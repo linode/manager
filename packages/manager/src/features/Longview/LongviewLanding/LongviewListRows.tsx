@@ -28,14 +28,14 @@ const LongviewListRows: React.FC<CombinedProps> = (props) => {
       {longviewClientsData.map((eachClient) => {
         return (
           <ClientRow
-            key={`longview-client-${eachClient.label}`}
-            clientInstallKey={eachClient.install_code}
-            clientID={eachClient.id}
-            clientLabel={eachClient.label}
-            clientAPIKey={eachClient.api_key}
             openPackageDrawer={() =>
               openPackageDrawer(eachClient.id, eachClient.label)
             }
+            clientAPIKey={eachClient.api_key}
+            clientID={eachClient.id}
+            clientInstallKey={eachClient.install_code}
+            clientLabel={eachClient.label}
+            key={`longview-client-${eachClient.label}`}
             triggerDeleteLongviewClient={triggerDeleteLongviewClient}
           />
         );

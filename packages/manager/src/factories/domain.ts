@@ -1,42 +1,42 @@
-import * as Factory from 'factory.ts';
 import {
   Domain,
   DomainRecord,
   ZoneFile,
 } from '@linode/api-v4/lib/domains/types';
+import * as Factory from 'factory.ts';
 
 export const domainFactory = Factory.Sync.makeFactory<Domain>({
-  domain: Factory.each((id) => `domain-${id}`),
-  id: Factory.each((id) => id),
-  soa_email: 'admin@example.com',
-  description: 'a domain',
   axfr_ips: [],
-  ttl_sec: 1000,
+  description: 'a domain',
+  domain: Factory.each((id) => `domain-${id}`),
+  expire_sec: 100,
+  group: '',
+  id: Factory.each((id) => id),
+  master_ips: [],
+  refresh_sec: 100,
+  retry_sec: 100,
+  soa_email: 'admin@example.com',
   status: 'active',
   tags: [],
-  group: '',
-  master_ips: [],
+  ttl_sec: 1000,
   type: 'master',
-  refresh_sec: 100,
-  expire_sec: 100,
-  retry_sec: 100,
   updated: '2020-01-01T13:00:00',
 });
 
 export const domainRecordFactory = Factory.Sync.makeFactory<DomainRecord>({
-  id: Factory.each((id) => id),
-  type: 'A',
-  name: 'www',
-  target: '172.104.27.30',
-  priority: 0,
-  weight: 0,
-  port: 0,
-  service: null,
-  protocol: null,
-  ttl_sec: 0,
-  tag: null,
   created: '2020-05-19T19:07:36',
+  id: Factory.each((id) => id),
+  name: 'www',
+  port: 0,
+  priority: 0,
+  protocol: null,
+  service: null,
+  tag: null,
+  target: '172.104.27.30',
+  ttl_sec: 0,
+  type: 'A',
   updated: '2020-05-19T19:07:36',
+  weight: 0,
 });
 
 export const domainZoneFileFactory = Factory.Sync.makeFactory<ZoneFile>({

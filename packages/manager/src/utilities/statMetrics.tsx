@@ -1,11 +1,11 @@
 import { StatsData } from '@linode/api-v4/lib/linodes';
 
 export interface Metrics {
-  max: number;
   average: number;
   last: number;
-  total: number;
   length: number;
+  max: number;
+  total: number;
 }
 
 // Returns max, average, and last for RDD data from the API, which has this
@@ -14,7 +14,7 @@ export interface Metrics {
 export const getMetrics = (data: number[][]): Metrics => {
   // If there's no data
   if (!data || !Array.isArray(data) || data.length < 1) {
-    return { max: 0, average: 0, last: 0, total: 0, length: 0 };
+    return { average: 0, last: 0, length: 0, max: 0, total: 0 };
   }
 
   let max = 0;
@@ -40,7 +40,7 @@ export const getMetrics = (data: number[][]): Metrics => {
 
   const last = data[length - 1][1] || 0;
 
-  return { max, average, last, total: sum, length };
+  return { average, last, length, max, total: sum };
 };
 
 export const formatNumber = (n: number): string => n.toFixed(2);
@@ -55,9 +55,9 @@ export const getTraffic = (averageInBits: number): number => {
 };
 
 export interface TotalTrafficResults {
+  combinedTraffic: number;
   inTraffic: number;
   outTraffic: number;
-  combinedTraffic: number;
 }
 export const getTotalTraffic = (
   inBits: number,
@@ -81,9 +81,9 @@ export const getTotalTraffic = (
   const outTraffic = getTraffic(averageOut);
 
   return {
+    combinedTraffic: inTraffic + outTraffic,
     inTraffic,
     outTraffic,
-    combinedTraffic: inTraffic + outTraffic,
   };
 };
 

@@ -1,10 +1,12 @@
 import React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { LinodeDisks } from './LinodeDisks';
-import { rest, server } from 'src/mocks/testServer';
-import { linodeFactory } from 'src/factories/linodes';
+
 import { linodeDiskFactory } from 'src/factories';
+import { linodeFactory } from 'src/factories/linodes';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { LinodeDisks } from './LinodeDisks';
 
 describe('LinodeDisks', () => {
   it('should render', async () => {
@@ -19,7 +21,7 @@ describe('LinodeDisks', () => {
       })
     );
 
-    const { getByText, findByText } = renderWithTheme(<LinodeDisks />);
+    const { findByText, getByText } = renderWithTheme(<LinodeDisks />);
 
     // Verify heading renders
     expect(getByText('Disks')).toBeVisible();

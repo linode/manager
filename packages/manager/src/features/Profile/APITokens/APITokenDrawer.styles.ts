@@ -1,12 +1,13 @@
+import { styled } from '@mui/material/styles';
+
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
-import { styled } from '@mui/material/styles';
 
 export const StyledPermsTable = styled(Table, {
   label: 'StyledPermsTable',
 })(({ theme }) => ({
-  marginTop: theme.spacing(3),
   marginBottom: theme.spacing(),
+  marginTop: theme.spacing(3),
 }));
 
 export const StyledSelectCell = styled(TableCell, {
@@ -19,18 +20,18 @@ export const StyledSelectCell = styled(TableCell, {
 export const StyledAccessCell = styled(TableCell, {
   label: 'StyledAccessCell',
 })(({ theme }) => ({
-  width: '31%',
   [theme.breakpoints.down('md')]: {
     width: '100%',
   },
+  width: '31%',
 }));
 
 export const StyledPermissionsCell = styled(TableCell, {
   label: 'StyledPermissionsCell',
 })(({ theme }) => ({
-  width: '23%',
+  textAlign: 'center',
   [theme.breakpoints.down('md')]: {
     width: '100%',
   },
-  textAlign: 'center',
+  width: '23%',
 }));

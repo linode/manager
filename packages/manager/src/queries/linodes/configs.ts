@@ -1,5 +1,3 @@
-import { useMutation, useQueryClient } from 'react-query';
-import { queryKey } from './linodes';
 import {
   APIError,
   Config,
@@ -8,6 +6,9 @@ import {
   deleteLinodeConfig,
   updateLinodeConfig,
 } from '@linode/api-v4';
+import { useMutation, useQueryClient } from 'react-query';
+
+import { queryKey } from './linodes';
 
 export const useLinodeConfigDeleteMutation = (
   linodeId: number,

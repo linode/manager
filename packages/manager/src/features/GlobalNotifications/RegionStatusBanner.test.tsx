@@ -1,11 +1,13 @@
-import * as React from 'react';
-import { regionFactory } from 'src/factories/regions';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { RegionStatusBanner } from './RegionStatusBanner';
-import { rest, server } from 'src/mocks/testServer';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { waitFor } from '@testing-library/react';
+import * as React from 'react';
 import { QueryClient } from 'react-query';
+
+import { regionFactory } from 'src/factories/regions';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { RegionStatusBanner } from './RegionStatusBanner';
 
 describe('Region status banner', () => {
   it('should render null if there are no warnings', () => {
@@ -23,14 +25,14 @@ describe('Region status banner', () => {
     server.use(
       rest.get('*/regions', (req, res, ctx) => {
         const regions = regionFactory.buildList(1, {
-          status: 'outage',
           id: 'us-east',
           label: 'Newark, NJ',
+          status: 'outage',
         });
         return res(ctx.json(makeResourcePage(regions)));
       })
     );
-    const { queryAllByText, queryAllByTestId } = renderWithTheme(
+    const { queryAllByTestId, queryAllByText } = renderWithTheme(
       <RegionStatusBanner />,
       {
         queryClient: new QueryClient(),

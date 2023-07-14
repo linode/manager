@@ -1,15 +1,15 @@
-import * as Factory from 'factory.ts';
 import {
   DataSeries,
   ManagedContact,
   ManagedCredential,
   ManagedIssue,
   ManagedLinodeSetting,
-  ManagedServiceMonitor,
   ManagedSSHPubKey,
   ManagedSSHSetting,
+  ManagedServiceMonitor,
   ManagedStats,
 } from '@linode/api-v4/lib/managed/types';
+import * as Factory from 'factory.ts';
 
 export const contactFactory = Factory.Sync.makeFactory<ManagedContact>({
   email: Factory.each((i) => `john.doe.${i}@example.com`),
@@ -25,26 +25,26 @@ export const contactFactory = Factory.Sync.makeFactory<ManagedContact>({
 
 export const credentialFactory = Factory.Sync.makeFactory<ManagedCredential>({
   id: Factory.each((i) => i),
-  last_decrypted: '2019-07-01',
   label: Factory.each((i) => `Credential ${i}`),
+  last_decrypted: '2019-07-01',
 });
 
 export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
+  address: 'http://www.example.com',
+  body: '',
   consultation_group: '',
-  timeout: 10,
-  label: 'Test service',
   created: '2019-08-01T20:29:14',
-  status: 'pending',
-  region: null,
-  updated: '2019-08-01T20:31:19',
-  service_type: 'url',
-  notes: '',
-  id: Factory.each((i) => i),
   credentials: credentialFactory
     .buildList(3)
     .map((credential) => credential.id),
-  address: 'http://www.example.com',
-  body: '',
+  id: Factory.each((i) => i),
+  label: 'Test service',
+  notes: '',
+  region: null,
+  service_type: 'url',
+  status: 'pending',
+  timeout: 10,
+  updated: '2019-08-01T20:31:19',
 });
 
 export const generateManagedStats = (modifier = 1): DataSeries[] => {
@@ -81,17 +81,17 @@ export const managedIssueFactory = Factory.Sync.makeFactory<ManagedIssue>({
 export const managedSSHSettingFactory = Factory.Sync.makeFactory<ManagedSSHSetting>(
   {
     access: true,
-    user: 'root',
     ip: 'any',
     port: 22,
+    user: 'root',
   }
 );
 
 export const managedLinodeSettingFactory = Factory.Sync.makeFactory<ManagedLinodeSetting>(
   {
+    group: 'linodes',
     id: Factory.each((i) => i),
     label: Factory.each((i) => `Managed Linode ${i}`),
-    group: 'linodes',
     ssh: managedSSHSettingFactory.build(),
   }
 );

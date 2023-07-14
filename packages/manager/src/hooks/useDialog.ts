@@ -2,11 +2,11 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 export interface DialogState<T> {
-  isOpen: boolean;
-  isLoading: boolean;
   entityID: T;
   entityLabel?: string;
   error?: string;
+  isLoading: boolean;
+  isOpen: boolean;
 }
 
 /**
@@ -48,14 +48,14 @@ export interface DialogState<T> {
  * @param request
  */
 
-export const useDialog = <T extends string | number | undefined>(
+export const useDialog = <T extends number | string | undefined>(
   request: (params?: T) => Promise<any>
 ): {
-  dialog: DialogState<T>;
-  openDialog: (id: T, label?: string) => void;
   closeDialog: () => void;
-  submitDialog: (params: T) => Promise<any>;
+  dialog: DialogState<T>;
   handleError: (e: string) => void;
+  openDialog: (id: T, label?: string) => void;
+  submitDialog: (params: T) => Promise<any>;
 } => {
   const [error, setErrors] = React.useState<string | undefined>();
   const [isOpen, setOpen] = React.useState<boolean>(false);
@@ -121,10 +121,10 @@ export const useDialog = <T extends string | number | undefined>(
   }, []);
 
   return {
-    dialog: { isOpen, isLoading, error, entityLabel, entityID },
-    openDialog,
     closeDialog,
-    submitDialog,
+    dialog: { entityID, entityLabel, error, isLoading, isOpen },
     handleError,
+    openDialog,
+    submitDialog,
   };
 };

@@ -1,19 +1,21 @@
+import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { Hidden } from 'src/components/Hidden';
+
 import { Currency } from 'src/components/Currency';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Hidden } from 'src/components/Hidden';
 import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
-import { ApplicationState } from 'src/store';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import { ApplicationState } from 'src/store';
 import { ExtendedType } from 'src/utilities/extendType';
-import { StyledDisabledTableRow } from './PlansPanel.styles';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
+
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
+import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
@@ -89,23 +91,20 @@ export const PlanSelection = ({
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
-          aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
-          aria-label={rowAriaLabel}
-          data-qa-plan-row={type.formattedLabel}
-          disabled={isSamePlan || planTooSmall || isDisabledClass}
-          key={type.id}
           onClick={() =>
             !isSamePlan && !disabled && !isDisabledClass
               ? onSelect(type.id)
               : undefined
           }
+          aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
+          aria-label={rowAriaLabel}
+          data-qa-plan-row={type.formattedLabel}
+          disabled={isSamePlan || planTooSmall || isDisabledClass}
+          key={type.id}
         >
           <StyledRadioCell>
             {!isSamePlan && (
               <FormControlLabel
-                aria-label={type.heading}
-                className={'label-visually-hidden'}
-                label={type.heading}
                 control={
                   <Radio
                     checked={
@@ -118,6 +117,9 @@ export const PlanSelection = ({
                     onChange={() => onSelect(type.id)}
                   />
                 }
+                aria-label={type.heading}
+                className={'label-visually-hidden'}
+                label={type.heading}
               />
             )}
           </StyledRadioCell>
@@ -132,11 +134,11 @@ export const PlanSelection = ({
             )}
             {tooltip && (
               <TooltipIcon
-                status="help"
                 sxTooltipIcon={{
-                  paddingTop: '0px !important',
                   paddingBottom: '0px !important',
+                  paddingTop: '0px !important',
                 }}
+                status="help"
                 text={tooltip}
                 tooltipPosition="right-end"
               />
@@ -150,13 +152,13 @@ export const PlanSelection = ({
               `$${type.price?.hourly}`
             )}
           </TableCell>
-          <TableCell center noWrap data-qa-ram>
+          <TableCell center data-qa-ram noWrap>
             {convertMegabytesTo(type.memory, true)}
           </TableCell>
           <TableCell center data-qa-cpu>
             {type.vcpus}
           </TableCell>
-          <TableCell center noWrap data-qa-storage>
+          <TableCell center data-qa-storage noWrap>
             {convertMegabytesTo(type.disk, true)}
           </TableCell>
           {shouldShowTransfer && type.transfer ? (
@@ -165,7 +167,7 @@ export const PlanSelection = ({
             </TableCell>
           ) : null}
           {shouldShowNetwork && type.network_out ? (
-            <TableCell center noWrap data-qa-network>
+            <TableCell center data-qa-network noWrap>
               {LINODE_NETWORK_IN} Gbps{' '}
               <span style={{ color: '#9DA4A6' }}>/</span>{' '}
               {type.network_out / 1000} Gbps

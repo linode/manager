@@ -1,10 +1,12 @@
-import * as React from 'react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import * as React from 'react';
+
 import { profileFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { formatOffset, TimezoneForm } from './TimezoneForm';
 import { queryClientFactory } from 'src/queries/base';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { TimezoneForm, formatOffset } from './TimezoneForm';
 
 const queryClient = queryClientFactory();
 
@@ -20,7 +22,7 @@ describe('Timezone change form', () => {
   );
 
   it('should render input label', async () => {
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <TimezoneForm loggedInAsCustomer={true} />,
       { queryClient }
     );
@@ -65,16 +67,16 @@ describe('formatOffset', () => {
   it('formats the offset correctly', () => {
     const testMap = [
       {
+        expectedOffset: '+0:00',
         timezone: {
           label: 'Coordinated Universal Time',
           name: 'UTC',
           offset: 0,
         },
-        expectedOffset: '+0:00',
       },
     ];
 
-    testMap.forEach(({ timezone, expectedOffset }) =>
+    testMap.forEach(({ expectedOffset, timezone }) =>
       expect(formatOffset(timezone)).toBe(
         `(GMT ${expectedOffset}) ${timezone.label}`
       )

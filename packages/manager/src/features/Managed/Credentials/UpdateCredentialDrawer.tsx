@@ -1,12 +1,14 @@
 import { CredentialPayload } from '@linode/api-v4/lib/managed';
 import { Formik } from 'formik';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TextField } from 'src/components/TextField';
+
 import { updateLabelSchema, updatePasswordSchema } from './credential.schema';
 
 const PasswordInput = React.lazy(
@@ -15,77 +17,77 @@ const PasswordInput = React.lazy(
 
 export interface Props {
   label: string;
-  open: boolean;
   onClose: () => void;
   onSubmitLabel: (values: Partial<CredentialPayload>, formikProps: any) => void;
   onSubmitPassword: (
     values: Partial<CredentialPayload>,
     formikProps: any
   ) => void;
+  open: boolean;
 }
 
 type CombinedProps = Props;
 
 const CredentialDrawer: React.FC<CombinedProps> = (props) => {
-  const { label, open, onClose, onSubmitLabel, onSubmitPassword } = props;
+  const { label, onClose, onSubmitLabel, onSubmitPassword, open } = props;
 
   return (
-    <Drawer title={`Edit Credential: ${label}`} open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title={`Edit Credential: ${label}`}>
       <Formik
         initialValues={{
           label,
         }}
-        validationSchema={updateLabelSchema}
-        validateOnChange={false}
-        validateOnBlur={false}
         onSubmit={onSubmitLabel}
+        validateOnBlur={false}
+        validateOnChange={false}
+        validationSchema={updateLabelSchema}
       >
         {({
-          values,
           errors,
-          status,
-          handleChange,
           handleBlur,
+          handleChange,
           handleSubmit,
           isSubmitting,
+          status,
+          values,
         }) => (
           <>
             {status && status.generalError && (
               <Notice
+                data-qa-error
+                error
                 key={status.generalError}
                 text={status.generalError}
-                error
-                data-qa-error
               />
             )}
 
             {status && status.success && (
               <Notice
-                key={status.success}
-                text={status.success}
-                success
                 data-qa-success
+                key={status.success}
+                success
+                text={status.success}
               />
             )}
 
             <form onSubmit={handleSubmit}>
               <TextField
-                label="Label"
-                name="label"
+                data-qa-add-label
                 error={!!errors.label}
                 errorText={errors.label}
+                label="Label"
+                name="label"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.label}
-                data-qa-add-label
               />
 
               <ActionsPanel>
                 <Button
                   buttonType="primary"
+                  data-qa-submit
                   loading={isSubmitting}
                   onClick={() => handleSubmit()}
-                  data-qa-submit
                 >
                   Update label
                 </Button>
@@ -99,75 +101,75 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
           password: '',
           username: '',
         }}
-        validationSchema={updatePasswordSchema}
-        validateOnChange={false}
-        validateOnBlur={false}
         onSubmit={onSubmitPassword}
+        validateOnBlur={false}
+        validateOnChange={false}
+        validationSchema={updatePasswordSchema}
       >
         {({
-          values,
           errors,
-          status,
-          handleChange,
           handleBlur,
+          handleChange,
           handleSubmit,
           isSubmitting,
+          status,
+          values,
         }) => (
           <div style={{ paddingTop: '1em' }}>
             {status && status.generalError && (
               <Notice
-                key={status.generalError}
-                text={status.generalError}
-                error
                 data-qa-error
+                error
+                key={status.generalError}
                 spacingBottom={0}
+                text={status.generalError}
               />
             )}
 
             {status && status.success && (
               <Notice
-                key={status.success}
-                text={status.success}
-                success
                 data-qa-success
+                key={status.success}
                 spacingBottom={0}
+                success
+                text={status.success}
               />
             )}
 
             <form onSubmit={handleSubmit}>
               <TextField
-                label="Username"
-                name="username"
+                data-qa-add-username
                 error={!!errors.username}
                 errorText={errors.username}
+                label="Username"
+                name="username"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 optional
                 value={values.username}
-                data-qa-add-username
               />
 
               <React.Suspense fallback={<SuspenseLoader />}>
                 <PasswordInput
-                  label="Password"
-                  name="password"
+                  data-qa-add-password
                   error={!!errors.password}
                   errorText={errors.password}
                   // This credential could be anything so might be counterproductive to validate strength
                   hideValidation
+                  label="Password"
+                  name="password"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   type="password"
                   value={values.password}
-                  data-qa-add-password
                 />
               </React.Suspense>
               <ActionsPanel>
                 <Button
                   buttonType="primary"
-                  onClick={() => handleSubmit()}
-                  loading={isSubmitting}
                   data-qa-submit
+                  loading={isSubmitting}
+                  onClick={() => handleSubmit()}
                 >
                   Update credentials
                 </Button>

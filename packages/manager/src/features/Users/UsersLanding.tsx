@@ -1,51 +1,34 @@
-import { deleteUser, User } from '@linode/api-v4/lib/account';
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import AddNewLink from 'src/components/AddNewLink';
-import { makeStyles, useTheme } from '@mui/styles';
+import { User, deleteUser } from '@linode/api-v4/lib/account';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
+import { makeStyles, useTheme } from '@mui/styles';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import AddNewLink from 'src/components/AddNewLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
+import { useProfile } from 'src/queries/profile';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import { GravatarByEmail } from '../../components/GravatarByEmail';
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
-import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  userLandingHeader: {
-    margin: 0,
-    width: '100%',
-  },
-  headline: {
-    marginTop: 8,
-    marginBottom: 8,
-    marginLeft: 15,
-    lineHeight: '1.5rem',
-  },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-      paddingRight: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -54,32 +37,51 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
   },
-  title: {
-    marginBottom: theme.spacing(2),
+  addNewWrapper: {
+    '&.MuiGrid-item': {
+      paddingRight: 0,
+      paddingTop: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(),
+    },
   },
   avatar: {
+    animation: '$fadeIn 150ms linear forwards',
     borderRadius: '50%',
-    width: 30,
     height: 30,
     marginRight: theme.spacing(2),
-    animation: '$fadeIn 150ms linear forwards',
+    width: 30,
   },
   emptyImage: {
     display: 'inline',
-    width: 30,
     height: 30,
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
-      width: 40,
       height: 40,
+      width: 40,
     },
+    width: 30,
+  },
+  headline: {
+    lineHeight: '1.5rem',
+    marginBottom: 8,
+    marginLeft: 15,
+    marginTop: 8,
+  },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  userLandingHeader: {
+    margin: 0,
+    width: '100%',
   },
 }));
 
 const UsersLanding = () => {
   const { data: profile } = useProfile();
   const pagination = usePagination(1, 'account-users');
-  const { data: users, isLoading, error, refetch } = useAccountUsers({
+  const { data: users, error, isLoading, refetch } = useAccountUsers({
     page: pagination.page,
     page_size: pagination.pageSize,
   });
@@ -146,12 +148,12 @@ const UsersLanding = () => {
   const renderUserRow = (user: User) => {
     return (
       <TableRow
-        key={user.username}
-        data-qa-user-row
         ariaLabel={`User ${user.username}`}
+        data-qa-user-row
+        key={user.username}
       >
         <TableCell data-qa-username>
-          <Grid container alignItems="center" spacing={2}>
+          <Grid alignItems="center" container spacing={2}>
             <Grid style={{ display: 'flex' }}>
               <GravatarByEmail email={user.email} />
             </Grid>
@@ -165,7 +167,7 @@ const UsersLanding = () => {
           {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
         <TableCell actionCell>
-          <ActionMenu username={user.username} onDelete={onUsernameDelete} />
+          <ActionMenu onDelete={onUsernameDelete} username={user.username} />
         </TableCell>
       </TableRow>
     );
@@ -176,8 +178,8 @@ const UsersLanding = () => {
       return (
         <TableRowLoading
           columns={4}
-          rows={1}
           responsive={{ 1: { smDown: true } }}
+          rows={1}
         />
       );
     }
@@ -201,28 +203,28 @@ const UsersLanding = () => {
       )}
       {userDeleteError && (
         <Notice
-          style={{ marginTop: newUsername ? 16 : 0 }}
           error
+          style={{ marginTop: newUsername ? 16 : 0 }}
           text={`Error when deleting user, please try again later`}
         />
       )}
       <Grid
-        container
         alignItems="flex-end"
-        justifyContent="flex-end"
         className={classes.userLandingHeader}
+        container
+        justifyContent="flex-end"
         spacing={2}
       >
         <Grid className={classes.addNewWrapper}>
           <AddNewLink
-            disabled={isRestrictedUser}
             disabledReason={
               isRestrictedUser
                 ? 'You cannot create other users as a restricted user.'
                 : undefined
             }
-            onClick={openForCreate}
+            disabled={isRestrictedUser}
             label="Add a User"
+            onClick={openForCreate}
           />
         </Grid>
       </Grid>
@@ -241,22 +243,22 @@ const UsersLanding = () => {
       </Table>
       <PaginationFooter
         count={users?.results || 0}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
+        eventCategory="users landing"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
-        eventCategory="users landing"
+        page={pagination.page}
+        pageSize={pagination.pageSize}
       />
       <CreateUserDrawer
-        open={createDrawerOpen}
         onClose={userCreateOnClose}
+        open={createDrawerOpen}
         refetch={refetch}
       />
       <UserDeleteConfirmationDialog
-        username={toDeleteUsername || ''}
-        open={deleteConfirmDialogOpen}
-        onDelete={() => onDeleteConfirm(toDeleteUsername ?? '')}
         onCancel={onDeleteCancel}
+        onDelete={() => onDeleteConfirm(toDeleteUsername ?? '')}
+        open={deleteConfirmDialogOpen}
+        username={toDeleteUsername || ''}
       />
     </React.Fragment>
   );

@@ -1,6 +1,7 @@
 import * as React from 'react';
-import StatusBanners from './StatusBanners';
 import { Redirect, Route, Switch } from 'react-router-dom';
+
+import StatusBanners from './StatusBanners';
 
 const HelpLanding = React.lazy(() =>
   import('./HelpLanding').then((module) => ({
@@ -23,18 +24,18 @@ const HelpAndSupport = () => {
       <StatusBanners />
       <Switch>
         <Route
-          exact
-          strict
-          path="/support/tickets"
           component={SupportTickets}
+          exact
+          path="/support/tickets"
+          strict
         />
         <Route
-          path="/support/tickets/:ticketId"
           component={SupportTicketDetail}
           exact
+          path="/support/tickets/:ticketId"
           strict
         />
-        <Route path="/support/search/" component={SupportSearchLanding} />
+        <Route component={SupportSearchLanding} path="/support/search/" />
 
         <Route path="/support">
           <HelpLanding />

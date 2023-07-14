@@ -1,10 +1,12 @@
 import { fireEvent, screen } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
+
 import { databaseFactory } from 'src/factories';
 import { IPv4List } from 'src/factories/databases';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+
 import AccessControls from './AccessControls';
 import AddAccessControlDrawer from './AddAccessControlDrawer';
 
@@ -17,7 +19,7 @@ afterEach(() => {
 
 describe('Add Access Controls drawer', () => {
   const database = databaseFactory.build();
-  const { getByText, getByTestId } = renderWithTheme(
+  const { getByTestId, getByText } = renderWithTheme(
     <AccessControls database={database} />
   );
   const button = getByText('Manage Access Controls');
@@ -33,10 +35,10 @@ describe('Add Access Controls drawer', () => {
     const IPv4ListWithMasks = IPv4List.map((ip) => `${ip}/32`);
     const { getAllByTestId } = renderWithTheme(
       <AddAccessControlDrawer
-        open={true}
-        onClose={() => null}
-        updateDatabase={() => null}
         allowList={IPv4ListWithMasks.map(stringToExtendedIP)}
+        onClose={() => null}
+        open={true}
+        updateDatabase={() => null}
       />
     );
 
@@ -52,10 +54,10 @@ describe('Add Access Controls drawer', () => {
   it('Should have a disabled Add Inbound Sources button until an inbound source field is touched', () => {
     const { getByText } = renderWithTheme(
       <AddAccessControlDrawer
-        open={true}
-        onClose={() => null}
-        updateDatabase={() => null}
         allowList={IPv4List.map(stringToExtendedIP)}
+        onClose={() => null}
+        open={true}
+        updateDatabase={() => null}
       />
     );
 

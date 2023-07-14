@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NotFound from 'src/components/NotFound';
 import { useDomainQuery } from 'src/queries/domains';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 const DomainsLanding = React.lazy(() => import('../DomainsLanding'));
 const DomainDetail = React.lazy(() => import('./DomainDetail'));
@@ -12,7 +13,7 @@ const DomainDetailRouting = () => {
   const params = useParams<{ domainId: string }>();
   const domainId = Number(params.domainId);
 
-  const { data: domain, isLoading, error } = useDomainQuery(domainId);
+  const { data: domain, error, isLoading } = useDomainQuery(domainId);
 
   if (isLoading) {
     return <CircleProgress />;

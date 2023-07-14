@@ -1,6 +1,7 @@
-import * as React from 'react';
 import { default as _Chip, ChipProps as _ChipProps } from '@mui/material/Chip';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
 import { isPropValid } from 'src/utilities/isPropValid';
 
 export interface ChipProps extends _ChipProps {
@@ -17,20 +18,20 @@ export interface ChipProps extends _ChipProps {
    * The color of the outline when the variant is outlined.
    * @default 'gray'
    */
-  outlineColor?: 'green' | 'gray';
+  outlineColor?: 'gray' | 'green';
 }
 
 export const Chip = ({
-  outlineColor = 'gray',
   className,
   inTable,
+  outlineColor = 'gray',
   ...props
 }: ChipProps) => {
   return (
     <StyledChip
+      className={className}
       inTable={inTable}
       outlineColor={outlineColor}
-      className={className}
       {...props}
     />
   );
@@ -41,9 +42,9 @@ const StyledChip = styled(_Chip, {
   shouldForwardProp: (prop) => isPropValid(['inTable', 'outlineColor'], prop),
 })<ChipProps>(({ theme, ...props }) => ({
   ...(props.inTable && {
-    marginTop: 0,
     marginBottom: 0,
     marginLeft: theme.spacing(2),
+    marginTop: 0,
     minHeight: theme.spacing(2),
     paddingLeft: theme.spacing(0.5),
     paddingRight: theme.spacing(0.5),

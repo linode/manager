@@ -5,7 +5,9 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+
 import { useProfile } from 'src/queries/profile';
+
 import { queryPresets } from './base';
 
 export const queryKey = 'account';

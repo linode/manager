@@ -1,11 +1,13 @@
-import * as React from 'react';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
-import { TicketList, Props } from './TicketList';
+import * as React from 'react';
 import { QueryClient } from 'react-query';
-import { rest, server } from 'src/mocks/testServer';
+
 import { supportTicketFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+
+import { Props, TicketList } from './TicketList';
 
 const queryClient = new QueryClient();
 
@@ -67,7 +69,7 @@ describe('TicketList', () => {
       })
     );
 
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <TicketList filterStatus="open" />,
       {
         queryClient,

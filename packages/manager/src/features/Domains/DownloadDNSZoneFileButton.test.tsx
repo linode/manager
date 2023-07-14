@@ -1,8 +1,10 @@
-import * as React from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
-import { DownloadDNSZoneFileButton } from './DownloadDNSZoneFileButton';
+import * as React from 'react';
+
 import { downloadFile } from 'src/utilities/downloadFile';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { DownloadDNSZoneFileButton } from './DownloadDNSZoneFileButton';
 
 jest.mock('@linode/api-v4/lib/domains', () => ({
   getDNSZoneFile: jest.fn().mockResolvedValue({
@@ -19,14 +21,14 @@ jest.mock('src/utilities/downloadFile', () => ({
 describe('DownloadDNSZoneFileButton', () => {
   it('renders button text correctly', () => {
     const { getByText } = renderWithTheme(
-      <DownloadDNSZoneFileButton domainLabel="test.com" domainId={1} />
+      <DownloadDNSZoneFileButton domainId={1} domainLabel="test.com" />
     );
     expect(getByText('Download DNS Zone File')).toBeInTheDocument();
   });
 
   it('downloads DNS zone file when button is clicked', async () => {
     const { getByText } = renderWithTheme(
-      <DownloadDNSZoneFileButton domainLabel="test.com" domainId={1} />
+      <DownloadDNSZoneFileButton domainId={1} domainLabel="test.com" />
     );
     fireEvent.click(getByText('Download DNS Zone File'));
     await waitFor(() => expect(downloadFile).toHaveBeenCalledTimes(1));

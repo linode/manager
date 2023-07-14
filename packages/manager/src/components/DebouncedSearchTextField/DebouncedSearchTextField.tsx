@@ -1,35 +1,34 @@
 import Search from '@mui/icons-material/Search';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import InputAdornment from 'src/components/core/InputAdornment';
-import { styled } from '@mui/material/styles';
 import { TextField, TextFieldProps } from 'src/components/TextField';
-
+import InputAdornment from 'src/components/core/InputAdornment';
 import usePrevious from 'src/hooks/usePrevious';
 
 interface DebouncedSearchProps extends TextFieldProps {
-  onSearch: (query: string) => void;
-  debounceTime?: number;
-  isSearching?: boolean;
   className?: string;
-  placeholder?: string;
-  label: string;
-  hideLabel?: boolean;
+  debounceTime?: number;
   defaultValue?: string;
+  hideLabel?: boolean;
+  isSearching?: boolean;
+  label: string;
+  onSearch: (query: string) => void;
+  placeholder?: string;
 }
 
 const DebouncedSearch = (props: DebouncedSearchProps) => {
   const {
-    className,
-    isSearching,
     InputProps,
+    className,
     debounceTime,
+    defaultValue,
+    hideLabel,
+    isSearching,
+    label,
     onSearch,
     placeholder,
-    label,
-    hideLabel,
-    defaultValue,
     ...restOfTextFieldProps
   } = props;
   const [query, setQuery] = React.useState<string>('');
@@ -63,19 +62,7 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
 
   return (
     <TextField
-      data-qa-debounced-search
-      className={className}
-      placeholder={placeholder || 'Filter by query'}
-      onChange={_setQuery}
-      defaultValue={defaultValue}
-      label={label}
-      hideLabel={hideLabel}
       InputProps={{
-        startAdornment: (
-          <InputAdornment position="end">
-            <StyledSearchIcon />
-          </InputAdornment>
-        ),
         endAdornment: isSearching ? (
           <InputAdornment position="end">
             <CircleProgress mini={true} />
@@ -83,8 +70,20 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
         ) : (
           <React.Fragment />
         ),
+        startAdornment: (
+          <InputAdornment position="end">
+            <StyledSearchIcon />
+          </InputAdornment>
+        ),
         ...InputProps,
       }}
+      className={className}
+      data-qa-debounced-search
+      defaultValue={defaultValue}
+      hideLabel={hideLabel}
+      label={label}
+      onChange={_setQuery}
+      placeholder={placeholder || 'Filter by query'}
       {...restOfTextFieldProps}
     />
   );

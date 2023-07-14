@@ -1,12 +1,13 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
+import { makeStyles } from 'tss-react/mui';
+
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { Box } from 'src/components/Box';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import NotFound from 'src/components/NotFound';
@@ -30,43 +31,59 @@ import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import { usePreferences } from 'src/queries/preferences';
+import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+
+import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
-import { ENABLE_MAINTENANCE_MODE } from './constants';
+
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  activationWrapper: {
+    padding: theme.spacing(4),
+    [theme.breakpoints.up('xl')]: {
+      margin: '0 auto',
+      width: '50%',
+    },
+  },
   appFrame: {
-    position: 'relative',
-    display: 'flex',
-    minHeight: '100vh',
-    flexDirection: 'column',
     backgroundColor: theme.bg.app,
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+    position: 'relative',
     zIndex: 1,
+  },
+  bgStyling: {
+    backgroundColor: theme.bg.main,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '100vh',
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
     padding: `${theme.spacing(3)} 0`,
     paddingTop: 12,
-    transition: theme.transitions.create('opacity'),
-    [theme.breakpoints.down('md')]: {
-      paddingTop: theme.spacing(2),
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
     [theme.breakpoints.between('md', 'xl')]: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
     },
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: 0,
+      paddingRight: 0,
+      paddingTop: theme.spacing(2),
+    },
+    transition: theme.transitions.create('opacity'),
   },
   content: {
     flex: 1,
-    transition: 'margin-left .1s linear',
     [theme.breakpoints.up('md')]: {
       marginLeft: 190,
     },
+    transition: 'margin-left .1s linear',
   },
   fullWidthContent: {
     marginLeft: 0,
@@ -74,22 +91,29 @@ const useStyles = makeStyles()((theme: Theme) => ({
       marginLeft: 52,
     },
   },
+  grid: {
+    marginLeft: 0,
+    marginRight: 0,
+    [theme.breakpoints.up('lg')]: {
+      height: '100%',
+    },
+    width: '100%',
+  },
   hidden: {
     display: 'none',
     overflow: 'hidden',
   },
-  grid: {
-    marginLeft: 0,
-    marginRight: 0,
-    width: '100%',
-    [theme.breakpoints.up('lg')]: {
-      height: '100%',
+  logo: {
+    '& > g': {
+      fill: theme.color.black,
     },
   },
   switchWrapper: {
-    flex: 1,
-    maxWidth: '100%',
-    position: 'relative',
+    '& .mlSidebar': {
+      [theme.breakpoints.up('lg')]: {
+        paddingRight: `0 !important`,
+      },
+    },
     '& > .MuiGrid-container': {
       maxWidth: theme.breakpoints.values.lg,
       width: '100%',
@@ -99,30 +123,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
         maxWidth: '78.8%',
       },
     },
-    '& .mlSidebar': {
-      [theme.breakpoints.up('lg')]: {
-        paddingRight: `0 !important`,
-      },
-    },
-  },
-  logo: {
-    '& > g': {
-      fill: theme.color.black,
-    },
-  },
-  activationWrapper: {
-    padding: theme.spacing(4),
-    [theme.breakpoints.up('xl')]: {
-      width: '50%',
-      margin: '0 auto',
-    },
-  },
-  bgStyling: {
-    backgroundColor: theme.bg.main,
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
+    flex: 1,
+    maxWidth: '100%',
+    position: 'relative',
   },
 }));
 
@@ -178,7 +181,7 @@ const MainContent = (props: CombinedProps) => {
   const complianceUpdateContextValue = useDialogContext();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const { account, profile, _isManagedAccount } = useAccountManagement();
+  const { _isManagedAccount, account, profile } = useAccountManagement();
 
   const username = profile?.username || '';
 
@@ -217,22 +220,22 @@ const MainContent = (props: CombinedProps) => {
               justifyContent: 'center',
             }}
           >
-            <Logo width={215} className={classes.logo} />
+            <Logo className={classes.logo} width={215} />
           </Box>
           <Switch>
             <Route
-              exact
-              strict
-              path="/support/tickets"
               component={SupportTickets}
+              exact
+              path="/support/tickets"
+              strict
             />
             <Route
-              path="/support/tickets/:ticketId"
               component={SupportTicketDetail}
               exact
+              path="/support/tickets/:ticketId"
               strict
             />
-            <Route exact path="/support" component={Help} />
+            <Route component={Help} exact path="/support" />
             <Route component={AccountActivationLanding} />
           </Switch>
         </div>
@@ -271,17 +274,17 @@ const MainContent = (props: CombinedProps) => {
               <>
                 {shouldDisplayMainContentBanner ? (
                   <MainContentBanner
-                    bannerText={flags.mainContentBanner?.text ?? ''}
-                    url={flags.mainContentBanner?.link?.url ?? ''}
-                    linkText={flags.mainContentBanner?.link?.text ?? ''}
                     bannerKey={flags.mainContentBanner?.key ?? ''}
+                    bannerText={flags.mainContentBanner?.text ?? ''}
+                    linkText={flags.mainContentBanner?.link?.text ?? ''}
                     onClose={() => setBannerDismissed(true)}
+                    url={flags.mainContentBanner?.link?.url ?? ''}
                   />
                 ) : null}
                 <SideMenu
-                  open={menuIsOpen}
-                  collapse={desktopMenuIsOpen || false}
                   closeMenu={() => toggleMenu(false)}
+                  collapse={desktopMenuIsOpen || false}
+                  open={menuIsOpen}
                 />
                 <div
                   className={cx(classes.content, {
@@ -291,10 +294,10 @@ const MainContent = (props: CombinedProps) => {
                   })}
                 >
                   <TopMenu
-                    isSideMenuOpen={!desktopMenuIsOpen}
-                    openSideMenu={() => toggleMenu(true)}
                     desktopMenuToggle={desktopMenuToggle}
                     isLoggedInAsCustomer={props.isLoggedInAsCustomer}
+                    isSideMenuOpen={!desktopMenuIsOpen}
+                    openSideMenu={() => toggleMenu(true)}
                     username={username}
                   />
                   <main
@@ -302,51 +305,51 @@ const MainContent = (props: CombinedProps) => {
                     id="main-content"
                     role="main"
                   >
-                    <Grid container spacing={0} className={classes.grid}>
+                    <Grid className={classes.grid} container spacing={0}>
                       <Grid className={cx(classes.switchWrapper, 'p0')}>
                         <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
-                            <Route path="/linodes" component={LinodesRoutes} />
-                            <Route path="/volumes" component={Volumes} />
+                            <Route component={LinodesRoutes} path="/linodes" />
+                            <Route component={Volumes} path="/volumes" />
                             <Redirect path="/volumes*" to="/volumes" />
                             {flags.aglb && (
                               <Route
-                                path="/loadbalancer*"
                                 component={LoadBalancers}
+                                path="/loadbalancer*"
                               />
                             )}
                             <Route
-                              path="/nodebalancers"
                               component={NodeBalancers}
+                              path="/nodebalancers"
                             />
-                            <Route path="/domains" component={Domains} />
-                            <Route path="/managed" component={Managed} />
-                            <Route path="/longview" component={Longview} />
-                            <Route path="/images" component={Images} />
+                            <Route component={Domains} path="/domains" />
+                            <Route component={Managed} path="/managed" />
+                            <Route component={Longview} path="/longview" />
+                            <Route component={Images} path="/images" />
                             <Route
-                              path="/stackscripts"
                               component={StackScripts}
+                              path="/stackscripts"
                             />
                             <Route
-                              path="/object-storage"
                               component={ObjectStorage}
+                              path="/object-storage"
                             />
-                            <Route path="/kubernetes" component={Kubernetes} />
-                            <Route path="/account" component={Account} />
+                            <Route component={Kubernetes} path="/kubernetes" />
+                            <Route component={Account} path="/account" />
 
                             <Route
-                              path="/profile"
                               render={(routeProps) => (
                                 <Profile {...routeProps} />
                               )}
+                              path="/profile"
                             />
-                            <Route path="/support" component={Help} />
-                            <Route path="/search" component={SearchLanding} />
-                            <Route path="/events" component={EventsLanding} />
-                            <Route path="/firewalls" component={Firewalls} />
+                            <Route component={Help} path="/support" />
+                            <Route component={SearchLanding} path="/search" />
+                            <Route component={EventsLanding} path="/events" />
+                            <Route component={Firewalls} path="/firewalls" />
                             {showDatabases ? (
-                              <Route path="/databases" component={Databases} />
+                              <Route component={Databases} path="/databases" />
                             ) : null}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}

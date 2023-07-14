@@ -14,19 +14,19 @@ export const uploadImageFile = (
   const source = CancelToken.source();
 
   const config: AxiosRequestConfig = {
-    url: signedUrl,
-    method: 'PUT',
+    cancelToken: source.token,
+    data: file,
     headers: {
       'Content-Type': headerContentType,
     },
-    data: file,
+    method: 'PUT',
     onUploadProgress,
-    cancelToken: source.token,
+    url: signedUrl,
   };
   return {
-    request: () => axiosInstance.request(config),
-    // Return the cancel function to the client, since this is a long-running
     // request that the user may want to cancel.
     cancel: source.cancel,
+    // Return the cancel function to the client, since this is a long-running
+    request: () => axiosInstance.request(config),
   };
 };

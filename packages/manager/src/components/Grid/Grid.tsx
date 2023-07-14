@@ -1,9 +1,10 @@
 import * as React from 'react';
-import Grid, { GridProps } from 'src/components/core/Grid';
+
 import RenderGuard from 'src/components/RenderGuard';
+import Grid, { GridProps } from 'src/components/core/Grid';
 
 /* tslint:disable-next-line */
-export interface Props extends GridProps {}
+export type Props = GridProps;
 
 const WrappedGrid = React.forwardRef<HTMLDivElement, GridProps>(
   (props, ref) => {

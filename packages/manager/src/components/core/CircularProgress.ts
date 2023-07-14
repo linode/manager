@@ -3,6 +3,6 @@ import CircularProgress, {
 } from '@mui/material/CircularProgress';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface CircularProgressProps extends _CircularProgressProps {}
+export type CircularProgressProps = _CircularProgressProps;
 
 export default CircularProgress;

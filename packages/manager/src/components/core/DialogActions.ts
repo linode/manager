@@ -3,6 +3,6 @@ import DialogActions, {
 } from '@mui/material/DialogActions';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface DialogActionsProps extends _DialogActionsProps {}
+export type DialogActionsProps = _DialogActionsProps;
 
 export default DialogActions;

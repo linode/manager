@@ -1,49 +1,50 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+
 import { Notice } from 'src/components/Notice/Notice';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
   subHeadings: string[];
 }
 
-type ClassNames = 'root' | 'panelBody';
+type ClassNames = 'panelBody' | 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-      width: '100%',
-      backgroundColor: theme.color.white,
-    },
     panelBody: {
       padding: `${theme.spacing(2)} 0 0`,
+    },
+    root: {
+      backgroundColor: theme.color.white,
+      flexGrow: 1,
+      width: '100%',
     },
   });
 
 interface Notice {
+  level: 'error' | 'warning'; // most likely only going to need these two 'warning'; 'warning';
   text: string;
-  level: 'warning' | 'error'; // most likely only going to need these two
 }
 
 interface Props {
-  linodes: ExtendedLinode[];
-  selectedLinodeID?: number;
-  handleSelection: (id: number, type: null | string, diskSize?: number) => void;
-  error?: string;
-  header?: string;
   disabled?: boolean;
+  error?: string;
+  handleSelection: (id: number, type: null | string, diskSize?: number) => void;
+  header?: string;
+  linodes: ExtendedLinode[];
   notice?: Notice;
+  selectedLinodeID?: number;
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
@@ -51,24 +52,8 @@ type StyledProps = Props & WithStyles<ClassNames>;
 type CombinedProps = StyledProps;
 
 class SelectLinodePanel extends React.Component<CombinedProps> {
-  renderCard(linode: ExtendedLinode) {
-    const { selectedLinodeID, handleSelection, disabled } = this.props;
-    return (
-      <SelectionCard
-        key={`selection-card-${linode.id}`}
-        onClick={(e) => {
-          handleSelection(linode.id, linode.type, linode.specs.disk);
-        }}
-        checked={linode.id === Number(selectedLinodeID)}
-        heading={linode.heading}
-        subheadings={linode.subHeadings}
-        disabled={disabled}
-      />
-    );
-  }
-
   render() {
-    const { error, classes, linodes, header, notice, disabled } = this.props;
+    const { classes, disabled, error, header, linodes, notice } = this.props;
 
     return (
       <Paginate data={linodes}>
@@ -83,18 +68,18 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
           return (
             <>
               <Paper className={classes.root} data-qa-select-linode-panel>
-                {error && <Notice text={error} error />}
+                {error && <Notice error text={error} />}
                 {notice && !disabled && (
                   <Notice
-                    text={notice.text}
                     error={notice.level === 'error'}
+                    text={notice.text}
                     warning={notice.level === 'warning'}
                   />
                 )}
-                <Typography variant="h2" data-qa-select-linode-header>
+                <Typography data-qa-select-linode-header variant="h2">
                   {!!header ? header : 'Select Linode'}
                 </Typography>
-                <Typography component="div" className={classes.panelBody}>
+                <Typography className={classes.panelBody} component="div">
                   <Grid container spacing={2}>
                     {linodesData.map((linode) => {
                       return this.renderCard(linode);
@@ -104,16 +89,32 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
               </Paper>
               <PaginationFooter
                 count={count}
+                eventCategory={'Clone from existing panel'}
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
                 page={page}
                 pageSize={pageSize}
-                eventCategory={'Clone from existing panel'}
               />
             </>
           );
         }}
       </Paginate>
+    );
+  }
+
+  renderCard(linode: ExtendedLinode) {
+    const { disabled, handleSelection, selectedLinodeID } = this.props;
+    return (
+      <SelectionCard
+        onClick={(e) => {
+          handleSelection(linode.id, linode.type, linode.specs.disk);
+        }}
+        checked={linode.id === Number(selectedLinodeID)}
+        disabled={disabled}
+        heading={linode.heading}
+        key={`selection-card-${linode.id}`}
+        subheadings={linode.subHeadings}
+      />
     );
   }
 }

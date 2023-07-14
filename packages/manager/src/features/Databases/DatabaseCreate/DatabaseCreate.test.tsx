@@ -1,12 +1,14 @@
+import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import DatabaseCreate from './DatabaseCreate';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { QueryClient } from 'react-query';
-import { waitForElementToBeRemoved, fireEvent } from '@testing-library/react';
-import { rest, server } from 'src/mocks/testServer';
+
 import { databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import DatabaseCreate from './DatabaseCreate';
 
 const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';
@@ -25,7 +27,7 @@ describe('Database Create', () => {
   });
 
   it('should render inputs', async () => {
-    const { getAllByText, getAllByTestId } = renderWithTheme(
+    const { getAllByTestId, getAllByText } = renderWithTheme(
       <DatabaseCreate />,
       {
         queryClient,
@@ -45,9 +47,9 @@ describe('Database Create', () => {
   it('should display the correct node price and disable 3 nodes for 1 GB plans', async () => {
     const standardTypes = [
       databaseTypeFactory.build({
+        class: 'nanode',
         id: 'g6-standard-0',
         label: `Nanode 1 GB`,
-        class: 'nanode',
         memory: 1024,
       }),
       ...databaseTypeFactory.buildList(7, { class: 'standard' }),

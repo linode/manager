@@ -1,30 +1,31 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 
 interface Props {
-  open: boolean;
   error?: string;
   loading: boolean;
   onClose: () => void;
   onSnapshot: () => void;
+  open: boolean;
 }
 
 export const CaptureSnapshotConfirmationDialog = (props: Props) => {
-  const { open, loading, onClose, error, onSnapshot } = props;
+  const { error, loading, onClose, onSnapshot, open } = props;
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+      <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onSnapshot}
-        loading={loading}
         data-qa-confirm
+        loading={loading}
+        onClick={onSnapshot}
       >
         Take Snapshot
       </Button>
@@ -33,11 +34,11 @@ export const CaptureSnapshotConfirmationDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      title="Take a snapshot?"
-      onClose={onClose}
       actions={actions}
       error={error}
+      onClose={onClose}
+      open={open}
+      title="Take a snapshot?"
     >
       <Typography>
         Taking a snapshot will back up your Linode in its current state,

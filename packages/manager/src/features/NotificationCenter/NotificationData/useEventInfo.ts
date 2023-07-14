@@ -1,13 +1,15 @@
 import { Event } from '@linode/api-v4/lib/account/types';
 import { path } from 'ramda';
+
 import eventMessageGenerator from 'src/eventMessageGenerator';
+import { ApplicationStore } from 'src/store';
 import {
   EntityType,
   getEntityByIDFromStore,
 } from 'src/utilities/getEntityByIDFromStore';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+
 import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
-import { ApplicationStore } from 'src/store';
 
 /**
  * Shared helper logic for rendering events
@@ -16,9 +18,9 @@ import { ApplicationStore } from 'src/store';
 
 export interface EventInfo {
   duration: string;
-  message: string | null;
-  type: EntityVariants;
+  message: null | string;
   status?: string;
+  type: EntityVariants;
 }
 
 export const useEventInfo = (

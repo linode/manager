@@ -23,13 +23,13 @@ const option4 = {
 const fakeDeviceList = [
   {
     label: 'Disks',
-    value: 'disks',
     options: [option1, option2],
+    value: 'disks',
   },
   {
     label: 'Volumes',
-    value: 'volumes',
     options: [option3, option4],
+    value: 'volumes',
   },
 ];
 

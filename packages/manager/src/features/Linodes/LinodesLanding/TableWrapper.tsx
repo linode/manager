@@ -1,18 +1,20 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+
 import { OrderByProps } from 'src/components/OrderBy';
 import { Table, TableProps } from 'src/components/Table';
+
 import SortableTableHead from './SortableTableHead';
 
 interface Props {
-  dataLength: number;
-  toggleLinodeView: () => 'list' | 'grid';
-  linodeViewPreference: 'list' | 'grid';
-  toggleGroupLinodes: () => boolean;
-  linodesAreGrouped: boolean;
-  isVLAN?: boolean;
-  tableProps?: TableProps;
   children: React.ReactNode;
+  dataLength: number;
+  isVLAN?: boolean;
+  linodeViewPreference: 'grid' | 'list';
+  linodesAreGrouped: boolean;
+  tableProps?: TableProps;
+  toggleGroupLinodes: () => boolean;
+  toggleLinodeView: () => 'grid' | 'list';
 }
 
 type CombinedProps<T> = Omit<OrderByProps<T>, 'data'> & Props;
@@ -20,36 +22,36 @@ type CombinedProps<T> = Omit<OrderByProps<T>, 'data'> & Props;
 const TableWrapper = <T extends unknown>(props: CombinedProps<T>) => {
   const {
     dataLength,
+    handleOrderChange,
+    isVLAN,
+    linodeViewPreference,
+    linodesAreGrouped,
     order,
     orderBy,
-    handleOrderChange,
-    toggleLinodeView,
-    linodeViewPreference,
-    toggleGroupLinodes,
-    linodesAreGrouped,
-    isVLAN,
     tableProps,
+    toggleGroupLinodes,
+    toggleLinodeView,
   } = props;
 
   return (
-    <Grid container className="m0" spacing={0} style={{ width: '100%' }}>
-      <Grid xs={12} className="p0">
+    <Grid className="m0" container spacing={0} style={{ width: '100%' }}>
+      <Grid className="p0" xs={12}>
         <Table
           aria-label="List of Linodes"
-          rowCount={dataLength}
           colCount={5}
+          rowCount={dataLength}
           stickyHeader
           {...tableProps}
         >
           <SortableTableHead
+            handleOrderChange={handleOrderChange}
+            isVLAN={isVLAN}
+            linodeViewPreference={linodeViewPreference}
+            linodesAreGrouped={linodesAreGrouped}
             order={order}
             orderBy={orderBy}
-            handleOrderChange={handleOrderChange}
             toggleGroupLinodes={toggleGroupLinodes}
-            linodeViewPreference={linodeViewPreference}
             toggleLinodeView={toggleLinodeView}
-            linodesAreGrouped={linodesAreGrouped}
-            isVLAN={isVLAN}
           />
           {props.children}
         </Table>

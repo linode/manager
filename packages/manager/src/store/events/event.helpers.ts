@@ -4,8 +4,9 @@ import {
   EventAction,
   EventStatus,
 } from '@linode/api-v4/lib/account';
-import { parseAPIDate } from 'src/utilities/date';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
+
+import { parseAPIDate } from 'src/utilities/date';
 import updateRight from 'src/utilities/updateRight';
 
 import { EntityEvent, ExtendedEvent } from './event.types';
@@ -51,13 +52,13 @@ export const isRelevantDeletionEvent = (
  */
 export const findInEvents = (
   events: Pick<ExtendedEvent, 'entity'>[],
-  entity: null | Partial<Entity> = {}
+  entity: Partial<Entity> | null = {}
 ) => findIndex((e) => equals(e.entity, entity), events);
 
 export const setDeletedEvents = (events: Event[]) => {
   /** Create a list of deletion events. */
   const deletions = events.reduce((result: Event[], event) => {
-    const { entity, action, status } = event;
+    const { action, entity, status } = event;
     if (!entity) {
       return result;
     }
@@ -149,7 +150,7 @@ export const addToEvents = (prevArr: Event[], arr: Event[]) =>
   }, prevArr);
 
 export const isLongPendingEvent = (event: Event): boolean => {
-  const { status, action } = event;
+  const { action, status } = event;
   return status === 'scheduled' && action === 'image_upload';
 };
 

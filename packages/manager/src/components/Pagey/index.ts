@@ -6,8 +6,8 @@ import Pagey, {
 } from './Pagey';
 
 /* tslint:disable */
-export interface HandleOrderChange extends _HandleOrderChange {}
+export type HandleOrderChange = _HandleOrderChange;
 export type Order = _Order;
 export type OrderBy = _OrderBy;
-export interface PaginationProps<T> extends _PaginationProps<T> {}
+export type PaginationProps<T> = _PaginationProps<T>;
 export default Pagey;

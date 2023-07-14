@@ -6,11 +6,11 @@ import * as React from 'react';
 // State used for this hook
 interface StackScriptState {
   id?: number;
-  label: string;
   images: Image[];
-  username: string;
-  user_defined_fields: UserDefinedField[];
+  label: string;
   udf_data: any;
+  user_defined_fields: UserDefinedField[];
+  username: string;
 }
 
 // Function used by child components to handle StackScript selection
@@ -57,11 +57,11 @@ export const useStackScript = (images: Image[]): UseStackScriptReturn => {
   ) => {
     setStackScript({
       id,
-      username,
-      label,
       images: getCompatibleImages(images, stackScriptImages),
-      user_defined_fields,
+      label,
       udf_data: getDefaultUDFData(user_defined_fields),
+      user_defined_fields,
+      username,
     });
   };
 
@@ -95,11 +95,11 @@ export const useStackScript = (images: Image[]): UseStackScriptReturn => {
 // =============================================================================
 const emptyStackScriptState: StackScriptState = {
   id: undefined,
-  label: '',
   images: [],
-  username: '',
-  user_defined_fields: [],
+  label: '',
   udf_data: [],
+  user_defined_fields: [],
+  username: '',
 };
 
 const getCompatibleImages = (

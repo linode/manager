@@ -2,16 +2,17 @@ import {
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
-import * as React from 'react';
-import { Divider } from 'src/components/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Divider } from 'src/components/Divider';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
 import { useVlansQuery } from 'src/queries/vlans';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
@@ -21,20 +22,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  slotNumber: number;
+  fromAddonsPanel?: boolean;
+  handleChange: (updatedInterface: ExtendedInterface) => void;
+  ipamAddress: null | string;
+  ipamError?: string;
+  label: null | string;
+  labelError?: string;
   purpose: ExtendedPurpose;
-  label: string | null;
-  ipamAddress: string | null;
   readOnly: boolean;
   region?: string;
-  labelError?: string;
-  ipamError?: string;
-  handleChange: (updatedInterface: ExtendedInterface) => void;
-  fromAddonsPanel?: boolean;
+  slotNumber: number;
 }
 
 // To allow for empty slots, which the API doesn't account for
-export type ExtendedPurpose = InterfacePurpose | 'none';
+export type ExtendedPurpose = 'none' | InterfacePurpose;
 export interface ExtendedInterface extends Omit<InterfacePayload, 'purpose'> {
   purpose: ExtendedPurpose;
 }
@@ -45,16 +46,16 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
 
   const {
-    readOnly,
-    slotNumber,
-    purpose,
-    label,
+    fromAddonsPanel,
+    handleChange,
     ipamAddress,
     ipamError,
+    label,
     labelError,
+    purpose,
+    readOnly,
     region,
-    handleChange,
-    fromAddonsPanel,
+    slotNumber,
   } = props;
 
   const [newVlan, setNewVlan] = React.useState('');
@@ -93,28 +94,28 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
     const purpose = selected.value;
     handleChange({
-      purpose,
-      label: purpose === 'vlan' ? label : '',
       ipam_address: purpose === 'vlan' ? ipamAddress : '',
+      label: purpose === 'vlan' ? label : '',
+      purpose,
     });
   };
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    handleChange({ purpose, label, ipam_address: e.target.value });
+    handleChange({ ipam_address: e.target.value, label, purpose });
 
   const handleLabelChange = (selected: Item<string>) =>
     handleChange({
-      purpose,
       ipam_address: ipamAddress,
       label: selected?.value ?? '',
+      purpose,
     });
 
   const handleCreateOption = (_newVlan: string) => {
     setNewVlan(_newVlan);
     handleChange({
-      purpose,
       ipam_address: ipamAddress,
       label: _newVlan,
+      purpose,
     });
   };
 
@@ -131,67 +132,67 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                     (thisPurposeOption) => thisPurposeOption.value !== 'none'
                   )
             }
-            label={`eth${slotNumber}`}
             value={purposeOptions.find(
               (thisOption) => thisOption.value === purpose
             )}
-            onChange={handlePurposeChange}
             disabled={readOnly}
             isClearable={false}
+            label={`eth${slotNumber}`}
+            onChange={handlePurposeChange}
           />
         </Grid>
       )}
       {purpose === 'vlan' ? (
-        <Grid xs={12} sm={9} md={7}>
+        <Grid md={7} sm={9} xs={12}>
           <Grid
-            container
             sx={{
               flexDirection: 'row',
               [theme.breakpoints.down('sm')]: {
                 flexDirection: 'column',
               },
             }}
+            container
             spacing={isSmallBp ? 0 : 4}
           >
-            <Grid xs={12} sm={6}>
+            <Grid sm={6} xs={12}>
               <Select
-                inputId={`vlan-label-${slotNumber}`}
-                errorText={labelError}
-                options={vlanOptions}
-                label="VLAN"
-                placeholder="Create or select a VLAN"
-                creatable
-                createOptionPosition="first"
-                value={
-                  vlanOptions.find((thisVlan) => thisVlan.value === label) ??
-                  null
-                }
-                onChange={handleLabelChange}
-                onCreateOption={handleCreateOption}
-                isClearable
-                isDisabled={readOnly}
                 noOptionsMessage={() =>
                   isLoading
                     ? 'Loading...'
                     : 'You have no VLANs in this region. Type to create one.'
                 }
+                value={
+                  vlanOptions.find((thisVlan) => thisVlan.value === label) ??
+                  null
+                }
+                creatable
+                createOptionPosition="first"
+                errorText={labelError}
+                inputId={`vlan-label-${slotNumber}`}
+                isClearable
+                isDisabled={readOnly}
+                label="VLAN"
+                onChange={handleLabelChange}
+                onCreateOption={handleCreateOption}
+                options={vlanOptions}
+                placeholder="Create or select a VLAN"
               />
             </Grid>
-            <Grid xs={12} sm={6}>
+            <Grid sm={6} xs={12}>
               <TextField
-                inputId={`ipam-input-${slotNumber}`}
-                label="IPAM Address"
-                disabled={readOnly}
-                errorText={ipamError}
-                onChange={handleAddressChange}
-                optional
-                placeholder="192.0.2.0/24"
                 tooltipOnMouseEnter={() =>
                   sendLinodeCreateDocsEvent('IPAM Address Tooltip Hover')
                 }
                 tooltipText={
                   'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
                 }
+                disabled={readOnly}
+                errorText={ipamError}
+                inputId={`ipam-input-${slotNumber}`}
+                label="IPAM Address"
+                onChange={handleAddressChange}
+                optional
+                placeholder="192.0.2.0/24"
                 value={ipamAddress}
               />
             </Grid>

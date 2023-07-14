@@ -1,19 +1,20 @@
 import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
+
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
-  selectedCluster: string;
-  onChange: (value: string) => void;
-  onBlur: (e: any) => void;
-  error?: string;
   disabled?: boolean;
+  error?: string;
+  onBlur: (e: any) => void;
+  onChange: (value: string) => void;
+  selectedCluster: string;
 }
 
 export const ClusterSelect: React.FC<Props> = (props) => {
-  const { selectedCluster, error, onChange, onBlur, disabled } = props;
+  const { disabled, error, onBlur, onChange, selectedCluster } = props;
 
   const { data: clusters, error: clustersError } = useObjectStorageClusters();
   const { data: regions } = useRegionsQuery();
@@ -36,17 +37,17 @@ export const ClusterSelect: React.FC<Props> = (props) => {
   return (
     <RegionSelect
       data-qa-select-cluster
-      name="cluster"
+      disabled={disabled}
+      errorText={errorText}
+      handleSelection={(id) => onChange(id)}
+      isClearable={false}
+      isSearchable={false}
       label="Region"
+      name="cluster"
+      onBlur={onBlur}
+      placeholder="Select a Region"
       regions={regionOptions ?? []}
       selectedID={selectedCluster}
-      placeholder="Select a Region"
-      handleSelection={(id) => onChange(id)}
-      onBlur={onBlur}
-      isSearchable={false}
-      isClearable={false}
-      errorText={errorText}
-      disabled={disabled}
     />
   );
 };

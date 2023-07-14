@@ -1,5 +1,5 @@
-import * as Factory from 'factory.ts';
 import { Entity, Event } from '@linode/api-v4/lib/account/types';
+import * as Factory from 'factory.ts';
 import { DateTime } from 'luxon';
 
 export const entityFactory = Factory.Sync.makeFactory<Entity>({
@@ -10,28 +10,28 @@ export const entityFactory = Factory.Sync.makeFactory<Entity>({
 });
 
 export const eventFactory = Factory.Sync.makeFactory<Event>({
-  id: Factory.each((id) => id),
+  action: 'linode_boot',
   created: DateTime.local().toISO(),
+  duration: 0,
   entity: {
     id: 1,
     label: 'my-linode',
     type: 'linode',
     url: '/v4/linode/instances/30499244',
   },
+  id: Factory.each((id) => id),
+  message: null,
+  percent_complete: 10,
+  rate: null,
+  read: false,
   secondary_entity: {
     id: 1,
     label: 'My Config',
     type: 'linode_config',
     url: '/v4/linode/instances/1/configs/1',
   },
-  status: 'started',
-  rate: null,
-  username: 'prod-test-001',
   seen: false,
-  read: false,
-  action: 'linode_boot',
-  percent_complete: 10,
+  status: 'started',
   time_remaining: null,
-  duration: 0,
-  message: null,
+  username: 'prod-test-001',
 });

@@ -6,24 +6,24 @@
  * Provide a Header, Body, and Footer and this component provides the proper positioning for each.
  */
 
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
 
 export interface EntityDetailProps {
-  header: JSX.Element;
   body?: JSX.Element;
   footer: JSX.Element;
+  header: JSX.Element;
 }
 
 export const EntityDetail = (props: EntityDetailProps) => {
-  const { header, body, footer } = props;
+  const { body, footer, header } = props;
 
   return (
     <>
       {header}
       {body !== undefined && <GridBody xs={12}>{body}</GridBody>}
-      <GridFooter xs={12} body={body}>
+      <GridFooter body={body} xs={12}>
         {footer}
       </GridFooter>
     </>

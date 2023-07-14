@@ -3,20 +3,20 @@ import { getLinodeIPv6Ranges } from './IPTransfer';
 describe('getLinodeIPv6Ranges', () => {
   const ipv6Ranges = [
     {
-      range: '2fff:db08:e003:1::',
       prefix: 64,
+      range: '2fff:db08:e003:1::',
       region: 'us-east',
       route_target: '2600:3c03::f03c:92ff:fe8d:5c0c',
     },
     {
-      range: '2fff:db08:e003:2::',
       prefix: 64,
+      range: '2fff:db08:e003:2::',
       region: 'us-east',
       route_target: '2600:3c03::f03c:92ff:fe8d:5c0d',
     },
     {
-      range: '2fff:db08:e003:3::',
       prefix: 56,
+      range: '2fff:db08:e003:3::',
       region: 'us-east',
       route_target: '2600:3c03::f03c:92ff:fe8d:5c0d',
     },

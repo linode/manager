@@ -2,7 +2,7 @@ import { handleAPIErrors } from './formikErrorUtils';
 
 const errorWithoutField = [{ reason: 'Internal server error' }];
 const errorWithField = [
-  { reason: 'Invalid credit card number', field: 'data.card_number' },
+  { field: 'data.card_number', reason: 'Invalid credit card number' },
 ];
 
 const setFieldError = jest.fn();

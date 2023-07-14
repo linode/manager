@@ -1,12 +1,13 @@
 import * as React from 'react';
-import {
-  Dialog,
-  DialogProps as _DialogProps,
-} from 'src/components/Dialog/Dialog';
-import { Typography } from 'src/components/Typography';
+
 import { Button } from 'src/components/Button/Button';
+import {
+  DialogProps as _DialogProps,
+  Dialog,
+} from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 type DialogProps = Pick<_DialogProps, 'onClose' | 'open'>;
@@ -55,13 +56,13 @@ const PreferenceEditor: React.FC<DialogProps> = (props) => {
 
   return (
     <Dialog
-      title="Edit Preferences"
-      open={props.open}
-      onClose={props.onClose}
-      maxWidth="sm"
       fullWidth
+      maxWidth="sm"
+      onClose={props.onClose}
+      open={props.open}
+      title="Edit Preferences"
     >
-      {errorMessage && <Notice spacingBottom={8} error text={errorMessage} />}
+      {errorMessage && <Notice error spacingBottom={8} text={errorMessage} />}
       {successMessage && (
         <Notice spacingBottom={8} success text={successMessage} />
       )}
@@ -75,21 +76,21 @@ const PreferenceEditor: React.FC<DialogProps> = (props) => {
       {loading && <Typography>Loading...</Typography>}
       <div>
         <textarea
-          value={userPrefs}
           style={{
+            fontFamily: '"Ubuntu Mono", monospace"',
+            height: 300,
             marginTop: 16,
             width: 400,
-            height: 300,
-            fontFamily: '"Ubuntu Mono", monospace"',
           }}
           onChange={(e) => setUserPrefs(e.target.value)}
+          value={userPrefs}
         ></textarea>
       </div>
       <Button
-        style={{ marginTop: 8 }}
         buttonType="primary"
-        onClick={handleSavePreferences}
         loading={submitting}
+        onClick={handleSavePreferences}
+        style={{ marginTop: 8 }}
       >
         Submit
       </Button>

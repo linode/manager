@@ -1,5 +1,6 @@
 import { AnyAction, Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
+
 import {
   addEvents,
   setPollingInterval,
@@ -16,19 +17,19 @@ import {
 import { ExtendedEvent } from './event.types';
 
 export interface State {
-  events: ExtendedEvent[];
-  mostRecentEventTime: number;
   countUnseenEvents: number;
+  events: ExtendedEvent[];
   inProgressEvents: Record<number, number>;
+  mostRecentEventTime: number;
   pollingInterval: number;
   requestDeadline: number;
 }
 
 export const defaultState: State = {
-  events: [],
-  mostRecentEventTime: epoch,
   countUnseenEvents: 0,
+  events: [],
   inProgressEvents: {},
+  mostRecentEventTime: epoch,
   pollingInterval: 1,
   requestDeadline: Date.now(),
 };
@@ -45,21 +46,21 @@ const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
 
     return {
       ...state,
+      countUnseenEvents: getNumUnseenEvents(updatedEvents),
       events: updatedEvents,
+      inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
       mostRecentEventTime: events.reduce(
         mostRecentCreated,
         mostRecentEventTime
       ),
-      countUnseenEvents: getNumUnseenEvents(updatedEvents),
-      inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
     };
   }
 
   if (isType(action, updateEventsAsSeen)) {
     return {
       ...state,
-      events: state.events.map((event) => ({ ...event, seen: true })),
       countUnseenEvents: 0,
+      events: state.events.map((event) => ({ ...event, seen: true })),
     };
   }
 

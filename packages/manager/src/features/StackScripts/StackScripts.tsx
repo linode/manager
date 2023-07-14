@@ -6,6 +6,7 @@ import {
   Switch,
   withRouter,
 } from 'react-router-dom';
+
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
@@ -16,8 +17,8 @@ type Props = RouteComponentProps<{}>;
 
 export const StackScripts: React.FC<Props> = (props) => {
   const {
-    match: { path },
     location: { search },
+    match: { path },
   } = props;
 
   // Redirects to prevent breaking old stackscripts?type=whatever bookmarks
@@ -35,21 +36,21 @@ export const StackScripts: React.FC<Props> = (props) => {
       <Switch>
         <Route component={StackScriptsLanding} path={`${path}/account`} />
         <Route component={StackScriptsLanding} path={`${path}/community`} />
-        <Route component={StackScriptsLanding} path={path} exact />
+        <Route component={StackScriptsLanding} exact path={path} />
         <Route
-          render={() => <StackScriptCreate mode="create" />}
-          path={`${path}/create`}
           exact
+          path={`${path}/create`}
+          render={() => <StackScriptCreate mode="create" />}
         />
         <Route
-          render={() => <StackScriptCreate mode="edit" />}
-          path={`${path}/:stackScriptID/edit`}
           exact
+          path={`${path}/:stackScriptID/edit`}
+          render={() => <StackScriptCreate mode="edit" />}
         />
         <Route
           component={StackScriptsDetail}
-          path={`${path}/:stackScriptId`}
           exact
+          path={`${path}/:stackScriptId`}
         />
         <Redirect to={`${path}`} />
       </Switch>

@@ -1,7 +1,8 @@
-import { server } from './mocks/testServer';
 import Enzyme from 'enzyme';
 // @ts-expect-error not a big deal, we can suffer
 import Adapter from 'enzyme-adapter-react-16';
+
+import { server } from './mocks/testServer';
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
 afterAll(() => server.close());
@@ -28,12 +29,12 @@ HTMLCanvasElement.prototype.getContext = () => {
  */
 
 jest.mock('chart.js', () => ({
-  Chart: jest.fn(),
   _adapters: {
     _date: {
       override: jest.fn(),
     },
   },
+  Chart: jest.fn(),
   defaults: {
     global: {
       defaultFontFamily: '',
@@ -46,7 +47,7 @@ jest.mock('chart.js', () => ({
 jest.mock('highlight.js/lib/highlight', () => ({
   default: {
     configure: jest.fn(),
-    registerLanguage: jest.fn(),
     highlightBlock: jest.fn(),
+    registerLanguage: jest.fn(),
   },
 }));

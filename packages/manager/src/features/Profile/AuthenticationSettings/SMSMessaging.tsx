@@ -1,23 +1,25 @@
+import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
-import { Typography } from 'src/components/Typography';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { getFormattedNumber } from './PhoneVerification/helpers';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
-import { useProfile } from 'src/queries/profile';
+import { Typography } from 'src/components/Typography';
 import { useSMSOptOutMutation } from 'src/queries/profile';
-import { useSnackbar } from 'notistack';
+import { useProfile } from 'src/queries/profile';
+
+import { getFormattedNumber } from './PhoneVerification/helpers';
 
 export const SMSMessaging = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const {
-    mutateAsync: optOut,
     error,
     isLoading,
+    mutateAsync: optOut,
     reset,
   } = useSMSOptOutMutation();
   const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
@@ -45,12 +47,12 @@ export const SMSMessaging = () => {
   return (
     <>
       <StyledNotice
+        hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}
         spacingBottom={16}
         spacingLeft={1}
         spacingTop={12}
         success={hasVerifiedPhoneNumber}
         warning={!hasVerifiedPhoneNumber}
-        hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}
       >
         <Typography sx={{ fontSize: '0.875rem !important' }}>
           <b>
@@ -123,14 +125,14 @@ const StyledButton = styled(Button, {
 const StyledCopy = styled(Typography, {
   label: 'StyledCopy',
 })(() => ({
-  maxWidth: 960,
   lineHeight: '20px',
+  maxWidth: 960,
 }));
 
 const StyledNotice = styled(Notice, {
   label: 'StyledNotice',
 })<{ hasVerifiedPhoneNumber: boolean }>(
-  ({ theme, hasVerifiedPhoneNumber }) => ({
+  ({ hasVerifiedPhoneNumber, theme }) => ({
     borderLeft: hasVerifiedPhoneNumber
       ? `5px solid ${theme.color.green}`
       : `5px solid ${theme.color.yellow}`,

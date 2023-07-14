@@ -1,29 +1,31 @@
 import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getAll } from 'src/utilities/getAll';
-import {
-  addFirewallDevice,
-  createFirewall,
   CreateFirewallPayload,
-  deleteFirewall,
-  deleteFirewallDevice,
   Firewall,
   FirewallDevice,
   FirewallDevicePayload,
   FirewallRules,
+  addFirewallDevice,
+  createFirewall,
+  deleteFirewall,
+  deleteFirewallDevice,
   getFirewall,
   getFirewallDevices,
   getFirewalls,
   updateFirewall,
   updateFirewallRules,
 } from '@linode/api-v4/lib/firewalls';
-import { itemInListCreationHandler, updateInPaginatedStore } from './base';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+
 import { EventWithStore } from 'src/events';
+import { getAll } from 'src/utilities/getAll';
+
+import { itemInListCreationHandler, updateInPaginatedStore } from './base';
 
 export const queryKey = 'firewall';
 

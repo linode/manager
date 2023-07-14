@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
+
 import { LinearProgress } from 'src/components/LinearProgress';
 import { isPropValid } from 'src/utilities/isPropValid';
 
@@ -27,21 +28,19 @@ export interface BarPercentProps {
  */
 export const BarPercent = (props: BarPercentProps) => {
   const {
-    max,
-    value,
     className,
-    valueBuffer,
     isFetchingValue,
-    rounded,
+    max,
     narrow,
+    rounded,
     sx,
+    value,
+    valueBuffer,
   } = props;
 
   return (
     <StyledDiv className={`${className}`}>
       <StyledLinearProgress
-        value={getPercentage(value, max)}
-        valueBuffer={valueBuffer}
         variant={
           isFetchingValue
             ? 'indeterminate'
@@ -49,9 +48,11 @@ export const BarPercent = (props: BarPercentProps) => {
             ? 'buffer'
             : 'determinate'
         }
-        rounded={rounded}
         narrow={narrow}
+        rounded={rounded}
         sx={sx}
+        value={getPercentage(value, max)}
+        valueBuffer={valueBuffer}
       />
     </StyledDiv>
   );
@@ -63,8 +64,8 @@ export const getPercentage = (value: number, max: number) =>
   (value / max) * 100;
 
 const StyledDiv = styled('div')({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   position: 'relative',
 });
 
@@ -72,17 +73,17 @@ const StyledLinearProgress = styled(LinearProgress, {
   label: 'StyledLinearProgress',
   shouldForwardProp: (prop) => isPropValid(['rounded'], prop),
 })<Partial<BarPercentProps>>(({ theme, ...props }) => ({
-  backgroundColor: theme.color.grey2,
-  padding: props.narrow ? 8 : 12,
-  width: '100%',
-  borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
-  '& .MuiLinearProgress-barColorPrimary': {
-    backgroundColor: '#5ad865',
-  },
   '& .MuiLinearProgress-bar2Buffer': {
     backgroundColor: '#99ec79',
+  },
+  '& .MuiLinearProgress-barColorPrimary': {
+    backgroundColor: '#5ad865',
   },
   '& .MuiLinearProgress-dashed': {
     display: 'none',
   },
+  backgroundColor: theme.color.grey2,
+  borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
+  padding: props.narrow ? 8 : 12,
+  width: '100%',
 }));

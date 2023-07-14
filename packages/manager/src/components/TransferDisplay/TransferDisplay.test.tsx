@@ -1,13 +1,15 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
+
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { TransferDisplay } from './TransferDisplay';
 
 const MockData = {
-  used: 0,
-  quota: 0,
   billable: 0,
+  quota: 0,
+  used: 0,
 };
 
 const transferDisplayPercentageSubstring = /You have used \d+\.\d\d%/;
@@ -20,9 +22,9 @@ describe('TransferDisplay', () => {
       rest.get('*/account/transfer', (req, res, ctx) => {
         return res(
           ctx.json({
-            used: 50,
-            quota: 11347,
             billable: 0,
+            quota: 11347,
+            used: 50,
           })
         );
       })

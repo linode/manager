@@ -2,11 +2,13 @@ import { Filter, Params } from '@linode/api-v4';
 import {
   createLongviewClient as _create,
   deleteLongviewClient as _delete,
-  getLongviewClients,
   LongviewClient,
+  getLongviewClients,
   updateLongviewClient as update,
 } from '@linode/api-v4/lib/longview';
+
 import { getAll } from 'src/utilities/getAll';
+
 import { createRequestThunk } from '../store.helpers';
 import {
   createLongviewClient as _createLongviewClientActions,
@@ -16,8 +18,8 @@ import {
 } from './longview.actions';
 
 const _getAllLongviewClients = (payload: {
-  params?: Params;
   filter?: Filter;
+  params?: Params;
 }) =>
   getAll<LongviewClient>((passedParams, passedFilter) =>
     getLongviewClients(passedParams, passedFilter)

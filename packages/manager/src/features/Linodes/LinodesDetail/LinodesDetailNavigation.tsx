@@ -1,3 +1,4 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import {
   matchPath,
@@ -5,19 +6,19 @@ import {
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+
+import { CircleProgress } from 'src/components/CircleProgress';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(
@@ -60,19 +61,19 @@ const LinodesDetailNavigation = () => {
       title: 'Network',
     },
     {
+      hidden: isBareMetalInstance,
       routeName: `${url}/storage`,
       title: 'Storage',
-      hidden: isBareMetalInstance,
     },
     {
+      hidden: isBareMetalInstance,
       routeName: `${url}/configurations`,
       title: 'Configurations',
-      hidden: isBareMetalInstance,
     },
     {
+      hidden: isBareMetalInstance,
       routeName: `${url}/backup`,
       title: 'Backups',
-      hidden: isBareMetalInstance,
     },
     {
       routeName: `${url}/activity`,
@@ -116,13 +117,13 @@ const LinodesDetailNavigation = () => {
           tabs[getIndex()]?.title ?? 'Detail View'
         }`}
       />
-      <SMTPRestrictionText supportLink={{ label: linode?.label, id }}>
+      <SMTPRestrictionText supportLink={{ id, label: linode?.label }}>
         {({ text }) =>
           text !== null ? (
             <DismissibleBanner
-              warning
               preferenceKey={`smtp-restriction-notice-${linode?.label}`}
               spacingTop={32}
+              warning
             >
               <Grid xs={12}>{text}</Grid>
             </DismissibleBanner>

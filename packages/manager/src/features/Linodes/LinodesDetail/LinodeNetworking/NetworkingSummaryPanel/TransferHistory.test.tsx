@@ -1,31 +1,32 @@
-import { DateTime } from 'luxon';
-import {
-  sumPublicOutboundTraffic,
-  parseMonthOffset,
-  getOffsetFromDate,
-} from './TransferHistory';
 import { Stats } from '@linode/api-v4/lib/linodes';
+import { DateTime } from 'luxon';
+
+import {
+  getOffsetFromDate,
+  parseMonthOffset,
+  sumPublicOutboundTraffic,
+} from './TransferHistory';
 
 describe('combineGraphData', () => {
   const netStats: Stats['data']['netv4'] = {
-    private_in: [],
-    private_out: [],
     in: [],
     out: [
       [1, 100],
       [1, 200],
       [1, 300],
     ],
+    private_in: [],
+    private_out: [],
   };
 
   const stats: Stats = {
-    title: 'Mock Stats',
     data: {
       cpu: [],
+      io: { io: [], swap: [] },
       netv4: netStats,
       netv6: netStats,
-      io: { io: [], swap: [] },
     },
+    title: 'Mock Stats',
   };
 
   it('sums  public outbound v4 and v6 data', () => {
@@ -41,7 +42,7 @@ const now = DateTime.fromISO('2020-07-01T12:00:00');
 
 describe('parseMonthOffset', () => {
   it('returns the current year and month with an offset of 0', () => {
-    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+    const { humanizedDate, longHumanizedDate, month, year } = parseMonthOffset(
       0,
       now
     );
@@ -52,7 +53,7 @@ describe('parseMonthOffset', () => {
   });
 
   it('correctly adjusts the month with a negative offset', () => {
-    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+    const { humanizedDate, longHumanizedDate, month, year } = parseMonthOffset(
       -1,
       now
     );
@@ -63,7 +64,7 @@ describe('parseMonthOffset', () => {
   });
 
   it('correctly adjusts the year with a negative offset', () => {
-    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+    const { humanizedDate, longHumanizedDate, month, year } = parseMonthOffset(
       -7,
       now
     );
@@ -74,7 +75,7 @@ describe('parseMonthOffset', () => {
   });
 
   it('correctly adjusts the month with a positive offset', () => {
-    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+    const { humanizedDate, longHumanizedDate, month, year } = parseMonthOffset(
       2,
       now
     );
@@ -85,7 +86,7 @@ describe('parseMonthOffset', () => {
   });
 
   it('correctly adjusts the year with a positive offset', () => {
-    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+    const { humanizedDate, longHumanizedDate, month, year } = parseMonthOffset(
       9,
       now
     );

@@ -1,6 +1,7 @@
-import * as React from 'react';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import * as React from 'react';
+
 import { TextField, TextFieldProps } from '../TextField';
 
 export const HideShowText = (props: TextFieldProps) => {
@@ -11,10 +12,6 @@ export const HideShowText = (props: TextFieldProps) => {
   return (
     <TextField
       {...props}
-      dataAttrs={{
-        'data-qa-hide': hidden,
-      }}
-      type={hidden ? 'password' : 'text'}
       InputProps={{
         startAdornment: hidden ? (
           <Visibility onClick={toggle} style={{ marginLeft: 14 }} />
@@ -22,7 +19,11 @@ export const HideShowText = (props: TextFieldProps) => {
           <VisibilityOff onClick={toggle} style={{ marginLeft: 14 }} />
         ),
       }}
+      dataAttrs={{
+        'data-qa-hide': hidden,
+      }}
       autoComplete="off"
+      type={hidden ? 'password' : 'text'}
     />
   );
 };

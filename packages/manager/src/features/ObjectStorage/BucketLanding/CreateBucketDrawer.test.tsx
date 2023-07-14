@@ -1,15 +1,17 @@
-import * as React from 'react';
-import { CreateBucketDrawer } from './CreateBucketDrawer';
 import { waitFor } from '@testing-library/react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import userEvent from '@testing-library/user-event';
-import { rest, server } from 'src/mocks/testServer';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
+import * as React from 'react';
+
 import {
   accountSettingsFactory,
   objectStorageClusterFactory,
   regionFactory,
 } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { CreateBucketDrawer } from './CreateBucketDrawer';
 
 const props = {
   isOpen: true,
@@ -41,8 +43,8 @@ describe('CreateBucketDrawer', () => {
           ctx.json(
             makeResourcePage(
               objectStorageClusterFactory.buildList(1, {
-                region: 'us-east',
                 id: 'us-east-1',
+                region: 'us-east',
               })
             )
           )
@@ -56,10 +58,10 @@ describe('CreateBucketDrawer', () => {
     );
 
     const {
-      getByTestId,
+      findByText,
       getByLabelText,
       getByPlaceholderText,
-      findByText,
+      getByTestId,
     } = renderWithTheme(<CreateBucketDrawer {...props} />);
 
     userEvent.type(getByLabelText('Label'), 'my-test-bucket');

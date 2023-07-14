@@ -2,10 +2,11 @@ import {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls/types';
+
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
-export type FirewallPreset = 'ssh' | 'http' | 'https' | 'mysql' | 'dns';
+export type FirewallPreset = 'dns' | 'http' | 'https' | 'mysql' | 'ssh';
 
 // Predefined Firewall options for Select components (long-form).
 export const firewallOptionItemsLong = [
@@ -70,11 +71,11 @@ export const addressOptions = [
 ];
 
 export const portPresets: Record<FirewallPreset, string> = {
-  ssh: '22',
+  dns: '53',
   http: '80',
   https: '443',
   mysql: '3306',
-  dns: '53',
+  ssh: '22',
 };
 
 export const allIPv4 = '0.0.0.0/0';
@@ -91,72 +92,72 @@ export interface PredefinedFirewall {
 }
 
 export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
-  ssh: {
-    label: 'SSH',
-    inbound: [
-      {
-        label: `accept-inbound-SSH`,
-        ports: portPresets.ssh,
-        protocol: 'TCP',
-        addresses: allIPs,
-        action: 'ACCEPT',
-      },
-    ],
-  },
-  http: {
-    label: 'HTTP',
-    inbound: [
-      {
-        label: `accept-inbound-HTTP`,
-        ports: portPresets.http,
-        protocol: 'TCP',
-        addresses: allIPs,
-        action: 'ACCEPT',
-      },
-    ],
-  },
-  https: {
-    label: 'HTTPS',
-    inbound: [
-      {
-        label: `accept-inbound-HTTPS`,
-        ports: portPresets.https,
-        protocol: 'TCP',
-        addresses: allIPs,
-        action: 'ACCEPT',
-      },
-    ],
-  },
-  mysql: {
-    label: 'MySQL',
-    inbound: [
-      {
-        label: `accept-inbound-MYSQL`,
-        ports: portPresets.mysql,
-        protocol: 'TCP',
-        addresses: allIPs,
-        action: 'ACCEPT',
-      },
-    ],
-  },
   dns: {
-    label: 'DNS',
     inbound: [
       {
+        action: 'ACCEPT',
+        addresses: allIPs,
         label: `accept-inbound-DNS`,
         ports: portPresets.dns,
         protocol: 'TCP',
-        addresses: allIPs,
-        action: 'ACCEPT',
       },
     ],
+    label: 'DNS',
+  },
+  http: {
+    inbound: [
+      {
+        action: 'ACCEPT',
+        addresses: allIPs,
+        label: `accept-inbound-HTTP`,
+        ports: portPresets.http,
+        protocol: 'TCP',
+      },
+    ],
+    label: 'HTTP',
+  },
+  https: {
+    inbound: [
+      {
+        action: 'ACCEPT',
+        addresses: allIPs,
+        label: `accept-inbound-HTTPS`,
+        ports: portPresets.https,
+        protocol: 'TCP',
+      },
+    ],
+    label: 'HTTPS',
+  },
+  mysql: {
+    inbound: [
+      {
+        action: 'ACCEPT',
+        addresses: allIPs,
+        label: `accept-inbound-MYSQL`,
+        ports: portPresets.mysql,
+        protocol: 'TCP',
+      },
+    ],
+    label: 'MySQL',
+  },
+  ssh: {
+    inbound: [
+      {
+        action: 'ACCEPT',
+        addresses: allIPs,
+        label: `accept-inbound-SSH`,
+        ports: portPresets.ssh,
+        protocol: 'TCP',
+      },
+    ],
+    label: 'SSH',
   },
 };
 
 export const predefinedFirewallFromRule = (
   rule: FirewallRuleType
 ): FirewallPreset | undefined => {
-  const { protocol, addresses, ports } = rule;
+  const { addresses, ports, protocol } = rule;
 
   // All predefined Firewalls have a protocol of TCP.
   if (protocol !== 'TCP') {

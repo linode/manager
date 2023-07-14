@@ -1,10 +1,12 @@
-import Axios from 'axios';
 import { APIError } from '@linode/api-v4/lib/types';
-import { IncidentResponse, MaintenanceResponse } from './types';
-import { useQuery, UseQueryOptions } from 'react-query';
+import Axios from 'axios';
+import { UseQueryOptions, useQuery } from 'react-query';
+
 import { LINODE_STATUS_PAGE_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+
 import { queryPresets } from '../base';
+import { IncidentResponse, MaintenanceResponse } from './types';
 
 /**
  * Documentation for the Linode-specific statuspage API can be found at:

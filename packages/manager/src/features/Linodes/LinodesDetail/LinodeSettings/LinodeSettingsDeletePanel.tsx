@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Typography } from 'src/components/Typography';
+
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useLinodeDeleteMutation,
@@ -12,16 +13,16 @@ import {
 } from 'src/queries/linodes/linodes';
 
 interface Props {
-  linodeId: number;
   isReadOnly?: boolean;
+  linodeId: number;
 }
 
-export const LinodeSettingsDeletePanel = ({ linodeId, isReadOnly }: Props) => {
+export const LinodeSettingsDeletePanel = ({ isReadOnly, linodeId }: Props) => {
   const { data: linode } = useLinodeQuery(linodeId);
   const {
-    mutateAsync: deleteLinode,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: deleteLinode,
   } = useLinodeDeleteMutation(linodeId);
 
   const history = useHistory();
@@ -36,13 +37,13 @@ export const LinodeSettingsDeletePanel = ({ linodeId, isReadOnly }: Props) => {
 
   return (
     <React.Fragment>
-      <Accordion heading="Delete Linode" defaultExpanded>
+      <Accordion defaultExpanded heading="Delete Linode">
         <Button
           buttonType="primary"
+          data-qa-delete-linode
           disabled={isReadOnly}
           onClick={() => setOpen(true)}
           style={{ marginBottom: 8 }}
-          data-qa-delete-linode
         >
           Delete
         </Button>
@@ -51,19 +52,19 @@ export const LinodeSettingsDeletePanel = ({ linodeId, isReadOnly }: Props) => {
         </Typography>
       </Accordion>
       <TypeToConfirmDialog
-        title={`Delete ${linode?.label}?`}
-        label={'Linode Label'}
         entity={{
-          type: 'Linode',
           action: 'deletion',
           name: linode?.label,
           primaryBtnText: 'Delete',
+          type: 'Linode',
         }}
-        open={open}
-        loading={isLoading}
         errors={error}
-        onClose={() => setOpen(false)}
+        label={'Linode Label'}
+        loading={isLoading}
         onClick={onDelete}
+        onClose={() => setOpen(false)}
+        open={open}
+        title={`Delete ${linode?.label}?`}
       >
         <Notice warning>
           <Typography style={{ fontSize: '0.875rem' }}>

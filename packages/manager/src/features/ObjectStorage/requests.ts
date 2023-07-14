@@ -8,21 +8,21 @@ export const uploadObject = (
   onUploadProgress: (e: ProgressEvent) => void
 ) => {
   const config: AxiosRequestConfig = {
-    url: signedUrl,
-    method: 'PUT',
+    data: file,
     headers: {
       'Content-Type': file.type,
     },
-    data: file,
+    method: 'PUT',
     onUploadProgress,
+    url: signedUrl,
   };
   return axiosInstance.request(config);
 };
 
 export const deleteObject = (signedUrl: string) => {
   const config: AxiosRequestConfig = {
-    url: signedUrl,
     method: 'DELETE',
+    url: signedUrl,
   };
   return axiosInstance.request(config);
 };

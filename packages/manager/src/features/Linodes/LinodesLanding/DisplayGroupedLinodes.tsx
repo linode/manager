@@ -1,29 +1,30 @@
 import { Config } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'ramda';
 import * as React from 'react';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+
 import GridView from 'src/assets/icons/grid-view.svg';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+import { Box } from 'src/components/Box';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import { Box } from 'src/components/Box';
 import {
   MIN_PAGE_SIZE,
   PaginationFooter,
   getMinimumPageSizeForNumberOfItems,
 } from 'src/components/PaginationFooter/PaginationFooter';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { Tooltip } from 'src/components/Tooltip';
+import { Typography } from 'src/components/Typography';
 import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
-import TableWrapper from './TableWrapper';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
+
 import { RenderLinodesProps } from './DisplayLinodes';
 import {
   StyledControlHeader,
@@ -31,8 +32,15 @@ import {
   StyledTagHeaderRow,
   StyledToggleButton,
 } from './DisplayLinodes.styles';
+import TableWrapper from './TableWrapper';
 
 interface Props {
+  component: React.ComponentType<RenderLinodesProps>;
+  data: LinodeWithMaintenance[];
+  display: 'grid' | 'list';
+  isVLAN?: boolean;
+  linodeViewPreference: 'grid' | 'list';
+  linodesAreGrouped: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
@@ -40,32 +48,26 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  display: 'grid' | 'list';
-  component: React.ComponentType<RenderLinodesProps>;
-  data: LinodeWithMaintenance[];
   someLinodesHaveMaintenance: boolean;
-  toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;
-  linodeViewPreference: 'grid' | 'list';
-  linodesAreGrouped: boolean;
-  isVLAN?: boolean;
+  toggleLinodeView: () => 'grid' | 'list';
 }
 
 type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
 
 export const DisplayGroupedLinodes = (props: CombinedProps) => {
   const {
+    component: Component,
     data,
     display,
-    component: Component,
-    order,
-    orderBy,
     handleOrderChange,
-    toggleLinodeView,
-    toggleGroupLinodes,
+    isVLAN,
     linodeViewPreference,
     linodesAreGrouped,
-    isVLAN,
+    order,
+    orderBy,
+    toggleGroupLinodes,
+    toggleLinodeView,
     ...rest
   } = props;
 
@@ -73,12 +75,12 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
 
   const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = {
+    dataLength,
     handleOrderChange,
+    isVLAN,
     order,
     orderBy,
     someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
-    dataLength,
-    isVLAN,
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -92,36 +94,36 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
   if (display === 'grid') {
     return (
       <>
-        <Grid xs={12} className={'px0'}>
+        <Grid className={'px0'} xs={12}>
           <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
-            <div id="displayViewDescription" className="visually-hidden">
+            <div className="visually-hidden" id="displayViewDescription">
               Currently in {linodeViewPreference} view
             </div>
             <Tooltip placement="top" title="List view">
               <StyledToggleButton
-                aria-label="Toggle display"
                 aria-describedby={'displayViewDescription'}
-                onClick={toggleLinodeView}
+                aria-label="Toggle display"
                 disableRipple
                 isActive={linodesAreGrouped}
+                onClick={toggleLinodeView}
                 size="large"
               >
                 <GridView />
               </StyledToggleButton>
             </Tooltip>
 
-            <div id="groupByDescription" className="visually-hidden">
+            <div className="visually-hidden" id="groupByDescription">
               {linodesAreGrouped
                 ? 'group by tag is currently enabled'
                 : 'group by tag is currently disabled'}
             </div>
             <Tooltip placement="top-end" title="Ungroup by tag">
               <StyledToggleButton
-                aria-label={`Toggle group by tag`}
                 aria-describedby={'groupByDescription'}
-                onClick={toggleGroupLinodes}
+                aria-label={`Toggle group by tag`}
                 disableRipple
                 isActive={linodesAreGrouped}
+                onClick={toggleGroupLinodes}
                 size="large"
               >
                 <GroupByTag />
@@ -136,15 +138,13 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
         ) : null}
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
-            <Box key={tag} sx={{ marginBottom: 2 }} data-qa-tag-header={tag}>
+            <Box data-qa-tag-header={tag} key={tag} sx={{ marginBottom: 2 }}>
               <Grid container>
                 <Grid xs={12}>
                   <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
                 </Grid>
               </Grid>
               <Paginate
-                data={linodes}
-                // If there are more Linodes with maintenance than the current page size, show the minimum
                 // page size needed to show ALL Linodes with maintenance.
                 pageSize={
                   numberOfLinodesWithMaintenance > infinitePageSize
@@ -153,28 +153,30 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
                       )
                     : infinitePageSize
                 }
+                // If there are more Linodes with maintenance than the current page size, show the minimum
+                data={linodes}
                 pageSizeSetter={setInfinitePageSize}
               >
                 {({
+                  count,
                   data: paginatedData,
                   handlePageChange,
                   handlePageSizeChange,
                   page,
                   pageSize,
-                  count,
                 }) => {
                   const finalProps = {
                     ...rest,
+                    count,
                     data: paginatedData,
-                    pageSize,
-                    page,
-                    handlePageSizeChange,
-                    handlePageChange,
                     handleOrderChange,
+                    handlePageChange,
+                    handlePageSizeChange,
+                    isVLAN,
                     order,
                     orderBy,
-                    isVLAN,
-                    count,
+                    page,
+                    pageSize,
                   };
                   return (
                     <React.Fragment>
@@ -182,11 +184,11 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
                       <Grid xs={12}>
                         <PaginationFooter
                           count={count}
+                          eventCategory={'linodes landing'}
                           handlePageChange={handlePageChange}
                           handleSizeChange={handlePageSizeChange}
-                          pageSize={pageSize}
                           page={page}
-                          eventCategory={'linodes landing'}
+                          pageSize={pageSize}
                           showAll
                         />
                       </Grid>
@@ -207,8 +209,8 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
         {...tableWrapperProps}
         linodeViewPreference="list"
         linodesAreGrouped={true}
-        toggleLinodeView={toggleLinodeView}
         toggleGroupLinodes={toggleGroupLinodes}
+        toggleLinodeView={toggleLinodeView}
       >
         {orderedGroupedLinodes.length === 0 ? (
           <TableBody>
@@ -224,25 +226,25 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
                 pageSizeSetter={setInfinitePageSize}
               >
                 {({
+                  count,
                   data: paginatedData,
                   handlePageChange,
                   handlePageSizeChange,
                   page,
                   pageSize,
-                  count,
                 }) => {
                   const finalProps = {
                     ...rest,
+                    count,
                     data: paginatedData,
-                    pageSize,
-                    page,
-                    handlePageSizeChange,
-                    handlePageChange,
                     handleOrderChange,
+                    handlePageChange,
+                    handlePageSizeChange,
+                    isVLAN,
                     order,
                     orderBy,
-                    isVLAN,
-                    count,
+                    page,
+                    pageSize,
                   };
                   return (
                     <TableBody data-qa-tag-header={tag}>
@@ -257,11 +259,11 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
                           <TableCell colSpan={7} sx={{ padding: 0 }}>
                             <PaginationFooter
                               count={count}
+                              eventCategory={'linodes landing'}
                               handlePageChange={handlePageChange}
                               handleSizeChange={handlePageSizeChange}
-                              pageSize={pageSize}
                               page={page}
-                              eventCategory={'linodes landing'}
+                              pageSize={pageSize}
                               // Disabling showAll as it is impacting page performance.
                               showAll={false}
                             />

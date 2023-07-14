@@ -3,6 +3,6 @@ import ListItemText, {
 } from '@mui/material/ListItemText';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface ListItemTextProps extends _ListItemTextProps {}
+export type ListItemTextProps = _ListItemTextProps;
 
 export default ListItemText;

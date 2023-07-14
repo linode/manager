@@ -1,7 +1,9 @@
 import React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { RenameDiskDrawer } from './RenameDiskDrawer';
+
 import { linodeDiskFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { RenameDiskDrawer } from './RenameDiskDrawer';
 
 describe('RenameDiskDrawer', () => {
   it('should render', () => {
@@ -11,10 +13,10 @@ describe('RenameDiskDrawer', () => {
 
     const { getByDisplayValue, getByText } = renderWithTheme(
       <RenameDiskDrawer
-        open={true}
-        onClose={jest.fn()}
-        linodeId={1}
         disk={disk}
+        linodeId={1}
+        onClose={jest.fn()}
+        open={true}
       />
     );
 

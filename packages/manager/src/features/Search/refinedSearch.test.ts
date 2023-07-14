@@ -1,10 +1,12 @@
 // import { searchableItems } from 'src/__data__/searchableItems
 import searchString from 'search-string';
+
 import { searchableItems } from 'src/__data__/searchableItems';
-import * as RefinedSearch from './refinedSearch';
-import { QueryJSON } from './refinedSearch';
-import { SearchableItem } from './search.interfaces';
+
 import { COMPRESSED_IPV6_REGEX } from './refinedSearch';
+import { QueryJSON } from './refinedSearch';
+import * as RefinedSearch from './refinedSearch';
+import { SearchableItem } from './search.interfaces';
 
 const {
   areAllTrue,
@@ -170,13 +172,13 @@ describe('Refined Search', () => {
 });
 
 const mockLinode: SearchableItem = {
-  value: 1234,
-  label: 'my-linode',
-  entityType: 'linode',
   data: {
-    tags: ['my-app', 'production'],
     ips: ['1234'],
+    tags: ['my-app', 'production'],
   },
+  entityType: 'linode',
+  label: 'my-linode',
+  value: 1234,
 };
 
 describe('formatQuery', () => {

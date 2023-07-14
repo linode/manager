@@ -1,9 +1,12 @@
-import React from 'react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
+
 import { LOGIN_ROOT } from 'src/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { screen } from '@testing-library/react';
+
 import { TPADialog } from './TPADialog';
+
 import type { TPADialogProps } from './TPADialog';
 
 jest.mock('src/hooks/useFlags', () => ({
@@ -12,15 +15,15 @@ jest.mock('src/hooks/useFlags', () => ({
     tpaProviders: [
       {
         displayName: 'Google',
-        name: 'google',
         href: 'https://google.com',
         icon: '"GoogleIcon"',
+        name: 'google',
       },
       {
         displayName: 'GitHub',
-        name: 'github',
         href: 'https://github.com',
         icon: 'GitHubIcon',
+        name: 'github',
       },
     ],
   }),
@@ -34,8 +37,8 @@ const props: TPADialogProps = {
     name: 'google',
   },
   newProvider: 'password',
-  open: true,
   onClose: jest.fn(),
+  open: true,
 };
 
 describe('TPADialog', () => {

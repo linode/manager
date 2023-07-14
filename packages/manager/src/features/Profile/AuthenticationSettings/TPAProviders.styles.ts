@@ -1,9 +1,10 @@
-import { Button } from 'src/components/Button/Button';
 import Grid from '@mui/material/Unstable_Grid2';
-import Paper from 'src/components/core/Paper';
-import { Typography } from 'src/components/Typography';
-import { Notice } from 'src/components/Notice/Notice';
 import { styled } from '@mui/material/styles';
+
+import { Button } from 'src/components/Button/Button';
+import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',
@@ -17,56 +18,56 @@ export const StyledCopy = styled(Typography, {
   label: 'StyledCopy',
 })(({ theme }) => ({
   lineHeight: '1.25rem',
-  marginTop: theme.spacing(),
   marginBottom: theme.spacing(2),
+  marginTop: theme.spacing(),
   maxWidth: 960,
 }));
 
 export const StyledProvidersListGrid = styled(Grid, {
   label: 'StyledProvidersListGrid',
 })(({ theme }) => ({
-  marginBottom: 0,
-  width: 'calc(100% + 24px)',
   '& .MuiGrid-item': {
-    [theme.breakpoints.down(1100)]: {
-      flexBasis: '50%',
-      maxWidth: '50%',
-    },
     [theme.breakpoints.down('sm')]: {
       flexBasis: '100%',
       maxWidth: '100%',
     },
+    [theme.breakpoints.down(1100)]: {
+      flexBasis: '50%',
+      maxWidth: '50%',
+    },
   },
+  marginBottom: 0,
   [theme.breakpoints.down('sm')]: {
     marginTop: theme.spacing(),
   },
+  width: 'calc(100% + 24px)',
 }));
 
 export const StyledButton = styled(Button, {
   label: 'StyledButton',
-})<{ isButtonEnabled: boolean }>(({ theme, isButtonEnabled }) => ({
-  borderRadius: 1,
-  backgroundColor: theme.name === 'light' ? '#f5f6f7' : '#444',
-  marginTop: theme.spacing(),
-  minHeight: 70,
-  paddingRight: `calc(${theme.spacing(3)} - 4px)`,
-  paddingLeft: `calc(${theme.spacing(3)} - 4px)`,
-  width: 'calc(100% - 8px)',
-  [theme.breakpoints.down('md')]: {
-    marginLeft: 0,
-  },
-  [theme.breakpoints.down('sm')]: {
-    marginTop: 0,
-    marginLeft: 0,
+})<{ isButtonEnabled: boolean }>(({ isButtonEnabled, theme }) => ({
+  '& > span': {
+    color: theme.color.headline,
+    display: 'inline-block',
+    width: '100%',
   },
   '&:hover': {
     backgroundColor: theme.color.grey6,
   },
-  '& > span': {
-    display: 'inline-block',
-    width: '100%',
-    color: theme.color.headline,
+  backgroundColor: theme.name === 'light' ? '#f5f6f7' : '#444',
+  borderRadius: 1,
+  marginTop: theme.spacing(),
+  minHeight: 70,
+  paddingLeft: `calc(${theme.spacing(3)} - 4px)`,
+  paddingRight: `calc(${theme.spacing(3)} - 4px)`,
+  [theme.breakpoints.down('md')]: {
+    marginLeft: 0,
   },
+  [theme.breakpoints.down('sm')]: {
+    marginLeft: 0,
+    marginTop: 0,
+  },
+  width: 'calc(100% - 8px)',
   ...(isButtonEnabled && {
     border: `1px solid ${theme.palette.primary.main} !important`,
   }),

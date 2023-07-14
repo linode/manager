@@ -1,6 +1,7 @@
 import { CreditCardSchema } from '@linode/validation';
 import { DateTime } from 'luxon';
 import { take, takeLast } from 'ramda';
+
 import {
   formatExpiry,
   hasExpirationPassedFor,
@@ -12,7 +13,7 @@ const currentYearFirstTwoDigits = take(2, String(currentYear));
 
 describe('isCreditCardExpired', () => {
   describe('give today is 01/01/2019', () => {
-    const date = DateTime.fromObject({ year: 2019, month: 1, day: 1 });
+    const date = DateTime.fromObject({ day: 1, month: 1, year: 2019 });
 
     const isCreditCardExpired = hasExpirationPassedFor(date);
 
@@ -88,16 +89,16 @@ describe('credit card expiry date parsing and validation', () => {
     {
       data: {
         card_number: '1111111111111111',
-        expiry: `09/${takeLast(2, String(currentYear + 19))}`,
         cvv: '123',
+        expiry: `09/${takeLast(2, String(currentYear + 19))}`,
       },
       result: true,
     },
     {
       data: {
         card_number: '1111111111111111',
-        expiry: `09/${takeLast(2, String(currentYear + 1))}`,
         cvv: '123',
+        expiry: `09/${takeLast(2, String(currentYear + 1))}`,
       },
       result: true,
     },
@@ -107,57 +108,57 @@ describe('credit card expiry date parsing and validation', () => {
         // Credit Card expiry years can't be more than 20 years in the future.
         // We also use currentYear to make sure this test does not fail in many
         // years down the road.
+        cvv: '123',
         // Using takeLast to simulate a user entering the year in a 2 digit format.
         expiry: `09/${takeLast(2, String(currentYear + 21))}`,
-        cvv: '123',
       },
       result: 'Expiry too far in the future.',
     },
     {
       data: {
         card_number: '1111111111111111',
-        expiry: `09/${String(currentYear + 19)}`,
         cvv: '123',
+        expiry: `09/${String(currentYear + 19)}`,
       },
       result: true,
     },
     {
       data: {
         card_number: '1111111111111111',
-        expiry: `09/${String(currentYear + 21)}`,
         cvv: '123',
+        expiry: `09/${String(currentYear + 21)}`,
       },
       result: 'Expiry too far in the future.',
     },
     {
       data: {
         card_number: '1111111111111111',
-        expiry: '01/2000',
         cvv: '123',
+        expiry: '01/2000',
       },
       result: 'Expiration year must not be in the past.',
     },
     {
       data: {
         card_number: '1111111111111111',
-        expiry: '00/24',
         cvv: '123',
+        expiry: '00/24',
       },
       result: 'Expiration month must be a number from 1 to 12.',
     },
     {
       data: {
         card_number: '1111111111111111',
-        expiry: '05/999',
         cvv: '123',
+        expiry: '05/999',
       },
       result: 'Expiration year must be 2 or 4 digits.',
     },
     {
       data: {
         card_number: '1111111111111111',
-        expiry: '05/99999',
         cvv: '123',
+        expiry: '05/99999',
       },
       result: 'Expiration year must be 2 or 4 digits.',
     },
@@ -176,9 +177,9 @@ describe('credit card expiry date parsing and validation', () => {
         try {
           const valid = await CreditCardSchema.validate({
             card_number: data.card_number,
+            cvv: data.cvv,
             expiry_month: expiryData[0],
             expiry_year: parsedYear,
-            cvv: data.cvv,
           });
 
           expect(valid);

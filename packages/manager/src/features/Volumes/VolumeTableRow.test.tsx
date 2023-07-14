@@ -1,32 +1,34 @@
 import * as React from 'react';
+
 import { volumeFactory } from 'src/factories';
-import { VolumeTableRow } from './VolumeTableRow';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
+import { VolumeTableRow } from './VolumeTableRow';
+
 const attachedVolume = volumeFactory.build({
-  region: 'us-east',
   linode_id: 0,
   linode_label: 'thisLinode',
+  region: 'us-east',
 });
 
 const unattachedVolume = volumeFactory.build({
-  linode_label: null,
   linode_id: null,
+  linode_label: null,
 });
 
 const handlers = {
-  openForEdit: jest.fn(),
-  openForResize: jest.fn(),
+  handleAttach: jest.fn(),
+  handleDelete: jest.fn(),
+  handleDetach: jest.fn(),
   openForClone: jest.fn(),
   openForConfig: jest.fn(),
-  handleAttach: jest.fn(),
-  handleDetach: jest.fn(),
-  handleDelete: jest.fn(),
+  openForEdit: jest.fn(),
+  openForResize: jest.fn(),
 };
 
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", () => {
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(<VolumeTableRow {...handlers} {...attachedVolume} />)
     );
 
@@ -52,7 +54,7 @@ describe('Volume table row', () => {
 
 describe('Volume table row - for linodes detail page', () => {
   it("should show the attached Linode's label if present", () => {
-    const { getByText, queryByText, queryByTestId } = renderWithTheme(
+    const { getByText, queryByTestId, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <VolumeTableRow {...handlers} {...attachedVolume} isDetailsPageRow />
       )

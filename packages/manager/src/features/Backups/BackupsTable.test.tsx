@@ -1,12 +1,14 @@
 import { LinodeType } from '@linode/api-v4';
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import types from 'src/utilities/types.json';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+
 import * as linodes from 'src/__data__/linodes';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { extendType } from 'src/utilities/extendType';
+import types from 'src/utilities/types.json';
+
 import { BackupsTable } from './BackupsTable';
 import { ExtendedLinode } from './types';
-import { extendType } from 'src/utilities/extendType';
 
 const type = extendType(types.data[0] as LinodeType);
 

@@ -1,17 +1,19 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+
 import { buckets } from 'src/__data__/buckets';
+
 import { BucketTable } from './BucketTable';
 
 describe('BucketTable', () => {
   const wrapper = shallow(
     <BucketTable
       data={buckets}
-      orderBy="label"
-      order="asc"
-      handleOrderChange={jest.fn()}
-      handleClickRemove={jest.fn()}
       handleClickDetails={jest.fn()}
+      handleClickRemove={jest.fn()}
+      handleOrderChange={jest.fn()}
+      order="asc"
+      orderBy="label"
     />
   );
 

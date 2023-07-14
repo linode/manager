@@ -1,12 +1,14 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import * as React from 'react';
-import { Hidden } from 'src/components/Hidden';
-import { AppBar } from 'src/components/AppBar';
-import { IconButton } from 'src/components/IconButton';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { AppBar } from 'src/components/AppBar';
+import { Hidden } from 'src/components/Hidden';
+import { IconButton } from 'src/components/IconButton';
 import { Toolbar } from 'src/components/Toolbar';
 import { Typography } from 'src/components/Typography';
+
 import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import { Community } from './Community';
 import { Help } from './Help';
@@ -17,37 +19,37 @@ import UserMenu from './UserMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
-    height: 50,
-    color: theme.palette.text.primary,
     backgroundColor: theme.bg.bgPaper,
-    position: 'relative',
-    paddingRight: '0 !important',
+    color: theme.palette.text.primary,
     display: 'flex',
-    justifyContent: 'center',
     flexDirection: 'row',
+    height: 50,
+    justifyContent: 'center',
+    paddingRight: '0 !important',
+    position: 'relative',
   },
   toolbar: {
-    padding: 0,
     height: `50px !important`,
+    padding: 0,
     width: '100%',
   },
 }));
 
 interface Props {
-  isSideMenuOpen: boolean;
-  openSideMenu: () => void;
   desktopMenuToggle: () => void;
   isLoggedInAsCustomer: boolean;
+  isSideMenuOpen: boolean;
+  openSideMenu: () => void;
   username: string;
 }
 
 const TopMenu = (props: Props) => {
   const {
+    desktopMenuToggle,
+    isLoggedInAsCustomer,
     isSideMenuOpen,
     openSideMenu,
     username,
-    isLoggedInAsCustomer,
-    desktopMenuToggle,
   } = props;
 
   const classes = useStyles();
@@ -66,7 +68,7 @@ const TopMenu = (props: Props) => {
             textAlign: 'center',
           }}
         >
-          <Typography style={{ fontSize: '1.2em', color: 'black' }}>
+          <Typography style={{ color: 'black', fontSize: '1.2em' }}>
             You are logged in as customer: <strong>{username}</strong>
           </Typography>
         </div>
@@ -74,23 +76,23 @@ const TopMenu = (props: Props) => {
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar} variant="dense">
           <Hidden mdDown>
-            <TopMenuIcon title={navHoverText} key={navHoverText}>
+            <TopMenuIcon key={navHoverText} title={navHoverText}>
               <IconButton
-                color="inherit"
                 aria-label="open menu"
+                color="inherit"
+                data-testid="open-nav-menu"
                 onClick={desktopMenuToggle}
                 size="large"
-                data-testid="open-nav-menu"
               >
                 <MenuIcon />
               </IconButton>
             </TopMenuIcon>
           </Hidden>
           <Hidden mdUp>
-            <TopMenuIcon title={navHoverText} key={navHoverText}>
+            <TopMenuIcon key={navHoverText} title={navHoverText}>
               <IconButton
-                color="inherit"
                 aria-label="open menu"
+                color="inherit"
                 onClick={openSideMenu}
                 size="large"
               >

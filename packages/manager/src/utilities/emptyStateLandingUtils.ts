@@ -10,8 +10,8 @@ export const youtubeChannelLink =
 export const youtubeMoreLinkLabel = 'View the complete playlist';
 
 interface AnalyticsEventTemplate {
-  category: string;
   action: string;
+  category: string;
 }
 
 export const getLinkOnClick = (

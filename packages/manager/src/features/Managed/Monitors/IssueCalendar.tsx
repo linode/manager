@@ -1,10 +1,12 @@
+import { ManagedIssue } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import IssueDay from './IssueDay';
-import { parseAPIDate } from 'src/utilities/date';
+
 import { useProfile } from 'src/queries/profile';
+import { parseAPIDate } from 'src/utilities/date';
 import getUserTimezone from 'src/utilities/getUserTimezone';
-import { ManagedIssue } from '@linode/api-v4';
+
+import IssueDay from './IssueDay';
 
 const TOTAL_DAYS = 10;
 
@@ -23,8 +25,8 @@ export const createdOnTargetDay = (
 };
 
 interface CalendarDay {
-  issues: ManagedIssue[];
   day: string;
+  issues: ManagedIssue[];
 }
 
 export const generateCalendar = (timezone: string, issues: ManagedIssue[]) => {
@@ -50,8 +52,8 @@ export const generateCalendar = (timezone: string, issues: ManagedIssue[]) => {
     );
 
     days.push({
-      issues: relevantIssues,
       day: day.toISO(),
+      issues: relevantIssues,
     });
   }
 
@@ -69,9 +71,9 @@ export const IssueCalendar: React.FC<Props> = (props) => {
     <>
       {days.map((thisDay, idx) => (
         <IssueDay
-          key={`issue-day-${idx}`}
-          issues={thisDay.issues}
           day={thisDay.day}
+          issues={thisDay.issues}
+          key={`issue-day-${idx}`}
         />
       ))}
     </>

@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
+import React, { useState } from 'react';
+
 import PasswordInput from './PasswordInput';
 
 const meta: Meta<typeof PasswordInput> = {
-  title: 'Components/Password Input',
   component: PasswordInput,
+  title: 'Components/Password Input',
 };
 
 type Story = StoryObj<typeof PasswordInput>;
@@ -16,13 +17,13 @@ export const Default: Story = {
     return (
       <PasswordInput
         {...args}
-        value={args.value ?? value}
         onChange={(e) => {
           if (args.onChange) {
             args.onChange(e);
           }
           setValue(e.target.value);
         }}
+        value={args.value ?? value}
       />
     );
   },

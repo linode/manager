@@ -1,14 +1,8 @@
-import type { Config } from '@linode/api-v4/lib/linodes/types';
-import type { APIError } from '@linode/api-v4/lib/types';
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
-import type { MapState } from 'src/store/types';
-
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-
-import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -52,6 +46,11 @@ import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
 import { ExtendedStatus, statusToPriority } from './utils';
+
+import type { Config } from '@linode/api-v4/lib/linodes/types';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import type { MapState } from 'src/store/types';
 
 interface State {
   deleteDialogOpen: boolean;

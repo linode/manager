@@ -1,7 +1,8 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { Crumbs, CrumbOverridesProps } from './Crumbs';
+
+import { CrumbOverridesProps, Crumbs } from './Crumbs';
 import { EditableProps, LabelProps } from './types';
 
 export interface BreadcrumbProps {
@@ -17,27 +18,27 @@ export interface BreadcrumbProps {
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    display: 'flex',
+  editablePreContainer: {
     alignItems: 'center',
+  },
+  hasError: {
+    marginBottom: theme.spacing(5),
+  },
+  preContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    flexWrap: 'wrap',
+    minHeight: 48,
+  },
+  root: {
+    alignItems: 'center',
+    display: 'flex',
     [theme.breakpoints.only('sm')]: {
       marginLeft: theme.spacing(),
     },
     [theme.breakpoints.only('xs')]: {
       marginLeft: theme.spacing(),
     },
-  },
-  preContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    minHeight: 48,
-  },
-  editablePreContainer: {
-    alignItems: 'center',
-  },
-  hasError: {
-    marginBottom: theme.spacing(5),
   },
 }));
 
@@ -69,8 +70,8 @@ const Breadcrumb = (props: BreadcrumbProps) => {
     <div
       className={cx(
         {
-          [classes.root]: true,
           [classes.hasError]: hasError,
+          [classes.root]: true,
         },
         className
       )}
@@ -78,17 +79,17 @@ const Breadcrumb = (props: BreadcrumbProps) => {
     >
       <div
         className={cx({
-          [classes.preContainer]: true,
           [classes.editablePreContainer]: onEditHandlers !== undefined,
+          [classes.preContainer]: true,
         })}
       >
         <Crumbs
-          pathMap={pathMap}
-          onEditHandlers={onEditHandlers}
           crumbOverrides={crumbOverrides}
-          labelTitle={labelTitle}
-          labelOptions={labelOptions}
           firstAndLastOnly={firstAndLastOnly}
+          labelOptions={labelOptions}
+          labelTitle={labelTitle}
+          onEditHandlers={onEditHandlers}
+          pathMap={pathMap}
         />
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
+
 import { addEvents } from './event.actions';
 import reducer, { defaultState } from './event.reducer';
 
@@ -17,46 +18,46 @@ describe('events.reducer', () => {
       describe('with events', () => {
         const events: Event[] = [
           {
-            id: 18029572,
-            time_remaining: null,
-            secondary_entity: null,
-            seen: true,
-            created: '2018-12-03T22:34:09',
             action: 'linode_reboot',
-            read: false,
-            percent_complete: 100,
-            username: 'test',
-            rate: null,
+            created: '2018-12-03T22:34:09',
+            duration: 0,
             entity: {
               id: 11241778,
               label: 'node-server',
               type: 'linode',
               url: '/v4/linode/instances/11241778',
             },
-            status: 'finished',
-            duration: 0,
+            id: 18029572,
             message: null,
+            percent_complete: 100,
+            rate: null,
+            read: false,
+            secondary_entity: null,
+            seen: true,
+            status: 'finished',
+            time_remaining: null,
+            username: 'test',
           },
           {
-            id: 18022171,
-            time_remaining: null,
-            secondary_entity: null,
-            seen: false,
-            created: '2018-12-03T19:59:53',
             action: 'linode_shutdown',
-            read: false,
-            percent_complete: 80,
-            username: 'test',
-            rate: null,
+            created: '2018-12-03T19:59:53',
+            duration: 0,
             entity: {
               id: 11642886,
               label: 'linode11642886',
               type: 'linode',
               url: '/v4/linode/instances/11642886',
             },
-            status: 'started',
-            duration: 0,
+            id: 18022171,
             message: null,
+            percent_complete: 80,
+            rate: null,
+            read: false,
+            secondary_entity: null,
+            seen: false,
+            status: 'started',
+            time_remaining: null,
+            username: 'test',
           },
         ];
         const action = addEvents(events);

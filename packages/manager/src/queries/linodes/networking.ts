@@ -1,6 +1,3 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { queryKey } from './linodes';
-import { getAll } from 'src/utilities/getAll';
 import {
   APIError,
   CreateIPv6RangePayload,
@@ -25,6 +22,11 @@ import {
   shareAddresses,
   updateIP,
 } from '@linode/api-v4';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+
+import { getAll } from 'src/utilities/getAll';
+
+import { queryKey } from './linodes';
 
 export const useLinodeIPsQuery = (
   linodeId: number,
@@ -42,7 +44,7 @@ export const useLinodeIPMutation = () => {
   return useMutation<
     IPAddress,
     APIError[],
-    { address: string; rdns?: string | null }
+    { address: string; rdns?: null | string }
   >(({ address, rdns }) => updateIP(address, rdns), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey]);
@@ -56,7 +58,7 @@ export const useLinodeIPDeleteMutation = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(
-    () => removeIPAddress({ linodeID: linodeId, address }),
+    () => removeIPAddress({ address, linodeID: linodeId }),
     {
       onSuccess() {
         queryClient.invalidateQueries([queryKey]);

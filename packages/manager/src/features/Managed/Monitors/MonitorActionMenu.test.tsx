@@ -1,14 +1,16 @@
 import * as React from 'react';
+
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
-import { Props, MonitorActionMenu } from './MonitorActionMenu';
+
+import { MonitorActionMenu, Props } from './MonitorActionMenu';
 
 const props: Props = {
-  status: 'disabled',
   label: 'this-monitor',
-  openDialog: jest.fn(),
   monitorID: 1,
-  openMonitorDrawer: jest.fn(),
+  openDialog: jest.fn(),
   openHistoryDrawer: jest.fn(),
+  openMonitorDrawer: jest.fn(),
+  status: 'disabled',
 };
 
 describe('Monitor action menu', () => {

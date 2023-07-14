@@ -1,26 +1,28 @@
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import NodeBalancerConfigurations from './NodeBalancerConfigurations';
-import NodeBalancerSettings from './NodeBalancerSettings';
-import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import LandingHeader from 'src/components/LandingHeader';
-import {
-  useNodeBalancerQuery,
-  useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
 import {
   matchPath,
   useHistory,
   useLocation,
   useParams,
 } from 'react-router-dom';
+
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import {
+  useNodeBalancerQuery,
+  useNodebalancerUpdateMutation,
+} from 'src/queries/nodebalancers';
+import { getErrorMap } from 'src/utilities/errorUtils';
+
+import NodeBalancerConfigurations from './NodeBalancerConfigurations';
+import NodeBalancerSettings from './NodeBalancerSettings';
+import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 
 export const NodeBalancerDetail = () => {
   const history = useHistory();
@@ -30,11 +32,11 @@ export const NodeBalancerDetail = () => {
   const [label, setLabel] = React.useState<string>();
 
   const {
-    mutateAsync: updateNodeBalancer,
     error: updateError,
+    mutateAsync: updateNodeBalancer,
   } = useNodebalancerUpdateMutation(id);
 
-  const { data: nodebalancer, isLoading, error } = useNodeBalancerQuery(id);
+  const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -90,19 +92,19 @@ export const NodeBalancerDetail = () => {
   return (
     <React.Fragment>
       <LandingHeader
-        title={nodeBalancerLabel}
-        docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
         breadcrumbProps={{
           firstAndLastOnly: true,
-          pathname: `/nodebalancers/${nodeBalancerLabel}`,
           onEditHandlers: {
             editableTextTitle: nodeBalancerLabel,
-            onEdit: (label) => updateNodeBalancer({ label }),
-            onCancel: cancelUpdate,
             errorText: labelError,
+            onCancel: cancelUpdate,
+            onEdit: (label) => updateNodeBalancer({ label }),
           },
+          pathname: `/nodebalancers/${nodeBalancerLabel}`,
         }}
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
+        title={nodeBalancerLabel}
       />
       {errorMap.none && <Notice error text={errorMap.none} />}
       <Tabs

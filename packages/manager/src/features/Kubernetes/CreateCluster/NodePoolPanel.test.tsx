@@ -1,17 +1,20 @@
 import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { NodePoolPanel } from './NodePoolPanel';
+
 import { extendedTypes } from 'src/__data__';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { NodePoolPanel } from './NodePoolPanel';
+
 import type { NodePoolPanelProps } from './NodePoolPanel';
 
 const props: NodePoolPanelProps = {
+  addNodePool: jest.fn(),
   hasSelectedRegion: true,
-  isSelectedRegionEligibleForPlan: () => false,
   isPlanPanelDisabled: () => false,
+  isSelectedRegionEligibleForPlan: () => false,
   regionsData: [],
   types: extendedTypes,
   typesLoading: false,
-  addNodePool: jest.fn(),
 };
 
 describe('NodePoolPanel', () => {

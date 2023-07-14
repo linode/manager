@@ -1,11 +1,11 @@
 export type DialogType =
   | 'delete'
+  | 'detach_vlan'
   | 'enable_backups'
   | 'migrate'
-  | 'resize'
-  | 'rescue'
   | 'rebuild'
-  | 'detach_vlan'
+  | 'rescue'
+  | 'resize'
   | 'upgrade_volumes';
 export type OpenDialog = (
   type: DialogType,

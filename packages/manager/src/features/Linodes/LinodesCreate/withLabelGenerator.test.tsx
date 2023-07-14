@@ -1,10 +1,12 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { ShallowWrapper, shallow } from 'enzyme';
 import * as React from 'react';
+
 import { queryClientFactory } from 'src/queries/base';
 import { storeFactory } from 'src/store';
+
 import {
-  dedupeLabel,
   LabelProps,
+  dedupeLabel,
   withLabelGenerator,
 } from './withLabelGenerator';
 

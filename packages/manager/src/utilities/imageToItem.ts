@@ -8,7 +8,7 @@ import { Item } from 'src/components/EnhancedSelect/Select';
  */
 export const imageToItem = (images: string[]): Item[] => {
   return images.map((image) => ({
-    value: image,
     label: image.replace('linode/', ''),
+    value: image,
   }));
 };

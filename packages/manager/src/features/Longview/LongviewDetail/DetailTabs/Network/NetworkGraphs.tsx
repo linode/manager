@@ -1,6 +1,7 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
+
 import { CircleProgress } from 'src/components/CircleProgress';
-import { withTheme, WithTheme } from '@mui/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
@@ -10,6 +11,7 @@ import {
   generateNetworkUnits,
   statMax,
 } from 'src/features/Longview/shared/utilities';
+
 import {
   InboundOutboundNetwork,
   LongviewNetworkInterface,
@@ -18,13 +20,13 @@ import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
 
 interface Props {
-  networkData: LongviewNetworkInterface;
-  error?: string;
-  loading: boolean;
-  timezone: string;
-  isToday: boolean;
-  start: number;
   end: number;
+  error?: string;
+  isToday: boolean;
+  loading: boolean;
+  networkData: LongviewNetworkInterface;
+  start: number;
+  timezone: string;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -63,7 +65,7 @@ export const NetworkGraphs: React.FC<CombinedProps> = (props) => {
   if (interfaces.length === 0 && !loading) {
     // Empty state
     return (
-      <Placeholder title="No network interfaces detected" renderAsSecondary>
+      <Placeholder renderAsSecondary title="No network interfaces detected">
         The Longview agent has not detected any interfaces that it can monitor.
       </Placeholder>
     );
@@ -80,36 +82,36 @@ export const NetworkGraphs: React.FC<CombinedProps> = (props) => {
         );
 
         return (
-          <GraphCard title={name} key={`network-interface-card-${idx}`}>
+          <GraphCard key={`network-interface-card-${idx}`} title={name}>
             <div style={{ paddingTop: theme.spacing(2) }}>
               <LongviewLineGraph
-                title="Network Traffic"
-                subtitle={maxUnit + '/s'}
-                unit={'/s'}
-                ariaLabel="Network Traffic Graph"
-                nativeLegend
+                data={[
+                  {
+                    backgroundColor: theme.graphs.network.inbound,
+                    borderColor: 'transparent',
+                    data: _convertData(rx_bytes, start, end),
+                    label: 'Inbound',
+                  },
+                  {
+                    backgroundColor: theme.graphs.network.outbound,
+                    borderColor: 'transparent',
+                    data: _convertData(tx_bytes, start, end),
+                    label: 'Outbound',
+                  },
+                ]}
                 formatData={(value: number) =>
                   convertNetworkToUnit(value * 8, maxUnit)
                 }
-                formatTooltip={formatNetworkTooltip}
+                ariaLabel="Network Traffic Graph"
                 error={error}
+                formatTooltip={formatNetworkTooltip}
                 loading={loading}
+                nativeLegend
                 showToday={isToday}
+                subtitle={maxUnit + '/s'}
                 timezone={timezone}
-                data={[
-                  {
-                    label: 'Inbound',
-                    borderColor: 'transparent',
-                    backgroundColor: theme.graphs.network.inbound,
-                    data: _convertData(rx_bytes, start, end),
-                  },
-                  {
-                    label: 'Outbound',
-                    borderColor: 'transparent',
-                    backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(tx_bytes, start, end),
-                  },
-                ]}
+                title="Network Traffic"
+                unit={'/s'}
               />
             </div>
           </GraphCard>

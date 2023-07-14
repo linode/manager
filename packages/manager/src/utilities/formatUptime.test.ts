@@ -1,4 +1,5 @@
 import { Duration } from 'luxon';
+
 import { formatUptime } from './formatUptime';
 
 describe('Formatting uptime', () => {

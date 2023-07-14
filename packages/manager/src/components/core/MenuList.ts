@@ -3,6 +3,6 @@ import MenuList, {
 } from '@mui/material/MenuList';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface MenuListProps extends _MenuListProps {}
+export type MenuListProps = _MenuListProps;
 
 export default MenuList;

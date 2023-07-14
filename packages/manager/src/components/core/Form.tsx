@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { Form } from 'formik';
+import * as React from 'react';
 
 /**
  * This abstraction is to resolve a bug in Formik

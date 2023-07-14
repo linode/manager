@@ -1,5 +1,7 @@
 import produce from 'immer';
 import { Reducer } from 'redux';
+import { isType } from 'typescript-fsa';
+
 import {
   addMany,
   ensureInitializedNestedState,
@@ -10,7 +12,7 @@ import {
   onStart,
 } from 'src/store/store.helpers.tmp';
 import { EntityError, RelationalMappedEntityState } from 'src/store/types';
-import { isType } from 'typescript-fsa';
+
 import { deleteLinode, deleteLinodeActions } from '../linodes.actions';
 import {
   createLinodeConfigActions,

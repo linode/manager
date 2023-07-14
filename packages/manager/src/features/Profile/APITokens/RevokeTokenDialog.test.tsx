@@ -1,15 +1,17 @@
-import * as React from 'react';
-import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+
 import { appTokenFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { Props, RevokeTokenDialog } from './RevokeTokenDialog';
 
 const token = appTokenFactory.build({ label: 'my-token' });
 
 const props: Props = {
-  open: true,
   onClose: jest.fn(),
+  open: true,
   token,
   type: 'Personal Access Token',
 };

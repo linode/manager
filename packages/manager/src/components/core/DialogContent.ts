@@ -3,6 +3,6 @@ import DialogContent, {
 } from '@mui/material/DialogContent';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface DialogContentProps extends _DialogContentProps {}
+export type DialogContentProps = _DialogContentProps;
 
 export default DialogContent;

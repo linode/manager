@@ -1,15 +1,15 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
-import { GetAllData } from 'src/utilities/getAll';
-
 import actionCreatorFactory from 'typescript-fsa';
+
+import { GetAllData } from 'src/utilities/getAll';
 
 export const actionCreator = actionCreatorFactory(`@@manager/longview`);
 
 export const getLongviewClients = actionCreator.async<
   {
-    params?: Params;
     filter?: Filter;
+    params?: Params;
   },
   GetAllData<LongviewClient>,
   APIError[]

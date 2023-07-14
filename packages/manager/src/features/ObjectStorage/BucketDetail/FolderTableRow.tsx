@@ -1,12 +1,14 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Hidden } from 'src/components/Hidden';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { FolderActionMenu } from './FolderActionMenu';
-import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+
+import { FolderActionMenu } from './FolderActionMenu';
 
 interface Props {
   displayName: string;
@@ -19,14 +21,14 @@ export const FolderTableRow = (props: Props) => {
   const { displayName, folderName, handleClickDelete } = props;
 
   return (
-    <TableRow key={folderName} ariaLabel={`Folder ${displayName}`} {...props}>
+    <TableRow ariaLabel={`Folder ${displayName}`} key={folderName} {...props}>
       <TableCell parentColumn="Object">
-        <Grid container wrap="nowrap" alignItems="center" spacing={2}>
+        <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <StyledIconWrapper>
-            <EntityIcon variant="folder" size={22} />
+            <EntityIcon size={22} variant="folder" />
           </StyledIconWrapper>
           <Grid>
-            <Link to={`?prefix=${folderName}`} className="secondaryLink">
+            <Link className="secondaryLink" to={`?prefix=${folderName}`}>
               {displayName}
             </Link>
           </Grid>

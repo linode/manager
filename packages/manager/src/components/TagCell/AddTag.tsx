@@ -1,22 +1,23 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
-import { useQueryClient } from 'react-query';
-import { styled } from '@mui/material/styles';
 import { isPropValid } from 'src/utilities/isPropValid';
 
 interface AddTagProps {
-  label?: string;
-  tags: string[];
-  onClose?: () => void;
   addTag: (tag: string) => Promise<void>;
   fixedMenu?: boolean;
   inDetailsContext?: boolean;
+  label?: string;
+  onClose?: () => void;
+  tags: string[];
 }
 
 const AddTag = (props: AddTagProps) => {
-  const { addTag, label, onClose, tags, fixedMenu } = props;
+  const { addTag, fixedMenu, label, onClose, tags } = props;
 
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -31,7 +32,7 @@ const AddTag = (props: AddTagProps) => {
 
   const tagOptions = accountTags
     ?.filter((tag) => !tags.includes(tag.label))
-    .map((tag) => ({ value: tag.label, label: tag.label }));
+    .map((tag) => ({ label: tag.label, value: tag.label }));
 
   const handleAddTag = (newTag: Item<string>) => {
     if (newTag?.value) {
@@ -53,20 +54,20 @@ const AddTag = (props: AddTagProps) => {
 
   return (
     <StyledSelect
-      small
-      escapeClearsValue
-      onChange={handleAddTag}
-      options={tagOptions}
-      creatable
-      onBlur={onClose}
-      placeholder="Create or Select a Tag"
-      label={label ?? 'Add a tag'}
-      hideLabel={!label}
       // eslint-disable-next-line
       autoFocus
+      creatable
       createOptionPosition="first"
-      menuPosition={fixedMenu ? 'fixed' : 'absolute'}
+      escapeClearsValue
+      hideLabel={!label}
       isLoading={loading}
+      label={label ?? 'Add a tag'}
+      menuPosition={fixedMenu ? 'fixed' : 'absolute'}
+      onBlur={onClose}
+      onChange={handleAddTag}
+      options={tagOptions}
+      placeholder="Create or Select a Tag"
+      small
     />
   );
 };
@@ -80,17 +81,17 @@ const StyledSelect = styled(Select, {
   fixedMenu?: boolean;
   inDetailsContext?: boolean;
 }>(({ ...props }) => ({
-  width: '100%',
   padding: '0px',
+  width: '100%',
   ...(props.fixedMenu && {
     '& .react-select__menu': {
       margin: '2px 0 0 0',
     },
   }),
   ...(props.inDetailsContext && {
-    width: '415px',
-    flexBasis: '100%',
     display: 'flex',
+    flexBasis: '100%',
     justifyContent: 'flex-end',
+    width: '415px',
   }),
 }));

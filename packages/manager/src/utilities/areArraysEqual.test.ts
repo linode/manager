@@ -11,7 +11,7 @@ describe('compare arrays', () => {
   });
 
   it('should return `false` if the given arrays contain different data types', () => {
-    const array2: (string | number)[] = [10, 2];
+    const array2: (number | string)[] = [10, 2];
     const result = areArraysEqual(array1, array2);
 
     expect(result).toBe(false);

@@ -1,15 +1,17 @@
 import * as React from 'react';
-import UserDefinedFieldsPanel from './UserDefinedFieldsPanel';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import UserDefinedFieldsPanel from './UserDefinedFieldsPanel';
 
 describe('UserDefinedFieldsPanel', () => {
   it('does not show a <Notice /> about number of nodes when a One-Click App without clusters is selected', () => {
     const { queryByTestId } = renderWithTheme(
       <UserDefinedFieldsPanel
         handleChange={() => null}
-        udf_data={[]}
         selectedLabel={''}
         selectedUsername={''}
+        udf_data={[]}
       />
     );
 
@@ -19,13 +21,13 @@ describe('UserDefinedFieldsPanel', () => {
   it('shows a <Notice /> about number of nodes when a One-Click App with clusters is selected', () => {
     const { queryByTestId } = renderWithTheme(
       <UserDefinedFieldsPanel
-        handleChange={() => null}
-        udf_data={[{ name: 'cluster_size' }]}
         userDefinedFields={[
-          { name: 'cluster_size', label: 'Set Number of Nodes' },
+          { label: 'Set Number of Nodes', name: 'cluster_size' },
         ]}
+        handleChange={() => null}
         selectedLabel={''}
         selectedUsername={''}
+        udf_data={[{ name: 'cluster_size' }]}
       />
     );
 

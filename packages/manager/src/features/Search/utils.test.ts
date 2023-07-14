@@ -1,5 +1,6 @@
 import { searchableItems } from 'src/__data__/searchableItems';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
+
 import { separateResultsByEntity } from './utils';
 
 const data = searchableItems as SearchableItem[];
@@ -29,13 +30,13 @@ describe('separate results by entity', () => {
   it('returns empty results if there is no data', () => {
     const newResults = separateResultsByEntity([]);
     expect(newResults).toEqual({
-      linodes: [],
-      volumes: [],
+      buckets: [],
       domains: [],
       images: [],
-      nodebalancers: [],
       kubernetesClusters: [],
-      buckets: [],
+      linodes: [],
+      nodebalancers: [],
+      volumes: [],
     });
   });
 });

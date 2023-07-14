@@ -1,11 +1,13 @@
-import * as React from 'react';
 import { DatabaseBackup } from '@linode/api-v4/lib/databases';
+import * as React from 'react';
+
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
-import formatDate from 'src/utilities/formatDate';
-import { parseAPIDate } from 'src/utilities/date';
 import { useProfile } from 'src/queries/profile';
+import { parseAPIDate } from 'src/utilities/date';
+import formatDate from 'src/utilities/formatDate';
+
+import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
 
 interface Props {
   backup: DatabaseBackup;
@@ -13,7 +15,7 @@ interface Props {
 }
 
 const BackupTableRow: React.FC<Props> = ({ backup, onRestore }) => {
-  const { id, created } = backup;
+  const { created, id } = backup;
 
   const { data: profile } = useProfile();
 

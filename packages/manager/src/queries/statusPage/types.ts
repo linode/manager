@@ -3,68 +3,68 @@
  */
 
 export type IncidentStatus =
-  | 'resolved'
+  | 'identified'
+  | 'investigating'
   | 'monitoring'
   | 'postmortem'
-  | 'identified'
-  | 'investigating';
+  | 'resolved';
 
 export type MaintenanceStatus =
-  | 'scheduled'
+  | 'completed'
   | 'in_progress'
-  | 'verifying'
-  | 'completed';
+  | 'scheduled'
+  | 'verifying';
 
 export type ComponentStatus =
-  | 'operational'
   | 'degraded_performance'
-  | 'partial_outage'
-  | 'major_outage';
+  | 'major_outage'
+  | 'operational'
+  | 'partial_outage';
 
-export type IncidentImpact = 'none' | 'minor' | 'major' | 'critical';
+export type IncidentImpact = 'critical' | 'major' | 'minor' | 'none';
 
 export interface IncidentComponent {
   code: string;
   name: string;
-  old_status: ComponentStatus;
   new_status: ComponentStatus;
+  old_status: ComponentStatus;
 }
 
 export interface IncidentPage {
   id: string;
   name: string;
-  url: string;
   time_zone: string;
   updated_at: string;
+  url: string;
 }
 
 export interface IncidentUpdate {
-  id: string;
-  status: IncidentStatus;
-  body: string;
-  incident_id: string;
-  created_at: string;
-  updated_at: string;
-  display_at: string;
   affected_components: IncidentComponent[];
+  body: string;
+  created_at: string;
+  custom_tweet: null | string;
   deliver_notifications: boolean;
-  custom_tweet: string | null;
-  tweet_id: number | null;
+  display_at: string;
+  id: string;
+  incident_id: string;
+  status: IncidentStatus;
+  tweet_id: null | number;
+  updated_at: string;
 }
 
 export interface Incident {
-  id: string;
-  name: string;
-  status: IncidentStatus;
   created_at: string;
-  updated_at: string;
-  monitoring_at: string | null;
-  resolved_at: string | null;
+  id: string;
   impact: IncidentImpact;
+  incident_updates: IncidentUpdate[];
+  monitoring_at: null | string;
+  name: string;
+  page_id: string;
+  resolved_at: null | string;
   shortlink: string;
   started_at: string;
-  page_id: string;
-  incident_updates: IncidentUpdate[];
+  status: IncidentStatus;
+  updated_at: string;
 }
 
 export interface Maintenance extends Omit<Incident, 'status'> {
@@ -72,8 +72,8 @@ export interface Maintenance extends Omit<Incident, 'status'> {
 }
 
 export interface IncidentResponse {
-  page: IncidentPage;
   incidents: Incident[];
+  page: IncidentPage;
 }
 
 export interface MaintenanceResponse {

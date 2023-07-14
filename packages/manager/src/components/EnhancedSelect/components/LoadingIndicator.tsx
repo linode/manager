@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import CircularProgress from 'src/components/core/CircularProgress';
 
 export const LoadingIndicator = () => {

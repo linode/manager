@@ -1,23 +1,25 @@
 import { ManagedCredential } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+
 import CredentialRow from './CredentialRow';
 
 interface Props {
   credentials: ManagedCredential[];
+  error?: APIError[] | null;
   loading: boolean;
   openDialog: (id: number, label: string) => void;
   openForEdit: (id: number) => void;
-  error?: APIError[] | null;
 }
 
 export type CombinedProps = Props;
 
 export const CredentialTableContent: React.FC<CombinedProps> = (props) => {
-  const { error, loading, credentials, openDialog, openForEdit } = props;
+  const { credentials, error, loading, openDialog, openForEdit } = props;
   if (loading) {
     return <TableRowLoading columns={3} />;
   }
@@ -39,8 +41,8 @@ export const CredentialTableContent: React.FC<CombinedProps> = (props) => {
     <>
       {credentials.map((credential: ManagedCredential, idx: number) => (
         <CredentialRow
-          key={`managed-credential-row-${idx}`}
           credential={credential}
+          key={`managed-credential-row-${idx}`}
           openDialog={openDialog}
           openForEdit={openForEdit}
         />

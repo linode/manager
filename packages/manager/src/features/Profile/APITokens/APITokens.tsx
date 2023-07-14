@@ -1,7 +1,9 @@
-import * as React from 'react';
-import { APITokenTable } from './APITokenTable';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Stack } from '@mui/material';
+import * as React from 'react';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+
+import { APITokenTable } from './APITokenTable';
 
 export const APITokens = () => {
   return (

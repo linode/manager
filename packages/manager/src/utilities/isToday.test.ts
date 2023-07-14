@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+
 import { isToday } from './isToday';
 
 describe('isToday helper utility', () => {

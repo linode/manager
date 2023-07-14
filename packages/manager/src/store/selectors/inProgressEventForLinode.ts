@@ -1,6 +1,8 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { createSelector } from 'reselect';
+
 import { ApplicationState } from 'src/store';
+
 import inProgressEvents from './inProgressEvents';
 
 const findInProgressEvent = (e: Event[]) => (id: number) => {

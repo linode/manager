@@ -1,9 +1,10 @@
-import * as React from 'react';
-import { omit } from 'lodash';
 import {
-  TableProps as _TableProps,
   default as _Table,
+  TableProps as _TableProps,
 } from '@mui/material/Table';
+import { omit } from 'lodash';
+import * as React from 'react';
+
 import { StyledTableWrapper } from './Table.styles';
 
 export interface TableProps extends _TableProps {

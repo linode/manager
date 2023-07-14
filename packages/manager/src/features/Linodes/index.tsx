@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -19,7 +20,7 @@ const LinodesRoutes: React.FC = () => {
       <Switch>
         <Route component={LinodesCreate} path="/linodes/create" />
         <Route component={LinodesDetail} path="/linodes/:linodeId" />
-        <Route component={LinodesLandingWrapper} path="/linodes" exact strict />
+        <Route component={LinodesLandingWrapper} exact path="/linodes" strict />
         <Redirect to="/linodes" />
       </Switch>
     </React.Suspense>
@@ -39,7 +40,7 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
     { status: { '+or': ['pending, started'] } }
   );
 
-  const { data: linodes, isLoading, error } = useAllLinodesQuery();
+  const { data: linodes, error, isLoading } = useAllLinodesQuery();
 
   const someLinodesHaveScheduledMaintenance = accountMaintenanceData?.some(
     (thisAccountMaintenance) => thisAccountMaintenance.entity.type === 'linode'
@@ -56,8 +57,8 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
         someLinodesHaveScheduledMaintenance
       )}
       linodesData={linodesData}
-      linodesRequestLoading={isLoading}
       linodesRequestError={error ?? undefined}
+      linodesRequestLoading={isLoading}
     />
   );
 });

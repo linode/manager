@@ -1,35 +1,37 @@
+import { Token } from '@linode/api-v4/lib/profile/types';
 import * as React from 'react';
+
 import Drawer from 'src/components/Drawer';
-import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
-import { scopeStringToPermTuples, basePermNameMap } from './utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Token } from '@linode/api-v4/lib/profile/types';
+import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
+
 import {
   StyledAccessCell,
   StyledPermissionsCell,
   StyledPermsTable,
 } from './APITokenDrawer.styles';
+import { basePermNameMap, scopeStringToPermTuples } from './utils';
 
 interface Props {
-  open: boolean;
   onClose: () => void;
+  open: boolean;
   token: Token | undefined;
 }
 
 export const ViewAPITokenDrawer = (props: Props) => {
-  const { open, onClose, token } = props;
+  const { onClose, open, token } = props;
 
   const permissions = scopeStringToPermTuples(token?.scopes ?? '');
 
   return (
-    <Drawer title={token?.label ?? 'Token'} open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>
       <StyledPermsTable
         aria-label="Personal Access Token Permissions"
-        spacingTop={24}
         spacingBottom={16}
+        spacingTop={24}
       >
         <TableHead>
           <TableRow>
@@ -52,43 +54,43 @@ export const ViewAPITokenDrawer = (props: Props) => {
             }
             return (
               <TableRow
-                key={scopeTup[0]}
                 data-qa-row={basePermNameMap[scopeTup[0]]}
+                key={scopeTup[0]}
               >
-                <StyledAccessCell parentColumn="Access" padding="checkbox">
+                <StyledAccessCell padding="checkbox" parentColumn="Access">
                   {basePermNameMap[scopeTup[0]]}
                 </StyledAccessCell>
-                <StyledPermissionsCell parentColumn="None" padding="checkbox">
+                <StyledPermissionsCell padding="checkbox" parentColumn="None">
                   <AccessCell
                     active={scopeTup[1] === 0}
+                    disabled={false}
+                    onChange={() => null}
                     scope="0"
                     scopeDisplay={scopeTup[0]}
                     viewOnly={true}
-                    disabled={false}
-                    onChange={() => null}
                   />
                 </StyledPermissionsCell>
                 <StyledPermissionsCell
-                  parentColumn="Read Only"
                   padding="checkbox"
+                  parentColumn="Read Only"
                 >
                   <AccessCell
                     active={scopeTup[1] === 1}
+                    disabled={false}
+                    onChange={() => null}
                     scope="1"
                     scopeDisplay={scopeTup[0]}
                     viewOnly={true}
-                    disabled={false}
-                    onChange={() => null}
                   />
                 </StyledPermissionsCell>
-                <TableCell parentColumn="Read/Write" padding="checkbox">
+                <TableCell padding="checkbox" parentColumn="Read/Write">
                   <AccessCell
                     active={scopeTup[1] === 2}
+                    disabled={false}
+                    onChange={() => null}
                     scope="2"
                     scopeDisplay={scopeTup[0]}
                     viewOnly={true}
-                    disabled={false}
-                    onChange={() => null}
                   />
                 </TableCell>
               </TableRow>

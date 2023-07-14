@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
+
 import Drawer from 'src/components/Drawer';
+
 import UpdateContactInformationForm from './UpdateContactInformationForm';
 
 const useStyles = makeStyles()(() => ({
@@ -15,24 +17,24 @@ const useStyles = makeStyles()(() => ({
 }));
 
 export interface Props {
-  open: boolean;
-  onClose: () => void;
   focusEmail: boolean;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const BillingContactDrawer = (props: Props) => {
-  const { open, onClose, focusEmail } = props;
+  const { focusEmail, onClose, open } = props;
 
   const { classes } = useStyles();
 
   return (
     <Drawer
-      title="Edit Billing Contact Info"
       className={classes.drawer}
-      open={open}
       onClose={onClose}
+      open={open}
+      title="Edit Billing Contact Info"
     >
-      <UpdateContactInformationForm onClose={onClose} focusEmail={focusEmail} />
+      <UpdateContactInformationForm focusEmail={focusEmail} onClose={onClose} />
     </Drawer>
   );
 };

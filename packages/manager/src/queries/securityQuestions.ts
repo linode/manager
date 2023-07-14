@@ -1,11 +1,12 @@
 import {
-  getSecurityQuestions,
-  updateSecurityQuestions,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
+  getSecurityQuestions,
+  updateSecurityQuestions,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+
 import { queryPresets } from './base';
 
 export const queryKey = 'securityQuestions';

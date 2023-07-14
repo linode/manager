@@ -2,7 +2,7 @@ import produce from 'immer';
 export type TransferableEntity = 'linodes';
 export const TRANSFERABLE_ENTITIES: TransferableEntity[] = ['linodes'];
 
-export type Entity = { label: string; id: string | number };
+export type Entity = { id: number | string; label: string };
 export type TransferEntity = Record<string, string>;
 export type TransferState = Record<TransferableEntity, TransferEntity>;
 
@@ -12,14 +12,14 @@ export const defaultTransferState: TransferState = TRANSFERABLE_ENTITIES.reduce(
 );
 
 export type TransferAction =
-  | { type: 'ADD'; entityType: TransferableEntity; entitiesToAdd: Entity[] }
   | {
-      type: 'REMOVE';
-      entityType: TransferableEntity;
       entitiesToRemove: string[];
+      entityType: TransferableEntity;
+      type: 'REMOVE';
     }
-  | { type: 'TOGGLE'; entityType: TransferableEntity; entity: Entity }
-  | { type: 'RESET'; entityType: TransferableEntity };
+  | { entitiesToAdd: Entity[]; entityType: TransferableEntity; type: 'ADD' }
+  | { entity: Entity; entityType: TransferableEntity; type: 'TOGGLE' }
+  | { entityType: TransferableEntity; type: 'RESET' };
 
 const transferReducer = (draft: TransferState, action: TransferAction) => {
   switch (action.type) {

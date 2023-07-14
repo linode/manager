@@ -1,12 +1,12 @@
-import { extractDiskOrVolumeId, adjustedErrorText } from './DeviceSelection';
+import { adjustedErrorText, extractDiskOrVolumeId } from './DeviceSelection';
 
 const errors = [
-  { input: 'disk ID 2005 is referenced more than once', expected: 'disk-2005' },
+  { expected: 'disk-2005', input: 'disk ID 2005 is referenced more than once' },
   {
-    input: 'volume ID 3005 is referenced more than once',
     expected: 'volume-3005',
+    input: 'volume ID 3005 is referenced more than once',
   },
-  { input: 'is referenced more than once', expected: null },
+  { expected: null, input: 'is referenced more than once' },
 ];
 
 describe('Device selection component', () => {

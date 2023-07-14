@@ -1,8 +1,10 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { useSnackbar } from 'notistack';
-import { Snackbar } from 'src/components/Snackbar/Snackbar';
+import React from 'react';
+
 import { Button } from 'src/components/Button/Button';
+import { Snackbar } from 'src/components/Snackbar/Snackbar';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 /**
  * #### Timing
@@ -12,23 +14,23 @@ import { Button } from 'src/components/Button/Button';
  */
 
 const meta: Meta<typeof Snackbar> = {
-  title: 'Components/Notifications/Snackbar - Toast',
-  component: Snackbar,
   argTypes: {
     anchorOrigin: {
       description:
         'Determine where the toast initially appears vertically and horizontally.',
     },
-    maxSnack: {
-      description:
-        'Set the maximum number of toasts that can appear simultaneously.',
-    },
     hideIconVariant: {
       description:
         'Determine whether variant icons appear to the left of the text in the toast.',
     },
+    maxSnack: {
+      description:
+        'Set the maximum number of toasts that can appear simultaneously.',
+    },
   },
   args: {},
+  component: Snackbar,
+  title: 'Components/Notifications/Snackbar - Toast',
 };
 
 export default meta;
@@ -37,9 +39,9 @@ type Story = StoryObj<typeof Snackbar>;
 
 export const Default: Story = {
   args: {
-    anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-    maxSnack: 5,
+    anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
     hideIconVariant: true,
+    maxSnack: 5,
   },
   render: (args) => <Template {...args} />,
 };
@@ -53,7 +55,7 @@ function Template(args: any) {
 }
 
 function MyButton(args: any) {
-  const { variant, onClick, sx } = args;
+  const { onClick, sx, variant } = args;
   const handleClick = () => {
     // just call the onClick with the provided variant
     onClick(variant);
@@ -82,12 +84,12 @@ function Example() {
         // map over each variant and show a button for each
         return (
           <MyButton
-            key={eachVariant}
-            variant={eachVariant}
-            onClick={showToast}
             sx={{
               margin: '0 5px',
             }}
+            key={eachVariant}
+            onClick={showToast}
+            variant={eachVariant}
           />
         );
       })}
