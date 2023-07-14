@@ -2,8 +2,14 @@
  * @file Utilities to handle retries with configurable backoff logic.
  */
 
-// Util to wait a given number of milliseconds before resolving.
-const timeout = (timeout: number) =>
+/**
+ * Promise that waits a given number of milliseconds before resolving.
+ *
+ * @param timeout - Timeout in milliseconds.
+ *
+ * @returns Promise that resolves when timeout has passed.
+ */
+export const timeout = (timeout: number) =>
   new Promise((resolve) => setTimeout(resolve, timeout));
 
 // Util to calculate fibonacci number for a given index.
