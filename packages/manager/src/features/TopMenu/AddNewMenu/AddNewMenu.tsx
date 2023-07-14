@@ -66,7 +66,7 @@ export const AddNewMenu = () => {
       description: 'Ensure your services are highly available',
       // TODO AGLB: Change this icon to the AGLB icon when available
       icon: DomainIcon,
-      link: '/loadbalancer/create',
+      link: '/loadbalancers/create',
       hide: !flags.aglb,
     },
     {
