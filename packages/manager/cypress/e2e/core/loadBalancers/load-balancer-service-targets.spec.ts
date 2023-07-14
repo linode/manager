@@ -60,7 +60,7 @@ describe('Akamai Global Load Balancer service targets', () => {
         .closest('tr')
         .within(() => {
           // TODO Assert for other balancing policies once available.
-          cy.findByText('Round Robin').should('be.visible');
+          cy.findByText('round robin').should('be.visible');
           // TODO Assert action menu behavior and items once available.
           // TODO Assert health checks are shown once available.
         });
