@@ -3,7 +3,6 @@ import * as React from 'react';
 import { QueryClient } from 'react-query';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
-import { capitalizeAllDelimitedWords } from 'src/utilities/capitalize';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -110,12 +109,7 @@ describe('Service Target Table Row', () => {
 
     // Check to see if the row rendered data
     getByText(serviceTarget.label);
-    getByText(
-      capitalizeAllDelimitedWords(
-        serviceTarget.load_balancing_policy.toLowerCase(),
-        '_'
-      )
-    );
+    getByText('Round Robin');
     // TODO: AGLB -follow up in M3-6882
   });
 });

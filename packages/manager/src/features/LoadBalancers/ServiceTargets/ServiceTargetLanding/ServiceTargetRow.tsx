@@ -4,8 +4,8 @@ import { Hidden } from 'src/components/Hidden';
 // import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { TableRow } from 'src/components/TableRow/TableRow';
-import { capitalizeAllDelimitedWords } from 'src/utilities/capitalize';
 import { ServiceTargetActionMenu } from './ServiceTargetActionMenu';
+import { styled } from '@mui/material/styles';
 
 interface Props extends ServiceTarget {
   onDelete: () => void;
@@ -31,10 +31,9 @@ export const ServiceTargetRow = React.memo((props: Props) => {
       {/* TODO: AGLB - Marked Nice to Have for Beta */}
       <Hidden smDown>
         <TableCell>
-          {capitalizeAllDelimitedWords(
-            load_balancing_policy.toLowerCase(),
-            '_'
-          )}
+          <StyledPolicySpan>
+            {load_balancing_policy.toLowerCase().replace(/_/g, ' ')}
+          </StyledPolicySpan>
         </TableCell>
       </Hidden>
       {/* TODO: AGLB - Needs API clarification: optional health_check fields in payload, unsure how to determine 'Yes/No'? */}
@@ -48,3 +47,9 @@ export const ServiceTargetRow = React.memo((props: Props) => {
     </TableRow>
   );
 });
+
+export const StyledPolicySpan = styled('span', {
+  label: 'StyledPolicySpan',
+})(() => ({
+  textTransform: 'capitalize',
+}));
