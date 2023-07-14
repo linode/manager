@@ -22,24 +22,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       marginRight: theme.spacing(),
     },
   },
-  cells: {
-    // TODO: figure out the type errors from commented out code
-    whiteSpace: 'nowrap',
-    width: 'auto',
-    '& .data': {
-      maxWidth: 300,
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-      [theme.breakpoints.up('md')]: {
-        maxWidth: 750,
-      },
-    },
-    '&:last-of-type': {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-  },
 }));
 
 export const DeleteDomain = (props: DeleteDomainProps) => {
