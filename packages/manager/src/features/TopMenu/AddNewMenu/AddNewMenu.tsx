@@ -13,6 +13,7 @@ import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Link } from 'react-router-dom';
+import useFlags from 'src/hooks/useFlags';
 import {
   Box,
   ListItemIcon,
@@ -23,9 +24,19 @@ import {
   useTheme,
 } from '@mui/material';
 
+interface LinkProps {
+  entity: string;
+  description: string;
+  hide?: boolean;
+  icon: React.ComponentClass<any, any>;
+  link: string;
+  attr?: { [key: string]: boolean };
+}
+
 export const AddNewMenu = () => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const flags = useFlags();
 
   const open = Boolean(anchorEl);
 
@@ -36,7 +47,7 @@ export const AddNewMenu = () => {
     setAnchorEl(null);
   };
 
-  const links = [
+  const links: LinkProps[] = [
     {
       entity: 'Linode',
       description: 'High performance SSD Linux servers',
@@ -48,6 +59,15 @@ export const AddNewMenu = () => {
       description: 'Attach additional storage to your Linode',
       icon: VolumeIcon,
       link: '/volumes/create',
+    },
+    {
+      entity: 'LoadBalancer',
+      // TODO AGLB: Replace with AGLB copy when available
+      description: 'Ensure your services are highly available',
+      // TODO AGLB: Change this icon to the AGLB icon when available
+      icon: DomainIcon,
+      link: '/loadbalancer/create',
+      hide: !flags.aglb,
     },
     {
       entity: 'NodeBalancer',
@@ -134,42 +154,48 @@ export const AddNewMenu = () => {
           },
         }}
       >
-        {links.map((link, i) => [
-          i !== 0 && <Divider spacingTop={0} spacingBottom={0} />,
-          <MenuItem
-            key={link.entity}
-            onClick={handleClose}
-            sx={{
-              paddingY: 1.5,
-              '&:hover': {
-                // This MUI Menu gets special colors compared
-                // to a standard menu such as the NodeBalancer Config Node Mode select menu
-                backgroundColor: theme.bg.app,
-              },
-            }}
-            component={Link}
-            to={link.link}
-            {...link.attr}
-            style={{
-              // We have to do this because in packages/manager/src/index.css we force underline links
-              textDecoration: 'none',
-            }}
-          >
-            <ListItemIcon>
-              <link.icon
-                width={20}
-                height={20}
-                color={theme.palette.text.primary}
-              />
-            </ListItemIcon>
-            <Stack>
-              <Typography variant="h3" color={theme.textColors.linkActiveLight}>
-                {link.entity}
-              </Typography>
-              <Typography>{link.description}</Typography>
-            </Stack>
-          </MenuItem>,
-        ])}
+        {links.map(
+          (link, i) =>
+            !link.hide && [
+              i !== 0 && <Divider spacingTop={0} spacingBottom={0} />,
+              <MenuItem
+                key={link.entity}
+                onClick={handleClose}
+                sx={{
+                  paddingY: 1.5,
+                  '&:hover': {
+                    // This MUI Menu gets special colors compared
+                    // to a standard menu such as the NodeBalancer Config Node Mode select menu
+                    backgroundColor: theme.bg.app,
+                  },
+                }}
+                component={Link}
+                to={link.link}
+                {...link.attr}
+                style={{
+                  // We have to do this because in packages/manager/src/index.css we force underline links
+                  textDecoration: 'none',
+                }}
+              >
+                <ListItemIcon>
+                  <link.icon
+                    width={20}
+                    height={20}
+                    color={theme.palette.text.primary}
+                  />
+                </ListItemIcon>
+                <Stack>
+                  <Typography
+                    variant="h3"
+                    color={theme.textColors.linkActiveLight}
+                  >
+                    {link.entity}
+                  </Typography>
+                  <Typography>{link.description}</Typography>
+                </Stack>
+              </MenuItem>,
+            ]
+        )}
       </Menu>
     </Box>
   );
