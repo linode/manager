@@ -109,7 +109,7 @@ describe('Service Target Table Row', () => {
 
     // Check to see if the row rendered data
     getByText(serviceTarget.label);
-    getByText('Round Robin');
+    getByText('round robin');
     // TODO: AGLB -follow up in M3-6882
   });
 });
