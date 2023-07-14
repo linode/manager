@@ -7,7 +7,7 @@ import type { FeatureFlagResponseData } from 'support/util/feature-flags';
 
 // LaunchDarkly URL pattern for feature flag retrieval.
 const launchDarklyUrlPattern =
-  'https://app.launchdarkly.com/sdk/evalx/*/users/*';
+  'https://app.launchdarkly.com/sdk/evalx/*/contexts/*';
 
 /**
  * Intercepts GET request to fetch feature flags and modifies the response.
