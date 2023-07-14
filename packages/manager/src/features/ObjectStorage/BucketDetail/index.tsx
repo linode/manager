@@ -1,13 +1,16 @@
+import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
+import { RouteComponentProps, matchPath } from 'react-router-dom';
+
 import LandingHeader from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+
 import { BucketAccess } from './BucketAccess';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
-import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+
 import type { ComponentType, LazyExoticComponent } from 'react';
 
 const ObjectList: LazyExoticComponent<ComponentType<any>> = React.lazy(() =>
@@ -20,8 +23,8 @@ const BucketSSL = React.lazy(() =>
 );
 
 interface MatchProps {
-  clusterId: ObjectStorageClusterID;
   bucketName: string;
+  clusterId: ObjectStorageClusterID;
 }
 
 type Props = RouteComponentProps<MatchProps>;
@@ -34,16 +37,16 @@ export const BucketDetailLanding = React.memo((props: Props) => {
 
   const tabs = [
     {
-      title: 'Objects',
       routeName: `${props.match.url}/objects`,
+      title: 'Objects',
     },
     {
-      title: 'Access',
       routeName: `${props.match.url}/access`,
+      title: 'Access',
     },
     {
-      title: 'SSL/TLS',
       routeName: `${props.match.url}/ssl`,
+      title: 'SSL/TLS',
     },
   ];
 
@@ -59,19 +62,19 @@ export const BucketDetailLanding = React.memo((props: Props) => {
   return (
     <>
       <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Object Storage',
+              position: 1,
+            },
+          ],
+          labelOptions: { noCap: true },
+          pathname: `/object-storage/${bucketName}`,
+        }}
         // Purposefully not using the title prop here because we want to use the `bucketName` override.
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
-        breadcrumbProps={{
-          pathname: `/object-storage/${bucketName}`,
-          labelOptions: { noCap: true },
-          crumbOverrides: [
-            {
-              position: 1,
-              label: 'Object Storage',
-            },
-          ],
-        }}
       />
 
       <Tabs index={index} onChange={handleTabChange}>

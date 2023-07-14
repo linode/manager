@@ -1,27 +1,29 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { withTheme, WithTheme } from '@mui/styles';
+
 import Grid from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
+import Paper from 'src/components/core/Paper';
 import {
   formatNetworkTooltip,
   getMaxUnitAndFormatNetwork,
 } from 'src/features/Longview/shared/utilities';
+
 import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ProcessGraphs, { useStyles } from '../ProcessGraphs';
 
 interface Props {
   data?: MySQLResponse;
-  error?: string;
-  loading: boolean;
-  timezone: string;
-  isToday: boolean;
-  start: number;
   end: number;
+  error?: string;
+  isToday: boolean;
+  loading: boolean;
   processesData: LongviewProcesses;
-  processesLoading: boolean;
   processesError?: string;
+  processesLoading: boolean;
+  start: number;
+  timezone: string;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -29,16 +31,16 @@ type CombinedProps = Props & WithTheme;
 export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
+    end,
     error,
     isToday,
     loading,
-    timezone,
-    start,
-    end,
     processesData,
-    processesLoading,
     processesError,
+    processesLoading,
+    start,
     theme,
+    timezone,
   } = props;
 
   const classes = useStyles();
@@ -56,7 +58,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
   const inbound = data?.Bytes_received ?? [];
   const outbound = data?.Bytes_sent ?? [];
 
-  const { maxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
+  const { formatNetwork, maxUnit } = getMaxUnitAndFormatNetwork(
     inbound,
     outbound
   );
@@ -66,169 +68,169 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
       <Grid container direction="column" spacing={0}>
         <Grid item xs={12}>
           <LongviewLineGraph
-            title="Queries"
-            subtitle="queries/s"
-            ariaLabel="Queries Per Second Graph"
-            nativeLegend
-            error={error}
-            loading={loading}
-            showToday={isToday}
-            timezone={timezone}
             data={[
               {
-                label: 'SELECT',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.select,
+                borderColor: 'transparent',
                 data: _convertData(selectQueries, start, end),
+                label: 'SELECT',
               },
               {
-                label: 'UPDATE',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.update,
+                borderColor: 'transparent',
                 data: _convertData(updateQueries, start, end),
+                label: 'UPDATE',
               },
               {
-                label: 'INSERT',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.insert,
+                borderColor: 'transparent',
                 data: _convertData(insertQueries, start, end),
+                label: 'INSERT',
               },
               {
-                label: 'DELETE',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.delete,
+                borderColor: 'transparent',
                 data: _convertData(deleteQueries, start, end),
+                label: 'DELETE',
               },
             ]}
+            ariaLabel="Queries Per Second Graph"
+            error={error}
+            loading={loading}
+            nativeLegend
+            showToday={isToday}
+            subtitle="queries/s"
+            timezone={timezone}
+            title="Queries"
           />
         </Grid>
         <Grid item xs={12}>
           <Grid container direction="row">
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+            <Grid className={classes.smallGraph} item sm={6} xs={12}>
               <LongviewLineGraph
-                title="Throughput"
-                subtitle={`${maxUnit}/s`}
-                unit={'/s'}
+                data={[
+                  {
+                    backgroundColor: theme.graphs.network.inbound,
+                    borderColor: 'transparent',
+                    data: _convertData(inbound, start, end),
+                    label: 'Inbound',
+                  },
+                  {
+                    backgroundColor: theme.graphs.network.outbound,
+                    borderColor: 'transparent',
+                    data: _convertData(outbound, start, end),
+                    label: 'Outbound',
+                  },
+                ]}
                 ariaLabel="Throughput Graph"
+                error={error}
                 formatData={formatNetwork}
                 formatTooltip={formatNetworkTooltip}
-                nativeLegend
-                error={error}
                 loading={loading}
+                nativeLegend
                 showToday={isToday}
+                subtitle={`${maxUnit}/s`}
                 timezone={timezone}
-                data={[
-                  {
-                    label: 'Inbound',
-                    borderColor: 'transparent',
-                    backgroundColor: theme.graphs.network.inbound,
-                    data: _convertData(inbound, start, end),
-                  },
-                  {
-                    label: 'Outbound',
-                    borderColor: 'transparent',
-                    backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(outbound, start, end),
-                  },
-                ]}
+                title="Throughput"
+                unit={'/s'}
               />
             </Grid>
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+            <Grid className={classes.smallGraph} item sm={6} xs={12}>
               <LongviewLineGraph
-                title="Connections"
-                subtitle="connections/s"
-                unit={' connections/s'}
-                ariaLabel="Connections Per Second Graph"
-                nativeLegend
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
                 data={[
                   {
-                    label: 'Connections',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.accepted,
+                    borderColor: 'transparent',
                     data: _convertData(connections, start, end),
+                    label: 'Connections',
                   },
                 ]}
+                ariaLabel="Connections Per Second Graph"
+                error={error}
+                loading={loading}
+                nativeLegend
+                showToday={isToday}
+                subtitle="connections/s"
+                timezone={timezone}
+                title="Connections"
+                unit={' connections/s'}
               />
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12}>
           <Grid container direction="row">
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+            <Grid className={classes.smallGraph} item sm={6} xs={12}>
               <LongviewLineGraph
-                title="Slow Queries"
-                ariaLabel="Slow Queries Graph"
-                nativeLegend
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
                 data={[
                   {
-                    label: 'Slow Queries',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.slowQueries,
+                    borderColor: 'transparent',
                     data: _convertData(slowQueries, start, end),
+                    label: 'Slow Queries',
                   },
                 ]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
-              <LongviewLineGraph
-                title="Aborted"
-                ariaLabel="Aborted Clients and Connections Graph"
-                nativeLegend
+                ariaLabel="Slow Queries Graph"
                 error={error}
                 loading={loading}
+                nativeLegend
                 showToday={isToday}
                 timezone={timezone}
+                title="Slow Queries"
+              />
+            </Grid>
+            <Grid className={classes.smallGraph} item sm={6} xs={12}>
+              <LongviewLineGraph
                 data={[
                   {
-                    label: 'Connections',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.aborted.connections,
+                    borderColor: 'transparent',
                     data: _convertData(
                       abortedConnections,
                       start,
                       end,
                       formatAborted
                     ),
+                    label: 'Connections',
                   },
                   {
-                    label: 'Clients',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.aborted.clients,
+                    borderColor: 'transparent',
                     data: _convertData(
                       abortedClients,
                       start,
                       end,
                       formatAborted
                     ),
+                    label: 'Clients',
                   },
                 ]}
+                ariaLabel="Aborted Clients and Connections Graph"
+                error={error}
+                loading={loading}
+                nativeLegend
+                showToday={isToday}
+                timezone={timezone}
+                title="Aborted"
               />
             </Grid>
           </Grid>
         </Grid>
         <ProcessGraphs
           data={processesData}
-          loading={processesLoading}
-          error={processesError || error}
-          timezone={timezone}
-          isToday={isToday}
-          start={start}
           end={end}
+          error={processesError || error}
+          isToday={isToday}
+          loading={processesLoading}
+          start={start}
+          timezone={timezone}
         />
       </Grid>
     </Paper>
   );
 };
 
-const formatAborted = (value: number | null) => {
+const formatAborted = (value: null | number) => {
   if (value === null) {
     return value;
   }

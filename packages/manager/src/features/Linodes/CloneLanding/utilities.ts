@@ -1,6 +1,6 @@
-import produce from 'immer';
 import { Config, Disk } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import produce from 'immer';
 import { DateTime } from 'luxon';
 import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
 
@@ -11,35 +11,35 @@ import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
 export interface CloneLandingState {
   configSelection: ConfigSelection;
   diskSelection: DiskSelection;
-  selectedLinodeId: number | null;
-  isSubmitting: boolean;
   errors?: APIError[];
+  isSubmitting: boolean;
+  selectedLinodeId: null | number;
 }
 
 // Allows for easy toggling of a selected config.
 export type ConfigSelection = Record<
   number,
-  { isSelected: boolean; associatedDiskIds: number[] }
+  { associatedDiskIds: number[]; isSelected: boolean }
 >;
 
 // Allows for easy toggling of a selected disk.
 export type DiskSelection = Record<
   number,
-  { isSelected: boolean; associatedConfigIds: number[] }
+  { associatedConfigIds: number[]; isSelected: boolean }
 >;
 
 export type CloneLandingAction =
-  | { type: 'toggleConfig'; id: number }
-  | { type: 'toggleDisk'; id: number }
-  | { type: 'setSelectedLinodeId'; id: number }
-  | { type: 'setSubmitting'; value: boolean }
-  | { type: 'setErrors'; errors?: APIError[] }
-  | { type: 'clearAll' }
   | {
-      type: 'syncConfigsDisks';
       configs: Config[];
       disks: Disk[];
-    };
+      type: 'syncConfigsDisks';
+    }
+  | { errors?: APIError[]; type: 'setErrors' }
+  | { id: number; type: 'setSelectedLinodeId' }
+  | { id: number; type: 'toggleConfig' }
+  | { id: number; type: 'toggleDisk' }
+  | { type: 'clearAll' }
+  | { type: 'setSubmitting'; value: boolean };
 
 export type ExtendedConfig = Config & { associatedDisks: Disk[] };
 /**
@@ -164,8 +164,8 @@ export const curriedCloneLandingReducer = produce(cloneLandingReducer);
 export const defaultState: CloneLandingState = {
   configSelection: {},
   diskSelection: {},
-  selectedLinodeId: null,
   isSubmitting: false,
+  selectedLinodeId: null,
 };
 
 // Returns an array of IDs of configs/disks that are selected.
@@ -206,8 +206,8 @@ export const createConfigDiskSelection = (
     });
 
     configSelection[eachConfig.id] = {
-      isSelected,
       associatedDiskIds,
+      isSelected,
     };
   });
 
@@ -219,8 +219,8 @@ export const createConfigDiskSelection = (
     const associatedConfigIds = diskConfigMap[eachDisk.id] || [];
 
     diskSelection[eachDisk.id] = {
-      isSelected,
       associatedConfigIds,
+      isSelected,
     };
   });
 
@@ -283,7 +283,7 @@ export const getAllDisks = (
   )(configs);
 };
 
-export type EstimatedCloneTimeMode = 'sameDatacenter' | 'differentDatacenter';
+export type EstimatedCloneTimeMode = 'differentDatacenter' | 'sameDatacenter';
 
 /**
  * Provides a rough estimate of the clone time, based on the size of the disk(s),

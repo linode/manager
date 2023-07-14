@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon';
+
 import {
+  Labels,
   generateSelectOptions,
   generateStartTime,
-  Labels,
 } from './TimeRangeSelect';
 
 describe('Utility Functions', () => {

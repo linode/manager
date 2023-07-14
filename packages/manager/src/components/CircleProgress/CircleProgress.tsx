@@ -1,14 +1,15 @@
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import CircularProgress, {
   CircularProgressProps,
 } from 'src/components/core/CircularProgress';
 import { isPropValid } from 'src/utilities/isPropValid';
 
 interface CircleProgressProps extends CircularProgressProps {
-  className?: string;
   children?: JSX.Element;
+  className?: string;
   mini?: boolean;
   noInner?: boolean;
   noPadding?: boolean;
@@ -17,8 +18,8 @@ interface CircleProgressProps extends CircularProgressProps {
 
 const CircleProgress = (props: CircleProgressProps) => {
   const {
-    className,
     children,
+    className,
     mini,
     noInner,
     noPadding,
@@ -33,20 +34,20 @@ const CircleProgress = (props: CircleProgressProps) => {
   if (mini) {
     return (
       <StyledMiniCircularProgress
-        size={size ? size : noPadding ? 22 : 40}
-        noPadding={noPadding}
         aria-label="Content is loading"
         data-qa-circle-progress
         data-testid="circle-progress"
+        noPadding={noPadding}
+        size={size ? size : noPadding ? 22 : 40}
         tabIndex={0}
       />
     );
   }
 
   return (
-    <StyledRootDiv className={className} aria-label="Content is loading">
+    <StyledRootDiv aria-label="Content is loading" className={className}>
       {children !== undefined && (
-        <Box sx={{ position: 'absolute', marginTop: 4 }}>{children}</Box>
+        <Box sx={{ marginTop: 4, position: 'absolute' }}>{children}</Box>
       )}
       {noInner !== true && (
         <StyledTopWrapperDiv>
@@ -55,12 +56,12 @@ const CircleProgress = (props: CircleProgressProps) => {
       )}
       <StyledCircularProgress
         {...rest}
-        size={124}
-        value={value}
-        variant={variant}
-        thickness={2}
         data-qa-circle-progress={value}
         data-testid="circle-progress"
+        size={124}
+        thickness={2}
+        value={value}
+        variant={variant}
       />
     </StyledRootDiv>
   );
@@ -69,44 +70,44 @@ const CircleProgress = (props: CircleProgressProps) => {
 export { CircleProgress };
 
 const StyledRootDiv = styled('div')(({ theme }) => ({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   justifyContent: 'center',
   margin: '0 auto 20px',
   position: 'relative',
-  width: '100%',
   [theme.breakpoints.up('md')]: {
     flex: 1,
     height: 300,
   },
+  width: '100%',
 }));
 
 const StyledTopWrapperDiv = styled('div')(({}) => ({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
+  height: '100%',
   justifyContent: 'center',
   position: 'absolute',
   width: '100%',
-  height: '100%',
 }));
 
 const StyledTopDiv = styled('div')(({ theme }) => ({
-  width: 70,
-  height: 70,
-  borderRadius: '50%',
   border: '1px solid #999',
+  borderRadius: '50%',
+  height: 70,
   [theme.breakpoints.up('sm')]: {
-    width: 120,
     height: 120,
+    width: 120,
   },
+  width: 70,
 }));
 
 const StyledCircularProgress = styled(CircularProgress)<CircleProgressProps>(
   ({ theme }) => ({
     position: 'relative',
     [theme.breakpoints.down('sm')]: {
-      width: '72px !important',
       height: '72px !important',
+      width: '72px !important',
     },
   })
 );

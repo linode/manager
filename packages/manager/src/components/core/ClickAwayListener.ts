@@ -3,6 +3,6 @@ import ClickAwayListener, {
 } from '@mui/material/ClickAwayListener';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface ClickAwayListenerProps extends _ClickAwayListenerProps {}
+export type ClickAwayListenerProps = _ClickAwayListenerProps;
 
 export default ClickAwayListener;

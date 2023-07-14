@@ -1,14 +1,16 @@
-import * as React from 'react';
-import useEvents from 'src/hooks/useEvents';
-import RenderProgressEvent from './RenderProgressEvent';
 import { Event, EventAction } from '@linode/api-v4/lib/account/types';
-import { ExtendedEvent } from 'src/store/events/event.types';
+import { partition } from 'ramda';
+import * as React from 'react';
+
+import useEvents from 'src/hooks/useEvents';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
+import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
+
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
-import { partition } from 'ramda';
-import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 import { RenderEvent } from './RenderEvent';
+import RenderProgressEvent from './RenderProgressEvent';
 
 const unwantedEvents: EventAction[] = [
   'account_update',
@@ -47,16 +49,16 @@ const formatEventForDisplay = (
   event: ExtendedEvent,
   onClose: () => void
 ): NotificationItem => ({
-  id: `event-${event.id}`,
   body: <RenderEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  id: `event-${event.id}`,
 });
 
 const formatProgressEventForDisplay = (
   event: ExtendedEvent,
   onClose: () => void
 ): NotificationItem => ({
-  id: `progress-event-${event.id}`,
   body: <RenderProgressEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  id: `progress-event-${event.id}`,
 });

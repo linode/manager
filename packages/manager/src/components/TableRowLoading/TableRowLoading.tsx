@@ -1,8 +1,9 @@
 import * as React from 'react';
+
 import { Hidden, HiddenProps } from '../Hidden';
-import Skeleton from '../core/Skeleton';
 import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';
+import Skeleton from '../core/Skeleton';
 
 export interface TableRowLoadingProps {
   /**
@@ -51,14 +52,14 @@ export const TableRowLoading = ({
   for (let i = 0; i < rows; i++) {
     tableRows.push(
       <TableRow
-        aria-label="Table content is loading"
-        data-testid="table-row-loading"
-        key={`table-loading-row-${i}`}
         sx={{
           '&& :last-child': {
             paddingRight: '15px',
           },
         }}
+        aria-label="Table content is loading"
+        data-testid="table-row-loading"
+        key={`table-loading-row-${i}`}
       >
         {cols}
       </TableRow>

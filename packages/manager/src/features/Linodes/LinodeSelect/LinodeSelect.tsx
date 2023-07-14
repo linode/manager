@@ -1,9 +1,5 @@
-import type { Linode } from '@linode/api-v4/lib/linodes';
-import type { Region } from '@linode/api-v4/lib/regions';
-
-import * as React from 'react';
-
 import { groupBy } from 'ramda';
+import * as React from 'react';
 
 import EnhancedSelect, {
   GroupType,
@@ -13,6 +9,9 @@ import { TextFieldProps } from 'src/components/TextField';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type { Region } from '@linode/api-v4/lib/regions';
 
 type Override = ((linode: Linode) => any) | keyof Linode;
 

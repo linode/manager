@@ -5,8 +5,8 @@ describe('CPU Gauge', () => {
   describe('sumCPUUSage', () => {
     const cpuData: Record<string, CPU> = {
       cpu0: {
-        user: [{ x: 0, y: 1 }],
         system: [{ x: 0, y: 2 }],
+        user: [{ x: 0, y: 1 }],
         wait: [{ x: 0, y: 3 }],
       },
     };
@@ -17,8 +17,8 @@ describe('CPU Gauge', () => {
       const data = {
         ...cpuData,
         cpu1: {
-          user: [{ x: 0, y: 1 }],
           system: [{ x: 0, y: 2 }],
+          user: [{ x: 0, y: 1 }],
           wait: [{ x: 0, y: 3 }],
         },
       };
@@ -30,7 +30,7 @@ describe('CPU Gauge', () => {
       expect(sumCPUUsage({ cpu0: { user: undefined } as any })).toBe(0);
       expect(sumCPUUsage({ cpu0: { user: null } as any })).toBe(0);
       expect(
-        sumCPUUsage({ cpu0: { user: [], system: null, wait: 1 } as any })
+        sumCPUUsage({ cpu0: { system: null, user: [], wait: 1 } as any })
       ).toBe(0);
     });
   });

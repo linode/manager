@@ -1,6 +1,8 @@
 import * as React from 'react';
+
 import { longviewProcessFactory } from 'src/factories/longviewProcess';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { extendData } from './ProcessesLanding';
 import { ProcessesTable, Props } from './ProcessesTable';
 
@@ -17,7 +19,7 @@ describe('ProcessTable', () => {
   const extendedData = extendData(longviewProcessFactory.build());
 
   it('renders all columns for each row', () => {
-    const { getAllByText, getAllByTestId } = renderWithTheme(
+    const { getAllByTestId, getAllByText } = renderWithTheme(
       <ProcessesTable {...props} processesData={extendedData} />
     );
     extendedData.forEach((row) => {

@@ -6,16 +6,16 @@ import { Notice } from 'src/components/Notice/Notice';
 import { AutoEnroll } from './AutoEnroll';
 
 const props = {
-  enabled: true,
-  error: undefined,
-  toggle: jest.fn(),
   classes: {
-    root: '',
     header: '',
     icon: '',
+    root: '',
     toggleLabel: '',
     toggleLabelText: '',
   },
+  enabled: true,
+  error: undefined,
+  toggle: jest.fn(),
 };
 
 const component = shallow(<AutoEnroll {...props} />);

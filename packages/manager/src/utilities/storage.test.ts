@@ -7,9 +7,9 @@ describe('getLocalStorageOverrides', () => {
 
   const localStorage = {
     apiRoot: 'http://localhost:5000/v4',
-    loginRoot: 'http://login.localhost:5000',
     clientID: 'MY_CLIENT_ID',
     label: 'My Env',
+    loginRoot: 'http://login.localhost:5000',
   };
 
   it.skip('it returns overrides if defined and if dev tools are enabled', () => {
@@ -49,17 +49,17 @@ describe('isDevToolsEnvValid', () => {
     expect(
       isDevToolsEnvValid({
         apiRoot: 'string-a',
-        loginRoot: 'string-b',
         clientID: 'string-c',
         label: 'string-d',
+        loginRoot: 'string-b',
       })
     ).toBe(true);
     expect(
       isDevToolsEnvValid({
         apiRoot: {},
-        loginRoot: 'string-b',
         clientID: 'string-c',
         label: 'string-d',
+        loginRoot: 'string-b',
       })
     ).toBe(false);
   });

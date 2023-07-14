@@ -1,6 +1,7 @@
 // import { useLocation } from '@reach/router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -19,7 +20,7 @@ const LoadBalancerDetailLanding = (props: Props) => {
   const history = useHistory();
   const { loadbalancerId } = useParams<{
     loadbalancerId: string;
-    tab?: 'summary' | 'entrypoints' | 'activity' | 'settings';
+    tab?: 'activity' | 'entrypoints' | 'settings' | 'summary';
   }>();
 
   const id = Number(loadbalancerId);
@@ -61,14 +62,14 @@ const LoadBalancerDetailLanding = (props: Props) => {
       <DocumentTitleSegment segment={loadbalancerId} />
       <LandingHeader
         breadcrumbProps={{
-          pathname: `/loadbalancers/${id}`, // TODO: AGLB - Use Load Balancer label
-          labelOptions: { noCap: true },
           crumbOverrides: [
             {
-              position: 1,
               label: 'Load Balancer',
+              position: 1,
             },
           ],
+          labelOptions: { noCap: true },
+          pathname: `/loadbalancers/${id}`, // TODO: AGLB - Use Load Balancer label
         }}
         docsLabel="Docs"
         docsLink="" // TODO: AGLB - Add docs link

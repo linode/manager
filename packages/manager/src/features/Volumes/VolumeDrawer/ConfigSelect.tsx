@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import FormControl from 'src/components/core/FormControl';
+
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import FormControl from 'src/components/core/FormControl';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 
 interface Props {
+  disabled?: boolean;
   error?: string;
-  onChange: (value: number) => void;
-  onBlur: (e: any) => void;
   linodeId: number;
   name: string;
+  onBlur: (e: any) => void;
+  onChange: (value: number) => void;
   value: number;
-  disabled?: boolean;
   width?: number;
 }
 
@@ -23,16 +24,16 @@ export const initialValueDefaultId = -1;
 const ConfigSelect: React.FC<CombinedProps> = (props) => {
   const {
     error,
-    onChange,
-    onBlur,
     linodeId,
     name,
+    onBlur,
+    onChange,
     value,
     width,
     ...rest
   } = props;
 
-  const { lastUpdated, error: configsError, loading, itemsById } = useSelector(
+  const { error: configsError, itemsById, lastUpdated, loading } = useSelector(
     (state: ApplicationState) => {
       return state.__resources.linodeConfigs[linodeId] ?? { error: {} };
     }
@@ -78,19 +79,19 @@ const ConfigSelect: React.FC<CombinedProps> = (props) => {
         style={{ marginTop: 20, width }}
       >
         <Select
-          options={configList}
-          name={name}
-          value={configList.find((thisConfig) => thisConfig.value === value)}
           onChange={(e: Item<number>) => {
             onChange(+e.value);
           }}
-          onBlur={onBlur}
-          id={name}
-          label="Config"
           errorText={error}
-          noMarginTop
+          id={name}
           isClearable={false}
+          label="Config"
+          name={name}
+          noMarginTop
+          onBlur={onBlur}
+          options={configList}
           placeholder="Select a Config"
+          value={configList.find((thisConfig) => thisConfig.value === value)}
           {...rest}
         />
       </FormControl>

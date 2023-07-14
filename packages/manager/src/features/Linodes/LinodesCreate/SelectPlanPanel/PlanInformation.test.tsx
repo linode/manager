@@ -1,7 +1,10 @@
-import React from 'react';
 import { screen } from '@testing-library/react';
+import React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { PlanInformation } from './PlanInformation';
+
 import type { PlanInformationProps } from './PlanInformation';
 
 jest.mock('src/hooks/useFlags', () => ({
@@ -10,9 +13,9 @@ jest.mock('src/hooks/useFlags', () => ({
 }));
 
 const mockProps: PlanInformationProps = {
-  planType: 'standard',
   hasSelectedRegion: true,
   isSelectedRegionEligibleForPlan: false,
+  planType: 'standard',
 };
 
 describe('PlanInformation', () => {

@@ -1,15 +1,17 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
-import { TableRow } from 'src/components/TableRow';
-import { formatDate } from 'src/utilities/formatDate';
-import { truncate } from 'src/utilities/truncate';
-import StackScriptSelectionRow from './StackScriptSelectionRow';
-import { useProfile } from 'src/queries/profile';
+import * as React from 'react';
+
+import { CircleProgress } from 'src/components/CircleProgress';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { useProfile } from 'src/queries/profile';
+import { formatDate } from 'src/utilities/formatDate';
+import { truncate } from 'src/utilities/truncate';
+
+import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 const useStyles = makeStyles(() => ({
   loadingWrapper: {
@@ -19,39 +21,39 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface Props {
-  onSelect: (s: StackScript) => void;
-  selectedId?: number;
-  data: StackScript[];
-  isSorting: boolean;
-  publicImages: Record<string, Image>;
   currentUser: string;
+  data: StackScript[];
   disabled?: boolean;
+  isSorting: boolean;
+  onSelect: (s: StackScript) => void;
+  publicImages: Record<string, Image>;
+  selectedId?: number;
 }
 
 type CombinedProps = Props;
 
 export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { onSelect, selectedId, data, isSorting, disabled } = props;
+  const { data, disabled, isSorting, onSelect, selectedId } = props;
 
   const { data: profile } = useProfile();
 
   const selectStackScript = (s: StackScript) => (
     <StackScriptSelectionRow
-      key={s.id}
-      label={s.label}
-      stackScriptUsername={s.username}
-      description={truncate(s.description, 100)}
-      deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, {
         displayTime: false,
         timezone: profile?.timezone,
       })}
-      onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
-      updateFor={[selectedId === s.id, classes]}
-      stackScriptID={s.id}
+      deploymentsActive={s.deployments_active}
+      description={truncate(s.description, 100)}
       disabled={disabled}
+      key={s.id}
+      label={s.label}
+      onSelect={() => onSelect(s)}
+      stackScriptID={s.id}
+      stackScriptUsername={s.username}
+      updateFor={[selectedId === s.id, classes]}
     />
   );
 
@@ -61,7 +63,7 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
         data && data.map(selectStackScript)
       ) : (
         <TableRow>
-          <TableCell colSpan={5} className={classes.loadingWrapper}>
+          <TableCell className={classes.loadingWrapper} colSpan={5}>
             <CircleProgress />
           </TableCell>
         </TableRow>

@@ -1,7 +1,8 @@
 import { LARGE_ACCOUNT_THRESHOLD } from 'src/constants';
+
 import { getLinodesPage } from '../linodes/linode.requests';
-import { setLargeAccount } from './accountManagement.actions';
 import { ThunkActionCreator, ThunkDispatch } from '../types';
+import { setLargeAccount } from './accountManagement.actions';
 
 export const checkAccountSize: ThunkActionCreator<Promise<null>> = () => async (
   dispatch: ThunkDispatch

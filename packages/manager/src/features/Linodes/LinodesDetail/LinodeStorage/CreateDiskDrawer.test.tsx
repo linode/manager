@@ -1,9 +1,11 @@
 import React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { CreateDiskDrawer } from './CreateDiskDrawer';
-import { rest, server } from 'src/mocks/testServer';
+
 import { linodeDiskFactory, linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { CreateDiskDrawer } from './CreateDiskDrawer';
 
 describe('CreateDiskDrawer', () => {
   it('should render', async () => {
@@ -18,8 +20,8 @@ describe('CreateDiskDrawer', () => {
       })
     );
 
-    const { getByText, getByLabelText, findByText } = renderWithTheme(
-      <CreateDiskDrawer open={true} onClose={jest.fn()} linodeId={1} />
+    const { findByText, getByLabelText, getByText } = renderWithTheme(
+      <CreateDiskDrawer linodeId={1} onClose={jest.fn()} open={true} />
     );
 
     // Title
@@ -56,7 +58,7 @@ describe('CreateDiskDrawer', () => {
     );
 
     const { findByText } = renderWithTheme(
-      <CreateDiskDrawer open={true} onClose={jest.fn()} linodeId={1} />
+      <CreateDiskDrawer linodeId={1} onClose={jest.fn()} open={true} />
     );
 
     await findByText('Maximum size: 1000 MB');

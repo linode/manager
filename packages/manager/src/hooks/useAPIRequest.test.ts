@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react-hooks';
+
 import { useAPIRequest } from './useAPIRequest';
 
 const mockError = [{ reason: 'An error occurred.' }];
@@ -27,7 +28,7 @@ describe('useAPIRequest', () => {
 
   it('executes request when dependencies change', async () => {
     let mockDep = 1;
-    const { result, waitForNextUpdate, rerender } = renderHook(() =>
+    const { rerender, result, waitForNextUpdate } = renderHook(() =>
       useAPIRequest<number>(mockRequestWithDep(mockDep), 0, [mockDep])
     );
 
@@ -57,7 +58,7 @@ describe('useAPIRequest', () => {
   });
   it('returns default state when the request is null', () => {
     const { result } = renderHook(() => useAPIRequest(null, []));
-    const { loading, error, lastUpdated, data } = result.current;
+    const { data, error, lastUpdated, loading } = result.current;
     expect(loading).toBe(false);
     expect(error).toBeUndefined();
     expect(lastUpdated).toBe(0);

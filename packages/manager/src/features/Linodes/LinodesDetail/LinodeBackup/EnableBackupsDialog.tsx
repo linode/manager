@@ -1,14 +1,15 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
-import { Typography } from 'src/components/Typography';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Currency } from 'src/components/Currency';
+import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
-import { useSnackbar } from 'notistack';
 
 interface Props {
   linodeId: number | undefined;
@@ -20,10 +21,10 @@ export const EnableBackupsDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
 
   const {
+    error,
+    isLoading,
     mutateAsync: enableBackups,
     reset,
-    isLoading,
-    error,
   } = useLinodeBackupsEnableMutation(linodeId ?? -1);
 
   const { data: linode } = useLinodeQuery(
@@ -57,14 +58,14 @@ export const EnableBackupsDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel-cancel>
+      <Button buttonType="secondary" data-qa-cancel-cancel onClick={onClose}>
         Close
       </Button>
       <Button
         buttonType="primary"
-        onClick={handleEnableBackups}
-        loading={isLoading}
         data-qa-confirm-enable-backups
+        loading={isLoading}
+        onClick={handleEnableBackups}
       >
         Enable Backups
       </Button>
@@ -73,11 +74,11 @@ export const EnableBackupsDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      title="Enable backups?"
       actions={actions}
-      open={open}
-      onClose={onClose}
       error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title="Enable backups?"
     >
       <Typography>
         Are you sure you want to enable backups on this Linode?{` `}

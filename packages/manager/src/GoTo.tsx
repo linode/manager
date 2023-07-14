@@ -1,8 +1,7 @@
-import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import MUIDialog from 'src/components/core/Dialog';
@@ -89,8 +88,8 @@ const GoTo: React.FC<CombinedProps> = (props) => {
         href: '/volumes',
       },
       {
-        hide: !flags.aglb,
         display: 'Load Balancers',
+        hide: !flags.aglb,
         href: '/loadbalancers',
       },
       {

@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
+
 import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
 
@@ -12,29 +14,29 @@ const CredentialList = React.lazy(() => import('./Credentials/CredentialList'));
 
 const tabs: NavTab[] = [
   {
-    title: 'Summary',
-    routeName: `/managed/summary`,
     component: ManagedDashboardCard,
+    routeName: `/managed/summary`,
+    title: 'Summary',
   },
   {
-    title: 'Monitors',
-    routeName: `/managed/monitors`,
     render: <Monitors />,
+    routeName: `/managed/monitors`,
+    title: 'Monitors',
   },
   {
-    title: 'SSH Access',
-    routeName: `/managed/ssh-access`,
     component: SSHAccess,
+    routeName: `/managed/ssh-access`,
+    title: 'SSH Access',
   },
   {
-    title: 'Credentials',
-    routeName: `/managed/credentials`,
     render: <CredentialList />,
+    routeName: `/managed/credentials`,
+    title: 'Credentials',
   },
   {
-    title: 'Contacts',
-    routeName: `/managed/contacts`,
     render: <Contacts />,
+    routeName: `/managed/contacts`,
+    title: 'Contacts',
   },
 ];
 
@@ -43,11 +45,11 @@ export const ManagedLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />
       <LandingHeader
-        title="Managed"
-        entity="Managed"
         docsLink="https://www.linode.com/docs/platform/linode-managed/"
+        entity="Managed"
         extraActions={<SupportWidget />}
         removeCrumbX={1}
+        title="Managed"
       />
       <NavTabs tabs={tabs} />
     </React.Fragment>

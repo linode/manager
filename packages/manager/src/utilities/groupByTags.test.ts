@@ -1,4 +1,4 @@
-import { groupByTags, NONE } from './groupByTags';
+import { NONE, groupByTags } from './groupByTags';
 /**
  * [Tag, Linode[]]s
  */

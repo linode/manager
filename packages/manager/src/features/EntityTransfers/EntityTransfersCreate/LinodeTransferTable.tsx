@@ -1,25 +1,27 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
-import * as React from 'react';
-import { Hidden } from 'src/components/Hidden';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+
+import { Hidden } from 'src/components/Hidden';
 import { SelectableTableRow } from 'src/components/SelectableTableRow/SelectableTableRow';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
-import { useSpecificTypes } from 'src/queries/types';
-import { Entity, TransferEntity } from './transferReducer';
-import TransferTable from './TransferTable';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { usePagination } from 'src/hooks/usePagination';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
+import TransferTable from './TransferTable';
+import { Entity, TransferEntity } from './transferReducer';
+
 interface Props {
-  selectedLinodes: TransferEntity;
-  handleSelect: (linodes: Entity[]) => void;
   handleRemove: (linodesToRemove: string[]) => void;
+  handleSelect: (linodes: Entity[]) => void;
   handleToggle: (linode: Entity) => void;
+  selectedLinodes: TransferEntity;
 }
 
 export const LinodeTransferTable = (props: Props) => {
@@ -28,7 +30,7 @@ export const LinodeTransferTable = (props: Props) => {
 
   const pagination = usePagination();
 
-  const { data, isError, isLoading, error, dataUpdatedAt } = useLinodesQuery(
+  const { data, dataUpdatedAt, error, isError, isLoading } = useLinodesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -68,27 +70,27 @@ export const LinodeTransferTable = (props: Props) => {
 
   return (
     <TransferTable
-      toggleSelectAll={toggleSelectAll}
+      count={data?.results ?? 0}
+      handleSearch={handleSearch}
       hasSelectedAll={hasSelectedAll}
       headers={columns}
-      requestPage={pagination.handlePageChange}
       page={pagination.page}
-      handleSearch={handleSearch}
       pageSize={pagination.pageSize}
-      count={data?.results ?? 0}
+      requestPage={pagination.handlePageChange}
+      toggleSelectAll={toggleSelectAll}
     >
       <TableContentWrapper
-        loading={isLoading}
         error={error ?? undefined}
-        length={data?.results ?? 0}
         lastUpdated={dataUpdatedAt}
+        length={data?.results ?? 0}
+        loading={isLoading}
       >
         {linodesCurrentPage.map((thisLinode) => (
           <LinodeRow
+            handleToggleCheck={() => handleToggle(thisLinode)}
+            isChecked={Boolean(selectedLinodes[thisLinode.id])}
             key={thisLinode.id}
             linode={thisLinode}
-            isChecked={Boolean(selectedLinodes[thisLinode.id])}
-            handleToggleCheck={() => handleToggle(thisLinode)}
           />
         ))}
       </TableContentWrapper>
@@ -97,13 +99,13 @@ export const LinodeTransferTable = (props: Props) => {
 };
 
 interface RowProps {
-  linode: Linode;
-  isChecked: boolean;
   handleToggleCheck: () => void;
+  isChecked: boolean;
+  linode: Linode;
 }
 
 const LinodeRow: React.FC<RowProps> = (props) => {
-  const { linode, isChecked, handleToggleCheck } = props;
+  const { handleToggleCheck, isChecked, linode } = props;
   const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
   const displayType = type?.formattedLabel ?? linode.type;
@@ -113,8 +115,8 @@ const LinodeRow: React.FC<RowProps> = (props) => {
   const displayRegion = region?.label ?? linode.region;
   return (
     <SelectableTableRow
-      isChecked={isChecked}
       handleToggleCheck={handleToggleCheck}
+      isChecked={isChecked}
     >
       <TableCell>{linode.label}</TableCell>
       <TableCell>{displayType}</TableCell>

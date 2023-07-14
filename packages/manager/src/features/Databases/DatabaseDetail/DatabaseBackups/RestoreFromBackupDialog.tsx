@@ -2,9 +2,10 @@ import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+
 import { DialogProps } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { useProfile } from 'src/queries/profile';
@@ -12,22 +13,22 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 
 interface Props extends Omit<DialogProps, 'title'> {
-  open: boolean;
-  onClose: () => void;
-  database: Database;
   backup: DatabaseBackup;
+  database: Database;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
-  const { database, backup, onClose, open } = props;
+  const { backup, database, onClose, open } = props;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
 
   const {
-    mutateAsync: restore,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: restore,
   } = useRestoreFromBackupMutation(database.engine, database.id, backup.id);
 
   const handleRestoreDatabase = () => {
@@ -42,29 +43,29 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
 
   return (
     <TypeToConfirmDialog
+      entity={{
+        action: 'restoration',
+        name: database.label,
+        primaryBtnText: 'Restore Database',
+        subType: 'Cluster',
+        type: 'Database',
+      }}
       title={`Restore from Backup ${formatDate(backup.created, {
         timezone: profile?.timezone,
       })}`}
       label={'Database Label'}
-      entity={{
-        type: 'Database',
-        subType: 'Cluster',
-        action: 'restoration',
-        name: database.label,
-        primaryBtnText: 'Restore Database',
-      }}
-      open={open}
-      onClose={onClose}
-      onClick={handleRestoreDatabase}
       loading={isLoading}
+      onClick={handleRestoreDatabase}
+      onClose={onClose}
+      open={open}
     >
       {error ? (
         <Notice
-          error
           text={
             getAPIErrorOrDefault(error, 'Unable to restore this backup.')[0]
               .reason
           }
+          error
         />
       ) : null}
       <Notice warning>

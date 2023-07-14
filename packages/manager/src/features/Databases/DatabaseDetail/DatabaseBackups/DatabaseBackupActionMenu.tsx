@@ -1,12 +1,13 @@
 import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { makeStyles } from 'tss-react/mui';
+
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles()(() => ({
   inlineActions: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     justifyContent: 'flex-end',
   },
 }));
@@ -22,8 +23,8 @@ const DatabaseBackupActionMenu = (props: Props) => {
 
   const actions = [
     {
-      title: 'Restore',
       onClick: () => onRestore(backup.id),
+      title: 'Restore',
     },
   ];
 
@@ -31,8 +32,8 @@ const DatabaseBackupActionMenu = (props: Props) => {
     <div className={classes.inlineActions}>
       {actions.map((thisAction) => (
         <InlineMenuAction
-          key={thisAction.title}
           actionText={thisAction.title}
+          key={thisAction.title}
           onClick={thisAction.onClick}
         />
       ))}

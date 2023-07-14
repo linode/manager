@@ -1,23 +1,24 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { createSelector } from 'reselect';
+
 import { ApplicationState } from 'src/store';
 import { RequestableDataWithEntityError } from 'src/store/types';
 
 type State = ApplicationState['__resources'];
 
 interface Resource<T, E = APIError[]> {
-  results: string[] | number[];
   entities: T;
-  loading: boolean;
-  lastUpdated: number;
   error?: E;
+  lastUpdated: number;
+  loading: boolean;
+  results: number[] | string[];
 }
 
 const emptyResource = {
-  results: [],
   entities: [],
-  loading: false,
   lastUpdated: 0,
+  loading: false,
+  results: [],
 };
 
 export const linodesSelector = (state: State) => state.linodes;
@@ -25,7 +26,7 @@ export const volumesSelector = (state: State) => emptyResource; // state.volumes
 export const nodeBalsSelector = (state: State) => emptyResource; // state.nodebalancers
 
 const isInitialLoad = (
-  e: Resource<any, any> | RequestableDataWithEntityError<any>
+  e: RequestableDataWithEntityError<any> | Resource<any, any>
 ) => e.loading && e.lastUpdated === 0;
 
 export default createSelector(

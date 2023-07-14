@@ -1,22 +1,24 @@
 import { deleteUser } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme, useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
-import { Theme, useTheme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { useProfile } from 'src/queries/profile';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,34 +28,34 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: theme.spacing(),
     },
   },
+  topMargin: {
+    marginLeft: 0,
+    marginTop: theme.spacing(2),
+  },
   wrapper: {
-    backgroundColor: theme.color.white,
-    marginTop: theme.spacing(),
     '&:not(:last-child)': {
       marginBottom: theme.spacing(3),
     },
-  },
-  topMargin: {
-    marginTop: theme.spacing(2),
-    marginLeft: 0,
+    backgroundColor: theme.color.white,
+    marginTop: theme.spacing(),
   },
 }));
 
 interface Props {
-  username: string;
-  email?: string;
-  changeUsername: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  saveAccount: () => void;
+  accountErrors?: APIError[];
   accountSaving: boolean;
   accountSuccess: boolean;
-  accountErrors?: APIError[];
-  saveProfile: () => void;
+  changeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeUsername: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  email?: string;
+  originalEmail?: string;
+  originalUsername?: string;
+  profileErrors?: APIError[];
   profileSaving: boolean;
   profileSuccess: boolean;
-  profileErrors?: APIError[];
-  originalUsername?: string;
-  originalEmail?: string;
+  saveAccount: () => void;
+  saveProfile: () => void;
+  username: string;
 }
 
 const UserProfile: React.FC<Props> = (props) => {
@@ -62,20 +64,20 @@ const UserProfile: React.FC<Props> = (props) => {
   const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const {
-    username,
-    email,
-    changeUsername,
-    changeEmail,
-    saveAccount,
+    accountErrors,
     accountSaving,
     accountSuccess,
-    accountErrors,
+    changeEmail,
+    changeUsername,
+    email,
+    originalEmail,
+    originalUsername,
+    profileErrors,
     profileSaving,
     profileSuccess,
-    profileErrors,
+    saveAccount,
     saveProfile,
-    originalUsername,
-    originalEmail,
+    username,
   } = props;
 
   const { data: profile } = useProfile();
@@ -105,34 +107,34 @@ const UserProfile: React.FC<Props> = (props) => {
       <>
         <Typography
           className={classes.title}
-          variant="h2"
           data-qa-profile-header
+          variant="h2"
         >
           User Profile
         </Typography>
         <Paper className={classes.wrapper}>
           {accountSuccess && (
-            <Notice success spacingBottom={0}>
+            <Notice spacingBottom={0} success>
               Username updated successfully
             </Notice>
           )}
           {generalAccountError && (
-            <Notice error text={generalAccountError} spacingBottom={0} />
+            <Notice error spacingBottom={0} text={generalAccountError} />
           )}
           <TextField
-            label="Username"
-            value={username}
-            onChange={changeUsername}
-            errorText={hasAccountErrorFor('username')}
             data-qa-username
+            errorText={hasAccountErrorFor('username')}
+            label="Username"
+            onChange={changeUsername}
+            value={username}
           />
           <ActionsPanel>
             <Button
               buttonType="primary"
+              data-qa-submit
               disabled={username === originalUsername}
               loading={accountSaving}
               onClick={saveAccount}
-              data-qa-submit
             >
               Save
             </Button>
@@ -140,26 +142,26 @@ const UserProfile: React.FC<Props> = (props) => {
         </Paper>
         <Paper className={classes.wrapper}>
           {profileSuccess && (
-            <Notice success spacingBottom={0}>
+            <Notice spacingBottom={0} success>
               Email updated successfully
             </Notice>
           )}
           {generalProfileError && (
-            <Notice error text={generalProfileError} spacingBottom={0} />
+            <Notice error spacingBottom={0} text={generalProfileError} />
           )}
           <TextField
-            // This should be disabled if this is NOT the current user.
-            disabled={profile?.username !== originalUsername}
-            label="Email"
-            value={email}
-            onChange={changeEmail}
             tooltipText={
               profile?.username !== originalUsername
                 ? "You can't change another user\u{2019}s email address"
                 : ''
             }
-            errorText={hasProfileErrorFor('email')}
             data-qa-email
+            // This should be disabled if this is NOT the current user.
+            disabled={profile?.username !== originalUsername}
+            errorText={hasProfileErrorFor('email')}
+            label="Email"
+            onChange={changeEmail}
+            value={email}
           />
           <ActionsPanel>
             <Button
@@ -169,9 +171,9 @@ const UserProfile: React.FC<Props> = (props) => {
                 email === originalEmail
               }
               buttonType="primary"
+              data-qa-submit
               loading={profileSaving}
               onClick={saveProfile}
-              data-qa-submit
             >
               Save
             </Button>
@@ -208,7 +210,7 @@ const UserProfile: React.FC<Props> = (props) => {
   const renderDeleteSection = () => {
     return (
       <Paper className={classes.wrapper}>
-        <Typography variant="h2" data-qa-delete-user-header>
+        <Typography data-qa-delete-user-header variant="h2">
           Delete User
         </Typography>
         {userDeleteError && (
@@ -219,22 +221,22 @@ const UserProfile: React.FC<Props> = (props) => {
           />
         )}
         <Button
-          disabled={profile?.username === originalUsername}
           buttonType="outlined"
           className={classes.topMargin}
-          onClick={onDelete}
           data-qa-confirm-delete
+          disabled={profile?.username === originalUsername}
+          onClick={onDelete}
         >
           Delete
         </Button>
         {profile?.username === originalUsername && (
           <TooltipIcon
+            sxTooltipIcon={{
+              marginLeft: 0,
+              marginTop: theme.spacing(2),
+            }}
             status="help"
             text="You can't delete the currently active user"
-            sxTooltipIcon={{
-              marginTop: theme.spacing(2),
-              marginLeft: 0,
-            }}
           />
         )}
         <Typography className={classes.topMargin} variant="body1">
@@ -253,10 +255,10 @@ const UserProfile: React.FC<Props> = (props) => {
           {renderProfileSection()}
           {renderDeleteSection()}
           <UserDeleteConfirmationDialog
-            username={username}
-            open={deleteConfirmDialogOpen}
-            onDelete={() => onDeleteConfirm(username)}
             onCancel={onDeleteCancel}
+            onDelete={() => onDeleteConfirm(username)}
+            open={deleteConfirmDialogOpen}
+            username={username}
           />
         </>
       ) : (

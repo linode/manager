@@ -1,16 +1,21 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import LandingHeader from './LandingHeader';
+import React from 'react';
+
 import { Button } from '../Button/Button';
+import LandingHeader from './LandingHeader';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof LandingHeader> = {
-  title: 'Components/LandingHeader',
-  component: LandingHeader,
   argTypes: {
     breadcrumbProps: {
       control: {
         type: 'object',
+      },
+    },
+    extraActions: {
+      table: {
+        disable: true,
       },
     },
     onButtonClick: {
@@ -22,17 +27,14 @@ const meta: Meta<typeof LandingHeader> = {
     onDocsClick: {
       action: 'onDocsClick',
     },
-    extraActions: {
-      table: {
-        disable: true,
-      },
-    },
   },
   args: {
     breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
     buttonDataAttrs: { 'data-qa-button': true },
     createButtonText: 'Create My Entity',
   },
+  component: LandingHeader,
+  title: 'Components/LandingHeader',
 };
 
 export default meta;
@@ -64,15 +66,15 @@ export const Default: Story = {
 export const withBreadcrumbOverrides: Story = {
   args: {
     breadcrumbProps: {
-      pathname: '/my/path/to/somewhere',
       crumbOverrides: [
         {
-          position: 1,
           label: 'My First Crumb',
           linkTo: '/someRoute',
           noCap: true,
+          position: 1,
         },
       ],
+      pathname: '/my/path/to/somewhere',
     },
   },
   render: (args) => <LandingHeader {...args} />,

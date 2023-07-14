@@ -1,16 +1,13 @@
-import type { Config } from '@linode/api-v4/lib/linodes';
-
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
-
-import Grid from '@mui/material/Unstable_Grid2';
 
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate, { PaginationProps } from 'src/components/Paginate';
-import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableBody } from 'src/components/TableBody';
 import { Tooltip } from 'src/components/Tooltip';
 import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
@@ -25,6 +22,8 @@ import {
   StyledToggleButton,
 } from './DisplayLinodes.styles';
 import TableWrapper from './TableWrapper';
+
+import type { Config } from '@linode/api-v4/lib/linodes';
 
 export interface RenderLinodesProps extends PaginationProps {
   data: Props['data'];

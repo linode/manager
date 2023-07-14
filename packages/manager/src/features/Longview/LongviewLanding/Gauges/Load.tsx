@@ -1,21 +1,23 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { WithTheme, withTheme } from '@mui/styles';
-import { Typography } from 'src/components/Typography';
+
 import GaugePercent from 'src/components/GaugePercent';
+import { Typography } from 'src/components/Typography';
 import withClientData, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
-import { baseGaugeProps, BaseProps as Props } from './common';
+
+import { BaseProps as Props, baseGaugeProps } from './common';
 
 type CombinedProps = Props & WithTheme & LVDataProps;
 
 const LoadGauge: React.FC<CombinedProps> = (props) => {
   const {
-    longviewClientData,
-    longviewClientDataLoading: loading,
-    longviewClientDataError: error,
     lastUpdatedError,
+    longviewClientData,
+    longviewClientDataError: error,
+    longviewClientDataLoading: loading,
   } = props;
 
   const load = pathOr<number>(0, ['Load', 0, 'y'], longviewClientData);
@@ -64,9 +66,9 @@ const LoadGauge: React.FC<CombinedProps> = (props) => {
   return (
     <GaugePercent
       {...baseGaugeProps}
+      filledInColor={props.theme.graphs.yellow}
       max={numberOfCores}
       value={load}
-      filledInColor={props.theme.graphs.yellow}
       {...generateCopy()}
     />
   );

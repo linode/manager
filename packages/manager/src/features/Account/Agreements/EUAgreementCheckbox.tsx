@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Checkbox } from 'src/components/Checkbox';
-import { Typography } from 'src/components/Typography';
+
 import { Box } from 'src/components/Box';
+import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 interface Props {
-  className?: string;
   centerCheckbox?: boolean;
   checked: boolean;
+  className?: string;
   onChange: (
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean
@@ -15,7 +16,7 @@ interface Props {
 }
 
 const EUAgreementCheckbox = (props: Props) => {
-  const { checked, onChange, className, centerCheckbox } = props;
+  const { centerCheckbox, checked, className, onChange } = props;
 
   const checkboxStyle = centerCheckbox
     ? { marginLeft: -8 }
@@ -23,10 +24,10 @@ const EUAgreementCheckbox = (props: Props) => {
 
   return (
     <Box
-      display="flex"
-      flexDirection="row"
       alignItems={centerCheckbox ? 'center' : 'flex-start'}
       className={className}
+      display="flex"
+      flexDirection="row"
     >
       <Checkbox checked={checked} onChange={onChange} style={checkboxStyle} />
       <Typography style={{ marginLeft: 4 }}>

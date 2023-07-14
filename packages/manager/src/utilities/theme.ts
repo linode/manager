@@ -1,10 +1,12 @@
 import { Theme } from '@mui/material/styles';
+
 import { dark, light } from 'src/foundations/themes';
+
 import type { ThemeName } from 'src/foundations/themes';
 
-export type ThemeChoice = 'light' | 'dark' | 'system';
+export type ThemeChoice = 'dark' | 'light' | 'system';
 
-export const themes: Record<ThemeName, Theme> = { light, dark };
+export const themes: Record<ThemeName, Theme> = { dark, light };
 
 /**
  * If you need to toggle Cloud Manager's theme, use this function

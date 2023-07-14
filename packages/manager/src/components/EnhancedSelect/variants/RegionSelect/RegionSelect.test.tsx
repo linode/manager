@@ -1,4 +1,5 @@
 import { regions } from 'src/__data__/regionsData';
+
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect';
 
 const fakeRegion = { ...regions[0], country: 'fake iso code' };

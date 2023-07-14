@@ -3,35 +3,37 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
-import type { NoticeProps } from 'src/components/Notice/Notice';
-import { Notice } from 'src/components/Notice/Notice';
+
 import { Box } from 'src/components/Box';
+import { Notice } from 'src/components/Notice/Notice';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';
 
+import type { NoticeProps } from 'src/components/Notice/Notice';
+
 interface Props {
-  preferenceKey: string;
+  actionButton?: JSX.Element;
   children: JSX.Element;
   className?: string;
   options?: DismissibleNotificationOptions;
+  preferenceKey: string;
   sx?: SxProps;
-  actionButton?: JSX.Element;
 }
 
 type CombinedProps = Props & Partial<NoticeProps>;
 
 export const DismissibleBanner = (props: CombinedProps) => {
   const {
-    className,
-    preferenceKey,
-    options,
-    children,
     actionButton,
+    children,
+    className,
+    options,
+    preferenceKey,
     ...rest
   } = props;
 
-  const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
+  const { handleDismiss, hasDismissedBanner } = useDismissibleBanner(
     preferenceKey,
     options
   );
@@ -44,8 +46,8 @@ export const DismissibleBanner = (props: CombinedProps) => {
     <Grid>
       <StyledButton
         aria-label={`Dismiss ${preferenceKey} banner`}
-        onClick={handleDismiss}
         data-testid="notice-dismiss"
+        onClick={handleDismiss}
       >
         <Close />
       </StyledButton>
@@ -55,13 +57,13 @@ export const DismissibleBanner = (props: CombinedProps) => {
   return (
     <StyledNotice className={className} {...rest}>
       <Box
+        alignItems="center"
         display="flex"
         flexDirection="row"
-        alignItems="center"
         justifyContent="space-between"
       >
         {children}
-        <Box display="flex" alignItems="center">
+        <Box alignItems="center" display="flex">
           {actionButton}
           {dismissibleButton}
         </Box>
@@ -89,28 +91,28 @@ export const useDismissibleBanner = (
     dismissNotifications([preferenceKey], options);
   };
 
-  return { hasDismissedBanner, handleDismiss };
+  return { handleDismiss, hasDismissedBanner };
 };
 
 const StyledNotice = styled(Notice)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  flexFlow: 'row nowrap',
-  justifyContent: 'space-between',
-  borderRadius: 1,
-  marginBottom: theme.spacing(),
-  padding: theme.spacing(2),
-  background: theme.bg.bgPaper,
   '&&': {
     p: {
       lineHeight: '1.25rem',
     },
   },
+  alignItems: 'center',
+  background: theme.bg.bgPaper,
+  borderRadius: 1,
+  display: 'flex',
+  flexFlow: 'row nowrap',
+  justifyContent: 'space-between',
+  marginBottom: theme.spacing(),
+  padding: theme.spacing(2),
 }));
 
 const StyledButton = styled('button')(({ theme }) => ({
   ...theme.applyLinkStyles,
-  display: 'flex',
   color: theme.textColors.tableStatic,
+  display: 'flex',
   marginLeft: 20,
 }));

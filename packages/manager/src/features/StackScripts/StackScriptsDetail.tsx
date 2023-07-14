@@ -1,25 +1,27 @@
 import {
-  getStackScript,
   StackScript,
+  getStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
+import LandingHeader from 'src/components/LandingHeader';
 import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+
 import {
   canUserModifyAccountStackScript,
   getStackScriptUrl,
 } from './stackScriptUtils';
-import LandingHeader from 'src/components/LandingHeader';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 export const StackScriptsDetail = () => {
-  const { _isRestrictedUser, _hasGrant, profile } = useAccountManagement();
+  const { _hasGrant, _isRestrictedUser, profile } = useAccountManagement();
   const { data: grants } = useGrants();
   const { stackScriptId } = useParams<{ stackScriptId: string }>();
   const history = useHistory();
@@ -112,33 +114,33 @@ export const StackScriptsDetail = () => {
   return (
     <>
       <LandingHeader
-        title={stackScript.label}
-        docsLabel="Docs"
-        createButtonText="Deploy New Linode"
-        disabledCreateButton={userCannotAddLinodes}
-        onButtonClick={handleCreateClick}
-        docsLink="https://www.linode.com/docs/platform/stackscripts"
         breadcrumbProps={{
-          pathname: location.pathname,
-          labelOptions: { noCap: true },
           crumbOverrides: [
             {
-              position: 1,
               label: 'StackScripts',
               linkTo: stackScript.mine
                 ? '/stackscripts/account'
                 : '/stackscripts/community',
+              position: 1,
             },
           ],
+          labelOptions: { noCap: true },
           onEditHandlers: userCanModify
             ? {
                 editableTextTitle: stackScriptLabel,
-                onEdit: handleLabelChange,
-                onCancel: resetEditableLabel,
                 errorText: labelError,
+                onCancel: resetEditableLabel,
+                onEdit: handleLabelChange,
               }
             : undefined,
+          pathname: location.pathname,
         }}
+        createButtonText="Deploy New Linode"
+        disabledCreateButton={userCannotAddLinodes}
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/platform/stackscripts"
+        onButtonClick={handleCreateClick}
+        title={stackScript.label}
       />
       <div className="detailsWrapper">
         <_StackScript data={stackScript} userCanModify={userCanModify} />

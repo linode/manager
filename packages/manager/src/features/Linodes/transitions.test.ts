@@ -1,5 +1,6 @@
-import { transitionText } from './transitions';
 import { eventFactory } from 'src/factories/events';
+
+import { transitionText } from './transitions';
 
 describe('transitionText helper', () => {
   it('should use status if an event is missing and capitalize it', () => {

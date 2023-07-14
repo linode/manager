@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+
 import type { LinkProps } from 'react-router-dom';
 
 const isExternal = (href: string) => {
@@ -14,12 +15,12 @@ export const Link = (props: LinkProps) => {
 
   return isLinkExternal ? (
     <a
-      href={props.to as string}
-      target="_blank"
       aria-describedby="new-window"
-      rel="noopener noreferrer"
-      onClick={props.onClick}
       className={props.className}
+      href={props.to as string}
+      onClick={props.onClick}
+      rel="noopener noreferrer"
+      target="_blank"
     >
       {props.children}
     </a>

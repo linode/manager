@@ -1,6 +1,5 @@
-import * as React from 'react';
-
 import { action } from '@storybook/addon-actions';
+import * as React from 'react';
 
 import { DebouncedSearchTextField } from '../DebouncedSearchTextField';
 
@@ -9,15 +8,34 @@ interface Props {
 }
 
 interface State {
-  list: string[];
   isSearching: boolean;
+  list: string[];
 }
 
 class Example extends React.Component<Props, State> {
-  state: State = {
-    list: this.props.list,
-    isSearching: false,
-  };
+  render() {
+    return (
+      <React.Fragment>
+        <DebouncedSearchTextField
+          debounceTime={400}
+          hideLabel
+          isSearching={this.state.isSearching}
+          label="Search for something"
+          onSearch={this.handleSearch}
+          placeholder="Search for something"
+        />
+        <ul data-qa-listOfItems>
+          {this.state.list.map((eachThing: string) => {
+            return (
+              <li data-qa-list-item key={eachThing}>
+                {eachThing}
+              </li>
+            );
+          })}
+        </ul>
+      </React.Fragment>
+    );
+  }
 
   handleSearch = (value: string) => {
     this.setState({ isSearching: true });
@@ -36,35 +54,16 @@ class Example extends React.Component<Props, State> {
     }).then((res: string[]) => {
       action('result')(res);
       this.setState({
-        list: res,
         isSearching: false,
+        list: res,
       });
     });
   };
 
-  render() {
-    return (
-      <React.Fragment>
-        <DebouncedSearchTextField
-          placeholder="Search for something"
-          debounceTime={400}
-          onSearch={this.handleSearch}
-          isSearching={this.state.isSearching}
-          label="Search for something"
-          hideLabel
-        />
-        <ul data-qa-listOfItems>
-          {this.state.list.map((eachThing: string) => {
-            return (
-              <li key={eachThing} data-qa-list-item>
-                {eachThing}
-              </li>
-            );
-          })}
-        </ul>
-      </React.Fragment>
-    );
-  }
+  state: State = {
+    isSearching: false,
+    list: this.props.list,
+  };
 }
 
 export default Example;
