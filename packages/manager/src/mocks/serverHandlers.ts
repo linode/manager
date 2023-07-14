@@ -83,7 +83,7 @@ import {
   createLoadbalancerWithAllChildrenFactory,
   getRouteFactory,
   createRouteFactory,
-  getServiceTargetsFactory,
+  getServiceTargetFactory,
   createServiceTargetFactory,
   updateLoadbalancerFactory,
 } from 'src/factories';
@@ -293,7 +293,8 @@ const databases = [
 const aglb = [
   // Entrypoints
   rest.get('*/aglb/entrypoints', (req, res, ctx) => {
-    return res(ctx.json(getEntrypointFactory.buildList(3)));
+    const entrypoints = getEntrypointFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(entrypoints)));
   }),
   rest.get('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
     return res(ctx.json(getEntrypointFactory.build()));
@@ -349,7 +350,8 @@ const aglb = [
   }),
   // Service Targets
   rest.get('*/aglb/service-targets', (req, res, ctx) => {
-    return res(ctx.json(getServiceTargetsFactory.buildList(2)));
+    const service_targets = getServiceTargetFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(service_targets)));
   }),
   rest.post('*/aglb/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));

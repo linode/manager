@@ -27,19 +27,19 @@ const LoadBalancerDetailLanding = (props: Props) => {
   const tabs = [
     {
       title: 'Summary',
-      routeName: `loadbalancer/${id}`,
+      routeName: `/loadbalancer/${id}`,
     },
     {
       title: 'Entry Points',
-      routeName: `loadbalancer/${id}/entrypoints`,
+      routeName: `/loadbalancer/${id}/entrypoints`,
     },
     {
       title: 'Activity Feed',
-      routeName: `loadbalancer/${id}/activity`,
+      routeName: `/loadbalancer/${id}/activity`,
     },
     {
       title: 'Settings',
-      routeName: `loadbalancer/${id}/settings`,
+      routeName: `/loadbalancer/${id}/settings`,
     },
   ];
 

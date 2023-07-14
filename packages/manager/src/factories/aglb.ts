@@ -196,28 +196,26 @@ export const createRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
 // Service Targets endpoints
 // *************************
 
-export const getServiceTargetsFactory = Factory.Sync.makeFactory<ServiceTarget>(
-  {
-    id: Factory.each((i) => i),
-    label: 'images-backend-aws',
-    endpoints: [
-      {
-        ip: '192.168.0.100',
-        port: 8080,
-        capacity: 100,
-        hard_rate_limit: 1000,
-      },
-    ],
-    ca_certificate: 'my-cms-certificate',
-    load_balancing_policy: 'ROUND_ROBIN',
-    health_check_interval: 10,
-    health_check_timeout: 5,
-    health_check_unhealthy_thresh: 3,
-    health_check_healthy_thresh: 2,
-    health_check_path: '/health',
-    health_check_host: 'example1.com',
-  }
-);
+export const getServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
+  id: Factory.each((i) => i),
+  label: Factory.each((i) => `images-backend-aws-${i}`),
+  endpoints: [
+    {
+      ip: '192.168.0.100',
+      port: 8080,
+      capacity: 100,
+      hard_rate_limit: 1000,
+    },
+  ],
+  ca_certificate: 'my-cms-certificate',
+  load_balancing_policy: 'ROUND_ROBIN',
+  health_check_interval: 10,
+  health_check_timeout: 5,
+  health_check_unhealthy_thresh: 3,
+  health_check_healthy_thresh: 2,
+  health_check_path: '/health',
+  health_check_host: 'example1.com',
+});
 
 export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTargetPayload>(
   {
