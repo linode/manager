@@ -1,33 +1,17 @@
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
-
+import { Theme } from '@mui/material/styles';
+import { Typography } from 'src/components/Typography';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { ExtendedType } from 'src/utilities/extendType';
-
 import { ExtendedLinode } from './types';
 
-type ClassNames = 'error' | 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    error: {
-      color: theme.color.red,
-      fontSize: 13,
-    },
-    root: {},
-  });
-
-interface Props {
+interface BackupLinodesProps {
   linodes: ExtendedLinode[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export const displayPrice = (price: number | string) => {
+export const displayPrice = (price: string | number) => {
   if (typeof price === 'string') {
     return price;
   }
@@ -39,8 +23,8 @@ const getLabel = (type?: ExtendedType) => type?.formattedLabel ?? 'Unknown';
 const getPrice = (type?: ExtendedType) =>
   type?.addons?.backups?.price?.monthly ?? 'Unavailable';
 
-export const BackupLinodes: React.FC<CombinedProps> = (props) => {
-  const { classes, linodes } = props;
+export const BackupLinodes = (props: BackupLinodesProps) => {
+  const { linodes } = props;
   return (
     <React.Fragment>
       {linodes &&
@@ -52,7 +36,13 @@ export const BackupLinodes: React.FC<CombinedProps> = (props) => {
                 <TableCell data-qa-linode-label parentColumn="Label">
                   <Typography variant="body1">{linode.label}</Typography>
                   {error && (
-                    <Typography className={classes.error} variant="body1">
+                    <Typography
+                      variant="body1"
+                      sx={(theme: Theme) => ({
+                        color: theme.color.red,
+                        fontSize: 13,
+                      })}
+                    >
                       {error}
                     </Typography>
                   )}
@@ -74,7 +64,3 @@ export const BackupLinodes: React.FC<CombinedProps> = (props) => {
 };
 
 BackupLinodes.displayName = 'BackupLinodes';
-
-const styled = withStyles(styles);
-
-export default styled(BackupLinodes);

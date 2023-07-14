@@ -1,10 +1,10 @@
-import { LinodeType } from '@linode/api-v4';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import * as linodes from 'src/__data__/linodes';
-import { displayPrice as _display } from 'src/components/DisplayPrice';
+import { LinodeType } from '@linode/api-v4';
 import types from 'src/utilities/types.json';
+import { displayPrice as _display } from 'src/components/DisplayPrice';
+import * as linodes from 'src/__data__/linodes';
 
 import { ExtendedLinode } from './types';
 
@@ -16,20 +16,14 @@ const linode1: ExtendedLinode = {
 };
 const linode2: ExtendedLinode = {
   ...linodes.linode2,
-  linodeError: { linodeId: linodes.linode2.id, reason: 'Error occurred' },
   typeInfo: type,
+  linodeError: { linodeId: linodes.linode2.id, reason: 'Error occurred' },
 };
 
+import { BackupLinodes, displayPrice } from './BackupLinodes';
 import { extendType } from 'src/utilities/extendType';
 
-import { BackupLinodes, displayPrice } from './BackupLinodes';
-
-const component = shallow(
-  <BackupLinodes
-    classes={{ error: '', root: '' }}
-    linodes={[linode1, linode2]}
-  />
-);
+const component = shallow(<BackupLinodes linodes={[linode1, linode2]} />);
 
 describe('BackupLinodes component', () => {
   describe('helper functions', () => {
