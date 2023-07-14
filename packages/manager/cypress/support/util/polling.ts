@@ -2,25 +2,26 @@
  * @file Utilities for polling APIs and other resources.
  */
 
+import { ImageStatus, LinodeStatus, getImage, getLinode } from '@linode/api-v4';
+
 import {
-  BackoffOptions,
   BackoffMethod,
+  BackoffOptions,
   FibonacciBackoffMethod,
   attemptWithBackoff,
 } from './backoff';
-import { LinodeStatus, ImageStatus, getImage, getLinode } from '@linode/api-v4';
 
-/// Describes a backoff configuration for a poll. This may be a partial BackoffOptions object,
-/// an instance of a BackoffMethod implementation, or undefined.
+// / Describes a backoff configuration for a poll. This may be a partial BackoffOptions object,
+// / an instance of a BackoffMethod implementation, or undefined.
 export type PollBackoffConfiguration =
-  | Partial<BackoffOptions>
   | BackoffMethod
+  | Partial<BackoffOptions>
   | undefined;
 
 // Default backoff options for a poll.
 const defaultBackoffOptions: BackoffOptions = {
-  maxAttempts: 10,
   initialDelay: 0,
+  maxAttempts: 10,
 };
 
 // Default backoff method for a poll, which uses the default backoff options.

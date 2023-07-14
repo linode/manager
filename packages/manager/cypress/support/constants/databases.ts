@@ -3,33 +3,33 @@ import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 interface databaseClusterConfiguration {
-  label: string;
-  linodeType: string;
   clusterSize: ClusterSize;
   dbType: Engine;
-  region: Region;
   engine: string;
+  label: string;
+  linodeType: string;
+  region: Region;
   version: string;
 }
 
 // Array of database cluster configurations for which to test creation.
 const databaseConfigurations: databaseClusterConfiguration[] = [
   {
-    label: randomLabel(),
-    linodeType: 'g6-nanode-1',
     clusterSize: 1,
     dbType: 'mysql',
-    region: chooseRegion(),
     engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    region: chooseRegion(),
     version: '8',
   },
   {
-    label: randomLabel(),
-    linodeType: 'g6-dedicated-16',
     clusterSize: 3,
     dbType: 'mysql',
-    region: chooseRegion(),
     engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g6-dedicated-16',
+    region: chooseRegion(),
     version: '5',
   },
   // {
@@ -43,12 +43,12 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
   //   version: '4',
   // },
   {
-    label: randomLabel(),
-    linodeType: 'g6-nanode-1',
     clusterSize: 3,
     dbType: 'postgresql',
-    region: chooseRegion(),
     engine: 'PostgreSQL',
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    region: chooseRegion(),
     version: '13',
   },
 ];

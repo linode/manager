@@ -2,8 +2,9 @@
  * @file Implements naive parallelization without Cypress Cloud.
  */
 
-import type { CypressPlugin } from './plugin';
 import { globSync } from 'glob';
+
+import type { CypressPlugin } from './plugin';
 
 export const splitCypressRun: CypressPlugin = (on, config) => {
   const splitRunEnabled = config?.env?.['CY_TEST_SPLIT_RUN'];
@@ -46,10 +47,10 @@ export const splitCypressRun: CypressPlugin = (on, config) => {
 
     console.info('Cypress split running is enabled.');
     console.table({
+      '# of Specs Total': specs.length,
+      '# of Specs for This Run': config.specPattern.length,
       Runner: runner,
       'Total Runners': totalRunners,
-      '# of Specs for This Run': config.specPattern.length,
-      '# of Specs Total': specs.length,
     });
 
     return config;
