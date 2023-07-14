@@ -83,7 +83,7 @@ import {
   createLoadbalancerWithAllChildrenFactory,
   getRouteFactory,
   createRouteFactory,
-  getServiceTargetsFactory,
+  getServiceTargetFactory,
   createServiceTargetFactory,
   updateLoadbalancerFactory,
 } from 'src/factories';
@@ -350,7 +350,7 @@ const aglb = [
   }),
   // Service Targets
   rest.get('*/aglb/service-targets', (req, res, ctx) => {
-    const service_targets = getServiceTargetsFactory.buildList(3);
+    const service_targets = getServiceTargetFactory.buildList(3);
     return res(ctx.json(makeResourcePage(service_targets)));
   }),
   rest.post('*/aglb/service-targets', (req, res, ctx) => {
