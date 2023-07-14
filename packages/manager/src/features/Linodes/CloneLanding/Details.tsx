@@ -17,7 +17,7 @@ import {
   getAllDisks,
   getEstimatedCloneTime,
 } from './utilities';
-import { LinodeSelectV2 } from '../LinodeSelect/LinodeSelectV2';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

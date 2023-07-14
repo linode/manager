@@ -25,7 +25,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { useImageAndLinodeGrantCheck } from './utils';
-import { LinodeSelectV2 } from '../Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},

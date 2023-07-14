@@ -18,7 +18,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -356,20 +356,20 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     alignItems="flex-end"
                     className={classes.linodeSelect}
                   >
-                    <LinodeSelect
-                      label="Linode"
-                      name="linodeId"
+                    <LinodeSelectV2
                       disabled={doesNotHavePermission}
-                      filterCondition={(linode: Linode) =>
+                      optionsFilter={(linode: Linode) =>
                         regionsWithBlockStorage.includes(linode.region)
                       }
-                      handleChange={handleLinodeChange}
-                      linodeError={linodeError || configErrorMessage}
+                      onSelectionChange={handleLinodeChange}
+                      errorText={linodeError || configErrorMessage}
                       onBlur={handleBlur}
-                      selectedLinode={values.linode_id}
+                      value={values.linode_id}
                       region={values.region}
-                      isClearable
-                      width={320}
+                      clearable
+                      sx={{
+                        width: '320px',
+                      }}
                     />
                     {renderSelectTooltip(
                       'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'

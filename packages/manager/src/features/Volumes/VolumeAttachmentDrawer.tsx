@@ -14,7 +14,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { number, object } from 'yup';
-import { LinodeSelectV2 } from '../Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 
 interface Props {
   open: boolean;
