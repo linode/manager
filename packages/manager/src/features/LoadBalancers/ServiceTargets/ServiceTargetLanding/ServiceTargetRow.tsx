@@ -43,11 +43,7 @@ export const ServiceTargetRow = React.memo((props: Props) => {
       </Hidden>
       <TableCell actionCell>
         {/* TODO: AGLB - Needs UX clarification: available actions? */}
-        <ServiceTargetActionMenu
-          serviceTargetId={id}
-          toggleDialog={onDelete}
-          label={label}
-        />
+        <ServiceTargetActionMenu label={label} toggleDialog={onDelete} />
       </TableCell>
     </TableRow>
   );

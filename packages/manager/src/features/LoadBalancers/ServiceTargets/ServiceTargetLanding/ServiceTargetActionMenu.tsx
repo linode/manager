@@ -2,14 +2,13 @@ import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 interface Props {
-  serviceTargetId: number;
-  toggleDialog: (serviceTargetId: number, label: string) => void;
   label: string;
+  toggleDialog: (serviceTargetId: number, label: string) => void;
 }
 
 // TODO: AGLB - Needs UX clarification: available actions?
 export const ServiceTargetActionMenu = (props: Props) => {
-  const { serviceTargetId } = props;
+  const { label } = props;
 
   const actions: Action[] = [
     {
@@ -35,7 +34,7 @@ export const ServiceTargetActionMenu = (props: Props) => {
   return (
     <ActionMenu
       actionsList={actions}
-      ariaLabel={`Action menu for Service Target ${serviceTargetId}`}
+      ariaLabel={`Action menu for Service Target ${label}`}
     />
   );
 };
