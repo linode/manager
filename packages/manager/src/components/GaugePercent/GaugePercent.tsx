@@ -1,39 +1,9 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles } from 'tss-react/mui';
 import { withTheme, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Chart } from 'chart.js';
-
-interface Options {
-  width: number | string;
-  height: number;
-  fontSize?: number;
-}
-
-const useStyles = (options: Options) =>
-  makeStyles()((theme: Theme) => ({
-    gaugeWrapper: {
-      position: 'relative',
-      width: `50%`,
-    },
-    innerText: {
-      position: 'absolute',
-      top: `calc(${options.height + 30}px / 2)`,
-      width: options.width,
-      textAlign: 'center',
-      fontSize: '1rem',
-      color: theme.palette.text.primary,
-    },
-    subTitle: {
-      position: 'absolute',
-      width: options.width,
-      textAlign: 'center',
-      top: `calc(${options.height}px + ${theme.spacing(1.25)})`,
-      fontSize: options.fontSize || theme.spacing(2.5),
-      color: theme.color.headline,
-    },
-  }));
+import { Box } from 'src/components/Box';
 
 interface Props {
   width?: number | string;
@@ -47,16 +17,11 @@ interface Props {
   subTitle?: string | JSX.Element | null;
 }
 
-type CombinedProps = Props & WithTheme;
+type GaugePercentProps = Props & WithTheme;
 
-const GaugePercent = (props: CombinedProps) => {
+export const GaugePercent = (props: GaugePercentProps) => {
   const width = props.width || 300;
   const height = props.height || 300;
-  const { classes } = useStyles({
-    width,
-    height,
-    fontSize: props.innerTextFontSize,
-  })();
 
   /**
    * if the value exceeds the maximum (e.g Longview Load), just make the max 0
@@ -118,29 +83,49 @@ const GaugePercent = (props: CombinedProps) => {
     }
   });
   return (
-    <div
-      className={classes.gaugeWrapper}
-      style={{
-        width,
+    <Box
+      sx={{
+        position: 'relative',
+        width: width,
         height: `calc(${height}px + ${props.theme.spacing(3.75)})`,
       }}
     >
       <canvas height={height} ref={graphRef} />
       {props.innerText && (
-        <div data-testid="gauge-innertext" className={classes.innerText}>
+        <Box
+          data-testid="gauge-innertext"
+          sx={(theme: Theme) => ({
+            position: 'absolute',
+            top: `calc(${height + 30}px / 2)`,
+            width: width,
+            textAlign: 'center',
+            fontSize: '1rem',
+            color: theme.palette.text.primary,
+          })}
+        >
           {props.innerText}
-        </div>
+        </Box>
       )}
       {props.subTitle && (
-        <div data-testid="gauge-subtext" className={classes.subTitle}>
+        <Box
+          data-testid="gauge-subtext"
+          sx={(theme: Theme) => ({
+            position: 'absolute',
+            width: width,
+            textAlign: 'center',
+            top: `calc(${height}px + ${theme.spacing(1.25)})`,
+            fontSize: props.innerTextFontSize || theme.spacing(2.5),
+            color: theme.color.headline,
+          })}
+        >
           {props.subTitle}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
-export default compose<CombinedProps, Props>(
+export default compose<GaugePercentProps, Props>(
   React.memo,
   withTheme
 )(GaugePercent);
