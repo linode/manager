@@ -71,11 +71,15 @@ export const LinodeDiskRow = React.memo((props: Props) => {
 
   const diskEventsToShowProgressFor = Object.keys(diskEventLabelMap);
 
-  const resizeEvent = events?.find(
-    (event) =>
-      isInProgressEvent(event) &&
-      event.secondary_entity?.id === disk.id &&
-      diskEventsToShowProgressFor.includes(event.action)
+  const resizeEvent = React.useMemo(
+    () =>
+      events?.find(
+        (event) =>
+          isInProgressEvent(event) &&
+          event.secondary_entity?.id === disk.id &&
+          diskEventsToShowProgressFor.includes(event.action)
+      ),
+    [disk.id, diskEventsToShowProgressFor, events]
   );
 
   return (

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
   isEventRelevantToLinode,
