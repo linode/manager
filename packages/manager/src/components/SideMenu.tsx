@@ -14,12 +14,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 1,
       },
       overflowY: 'auto',
-      width: `190px !important`,
+      width: '190px !important',
     },
     [theme.breakpoints.up('sm')]: {
       overflowY: 'hidden',
     },
-    width: `52px !important`,
+    width: '52px !important',
   },
   desktopMenu: {
     transform: 'none',
