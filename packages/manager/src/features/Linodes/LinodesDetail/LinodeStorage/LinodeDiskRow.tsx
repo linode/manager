@@ -61,7 +61,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
   } = props;
 
   const classes = useStyles();
-  const { data: eventsData } = useEventsInfiniteQuery();
+  const { events } = useEventsInfiniteQuery();
 
   const diskEventLabelMap = {
     disk_create: 'Creating',
@@ -71,14 +71,12 @@ export const LinodeDiskRow = React.memo((props: Props) => {
 
   const diskEventsToShowProgressFor = Object.keys(diskEventLabelMap);
 
-  const resizeEvent = eventsData?.pages
-    .reduce((events, page) => [...events, ...page.data], [])
-    .find(
-      (event) =>
-        isInProgressEvent(event) &&
-        event.secondary_entity?.id === disk.id &&
-        diskEventsToShowProgressFor.includes(event.action)
-    );
+  const resizeEvent = events?.find(
+    (event) =>
+      isInProgressEvent(event) &&
+      event.secondary_entity?.id === disk.id &&
+      diskEventsToShowProgressFor.includes(event.action)
+  );
 
   return (
     <TableRow data-qa-disk={disk.label}>
