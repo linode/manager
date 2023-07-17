@@ -1,6 +1,5 @@
 import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 
 import { Currency } from 'src/components/Currency';
 import { Hidden } from 'src/components/Hidden';
@@ -10,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import { ApplicationState } from 'src/store';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { ExtendedType } from 'src/utilities/extendType';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
@@ -73,12 +72,12 @@ export const PlanSelection = ({
   const shouldShowTransfer = showTransfer && type.transfer;
   const shouldShowNetwork = showTransfer && type.network_out;
 
-  const selectedLinodePlanType = useSelector((state: ApplicationState) => {
-    if (linodeID) {
-      return state?.__resources.linodes.itemsById[linodeID]?.type;
-    }
-    return linodeID;
-  });
+  const { data: linode } = useLinodeQuery(
+    linodeID ?? -1,
+    linodeID !== undefined
+  );
+
+  const selectedLinodePlanType = linode?.type;
 
   const rowAriaLabel =
     type && type.formattedLabel && isSamePlan
