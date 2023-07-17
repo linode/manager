@@ -1,12 +1,14 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { Button } from 'src/components/Button/Button';
+
 import {
   Breadcrumb,
   BreadcrumbProps,
 } from 'src/components/Breadcrumb/Breadcrumb';
+import { Button } from 'src/components/Button/Button';
+
 import DocsLink from '../DocsLink';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme, styled } from '@mui/material/styles';
 
 export interface Props {
   analyticsLabel?: string;
@@ -25,7 +27,7 @@ export interface Props {
   onDocsClick?: () => void;
   removeCrumbX?: number;
   shouldHideDocsAndCreateButtons?: boolean;
-  title?: string | JSX.Element;
+  title?: JSX.Element | string;
 }
 
 /**
@@ -65,10 +67,10 @@ export const LandingHeader = ({
 
   return (
     <Grid
+      alignItems="center"
       container
       data-qa-entity-header
       justifyContent="space-between"
-      alignItems="center"
       sx={{ width: '100%' }}
     >
       <Grid>
@@ -87,9 +89,9 @@ export const LandingHeader = ({
           <Grid alignItems="center" container justifyContent="flex-end">
             {docsLink ? (
               <DocsLink
+                analyticsLabel={docsAnalyticsLabel}
                 href={docsLink}
                 label={docsLabel}
-                analyticsLabel={docsAnalyticsLabel}
                 onClick={onDocsClick}
               />
             ) : null}
@@ -102,8 +104,8 @@ export const LandingHeader = ({
                     disabled={disabledCreateButton}
                     loading={loading}
                     onClick={onButtonClick}
-                    sx={sxButton}
                     onKeyPress={onButtonKeyPress}
+                    sx={sxButton}
                     {...buttonDataAttrs}
                   >
                     {createButtonText ?? `Create ${entity}`}

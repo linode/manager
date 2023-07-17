@@ -3,60 +3,49 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { Box } from 'src/components/Box';
 import { MBpsInterDC } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import useFlags from 'src/hooks/useFlags';
+import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
-import { useTypeQuery } from 'src/queries/types';
-import { formatDate } from 'src/utilities/formatDate';
-import { isEURegion } from 'src/utilities/formatRegion';
-import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
-import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import CautionNotice from './CautionNotice';
-import ConfigureForm from './ConfigureForm';
+import { useEventsInfiniteQuery } from 'src/queries/events';
+import { useImageQuery } from 'src/queries/images';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeMigrateMutation,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useImageQuery } from 'src/queries/images';
+import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
+import { useTypeQuery } from 'src/queries/types';
+import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
+import formatDate from 'src/utilities/formatDate';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import { useEventsInfiniteQuery } from 'src/queries/events';
-import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
+import CautionNotice from './CautionNotice';
+import ConfigureForm from './ConfigureForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  details: {
-    marginTop: theme.spacing(2),
-  },
   actionWrapper: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-  },
-  vlanHelperText: {
-    marginTop: theme.spacing(0.5),
-  },
-  buttonGroup: {
-    marginTop: theme.spacing(3),
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'flex-end',
-      flexWrap: 'wrap',
-    },
+    marginTop: theme.spacing(2),
   },
   agreement: {
     maxWidth: '70%',
@@ -69,12 +58,25 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(2),
     },
   },
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    [theme.breakpoints.down('md')]: {
+      flexWrap: 'wrap',
+      justifyContent: 'flex-end',
+    },
+  },
+  details: {
+    marginTop: theme.spacing(2),
+  },
+  vlanHelperText: {
+    marginTop: theme.spacing(0.5),
+  },
 }));
 
 interface Props {
   linodeId: number | undefined;
-  open: boolean;
   onClose: () => void;
+  open: boolean;
 }
 
 export const MigrateLinode = React.memo((props: Props) => {
@@ -110,9 +112,9 @@ export const MigrateLinode = React.memo((props: Props) => {
   );
 
   const {
-    mutateAsync: migrateLinode,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: migrateLinode,
     reset,
   } = useLinodeMigrateMutation(linodeId ?? -1);
 
@@ -122,7 +124,7 @@ export const MigrateLinode = React.memo((props: Props) => {
   const { data: regionsData } = useRegionsQuery();
   const flags = useFlags();
 
-  const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
+  const [selectedRegion, handleSelectRegion] = React.useState<null | string>(
     null
   );
 
@@ -192,8 +194,8 @@ export const MigrateLinode = React.memo((props: Props) => {
         region,
         selectedRegion,
         +formatDate(new Date().toISOString(), {
-          timezone: profile?.timezone,
           format: 'H',
+          timezone: profile?.timezone,
         })
       );
       enqueueSnackbar(
@@ -227,12 +229,12 @@ export const MigrateLinode = React.memo((props: Props) => {
 
   return (
     <Dialog
-      title={`Migrate Linode ${linode.label ?? ''} to another region`}
-      open={open}
-      onClose={onClose}
-      fullWidth
       fullHeight
+      fullWidth
       maxWidth="md"
+      onClose={onClose}
+      open={open}
+      title={`Migrate Linode ${linode.label ?? ''} to another region`}
     >
       {error && <Notice error text={error?.[0].reason} />}
       <Typography className={classes.details} variant="h2">
@@ -247,11 +249,11 @@ export const MigrateLinode = React.memo((props: Props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
-        linodeId={linodeId}
-        setConfirmed={setConfirmed}
         hasConfirmed={hasConfirmed}
-        migrationTimeInMins={migrationTimeInMinutes}
+        linodeId={linodeId}
         metadataWarning={metadataMigrateWarning}
+        migrationTimeInMins={migrationTimeInMinutes}
+        setConfirmed={setConfirmed}
       />
       <ConfigureForm
         currentRegion={region}
@@ -259,34 +261,34 @@ export const MigrateLinode = React.memo((props: Props) => {
         selectedRegion={selectedRegion}
       />
       <Box
-        display="flex"
-        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
         alignItems="center"
         className={classes.buttonGroup}
+        display="flex"
+        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
       >
         {showAgreement ? (
           <EUAgreementCheckbox
-            checked={hasSignedAgreement}
-            onChange={(e) => setHasSignedAgreement(e.target.checked)}
-            className={classes.agreement}
             centerCheckbox
+            checked={hasSignedAgreement}
+            className={classes.agreement}
+            onChange={(e) => setHasSignedAgreement(e.target.checked)}
           />
         ) : null}
         <Button
-          buttonType="primary"
           disabled={
             !!disabledText ||
             !hasConfirmed ||
             !selectedRegion ||
             (showAgreement && !hasSignedAgreement)
           }
+          buttonType="primary"
+          className={classes.button}
           loading={isLoading}
           onClick={handleMigrate}
-          className={classes.button}
         >
           Enter Migration Queue
         </Button>
-        {!!disabledText && <TooltipIcon text={disabledText} status="help" />}
+        {!!disabledText && <TooltipIcon status="help" text={disabledText} />}
       </Box>
     </Dialog>
   );

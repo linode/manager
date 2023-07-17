@@ -78,7 +78,6 @@ export const COUNTRY_CODE_TO_CONTINENT_CODE = Object.freeze({
   FR: 'EU',
   GA: 'AF',
   GB: 'EU',
-  UK: 'EU', // for compatability with the Linode API
   GD: 'NA',
   GE: 'AS',
   GF: 'SA',
@@ -233,6 +232,7 @@ export const COUNTRY_CODE_TO_CONTINENT_CODE = Object.freeze({
   TZ: 'AF',
   UA: 'EU',
   UG: 'AF',
+  UK: 'EU', // for compatability with the Linode API
   UM: 'OC',
   US: 'NA',
   UY: 'SA',
@@ -257,13 +257,13 @@ export const COUNTRY_CODE_TO_CONTINENT_CODE = Object.freeze({
 export type Country = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
 
 export const CONTINENT_CODE_TO_CONTINENT = Object.freeze({
-  EU: 'Europe',
-  AS: 'Asia',
-  NA: 'North America',
-  SA: 'South America',
-  OC: 'Oceania',
   AF: 'Africa',
   AN: 'Antartica',
+  AS: 'Asia',
+  EU: 'Europe',
+  NA: 'North America',
+  OC: 'Oceania',
+  SA: 'South America',
 });
 
 export type ContinentNames = typeof CONTINENT_CODE_TO_CONTINENT[keyof typeof CONTINENT_CODE_TO_CONTINENT];

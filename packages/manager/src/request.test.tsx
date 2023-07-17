@@ -1,26 +1,28 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
+
 import { profileFactory } from './factories';
-import { handleError, getURL, injectEuuidToProfile } from './request';
+import { getURL, handleError, injectEuuidToProfile } from './request';
 import { storeFactory } from './store';
 
 const store = storeFactory();
 
 const baseErrorConfig: AxiosRequestConfig = {
-  method: 'POST',
   headers: {},
+  method: 'POST',
 };
 const baseError = {
   config: baseErrorConfig,
-  name: 'requestName',
-  message: 'helloworld',
-  response: {
-    statusText: '',
-    data: [],
-    config: {},
-    headers: {},
-  },
   isAxiosError: true,
+  message: 'helloworld',
+  name: 'requestName',
+  response: {
+    config: {},
+    data: [],
+    headers: {},
+    statusText: '',
+  },
 };
 const baseErrorWithJson = {
   ...baseError,
@@ -47,9 +49,9 @@ describe('Expiring Tokens', () => {
   it('should properly expire tokens if given a 401 error', () => {
     store.dispatch(
       handleStartSession({
-        token: 'helloworld',
-        scopes: '*',
         expires: 'never',
+        scopes: '*',
+        token: 'helloworld',
       })
     );
     const expireToken = handleError(error401, store);
@@ -59,10 +61,10 @@ describe('Expiring Tokens', () => {
      * our original error
      */
     expect(store.getState().authentication).toEqual({
-      token: null,
-      scopes: null,
       expiration: null,
       loggedInAsCustomer: false,
+      scopes: null,
+      token: null,
     });
     expireToken.catch((e: AxiosError) =>
       expect(e[0].reason).toMatch(/unexpected error/)
@@ -72,9 +74,9 @@ describe('Expiring Tokens', () => {
   it('should just promise reject if a non-401 error', () => {
     store.dispatch(
       handleStartSession({
-        token: 'helloworld',
-        scopes: '*',
         expires: 'never',
+        scopes: '*',
+        token: 'helloworld',
       })
     );
     const expireToken = handleError(error400, store);
@@ -84,10 +86,10 @@ describe('Expiring Tokens', () => {
      * our original error
      */
     expect(store.getState().authentication).toEqual({
-      token: 'helloworld',
-      scopes: '*',
       expiration: 'never',
       loggedInAsCustomer: false,
+      scopes: '*',
+      token: 'helloworld',
     });
     expireToken.catch((e: AxiosError) =>
       expect(e[0].reason).toMatch(/unexpected error/)
@@ -113,10 +115,10 @@ describe('getURL', () => {
 describe('injectEuuidToProfile', () => {
   const profile = profileFactory.build();
   const response: Partial<AxiosResponse> = {
+    config: { method: 'get', url: '/profile' },
     data: profile,
-    status: 200,
-    config: { url: '/profile', method: 'get' },
     headers: { 'x-customer-uuid': '1234' },
+    status: 200,
   };
 
   it('injects the euuid on successful GET profile response ', () => {

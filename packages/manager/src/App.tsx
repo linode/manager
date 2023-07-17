@@ -5,10 +5,12 @@ import 'highlight.js/styles/a11y-light.css';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
+
 import GoTo from './GoTo';
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
@@ -129,7 +131,7 @@ const BaseApp = withFeatureFlagProvider(
     return (
       <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
         {/** Accessibility helper */}
-        <a href="#main-content" className="skip-link">
+        <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
         <div hidden>
@@ -139,7 +141,7 @@ const BaseApp = withFeatureFlagProvider(
             Opens an external site in a new window
           </span>
         </div>
-        <GoTo open={goToOpen} onClose={() => setGoToOpen(false)} />
+        <GoTo onClose={() => setGoToOpen(false)} open={goToOpen} />
         {/** Update the LD client with the user's id as soon as we know it */}
         <IdentifyUser />
         <DocumentTitleSegment segment="Linode Manager" />

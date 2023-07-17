@@ -1,4 +1,5 @@
 import { authentication } from 'src/utilities/storage';
+
 import { storeFactory } from '..';
 import {
   handleInitTokens,
@@ -17,25 +18,25 @@ describe('Authentication', () => {
   it('should set tokens when setToken is invoked', () => {
     store.dispatch(
       handleStartSession({
-        token: 'helloworld',
-        scopes: '*',
         expires: 'never',
+        scopes: '*',
+        token: 'helloworld',
       })
     );
     expect(store.getState().authentication).toEqual({
-      token: 'helloworld',
-      scopes: '*',
       expiration: 'never',
       loggedInAsCustomer: false,
+      scopes: '*',
+      token: 'helloworld',
     });
   });
 
   it('expire() should properly expire tokens stored in local storage and redux state', () => {
     store.dispatch(
       handleStartSession({
-        token: 'helloworld',
-        scopes: '*',
         expires: 'never',
+        scopes: '*',
+        token: 'helloworld',
       })
     );
     store.dispatch(handleLogout());
@@ -44,10 +45,10 @@ describe('Authentication', () => {
     expect(authentication.scopes.get()).toBe('');
     expect(authentication.token.get()).toBe('');
     expect(store.getState().authentication).toEqual({
-      token: null,
-      scopes: null,
       expiration: null,
       loggedInAsCustomer: false,
+      scopes: null,
+      token: null,
     });
   });
 
@@ -62,10 +63,10 @@ describe('Authentication', () => {
     store.dispatch(handleInitTokens());
 
     expect(store.getState().authentication).toEqual({
-      token: 'Admin',
-      scopes: 'hello world',
       expiration: 'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)',
       loggedInAsCustomer: true,
+      scopes: 'hello world',
+      token: 'Admin',
     });
   });
 
@@ -80,10 +81,10 @@ describe('Authentication', () => {
     store.dispatch(handleInitTokens());
 
     expect(store.getState().authentication).toEqual({
-      token: 'bearer',
-      scopes: 'hello world',
       expiration: 'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)',
       loggedInAsCustomer: false,
+      scopes: 'hello world',
+      token: 'bearer',
     });
   });
 });

@@ -11,7 +11,9 @@ import {
   updateOAuthClient,
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+
 import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+
 import { queryKey as accountQueryKey } from './account';
 
 const queryKey = [accountQueryKey, 'oauth'];

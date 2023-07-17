@@ -1,12 +1,14 @@
+import { Region } from '@linode/api-v4/lib/regions';
+
 import { linode4, linodes } from 'src/__data__/linodes';
+import regionsData from 'src/cachedData/regions.json';
+
 import {
   linodeFromGroupedItems,
   linodeFromItems,
   linodesToGroupedItems,
   linodesToItems,
 } from './LinodeSelect';
-import regionsData from 'src/cachedData/regions.json';
-import { Region } from '@linode/api-v4/lib/regions';
 
 const regions = regionsData.data as Region[];
 

@@ -1,7 +1,9 @@
 import { styled } from '@mui/material/styles';
+
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+
 import type { MODE } from './types';
 
 export const StyledTableRoot = styled(Table, {
@@ -25,7 +27,7 @@ export const StyledBucketCell = styled(TableCell, {
 
 export const StyledRadioRow = styled(TableRow, {
   label: 'StyledRadioRow',
-})<{ disabled: boolean; mode?: MODE }>(({ theme, disabled, mode }) => ({
+})<{ disabled: boolean; mode?: MODE }>(({ disabled, mode, theme }) => ({
   '& td ': {
     color: `${theme.palette.text.primary} !important`,
   },

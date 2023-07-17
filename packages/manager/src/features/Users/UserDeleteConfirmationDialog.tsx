@@ -1,41 +1,42 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 interface Props {
-  username: string;
-  open: boolean;
-  onDelete: () => void;
   onCancel: () => void;
+  onDelete: () => void;
+  open: boolean;
+  username: string;
 }
 
 export const UserDeleteConfirmationDialog = (props: Props) => {
-  const { onDelete, onCancel, open, username } = props;
+  const { onCancel, onDelete, open, username } = props;
 
   return (
     <ConfirmationDialog
-      title="Confirm Deletion"
-      onClose={onCancel}
-      open={open}
       actions={
         <ActionsPanel style={{ padding: 0 }}>
           <Button
             buttonType="secondary"
-            onClick={onCancel}
             data-qa-cancel-delete
+            onClick={onCancel}
           >
             Cancel
           </Button>
           <Button
             buttonType="primary"
-            onClick={onDelete}
             data-qa-confirm-delete
+            onClick={onDelete}
           >
             Delete
           </Button>
         </ActionsPanel>
       }
+      onClose={onCancel}
+      open={open}
+      title="Confirm Deletion"
     >
       User {username} will be permanently deleted. Are you sure?
     </ConfirmationDialog>

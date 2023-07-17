@@ -1,12 +1,14 @@
 import * as React from 'react';
+
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import type { Meta, StoryObj } from '@storybook/react';
+
 import type { TableRowLoadingProps } from './TableRowLoading';
+import type { Meta, StoryObj } from '@storybook/react';
 
 export const Default: StoryObj<TableRowLoadingProps> = {
   render: (args) => {
@@ -34,11 +36,11 @@ export const Default: StoryObj<TableRowLoadingProps> = {
 };
 
 const meta: Meta<TableRowLoadingProps> = {
-  title: 'Components/Table/TableRowLoading',
-  component: TableRowLoading,
   args: {
     columns: 4,
     rows: 1,
   },
+  component: TableRowLoading,
+  title: 'Components/Table/TableRowLoading',
 };
 export default meta;

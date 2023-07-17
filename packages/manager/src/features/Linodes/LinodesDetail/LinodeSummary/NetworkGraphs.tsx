@@ -1,9 +1,10 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme, useTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import {
   convertNetworkToUnit,
@@ -12,17 +13,18 @@ import {
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import {
+  Metrics,
   getMetrics,
   getTotalTraffic,
-  Metrics,
 } from 'src/utilities/statMetrics';
 import { readableBytes } from 'src/utilities/unitConversions';
+
 import { StatsPanel } from './StatsPanel';
 
 export interface TotalTrafficProps {
+  combinedTraffic: string;
   inTraffic: string;
   outTraffic: string;
-  combinedTraffic: string;
 }
 
 const formatTotalTraffic = (value: number) =>
@@ -39,23 +41,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   grid: {
-    backgroundColor: theme.bg.offWhite,
-    border: `solid 1px ${theme.borderColors.divider}`,
+    '& h2': {
+      fontSize: '1rem',
+    },
     '&.MuiGrid-item': {
       padding: theme.spacing(2),
     },
-    '& h2': {
-      fontSize: '1rem',
+    backgroundColor: theme.bg.offWhite,
+    border: `solid 1px ${theme.borderColors.divider}`,
+    [theme.breakpoints.down(1100)]: {
+      '&:first-of-type': {
+        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2),
+      },
     },
     [theme.breakpoints.up(1100)]: {
       '&:first-of-type': {
         marginRight: theme.spacing(2),
-      },
-    },
-    [theme.breakpoints.down(1100)]: {
-      '&:first-of-type': {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
       },
     },
   },
@@ -64,36 +66,36 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface ChartProps {
   height: number;
   loading: boolean;
-  timezone: string;
   rangeSelection: string;
+  timezone: string;
 }
 
 interface Props extends ChartProps {
-  timezone: string;
   rangeSelection: string;
   stats?: Stats;
+  timezone: string;
 }
 
 interface NetworkMetrics {
-  publicIn: Metrics;
-  publicOut: Metrics;
   privateIn: Metrics;
   privateOut: Metrics;
+  publicIn: Metrics;
+  publicOut: Metrics;
 }
 
 interface NetworkStats {
-  publicIn: [number, number][];
-  publicOut: [number, number][];
   privateIn: [number, number][];
   privateOut: [number, number][];
+  publicIn: [number, number][];
+  publicOut: [number, number][];
 }
 
 const _getMetrics = (data: NetworkStats) => {
   return {
-    publicIn: getMetrics(data.publicIn),
-    publicOut: getMetrics(data.publicOut),
     privateIn: getMetrics(data.privateIn),
     privateOut: getMetrics(data.privateOut ?? []),
+    publicIn: getMetrics(data.publicIn),
+    publicOut: getMetrics(data.publicOut),
   };
 };
 
@@ -104,17 +106,17 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const v4Data: NetworkStats = {
-    publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
-    publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
     privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
     privateOut: pathOr([], ['data', 'netv4', 'private_out'], stats),
+    publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
+    publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
   };
 
   const v6Data: NetworkStats = {
-    publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
-    publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
     privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats),
     privateOut: pathOr([], ['data', 'netv6', 'private_out'], stats),
+    publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
+    publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
   };
 
   const v4Metrics = _getMetrics(v4Data);
@@ -161,43 +163,43 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
   const v6Unit = generateNetworkUnits(maxV6InBytes);
 
   const commonGraphProps = {
-    timezone: props.timezone,
-    theme,
     chartHeight: props.height,
     rangeSelection,
+    theme,
+    timezone: props.timezone,
   };
 
   return (
-    <Grid container className={`${classes.graphGrids} p0`} xs={12} spacing={4}>
+    <Grid className={`${classes.graphGrids} p0`} container spacing={4} xs={12}>
       <Grid className={classes.grid} xs={12}>
         <StatsPanel
-          title={`Network — IPv4 (${v4Unit}/s)`}
           renderBody={() => (
             <Graph
               ariaLabel="IPv4 Network Traffic Graph"
               data={v4Data}
-              unit={v4Unit}
-              totalTraffic={v4totalTraffic}
               metrics={v4Metrics}
+              totalTraffic={v4totalTraffic}
+              unit={v4Unit}
               {...commonGraphProps}
             />
           )}
+          title={`Network — IPv4 (${v4Unit}/s)`}
           {...rest}
         />
       </Grid>
       <Grid className={classes.grid} xs={12}>
         <StatsPanel
-          title={`Network — IPv6 (${v6Unit}/s)`}
           renderBody={() => (
             <Graph
               ariaLabel="IPv6 Network Traffic Graph"
               data={v6Data}
-              unit={v6Unit}
-              totalTraffic={v6totalTraffic}
               metrics={v6Metrics}
+              totalTraffic={v6totalTraffic}
+              unit={v6Unit}
               {...commonGraphProps}
             />
           )}
+          title={`Network — IPv6 (${v6Unit}/s)`}
           {...rest}
         />
       </Grid>
@@ -207,14 +209,14 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
 
 interface GraphProps {
   ariaLabel: string;
-  timezone: string;
-  data: NetworkStats;
-  unit: string;
-  theme: Theme;
-  rangeSelection: string;
   chartHeight: number;
-  totalTraffic: TotalTrafficProps;
+  data: NetworkStats;
   metrics: NetworkMetrics;
+  rangeSelection: string;
+  theme: Theme;
+  timezone: string;
+  totalTraffic: TotalTrafficProps;
+  unit: string;
 }
 
 const Graph: React.FC<GraphProps> = (props) => {
@@ -253,36 +255,28 @@ const Graph: React.FC<GraphProps> = (props) => {
 
   return (
     <LineGraph
-      ariaLabel={ariaLabel}
-      timezone={timezone}
-      chartHeight={chartHeight}
-      unit={`/s`}
-      accessibleDataTable={{ unit: 'Kb/s' }}
-      formatData={convertNetworkData}
-      formatTooltip={_formatTooltip}
-      showToday={rangeSelection === '24'}
       data={[
         {
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.network.inbound,
+          borderColor: 'transparent',
           data: convertedPublicIn,
           label: 'Public In',
         },
         {
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.network.outbound,
+          borderColor: 'transparent',
           data: convertedPublicOut,
           label: 'Public Out',
         },
         {
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.purple,
+          borderColor: 'transparent',
           data: convertedPrivateIn,
           label: 'Private In',
         },
         {
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.yellow,
+          borderColor: 'transparent',
           data: convertedPrivateOut,
           label: 'Private Out',
         },
@@ -305,6 +299,14 @@ const Graph: React.FC<GraphProps> = (props) => {
           format,
         },
       ]}
+      accessibleDataTable={{ unit: 'Kb/s' }}
+      ariaLabel={ariaLabel}
+      chartHeight={chartHeight}
+      formatData={convertNetworkData}
+      formatTooltip={_formatTooltip}
+      showToday={rangeSelection === '24'}
+      timezone={timezone}
+      unit={`/s`}
     />
   );
 };

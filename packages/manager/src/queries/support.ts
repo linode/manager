@@ -1,26 +1,28 @@
 import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
-import {
+  ReplyRequest,
+  SupportReply,
+  SupportTicket,
   closeSupportTicket,
   createReply,
   getTicket,
   getTicketReplies,
   getTickets,
-  ReplyRequest,
-  SupportReply,
-  SupportTicket,
 } from '@linode/api-v4/lib/support';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
+
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+
 import type {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 const queryKey = `tickets`;
 

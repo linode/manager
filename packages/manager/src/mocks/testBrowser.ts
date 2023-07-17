@@ -1,9 +1,11 @@
 import { setupWorker } from 'msw';
 import { SetupWorkerApi } from 'msw/lib/types/setupWorker/setupWorker';
+
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import { MockData, mockDataController } from 'src/dev-tools/mockDataController';
 import { ApplicationState, storeFactory } from 'src/store';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
+
 import { handlers, mockDataHandlers } from './serverHandlers';
 
 const store = storeFactory();

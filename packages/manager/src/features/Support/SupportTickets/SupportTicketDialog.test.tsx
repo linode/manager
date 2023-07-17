@@ -1,14 +1,16 @@
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import {
   SupportTicketDialog,
   SupportTicketDialogProps,
 } from './SupportTicketDialog';
 
 const props: SupportTicketDialogProps = {
-  open: true,
   onClose: jest.fn(),
   onSuccess: jest.fn(),
+  open: true,
 };
 
 // Mock React-Select

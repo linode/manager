@@ -5,8 +5,10 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+
 import { reportException } from 'src/exceptionReporting';
 import { useProfile } from 'src/queries/profile';
+
 import { queryPresets, simpleMutationHandlers } from './base';
 
 export const queryKey = 'account-agreements';

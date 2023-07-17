@@ -2,22 +2,23 @@ import { Engine } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Typography } from 'src/components/Typography';
+
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { useDeleteDatabaseMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  databaseID: number;
   databaseEngine: Engine;
+  databaseID: number;
   databaseLabel: string;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
-  const { open, onClose, databaseID, databaseEngine, databaseLabel } = props;
+  const { databaseEngine, databaseID, databaseLabel, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: deleteDatabase } = useDeleteDatabaseMutation(
     databaseEngine,
@@ -47,19 +48,19 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
 
   return (
     <TypeToConfirmDialog
-      title={`Delete Database Cluster ${databaseLabel}`}
-      label={'Cluster Name'}
       entity={{
-        type: 'Database',
-        subType: 'Cluster',
         action: 'deletion',
         name: databaseLabel,
         primaryBtnText: 'Delete Cluster',
+        subType: 'Cluster',
+        type: 'Database',
       }}
-      open={open}
-      onClose={onClose}
-      onClick={onDeleteCluster}
+      label={'Cluster Name'}
       loading={isLoading}
+      onClick={onDeleteCluster}
+      onClose={onClose}
+      open={open}
+      title={`Delete Database Cluster ${databaseLabel}`}
     >
       {error ? <Notice error text={error} /> : null}
       <Notice warning>

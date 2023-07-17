@@ -1,10 +1,12 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { imageFactory } from 'src/factories/images';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { storeFactory } from 'src/store';
+
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { imageFactory } from 'src/factories';
+import { storeFactory } from 'src/store';
+
 import {
   CombinedProps,
   FromStackScriptContent,
@@ -15,23 +17,23 @@ const store = storeFactory();
 const mockImages = imageFactory.buildList(10);
 
 const mockProps: CombinedProps = {
+  accountBackupsEnabled: false,
   category: 'community',
   classes: {
-    main: '',
     emptyImagePanel: '',
     emptyImagePanelText: '',
+    main: '',
   },
-  accountBackupsEnabled: false,
-  updateImageID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
+  handleSelectUDFs: jest.fn(),
+  header: '',
   imagesData: {},
   regionsData: [],
-  userCannotCreateLinode: false,
   request: jest.fn(),
-  header: '',
+  updateImageID: jest.fn(),
+  updateRegionID: jest.fn(),
   updateStackScript: jest.fn(),
-  handleSelectUDFs: jest.fn(),
+  updateTypeID: jest.fn(),
+  userCannotCreateLinode: false,
 };
 
 describe('FromImageContent', () => {
@@ -48,8 +50,8 @@ describe('FromImageContent', () => {
       <LinodeThemeWrapper>
         <FromStackScriptContent
           {...mockProps}
-          availableUserDefinedFields={mockUserDefinedFields}
           availableStackScriptImages={mockImages}
+          availableUserDefinedFields={mockUserDefinedFields}
         />
       </LinodeThemeWrapper>
     </Provider>

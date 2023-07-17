@@ -1,42 +1,44 @@
 import { Notification } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
+import { SxProps } from '@mui/system';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import Flag from 'src/assets/icons/flag.svg';
+import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { Hidden } from 'src/components/Hidden';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Tooltip } from 'src/components/Tooltip';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
 import {
   getProgressOrDefault,
   linodeInTransition,
   transitionText,
 } from 'src/features/Linodes/transitions';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
-import IPAddress from '../IPAddress';
-import LinodeActionMenu from '../LinodeActionMenu';
-import RegionIndicator from '../RegionIndicator';
-import { parseMaintenanceStartTime } from '../utils';
-import { SxProps } from '@mui/system';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { LinodeHandlers } from '../LinodesLanding';
-import { useTypeQuery } from 'src/queries/types';
-import { useStyles } from './LinodeRow.style';
-import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
-import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
+import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useTypeQuery } from 'src/queries/types';
+import { capitalizeAllWords } from 'src/utilities/capitalize';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+
+import IPAddress from '../IPAddress';
+import LinodeActionMenu from '../LinodeActionMenu';
+import { LinodeHandlers } from '../LinodesLanding';
+import RegionIndicator from '../RegionIndicator';
+import { parseMaintenanceStartTime } from '../utils';
+import { useStyles } from './LinodeRow.style';
 
 type Props = Linode & { handlers: LinodeHandlers };
 
 export const LinodeRow = (props: Props) => {
   const classes = useStyles();
-  const { backups, id, ipv4, label, region, status, type, handlers } = props;
+  const { backups, handlers, id, ipv4, label, region, status, type } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -90,14 +92,14 @@ export const LinodeRow = (props: Props) => {
 
   return (
     <TableRow
-      key={id}
-      className={classes.bodyRow}
-      data-qa-loading
-      data-qa-linode={label}
       ariaLabel={label}
+      className={classes.bodyRow}
+      data-qa-linode={label}
+      data-qa-loading
+      key={id}
     >
       <TableCell noWrap>
-        <Link to={`/linodes/${id}`} tabIndex={0}>
+        <Link tabIndex={0} to={`/linodes/${id}`}>
           {label}
         </Link>
       </TableCell>
@@ -105,8 +107,8 @@ export const LinodeRow = (props: Props) => {
         className={classNames({
           [classes.statusCellMaintenance]: Boolean(maintenance),
         })}
-        statusCell
         data-qa-status
+        statusCell
       >
         {!Boolean(maintenance) ? (
           loading ? (
@@ -133,11 +135,11 @@ export const LinodeRow = (props: Props) => {
           <div className={classes.maintenanceOuter}>
             <strong>Maintenance Scheduled</strong>
             <TooltipIcon
+              classes={{ tooltip: classes.maintenanceTooltip }}
+              interactive
               status="help"
               text={<MaintenanceText />}
               tooltipPosition="top"
-              interactive
-              classes={{ tooltip: classes.maintenanceTooltip }}
             />
           </div>
         )}
@@ -146,7 +148,7 @@ export const LinodeRow = (props: Props) => {
         <TableCell noWrap>
           {linodeType ? formatStorageUnits(linodeType.label) : type}
         </TableCell>
-        <TableCell data-qa-ips className={classes.ipCellWrapper}>
+        <TableCell className={classes.ipCellWrapper} data-qa-ips>
           <IPAddress ips={ipv4} />
         </TableCell>
         <Hidden lgDown>
@@ -158,10 +160,10 @@ export const LinodeRow = (props: Props) => {
       <Hidden lgDown>
         <TableCell>
           <BackupStatus
-            linodeId={id}
             backupsEnabled={backups.enabled}
-            mostRecentBackup={backups.last_successful}
             isBareMetalInstance={isBareMetalInstance}
+            linodeId={id}
+            mostRecentBackup={backups.last_successful}
           />
         </TableCell>
       </Hidden>
@@ -170,16 +172,16 @@ export const LinodeRow = (props: Props) => {
           mutationAvailable={
             linodeType !== undefined && linodeType?.successor !== null
           }
-          linodeNotifications={linodeNotifications}
           classes={classes}
+          linodeNotifications={linodeNotifications}
         />
         <LinodeActionMenu
+          linodeBackups={backups}
           linodeId={id}
           linodeLabel={label}
           linodeRegion={region}
-          linodeType={linodeType}
           linodeStatus={status}
-          linodeBackups={backups}
+          linodeType={linodeType}
           {...handlers}
           inListView
         />
@@ -189,16 +191,16 @@ export const LinodeRow = (props: Props) => {
 };
 
 export const RenderFlag: React.FC<{
-  mutationAvailable: boolean;
-  linodeNotifications: Notification[];
   classes: any;
+  linodeNotifications: Notification[];
+  mutationAvailable: boolean;
 }> = (props) => {
   /*
    * Render either a flag for if the Linode has a notification
    * or if it has a pending mutation available. Mutations take
    * precedent over notifications
    */
-  const { mutationAvailable, linodeNotifications, classes } = props;
+  const { classes, linodeNotifications, mutationAvailable } = props;
 
   if (mutationAvailable) {
     return (
@@ -226,15 +228,15 @@ RenderFlag.displayName = `RenderFlag`;
 
 export const ProgressDisplay: React.FC<{
   className?: string;
-  sx?: SxProps;
   progress: null | number;
+  sx?: SxProps;
   text: string | undefined;
 }> = (props) => {
-  const { progress, text, className, sx } = props;
+  const { className, progress, sx, text } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 
   return (
-    <Typography variant="body1" className={className} sx={sx}>
+    <Typography className={className} sx={sx} variant="body1">
       {text} {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
     </Typography>
   );

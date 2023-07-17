@@ -1,6 +1,8 @@
-import React from 'react';
 import { render } from '@testing-library/react';
+import React from 'react';
+
 import AccessibleGraphData from './AccessibleGraphData';
+
 import type { GraphTabledDataProps } from './AccessibleGraphData';
 
 const chartInstance = {
@@ -8,20 +10,20 @@ const chartInstance = {
     data: {
       datasets: [
         {
-          label: 'Dataset 1',
           data: [
             { t: 1631026800000, y: 10 },
             { t: 1631030400000, y: 20 },
             { t: 1631034000000, y: 30 },
           ],
+          label: 'Dataset 1',
         },
         {
-          label: 'Dataset 2',
           data: [
             { t: 1631026800000, y: 5 },
             { t: 1631030400000, y: 15 },
             { t: 1631034000000, y: 25 },
           ],
+          label: 'Dataset 2',
         },
       ],
     },
@@ -32,10 +34,10 @@ describe('AccessibleGraphData', () => {
   it('renders a table with correct data', () => {
     const { getAllByRole } = render(
       <AccessibleGraphData
+        accessibleUnit="%"
         ariaLabel="data filter"
         chartInstance={chartInstance as GraphTabledDataProps['chartInstance']}
         hiddenDatasets={[]}
-        accessibleUnit="%"
       />
     );
 
@@ -76,9 +78,9 @@ describe('AccessibleGraphData', () => {
   it('hides the correct datasets', () => {
     const { getByRole, queryByText } = render(
       <AccessibleGraphData
+        accessibleUnit="%"
         chartInstance={chartInstance as GraphTabledDataProps['chartInstance']}
         hiddenDatasets={[0]}
-        accessibleUnit="%"
       />
     );
 

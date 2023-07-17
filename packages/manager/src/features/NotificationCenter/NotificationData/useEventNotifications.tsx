@@ -1,15 +1,17 @@
 import { Event, EventAction } from '@linode/api-v4';
 import * as React from 'react';
+
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
   isInProgressEvent,
   removeBlocklistedEvents,
 } from 'src/utilities/eventUtils';
+import { partition } from 'src/utilities/partition';
+
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { RenderEvent } from './RenderEvent';
 import RenderProgressEvent from './RenderProgressEvent';
-import { partition } from 'src/utilities/partition';
 
 const unwantedEvents: EventAction[] = [
   'account_update',
@@ -51,18 +53,18 @@ const formatEventForDisplay = (
   event: Event,
   onClose: () => void
 ): NotificationItem => ({
-  originalId: event.id,
-  id: `event-${event.id}`,
   body: <RenderEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  id: `event-${event.id}`,
+  originalId: event.id,
 });
 
 const formatProgressEventForDisplay = (
   event: Event,
   onClose: () => void
 ): NotificationItem => ({
-  originalId: event.id,
-  id: `progress-event-${event.id}`,
   body: <RenderProgressEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  id: `progress-event-${event.id}`,
+  originalId: event.id,
 });

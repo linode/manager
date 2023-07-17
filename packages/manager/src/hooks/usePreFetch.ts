@@ -22,7 +22,7 @@ export const usePrefetch = (
   prefetchCondition = true,
   delay = PREFETCH_DELAY
 ) => {
-  const timeoutID = React.useRef<number | null>(null);
+  const timeoutID = React.useRef<null | number>(null);
 
   // We must store this in a ref so the handler inside setTimeout can "see" the current value.
   const prefetchConditionRef = React.useRef<boolean>(prefetchCondition);
@@ -47,13 +47,13 @@ export const usePrefetch = (
   }, []);
 
   const handlers = {
-    onMouseEnter: makeRequest,
-    onFocus: makeRequest,
-    onMouseLeave: cancelRequest,
     onBlur: cancelRequest,
+    onFocus: makeRequest,
+    onMouseEnter: makeRequest,
+    onMouseLeave: cancelRequest,
   };
 
-  return { makeRequest, cancelRequest, handlers };
+  return { cancelRequest, handlers, makeRequest };
 };
 
 export default usePrefetch;

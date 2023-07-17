@@ -1,32 +1,33 @@
 import { CloneVolumeSchema } from '@linode/validation/lib/volumes.schema';
-import { Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import * as React from 'react';
-import Form from 'src/components/core/Form';
+
 import { Typography } from 'src/components/Typography';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useCloneVolumeMutation } from 'src/queries/volumes';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import VolumesActionsPanel from './VolumesActionsPanel';
-import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   onClose: () => void;
   volumeId: number;
   volumeLabel: string;
-  volumeSize: number;
   volumeRegion: string;
+  volumeSize: number;
 }
 
 const initialValues = { label: '' };
 
 export const CloneVolumeForm = (props: Props) => {
-  const { onClose, volumeId, volumeRegion, volumeLabel, volumeSize } = props;
+  const { onClose, volumeId, volumeLabel, volumeRegion, volumeSize } = props;
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
@@ -34,10 +35,8 @@ export const CloneVolumeForm = (props: Props) => {
 
   return (
     <Formik
-      initialValues={initialValues}
-      validationSchema={CloneVolumeSchema}
-      onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
-        cloneVolume({ volumeId, label: values.label })
+      onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
+        cloneVolume({ label: values.label, volumeId })
           .then((_) => {
             onClose();
             resetEventsPolling();
@@ -56,6 +55,8 @@ export const CloneVolumeForm = (props: Props) => {
             );
           });
       }}
+      initialValues={initialValues}
+      validationSchema={CloneVolumeSchema}
     >
       {({
         errors,
@@ -77,8 +78,8 @@ export const CloneVolumeForm = (props: Props) => {
             </Typography>
             {status && (
               <NoticePanel
-                success={status.success}
                 error={status.generalError}
+                success={status.success}
               />
             )}
             <LabelField
@@ -88,14 +89,14 @@ export const CloneVolumeForm = (props: Props) => {
               onChange={handleChange}
               value={values.label}
             />
-            <PricePanel value={volumeSize} currentSize={volumeSize} />
+            <PricePanel currentSize={volumeSize} value={volumeSize} />
             <VolumesActionsPanel
-              onSubmit={handleSubmit}
               onCancel={() => {
                 resetForm();
                 onClose();
               }}
               isSubmitting={isSubmitting}
+              onSubmit={handleSubmit}
               submitText="Clone Volume"
             />
           </Form>

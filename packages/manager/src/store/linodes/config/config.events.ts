@@ -1,8 +1,10 @@
 import { EventStatus } from '@linode/api-v4/lib/account';
 import { Dispatch } from 'redux';
-import { getAllLinodeConfigs } from './config.requests';
+
 import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 import { isEntityEvent } from 'src/utilities/eventUtils';
+
+import { getAllLinodeConfigs } from './config.requests';
 
 export const configEventHandler: AppEventHandler = (event, _, store) => {
   if (!isEntityEvent(event)) {

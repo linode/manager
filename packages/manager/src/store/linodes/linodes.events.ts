@@ -3,8 +3,8 @@ import {
   EventAction,
   EventStatus,
 } from '@linode/api-v4/lib/account';
-import type { QueryClient } from 'react-query';
 import { Dispatch } from 'redux';
+
 import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
 import { ApplicationState } from 'src/store';
@@ -12,7 +12,10 @@ import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { isEntityEvent } from 'src/utilities/eventUtils';
+
 import { deleteLinode } from './linodes.actions';
+
+import type { QueryClient } from 'react-query';
 
 export const linodeStoreEventsHandler: AppEventHandler = (
   event,
@@ -93,7 +96,7 @@ const handleLinodeRebuild = (
   dispatch: Dispatch<any>,
   status: EventStatus,
   id: number,
-  percent_complete: number | null
+  percent_complete: null | number
 ) => {
   /**
    * Rebuilding is a special case, because the rebuilt Linode
@@ -257,7 +260,7 @@ const handleConfigEvent = (
 export const shouldRequestNotifications = (event: EntityEvent) => {
   return (
     eventsWithRelevantNotifications.includes(event.action) &&
-    ['notification', 'finished', 'error'].includes(event.status)
+    ['error', 'finished', 'notification'].includes(event.status)
   );
 };
 

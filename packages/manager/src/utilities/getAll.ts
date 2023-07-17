@@ -1,11 +1,12 @@
 import { Filter, Params } from '@linode/api-v4';
 import { range } from 'ramda';
+
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 
 export interface APIResponsePage<T> {
+  data: T;
   page: number;
   pages: number;
-  data: T;
   results: number;
 }
 

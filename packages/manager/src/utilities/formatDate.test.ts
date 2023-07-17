@@ -1,8 +1,10 @@
 import { DateTime, Duration } from 'luxon';
+
 import {
-  ISO_DATETIME_NO_TZ_FORMAT,
   DATETIME_DISPLAY_FORMAT,
+  ISO_DATETIME_NO_TZ_FORMAT,
 } from 'src/constants';
+
 import { formatDate, shouldHumanize } from './formatDate';
 jest.mock('./getUserTimezone');
 

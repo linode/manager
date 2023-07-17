@@ -1,6 +1,3 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { queryKey } from './linodes';
-import { getAll } from 'src/utilities/getAll';
 import {
   APIError,
   Disk,
@@ -12,6 +9,11 @@ import {
   resizeLinodeDisk,
   updateLinodeDisk,
 } from '@linode/api-v4';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+
+import { getAll } from 'src/utilities/getAll';
+
+import { queryKey } from './linodes';
 
 export const useAllLinodeDisksQuery = (id: number, enabled = true) => {
   return useQuery<Disk[], APIError[]>(

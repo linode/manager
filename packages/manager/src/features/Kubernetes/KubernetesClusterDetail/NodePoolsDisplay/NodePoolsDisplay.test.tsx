@@ -1,6 +1,8 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { NodePoolsDisplay, Props } from './NodePoolsDisplay';
 
 const props: Props = {

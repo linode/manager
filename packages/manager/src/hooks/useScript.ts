@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-type ScriptStatus = 'idle' | 'loading' | 'ready' | 'error';
-type ScriptLocation = 'head' | 'body';
+type ScriptStatus = 'error' | 'idle' | 'loading' | 'ready';
+type ScriptLocation = 'body' | 'head';
 
 interface ScriptOptions {
-  setStatus?: (status: ScriptStatus) => void;
   location?: ScriptLocation;
+  setStatus?: (status: ScriptStatus) => void;
 }
 
 /**
@@ -47,8 +47,8 @@ export const loadScript = (
         script.setAttribute('data-status', 'error');
         setStateFromEvent(event);
         reject({
-          status: 'error',
           message: `Failed to load script with src ${src}`,
+          status: 'error',
         });
       };
 
@@ -86,7 +86,7 @@ export const useScript = (
   useEffect(() => {
     (async () => {
       try {
-        await loadScript(src, { setStatus, location });
+        await loadScript(src, { location, setStatus });
       } catch (e) {} // Handle errors where useScript is called.
     })();
   }, [src]);
@@ -105,13 +105,13 @@ export const useLazyScript = (
   src: string,
   location?: ScriptLocation
 ): {
-  status: ScriptStatus;
   load: () => void;
+  status: ScriptStatus;
 } => {
   const [status, setStatus] = useState(src ? 'loading' : 'idle');
 
   return {
+    load: () => loadScript(src, { location, setStatus }),
     status: status as ScriptStatus,
-    load: () => loadScript(src, { setStatus, location }),
   };
 };

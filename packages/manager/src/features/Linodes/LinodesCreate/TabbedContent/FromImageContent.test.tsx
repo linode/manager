@@ -1,20 +1,22 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { CombinedProps, FromImageContent } from './FromImageContent';
 import { Provider } from 'react-redux';
+
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { storeFactory } from 'src/store';
+
+import FromImageContent, { CombinedProps } from './FromImageContent';
 
 const store = storeFactory();
 
 const mockProps: CombinedProps = {
-  updateImageID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
+  accountBackupsEnabled: false,
   imagesData: {},
   regionsData: [],
   typesData: [],
-  accountBackupsEnabled: false,
+  updateImageID: jest.fn(),
+  updateRegionID: jest.fn(),
+  updateTypeID: jest.fn(),
   userCannotCreateLinode: false,
 };
 

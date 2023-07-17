@@ -1,4 +1,4 @@
-import { GrantLevel, Grants, GrantType } from '@linode/api-v4';
+import { GrantLevel, GrantType, Grants } from '@linode/api-v4';
 
 /**
  * Gets entity ids for a specified permission level given a user's grants

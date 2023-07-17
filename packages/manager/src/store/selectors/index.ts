@@ -1,5 +1,5 @@
 import { registerSelectors } from 'reselect-tools';
-import entityErrors from './entitiesErrors';
+
 import entitiesLoading from './entitiesLoading';
 
 /** Note: We could simplify this boilerplate if we had a rule that each selector file
@@ -8,7 +8,6 @@ import entitiesLoading from './entitiesLoading';
 
 export const initReselectDevtools = () => {
   registerSelectors({
-    entityErrors,
     entitiesLoading,
   });
 };

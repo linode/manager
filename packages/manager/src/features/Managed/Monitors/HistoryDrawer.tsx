@@ -1,34 +1,36 @@
 import { ManagedIssue } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Drawer from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import IssueCalendar from './IssueCalendar';
 
 interface Props {
-  open: boolean;
   error?: APIError[] | null;
+  issues: ManagedIssue[] | undefined;
   loading: boolean;
   monitorLabel: string;
-  issues: ManagedIssue[] | undefined;
   onClose: () => void;
+  open: boolean;
 }
 
 export const HistoryDrawer: React.FC<Props> = (props) => {
   const { error, issues, loading, monitorLabel, onClose, open } = props;
   return (
     <Drawer
-      title={`Issue History: ${monitorLabel}`}
-      open={open}
       onClose={onClose}
+      open={open}
+      title={`Issue History: ${monitorLabel}`}
     >
       {renderDrawerContent(issues, loading, error)}
       <ActionsPanel>
-        <Button buttonType="primary" onClick={() => onClose()} data-qa-close>
+        <Button buttonType="primary" data-qa-close onClick={() => onClose()}>
           Close
         </Button>
       </ActionsPanel>

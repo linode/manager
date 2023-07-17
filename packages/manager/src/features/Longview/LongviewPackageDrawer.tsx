@@ -1,21 +1,23 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
+
 import Drawer from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import withLongviewStats, {
   DispatchProps,
   LVClientData,
 } from 'src/containers/longview.stats.container';
+
 import LongviewPackageRow from './LongviewPackageRow';
 import { LongviewPackage } from './request.types';
-import { TableCell } from 'src/components/TableCell';
 
 const useStyles = makeStyles((theme: Theme) => ({
   new: {
@@ -24,8 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  clientLabel: string;
   clientID: number;
+  clientLabel: string;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -33,7 +35,7 @@ interface Props {
 type CombinedProps = Props & DispatchProps & LVClientData;
 
 export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
-  const { isOpen, clientLabel, longviewClientData, onClose } = props;
+  const { clientLabel, isOpen, longviewClientData, onClose } = props;
 
   const classes = useStyles();
 
@@ -63,8 +65,8 @@ export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
           {lvPackages.length > 0 ? (
             lvPackages.map((thisPackage, idx) => (
               <LongviewPackageRow
-                lvPackage={thisPackage}
                 key={`package-drawer-row-${idx}`}
+                lvPackage={thisPackage}
               />
             ))
           ) : (

@@ -1,31 +1,33 @@
 import { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import {
+  CreateLinodeDiskFromImageSchema,
+  CreateLinodeDiskSchema,
+} from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { ModeSelect, Mode } from 'src/components/ModeSelect/ModeSelect';
+import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskCreateMutation,
 } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
-import {
-  CreateLinodeDiskFromImageSchema,
-  CreateLinodeDiskSchema,
-} from '@linode/validation';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { useEventsInfiniteQuery } from 'src/queries/events';
 
-type FileSystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd';
+import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
+
+type FileSystem = 'ext3' | 'ext4' | 'initrd' | 'raw' | 'swap';
 
 type CreateMode = 'empty' | 'from_image';
 
@@ -41,13 +43,13 @@ const modeList: Mode<CreateMode>[] = [
 ];
 
 export interface Props {
-  open: boolean;
-  onClose: () => void;
   linodeId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const CreateDiskDrawer = (props: Props) => {
-  const { open, onClose, linodeId } = props;
+  const { linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const [selectedMode, setSelectedMode] = React.useState<CreateMode>('empty');
@@ -65,12 +67,12 @@ export const CreateDiskDrawer = (props: Props) => {
   const maximumSize = calculateDiskFree(linode, disks, 0);
 
   const initialValues = {
-    label: '',
-    filesystem: 'ext4' as FileSystem,
-    size: maximumSize,
-    image: '',
-    root_pass: '',
     authorized_users: [],
+    filesystem: 'ext4' as FileSystem,
+    image: '',
+    label: '',
+    root_pass: '',
+    size: maximumSize,
   };
 
   const validationSchema =
@@ -79,17 +81,16 @@ export const CreateDiskDrawer = (props: Props) => {
       : CreateLinodeDiskSchema;
 
   const formik = useFormik({
-    initialValues,
     enableReinitialize: true,
-    validationSchema,
+    initialValues,
     async onSubmit(values, helpers) {
       try {
         const cleanedValues =
           selectedMode === 'empty'
             ? {
+                filesystem: values.filesystem,
                 label: values.label,
                 size: values.size,
-                filesystem: values.filesystem,
               }
             : values;
 
@@ -103,6 +104,7 @@ export const CreateDiskDrawer = (props: Props) => {
         handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
       }
     },
+    validationSchema,
   });
 
   React.useEffect(() => {
@@ -114,49 +116,49 @@ export const CreateDiskDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer title="Create Disk" open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title="Create Disk">
       <form onSubmit={formik.handleSubmit}>
         <ModeSelect
           modes={modeList}
-          selected={selectedMode}
           onChange={(e) => setSelectedMode(e.target.value as CreateMode)}
+          selected={selectedMode}
         />
         {formik.status && (
           <Notice
             error
-            spacingBottom={8}
             errorGroup="linode-disk-drawer"
+            spacingBottom={8}
             text={formik.status}
           />
         )}
         <TextField
+          data-qa-label
+          errorGroup="linode-disk-drawer"
+          errorText={formik.touched.label ? formik.errors.label : undefined}
           label="Label"
           name="label"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
           required
           value={formik.values.label}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          errorText={formik.touched.label ? formik.errors.label : undefined}
-          errorGroup="linode-disk-drawer"
-          data-qa-label
         />
         {selectedMode === 'empty' && (
           <TextField
-            label="Filesystem"
-            name="filesystem"
-            select
-            value={formik.values.filesystem}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
             errorText={
               formik.touched.filesystem ? formik.errors.filesystem : undefined
             }
+            label="Filesystem"
+            name="filesystem"
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            select
+            value={formik.values.filesystem}
           >
             <MenuItem value="_none_">
               <em>Select a Filesystem</em>
             </MenuItem>
             {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map((fs) => (
-              <MenuItem value={fs} key={fs}>
+              <MenuItem key={fs} value={fs}>
                 {fs}
               </MenuItem>
             ))}
@@ -164,52 +166,52 @@ export const CreateDiskDrawer = (props: Props) => {
         )}
         {selectedMode === 'from_image' && (
           <ImageAndPassword
-            onImageChange={(selected: Item) =>
-              formik.setFieldValue('image', selected?.value ?? null)
-            }
             imageFieldError={
               formik.touched.image ? formik.errors.image : undefined
             }
-            password={formik.values.root_pass}
-            passwordError={
-              formik.touched.root_pass ? formik.errors.root_pass : undefined
+            onImageChange={(selected: Item) =>
+              formik.setFieldValue('image', selected?.value ?? null)
             }
             onPasswordChange={(root_pass: string) =>
               formik.setFieldValue('root_pass', root_pass)
             }
-            authorizedUsers={formik.values.authorized_users}
+            passwordError={
+              formik.touched.root_pass ? formik.errors.root_pass : undefined
+            }
             setAuthorizedUsers={(value) =>
               formik.setFieldValue('authorized_users', value)
             }
+            authorizedUsers={formik.values.authorized_users}
             linodeId={linodeId}
+            password={formik.values.root_pass}
           />
         )}
         <TextField
-          label="Size"
-          type="number"
-          name="size"
-          required
-          value={formik.values.size}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          errorText={formik.touched.size ? formik.errors.size : undefined}
           InputProps={{
             endAdornment: <InputAdornment position="end">MB</InputAdornment>,
           }}
           data-qa-disk-size
+          errorText={formik.touched.size ? formik.errors.size : undefined}
+          label="Size"
+          name="size"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          required
+          type="number"
+          value={formik.values.size}
         />
         <FormHelperText style={{ marginTop: 8 }}>
           Maximum size: {maximumSize} MB
         </FormHelperText>
         <ActionsPanel>
-          <Button onClick={onClose} buttonType="secondary" className="cancel">
+          <Button buttonType="secondary" className="cancel" onClick={onClose}>
             Cancel
           </Button>
           <Button
             buttonType="primary"
-            type="submit"
-            loading={formik.isSubmitting}
             data-testid="submit-disk-form"
+            loading={formik.isSubmitting}
+            type="submit"
           >
             Create
           </Button>

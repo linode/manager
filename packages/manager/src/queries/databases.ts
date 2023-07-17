@@ -4,22 +4,22 @@ import {
   deleteDatabase,
   getDatabaseBackups,
   getDatabaseCredentials,
-  getDatabases,
-  getDatabaseTypes,
   getDatabaseEngines,
+  getDatabaseTypes,
+  getDatabases,
   getEngineDatabase,
+  resetDatabaseCredentials,
   restoreWithBackup,
   updateDatabase,
-  resetDatabaseCredentials,
 } from '@linode/api-v4/lib/databases';
 import {
   CreateDatabasePayload,
   Database,
   DatabaseBackup,
   DatabaseCredentials,
+  DatabaseEngine,
   DatabaseInstance,
   DatabaseType,
-  DatabaseEngine,
   Engine,
   UpdateDatabasePayload,
   UpdateDatabaseResponse,
@@ -36,9 +36,11 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { getAll } from 'src/utilities/getAll';
-import { queryPresets, updateInPaginatedStore } from './base';
+
 import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { getAll } from 'src/utilities/getAll';
+
+import { queryPresets, updateInPaginatedStore } from './base';
 
 export const queryKey = 'databases';
 
@@ -206,7 +208,7 @@ export const useRestoreFromBackupMutation = (
 };
 
 export const databaseEventsHandler: AppEventHandler = (event, queryClient) => {
-  const { action, status, entity } = event;
+  const { action, entity, status } = event;
 
   switch (action) {
     case 'database_create':

@@ -1,5 +1,5 @@
-import { Tag } from '@linode/api-v4/types';
 import { deleteTag, getTags } from '@linode/api-v4/lib/tags';
+import { Tag } from '@linode/api-v4/types';
 import { pageSize } from 'support/constants/api';
 import { entityTag } from 'support/constants/cypress';
 import { depaginate } from 'support/util/paginate';
@@ -11,7 +11,7 @@ import { depaginate } from 'support/util/paginate';
  */
 export const deleteAllTestTags = async (): Promise<void> => {
   const tags = await depaginate<Tag>((page: number) =>
-    getTags({ page_size: pageSize, page })
+    getTags({ page, page_size: pageSize })
   );
   const testTags = tags.filter((tag: Tag) => tag.label.startsWith(entityTag));
   for (const testTag of testTags) {

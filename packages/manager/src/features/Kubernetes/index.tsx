@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const KubernetesLanding = React.lazy(
@@ -19,12 +20,12 @@ const Kubernetes: React.FC = () => {
           path={`/kubernetes/clusters/:clusterID/summary`}
         />
         <Route
-          path={`/kubernetes/clusters/:clusterID`}
           render={(props) => (
             <Redirect
               to={`/kubernetes/clusters/${props.match.params.clusterID}/summary`}
             />
           )}
+          path={`/kubernetes/clusters/:clusterID`}
         />
         <Route
           component={KubernetesLanding}

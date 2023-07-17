@@ -1,4 +1,5 @@
 import { longviewProcessFactory } from 'src/factories/longviewProcess';
+
 import { extendData } from './ProcessesLanding';
 
 const mockData = longviewProcessFactory.build();

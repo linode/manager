@@ -1,62 +1,64 @@
 import { Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Typography } from '@mui/material';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
-import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { HostMaintenanceError } from '../HostMaintenanceError';
-import { LinodePermissionsError } from '../LinodePermissionsError';
-import { extendType } from 'src/utilities/extendType';
-import { useFormik } from 'formik';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
   useLinodeResizeMutation,
 } from 'src/queries/linodes/linodes';
+import { usePreferences } from 'src/queries/preferences';
+import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
-import { useGrants } from 'src/queries/profile';
-import { usePreferences } from 'src/queries/preferences';
-import { useEventsInfiniteQuery } from 'src/queries/events';
-import { Box } from 'src/components/Box';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
+import { extendType } from 'src/utilities/extendType';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import { HostMaintenanceError } from '../HostMaintenanceError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 
 const useStyles = makeStyles((theme: Theme) => ({
   resizeTitle: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     minHeight: '44px',
   },
   selectPlanPanel: {
-    marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(3),
     '& > div': {
       padding: 0,
     },
+    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(5),
   },
 }));
 
 interface Props {
   linodeId?: number;
   linodeLabel?: string;
-  open: boolean;
   onClose: () => void;
+  open: boolean;
 }
 
 export const LinodeResize = (props: Props) => {
   const classes = useStyles();
-  const { linodeId, open, onClose } = props;
+  const { linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -80,17 +82,17 @@ export const LinodeResize = (props: Props) => {
   const [confirmationText, setConfirmationText] = React.useState('');
 
   const {
-    mutateAsync: resizeLinode,
-    isLoading,
     error: resizeError,
+    isLoading,
+    mutateAsync: resizeLinode,
   } = useLinodeResizeMutation(linodeId ?? -1);
 
   const { data: regionsData } = useRegionsQuery();
 
   const formik = useFormik({
     initialValues: {
-      type: '',
       allow_auto_disk_resize: shouldEnableAutoResizeDiskOption(disks ?? [])[1],
+      type: '',
     },
     async onSubmit(values) {
       const isSmaller = isSmallerThanCurrentPlan(
@@ -105,8 +107,8 @@ export const LinodeResize = (props: Props) => {
        * is larger than the target plan).
        */
       await resizeLinode({
-        type: values.type,
         allow_auto_disk_resize: values.allow_auto_disk_resize && !isSmaller,
+        type: values.type,
       });
       resetEventsPolling();
       enqueueSnackbar('Linode queued for resize.', {
@@ -168,12 +170,12 @@ export const LinodeResize = (props: Props) => {
 
   return (
     <Dialog
-      title={`Resize Linode ${linode?.label}`}
-      open={open}
-      onClose={onClose}
-      fullWidth
       fullHeight
+      fullWidth
       maxWidth="md"
+      onClose={onClose}
+      open={open}
+      title={`Resize Linode ${linode?.label}`}
     >
       <form onSubmit={formik.handleSubmit}>
         {unauthorized && <LinodePermissionsError />}
@@ -192,39 +194,39 @@ export const LinodeResize = (props: Props) => {
           different plan.{' '}
           <ExternalLink
             fixedIcon
-            text="Learn more."
             link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+            text="Learn more."
           />
         </Typography>
 
         <div className={classes.selectPlanPanel}>
           <PlansPanel
             currentPlanHeading={type ? extendType(type).heading : undefined} // lol, why make us pass the heading and not the plan id?
-            types={currentTypes.map(extendType)}
-            onSelect={(type) => formik.setFieldValue('type', type)}
-            selectedID={formik.values.type}
             disabled={tableDisabled}
+            onSelect={(type) => formik.setFieldValue('type', type)}
             regionsData={regionsData}
+            selectedID={formik.values.type}
             selectedRegionID={linode?.region}
+            types={currentTypes.map(extendType)}
           />
         </div>
-        <Typography variant="h2" className={classes.resizeTitle}>
+        <Typography className={classes.resizeTitle} variant="h2">
           Auto Resize Disk
           {disksError ? (
             <TooltipIcon
               sxTooltipIcon={{
                 marginLeft: '-2px',
               }}
-              text={`There was an error loading your Linode&rsquo; disks.`}
               status="help"
+              text={`There was an error loading your Linode&rsquo; disks.`}
             />
           ) : isSmaller ? (
             <TooltipIcon
               sxTooltipIcon={{
                 marginLeft: '-2px',
               }}
-              text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
               status="help"
+              text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
             />
           ) : !_shouldEnableAutoResizeDiskOption ? (
             <TooltipIcon
@@ -238,7 +240,6 @@ export const LinodeResize = (props: Props) => {
           ) : null}
         </Typography>
         <Checkbox
-          disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
           checked={
             !_shouldEnableAutoResizeDiskOption || isSmaller
               ? false
@@ -262,23 +263,24 @@ export const LinodeResize = (props: Props) => {
               Linode.
             </Typography>
           }
+          disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
         />
         <Box marginTop={2}>
           <TypeToConfirm
-            title="Confirm"
             confirmationText={
               <span>
                 To confirm these changes, type the label of the Linode (
                 <strong>{linode?.label}</strong>) in the field below:
               </span>
             }
-            typographyStyle={{ marginBottom: 8 }}
-            onChange={setConfirmationText}
-            value={confirmationText}
             hideLabel
-            visible={preferences?.type_to_confirm}
             label="Linode Label"
+            onChange={setConfirmationText}
             textFieldStyle={{ marginBottom: 16 }}
+            title="Confirm"
+            typographyStyle={{ marginBottom: 8 }}
+            value={confirmationText}
+            visible={preferences?.type_to_confirm}
           />
         </Box>
         <Box display="flex" justifyContent="flex-end">
@@ -289,10 +291,10 @@ export const LinodeResize = (props: Props) => {
               tableDisabled ||
               submitButtonDisabled
             }
-            loading={isLoading}
             buttonType="primary"
-            type="submit"
             data-qa-resize
+            loading={isLoading}
+            type="submit"
           >
             Resize Linode
           </Button>
@@ -316,8 +318,8 @@ const getError = (error: APIError[] | null) => {
         our{' '}
         <ExternalLink
           hideIcon
-          text="Resize Your Linode"
           link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+          text="Resize Your Linode"
         />{' '}
         guide for more detailed instructions.
       </Typography>
@@ -363,8 +365,8 @@ export const shouldEnableAutoResizeDiskOption = (
 };
 
 export const isSmallerThanCurrentPlan = (
-  selectedPlanID: string | null,
-  currentPlanID: string | null,
+  selectedPlanID: null | string,
+  currentPlanID: null | string,
   types: LinodeType[]
 ) => {
   const currentType = types.find((thisType) => thisType.id === currentPlanID);

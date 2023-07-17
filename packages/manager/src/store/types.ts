@@ -1,7 +1,8 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { MapStateToProps as _MapStateToProps } from 'react-redux';
 import { Action } from 'redux';
-import { ThunkAction, ThunkDispatch as _ThunkDispatch } from 'redux-thunk';
+import { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';
+
 import { ApplicationState } from 'src/store';
 
 export type ThunkResult<T> = ThunkAction<
@@ -12,9 +13,9 @@ export type ThunkResult<T> = ThunkAction<
 >;
 
 export interface EntityError {
-  read?: APIError[];
   create?: APIError[];
   delete?: APIError[];
+  read?: APIError[];
   update?: APIError[];
 }
 
@@ -35,7 +36,7 @@ export interface HasNumericID {
   id: number;
 }
 
-export type Entity = HasStringID | HasNumericID;
+export type Entity = HasNumericID | HasStringID;
 
 export type TypeOfID<T> = T extends HasNumericID ? number : string;
 
@@ -55,39 +56,39 @@ export interface MappedEntityState<
 // NOTE: These 2 interfaces are as of 2/26/2020 what we intend to consolidate around
 export interface MappedEntityState2<T extends Entity, E = EntityError> {
   error: E;
+  itemsById: Record<string, T>;
   lastUpdated: number;
   loading: boolean;
-  itemsById: Record<string, T>;
   results: number;
 }
 
 export type RelationalMappedEntityState<T extends Entity, E> = Record<
-  string | number,
+  number | string,
   MappedEntityState2<T, E>
 >;
 
 export interface EntityState<T extends Entity, E = APIError[] | undefined> {
-  results: TypeOfID<T>[];
   entities: T[];
-  loading: boolean;
-  lastUpdated: number;
   error?: E;
+  lastUpdated: number;
+  loading: boolean;
+  results: TypeOfID<T>[];
 }
 
 export interface RequestableData<D, E = APIError[]> {
-  lastUpdated: number;
-  loading: boolean;
   data?: D;
   error?: E;
+  lastUpdated: number;
+  loading: boolean;
 }
 
 // Rename to RequestableData and delete above when all components are using this pattern
 export interface RequestableDataWithEntityError<D> {
+  data?: D;
+  error: EntityError;
   lastUpdated: number;
   loading: boolean;
-  data?: D;
   results?: number;
-  error: EntityError;
 }
 
 export interface RequestableRequiredData<D> extends RequestableData<D> {
@@ -95,11 +96,11 @@ export interface RequestableRequiredData<D> extends RequestableData<D> {
 }
 
 export interface EntitiesAsObjectState<T> {
-  error: EntityError;
   data: Record<string, T>;
-  results: number;
+  error: EntityError;
   lastUpdated: number;
   loading: boolean;
+  results: number;
 }
 
 /**
@@ -116,8 +117,8 @@ export type RelationalDataSet<T extends {}, E = EntityError> = Record<
   string,
   Partial<{
     data: T;
-    loading: boolean;
     error: E;
     lastUpdated: number;
+    loading: boolean;
   }>
 >;

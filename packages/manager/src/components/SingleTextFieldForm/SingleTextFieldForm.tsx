@@ -1,5 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
@@ -8,25 +9,25 @@ import { TextField, TextFieldProps } from 'src/components/TextField';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props extends TextFieldProps {
-  fieldName?: string;
-  submitForm: (value: string) => Promise<any>;
-  initialValue?: string;
-  successMessage?: string;
   errorMessage?: string;
+  fieldName?: string;
+  initialValue?: string;
+  submitForm: (value: string) => Promise<any>;
   successCallback?: () => void;
+  successMessage?: string;
 }
 
 export const SingleTextFieldForm = React.memo((props: Props) => {
   const {
-    label,
-    fieldName,
-    submitForm,
     disabled,
-    tooltipText,
-    successMessage,
     errorMessage,
-    successCallback,
+    fieldName,
     initialValue,
+    label,
+    submitForm,
+    successCallback,
+    successMessage,
+    tooltipText,
     ...textFieldProps
   } = props;
 
@@ -65,13 +66,13 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
   return (
     <>
       <Box
-        display="flex"
-        justifyContent="space-between"
         sx={(theme) => ({
           [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
           },
         })}
+        display="flex"
+        justifyContent="space-between"
       >
         <TextField
           {...textFieldProps}
@@ -81,12 +82,12 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
               minWidth: 'auto',
             },
           })}
-          label={label}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
           disabled={disabled}
           errorText={fieldError}
+          label={label}
+          onChange={(e) => setValue(e.target.value)}
           tooltipText={tooltipText ? tooltipText : undefined}
+          value={value}
         />
         <ActionsPanel>
           <Button
@@ -97,9 +98,9 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
               },
             })}
             buttonType="primary"
-            onClick={handleSubmit}
             disabled={disabled || value === initialValue}
             loading={submitting}
+            onClick={handleSubmit}
           >
             Update {label}
           </Button>
@@ -107,14 +108,14 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
       </Box>
       {success ? (
         <Notice
+          spacingBottom={8}
+          spacingTop={8}
           success
           text={_successMessage}
-          spacingTop={8}
-          spacingBottom={8}
         />
       ) : null}
       {generalError ? (
-        <Notice error text={generalError} spacingTop={8} spacingBottom={8} />
+        <Notice error spacingBottom={8} spacingTop={8} text={generalError} />
       ) : null}
     </>
   );

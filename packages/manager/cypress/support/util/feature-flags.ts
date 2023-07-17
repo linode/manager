@@ -44,10 +44,10 @@ export const makeFeatureFlagData = <T>(
   };
 
   return {
+    flagVersion: flagVersion ?? defaultFeatureFlagData.flagVersion,
+    trackEvents: trackEvents ?? defaultFeatureFlagData.trackEvents,
     value,
     variation: variation ?? defaultFeatureFlagData.variation,
     version: version ?? defaultFeatureFlagData.version,
-    trackEvents: trackEvents ?? defaultFeatureFlagData.trackEvents,
-    flagVersion: flagVersion ?? defaultFeatureFlagData.flagVersion,
   };
 };

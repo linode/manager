@@ -1,4 +1,5 @@
 import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+
 import { queryKey } from './linodes';
 
 export const linodeEventsHandler: AppEventHandler = (_, queryClient) => {
@@ -11,7 +12,7 @@ export const diskEventHandler: AppEventHandler = (event, queryClient, _) => {
 
   if (
     !linodeId ||
-    !['finished', 'failed', 'notification'].includes(event.status)
+    !['failed', 'finished', 'notification'].includes(event.status)
   ) {
     return;
   }

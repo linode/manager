@@ -1,6 +1,7 @@
 import Popper from '@mui/material/Popper';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+
 import Bell from 'src/assets/icons/notification.svg';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
@@ -19,6 +20,7 @@ import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import usePrevious from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMarkEventsAsSeen } from 'src/queries/events';
+
 import { TopMenuIcon } from '../TopMenuIcon';
 import {
   NotificationIconWrapper,
@@ -105,12 +107,12 @@ export const NotificationMenu = () => {
     <>
       <TopMenuIcon title="Notifications">
         <StyledButton
-          id={menuButtonId}
-          ref={anchorRef}
-          aria-label="Notifications"
           aria-haspopup="true"
-          onClick={handleNotificationMenuToggle}
+          aria-label="Notifications"
           disableRipple
+          id={menuButtonId}
+          onClick={handleNotificationMenuToggle}
+          ref={anchorRef}
         >
           <NotificationIconWrapper isMenuOpen={notificationContext.menuOpen}>
             <Bell />
@@ -122,40 +124,40 @@ export const NotificationMenu = () => {
       </TopMenuIcon>
 
       <Popper
-        open={notificationContext.menuOpen}
-        anchorEl={anchorRef.current}
-        transition
-        disablePortal
         sx={{
           boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-          zIndex: 3000,
-          top: '50px !important',
           left: 'auto !important',
-          right: '15px',
-          width: '430px',
-          position: 'absolute !important',
           maxHeight: 'calc(100vh - 150px)',
           overflowY: 'auto',
+          position: 'absolute !important',
+          right: '15px',
           [theme.breakpoints.down('sm')]: {
             right: 0,
             width: '100%',
           },
+          top: '50px !important',
+          width: '430px',
+          zIndex: 3000,
         }}
+        anchorEl={anchorRef.current}
+        disablePortal
+        open={notificationContext.menuOpen}
+        transition
       >
         <ClickAwayListener onClickAway={handleClose}>
           <MenuList
-            id={menuId}
             autoFocusItem={notificationContext.menuOpen}
+            id={menuId}
             onKeyDown={handleMenuListKeyDown}
           >
             <WrapperMenuItem
               sx={{
-                boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-                whiteSpace: 'initial',
                 border: 'none',
-                padding: 0,
+                boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
                 cursor: 'default',
                 display: 'block',
+                padding: 0,
+                whiteSpace: 'initial',
               }}
               disableRipple
             >

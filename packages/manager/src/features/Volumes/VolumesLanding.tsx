@@ -4,16 +4,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
+import { Dispatch, bindActionCreators } from 'redux';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
@@ -21,34 +22,46 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useVolumesQuery } from 'src/queries/volumes';
 import {
   LinodeOptions,
+  Origin as VolumeDrawerOrigin,
   openForClone,
   openForConfig,
   openForCreating,
   openForEdit,
   openForResize,
-  Origin as VolumeDrawerOrigin,
 } from 'src/store/volumeForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import { DestructiveVolumeDialog } from './DestructiveVolumeDialog';
 import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
 import { VolumeAttachmentDrawer } from './VolumeAttachmentDrawer';
+import { VolumeTableRow } from './VolumeTableRow';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
-import { VolumeTableRow } from './VolumeTableRow';
 
 interface Props {
+  fromLinodes?: boolean;
   isVolumesLanding?: boolean;
+  linodeConfigs?: Config[];
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
-  linodeConfigs?: Config[];
-  recentEvent?: Event;
   readOnly?: boolean;
+  recentEvent?: Event;
   removeBreadCrumb?: boolean;
-  fromLinodes?: boolean;
 }
 
 interface DispatchProps {
+  openForClone: (
+    volumeId: number,
+    volumeLabel: string,
+    volumeSize: number,
+    volumeRegion: string
+  ) => void;
+  openForConfig: (volumeLabel: string, volumePath: string) => void;
+  openForCreating: (
+    origin: VolumeDrawerOrigin,
+    linodeOptions?: LinodeOptions
+  ) => void;
   openForEdit: (
     volumeId: number,
     volumeLabel: string,
@@ -59,17 +72,6 @@ interface DispatchProps {
     volumeSize: number,
     volumeLabel: string
   ) => void;
-  openForClone: (
-    volumeId: number,
-    volumeLabel: string,
-    volumeSize: number,
-    volumeRegion: string
-  ) => void;
-  openForCreating: (
-    origin: VolumeDrawerOrigin,
-    linodeOptions?: LinodeOptions
-  ) => void;
-  openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
 type CombinedProps = Props & DispatchProps;
@@ -81,20 +83,20 @@ export const VolumesLanding = (props: CombinedProps) => {
 
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'desc',
+      orderBy: 'label',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
-  const { data: volumes, isLoading, error } = useVolumesQuery(
+  const { data: volumes, error, isLoading } = useVolumesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -102,7 +104,7 @@ export const VolumesLanding = (props: CombinedProps) => {
     filter
   );
 
-  const { openForConfig, openForClone, openForEdit, openForResize } = props;
+  const { openForClone, openForConfig, openForEdit, openForResize } = props;
 
   const [upgradeVolumeDialog, setUpgradeVolumeDialog] = React.useState({
     open: false,
@@ -111,26 +113,26 @@ export const VolumesLanding = (props: CombinedProps) => {
   });
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
+    linodeRegion: '',
     open: false,
     volumeId: 0,
     volumeLabel: '',
-    linodeRegion: '',
   });
 
   const [destructiveDialog, setDestructiveDialog] = React.useState<{
+    linodeId?: number;
+    linodeLabel?: string;
+    mode: 'delete' | 'detach';
     open: boolean;
-    mode: 'detach' | 'delete';
     volumeId?: number;
     volumeLabel: string;
-    linodeLabel?: string;
-    linodeId?: number;
   }>({
-    open: false,
-    mode: 'detach',
-    volumeId: 0,
-    volumeLabel: '',
     linodeId: undefined,
     linodeLabel: undefined,
+    mode: 'detach',
+    open: false,
+    volumeId: 0,
+    volumeLabel: '',
   });
 
   const handleCloseAttachDrawer = () => {
@@ -147,10 +149,10 @@ export const VolumesLanding = (props: CombinedProps) => {
   const handleAttach = (volumeId: number, label: string, regionID: string) => {
     setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
+      linodeRegion: regionID,
       open: true,
       volumeId,
       volumeLabel: label,
-      linodeRegion: regionID,
     }));
   };
 
@@ -162,25 +164,25 @@ export const VolumesLanding = (props: CombinedProps) => {
   ) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
-      open: true,
+      error: '',
+      linodeId,
+      linodeLabel,
       mode: 'detach',
+      open: true,
       volumeId,
       volumeLabel,
-      linodeLabel,
-      linodeId,
-      error: '',
     }));
   };
 
   const handleDelete = (volumeId: number, volumeLabel: string) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
-      open: true,
+      error: '',
+      linodeLabel: '',
       mode: 'delete',
+      open: true,
       volumeId,
       volumeLabel,
-      linodeLabel: '',
-      error: '',
     }));
   };
 
@@ -217,24 +219,24 @@ export const VolumesLanding = (props: CombinedProps) => {
   }
 
   const handlers: VolumeHandlers = {
+    handleAttach,
+    handleDelete,
+    handleDetach,
+    handleUpgrade,
+    openForClone,
     openForConfig,
     openForEdit,
     openForResize,
-    openForClone,
-    handleAttach,
-    handleDetach,
-    handleDelete,
-    handleUpgrade,
   };
 
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
       <LandingHeader
-        title="Volumes"
+        docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
         entity="Volume"
         onButtonClick={() => history.push('/volumes/create')}
-        docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
+        title="Volumes"
       />
       <Table>
         <TableHead>
@@ -242,16 +244,16 @@ export const VolumesLanding = (props: CombinedProps) => {
             <TableSortCell
               active={orderBy === 'label'}
               direction={order}
-              label="label"
               handleClick={handleOrderChange}
+              label="label"
             >
               Label
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
-              label="status"
               handleClick={handleOrderChange}
+              label="status"
             >
               Status
             </TableSortCell>
@@ -259,8 +261,8 @@ export const VolumesLanding = (props: CombinedProps) => {
             <TableSortCell
               active={orderBy === 'size'}
               direction={order}
-              label="size"
               handleClick={handleOrderChange}
+              label="size"
             >
               Size
             </TableSortCell>
@@ -276,33 +278,33 @@ export const VolumesLanding = (props: CombinedProps) => {
       </Table>
       <PaginationFooter
         count={volumes?.results ?? 0}
+        eventCategory="Volumes Table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
-        eventCategory="Volumes Table"
       />
       <UpgradeVolumeDialog
-        open={upgradeVolumeDialog.open}
         id={upgradeVolumeDialog.volumeId}
         label={upgradeVolumeDialog.volumeLabel}
         onClose={closeUpgradeVolumeDialog}
+        open={upgradeVolumeDialog.open}
       />
       <VolumeAttachmentDrawer
+        linodeRegion={attachmentDrawer.linodeRegion || ''}
+        onClose={handleCloseAttachDrawer}
         open={attachmentDrawer.open}
         volumeId={attachmentDrawer.volumeId || 0}
         volumeLabel={attachmentDrawer.volumeLabel || ''}
-        linodeRegion={attachmentDrawer.linodeRegion || ''}
-        onClose={handleCloseAttachDrawer}
       />
       <DestructiveVolumeDialog
-        open={destructiveDialog.open}
-        volumeLabel={destructiveDialog.volumeLabel}
-        linodeLabel={destructiveDialog.linodeLabel}
         linodeId={destructiveDialog.linodeId}
-        volumeId={destructiveDialog.volumeId ?? 0}
+        linodeLabel={destructiveDialog.linodeLabel}
         mode={destructiveDialog.mode}
         onClose={closeDestructiveDialog}
+        open={destructiveDialog.open}
+        volumeId={destructiveDialog.volumeId ?? 0}
+        volumeLabel={destructiveDialog.volumeLabel}
       />
     </>
   );
@@ -311,11 +313,11 @@ export const VolumesLanding = (props: CombinedProps) => {
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
+      openForClone,
+      openForConfig,
+      openForCreating,
       openForEdit,
       openForResize,
-      openForClone,
-      openForCreating,
-      openForConfig,
     },
     dispatch
   );

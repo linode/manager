@@ -1,75 +1,77 @@
 import { useStore } from 'react-redux';
 import {
+  Store,
   applyMiddleware,
   combineReducers,
   compose,
   createStore,
-  Store,
 } from 'redux';
 import thunk from 'redux-thunk';
+
 import accountManagement, {
-  defaultState as defaultAccountManagementState,
   State as AccountManagementState,
+  defaultState as defaultAccountManagementState,
 } from 'src/store/accountManagement/accountManagement.reducer';
 import { State as AuthState } from 'src/store/authentication';
 import authentication, {
   defaultState as authenticationDefaultState,
 } from 'src/store/authentication/authentication.reducer';
 import backups, {
-  defaultState as backupsDefaultState,
   State as BackupDrawerState,
+  defaultState as backupsDefaultState,
 } from 'src/store/backupDrawer';
 import globalErrors, {
-  defaultState as defaultGlobalErrorState,
   State as GlobalErrorState,
+  defaultState as defaultGlobalErrorState,
 } from 'src/store/globalErrors';
 import linodeCreateReducer, {
-  defaultState as linodeCreateDefaultState,
   State as LinodeCreateState,
+  defaultState as linodeCreateDefaultState,
 } from 'src/store/linodeCreate/linodeCreate.reducer';
 import linodeConfigs, {
-  defaultState as defaultLinodeConfigsState,
   State as LinodeConfigsState,
+  defaultState as defaultLinodeConfigsState,
 } from 'src/store/linodes/config/config.reducer';
 import linodeDisks, {
-  defaultState as defaultLinodeDisksState,
   State as LinodeDisksState,
+  defaultState as defaultLinodeDisksState,
 } from 'src/store/linodes/disk/disk.reducer';
 import linodes, {
-  defaultState as defaultLinodesState,
   State as LinodesState,
+  defaultState as defaultLinodesState,
 } from 'src/store/linodes/linodes.reducer';
 import longview, {
-  defaultState as defaultLongviewState,
   State as LongviewState,
+  defaultState as defaultLongviewState,
 } from 'src/store/longview/longview.reducer';
 import longviewStats, {
-  defaultState as defaultLongviewStatsState,
   State as LongviewStatsState,
+  defaultState as defaultLongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
 import stackScriptDialog, {
-  defaultState as stackScriptDialogDefaultState,
   State as StackScriptDialogState,
+  defaultState as stackScriptDialogDefaultState,
 } from 'src/store/stackScriptDialog';
 import volumeDrawer, {
-  defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState,
+  defaultState as volumeDrawerDefaultState,
 } from 'src/store/volumeForm';
+
 import featureFlagsLoad, {
-  defaultState as featureFlagsLoadState,
   State as FeatureFlagsLoadState,
+  defaultState as featureFlagsLoadState,
 } from './featureFlagsLoad/featureFlagsLoad.reducer';
 import initialLoad, {
-  defaultState as initialLoadState,
   State as InitialLoadState,
+  defaultState as initialLoadState,
 } from './initialLoad/initialLoad.reducer';
 import mockFeatureFlags, {
-  defaultMockFeatureFlagState,
   MockFeatureFlagState,
+  defaultMockFeatureFlagState,
 } from './mockFeatureFlags';
 import pendingUpload, {
-  defaultState as pendingUploadState,
   State as PendingUploadState,
+  defaultState as pendingUploadState,
 } from './pendingUpload';
 import { initReselectDevtools } from './selectors';
 
@@ -81,48 +83,48 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
+  linodes: defaultLinodesState,
 };
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
+  linodes: LinodesState;
 }
 
 export interface ApplicationState {
   __resources: ResourcesState;
   authentication: AuthState;
   backups: BackupDrawerState;
-  stackScriptDialog: StackScriptDialogState;
-  volumeDrawer: VolumeDrawerState;
   createLinode: LinodeCreateState;
-  pendingUpload: PendingUploadState;
-  initialLoad: InitialLoadState;
   featureFlagsLoad: FeatureFlagsLoadState;
   globalErrors: GlobalErrorState;
+  initialLoad: InitialLoadState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
+  pendingUpload: PendingUploadState;
+  stackScriptDialog: StackScriptDialogState;
+  volumeDrawer: VolumeDrawerState;
 }
 
 export const defaultState: ApplicationState = {
   __resources: __resourcesDefaultState,
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
-  stackScriptDialog: stackScriptDialogDefaultState,
-  volumeDrawer: volumeDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
-  pendingUpload: pendingUploadState,
-  initialLoad: initialLoadState,
   featureFlagsLoad: featureFlagsLoadState,
   globalErrors: defaultGlobalErrorState,
+  initialLoad: initialLoadState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
   mockFeatureFlags: defaultMockFeatureFlagState,
+  pendingUpload: pendingUploadState,
+  stackScriptDialog: stackScriptDialogDefaultState,
+  volumeDrawer: volumeDrawerDefaultState,
 };
 
 /**
@@ -130,25 +132,25 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  linodes,
   linodeConfigs,
   linodeDisks,
+  linodes,
 });
 
 const reducers = combineReducers<ApplicationState>({
   __resources,
   authentication,
   backups,
-  stackScriptDialog,
-  volumeDrawer,
   createLinode: linodeCreateReducer,
-  pendingUpload,
-  initialLoad,
   featureFlagsLoad,
   globalErrors,
+  initialLoad,
   longviewClients: longview,
   longviewStats,
   mockFeatureFlags,
+  pendingUpload,
+  stackScriptDialog,
+  volumeDrawer,
 });
 
 const enhancersFactory = () =>

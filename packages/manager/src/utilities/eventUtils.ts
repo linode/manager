@@ -1,5 +1,6 @@
 import { EntityEvent, Event, EventAction } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
+
 import { parseAPIDate } from './date';
 
 export const isLongPendingEvent = (event: Event): boolean => {

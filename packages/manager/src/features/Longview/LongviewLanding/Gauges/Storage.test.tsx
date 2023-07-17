@@ -5,17 +5,17 @@ describe('Storage Gauge', () => {
   describe('sumStorage', () => {
     const storageData: Record<string, Disk> = {
       '/dev/sda': {
-        fs: {
-          free: [{ x: 0, y: 1 }],
-          total: [{ x: 0, y: 2 }],
-          ifree: [],
-          itotal: [],
-          path: '/',
-        },
-        isswap: 0,
         childof: 0,
         children: 0,
         dm: 0,
+        fs: {
+          free: [{ x: 0, y: 1 }],
+          ifree: [],
+          itotal: [],
+          path: '/',
+          total: [{ x: 0, y: 2 }],
+        },
+        isswap: 0,
         mounted: 1,
       },
     };
@@ -27,17 +27,17 @@ describe('Storage Gauge', () => {
       const data = {
         ...storageData,
         '/dev/sda2': {
-          fs: {
-            free: [{ x: 0, y: 100 }],
-            total: [{ x: 0, y: 200 }],
-            ifree: [],
-            itotal: [],
-            path: '/',
-          },
-          isswap: 0,
           childof: 0,
           children: 0,
           dm: 0,
+          fs: {
+            free: [{ x: 0, y: 100 }],
+            ifree: [],
+            itotal: [],
+            path: '/',
+            total: [{ x: 0, y: 200 }],
+          },
+          isswap: 0,
           mounted: 1,
         },
       };

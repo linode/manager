@@ -1,31 +1,33 @@
 import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose, withHandlers } from 'recompose';
-import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+
 import { LinearProgress } from 'src/components/LinearProgress';
 import { TextField } from 'src/components/TextField';
+import InputAdornment from 'src/components/core/InputAdornment';
+
 import { FileAttachment } from './index';
 
 const useStyles = makeStyles((theme: Theme) => ({
   attachmentField: {
-    marginTop: 0,
-    width: 415,
-    [theme.breakpoints.down('sm')]: {
-      width: 165,
-    },
     '& > div ': {
       backgroundColor: 'transparent',
       border: 0,
     },
     '& svg': {
       color: theme.palette.text.primary,
-      width: 24,
       fontSize: 22,
+      width: 24,
     },
+    marginTop: 0,
+    [theme.breakpoints.down('sm')]: {
+      width: 165,
+    },
+    width: 415,
   },
   closeIcon: {
     cursor: 'pointer',
@@ -61,31 +63,31 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
     <Grid container spacing={2}>
       <Grid>
         <TextField
-          className={classes.attachmentField}
-          value={file.name}
-          errorText={err}
           InputProps={{
+            endAdornment: (
+              <InputAdornment
+                className={classes.closeIcon}
+                data-qa-inline-delete
+                data-testid="delete-button"
+                onClick={onClick}
+                position="end"
+              >
+                <Close />
+              </InputAdornment>
+            ),
             startAdornment: (
               <InputAdornment position="end">
                 <CloudUpload />
               </InputAdornment>
             ),
-            endAdornment: (
-              <InputAdornment
-                onClick={onClick}
-                position="end"
-                className={classes.closeIcon}
-                data-testid="delete-button"
-                data-qa-inline-delete
-              >
-                <Close />
-              </InputAdornment>
-            ),
           }}
-          label="File Attached"
           aria-label="Disabled Text Field"
-          hideLabel
+          className={classes.attachmentField}
           data-testid="attached-file"
+          errorText={err}
+          hideLabel
+          label="File Attached"
+          value={file.name}
         />
       </Grid>
       {file.uploading && (
