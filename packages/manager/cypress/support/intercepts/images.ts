@@ -10,7 +10,7 @@ import { getFilters } from 'support/util/request';
 import type { Image, ImageStatus } from '@linode/api-v4/types';
 
 /**
- * Intercepts POST request to create an Image and mocks the response.
+ * Intercepts POST request to create a machine image and mocks the response.
  *
  * @param image - an image objects
  *
@@ -18,6 +18,15 @@ import type { Image, ImageStatus } from '@linode/api-v4/types';
  */
 export const mockCreateImage = (image: Image): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher('images'), image);
+};
+
+/**
+ * Intercepts POST request to upload a machine image.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptUploadImage = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('images/upload'));
 };
 
 /**
