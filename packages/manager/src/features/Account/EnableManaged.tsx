@@ -8,7 +8,7 @@ import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
@@ -44,11 +44,9 @@ export const ManagedContent = (props: ContentProps) => {
           Linode Managed includes Backups, Longview Pro, cPanel, and
           round-the-clock monitoring to help keep your systems up and running.
           +$100/month per Linode.{'  '}
-          <ExternalLink
-            fixedIcon
-            link="https://linode.com/managed"
-            text="Learn more."
-          />
+          <Link external fixedIcon to="https://linode.com/managed">
+            Learn more.
+          </Link>
         </Typography>
       </Grid>
       <Grid>

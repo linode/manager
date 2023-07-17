@@ -1,7 +1,7 @@
 import { Region } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -50,11 +50,9 @@ const renderBanner = (statusWarnings: string[]): JSX.Element => {
         {moreThanOneRegionAffected ? 'these facilities' : 'this facility'},
         there is no need to open a support ticket at this time. Please monitor
         our{` `}
-        <ExternalLink
-          hideIcon
-          link="https://status.linode.com"
-          text="status blog"
-        />{' '}
+        <Link external hideIcon to="https://status.linode.com">
+          status blog
+        </Link>{' '}
         for further information. Thank you for your patience and understanding.
       </Typography>
     </>

@@ -9,7 +9,7 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 import formatDate from 'src/utilities/formatDate';
@@ -73,7 +73,9 @@ export const ObjectDetailsDrawer = React.memo(
 
         {url ? (
           <StyledLinkContainer>
-            <ExternalLink hideIcon link={url} text={truncateMiddle(url, 50)} />
+            <Link external hideIcon to={url}>
+              {truncateMiddle(url, 50)}
+            </Link>
             <StyledCopyTooltip text={url} />
           </StyledLinkContainer>
         ) : null}

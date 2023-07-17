@@ -20,7 +20,7 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
@@ -873,11 +873,13 @@ export const LinodeConfigDialog = (props: Props) => {
                         connect to (either &quot;Public Internet&quot; or a
                         VLAN). Each Linode can have up to three Network
                         Interfaces. For more information, see our{' '}
-                        <ExternalLink
+                        <Link
                           hideIcon
-                          link="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance"
-                          text="Network Interfaces guide"
-                        />
+                          external
+                          to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance"
+                        >
+                          Network Interfaces guide
+                        </Link>
                         .
                       </Typography>
                     }
@@ -988,10 +990,12 @@ export const LinodeConfigDialog = (props: Props) => {
                         tooltipText={
                           <>
                             Automatically configure static networking
-                            <ExternalLink
-                              link="https://www.linode.com/docs/platform/network-helper/"
-                              text="(more info)"
-                            />
+                            <Link
+                              external
+                              to="https://www.linode.com/docs/platform/network-helper/"
+                            >
+                              (more info)
+                            </Link>
                           </>
                         }
                         checked={values.helpers.network}

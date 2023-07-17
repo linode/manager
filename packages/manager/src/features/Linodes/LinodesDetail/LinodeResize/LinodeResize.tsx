@@ -10,7 +10,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
@@ -192,11 +192,13 @@ export const LinodeResize = (props: Props) => {
           website, or if you&rsquo;re not using your Linode as much as you
           thought, you can temporarily or permanently resize your Linode to a
           different plan.{' '}
-          <ExternalLink
+          <Link
+            external
             fixedIcon
-            link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
-            text="Learn more."
-          />
+            to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+          >
+            Learn more.
+          </Link>
         </Typography>
 
         <div className={classes.selectPlanPanel}>
@@ -316,11 +318,13 @@ const getError = (error: APIError[] | null) => {
         The current disk size of your Linode is too large for the new service
         plan. Please resize your disk to accommodate the new plan. You can read
         our{' '}
-        <ExternalLink
+        <Link
+          external
           hideIcon
-          link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
-          text="Resize Your Linode"
-        />{' '}
+          to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+        >
+          Resize Your Linode
+        </Link>{' '}
         guide for more detailed instructions.
       </Typography>
     );
