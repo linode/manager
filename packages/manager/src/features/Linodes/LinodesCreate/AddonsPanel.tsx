@@ -17,7 +17,7 @@ import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
-import AttachVLAN from './AttachVLAN';
+import { AttachVLAN } from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addons: {
@@ -163,7 +163,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   return (
     <>
-      {showVlans ? (
+      {showVlans && (
         <AttachVLAN
           handleVLANChange={handleVLANChange}
           helperText={vlanDisabledReason}
@@ -174,13 +174,13 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           region={selectedRegionID}
           vlanLabel={vlanLabel}
         />
-      ) : null}
+      )}
       <Paper className={classes.addons} data-qa-add-ons>
         <Typography className={classes.title} variant="h2">
           Add-ons{' '}
-          {backupsDisabledReason ? (
+          {backupsDisabledReason && (
             <TooltipIcon status="help" text={backupsDisabledReason} />
-          ) : null}
+          )}
         </Typography>
         {showBackupsWarning && (
           <Notice warning>

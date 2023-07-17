@@ -1,6 +1,4 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -19,20 +17,6 @@ import {
 
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  paragraphBreak: {
-    marginTop: theme.spacing(2),
-  },
-  title: {
-    '& button': {
-      paddingLeft: theme.spacing(),
-    },
-    alignItems: 'center',
-    display: 'flex',
-    marginBottom: theme.spacing(2),
-  },
-}));
-
 interface Props {
   handleVLANChange: (updatedInterface: Interface) => void;
   helperText?: string;
@@ -44,9 +28,7 @@ interface Props {
   vlanLabel: string;
 }
 
-type CombinedProps = Props;
-
-const AttachVLAN: React.FC<CombinedProps> = (props) => {
+export const AttachVLAN = React.memo((props: Props) => {
   const {
     handleVLANChange,
     helperText,
@@ -57,8 +39,6 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
     region,
     vlanLabel,
   } = props;
-
-  const classes = useStyles();
 
   const queryClient = useQueryClient();
 
@@ -114,7 +94,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
       }}
     >
       <Typography>{regionalAvailabilityMessage}</Typography>
-      <Typography className={classes.paragraphBreak} variant="body1">
+      <Typography sx={{ marginTop: 2 }} variant="body1">
         VLANs are used to create a private L2 Virtual Local Area Network between
         Linodes. A VLAN created or attached in this section will be assigned to
         the eth1 interface, with eth0 being used for connections to the public
@@ -143,6 +123,4 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
       />
     </Accordion>
   );
-};
-
-export default React.memo(AttachVLAN);
+});
