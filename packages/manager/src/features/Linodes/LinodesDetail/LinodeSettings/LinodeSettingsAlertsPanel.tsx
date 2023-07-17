@@ -2,6 +2,7 @@ import { Linode } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
@@ -12,23 +13,24 @@ import {
 } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
 import { AlertSection } from './AlertSection';
 
 interface Props {
-  linodeId: number;
   isReadOnly?: boolean;
+  linodeId: number;
 }
 
 export const LinodeSettingsAlertsPanel = (props: Props) => {
-  const { linodeId, isReadOnly } = props;
+  const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
-    mutateAsync: updateLinode,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
   const { data: type } = useTypeQuery(
@@ -47,14 +49,14 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       network_out: linode?.alerts.network_out ?? 0,
       transfer_quota: linode?.alerts.transfer_quota ?? 0,
     },
-    async onSubmit({ cpu, network_in, network_out, transfer_quota, io }) {
+    async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
       await updateLinode({
         alerts: {
           cpu: isBareMetalInstance ? undefined : cpu,
+          io,
           network_in: isBareMetalInstance ? undefined : network_in,
           network_out,
           transfer_quota,
-          io,
         },
       });
 
@@ -68,24 +70,21 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   const hasErrorFor = getAPIErrorFor(
     {
       'alerts.cpu': 'CPU',
+      'alerts.io': 'Disk I/O rate',
       'alerts.network_in': 'Incoming traffic',
       'alerts.network_out': 'Outbound traffic',
       'alerts.transfer_quota': 'Transfer quota',
-      'alerts.io': 'Disk I/O rate',
     },
     error ?? undefined
   );
 
   const alertSections = [
     {
-      title: 'CPU Usage',
-      textTitle: 'Usage Threshold',
-      radioInputLabel: 'cpu_usage_state',
-      textInputLabel: 'cpu_usage_threshold',
       copy:
         'Average CPU usage over 2 hours exceeding this value triggers this alert.',
-      state: formik.values.cpu > 0,
-      value: formik.values.cpu,
+      endAdornment: '%',
+      error: hasErrorFor('alerts.cpu'),
+      hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -100,19 +99,19 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('cpu', e.target.valueAsNumber),
-      error: hasErrorFor('alerts.cpu'),
-      endAdornment: '%',
-      hidden: isBareMetalInstance,
+      radioInputLabel: 'cpu_usage_state',
+      state: formik.values.cpu > 0,
+      textInputLabel: 'cpu_usage_threshold',
+      textTitle: 'Usage Threshold',
+      title: 'CPU Usage',
+      value: formik.values.cpu,
     },
     {
-      radioInputLabel: 'disk_io_state',
-      textInputLabel: 'disk_io_threshold',
-      textTitle: 'I/O Threshold',
-      title: 'Disk I/O Rate',
       copy:
         'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
-      state: formik.values.io > 0,
-      value: formik.values.io,
+      endAdornment: 'IOPS',
+      error: hasErrorFor('alerts.io'),
+      hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -123,19 +122,18 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('io', e.target.valueAsNumber),
-      error: hasErrorFor('alerts.io'),
-      endAdornment: 'IOPS',
-      hidden: isBareMetalInstance,
+      radioInputLabel: 'disk_io_state',
+      state: formik.values.io > 0,
+      textInputLabel: 'disk_io_threshold',
+      textTitle: 'I/O Threshold',
+      title: 'Disk I/O Rate',
+      value: formik.values.io,
     },
     {
-      radioInputLabel: 'incoming_traffic_state',
-      textInputLabel: 'incoming_traffic_threshold',
-      textTitle: 'Traffic Threshold',
-      title: 'Incoming Traffic',
       copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
         alert.`,
-      state: formik.values.network_in > 0,
-      value: formik.values.network_in,
+      endAdornment: 'Mb/s',
+      error: hasErrorFor('alerts.network_in'),
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -150,18 +148,18 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('network_in', e.target.valueAsNumber),
-      error: hasErrorFor('alerts.network_in'),
-      endAdornment: 'Mb/s',
+      radioInputLabel: 'incoming_traffic_state',
+      state: formik.values.network_in > 0,
+      textInputLabel: 'incoming_traffic_threshold',
+      textTitle: 'Traffic Threshold',
+      title: 'Incoming Traffic',
+      value: formik.values.network_in,
     },
     {
-      radioInputLabel: 'outbound_traffic_state',
-      textInputLabel: 'outbound_traffic_threshold',
-      textTitle: 'Traffic Threshold',
-      title: 'Outbound Traffic',
       copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
         alert.`,
-      state: formik.values.network_out > 0,
-      value: formik.values.network_out,
+      endAdornment: 'Mb/s',
+      error: hasErrorFor('alerts.network_out'),
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -176,18 +174,18 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('network_out', e.target.valueAsNumber),
-      error: hasErrorFor('alerts.network_out'),
-      endAdornment: 'Mb/s',
+      radioInputLabel: 'outbound_traffic_state',
+      state: formik.values.network_out > 0,
+      textInputLabel: 'outbound_traffic_threshold',
+      textTitle: 'Traffic Threshold',
+      title: 'Outbound Traffic',
+      value: formik.values.network_out,
     },
     {
-      radioInputLabel: 'transfer_quota_state',
-      textInputLabel: 'transfer_quota_threshold',
-      textTitle: 'Quota Threshold',
-      title: 'Transfer Quota',
       copy: `Percentage of network transfer quota used being greater than this value will trigger
           this alert.`,
-      state: formik.values.transfer_quota > 0,
-      value: formik.values.transfer_quota,
+      endAdornment: '%',
+      error: hasErrorFor('alerts.transfer_quota'),
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -202,8 +200,12 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('transfer_quota', e.target.valueAsNumber),
-      error: hasErrorFor('alerts.transfer_quota'),
-      endAdornment: '%',
+      radioInputLabel: 'transfer_quota_state',
+      state: formik.values.transfer_quota > 0,
+      textInputLabel: 'transfer_quota_threshold',
+      textTitle: 'Quota Threshold',
+      title: 'Transfer Quota',
+      value: formik.values.transfer_quota,
     },
   ].filter((thisAlert) => !thisAlert.hidden);
 
@@ -212,10 +214,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       <ActionsPanel>
         <Button
           buttonType="primary"
-          onClick={() => formik.handleSubmit()}
+          data-qa-alerts-save
           disabled={isReadOnly || !formik.dirty}
           loading={isLoading}
-          data-qa-alerts-save
+          onClick={() => formik.handleSubmit()}
         >
           Save
         </Button>
@@ -227,9 +229,9 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   return (
     <Accordion
-      heading="Notification Thresholds"
       actions={renderExpansionActions}
       defaultExpanded
+      heading="Notification Thresholds"
     >
       {generalError && <Notice error>{generalError}</Notice>}
       {alertSections.map((p, idx) => (

@@ -54,7 +54,7 @@
     "glob-parent": "^5.1.2",
     "browserslist": "^4.16.5",
     "hosted-git-info": "^5.0.0",
-    "minimatch": "^3.0.5",
+    "minimatch": "^9.0.2",
     "@types/react": "^17",
     "yaml": "^2.3.0"
   },

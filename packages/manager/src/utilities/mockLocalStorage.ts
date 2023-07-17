@@ -9,8 +9,6 @@
  */
 
 class LocalStorageMock {
-  store: any = {};
-
   clear() {
     this.store = {};
   }
@@ -19,13 +17,15 @@ class LocalStorageMock {
     return this.store[key] || null;
   }
 
+  removeItem(key: string) {
+    delete this.store[key];
+  }
+
   setItem(key: string, value: string) {
     this.store[key] = value.toString();
   }
 
-  removeItem(key: string) {
-    delete this.store[key];
-  }
+  store: any = {};
 }
 
 export default LocalStorageMock;

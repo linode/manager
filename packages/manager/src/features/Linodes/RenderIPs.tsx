@@ -1,10 +1,10 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Unstable_Grid2';
 
 export interface Props {
   ipv4: string[];
-  ipv6: string | null;
+  ipv6: null | string;
   linodeId: number;
 }
 
@@ -20,7 +20,7 @@ export const RenderIPs: React.FC<CombinedProps> = (props) => {
     <>
       {ipv4Slice.map((thisIP) => {
         return (
-          <Grid key={thisIP} data-testid="ipv4-list-item">
+          <Grid data-testid="ipv4-list-item" key={thisIP}>
             {thisIP}
           </Grid>
         );
@@ -30,8 +30,8 @@ export const RenderIPs: React.FC<CombinedProps> = (props) => {
         <Grid>
           ... plus{' '}
           <Link
-            to={`/linodes/${linodeId}/networking`}
             data-testid="truncated-ips"
+            to={`/linodes/${linodeId}/networking`}
           >
             {ipv4.length - 3} more
           </Link>{' '}

@@ -1,13 +1,15 @@
-import { getLinodeTypes, getType, LinodeType } from '@linode/api-v4';
+import { LinodeType, getLinodeTypes, getType } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
+  UseQueryOptions,
   useQueries,
   useQuery,
   useQueryClient,
-  UseQueryOptions,
 } from 'react-query';
+
 import { getAll } from 'src/utilities/getAll';
+
 import { queryPresets } from './base';
 
 const queryKey = 'types';
@@ -41,9 +43,9 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
   const queryClient = useQueryClient();
   return useQueries(
     types.map<UseQueryOptions<LinodeType, APIError[]>>((type) => ({
-      queryKey: specificTypesQueryKey(type),
-      queryFn: () => getSingleType(type, queryClient),
       enabled,
+      queryFn: () => getSingleType(type, queryClient),
+      queryKey: specificTypesQueryKey(type),
       ...queryPresets.oneTimeFetch,
     }))
   );
@@ -51,8 +53,8 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
 
 export const useTypeQuery = (type: string, enabled = true) => {
   return useQuery<LinodeType, APIError[]>({
-    queryKey: specificTypesQueryKey(type),
     queryFn: () => getType(type),
+    queryKey: specificTypesQueryKey(type),
     ...queryPresets.oneTimeFetch,
     enabled: enabled && Boolean(type),
   });

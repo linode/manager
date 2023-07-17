@@ -1,9 +1,12 @@
 import React from 'react';
+
 import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+
 import { Table } from './Table';
+
 import type { TableProps } from './Table';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -12,8 +15,6 @@ export const Default: StoryObj<TableProps> = {
 };
 
 const meta: Meta<TableProps> = {
-  title: 'Components/table/Table',
-  component: Table,
   args: {
     children: (
       <>
@@ -50,5 +51,7 @@ const meta: Meta<TableProps> = {
     spacingBottom: 0,
     spacingTop: 0,
   },
+  component: Table,
+  title: 'Components/table/Table',
 };
 export default meta;

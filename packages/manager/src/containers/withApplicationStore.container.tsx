@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ApplicationStore, useApplicationStore } from 'src/store';
 
 export interface WithApplicationStoreProps {

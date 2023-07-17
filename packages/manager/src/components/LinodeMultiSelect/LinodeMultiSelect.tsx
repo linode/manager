@@ -1,30 +1,31 @@
-import * as React from 'react';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import Autocomplete from '@mui/material/Autocomplete';
 import Popper from '@mui/material/Popper';
+import * as React from 'react';
+
 import { TextField } from 'src/components/TextField';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 export interface Props {
   allowedRegions?: string[];
+  disabled?: boolean;
+  errorText?: string;
   filteredLinodes?: number[];
   helperText?: string;
+  onBlur?: (e: React.FocusEvent) => void;
   onChange: (selected: number[]) => void;
   value: number[];
-  errorText?: string;
-  disabled?: boolean;
-  onBlur?: (e: React.FocusEvent) => void;
 }
 
 const LinodeMultiSelect = (props: Props) => {
   const {
     allowedRegions,
+    disabled,
     errorText,
     filteredLinodes,
     helperText,
+    onBlur,
     onChange,
     value,
-    disabled,
-    onBlur,
   } = props;
 
   const regionFilter = allowedRegions
@@ -35,7 +36,7 @@ const LinodeMultiSelect = (props: Props) => {
       }
     : {};
 
-  const { data, isLoading, error } = useAllLinodesQuery({}, regionFilter);
+  const { data, error, isLoading } = useAllLinodesQuery({}, regionFilter);
 
   const options = data
     ?.filter((linode) => !filteredLinodes?.includes(linode.id))
@@ -46,29 +47,29 @@ const LinodeMultiSelect = (props: Props) => {
 
   return (
     <Autocomplete
-      multiple
-      clearOnBlur
-      onBlur={onBlur}
-      disabled={disabled}
-      loading={isLoading}
-      options={options ?? []}
-      value={selectedLinodeOptions}
-      onChange={(event, value) => {
-        onChange(value.map((option) => option.id));
-      }}
       PopperComponent={(popperProps) => (
         <Popper {...popperProps} data-qa-autocomplete-popper />
       )}
+      onChange={(event, value) => {
+        onChange(value.map((option) => option.id));
+      }}
       renderInput={(params) => (
         <TextField
-          label="Linodes"
-          placeholder="Select Linodes"
-          loading={isLoading}
           errorText={error?.[0].reason ?? errorText}
           helperText={helperText}
+          label="Linodes"
+          loading={isLoading}
+          placeholder="Select Linodes"
           {...params}
         />
       )}
+      clearOnBlur
+      disabled={disabled}
+      loading={isLoading}
+      multiple
+      onBlur={onBlur}
+      options={options ?? []}
+      value={selectedLinodeOptions}
     />
   );
 };

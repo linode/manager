@@ -1,32 +1,34 @@
 import {
   Account,
-  getInvoice,
-  getInvoiceItems,
   Invoice,
   InvoiceItem,
+  getInvoice,
+  getInvoiceItems,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import * as React from 'react';
-import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { useParams } from 'react-router-dom';
-import { Button } from 'src/components/Button/Button';
-import Paper from 'src/components/core/Paper';
-import { useTheme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
-import { Currency } from 'src/components/Currency';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
+
+import { Button } from 'src/components/Button/Button';
+import { Currency } from 'src/components/Currency';
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { IconButton } from 'src/components/IconButton';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
+
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import InvoiceTable from './InvoiceTable';
-import Box from '@mui/material/Box';
 
 export const InvoiceDetail = () => {
   const { invoiceId } = useParams<{ invoiceId: string }>();
@@ -105,37 +107,37 @@ export const InvoiceDetail = () => {
     >
       <Grid container rowGap={2}>
         <Grid xs={12}>
-          <Grid container sx={sxGrid} spacing={2}>
-            <Grid xs={12} sm={4} sx={sxGrid}>
+          <Grid container spacing={2} sx={sxGrid}>
+            <Grid sm={4} sx={sxGrid} xs={12}>
               <Link to={`/account/billing`}>
                 <IconButton
-                  data-qa-back-to-billing
-                  size="large"
                   sx={{
                     padding: 0,
                   }}
+                  data-qa-back-to-billing
+                  size="large"
                 >
                   <KeyboardArrowLeft
                     sx={{
-                      width: 34,
                       height: 34,
+                      width: 34,
                     }}
                   />
                 </IconButton>
               </Link>
               {invoice && (
                 <Typography
-                  variant="h2"
                   data-qa-invoice-id
                   sx={{ paddingLeft: theme.spacing(1) }}
+                  variant="h2"
                 >
                   Invoice #{invoice.id}
                 </Typography>
               )}
             </Grid>
             <Grid
-              sm
               data-qa-printable-invoice
+              sm
               sx={{ ...sxGrid, justifyContent: 'flex-end' }}
             >
               {account && invoice && items && (
@@ -160,11 +162,11 @@ export const InvoiceDetail = () => {
             </Grid>
             <Grid sm="auto">
               {invoice && (
-                <Typography variant="h2" data-qa-total={invoice.total}>
+                <Typography data-qa-total={invoice.total} variant="h2">
                   Total:{' '}
                   <Currency
-                    wrapInParentheses={invoice.total < 0}
                     quantity={invoice.total}
+                    wrapInParentheses={invoice.total < 0}
                   />
                 </Typography>
               )}
@@ -173,7 +175,7 @@ export const InvoiceDetail = () => {
         </Grid>
         <Grid xs={12}>
           {pdfGenerationError && <Notice error>Failed generating PDF.</Notice>}
-          <InvoiceTable loading={loading} items={items} errors={errors} />
+          <InvoiceTable errors={errors} items={items} loading={loading} />
         </Grid>
         <Grid xs={12}>
           {invoice && (
@@ -189,8 +191,8 @@ export const InvoiceDetail = () => {
               <Typography variant="h2">
                 Subtotal:{' '}
                 <Currency
-                  wrapInParentheses={invoice.subtotal < 0}
                   quantity={invoice.subtotal}
+                  wrapInParentheses={invoice.subtotal < 0}
                 />
               </Typography>
               {invoice.tax_summary.map((summary) => {
@@ -209,8 +211,8 @@ export const InvoiceDetail = () => {
               <Typography variant="h2">
                 Total:{' '}
                 <Currency
-                  wrapInParentheses={invoice.total < 0}
                   quantity={invoice.total}
+                  wrapInParentheses={invoice.total < 0}
                 />
               </Typography>
             </Box>
@@ -224,12 +226,12 @@ export const InvoiceDetail = () => {
 export default InvoiceDetail;
 
 const csvHeaders = [
-  { label: 'Description', key: 'label' },
-  { label: 'From', key: 'from' },
-  { label: 'To', key: 'to' },
-  { label: 'Quantity', key: 'quantity' },
-  { label: 'Unit Price', key: 'unit_price' },
-  { label: 'Amount (USD)', key: 'amount' },
-  { label: 'Tax (USD)', key: 'tax' },
-  { label: 'Total (USD)', key: 'total' },
+  { key: 'label', label: 'Description' },
+  { key: 'from', label: 'From' },
+  { key: 'to', label: 'To' },
+  { key: 'quantity', label: 'Quantity' },
+  { key: 'unit_price', label: 'Unit Price' },
+  { key: 'amount', label: 'Amount (USD)' },
+  { key: 'tax', label: 'Tax (USD)' },
+  { key: 'total', label: 'Total (USD)' },
 ];

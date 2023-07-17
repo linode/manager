@@ -1,13 +1,15 @@
 import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+
 import ActionMenu, { Handlers } from './DomainActionMenu';
 import { getDomainDisplayType } from './domainUtils';
 
@@ -16,9 +18,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
   },
   labelStatusWrapper: {
+    alignItems: 'center',
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
     whiteSpace: 'nowrap',
   },
 }));
@@ -26,20 +28,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 type CombinedProps = { domain: Domain } & Handlers;
 
 const DomainTableRow: React.FC<CombinedProps> = (props) => {
-  const { domain, onDisableOrEnable, onClone, onRemove, onEdit } = props;
+  const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;
 
   const classes = useStyles();
 
   return (
     <TableRow
-      key={domain.id}
-      data-qa-domain-cell={domain.domain}
       ariaLabel={`Domain ${domain.domain}`}
+      data-qa-domain-cell={domain.domain}
+      key={domain.id}
     >
       <TableCell data-qa-domain-label>
         <div className={classes.labelStatusWrapper}>
           {domain.type !== 'slave' ? (
-            <Link to={`/domains/${domain.id}`} tabIndex={0}>
+            <Link tabIndex={0} to={`/domains/${domain.id}`}>
               {domain.domain}
             </Link>
           ) : (
@@ -52,7 +54,7 @@ const DomainTableRow: React.FC<CombinedProps> = (props) => {
           )}
         </div>
       </TableCell>
-      <TableCell statusCell data-qa-domain-status>
+      <TableCell data-qa-domain-status statusCell>
         <StatusIcon status={domainStatusToIconStatus(domain.status)} />
         {humanizeDomainStatus(domain.status)}
       </TableCell>
@@ -67,10 +69,10 @@ const DomainTableRow: React.FC<CombinedProps> = (props) => {
       <TableCell actionCell>
         <ActionMenu
           domain={domain}
-          onDisableOrEnable={onDisableOrEnable}
-          onRemove={onRemove}
           onClone={onClone}
+          onDisableOrEnable={onDisableOrEnable}
           onEdit={onEdit}
+          onRemove={onRemove}
         />
       </TableCell>
     </TableRow>

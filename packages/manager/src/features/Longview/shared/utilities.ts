@@ -1,7 +1,9 @@
 import { pathOr } from 'ramda';
+
 import { LVClientData } from 'src/containers/longview.stats.container';
 import { pluralize } from 'src/utilities/pluralize';
 import { readableBytes } from 'src/utilities/unitConversions';
+
 import {
   CPU,
   Disk,
@@ -106,8 +108,8 @@ export const sumNetwork = (
   networkData: LongviewNetworkInterface = {}
 ): InboundOutboundNetwork<'yAsNull'> => {
   const result: InboundOutboundNetwork<'yAsNull'> = {
-    tx_bytes: [],
     rx_bytes: [],
+    tx_bytes: [],
   };
 
   // Protect against malformed data.
@@ -305,7 +307,7 @@ export const sumRelatedProcessesAcrossAllUsers = (
     return accum;
   }, {} as ProcessStats);
 
-export type NetworkUnit = 'b' | 'Kb' | 'Mb';
+export type NetworkUnit = 'Kb' | 'Mb' | 'b';
 /**
  * converts bytes to either Kb (Kilobits) or Mb (Megabits)
  * depending on if the Kilobit conversion exceeds 1000.
@@ -354,7 +356,7 @@ export const getMaxUnitAndFormatNetwork = (
   const max = Math.max(statMax(rx_bytes), statMax(tx_bytes));
   const maxUnit = generateNetworkUnits(max);
 
-  const formatNetwork = (valueInBytes: number | null) => {
+  const formatNetwork = (valueInBytes: null | number) => {
     if (valueInBytes === null) {
       return valueInBytes;
     }
@@ -364,7 +366,7 @@ export const getMaxUnitAndFormatNetwork = (
     return convertNetworkToUnit(valueInBits, maxUnit);
   };
 
-  return { maxUnit, formatNetwork };
+  return { formatNetwork, maxUnit };
 };
 
 export const getMaxUnit = (stats: Stat[][]) => {

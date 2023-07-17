@@ -1,30 +1,44 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { KubernetesPlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import { nodeWarning } from '../../kubeUtils';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
+
 import type { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  boxOuter: {
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'flex-start',
+      flexDirection: 'column',
+    },
+    width: '100%',
+  },
+  button: {
+    marginTop: '0 !important',
+    paddingTop: 0,
+  },
   drawer: {
     '& .MuiDrawer-paper': {
+      overflowX: 'hidden',
       [theme.breakpoints.up('md')]: {
         width: 790,
       },
-      overflowX: 'hidden',
     },
     '& .MuiGrid-root': {
       marginBottom: 0,
@@ -35,33 +49,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   plans: {
     '& > *': {
-      marginTop: 0,
       '& > *': {
         padding: 0,
       },
+      marginTop: 0,
     },
   },
-  button: {
-    paddingTop: 0,
-    marginTop: '0 !important',
-  },
   priceDisplay: {
+    '& span': {
+      fontWeight: 'bold',
+    },
     color: theme.color.headline,
     display: 'inline',
     fontSize: '1rem',
     lineHeight: '1.25rem',
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    '& span': {
-      fontWeight: 'bold',
-    },
-  },
-  boxOuter: {
-    width: '100%',
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'flex-start',
-      flexDirection: 'column',
-    },
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -69,8 +72,8 @@ export interface Props {
   clusterId: number;
   clusterLabel: string;
   clusterRegionId: Region['id'];
-  open: boolean;
   onClose: () => void;
+  open: boolean;
   regionsData: Region[];
 }
 
@@ -86,16 +89,16 @@ export const AddNodePoolDrawer = (props: Props) => {
   const classes = useStyles();
   const { data: types } = useAllTypes(open);
   const {
-    mutateAsync: createPool,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createPool,
   } = useCreateNodePoolMutation(clusterId);
 
   // Only want to use current types here.
   const extendedTypes = filterCurrentTypes(types?.map(extendType));
 
   const [selectedTypeInfo, setSelectedTypeInfo] = React.useState<
-    { planId: string; count: number } | undefined
+    { count: number; planId: string } | undefined
   >(undefined);
 
   const getTypeCount = React.useCallback(
@@ -126,7 +129,7 @@ export const AddNodePoolDrawer = (props: Props) => {
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    setSelectedTypeInfo(newCount > 0 ? { planId, count: newCount } : undefined);
+    setSelectedTypeInfo(newCount > 0 ? { count: newCount, planId } : undefined);
   };
 
   const handleAdd = () => {
@@ -134,8 +137,8 @@ export const AddNodePoolDrawer = (props: Props) => {
       return;
     }
     return createPool({
-      type: selectedTypeInfo.planId,
       count: selectedTypeInfo.count,
+      type: selectedTypeInfo.planId,
     }).then(() => {
       onClose();
     });
@@ -146,60 +149,60 @@ export const AddNodePoolDrawer = (props: Props) => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
-    selectedRegionID: clusterRegionId,
     regionsData,
+    selectedRegionID: clusterRegionId,
   });
 
   return (
     <Drawer
-      title={`Add a Node Pool: ${clusterLabel}`}
       className={classes.drawer}
-      open={open}
       onClose={onClose}
+      open={open}
+      title={`Add a Node Pool: ${clusterLabel}`}
     >
       {error && (
         <Notice className={classes.error} error text={error?.[0].reason} />
       )}
       <form className={classes.plans}>
         <KubernetesPlansPanel
+          onSelect={(newType: string) => {
+            if (selectedTypeInfo?.planId !== newType) {
+              setSelectedTypeInfo({ count: 1, planId: newType });
+            }
+          }}
           // No nanodes or GPUs in clusters
           types={extendedTypes.filter(
             (t) => t.class !== 'nanode' && t.class !== 'gpu'
           )}
+          addPool={handleAdd}
           getTypeCount={getTypeCount}
-          selectedID={selectedTypeInfo?.planId}
-          onSelect={(newType: string) => {
-            if (selectedTypeInfo?.planId !== newType) {
-              setSelectedTypeInfo({ planId: newType, count: 1 });
-            }
-          }}
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          regionsData={regionsData}
-          updatePlanCount={updatePlanCount}
-          addPool={handleAdd}
           isSubmitting={isLoading}
+          regionsData={regionsData}
           resetValues={resetDrawer}
+          selectedID={selectedTypeInfo?.planId}
+          updatePlanCount={updatePlanCount}
         />
         {selectedTypeInfo &&
           selectedTypeInfo.count > 0 &&
           selectedTypeInfo.count < 3 && (
             <Notice
               important
-              warning
-              text={nodeWarning}
-              spacingTop={8}
               spacingBottom={16}
+              spacingTop={8}
+              text={nodeWarning}
+              warning
             />
           )}
         <ActionsPanel className={classes.button}>
           <Box
+            alignItems="center"
+            className={classes.boxOuter}
             display="flex"
             flexDirection="row"
-            alignItems="center"
             justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
-            className={classes.boxOuter}
           >
             {selectedTypeInfo && (
               <Typography className={classes.priceDisplay}>
@@ -215,9 +218,9 @@ export const AddNodePoolDrawer = (props: Props) => {
             )}
             <Button
               buttonType="primary"
-              onClick={handleAdd}
               disabled={!selectedTypeInfo}
               loading={isLoading}
+              onClick={handleAdd}
             >
               Add pool
             </Button>

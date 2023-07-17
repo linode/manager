@@ -1,10 +1,11 @@
 import * as React from 'react';
+
 import { Tag, TagProps } from 'src/components/Tag/Tag';
 
 interface Props extends TagProps {
-  tagLabel: string;
   loading: boolean;
   onDelete?: (tag: string) => void;
+  tagLabel: string;
 }
 
 type CombinedProps = Props;
@@ -14,6 +15,18 @@ type CombinedProps = Props;
  * delete payload to the onDelete function
  */
 class TagsPanelItem extends React.Component<CombinedProps, {}> {
+  render() {
+    const { onDelete, ...restOfProps } = this.props;
+    return (
+      <Tag
+        {...(restOfProps as any)}
+        colorVariant="lightBlue"
+        component={'button' as 'div'}
+        onDelete={onDelete ? this.handleDelete : undefined}
+      />
+    );
+  }
+
   handleDelete = () => {
     const { onDelete } = this.props;
     /*
@@ -24,18 +37,6 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
     }
     onDelete(this.props.tagLabel);
   };
-
-  render() {
-    const { onDelete, ...restOfProps } = this.props;
-    return (
-      <Tag
-        {...(restOfProps as any)}
-        onDelete={onDelete ? this.handleDelete : undefined}
-        component={'button' as 'div'}
-        colorVariant="lightBlue"
-      />
-    );
-  }
 }
 
 export default TagsPanelItem;

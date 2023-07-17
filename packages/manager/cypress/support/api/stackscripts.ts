@@ -1,12 +1,13 @@
-import { isTestLabel } from './common';
 import {
   Filter,
   StackScript,
-  getStackScripts,
   deleteStackScript,
+  getStackScripts,
 } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
+
+import { isTestLabel } from './common';
 
 // Retrieve only private StackScripts with "cy-test-" in label.
 const userStackScriptFilter: Filter = {
@@ -29,7 +30,7 @@ const userStackScriptFilter: Filter = {
  */
 export const deleteAllTestStackScripts = async (): Promise<void> => {
   const stackScripts = await depaginate<StackScript>((page: number) =>
-    getStackScripts({ page_size: pageSize, page }, userStackScriptFilter)
+    getStackScripts({ page, page_size: pageSize }, userStackScriptFilter)
   );
 
   const deletionPromises = stackScripts

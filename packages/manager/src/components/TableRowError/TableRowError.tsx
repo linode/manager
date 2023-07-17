@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -12,14 +13,14 @@ export interface TableRowErrorProps {
    * The message to display in the empty state
    * @default 'No items to display.'
    */
-  message: string | JSX.Element;
+  message: JSX.Element | string;
 }
 
 export const TableRowError = (props: TableRowErrorProps) => {
   return (
     <TableRow data-testid="table-row-error">
       <TableCell colSpan={props.colSpan}>
-        <ErrorState errorText={props.message} compact />
+        <ErrorState compact errorText={props.message} />
       </TableCell>
     </TableRow>
   );

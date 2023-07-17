@@ -2,21 +2,22 @@
  * @file Cypress intercepts and mocks for Cloud Manager LKE operations.
  */
 
-import type {
-  KubernetesCluster,
-  KubeNodePoolResponse,
-  KubeConfigResponse,
-  KubernetesVersion,
-} from '@linode/api-v4/types';
+import {
+  kubeEndpointFactory,
+  kubernetesDashboardUrlFactory,
+} from '@src/factories';
 import { kubernetesVersions } from 'support/constants/lke';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
-import { makeResponse } from 'support/util/response';
 import { randomDomainName } from 'support/util/random';
-import {
-  kubernetesDashboardUrlFactory,
-  kubeEndpointFactory,
-} from '@src/factories';
+import { makeResponse } from 'support/util/response';
+
+import type {
+  KubeConfigResponse,
+  KubeNodePoolResponse,
+  KubernetesCluster,
+  KubernetesVersion,
+} from '@linode/api-v4/types';
 
 /**
  * Intercepts GET request to retrieve Kubernetes versions and mocks response.

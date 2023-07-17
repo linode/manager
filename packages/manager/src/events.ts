@@ -13,6 +13,7 @@
 import { EntityEvent, Event } from '@linode/api-v4/lib/account';
 import { QueryClient } from 'react-query';
 import { Subject } from 'rxjs/Subject';
+
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
 import {
   getPollingInterval,
@@ -22,12 +23,13 @@ import {
 } from 'src/eventsPolling';
 import { getEvents } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
+
 import { ApplicationStore } from './store';
 
 export interface EventWithStore {
   event: Event;
-  store: ApplicationStore;
   queryClient: QueryClient;
+  store: ApplicationStore;
 }
 
 export interface EntityEventWithStore extends EventWithStore {
@@ -52,7 +54,7 @@ export const requestEvents = (
        * request response onto the stream one at a time.
        */
       reversed.forEach((event: Event) => {
-        events$.next({ event, store, queryClient });
+        events$.next({ event, queryClient, store });
       });
       inProgress = false;
     })

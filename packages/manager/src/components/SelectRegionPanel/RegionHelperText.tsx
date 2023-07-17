@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { Typography } from 'src/components/Typography';
 
 interface RegionHelperTextProps {
@@ -13,11 +14,11 @@ export const RegionHelperText = (props: RegionHelperTextProps) => {
       You can use
       {` `}
       <a
-        onClick={onClick}
-        target="_blank"
         aria-describedby="external-site"
-        rel="noopener noreferrer"
         href="https://www.linode.com/speed-test/"
+        onClick={onClick}
+        rel="noopener noreferrer"
+        target="_blank"
       >
         our speedtest page
       </a>

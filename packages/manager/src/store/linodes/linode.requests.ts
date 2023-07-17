@@ -3,14 +3,17 @@ import {
   createLinode as _createLinode,
   deleteLinode as _deleteLinode,
   getLinode as _getLinode,
-  getLinodes,
-  Linode,
   linodeReboot as _rebootLinode,
   updateLinode as _updateLinode,
+  Linode,
+  getLinodes,
 } from '@linode/api-v4/lib/linodes';
+
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { getAllLinodeFirewalls } from 'src/queries/linodes/firewalls';
+import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 import { getAll } from 'src/utilities/getAll';
+
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
@@ -23,7 +26,6 @@ import {
   updateLinodeActions,
   upsertLinode,
 } from './linodes.actions';
-import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 
 export const getLinode = createRequestThunk(getLinodeActions, ({ linodeId }) =>
   _getLinode(linodeId)
@@ -68,17 +70,17 @@ export const deleteLinode = createRequestThunk(
 
 export const rebootLinode = createRequestThunk(
   rebootLinodeActions,
-  ({ linodeId, configId }) => _rebootLinode(linodeId, configId)
+  ({ configId, linodeId }) => _rebootLinode(linodeId, configId)
 );
 
-const getAllLinodes = (payload: { params?: Params; filter?: Filter }) =>
+const getAllLinodes = (payload: { filter?: Filter; params?: Params }) =>
   getAll<Linode>((passedParams, passedFilter) =>
     getLinodes(passedParams, passedFilter)
   )(payload.params, payload.filter);
 
 export const requestLinodes = createRequestThunk(
   getLinodesActions,
-  ({ params, filter }) => getAllLinodes({ params, filter })
+  ({ filter, params }) => getAllLinodes({ filter, params })
 );
 
 /**
@@ -86,7 +88,7 @@ export const requestLinodes = createRequestThunk(
  */
 export const getLinodesPage = createRequestThunk(
   getLinodesPageActions,
-  ({ params, filters }) => getLinodes(params, filters)
+  ({ filters, params }) => getLinodes(params, filters)
 );
 
 type RequestLinodeForStoreThunk = ThunkActionCreator<void, number>;

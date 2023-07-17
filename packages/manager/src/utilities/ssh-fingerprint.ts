@@ -1,4 +1,5 @@
 import md5 from 'md5';
+
 import { reportException } from 'src/exceptionReporting';
 
 /**

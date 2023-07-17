@@ -1,10 +1,11 @@
 import { Linode } from '@linode/api-v4';
+
 import { isNotNullOrUndefined } from './nullOrUndefined';
 
 export const mapIdsToLinodes = (
-  ids: number[] | number | null,
+  ids: null | number | number[],
   linodes: Linode[] = []
-): Linode[] | Linode | null => {
+): Linode | Linode[] | null => {
   const linodeMap = new Map(linodes.map((linode) => [linode.id, linode]));
   if (Array.isArray(ids)) {
     return ids.map((id) => linodeMap.get(id)).filter(isNotNullOrUndefined);

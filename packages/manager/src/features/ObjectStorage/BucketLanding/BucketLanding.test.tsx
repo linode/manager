@@ -1,15 +1,17 @@
-import * as React from 'react';
-import { BucketLanding } from './BucketLanding';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { QueryClient } from 'react-query';
-import { queryPresets } from 'src/queries/base';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { rest, server } from 'src/mocks/testServer';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import * as React from 'react';
+import { QueryClient } from 'react-query';
+
 import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
 } from 'src/factories/objectStorage';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { queryPresets } from 'src/queries/base';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { BucketLanding } from './BucketLanding';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: queryPresets.oneTimeFetch },

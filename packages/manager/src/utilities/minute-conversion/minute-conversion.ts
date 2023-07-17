@@ -17,7 +17,7 @@ import { pluralize } from '../pluralize';
  */
 export const convertMinutesTo = (
   minutes: number,
-  conversion: 'hours' | 'days',
+  conversion: 'days' | 'hours',
   includeRemainder: boolean = false
 ): string => {
   if (conversion === 'hours') {
@@ -87,7 +87,7 @@ export const generateMigrationTimeString = (migrationTimeInMins: number) => {
   return pluralize('minute', 'minutes', migrationTimeInMins);
 };
 
-export const formatEventSeconds = (seconds: number | null) => {
+export const formatEventSeconds = (seconds: null | number) => {
   if (!seconds) {
     return ''; // Show nothing if we don't know a duration
   }

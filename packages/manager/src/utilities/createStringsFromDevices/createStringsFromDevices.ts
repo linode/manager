@@ -5,7 +5,7 @@ import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 
 const rdx = (
   result: DevicesAsStrings,
-  [key, device]: [string, null | DiskDevice | VolumeDevice]
+  [key, device]: [string, DiskDevice | VolumeDevice | null]
 ) => {
   if (device === null) {
     return result;

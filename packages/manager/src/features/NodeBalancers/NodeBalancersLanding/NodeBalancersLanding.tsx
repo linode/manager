@@ -1,24 +1,26 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Hidden } from 'src/components/Hidden';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Hidden } from 'src/components/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
+
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
-import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
+import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 
 const preferenceKey = 'nodebalancers';
 
@@ -34,20 +36,20 @@ export const NodeBalancersLanding = () => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'asc',
+      orderBy: 'label',
     },
     preferenceKey
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
-  const { data, isLoading, error } = useNodeBalancersQuery(
+  const { data, error, isLoading } = useNodeBalancersQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -84,10 +86,10 @@ export const NodeBalancersLanding = () => {
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
       <LandingHeader
-        title="NodeBalancers"
+        docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
         entity="NodeBalancer"
         onButtonClick={() => history.push('/nodebalancers/create')}
-        docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
+        title="NodeBalancers"
       />
       <Table>
         <TableHead>
@@ -95,8 +97,8 @@ export const NodeBalancersLanding = () => {
             <TableSortCell
               active={orderBy === 'label'}
               direction={order}
-              label="label"
               handleClick={handleOrderChange}
+              label="label"
             >
               Label
             </TableSortCell>
@@ -112,8 +114,8 @@ export const NodeBalancersLanding = () => {
               <TableSortCell
                 active={orderBy === 'region'}
                 direction={order}
-                label="region"
                 handleClick={handleOrderChange}
+                label="region"
               >
                 Region
               </TableSortCell>
@@ -133,18 +135,18 @@ export const NodeBalancersLanding = () => {
       </Table>
       <PaginationFooter
         count={data?.results ?? 0}
+        eventCategory="NodeBalancers Table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
-        eventCategory="NodeBalancers Table"
       />
       <TransferDisplay spacingTop={18} />
       <NodeBalancerDeleteDialog
         id={selectedNodeBalancerId}
         label={selectedNodeBalancer?.label ?? ''}
-        open={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
       />
     </>
   );

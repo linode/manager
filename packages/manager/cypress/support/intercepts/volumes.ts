@@ -2,9 +2,10 @@
  * @files Cypress intercepts and mocks for Volume API requests.
  */
 
-import type { Volume } from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+
+import type { Volume } from '@linode/api-v4/types';
 
 /**
  * Intercepts GET request to fetch Volumes and mocks response.

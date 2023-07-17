@@ -14,7 +14,7 @@ const expirationDateFromString = (expDate: string /* MM/YYYY */) => {
   const month = +expDate.substr(0, 2);
   const year = +expDate.substr(3, 8);
 
-  return DateTime.fromObject({ year, month, day: 1 }).endOf('month');
+  return DateTime.fromObject({ day: 1, month, year }).endOf('month');
 };
 
 export const hasExpirationPassedFor = (today: DateTime = DateTime.local()) => (

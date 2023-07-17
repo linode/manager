@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const DomainCreate = React.lazy(() => import('./CreateDomain'));
@@ -12,18 +13,18 @@ const DomainsRoutes = () => {
       <Switch>
         <Route component={DomainCreate} exact path="/domains/create" />
         <Route
-          path="/domains/:domainId/records"
-          exact
-          strict
           component={DomainDetail}
+          exact
+          path="/domains/:domainId/records"
+          strict
         />
         <Route
-          path="/domains/:domainId"
-          exact
-          strict
           component={DomainDetail}
+          exact
+          path="/domains/:domainId"
+          strict
         />
-        <Route component={DomainsLanding} path="/domains" exact strict />
+        <Route component={DomainsLanding} exact path="/domains" strict />
         <Redirect to="/domains" />
       </Switch>
     </React.Suspense>

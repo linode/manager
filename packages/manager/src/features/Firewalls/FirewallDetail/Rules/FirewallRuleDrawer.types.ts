@@ -1,19 +1,19 @@
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
-import type { FormikProps } from 'formik';
 import type { Category, FirewallRuleError } from './shared';
 import type {
   FirewallPolicyType,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
+import type { FormikProps } from 'formik';
 import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export type FirewallRuleDrawerMode = 'create' | 'edit';
 
 export interface FirewallRuleDrawerProps {
   category: Category;
-  mode: FirewallRuleDrawerMode;
   isOpen: boolean;
+  mode: FirewallRuleDrawerMode;
   onClose: () => void;
   onSubmit: (category: 'inbound' | 'outbound', rule: FirewallRuleType) => void;
   ruleToModify?: ExtendedFirewallRule;
@@ -21,21 +21,21 @@ export interface FirewallRuleDrawerProps {
 
 export interface FormState {
   action: FirewallPolicyType;
-  type: string;
-  ports?: string;
   addresses: string;
-  protocol: string;
-  label: string;
   description: string;
+  label: string;
+  ports?: string;
+  protocol: string;
+  type: string;
 }
 
 export interface FirewallRuleFormProps extends FormikProps<FormState> {
-  ips: ExtendedIP[];
-  setIPs: (ips: ExtendedIP[]) => void;
-  presetPorts: Item<string>[];
-  setPresetPorts: (selected: Item<string>[]) => void;
   addressesLabel: string;
-  mode: FirewallRuleDrawerMode;
   category: Category;
+  ips: ExtendedIP[];
+  mode: FirewallRuleDrawerMode;
+  presetPorts: Item<string>[];
   ruleErrors?: FirewallRuleError[];
+  setIPs: (ips: ExtendedIP[]) => void;
+  setPresetPorts: (selected: Item<string>[]) => void;
 }

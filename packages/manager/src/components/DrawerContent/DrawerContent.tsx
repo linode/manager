@@ -1,17 +1,18 @@
 import * as React from 'react';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 
 export interface Props {
-  title: string;
-  loading: boolean;
+  children: React.ReactNode;
   error: boolean;
   errorMessage?: string;
-  children: React.ReactNode;
+  loading: boolean;
+  title: string;
 }
 
 export const DrawerContent = (props: Props) => {
-  const { title, loading, error, errorMessage, children } = props;
+  const { children, error, errorMessage, loading, title } = props;
   if (loading) {
     return <CircleProgress />;
   }

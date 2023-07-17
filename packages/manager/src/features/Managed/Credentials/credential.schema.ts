@@ -1,11 +1,10 @@
-import { object, string } from 'yup';
-
 import {
   createCredentialSchema,
   credentialLabel,
   credentialPassword,
   credentialUsername,
 } from '@linode/validation/lib/managed.schema';
+import { object, string } from 'yup';
 
 export const creationSchema = createCredentialSchema.shape({
   password: string().required('Password is required.'),

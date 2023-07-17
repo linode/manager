@@ -13,6 +13,21 @@ export type ToastFindOptions = Partial<
  */
 export const toast = {
   /**
+   * Asserts that a toast notification with the given message is displayed.
+   *
+   * @param message - Message for the toast being asserted.
+   * @param options - Optional Cypress options to find and wait for toast notification.
+   *
+   * @returns Cypress chainable.
+   */
+  assertMessage: (
+    message: string,
+    options?: ToastFindOptions | undefined
+  ): void => {
+    cy.contains('[data-qa-toast]', message, options).should('be.visible');
+  },
+
+  /**
    * Finds a toast notification element by its message contents.
    *
    * Toast notifications are short lived, so actions or assertions should be
@@ -28,20 +43,5 @@ export const toast = {
     options?: ToastFindOptions | undefined
   ): Cypress.Chainable => {
     return cy.contains('[data-qa-toast]', message, options);
-  },
-
-  /**
-   * Asserts that a toast notification with the given message is displayed.
-   *
-   * @param message - Message for the toast being asserted.
-   * @param options - Optional Cypress options to find and wait for toast notification.
-   *
-   * @returns Cypress chainable.
-   */
-  assertMessage: (
-    message: string,
-    options?: ToastFindOptions | undefined
-  ): void => {
-    cy.contains('[data-qa-toast]', message, options).should('be.visible');
   },
 };

@@ -1,14 +1,15 @@
 import { Kernel } from '@linode/api-v4/lib/linodes/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-import Select, { Item, GroupType } from 'src/components/EnhancedSelect/Select';
+
+import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 
 export interface Props {
-  kernels: Kernel[];
-  selectedKernel?: string;
-  readOnly?: boolean;
   errorText?: string;
+  kernels: Kernel[];
   onChange: (selected: Item<string>) => void;
+  readOnly?: boolean;
+  selectedKernel?: string;
 }
 
 /**
@@ -19,20 +20,20 @@ export interface Props {
  */
 
 export const KernelSelect: React.FC<Props> = (props) => {
-  const { selectedKernel, kernels, onChange, readOnly, errorText } = props;
+  const { errorText, kernels, onChange, readOnly, selectedKernel } = props;
 
   const options = kernelsToGroupedItems(kernels);
 
   return (
     <Select
-      options={options}
-      label="Select a Kernel"
-      value={getSelectedKernelId(selectedKernel, options)}
-      onChange={onChange}
-      errorText={errorText}
-      errorGroup="linode-config-drawer"
       disabled={Boolean(readOnly)}
+      errorGroup="linode-config-drawer"
+      errorText={errorText}
       isClearable={false}
+      label="Select a Kernel"
+      onChange={onChange}
+      options={options}
+      value={getSelectedKernelId(selectedKernel, options)}
     />
   );
 };
@@ -55,7 +56,7 @@ export const groupKernels = (kernel: Kernel) => {
   if (kernel.label.match(/latest/i)) {
     return 'Current';
   }
-  if (['GRUB 2', 'GRUB (Legacy)'].includes(kernel.label)) {
+  if (['GRUB (Legacy)', 'GRUB 2'].includes(kernel.label)) {
     return 'Current';
   }
   if (kernel.label === 'Direct Disk') {
@@ -98,9 +99,9 @@ export const kernelsToGroupedItems = (kernels: Kernel[]) => {
 };
 
 const PRIORITY = {
-  Current: 4,
-  '64 bit': 3,
   '32 bit': 2,
+  '64 bit': 3,
+  Current: 4,
   Deprecated: 1,
 };
 

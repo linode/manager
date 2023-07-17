@@ -1,14 +1,16 @@
-import * as React from 'react';
 import { waitFor } from '@testing-library/react';
-import { linodeFactory } from 'src/factories/linodes';
-import { rest, server } from 'src/mocks/testServer';
-import { typeFactory } from 'src/factories/types';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { RescueDialog, Props } from './RescueDialog';
+import * as React from 'react';
 import { QueryClient } from 'react-query';
 
+import { linodeFactory } from 'src/factories/linodes';
+import { typeFactory } from 'src/factories/types';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { Props, RescueDialog } from './RescueDialog';
+
 const standard = typeFactory.build({ id: 'g6-standard-1' });
-const metal = typeFactory.build({ id: 'g6-metal-alpha-2', class: 'metal' });
+const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
 
 const normalLinode = linodeFactory.build({ type: 'g6-standard-1' });
 const metalLinode = linodeFactory.build({ type: 'g6-metal-alpha-2' });
@@ -29,7 +31,7 @@ describe('RescueDialog', () => {
         return res(ctx.json(normalLinode));
       })
     );
-    const { queryByTestId, getByText } = renderWithTheme(
+    const { getByText, queryByTestId } = renderWithTheme(
       <RescueDialog {...props} />,
       {
         queryClient: new QueryClient(),
@@ -52,7 +54,7 @@ describe('RescueDialog', () => {
         return res(ctx.json(metalLinode));
       })
     );
-    const { queryByTestId, getByText } = renderWithTheme(
+    const { getByText, queryByTestId } = renderWithTheme(
       <RescueDialog {...props} linodeId={metalLinode.id} />,
       {
         queryClient: new QueryClient(),

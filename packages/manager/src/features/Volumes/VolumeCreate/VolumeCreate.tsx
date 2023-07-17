@@ -1,25 +1,27 @@
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import LandingHeader from 'src/components/LandingHeader';
 import { useRegionsQuery } from 'src/queries/regions';
 import { MapState } from 'src/store/types';
 import { openForConfig, viewResizeInstructions } from 'src/store/volumeForm';
+
 import CreateVolumeForm from './CreateVolumeForm';
-import LandingHeader from 'src/components/LandingHeader';
 
 interface StateProps {
-  mode: string;
-  volumeId?: number;
-  volumeLabel?: string;
-  volumeRegion?: string;
-  volumeSize?: number;
-  volumeTags?: string[];
-  volumePath?: string;
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
   message?: string;
+  mode: string;
+  volumeId?: number;
+  volumeLabel?: string;
+  volumePath?: string;
+  volumeRegion?: string;
+  volumeSize?: number;
+  volumeTags?: string[];
 }
 
 interface DispatchProps {
@@ -43,7 +45,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       message?: string
     ) => dispatch(openForConfig(volumeLabel, volumePath, message)),
     openForResizeInstructions: (volumeLabel: string, message?: string) =>
-      dispatch(viewResizeInstructions({ volumeLabel, message })),
+      dispatch(viewResizeInstructions({ message, volumeLabel })),
   },
 });
 
@@ -59,9 +61,9 @@ const VolumeCreate: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment segment="Create Volume" />
       <LandingHeader title="Create" />
       <CreateVolumeForm
+        history={history}
         onSuccess={actions.openForConfig}
         regions={regions}
-        history={history}
       />
     </>
   );
@@ -72,28 +74,28 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     linodeId,
     linodeLabel,
     linodeRegion,
+    message,
     mode,
     volumeId,
     volumeLabel,
+    volumePath,
     volumeRegion,
     volumeSize,
     volumeTags,
-    volumePath,
-    message,
   } = state.volumeDrawer;
 
   return {
     linode_id: linodeId,
     linodeLabel,
     linodeRegion,
+    message,
     mode,
     volumeId,
     volumeLabel,
+    volumePath,
     volumeRegion,
     volumeSize,
     volumeTags,
-    volumePath,
-    message,
   };
 };
 

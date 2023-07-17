@@ -1,11 +1,13 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { Typography } from 'src/components/Typography';
+
 import { Button } from 'src/components/Button/Button';
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from 'src/components/Typography';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
-import { getNextVersion } from '../kubeUtils';
+
 import UpgradeVersionModal from '../UpgradeVersionModal';
+import { getNextVersion } from '../kubeUtils';
 
 interface Props {
   clusterID: number;
@@ -20,7 +22,7 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const actionButton = (
-    <Button onClick={() => setDialogOpen(true)} buttonType="primary">
+    <Button buttonType="primary" onClick={() => setDialogOpen(true)}>
       Upgrade Version
     </Button>
   );
@@ -29,14 +31,14 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
     <>
       {nextVersion ? (
         <DismissibleBanner
-          preferenceKey={`${clusterID}-${currentVersion}`}
-          info
           actionButton={actionButton}
+          info
+          preferenceKey={`${clusterID}-${currentVersion}`}
         >
           <Grid
+            alignItems="center"
             container
             direction="row"
-            alignItems="center"
             justifyContent="space-between"
           >
             <Grid>

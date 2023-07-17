@@ -25,23 +25,27 @@ const slideOut = keyframes`
 
 const useStyles = makeStyles<void, 'linkItem'>()(
   (theme: Theme, _params, classes) => ({
-    menuGrid: {
-      minHeight: 64,
-      height: '100%',
-      width: '100%',
-      margin: 0,
-      padding: 0,
-      [theme.breakpoints.up('sm')]: {
-        minHeight: 72,
+    active: {
+      '& .icon': {
+        opacity: 1,
       },
-      [theme.breakpoints.up('md')]: {
-        minHeight: 80,
+      '& svg': {
+        color: theme.color.teal,
       },
-      '&:hover': {
-        '& path.akamai-clip-path': {
-          animation: `${slideIn} .33s ease-in-out`,
-        },
+      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+      textDecoration: 'none',
+    },
+    chip: {
+      '&.beta-chip-aglb': {
+        bottom: -2,
+        left: 70,
+        position: 'absolute',
       },
+      marginTop: 2,
+    },
+    divider: {
+      backgroundColor: 'rgba(0, 0, 0, 0.12)',
+      color: '#222',
     },
     fadeContainer: {
       display: 'flex',
@@ -49,47 +53,42 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       height: 'calc(100% - 90px)',
       width: '100%',
     },
-    logoItemAkamai: {
-      paddingTop: 12,
-      paddingLeft: 12,
-      transition: 'padding-left .03s linear',
-      '& path.akamai-clip-path': {
-        animation: `${slideIn} .33s ease-in-out`,
+    linkItem: {
+      '&.hiddenWhenCollapsed': {
+        maxHeight: 36,
+        opacity: 0,
       },
-    },
-    logoItemAkamaiCollapsed: {
-      paddingLeft: 8,
-    },
-    logoAkamaiCollapsed: {
-      background: theme.bg.primaryNavPaper,
-      width: 96,
-      '& path.akamai-clip-path': {
-        animation: `${slideOut} 0s ease-in-out 0s forwards`,
-      },
+      alignItems: 'center',
+      color: '#fff',
+      display: 'flex',
+      fontFamily: 'LatoWebBold', // we keep this bold at all times
+      opacity: 1,
+      position: 'relative',
+      transition: theme.transitions.create(['color']),
     },
     listItem: {
-      display: 'flex',
-      alignItems: 'center',
-      cursor: 'pointer',
-      height: 36,
-      lineHeight: 0,
-      padding: '12px 16px',
-      position: 'relative',
-      transition: theme.transitions.create(['background-color']),
+      '& .icon': {
+        '& svg': {
+          '&:not(.wBorder) circle, & .circle': {
+            display: 'none',
+          },
+          alignItems: 'center',
+          display: 'flex',
+          height: 20,
+          width: 20,
+        },
+        color: '#CFD0D2',
+        marginRight: theme.spacing(2),
+        opacity: 0.5,
+      },
       '& p': {
-        marginTop: 0,
         marginBottom: 0,
+        marginTop: 0,
       },
       '&:focus': {
         textDecoration: 'none',
       },
       '&:hover': {
-        border: 'red',
-        backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
-        textDecoration: 'none',
-        [`& .${classes.linkItem}`]: {
-          color: 'white',
-        },
         '& .icon': {
           opacity: 1,
         },
@@ -97,50 +96,47 @@ const useStyles = makeStyles<void, 'linkItem'>()(
           color: theme.color.teal,
           fill: theme.color.teal,
         },
-      },
-      '& .icon': {
-        color: '#CFD0D2',
-        marginRight: theme.spacing(2),
-        opacity: 0.5,
-        '& svg': {
-          display: 'flex',
-          alignItems: 'center',
-          height: 20,
-          width: 20,
-          '&:not(.wBorder) circle, & .circle': {
-            display: 'none',
-          },
+        [`& .${classes.linkItem}`]: {
+          color: 'white',
         },
+        backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+        border: 'red',
+        textDecoration: 'none',
       },
-    },
-    linkItem: {
-      display: 'flex',
       alignItems: 'center',
-      color: '#fff',
-      fontFamily: 'LatoWebBold', // we keep this bold at all times
-      opacity: 1,
-      transition: theme.transitions.create(['color']),
-      whiteSpace: 'nowrap',
-      '&.hiddenWhenCollapsed': {
-        opacity: 0,
+      cursor: 'pointer',
+      display: 'flex',
+      padding: '8px 16px',
+      position: 'relative',
+      transition: theme.transitions.create(['background-color']),
+    },
+    logo: {
+      // give the svg a transition so it smoothly resizes
+      transition: 'width .1s linear',
+    },
+    logoAkamaiCollapsed: {
+      '& path.akamai-clip-path': {
+        animation: `${slideOut} 0s ease-in-out 0s forwards`,
+      },
+      background: theme.bg.primaryNavPaper,
+      width: 96,
+    },
+    logoContainer: {
+      // when the nav is collapsed, but hovered by the user, make the logo full sized
+      'nav:hover & > svg ': {
+        width: 128,
       },
     },
-    active: {
-      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
-      textDecoration: 'none',
-      '& .icon': {
-        opacity: 1,
+    logoItemAkamai: {
+      '& path.akamai-clip-path': {
+        animation: `${slideIn} .33s ease-in-out`,
       },
-      '& svg': {
-        color: theme.color.teal,
-      },
+      paddingLeft: 12,
+      paddingTop: 12,
+      transition: 'padding-left .03s linear',
     },
-    divider: {
-      backgroundColor: 'rgba(0, 0, 0, 0.12)',
-      color: '#222',
-    },
-    chip: {
-      marginTop: 2,
+    logoItemAkamaiCollapsed: {
+      paddingLeft: 8,
     },
     logoSvgCollapsed: {
       // Hide 'Akamai' text when the navigation is collapsed and the nav is not hovered
@@ -153,15 +149,23 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       // Make the logo 115px so that the Akamai logo is centered when the navigation is collapsed
       width: 115,
     },
-    logoContainer: {
-      // when the nav is collapsed, but hovered by the user, make the logo full sized
-      'nav:hover & > svg ': {
-        width: 128,
+    menuGrid: {
+      '&:hover': {
+        '& path.akamai-clip-path': {
+          animation: `${slideIn} .33s ease-in-out`,
+        },
       },
-    },
-    logo: {
-      // give the svg a transition so it smoothly resizes
-      transition: 'width .1s linear',
+      height: '100%',
+      margin: 0,
+      minHeight: 64,
+      padding: 0,
+      [theme.breakpoints.up('md')]: {
+        minHeight: 80,
+      },
+      [theme.breakpoints.up('sm')]: {
+        minHeight: 72,
+      },
+      width: '100%',
     },
   })
 );

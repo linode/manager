@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { TypeToConfirmDialog } from './TypeToConfirmDialog';
 
 const props = { onClick: jest.fn(), onClose: jest.fn() };
@@ -13,16 +14,16 @@ describe('TypeToConfirmDialog Component', () => {
   it('Should render children', () => {
     const { getByText } = renderWithTheme(
       <TypeToConfirmDialog
-        title="Delete Linode test?"
-        label={'Linode Label'}
-        open={true}
         entity={{
-          type: 'Linode',
-          name: 'test',
           action: 'deletion',
+          name: 'test',
           primaryBtnText: 'Delete',
+          type: 'Linode',
         }}
+        label={'Linode Label'}
         loading={false}
+        open={true}
+        title="Delete Linode test?"
         {...props}
       >
         <Typography style={{ fontSize: '0.875rem' }}>

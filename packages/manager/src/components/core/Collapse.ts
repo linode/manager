@@ -3,6 +3,6 @@ import Collapse, {
 } from '@mui/material/Collapse';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface CollapseProps extends _CollapseProps {}
+export type CollapseProps = _CollapseProps;
 
 export default Collapse;

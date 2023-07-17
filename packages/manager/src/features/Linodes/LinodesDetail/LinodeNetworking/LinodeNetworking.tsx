@@ -5,6 +5,8 @@ import { Theme, useTheme } from '@mui/material/styles';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
+
 import AddNewLink from 'src/components/AddNewLink';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -26,7 +28,7 @@ import {
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
 import { useGrants } from 'src/queries/profile';
-import { makeStyles } from 'tss-react/mui';
+
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import AddIPDrawer from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -44,55 +46,55 @@ import { IPTypes } from './types';
 
 const useStyles = makeStyles<void, 'copy'>()(
   (theme: Theme, _params, classes) => ({
-    root: {
-      backgroundColor: theme.color.white,
-      margin: 0,
-      width: '100%',
-    },
-    headline: {
-      marginTop: 8,
-      marginBottom: 8,
-      marginLeft: 15,
-      lineHeight: '1.5rem',
+    action: {
+      '& a': {
+        marginRight: theme.spacing(1),
+      },
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'flex-end',
+      padding: 0,
+      paddingRight: `0px !important`,
     },
     addNewWrapper: {
+      '&.MuiGrid-item': {
+        padding: 5,
+      },
       [theme.breakpoints.down('sm')]: {
         marginLeft: `-${theme.spacing(1.5)}`,
         marginTop: `-${theme.spacing(1)}`,
       },
-      '&.MuiGrid-item': {
-        padding: 5,
-      },
     },
-    action: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      padding: 0,
-      '& a': {
-        marginRight: theme.spacing(1),
+    copy: {
+      '& svg': {
+        height: `12px`,
+        opacity: 0,
+        width: `12px`,
       },
-      paddingRight: `0px !important`,
+      marginLeft: 4,
+      top: 1,
+    },
+    headline: {
+      lineHeight: '1.5rem',
+      marginBottom: 8,
+      marginLeft: 15,
+      marginTop: 8,
+    },
+    ipAddress: {
+      whiteSpace: 'nowrap',
     },
     multipleRDNSButton: {
       ...theme.applyLinkStyles,
     },
     multipleRDNSText: {},
+    root: {
+      backgroundColor: theme.color.white,
+      margin: 0,
+      width: '100%',
+    },
     row: {
       [`&:hover .${classes.copy} > svg, & .${classes.copy}:focus > svg`]: {
         opacity: 1,
-      },
-    },
-    ipAddress: {
-      whiteSpace: 'nowrap',
-    },
-    copy: {
-      marginLeft: 4,
-      top: 1,
-      '& svg': {
-        height: `12px`,
-        width: `12px`,
-        opacity: 0,
       },
     },
   })
@@ -105,7 +107,7 @@ const LinodeNetworking = () => {
   const { classes } = useStyles();
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
-  const { data: ips, isLoading, error } = useLinodeIPsQuery(id);
+  const { data: ips, error, isLoading } = useLinodeIPsQuery(id);
 
   const readOnly =
     grants !== undefined &&
@@ -156,30 +158,30 @@ const LinodeNetworking = () => {
   };
 
   const renderIPRow = (ipDisplay: IPDisplay) => {
-    const { address, type, gateway, subnetMask, rdns, _ip, _range } = ipDisplay;
+    const { _ip, _range, address, gateway, rdns, subnetMask, type } = ipDisplay;
     const isOnlyPublicIP =
       ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
 
     return (
       <TableRow
-        key={`${address}-${type}`}
         className={classes.row}
         data-qa-ip={address}
+        key={`${address}-${type}`}
       >
         <TableCell
-          parentColumn="Address"
           className={classes.ipAddress}
           data-qa-ip-address
+          parentColumn="Address"
         >
-          <CopyTooltip text={address} copyableText />
+          <CopyTooltip copyableText text={address} />
           <CopyTooltip className={classes.copy} text={address} />
         </TableCell>
-        <TableCell parentColumn="Type" data-qa-ip-address>
+        <TableCell data-qa-ip-address parentColumn="Type">
           {type}
         </TableCell>
         <TableCell parentColumn="Default Gateway">{gateway}</TableCell>
         <TableCell parentColumn="Subnet Mask">{subnetMask}</TableCell>
-        <TableCell parentColumn="Reverse DNS" data-qa-rdns>
+        <TableCell data-qa-rdns parentColumn="Reverse DNS">
           {/* Ranges have special handling for RDNS. */}
           {_range ? (
             <RangeRDNSCell
@@ -194,21 +196,21 @@ const LinodeNetworking = () => {
         <TableCell className={classes.action} data-qa-action>
           {_ip ? (
             <LinodeNetworkingActionMenu
-              onEdit={handleOpenEditRDNS}
-              ipType={type}
               ipAddress={_ip}
+              ipType={type}
+              isOnlyPublicIP={isOnlyPublicIP}
+              onEdit={handleOpenEditRDNS}
               onRemove={openRemoveIPDialog}
               readOnly={readOnly}
-              isOnlyPublicIP={isOnlyPublicIP}
             />
           ) : _range ? (
             <LinodeNetworkingActionMenu
-              ipType={type}
               ipAddress={_range}
+              ipType={type}
+              isOnlyPublicIP={isOnlyPublicIP}
               onEdit={() => handleOpenEditRDNSForRange(_range)}
               onRemove={openRemoveIPRangeDialog}
               readOnly={readOnly}
-              isOnlyPublicIP={isOnlyPublicIP}
             />
           ) : null}
         </TableCell>
@@ -234,29 +236,29 @@ const LinodeNetworking = () => {
     return (
       <div style={{ marginTop: 20 }}>
         <Grid
-          container
-          justifyContent="space-between"
           alignItems="flex-end"
           className={classes.root}
+          container
+          justifyContent="space-between"
           spacing={1}
         >
           <Grid className="p0">
-            <Typography variant="h3" className={classes.headline}>
+            <Typography className={classes.headline} variant="h3">
               IP Addresses
             </Typography>
           </Grid>
           <Grid className={classes.addNewWrapper}>
             <Hidden smDown>
               <Button
-                onClick={() => setIsTransferDialogOpen(true)}
                 buttonType="secondary"
+                onClick={() => setIsTransferDialogOpen(true)}
               >
                 IP Transfer
               </Button>
               <Button
-                style={{ marginRight: 16 }}
-                onClick={() => setIsShareDialogOpen(true)}
                 buttonType="secondary"
+                onClick={() => setIsShareDialogOpen(true)}
+                style={{ marginRight: 16 }}
               >
                 IP Sharing
               </Button>
@@ -269,7 +271,7 @@ const LinodeNetworking = () => {
         </Grid>
         <Paper style={{ padding: 0 }}>
           {/* @todo: It'd be nice if we could always sort by public -> private. */}
-          <OrderBy data={ipDisplay} orderBy="type" order="asc">
+          <OrderBy data={ipDisplay} order="asc" orderBy="type">
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
               return (
                 <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
@@ -277,11 +279,11 @@ const LinodeNetworking = () => {
                     <TableRow>
                       <TableCell style={{ width: '15%' }}>Address</TableCell>
                       <TableSortCell
-                        style={{ width: '10%' }}
-                        label="type"
-                        direction={order}
                         active={orderBy === 'type'}
+                        direction={order}
                         handleClick={handleOrderChange}
+                        label="type"
+                        style={{ width: '10%' }}
                       >
                         Type
                       </TableSortCell>
@@ -291,10 +293,10 @@ const LinodeNetworking = () => {
                       <TableCell style={{ width: '10%' }}>
                         Subnet Mask
                       </TableCell>
-                      <TableCell style={{ width: '20%', borderRight: 'none' }}>
+                      <TableCell style={{ borderRight: 'none', width: '20%' }}>
                         Reverse DNS
                       </TableCell>
-                      <TableCell style={{ width: '20%', borderLeft: 'none' }} />
+                      <TableCell style={{ borderLeft: 'none', width: '20%' }} />
                     </TableRow>
                   </TableHead>
                   <TableBody>{orderedData.map(renderIPRow)}</TableBody>
@@ -313,63 +315,63 @@ const LinodeNetworking = () => {
       <LinodeNetworkingSummaryPanel linodeID={id} />
       {renderIPTable()}
       <ViewIPDrawer
-        open={isIPDrawerOpen}
-        onClose={() => setIsIPDrawerOpen(false)}
         ip={selectedIP}
+        onClose={() => setIsIPDrawerOpen(false)}
+        open={isIPDrawerOpen}
       />
       <ViewRangeDrawer
-        open={isRangeDrawerOpen}
         onClose={() => setIsRangeDrawerOpen(false)}
+        open={isRangeDrawerOpen}
         range={selectedRange}
       />
       <EditIPRDNSDrawer
-        open={isIpRdnsDrawerOpen}
-        onClose={() => setIsIpRdnsDrawerOpen(false)}
         ip={selectedIP}
+        onClose={() => setIsIpRdnsDrawerOpen(false)}
+        open={isIpRdnsDrawerOpen}
       />
       <EditRangeRDNSDrawer
-        open={isRangeRdnsDrawerOpen}
-        onClose={() => setIsRangeRdnsDrawerOpen(false)}
-        range={selectedRange}
         linodeId={id}
+        onClose={() => setIsRangeRdnsDrawerOpen(false)}
+        open={isRangeRdnsDrawerOpen}
+        range={selectedRange}
       />
       <ViewRDNSDrawer
-        open={isViewRDNSDialogOpen}
-        onClose={() => setIsViewRDNSDialogOpen(false)}
         linodeId={id}
+        onClose={() => setIsViewRDNSDialogOpen(false)}
+        open={isViewRDNSDialogOpen}
         selectedRange={selectedRange}
       />
       <AddIPDrawer
-        open={isAddDrawerOpen}
-        onClose={() => setIsAddDrawerOpen(false)}
         linodeId={id}
+        onClose={() => setIsAddDrawerOpen(false)}
+        open={isAddDrawerOpen}
         readOnly={readOnly}
       />
       <IPTransfer
-        open={isTransferDialogOpen}
-        onClose={() => setIsTransferDialogOpen(false)}
         linodeId={id}
+        onClose={() => setIsTransferDialogOpen(false)}
+        open={isTransferDialogOpen}
         readOnly={readOnly}
       />
       <IPSharing
-        open={isShareDialogOpen}
-        onClose={() => setIsShareDialogOpen(false)}
         linodeId={id}
+        onClose={() => setIsShareDialogOpen(false)}
+        open={isShareDialogOpen}
         readOnly={readOnly}
       />
       {selectedIP && (
         <DeleteIPDialog
-          onClose={() => setIsDeleteIPDialogOpen(false)}
           address={selectedIP.address}
-          open={isDeleteIPDialogOpen}
           linodeId={id}
+          onClose={() => setIsDeleteIPDialogOpen(false)}
+          open={isDeleteIPDialogOpen}
         />
       )}
       {selectedRange && (
         <DeleteRangeDialog
           onClose={() => setIsDeleteRangeDialogOpen(false)}
-          range={selectedRange}
           open={isDeleteRangeDialogOpen}
+          range={selectedRange}
         />
       )}
     </div>
@@ -379,11 +381,11 @@ const LinodeNetworking = () => {
 export default LinodeNetworking;
 
 const RangeRDNSCell = (props: {
-  range: IPRange;
   linodeId: number;
   onViewDetails: () => void;
+  range: IPRange;
 }) => {
-  const { range, linodeId, onViewDetails } = props;
+  const { linodeId, onViewDetails, range } = props;
   const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(linodeId);
@@ -399,7 +401,7 @@ const RangeRDNSCell = (props: {
   const ipsWithRDNS = listIPv6InRange(range.range, range.prefix, ipsInRegion);
 
   if (ipv6Loading) {
-    return <CircleProgress noPadding mini />;
+    return <CircleProgress mini noPadding />;
   }
 
   // We don't show anything if there are no addresses.
@@ -418,16 +420,16 @@ const RangeRDNSCell = (props: {
 
   return (
     <button
-      style={theme.applyLinkStyles}
-      onClick={onViewDetails}
       aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
+      onClick={onViewDetails}
+      style={theme.applyLinkStyles}
     >
       <Typography
         sx={{
-          color: theme.palette.primary.main,
           '&:hover': {
             color: theme.palette.primary.light,
           },
+          color: theme.palette.primary.main,
         }}
       >
         {ipsWithRDNS.length} Addresses
@@ -451,7 +453,7 @@ export const listIPv6InRange = (
     // 1. are part of an IPv6 range or pool
     // 2. have RDNS set
     if (
-      !['ipv6/range', 'ipv6/pool'].includes(thisIP.type) ||
+      !['ipv6/pool', 'ipv6/range'].includes(thisIP.type) ||
       thisIP.rdns === null
     ) {
       // eslint-disable-next-line array-callback-return
@@ -474,14 +476,14 @@ export const listIPv6InRange = (
 
 // Higher-level IP address display for the IP Table.
 interface IPDisplay {
-  address: string;
-  type: IPTypes;
-  gateway: string;
-  subnetMask: string;
-  rdns: string;
   // Not for display, but useful for lower-level components.
   _ip?: IPAddress;
   _range?: IPRange;
+  address: string;
+  gateway: string;
+  rdns: string;
+  subnetMask: string;
+  type: IPTypes;
 }
 
 // Takes an IP Response object and returns high-level IP display rows.
@@ -528,12 +530,12 @@ export const ipResponseToDisplayRows = (
           extra requests on Linodes with many ranges
       */
       return {
-        type: 'IPv6 – Range' as IPDisplay['type'],
+        _range: thisIP,
         address: `${thisIP.range}/${thisIP.prefix}`,
         gateway: '',
-        subnetMask: '',
         rdns: '',
-        _range: thisIP,
+        subnetMask: '',
+        type: 'IPv6 – Range' as IPDisplay['type'],
       };
     })
   );
@@ -542,12 +544,12 @@ export const ipResponseToDisplayRows = (
 };
 
 type ipKey =
-  | 'Public'
+  | 'Link Local'
   | 'Private'
+  | 'Public'
   | 'Reserved'
-  | 'Shared'
   | 'SLAAC'
-  | 'Link Local';
+  | 'Shared';
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map((ip) => ipToDisplay(ip, key));
@@ -555,12 +557,12 @@ const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
 
 const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
   return {
+    _ip: ip,
     address: ip.address,
     gateway: ip.gateway ?? '',
-    subnetMask: ip.subnet_mask ?? '',
     rdns: ip.rdns ?? '',
+    subnetMask: ip.subnet_mask ?? '',
     type: createType(ip, key) as IPTypes,
-    _ip: ip,
   };
 };
 

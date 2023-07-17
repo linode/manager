@@ -1,9 +1,10 @@
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { TextField, TextFieldProps } from 'src/components/TextField';
+
 import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
-import { useTheme } from '@mui/material/styles';
+import { TextField, TextFieldProps } from 'src/components/TextField';
+import Paper from 'src/components/core/Paper';
 
 interface LabelAndTagsProps {
   error?: string;
@@ -17,15 +18,15 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
 
   return (
     <Paper
-      data-qa-label-header
       sx={{
         backgroundColor: theme.color.white,
         flexGrow: 1,
         marginTop: theme.spacing(3),
         width: '100%',
       }}
+      data-qa-label-header
     >
-      {error && <Notice text={error} error />}
+      {error && <Notice error text={error} />}
       <TextField
         {...(labelFieldProps || {
           label: 'Label',

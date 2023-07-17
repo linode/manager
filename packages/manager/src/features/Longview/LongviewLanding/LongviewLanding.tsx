@@ -9,20 +9,22 @@ import {
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, matchPath } from 'react-router-dom';
 import { compose } from 'recompose';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+
 import LandingHeader from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import SubscriptionDialog from './SubscriptionDialog';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
@@ -60,12 +62,12 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
-      title: 'Clients',
       routeName: `${props.match.url}/clients`,
+      title: 'Clients',
     },
     {
-      title: 'Plan Details',
       routeName: `${props.match.url}/plan-details`,
+      title: 'Plan Details',
     },
   ];
 
@@ -125,13 +127,13 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   return (
     <>
       <LandingHeader
-        title="Longview"
-        entity="Client"
         createButtonText="Add Client"
         docsLink="https://www.linode.com/docs/platform/longview/longview/"
+        entity="Client"
         loading={newClientLoading}
         onButtonClick={handleAddClient}
         removeCrumbX={1}
+        title="Longview"
       />
       <Tabs
         index={Math.max(
@@ -163,16 +165,16 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
         </React.Suspense>
       </Tabs>
       <SubscriptionDialog
-        isOpen={subscriptionDialogOpen}
-        isManaged={isManaged}
-        onClose={() => setSubscriptionDialogOpen(false)}
-        onSubmit={handleSubmit}
         clientLimit={
           isEmpty(activeSubscriptionRequestHook.data)
             ? 10
             : (activeSubscriptionRequestHook.data as LongviewSubscription)
                 .clients_included
         }
+        isManaged={isManaged}
+        isOpen={subscriptionDialogOpen}
+        onClose={() => setSubscriptionDialogOpen(false)}
+        onSubmit={handleSubmit}
       />
     </>
   );
