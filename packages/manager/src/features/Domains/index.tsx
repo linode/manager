@@ -4,7 +4,9 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const DomainCreate = React.lazy(() =>
-  import('./CreateDomain').then((module) => ({ default: module.CreateDomain }))
+  import('./CreateDomain/CreateDomain').then((module) => ({
+    default: module.CreateDomain,
+  }))
 );
 const DomainsLanding = React.lazy(() =>
   import('./DomainsLanding').then((module) => ({
