@@ -5,12 +5,11 @@ import {
 } from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
@@ -80,11 +79,9 @@ export const BucketDetailsDrawer = React.memo(
 
         {hostname ? (
           <StyledLinkContainer>
-            <ExternalLink
-              hideIcon
-              link={`https://${hostname}`}
-              text={truncateMiddle(hostname, 50)}
-            />
+            <Link external hideIcon to={`https://${hostname}`}>
+              {truncateMiddle(hostname, 50)}
+            </Link>
             <StyledCopyTooltip text={hostname} />
           </StyledLinkContainer>
         ) : null}
