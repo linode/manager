@@ -32,8 +32,8 @@ const LoadBalancerLanding = () => {
       title: 'Routes',
     },
     {
-      title: 'Service Targets',
       routeName: `/loadbalancers/service-targets`,
+      title: 'Service Targets',
     },
   ];
 
