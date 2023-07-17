@@ -44,9 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     marginBottom: theme.spacing(2),
   },
-  vlan: {
-    marginTop: theme.spacing(3),
-  },
 }));
 
 export interface AddonsPanelProps {
@@ -167,18 +164,16 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   return (
     <>
       {showVlans ? (
-        <Paper className={classes.vlan} data-qa-add-ons>
-          <AttachVLAN
-            handleVLANChange={handleVLANChange}
-            helperText={vlanDisabledReason}
-            ipamAddress={ipamAddress}
-            ipamError={ipamError}
-            labelError={labelError}
-            readOnly={disabled || Boolean(vlanDisabledReason)}
-            region={selectedRegionID}
-            vlanLabel={vlanLabel}
-          />
-        </Paper>
+        <AttachVLAN
+          handleVLANChange={handleVLANChange}
+          helperText={vlanDisabledReason}
+          ipamAddress={ipamAddress}
+          ipamError={ipamError}
+          labelError={labelError}
+          readOnly={disabled || Boolean(vlanDisabledReason)}
+          region={selectedRegionID}
+          vlanLabel={vlanLabel}
+        />
       ) : null}
       <Paper className={classes.addons} data-qa-add-ons>
         <Typography className={classes.title} variant="h2">

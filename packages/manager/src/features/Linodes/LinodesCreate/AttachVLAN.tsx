@@ -1,10 +1,11 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
+import { Accordion } from 'src/components/Accordion';
+import { Box } from 'src/components/Box';
 import ExternalLink from 'src/components/ExternalLink';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -85,44 +86,62 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   )}.`;
 
   return (
-    <>
-      <Typography className={classes.title} variant="h2">
-        Attach a VLAN{' '}
-        {helperText ? <TooltipIcon status="help" text={helperText} /> : null}
-      </Typography>
-      <Grid container>
-        <Grid xs={12}>
-          <Typography>{regionalAvailabilityMessage}</Typography>
-          <Typography className={classes.paragraphBreak} variant="body1">
-            VLANs are used to create a private L2 Virtual Local Area Network
-            between Linodes. A VLAN created or attached in this section will be
-            assigned to the eth1 interface, with eth0 being used for connections
-            to the public internet. VLAN configurations can be further edited in
-            the Linode&rsquo;s{' '}
-            <ExternalLink
-              hideIcon
-              link="https://www.linode.com/docs/guides/linode-configuration-profiles/"
-              text="Configuration Profile"
+    <Accordion
+      detailProps={{
+        sx: {
+          padding: '0px 24px 24px 24px',
+        },
+      }}
+      heading={
+        <Box display="flex">
+          VLAN
+          {helperText && (
+            <TooltipIcon
+              status="help"
+              sxTooltipIcon={{ alignItems: 'baseline', padding: '0 8px' }}
+              text={helperText}
             />
-            .
-          </Typography>
-          <InterfaceSelect
-            handleChange={(newInterface: Interface) =>
-              handleVLANChange(newInterface)
-            }
-            fromAddonsPanel
-            ipamAddress={ipamAddress}
-            ipamError={ipamError}
-            label={vlanLabel}
-            labelError={labelError}
-            purpose="vlan"
-            readOnly={readOnly || !regionSupportsVLANs || false}
-            region={region}
-            slotNumber={1}
-          />
-        </Grid>
-      </Grid>
-    </>
+          )}
+        </Box>
+      }
+      summaryProps={{
+        sx: {
+          padding: '5px 24px 0px 24px',
+        },
+      }}
+      sx={{
+        marginTop: 2,
+      }}
+    >
+      <Typography>{regionalAvailabilityMessage}</Typography>
+      <Typography className={classes.paragraphBreak} variant="body1">
+        VLANs are used to create a private L2 Virtual Local Area Network between
+        Linodes. A VLAN created or attached in this section will be assigned to
+        the eth1 interface, with eth0 being used for connections to the public
+        internet. VLAN configurations can be further edited in the
+        Linode&rsquo;s{' '}
+        <ExternalLink
+          hideIcon
+          link="https://www.linode.com/docs/guides/linode-configuration-profiles/"
+          text="Configuration Profile"
+        />
+        .
+      </Typography>
+      <InterfaceSelect
+        handleChange={(newInterface: Interface) =>
+          handleVLANChange(newInterface)
+        }
+        fromAddonsPanel
+        ipamAddress={ipamAddress}
+        ipamError={ipamError}
+        label={vlanLabel}
+        labelError={labelError}
+        purpose="vlan"
+        readOnly={readOnly || !regionSupportsVLANs || false}
+        region={region}
+        slotNumber={1}
+      />
+    </Accordion>
   );
 };
 
