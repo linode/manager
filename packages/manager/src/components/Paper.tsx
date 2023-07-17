@@ -2,13 +2,9 @@ import _Paper, { PaperProps } from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import FormHelperText from './core/FormHelperText';
+import { isPropValid } from 'src/utilities/isPropValid';
 
-const StyledPaper = styled(_Paper)<Props>(({ theme, ...props }) => ({
-  borderColor: props.error ? `#ca0813` : undefined,
-  padding: theme.spacing(3),
-  paddingTop: 17,
-}));
+import FormHelperText from './core/FormHelperText';
 
 interface Props extends PaperProps {
   /**
@@ -29,14 +25,25 @@ interface Props extends PaperProps {
  *
  */
 export const Paper = (props: Props) => {
-  const { className, error, ...rest } = props;
-
   return (
     <React.Fragment>
-      <StyledPaper className={className} {...rest} />
-      {error && (
-        <FormHelperText sx={{ color: '#ca0813' }}>{error}</FormHelperText>
-      )}
+      <StyledPaper
+        {...props}
+        variant={props.error ? 'outlined' : props.variant}
+      />
+      {props.error && <StyledErrorText>{props.error}</StyledErrorText>}
     </React.Fragment>
   );
 };
+
+const StyledPaper = styled(_Paper, {
+  shouldForwardProp: (prop) => isPropValid(['error'], prop),
+})<Props>(({ theme, ...props }) => ({
+  borderColor: props.error ? theme.color.red : undefined,
+  padding: theme.spacing(3),
+  paddingTop: 17,
+}));
+
+const StyledErrorText = styled(FormHelperText)(({ theme }) => ({
+  color: theme.color.red,
+}));
