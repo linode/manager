@@ -49,28 +49,28 @@ const useStyles = makeStyles<void, 'icon'>()(
   })
 );
 
-interface Props {
+export interface ExternalLinkProps {
   absoluteIcon?: boolean;
   black?: boolean;
+  children: React.ReactNode;
   className?: string;
   fixedIcon?: boolean;
   hideIcon?: boolean;
-  link: string;
   onClick?: () => void;
-  text: string;
+  to: string;
 }
 
-const ExternalLink = (props: Props) => {
+export const ExternalLink = (props: ExternalLinkProps) => {
   const { classes, cx } = useStyles();
   const {
     absoluteIcon,
     black,
+    children,
     className,
     fixedIcon,
     hideIcon,
-    link,
     onClick,
-    text,
+    to,
   } = props;
 
   return (
@@ -85,12 +85,12 @@ const ExternalLink = (props: Props) => {
       )}
       aria-describedby="external-site"
       data-qa-external-link
-      href={sanitizeUrl(link)}
+      href={sanitizeUrl(to)}
       onClick={onClick}
       rel="noopener noreferrer"
       target="_blank"
     >
-      {text}
+      {children}
       {!hideIcon &&
         (fixedIcon ? (
           <OpenInNew className={classes.fixedIcon} />
@@ -100,5 +100,3 @@ const ExternalLink = (props: Props) => {
     </a>
   );
 };
-
-export default ExternalLink;
