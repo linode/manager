@@ -1,41 +1,42 @@
 import { Domain } from '@linode/api-v4/lib/domains/types';
-import { Image } from '@linode/api-v4/lib/images/types';
 import { Firewall } from '@linode/api-v4/lib/firewalls/types';
+import { Image } from '@linode/api-v4/lib/images/types';
 import { Linode } from '@linode/api-v4/lib/linodes/types';
-import { Volume } from '@linode/api-v4/lib/volumes/types';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Volume } from '@linode/api-v4/lib/volumes/types';
+
 import { OrderByProps } from 'src/components/OrderBy';
 // eslint-disable-next-line
 export type Handlers = any;
-export type Entity = Linode | Domain | Firewall | Image | Volume; // @todo add more here
+export type Entity = Domain | Firewall | Image | Linode | Volume; // @todo add more here
 
 export interface HeaderCell {
-  sortable: boolean;
-  label: string;
   dataColumn: string;
-  widthPercent: number;
-  visuallyHidden?: boolean;
   hideOnMobile?: boolean;
   hideOnTablet?: boolean;
+  label: string;
+  sortable: boolean;
+  visuallyHidden?: boolean;
+  widthPercent: number;
 }
 export interface BaseProps {
   error?: APIError[];
-  loading: boolean;
-  lastUpdated: number;
   handlers?: Handlers;
+  lastUpdated: number;
+  loading: boolean;
 }
 export interface ListProps extends BaseProps {
-  entity: string;
-  data: Entity[];
   RowComponent: React.ComponentType;
+  data: Entity[];
+  emptyMessage?: string;
+  entity: string;
   headers: HeaderCell[];
   initialOrder?: {
     order: OrderByProps<Entity>['order'];
     orderBy: OrderByProps<Entity>['orderBy'];
   };
-  toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;
-  emptyMessage?: string;
+  toggleGroupByTag?: () => boolean;
 }
 
 export interface EntityTableRow<T> extends BaseProps {
@@ -45,6 +46,6 @@ export interface EntityTableRow<T> extends BaseProps {
 }
 
 export interface PageyIntegrationProps {
-  persistData?: (data: Entity[]) => void;
   normalizeData?: (data: Entity[]) => Entity[];
+  persistData?: (data: Entity[]) => void;
 }

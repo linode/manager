@@ -1,5 +1,6 @@
 import { Reducer } from 'redux';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+
 import { clearErrors, setErrors } from './globalErrors.actions';
 import { State } from './types';
 

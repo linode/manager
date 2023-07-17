@@ -1,10 +1,11 @@
 import { APIError } from '@linode/api-v4/lib/types';
+
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
 export default (
   errorMap: { [index: string]: string },
   arr: APIError[] = []
-) => (field: string): undefined | string => {
+) => (field: string): string | undefined => {
   // Safeguard in case this function isn't called with an array.
   if (!Array.isArray(arr)) {
     return field === 'none' ? DEFAULT_ERROR_MESSAGE : undefined;

@@ -1,8 +1,11 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { Button } from './Button';
+import React from 'react';
+
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+
+import { Button } from './Button';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 /**
  * Buttons allow users to take actions, and make choices, with a single tap.
@@ -14,8 +17,6 @@ import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
  */
 
 const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
-  component: Button,
   argTypes: {
     tooltipAnalyticsEvent: {
       action: 'Analytics Event Action',
@@ -29,9 +30,11 @@ const meta: Meta<typeof Button> = {
     disabled: false,
     loading: false,
     sx: {},
-    tooltipText: '',
     tooltipAnalyticsEvent: action('tooltipAnalyticsEvent'),
+    tooltipText: '',
   },
+  component: Button,
+  title: 'Components/Button',
 };
 
 export default meta;

@@ -1,26 +1,28 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { WithTheme, withTheme } from '@mui/styles';
-import { Typography } from 'src/components/Typography';
+
 import GaugePercent from 'src/components/GaugePercent';
+import { Typography } from 'src/components/Typography';
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
+
 import { LongviewNetwork } from '../../request.types';
 import {
   convertNetworkToUnit,
   generateNetworkUnits,
 } from '../../shared/utilities';
-import { baseGaugeProps, BaseProps as Props } from './common';
+import { BaseProps as Props, baseGaugeProps } from './common';
 
 type CombinedProps = Props & LVDataProps & WithTheme;
 
 const NetworkGauge: React.FC<CombinedProps> = (props) => {
   const {
-    longviewClientDataLoading: loading,
-    longviewClientDataError: error,
-    longviewClientData,
     lastUpdatedError,
+    longviewClientData,
+    longviewClientDataError: error,
+    longviewClientDataLoading: loading,
   } = props;
 
   const networkUsed = generateUsedNetworkAsBytes(
@@ -68,11 +70,9 @@ const NetworkGauge: React.FC<CombinedProps> = (props) => {
     return {
       innerText: `${value} ${unit}/s`,
       subTitle: (
-        <React.Fragment>
-          <Typography>
-            <strong>Network</strong>
-          </Typography>
-        </React.Fragment>
+        <Typography>
+          <strong>Network</strong>
+        </Typography>
       ),
     };
   };
@@ -83,6 +83,7 @@ const NetworkGauge: React.FC<CombinedProps> = (props) => {
   return (
     <GaugePercent
       {...baseGaugeProps}
+      filledInColor={props.theme.graphs.green}
       /*
         the max here is not meant to act as an actual max
         but instead just a logical high value.
@@ -93,7 +94,6 @@ const NetworkGauge: React.FC<CombinedProps> = (props) => {
       */
       max={howManyBytesInAGigabit}
       value={networkUsed}
-      filledInColor={props.theme.graphs.green}
       {...generateCopy()}
     />
   );

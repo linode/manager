@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
 import { linodeFactory } from 'src/factories/linodes';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { NodeTable, Props } from './NodeTable';
 
 const mockLinodes = linodeFactory.buildList(3);
@@ -10,9 +12,9 @@ const mockKubeNodes = kubeLinodeFactory.buildList(3);
 
 const props: Props = {
   nodes: mockKubeNodes,
+  openRecycleNodeDialog: jest.fn(),
   poolId: 1,
   typeLabel: 'Linode 2G',
-  openRecycleNodeDialog: jest.fn(),
 };
 
 beforeAll(() => linodeFactory.resetSequenceNumber());

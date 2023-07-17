@@ -3,6 +3,6 @@ import CssBaseline, {
 } from '@mui/material/CssBaseline';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface CssBaselineProps extends _CssBaselineProps {}
+export type CssBaselineProps = _CssBaselineProps;
 
 export default CssBaseline;

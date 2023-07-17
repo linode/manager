@@ -1,32 +1,34 @@
 import {
-  createEntityTransfer,
   CreateTransferPayload,
   EntityTransfer,
+  createEntityTransfer,
   getEntityTransfer,
   getEntityTransfers,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+
 import { useProfile } from 'src/queries/profile';
+
 import { creationHandlers, listToItemsByID, queryPresets } from './base';
 
 export const queryKey = 'entity-transfers';
 
 interface EntityTransfersData {
-  results: number;
   entityTransfers: Record<string, EntityTransfer>;
+  results: number;
 }
 
-const sortFilter = { '+order_by': 'created', '+order': 'desc' };
+const sortFilter = { '+order': 'desc', '+order_by': 'created' };
 
 export const TRANSFER_FILTERS = {
-  received: {
-    ...sortFilter,
-    '+and': [{ is_sender: false }, { status: { '+neq': 'pending' } }],
-  },
   pending: {
     ...sortFilter,
     status: 'pending',
+  },
+  received: {
+    ...sortFilter,
+    '+and': [{ is_sender: false }, { status: { '+neq': 'pending' } }],
   },
   sent: {
     ...sortFilter,

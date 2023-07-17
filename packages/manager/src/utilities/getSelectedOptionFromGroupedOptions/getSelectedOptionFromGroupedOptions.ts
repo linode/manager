@@ -1,4 +1,5 @@
 import { flatten } from 'ramda';
+
 import { GroupType, Item } from 'src/components/EnhancedSelect';
 
 export const getSelectedOptionFromGroupedOptions = (

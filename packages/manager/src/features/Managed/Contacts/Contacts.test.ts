@@ -1,6 +1,7 @@
 import managedContacts, {
   contactWithoutGroup,
 } from 'src/__data__/managedContacts';
+
 import { generateGroupsFromContacts } from './Contacts';
 
 describe('groupsToContacts', () => {

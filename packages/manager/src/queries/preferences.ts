@@ -9,7 +9,9 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
+
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
+
 import { queryPresets } from './base';
 
 export const queryKey = 'preferences';

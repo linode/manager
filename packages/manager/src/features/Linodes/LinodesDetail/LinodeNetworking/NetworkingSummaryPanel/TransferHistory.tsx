@@ -1,14 +1,16 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { Theme } from '@mui/material/styles';
 import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Box } from 'src/components/Box';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
+
+import PendingIcon from 'src/assets/icons/pending.svg';
+import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
+import { Typography } from 'src/components/Typography';
 import {
   convertNetworkToUnit,
   formatNetworkTooltip,
@@ -23,41 +25,40 @@ import {
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
-import PendingIcon from 'src/assets/icons/pending.svg';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  arrowIconOuter: {
-    ...theme.applyLinkStyles,
-    display: 'flex',
-  },
-  arrowIconInner: {
-    fontSize: '1rem',
+  arrowIconDisabled: {
+    cursor: 'not-allowed',
+    fill: theme.color.grey1,
   },
   arrowIconForward: {
     transform: 'rotate(180deg)',
   },
-  arrowIconDisabled: {
-    fill: theme.color.grey1,
-    cursor: 'not-allowed',
+  arrowIconInner: {
+    fontSize: '1rem',
   },
-  loading: {
+  arrowIconOuter: {
+    ...theme.applyLinkStyles,
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 100,
   },
   graphHeaderContainer: {
     borderBottom: `1px solid ${theme.color.grey6}`,
   },
+  loading: {
+    alignItems: 'center',
+    display: 'flex',
+    height: 100,
+    justifyContent: 'center',
+  },
 }));
 
 interface Props {
-  linodeID: number;
   linodeCreated: string;
+  linodeID: number;
 }
 
 export const TransferHistory: React.FC<Props> = (props) => {
-  const { linodeID, linodeCreated } = props;
+  const { linodeCreated, linodeID } = props;
 
   const { classes, cx } = useStyles();
 
@@ -70,12 +71,12 @@ export const TransferHistory: React.FC<Props> = (props) => {
 
   const now = DateTime.utc();
 
-  const { year, month, humanizedDate } = parseMonthOffset(monthOffset, now);
+  const { humanizedDate, month, year } = parseMonthOffset(monthOffset, now);
 
   const {
     data: stats,
-    isLoading: statsLoading,
     error: statsError,
+    isLoading: statsLoading,
   } = useLinodeStatsByDate(linodeID, year, month, true, linodeCreated);
 
   const { data: transfer } = useLinodeTransferByDate(
@@ -166,10 +167,10 @@ export const TransferHistory: React.FC<Props> = (props) => {
 
       return (
         <ErrorState
-          CustomIcon={areStatsNotReady ? PendingIcon : undefined}
           errorText={
             areStatsNotReady ? STATS_NOT_READY_MESSAGE : statsErrorString
           }
+          CustomIcon={areStatsNotReady ? PendingIcon : undefined}
           compact
         />
       );
@@ -177,23 +178,23 @@ export const TransferHistory: React.FC<Props> = (props) => {
 
     return (
       <LineGraph
-        ariaLabel={graphAriaLabel}
-        tabIndex={-1}
-        timezone={profile?.timezone ?? 'UTC'}
-        chartHeight={190}
-        unit={`/s`}
-        accessibleDataTable={{ unit: 'Kb/s' }}
-        formatData={convertNetworkData}
-        formatTooltip={formatTooltip}
-        showToday={true}
         data={[
           {
-            borderColor: 'transparent',
             backgroundColor: '#5ad865',
+            borderColor: 'transparent',
             data: combinedData,
             label: 'Public Outbound Traffic',
           },
         ]}
+        accessibleDataTable={{ unit: 'Kb/s' }}
+        ariaLabel={graphAriaLabel}
+        chartHeight={190}
+        formatData={convertNetworkData}
+        formatTooltip={formatTooltip}
+        showToday={true}
+        tabIndex={-1}
+        timezone={profile?.timezone ?? 'UTC'}
+        unit={`/s`}
       />
     );
   };
@@ -201,15 +202,15 @@ export const TransferHistory: React.FC<Props> = (props) => {
   return (
     // Allow `tabIndex` on `<div>` because it represents an interactive element.
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-    <div tabIndex={0} role="graphics-document" aria-label={graphAriaLabel}>
+    <div aria-label={graphAriaLabel} role="graphics-document" tabIndex={0}>
       <Box
+        alignItems="center"
+        className={classes.graphHeaderContainer}
         display="flex"
         flexDirection="row"
         justifyContent="space-between"
-        alignItems="center"
         marginBottom="8px"
         paddingBottom="6px"
-        className={classes.graphHeaderContainer}
       >
         <Typography>
           <strong>Network Transfer History ({unit}/s)</strong>
@@ -220,21 +221,21 @@ export const TransferHistory: React.FC<Props> = (props) => {
           </Typography>
         ) : null}
         <Box
+          alignItems="center"
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
-          alignItems="center"
         >
           <button
-            className={classes.arrowIconOuter}
-            onClick={decrementOffset}
             aria-label={`Show Network Transfer History for ${decrementLabel}`}
+            className={classes.arrowIconOuter}
             disabled={monthOffset === maxMonthOffset}
+            onClick={decrementOffset}
           >
             <ArrowBackIosIcon
               className={cx({
-                [classes.arrowIconInner]: true,
                 [classes.arrowIconDisabled]: monthOffset === maxMonthOffset,
+                [classes.arrowIconInner]: true,
               })}
             />
           </button>
@@ -244,16 +245,16 @@ export const TransferHistory: React.FC<Props> = (props) => {
             <Typography>{humanizedDate}</Typography>
           </span>
           <button
-            className={classes.arrowIconOuter}
-            onClick={incrementOffset}
             aria-label={`Show Network Transfer History for ${incrementLabel}`}
+            className={classes.arrowIconOuter}
             disabled={monthOffset === minMonthOffset}
+            onClick={incrementOffset}
           >
             <ArrowBackIosIcon
               className={cx({
-                [classes.arrowIconInner]: true,
-                [classes.arrowIconForward]: true,
                 [classes.arrowIconDisabled]: monthOffset === minMonthOffset,
+                [classes.arrowIconForward]: true,
+                [classes.arrowIconInner]: true,
               })}
             />
           </button>
@@ -310,7 +311,7 @@ export const parseMonthOffset = (offset: number, date: DateTime) => {
     offset === 0 ? 'Last 30 Days' : resultingDate.toFormat('LLL y');
   const longHumanizedDate =
     offset === 0 ? 'Last 30 Days' : resultingDate.toFormat('LLLL y');
-  return { year, month, humanizedDate, longHumanizedDate };
+  return { humanizedDate, longHumanizedDate, month, year };
 };
 
 // We don't want to allow the user to scroll back further than the Linode was created,

@@ -1,21 +1,22 @@
 import * as React from 'react';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 
 export const DEFAULT_DELAY = 1000;
 
 interface LandingLoadingProps {
-  /** If true, the loading indicator will not be rendered for 1 second which may give user's with fast connections a more fluid experience. */
-  shouldDelay?: boolean;
-  /**  If given, the loading indicator will not be rendered for the given duration in milliseconds */
-  delayInMS?: number;
   /**  Allow children to be passed in to override the default loading indicator */
   children?: JSX.Element;
+  /**  If given, the loading indicator will not be rendered for the given duration in milliseconds */
+  delayInMS?: number;
+  /** If true, the loading indicator will not be rendered for 1 second which may give user's with fast connections a more fluid experience. */
+  shouldDelay?: boolean;
 }
 
 export const LandingLoading = ({
-  shouldDelay,
-  delayInMS,
   children,
+  delayInMS,
+  shouldDelay,
 }: LandingLoadingProps): JSX.Element | null => {
   const [showLoading, setShowLoading] = React.useState<boolean>(false);
 

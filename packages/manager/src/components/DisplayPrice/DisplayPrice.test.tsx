@@ -1,5 +1,6 @@
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import * as React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DisplayPrice, displayPrice } from './DisplayPrice';
 
@@ -16,7 +17,7 @@ describe('DisplayPrice component', () => {
   });
   it('should display the interval when specified', () => {
     const { getAllByRole } = renderWithTheme(
-      <DisplayPrice price={10} interval="mo" />
+      <DisplayPrice interval="mo" price={10} />
     );
     const headings = getAllByRole('heading', { level: 3 });
     expect(headings).toHaveLength(2);

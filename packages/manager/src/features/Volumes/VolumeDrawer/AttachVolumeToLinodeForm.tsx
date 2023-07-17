@@ -1,32 +1,34 @@
-import { Formik } from 'formik';
 import { Grant } from '@linode/api-v4/lib/account';
+import { Formik } from 'formik';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
+import { number, object } from 'yup';
+
+import { Notice } from 'src/components/Notice/Notice';
 import Form from 'src/components/core/Form';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useGrants } from 'src/queries/profile';
+import { useAttachVolumeMutation } from 'src/queries/volumes';
 import { openForCreating } from 'src/store/volumeForm';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { number, object } from 'yup';
+
 import ConfigSelect from './ConfigSelect';
-import { modes } from './modes';
 import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
-import { Notice } from 'src/components/Notice/Notice';
-import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
-import { useAttachVolumeMutation } from 'src/queries/volumes';
-import { useGrants } from 'src/queries/profile';
+import VolumesActionsPanel from './VolumesActionsPanel';
+import { modes } from './modes';
 
 interface Props {
-  onClose: () => void;
   linodeId: number;
-  linodeRegion: string;
   linodeLabel: string;
+  linodeRegion: string;
+  onClose: () => void;
   readOnly?: boolean;
 }
 
@@ -37,18 +39,18 @@ type CombinedProps = Props & DispatchProps;
  * provided as a prop and not a user input value.
  */
 const AttachVolumeValidationSchema = object({
-  volume_id: number()
-    .min(0, 'Volume is required.')
-    .required('Volume is required.'),
   config_id: number()
     .min(0, 'Config is required.')
     .required('Config is required.'),
+  volume_id: number()
+    .min(0, 'Volume is required.')
+    .required('Volume is required.'),
 });
 
-const initialValues = { volume_id: -1, config_id: -1 };
+const initialValues = { config_id: -1, volume_id: -1 };
 
 const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
-  const { actions, onClose, linodeId, linodeRegion, readOnly } = props;
+  const { actions, linodeId, linodeRegion, onClose, readOnly } = props;
 
   const { data: grants } = useGrants();
 
@@ -65,12 +67,11 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
 
   return (
     <Formik
-      validationSchema={AttachVolumeValidationSchema}
-      onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
+      onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
         attachVolume({
-          volumeId: values.volume_id,
-          linode_id: linodeId,
           config_id: values.config_id,
+          linode_id: linodeId,
+          volumeId: values.volume_id,
         })
           .then((_) => {
             onClose();
@@ -91,6 +92,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
           });
       }}
       initialValues={initialValues}
+      validationSchema={AttachVolumeValidationSchema}
     >
       {({
         errors,
@@ -107,8 +109,8 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
           <Form>
             {status && !disabled && (
               <NoticePanel
-                success={status.success}
                 error={status.generalError}
+                success={status.success}
               />
             )}
 
@@ -128,32 +130,32 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
             />
 
             <VolumeSelect
+              disabled={disabled}
               error={touched.volume_id ? errors.volume_id : undefined}
-              value={values.volume_id}
               onBlur={handleBlur}
               onChange={(v) => setFieldValue('volume_id', v)}
               region={linodeRegion}
-              disabled={disabled}
+              value={values.volume_id}
             />
 
             <ConfigSelect
+              disabled={disabled}
               error={touched.config_id ? errors.config_id : undefined}
               linodeId={linodeId}
               name="config_id"
               onBlur={handleBlur}
               onChange={(id) => setFieldValue('config_id', id)}
               value={values.config_id}
-              disabled={disabled}
             />
 
             <VolumesActionsPanel
-              onSubmit={handleSubmit}
               onCancel={() => {
                 resetForm();
                 onClose();
               }}
-              isSubmitting={isSubmitting}
               disabled={disabled}
+              isSubmitting={isSubmitting}
+              onSubmit={handleSubmit}
               submitText="Attach Volume"
             />
           </Form>

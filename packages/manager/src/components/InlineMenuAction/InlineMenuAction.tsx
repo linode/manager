@@ -1,24 +1,25 @@
 /* eslint-disable react/jsx-no-useless-fragment */
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { StyledActionButton } from 'src/components/Button/StyledActionButton';
-import { styled } from '@mui/material/styles';
 
 interface InlineMenuActionProps {
   /** Required action text */
   actionText: string;
   /** Optional class names */
   className?: string;
-  /** Optional href */
-  href?: string;
   /** Optional disabled */
   disabled?: boolean;
-  /** Optional tooltip text for help icon */
-  tooltip?: string;
-  /** Optional onClick handler */
-  onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  /** Optional href */
+  href?: string;
   /** Optional loading state */
   loading?: boolean;
+  /** Optional onClick handler */
+  onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  /** Optional tooltip text for help icon */
+  tooltip?: string;
   /** Optional tooltip event handler for sending analytics */
   tooltipAnalyticsEvent?: () => void;
 }
@@ -27,11 +28,11 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
   const {
     actionText,
     className,
-    href,
     disabled,
-    tooltip,
-    onClick,
+    href,
     loading,
+    onClick,
+    tooltip,
     tooltipAnalyticsEvent,
   } = props;
 
@@ -47,11 +48,11 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
     <StyledActionButton
       // TODO: We need to define what buttonType this will be in the future for now 'secondary' works...
       buttonType="secondary"
-      onClick={onClick}
       disabled={disabled}
       loading={loading}
-      tooltipText={tooltip}
+      onClick={onClick}
       tooltipAnalyticsEvent={tooltipAnalyticsEvent}
+      tooltipText={tooltip}
     >
       {actionText}
     </StyledActionButton>

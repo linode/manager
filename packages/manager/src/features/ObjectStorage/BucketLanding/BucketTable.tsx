@@ -1,8 +1,8 @@
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
+
 import { Hidden } from 'src/components/Hidden';
 import Paginate from 'src/components/Paginate';
-import { BucketTableRow } from './BucketTableRow';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -10,6 +10,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+
+import { BucketTableRow } from './BucketTableRow';
 
 interface Props {
   data: ObjectStorageBucket[];
@@ -23,18 +25,18 @@ interface Props {
 export const BucketTable = (props: Props) => {
   const {
     data,
-    orderBy,
-    order,
-    handleOrderChange,
-    handleClickRemove,
     handleClickDetails,
+    handleClickRemove,
+    handleOrderChange,
+    order,
+    orderBy,
   } = props;
 
   return (
     <Paginate data={data} pageSize={25}>
       {({
-        data: paginatedData,
         count,
+        data: paginatedData,
         handlePageChange,
         handlePageSizeChange,
         page,
@@ -46,20 +48,20 @@ export const BucketTable = (props: Props) => {
               <TableRow>
                 <TableSortCell
                   active={orderBy === 'label'}
-                  label="label"
+                  data-qa-name
                   direction={order}
                   handleClick={handleOrderChange}
-                  data-qa-name
+                  label="label"
                 >
                   Name
                 </TableSortCell>
                 <Hidden smDown>
                   <TableSortCell
                     active={orderBy === 'cluster'}
-                    label="cluster"
+                    data-qa-region
                     direction={order}
                     handleClick={handleOrderChange}
-                    data-qa-region
+                    label="cluster"
                   >
                     Region
                   </TableSortCell>
@@ -67,30 +69,30 @@ export const BucketTable = (props: Props) => {
                 <Hidden lgDown>
                   <TableSortCell
                     active={orderBy === 'created'}
-                    label="created"
+                    data-qa-created
                     direction={order}
                     handleClick={handleOrderChange}
-                    data-qa-created
+                    label="created"
                   >
                     Created
                   </TableSortCell>
                 </Hidden>
                 <TableSortCell
                   active={orderBy === 'size'}
-                  label="size"
+                  data-qa-size
                   direction={order}
                   handleClick={handleOrderChange}
-                  data-qa-size
+                  label="size"
                 >
                   Size
                 </TableSortCell>
                 <Hidden smDown>
                   <TableSortCell
                     active={orderBy === 'objects'}
-                    label="objects"
+                    data-qa-objects
                     direction={order}
                     handleClick={handleOrderChange}
-                    data-qa-objects
+                    label="objects"
                   >
                     Objects
                   </TableSortCell>
@@ -103,19 +105,19 @@ export const BucketTable = (props: Props) => {
             <TableBody>
               <RenderData
                 data={paginatedData}
-                onRemove={handleClickRemove}
                 onDetails={handleClickDetails}
+                onRemove={handleClickRemove}
               />
             </TableBody>
           </Table>
 
           <PaginationFooter
             count={count}
-            page={page}
-            pageSize={pageSize}
+            eventCategory="object storage landing"
             handlePageChange={handlePageChange}
             handleSizeChange={handlePageSizeChange}
-            eventCategory="object storage landing"
+            page={page}
+            pageSize={pageSize}
           />
         </React.Fragment>
       )}
@@ -125,12 +127,12 @@ export const BucketTable = (props: Props) => {
 
 interface RenderDataProps {
   data: ObjectStorageBucket[];
-  onRemove: (bucket: ObjectStorageBucket) => void;
   onDetails: (bucket: ObjectStorageBucket) => void;
+  onRemove: (bucket: ObjectStorageBucket) => void;
 }
 
 const RenderData: React.FC<RenderDataProps> = (props) => {
-  const { data, onRemove, onDetails } = props;
+  const { data, onDetails, onRemove } = props;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -139,8 +141,8 @@ const RenderData: React.FC<RenderDataProps> = (props) => {
         <BucketTableRow
           {...bucket}
           key={`${bucket.label}-${bucket.cluster}`}
-          onRemove={() => onRemove(bucket)}
           onDetails={() => onDetails(bucket)}
+          onRemove={() => onRemove(bucket)}
         />
       ))}
     </>

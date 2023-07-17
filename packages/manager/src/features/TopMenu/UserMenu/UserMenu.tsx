@@ -1,39 +1,33 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import {
-  Menu as ReachMenu,
   MenuButton,
   MenuItems,
   MenuLink,
   MenuPopover,
+  Menu as ReachMenu,
 } from '@reach/menu-button';
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Unstable_Grid2';
+
+import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
 
 interface MenuLink {
   display: string;
-  href: string;
   hide?: boolean;
+  href: string;
 }
 
 export const menuLinkStyle = (linkColor: string) => ({
-  lineHeight: 1,
   '&[data-reach-menu-item]': {
-    display: 'flex',
-    alignItems: 'center',
-    color: linkColor,
-    cursor: 'pointer',
-    fontSize: '0.875rem',
-    padding: '8px 24px',
     '&:focus, &:hover': {
       backgroundColor: 'transparent',
       color: linkColor,
@@ -43,89 +37,78 @@ export const menuLinkStyle = (linkColor: string) => ({
       color: linkColor,
       outline: 'dotted 1px #c1c1c0',
     },
+    alignItems: 'center',
+    color: linkColor,
+    cursor: 'pointer',
+    display: 'flex',
+    fontSize: '0.875rem',
+    padding: '8px 24px',
   },
+  lineHeight: 1,
 });
 
 const useStyles = makeStyles((theme: Theme) => ({
-  menu: {
-    transform: `translateY(${theme.spacing(1)})`,
+  accountColumn: {
+    whiteSpace: 'normal',
+    width: '100%',
   },
   button: {
-    borderRadius: 30,
-    order: 4,
-    padding: theme.spacing(1),
-    '&:hover, &.active': {
-      '& $username': {
-        color: theme.palette.primary.main,
-      },
-      '& $userWrapper': {
-        boxShadow: '0 0 10px #bbb',
-      },
-    },
     '&:focus': {
       '& $username': {
         color: theme.palette.primary.main,
       },
     },
+    '&:hover, &.active': {
+      '& $userWrapper': {
+        boxShadow: '0 0 10px #bbb',
+      },
+      '& $username': {
+        color: theme.palette.primary.main,
+      },
+    },
+    borderRadius: 30,
+    order: 4,
+    padding: theme.spacing(1),
   },
-  userWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+  caret: {
+    color: '#9ea4ae',
+    fontSize: 26,
+    marginLeft: 2,
+    marginTop: 2,
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
+    },
+  },
+  gravatar: {
     borderRadius: '50%',
-    transition: theme.transitions.create(['box-shadow']),
     height: 30,
     width: 30,
-    '& svg': {
-      color: '#c9c7c7',
-      width: 30,
-      height: 30,
-    },
-    [theme.breakpoints.down('lg')]: {
-      width: '28px',
-      height: '28px',
-    },
+  },
+  hidden: {
+    ...theme.visually.hidden,
+  },
+  inlineUserName: {
+    fontSize: '0.875rem',
+    paddingLeft: theme.spacing(),
   },
   leftIcon: {
     borderRadius: '50%',
     height: 30,
     width: 30,
   },
-  username: {
-    maxWidth: '135px',
-    overflow: 'hidden',
-    paddingRight: 15,
-    textOverflow: 'ellipsis',
-    transition: theme.transitions.create(['color']),
-    whiteSpace: 'nowrap',
-    // Hides username as soon as things start to scroll
-    [theme.breakpoints.down(1345)]: {
-      ...theme.visually.hidden,
-    },
-  },
-  menuItem: {
-    fontFamily: 'LatoWeb',
-    fontSize: '.9rem',
-    '&:hover, &:focus': {
-      backgroundColor: theme.name === 'light' ? '#3a3f46' : '#23262a',
-      color: 'white',
-    },
-  },
-  hidden: {
-    ...theme.visually.hidden,
+  menu: {
+    transform: `translateY(${theme.spacing(1)})`,
   },
   menuButton: {
-    display: 'flex',
-    alignItems: 'center',
-    lineHeight: 1,
-    paddingRight: 10,
-    [theme.breakpoints.up('sm')]: {
-      paddingLeft: 12,
-    },
-    [theme.breakpoints.down(360)]: {
-      paddingLeft: 3,
-    },
     '&[data-reach-menu-button]': {
+      '&[aria-expanded="true"]': {
+        '& $caret': {
+          color: '#0683E3',
+          marginTop: 4,
+          transform: 'rotate(180deg)',
+        },
+        background: theme.bg.app,
+      },
       backgroundColor: 'transparent',
       border: 'none',
       borderRadius: 0,
@@ -134,61 +117,25 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1rem',
       height: 50,
       textTransform: 'inherit',
-      '&[aria-expanded="true"]': {
-        background: theme.bg.app,
-        '& $caret': {
-          color: '#0683E3',
-          marginTop: 4,
-          transform: 'rotate(180deg)',
-        },
-      },
       [theme.breakpoints.down('md')]: {
-        paddingRight: 12,
         paddingLeft: 12,
+        paddingRight: 12,
       },
       [theme.breakpoints.down(360)]: {
-        paddingRight: theme.spacing(),
         paddingLeft: theme.spacing(),
+        paddingRight: theme.spacing(),
       },
     },
-  },
-  gravatar: {
-    height: 30,
-    width: 30,
-    borderRadius: '50%',
-  },
-  menuPopover: {
-    '&[data-reach-menu], &[data-reach-menu-popover]': {
-      position: 'absolute',
-      top: 50,
-      zIndex: 3000,
-      [theme.breakpoints.down('lg')]: {
-        left: 0,
-      },
+    alignItems: 'center',
+    display: 'flex',
+    lineHeight: 1,
+    paddingRight: 10,
+    [theme.breakpoints.down(360)]: {
+      paddingLeft: 3,
     },
-  },
-  caret: {
-    color: '#9ea4ae',
-    fontSize: 26,
-    marginTop: 2,
-    marginLeft: 2,
-    [theme.breakpoints.down('md')]: {
-      display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      paddingLeft: 12,
     },
-  },
-  menuItemList: {
-    boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-    '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.bgPaper,
-      border: 'none',
-      padding: 0,
-      paddingBottom: theme.spacing(1.5),
-      width: 300,
-    },
-  },
-  inlineUserName: {
-    paddingLeft: theme.spacing(),
-    fontSize: '0.875rem',
   },
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',
@@ -201,24 +148,78 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '16px 0 8px',
     textTransform: 'uppercase',
   },
+  menuItem: {
+    '&:hover, &:focus': {
+      backgroundColor: theme.name === 'light' ? '#3a3f46' : '#23262a',
+      color: 'white',
+    },
+    fontFamily: 'LatoWeb',
+    fontSize: '.9rem',
+  },
+  menuItemLink: menuLinkStyle(theme.textColors.linkActiveLight),
+  menuItemList: {
+    '&[data-reach-menu-items]': {
+      backgroundColor: theme.bg.bgPaper,
+      border: 'none',
+      padding: 0,
+      paddingBottom: theme.spacing(1.5),
+      width: 300,
+    },
+    boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
+  },
+  menuPopover: {
+    '&[data-reach-menu], &[data-reach-menu-popover]': {
+      position: 'absolute',
+      [theme.breakpoints.down('lg')]: {
+        left: 0,
+      },
+      top: 50,
+      zIndex: 3000,
+    },
+  },
   profileWrapper: {
-    marginBottom: theme.spacing(2),
     '& > div': {
       whiteSpace: 'normal',
     },
+    marginBottom: theme.spacing(2),
   },
-  accountColumn: {
-    whiteSpace: 'normal',
-    width: '100%',
-  },
-  menuItemLink: menuLinkStyle(theme.textColors.linkActiveLight),
   userName: {
     color: theme.textColors.headlineStatic,
     fontSize: '1.1rem',
-    marginTop: -1,
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
+    marginTop: -1,
     paddingTop: theme.spacing(2),
+  },
+  userWrapper: {
+    '& svg': {
+      color: '#c9c7c7',
+      height: 30,
+      width: 30,
+    },
+    alignItems: 'center',
+    borderRadius: '50%',
+    display: 'flex',
+    height: 30,
+    justifyContent: 'center',
+    [theme.breakpoints.down('lg')]: {
+      height: '28px',
+      width: '28px',
+    },
+    transition: theme.transitions.create(['box-shadow']),
+    width: 30,
+  },
+  username: {
+    maxWidth: '135px',
+    overflow: 'hidden',
+    paddingRight: 15,
+    textOverflow: 'ellipsis',
+    // Hides username as soon as things start to scroll
+    [theme.breakpoints.down(1345)]: {
+      ...theme.visually.hidden,
+    },
+    transition: theme.transitions.create(['color']),
+    whiteSpace: 'nowrap',
   },
 }));
 
@@ -244,9 +245,9 @@ export const UserMenu: React.FC<{}> = () => {
   const classes = useStyles();
 
   const {
-    profile,
     _hasAccountAccess,
     _isRestrictedUser,
+    profile,
   } = useAccountManagement();
 
   const { data: grants } = useGrants();
@@ -263,14 +264,14 @@ export const UserMenu: React.FC<{}> = () => {
       // Restricted users can't view the Users tab regardless of their grants
       {
         display: 'Users & Grants',
-        href: '/account/users',
         hide: _isRestrictedUser,
+        href: '/account/users',
       },
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Service Transfers',
-        href: '/account/service-transfers',
         hide: _isRestrictedUser,
+        href: '/account/service-transfers',
       },
       {
         display: 'Maintenance',
@@ -279,8 +280,8 @@ export const UserMenu: React.FC<{}> = () => {
       // Restricted users with read_write account access can view Settings.
       {
         display: 'Account Settings',
-        href: '/account/settings',
         hide: !hasFullAccountAccess,
+        href: '/account/settings',
       },
     ],
     [hasFullAccountAccess, _isRestrictedUser]
@@ -290,12 +291,12 @@ export const UserMenu: React.FC<{}> = () => {
 
   const renderLink = (menuLink: MenuLink) =>
     menuLink.hide ? null : (
-      <Grid xs={12} key={menuLink.display}>
+      <Grid key={menuLink.display} xs={12}>
         <MenuLink
           as={Link}
-          to={menuLink.href}
           className={classes.menuItemLink}
           data-testid={`menu-item-${menuLink.display}`}
+          to={menuLink.href}
         >
           {menuLink.display}
         </MenuLink>
@@ -306,18 +307,18 @@ export const UserMenu: React.FC<{}> = () => {
     <div>
       <ReachMenu>
         <Tooltip
-          title={'Profile & Account'}
           disableTouchListener
           enterDelay={500}
           leaveDelay={0}
+          title="Profile & Account"
         >
           <MenuButton
             className={classes.menuButton}
             data-testid="nav-group-profile"
           >
             <GravatarByEmail
-              email={profile?.email ?? ''}
               className={classes.userWrapper}
+              email={profile?.email ?? ''}
             />
             <Hidden mdDown>
               <Typography className={classes.inlineUserName}>
@@ -329,8 +330,8 @@ export const UserMenu: React.FC<{}> = () => {
         </Tooltip>
         <MenuPopover
           className={classes.menuPopover}
-          position={positionRight}
           data-qa-user-menu
+          position={positionRight}
         >
           <MenuItems className={classes.menuItemList}>
             <div className={classes.userName}>
@@ -339,18 +340,18 @@ export const UserMenu: React.FC<{}> = () => {
             <div className={classes.menuHeader}>My Profile</div>
             <Grid container>
               <Grid
-                xs={6}
-                wrap="nowrap"
-                direction="column"
                 className={classes.profileWrapper}
+                direction="column"
+                wrap="nowrap"
+                xs={6}
               >
                 {profileLinks.slice(0, 4).map(renderLink)}
               </Grid>
               <Grid
-                xs={6}
-                wrap="nowrap"
-                direction="column"
                 className={classes.profileWrapper}
+                direction="column"
+                wrap="nowrap"
+                xs={6}
               >
                 {profileLinks.slice(4).map(renderLink)}
               </Grid>
@@ -363,11 +364,11 @@ export const UserMenu: React.FC<{}> = () => {
                     {accountLinks.map((menuLink) =>
                       menuLink.hide ? null : (
                         <MenuLink
-                          key={menuLink.display}
                           as={Link}
-                          to={menuLink.href}
                           className={classes.menuItemLink}
                           data-testid={`menu-item-${menuLink.display}`}
+                          key={menuLink.display}
+                          to={menuLink.href}
                         >
                           {menuLink.display}
                         </MenuLink>

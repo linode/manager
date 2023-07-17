@@ -1,23 +1,25 @@
+import { useFormik } from 'formik';
+import { DateTime } from 'luxon';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
-import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { TextField } from 'src/components/TextField';
-import { DateTime } from 'luxon';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TextField } from 'src/components/TextField';
+import FormControl from 'src/components/core/FormControl';
+import FormHelperText from 'src/components/core/FormHelperText';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
-import { useFormik } from 'formik';
+import { getErrorMap } from 'src/utilities/errorUtils';
+
 import {
   StyledAccessCell,
   StyledPermissionsCell,
@@ -26,10 +28,10 @@ import {
 } from './APITokenDrawer.styles';
 import {
   Permission,
-  permTuplesToScopeString,
-  scopeStringToPermTuples,
   allScopesAreTheSame,
   basePermNameMap,
+  permTuplesToScopeString,
+  scopeStringToPermTuples,
 } from './utils';
 
 type Expiry = [string, string];
@@ -72,38 +74,38 @@ interface RadioButton extends HTMLInputElement {
 }
 
 interface Props {
-  open: boolean;
   onClose: () => void;
+  open: boolean;
   showSecret: (token: string) => void;
 }
 
 export const CreateAPITokenDrawer = (props: Props) => {
   const expiryTups = genExpiryTups();
-  const { open, onClose, showSecret } = props;
+  const { onClose, open, showSecret } = props;
 
   const initialValues = {
-    scopes: scopeStringToPermTuples('*'),
-    label: '',
     expiry: expiryTups[0][1],
+    label: '',
+    scopes: scopeStringToPermTuples('*'),
   };
 
   const {
-    mutateAsync: createPersonalAccessToken,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createPersonalAccessToken,
   } = useCreatePersonalAccessTokenMutation();
 
   const form = useFormik<{
-    scopes: Permission[];
-    label: string;
     expiry: string;
+    label: string;
+    scopes: Permission[];
   }>({
     initialValues,
     async onSubmit(values) {
       const { token } = await createPersonalAccessToken({
+        expiry: values.expiry,
         label: values.label,
         scopes: permTuplesToScopeString(values.scopes),
-        expiry: values.expiry,
       });
       onClose();
       showSecret(token ?? 'Secret not available');
@@ -152,29 +154,29 @@ export const CreateAPITokenDrawer = (props: Props) => {
   });
 
   return (
-    <Drawer title="Add Personal Access Token" open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title="Add Personal Access Token">
       {errorMap.none && <Notice error text={errorMap.none} />}
       <TextField
         errorText={errorMap.label}
-        value={form.values.label}
         label="Label"
         name="label"
         onChange={form.handleChange}
+        value={form.values.label}
       />
       <FormControl data-testid="expiry-select">
         <Select
-          options={expiryList}
-          onChange={handleExpiryChange}
-          value={expiryList.find((item) => item.value === form.values.expiry)}
-          name="expiry"
-          label="Expiry"
           isClearable={false}
+          label="Expiry"
+          name="expiry"
+          onChange={handleExpiryChange}
+          options={expiryList}
+          value={expiryList.find((item) => item.value === form.values.expiry)}
         />
       </FormControl>
       <StyledPermsTable
         aria-label="Personal Access Token Permissions"
-        spacingTop={24}
         spacingBottom={16}
+        spacingTop={24}
       >
         <TableHead>
           <TableRow>
@@ -192,46 +194,46 @@ export const CreateAPITokenDrawer = (props: Props) => {
         </TableHead>
         <TableBody>
           <TableRow data-qa-row="Select All">
-            <StyledSelectCell parentColumn="Access" padding="checkbox">
+            <StyledSelectCell padding="checkbox" parentColumn="Access">
               Select All
             </StyledSelectCell>
-            <StyledPermissionsCell parentColumn="None" padding="checkbox">
+            <StyledPermissionsCell padding="checkbox" parentColumn="None">
               <Radio
-                name="Select All"
-                checked={indexOfColumnWhereAllAreSelected === 0}
-                data-testid="set-all-none"
-                value="0"
-                onChange={handleSelectAllScopes}
-                data-qa-perm-none-radio
                 inputProps={{
                   'aria-label': 'Select none for all',
                 }}
+                checked={indexOfColumnWhereAllAreSelected === 0}
+                data-qa-perm-none-radio
+                data-testid="set-all-none"
+                name="Select All"
+                onChange={handleSelectAllScopes}
+                value="0"
               />
             </StyledPermissionsCell>
-            <StyledPermissionsCell parentColumn="Read Only" padding="checkbox">
+            <StyledPermissionsCell padding="checkbox" parentColumn="Read Only">
               <Radio
-                name="Select All"
-                checked={indexOfColumnWhereAllAreSelected === 1}
-                value="1"
-                data-testid="set-all-read"
-                onChange={handleSelectAllScopes}
-                data-qa-perm-read-radio
                 inputProps={{
                   'aria-label': 'Select read-only for all',
                 }}
+                checked={indexOfColumnWhereAllAreSelected === 1}
+                data-qa-perm-read-radio
+                data-testid="set-all-read"
+                name="Select All"
+                onChange={handleSelectAllScopes}
+                value="1"
               />
             </StyledPermissionsCell>
-            <StyledPermissionsCell parentColumn="Read/Write" padding="checkbox">
+            <StyledPermissionsCell padding="checkbox" parentColumn="Read/Write">
               <Radio
-                name="Select All"
-                checked={indexOfColumnWhereAllAreSelected === 2}
-                data-testid="set-all-write"
-                value="2"
-                onChange={handleSelectAllScopes}
-                data-qa-perm-rw-radio
                 inputProps={{
                   'aria-label': 'Select read/write for all',
                 }}
+                checked={indexOfColumnWhereAllAreSelected === 2}
+                data-qa-perm-rw-radio
+                data-testid="set-all-write"
+                name="Select All"
+                onChange={handleSelectAllScopes}
+                value="2"
               />
             </StyledPermissionsCell>
           </TableRow>
@@ -241,46 +243,46 @@ export const CreateAPITokenDrawer = (props: Props) => {
             }
             return (
               <TableRow
-                key={scopeTup[0]}
                 data-qa-row={basePermNameMap[scopeTup[0]]}
+                key={scopeTup[0]}
               >
-                <StyledAccessCell parentColumn="Access" padding="checkbox">
+                <StyledAccessCell padding="checkbox" parentColumn="Access">
                   {basePermNameMap[scopeTup[0]]}
                 </StyledAccessCell>
-                <StyledPermissionsCell parentColumn="None" padding="checkbox">
+                <StyledPermissionsCell padding="checkbox" parentColumn="None">
                   <AccessCell
                     active={scopeTup[1] === 0}
+                    disabled={false}
+                    onChange={handleScopeChange}
                     scope="0"
                     scopeDisplay={scopeTup[0]}
                     viewOnly={false}
-                    disabled={false}
-                    onChange={handleScopeChange}
                   />
                 </StyledPermissionsCell>
                 <StyledPermissionsCell
-                  parentColumn="Read Only"
                   padding="checkbox"
+                  parentColumn="Read Only"
                 >
                   <AccessCell
                     active={scopeTup[1] === 1}
+                    disabled={false}
+                    onChange={handleScopeChange}
                     scope="1"
                     scopeDisplay={scopeTup[0]}
                     viewOnly={false}
-                    disabled={false}
-                    onChange={handleScopeChange}
                   />
                 </StyledPermissionsCell>
                 <StyledPermissionsCell
-                  parentColumn="Read/Write"
                   padding="checkbox"
+                  parentColumn="Read/Write"
                 >
                   <AccessCell
                     active={scopeTup[1] === 2}
+                    disabled={false}
+                    onChange={handleScopeChange}
                     scope="2"
                     scopeDisplay={scopeTup[0]}
                     viewOnly={false}
-                    disabled={false}
-                    onChange={handleScopeChange}
                   />
                 </StyledPermissionsCell>
               </TableRow>
@@ -297,9 +299,9 @@ export const CreateAPITokenDrawer = (props: Props) => {
         </Button>
         <Button
           buttonType="primary"
+          data-testid="create-button"
           loading={isLoading}
           onClick={() => form.handleSubmit()}
-          data-testid="create-button"
         >
           Create Token
         </Button>

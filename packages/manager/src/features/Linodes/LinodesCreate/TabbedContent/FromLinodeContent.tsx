@@ -1,14 +1,16 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import Paper from 'src/components/core/Paper';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import Paper from 'src/components/core/Paper';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+
 import SelectLinodePanel from '../SelectLinodePanel';
 import {
   CloneFormStateHandlers,
@@ -26,10 +28,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const errorResources = {
-  type: 'A plan selection',
-  region: 'region',
   label: 'A label',
+  region: 'region',
   root_pass: 'A root password',
+  type: 'A plan selection',
 };
 
 export type CombinedProps = CloneFormStateHandlers &
@@ -43,12 +45,12 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     errors,
     imagesData,
     linodesData,
-    typesData,
     regionsData,
     selectedLinodeID,
-    userCannotCreateLinode,
+    typesData,
     updateLinodeID,
     updateTypeID,
+    userCannotCreateLinode,
   } = props;
 
   const extendedTypes = typesData?.map(extendType);
@@ -90,8 +92,8 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
           <Paper>
             <Placeholder
               data-qa-placeholder
-              isEntity
               icon={VolumeIcon}
+              isEntity
               renderAsSecondary
               title="Clone from Existing Linode"
             >
@@ -103,23 +105,23 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
       ) : (
         <Grid className={`${classes.main} mlMain py0`}>
           <SelectLinodePanel
-            data-qa-linode-panel
-            error={hasErrorFor('linode_id')}
             linodes={extendLinodes(
               linodesData,
               imagesData,
               extendedTypes,
               regionsData
             )}
-            selectedLinodeID={selectedLinodeID}
-            header={'Select Linode to Clone From'}
-            handleSelection={handleSelectLinode}
-            updateFor={[selectedLinodeID, errors]}
-            disabled={userCannotCreateLinode}
             notice={{
               level: 'warning',
               text: `This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.`,
             }}
+            data-qa-linode-panel
+            disabled={userCannotCreateLinode}
+            error={hasErrorFor('linode_id')}
+            handleSelection={handleSelectLinode}
+            header={'Select Linode to Clone From'}
+            selectedLinodeID={selectedLinodeID}
+            updateFor={[selectedLinodeID, errors]}
           />
         </Grid>
       )}

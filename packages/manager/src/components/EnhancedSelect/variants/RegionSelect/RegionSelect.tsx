@@ -1,27 +1,29 @@
+import { Region } from '@linode/api-v4/lib/regions';
+import * as React from 'react';
+
 import Select, {
   BaseSelectProps,
   GroupType,
   Item,
 } from 'src/components/EnhancedSelect/Select';
-import * as React from 'react';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
-import { Region } from '@linode/api-v4/lib/regions';
-import { RegionOption, RegionItem } from './RegionOption';
 import { Flag } from 'src/components/Flag';
-import { ContinentNames, Country } from './utils';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
+
+import { RegionItem, RegionOption } from './RegionOption';
+import { ContinentNames, Country } from './utils';
 
 interface Props<IsClearable extends boolean>
   extends Omit<
     BaseSelectProps<Item<string>, false, IsClearable>,
-    'onChange' | 'label'
+    'label' | 'onChange'
   > {
+  handleSelection: (id: string) => void;
+  helperText?: string;
   label?: string;
   regions: Region[];
-  handleSelection: (id: string) => void;
-  selectedID: string | null;
-  helperText?: string;
   required?: boolean;
+  selectedID: null | string;
   width?: number;
 }
 
@@ -29,28 +31,28 @@ export const selectStyles = {
   menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` }),
 };
 
-type RegionGroup = ContinentNames | 'Other';
+type RegionGroup = 'Other' | ContinentNames;
 
 export const getRegionOptions = (regions: Region[]) => {
   const groups: Record<RegionGroup, RegionItem[]> = {
-    'North America': [],
-    Europe: [],
-    Asia: [],
-    'South America': [],
-    Oceania: [],
     Africa: [],
     Antartica: [],
+    Asia: [],
+    Europe: [],
+    'North America': [],
+    Oceania: [],
     Other: [],
+    'South America': [],
   };
 
   for (const region of regions) {
     const group = getRegionCountryGroup(region);
 
     groups[group].push({
+      country: region.country,
+      flag: <Flag country={region.country as Lowercase<Country>} />,
       label: `${region.label} (${region.id})`,
       value: region.id,
-      flag: <Flag country={region.country as Lowercase<Country>} />,
-      country: region.country,
     });
   }
 
@@ -92,15 +94,15 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
 export const RegionSelect = React.memo(
   <IsClearable extends boolean>(props: Props<IsClearable>) => {
     const {
-      label,
       disabled,
       handleSelection,
-      isClearable,
       helperText,
+      isClearable,
+      label,
       regions,
+      required,
       selectedID,
       styles,
-      required,
       width,
       ...restOfReactSelectProps
     } = props;
@@ -126,22 +128,22 @@ export const RegionSelect = React.memo(
     return (
       <div style={{ width }}>
         <Select
-          isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
-          value={getSelectedRegionById(selectedID || '', options) ?? null}
-          label={label ?? 'Region'}
-          disabled={disabled}
-          placeholder="Select a Region"
-          options={options}
-          onChange={onChange}
-          components={{ Option: RegionOption, SingleValue: _SingleValue }}
           isOptionDisabled={(option: RegionItem) =>
             Boolean(option.disabledMessage)
           }
-          styles={styles || selectStyles}
           textFieldProps={{
             tooltipText: helperText,
           }}
+          components={{ Option: RegionOption, SingleValue: _SingleValue }}
+          disabled={disabled}
+          isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
+          label={label ?? 'Region'}
+          onChange={onChange}
+          options={options}
+          placeholder="Select a Region"
           required={required}
+          styles={styles || selectStyles}
+          value={getSelectedRegionById(selectedID || '', options) ?? null}
           {...restOfReactSelectProps}
         />
       </div>

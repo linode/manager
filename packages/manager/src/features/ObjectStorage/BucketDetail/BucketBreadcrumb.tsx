@@ -1,7 +1,9 @@
-import * as React from 'react';
 import copy from 'copy-to-clipboard';
-import { prefixArrayToString } from '../utilities';
+import * as React from 'react';
+
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+
+import { prefixArrayToString } from '../utilities';
 import {
   StyledCopied,
   StyledFileCopy,
@@ -12,9 +14,9 @@ import {
 } from './BucketBreadcrumb.styles';
 
 interface Props {
-  prefix: string;
-  history: any;
   bucketName: string;
+  history: any;
+  prefix: string;
 }
 
 export const BucketBreadcrumb = (props: Props) => {
@@ -25,7 +27,7 @@ export const BucketBreadcrumb = (props: Props) => {
     timeout = setTimeout(() => setCopied(false), 1500);
     copy(value);
   };
-  const { prefix, bucketName, history } = props;
+  const { bucketName, history, prefix } = props;
   const { width } = useWindowDimensions();
 
   React.useEffect(() => {
@@ -49,10 +51,10 @@ export const BucketBreadcrumb = (props: Props) => {
       <StyledPrefixWrapper>
         {/* Bucket name */}
         <StyledLink
-          variant="body1"
           onClick={() => {
             history.push({ search: '?prefix=' });
           }}
+          variant="body1"
         >
           {bucketName}
         </StyledLink>
@@ -71,7 +73,6 @@ export const BucketBreadcrumb = (props: Props) => {
             <React.Fragment key={idx}>
               <StyledSlash variant="body1">/</StyledSlash>
               <StyledLink
-                variant="body1"
                 onClick={() => {
                   // If clicking the last crumb, don't do anything (we're
                   // already on the correct level).
@@ -82,6 +83,7 @@ export const BucketBreadcrumb = (props: Props) => {
                   const prefixString = prefixArrayToString(prefixArray, idx);
                   history.push({ search: '?prefix=' + prefixString });
                 }}
+                variant="body1"
               >
                 {prefixSection}
               </StyledLink>

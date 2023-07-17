@@ -1,23 +1,25 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
 import SSHAccessRow from './SSHAccessRow';
 
 interface Props {
+  error?: APIError[] | null;
   linodeSettings: ManagedLinodeSetting[];
   loading: boolean;
   openDrawer: (linodeId: number) => void;
-  error?: APIError[] | null;
 }
 
 export type CombinedProps = Props;
 
 export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
-  const { linodeSettings, loading, openDrawer, error } = props;
+  const { error, linodeSettings, loading, openDrawer } = props;
 
   if (loading) {
     return <TableRowLoading columns={6} />;

@@ -1,30 +1,31 @@
-import * as React from 'react';
-import { styled, Theme } from '@mui/material/styles';
+import _Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import { Theme, styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
+import * as React from 'react';
+
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
-import _Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
-import FormControlLabel from 'src/components/core/FormControlLabel';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 
 interface Props extends CheckboxProps {
   /**
+   * Styles applied to the `FormControlLabel`. Only works when `text` is defined.
+   */
+  sxFormLabel?: SxProps<Theme>;
+  /**
    * Renders a `FormControlLabel` that controls the underlying Checkbox with a label of `text`
    */
-  text?: string | JSX.Element;
-  /**
-   * Renders a tooltip to the right of the Checkbox
-   */
-  toolTipText?: string | JSX.Element;
+  text?: JSX.Element | string;
   /**
    * Whether or not the tooltip is interactive
    * @default false
    */
   toolTipInteractive?: boolean;
   /**
-   * Styles applied to the `FormControlLabel`. Only works when `text` is defined.
+   * Renders a tooltip to the right of the Checkbox
    */
-  sxFormLabel?: SxProps<Theme>;
+  toolTipText?: JSX.Element | string;
 }
 
 /**
@@ -43,14 +44,14 @@ interface Props extends CheckboxProps {
  * - If the user clicks the Back button, any changes made to checkboxes should be discarded and the original settings reinstated.
  */
 export const Checkbox = (props: Props) => {
-  const { toolTipInteractive, toolTipText, text, sxFormLabel, ...rest } = props;
+  const { sxFormLabel, text, toolTipInteractive, toolTipText, ...rest } = props;
 
   const BaseCheckbox = (
     <StyledCheckbox
-      color="primary"
-      icon={<CheckboxIcon />}
       checkedIcon={<CheckboxCheckedIcon />}
+      color="primary"
       data-qa-checked={props.checked}
+      icon={<CheckboxIcon />}
       {...rest}
     />
   );
@@ -71,8 +72,8 @@ export const Checkbox = (props: Props) => {
       {toolTipText ? (
         <TooltipIcon
           interactive={toolTipInteractive}
-          text={toolTipText}
           status="help"
+          text={toolTipText}
         />
       ) : null}
     </>
@@ -80,25 +81,25 @@ export const Checkbox = (props: Props) => {
 };
 
 const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
-  color: '#ccc',
-  transition: theme.transitions.create(['color']),
   '& .defaultFill': {
     transition: theme.transitions.create(['fill']),
   },
   '&:hover': {
     color: theme.palette.primary.main,
   },
+  color: '#ccc',
+  transition: theme.transitions.create(['color']),
   ...(props.checked && {
     color: theme.palette.primary.main,
   }),
   ...(props.disabled && {
+    '& .defaultFill': {
+      fill: `${theme.bg.main}`,
+      opacity: 0.5,
+    },
     color: '#ccc !important',
     fill: `${theme.bg.main} !important`,
     pointerEvents: 'none',
-    '& .defaultFill': {
-      opacity: 0.5,
-      fill: `${theme.bg.main}`,
-    },
   }),
 }));
 

@@ -1,46 +1,48 @@
 import { rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
+
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
+import Paper from 'src/components/core/Paper';
 import { resetEventsPolling } from 'src/eventsPolling';
 import usePrevious from 'src/hooks/usePrevious';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import createDevicesFromStrings, {
   DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
+
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import DeviceSelection, { ExtendedDisk } from './DeviceSelection';
 import RescueDescription from './RescueDescription';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    marginTop: theme.spacing(),
+  },
   root: {
-    padding: `${theme.spacing(3)} 0 ${theme.spacing(1)}`,
     '& .iconTextLink': {
       display: 'inline-flex',
       margin: `${theme.spacing(3)} 0 0 0`,
     },
-  },
-  button: {
-    marginTop: theme.spacing(),
+    padding: `${theme.spacing(3)} 0 ${theme.spacing(1)}`,
   },
 }));
 
 interface Props {
   linodeId: number | undefined;
-  open: boolean;
   onClose: () => void;
+  open: boolean;
 }
 
 interface DeviceMap {
@@ -84,7 +86,7 @@ export const getDefaultDeviceMapAndCounter = (
 };
 
 export const StandardRescueDialog = (props: Props) => {
-  const { open, onClose, linodeId } = props;
+  const { linodeId, onClose, open } = props;
 
   const classes = useStyles();
 
@@ -197,15 +199,15 @@ export const StandardRescueDialog = (props: Props) => {
 
   return (
     <Dialog
-      title={`Rescue Linode ${linode?.label ?? ''}`}
-      open={open}
       onClose={() => {
         setAPIError('');
         onClose();
       }}
-      fullWidth
       fullHeight
+      fullWidth
       maxWidth="md"
+      open={open}
+      title={`Rescue Linode ${linode?.label ?? ''}`}
     >
       {APIError && <Notice error text={APIError} />}
       {disksError ? (
@@ -222,29 +224,29 @@ export const StandardRescueDialog = (props: Props) => {
             {isReadOnly && <LinodePermissionsError />}
             {linodeId ? <RescueDescription linodeId={linodeId} /> : null}
             <DeviceSelection
-              slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
-              devices={devices}
-              onChange={onChange}
-              getSelected={(slot) => pathOr('', [slot], rescueDevices)}
               counter={counter}
-              rescue
+              devices={devices}
               disabled={disabled}
+              getSelected={(slot) => pathOr('', [slot], rescueDevices)}
+              onChange={onChange}
+              rescue
+              slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
             />
             <Button
               buttonType="secondary"
-              onClick={incrementCounter}
               className={classes.button}
               compactX
               disabled={disabled || counter >= 6}
+              onClick={incrementCounter}
             >
               Add Disk
             </Button>
             <StyledActionPanel>
               <Button
                 buttonType="primary"
+                data-qa-submit
                 disabled={disabled}
                 onClick={onSubmit}
-                data-qa-submit
               >
                 Reboot into Rescue Mode
               </Button>

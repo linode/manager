@@ -1,42 +1,44 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
+import React from 'react';
+
 import { TypeToConfirmDialog } from './TypeToConfirmDialog';
 
+import type { Meta, StoryObj } from '@storybook/react';
+
 const meta: Meta<typeof TypeToConfirmDialog> = {
-  title: 'Components/TypeToConfirmDialog',
-  component: TypeToConfirmDialog,
   argTypes: {
     children: {
       description: 'The items of the Dialog, passed-in as sub-components.',
     },
     error: { description: 'Error that will be shown in the dialog.' },
+    onClick: {
+      description: 'Callback fired when the action is confirmed.',
+    },
     onClose: {
       action: 'onClose',
       description: 'Callback fired when the component requests to be closed.',
-    },
-    onClick: {
-      description: 'Callback fired when the action is confirmed.',
     },
     open: { description: 'Is the modal open?' },
     title: { description: 'Title that appears in the heading of the dialog.' },
   },
   args: {
-    open: true,
-    title: 'Delete Linode?',
-    onClose: action('onClose'),
-    onClick: action('onDelete'),
-    loading: false,
-    label: 'Linode Label',
     children: '',
-    error: undefined,
     entity: {
-      type: 'Linode',
       action: 'deletion',
       name: 'test linode',
       primaryBtnText: 'Delete',
+      type: 'Linode',
     },
+    error: undefined,
+    label: 'Linode Label',
+    loading: false,
+    onClick: action('onDelete'),
+    onClose: action('onClose'),
+    open: true,
+    title: 'Delete Linode?',
   },
+  component: TypeToConfirmDialog,
+  title: 'Components/TypeToConfirmDialog',
 };
 
 export default meta;

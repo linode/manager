@@ -7,6 +7,7 @@ import {
 import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+
 import { Tag } from 'src/components/TagsInput/TagsInput';
 import { ExtendedType } from 'src/utilities/extendType';
 
@@ -17,25 +18,25 @@ export interface ExtendedLinode extends Linode {
 
 export type TypeInfo =
   | {
-      title: string;
+      backupsMonthly: null | number;
       details: string;
-      monthly: number;
       hourly: number;
-      backupsMonthly: number | null;
+      monthly: number;
+      title: string;
     }
   | undefined;
 
-export type Info = { title?: string; details?: string } | undefined;
+export type Info = { details?: string; title?: string } | undefined;
 
 /**
  * These props are meant purely for what is displayed in the
  * Checkout bar
  */
 export interface WithDisplayData {
-  typeDisplayInfo?: TypeInfo;
-  regionDisplayInfo?: Info;
+  backupsMonthlyPrice?: null | number;
   imageDisplayInfo?: Info;
-  backupsMonthlyPrice?: number | null;
+  regionDisplayInfo?: Info;
+  typeDisplayInfo?: TypeInfo;
 }
 
 /**
@@ -44,9 +45,9 @@ export interface WithDisplayData {
  * safe-guarded with null, loading, and error checking
  */
 export interface WithTypesRegionsAndImages {
+  imagesData: Record<string, Image>;
   regionsData: Region[];
   typesData?: ExtendedType[];
-  imagesData: Record<string, Image>;
 }
 
 export interface WithLinodesTypesRegionsAndImages
@@ -55,8 +56,8 @@ export interface WithLinodesTypesRegionsAndImages
 }
 
 export interface ReduxStateProps {
-  userCannotCreateLinode: boolean;
   accountBackupsEnabled: boolean;
+  userCannotCreateLinode: boolean;
 }
 
 export type HandleSubmit = (
@@ -67,14 +68,14 @@ export type HandleSubmit = (
 export type LinodeCreateValidation = (payload: CreateLinodeRequest) => void;
 
 export interface BasicFromContentProps {
-  errors?: APIError[];
-  selectedImageID?: string;
-  updateImageID: (id: string) => void;
-  selectedRegionID?: string;
   disabledClasses?: LinodeTypeClass[];
+  errors?: APIError[];
   regionHelperText?: string;
-  updateRegionID: (id: string) => void;
+  selectedImageID?: string;
+  selectedRegionID?: string;
   selectedTypeID?: string;
+  updateImageID: (id: string) => void;
+  updateRegionID: (id: string) => void;
   updateTypeID: (id: string) => void;
 }
 
@@ -83,36 +84,36 @@ export interface BasicFromContentProps {
  * the _create from image_ flow to function
  */
 export interface BaseFormStateAndHandlers {
+  authorized_users: string[];
+  backupsEnabled: boolean;
+  disabledClasses?: LinodeTypeClass[];
   errors?: APIError[];
   formIsSubmitting: boolean;
   handleSubmitForm: HandleSubmit;
-  selectedImageID?: string;
-  updateImageID: (id: string) => void;
-  selectedRegionID?: string;
-  disabledClasses?: LinodeTypeClass[];
-  regionHelperText?: string;
-  updateRegionID: (id: string) => void;
-  selectedTypeID?: string;
-  updateTypeID: (id: string) => void;
   label: string;
+  password: string;
+  privateIPEnabled: boolean;
+  regionHelperText?: string;
+  resetCreationState: () => void;
+  selectedImageID?: string;
+  selectedRegionID?: string;
+  selectedTypeID?: string;
+  selectedVlanIDs: number[];
+  setAuthorizedUsers: (usernames: string[]) => void;
+  setVlanID: (ids: number[]) => void;
+  tags?: Tag[];
+  toggleBackupsEnabled: () => void;
+  togglePrivateIPEnabled: () => void;
+  updateImageID: (id: string) => void;
   updateLabel: (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => void;
-  password: string;
   updatePassword: (password: string) => void;
-  backupsEnabled: boolean;
-  toggleBackupsEnabled: () => void;
-  privateIPEnabled: boolean;
-  togglePrivateIPEnabled: () => void;
-  tags?: Tag[];
+  updateRegionID: (id: string) => void;
   updateTags: (tags: Tag[]) => void;
-  resetCreationState: () => void;
-  authorized_users: string[];
-  setAuthorizedUsers: (usernames: string[]) => void;
-  selectedVlanIDs: number[];
-  setVlanID: (ids: number[]) => void;
+  updateTypeID: (id: string) => void;
 }
 
 /**
@@ -121,21 +122,23 @@ export interface BaseFormStateAndHandlers {
  */
 export interface CloneFormStateHandlers extends BasicFromContentProps {
   selectedDiskSize?: number;
-  updateDiskSize: (id: number) => void;
   selectedLinodeID?: number;
+  updateDiskSize: (id: number) => void;
   updateLinodeID: (id: number, diskSize?: number) => void;
-  updateTypeID: (id: string | null) => void;
+  updateTypeID: (id: null | string) => void;
 }
 
 /**
  * additional form fields needed when creating a Linode from a StackScript
  */
 export interface StackScriptFormStateHandlers extends BasicFromContentProps {
-  selectedStackScriptID?: number;
-  selectedStackScriptUsername?: string;
-  selectedStackScriptLabel?: string;
-  availableUserDefinedFields?: UserDefinedField[];
   availableStackScriptImages?: Image[];
+  availableUserDefinedFields?: UserDefinedField[];
+  handleSelectUDFs: (stackScripts: any) => void;
+  selectedStackScriptID?: number;
+  selectedStackScriptLabel?: string;
+  selectedStackScriptUsername?: string;
+  selectedUDFs?: any;
   updateStackScript: (
     id: number,
     label: string,
@@ -144,8 +147,6 @@ export interface StackScriptFormStateHandlers extends BasicFromContentProps {
     availableImages: Image[],
     defaultData?: any
   ) => void;
-  selectedUDFs?: any;
-  handleSelectUDFs: (stackScripts: any) => void;
 }
 
 /**
@@ -160,8 +161,8 @@ export interface BackupFormStateHandlers extends CloneFormStateHandlers {
 
 export interface AppsData {
   appInstances?: StackScript[];
-  appInstancesLoading: boolean;
   appInstancesError?: string;
+  appInstancesLoading: boolean;
 }
 
 export type AllFormStateAndHandlers = BaseFormStateAndHandlers &

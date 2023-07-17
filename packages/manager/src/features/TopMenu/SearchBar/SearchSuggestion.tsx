@@ -2,25 +2,26 @@ import { LinodeStatus } from '@linode/api-v4/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
+
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Tag } from 'src/components/Tag/Tag';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 
 export interface SearchSuggestionT {
-  icon: string;
   description: string;
+  history: any;
+  icon: string;
+  isHighlighted?: boolean;
   path: string;
   searchText: string;
-  history: any;
-  tags?: string[];
-  isHighlighted?: boolean;
   status?: LinodeStatus;
+  tags?: string[];
 }
 
 interface Props extends OptionProps<any, any> {
   data: {
-    label: string;
     data: SearchSuggestionT;
+    label: string;
   };
   searchText: string;
 }
@@ -28,57 +29,12 @@ interface Props extends OptionProps<any, any> {
 type CombinedProps = Props;
 
 class SearchSuggestion extends React.Component<CombinedProps> {
-  maybeStyleSegment = (
-    text: string,
-    searchText: string,
-    hlClass: string
-  ): React.ReactNode => {
-    const idx = text
-      .toLocaleLowerCase()
-      .indexOf(searchText.toLocaleLowerCase());
-    if (idx === -1) {
-      return text;
-    }
-    return (
-      <React.Fragment>
-        {`${text.substr(0, idx)}`}
-        <span className={hlClass}>{`${text.substr(
-          idx,
-          searchText.length
-        )}`}</span>
-        {`${text.slice(idx + searchText.length)}`}
-      </React.Fragment>
-    );
-  };
-
-  renderTags = (tags: string[], selected: boolean) => {
-    if (tags.length === 0) {
-      return;
-    }
-    return tags.map((tag: string) => (
-      <Tag
-        key={`tag-${tag}`}
-        label={tag}
-        colorVariant={selected ? 'blue' : 'lightBlue'}
-        component={'button' as 'div'}
-        asSuggestion={true}
-        className="tag"
-        closeMenu={this.props.selectProps.onMenuClose}
-      />
-    ));
-  };
-
-  handleClick = () => {
-    const suggestion = this.props.data;
-    this.props.selectOption(suggestion);
-  };
-
   render() {
     const suggestion = this.props.data.data;
     const { classes } = this.props.selectProps;
     const { icon } = pathOr<string>('default', [], suggestion);
     const { searchText } = suggestion;
-    const { innerRef, innerProps } = this.props;
+    const { innerProps, innerRef } = this.props;
     const { status } = suggestion;
     return (
       <div
@@ -86,10 +42,10 @@ class SearchSuggestion extends React.Component<CombinedProps> {
           ${classes.suggestionRoot}
           ${Boolean(this.props.isFocused) && classes.selectedMenuItem}
         `}
-        data-qa-suggestion
         data-qa-selected={Boolean(this.props.isFocused)}
-        ref={innerRef}
+        data-qa-suggestion
         onKeyPress={this.handleClick}
+        ref={innerRef}
         {...innerProps}
         // overrides onClick from InnerProps
         onClick={this.handleClick}
@@ -104,10 +60,10 @@ class SearchSuggestion extends React.Component<CombinedProps> {
           `}
           >
             <EntityIcon
-              variant={icon}
-              status={status}
               loading={status && linodeInTransition(status)}
               size={20}
+              status={status}
+              variant={icon}
             />
           </div>
           <div
@@ -138,6 +94,51 @@ class SearchSuggestion extends React.Component<CombinedProps> {
       </div>
     );
   }
+
+  handleClick = () => {
+    const suggestion = this.props.data;
+    this.props.selectOption(suggestion);
+  };
+
+  maybeStyleSegment = (
+    text: string,
+    searchText: string,
+    hlClass: string
+  ): React.ReactNode => {
+    const idx = text
+      .toLocaleLowerCase()
+      .indexOf(searchText.toLocaleLowerCase());
+    if (idx === -1) {
+      return text;
+    }
+    return (
+      <React.Fragment>
+        {`${text.substr(0, idx)}`}
+        <span className={hlClass}>{`${text.substr(
+          idx,
+          searchText.length
+        )}`}</span>
+        {`${text.slice(idx + searchText.length)}`}
+      </React.Fragment>
+    );
+  };
+
+  renderTags = (tags: string[], selected: boolean) => {
+    if (tags.length === 0) {
+      return;
+    }
+    return tags.map((tag: string) => (
+      <Tag
+        asSuggestion={true}
+        className="tag"
+        closeMenu={this.props.selectProps.onMenuClose}
+        colorVariant={selected ? 'blue' : 'lightBlue'}
+        component={'button' as 'div'}
+        key={`tag-${tag}`}
+        label={tag}
+      />
+    ));
+  };
 }
 
 export default SearchSuggestion;

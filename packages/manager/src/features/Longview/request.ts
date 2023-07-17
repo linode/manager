@@ -1,6 +1,8 @@
 import Axios, { AxiosResponse } from 'axios';
 import { curry } from 'ramda';
+
 import { LONGVIEW_ROOT } from 'src/constants';
+
 import {
   Get,
   LongviewAction,
@@ -63,29 +65,29 @@ import {
  */
 
 export const fieldNames: Record<LongviewFieldName, string> = {
-  cpu: 'CPU.*',
-  uptime: 'Uptime',
-  memory: 'Memory.*',
-  load: 'Load.*',
-  network: 'Network.*',
-  disk: 'Disk.*',
-  sysinfo: 'SysInfo.*',
-  packages: 'Packages',
-  processes: 'Processes.*',
-  listeningServices: 'Ports.listening',
   activeConnections: 'Ports.active',
-  nginx: 'Applications.Nginx.*',
-  nginxProcesses: 'Processes.nginx.*',
   apache: 'Applications.Apache.*',
   apacheProcesses: 'Processes.apache.*',
+  cpu: 'CPU.*',
+  disk: 'Disk.*',
+  listeningServices: 'Ports.listening',
+  load: 'Load.*',
+  memory: 'Memory.*',
   mysql: 'Applications.MySQL.*',
   mysqlProcesses: 'Processes.mysql.*',
+  network: 'Network.*',
+  nginx: 'Applications.Nginx.*',
+  nginxProcesses: 'Processes.nginx.*',
+  packages: 'Packages',
+  processes: 'Processes.*',
+  sysinfo: 'SysInfo.*',
+  uptime: 'Uptime',
 };
 
 export const baseRequest = Axios.create({
   baseURL: LONGVIEW_ROOT,
-  method: 'POST',
   headers: { 'Content-Type': 'Multivalue-FormData' },
+  method: 'POST',
 });
 
 export const handleLongviewResponse = (
@@ -111,7 +113,7 @@ export const get: Get = (
   action: LongviewAction,
   options: Partial<Options> = {}
 ) => {
-  const { fields, start, end } = options;
+  const { end, fields, start } = options;
 
   const request = baseRequest;
   const data = new FormData();

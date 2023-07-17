@@ -1,4 +1,19 @@
-import { getAll } from 'src/utilities/getAll';
+import {
+  CloneDomainPayload,
+  CreateDomainPayload,
+  Domain,
+  DomainRecord,
+  ImportZonePayload,
+  UpdateDomainPayload,
+  cloneDomain,
+  createDomain,
+  deleteDomain,
+  getDomain,
+  getDomainRecords,
+  getDomains,
+  importZone,
+  updateDomain,
+} from '@linode/api-v4/lib/domains';
 import {
   APIError,
   Filter,
@@ -6,23 +21,9 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import {
-  cloneDomain,
-  createDomain,
-  CreateDomainPayload,
-  deleteDomain,
-  Domain,
-  getDomains,
-  updateDomain,
-  UpdateDomainPayload,
-  CloneDomainPayload,
-  getDomain,
-  ImportZonePayload,
-  importZone,
-  getDomainRecords,
-  DomainRecord,
-} from '@linode/api-v4/lib/domains';
+
 import { EventWithStore } from 'src/events';
+import { getAll } from 'src/utilities/getAll';
 
 export const queryKey = 'domains';
 

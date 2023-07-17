@@ -1,6 +1,8 @@
 import { EventAction } from '@linode/api-v4/lib/account';
-import { eventFactory } from 'src/factories/events';
+
 import { reduxEvent, uniqueEvents } from 'src/__data__/events';
+import { eventFactory } from 'src/factories/events';
+
 import {
   filterUniqueEvents,
   formatEventWithAppendedText,

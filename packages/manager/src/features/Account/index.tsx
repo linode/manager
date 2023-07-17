@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const AccountLanding = React.lazy(
@@ -26,9 +27,9 @@ class Account extends React.Component<Props> {
         <Switch>
           <Route component={UserDetail} path={`${path}/users/:username`} />
           <Route
-            path={`${path}/billing/edit`}
             component={AccountLanding}
             exact
+            path={`${path}/billing/edit`}
             strict
           />
           <Route
@@ -39,7 +40,7 @@ class Account extends React.Component<Props> {
             component={EntityTransfersCreate}
             path={`${path}/service-transfers/create`}
           />
-          <Redirect from={path} to={`${path}/billing`} exact />
+          <Redirect exact from={path} to={`${path}/billing`} />
           <Route component={AccountLanding} path={path} />
         </Switch>
       </React.Suspense>

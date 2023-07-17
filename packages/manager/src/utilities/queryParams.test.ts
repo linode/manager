@@ -1,6 +1,6 @@
 import {
-  getQueryParamsFromQueryString,
   getQueryParamFromQueryString,
+  getQueryParamsFromQueryString,
 } from './queryParams';
 
 describe('Url/query parsing utilities', () => {

@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import Info from 'src/assets/icons/info.svg';
 import { IconButton } from 'src/components/IconButton';
 
