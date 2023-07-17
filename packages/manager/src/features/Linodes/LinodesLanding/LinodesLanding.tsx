@@ -436,6 +436,17 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   };
 
+  state: State = {
+    deleteDialogOpen: false,
+    enableBackupsDialogOpen: false,
+    groupByTag: false,
+    linodeMigrateOpen: false,
+    linodeResizeOpen: false,
+    powerDialogOpen: false,
+    rebuildDialogOpen: false,
+    rescueDialogOpen: false,
+  };
+
   updatePageUrl = (page: number) => {
     this.props.history.push(`?page=${page}`);
   };
