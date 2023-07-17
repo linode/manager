@@ -14,7 +14,7 @@ import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 
 import GooglePayChip from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';
-import PayPalErrorBoundary from '../PayPalErrorBoundary';
+import { PayPalErrorBoundary } from '../PayPalErrorBoundary';
 import AddCreditCardForm from './AddCreditCardForm';
 
 interface Props {
