@@ -1,13 +1,15 @@
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { AddNodePoolDrawer, Props } from './AddNodePoolDrawer';
 
 const props: Props = {
   clusterId: 0,
   clusterLabel: 'test',
   clusterRegionId: 'us-east',
-  open: true,
   onClose: jest.fn(),
+  open: true,
   regionsData: [],
 };
 

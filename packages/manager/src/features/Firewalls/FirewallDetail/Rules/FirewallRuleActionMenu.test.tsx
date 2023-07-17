@@ -1,13 +1,14 @@
 import * as React from 'react';
-import FirewallRuleActionMenu, { Props } from './FirewallRuleActionMenu';
 
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
+
+import FirewallRuleActionMenu, { Props } from './FirewallRuleActionMenu';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
 
 const props: Props = {
-  idx: 1,
   disabled: false,
+  idx: 1,
   triggerCloneFirewallRule: jest.fn(),
   triggerDeleteFirewallRule: jest.fn(),
   triggerOpenRuleDrawerForEditing: jest.fn(),

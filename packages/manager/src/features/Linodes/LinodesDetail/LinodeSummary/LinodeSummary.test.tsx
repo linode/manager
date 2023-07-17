@@ -1,7 +1,9 @@
 import * as React from 'react';
-import LinodeSummary from './LinodeSummary';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { MemoryRouter, Route } from 'react-router-dom';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import LinodeSummary from './LinodeSummary';
 
 describe('LinodeSummary', () => {
   const { getByText } = renderWithTheme(

@@ -2,12 +2,14 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import ActionsPanel from 'src/components/ActionsPanel';
-import { Typography } from 'src/components/Typography';
 import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import {
@@ -16,7 +18,6 @@ import {
   ipFieldPlaceholder,
   validateIPs,
 } from 'src/utilities/ipUtils';
-import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   instructions: {
@@ -28,10 +29,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  updateDatabase: any;
   allowList: ExtendedIP[];
+  onClose: () => void;
+  open: boolean;
+  updateDatabase: any;
 }
 
 interface Values {
@@ -41,7 +42,7 @@ interface Values {
 type CombinedProps = Props;
 
 const AddAccessControlDrawer = (props: CombinedProps) => {
-  const { open, onClose, updateDatabase, allowList } = props;
+  const { allowList, onClose, open, updateDatabase } = props;
 
   const { classes } = useStyles();
 
@@ -61,11 +62,11 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   const handleUpdateAccessControlsClick = (
     { _allowList }: Values,
     {
-      setSubmitting,
       setFieldError,
+      setSubmitting,
     }: {
-      setSubmitting: (isSubmitting: boolean) => void;
       setFieldError: (field: string, reason: string) => void;
+      setSubmitting: (isSubmitting: boolean) => void;
     }
   ) => {
     // Get the IP address strings out of the objects and filter empty strings out.
@@ -124,20 +125,20 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   };
 
   const {
-    values,
-    isSubmitting,
     handleSubmit,
-    setValues,
+    isSubmitting,
     resetForm,
+    setValues,
+    values,
   } = useFormik({
+    enableReinitialize: true,
     initialValues: {
       _allowList: allowList,
     },
-    enableReinitialize: true,
     onSubmit: handleUpdateAccessControlsClick,
-    validateOnChange: false,
-    validateOnBlur: false,
     validate: (values: Values) => onValidate(values),
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleIPChange = React.useCallback(
@@ -160,50 +161,50 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   }, [open, resetForm]);
 
   return (
-    <Drawer open={open} onClose={onClose} title="Manage Access Controls">
+    <Drawer onClose={onClose} open={open} title="Manage Access Controls">
       <React.Fragment>
         {error ? <Notice error text={error} /> : null}
         {allowListErrors
           ? allowListErrors.map((allowListError) => (
               <Notice
                 error
-                text={allowListError.reason}
                 key={allowListError.reason}
+                text={allowListError.reason}
               />
             ))
           : null}
-        <Typography variant="body1" className={classes.instructions}>
+        <Typography className={classes.instructions} variant="body1">
           Add, edit, or remove IPv4 addresses and ranges that should be
           authorized to access your cluster.
         </Typography>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
-            title="Allowed IP Address(es) or Range(s)"
             aria-label="Allowed IP Addresses or Ranges"
             className={classes.ipSelect}
-            ips={values._allowList}
-            onChange={handleIPChange}
-            onBlur={handleIPBlur}
-            inputProps={{ autoFocus: true }}
-            placeholder={ipFieldPlaceholder}
             forDatabaseAccessControls
+            inputProps={{ autoFocus: true }}
+            ips={values._allowList}
+            onBlur={handleIPBlur}
+            onChange={handleIPChange}
+            placeholder={ipFieldPlaceholder}
+            title="Allowed IP Address(es) or Range(s)"
           />
           <ActionsPanel>
             <Button
               buttonType="secondary"
-              onClick={onClose}
               disabled={isSubmitting}
-              style={{ marginBottom: 8 }}
               loading={false}
+              onClick={onClose}
+              style={{ marginBottom: 8 }}
             >
               Cancel
             </Button>
             <Button
-              type="submit"
               buttonType="primary"
               disabled={!formTouched}
-              style={{ marginBottom: 8 }}
               loading={isSubmitting}
+              style={{ marginBottom: 8 }}
+              type="submit"
             >
               Update Access Controls
             </Button>

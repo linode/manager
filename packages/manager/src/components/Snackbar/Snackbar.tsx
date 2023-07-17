@@ -1,10 +1,17 @@
+import { Theme } from '@mui/material/styles';
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+
 import CloseSnackbar from './CloseSnackbar';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  error: {
+    borderLeft: `6px solid ${theme.palette.error.dark}`,
+  },
+  info: {
+    borderLeft: `6px solid ${theme.palette.primary.main}`,
+  },
   root: {
     '& div': {
       backgroundColor: `${theme.bg.white} !important`,
@@ -25,14 +32,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
     },
   },
-  info: {
-    borderLeft: `6px solid ${theme.palette.primary.main}`,
-  },
   success: {
     borderLeft: `6px solid ${theme.color.green}`,
-  },
-  error: {
-    borderLeft: `6px solid ${theme.palette.error.dark}`,
   },
   warning: {
     borderLeft: `6px solid ${theme.palette.warning.dark}`,
@@ -46,7 +47,7 @@ export const Snackbar = (props: SnackbarProviderProps) => {
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
    */
   const notistackRef: React.Ref<SnackbarProvider> = React.createRef();
-  const onClickDismiss = (key: string | number | undefined) => () => {
+  const onClickDismiss = (key: number | string | undefined) => () => {
     if (notistackRef.current) {
       notistackRef.current.closeSnackbar(key);
     }
@@ -58,19 +59,19 @@ export const Snackbar = (props: SnackbarProviderProps) => {
     <SnackbarProvider
       ref={notistackRef}
       {...rest}
-      classes={{
-        root: classes.root,
-        variantSuccess: classes.success,
-        variantError: classes.error,
-        variantWarning: classes.warning,
-        variantInfo: classes.info,
-      }}
       action={(key) => (
         <CloseSnackbar
           onClick={onClickDismiss(key)}
           text="Dismiss Notification"
         />
       )}
+      classes={{
+        root: classes.root,
+        variantError: classes.error,
+        variantInfo: classes.info,
+        variantSuccess: classes.success,
+        variantWarning: classes.warning,
+      }}
     >
       {children}
     </SnackbarProvider>

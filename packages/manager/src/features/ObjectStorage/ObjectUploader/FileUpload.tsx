@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import CautionIcon from 'src/assets/icons/caution.svg';
 import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg';
 import { Button } from 'src/components/Button/Button';
@@ -6,6 +7,7 @@ import { LinearProgress } from 'src/components/LinearProgress';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { readableBytes } from 'src/utilities/unitConversions';
+
 import {
   StyledActionsContainer,
   StyledContainer,
@@ -35,14 +37,14 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
 
   const resumeUpload = () =>
     props.dispatch({
-      type: 'RESUME_UPLOAD',
       fileName: props.fileName,
+      type: 'RESUME_UPLOAD',
     });
 
   const cancelOverwrite = () =>
     props.dispatch({
-      type: 'CANCEL_OVERWRITE',
       fileName: props.fileName,
+      type: 'CANCEL_OVERWRITE',
     });
 
   const handleClickRow = () => {
@@ -60,31 +62,31 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
       tabIndex={0}
     >
       <LinearProgress
-        variant="determinate"
-        value={props.percentCompleted}
         classes={{
-          root: classes.progressBar,
           barColorPrimary: classes.barColorPrimary,
+          root: classes.progressBar,
         }}
         className={classes.progressBar}
+        value={props.percentCompleted}
+        variant="determinate"
       />
       <StyledContainer>
         <StyledLeftWrapper>
           <Typography
-            variant="body1"
             className={cx({
               [classes.error]: props.error !== '',
             })}
+            variant="body1"
           >
             {props.displayName}
           </Typography>
         </StyledLeftWrapper>
         <StyledRightWrapper>
           <StyledFileSizeTypography
-            variant="body1"
             className={cx({
               [classes.error]: props.error !== '',
             })}
+            variant="body1"
           >
             {readableBytes(props.sizeInBytes).formatted}
           </StyledFileSizeTypography>
@@ -97,8 +99,8 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
           ) : props.error || props.overwriteNotice ? (
             <CautionIcon
               className={cx({
-                [classes.iconRight]: true,
                 [classes.error]: props.error !== '',
+                [classes.iconRight]: true,
               })}
               height={22}
               width={22}
@@ -134,7 +136,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
   const TooltipTitle = <div>{errorText}</div>;
 
   return props.error ? (
-    <Tooltip title={TooltipTitle} placement="bottom">
+    <Tooltip placement="bottom" title={TooltipTitle}>
       {Content}
     </Tooltip>
   ) : (

@@ -1,17 +1,55 @@
 import { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
-import * as React from 'react';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { capitalize } from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
+
 import ActionMenu from './TransfersPendingActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  cellContents: {
+    paddingLeft: '1rem',
+  },
+  createdCell: {
+    [theme.breakpoints.down('sm')]: {
+      width: '25%',
+    },
+    width: '20%',
+  },
+  entitiesCell: {
+    [theme.breakpoints.down('md')]: {
+      width: '20%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '25%',
+    },
+    width: '15%',
+  },
+  expiryCell: {
+    [theme.breakpoints.down('sm')]: {
+      width: '25%',
+    },
+    width: '20%',
+  },
+  icon: {
+    '& svg': {
+      height: 12,
+      width: 12,
+    },
+    marginLeft: theme.spacing(1),
+    marginTop: 2,
+  },
+  link: {
+    ...theme.applyLinkStyles,
+    fontSize: '0.875rem',
+  },
   row: {
     '&:hover': {
       '& [data-qa-copy-token]': {
@@ -19,82 +57,46 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  cellContents: {
-    paddingLeft: '1rem',
-  },
-  tokenCell: {
-    width: '40%',
-    [theme.breakpoints.down('md')]: {
-      width: '50%',
-    },
-  },
   tokenAndCopyIcon: {
-    display: 'flex',
     '& [data-qa-copy-token]': {
       opacity: 0,
     },
+    display: 'flex',
   },
-  icon: {
-    marginLeft: theme.spacing(1),
-    marginTop: 2,
-    '& svg': {
-      width: 12,
-      height: 12,
-    },
-  },
-  createdCell: {
-    width: '20%',
-    [theme.breakpoints.down('sm')]: {
-      width: '25%',
-    },
-  },
-  entitiesCell: {
-    width: '15%',
+  tokenCell: {
     [theme.breakpoints.down('md')]: {
-      width: '20%',
+      width: '50%',
     },
-    [theme.breakpoints.down('sm')]: {
-      width: '25%',
-    },
-  },
-  expiryCell: {
-    width: '20%',
-    [theme.breakpoints.down('sm')]: {
-      width: '25%',
-    },
-  },
-  link: {
-    ...theme.applyLinkStyles,
-    fontSize: '0.875rem',
+    width: '40%',
   },
 }));
 
 interface Props {
-  token: string;
   created: string;
   entities: TransferEntities;
   expiry?: string;
-  status?: string;
-  transferType?: 'pending' | 'received' | 'sent';
   handleCancelPendingTransferClick: (
     token: string,
     entities: TransferEntities
   ) => void;
   handleTokenClick: (token: string, entities: TransferEntities) => void;
+  status?: string;
+  token: string;
+  transferType?: 'pending' | 'received' | 'sent';
 }
 
 type CombinedProps = Props;
 
 export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
   const {
-    token,
     created,
     entities,
     expiry,
-    status,
-    transferType,
     handleCancelPendingTransferClick,
     handleTokenClick,
+    status,
+    token,
+    transferType,
   } = props;
 
   const classes = useStyles();
@@ -119,7 +121,7 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
             {token}
           </button>
           <div data-qa-copy-token>
-            <CopyTooltip text={token} className={`${classes.icon}`} />
+            <CopyTooltip className={`${classes.icon}`} text={token} />
           </div>
         </div>
       </TableCell>

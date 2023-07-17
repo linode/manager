@@ -1,46 +1,46 @@
 import {
-  curriedObjectUploaderReducer as reducer,
   ObjectUploaderState,
+  curriedObjectUploaderReducer as reducer,
 } from './reducer';
 
 describe('reducer', () => {
   const baseState: ObjectUploaderState = {
     files: [],
-    numQueued: 0,
-    numInProgress: 0,
-    numFinished: 0,
     numCanceled: 0,
     numErrors: 0,
+    numFinished: 0,
+    numInProgress: 0,
+    numQueued: 0,
   };
 
   const file1: File = {
-    name: 'my-file1',
-    lastModified: 0,
-    size: 0,
-    type: '',
-    slice: jest.fn(),
     arrayBuffer: jest.fn(),
+    lastModified: 0,
+    name: 'my-file1',
+    size: 0,
+    slice: jest.fn(),
     stream: jest.fn(),
     text: jest.fn(),
+    type: '',
     webkitRelativePath: '',
   };
   const file2: File = {
-    name: 'my-file2',
-    lastModified: 0,
-    size: 0,
-    type: '',
-    slice: jest.fn(),
     arrayBuffer: jest.fn(),
+    lastModified: 0,
+    name: 'my-file2',
+    size: 0,
+    slice: jest.fn(),
     stream: jest.fn(),
     text: jest.fn(),
+    type: '',
     webkitRelativePath: '',
   };
 
   it('enqueues new files and updates the count', () => {
     const newState = reducer(baseState, {
-      type: 'ENQUEUE',
       files: [file1, file2],
       prefix: '',
+      type: 'ENQUEUE',
     });
     expect(newState.files).toHaveLength(2);
     expect(newState.numQueued).toBe(2);
@@ -53,15 +53,15 @@ describe('reducer', () => {
         {
           file: file1,
           percentComplete: 0,
-          status: 'IN_PROGRESS',
           prefix: '',
+          status: 'IN_PROGRESS',
         },
       ],
     };
     const newState = reducer(initialState, {
-      type: 'ENQUEUE',
       files: [file1],
       prefix: '',
+      type: 'ENQUEUE',
     });
 
     expect(newState.files[0].status).toBe('IN_PROGRESS');
@@ -74,15 +74,15 @@ describe('reducer', () => {
         {
           file: file1,
           percentComplete: 0,
-          status: 'FINISHED',
           prefix: '',
+          status: 'FINISHED',
         },
       ],
     };
     const newState = reducer(initialState, {
-      type: 'ENQUEUE',
       files: [file1],
       prefix: '',
+      type: 'ENQUEUE',
     });
 
     expect(newState.files[0].status).toBe('QUEUED');
@@ -93,13 +93,13 @@ describe('reducer', () => {
       {
         ...baseState,
         files: [
-          { status: 'QUEUED', percentComplete: 0, file: file1, prefix: '' },
+          { file: file1, percentComplete: 0, prefix: '', status: 'QUEUED' },
         ],
       },
       {
-        type: 'UPDATE_FILES',
-        filesToUpdate: [file1.name],
         data: { status: 'IN_PROGRESS' },
+        filesToUpdate: [file1.name],
+        type: 'UPDATE_FILES',
       }
     );
     expect(newState.files[0].status).toBe('IN_PROGRESS');

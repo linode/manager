@@ -1,6 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { AccessSelect, Props } from './AccessSelect';
 
 jest.mock('src/components/EnhancedSelect/Select');
@@ -9,10 +11,10 @@ const mockGetAccess = jest.fn();
 const mockUpdateAccess = jest.fn();
 
 const props: Props = {
-  variant: 'object',
   getAccess: mockGetAccess.mockResolvedValue({ acl: 'public-read' }),
-  updateAccess: mockUpdateAccess.mockResolvedValue({}),
   name: 'my-object-name',
+  updateAccess: mockUpdateAccess.mockResolvedValue({}),
+  variant: 'object',
 };
 
 describe('AccessSelect', () => {

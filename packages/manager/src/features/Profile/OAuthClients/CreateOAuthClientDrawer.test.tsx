@@ -1,14 +1,16 @@
-import * as React from 'react';
-import userEvent from '@testing-library/user-event';
-import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
 import { act, waitFor } from '@testing-library/react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { rest, server } from 'src/mocks/testServer';
+import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+
 import { oauthClientFactory } from 'src/factories/accountOAuth';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
 
 const props = {
-  open: true,
   onClose: jest.fn(),
+  open: true,
   showSecret: jest.fn(),
 };
 
@@ -49,7 +51,7 @@ describe('Create API Token Drawer', () => {
       })
     );
 
-    const { getByText, getAllByTestId } = renderWithTheme(
+    const { getAllByTestId, getByText } = renderWithTheme(
       <CreateOAuthClientDrawer {...props} />
     );
 

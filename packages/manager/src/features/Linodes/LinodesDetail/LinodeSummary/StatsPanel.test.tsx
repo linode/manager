@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { StatsPanel } from './StatsPanel';
 
 const title = 'Stats About My Linode';
@@ -9,10 +11,10 @@ describe('StatsPanel component', () => {
     const renderBody = jest.fn();
     const { getByTestId } = renderWithTheme(
       <StatsPanel
-        title={title}
         height={300}
         loading={true}
         renderBody={renderBody}
+        title={title}
       />
     );
 
@@ -25,10 +27,10 @@ describe('StatsPanel component', () => {
 
     renderWithTheme(
       <StatsPanel
-        title={title}
         height={300}
         loading={false}
         renderBody={renderBody}
+        title={title}
       />
     );
 

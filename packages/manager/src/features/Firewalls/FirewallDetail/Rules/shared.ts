@@ -3,26 +3,26 @@ import { prop, sortBy } from 'ramda';
 export type Category = 'inbound' | 'outbound';
 
 export interface FirewallRuleError {
-  reason: string;
   category: string;
-  idx: number;
   formField: string;
+  idx: number;
   ip?: {
-    type: string;
     idx: number;
+    type: string;
   };
+  reason: string;
 }
 
 // This is not the most efficient or elegant data structure ever,
 // but it makes it easier to test and work with presets without having to .find()
 // in multiple places.
 export const PORT_PRESETS = {
-  ALL: { label: 'Allow All', value: '1-65535' },
+  '22': { label: 'SSH (22)', value: '22' },
   '53': { label: 'DNS (53)', value: '53' },
   '80': { label: 'HTTP (80)', value: '80' },
   '443': { label: 'HTTPS (443)', value: '443' },
   '3306': { label: 'MySQL (3306)', value: '3306' },
-  '22': { label: 'SSH (22)', value: '22' },
+  ALL: { label: 'Allow All', value: '1-65535' },
   CUSTOM: { label: 'Custom', value: 'CUSTOM' },
 };
 
@@ -44,7 +44,7 @@ export const PORT_PRESETS_ITEMS = sortBy(
 export const parseFirewallRuleError = (
   error: APIError
 ): FirewallRuleError | null => {
-  const { reason, field } = error;
+  const { field, reason } = error;
 
   if (!field) {
     return null;
@@ -61,16 +61,16 @@ export const parseFirewallRuleError = (
   }
 
   const result: FirewallRuleError = {
-    reason,
     category,
-    idx: +idx,
     formField,
+    idx: +idx,
+    reason,
   };
 
   if (ipType && ipIdx) {
     result.ip = {
-      type: ipType,
       idx: +ipIdx,
+      type: ipType,
     };
   }
 

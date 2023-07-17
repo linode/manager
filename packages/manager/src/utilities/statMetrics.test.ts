@@ -61,7 +61,7 @@ describe('Stat Metrics', () => {
   });
 
   it('does not crash with unexpected inputs', () => {
-    const emptyResponse = { max: 0, average: 0, last: 0, total: 0, length: 0 };
+    const emptyResponse = { average: 0, last: 0, length: 0, max: 0, total: 0 };
     expect(getMetrics([])).toEqual(emptyResponse);
     expect(getMetrics(undefined as any)).toEqual(emptyResponse);
     expect(getMetrics(null as any)).toEqual(emptyResponse);

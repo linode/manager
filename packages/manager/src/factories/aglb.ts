@@ -1,4 +1,3 @@
-import * as Factory from 'factory.ts';
 import {
   CreateEntrypointPayload,
   CreateLoadbalancerPayload,
@@ -10,35 +9,36 @@ import {
   ServiceTargetPayload,
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4/lib/aglb/types';
+import * as Factory from 'factory.ts';
 
 // ********************
 // Entrypoint endpoints
 // ********************
 export const getEntrypointFactory = Factory.Sync.makeFactory<Entrypoint>({
+  certificate_table: [
+    {
+      certificate_id: 'cert-12345',
+      sni_hostname: 'example.com',
+    },
+  ],
   id: Factory.each((i) => i),
   label: Factory.each((i) => `entrypoint${i}`),
   port: 80,
   protocol: 'HTTP',
-  certificate_table: [
-    {
-      sni_hostname: 'example.com',
-      certificate_id: 'cert-12345',
-    },
-  ],
   routes: ['images-route'],
 });
 
 export const createEntrypointFactory = Factory.Sync.makeFactory<CreateEntrypointPayload>(
   {
+    certificate_table: [
+      {
+        certificate_id: 'cert-12345',
+        sni_hostname: 'example.com',
+      },
+    ],
     label: Factory.each((i) => `entrypoint${i}`),
     port: 80,
     protocol: 'HTTP',
-    certificate_table: [
-      {
-        sni_hostname: 'example.com',
-        certificate_id: 'cert-12345',
-      },
-    ],
   }
 );
 
@@ -47,11 +47,11 @@ export const createEntrypointFactory = Factory.Sync.makeFactory<CreateEntrypoint
 // ***********************
 
 export const getLoadbalancerFactory = Factory.Sync.makeFactory<Loadbalancer>({
+  entrypoints: ['entrypoint1'],
   id: Factory.each((i) => i),
-  tags: ['tag1', 'tag2'],
   label: 'loadbalancer1',
   regions: ['us-west'],
-  entrypoints: ['entrypoint1'],
+  tags: ['tag1', 'tag2'],
 });
 
 export const createLoadbalancerFactory = Factory.Sync.makeFactory<CreateLoadbalancerPayload>(
@@ -64,21 +64,38 @@ export const createLoadbalancerFactory = Factory.Sync.makeFactory<CreateLoadbala
 
 export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory<CreateLoadbalancerPayload>(
   {
-    label: Factory.each((i) => `loadbalancer${i}`),
-    regions: ['us-west'],
     entrypoints: [
       {
+        certificate_table: [
+          {
+            certificate_id: 'cert-12345',
+            sni_hostname: 'example.com',
+          },
+        ],
         label: 'myentrypoint1',
         port: 80,
         protocol: 'HTTP',
-        certificate_table: [
-          {
-            sni_hostname: 'example.com',
-            certificate_id: 'cert-12345',
-          },
-        ],
         routes: [
           {
+            default_target: {
+              ca_certificate: 'my-cms-certificate',
+              endpoints: [
+                {
+                  capacity: 100,
+                  hard_rate_limit: 1000,
+                  ip: '192.168.0.101',
+                  port: 8080,
+                },
+              ],
+              health_check_healthy_thresh: 2,
+              health_check_host: 'example.com',
+              health_check_interval: 10,
+              health_check_path: '/health',
+              health_check_timeout: 5,
+              health_check_unhealthy_thresh: 3,
+              label: 'my-default-service-target',
+              load_balancing_policy: 'ROUND_ROBIN',
+            },
             label: 'my-route',
             rules: [
               {
@@ -88,58 +105,41 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                 },
                 service_targets: [
                   {
-                    label: 'my-service-target',
+                    ca_certificate: 'my-cms-certificate',
                     endpoints: [
                       {
-                        ip: '192.168.0.100',
-                        port: 8080,
                         capacity: 100,
                         hard_rate_limit: 1000,
+                        ip: '192.168.0.100',
+                        port: 8080,
                       },
                     ],
-                    ca_certificate: 'my-cms-certificate',
-                    load_balancing_policy: 'ROUND_ROBIN',
+                    health_check_healthy_thresh: 2,
+                    health_check_host: 'example.com',
                     health_check_interval: 10,
+                    health_check_path: '/health',
                     health_check_timeout: 5,
                     health_check_unhealthy_thresh: 3,
-                    health_check_healthy_thresh: 2,
-                    health_check_path: '/health',
-                    health_check_host: 'example.com',
+                    label: 'my-service-target',
+                    load_balancing_policy: 'ROUND_ROBIN',
                   },
                 ],
               },
             ],
-            default_target: {
-              label: 'my-default-service-target',
-              endpoints: [
-                {
-                  ip: '192.168.0.101',
-                  port: 8080,
-                  capacity: 100,
-                  hard_rate_limit: 1000,
-                },
-              ],
-              ca_certificate: 'my-cms-certificate',
-              load_balancing_policy: 'ROUND_ROBIN',
-              health_check_interval: 10,
-              health_check_timeout: 5,
-              health_check_unhealthy_thresh: 3,
-              health_check_healthy_thresh: 2,
-              health_check_path: '/health',
-              health_check_host: 'example.com',
-            },
           },
         ],
       },
     ],
+    label: Factory.each((i) => `loadbalancer${i}`),
+    regions: ['us-west'],
   }
 );
 
 export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbalancerPayload>(
   {
+    entrypoints: [1],
     label: Factory.each((i) => `loadbalancer${i}`),
     regions: ['us-west'],
-    entrypoints: [1],
   }
 );
 
@@ -197,44 +197,44 @@ export const createRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
 // *************************
 
 export const getServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
-  id: Factory.each((i) => i),
-  label: Factory.each((i) => `images-backend-aws-${i}`),
+  ca_certificate: 'my-cms-certificate',
   endpoints: [
     {
-      ip: '192.168.0.100',
-      port: 8080,
       capacity: 100,
       hard_rate_limit: 1000,
+      ip: '192.168.0.100',
+      port: 8080,
     },
   ],
-  ca_certificate: 'my-cms-certificate',
-  load_balancing_policy: 'ROUND_ROBIN',
+  health_check_healthy_thresh: 2,
+  health_check_host: 'example1.com',
   health_check_interval: 10,
+  health_check_path: '/health',
   health_check_timeout: 5,
   health_check_unhealthy_thresh: 3,
-  health_check_healthy_thresh: 2,
-  health_check_path: '/health',
-  health_check_host: 'example1.com',
+  id: Factory.each((i) => i),
+  label: Factory.each((i) => `images-backend-aws-${i}`),
+  load_balancing_policy: 'ROUND_ROBIN',
 });
 
 export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTargetPayload>(
   {
-    label: 'images-backend-aws',
+    ca_certificate: 'my-cms-certificate',
     endpoints: [
       {
-        ip: '192.168.0.100',
-        port: 8080,
         capacity: 100,
         hard_rate_limit: 1000,
+        ip: '192.168.0.100',
+        port: 8080,
       },
     ],
-    ca_certificate: 'my-cms-certificate',
-    load_balancing_policy: 'ROUND_ROBIN',
+    health_check_healthy_thresh: 2,
+    health_check_host: 'example1.com',
     health_check_interval: 10,
+    health_check_path: '/health',
     health_check_timeout: 5,
     health_check_unhealthy_thresh: 3,
-    health_check_healthy_thresh: 2,
-    health_check_path: '/health',
-    health_check_host: 'example1.com',
+    label: 'images-backend-aws',
+    load_balancing_policy: 'ROUND_ROBIN',
   }
 );

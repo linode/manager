@@ -1,28 +1,30 @@
-import * as React from 'react';
 import { Config, Interface } from '@linode/api-v4/lib/linodes';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import { ConfigActionMenu } from './LinodeConfigActionMenu';
-import { useLinodeKernelQuery } from 'src/queries/linodes/linodes';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import { useLinodeKernelQuery } from 'src/queries/linodes/linodes';
+import { useLinodeVolumesQuery } from 'src/queries/volumes';
+
+import { ConfigActionMenu } from './LinodeConfigActionMenu';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actionInner: {
-    padding: '0 !important',
     '&.MuiTableCell-root': {
       paddingRight: 0,
     },
+    padding: '0 !important',
   },
   interfaceList: {
     listStyleType: 'none',
     margin: 0,
-    paddingTop: theme.spacing(),
     paddingBottom: theme.spacing(),
     paddingLeft: 0,
+    paddingTop: theme.spacing(),
   },
   interfaceListItem: {
     paddingBottom: 4,
@@ -32,14 +34,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   config: Config;
   linodeId: number;
-  readOnly: boolean;
   onBoot: () => void;
-  onEdit: () => void;
   onDelete: () => void;
+  onEdit: () => void;
+  readOnly: boolean;
 }
 
 export const ConfigRow = React.memo((props: Props) => {
-  const { config, linodeId, onBoot, onEdit, onDelete, readOnly } = props;
+  const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
 
   const { data: kernel } = useLinodeKernelQuery(config.kernel);
 
@@ -59,7 +61,7 @@ export const ConfigRow = React.memo((props: Props) => {
       Object.keys(config.devices)
         .map((thisDevice) => {
           const device = config.devices[thisDevice];
-          let label: string | null = null;
+          let label: null | string = null;
           if (device?.disk_id) {
             label =
               disks?.find(
@@ -78,7 +80,7 @@ export const ConfigRow = React.memo((props: Props) => {
             return undefined;
           }
           return (
-            <li key={thisDevice} className={classes.interfaceListItem}>
+            <li className={classes.interfaceListItem} key={thisDevice}>
               /dev/{thisDevice} - {label}
             </li>
           );
@@ -101,8 +103,8 @@ export const ConfigRow = React.memo((props: Props) => {
 
         return (
           <li
-            key={interfaceEntry.label ?? 'public' + idx}
             className={classes.interfaceListItem}
+            key={interfaceEntry.label ?? 'public' + idx}
           >
             {interfaceName} – {getInterfaceLabel(interfaceEntry)}
           </li>
@@ -114,7 +116,7 @@ export const ConfigRow = React.memo((props: Props) => {
   const defaultInterfaceLabel = 'eth0 – Public Internet';
 
   return (
-    <TableRow key={config.id} data-qa-config={config.label}>
+    <TableRow data-qa-config={config.label} key={config.id}>
       <TableCell>
         {config.label} – {kernel?.label ?? config.kernel}
       </TableCell>
@@ -125,12 +127,12 @@ export const ConfigRow = React.memo((props: Props) => {
       <TableCell className={classes.actionInner}>
         <ConfigActionMenu
           config={config}
+          label={config.label}
           linodeId={linodeId}
           onBoot={onBoot}
-          onEdit={onEdit}
           onDelete={onDelete}
+          onEdit={onEdit}
           readOnly={readOnly}
-          label={config.label}
         />
       </TableCell>
     </TableRow>

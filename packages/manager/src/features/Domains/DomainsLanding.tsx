@@ -1,46 +1,52 @@
-import * as React from 'react';
 import { Domain } from '@linode/api-v4/lib/domains';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Hidden } from 'src/components/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import DisableDomainDialog from './DisableDomainDialog';
-import { Handlers as DomainHandlers } from './DomainActionMenu';
-import DomainBanner from './DomainBanner';
-import DomainRow from './DomainTableRow';
-import DomainZoneImportDrawer from './DomainZoneImportDrawer';
-import { useProfile } from 'src/queries/profile';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
 import {
   useDeleteDomainMutation,
   useDomainsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
-import { usePagination } from 'src/hooks/usePagination';
-import { useOrder } from 'src/hooks/useOrder';
-import { Table } from 'src/components/Table';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableBody } from 'src/components/TableBody';
-import { TableSortCell } from 'src/components/TableSortCell';
-import { TableCell } from 'src/components/TableCell';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Hidden } from 'src/components/Hidden';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import { CloneDomainDrawer } from './CloneDomainDrawer';
-import { EditDomainDrawer } from './EditDomainDrawer';
+import DisableDomainDialog from './DisableDomainDialog';
+import { Handlers as DomainHandlers } from './DomainActionMenu';
+import DomainBanner from './DomainBanner';
+import DomainRow from './DomainTableRow';
+import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
+import { EditDomainDrawer } from './EditDomainDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  importButton: {
+    marginLeft: `-${theme.spacing()}`,
+    whiteSpace: 'nowrap',
+  },
   root: {
     // Adds spacing when the docs button wraps to make it look a little less awkward
     [theme.breakpoints.down(380)]: {
@@ -48,10 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingBottom: theme.spacing(2),
       },
     },
-  },
-  importButton: {
-    marginLeft: `-${theme.spacing()}`,
-    whiteSpace: 'nowrap',
   },
 }));
 
@@ -73,17 +75,17 @@ export const DomainsLanding: React.FC<Props> = (props) => {
 
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'domain',
       order: 'asc',
+      orderBy: 'domain',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
   const { data: domains, error, isLoading } = useDomainsQuery(
@@ -113,9 +115,9 @@ export const DomainsLanding: React.FC<Props> = (props) => {
   >();
 
   const {
-    mutateAsync: deleteDomain,
-    isLoading: isDeleting,
     error: deleteError,
+    isLoading: isDeleting,
+    mutateAsync: deleteDomain,
   } = useDeleteDomainMutation(selectedDomain?.id ?? 0);
 
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
@@ -164,7 +166,7 @@ export const DomainsLanding: React.FC<Props> = (props) => {
     });
   };
 
-  const onDisableOrEnable = (action: 'enable' | 'disable', domain: Domain) => {
+  const onDisableOrEnable = (action: 'disable' | 'enable', domain: Domain) => {
     if (action === 'enable') {
       updateDomain({
         id: domain.id,
@@ -186,9 +188,9 @@ export const DomainsLanding: React.FC<Props> = (props) => {
 
   const handlers: DomainHandlers = {
     onClone,
+    onDisableOrEnable,
     onEdit,
     onRemove,
-    onDisableOrEnable,
   };
 
   if (isLoading) {
@@ -209,8 +211,8 @@ export const DomainsLanding: React.FC<Props> = (props) => {
           openImportZoneDrawer={openImportZoneDrawer}
         />
         <DomainZoneImportDrawer
-          open={importDrawerOpen}
           onClose={closeImportZoneDrawer}
+          open={importDrawerOpen}
         />
       </>
     );
@@ -241,19 +243,19 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         <Notice error text={location.state.recordError} />
       )}
       <LandingHeader
-        title="Domains"
         extraActions={
           <Button
+            buttonType="secondary"
             className={classes.importButton}
             onClick={openImportZoneDrawer}
-            buttonType="secondary"
           >
             Import a Zone
           </Button>
         }
+        docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
         entity="Domain"
         onButtonClick={navigateToCreate}
-        docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
+        title="Domains"
       />
       <Table>
         <TableHead>
@@ -261,16 +263,16 @@ export const DomainsLanding: React.FC<Props> = (props) => {
             <TableSortCell
               active={orderBy === 'domain'}
               direction={order}
-              label="domain"
               handleClick={handleOrderChange}
+              label="domain"
             >
               Domain
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
-              label="status"
               handleClick={handleOrderChange}
+              label="status"
             >
               Status
             </TableSortCell>
@@ -278,16 +280,16 @@ export const DomainsLanding: React.FC<Props> = (props) => {
               <TableSortCell
                 active={orderBy === 'type'}
                 direction={order}
-                label="type"
                 handleClick={handleOrderChange}
+                label="type"
               >
                 Type
               </TableSortCell>
               <TableSortCell
                 active={orderBy === 'updated'}
                 direction={order}
-                label="updated"
                 handleClick={handleOrderChange}
+                label="updated"
               >
                 Last Modified
               </TableSortCell>
@@ -297,21 +299,21 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         </TableHead>
         <TableBody>
           {domains?.data.map((domain: Domain) => (
-            <DomainRow key={domain.id} domain={domain} {...handlers} />
+            <DomainRow domain={domain} key={domain.id} {...handlers} />
           ))}
         </TableBody>
       </Table>
       <PaginationFooter
         count={domains?.results || 0}
+        eventCategory="Domains Table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
-        eventCategory="Domains Table"
       />
       <DomainZoneImportDrawer
-        open={importDrawerOpen}
         onClose={closeImportZoneDrawer}
+        open={importDrawerOpen}
       />
       <DisableDomainDialog
         domain={selectedDomain}
@@ -319,29 +321,29 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         open={disableDialogOpen}
       />
       <CloneDomainDrawer
-        open={cloneDialogOpen}
-        onClose={() => setCloneDialogOpen(false)}
         domain={selectedDomain}
+        onClose={() => setCloneDialogOpen(false)}
+        open={cloneDialogOpen}
       />
       <EditDomainDrawer
-        open={editDialogOpen}
-        onClose={() => setEditDialogOpen(false)}
         domain={selectedDomain}
+        onClose={() => setEditDialogOpen(false)}
+        open={editDialogOpen}
       />
       <DeletionDialog
-        typeToConfirm
-        entity="domain"
-        open={removeDialogOpen}
-        label={selectedDomain?.domain ?? 'Unknown'}
-        loading={isDeleting}
         error={
           deleteError
             ? getAPIErrorOrDefault(deleteError, 'Error deleting Domain.')[0]
                 .reason
             : undefined
         }
+        entity="domain"
+        label={selectedDomain?.domain ?? 'Unknown'}
+        loading={isDeleting}
         onClose={closeRemoveDialog}
         onDelete={removeDomain}
+        open={removeDialogOpen}
+        typeToConfirm
       />
     </>
   );

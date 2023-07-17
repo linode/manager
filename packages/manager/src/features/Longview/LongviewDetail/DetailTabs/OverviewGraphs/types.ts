@@ -1,9 +1,9 @@
 export interface GraphProps {
   clientAPIKey: string;
-  timezone: string;
+  end: number;
+  isToday: boolean;
   lastUpdated?: number;
   lastUpdatedError: boolean;
   start: number;
-  end: number;
-  isToday: boolean;
+  timezone: string;
 }

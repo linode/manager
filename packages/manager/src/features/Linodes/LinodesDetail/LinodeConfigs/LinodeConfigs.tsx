@@ -1,43 +1,45 @@
-import * as React from 'react';
-import AddNewLink from 'src/components/AddNewLink';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
+
+import AddNewLink from 'src/components/AddNewLink';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { LinodeConfigDialog } from './LinodeConfigDialog';
-import { ConfigRow } from './ConfigRow';
-import { useParams } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile';
+
 import { BootConfigDialog } from './BootConfigDialog';
+import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
+import { LinodeConfigDialog } from './LinodeConfigDialog';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  tableCell: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-    fontWeight: 'bold',
+  actionsColumn: {
+    width: '10%',
+  },
+  deviceColumn: {
+    width: '25%',
+  },
+  interfacesColumn: {
+    width: '30%',
   },
   labelColumn: {
     ...theme.applyTableHeaderStyles,
     width: '35%',
   },
-  interfacesColumn: {
-    width: '30%',
-  },
-  deviceColumn: {
-    width: '25%',
-  },
-  actionsColumn: {
-    width: '10%',
+  tableCell: {
+    borderRight: `1px solid ${theme.palette.divider}`,
+    fontWeight: 'bold',
   },
 }));
 
@@ -57,7 +59,7 @@ const LinodeConfigs = () => {
     grants?.linode.find((grant) => grant.id === id)?.permissions ===
       'read_only';
 
-  const { data: configs, isLoading, error } = useAllLinodeConfigsQuery(id);
+  const { data: configs, error, isLoading } = useAllLinodeConfigsQuery(id);
 
   const [
     isLinodeConfigDialogOpen,
@@ -100,31 +102,31 @@ const LinodeConfigs = () => {
   return (
     <>
       <Grid
-        container
-        alignItems="flex-end"
-        justifyContent="flex-end"
         sx={{
           padding: '0 0 8px 0',
         }}
+        alignItems="flex-end"
+        container
+        justifyContent="flex-end"
       >
         <Grid>
           <AddNewLink
-            onClick={onCreate}
-            label="Add Configuration"
             disabled={isReadOnly}
+            label="Add Configuration"
+            onClick={onCreate}
           />
         </Grid>
       </Grid>
-      <OrderBy data={configs ?? []} orderBy={'label'} order={'asc'}>
+      <OrderBy data={configs ?? []} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData} scrollToRef={configsPanel}>
             {({
+              count,
               data: paginatedData,
               handlePageChange,
               handlePageSizeChange,
               page,
               pageSize,
-              count,
             }) => {
               return (
                 <React.Fragment>
@@ -133,10 +135,10 @@ const LinodeConfigs = () => {
                       <TableRow>
                         <TableSortCell
                           active={orderBy === 'label'}
-                          label={'label'}
+                          className={classes.labelColumn}
                           direction={order}
                           handleClick={handleOrderChange}
-                          className={classes.labelColumn}
+                          label={'label'}
                         >
                           <strong>Config</strong>
                         </TableSortCell>
@@ -158,19 +160,19 @@ const LinodeConfigs = () => {
                         loadingProps={{
                           columns: 4,
                         }}
-                        loading={isLoading}
-                        length={paginatedData.length}
                         error={error ?? undefined}
+                        length={paginatedData.length}
+                        loading={isLoading}
                       >
                         {paginatedData.map((thisConfig) => {
                           return (
                             <ConfigRow
-                              key={`config-row-${thisConfig.id}`}
                               config={thisConfig}
+                              key={`config-row-${thisConfig.id}`}
                               linodeId={id}
                               onBoot={() => onBoot(thisConfig.id)}
-                              onEdit={() => onEdit(thisConfig.id)}
                               onDelete={() => onDelete(thisConfig.id)}
+                              onEdit={() => onEdit(thisConfig.id)}
                               readOnly={isReadOnly}
                             />
                           );
@@ -180,11 +182,11 @@ const LinodeConfigs = () => {
                   </Table>
                   <PaginationFooter
                     count={count}
-                    page={page}
-                    pageSize={pageSize}
+                    eventCategory="linode configs"
                     handlePageChange={handlePageChange}
                     handleSizeChange={handlePageSizeChange}
-                    eventCategory="linode configs"
+                    page={page}
+                    pageSize={pageSize}
                   />
                 </React.Fragment>
               );
@@ -193,23 +195,23 @@ const LinodeConfigs = () => {
         )}
       </OrderBy>
       <LinodeConfigDialog
-        linodeId={id}
         config={selectedConfig}
         isReadOnly={isReadOnly}
+        linodeId={id}
         onClose={() => setIsLinodeConfigDialogOpen(false)}
         open={isLinodeConfigDialogOpen}
       />
       <BootConfigDialog
-        open={isBootConfigDialogOpen}
-        onClose={() => setIsBootConfigDialogOpen(false)}
-        linodeId={id}
         config={selectedConfig}
+        linodeId={id}
+        onClose={() => setIsBootConfigDialogOpen(false)}
+        open={isBootConfigDialogOpen}
       />
       <DeleteConfigDialog
-        open={isDeleteConfigDialogOpen}
-        onClose={() => setIsDeleteConfigDialogOpen(false)}
-        linodeId={id}
         config={selectedConfig}
+        linodeId={id}
+        onClose={() => setIsDeleteConfigDialogOpen(false)}
+        open={isDeleteConfigDialogOpen}
       />
     </>
   );

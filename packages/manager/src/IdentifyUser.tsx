@@ -1,6 +1,8 @@
-import * as React from 'react';
-import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 import { useLDClient } from 'launchdarkly-react-client-sdk';
+import * as React from 'react';
+
+import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
+
 import { configureErrorReportingUser } from './exceptionReporting';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
 import { useAccount } from './queries/account';
@@ -60,11 +62,11 @@ export const IdentifyUser = () => {
       if (client && country && username && taxID) {
         client
           .identify({
-            kind: 'user',
             anonymous: true,
             country,
-            taxID,
+            kind: 'user',
             privateAttributes: ['country, taxID'],
+            taxID,
           })
           .then(() => setFeatureFlagsLoaded())
           /**

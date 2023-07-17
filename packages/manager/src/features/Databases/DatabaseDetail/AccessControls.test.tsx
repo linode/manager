@@ -1,8 +1,10 @@
 import { fireEvent, screen } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
+
 import { databaseFactory } from 'src/factories';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+
 import AccessControls from './AccessControls';
 
 const queryClient = new QueryClient();

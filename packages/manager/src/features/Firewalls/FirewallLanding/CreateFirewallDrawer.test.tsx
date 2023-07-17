@@ -1,7 +1,9 @@
-import * as React from 'react';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import CreateFirewallDrawer from './CreateFirewallDrawer';
 
 const props = {

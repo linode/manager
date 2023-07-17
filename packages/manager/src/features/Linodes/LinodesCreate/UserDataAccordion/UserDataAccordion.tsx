@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { Accordion } from 'src/components/Accordion';
 import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
@@ -6,16 +7,17 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+
 import { useExpandIconStyles } from './UserDataAccordion.styles';
 import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 
 interface Props {
   createType?: CreateTypes;
-  userData: string | undefined;
-  onChange: (userData: string) => void;
   disabled?: boolean;
-  renderNotice?: JSX.Element;
+  onChange: (userData: string) => void;
   renderCheckbox?: JSX.Element;
+  renderNotice?: JSX.Element;
+  userData: string | undefined;
 }
 
 export const UserDataAccordion = (props: Props) => {
@@ -23,19 +25,19 @@ export const UserDataAccordion = (props: Props) => {
   const {
     createType,
     disabled,
-    userData,
     onChange,
-    renderNotice,
     renderCheckbox,
+    renderNotice,
+    userData,
   } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
 
   const checkFormat = ({
-    userData,
     hasInputValueChanged,
+    userData,
   }: {
-    userData: string;
     hasInputValueChanged: boolean;
+    userData: string;
   }) => {
     const userDataLower = userData.toLowerCase();
     const validPrefixes = ['#cloud-config', 'content-type: text/', '#!/bin/'];
@@ -58,9 +60,6 @@ export const UserDataAccordion = (props: Props) => {
 
   return (
     <Accordion
-      detailProps={{ sx: sxDetails }}
-      expandIconClassNames={fromBackupOrFromLinode ? expandIconStyles : ''}
-      heading={<UserDataAccordionHeading createType={createType} />}
       headingProps={{
         variant: 'h2',
       }}
@@ -69,8 +68,8 @@ export const UserDataAccordion = (props: Props) => {
       }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       summaryProps={{
         sx: {
-          padding: '5px 24px 0px 24px',
           alignItems: fromBackupOrFromLinode ? 'flex-start' : 'center',
+          padding: '5px 24px 0px 24px',
         },
       }}
       sx={{
@@ -78,9 +77,12 @@ export const UserDataAccordion = (props: Props) => {
           display: 'none',
         },
       }}
+      detailProps={{ sx: sxDetails }}
+      expandIconClassNames={fromBackupOrFromLinode ? expandIconStyles : ''}
+      heading={<UserDataAccordionHeading createType={createType} />}
     >
       {renderNotice ? (
-        <Box marginBottom="16px" data-testid="render-notice">
+        <Box data-testid="render-notice" marginBottom="16px">
           {renderNotice}
         </Box>
       ) : null}
@@ -95,26 +97,26 @@ export const UserDataAccordion = (props: Props) => {
         </Link>{' '}
       </Typography>
       {formatWarning ? (
-        <Notice warning spacingTop={16} spacingBottom={16}>
+        <Notice spacingBottom={16} spacingTop={16} warning>
           The user data may be formatted incorrectly.
         </Notice>
       ) : null}
       <TextField
+        onBlur={(e) =>
+          checkFormat({ hasInputValueChanged: false, userData: e.target.value })
+        }
+        onChange={(e) => {
+          checkFormat({ hasInputValueChanged: true, userData: e.target.value });
+          onChange(e.target.value);
+        }}
+        data-qa-user-data-input
         disabled={Boolean(disabled)}
         expand
         label="User Data"
         labelTooltipText="Compatible formats include cloud-config data and executable scripts."
         multiline
-        onBlur={(e) =>
-          checkFormat({ userData: e.target.value, hasInputValueChanged: false })
-        }
-        onChange={(e) => {
-          checkFormat({ userData: e.target.value, hasInputValueChanged: true });
-          onChange(e.target.value);
-        }}
         rows={1}
         value={userData}
-        data-qa-user-data-input
       />
       {renderCheckbox ?? null}
     </Accordion>
