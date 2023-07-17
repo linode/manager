@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import type { Meta, StoryObj } from '@storybook/react';
+
 import type { CopyTooltipProps } from './CopyTooltip';
+import type { Meta, StoryObj } from '@storybook/react';
 
 export const Default: StoryObj<CopyTooltipProps> = {
   render: (args) => <CopyTooltip {...args} />,
@@ -12,15 +14,15 @@ export const WithCopyableText: StoryObj<CopyTooltipProps> = {
 };
 
 const meta: Meta<CopyTooltipProps> = {
-  title: 'Components/Tooltip/Copy Tooltip',
-  component: CopyTooltip,
-  args: {
-    text: 'Copyable Text',
-    copyableText: false,
-    onClickCallback: undefined,
-  },
   argTypes: {
     onClickCallback: { action: 'clicked, text copied' },
   },
+  args: {
+    copyableText: false,
+    onClickCallback: undefined,
+    text: 'Copyable Text',
+  },
+  component: CopyTooltip,
+  title: 'Components/Tooltip/Copy Tooltip',
 };
 export default meta;

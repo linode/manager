@@ -6,8 +6,8 @@
  * Object describing an HTTP response.
  */
 export interface Response {
-  statusCode: number;
   body: any;
+  statusCode: number;
 }
 
 /**
@@ -23,7 +23,7 @@ export const makeResponse = (
   statusCode: number = 200
 ): Response => {
   return {
-    statusCode,
     body,
+    statusCode,
   };
 };

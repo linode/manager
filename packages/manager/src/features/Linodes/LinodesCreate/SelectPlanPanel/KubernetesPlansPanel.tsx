@@ -1,6 +1,8 @@
 import * as React from 'react';
+
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
+
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
@@ -8,6 +10,7 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
 } from './utils';
+
 import type { CreateNodePoolData, Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 
@@ -34,21 +37,21 @@ interface Props {
 
 export const KubernetesPlansPanel = ({
   copy,
+  currentPlanHeading,
   disabled,
   error,
+  getTypeCount,
   hasSelectedRegion,
   header,
   isPlanPanelDisabled,
   isSelectedRegionEligibleForPlan,
   onAdd,
-  regionsData,
-  updatePlanCount,
-  types,
-  resetValues,
-  currentPlanHeading,
-  getTypeCount,
   onSelect,
+  regionsData,
+  resetValues,
   selectedID,
+  types,
+  updatePlanCount,
 }: Props) => {
   const plans = getPlanSelectionsByPlanType(types);
 
@@ -58,11 +61,11 @@ export const KubernetesPlansPanel = ({
         return (
           <>
             <PlanInformation
-              planType={plan}
-              hasSelectedRegion={hasSelectedRegion}
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
+              hasSelectedRegion={hasSelectedRegion}
+              planType={plan}
               regionsData={regionsData}
             />
             <KubernetesPlanContainer
@@ -89,12 +92,12 @@ export const KubernetesPlansPanel = ({
 
   return (
     <TabbedPanel
-      sx={{ padding: 0 }}
       copy={copy}
       error={error}
       handleTabChange={() => resetValues()}
       header={header || ' '}
       initTab={initialTab >= 0 ? initialTab : 0}
+      sx={{ padding: 0 }}
       tabs={tabs}
     />
   );

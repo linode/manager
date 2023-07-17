@@ -1,5 +1,8 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import StorageIcon from 'src/assets/icons/entityIcons/bucket.svg';
+import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
@@ -12,54 +15,52 @@ import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
 import MarketplaceIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import LongviewIcon from 'src/assets/icons/longview.svg';
-import { styled } from '@mui/material/styles';
 
 export type EntityVariants =
-  | 'managed'
-  | 'linode'
-  | 'volume'
-  | 'nodebalancer'
-  | 'firewall'
-  | 'stackscript'
-  | 'image'
+  | 'database'
   | 'domain'
-  | 'kubernetes'
-  | 'storage'
-  | 'longview'
-  | 'marketplace'
-  | 'object'
+  | 'firewall'
   | 'folder'
-  | 'database';
+  | 'image'
+  | 'kubernetes'
+  | 'linode'
+  | 'longview'
+  | 'managed'
+  | 'marketplace'
+  | 'nodebalancer'
+  | 'object'
+  | 'stackscript'
+  | 'storage'
+  | 'volume';
 
 interface EntityIconProps {
-  variant: EntityVariants;
-  status?: string;
-  loading?: boolean;
-  size?: number;
-  style?: React.CSSProperties;
   className?: any;
+  loading?: boolean;
   marginTop?: number;
+  size?: number;
+  status?: string;
   stopAnimation?: boolean;
+  style?: React.CSSProperties;
+  variant: EntityVariants;
 }
 
 const iconMap = {
-  managed: ManagedIcon,
-  linode: LinodeIcon,
-  volume: VolumeIcon,
-  nodebalancer: NodeBalancerIcon,
-  firewall: FirewallIcon,
-  stackscript: StackScriptIcon,
-  image: ImageIcon,
-  domain: DomainIcon,
-  kubernetes: KubernetesIcon,
-  storage: StorageIcon,
-  longview: LongviewIcon,
-  marketplace: MarketplaceIcon,
-  object: ObjectIcon,
-  folder: FolderIcon,
   database: DatabaseIcon,
+  domain: DomainIcon,
+  firewall: FirewallIcon,
+  folder: FolderIcon,
+  image: ImageIcon,
+  kubernetes: KubernetesIcon,
+  linode: LinodeIcon,
+  longview: LongviewIcon,
+  managed: ManagedIcon,
+  marketplace: MarketplaceIcon,
+  nodebalancer: NodeBalancerIcon,
+  object: ObjectIcon,
+  stackscript: StackScriptIcon,
+  storage: StorageIcon,
+  volume: VolumeIcon,
 };
 
 const getIcon = (variant: EntityVariants) => {
@@ -68,13 +69,13 @@ const getIcon = (variant: EntityVariants) => {
 
 export const EntityIcon = (props: EntityIconProps) => {
   const {
-    variant,
-    status,
-    loading,
-    size,
     className,
+    loading,
     marginTop,
+    size,
+    status,
     style,
+    variant,
     ...rest
   } = props;
 

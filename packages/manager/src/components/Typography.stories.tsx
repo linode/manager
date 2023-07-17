@@ -1,19 +1,20 @@
-import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+
 import { Typography } from './Typography';
 
 const meta: Meta<typeof Typography> = {
-  title: 'Components/Typography',
   component: Typography,
+  title: 'Components/Typography',
 };
 
 type Story = StoryObj<typeof Typography>;
 
 export const Default: Story = {
-  render: (args) => <Typography {...args} />,
   args: {
     children: 'Hello World',
   },
+  render: (args) => <Typography {...args} />,
 };
 
 /**
@@ -23,11 +24,11 @@ export const Default: Story = {
  * - Backup auto enrollment paper.
  */
 export const H1: Story = {
-  render: (args) => <Typography {...args} />,
   args: {
-    variant: 'h1',
     children: 'Hello World',
+    variant: 'h1',
   },
+  render: (args) => <Typography {...args} />,
 };
 
 /**
@@ -36,11 +37,11 @@ export const H1: Story = {
  * - Section-level headings, such as drawers, some table headers and panel sections.
  */
 export const H2: Story = {
-  render: (args) => <Typography {...args} />,
   args: {
-    variant: 'h2',
     children: 'Hello World',
+    variant: 'h2',
   },
+  render: (args) => <Typography {...args} />,
 };
 
 /**
@@ -49,35 +50,35 @@ export const H2: Story = {
  * - Titles of paper components.
  */
 export const H3: Story = {
-  render: (args) => <Typography {...args} />,
   args: {
-    variant: 'h3',
     children: 'Hello World',
+    variant: 'h3',
   },
+  render: (args) => <Typography {...args} />,
 };
 
 export const Body1: Story = {
-  render: (args) => <Typography {...args} />,
   args: {
-    variant: 'body1',
     children: 'Hello World',
+    variant: 'body1',
   },
+  render: (args) => <Typography {...args} />,
 };
 
 export const Body2: Story = {
-  render: (args) => <Typography {...args} />,
   args: {
-    variant: 'body2',
     children: 'Hello World',
+    variant: 'body2',
   },
+  render: (args) => <Typography {...args} />,
 };
 
 export const Caption: Story = {
-  render: (args) => <Typography {...args} />,
   args: {
-    variant: 'caption',
     children: 'Hello World',
+    variant: 'caption',
   },
+  render: (args) => <Typography {...args} />,
 };
 
 export default meta;

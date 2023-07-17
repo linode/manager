@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 export interface PreferencesStateProps {
@@ -24,9 +25,9 @@ const withPreferences = <Props>(
 
   return React.createElement(Component, {
     ...props,
-    preferences,
     getUserPreferences: () =>
       refetch().then(({ data }) => data ?? Promise.reject()),
+    preferences,
     updateUserPreferences,
   });
 };

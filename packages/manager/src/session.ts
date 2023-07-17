@@ -1,10 +1,11 @@
 import Axios from 'axios';
+import { v4 } from 'uuid';
+
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import {
   authentication,
   getEnvLocalStorageOverrides,
 } from 'src/utilities/storage';
-import { v4 } from 'uuid';
 
 /**
  * Creates a URL with the supplied props as a stringified query. The shape of the query is required
@@ -30,9 +31,9 @@ export const genOAuthEndpoint = (
 
   const query = {
     client_id: clientID,
-    scope,
-    response_type: 'token',
     redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${redirectUri}`,
+    response_type: 'token',
+    scope,
     state: nonce,
   };
 
@@ -81,11 +82,11 @@ export const revokeToken = (client_id: string, token: string) => {
 
   return Axios({
     baseURL: loginURL,
-    url: `/oauth/revoke`,
-    method: 'POST',
     data: new URLSearchParams({ client_id, token }).toString(),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     },
+    method: 'POST',
+    url: `/oauth/revoke`,
   });
 };

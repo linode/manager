@@ -1,16 +1,17 @@
 import {
-  rebuildLinode,
   RebuildRequest,
   UserData,
+  rebuildLinode,
 } from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
+
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -19,7 +20,6 @@ import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-
 import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import useFlags from 'src/hooks/useFlags';
@@ -32,54 +32,55 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
+
 import { StyledNotice } from './RebuildFromImage.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingTop: theme.spacing(3),
+  actionPanel: {
+    '& button': {
+      alignSelf: 'flex-end',
+    },
+    flexDirection: 'column',
   },
   error: {
     marginTop: theme.spacing(2),
   },
-  actionPanel: {
-    flexDirection: 'column',
-    '& button': {
-      alignSelf: 'flex-end',
-    },
+  root: {
+    paddingTop: theme.spacing(3),
   },
 }));
 
 interface Props {
   disabled: boolean;
-  passwordHelperText: string;
+  handleRebuildError: (status: string) => void;
   linodeId: number;
   linodeLabel?: string;
-  handleRebuildError: (status: string) => void;
   onClose: () => void;
+  passwordHelperText: string;
 }
 
 interface RebuildFromImageForm {
-  image: string;
-  root_pass: string;
   authorized_users: string[];
+  image: string;
   metadata?: UserData;
+  root_pass: string;
 }
 
 const initialValues: RebuildFromImageForm = {
-  image: '',
-  root_pass: '',
   authorized_users: [],
+  image: '',
   metadata: {
     user_data: '',
   },
+  root_pass: '',
 };
 
 export const RebuildFromImage = (props: Props) => {
   const {
     disabled,
+    handleRebuildError,
     linodeId,
     linodeLabel,
-    handleRebuildError,
     onClose,
     passwordHelperText,
   } = props;
@@ -119,8 +120,8 @@ export const RebuildFromImage = (props: Props) => {
     preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
 
   const handleFormSubmit = (
-    { image, root_pass, authorized_users }: RebuildFromImageForm,
-    { setSubmitting, setStatus, setErrors }: FormikProps<RebuildFromImageForm>
+    { authorized_users, image, root_pass }: RebuildFromImageForm,
+    { setErrors, setStatus, setSubmitting }: FormikProps<RebuildFromImageForm>
   ) => {
     setSubmitting(true);
 
@@ -128,9 +129,8 @@ export const RebuildFromImage = (props: Props) => {
     setStatus(undefined);
 
     const params: RebuildRequest = {
-      image,
-      root_pass,
       authorized_users,
+      image,
       metadata: {
         user_data: userData
           ? window.btoa(userData)
@@ -138,6 +138,7 @@ export const RebuildFromImage = (props: Props) => {
           ? null
           : '',
       },
+      root_pass,
     };
 
     /*
@@ -183,17 +184,17 @@ export const RebuildFromImage = (props: Props) => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={RebuildSchema}
-      validateOnChange={false}
       onSubmit={handleFormSubmit}
+      validateOnChange={false}
+      validationSchema={RebuildSchema}
     >
       {({
         errors,
         handleSubmit,
         setFieldValue,
         status, // holds generalError messages
-        values,
         validateForm,
+        values,
       }) => {
         // We'd like to validate the form before submitting.
         const handleRebuildButtonClick = () => {
@@ -226,52 +227,52 @@ export const RebuildFromImage = (props: Props) => {
           <Grid className={classes.root}>
             <form>
               <ImageSelect
-                title="Select Image"
-                images={_imagesData ?? []}
-                error={_imagesError || errors.image}
-                selectedImageID={values.image}
                 handleSelectImage={(selected) =>
                   setFieldValue('image', selected)
                 }
-                disabled={disabled}
-                variant="all"
                 data-qa-select-image
+                disabled={disabled}
+                error={_imagesError || errors.image}
+                images={_imagesData ?? []}
+                selectedImageID={values.image}
+                title="Select Image"
+                variant="all"
               />
               <AccessPanel
-                password={values.root_pass}
-                handleChange={(input) => setFieldValue('root_pass', input)}
-                error={errors.root_pass}
                 setAuthorizedUsers={(usernames) =>
                   setFieldValue('authorized_users', usernames)
                 }
                 authorizedUsers={values.authorized_users}
                 data-qa-access-panel
                 disabled={disabled}
+                error={errors.root_pass}
+                handleChange={(input) => setFieldValue('root_pass', input)}
+                password={values.root_pass}
                 passwordHelperText={passwordHelperText}
               />
               {shouldDisplayUserDataAccordion ? (
                 <>
                   <Divider spacingTop={40} />
                   <UserDataAccordion
-                    userData={userData}
-                    onChange={handleUserDataChange}
-                    disabled={shouldReuseUserData}
+                    renderCheckbox={
+                      <Box>
+                        <Checkbox
+                          checked={shouldReuseUserData}
+                          onChange={handleShouldReuseUserDataChange}
+                          sxFormLabel={{ paddingLeft: '2px' }}
+                          text={`Reuse user data previously provided for ${linodeLabel}`}
+                        />
+                      </Box>
+                    }
                     renderNotice={
                       <StyledNotice
                         success
                         text="Adding new user data is recommended as part of the rebuild process."
                       />
                     }
-                    renderCheckbox={
-                      <Box>
-                        <Checkbox
-                          checked={shouldReuseUserData}
-                          onChange={handleShouldReuseUserDataChange}
-                          text={`Reuse user data previously provided for ${linodeLabel}`}
-                          sxFormLabel={{ paddingLeft: '2px' }}
-                        />
-                      </Box>
-                    }
+                    disabled={shouldReuseUserData}
+                    onChange={handleUserDataChange}
+                    userData={userData}
                   />
                 </>
               ) : null}
@@ -283,22 +284,22 @@ export const RebuildFromImage = (props: Props) => {
                       <strong>{linodeLabel}</strong>) in the field below:
                     </span>
                   }
-                  title="Confirm"
-                  typographyStyle={{ marginBottom: 8 }}
                   onChange={(input) => {
                     setConfirmationText(input);
                   }}
-                  value={confirmationText}
                   hideLabel
-                  visible={preferences?.type_to_confirm}
                   label="Linode Label"
                   textFieldStyle={{ marginBottom: 16 }}
+                  title="Confirm"
+                  typographyStyle={{ marginBottom: 8 }}
+                  value={confirmationText}
+                  visible={preferences?.type_to_confirm}
                 />
                 <Button
-                  disabled={submitButtonDisabled || disabled}
                   buttonType="primary"
-                  onClick={handleRebuildButtonClick}
                   data-testid="rebuild-button"
+                  disabled={submitButtonDisabled || disabled}
+                  onClick={handleRebuildButtonClick}
                 >
                   Rebuild Linode
                 </Button>

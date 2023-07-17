@@ -1,4 +1,5 @@
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
+
 import { getAPIErrorOrDefault, getErrorStringOrDefault } from './errorUtils';
 
 const error = [{ field: 'a field', reason: 'a reason' }];

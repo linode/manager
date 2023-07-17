@@ -1,39 +1,40 @@
-import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+
 import { TextField } from './TextField';
 
 const meta: Meta<typeof TextField> = {
-  title: 'Components/TextField',
   component: TextField,
+  title: 'Components/TextField',
 };
 
 type Story = StoryObj<typeof TextField>;
 
 export const Default: Story = {
-  render: (args) => <TextField {...args} />,
   args: {
     label: 'Label',
-    placeholder: 'Placeholder',
     noMarginTop: true,
+    placeholder: 'Placeholder',
   },
+  render: (args) => <TextField {...args} />,
 };
 
 export const Error: Story = {
-  render: (args) => <TextField {...args} />,
   args: {
-    label: 'Label for Error',
     errorText: 'This input needs further attention!',
+    label: 'Label for Error',
     noMarginTop: true,
   },
+  render: (args) => <TextField {...args} />,
 };
 
 export const Number: Story = {
-  render: (args) => <TextField {...args} />,
   args: {
-    type: 'number',
     label: 'Label for Number',
     noMarginTop: true,
+    type: 'number',
   },
+  render: (args) => <TextField {...args} />,
 };
 
 export default meta;

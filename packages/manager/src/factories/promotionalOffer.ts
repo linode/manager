@@ -1,23 +1,24 @@
 import * as Factory from 'factory.ts';
+
 import { PromotionalOffer } from 'src/featureFlags';
 
 export const promotionalOfferFactory = Factory.Sync.makeFactory<PromotionalOffer>(
   {
-    name: Factory.each((i) => `offer-${i}`),
-    features: ['Object Storage'],
+    alt: 'Promotional Offer',
     body:
       'Sample promotional body. This offer is valid until January 1st. Try it out now.',
-    footnote: 'Offer is inclusive of list price only.',
-    logo: 'heavenly-bucket.svg',
-    alt: 'Promotional Offer',
-    displayOnDashboard: true,
     buttons: [
-      { text: 'Try it Now', href: '/object-storage/buckets', type: 'primary' },
+      { href: '/object-storage/buckets', text: 'Try it Now', type: 'primary' },
       {
-        text: 'Cost Estimator',
         href: 'https://www.linode.com/products/object-storage/',
+        text: 'Cost Estimator',
         type: 'secondary',
       },
     ],
+    displayOnDashboard: true,
+    features: ['Object Storage'],
+    footnote: 'Offer is inclusive of list price only.',
+    logo: 'heavenly-bucket.svg',
+    name: Factory.each((i) => `offer-${i}`),
   }
 );

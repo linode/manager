@@ -4,6 +4,7 @@ import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
@@ -20,23 +21,23 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      to: 'https://www.linode.com/docs/products/databases/managed-databases/',
       text: 'Overview of Managed Databases',
+      to: 'https://www.linode.com/docs/products/databases/managed-databases/',
     },
     {
+      text: 'Get Started with Managed Databases',
       to:
         'https://www.linode.com/docs/products/databases/managed-databases/get-started/',
-      text: 'Get Started with Managed Databases',
     },
     {
+      text: 'Choosing a Database Engine',
       to:
         'https://www.linode.com/docs/products/databases/managed-databases/guides/database-engines/',
-      text: 'Choosing a Database Engine',
     },
   ],
   moreInfo: {
-    to: docsLink,
     text: guidesMoreLinkText,
+    to: docsLink,
   },
   title: 'Getting Started Guides',
 };
@@ -44,25 +45,25 @@ export const gettingStartedGuides: ResourcesLinkSection = {
 export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
-      to: 'https://www.youtube.com/watch?v=loEVtzUN2i8',
+      external: true,
       text: 'Linode Managed Databases Overview',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=loEVtzUN2i8',
     },
     {
-      to: 'https://www.youtube.com/watch?v=dnV-6TtfYfY',
+      external: true,
       text: 'How to Choose the Right Database for Your Application',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=dnV-6TtfYfY',
     },
     {
+      external: true,
+      text: 'MySQL Beginner Series',
       to:
         'https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC',
-      text: 'MySQL Beginner Series',
-      external: true,
     },
   ],
   moreInfo: {
-    to: youtubeChannelLink,
     text: youtubeMoreLinkText,
+    to: youtubeChannelLink,
   },
   title: 'Video Playlist',
 };

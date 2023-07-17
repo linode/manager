@@ -1,9 +1,10 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
+
 import ActionMenu from './ActionMenu';
 
 describe('ActionMenu', () => {
-  const action = { title: 'whatever', onClick: () => undefined };
+  const action = { onClick: () => undefined, title: 'whatever' };
 
   const manyActions = [action, action, action];
 

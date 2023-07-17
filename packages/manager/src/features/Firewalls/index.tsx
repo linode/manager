@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
@@ -19,8 +20,8 @@ const Firewall = (props: Props) => {
       <React.Fragment>
         <DocumentTitleSegment segment="Firewalls" />
         <Switch>
-          <Route exact path={`${path}(/create)?`} component={FirewallLanding} />
-          <Route path={`${path}/:id`} component={FirewallDetail} />
+          <Route component={FirewallLanding} exact path={`${path}(/create)?`} />
+          <Route component={FirewallDetail} path={`${path}/:id`} />
           <Route component={FirewallLanding} />
         </Switch>
       </React.Fragment>

@@ -5,6 +5,7 @@ import { FileRejection, useDropzone } from 'react-dropzone';
 import { useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
 import {
   StyledCopy,
   StyledDropZoneContentDiv,
@@ -31,38 +32,38 @@ import { sendImageUploadEvent } from 'src/utilities/analytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 interface FileUploaderProps {
-  label: string;
-  description?: string;
-  isCloudInit?: boolean;
-  region: string;
-  dropzoneDisabled: boolean;
   apiError: string | undefined;
-  setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
+  description?: string;
+  dropzoneDisabled: boolean;
+  isCloudInit?: boolean;
+  label: string;
+  onSuccess?: () => void;
+  region: string;
   // Send a function for canceling the upload back to the parent.
   setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
-  onSuccess?: () => void;
+  setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
 }
 
 export const FileUploader = React.memo((props: FileUploaderProps) => {
   const {
-    label,
-    description,
-    isCloudInit,
-    region,
-    dropzoneDisabled,
     apiError,
-    setErrors,
+    description,
+    dropzoneDisabled,
+    isCloudInit,
+    label,
     onSuccess,
+    region,
+    setErrors,
   } = props;
 
   const { enqueueSnackbar } = useSnackbar();
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
   const queryClient = useQueryClient();
   const { mutateAsync: uploadImage } = useUploadImageQuery({
+    cloud_init: isCloudInit ? isCloudInit : undefined,
+    description: description ? description : undefined,
     label,
     region,
-    description: description ? description : undefined,
-    cloud_init: isCloudInit ? isCloudInit : undefined,
   });
 
   const history = useHistory();
@@ -106,7 +107,7 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
       dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
     }
 
-    dispatch({ type: 'ENQUEUE', files, prefix });
+    dispatch({ files, prefix, type: 'ENQUEUE' });
   };
 
   // This function will be called when the user drops non-.gz files, more than one file at a time, or files that are over the max size.
@@ -124,18 +125,18 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
 
     if (wrongFileType) {
       enqueueSnackbar(fileTypeErrorMessage, {
-        variant: 'error',
         autoHideDuration: 10000,
+        variant: 'error',
       });
     } else if (moreThanOneFile) {
       enqueueSnackbar(fileNumberErrorMessage, {
-        variant: 'error',
         autoHideDuration: 10000,
+        variant: 'error',
       });
     } else {
       enqueueSnackbar(fileSizeErrorMessage, {
-        variant: 'error',
         autoHideDuration: 10000,
+        variant: 'error',
       });
     }
   };
@@ -174,19 +175,19 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
         }
 
         dispatch({
-          type: 'UPDATE_FILES',
-          filesToUpdate: [path],
           data: {
             percentComplete: 100,
             status: 'FINISHED',
           },
+          filesToUpdate: [path],
+          type: 'UPDATE_FILES',
         });
 
         const successfulUploadMessage = `Image ${label} uploaded successfully. It is being processed and will be available shortly.`;
 
         enqueueSnackbar(successfulUploadMessage, {
-          variant: 'success',
           autoHideDuration: 6000,
+          variant: 'success',
         });
 
         dispatchAction(setPendingUpload(false));
@@ -209,11 +210,11 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
 
       const handleError = () => {
         dispatch({
-          type: 'UPDATE_FILES',
-          filesToUpdate: [path],
           data: {
             status: 'ERROR',
           },
+          filesToUpdate: [path],
+          type: 'UPDATE_FILES',
         });
 
         dispatchAction(setPendingUpload(false));
@@ -230,14 +231,14 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
             dispatchAction(setPendingUpload(true));
 
             dispatch({
-              type: 'UPDATE_FILES',
-              filesToUpdate: [pathOrFileName(fileUpload.file)],
               data: { status: 'IN_PROGRESS' },
+              filesToUpdate: [pathOrFileName(fileUpload.file)],
+              type: 'UPDATE_FILES',
             });
 
             recordImageAnalytics('start', file);
 
-            const { request, cancel } = uploadImageFile(
+            const { cancel, request } = uploadImageFile(
               response.upload_to,
               file,
               onUploadProgress
@@ -259,7 +260,7 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
         recordImageAnalytics('start', file);
 
         // Overwrite any file that was previously uploaded to the upload_to URL.
-        const { request, cancel } = uploadImageFile(
+        const { cancel, request } = uploadImageFile(
           uploadToURL,
           file,
           onUploadProgress
@@ -279,22 +280,22 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
   }, [nextBatch]);
 
   const {
+    acceptedFiles,
     getInputProps,
     getRootProps,
-    isDragActive,
     isDragAccept,
+    isDragActive,
     isDragReject,
     open,
-    acceptedFiles,
   } = useDropzone({
-    onDrop,
-    onDropRejected,
-    disabled: dropzoneDisabled || uploadInProgressOrFinished, // disabled when dropzoneDisabled === true, an upload is in progress, or if an upload finished.
-    noClick: true,
-    noKeyboard: true,
     accept: ['application/x-gzip', 'application/gzip'], // Uploaded files must be compressed using gzip.
+    disabled: dropzoneDisabled || uploadInProgressOrFinished, // disabled when dropzoneDisabled === true, an upload is in progress, or if an upload finished.
     maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
+    noClick: true,
+    noKeyboard: true,
+    onDrop,
+    onDropRejected,
   });
 
   const hideDropzoneBrowseBtn =
@@ -312,10 +313,10 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
   return (
     <StyledDropZoneDiv
       {...getRootProps({})}
-      isDragActive={isDragActive}
-      isDragAccept={isDragAccept}
-      isDragReject={isDragReject}
       dropzoneDisabled={dropzoneDisabled || uploadInProgressOrFinished}
+      isDragAccept={isDragAccept}
+      isDragActive={isDragActive}
+      isDragReject={isDragReject}
     >
       <input {...getInputProps()} placeholder={placeholder} />
       <StyledFileUploadsDiv>
@@ -323,14 +324,14 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
           const fileName = upload.file.name;
           return (
             <FileUpload
-              key={idx}
-              displayName={fileName}
-              fileName={fileName}
-              sizeInBytes={upload.file.size || 0}
-              percentCompleted={upload.percentComplete || 0}
-              overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
               dispatch={dispatch}
+              displayName={fileName}
               error={upload.status === 'ERROR' ? 'Error uploading image.' : ''}
+              fileName={fileName}
+              key={idx}
+              overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
+              percentCompleted={upload.percentComplete || 0}
+              sizeInBytes={upload.file.size || 0}
               type="image"
             />
           );
@@ -343,8 +344,8 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
         {!hideDropzoneBrowseBtn ? (
           <StyledUploadButton
             buttonType="primary"
-            onClick={open}
             disabled={dropzoneDisabled}
+            onClick={open}
           >
             Browse Files
           </StyledUploadButton>
@@ -355,7 +356,7 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
 });
 
 const recordImageAnalytics = (
-  action: 'start' | 'success' | 'fail',
+  action: 'fail' | 'start' | 'success',
   file: File
 ) => {
   const readableFileSize = readableBytes(file.size).formatted;

@@ -3,6 +3,6 @@ import FormControlLabel, {
 } from '@mui/material/FormControlLabel';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface FormControlLabelProps extends _FormControlLabelProps {}
+export type FormControlLabelProps = _FormControlLabelProps;
 
 export default FormControlLabel;

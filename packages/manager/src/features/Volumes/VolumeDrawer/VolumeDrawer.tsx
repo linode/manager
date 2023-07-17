@@ -1,11 +1,12 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
+
 import Drawer from 'src/components/Drawer';
 import {
-  withProfile,
   WithProfileProps,
+  withProfile,
 } from 'src/containers/profile.container';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
@@ -14,14 +15,15 @@ import {
   openForConfig,
   viewResizeInstructions,
 } from 'src/store/volumeForm';
+
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
 import { CloneVolumeForm } from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import { EditVolumeForm } from './EditVolumeForm';
-import { modes } from './modes';
 import { ResizeVolumeForm } from './ResizeVolumeForm';
 import ResizeVolumesInstruction from './ResizeVolumesInstruction';
 import VolumeConfigForm from './VolumeConfigForm';
+import { modes } from './modes';
 
 type CombinedProps = StateProps & DispatchProps & WithProfileProps;
 
@@ -30,20 +32,20 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
     const {
       actions,
       drawerTitle,
+      grants,
       isOpen,
       linodeId,
       linodeLabel,
       linodeRegion,
+      message,
       mode,
+      profile,
       volumeId,
       volumeLabel,
+      volumePath,
       volumeRegion,
       volumeSize,
       volumeTags,
-      volumePath,
-      message,
-      profile,
-      grants,
     } = this.props;
 
     const volumesPermissions = grants.data?.volume;
@@ -57,17 +59,17 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       volumePermissions.permissions === 'read_only';
 
     return (
-      <Drawer open={isOpen} title={drawerTitle} onClose={actions.closeDrawer}>
+      <Drawer onClose={actions.closeDrawer} open={isOpen} title={drawerTitle}>
         {mode === modes.EDITING &&
           volumeId !== undefined &&
           volumeLabel !== undefined &&
           volumeTags !== undefined && (
             <EditVolumeForm
+              onClose={actions.closeDrawer}
+              readOnly={readOnly}
               volumeId={volumeId}
               volumeLabel={volumeLabel}
-              onClose={actions.closeDrawer}
               volumeTags={volumeTags.map((v) => ({ label: v, value: v }))}
-              readOnly={readOnly}
             />
           )}
         {mode === modes.RESIZING &&
@@ -75,12 +77,12 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           volumeSize !== undefined &&
           volumeLabel !== undefined && (
             <ResizeVolumeForm
-              volumeId={volumeId}
-              volumeSize={volumeSize}
               onClose={actions.closeDrawer}
-              volumeLabel={volumeLabel}
               onSuccess={actions.openForResizeInstructions}
               readOnly={readOnly}
+              volumeId={volumeId}
+              volumeLabel={volumeLabel}
+              volumeSize={volumeSize}
             />
           )}
         {mode === modes.CLONING &&
@@ -104,8 +106,8 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
               linode_id={linodeId}
               linodeLabel={linodeLabel}
               linodeRegion={linodeRegion}
-              onSuccess={actions.openForConfig}
               onClose={actions.closeDrawer}
+              onSuccess={actions.openForConfig}
             />
           )}
         {mode === modes.ATTACHING &&
@@ -114,8 +116,8 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           linodeLabel !== undefined && (
             <AttachVolumeToLinodeForm
               linodeId={linodeId}
-              linodeRegion={linodeRegion}
               linodeLabel={linodeLabel}
+              linodeRegion={linodeRegion}
               onClose={actions.closeDrawer}
             />
           )}
@@ -123,18 +125,18 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           volumeLabel !== undefined &&
           volumePath !== undefined && (
             <VolumeConfigForm
-              volumeLabel={volumeLabel}
-              volumePath={volumePath}
               message={message}
               onClose={actions.closeDrawer}
+              volumeLabel={volumeLabel}
+              volumePath={volumePath}
             />
           )}
         {mode === modes.VIEW_RESIZE_INSTRUCTIONS &&
           volumeLabel !== undefined && (
             <ResizeVolumesInstruction
-              volumeLabel={volumeLabel}
               message={message}
               onClose={actions.closeDrawer}
+              volumeLabel={volumeLabel}
             />
           )}
       </Drawer>
@@ -165,24 +167,24 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       message?: string
     ) => dispatch(openForConfig(volumeLabel, volumePath, message)),
     openForResizeInstructions: (volumeLabel: string, message?: string) =>
-      dispatch(viewResizeInstructions({ volumeLabel, message })),
+      dispatch(viewResizeInstructions({ message, volumeLabel })),
   },
 });
 
 interface StateProps {
   drawerTitle: string;
   isOpen: boolean;
-  mode: string;
-  volumeId?: number;
-  volumeLabel?: string;
-  volumeRegion?: string;
-  volumeSize?: number;
-  volumeTags?: string[];
-  volumePath?: string;
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
   message?: string;
+  mode: string;
+  volumeId?: number;
+  volumeLabel?: string;
+  volumePath?: string;
+  volumeRegion?: string;
+  volumeSize?: number;
+  volumeTags?: string[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => {
@@ -190,14 +192,14 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     linodeId,
     linodeLabel,
     linodeRegion,
+    message,
     mode,
     volumeId,
     volumeLabel,
+    volumePath,
     volumeRegion,
     volumeSize,
     volumeTags,
-    volumePath,
-    message,
   } = state.volumeDrawer;
 
   return {
@@ -206,19 +208,19 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     linodeId,
     linodeLabel,
     linodeRegion,
+    message,
     mode,
     volumeId,
     volumeLabel,
+    volumePath,
     volumeRegion,
     volumeSize,
     volumeTags,
-    volumePath,
-    message,
   };
 };
 
 const titleFromState = (state: ApplicationState['volumeDrawer']) => {
-  const { mode, linodeLabel } = state;
+  const { linodeLabel, mode } = state;
 
   switch (mode) {
     case modes.CREATING_FOR_LINODE:

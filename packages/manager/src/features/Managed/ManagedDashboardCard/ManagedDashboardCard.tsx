@@ -2,6 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
@@ -9,31 +10,13 @@ import {
   useAllManagedMonitorsQuery,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import DashboardCard from './DashboardCard';
 import ManagedChartPanel from './ManagedChartPanel';
 import MonitorStatus from './MonitorStatus';
 import MonitorTickets from './MonitorTickets';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.bg.bgPaper,
-    margin: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginBottom: 20,
-    },
-  },
-  status: {
-    position: 'relative',
-    [theme.breakpoints.up('sm')]: {
-      margin: `${theme.spacing(3)} ${theme.spacing(1)} !important`,
-    },
-  },
-  outerContainer: {
-    [theme.breakpoints.up('sm')]: {
-      flexWrap: 'nowrap',
-    },
-  },
   detailsLink: {
     fontSize: 14,
     fontWeight: 'bold',
@@ -44,6 +27,25 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: `calc(${theme.spacing(3)} + 2px)`,
     },
   },
+  outerContainer: {
+    [theme.breakpoints.up('sm')]: {
+      flexWrap: 'nowrap',
+    },
+  },
+  root: {
+    backgroundColor: theme.bg.bgPaper,
+    margin: 0,
+    [theme.breakpoints.up('sm')]: {
+      marginBottom: 20,
+    },
+    width: '100%',
+  },
+  status: {
+    position: 'relative',
+    [theme.breakpoints.up('sm')]: {
+      margin: `${theme.spacing(3)} ${theme.spacing(1)} !important`,
+    },
+  },
 }));
 
 export const ManagedDashboardCard = () => {
@@ -51,14 +53,14 @@ export const ManagedDashboardCard = () => {
 
   const {
     data: monitors,
-    isLoading: monitorsLoading,
     error: monitorsError,
+    isLoading: monitorsLoading,
   } = useAllManagedMonitorsQuery();
 
   const {
     data: issues,
-    isLoading: issuesLoading,
     error: issuesError,
+    isLoading: issuesLoading,
   } = useAllManagedIssuesQuery();
 
   const defaultError = 'Error loading your Managed service information.';
@@ -66,13 +68,13 @@ export const ManagedDashboardCard = () => {
   if (monitorsError) {
     const error = getAPIErrorOrDefault(monitorsError, defaultError)[0].reason;
 
-    return <ErrorState errorText={error} compact />;
+    return <ErrorState compact errorText={error} />;
   }
 
   if (issuesError) {
     const error = getAPIErrorOrDefault(issuesError, defaultError)[0].reason;
 
-    return <ErrorState errorText={error} compact />;
+    return <ErrorState compact errorText={error} />;
   }
 
   if (monitorsLoading || issuesLoading) {
@@ -86,20 +88,20 @@ export const ManagedDashboardCard = () => {
       noHeaderActionStyles
     >
       <Grid
+        alignItems="center"
+        className={classes.outerContainer}
         container
         direction="row"
         justifyContent="center"
-        alignItems="center"
-        className={classes.outerContainer}
       >
         <Grid
+          alignItems="center"
+          className={classes.status}
           container
           direction="column"
           justifyContent="space-around"
-          alignItems="center"
-          xs={12}
           sm={5}
-          className={classes.status}
+          xs={12}
         >
           <Grid className={classes.monitorStatusOuter}>
             <MonitorStatus monitors={monitors || []} />
@@ -108,7 +110,7 @@ export const ManagedDashboardCard = () => {
             <MonitorTickets issues={issues || []} />
           </Grid>
         </Grid>
-        <Grid xs={12} sm={8} className="p0">
+        <Grid className="p0" sm={8} xs={12}>
           <ManagedChartPanel />
         </Grid>
       </Grid>

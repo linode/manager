@@ -1,5 +1,6 @@
 import React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -23,16 +24,16 @@ const LoadBalancerLanding = () => {
 
   const tabs = [
     {
-      title: 'Load Balancers',
       routeName: `/loadbalancers`,
+      title: 'Load Balancers',
     },
     {
-      title: 'Routes',
       routeName: `/loadbalancers/routes`,
+      title: 'Routes',
     },
     {
-      title: 'Service Targets',
       routeName: `/loadbalancers/service-targets`,
+      title: 'Service Targets',
     },
   ];
 

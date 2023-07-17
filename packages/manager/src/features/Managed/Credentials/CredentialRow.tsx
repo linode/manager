@@ -1,28 +1,30 @@
 import { ManagedCredential } from '@linode/api-v4/lib/managed';
-import * as React from 'react';
-import { createStyles, makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { createStyles, makeStyles } from '@mui/styles';
+import * as React from 'react';
+
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+
 import ActionMenu from './CredentialActionMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    actionInner: {
+      '&.MuiTableCell-root': {
+        paddingRight: 0,
+      },
+      display: 'flex',
+      justifyContent: 'flex-end',
+      padding: 0,
+    },
     credentialDescription: {
       paddingTop: theme.spacing(0.5),
     },
     credentialRow: {
       '&:before': {
         display: 'none',
-      },
-    },
-    actionInner: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      padding: 0,
-      '&.MuiTableCell-root': {
-        paddingRight: 0,
       },
     },
   })
@@ -44,11 +46,11 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = (
 
   return (
     <TableRow
-      key={credential.id}
+      ariaLabel={`Credential ${credential.label}`}
+      className={classes.credentialRow}
       data-qa-credential-cell={credential.id}
       data-testid={'credential-row'}
-      className={classes.credentialRow}
-      ariaLabel={`Credential ${credential.label}`}
+      key={credential.id}
     >
       <TableCell data-qa-credential-label>{credential.label}</TableCell>
       <TableCell data-qa-credential-decrypted>
@@ -62,9 +64,9 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = (
       <TableCell className={classes.actionInner}>
         <ActionMenu
           credentialID={credential.id}
+          label={credential.label}
           openDialog={openDialog}
           openForEdit={openForEdit}
-          label={credential.label}
         />
       </TableCell>
     </TableRow>

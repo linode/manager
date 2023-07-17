@@ -1,22 +1,24 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
+
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
 
 const pools = nodePoolFactory.buildList(5, { count: 3, type: 'g6-standard-1' });
 
 const props: Props = {
-  pools,
-  submitting: false,
-  highAvailability: false,
-  setHighAvailability: jest.fn(),
-  updatePool: jest.fn(),
-  removePool: jest.fn(),
   createCluster: jest.fn(),
-  region: undefined,
   hasAgreed: false,
+  highAvailability: false,
+  pools,
+  region: undefined,
+  removePool: jest.fn(),
+  setHighAvailability: jest.fn(),
+  submitting: false,
   toggleHasAgreed: jest.fn(),
+  updatePool: jest.fn(),
 };
 
 const renderComponent = (_props: Props) =>
@@ -24,7 +26,7 @@ const renderComponent = (_props: Props) =>
 
 describe('KubeCheckoutBar', () => {
   it('should render a section for each pool', async () => {
-    const { queryAllByTestId, getByTestId } = renderComponent(props);
+    const { getByTestId, queryAllByTestId } = renderComponent(props);
 
     await waitForElementToBeRemoved(getByTestId('circle-progress'));
 

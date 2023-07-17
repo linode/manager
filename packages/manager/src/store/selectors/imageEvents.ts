@@ -1,9 +1,10 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { createSelector } from 'reselect';
+
 import { ApplicationState } from 'src/store';
 import {
-  isEventInProgressDiskImagize,
   isEventImageUpload,
+  isEventInProgressDiskImagize,
 } from 'src/store/events/event.helpers';
 
 /**

@@ -1,22 +1,24 @@
 import { rescueMetalLinode } from '@linode/api-v4/lib/linodes/actions';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import RescueDescription from './RescueDescription';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import RescueDescription from './RescueDescription';
 
 interface Props {
-  linodeId: number | undefined;
   isOpen: boolean;
+  linodeId: number | undefined;
   onClose: () => void;
 }
 
 export const BareMetalRescue = (props: Props) => {
-  const { isOpen, onClose, linodeId } = props;
+  const { isOpen, linodeId, onClose } = props;
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const { enqueueSnackbar } = useSnackbar();
@@ -54,10 +56,10 @@ export const BareMetalRescue = (props: Props) => {
 
   const actions = () => (
     <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+      <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
         Cancel
       </Button>
-      <Button buttonType="primary" onClick={handleSubmit} loading={loading}>
+      <Button buttonType="primary" loading={loading} onClick={handleSubmit}>
         Reboot into Rescue Mode
       </Button>
     </ActionsPanel>
@@ -65,13 +67,13 @@ export const BareMetalRescue = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      title={`Rescue Linode ${linode?.label ?? ''}`}
-      open={isOpen}
-      onClose={onClose}
       actions={actions}
       error={error}
+      onClose={onClose}
+      open={isOpen}
+      title={`Rescue Linode ${linode?.label ?? ''}`}
     >
-      {linodeId ? <RescueDescription linodeId={linodeId} isBareMetal /> : null}
+      {linodeId ? <RescueDescription isBareMetal linodeId={linodeId} /> : null}
     </ConfirmationDialog>
   );
 };

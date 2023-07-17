@@ -30,6 +30,12 @@ describe('pathMaybeAddDataInThePast', () => {
     const dummyCPU: LongviewCPU = {
       CPU: {
         cpu1: {
+          system: [
+            {
+              x: oct29GMTInSeconds,
+              y: 123,
+            },
+          ],
           user: [
             {
               x: oct29GMTInSeconds,
@@ -37,12 +43,6 @@ describe('pathMaybeAddDataInThePast', () => {
             },
           ],
           wait: [
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
-          system: [
             {
               x: oct29GMTInSeconds,
               y: 123,
@@ -65,6 +65,16 @@ describe('pathMaybeAddDataInThePast', () => {
     expect(result).toEqual({
       CPU: {
         cpu1: {
+          system: [
+            {
+              x: oct18GMTInSeconds,
+              y: null,
+            },
+            {
+              x: oct29GMTInSeconds,
+              y: 123,
+            },
+          ],
           user: [
             {
               x: oct18GMTInSeconds,
@@ -76,16 +86,6 @@ describe('pathMaybeAddDataInThePast', () => {
             },
           ],
           wait: [
-            {
-              x: oct18GMTInSeconds,
-              y: null,
-            },
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
-          system: [
             {
               x: oct18GMTInSeconds,
               y: null,
@@ -112,6 +112,12 @@ describe('pathMaybeAddDataInThePast', () => {
     expect(result2).toEqual({
       CPU: {
         cpu1: {
+          system: [
+            {
+              x: oct29GMTInSeconds,
+              y: 123,
+            },
+          ],
           user: [
             {
               x: oct29GMTInSeconds,
@@ -119,12 +125,6 @@ describe('pathMaybeAddDataInThePast', () => {
             },
           ],
           wait: [
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
-          system: [
             {
               x: oct29GMTInSeconds,
               y: 123,
@@ -138,9 +138,9 @@ describe('pathMaybeAddDataInThePast', () => {
       {
         CPU: {
           cpu1: {
-            wait: [],
-            user: [],
             system: [],
+            user: [],
+            wait: [],
           },
         },
       },
@@ -155,9 +155,9 @@ describe('pathMaybeAddDataInThePast', () => {
     expect(result3).toEqual({
       CPU: {
         cpu1: {
-          wait: [],
-          user: [],
           system: [],
+          user: [],
+          wait: [],
         },
       },
     });

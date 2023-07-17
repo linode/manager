@@ -2,6 +2,7 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
 
 describe('DatabaseSettingsMenuItem Component', () => {
@@ -14,8 +15,8 @@ describe('DatabaseSettingsMenuItem Component', () => {
       <DatabaseSettingsMenuItem
         buttonText={buttonText}
         descriptiveText={descriptiveText}
-        sectionTitle={sectionTitle}
         onClick={jest.fn()}
+        sectionTitle={sectionTitle}
       />
     );
     const title = getByRole('heading');
@@ -27,8 +28,8 @@ describe('DatabaseSettingsMenuItem Component', () => {
       <DatabaseSettingsMenuItem
         buttonText={buttonText}
         descriptiveText={descriptiveText}
-        sectionTitle={sectionTitle}
         onClick={jest.fn()}
+        sectionTitle={sectionTitle}
       />
     );
     getByText(descriptiveText);
@@ -39,8 +40,8 @@ describe('DatabaseSettingsMenuItem Component', () => {
       <DatabaseSettingsMenuItem
         buttonText={buttonText}
         descriptiveText={descriptiveText}
-        sectionTitle={sectionTitle}
         onClick={jest.fn()}
+        sectionTitle={sectionTitle}
       />
     );
     const button = getByRole('button');
@@ -53,8 +54,8 @@ describe('DatabaseSettingsMenuItem Component', () => {
       <DatabaseSettingsMenuItem
         buttonText={buttonText}
         descriptiveText={descriptiveText}
-        sectionTitle={sectionTitle}
         onClick={onClick}
+        sectionTitle={sectionTitle}
       />
     );
     const button = getByRole('button');

@@ -6,8 +6,8 @@ import { reportException } from 'src/exceptionReporting';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 export interface Tab {
-  title: string | JSX.Element;
   render: any;
+  title: JSX.Element | string;
   type?: CreateTypes;
 }
 
@@ -20,8 +20,8 @@ export const safeGetTabRender = (tabs: Tab[], selectedTab: number) => {
      */
 
     reportException('Attempted to render undefined tab.', {
-      'Selected tab': selectedTab,
       Location: window.location.search,
+      'Selected tab': selectedTab,
     });
     return <ErrorState errorText={'An unexpected error occurred.'} />;
   };

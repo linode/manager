@@ -1,18 +1,18 @@
-import * as Factory from 'factory.ts';
 import { Apps, LongviewClient } from '@linode/api-v4/lib/longview';
+import * as Factory from 'factory.ts';
 
 export const longviewAppsFactory = Factory.Sync.makeFactory<Apps>({
-  nginx: false,
-  mysql: false,
   apache: false,
+  mysql: false,
+  nginx: false,
 });
 
 export const longviewClientFactory = Factory.Sync.makeFactory<LongviewClient>({
-  id: Factory.each((id) => id),
-  created: new Date().toDateString(),
-  updated: new Date().toDateString(),
-  label: Factory.each((i) => `longview-client-${i}`),
   api_key: 'EXAMPLE_API_KEY',
   apps: longviewAppsFactory.build(),
+  created: new Date().toDateString(),
+  id: Factory.each((id) => id),
   install_code: 'INSTALL_ME',
+  label: Factory.each((i) => `longview-client-${i}`),
+  updated: new Date().toDateString(),
 });

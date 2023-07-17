@@ -2,6 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { concat } from 'ramda';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
+
 import Select, {
   Item,
   NoOptionsMessageProps,
@@ -11,31 +12,31 @@ import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 export interface Tag {
-  value: string;
   label: string;
+  value: string;
 }
 
 export interface TagsInputProps {
-  label?: string;
+  disabled?: boolean;
   hideLabel?: boolean;
+  label?: string;
+  menuPlacement?: 'auto' | 'bottom' | 'top';
   name?: string;
+  onChange: (selected: Item[]) => void;
   tagError?: string;
   value: Item[];
-  onChange: (selected: Item[]) => void;
-  disabled?: boolean;
-  menuPlacement?: 'bottom' | 'top' | 'auto';
 }
 
 const TagsInput = (props: TagsInputProps) => {
   const {
-    label,
+    disabled,
     hideLabel,
+    label,
+    menuPlacement,
     name,
+    onChange,
     tagError,
     value,
-    onChange,
-    disabled,
-    menuPlacement,
   } = props;
 
   const [errors, setErrors] = React.useState<APIError[]>([]);
@@ -54,7 +55,7 @@ const TagsInput = (props: TagsInputProps) => {
     })) ?? [];
 
   const createTag = (inputValue: string) => {
-    const newTag = { value: inputValue, label: inputValue };
+    const newTag = { label: inputValue, value: inputValue };
     const updatedSelectedTags = concat(value, [newTag]);
 
     if (inputValue.length < 3 || inputValue.length > 50) {
@@ -97,20 +98,20 @@ const TagsInput = (props: TagsInputProps) => {
 
   return (
     <Select
-      name={name}
       creatable
+      errorText={error}
+      hideLabel={hideLabel}
+      isDisabled={disabled}
       isMulti={true}
       label={label || 'Add Tags'}
-      hideLabel={hideLabel}
-      options={accountTagItems}
-      placeholder={'Type to choose or create a tag.'}
-      errorText={error}
-      value={value}
+      menuPlacement={menuPlacement}
+      name={name}
+      noOptionsMessage={getEmptyMessage}
       onChange={onChange}
       onCreateOption={createTag}
-      noOptionsMessage={getEmptyMessage}
-      isDisabled={disabled}
-      menuPlacement={menuPlacement}
+      options={accountTagItems}
+      placeholder={'Type to choose or create a tag.'}
+      value={value}
     />
   );
 };

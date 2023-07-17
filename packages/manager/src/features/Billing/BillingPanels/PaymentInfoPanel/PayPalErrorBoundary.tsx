@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { reportException } from 'src/exceptionReporting';
 
 interface State {

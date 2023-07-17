@@ -1,6 +1,8 @@
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+
 import { ApplicationState } from 'src/store';
+
 import { isInProgressEvent } from '../events/event.helpers';
 import { isEventRelevantToLinode } from '../events/event.selectors';
 

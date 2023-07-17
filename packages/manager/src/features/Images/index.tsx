@@ -6,6 +6,7 @@ import {
   Switch,
   withRouter,
 } from 'react-router-dom';
+
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const ImagesLanding = React.lazy(() => import('./ImagesLanding'));
@@ -23,7 +24,7 @@ export const ImagesRoutes: React.FC<Props> = (props) => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={ImagesLanding} path={path} exact />
+        <Route component={ImagesLanding} exact path={path} />
         <Route component={ImageCreate} path={`${path}/create`} />
         <Redirect to="/images" />
       </Switch>

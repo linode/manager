@@ -1,18 +1,19 @@
 import { LinodeType } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
+
 import { useAllTypes, useSpecificTypes } from 'src/queries/types';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 export interface WithTypesProps {
   typesData?: LinodeType[];
-  typesLoading: boolean;
   typesError?: APIError[];
+  typesLoading: boolean;
 }
 
 export interface WithSpecificTypesProps {
-  setRequestedTypes: (types: string[]) => void;
   requestedTypesData: LinodeType[];
+  setRequestedTypes: (types: string[]) => void;
 }
 
 export const withTypes = <Props>(
@@ -21,15 +22,15 @@ export const withTypes = <Props>(
 ) => (props: Props) => {
   const {
     data: typesData,
-    isLoading: typesLoading,
     error: typesError,
+    isLoading: typesLoading,
   } = useAllTypes(enabled);
 
   return React.createElement(Component, {
     ...props,
     typesData,
-    typesLoading,
     typesError: typesError ?? undefined,
+    typesLoading,
   });
 };
 
@@ -45,7 +46,7 @@ export const withSpecificTypes = <Props>(
 
   return React.createElement(Component, {
     ...props,
-    setRequestedTypes,
     requestedTypesData,
+    setRequestedTypes,
   });
 };

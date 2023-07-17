@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -12,7 +13,7 @@ export interface TableRowEmptyProps {
    * The message to display in the empty state
    * @default 'No items to display.'
    */
-  message?: string | JSX.Element;
+  message?: JSX.Element | string;
 }
 
 /**

@@ -23,11 +23,11 @@ const Volumes: React.FC<Props> = (props) => {
         render={(routeProps) => (
           <VolumesLanding isVolumesLanding removeBreadCrumb {...routeProps} />
         )}
-        path={path}
         exact
+        path={path}
         strict
       />
-      <Route component={VolumeCreate} path={`${path}/create`} exact strict />
+      <Route component={VolumeCreate} exact path={`${path}/create`} strict />
       <Redirect to={path} />
     </Switch>
   );

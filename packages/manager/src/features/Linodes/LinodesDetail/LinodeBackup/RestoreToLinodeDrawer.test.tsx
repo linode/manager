@@ -1,15 +1,17 @@
 import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
-import { rest, server } from 'src/mocks/testServer';
+
 import { backupFactory, linodeFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
 
 describe('RestoreToLinodeDrawer', () => {
   it('renders without crashing', async () => {
     server.use(
       rest.get('*/linode/instances/1', (req, res, ctx) => {
         return res(
-          ctx.json(linodeFactory.build({ id: 1, backups: { enabled: true } }))
+          ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
         );
       })
     );
@@ -18,10 +20,10 @@ describe('RestoreToLinodeDrawer', () => {
 
     const { getByText } = renderWithTheme(
       <RestoreToLinodeDrawer
-        open={true}
-        linodeId={1}
         backup={backup}
+        linodeId={1}
         onClose={jest.fn()}
+        open={true}
       />
     );
 

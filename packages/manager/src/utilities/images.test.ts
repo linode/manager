@@ -1,4 +1,5 @@
 import { imageFactory } from 'src/factories/images';
+
 import { groupImages } from './images';
 
 const [privateImage1, privateImage2] = imageFactory.buildList(2, {
@@ -6,26 +7,26 @@ const [privateImage1, privateImage2] = imageFactory.buildList(2, {
 });
 
 const [deprecatedImage1, deprecatedImage2] = imageFactory.buildList(2, {
-  deprecated: true,
   created_by: 'linode',
+  deprecated: true,
 });
 
 const [recommendedImage1, recommendedImage2] = imageFactory.buildList(2, {
-  id: 'linode/image',
   created_by: 'linode',
+  id: 'linode/image',
 });
 
 const [deletedImage1, deletedImage2] = imageFactory.buildList(2, {
-  deprecated: false,
-  type: 'automatic',
-  created_by: null,
-  description: '',
-  vendor: null,
-  size: 0,
-  label: '',
-  is_public: false,
   created: '',
+  created_by: null,
+  deprecated: false,
+  description: '',
   expiry: '2019-05-09T04:13:37',
+  is_public: false,
+  label: '',
+  size: 0,
+  type: 'automatic',
+  vendor: null,
 });
 
 describe('groupImages method', () => {

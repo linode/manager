@@ -2,17 +2,18 @@
  * @file Cypress intercepts and mocks for Cloud Manager account requests.
  */
 
+import { makeErrorResponse } from 'support/util/errors';
+import { apiMatcher } from 'support/util/intercepts';
+import { paginateResponse } from 'support/util/paginate';
+import { getFilters } from 'support/util/request';
+
 import type {
   Account,
   AccountSettings,
   EntityTransfer,
-  PaymentMethod,
   Invoice,
+  PaymentMethod,
 } from '@linode/api-v4/types';
-import { apiMatcher } from 'support/util/intercepts';
-import { paginateResponse } from 'support/util/paginate';
-import { getFilters } from 'support/util/request';
-import { makeErrorResponse } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch account and mocks response.
@@ -195,11 +196,11 @@ export const mockUpdateUsername = (
   restricted: boolean = false
 ) => {
   return cy.intercept('PUT', apiMatcher(`account/users/${oldUsername}`), {
-    username: newUsername,
     email: 'mockEmail@example.com',
     restricted,
     ssh_keys: [],
     tfa_enabled: false,
+    username: newUsername,
     verified_phone_number: null,
   });
 };

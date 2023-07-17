@@ -1,25 +1,27 @@
 import { shallow } from 'enzyme';
 import { assocPath } from 'ramda';
 import * as React from 'react';
+
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { H1Header } from 'src/components/H1Header/H1Header';
+
 import { CombinedProps, SupportSearchLanding } from './SupportSearchLanding';
 
 const classes = {
-  root: '',
   backButton: '',
+  root: '',
   searchBar: '',
   searchBoxInner: '',
-  searchHeading: '',
   searchField: '',
+  searchHeading: '',
   searchIcon: '',
 };
 
 const props: CombinedProps = {
   classes,
   searchAlgolia: jest.fn(),
-  searchResults: [[], []],
   searchEnabled: true,
+  searchResults: [[], []],
   ...reactRouterProps,
 };
 
@@ -50,8 +52,8 @@ describe('Component', () => {
     expect(
       component.containsMatchingElement(
         <H1Header
-          title='Search results for "search"'
           data-qa-support-search-landing-title={true}
+          title='Search results for "search"'
         />
       )
     ).toBeTruthy();
@@ -60,14 +62,14 @@ describe('Component', () => {
     component.setState({ query: '' });
     expect(
       component.containsMatchingElement(
-        <H1Header title="Search" data-qa-support-search-landing-title={true} />
+        <H1Header data-qa-support-search-landing-title={true} title="Search" />
       )
     ).toBeTruthy();
     expect(
       component.containsMatchingElement(
         <H1Header
-          title="Search results for"
           data-qa-support-search-landing-title={true}
+          title="Search results for"
         />
       )
     ).toBeFalsy();

@@ -1,8 +1,10 @@
+import { Tag, getTags } from '@linode/api-v4';
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { QueryClient, useQuery } from 'react-query';
-import { getTags, Tag } from '@linode/api-v4';
-import { queryPresets } from './base';
+
 import { getAll } from 'src/utilities/getAll';
+
+import { queryPresets } from './base';
 
 export const queryKey = 'tags';
 

@@ -1,20 +1,21 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { Chip, ChipProps } from 'src/components/Chip';
 import { makeStyles } from 'tss-react/mui';
+
+import { Chip, ChipProps } from 'src/components/Chip';
 
 interface BetaChipProps
   extends Omit<
     ChipProps,
-    | 'label'
-    | 'deleteIcon'
-    | 'onDelete'
     | 'avatar'
-    | 'disabled'
     | 'clickable'
-    | 'variant'
-    | 'outlineColor'
+    | 'deleteIcon'
+    | 'disabled'
     | 'icon'
+    | 'label'
+    | 'onDelete'
+    | 'outlineColor'
+    | 'variant'
   > {
   className?: string;
   color?: 'default' | 'primary';
@@ -26,8 +27,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     fontSize: '0.625rem',
     height: 16,
     letterSpacing: '.25px',
-    textTransform: 'uppercase',
     marginLeft: theme.spacing(),
+    textTransform: 'uppercase',
   },
 }));
 
@@ -39,11 +40,11 @@ const BetaChip = (props: BetaChipProps) => {
   return (
     <Chip
       {...props}
-      label="beta"
-      color={color}
       className={cx(className, {
         [classes.root]: true,
       })}
+      color={color}
+      label="beta"
     />
   );
 };

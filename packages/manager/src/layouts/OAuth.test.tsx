@@ -1,4 +1,5 @@
 import { isEmpty } from 'ramda';
+
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 describe('layouts/OAuth', () => {

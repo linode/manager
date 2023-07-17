@@ -1,5 +1,6 @@
-import React from 'react';
 import { default as _LinearProgress } from '@mui/material/LinearProgress';
+import React from 'react';
+
 import type { LinearProgressProps } from '@mui/material/LinearProgress';
 
 /**

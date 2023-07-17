@@ -1,12 +1,14 @@
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import DatabaseBackups from './DatabaseBackups';
-import { rest, server } from 'src/mocks/testServer';
+
 import { databaseBackupFactory, databaseFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { waitForElementToBeRemoved } from '@testing-library/react';
+import { rest, server } from 'src/mocks/testServer';
 import formatDate from 'src/utilities/formatDate';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import DatabaseBackups from './DatabaseBackups';
 
 const queryClient = new QueryClient();
 

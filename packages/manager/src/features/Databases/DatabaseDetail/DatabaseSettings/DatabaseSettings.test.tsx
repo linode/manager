@@ -1,8 +1,9 @@
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import DatabaseSettings from './DatabaseSettings';
 import { databaseFactory } from 'src/factories/databases';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import DatabaseSettings from './DatabaseSettings';
 
 describe('DatabaseSettings Component', () => {
   const database = databaseFactory.build();
@@ -12,7 +13,7 @@ describe('DatabaseSettings Component', () => {
   });
 
   it('Should render a Paper component with headers for Access Controls, Reseting the Root password, and Deleting the Cluster', () => {
-    const { getAllByRole, container } = renderWithTheme(
+    const { container, getAllByRole } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
     const paper = container.querySelector('.MuiPaper-root');

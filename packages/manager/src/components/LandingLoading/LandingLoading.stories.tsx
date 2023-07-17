@@ -1,16 +1,18 @@
 import React from 'react';
+
+import { DEFAULT_DELAY, LandingLoading } from './LandingLoading';
+
 import type { Meta, StoryObj } from '@storybook/react';
-import { LandingLoading, DEFAULT_DELAY } from './LandingLoading';
 
 const meta: Meta<typeof LandingLoading> = {
-  title: 'Components/LandingLoading',
-  component: LandingLoading,
   argTypes: {},
   args: {
-    shouldDelay: false,
-    delayInMS: DEFAULT_DELAY,
     children: undefined,
+    delayInMS: DEFAULT_DELAY,
+    shouldDelay: false,
   },
+  component: LandingLoading,
+  title: 'Components/LandingLoading',
 };
 
 export default meta;

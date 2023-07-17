@@ -1,7 +1,8 @@
 import { LinodeStatus } from '@linode/api-v4/lib/linodes';
+
 import { reportException } from 'src/exceptionReporting';
 
-export const parseMaintenanceStartTime = (startTime?: string | null) => {
+export const parseMaintenanceStartTime = (startTime?: null | string) => {
   if (!startTime) {
     return 'No Maintenance Needed';
   }
@@ -11,8 +12,8 @@ export const parseMaintenanceStartTime = (startTime?: string | null) => {
    */
   if (startTime.match(/valid/i)) {
     reportException('Error parsing maintenance start time', {
-      rawDate: startTime,
       convertedDate: startTime,
+      rawDate: startTime,
     });
     return 'Maintenance Window Unknown';
   }
@@ -20,7 +21,7 @@ export const parseMaintenanceStartTime = (startTime?: string | null) => {
   return startTime;
 };
 
-export type ExtendedStatus = LinodeStatus | 'maintenance' | 'busy';
+export type ExtendedStatus = 'busy' | 'maintenance' | LinodeStatus;
 
 // Given a Linode's status, assign it a priority so the "Status" column can be sorted in this way.
 export const statusToPriority = (status: ExtendedStatus): number => {

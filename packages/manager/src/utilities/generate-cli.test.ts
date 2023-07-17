@@ -1,16 +1,17 @@
-import generateCLICommand from './generate-cli';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
+
+import generateCLICommand from './generate-cli';
 
 const linodeRequest = createLinodeRequestFactory.build();
 
 const linodeData = {
   ...linodeRequest,
-  stackscript_id: 10079,
+  authorized_users: ['Linny', 'Gritty'],
+  backup_id: undefined,
   stackscript_data: {
     gh_username: 'linode',
   },
-  backup_id: undefined,
-  authorized_users: ['Linny', 'Gritty'],
+  stackscript_id: 10079,
 };
 
 const linodeDataForCLI = `

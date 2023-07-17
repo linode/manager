@@ -64,8 +64,13 @@ export function withDocumentTitleProvider<P>(
     P,
     DocumentTitleSegmentsContext
   > {
-    /* Make this a class property to avoid race conditions with setState */
-    titleSegments: string[] = [];
+    render() {
+      return (
+        <DocumentTitleSegmentsProvider value={this.state}>
+          <Component {...this.props} />
+        </DocumentTitleSegmentsProvider>
+      );
+    }
 
     state: DocumentTitleSegmentsContext = {
       appendSegment: (segment: string) => {
@@ -80,17 +85,12 @@ export function withDocumentTitleProvider<P>(
       },
     };
 
+    /* Make this a class property to avoid race conditions with setState */
+    titleSegments: string[] = [];
+
     updateDocumentTitle = () => {
       const newTitle = reverse(this.titleSegments).join(' | ');
       document.title = newTitle;
     };
-
-    render() {
-      return (
-        <DocumentTitleSegmentsProvider value={this.state}>
-          <Component {...this.props} />
-        </DocumentTitleSegmentsProvider>
-      );
-    }
   };
 }

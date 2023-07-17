@@ -14,9 +14,10 @@
 // ***********************************************************
 
 import chaiString from 'chai-string';
+import 'cypress-real-events/support';
+
 import { authenticate } from './api/authentication';
 import { deleteAllTestData } from './ui/common';
-import 'cypress-real-events/support';
 
 // chai is a global exposed by Cypress which means
 // we can just simply extend it

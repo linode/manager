@@ -1,8 +1,9 @@
-import { Typography } from 'src/components/Typography';
+import { styled } from '@mui/material/styles';
+
 import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { styled } from '@mui/material/styles';
 import { TableCell } from 'src/components/TableCell';
+import { Typography } from 'src/components/Typography';
 
 export const StyledNameColumn = styled(TableCell, {
   label: 'StyledNameColumn',
@@ -34,6 +35,6 @@ export const StyledFooter = styled(Typography, {
   label: 'StyledFooter',
 })(({ theme }) => ({
   color: theme.palette.primary.main,
-  textDecoration: 'underline',
   cursor: 'pointer',
+  textDecoration: 'underline',
 }));

@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { BucketSSL } from './BucketSSL';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { BucketSSL } from './BucketSSL';
 
 describe('BucketSSL', () => {
   it('renders inputs for a Certificate and Private Key when no cert is set', async () => {

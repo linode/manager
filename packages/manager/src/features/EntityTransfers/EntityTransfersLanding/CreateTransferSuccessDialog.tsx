@@ -1,22 +1,23 @@
 import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
 import { update } from 'ramda';
 import * as React from 'react';
+import { debounce } from 'throttle-debounce';
+
 import { Button } from 'src/components/Button/Button';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { parseAPIDate } from 'src/utilities/date';
 import {
   sendEntityTransferCopyDraftEmailEvent,
   sendEntityTransferCopyTokenEvent,
 } from 'src/utilities/analytics';
+import { parseAPIDate } from 'src/utilities/date';
 import { pluralize } from 'src/utilities/pluralize';
-import { debounce } from 'throttle-debounce';
 
 const debouncedSendEntityTransferCopyTokenEvent = debounce(
   10 * 1000,
@@ -31,31 +32,31 @@ const debouncedSendEntityTransferDraftEmailEvent = debounce(
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingBottom: theme.spacing(),
-  },
-  tokenInput: {
-    maxWidth: '100%',
-  },
   copyButton: {
+    alignSelf: 'flex-end',
     marginTop: theme.spacing(2),
     maxWidth: 220,
-    alignSelf: 'flex-end',
-  },
-  text: {
-    marginBottom: theme.spacing(),
   },
   inputSection: {
     display: 'flex',
     flexFlow: 'column nowrap',
     paddingBottom: theme.spacing(1),
   },
+  root: {
+    paddingBottom: theme.spacing(),
+  },
+  text: {
+    marginBottom: theme.spacing(),
+  },
+  tokenInput: {
+    maxWidth: '100%',
+  },
 }));
 
 interface Props {
   isOpen: boolean;
-  transfer?: EntityTransfer;
   onClose: () => void;
+  transfer?: EntityTransfer;
 }
 
 export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
@@ -95,10 +96,10 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
 
   return (
     <Dialog
-      title="Service Transfer Token"
-      open={isOpen}
-      onClose={onClose}
       className={classes.root}
+      onClose={onClose}
+      open={isOpen}
+      title="Service Transfer Token"
     >
       <Typography className={classes.text}>
         This token authorizes the transfer of {pluralizedEntities}.
@@ -110,22 +111,22 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
       </Typography>
       <div className={classes.inputSection}>
         <CopyableTextField
-          className={classes.tokenInput}
-          value={transfer.token}
-          label="Token"
-          hideIcon
-          fullWidth
           aria-disabled
+          className={classes.tokenInput}
+          fullWidth
+          hideIcon
+          label="Token"
+          value={transfer.token}
         />
         <Tooltip open={tooltipOpen[0]} title="Copied!">
           <div className={classes.copyButton}>
             <Button
-              buttonType="outlined"
               onClick={() => {
                 // @analytics
                 debouncedSendEntityTransferCopyTokenEvent();
                 handleCopy(0, transfer.token);
               }}
+              buttonType="outlined"
             >
               Copy Token
             </Button>
@@ -134,23 +135,23 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
       </div>
       <div className={classes.inputSection}>
         <CopyableTextField
-          className={classes.tokenInput}
-          value={draftEmail}
-          label="Draft Email"
-          hideIcon
-          fullWidth
           aria-disabled
+          className={classes.tokenInput}
+          fullWidth
+          hideIcon
+          label="Draft Email"
           multiline
+          value={draftEmail}
         />
         <Tooltip open={tooltipOpen[1]} title="Copied!">
           <div className={classes.copyButton}>
             <Button
-              buttonType="primary"
               onClick={() => {
                 // @analytics
                 debouncedSendEntityTransferDraftEmailEvent();
                 handleCopy(1, draftEmail);
               }}
+              buttonType="primary"
             >
               Copy Draft Email
             </Button>

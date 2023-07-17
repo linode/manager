@@ -1,6 +1,7 @@
+import { act, render, screen } from '@testing-library/react';
 import * as React from 'react';
-import { LandingLoading, DEFAULT_DELAY } from './LandingLoading';
-import { render, screen, act } from '@testing-library/react';
+
+import { DEFAULT_DELAY, LandingLoading } from './LandingLoading';
 
 jest.useFakeTimers();
 

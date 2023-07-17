@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { PaginationControls } from './PaginationControls';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { PaginationControls } from './PaginationControls';
 
 const props = {
   count: 100,
+  onClickHandler: jest.fn(),
   page: 1,
   pageSize: 25,
-  onClickHandler: jest.fn(),
 };
 
 describe('PaginationControls', () => {

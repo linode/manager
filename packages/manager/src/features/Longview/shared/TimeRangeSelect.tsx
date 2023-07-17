@@ -11,18 +11,18 @@ import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 interface Props
   extends Omit<
     BaseSelectProps<Item<Labels, Labels>, false>,
-    'onChange' | 'defaultValue'
+    'defaultValue' | 'onChange'
   > {
-  handleStatsChange?: (start: number, end: number) => void;
   defaultValue?: Labels;
+  handleStatsChange?: (start: number, end: number) => void;
 }
 
 export type Labels =
-  | 'Past 30 Minutes'
+  | 'Past 7 Days'
   | 'Past 12 Hours'
   | 'Past 24 Hours'
-  | 'Past 7 Days'
   | 'Past 30 Days'
+  | 'Past 30 Minutes'
   | 'Past Year';
 
 const TimeRangeSelect: React.FC<Props> = (props) => {
@@ -117,12 +117,12 @@ const TimeRangeSelect: React.FC<Props> = (props) => {
   return (
     <Select
       {...restOfSelectProps}
-      small
-      onChange={handleChange}
       isClearable={false}
       isSearchable={false}
-      value={options.find((o) => o.label === selectedTimeRange) || options[0]}
+      onChange={handleChange}
       options={options}
+      small
+      value={options.find((o) => o.label === selectedTimeRange) || options[0]}
     />
   );
 };

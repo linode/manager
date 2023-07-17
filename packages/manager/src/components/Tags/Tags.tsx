@@ -1,5 +1,6 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
+
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { Tag } from 'src/components/Tag/Tag';
 
@@ -14,17 +15,17 @@ const Tags = (props: TagsProps) => {
     return tags.map((eachTag) => {
       return (
         <Tag
-          label={eachTag}
-          key={eachTag}
-          component={'button' as 'div'}
           colorVariant="lightBlue"
+          component={'button' as 'div'}
+          key={eachTag}
+          label={eachTag}
         />
       );
     });
   };
 
   const renderMoreTags = (tags: string[]) => {
-    return <ShowMore items={tags} render={renderTags} ariaItemType="tags" />;
+    return <ShowMore ariaItemType="tags" items={tags} render={renderTags} />;
   };
 
   if (!tags) {

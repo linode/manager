@@ -1,37 +1,59 @@
-import { createStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { createStyles } from '@mui/styles';
 
 export type ClassNames =
-  | 'row'
-  | 'link'
+  | 'detailsButton'
+  | 'images'
+  | 'libDescription'
   | 'libRadio'
   | 'libRadioLabel'
   | 'libTitle'
-  | 'libDescription'
+  | 'link'
+  | 'row'
   | 'selectionGrid'
-  | 'selectionGridDetails'
   | 'selectionGridButton'
+  | 'selectionGridDetails'
   | 'stackScriptCell'
-  | 'stackScriptUsername'
-  | 'detailsButton'
-  | 'images';
+  | 'stackScriptUsername';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const styles = (theme: Theme) =>
   createStyles({
-    row: {
-      height: 46,
-      '& > button': {
-        height: 46,
+    detailsButton: {
+      '&:hover, &:focus': {
+        backgroundColor: 'transparent',
       },
+      fontFamily: theme.font.normal,
+      fontSize: '0.875rem',
+      marginTop: 0,
+      padding: theme.spacing(),
+      [theme.breakpoints.down('sm')]: {
+        marginBottom: 4,
+        marginLeft: 0,
+        paddingBottom: 4,
+        paddingTop: 4,
+      },
+      width: 100,
     },
-    link: {
-      color: theme.textColors.tableStatic,
+    images: {
+      fontSize: '0.75rem',
+      overflowWrap: 'break-word',
+      whiteSpace: 'pre-wrap',
+    },
+    libDescription: {
+      color: theme.textColors.tableHeader,
+      fontSize: '.75rem',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      [theme.breakpoints.between('sm', 'xl')]: {
+        wordBreak: 'break-word',
+      },
+      whiteSpace: 'nowrap',
     },
     libRadio: {
+      alignItems: 'center',
       display: 'flex',
       flexWrap: 'wrap',
-      alignItems: 'center',
       height: '100%',
       width: 70,
     },
@@ -43,29 +65,36 @@ export const styles = (theme: Theme) =>
       lineHeight: '1.125rem',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
       [theme.breakpoints.down('md')]: {
         wordBreak: 'break-all',
       },
-    },
-    libDescription: {
-      color: theme.textColors.tableHeader,
-      fontSize: '.75rem',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      [theme.breakpoints.between('sm', 'xl')]: {
-        wordBreak: 'break-word',
+    },
+    link: {
+      color: theme.textColors.tableStatic,
+    },
+    row: {
+      '& > button': {
+        height: 46,
       },
+      height: 46,
     },
     selectionGrid: {
-      width: '100%',
-      flexWrap: 'nowrap',
       alignItems: 'center',
+      flexWrap: 'nowrap',
       justifyContent: 'space-between',
       [theme.breakpoints.down('sm')]: {
-        flexDirection: 'column',
         alignItems: 'flex-start',
+        flexDirection: 'column',
+      },
+      width: '100%',
+    },
+    selectionGridButton: {
+      [theme.breakpoints.down('sm')]: {
+        '&.MuiGrid-item': {
+          paddingLeft: 0,
+          paddingTop: 0,
+        },
       },
     },
     selectionGridDetails: {
@@ -73,14 +102,6 @@ export const styles = (theme: Theme) =>
         '&.MuiGrid-item': {
           marginTop: 4,
           paddingBottom: 0,
-        },
-      },
-    },
-    selectionGridButton: {
-      [theme.breakpoints.down('sm')]: {
-        '&.MuiGrid-item': {
-          paddingTop: 0,
-          paddingLeft: 0,
         },
       },
     },
@@ -92,26 +113,5 @@ export const styles = (theme: Theme) =>
       color: theme.textColors.tableStatic,
       fontSize: '0.875rem',
       lineHeight: '1.125rem',
-    },
-    detailsButton: {
-      fontSize: '0.875rem',
-      fontFamily: theme.font.normal,
-      marginTop: 0,
-      padding: theme.spacing(),
-      width: 100,
-      '&:hover, &:focus': {
-        backgroundColor: 'transparent',
-      },
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: 4,
-        marginLeft: 0,
-        paddingTop: 4,
-        paddingBottom: 4,
-      },
-    },
-    images: {
-      fontSize: '0.75rem',
-      overflowWrap: 'break-word',
-      whiteSpace: 'pre-wrap',
     },
   });

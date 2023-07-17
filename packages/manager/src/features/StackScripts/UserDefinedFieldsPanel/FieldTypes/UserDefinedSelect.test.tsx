@@ -1,21 +1,23 @@
-import React from 'react';
 import { fireEvent } from '@testing-library/react';
+import React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { UserDefinedSelect } from './UserDefinedSelect';
 
 describe('UserDefinedSelect', () => {
   it('renders select when oneof has more than 4 options', () => {
     const field = {
-      name: 'selectField',
       label: 'Select Field',
+      name: 'selectField',
       oneof: 'option1,option2,option3,option4,option5',
     };
     const { getByLabelText, getByText } = renderWithTheme(
       <UserDefinedSelect
         field={field}
-        value=""
-        updateFormState={() => {}}
         isOptional={false}
+        updateFormState={() => {}}
+        value=""
       />
     );
 
@@ -27,17 +29,17 @@ describe('UserDefinedSelect', () => {
 
   it('renders radio when oneof has 4 or fewer options', () => {
     const field = {
-      name: 'radioField',
       label: 'Radio Field',
+      name: 'radioField',
       oneof: 'option1,option2,option3,option4',
     };
     const updateFormState = jest.fn();
     const { getAllByRole } = renderWithTheme(
       <UserDefinedSelect
         field={field}
-        value=""
-        updateFormState={updateFormState}
         isOptional={false}
+        updateFormState={updateFormState}
+        value=""
       />
     );
 
@@ -48,17 +50,17 @@ describe('UserDefinedSelect', () => {
 
   it('calls updateFormState when a new option is selected', () => {
     const field = {
-      name: 'selectField',
       label: 'Select Field',
+      name: 'selectField',
       oneof: 'option1,option2,option3,option4',
     };
     const updateFormState = jest.fn();
     const { getAllByRole } = renderWithTheme(
       <UserDefinedSelect
         field={field}
-        value=""
-        updateFormState={updateFormState}
         isOptional={false}
+        updateFormState={updateFormState}
+        value=""
       />
     );
 

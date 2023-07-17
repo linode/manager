@@ -9,114 +9,114 @@ export interface NodeBalancerConfigFieldsWithStatus
   modifyStatus?: 'new';
 }
 export interface ExtendedNodeBalancerConfigNode {
+  address: string;
+  config_id?: number;
+  errors?: APIError[];
   id: number;
   label: string;
-  address: string;
-  port?: number;
-  weight?: number;
-  nodebalancer_id: number;
-  config_id?: number;
   mode?: NodeBalancerConfigNodeMode;
-  modifyStatus?: 'new' | 'delete' | 'update';
-  errors?: APIError[];
-  status: 'UP' | 'DOWN' | 'unknown';
+  modifyStatus?: 'delete' | 'new' | 'update';
+  nodebalancer_id: number;
+  port?: number;
+  status: 'DOWN' | 'UP' | 'unknown';
+  weight?: number;
 }
 
 export interface NodeBalancerConfigFields {
-  id?: number;
-  algorithm?: 'roundrobin' | 'leastconn' | 'source';
+  algorithm?: 'leastconn' | 'roundrobin' | 'source';
+  check?: 'connection' | 'http' | 'http_body' | 'none';
   check_attempts?: number /** 1..30 */;
   check_body?: string;
   check_interval?: number;
   check_passive?: boolean;
   check_path?: string;
   check_timeout?: number /** 1..30 */;
-  check?: 'none' | 'connection' | 'http' | 'http_body';
-  cipher_suite?: 'recommended' | 'legacy';
+  cipher_suite?: 'legacy' | 'recommended';
+  id?: number;
+  nodes: NodeBalancerConfigNodeFields[];
   port?: number /** 1..65535 */;
   protocol?: 'http' | 'https' | 'tcp';
   proxy_protocol?: NodeBalancerProxyProtocol;
   ssl_cert?: string;
   ssl_key?: string;
-  stickiness?: 'none' | 'table' | 'http_cookie';
-  nodes: NodeBalancerConfigNodeFields[];
+  stickiness?: 'http_cookie' | 'none' | 'table';
 }
 
 export interface NodeBalancerConfigNodeFields {
+  address: string;
+  config_id?: number;
+  errors?: APIError[];
   id?: number;
   label: string;
-  address: string;
-  port?: number;
-  weight?: number;
-  nodebalancer_id?: number;
-  config_id?: number;
   mode?: NodeBalancerConfigNodeMode;
   /* for the sake of local operations */
-  modifyStatus?: 'new' | 'delete' | 'update';
-  errors?: APIError[];
-  status?: 'UP' | 'DOWN' | 'unknown';
+  modifyStatus?: 'delete' | 'new' | 'update';
+  nodebalancer_id?: number;
+  port?: number;
+  status?: 'DOWN' | 'UP' | 'unknown';
+  weight?: number;
 }
 
 export interface NodeBalancerConfigPanelProps {
-  nodeBalancerRegion?: string;
-  errors?: APIError[];
-  nodeMessage?: string;
-  configIdx?: number;
-
-  forEdit?: boolean;
-  submitting?: boolean;
-  onSave?: () => void;
-  onDelete?: any;
-
-  algorithm: 'roundrobin' | 'leastconn' | 'source';
-  onAlgorithmChange: (v: string) => void;
-
-  checkPassive: boolean;
-  onCheckPassiveChange: (v: boolean) => void;
-
+  addNode: (nodeIdx?: number) => void;
+  algorithm: 'leastconn' | 'roundrobin' | 'source';
   checkBody: string;
-  onCheckBodyChange: (v: string) => void;
+  checkPassive: boolean;
 
   checkPath: string;
-  onCheckPathChange: (v: string) => void;
+  configIdx?: number;
+  disabled?: boolean;
+  errors?: APIError[];
 
-  port: number;
-  onPortChange: (v: string | number) => void;
-
-  protocol: 'http' | 'https' | 'tcp';
-  onProtocolChange: (v: string) => void;
-
-  proxyProtocol: NodeBalancerProxyProtocol;
-  onProxyProtocolChange: (v: string) => void;
-
-  healthCheckType: 'none' | 'connection' | 'http' | 'http_body';
-  onHealthCheckTypeChange: (v: string) => void;
-
+  forEdit?: boolean;
   healthCheckAttempts: number;
-  onHealthCheckAttemptsChange: (v: string | number) => void;
 
   healthCheckInterval: number;
-  onHealthCheckIntervalChange: (v: string | number) => void;
-
   healthCheckTimeout: number;
-  onHealthCheckTimeoutChange: (v: string | number) => void;
 
-  sessionStickiness: 'none' | 'table' | 'http_cookie';
-  onSessionStickinessChange: (v: string) => void;
+  healthCheckType: 'connection' | 'http' | 'http_body' | 'none';
+  nodeBalancerRegion?: string;
 
-  sslCertificate: string;
-  onSslCertificateChange: (v: string) => void;
-
-  privateKey: string;
-  onPrivateKeyChange: (v: string) => void;
-
+  nodeMessage?: string;
   nodes: NodeBalancerConfigNodeFields[];
-  disabled?: boolean;
-  addNode: (nodeIdx?: number) => void;
-  removeNode: (nodeIdx: number) => void;
-  onNodeLabelChange: (nodeIdx: number, value: string) => void;
+
+  onAlgorithmChange: (v: string) => void;
+  onCheckBodyChange: (v: string) => void;
+
+  onCheckPassiveChange: (v: boolean) => void;
+  onCheckPathChange: (v: string) => void;
+
+  onDelete?: any;
+  onHealthCheckAttemptsChange: (v: number | string) => void;
+
+  onHealthCheckIntervalChange: (v: number | string) => void;
+  onHealthCheckTimeoutChange: (v: number | string) => void;
+
+  onHealthCheckTypeChange: (v: string) => void;
   onNodeAddressChange: (nodeIdx: number, value: string) => void;
+
+  onNodeLabelChange: (nodeIdx: number, value: string) => void;
+  onNodeModeChange?: (nodeIdx: number, value: string) => void;
+
   onNodePortChange: (nodeIdx: number, value: string) => void;
   onNodeWeightChange: (nodeIdx: number, value: string) => void;
-  onNodeModeChange?: (nodeIdx: number, value: string) => void;
+
+  onPortChange: (v: number | string) => void;
+  onPrivateKeyChange: (v: string) => void;
+
+  onProtocolChange: (v: string) => void;
+  onProxyProtocolChange: (v: string) => void;
+
+  onSave?: () => void;
+  onSessionStickinessChange: (v: string) => void;
+
+  onSslCertificateChange: (v: string) => void;
+  port: number;
+  privateKey: string;
+  protocol: 'http' | 'https' | 'tcp';
+  proxyProtocol: NodeBalancerProxyProtocol;
+  removeNode: (nodeIdx: number) => void;
+  sessionStickiness: 'http_cookie' | 'none' | 'table';
+  sslCertificate: string;
+  submitting?: boolean;
 }

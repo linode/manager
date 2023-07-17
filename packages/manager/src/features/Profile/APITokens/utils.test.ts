@@ -1,10 +1,11 @@
-import {
-  scopeStringToPermTuples,
-  allScopesAreTheSame,
-  Permission,
-  isWayInTheFuture,
-} from './utils';
 import { DateTime } from 'luxon';
+
+import {
+  Permission,
+  allScopesAreTheSame,
+  isWayInTheFuture,
+  scopeStringToPermTuples,
+} from './utils';
 
 describe('isWayInTheFuture', () => {
   it('should return true if past 100 years in the future', () => {

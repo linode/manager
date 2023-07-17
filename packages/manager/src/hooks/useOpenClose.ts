@@ -2,14 +2,14 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 interface OpenCloseState {
-  open: boolean;
   error?: APIError[];
+  open: boolean;
 }
 
 export interface OpenClose {
+  close: () => void;
   isOpen: boolean;
   open: () => void;
-  close: () => void;
 }
 
 const defaultState = {
@@ -29,7 +29,7 @@ export const useOpenClose = (
 
   const isOpen = entity.open;
 
-  return { isOpen, open, close };
+  return { close, isOpen, open };
 };
 
 export default useOpenClose;

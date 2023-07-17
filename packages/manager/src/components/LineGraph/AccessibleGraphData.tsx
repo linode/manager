@@ -1,12 +1,14 @@
-import * as React from 'react';
-import type { ChartData, ChartPoint } from 'chart.js';
-import { DateTime } from 'luxon';
 import { visuallyHidden } from '@mui/utils';
+import { DateTime } from 'luxon';
+import * as React from 'react';
+
 import { Box } from 'src/components/Box';
 
+import type { ChartData, ChartPoint } from 'chart.js';
+
 export interface GraphTabledDataProps {
-  ariaLabel?: string;
   accessibleUnit: string;
+  ariaLabel?: string;
   chartInstance: React.MutableRefObject<Chart | null>['current'];
   hiddenDatasets: number[];
 }
@@ -27,7 +29,7 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
   const { datasets }: ChartData = chartInstance.config.data;
 
   const tables = datasets.map((dataset, tableID) => {
-    const { label, data } = dataset;
+    const { data, label } = dataset;
     const hidden = hiddenDatasets.includes(tableID);
 
     const TableHeader = (
@@ -64,10 +66,10 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
     return (
       !hidden && (
         <table
-          key={`accessible-graph-data-table-${tableID}`}
           summary={`This table contains the data for the ${
             ariaLabel && label ? ariaLabel + ` (${label})` : 'graph below'
           }`}
+          key={`accessible-graph-data-table-${tableID}`}
         >
           <thead>{TableHeader}</thead>
           <tbody>{TableBody}</tbody>

@@ -1,28 +1,28 @@
-import * as Factory from 'factory.ts';
 import {
   ObjectStorageBucket,
   ObjectStorageCluster,
-  ObjectStorageObject,
   ObjectStorageKey,
+  ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage/types';
+import * as Factory from 'factory.ts';
 
 export const objectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorageBucket>(
   {
-    label: Factory.each((i) => `obj-bucket-${i}`),
+    cluster: 'us-east-1',
+    created: '2019-12-12T00:00:00',
     hostname: Factory.each(
       (i) => `obj-bucket-${i}.us-east-1.linodeobjects.com`
     ),
-    cluster: 'us-east-1',
-    created: '2019-12-12T00:00:00',
-    size: 999999,
+    label: Factory.each((i) => `obj-bucket-${i}`),
     objects: 103,
+    size: 999999,
   }
 );
 
 export const objectStorageClusterFactory = Factory.Sync.makeFactory<ObjectStorageCluster>(
   {
-    id: Factory.each((id) => `cluster-${id}`) as any,
     domain: Factory.each((id) => `cluster-${id}.linodeobjects.com`),
+    id: Factory.each((id) => `cluster-${id}`) as any,
     region: 'us-east',
     static_site_domain: Factory.each(
       (id) => `website-cluster-${id}.linodeobjects.com`
@@ -33,28 +33,28 @@ export const objectStorageClusterFactory = Factory.Sync.makeFactory<ObjectStorag
 
 export const objectStorageObjectFactory = Factory.Sync.makeFactory<ObjectStorageObject>(
   {
-    size: 1024,
-    owner: 'bfc70ab2-e3d4-42a4-ad55-83921822270c',
     etag: '9f254c71e28e033bf9e0e5262e3e72ab',
     last_modified: '2019-01-01T01:23:45',
     name: Factory.each((id) => `example-${id}`),
+    owner: 'bfc70ab2-e3d4-42a4-ad55-83921822270c',
+    size: 1024,
   }
 );
 
 export const objectStorageKeyFactory = Factory.Sync.makeFactory<ObjectStorageKey>(
   {
+    access_key: '4LRW3T5FX5Z55LB3LYQ8',
+    bucket_access: null,
     id: Factory.each((id) => id),
     label: Factory.each((id) => `access-key-${id}`),
-    access_key: '4LRW3T5FX5Z55LB3LYQ8',
-    secret_key: 'PYiAB02QRb53JeUge872CM6wEvBUyRhl3vHn31Ol',
     limited: false,
-    bucket_access: null,
+    secret_key: 'PYiAB02QRb53JeUge872CM6wEvBUyRhl3vHn31Ol',
   }
 );
 
 export const makeObjectsPage = (
   e: ObjectStorageObject[],
-  override: { is_truncated: boolean; next_marker: string | null }
+  override: { is_truncated: boolean; next_marker: null | string }
 ) => ({
   data: e,
   is_truncated: override.is_truncated || false,

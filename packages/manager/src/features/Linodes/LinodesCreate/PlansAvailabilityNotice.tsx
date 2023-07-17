@@ -1,20 +1,23 @@
 import * as React from 'react';
+
+import { Notice } from 'src/components/Notice/Notice';
 import ListItem from 'src/components/core/ListItem';
 import { formatPlanTypes } from 'src/utilities/planNotices';
 import { getCapabilityFromPlanType } from 'src/utilities/planNotices';
-import { Notice } from 'src/components/Notice/Notice';
-import type { LinodeTypeClass, Region } from '@linode/api-v4';
+
 import {
   StyledFormattedRegionList,
   StyledNoticeTypography,
   StyledTextTooltip,
 } from './PlansAvailabilityNotice.styles';
 
+import type { LinodeTypeClass, Region } from '@linode/api-v4';
+
 export interface PlansAvailabilityNoticeProps {
-  isSelectedRegionEligibleForPlan: boolean;
   hasSelectedRegion: boolean;
-  regionsData: Region[];
+  isSelectedRegionEligibleForPlan: boolean;
   planType: LinodeTypeClass;
+  regionsData: Region[];
 }
 
 export const PlansAvailabilityNotice = React.memo(
@@ -80,7 +83,7 @@ const PlansAvailabilityNoticeMessage = (
 
   if (!hasSelectedRegion) {
     return (
-      <Notice warning dataTestId={`${planType}-notice-warning`}>
+      <Notice dataTestId={`${planType}-notice-warning`} warning>
         <StyledNoticeTypography>
           {formattedPlanType} Plans are currently available in&nbsp;
           <StyledTextTooltip
@@ -95,7 +98,7 @@ const PlansAvailabilityNoticeMessage = (
 
   if (hasSelectedRegion && !isSelectedRegionEligibleForPlan) {
     return (
-      <Notice error dataTestId={`${planType}-notice-error`}>
+      <Notice dataTestId={`${planType}-notice-error`} error>
         <StyledNoticeTypography>
           {formattedPlanType} Plans are not currently available in this
           region.&nbsp;

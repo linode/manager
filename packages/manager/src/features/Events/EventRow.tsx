@@ -1,33 +1,35 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Hidden } from 'src/components/Hidden';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
-import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
-import { GravatarByUsername } from '../../components/GravatarByUsername';
 import { useApplicationStore } from 'src/store';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
-import { DateTime } from 'luxon';
+import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
+import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
+
+import { GravatarByUsername } from '../../components/GravatarByUsername';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  icon: {
+    height: 24,
+    width: 24,
+  },
   row: {
     '&:hover': {
       backgroundColor:
         theme.name === 'light' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
     },
-  },
-  icon: {
-    height: 24,
-    width: 24,
   },
 }));
 
@@ -36,18 +38,18 @@ interface ExtendedEvent extends Event {
 }
 
 interface Props {
-  event: ExtendedEvent;
   entityId?: number;
+  event: ExtendedEvent;
 }
 
 type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
-  const { event, entityId } = props;
+  const { entityId, event } = props;
   const store = useApplicationStore();
   const link = getLinkForEvent(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
-  const id = pathOr<string | number>(-1, ['entity', 'id'], event);
+  const id = pathOr<number | string>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id, store);
   const timestamp = getEventTimestamp(event);
 
@@ -57,9 +59,9 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     link,
     message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
+    timestamp,
     type,
     username: event.username,
-    timestamp,
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -67,18 +69,18 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
 
 export interface RowProps {
   action: EventAction;
-  link?: string | (() => void);
+  link?: (() => void) | string;
   message?: string | void;
   status?: string;
+  timestamp: DateTime;
   type:
-    | 'linode'
+    | 'database'
     | 'domain'
+    | 'linode'
     | 'nodebalancer'
     | 'stackscript'
-    | 'volume'
-    | 'database';
-  username: string | null;
-  timestamp: DateTime;
+    | 'volume';
+  username: null | string;
 }
 
 export const Row: React.FC<RowProps> = (props) => {
@@ -95,33 +97,33 @@ export const Row: React.FC<RowProps> = (props) => {
 
   return (
     <TableRow
-      data-qa-event-row
-      data-test-id={action}
       ariaLabel={`Event ${message}`}
       className={classes.row}
+      data-qa-event-row
+      data-test-id={action}
     >
       <Hidden smDown>
         <TableCell data-qa-event-icon-cell>
           <GravatarByUsername
-            username={username ?? ''}
             className={classes.icon}
+            username={username ?? ''}
           />
         </TableCell>
       </Hidden>
-      <TableCell parentColumn="Event" data-qa-event-message-cell>
+      <TableCell data-qa-event-message-cell parentColumn="Event">
         <HighlightedMarkdown
-          textOrMarkdown={message}
           sanitizeOptions={{
             allowedTags: ['a'],
             disallowedTagsMode: 'discard',
           }}
+          textOrMarkdown={message}
         />
       </TableCell>
       <TableCell parentColumn="Relative Date">
         {timestamp.toRelative()}
       </TableCell>
       <Hidden mdDown>
-        <TableCell parentColumn="Absolute Date" data-qa-event-created-cell>
+        <TableCell data-qa-event-created-cell parentColumn="Absolute Date">
           <DateTimeDisplay value={timestamp.toString()} />
         </TableCell>
       </Hidden>

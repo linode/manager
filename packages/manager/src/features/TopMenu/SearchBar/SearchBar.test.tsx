@@ -3,7 +3,7 @@ import { createFinalOptions } from './SearchBar';
 const createMockItems = (numberOfItemsToCreate: number) => {
   const mockItems = [];
   for (let i = 0; i < numberOfItemsToCreate; i++) {
-    mockItems.push({ value: `test-value-${i}`, label: `test-label-${i}` });
+    mockItems.push({ label: `test-label-${i}`, value: `test-value-${i}` });
   }
   return mockItems;
 };

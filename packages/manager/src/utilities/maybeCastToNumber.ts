@@ -1,4 +1,4 @@
 import { isNilOrEmpty } from './isNilOrEmpty';
 
-export const maybeCastToNumber = (v: string | number) =>
+export const maybeCastToNumber = (v: number | string) =>
   isNilOrEmpty(v) ? undefined : Number(v);

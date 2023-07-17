@@ -1,22 +1,22 @@
-import * as Factory from 'factory.ts';
-import { APIWarning } from '@linode/api-v4/lib/types';
 import {
+  Invoice,
   InvoiceItem,
   Payment,
   PaymentResponse,
-  Invoice,
 } from '@linode/api-v4/lib/account';
+import { APIWarning } from '@linode/api-v4/lib/types';
+import * as Factory from 'factory.ts';
 
 export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
-  label: Factory.each((i) => `Nanode 1GB - my-linode-${i} (${i})`),
-  unit_price: '0.0075',
   amount: 5,
+  from: '2020-01-01T12:00:00',
+  label: Factory.each((i) => `Nanode 1GB - my-linode-${i} (${i})`),
   quantity: 730,
   tax: 0,
-  total: 5,
-  from: '2020-01-01T12:00:00',
   to: '2020-01-31T12:00:00',
+  total: 5,
   type: 'hourly',
+  unit_price: '0.0075',
 });
 
 const paymentDate = new Date('2020-01-01T00:00:00');
@@ -36,34 +36,34 @@ export const invoiceFactory = Factory.Sync.makeFactory<Invoice>({
     return invoiceDate.toISOString();
   }),
   id: Factory.each((i) => i),
+  label: Factory.each((i) => `Invoice #${i}`),
   subtotal: 50,
   tax: 5,
   tax_summary: [
     {
-      tax: 3,
       name: 'PA STATE TAX',
+      tax: 3,
     },
     {
-      tax: 2,
       name: 'PA COUNTY TAX',
+      tax: 2,
     },
   ],
   total: 55,
-  label: Factory.each((i) => `Invoice #${i}`),
 });
 
 export const warningFactory = Factory.Sync.makeFactory<APIWarning>({
-  title:
-    'Your payment has been processed but we encountered an error releasing your resources.',
   detail:
     'Object Storage could not be reactivated, please open a support ticket.',
+  title:
+    'Your payment has been processed but we encountered an error releasing your resources.',
 });
 
 export const creditPaymentResponseFactory = Factory.Sync.makeFactory<PaymentResponse>(
   {
+    date: '2020-01-01T12:00:00',
     id: Factory.each((i) => i),
     usd: 10,
-    date: '2020-01-01T12:00:00',
     warnings: warningFactory.buildList(1),
   }
 );

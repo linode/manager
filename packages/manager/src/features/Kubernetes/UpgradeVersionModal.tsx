@@ -1,24 +1,25 @@
+import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
-import { useSnackbar } from 'notistack';
-import {
-  useKubernetesClusterMutation,
-  useKubernetesVersionQuery,
-} from 'src/queries/kubernetes';
 import {
   getNextVersion,
   localStorageWarning,
 } from 'src/features/Kubernetes/kubeUtils';
+import {
+  useKubernetesClusterMutation,
+  useKubernetesVersionQuery,
+} from 'src/queries/kubernetes';
 
 interface Props {
   clusterID: number;
   clusterLabel: string;
-  isOpen: boolean;
   currentVersion: string;
+  isOpen: boolean;
   onClose: () => void;
 }
 
@@ -91,28 +92,28 @@ export const UpgradeDialog = (props: Props) => {
 
   const actions = hasUpdatedSuccessfully ? (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+      <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onSubmitRecycleDialog}
-        loading={submitting}
         data-qa-confirm
+        loading={submitting}
+        onClick={onSubmitRecycleDialog}
       >
         Recycle All Nodes
       </Button>
     </ActionsPanel>
   ) : (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+      <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onSubmitUpgradeDialog}
-        loading={submitting}
         data-qa-confirm
+        loading={submitting}
+        onClick={onSubmitUpgradeDialog}
       >
         Upgrade Version
       </Button>
@@ -121,11 +122,11 @@ export const UpgradeDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      title={dialogTitle}
-      error={error}
-      open={isOpen}
-      onClose={onClose}
       actions={actions}
+      error={error}
+      onClose={onClose}
+      open={isOpen}
+      title={dialogTitle}
     >
       <Typography>
         {hasUpdatedSuccessfully ? (

@@ -1,96 +1,19 @@
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 
 type ClassNames =
-  | 'root'
-  | 'navIconHide'
   | 'close'
-  | 'textfieldContainer'
-  | 'textfield'
+  | 'icon'
   | 'input'
-  | 'icon';
+  | 'navIconHide'
+  | 'root'
+  | 'textfield'
+  | 'textfieldContainer';
 
 export type StyleProps = WithStyles<ClassNames>;
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      position: 'relative' /* for search results */,
-      height: 34,
-      flex: 1,
-      display: 'flex',
-      alignItems: 'center',
-      backgroundColor: theme.bg.app,
-      borderRadius: 3,
-      padding: theme.spacing(1),
-      marginLeft: theme.spacing(1),
-      transition: theme.transitions.create(['opacity']),
-      [theme.breakpoints.down('md')]: {
-        backgroundColor: theme.bg.white,
-        position: 'absolute',
-        width: 'calc(100% - 100px)',
-        zIndex: -1,
-        left: 0,
-        visibility: 'hidden',
-        opacity: 0,
-        margin: 0,
-        '&.active': {
-          visibility: 'visible',
-          opacity: 1,
-          zIndex: 3,
-        },
-      },
-      [theme.breakpoints.down('sm')]: {
-        width: '100%',
-      },
-      '& .react-select__menu-list': {
-        padding: 0,
-        overflowX: 'hidden',
-      },
-      '& .react-select__control': {
-        backgroundColor: 'transparent',
-      },
-      '& .react-select__value-container': {
-        overflow: 'hidden',
-        '& p': {
-          fontSize: '0.875rem',
-          overflow: 'visible',
-        },
-      },
-      '& .react-select__indicators': {
-        display: 'none',
-      },
-      '& .react-select__menu': {
-        marginTop: 12,
-        boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-        maxHeight: 350,
-        overflowY: 'auto',
-        border: 0,
-        borderRadius: 4,
-      },
-    },
-    navIconHide: {
-      cursor: 'pointer',
-      color: '#c9c7c7',
-      border: 'none',
-      padding: theme.spacing(),
-      backgroundColor: 'inherit',
-      '&:hover, &:focus': {
-        color: '#c1c1c0',
-      },
-      position: 'relative',
-      top: 1,
-      '& > span': {
-        justifyContent: 'flex-end',
-      },
-      '& svg': {
-        width: 25,
-        height: 25,
-      },
-      [theme.breakpoints.up('md')]: {
-        display: 'none',
-      },
-    },
     close: {
       '& > span': {
         padding: 2,
@@ -103,27 +26,104 @@ const styles = (theme: Theme) =>
       color: '#c9cacb',
       fontSize: '2rem',
     },
-    textfieldContainer: {
-      width: '100%',
-      [theme.breakpoints.down('md')]: {},
+    input: {
+      '& input': {
+        fontSize: '1.0em',
+        [theme.breakpoints.down('md')]: {},
+        transition: theme.transitions.create(['opacity']),
+      },
+      background: 'transparent',
+      border: 0,
+      maxWidth: '100%',
+    },
+    navIconHide: {
+      '& > span': {
+        justifyContent: 'flex-end',
+      },
+      '& svg': {
+        height: 25,
+        width: 25,
+      },
+      '&:hover, &:focus': {
+        color: '#c1c1c0',
+      },
+      backgroundColor: 'inherit',
+      border: 'none',
+      color: '#c9c7c7',
+      cursor: 'pointer',
+      padding: theme.spacing(),
+      position: 'relative',
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
+      top: 1,
+    },
+    root: {
+      '& .react-select__control': {
+        backgroundColor: 'transparent',
+      },
+      '& .react-select__indicators': {
+        display: 'none',
+      },
+      '& .react-select__menu': {
+        border: 0,
+        borderRadius: 4,
+        boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
+        marginTop: 12,
+        maxHeight: 350,
+        overflowY: 'auto',
+      },
+      '& .react-select__menu-list': {
+        overflowX: 'hidden',
+        padding: 0,
+      },
+      '& .react-select__value-container': {
+        '& p': {
+          fontSize: '0.875rem',
+          overflow: 'visible',
+        },
+        overflow: 'hidden',
+      },
+      alignItems: 'center',
+      backgroundColor: theme.bg.app,
+      borderRadius: 3,
+      display: 'flex',
+      flex: 1,
+      height: 34,
+      marginLeft: theme.spacing(1),
+      padding: theme.spacing(1),
+      position: 'relative' /* for search results */,
+      [theme.breakpoints.down('md')]: {
+        '&.active': {
+          opacity: 1,
+          visibility: 'visible',
+          zIndex: 3,
+        },
+        backgroundColor: theme.bg.white,
+        left: 0,
+        margin: 0,
+        opacity: 0,
+        position: 'absolute',
+        visibility: 'hidden',
+        width: 'calc(100% - 100px)',
+        zIndex: -1,
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: '100%',
+      },
+      transition: theme.transitions.create(['opacity']),
     },
     textfield: {
-      margin: 0,
-      flex: 1,
-      minHeight: 'initial',
       '& input:focus': {
         outline: '1px dotted #606469',
       },
+      flex: 1,
+      margin: 0,
+      minHeight: 'initial',
     },
-    input: {
-      maxWidth: '100%',
-      border: 0,
-      background: 'transparent',
-      '& input': {
-        transition: theme.transitions.create(['opacity']),
-        fontSize: '1.0em',
-        [theme.breakpoints.down('md')]: {},
-      },
+    textfieldContainer: {
+      [theme.breakpoints.down('md')]: {},
+      width: '100%',
     },
   });
 

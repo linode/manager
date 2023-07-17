@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { imageFactory } from 'src/factories/images';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 jest.mock('src/components/EnhancedSelect/Select');
 
-import { getImagesOptions, groupNameMap, ImageSelect } from './ImageSelect';
+import { ImageSelect, getImagesOptions, groupNameMap } from './ImageSelect';
 
 const images = imageFactory.buildList(10);
 
@@ -15,30 +16,30 @@ const props = {
 
 const privateImage1 = imageFactory.build({
   deprecated: false,
-  type: 'manual',
   is_public: false,
+  type: 'manual',
 });
 
 const recommendedImage1 = imageFactory.build({
-  deprecated: false,
-  type: 'manual',
-  id: 'linode/0001',
   created_by: 'linode',
+  deprecated: false,
+  id: 'linode/0001',
+  type: 'manual',
 });
 
 const recommendedImage2 = imageFactory.build({
-  deprecated: false,
-  type: 'manual',
-  id: 'linode/0002',
   created_by: 'linode',
+  deprecated: false,
+  id: 'linode/0002',
+  type: 'manual',
 });
 
 const deletedImage1 = imageFactory.build({
-  deprecated: false,
-  type: 'automatic',
-  id: 'private/0001',
   created_by: null,
+  deprecated: false,
   expiry: '2019-04-09T04:13:37',
+  id: 'private/0001',
+  type: 'automatic',
 });
 
 describe('ImageSelect', () => {

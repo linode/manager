@@ -1,9 +1,10 @@
+import { styled } from '@mui/material/styles';
+
 import { Box } from 'src/components/Box';
-import FormHelperText from 'src/components/core/FormHelperText';
 import Select from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { styled } from '@mui/material/styles';
+import FormHelperText from 'src/components/core/FormHelperText';
 
 export const StyledCodeSentMessageBox = styled(Box, {
   label: 'StyledCodeSentMessageBox',
@@ -29,77 +30,77 @@ export const StyledButtonContainer = styled(Box, {
 
 export const StyledInputContainer = styled(Box, {
   label: 'StyledInputContainer',
-})<{ isPhoneInputFocused: boolean }>(({ theme, isPhoneInputFocused }) => ({
+})<{ isPhoneInputFocused: boolean }>(({ isPhoneInputFocused, theme }) => ({
   border: theme.name === 'light' ? '1px solid #ccc' : '1px solid #222',
-  width: 'fit-content',
   transition: 'border-color 225ms ease-in-out',
+  width: 'fit-content',
   ...(isPhoneInputFocused &&
     (theme.name === 'light'
       ? {
-          boxShadow: '0 0 2px 1px #e1edfa',
           borderColor: '#3683dc',
+          boxShadow: '0 0 2px 1px #e1edfa',
         }
       : {
-          boxShadow: '0 0 2px 1px #222',
           borderColor: '#3683dc',
+          boxShadow: '0 0 2px 1px #222',
         })),
 }));
 
 export const StyledPhoneNumberInput = styled(TextField, {
   label: 'StyledPhoneNumberInput',
 })(() => ({
-  minWidth: '300px',
-  border: 'unset',
-  '&:focus': {
-    boxShadow: 'unset',
-    borderColor: 'unset',
-  },
   '&.Mui-focused': {
-    boxShadow: 'none',
     borderColor: 'unset',
+    boxShadow: 'none',
   },
+  '&:focus': {
+    borderColor: 'unset',
+    boxShadow: 'unset',
+  },
+  border: 'unset',
+  minWidth: '300px',
 }));
 
 export const StyledSelect = styled(Select, {
   label: 'StyledSelect',
 })(({ theme }) => ({
-  width: '70px !important',
-  height: '34px',
-  border: 'unset',
-  '&:focus': {
-    boxShadow: 'unset',
-    borderColor: 'unset',
-  },
-  '&.Mui-focused': {
-    boxShadow: 'none',
-    borderColor: 'unset',
-  },
   '& .MuiInputBase-input .react-select__indicators svg': {
     color: `${theme.palette.primary.main} !important`,
     opacity: '1 !important',
   },
+  '&.Mui-focused': {
+    borderColor: 'unset',
+    boxShadow: 'none',
+  },
+  '&:focus': {
+    borderColor: 'unset',
+    boxShadow: 'unset',
+  },
+  border: 'unset',
+  height: '34px',
+  width: '70px !important',
 }));
 
 export const StyledLabel = styled(Typography, {
   label: 'StyledLabel',
 })(({ theme }) => ({
-  marginTop: theme.spacing(2),
   color: theme.name === 'light' ? '#555' : '#c9cacb',
-  padding: 0,
+  fontFamily: 'LatoWebBold',
   fontSize: '.875rem',
   fontWeight: 400,
   lineHeight: '1',
   marginBottom: '8px',
-  fontFamily: 'LatoWebBold',
+  marginTop: theme.spacing(2),
+  padding: 0,
 }));
 
 export const StyledFormHelperText = styled(FormHelperText, {
   label: 'StyledFormHelperText',
 })(({ theme }) => ({
-  display: 'flex',
   alignItems: 'center',
   color: theme.color.red,
-  top: 42,
+  display: 'flex',
   left: 5,
+  top: 42,
   width: '100%',
 }));

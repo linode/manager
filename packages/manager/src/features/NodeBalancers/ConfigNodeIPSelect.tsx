@@ -1,23 +1,25 @@
-import * as React from 'react';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { Linode } from '@linode/api-v4/lib/linodes';
+import * as React from 'react';
+
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+
 import type { TextFieldProps } from 'src/components/TextField';
 
 interface ConfigNodeIPSelectProps {
-  selectedRegion?: string;
-  handleChange: (nodeIndex: number, ipAddress: string) => void;
-  nodeIndex: number;
   disabled?: boolean;
-  inputId?: string;
   errorText?: string;
+  handleChange: (nodeIndex: number, ipAddress: string) => void;
+  inputId?: string;
   nodeAddress?: string;
+  nodeIndex: number;
+  selectedRegion?: string;
   textfieldProps: Omit<TextFieldProps, 'label'>;
 }
 
 export const ConfigNodeIPSelect = React.memo(
   (props: ConfigNodeIPSelectProps) => {
-    const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
+    const [selectedLinode, setSelectedLinode] = React.useState<null | number>(
       null
     );
     const { handleChange: _handleChange, inputId } = props;
@@ -36,39 +38,6 @@ export const ConfigNodeIPSelect = React.memo(
 
     return (
       <LinodeSelect
-        noMarginTop
-        inputId={inputId}
-        textFieldProps={props.textfieldProps}
-        value={
-          props.nodeAddress
-            ? {
-                value: props.nodeAddress,
-                label: props.nodeAddress,
-              }
-            : null
-        }
-        selectedLinode={selectedLinode}
-        noOptionsMessage={`No options - please ensure you have at least 1 Linode
-      with a private IP located in the selected region.`}
-        generalError={props.errorText}
-        handleChange={handleChange}
-        label="IP Address"
-        disabled={props.disabled}
-        small
-        placeholder="Enter IP Address"
-        valueOverride={(linode) => {
-          return linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex));
-        }}
-        labelOverride={(linode) => {
-          return (
-            <div>
-              <strong>
-                {linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
-              </strong>
-              <div>{` ${linode.label}`}</div>
-            </div>
-          );
-        }}
         filterCondition={(linode) => {
           /**
            * if the Linode doesn't have an private IP OR if the Linode
@@ -80,6 +49,39 @@ export const ConfigNodeIPSelect = React.memo(
             linode.region === props.selectedRegion
           );
         }}
+        labelOverride={(linode) => {
+          return (
+            <div>
+              <strong>
+                {linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
+              </strong>
+              <div>{` ${linode.label}`}</div>
+            </div>
+          );
+        }}
+        noOptionsMessage={`No options - please ensure you have at least 1 Linode
+      with a private IP located in the selected region.`}
+        value={
+          props.nodeAddress
+            ? {
+                label: props.nodeAddress,
+                value: props.nodeAddress,
+              }
+            : null
+        }
+        valueOverride={(linode) => {
+          return linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex));
+        }}
+        disabled={props.disabled}
+        generalError={props.errorText}
+        handleChange={handleChange}
+        inputId={inputId}
+        label="IP Address"
+        noMarginTop
+        placeholder="Enter IP Address"
+        selectedLinode={selectedLinode}
+        small
+        textFieldProps={props.textfieldProps}
       />
     );
   }

@@ -1,19 +1,21 @@
 import {
-  getLinodeBackups,
   Linode,
   LinodeBackupsResponse,
+  getLinodeBackups,
 } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
+
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import Paper from 'src/components/core/Paper';
 import { reportException } from 'src/exceptionReporting';
 import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
 import {
@@ -45,9 +47,9 @@ interface Props {
 
 interface State {
   backupInfo: Info;
+  backupsError?: string;
   isGettingBackups: boolean;
   selectedLinodeWithBackups?: LinodeWithBackups;
-  backupsError?: string;
 }
 
 export type CombinedProps = Props &
@@ -57,66 +59,116 @@ export type CombinedProps = Props &
   WithStyles<ClassNames>;
 
 const errorResources = {
-  type: 'A plan selection',
-  region: 'A region selection',
+  backup_id: 'Backup ID',
   label: 'A label',
+  region: 'A region selection',
   root_pass: 'A root password',
   tags: 'Tags for this Linode',
-  backup_id: 'Backup ID',
+  type: 'A plan selection',
 };
 
 const filterLinodesWithBackups = (linodes: Linode[]) =>
   linodes.filter((linode) => linode.backups.enabled);
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
-  state: State = {
-    backupInfo: undefined,
-    isGettingBackups: false,
-  };
-
-  mounted: boolean = false;
-
-  handleSelectBackupInfo = (info: Info) => {
-    this.setState({ backupInfo: info });
-  };
-
-  getBackupsForLinode = (linodeId: number) => {
-    const { linodesData } = this.props;
-
-    if (!linodeId) {
-      return;
+  componentDidMount() {
+    this.mounted = true;
+    // If there is a selected Linode ID (from props), make sure its information
+    // is set to state as if it had been selected manually.
+    if (this.props.selectedLinodeID) {
+      this.updateRegion(this.props.selectedLinodeID);
+      this.getBackupsForLinode(this.props.selectedLinodeID);
     }
+  }
 
-    this.setState({
-      isGettingBackups: true,
-      backupsError: undefined,
-    });
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
-    getLinodeBackups(linodeId)
-      .then((backups) => {
-        const selectedLinode = linodesData.find(
-          (thisLinode) => thisLinode.id === linodeId
-        );
+  render() {
+    const { isGettingBackups, selectedLinodeWithBackups } = this.state;
+    const {
+      classes,
+      disabled,
+      errors,
+      imagesData,
+      linodesData,
+      regionsData,
+      selectedBackupID,
+      selectedLinodeID,
+      setBackupID,
+      typesData,
+    } = this.props;
 
-        if (!selectedLinode) {
-          return this.setState({ isGettingBackups: false });
-        }
+    const extendedTypes = typesData?.map(extendType);
 
-        const selectedLinodeWithBackups: LinodeWithBackups = {
-          ...selectedLinode,
-          currentBackups: { ...backups },
-        };
+    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
-        this.setState({ selectedLinodeWithBackups, isGettingBackups: false });
-      })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .catch((err) => {
-        this.setState({
-          isGettingBackups: false,
-          backupsError: 'Error retrieving backups for this Linode.',
-        });
-      });
-  };
+    const userHasBackups = linodesData.some(
+      (thisLinode) => thisLinode.backups.enabled
+    );
+
+    return (
+      <Grid className={`${classes.main} mlMain py0`}>
+        {!userHasBackups ? (
+          <Paper>
+            <Placeholder
+              icon={VolumeIcon}
+              isEntity
+              renderAsSecondary
+              title="Create from Backup"
+            >
+              You do not have backups enabled for your Linodes. Please visit the
+              Backups panel in the Linode Details view.
+            </Placeholder>
+          </Paper>
+        ) : (
+          <React.Fragment>
+            <SelectLinodePanel
+              linodes={ramdaCompose(
+                (linodes: Linode[]) =>
+                  extendLinodes(
+                    linodes,
+                    imagesData,
+                    extendedTypes,
+                    regionsData
+                  ),
+                filterLinodesWithBackups
+              )(linodesData)}
+              notice={{
+                level: 'warning',
+                text: `This newly created Linode will be created with
+                          the same password and SSH Keys (if any) as the original Linode.
+                          Also note that this Linode will need to be manually booted after it finishes
+                          provisioning.`,
+              }}
+              disabled={disabled}
+              error={hasErrorFor('linode_id')}
+              handleSelection={this.handleLinodeSelect}
+              selectedLinodeID={selectedLinodeID}
+              updateFor={[selectedLinodeID, errors]}
+            />
+            <SelectBackupPanel
+              updateFor={[
+                selectedLinodeID,
+                selectedBackupID,
+                errors,
+                selectedLinodeWithBackups,
+                isGettingBackups,
+              ]}
+              error={hasErrorFor('backup_id') || this.state.backupsError}
+              handleChangeBackup={setBackupID}
+              handleChangeBackupInfo={this.handleSelectBackupInfo}
+              loading={isGettingBackups}
+              selectedBackupID={selectedBackupID}
+              selectedLinodeID={selectedLinodeID}
+              selectedLinodeWithBackups={selectedLinodeWithBackups}
+            />
+          </React.Fragment>
+        )}
+      </Grid>
+    );
+  }
 
   // Find regionID from the selectedLinodeID, and update the parent state.
   updateRegion(selectedLinodeID: number) {
@@ -137,19 +189,43 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     this.props.updateRegionID(regionID || '');
   }
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
+  getBackupsForLinode = (linodeId: number) => {
+    const { linodesData } = this.props;
 
-  componentDidMount() {
-    this.mounted = true;
-    // If there is a selected Linode ID (from props), make sure its information
-    // is set to state as if it had been selected manually.
-    if (this.props.selectedLinodeID) {
-      this.updateRegion(this.props.selectedLinodeID);
-      this.getBackupsForLinode(this.props.selectedLinodeID);
+    if (!linodeId) {
+      return;
     }
-  }
+
+    this.setState({
+      backupsError: undefined,
+      isGettingBackups: true,
+    });
+
+    getLinodeBackups(linodeId)
+      .then((backups) => {
+        const selectedLinode = linodesData.find(
+          (thisLinode) => thisLinode.id === linodeId
+        );
+
+        if (!selectedLinode) {
+          return this.setState({ isGettingBackups: false });
+        }
+
+        const selectedLinodeWithBackups: LinodeWithBackups = {
+          ...selectedLinode,
+          currentBackups: { ...backups },
+        };
+
+        this.setState({ isGettingBackups: false, selectedLinodeWithBackups });
+      })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .catch((err) => {
+        this.setState({
+          backupsError: 'Error retrieving backups for this Linode.',
+          isGettingBackups: false,
+        });
+      });
+  };
 
   handleLinodeSelect = (
     linodeId: number,
@@ -162,90 +238,16 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     this.props.updateTypeID(type);
   };
 
-  render() {
-    const { isGettingBackups, selectedLinodeWithBackups } = this.state;
-    const {
-      classes,
-      disabled,
-      errors,
-      imagesData,
-      linodesData,
-      selectedBackupID,
-      selectedLinodeID,
-      setBackupID,
-      typesData,
-      regionsData,
-    } = this.props;
+  handleSelectBackupInfo = (info: Info) => {
+    this.setState({ backupInfo: info });
+  };
 
-    const extendedTypes = typesData?.map(extendType);
+  mounted: boolean = false;
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-
-    const userHasBackups = linodesData.some(
-      (thisLinode) => thisLinode.backups.enabled
-    );
-
-    return (
-      <Grid className={`${classes.main} mlMain py0`}>
-        {!userHasBackups ? (
-          <Paper>
-            <Placeholder
-              isEntity
-              icon={VolumeIcon}
-              title="Create from Backup"
-              renderAsSecondary
-            >
-              You do not have backups enabled for your Linodes. Please visit the
-              Backups panel in the Linode Details view.
-            </Placeholder>
-          </Paper>
-        ) : (
-          <React.Fragment>
-            <SelectLinodePanel
-              error={hasErrorFor('linode_id')}
-              linodes={ramdaCompose(
-                (linodes: Linode[]) =>
-                  extendLinodes(
-                    linodes,
-                    imagesData,
-                    extendedTypes,
-                    regionsData
-                  ),
-                filterLinodesWithBackups
-              )(linodesData)}
-              selectedLinodeID={selectedLinodeID}
-              handleSelection={this.handleLinodeSelect}
-              updateFor={[selectedLinodeID, errors]}
-              disabled={disabled}
-              notice={{
-                level: 'warning',
-                text: `This newly created Linode will be created with
-                          the same password and SSH Keys (if any) as the original Linode.
-                          Also note that this Linode will need to be manually booted after it finishes
-                          provisioning.`,
-              }}
-            />
-            <SelectBackupPanel
-              error={hasErrorFor('backup_id') || this.state.backupsError}
-              selectedLinodeWithBackups={selectedLinodeWithBackups}
-              selectedLinodeID={selectedLinodeID}
-              selectedBackupID={selectedBackupID}
-              handleChangeBackup={setBackupID}
-              handleChangeBackupInfo={this.handleSelectBackupInfo}
-              updateFor={[
-                selectedLinodeID,
-                selectedBackupID,
-                errors,
-                selectedLinodeWithBackups,
-                isGettingBackups,
-              ]}
-              loading={isGettingBackups}
-            />
-          </React.Fragment>
-        )}
-      </Grid>
-    );
-  }
+  state: State = {
+    backupInfo: undefined,
+    isGettingBackups: false,
+  };
 }
 
 const styled = withStyles(styles);

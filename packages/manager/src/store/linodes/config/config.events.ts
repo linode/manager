@@ -1,6 +1,8 @@
 import { EventStatus } from '@linode/api-v4/lib/account';
 import { Dispatch } from 'redux';
+
 import { EventHandler } from 'src/store/types';
+
 import { getAllLinodeConfigs } from './config.requests';
 
 const configEventHandler: EventHandler = (event, dispatch) => {

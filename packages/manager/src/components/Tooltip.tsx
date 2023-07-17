@@ -1,5 +1,6 @@
-import React from 'react';
 import { default as _Tooltip } from '@mui/material/Tooltip';
+import React from 'react';
+
 import type { TooltipProps } from '@mui/material/Tooltip';
 
 /**

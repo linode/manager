@@ -51,8 +51,8 @@ export const percentCompleteHasUpdated = (
 };
 
 interface Payload {
-  mostRecentEventTime: string;
   inProgressEvents: Record<number, number>;
+  mostRecentEventTime: string;
 }
 
 /**
@@ -91,7 +91,7 @@ const ACTIONS_WITHOUT_USERNAMES = [
 
 export const formatEventWithUsername = (
   action: EventAction,
-  username: string | null,
+  username: null | string,
   message: string
 ) => {
   return username &&

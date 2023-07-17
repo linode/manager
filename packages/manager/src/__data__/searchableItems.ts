@@ -1,21 +1,21 @@
 export const searchableItems = [
   {
-    value: 1,
-    label: 'test-linode-001',
-    entityType: 'linode',
     data: { tags: ['my-app'] },
+    entityType: 'linode',
+    label: 'test-linode-001',
+    value: 1,
   },
   {
-    value: 2,
-    label: 'test-linode-002',
-    entityType: 'linode',
     data: { tags: ['my-app2', 'production'] },
+    entityType: 'linode',
+    label: 'test-linode-002',
+    value: 2,
   },
   {
-    value: 3,
-    label: 'test-linode-003',
-    entityType: 'linode',
     data: { tags: ['unrelated-app', 'production'] },
+    entityType: 'linode',
+    label: 'test-linode-003',
+    value: 3,
   },
-  { value: 4, label: 'my-app', entityType: 'domain', data: { tags: [] } },
+  { data: { tags: [] }, entityType: 'domain', label: 'my-app', value: 4 },
 ];

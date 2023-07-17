@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon';
+
 import { isRecent } from './isRecent';
 
 describe('isRecent', () => {
-  const baseDate = DateTime.fromObject({ year: 2019, month: 1, day: 1 });
+  const baseDate = DateTime.fromObject({ day: 1, month: 1, year: 2019 });
   const m = baseDate.toISO();
 
   it('should return false if time is in the future', () => {

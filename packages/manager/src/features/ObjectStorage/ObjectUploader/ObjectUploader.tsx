@@ -1,40 +1,42 @@
-import * as React from 'react';
-import { Button } from 'src/components/Button/Button';
-import { debounce } from 'throttle-debounce';
-import { FileUpload } from './FileUpload';
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
-import { readableBytes } from 'src/utilities/unitConversions';
-import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics';
-import { updateBucket } from 'src/queries/objectStorage';
-import { uploadObject } from '../requests';
-import { useDropzone, FileRejection } from 'react-dropzone';
-import { useQueryClient } from 'react-query';
 import { useSnackbar } from 'notistack';
-import {
-  curriedObjectUploaderReducer,
-  defaultState,
-  MAX_FILE_SIZE_IN_BYTES,
-  MAX_NUM_UPLOADS,
-  MAX_PARALLEL_UPLOADS,
-  ObjectUploaderAction,
-  pathOrFileName,
-} from './reducer';
+import * as React from 'react';
+import { FileRejection, useDropzone } from 'react-dropzone';
+import { useQueryClient } from 'react-query';
+import { debounce } from 'throttle-debounce';
+
+import { Button } from 'src/components/Button/Button';
+import { updateBucket } from 'src/queries/objectStorage';
+import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics';
+import { readableBytes } from 'src/utilities/unitConversions';
+
+import { uploadObject } from '../requests';
+import { FileUpload } from './FileUpload';
 import {
   StyledDropZoneContent,
   StyledDropZoneCopy,
   StyledFileUploadsContainer,
   useStyles,
 } from './ObjectUploader.styles';
+import {
+  MAX_FILE_SIZE_IN_BYTES,
+  MAX_NUM_UPLOADS,
+  MAX_PARALLEL_UPLOADS,
+  ObjectUploaderAction,
+  curriedObjectUploaderReducer,
+  defaultState,
+  pathOrFileName,
+} from './reducer';
 
 interface Props {
-  clusterId: string;
   bucketName: string;
-  prefix: string;
+  clusterId: string;
   maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
+  prefix: string;
 }
 
 export const ObjectUploader = React.memo((props: Props) => {
-  const { clusterId, bucketName, prefix } = props;
+  const { bucketName, clusterId, prefix } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
   const queryClient = useQueryClient();
@@ -63,7 +65,7 @@ export const ObjectUploader = React.memo((props: Props) => {
     // We bind each file to the prefix at the time of onDrop. The prefix could
     // change later, if the user navigates to a different folder before the
     // upload is complete.
-    dispatch({ type: 'ENQUEUE', files, prefix });
+    dispatch({ files, prefix, type: 'ENQUEUE' });
   };
 
   // This function will be called when dropped files that are over the max size.
@@ -109,11 +111,11 @@ export const ObjectUploader = React.memo((props: Props) => {
 
     // Set status as "IN_PROGRESS" for each file.
     dispatch({
-      type: 'UPDATE_FILES',
+      data: { status: 'IN_PROGRESS' },
       filesToUpdate: nextBatch.map((fileUpload) =>
         pathOrFileName(fileUpload.file)
       ),
-      data: { status: 'IN_PROGRESS' },
+      type: 'UPDATE_FILES',
     });
 
     nextBatch.forEach((fileUpload) => {
@@ -145,22 +147,22 @@ export const ObjectUploader = React.memo((props: Props) => {
         props.maybeAddObjectToTable(fullObjectName, file.size);
 
         dispatch({
-          type: 'UPDATE_FILES',
-          filesToUpdate: [path],
           data: {
             percentComplete: 100,
             status: 'FINISHED',
           },
+          filesToUpdate: [path],
+          type: 'UPDATE_FILES',
         });
       };
 
       const handleError = () => {
         dispatch({
-          type: 'UPDATE_FILES',
-          filesToUpdate: [path],
           data: {
             status: 'ERROR',
           },
+          filesToUpdate: [path],
+          type: 'UPDATE_FILES',
         });
       };
 
@@ -175,11 +177,11 @@ export const ObjectUploader = React.memo((props: Props) => {
         getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
           content_type: file.type,
         })
-          .then(({ url, exists }) => {
+          .then(({ exists, url }) => {
             if (exists) {
               dispatch({
-                type: 'NOTIFY_FILE_EXISTS',
                 fileName: path,
+                type: 'NOTIFY_FILE_EXISTS',
                 url,
               });
               return;
@@ -212,8 +214,8 @@ export const ObjectUploader = React.memo((props: Props) => {
   const className = React.useMemo(
     () =>
       cx({
-        [classes.active]: isDragActive,
         [classes.accept]: isDragAccept,
+        [classes.active]: isDragActive,
         [classes.reject]: isDragReject,
       }),
     [isDragActive, isDragAccept, isDragReject]
@@ -240,27 +242,27 @@ export const ObjectUploader = React.memo((props: Props) => {
             const path = (upload.file as any).path || upload.file.name;
             return (
               <FileUpload
-                key={idx}
-                displayName={upload.file.name}
-                fileName={path}
-                sizeInBytes={upload.file.size || 0}
-                percentCompleted={upload.percentComplete || 0}
-                overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
-                url={upload.url}
-                dispatch={dispatch}
                 error={
                   upload.status === 'ERROR' ? 'Error uploading object.' : ''
                 }
+                dispatch={dispatch}
+                displayName={upload.file.name}
+                fileName={path}
+                key={idx}
+                overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
+                percentCompleted={upload.percentComplete || 0}
+                sizeInBytes={upload.file.size || 0}
+                url={upload.url}
               />
             );
           })}
         </StyledFileUploadsContainer>
 
         <StyledDropZoneContent
-          data-qa-drop-zone
           className={cx({
             [classes.UploadZoneActiveButton]: UploadZoneActive,
           })}
+          data-qa-drop-zone
         >
           {!UploadZoneActive && (
             <StyledDropZoneCopy variant="subtitle2">
@@ -269,8 +271,8 @@ export const ObjectUploader = React.memo((props: Props) => {
           )}
           <Button
             buttonType="primary"
-            onClick={open}
             className={classes.uploadButton}
+            onClick={open}
           >
             Browse Files
           </Button>
@@ -285,10 +287,10 @@ export const onUploadProgressFactory = (
   fileName: string
 ) => (progressEvent: ProgressEvent) => {
   dispatch({
-    type: 'UPDATE_FILES',
-    filesToUpdate: [fileName],
     data: {
       percentComplete: (progressEvent.loaded / progressEvent.total) * 100,
     },
+    filesToUpdate: [fileName],
+    type: 'UPDATE_FILES',
   });
 };

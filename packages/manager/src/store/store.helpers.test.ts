@@ -26,11 +26,11 @@ describe('store.helpers', () => {
     const result = createDefaultState();
     it('should return the unmodified defaultState', () => {
       expect(result).toEqual({
-        loading: false,
-        lastUpdated: 0,
+        error: undefined,
         items: [],
         itemsById: {},
-        error: undefined,
+        lastUpdated: 0,
+        loading: false,
       });
     });
   });
@@ -66,8 +66,8 @@ describe('store.helpers', () => {
           1: { id: 1 },
           2: { id: 2 },
           3: { id: 3 },
-          99: { id: 99 },
           66: { id: 66 },
+          99: { id: 99 },
         },
       });
     });
@@ -80,8 +80,8 @@ describe('store.helpers', () => {
     it('should update state with error and complete loading', () => {
       expect(result).toEqual({
         ...createDefaultState(),
-        loading: false,
         error: [{ reason: 'Something bad happened.' }],
+        loading: false,
       });
     });
   });

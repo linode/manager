@@ -2,13 +2,15 @@ import { Engine } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import {
   useDatabaseMutation,
@@ -16,7 +18,6 @@ import {
   useDatabaseTypesQuery,
 } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import LandingHeader from 'src/components/LandingHeader';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
@@ -32,15 +33,15 @@ export const DatabaseDetail = () => {
 
   const id = Number(databaseId);
 
-  const { data: database, isLoading, error } = useDatabaseQuery(engine, id);
+  const { data: database, error, isLoading } = useDatabaseQuery(engine, id);
   const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
 
   const {
     editableLabelError,
-    setEditableLabelError,
     resetEditableLabel,
+    setEditableLabelError,
   } = useEditableLabelState();
 
   if (error) {
@@ -63,16 +64,16 @@ export const DatabaseDetail = () => {
 
   const tabs = [
     {
-      title: 'Summary',
       routeName: `/databases/${engine}/${id}/summary`,
+      title: 'Summary',
     },
     {
-      title: 'Backups',
       routeName: `/databases/${engine}/${id}/backups`,
+      title: 'Backups',
     },
     {
-      title: 'Settings',
       routeName: `/databases/${engine}/${id}/settings`,
+      title: 'Settings',
     },
   ];
 
@@ -118,24 +119,24 @@ export const DatabaseDetail = () => {
     <>
       <DocumentTitleSegment segment={database.label} />
       <LandingHeader
-        title={database.label}
         breadcrumbProps={{
-          firstAndLastOnly: true,
-          pathname: location.pathname,
-          labelOptions: { noCap: true },
           crumbOverrides: [
             {
               label: 'Database Clusters',
               position: 1,
             },
           ],
+          firstAndLastOnly: true,
+          labelOptions: { noCap: true },
           onEditHandlers: {
             editableTextTitle: database.label,
             errorText: editableLabelError,
             onCancel: resetEditableLabel,
             onEdit: handleSubmitLabelChange,
           },
+          pathname: location.pathname,
         }}
+        title={database.label}
       />
       <Tabs index={getTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />

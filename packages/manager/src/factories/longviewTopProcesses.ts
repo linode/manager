@@ -1,4 +1,5 @@
 import * as Factory from 'factory.ts';
+
 import {
   LongviewTopProcesses,
   TopProcess,
@@ -6,10 +7,10 @@ import {
 
 export const topProcessFactory = Factory.Sync.makeFactory<TopProcess>({
   root: {
-    cpu: 5,
-    mem: 1024 * 2,
     count: 1,
+    cpu: 5,
     entries: 2,
+    mem: 1024 * 2,
   },
 });
 

@@ -1,6 +1,6 @@
 import { append, update } from 'ramda';
 
-export default <T extends { id: string | number }>(
+export default <T extends { id: number | string }>(
   item: T,
   items: T[] = []
 ) => {

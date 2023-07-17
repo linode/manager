@@ -1,15 +1,17 @@
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import { SupportLink } from 'src/components/SupportLink';
-import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { useQueryClient } from 'react-query';
+import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
 import { queryKey } from 'src/queries/accountNotifications';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
+import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 
 const ComplianceUpdateModal = () => {
   const [error, setError] = React.useState('');
@@ -19,8 +21,8 @@ const ComplianceUpdateModal = () => {
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
   const {
-    mutateAsync: updateAccountAgreements,
     isLoading,
+    mutateAsync: updateAccountAgreements,
   } = useMutateAccountAgreements();
 
   const handleAgree = () => {
@@ -42,32 +44,32 @@ const ComplianceUpdateModal = () => {
 
   return (
     <ConfirmationDialog
-      open={complianceModelContext.isOpen}
-      onClose={complianceModelContext.close}
-      title="Compliance Update"
       actions={() => (
         <ActionsPanel>
           <Button
-            buttonType="secondary"
             onClick={() => {
               setChecked(false);
               complianceModelContext.close();
             }}
+            buttonType="secondary"
             data-qa-cancel
           >
             Close
           </Button>
           <Button
             buttonType="primary"
-            onClick={handleAgree}
-            loading={isLoading}
             disabled={!checked}
+            loading={isLoading}
+            onClick={handleAgree}
           >
             Agree
           </Button>
         </ActionsPanel>
       )}
       error={error}
+      onClose={complianceModelContext.close}
+      open={complianceModelContext.isOpen}
+      title="Compliance Update"
     >
       <Typography>
         Recent legal changes now require users located in Europe, or with
@@ -78,11 +80,11 @@ const ComplianceUpdateModal = () => {
         After your review, please click the box below if the agreement is
         acceptable, or{' '}
         <SupportLink
-          text="open a Support Ticket"
           onClick={() => {
             setChecked(false);
             complianceModelContext.close();
           }}
+          text="open a Support Ticket"
           title="Updates to the new EU Model Contact"
         />{' '}
         if you have any questions.

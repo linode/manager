@@ -1,67 +1,68 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Box from '@mui/material/Box';
-import { Theme } from '@mui/material/styles';
 import {
   default as _TextField,
   StandardTextFieldProps,
 } from '@mui/material/TextField';
+import { Theme } from '@mui/material/styles';
 import { clamp } from 'ramda';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import { CircleProgress } from 'src/components/CircleProgress';
+import { TooltipProps as _TooltipProps } from 'src/components/Tooltip';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
-import { TooltipProps as _TooltipProps } from 'src/components/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
-import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  helpWrapper: {
+  absolute: {
+    position: 'absolute',
+  },
+  editable: {
+    paddingLeft: 1,
+    wordBreak: 'keep-all',
+  },
+  errorText: {
+    alignItems: 'center',
+    color: theme.color.red,
     display: 'flex',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap',
-  },
-  wrapper: {
-    marginTop: theme.spacing(2),
-  },
-  noTransform: {
-    transform: 'none',
-  },
-  label: {
-    fontFamily: theme.font.normal,
-  },
-  helperTextTop: {
-    marginBottom: theme.spacing(),
-    marginTop: theme.spacing(),
-  },
-  helpWrapperContainer: {
-    display: 'flex',
+    left: 5,
+    top: 42,
     width: '100%',
   },
   expand: {
     maxWidth: '100%',
   },
-  root: {
-    marginTop: 0,
+  helpWrapper: {
+    alignItems: 'flex-end',
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  helpWrapperContainer: {
+    display: 'flex',
+    width: '100%',
   },
   helpWrapperTextField: {
     width: '415px',
   },
-  errorText: {
-    display: 'flex',
-    alignItems: 'center',
-    color: theme.color.red,
-    top: 42,
-    left: 5,
-    width: '100%',
+  helperTextTop: {
+    marginBottom: theme.spacing(),
+    marginTop: theme.spacing(),
   },
-  editable: {
-    wordBreak: 'keep-all',
-    paddingLeft: 1,
+  label: {
+    fontFamily: theme.font.normal,
   },
-  absolute: {
-    position: 'absolute',
+  noTransform: {
+    transform: 'none',
+  },
+  root: {
+    marginTop: 0,
+  },
+  wrapper: {
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -101,7 +102,7 @@ interface BaseProps {
    * Placement of the `helperText`
    * @default bottom
    */
-  helperTextPosition?: 'top' | 'bottom';
+  helperTextPosition?: 'bottom' | 'top';
   /**
    * Hides the `label`
    * @default false
@@ -141,18 +142,18 @@ interface BaseProps {
   value?: Value;
 }
 
-type Value = string | number | undefined | null;
+type Value = null | number | string | undefined;
 
 interface LabelToolTipProps {
-  labelTooltipText?: string | JSX.Element;
+  labelTooltipText?: JSX.Element | string;
 }
 
 interface InputToolTipProps {
-  tooltipPosition?: _TooltipProps['placement'];
-  tooltipText?: string | JSX.Element;
-  tooltipInteractive?: boolean;
   tooltipClasses?: string;
+  tooltipInteractive?: boolean;
   tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
+  tooltipPosition?: _TooltipProps['placement'];
+  tooltipText?: JSX.Element | string;
 }
 
 interface TextFieldPropsOverrides extends StandardTextFieldProps {
@@ -169,6 +170,9 @@ export const TextField = (props: TextFieldProps) => {
   const { classes, cx } = useStyles();
 
   const {
+    InputLabelProps,
+    InputProps,
+    SelectProps,
     children,
     className,
     dataAttrs,
@@ -182,9 +186,7 @@ export const TextField = (props: TextFieldProps) => {
     helperTextPosition,
     hideLabel,
     inputId,
-    InputLabelProps,
     inputProps,
-    InputProps,
     label,
     labelTooltipText,
     loading,
@@ -194,12 +196,11 @@ export const TextField = (props: TextFieldProps) => {
     onChange,
     optional,
     required,
-    SelectProps,
-    tooltipPosition,
-    tooltipText,
     tooltipClasses,
     tooltipInteractive,
     tooltipOnMouseEnter,
+    tooltipPosition,
+    tooltipText,
     type,
     value,
     ...textFieldProps
@@ -284,12 +285,12 @@ export const TextField = (props: TextFieldProps) => {
     >
       <Box display="flex">
         <InputLabel
-          data-qa-textfield-label={label}
           className={cx({
-            [classes.wrapper]: noMarginTop ? false : true,
             [classes.noTransform]: true,
+            [classes.wrapper]: noMarginTop ? false : true,
             'visually-hidden': hideLabel,
           })}
+          data-qa-textfield-label={label}
           htmlFor={validInputId}
         >
           {label}
@@ -301,19 +302,19 @@ export const TextField = (props: TextFieldProps) => {
         </InputLabel>
         {labelTooltipText && (
           <TooltipIcon
-            text={labelTooltipText}
-            status="help"
             sxTooltipIcon={{
               padding: '8px 0px 0px 8px',
             }}
+            status="help"
+            text={labelTooltipText}
           />
         )}
       </Box>
 
       {helperText && helperTextPosition === 'top' && (
         <FormHelperText
-          data-qa-textfield-helper-text
           className={classes.helperTextTop}
+          data-qa-textfield-helper-text
         >
           {helperText}
         </FormHelperText>
@@ -326,38 +327,12 @@ export const TextField = (props: TextFieldProps) => {
         <_TextField
           {...textFieldProps}
           {...dataAttrs}
-          variant="standard"
-          error={!!error || !!errorText}
-          /**
-           * Set _helperText_ and _label_ to no value because we want to
-           * have the ability to put the helper text under the label at the top.
-           */
-          label={''}
-          helperText={''}
-          fullWidth
-          /*
-           * Let us explicitly pass an empty string to the input
-           * See UserDefinedFieldsPanel.tsx for a verbose explanation why.
-           */
-          value={_value}
-          onChange={handleChange}
           InputLabelProps={{
             ...InputLabelProps,
             required: false,
             shrink: true,
           }}
-          inputProps={{
-            'data-testid': 'textfield-input',
-            id: validInputId,
-            ...inputProps,
-          }}
           InputProps={{
-            disableUnderline: true,
-            endAdornment: loading && (
-              <InputAdornment position="end">
-                <CircleProgress mini />
-              </InputAdornment>
-            ),
             className: cx(
               'input',
               {
@@ -365,50 +340,76 @@ export const TextField = (props: TextFieldProps) => {
               },
               className
             ),
+            disableUnderline: true,
+            endAdornment: loading && (
+              <InputAdornment position="end">
+                <CircleProgress mini />
+              </InputAdornment>
+            ),
             ...InputProps,
           }}
           SelectProps={{
-            disableUnderline: true,
             IconComponent: KeyboardArrowDown,
             MenuProps: {
-              anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
-              transformOrigin: { vertical: 'top', horizontal: 'left' },
               MenuListProps: { className: 'selectMenuList' },
               PaperProps: { className: 'selectMenuDropdown' },
+              anchorOrigin: { horizontal: 'left', vertical: 'bottom' },
+              transformOrigin: { horizontal: 'left', vertical: 'top' },
             },
+            disableUnderline: true,
             ...SelectProps,
           }}
           className={cx(
             {
-              [classes.root]: true,
               [classes.helpWrapperTextField]: Boolean(tooltipText),
+              [classes.root]: true,
             },
             className
           )}
+          inputProps={{
+            'data-testid': 'textfield-input',
+            id: validInputId,
+            ...inputProps,
+          }}
+          error={!!error || !!errorText}
+          fullWidth
+          helperText={''}
+          /**
+           * Set _helperText_ and _label_ to no value because we want to
+           * have the ability to put the helper text under the label at the top.
+           */
+          label={''}
+          onChange={handleChange}
           type={type}
+          /*
+           * Let us explicitly pass an empty string to the input
+           * See UserDefinedFieldsPanel.tsx for a verbose explanation why.
+           */
+          value={_value}
+          variant="standard"
         >
           {children}
         </_TextField>
         {tooltipText && (
           <TooltipIcon
-            classes={{ popper: tooltipClasses }}
-            text={tooltipText}
-            tooltipPosition={tooltipPosition}
-            interactive={tooltipInteractive}
-            onMouseEnter={tooltipOnMouseEnter}
-            status="help"
             sxTooltipIcon={{
               padding: '0px 0px 0px 8px',
             }}
+            classes={{ popper: tooltipClasses }}
+            interactive={tooltipInteractive}
+            onMouseEnter={tooltipOnMouseEnter}
+            status="help"
+            text={tooltipText}
+            tooltipPosition={tooltipPosition}
           />
         )}
       </div>
       {errorText && (
         <FormHelperText
           className={cx({
-            [classes.errorText]: true,
-            [classes.editable]: editable,
             [classes.absolute]: editable || hasAbsoluteError,
+            [classes.editable]: editable,
+            [classes.errorText]: true,
           })}
           data-qa-textfield-error-text={label}
           role="alert"

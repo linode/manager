@@ -1,21 +1,22 @@
 import * as React from 'react';
+
+import { Toggle } from 'src/components/Toggle';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { Toggle } from 'src/components/Toggle';
 
 interface ToggleProps {
-  toggleDisableDialog: () => void;
-  onChange: (value: boolean) => void;
-  twoFactorEnabled: boolean;
-  twoFactorConfirmed: boolean;
   disabled?: boolean;
+  onChange: (value: boolean) => void;
+  toggleDisableDialog: () => void;
+  twoFactorConfirmed: boolean;
+  twoFactorEnabled: boolean;
 }
 
 export const TwoFactorToggle = (props: ToggleProps) => {
   const { disabled, twoFactorEnabled } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { twoFactorConfirmed, onChange } = props;
+    const { onChange, twoFactorConfirmed } = props;
     const enabled = e.currentTarget.checked;
     /**
      * only open the disable dialog if 2FA has been turned on and we're flipping the toggle off
@@ -31,15 +32,15 @@ export const TwoFactorToggle = (props: ToggleProps) => {
   return (
     <FormControl fullWidth style={{ marginTop: 0 }}>
       <FormControlLabel
-        label={twoFactorEnabled ? 'Enabled' : 'Disabled'}
         control={
           <Toggle
             checked={twoFactorEnabled}
-            onChange={handleChange}
             data-qa-toggle-tfa={twoFactorEnabled}
             disabled={disabled}
+            onChange={handleChange}
           />
         }
+        label={twoFactorEnabled ? 'Enabled' : 'Disabled'}
       />
     </FormControl>
   );

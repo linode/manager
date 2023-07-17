@@ -1,8 +1,11 @@
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider as ReduxStoreProvider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
@@ -11,12 +14,11 @@ import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
-import './index.css';
+
+import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 import loadDevTools from './dev-tools/load';
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { App } from './App';
+import './index.css';
 import { queryClientFactory } from './queries/base';
 
 const queryClient = queryClientFactory();
@@ -41,11 +43,11 @@ const AppWrapper = () => (
   <>
     <SplashScreen />
     <Snackbar
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      maxSnack={3}
+      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       autoHideDuration={4000}
       data-qa-toast
       hideIconVariant={true}
+      maxSnack={3}
     >
       <App />
     </Snackbar>
@@ -58,19 +60,19 @@ const ContextWrapper = () => (
       <LinodeThemeWrapper>
         <React.Suspense fallback={<SplashScreen />}>
           <Switch>
-            <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+            <Route component={OAuthCallbackPage} exact path="/oauth/callback" />
             <Route
+              component={LoginAsCustomerCallback}
               exact
               path="/admin/callback"
-              component={LoginAsCustomerCallback}
             />
             {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-            <Route exact path="/nullauth" component={NullAuth} />
-            <Route exact path="/logout" component={Logout} />
-            <Route exact path="/cancel" component={CancelLanding} />
+            <Route component={NullAuth} exact path="/nullauth" />
+            <Route component={Logout} exact path="/logout" />
+            <Route component={CancelLanding} exact path="/cancel" />
             <AuthenticationWrapper>
               <Switch>
-                <Route path="/linodes/:linodeId/lish/:type" component={Lish} />
+                <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
                 <Route component={AppWrapper} />
               </Switch>
             </AuthenticationWrapper>
@@ -94,7 +96,7 @@ loadDevTools(store, () => {
       <Router>
         <Switch>
           {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-          <Route exact path="/null" component={Null} />
+          <Route component={Null} exact path="/null" />
           <Route component={ContextWrapper} />
         </Switch>
       </Router>

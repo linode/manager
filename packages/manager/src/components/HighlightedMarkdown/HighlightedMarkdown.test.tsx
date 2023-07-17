@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { HighlightedMarkdown } from './HighlightedMarkdown';
 
 const sampleMarkdown =
@@ -10,8 +11,8 @@ describe('HighlightedMarkdown component', () => {
   it('should highlight text consistently', () => {
     const { asFragment } = renderWithTheme(
       <HighlightedMarkdown
-        textOrMarkdown={sampleMarkdown}
         language={'javascript'}
+        textOrMarkdown={sampleMarkdown}
       />
     );
     expect(asFragment()).toMatchSnapshot();

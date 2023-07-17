@@ -1,32 +1,33 @@
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
-  linodeId: number;
   isReadOnly?: boolean;
+  linodeId: number;
 }
 
 export const LinodeSettingsLabelPanel = (props: Props) => {
-  const { linodeId, isReadOnly } = props;
+  const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
-    mutateAsync: updateLinode,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
   const formik = useFormik({
@@ -48,32 +49,32 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
 
   return (
     <Accordion
-      defaultExpanded
-      heading="Linode Label"
       actions={() => (
         <ActionsPanel>
           <Button
             buttonType="primary"
+            data-qa-label-save
             disabled={isReadOnly || !formik.dirty}
             loading={isLoading}
             onClick={() => formik.handleSubmit()}
-            data-qa-label-save
           >
             Save
           </Button>
         </ActionsPanel>
       )}
+      defaultExpanded
+      heading="Linode Label"
     >
       {Boolean(generalError) && <Notice error text={generalError} />}
       <TextField
-        label="Label"
+        data-qa-label
         disabled={isReadOnly}
-        errorText={labelError}
         errorGroup="linode-settings-label"
+        errorText={labelError}
+        label="Label"
         name="label"
         onChange={formik.handleChange}
         value={formik.values.label}
-        data-qa-label
       />
     </Accordion>
   );

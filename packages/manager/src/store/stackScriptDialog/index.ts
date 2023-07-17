@@ -10,8 +10,8 @@ export interface State {
 }
 
 interface Open extends Action {
-  type: typeof OPEN;
   stackScriptId: number;
+  type: typeof OPEN;
 }
 
 interface Close extends Action {
@@ -24,8 +24,8 @@ type ActionCreator = (...args: any[]) => Action;
 export const openStackScriptDialog: ActionCreator = (
   stackScriptId: number
 ): Open => ({
-  type: OPEN,
   stackScriptId,
+  type: OPEN,
 });
 export const closeStackScriptDialog: ActionCreator = (): Close => ({
   type: CLOSE,
@@ -36,7 +36,7 @@ export const defaultState: State = {
   open: false,
 };
 
-type ActionTypes = Open | Close;
+type ActionTypes = Close | Open;
 
 export default (state: State = defaultState, action: ActionTypes) => {
   switch (action.type) {

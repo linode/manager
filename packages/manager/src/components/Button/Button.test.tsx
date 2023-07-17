@@ -1,7 +1,9 @@
 import React from 'react';
-import { Button } from './Button';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { Button } from './Button';
 
 describe('Button', () => {
   it('should render', () => {

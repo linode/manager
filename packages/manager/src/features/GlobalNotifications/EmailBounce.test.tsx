@@ -1,8 +1,10 @@
-import * as profile from '@linode/api-v4/lib/profile/profile';
 import * as account from '@linode/api-v4/lib/account/account';
-import { waitFor, fireEvent } from '@testing-library/react';
+import * as profile from '@linode/api-v4/lib/profile/profile';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { EmailBounceNotificationSection } from './EmailBounce';
 
 const mockUpdateAccountInfo = jest.spyOn(account, 'updateAccountInfo');

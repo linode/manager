@@ -2,7 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 
 export const filterImagesByType = (
   images: Record<string, Image>,
-  type: 'public' | 'private'
+  type: 'private' | 'public'
 ): Record<string, Image> => {
   return Object.keys(images).reduce((acc, eachKey) => {
     /** keep the public images if we're filtering by public images */
@@ -29,6 +29,6 @@ export const filterImagesByType = (
  * @param {string | null} id the image's id (unlike most entities, image ids are string)
  * @returns {boolean} true if the image is an LKE image
  */
-export const isLinodeKubeImageId = (id: string | null): boolean => {
+export const isLinodeKubeImageId = (id: null | string): boolean => {
   return Boolean(id?.startsWith('linode/')) && Boolean(id?.includes('kube'));
 };

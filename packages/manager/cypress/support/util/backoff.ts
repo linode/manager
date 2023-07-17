@@ -24,19 +24,19 @@ const fibonacci = (index: number): number => {
  * Options that apply to all backoff method implementations.
  */
 export interface BackoffOptions {
-  /// Maximum number of attempts to make before rejecting with an error.
-  maxAttempts: number;
-
-  /// Length of time to wait (in milliseconds) before making first attempt.
+  // / Length of time to wait (in milliseconds) before making first attempt.
   initialDelay: number;
+
+  // / Maximum number of attempts to make before rejecting with an error.
+  maxAttempts: number;
 }
 
 /**
  * Default backoff method options.
  */
 export const defaultBackoffOptions: BackoffOptions = {
-  maxAttempts: 10,
   initialDelay: 0,
+  maxAttempts: 10,
 };
 
 /**
@@ -63,8 +63,7 @@ export const attemptWithBackoff = async <T>(
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const nextAttempt = attempt + 1;
     try {
-      const result = await promiseCallback();
-      return result;
+      return await promiseCallback();
     } catch (e) {
       attemptErrors.push(e);
       if (nextAttempt <= maxAttempts) {
@@ -87,9 +86,6 @@ export const attemptWithBackoff = async <T>(
  * Calculates backoff time when retrying an attempt to do something.
  */
 export abstract class BackoffMethod {
-  /// Backoff method options.
-  public readonly options: BackoffOptions;
-
   /**
    * Constructor.
    *
@@ -110,15 +106,15 @@ export abstract class BackoffMethod {
    * @returns Time (in milliseconds) to delay.
    */
   public abstract calculateBackoff(attempt: number): number;
+
+  // / Backoff method options.
+  public readonly options: BackoffOptions;
 }
 
 /**
  * Calculates backoff time using a constant interval between attempts.
  */
 export class SimpleBackoffMethod extends BackoffMethod {
-  /// Delay between attempts (in milliseconds).
-  public readonly timeout: number;
-
   /**
    * Constructor.
    *
@@ -138,18 +134,15 @@ export class SimpleBackoffMethod extends BackoffMethod {
   public calculateBackoff(_attempt: number): number {
     return this.timeout;
   }
+
+  // / Delay between attempts (in milliseconds).
+  public readonly timeout: number;
 }
 
 /**
  * Calculates backoff time using Fibonacci sequence.
  */
 export class FibonacciBackoffMethod extends BackoffMethod {
-  /// Optional maximum timeout, in milliseconds.
-  public readonly maxTimeout: number | undefined;
-
-  /// Fibonacci starting index.
-  public readonly offset: number;
-
   /**
    * Constructor.
    *
@@ -178,4 +171,10 @@ export class FibonacciBackoffMethod extends BackoffMethod {
       ? Math.min(fibonacciTimeout, this.maxTimeout)
       : fibonacciTimeout;
   }
+
+  // / Optional maximum timeout, in milliseconds.
+  public readonly maxTimeout: number | undefined;
+
+  // / Fibonacci starting index.
+  public readonly offset: number;
 }

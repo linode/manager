@@ -2,37 +2,38 @@ import { Domain } from '@linode/api-v4/lib/domains';
 import { has } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 interface EditPayload {
   id?: number;
   name?: string;
-  service?: string | null;
+  port?: number;
+  priority?: number;
+  protocol?: null | string;
+  service?: null | string;
+  tag?: null | string;
   target?: string;
   ttl_sec?: number;
-  priority?: number;
-  protocol?: string | null;
-  port?: number;
   weight?: number;
-  tag?: string | null;
 }
 
 interface DeleteData {
-  recordID: number;
   onDelete: (id: number) => void;
+  recordID: number;
 }
 
 interface Props {
-  onEdit: (data: Domain | EditPayload) => void;
   deleteData?: DeleteData;
   editPayload: Domain | EditPayload;
   label: string;
+  onEdit: (data: Domain | EditPayload) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
-  const { editPayload, onEdit, deleteData } = props;
+  const { deleteData, editPayload, onEdit } = props;
 
   const handleEdit = () => {
     onEdit(editPayload);
@@ -44,17 +45,17 @@ export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions = [
     {
-      title: 'Edit',
       onClick: () => {
         handleEdit();
       },
+      title: 'Edit',
     },
     has('deleteData', props)
       ? {
-          title: 'Delete',
           onClick: () => {
             handleDelete();
           },
+          title: 'Delete',
         }
       : null,
   ].filter(Boolean) as Action[];

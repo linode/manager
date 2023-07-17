@@ -2,15 +2,15 @@
 import { createContext, useCallback, useState } from 'react';
 
 export interface NotificationContextProps {
+  closeMenu: () => void;
   menuOpen: boolean;
   openMenu: () => void;
-  closeMenu: () => void;
 }
 
 const defaultContext = {
+  closeMenu: () => null,
   menuOpen: false,
   openMenu: () => null,
-  closeMenu: () => null,
 };
 
 export const notificationContext = createContext<NotificationContextProps>(
@@ -38,8 +38,8 @@ export const useNotificationContext = (): NotificationContextProps => {
   }, []);
 
   return {
+    closeMenu,
     menuOpen,
     openMenu,
-    closeMenu,
   };
 };

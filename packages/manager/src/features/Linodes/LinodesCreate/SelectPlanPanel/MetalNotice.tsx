@@ -1,15 +1,17 @@
 import * as React from 'react';
+
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';
+
 import { StyledTypography } from './PlansPanel.styles';
 import { getRegionsWithCapability } from './utils';
 
 interface Props {
-  hasDisabledClass: boolean;
   dataTestId?: string;
+  hasDisabledClass: boolean;
 }
 
-export const MetalNotice = ({ hasDisabledClass, dataTestId }: Props) => {
+export const MetalNotice = ({ dataTestId, hasDisabledClass }: Props) => {
   const { data: regions } = useRegionsQuery();
 
   // Until BM-426 is merged, we aren't filtering for regions in getDisabledClass
@@ -29,7 +31,7 @@ export const MetalNotice = ({ hasDisabledClass, dataTestId }: Props) => {
   );
 
   return (
-    <Notice warning dataTestId={dataTestId}>
+    <Notice dataTestId={dataTestId} warning>
       {programInfo}
     </Notice>
   );

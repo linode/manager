@@ -1,6 +1,6 @@
 import {
-  getMinimumPageSizeForNumberOfItems,
   PAGE_SIZES,
+  getMinimumPageSizeForNumberOfItems,
 } from './PaginationFooter';
 
 describe('getMinimumPageSizeForNumberOfItems', () => {

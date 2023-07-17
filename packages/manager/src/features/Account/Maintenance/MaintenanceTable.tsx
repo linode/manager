@@ -1,41 +1,43 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import * as React from 'react';
-import { Box } from 'src/components/Box';
-import { Hidden } from 'src/components/Hidden';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableSortCell } from 'src/components/TableSortCell';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { Typography } from 'src/components/Typography';
-import { usePagination } from 'src/hooks/usePagination';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
-import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import { useOrder } from 'src/hooks/useOrder';
-import { MaintenanceTableRow } from './MaintenanceTableRow';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import { Box } from 'src/components/Box';
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
+import { Hidden } from 'src/components/Hidden';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
 } from 'src/queries/accountMaintenance';
 
+import { MaintenanceTableRow } from './MaintenanceTableRow';
+
 const preferenceKey = 'account-maintenance';
 
 const headersForCSVDownload = [
-  { label: 'Entity Label', key: 'entity.label' },
-  { label: 'Entity Type', key: 'entity.type' },
-  { label: 'Entity ID', key: 'entity.id' },
-  { label: 'Date', key: 'when' },
-  { label: 'Type', key: 'type' },
-  { label: 'Status', key: 'status' },
-  { label: 'Reason', key: 'reason' },
+  { key: 'entity.label', label: 'Entity Label' },
+  { key: 'entity.type', label: 'Entity Type' },
+  { key: 'entity.id', label: 'Entity ID' },
+  { key: 'when', label: 'Date' },
+  { key: 'type', label: 'Type' },
+  { key: 'status', label: 'Status' },
+  { key: 'reason', label: 'Reason' },
 ];
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -43,8 +45,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: '12%',
   },
   headingContainer: {
-    marginTop: theme.spacing(1.5),
     marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1.5),
     [theme.breakpoints.down('md')]: {
       paddingLeft: theme.spacing(),
       paddingRight: theme.spacing(),
@@ -53,7 +55,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 interface Props {
-  type: 'pending' | 'completed';
+  type: 'completed' | 'pending';
 }
 
 const MaintenanceTable = ({ type }: Props) => {
@@ -62,23 +64,23 @@ const MaintenanceTable = ({ type }: Props) => {
   const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
   const formattedDate = useFormattedDate();
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'status',
       order: 'desc',
+      orderBy: 'status',
     },
     `${preferenceKey}-order-${type}`,
     type
   );
 
-  const filters: Record<'pending' | 'completed', any> = {
-    pending: { '+or': ['pending, started'] },
+  const filters: Record<'completed' | 'pending', any> = {
     completed: 'completed',
+    pending: { '+or': ['pending, started'] },
   };
 
   const filter = {
-    '+order_by': orderBy,
     '+order': order,
+    '+order_by': orderBy,
     status: filters[type],
   };
 
@@ -88,7 +90,7 @@ const MaintenanceTable = ({ type }: Props) => {
     false
   );
 
-  const { data, isLoading, error } = useAccountMaintenanceQuery(
+  const { data, error, isLoading } = useAccountMaintenanceQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -100,13 +102,13 @@ const MaintenanceTable = ({ type }: Props) => {
     if (isLoading) {
       return (
         <TableRowLoading
-          rows={1}
-          columns={7}
           responsive={{
             2: { smDown: true },
             3: { xsDown: true },
             5: { mdDown: true },
           }}
+          columns={7}
+          rows={1}
         />
       );
     }
@@ -116,7 +118,7 @@ const MaintenanceTable = ({ type }: Props) => {
     }
 
     if (data?.results === 0) {
-      return <TableRowEmpty message={`No ${type} maintenance.`} colSpan={7} />;
+      return <TableRowEmpty colSpan={7} message={`No ${type} maintenance.`} />;
     }
 
     if (data) {
@@ -136,11 +138,11 @@ const MaintenanceTable = ({ type }: Props) => {
   return (
     <>
       <Box
+        className={classes.headingContainer}
         display="flex"
         justifyContent="space-between"
-        className={classes.headingContainer}
       >
-        <Typography variant="h3" style={{ textTransform: 'capitalize' }}>
+        <Typography style={{ textTransform: 'capitalize' }} variant="h3">
           {type}
         </Typography>
         <Box>
@@ -160,20 +162,20 @@ const MaintenanceTable = ({ type }: Props) => {
             <TableCell className={classes.cell}>Label</TableCell>
             <TableSortCell
               active={orderBy === 'when'}
-              direction={order}
-              label="when"
-              handleClick={handleOrderChange}
               className={classes.cell}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="when"
             >
               Date
             </TableSortCell>
             <Hidden mdDown>
               <TableSortCell
                 active={orderBy === 'when'}
-                direction={order}
-                label="when"
-                handleClick={handleOrderChange}
                 className={classes.cell}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="when"
               >
                 When
               </TableSortCell>
@@ -181,20 +183,20 @@ const MaintenanceTable = ({ type }: Props) => {
             <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'type'}
-                direction={order}
-                label="type"
-                handleClick={handleOrderChange}
                 className={classes.cell}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="type"
               >
                 Type
               </TableSortCell>
             </Hidden>
             <TableSortCell
               active={orderBy === 'status'}
-              direction={order}
-              label="status"
-              handleClick={handleOrderChange}
               className={classes.cell}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="status"
             >
               Status
             </TableSortCell>
@@ -207,11 +209,11 @@ const MaintenanceTable = ({ type }: Props) => {
       </Table>
       <PaginationFooter
         count={data?.results || 0}
+        eventCategory={`${type} Maintenance Table`}
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
-        eventCategory={`${type} Maintenance Table`}
       />
     </>
   );
