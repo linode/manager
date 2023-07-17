@@ -91,8 +91,8 @@ const domainStatusToIconStatus = (status: DomainStatus) => {
 };
 
 const StyledDiv = styled('div', { label: 'StyledDiv' })({
+  alignItems: 'center',
   display: 'flex',
   flexFlow: 'row nowrap',
-  alignItems: 'center',
   whiteSpace: 'nowrap',
 });
