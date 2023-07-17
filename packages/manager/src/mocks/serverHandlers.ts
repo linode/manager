@@ -39,6 +39,7 @@ import {
   getEntrypointFactory,
   getLoadbalancerFactory,
   getRouteFactory,
+  getServiceTargetFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -84,7 +85,6 @@ import {
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
-  getServiceTargetFactory,
   updateLoadbalancerFactory,
   volumeFactory,
 } from 'src/factories';
