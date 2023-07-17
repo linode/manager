@@ -1,12 +1,17 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import * as React from 'react';
-import Info from 'src/assets/icons/info.svg';
-import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { styled, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import Info from 'src/assets/icons/info.svg';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { APP_ROOT } from 'src/constants';
 
 interface Props {
+  availableImages: string[];
+  checked: boolean;
+  clusterLabel: string;
+  disabled: boolean;
   handleClick: (
     id: number,
     label: string,
@@ -14,47 +19,43 @@ interface Props {
     stackScriptImages: string[],
     userDefinedFields: UserDefinedField[]
   ) => void;
-  openDrawer: (stackScriptLabel: string) => void;
   iconUrl: string;
   id: number;
   label: string;
-  clusterLabel: string;
-  userDefinedFields: UserDefinedField[];
-  availableImages: string[];
-  disabled: boolean;
-  checked: boolean;
   labelDecoration?: JSX.Element;
+  openDrawer: (stackScriptLabel: string) => void;
+  userDefinedFields: UserDefinedField[];
 }
 
 const InfoGrid = styled(Grid, {
   label: 'InfoGrid',
 })(({ theme }) => ({
+  '& svg': {
+    height: '19px',
+    width: '19px',
+  },
+  color: theme.palette.primary.main,
   display: 'flex',
   justifyContent: 'flex-end',
-  color: theme.palette.primary.main,
+  maxWidth: 40,
   padding: theme.spacing(1),
   paddingLeft: 0,
-  maxWidth: 40,
-  '& svg': {
-    width: '19px',
-    height: '19px',
-  },
 }));
 
 export const SelectionCardWrapper: React.FC<Props> = (props) => {
   const theme = useTheme();
   const {
-    iconUrl,
-    id,
-    checked,
-    label,
-    clusterLabel,
-    userDefinedFields,
     availableImages,
+    checked,
+    clusterLabel,
     disabled,
     handleClick,
-    openDrawer,
+    iconUrl,
+    id,
+    label,
     labelDecoration,
+    openDrawer,
+    userDefinedFields,
   } = props;
   /**
    * '' is the default value for a stackscript's logo_url;
@@ -85,15 +86,15 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
   const renderIcon =
     iconUrl === ''
       ? () => <span className="fl-tux" />
-      : () => <img src={`${APP_ROOT}/${iconUrl}`} alt={`${label} logo`} />;
+      : () => <img alt={`${label} logo`} src={`${APP_ROOT}/${iconUrl}`} />;
 
   const renderVariant = () => (
     <InfoGrid xs={2}>
       <Info
-        role="button"
         aria-label={`Info for "${label}"`}
         onClick={handleInfoClick}
         onKeyDown={handleKeyPress}
+        role="button"
         tabIndex={0}
       />
     </InfoGrid>
@@ -101,25 +102,25 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
 
   return (
     <SelectionCard
-      id={`app-${String(id)}`}
-      key={id}
-      checked={checked}
-      onClick={handleSelectApp}
-      renderIcon={renderIcon}
-      renderVariant={renderVariant}
-      heading={label}
-      subheadings={['']}
-      data-qa-selection-card
-      disabled={disabled}
-      sxGrid={{
-        mixBlendMode: theme.name === 'dark' ? 'initial' : 'darken',
-      }}
-      headingDecoration={labelDecoration}
       sxCardBaseIcon={{
         justifyContent: 'flex-start',
         paddingRight: 0,
         width: 40,
       }}
+      sxGrid={{
+        mixBlendMode: theme.name === 'dark' ? 'initial' : 'darken',
+      }}
+      checked={checked}
+      data-qa-selection-card
+      disabled={disabled}
+      heading={label}
+      headingDecoration={labelDecoration}
+      id={`app-${String(id)}`}
+      key={id}
+      onClick={handleSelectApp}
+      renderIcon={renderIcon}
+      renderVariant={renderVariant}
+      subheadings={['']}
     />
   );
 };

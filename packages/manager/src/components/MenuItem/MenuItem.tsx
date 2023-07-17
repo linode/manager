@@ -1,71 +1,72 @@
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import * as React from 'react';
-import CircularProgress from 'src/components/core/CircularProgress';
-import { IconButton } from 'src/components/IconButton';
-import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
 import { Theme } from '@mui/material/styles';
+import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { IconButton } from 'src/components/IconButton';
+import CircularProgress from 'src/components/core/CircularProgress';
+import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
+
 interface WrapperMenuItemProps {
-  tooltip?: string;
   isLoading?: boolean;
   ref?: any;
+  tooltip?: string;
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  circleProgress: {
+    left: 0,
+    margin: '0 auto',
+    position: 'absolute',
+    right: 0,
+  },
+  helpButton: {
+    '&:hover, &:focus': {
+      color: theme.palette.primary.light,
+    },
+    color: theme.palette.primary.main,
+    height: 28,
+    padding: 0,
+    pointerEvents: 'initial',
+    width: 28,
+  },
+  helpIcon: {
+    height: 20,
+    width: 20,
+  },
+  label: {
+    opacity: 0.5,
+  },
+  labelWrapper: {
+    alignItems: 'center',
+    display: 'flex',
+    flexBasis: '100%',
+    justifyContent: 'space-between',
+  },
   root: {
-    position: 'relative',
-    flexWrap: 'wrap',
     '&.hasTooltip': {
-      opacity: 1,
-      paddingTop: `calc(${theme.spacing(1)} - 2)`,
-      paddingBottom: theme.spacing(1) + 2,
       '&:hover, &:focus': {
-        background: 'transparent',
-        color: theme.palette.primary.main,
         '& $toolTip': {
           marginTop: theme.spacing(1),
           maxHeight: 200,
           opacity: 1,
         },
+        background: 'transparent',
+        color: theme.palette.primary.main,
       },
+      opacity: 1,
+      paddingBottom: theme.spacing(1) + 2,
+      paddingTop: `calc(${theme.spacing(1)} - 2)`,
     },
-  },
-  labelWrapper: {
-    display: 'flex',
-    flexBasis: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  label: {
-    opacity: 0.5,
+    flexWrap: 'wrap',
+    position: 'relative',
   },
   toolTip: {
-    transition: theme.transitions.create(['max-height', 'opacity', 'margin']),
-    maxHeight: 0,
-    display: 'block',
     color: theme.palette.text.primary,
+    display: 'block',
+    maxHeight: 0,
     opacity: 0,
-  },
-  helpButton: {
-    width: 28,
-    height: 28,
-    padding: 0,
-    color: theme.palette.primary.main,
-    pointerEvents: 'initial',
-    '&:hover, &:focus': {
-      color: theme.palette.primary.light,
-    },
-  },
-  helpIcon: {
-    width: 20,
-    height: 20,
-  },
-  circleProgress: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    margin: '0 auto',
+    transition: theme.transitions.create(['max-height', 'opacity', 'margin']),
   },
 }));
 
@@ -73,7 +74,7 @@ type CombinedProps = MenuItemProps & WrapperMenuItemProps;
 
 export const WrapperMenuItem = (props: CombinedProps) => {
   const { classes } = useStyles();
-  const { tooltip, isLoading, className, ...rest } = props;
+  const { className, isLoading, tooltip, ...rest } = props;
   const shouldWrapLabel = isLoading || tooltip;
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -86,7 +87,7 @@ export const WrapperMenuItem = (props: CombinedProps) => {
       className={`${classes.root} ${className} ${tooltip && 'hasTooltip'}`}
     >
       {isLoading && (
-        <CircularProgress size={20} className={classes.circleProgress} />
+        <CircularProgress className={classes.circleProgress} size={20} />
       )}
       <span className={shouldWrapLabel && classes.labelWrapper}>
         <span className={shouldWrapLabel && classes.label}>
@@ -95,8 +96,8 @@ export const WrapperMenuItem = (props: CombinedProps) => {
         {tooltip && !isLoading && (
           <IconButton
             className={classes.helpButton}
-            onClick={(e) => handleClick(e)}
             data-qa-tooltip-icon
+            onClick={(e) => handleClick(e)}
             size="large"
           >
             <HelpOutline className={classes.helpIcon} />

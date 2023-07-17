@@ -1,11 +1,13 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
-import { Box } from 'src/components/Box';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { isToday as _isToday } from 'src/utilities/isToday';
+
 import {
   LongviewNetworkInterface,
   WithStartAndEnd,
@@ -38,11 +40,11 @@ export const NetworkLanding: React.FC<Props> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    start: 0,
     end: 0,
+    start: 0,
   });
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['network'],
     clientAPIKey,
     time.start,
@@ -54,7 +56,7 @@ export const NetworkLanding: React.FC<Props> = (props) => {
   }, [clientAPIKey, lastUpdated, lastUpdatedError, time]);
 
   const handleStatsChange = (start: number, end: number) => {
-    setTimeBox({ start, end });
+    setTimeBox({ end, start });
   };
 
   const interfaces: LongviewNetworkInterface = data?.Network?.Interface ?? {};
@@ -66,31 +68,31 @@ export const NetworkLanding: React.FC<Props> = (props) => {
       <DocumentTitleSegment segment={'Network'} />
       <Grid item xs={12}>
         <Box
+          alignItems="center"
+          className={classes.root}
           display="flex"
           flexDirection="row"
           justifyContent="flex-end"
-          alignItems="center"
-          className={classes.root}
         >
           <TimeRangeSelect
-            small
             className={classes.select}
-            handleStatsChange={handleStatsChange}
             defaultValue="Past 30 Minutes"
-            label="Select Time Range"
+            handleStatsChange={handleStatsChange}
             hideLabel
+            label="Select Time Range"
+            small
           />
         </Box>
       </Grid>
-      <Grid item xs={12} className="py0">
+      <Grid className="py0" item xs={12}>
         <NetworkGraphs
-          networkData={interfaces}
+          end={time.end}
+          error={lastUpdatedError?.[0]?.reason || error}
           isToday={isToday}
           loading={loading}
-          error={lastUpdatedError?.[0]?.reason || error}
-          timezone={timezone}
+          networkData={interfaces}
           start={time.start}
-          end={time.end}
+          timezone={timezone}
         />
       </Grid>
     </Grid>

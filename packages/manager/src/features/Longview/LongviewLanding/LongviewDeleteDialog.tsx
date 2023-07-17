@@ -1,15 +1,16 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 interface Props {
-  open: boolean;
   closeDialog: () => void;
+  deleteClient: (id: number) => Promise<{}>;
+  open: boolean;
   selectedLongviewClientID?: number;
   selectedLongviewClientLabel: string;
-  deleteClient: (id: number) => Promise<{}>;
 }
 
 type CombinedProps = Props;
@@ -19,8 +20,8 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
   const {
-    open,
     closeDialog,
+    open,
     selectedLongviewClientID,
     selectedLongviewClientLabel: label,
   } = props;
@@ -57,17 +58,17 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      title={`Delete ${label ? label : 'this Longview Client'}?`}
-      onClose={props.closeDialog}
-      error={errors ? errors[0].reason : ''}
       actions={
         <Actions
-          onClose={props.closeDialog}
           isDeleting={isDeleting}
+          onClose={props.closeDialog}
           onSubmit={handleDelete}
         />
       }
+      error={errors ? errors[0].reason : ''}
+      onClose={props.closeDialog}
+      open={open}
+      title={`Delete ${label ? label : 'this Longview Client'}?`}
     >
       Are you sure you want to delete this Longview Client?
     </ConfirmationDialog>
@@ -75,9 +76,9 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
 };
 
 interface ActionsProps {
+  isDeleting: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  isDeleting: boolean;
 }
 
 const Actions: React.FC<ActionsProps> = (props) => {
@@ -88,9 +89,9 @@ const Actions: React.FC<ActionsProps> = (props) => {
       </Button>
       <Button
         buttonType="primary"
-        onClick={props.onSubmit}
-        loading={props.isDeleting}
         data-testid="delete-button"
+        loading={props.isDeleting}
+        onClick={props.onSubmit}
       >
         Delete
       </Button>

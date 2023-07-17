@@ -1,71 +1,74 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Filter } from '@linode/api-v4';
+import { Event, getEvents } from '@linode/api-v4/lib/account';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
-import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { Typography } from 'src/components/Typography';
+
 import { H1Header } from 'src/components/H1Header/H1Header';
+import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { Typography } from 'src/components/Typography';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { ApplicationState } from 'src/store';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
+
 import EventRow from './EventRow';
-import { useEventsInfiniteQuery } from 'src/queries/events';
-import { Filter } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  columnHeader: {
+    color: theme.textColors.tableHeader,
+    fontFamily: theme.font.bold,
+    fontSize: '0.875rem',
+  },
   header: {
     marginBottom: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
-  noMoreEvents: {
-    padding: theme.spacing(4),
-    textAlign: 'center',
-  },
   labelCell: {
-    width: '60%',
     minWidth: 200,
     paddingLeft: 10,
     [theme.breakpoints.down('sm')]: {
       width: '70%',
     },
+    width: '60%',
   },
-  columnHeader: {
-    fontFamily: theme.font.bold,
-    fontSize: '0.875rem',
-    color: theme.textColors.tableHeader,
+  noMoreEvents: {
+    padding: theme.spacing(4),
+    textAlign: 'center',
   },
 }));
 
 interface EventsLandingProps {
-  filter?: Filter;
+  emptyMessage?: string;
   entityId?: number;
   errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
-  emptyMessage?: string; // Custom message for the empty state (i.e. no events).
+  filter?: Filter;
+  getEventsRequest?: typeof getEvents;
 }
 
 type CombinedProps = EventsLandingProps & StateProps;
 
 export const EventsLanding = (props: CombinedProps) => {
   const {
-    entitiesLoading,
-    errorMessage,
-    entityId,
     emptyMessage,
+    entitiesLoading,
+    entityId,
+    errorMessage,
     filter,
   } = props;
 
@@ -74,11 +77,11 @@ export const EventsLanding = (props: CombinedProps) => {
 
   const {
     data: eventsData,
-    isLoading,
     error,
-    hasNextPage,
     fetchNextPage,
+    hasNextPage,
     isFetchingNextPage,
+    isLoading,
   } = useEventsInfiniteQuery(filter);
 
   const events = eventsData?.pages.reduce(
@@ -99,7 +102,7 @@ export const EventsLanding = (props: CombinedProps) => {
   return (
     <>
       {/* Only display this title on the main Events landing page */}
-      {!entityId && <H1Header title="Events" className={classes.header} />}
+      {!entityId && <H1Header className={classes.header} title="Events" />}
       <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
@@ -107,8 +110,8 @@ export const EventsLanding = (props: CombinedProps) => {
               <TableCell style={{ padding: 0, width: '1%' }} />
             </Hidden>
             <TableCell
-              data-qa-events-subject-header
               className={`${classes.labelCell} ${classes.columnHeader}`}
+              data-qa-events-subject-header
             >
               Event
             </TableCell>
@@ -168,16 +171,16 @@ export const renderTableBody = (
     return (
       <TableRowError
         colSpan={12}
-        message={errorMessage}
         data-qa-events-table-error
+        message={errorMessage}
       />
     );
   } else if (filteredEvents.length === 0 && !loading) {
     return (
       <TableRowEmpty
         colSpan={12}
-        message={emptyMessage}
         data-qa-events-table-empty
+        message={emptyMessage}
       />
     );
   } else {
@@ -186,15 +189,15 @@ export const renderTableBody = (
         {filteredEvents.map((thisEvent, idx) => (
           <EventRow
             entityId={entityId}
-            key={`event-list-item-${idx}`}
             event={thisEvent}
+            key={`event-list-item-${idx}`}
           />
         ))}
         {loading && (
           <TableRowLoading
             columns={4}
-            rows={5}
             responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
+            rows={5}
           />
         )}
       </>
@@ -204,15 +207,15 @@ export const renderTableBody = (
 
 interface StateProps {
   entitiesLoading: boolean;
-  inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
+  inProgressEvents: Record<number, number>;
   mostRecentEventTime: string;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
   entitiesLoading: areEntitiesLoading(state.__resources),
-  inProgressEvents: state.events.inProgressEvents,
   eventsFromRedux: state.events.events,
+  inProgressEvents: state.events.inProgressEvents,
   mostRecentEventTime: state.events.mostRecentEventTime,
 });
 

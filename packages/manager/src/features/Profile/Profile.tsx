@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 const SSHKeys = React.lazy(() =>
   import('./SSHKeys/SSHKeys').then((module) => ({
@@ -48,44 +49,44 @@ const Profile = (props: RouteComponentProps) => {
 
   const tabs: NavTab[] = [
     {
-      title: 'Display',
-      routeName: `${url}/display`,
       component: DisplaySettings,
+      routeName: `${url}/display`,
+      title: 'Display',
     },
     {
-      title: 'Login & Authentication',
-      routeName: `${url}/auth`,
       component: AuthenticationSettings,
+      routeName: `${url}/auth`,
+      title: 'Login & Authentication',
     },
     {
-      title: 'SSH Keys',
-      routeName: `${url}/keys`,
       component: SSHKeys,
+      routeName: `${url}/keys`,
+      title: 'SSH Keys',
     },
     {
-      title: 'LISH Console Settings',
-      routeName: `${url}/lish`,
       component: LishSettings,
+      routeName: `${url}/lish`,
+      title: 'LISH Console Settings',
     },
     {
-      title: 'API Tokens',
-      routeName: `${url}/tokens`,
       component: APITokens,
+      routeName: `${url}/tokens`,
+      title: 'API Tokens',
     },
     {
-      title: 'OAuth Apps',
-      routeName: `${url}/clients`,
       component: OAuthClients,
+      routeName: `${url}/clients`,
+      title: 'OAuth Apps',
     },
     {
-      title: 'Referrals',
-      routeName: `${url}/referrals`,
       component: Referrals,
+      routeName: `${url}/referrals`,
+      title: 'Referrals',
     },
     {
-      title: 'My Settings',
-      routeName: `${url}/settings`,
       render: <Settings />,
+      routeName: `${url}/settings`,
+      title: 'My Settings',
     },
   ];
 
@@ -93,9 +94,9 @@ const Profile = (props: RouteComponentProps) => {
     <React.Fragment>
       <DocumentTitleSegment segment="My Profile " />
       <LandingHeader
-        title="My Profile"
-        removeCrumbX={1}
         data-qa-profile-header
+        removeCrumbX={1}
+        title="My Profile"
       />
       <NavTabs tabs={tabs} />
     </React.Fragment>

@@ -1,16 +1,18 @@
-import * as React from 'react';
-import { Hidden } from 'src/components/Hidden';
 import { TableRowProps as _TableRowProps } from '@mui/material/TableRow';
+import * as React from 'react';
+
+import { Hidden } from 'src/components/Hidden';
+
 import {
-  StyledTableRow,
-  StyledTableDataCell,
   StyledActiveCaret,
   StyledActiveCaretOverlay,
+  StyledTableDataCell,
+  StyledTableRow,
 } from './TableRow.styles';
 
 export interface TableRowProps extends _TableRowProps {
-  className?: string;
   ariaLabel?: string;
+  className?: string;
   disabled?: boolean;
   domRef?: any;
   forceIndex?: boolean;

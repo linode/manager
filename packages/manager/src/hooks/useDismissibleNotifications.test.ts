@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon';
+
 import {
+  STALE_DAYS,
   isExpired,
   isStale,
-  STALE_DAYS,
   updateDismissedNotifications,
 } from './useDismissibleNotifications';
 
@@ -51,6 +52,11 @@ describe('Dismissible notifications', () => {
 
   describe('updateDismissedNotifications', () => {
     const dismissedNotifications = {
+      expired: {
+        created: DateTime.utc().plus({ minutes: 5 }).toISO(),
+        expiry: DateTime.utc().minus({ minutes: 5 }).toISO(),
+        id: 'expired',
+      },
       normal: {
         created: DateTime.utc().plus({ minutes: 5 }).toISO(),
         id: 'normal',
@@ -60,11 +66,6 @@ describe('Dismissible notifications', () => {
           .minus({ days: STALE_DAYS + 1 })
           .toISO(),
         id: 'stale',
-      },
-      expired: {
-        created: DateTime.utc().plus({ minutes: 5 }).toISO(),
-        expiry: DateTime.utc().minus({ minutes: 5 }).toISO(),
-        id: 'expired',
       },
     };
     it('should include existing dismissed notifications', () => {

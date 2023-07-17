@@ -1,10 +1,12 @@
 import { Event, EventAction } from '@linode/api-v4';
 import { partition } from 'ramda';
 import * as React from 'react';
+
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
+
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { RenderEvent } from './RenderEvent';
@@ -49,18 +51,18 @@ const formatEventForDisplay = (
   event: ExtendedEvent,
   onClose: () => void
 ): NotificationItem => ({
-  originalId: event.id,
-  id: `event-${event.id}`,
   body: <RenderEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  id: `event-${event.id}`,
+  originalId: event.id,
 });
 
 const formatProgressEventForDisplay = (
   event: ExtendedEvent,
   onClose: () => void
 ): NotificationItem => ({
-  originalId: event.id,
-  id: `progress-event-${event.id}`,
   body: <RenderProgressEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  id: `progress-event-${event.id}`,
+  originalId: event.id,
 });

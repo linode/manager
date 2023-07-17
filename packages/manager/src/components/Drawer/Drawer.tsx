@@ -1,11 +1,12 @@
 import Close from '@mui/icons-material/Close';
-import * as React from 'react';
-import { IconButton } from 'src/components/IconButton';
-import _Drawer, { DrawerProps } from 'src/components/core/Drawer';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import { IconButton } from 'src/components/IconButton';
+import { Typography } from 'src/components/Typography';
+import _Drawer, { DrawerProps } from 'src/components/core/Drawer';
 import { convertForAria } from 'src/utilities/stringUtils';
 
 export interface Props extends DrawerProps {
@@ -14,46 +15,46 @@ export interface Props extends DrawerProps {
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  paper: {
-    width: 300,
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      width: 480,
-      padding: theme.spacing(4),
+  button: {
+    '& :hover, & :focus': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
     },
-    '& .actionPanel': {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      marginTop: theme.spacing(),
+    '& > span': {
+      padding: 2,
     },
-    '& .selectionCard': {
-      maxWidth: '100%',
-      flexBasis: '100%',
-    },
-  },
-  wide: {
-    [theme.breakpoints.up('sm')]: {
-      width: 700,
-    },
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
   },
   drawerHeader: {
     '&&': {
       marginBottom: theme.spacing(2),
     },
   },
+  paper: {
+    '& .actionPanel': {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      marginTop: theme.spacing(),
+    },
+    '& .selectionCard': {
+      flexBasis: '100%',
+      maxWidth: '100%',
+    },
+    padding: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(4),
+      width: 480,
+    },
+    width: 300,
+  },
   title: {
     wordBreak: 'break-word',
   },
-  button: {
-    minWidth: 'auto',
-    minHeight: 'auto',
-    padding: 0,
-    '& > span': {
-      padding: 2,
-    },
-    '& :hover, & :focus': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
+  wide: {
+    [theme.breakpoints.up('sm')]: {
+      width: 700,
     },
   },
 }));
@@ -61,19 +62,19 @@ const useStyles = makeStyles()((theme: Theme) => ({
 const Drawer = (props: Props) => {
   const { classes } = useStyles();
 
-  const { title, children, onClose, wide, ...rest } = props;
+  const { children, onClose, title, wide, ...rest } = props;
 
   const titleID = convertForAria(title);
 
   return (
     <_Drawer
-      anchor="right"
-      classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       onClose={(event, reason) => {
         if (onClose && reason !== 'backdropClick') {
           onClose(event, reason);
         }
       }}
+      anchor="right"
+      classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       {...rest}
       aria-labelledby={titleID}
       data-qa-drawer
@@ -81,38 +82,38 @@ const Drawer = (props: Props) => {
       role="dialog"
     >
       <Grid
-        className={classes.drawerHeader}
-        container
-        alignItems="flex-start"
-        justifyContent="space-between"
-        wrap="nowrap"
         sx={{
           position: 'relative',
         }}
+        alignItems="flex-start"
+        className={classes.drawerHeader}
+        container
+        justifyContent="space-between"
+        wrap="nowrap"
       >
         <Grid>
           <Typography
-            id={titleID}
             className={classes.title}
-            variant="h2"
             data-qa-drawer-title={title}
             data-testid="drawer-title"
+            id={titleID}
+            variant="h2"
           >
             {title}
           </Typography>
         </Grid>
         <Grid>
           <IconButton
-            color="primary"
+            sx={{
+              position: 'absolute',
+              right: '-12px',
+              top: '-12px',
+            }}
             aria-label="Close drawer"
+            color="primary"
             data-qa-close-drawer
             onClick={onClose as (e: any) => void}
             size="large"
-            sx={{
-              position: 'absolute',
-              top: '-12px',
-              right: '-12px',
-            }}
           >
             <Close />
           </IconButton>

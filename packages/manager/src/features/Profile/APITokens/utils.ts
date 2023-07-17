@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+
 import { isPast } from 'src/utilities/isPast';
 
 export type Permission = [string, number];
@@ -40,13 +41,13 @@ export const basePermNameMap: Record<string, string> = {
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
 
 export const levelMap = {
+  create: 2,
+  delete: 2,
+  modify: 2,
   none: 0,
   read_only: 1,
   read_write: 2,
   view: 1,
-  modify: 2,
-  create: 2,
-  delete: 2,
 };
 
 const defaultScopeMap = (perms: typeof basePerms): Record<string, 0> =>

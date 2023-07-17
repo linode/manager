@@ -1,4 +1,4 @@
-import { MatcherFunction, render, RenderResult } from '@testing-library/react';
+import { MatcherFunction, RenderResult, render } from '@testing-library/react';
 import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
@@ -10,24 +10,25 @@ import { MemoryRouter } from 'react-router-dom';
 import { DeepPartial } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { FlagSet } from 'src/featureFlags';
+
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { FlagSet } from 'src/featureFlags';
 import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
 import {
-  storeFactory,
   ApplicationState,
-  defaultState,
   ApplicationStore,
+  defaultState,
+  storeFactory,
 } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = jest.fn().mockImplementation((query) => {
     return {
+      addListener: jest.fn(),
       matches,
       media: query,
       onchange: null,
-      addListener: jest.fn(),
       removeListener: jest.fn(),
     };
   });
@@ -37,7 +38,7 @@ interface Options {
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
   queryClient?: QueryClient;
-  theme?: 'light' | 'dark';
+  theme?: 'dark' | 'light';
 }
 
 /**
@@ -69,8 +70,8 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
         <LinodeThemeWrapper theme={options.theme}>
           <LDProvider
             value={{
-              flags: options.flags ?? {},
               flagKeyMap: {},
+              flags: options.flags ?? {},
             }}
           >
             <SnackbarProvider>
@@ -180,7 +181,7 @@ export const toPassAxeCheck = {
       // ugly trick to bypass tslint inablility to understand it s normal not to return
       continue;
     }
-    return { pass: true, message: () => '!' };
+    return { message: () => '!', pass: true };
   },
 };
 

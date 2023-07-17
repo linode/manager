@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { ScriptCode } from './ScriptCode';
 
 describe('ScriptCode', () => {

@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/analytics';
+
 import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
-import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,
   headers,
@@ -17,15 +19,15 @@ export const VolumesLandingEmptyState = () => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Volume',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Volume',
             });
             push('/volumes/create');
           },
-          children: 'Create Volume',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

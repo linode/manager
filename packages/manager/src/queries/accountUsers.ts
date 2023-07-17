@@ -1,4 +1,4 @@
-import { getUser, getUsers, User } from '@linode/api-v4/lib/account';
+import { User, getUser, getUsers } from '@linode/api-v4/lib/account';
 import {
   APIError,
   Filter,
@@ -6,7 +6,9 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
+
 import { useProfile } from 'src/queries/profile';
+
 import { queryKey } from './account';
 
 export const useAccountUsers = (params?: Params, filters?: Filter) => {

@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
+
 import {
   LinodeMultiSelectProps,
   LinodeSelectV2,
@@ -8,9 +9,9 @@ import {
 
 /** Default Linode Select */
 export const Default: StoryObj<
-  LinodeSingleSelectProps | LinodeMultiSelectProps
+  LinodeMultiSelectProps | LinodeSingleSelectProps
 > = {
-  render: (args: LinodeSingleSelectProps | LinodeMultiSelectProps) => (
+  render: (args: LinodeMultiSelectProps | LinodeSingleSelectProps) => (
     <LinodeSelectV2 {...args} />
   ),
 };
@@ -20,8 +21,8 @@ export const MultiSelect: StoryObj<LinodeMultiSelectProps> = {
   render: (args: LinodeMultiSelectProps) => <LinodeSelectV2 {...args} />,
 };
 
-const meta: Meta<LinodeSingleSelectProps | LinodeMultiSelectProps> = {
-  title: 'Components/Linode Select',
+const meta: Meta<LinodeMultiSelectProps | LinodeSingleSelectProps> = {
   component: LinodeSelectV2,
+  title: 'Components/Linode Select',
 };
 export default meta;

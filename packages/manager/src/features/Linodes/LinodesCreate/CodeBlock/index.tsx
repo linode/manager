@@ -1,16 +1,18 @@
 import React from 'react';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
+
 import { useCodeBlockStyles } from './styles';
 export interface Props {
   command: string;
-  language: 'bash';
   commandType: string;
+  language: 'bash';
 }
 
 const CodeBlock = (props: Props) => {
-  const { command, language, commandType } = props;
+  const { command, commandType, language } = props;
   const classes = useCodeBlockStyles();
 
   const handleCopyIconClick = () => {
@@ -21,13 +23,13 @@ const CodeBlock = (props: Props) => {
     <div className={classes.commandDisplay}>
       <HighlightedMarkdown
         className={classes.commandWrapper}
-        textOrMarkdown={'```\n' + command + '\n```'}
         language={language}
+        textOrMarkdown={'```\n' + command + '\n```'}
       />
       <CopyTooltip
-        text={command}
         className={classes.copyIcon}
         onClickCallback={handleCopyIconClick}
+        text={command}
       />
     </div>
   );

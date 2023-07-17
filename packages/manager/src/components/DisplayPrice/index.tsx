@@ -1,2 +1,2 @@
-export { displayPrice, DisplayPrice } from './DisplayPrice';
+export { DisplayPrice, displayPrice } from './DisplayPrice';
 export type { DisplayPriceProps } from './DisplayPrice';

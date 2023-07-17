@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { LongviewPort } from 'src/features/Longview/request.types';
@@ -12,13 +13,13 @@ export const ConnectionRow: React.FC<Props> = (props) => {
 
   return (
     <TableRow ariaLabel={connection.name} data-testid="longview-connection-row">
-      <TableCell parentColumn="Name" data-qa-active-connection-name>
+      <TableCell data-qa-active-connection-name parentColumn="Name">
         {connection.name}
       </TableCell>
-      <TableCell parentColumn="User" data-qa-active-connection-user>
+      <TableCell data-qa-active-connection-user parentColumn="User">
         {connection.user}
       </TableCell>
-      <TableCell parentColumn="Count" data-qa-active-connection-count>
+      <TableCell data-qa-active-connection-count parentColumn="Count">
         {connection.count}
       </TableCell>
     </TableRow>

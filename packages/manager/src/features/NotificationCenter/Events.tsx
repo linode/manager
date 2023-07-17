@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { notificationContext as _notificationContext } from './NotificationContext';
 import { useEventNotifications } from './NotificationData/useEventNotifications';
 import { NotificationSection } from './NotificationSection';
@@ -11,15 +12,15 @@ export const Events = () => {
 
   return (
     <NotificationSection
-      content={events.slice(0, NUM_EVENTS_DISPLAY)}
-      header="Events"
       showMore={{
+        onClick: notificationContext.closeMenu,
         target: '/events',
         text: 'View all events',
-        onClick: notificationContext.closeMenu,
       }}
-      emptyMessage="No recent events to display."
+      content={events.slice(0, NUM_EVENTS_DISPLAY)}
       count={NUM_EVENTS_DISPLAY}
+      emptyMessage="No recent events to display."
+      header="Events"
     />
   );
 };

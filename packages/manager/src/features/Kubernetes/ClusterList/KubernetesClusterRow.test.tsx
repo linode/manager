@@ -1,15 +1,17 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
+
 import { kubernetesClusterFactory } from 'src/factories';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
+
 import { KubernetesClusterRow, Props } from './KubernetesClusterRow';
 
 const cluster = kubernetesClusterFactory.build();
 
 const props: Props = {
   cluster,
-  openUpgradeDialog: jest.fn(),
   openDeleteDialog: jest.fn(),
+  openUpgradeDialog: jest.fn(),
 };
 
 describe('ClusterRow component', () => {

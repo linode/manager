@@ -1,4 +1,5 @@
 import { domainRecords as records } from 'src/__data__/domains';
+
 import {
   isEditableNameServer,
   isValidCNAME,

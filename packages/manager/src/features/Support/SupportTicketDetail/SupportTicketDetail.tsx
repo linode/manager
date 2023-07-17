@@ -1,59 +1,62 @@
 import { SupportReply } from '@linode/api-v4/lib/support';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Chip } from 'src/components/Chip';
+import { Waypoint } from 'react-waypoint';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
+
+import { Chip } from 'src/components/Chip';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
-import formatDate from 'src/utilities/formatDate';
-import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
-import TicketAttachmentList from '../TicketAttachmentList';
-import AttachmentError from './AttachmentError';
-import { ReplyContainer } from './TabbedReply/ReplyContainer';
 import LandingHeader from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
+import { useProfile } from 'src/queries/profile';
 import {
   useInfiniteSupportTicketRepliesQuery,
   useSupportTicketQuery,
 } from 'src/queries/support';
-import { useProfile } from 'src/queries/profile';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
-import { Waypoint } from 'react-waypoint';
-import Stack from '@mui/material/Stack';
-import { Notice } from 'src/components/Notice/Notice';
-import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { capitalize } from 'src/utilities/capitalize';
+import formatDate from 'src/utilities/formatDate';
+import { getLinkTargets } from 'src/utilities/getEventsActionLink';
+
+import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
+import TicketAttachmentList from '../TicketAttachmentList';
+import AttachmentError from './AttachmentError';
+import { ReplyContainer } from './TabbedReply/ReplyContainer';
+
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  title: {
-    display: 'flex',
-    alignItems: 'center',
+  closed: {
+    backgroundColor: theme.color.red,
+  },
+  open: {
+    backgroundColor: theme.color.green,
+  },
+  status: {
+    color: theme.color.white,
+    marginLeft: theme.spacing(1),
+    marginTop: 5,
   },
   ticketLabel: {
     position: 'relative',
     top: -3,
   },
-  status: {
-    marginTop: 5,
-    marginLeft: theme.spacing(1),
-    color: theme.color.white,
-  },
-  open: {
-    backgroundColor: theme.color.green,
-  },
-  closed: {
-    backgroundColor: theme.color.red,
+  title: {
+    alignItems: 'center',
+    display: 'flex',
   },
 }));
 
 export interface AttachmentError {
-  file: string;
   error: string;
+  file: string;
 }
 
 const SupportTicketDetail = () => {
@@ -68,13 +71,13 @@ const SupportTicketDetail = () => {
 
   const { data: profile } = useProfile();
 
-  const { data: ticket, isLoading, error, refetch } = useSupportTicketQuery(id);
+  const { data: ticket, error, isLoading, refetch } = useSupportTicketQuery(id);
   const {
     data: repliesData,
-    isLoading: repliesLoading,
     error: repliesError,
-    hasNextPage,
     fetchNextPage,
+    hasNextPage,
+    isLoading: repliesLoading,
   } = useInfiniteSupportTicketRepliesQuery(id);
 
   const replies = repliesData?.pages.flatMap((page) => page.data);
@@ -107,8 +110,8 @@ const SupportTicketDetail = () => {
     const target = getLinkTargets(entity);
 
     return (
-      <Notice success spacingTop={12}>
-        <Stack direction="row" spacing={1} alignItems="center">
+      <Notice spacingTop={12} success>
+        <Stack alignItems="center" direction="row" spacing={1}>
           <EntityIcon size={20} variant={entity.type as EntityVariants} />
           <Typography>
             This ticket is associated with your {capitalize(entity.type)}{' '}
@@ -122,12 +125,12 @@ const SupportTicketDetail = () => {
   const _Chip = () => (
     <Chip
       className={cx({
-        [classes.status]: true,
-        [classes.open]: ticket.status === 'open' || ticket.status === 'new',
         [classes.closed]: ticket.status === 'closed',
+        [classes.open]: ticket.status === 'open' || ticket.status === 'new',
+        [classes.status]: true,
       })}
-      label={ticket.status}
       component="div"
+      label={ticket.status}
       role="term"
     />
   );
@@ -136,19 +139,12 @@ const SupportTicketDetail = () => {
     <React.Fragment>
       <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
       <LandingHeader
-        title={`#${ticket.id}: ${ticket.summary}`}
         breadcrumbProps={{
-          pathname: location.pathname,
           breadcrumbDataAttrs: {
             'data-qa-breadcrumb': true,
           },
-          labelOptions: {
-            subtitle: `${status} by ${ticket.updated_by} at ${formattedDate}`,
-            suffixComponent: <_Chip />,
-          },
           crumbOverrides: [
             {
-              position: 2,
               linkTo: {
                 pathname: `/support/tickets`,
                 // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
@@ -156,9 +152,16 @@ const SupportTicketDetail = () => {
                   ticket.status === 'closed' ? 'closed' : 'open'
                 }`,
               },
+              position: 2,
             },
           ],
+          labelOptions: {
+            subtitle: `${status} by ${ticket.updated_by} at ${formattedDate}`,
+            suffixComponent: <_Chip />,
+          },
+          pathname: location.pathname,
         }}
+        title={`#${ticket.id}: ${ticket.summary}`}
       />
 
       {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
@@ -166,8 +169,8 @@ const SupportTicketDetail = () => {
         !isEmpty(attachmentErrors) &&
         attachmentErrors?.map((error, idx: number) => (
           <AttachmentError
-            key={idx}
             fileName={error.file}
+            key={idx}
             reason={error.error}
           />
         ))}
@@ -179,19 +182,19 @@ const SupportTicketDetail = () => {
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description && (
             <ExpandableTicketPanel
+              isCurrentUser={profile?.username === ticket.opened_by}
               key={ticket.id}
               ticket={ticket}
-              isCurrentUser={profile?.username === ticket.opened_by}
             />
           )}
           {replies?.map((reply: SupportReply, idx: number) => (
             <ExpandableTicketPanel
+              isCurrentUser={profile?.username === reply.created_by}
               key={idx}
-              reply={reply}
               open={idx === replies.length - 1}
               parentTicket={ticket ? ticket.id : undefined}
+              reply={reply}
               ticketUpdated={ticket ? ticket.updated : ''}
-              isCurrentUser={profile?.username === reply.created_by}
             />
           ))}
           {repliesLoading && <CircleProgress mini />}
@@ -201,12 +204,12 @@ const SupportTicketDetail = () => {
           {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
           <TicketAttachmentList attachments={ticket.attachments} />
           {/* If the ticket is open, allow users to reply to it. */}
-          {['open', 'new'].includes(ticket.status) && (
+          {['new', 'open'].includes(ticket.status) && (
             <ReplyContainer
-              ticketId={ticket.id}
               closable={ticket.closable}
-              reloadAttachments={refetch}
               lastReply={replies && replies[replies?.length - 1]}
+              reloadAttachments={refetch}
+              ticketId={ticket.id}
             />
           )}
         </Grid>

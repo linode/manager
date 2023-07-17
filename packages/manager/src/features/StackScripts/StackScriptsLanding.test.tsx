@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+
 import { StackScriptsLanding } from './StackScriptsLanding';
 
 jest.mock('@linode/api-v4/lib/account', () => ({

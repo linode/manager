@@ -1,25 +1,27 @@
+import { SecurityQuestionsData } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
+import { FormikConfig, useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Typography } from 'src/components/Typography';
+
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
 import { Link } from 'src/components/Link';
-import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
-import { SecurityQuestionsData } from '@linode/api-v4';
-import { styled } from '@mui/material/styles';
-import { useFormik, FormikConfig } from 'formik';
-import { useSnackbar } from 'notistack';
+import { Typography } from 'src/components/Typography';
 import {
-  useSecurityQuestions,
   useMutateSecurityQuestions,
+  useSecurityQuestions,
 } from 'src/queries/securityQuestions';
+
+import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
+import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
 
 export const SecurityQuestions = () => {
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
   const {
-    mutateAsync: updateSecurityQuestions,
     isLoading: isUpdating,
+    mutateAsync: updateSecurityQuestions,
   } = useMutateSecurityQuestions();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -37,8 +39,8 @@ export const SecurityQuestions = () => {
   const initalFormValues = { security_questions: answeredQuestions };
 
   const formikConfig: FormikConfig<SecurityQuestionsData> = {
-    initialValues: initalFormValues,
     enableReinitialize: true,
+    initialValues: initalFormValues,
     onSubmit: async (values) => {
       try {
         const action = hasSecurityQuestionsCompleted ? 'updated' : 'added';
@@ -89,12 +91,12 @@ export const SecurityQuestions = () => {
   };
 
   const {
-    values,
-    handleSubmit,
-    setFieldValue,
-    handleChange,
     dirty,
+    handleChange,
+    handleSubmit,
     resetForm,
+    setFieldValue,
+    values,
   } = useFormik(formikConfig);
 
   const isButtonDisabled =
@@ -105,8 +107,8 @@ export const SecurityQuestions = () => {
     );
 
   const qaProps = {
-    setFieldValue,
     handleChange,
+    setFieldValue,
   };
 
   if (isLoading) {
@@ -128,42 +130,42 @@ export const SecurityQuestions = () => {
       </StyledCopy>
       <StyledForm onSubmit={handleSubmit}>
         <QuestionAndAnswerPair
-          questionResponse={values.security_questions[0]}
-          index={0}
-          edit={questionEditStates[0]}
-          onEdit={() => onEdit(0)}
           options={options.filter((option) => {
             return (
               option.value !== values.security_questions[1]?.id &&
               option.value !== values.security_questions[2]?.id
             );
           })}
+          edit={questionEditStates[0]}
+          index={0}
+          onEdit={() => onEdit(0)}
+          questionResponse={values.security_questions[0]}
           {...qaProps}
         />
         <QuestionAndAnswerPair
-          questionResponse={values.security_questions[1]}
-          index={1}
-          edit={questionEditStates[1]}
-          onEdit={() => onEdit(1)}
           options={options.filter((option) => {
             return (
               option.value !== values.security_questions[0]?.id &&
               option.value !== values.security_questions[2]?.id
             );
           })}
+          edit={questionEditStates[1]}
+          index={1}
+          onEdit={() => onEdit(1)}
+          questionResponse={values.security_questions[1]}
           {...qaProps}
         />
         <QuestionAndAnswerPair
-          questionResponse={values.security_questions[2]}
-          index={2}
-          edit={questionEditStates[2]}
-          onEdit={() => onEdit(2)}
           options={options.filter((option) => {
             return (
               option.value !== values.security_questions[0]?.id &&
               option.value !== values.security_questions[1]?.id
             );
           })}
+          edit={questionEditStates[2]}
+          index={2}
+          onEdit={() => onEdit(2)}
+          questionResponse={values.security_questions[2]}
           {...qaProps}
         />
         <StyledButtonContainer display="flex" justifyContent="flex-end">
@@ -174,10 +176,10 @@ export const SecurityQuestions = () => {
             </Button>
           ) : null}
           <Button
-            loading={isUpdating}
             buttonType="primary"
-            type="submit"
             disabled={isButtonDisabled}
+            loading={isUpdating}
+            type="submit"
           >
             {`${
               hasSecurityQuestionsCompleted ? 'Update' : 'Add'
@@ -193,24 +195,24 @@ const StyledCopy = styled(Typography, {
   label: 'StyledCopy',
 })(({ theme }) => ({
   lineHeight: '20px',
-  marginTop: theme.spacing(),
   marginBottom: theme.spacing(),
+  marginTop: theme.spacing(),
   maxWidth: 960,
 }));
 
 const StyledForm = styled('form', {
   label: 'StyledForm',
 })(() => ({
-  width: '100%',
   display: 'flex',
   flexDirection: 'column',
+  width: '100%',
 }));
 
 const StyledButtonContainer = styled(Box, {
   label: 'StyledButtonContainer',
 })(({ theme }) => ({
-  marginTop: theme.spacing(2),
   gap: theme.spacing(),
+  marginTop: theme.spacing(2),
   [theme.breakpoints.down('md')]: {
     marginTop: theme.spacing(2),
   },

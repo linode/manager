@@ -9,8 +9,10 @@ import ReactSelect, {
 import CreatableSelect, {
   CreatableProps as CreatableSelectProps,
 } from 'react-select/creatable';
+
 import { TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
+
 import { reactSelectStyles, useStyles } from './Select.styles';
 import { DropdownIndicator } from './components/DropdownIndicator';
 import Input from './components/Input';
@@ -23,13 +25,13 @@ import Option from './components/Option';
 import Control from './components/SelectControl';
 import { SelectPlaceholder as Placeholder } from './components/SelectPlaceholder';
 
-export interface Item<T = string | number, L = string> {
-  value: T;
-  label: L;
+export interface Item<T = number | string, L = string> {
   data?: any;
+  label: L;
+  value: T;
 }
 
-export interface GroupType<T = string | number> {
+export interface GroupType<T = number | string> {
   label: string;
   options: Item<T>[];
 }
@@ -42,15 +44,15 @@ export interface NoOptionsMessageProps {
 // Will override the RS defaults.
 const _components = {
   Control,
-  NoOptionsMessage,
-  Placeholder,
+  DropdownIndicator,
+  Input,
+  LoadingIndicator,
+  MenuList,
   MultiValueLabel,
   MultiValueRemove,
-  MenuList,
+  NoOptionsMessage,
   Option,
-  DropdownIndicator,
-  LoadingIndicator,
-  Input,
+  Placeholder,
 };
 
 // We extend TexFieldProps to still be able to pass
@@ -66,22 +68,28 @@ export interface BaseSelectProps<
 > extends Omit<SelectProps<I, IsMulti>, 'onChange'>,
     CreatableSelectProps<I, IsMulti> {
   classes?: any;
-  /*
-   textFieldProps isn't native to react-select
-   but we're using the MUI select element so any props that
-   can be passed to the MUI TextField element can be passed here
-  */
-  textFieldProps?: ModifiedTextFieldProps;
+  creatable?: boolean;
+  /** the rest are props we've added ourselves */
+  disabled?: boolean;
+  errorGroup?: string;
+
   /**
    * errorText and label both passed to textFieldProps
    * @todo consider just putting this under textFieldProps
    */
   errorText?: string;
+
+  guidance?: React.ReactNode | string;
+  hideLabel?: boolean;
+  inline?: boolean;
+  inputId?: any;
+  isClearable?: Clearable;
   /**
    * We require label for accessibility purpose
    */
   label?: string;
-
+  medium?: boolean;
+  noMarginTop?: boolean;
   /** onChange is called when the user selectes a new value / new values */
   onChange: Clearable extends true // if the Select is NOT clearable, the value passed in the onChange function must be defined
     ? Exclude<SelectProps<I, IsMulti>['onChange'], undefined>
@@ -89,24 +97,18 @@ export interface BaseSelectProps<
         value: Exclude<ValueType<I, IsMulti>, null | undefined>,
         action: ActionMeta<I>
       ) => void;
-
-  /** the rest are props we've added ourselves */
-  disabled?: boolean;
-  medium?: boolean;
-  small?: boolean;
-  noMarginTop?: boolean;
-  inline?: boolean;
-  hideLabel?: boolean;
-  errorGroup?: string;
-  guidance?: string | React.ReactNode;
-  inputId?: any;
-  required?: boolean;
-  creatable?: boolean;
-  variant?: 'creatable';
-  isClearable?: Clearable;
-  // Set this prop to `true` when using a <Select /> on a modal. It attaches the <Select /> to the
   // document body directly, so the overflow is visible over the edge of the modal.
   overflowPortal?: boolean;
+  required?: boolean;
+  small?: boolean;
+  /*
+   textFieldProps isn't native to react-select
+   but we're using the MUI select element so any props that
+   can be passed to the MUI TextField element can be passed here
+  */
+  textFieldProps?: ModifiedTextFieldProps;
+  // Set this prop to `true` when using a <Select /> on a modal. It attaches the <Select /> to the
+  variant?: 'creatable';
 }
 
 const Select = <
@@ -119,35 +121,35 @@ const Select = <
   const theme = useTheme<Theme>();
   const { classes } = useStyles();
   const {
+    blurInputOnSelect,
     className,
     components,
+    creatable,
+    errorGroup,
     errorText,
     filterOption,
-    label,
-    isClearable,
-    isMulti,
-    isLoading,
-    placeholder,
-    onChange,
-    onInputChange,
-    options,
-    value,
-    noOptionsMessage,
-    onMenuClose,
-    onBlur,
-    blurInputOnSelect,
-    medium,
-    small,
-    noMarginTop,
-    textFieldProps,
-    inline,
     hideLabel,
-    errorGroup,
-    onFocus,
+    inline,
     inputId,
+    isClearable,
+    isLoading,
+    isMulti,
+    label,
+    medium,
+    noMarginTop,
+    noOptionsMessage,
+    onBlur,
+    onChange,
+    onFocus,
+    onInputChange,
+    onMenuClose,
+    options,
     overflowPortal,
+    placeholder,
     required,
-    creatable,
+    small,
+    textFieldProps,
+    value,
     ...restOfProps
   } = props;
 
@@ -206,18 +208,6 @@ const Select = <
   return (
     <BaseSelect
       {...restOfProps}
-      label={props.label}
-      // If isClearable hasn't been supplied, default to true
-      isClearable={isClearable ?? true}
-      isSearchable
-      blurInputOnSelect={blurInputOnSelect}
-      isLoading={isLoading}
-      isDisabled={props.disabled || props.isDisabled}
-      filterOption={filterOption}
-      isMulti={isMulti}
-      classes={classes}
-      className={classNames(classes.root, className)}
-      classNamePrefix="react-select"
       inputId={
         inputId
           ? inputId
@@ -232,36 +222,48 @@ const Select = <
       */
       textFieldProps={{
         ...textFieldProps,
-        label,
-        hideLabel,
-        errorText,
-        errorGroup,
-        disabled: props.isDisabled || props.disabled,
-        noMarginTop,
         InputLabelProps: {
           shrink: true,
         },
         className: classNames(
           {
+            [classes.inline]: inline,
             [classes.medium]: medium,
             [classes.small]: small,
-            [classes.inline]: inline,
           },
           className
         ),
+        disabled: props.isDisabled || props.disabled,
+        errorGroup,
+        errorText,
+        hideLabel,
+        label,
+        noMarginTop,
         required,
       }}
-      value={value}
-      onBlur={onBlur}
-      options={options}
+      blurInputOnSelect={blurInputOnSelect}
+      className={classNames(classes.root, className)}
+      classNamePrefix="react-select"
+      classes={classes}
       components={combinedComponents}
-      onChange={_onChange}
-      onInputChange={onInputChange}
-      placeholder={placeholder || 'Select a value...'}
-      noOptionsMessage={noOptionsMessage || (() => 'No results')}
+      filterOption={filterOption}
+      // If isClearable hasn't been supplied, default to true
+      isClearable={isClearable ?? true}
+      isDisabled={props.disabled || props.isDisabled}
+      isLoading={isLoading}
+      isMulti={isMulti}
+      isSearchable
+      label={props.label}
       menuPlacement={props.menuPlacement || 'auto'}
-      onMenuClose={onMenuClose}
+      noOptionsMessage={noOptionsMessage || (() => 'No results')}
+      onBlur={onBlur}
+      onChange={_onChange}
       onFocus={onFocus}
+      onInputChange={onInputChange}
+      onMenuClose={onMenuClose}
+      options={options}
+      placeholder={placeholder || 'Select a value...'}
+      value={value}
     />
   );
 };

@@ -2,30 +2,20 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import BarPercent from 'src/components/BarPercent';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Typography } from 'src/components/Typography';
-import { Link } from 'src/components/Link';
-import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { makeStyles } from 'tss-react/mui';
 
+import BarPercent from 'src/components/BarPercent';
+import { Dialog } from 'src/components/Dialog/Dialog';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
+import { useAccountTransfer } from 'src/queries/accountTransfer';
+
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    width: '100%',
-    margin: 'auto',
-    textAlign: 'center',
-    [theme.breakpoints.down('md')]: {
-      width: '85%',
-    },
-  },
-  poolUsageProgress: {
-    marginBottom: theme.spacing(0.5),
-    '& .MuiLinearProgress-root': {
-      borderRadius: 1,
-    },
-  },
   link: {
     marginTop: theme.spacing(1),
+  },
+  openModalButton: {
+    ...theme.applyLinkStyles,
   },
   paddedDocsText: {
     [theme.breakpoints.up('md')]: {
@@ -35,12 +25,23 @@ const useStyles = makeStyles()((theme: Theme) => ({
   paper: {
     padding: theme.spacing(3),
   },
-  proratedNotice: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+  poolUsageProgress: {
+    '& .MuiLinearProgress-root': {
+      borderRadius: 1,
+    },
+    marginBottom: theme.spacing(0.5),
   },
-  openModalButton: {
-    ...theme.applyLinkStyles,
+  proratedNotice: {
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
+  },
+  root: {
+    margin: 'auto',
+    textAlign: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '85%',
+    },
+    width: '100%',
   },
 }));
 
@@ -52,7 +53,7 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const { classes } = useStyles();
 
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { data, isLoading, isError } = useAccountTransfer();
+  const { data, isError, isLoading } = useAccountTransfer();
   const quota = data?.quota ?? 0;
   const used = data?.used ?? 0;
 
@@ -91,10 +92,10 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
       </Typography>
       <TransferDialog
         isOpen={modalOpen}
-        used={used}
-        quota={quota}
-        poolUsagePct={poolUsagePct}
         onClose={() => setModalOpen(false)}
+        poolUsagePct={poolUsagePct}
+        quota={quota}
+        used={used}
       />
     </>
   );
@@ -114,10 +115,10 @@ export const getDaysRemaining = () =>
 // =============================================================================
 interface DialogProps {
   isOpen: boolean;
-  used: number;
-  quota: number;
-  poolUsagePct: number;
   onClose: () => void;
+  poolUsagePct: number;
+  quota: number;
+  used: number;
 }
 
 export const TransferDialog = React.memo((props: DialogProps) => {
@@ -138,18 +139,18 @@ export const TransferDialog = React.memo((props: DialogProps) => {
 
   return (
     <Dialog
-      open={isOpen}
       classes={{ paper: classes.paper }}
-      onClose={onClose}
-      title="Monthly Network Transfer Pool"
-      maxWidth="sm"
       fullWidth
+      maxWidth="sm"
+      onClose={onClose}
+      open={isOpen}
+      title="Monthly Network Transfer Pool"
     >
       <Grid
         container
         justifyContent="space-between"
-        style={{ marginBottom: 0 }}
         spacing={2}
+        style={{ marginBottom: 0 }}
       >
         <Grid style={{ marginRight: 10 }}>
           {!isEmptyPool ? (
@@ -177,10 +178,10 @@ export const TransferDialog = React.memo((props: DialogProps) => {
       </Grid>
       {!isEmptyPool ? (
         <BarPercent
-          max={100}
-          value={Math.ceil(poolUsagePct)}
           className={classes.poolUsageProgress}
+          max={100}
           rounded
+          value={Math.ceil(poolUsagePct)}
         />
       ) : null}
 
@@ -199,8 +200,8 @@ export const TransferDialog = React.memo((props: DialogProps) => {
         <Typography>
           {transferQuotaDocsText}{' '}
           <Link
-            to="https://www.linode.com/docs/guides/network-transfer-quota/"
             aria-label="Learn more – link opens in a new tab"
+            to="https://www.linode.com/docs/guides/network-transfer-quota/"
           >
             Learn more.
           </Link>

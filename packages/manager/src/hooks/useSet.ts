@@ -37,10 +37,10 @@ export const useSet = <T>(initial?: Iterable<T>) => {
 
   return {
     add,
-    delete: _delete,
-    has,
-    forEach,
     clear,
+    delete: _delete,
+    forEach,
+    has,
     set,
   };
 };

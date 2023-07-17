@@ -1,8 +1,10 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
-import { Typography } from 'src/components/Typography';
 import { Button } from 'src/components/Button/Button';
+import { Typography } from 'src/components/Typography';
+
 import { ResultGroup } from './ResultGroup';
 
 jest.mock('@mui/styles', () => ({
@@ -15,6 +17,8 @@ jest.mock('src/hooks/useFlags', () => ({
 
 const props = {
   entity: 'linodes',
+  groupSize: 5,
+  loading: false,
   results: [
     searchbarResult1,
     searchbarResult2,
@@ -23,16 +27,14 @@ const props = {
     searchbarResult1,
     searchbarResult2,
   ],
-  loading: false,
-  groupSize: 5,
   showMore: false,
   toggle: jest.fn(),
 };
 
 const emptyProps = {
   entity: 'linodes',
-  results: [],
   groupSize: 5,
+  results: [],
   showMore: false,
   toggle: jest.fn(),
 };

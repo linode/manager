@@ -1,16 +1,16 @@
 import { withStateHandlers } from 'recompose';
 
 interface State {
-  mutationDrawerOpen: boolean;
-  mutationDrawerLoading: boolean;
   mutationDrawerError: string;
+  mutationDrawerLoading: boolean;
+  mutationDrawerOpen: boolean;
 }
 
 interface Handlers {
-  openMutationDrawer: () => void;
+  [key: string]: any;
   closeMutationDrawer: () => void;
   mutationFailed: (error: string) => void;
-  [key: string]: any;
+  openMutationDrawer: () => void;
 }
 
 export type MutationDrawerProps = State & Handlers;
@@ -22,12 +22,6 @@ export default withStateHandlers<State, Handlers>(
     mutationDrawerOpen: false,
   }),
   {
-    openMutationDrawer: (state) => () => ({
-      mutationDrawerError: '',
-      mutationDrawerLoading: false,
-      mutationDrawerOpen: true,
-    }),
-
     closeMutationDrawer: (state) => () => ({
       ...state,
       mutationDrawerOpen: false,
@@ -35,6 +29,12 @@ export default withStateHandlers<State, Handlers>(
 
     mutationFailed: (state) => (error: string) => ({
       mutationDrawerError: error,
+      mutationDrawerLoading: false,
+      mutationDrawerOpen: true,
+    }),
+
+    openMutationDrawer: (state) => () => ({
+      mutationDrawerError: '',
       mutationDrawerLoading: false,
       mutationDrawerOpen: true,
     }),

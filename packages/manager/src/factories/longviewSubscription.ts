@@ -1,14 +1,14 @@
-import * as Factory from 'factory.ts';
 import {
   ActiveLongviewPlan,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
+import * as Factory from 'factory.ts';
 
 export const longviewSubscriptionFactory = Factory.Sync.makeFactory<LongviewSubscription>(
   {
+    clients_included: Factory.each((i) => i),
     id: Factory.each((i) => `longview-${i}`),
     label: Factory.each((i) => `Longview Pro ${i} Pack`),
-    clients_included: Factory.each((i) => i),
     price: {
       hourly: 0.03,
       monthly: 200,
@@ -18,12 +18,12 @@ export const longviewSubscriptionFactory = Factory.Sync.makeFactory<LongviewSubs
 
 export const longviewActivePlanFactory = Factory.Sync.makeFactory<ActiveLongviewPlan>(
   {
+    clients_included: 100,
     id: 'longview-3',
     label: 'Longview Pro 3 pack',
     price: {
       hourly: 0.03,
       monthly: 20,
     },
-    clients_included: 100,
   }
 );

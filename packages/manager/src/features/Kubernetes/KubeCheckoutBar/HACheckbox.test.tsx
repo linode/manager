@@ -1,7 +1,9 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
+
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import HACheckbox, { Props } from './HACheckbox';
 
 const props: Props = {
@@ -13,7 +15,7 @@ const shouldRender = HIGH_AVAILABILITY_PRICE !== undefined;
 
 describe('HACheckbox', () => {
   it('the component should render', () => {
-    const { getByTestId, container } = renderWithTheme(
+    const { container, getByTestId } = renderWithTheme(
       <HACheckbox {...props} />
     );
 

@@ -1,16 +1,11 @@
+import { Token } from '@linode/api-v4/lib/profile';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+
 import AddNewLink from 'src/components/AddNewLink';
 import { Box } from 'src/components/Box';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Typography } from 'src/components/Typography';
-import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { EditAPITokenDrawer } from './EditAPITokenDrawer';
-import { isWayInTheFuture } from './utils';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { RevokeTokenDialog } from './RevokeTokenDialog';
-import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -18,43 +13,50 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { APITokenMenu } from './APITokenMenu';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { Token } from '@linode/api-v4/lib/profile';
+import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
+import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { Typography } from 'src/components/Typography';
+import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
-import {
-  StyledAddNewWrapper,
-  StyledHeadline,
-  StyledRootContainer,
-} from './APITokenTable.styles';
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
 } from 'src/queries/tokens';
 
+import { APITokenMenu } from './APITokenMenu';
+import {
+  StyledAddNewWrapper,
+  StyledHeadline,
+  StyledRootContainer,
+} from './APITokenTable.styles';
+import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
+import { EditAPITokenDrawer } from './EditAPITokenDrawer';
+import { RevokeTokenDialog } from './RevokeTokenDialog';
+import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
+import { isWayInTheFuture } from './utils';
+
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
 
 export type APITokenTitle =
-  | 'Third Party Access Tokens'
-  | 'Personal Access Tokens';
+  | 'Personal Access Tokens'
+  | 'Third Party Access Tokens';
 
 interface Props {
-  type: APITokenType;
   title: APITokenTitle;
+  type: APITokenType;
 }
 
 const PREFERENCE_KEY = 'api-tokens';
 
 export const APITokenTable = (props: Props) => {
-  const { type, title } = props;
+  const { title, type } = props;
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'created',
       order: 'desc',
+      orderBy: 'created',
     },
     `${PREFERENCE_KEY}-order}`,
     type === 'OAuth Client Token' ? 'oauth' : 'token'
@@ -68,7 +70,7 @@ export const APITokenTable = (props: Props) => {
 
   const useTokenQuery = queryMap[type];
 
-  const { data, isLoading, error } = useTokenQuery(
+  const { data, error, isLoading } = useTokenQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -137,17 +139,17 @@ export const APITokenTable = (props: Props) => {
     return tokens.map((token: Token) => (
       <TableRow
         ariaLabel={token.label}
-        key={token.id}
         data-qa-table-row={token.label}
+        key={token.id}
       >
         <TableCell data-qa-token-label>{token.label}</TableCell>
         <TableCell>
-          <Typography variant="body1" data-qa-token-created>
+          <Typography data-qa-token-created variant="body1">
             <DateTimeDisplay value={token.created} />
           </Typography>
         </TableCell>
         <TableCell>
-          <Typography variant="body1" data-qa-token-expiry>
+          <Typography data-qa-token-expiry variant="body1">
             {
               /*
              The expiry time of tokens that never expire are returned from the API as
@@ -167,12 +169,12 @@ export const APITokenTable = (props: Props) => {
         </TableCell>
         <TableCell actionCell>
           <APITokenMenu
-            token={token}
-            type={type}
             isThirdPartyAccessToken={title === 'Third Party Access Tokens'}
-            openViewDrawer={openViewDrawer}
             openEditDrawer={openEditDrawer}
             openRevokeDialog={openRevokeDialog}
+            openViewDrawer={openViewDrawer}
+            token={token}
+            type={type}
           />
         </TableCell>
       </TableRow>
@@ -182,21 +184,21 @@ export const APITokenTable = (props: Props) => {
   return (
     <Box>
       <StyledRootContainer
-        container
         alignItems="center"
+        container
         justifyContent="space-between"
         spacing={2}
       >
         <Grid>
-          <StyledHeadline variant="h3" data-qa-table={type}>
+          <StyledHeadline data-qa-table={type} variant="h3">
             {title}
           </StyledHeadline>
         </Grid>
         <StyledAddNewWrapper>
           {type === 'Personal Access Token' && (
             <AddNewLink
-              onClick={() => setIsCreateOpen(true)}
               label="Create a Personal Access Token"
+              onClick={() => setIsCreateOpen(true)}
             />
           )}
         </StyledAddNewWrapper>
@@ -206,25 +208,25 @@ export const APITokenTable = (props: Props) => {
           <TableRow data-qa-table-head>
             <StyledTableSortCell
               active={orderBy === 'label'}
-              label="label"
               direction={order}
               handleClick={handleOrderChange}
+              label="label"
             >
               Label
             </StyledTableSortCell>
             <TableSortCell
               active={orderBy === 'created'}
-              label="created"
               direction={order}
               handleClick={handleOrderChange}
+              label="created"
             >
               Created
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'expiry'}
-              label="expiry"
               direction={order}
               handleClick={handleOrderChange}
+              label="expiry"
             >
               Expires
             </TableSortCell>
@@ -234,38 +236,38 @@ export const APITokenTable = (props: Props) => {
         <TableBody>{renderContent()}</TableBody>
       </Table>
       <PaginationFooter
-        page={pagination.page}
-        pageSize={pagination.pageSize}
         count={data?.results ?? 0}
+        eventCategory="api tokens table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
-        eventCategory="api tokens table"
+        page={pagination.page}
+        pageSize={pagination.pageSize}
       />
       <CreateAPITokenDrawer
-        open={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
+        open={isCreateOpen}
         showSecret={showSecret}
       />
       <ViewAPITokenDrawer
-        open={isViewOpen}
         onClose={() => setIsViewOpen(false)}
+        open={isViewOpen}
         token={selectedToken}
       />
       <EditAPITokenDrawer
-        open={isEditOpen}
         onClose={() => setIsEditOpen(false)}
+        open={isEditOpen}
         token={selectedToken}
       />
       <RevokeTokenDialog
-        open={isRevokeOpen}
         onClose={() => setIsRevokeOpen(false)}
+        open={isRevokeOpen}
         token={selectedToken}
         type={type}
       />
       <SecretTokenDialog
-        title="Personal Access Token"
-        open={secretTokenDialogData.open}
         onClose={closeSecretDialog}
+        open={secretTokenDialogData.open}
+        title="Personal Access Token"
         value={secretTokenDialogData.token}
       />
     </Box>

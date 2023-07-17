@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 export interface ActionHandlers {
@@ -26,14 +27,14 @@ const LongviewActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'Delete',
       disabled: !userCanModifyClient,
-      tooltip: userCanModifyClient
-        ? ''
-        : 'Contact an account administrator for permission.',
       onClick: () => {
         triggerDeleteLongviewClient(longviewClientID, longviewClientLabel);
       },
+      title: 'Delete',
+      tooltip: userCanModifyClient
+        ? ''
+        : 'Contact an account administrator for permission.',
     },
   ];
 

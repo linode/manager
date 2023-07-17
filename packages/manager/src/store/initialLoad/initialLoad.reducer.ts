@@ -1,4 +1,5 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+
 import { handleLoadingDone } from './initialLoad.actions';
 
 export interface State {
