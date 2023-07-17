@@ -15,7 +15,7 @@ import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
-import DocumentationResults, { SearchResult } from './DocumentationResults';
+import { DocumentationResults, SearchResult } from './DocumentationResults';
 import HelpResources from './HelpResources';
 
 type ClassNames =

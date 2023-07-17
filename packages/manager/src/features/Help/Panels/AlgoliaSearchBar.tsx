@@ -1,10 +1,10 @@
 import Search from '@mui/icons-material/Search';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, WithTheme, createStyles, withStyles } from '@mui/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { makeStyles } from 'tss-react/mui';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import { Notice } from 'src/components/Notice/Notice';
@@ -12,184 +12,142 @@ import { selectStyles } from 'src/features/TopMenu/SearchBar';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
 
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
-import SearchItem from './SearchItem';
+import { SearchItem } from './SearchItem';
 
-type ClassNames =
-  | 'enhancedSelectWrapper'
-  | 'notice'
-  | 'root'
-  | 'searchIcon'
-  | 'searchItem';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    enhancedSelectWrapper: {
-      '& .input': {
-        '& > div': {
-          marginRight: 0,
-        },
-        '& p': {
-          color: theme.color.grey1,
-          paddingLeft: theme.spacing(3),
-        },
-        maxWidth: '100%',
+const useStyles = makeStyles()((theme: Theme) => ({
+  enhancedSelectWrapper: {
+    '& .input': {
+      '& > div': {
+        marginRight: 0,
       },
-      '& .react-select__value-container': {
-        paddingLeft: theme.spacing(4),
-      },
-      margin: '0 auto',
-      maxHeight: 500,
-      [theme.breakpoints.up('md')]: {
-        width: 500,
-      },
-      width: 300,
-    },
-    notice: {
       '& p': {
-        color: theme.color.white,
-        fontFamily: 'LatoWeb',
+        color: theme.color.grey1,
+        paddingLeft: theme.spacing(3),
       },
+      maxWidth: '100%',
     },
-    root: {
-      position: 'relative',
+    '& .react-select__value-container': {
+      paddingLeft: theme.spacing(4),
     },
-    searchIcon: {
-      color: theme.color.grey1,
-      left: 5,
-      position: 'absolute',
-      top: 4,
-      zIndex: 3,
+    margin: '0 auto',
+    maxHeight: 500,
+    [theme.breakpoints.up('md')]: {
+      width: 500,
     },
-    searchItem: {
-      '& em': {
-        color: theme.palette.primary.main,
-        fontStyle: 'normal',
-      },
+    width: 300,
+  },
+  notice: {
+    '& p': {
+      color: theme.color.white,
+      fontFamily: 'LatoWeb',
     },
-  });
+  },
+  root: {
+    position: 'relative',
+  },
+  searchIcon: {
+    color: theme.color.grey1,
+    left: 5,
+    position: 'absolute',
+    top: 4,
+    zIndex: 3,
+  },
+}));
 
-interface State {
-  inputValue: string;
-}
+type CombinedProps = AlgoliaProps & RouteComponentProps<{}>;
 
-type CombinedProps = AlgoliaProps &
-  WithStyles<ClassNames> &
-  WithTheme &
-  RouteComponentProps<{}>;
-class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
-  componentDidMount() {
-    const { theme } = this.props;
-    this.mounted = true;
+const AlgoliaSearchBar = (props: CombinedProps) => {
+  const { classes } = useStyles();
+  const theme = useTheme();
+  const [inputValue, setInputValue] = React.useState('');
+  const [mounted, setMounted] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+  const { searchEnabled, searchError } = props;
+
+  React.useEffect(() => {
+    setMounted(true);
     if (theme) {
-      this.isMobile = windowIsNarrowerThan(theme.breakpoints.values.sm);
+      setIsMobile(windowIsNarrowerThan(theme.breakpoints.values.sm));
     }
-  }
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-  render() {
-    const { classes, searchEnabled, searchError } = this.props;
-    const { inputValue } = this.state;
-    const options = this.getOptionsFromResults();
+    return () => setMounted(false);
+  }, [isMobile, theme]);
 
-    return (
-      <React.Fragment>
-        {searchError && (
-          <Notice className={classes.notice} error spacingTop={8}>
-            {searchError}
-          </Notice>
-        )}
-        <div className={classes.root}>
-          <Search className={classes.searchIcon} data-qa-search-icon />
-          <EnhancedSelect
-            components={
-              { DropdownIndicator: () => null, Option: SearchItem } as any
-            }
-            className={classes.enhancedSelectWrapper}
-            disabled={!searchEnabled}
-            hideLabel
-            inputValue={inputValue}
-            isClearable={false}
-            isMulti={false}
-            label="Search for answers"
-            onChange={this.handleSelect}
-            onInputChange={this.onInputValueChange}
-            options={options}
-            placeholder="Search for answers..."
-            styles={selectStyles}
-          />
-        </div>
-      </React.Fragment>
-    );
-  }
-  getLinkTarget = (inputValue: string) => {
-    return inputValue
-      ? `/support/search/?query=${inputValue}`
-      : '/support/search/';
-  };
-
-  getOptionsFromResults = () => {
-    const [docs, community] = this.props.searchResults;
-    const { inputValue } = this.state;
+  const getOptionsFromResults = () => {
+    const [docs, community] = props.searchResults;
     const options = [...docs, ...community];
+
     return [
       { data: { source: 'finalLink' }, label: inputValue, value: 'search' },
       ...options,
     ];
   };
 
-  handleSelect = (selected: Item<string>) => {
+  const onInputValueChange = (inputValue: string) => {
+    if (!mounted) {
+      return;
+    }
+    setInputValue(inputValue);
+    props.searchAlgolia(inputValue);
+  };
+
+  const getLinkTarget = (inputValue: string) => {
+    return inputValue
+      ? `/support/search/?query=${inputValue}`
+      : '/support/search/';
+  };
+
+  const handleSelect = (selected: Item<string>) => {
     if (!selected) {
       return;
     }
-    const { history } = this.props;
-    const { inputValue } = this.state;
+    const { history } = props;
     if (!inputValue) {
       return;
     }
+
     const href = pathOr('', ['data', 'href'], selected);
+
     if (selected.value === 'search') {
-      const link = this.getLinkTarget(inputValue);
+      const link = getLinkTarget(inputValue);
       history.push(link);
     } else {
       window.open(href, '_blank', 'noopener');
     }
   };
 
-  handleSubmit = () => {
-    const { inputValue } = this.state;
-    if (!inputValue) {
-      return;
-    }
-    const { history } = this.props;
-    const link = this.getLinkTarget(inputValue);
-    history.push(link);
-  };
+  const options = getOptionsFromResults();
 
-  isMobile: boolean = false;
+  return (
+    <React.Fragment>
+      {searchError && (
+        <Notice className={classes.notice} error spacingTop={8}>
+          {searchError}
+        </Notice>
+      )}
+      <div className={classes.root}>
+        <Search className={classes.searchIcon} data-qa-search-icon />
+        <EnhancedSelect
+          components={
+            { DropdownIndicator: () => null, Option: SearchItem } as any
+          }
+          className={classes.enhancedSelectWrapper}
+          disabled={!searchEnabled}
+          hideLabel
+          inputValue={inputValue}
+          isClearable={false}
+          isMulti={false}
+          label="Search for answers"
+          onChange={handleSelect}
+          onInputChange={onInputValueChange}
+          options={options}
+          placeholder="Search for answers..."
+          styles={selectStyles}
+        />
+      </div>
+    </React.Fragment>
+  );
+};
 
-  mounted: boolean = false;
-
-  onInputValueChange = (inputValue: string) => {
-    if (!this.mounted) {
-      return;
-    }
-    this.setState({ inputValue });
-    this.props.searchAlgolia(inputValue);
-  };
-
-  searchIndex: any = null;
-
-  state: State = {
-    inputValue: '',
-  };
-}
-
-const styled = withStyles(styles, { withTheme: true });
 const search = withSearch({ highlight: true, hitsPerPage: 10 });
 
-export default compose<CombinedProps, {}>(
-  styled,
-  search,
-  withRouter
-)(AlgoliaSearchBar);
+export default compose<CombinedProps, {}>(search, withRouter)(AlgoliaSearchBar);

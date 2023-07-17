@@ -1,14 +1,14 @@
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import ExternalLink from 'src/components/ExternalLink';
 import { Typography } from 'src/components/Typography';
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(3),
@@ -52,10 +52,8 @@ interface Props {
   target: string;
 }
 
-type CombinedProps = Props;
-
-const DocumentationResults: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const DocumentationResults = (props: Props) => {
+  const { classes } = useStyles();
   const { results, sectionTitle, target } = props;
 
   const renderResults = () => {
@@ -80,7 +78,7 @@ const DocumentationResults: React.FC<CombinedProps> = (props) => {
     ));
   };
 
-  const renderEmptyState = () => {
+  const renderEmptyState = (): JSX.Element => {
     return (
       <Paper className={classes.noResultsContainer}>
         <Typography variant="body1">No results</Typography>
@@ -109,5 +107,3 @@ const DocumentationResults: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default DocumentationResults;

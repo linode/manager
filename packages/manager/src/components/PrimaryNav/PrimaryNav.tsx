@@ -248,6 +248,7 @@ export const PrimaryNav = (props: Props) => {
         },
       ],
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       showDatabases,
       _isManagedAccount,
