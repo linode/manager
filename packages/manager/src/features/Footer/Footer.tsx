@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 
 import packageJson from '../../../package.json';
 
@@ -108,12 +108,9 @@ export const Footer = React.memo((props: Props) => {
             [classes.linkContainer]: true,
           })}
         >
-          <ExternalLink
-            className={classes.link}
-            hideIcon
-            link={FEEDBACK_LINK}
-            text="Provide Feedback"
-          />
+          <Link className={classes.link} external hideIcon to={FEEDBACK_LINK}>
+            Provide Feedback
+          </Link>
         </Grid>
       </Grid>
     </footer>

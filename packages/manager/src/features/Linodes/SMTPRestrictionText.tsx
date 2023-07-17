@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
@@ -26,12 +26,14 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
     <Typography variant="body1">
       SMTP ports may be restricted on this Linode. Need to send email? Review
       our{' '}
-      <ExternalLink
+      <Link
+        external
         hideIcon
-        link="https://www.linode.com/docs/email/best-practices/running-a-mail-server/"
         onClick={() => sendLinodeCreateDocsEvent('SMTP Notice Link')}
-        text="mail server guide"
-      />
+        to="https://www.linode.com/docs/email/best-practices/running-a-mail-server/"
+      >
+        mail server guide
+      </Link>
       , then{' '}
       {supportLink ? (
         <SupportLink

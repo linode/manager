@@ -4,11 +4,10 @@ import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
-import { Link } from 'react-router-dom';
 
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
@@ -56,11 +55,13 @@ export const ObjectStorageContent = (props: ContentProps) => {
       started with Object Storage, create a{' '}
       <Link to="/object-storage/buckets">Bucket</Link> or an{' '}
       <Link to="/object-storage/access-keys">Access Key.</Link>{' '}
-      <ExternalLink
+      <Link
+        external
         fixedIcon
-        link="https://www.linode.com/docs/platform/object-storage/"
-        text="Learn more."
-      />
+        to="https://www.linode.com/docs/platform/object-storage/"
+      >
+        Learn more.
+      </Link>
     </Typography>
   );
 };

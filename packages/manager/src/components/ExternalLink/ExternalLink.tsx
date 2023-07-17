@@ -56,7 +56,7 @@ export interface ExternalLinkProps {
   className?: string;
   fixedIcon?: boolean;
   hideIcon?: boolean;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   to: string;
 }
 
