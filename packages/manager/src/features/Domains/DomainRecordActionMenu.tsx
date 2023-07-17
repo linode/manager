@@ -67,5 +67,3 @@ export const DomainRecordActionMenu = withRouter((props: CombinedProps) => {
     />
   );
 });
-
-// export default withRouter(DomainRecordActionMenu);
