@@ -5,6 +5,7 @@ import * as buttons from './buttons';
 import * as dialog from './dialog';
 import * as drawer from './drawer';
 import * as entityHeader from './entity-header';
+import * as fileUpload from './file-upload';
 import * as heading from './heading';
 import * as landingPageEmptyStateResources from './landing-page-empty-state-resources';
 import * as nav from './nav';
@@ -21,6 +22,7 @@ export const ui = {
   ...dialog,
   ...drawer,
   ...entityHeader,
+  ...fileUpload,
   ...heading,
   ...landingPageEmptyStateResources,
   ...nav,
