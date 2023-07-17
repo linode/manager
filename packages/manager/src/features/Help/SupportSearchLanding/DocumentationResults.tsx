@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import ListItem from 'src/components/core/ListItem';
 import { Paper } from 'src/components/Paper';
@@ -100,12 +100,12 @@ const DocumentationResults: React.FC<CombinedProps> = (props) => {
       <Paper>
         <nav>{results.length > 0 ? renderResults() : renderEmptyState()}</nav>
       </Paper>
-      <ExternalLink
+      <Link
         className={classes.link}
         data-qa-view-more={sectionTitle}
-        link={target}
-        text={`View more ${sectionTitle}`}
-      />
+        external
+        to={target}
+      >{`View more ${sectionTitle}`}</Link>
     </>
   );
 };

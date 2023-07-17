@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
@@ -131,37 +131,43 @@ const ApiAwarenessModal = (props: Props) => {
           <SafeTabPanel index={0}>
             <Typography className={classes.tabDescription} variant="body1">
               Most Linode API requests need to be authenticated with a valid{' '}
-              <ExternalLink
+              <Link
                 onClick={() =>
                   sendApiAwarenessClickEvent('link', 'personal access token')
                 }
+                external
                 hideIcon
-                link="/profile/tokens"
-                text="personal access token"
-              />
+                to="/profile/tokens"
+              >
+                personal access token
+              </Link>
               . The command below assumes that your personal access token has
               been stored within the TOKEN shell variable. For more information,
               see{' '}
-              <ExternalLink
+              <Link
                 onClick={() =>
                   sendApiAwarenessClickEvent(
                     'link',
                     'Get Started with the Linode API'
                   )
                 }
+                external
                 hideIcon
-                link="https://www.linode.com/docs/products/tools/api/get-started/"
-                text="Get Started with the Linode API"
-              />{' '}
+                to="https://www.linode.com/docs/products/tools/api/get-started/"
+              >
+                Get Started with the Linode API
+              </Link>{' '}
               and{' '}
-              <ExternalLink
+              <Link
                 onClick={() =>
                   sendApiAwarenessClickEvent('link', 'Linode API Guides')
                 }
+                external
                 hideIcon
-                link="https://www.linode.com/docs/products/tools/api/guides/"
-                text="Linode API Guides"
-              />
+                to="https://www.linode.com/docs/products/tools/api/guides/"
+              >
+                Linode API Guides
+              </Link>
               .
             </Typography>
             <CodeBlock
@@ -174,27 +180,31 @@ const ApiAwarenessModal = (props: Props) => {
             <Typography variant="body1">
               Before running the command below, the Linode CLI needs to be
               installed and configured on your system. See the{' '}
-              <ExternalLink
+              <Link
                 onClick={() =>
                   sendApiAwarenessClickEvent(
                     'link',
                     'Install and Configure the Linode CLI'
                   )
                 }
+                external
                 hideIcon
-                link="https://www.linode.com/docs/products/tools/cli/guides/install/"
-                text="Install and Configure the Linode CLI"
-              />{' '}
+                to="https://www.linode.com/docs/products/tools/cli/guides/install/"
+              >
+                Install and Configure the Linode CLI
+              </Link>{' '}
               guide for instructions. To learn more and to use the Linode CLI
               for tasks, review additional{' '}
-              <ExternalLink
+              <Link
                 onClick={() =>
                   sendApiAwarenessClickEvent('link', 'Linode CLI Guides')
                 }
+                external
                 hideIcon
-                link="https://www.linode.com/docs/products/tools/cli/guides/"
-                text="Linode CLI Guides"
-              />
+                to="https://www.linode.com/docs/products/tools/cli/guides/"
+              >
+                Linode CLI Guides
+              </Link>
               .
             </Typography>
             <CodeBlock
@@ -208,30 +218,36 @@ const ApiAwarenessModal = (props: Props) => {
       <Notice marketing spacingBottom={0} spacingTop={24}>
         <Typography className={classes.otherTools}>
           Deploy and manage your infrastructure with the{' '}
-          <ExternalLink
+          <Link
             onClick={() =>
               sendApiAwarenessClickEvent('link', 'Linode Terraform Provider')
             }
+            external
             hideIcon
-            link="https://www.linode.com/products/linode-terraform-provider/"
-            text="Linode Terraform Provider"
-          />{' '}
+            to="https://www.linode.com/products/linode-terraform-provider/"
+          >
+            Linode Terraform Provider
+          </Link>{' '}
           and{' '}
-          <ExternalLink
+          <Link
             onClick={() =>
               sendApiAwarenessClickEvent('link', 'Ansible Collection')
             }
+            external
             hideIcon
-            link="https://www.linode.com/products/linode-ansible-collection/"
-            text="Ansible Collection"
-          />
+            to="https://www.linode.com/products/linode-ansible-collection/"
+          >
+            Ansible Collection
+          </Link>
           .{' '}
-          <ExternalLink
+          <Link
             hideIcon
-            link="https://www.linode.com/docs/products/tools/api/developers/"
+            external
+            to="https://www.linode.com/docs/products/tools/api/developers/"
             onClick={() => sendApiAwarenessClickEvent('link', 'View all tools')}
-            text="View all tools"
-          />{' '}
+          >
+            View all tools
+          </Link>{' '}
           with programmatic access to the Linode platform.
         </Typography>
       </Notice>

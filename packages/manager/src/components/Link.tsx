@@ -18,22 +18,44 @@ const opensInNewTab = (href: string) => {
  * A wrapper around React Router's `Link` component that will open external links in a new window when a non-relative URL is provided.
  */
 export const Link = (props: Props & ExternalLinkProps) => {
-  const { external, ...rest } = props;
+  const {
+    absoluteIcon,
+    black,
+    children,
+    className,
+    external,
+    fixedIcon,
+    hideIcon,
+    onClick,
+    to,
+  } = props;
   const doesLinkOPenInNewTab = opensInNewTab(props.to);
 
   if (external) {
-    return <ExternalLink {...rest} />;
+    return (
+      <ExternalLink
+        absoluteIcon={absoluteIcon}
+        black={black}
+        className={className}
+        fixedIcon={fixedIcon}
+        hideIcon={hideIcon}
+        onClick={onClick}
+        to={to}
+      >
+        {children}
+      </ExternalLink>
+    );
   } else {
     return doesLinkOPenInNewTab ? (
       <a
         aria-describedby="new-window"
-        className={props.className}
-        href={props.to as string}
-        onClick={props.onClick}
+        className={className}
+        href={to}
+        onClick={onClick}
         rel="noopener noreferrer"
         target="_blank"
       >
-        {props.children}
+        {children}
       </a>
     ) : (
       <RouterLink {...props} />
