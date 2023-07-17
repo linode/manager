@@ -1,14 +1,15 @@
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
+
 import { Button } from 'src/components/Button/Button';
-import ClickAwayListener from 'src/components/core/ClickAwayListener';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import { TextField, TextFieldProps } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import ClickAwayListener from 'src/components/core/ClickAwayListener';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -19,25 +20,54 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
   },
-  root: {
-    padding: '5px 8px',
-    display: 'inline-block',
-    transition: theme.transitions.create(['opacity']),
-    wordBreak: 'break-all',
-    textDecoration: 'inherit',
-    lineHeight: 1,
+  button: {
+    background: 'transparent !important',
+    height: 24,
+    marginTop: 5,
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
+    width: 24,
+  },
+  close: {
+    fontSize: 26,
   },
   container: {
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
     position: 'relative',
   },
   containerEditing: {
+    alignItems: 'flex-start',
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
     position: 'relative',
+  },
+  edit: {
+    border: '1px solid transparent',
+    fontSize: 22,
+  },
+  editIcon: {
+    marginTop: '0 !important',
+    position: 'absolute',
+    right: 10,
+    [theme.breakpoints.up('sm')]: {
+      '&:focus': {
+        opacity: 1,
+      },
+      opacity: 0,
+    },
+  },
+  headline: {
+    ...theme.typography.h1,
+  },
+  icon: {
+    '&:hover, &:focus': {
+      color: theme.palette.primary.light,
+    },
+    color: theme.palette.text.primary,
+    margin: '0 10px',
   },
   initial: {
     '&:hover, &:focus': {
@@ -45,97 +75,68 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 1,
       },
       '& $icon': {
-        color: theme.color.grey1,
         '&:hover': {
           color: theme.color.black,
         },
+        color: theme.color.grey1,
       },
     },
   },
-  edit: {
-    fontSize: 22,
-    border: '1px solid transparent',
-  },
-  textField: {
-    opacity: 0,
-    animation: '$fadeIn .3s ease-in-out forwards',
-    margin: 0,
+  input: {
+    padding: '5px 8px',
+    ...theme.typography.body1,
   },
   inputRoot: {
-    maxWidth: 170,
-    borderColor: `${theme.palette.primary.main} !important`,
     backgroundColor: 'transparent',
+    borderColor: `${theme.palette.primary.main} !important`,
     boxShadow: 'none',
+    maxWidth: 170,
     minHeight: 40,
     [theme.breakpoints.up('md')]: {
       maxWidth: 415,
       width: '100%',
     },
   },
-  button: {
-    padding: 0,
-    height: 24,
-    width: 24,
-    minWidth: 'auto',
-    minHeight: 'auto',
-    marginTop: 5,
-    background: 'transparent !important',
+  root: {
+    display: 'inline-block',
+    lineHeight: 1,
+    padding: '5px 8px',
+    textDecoration: 'inherit',
+    transition: theme.transitions.create(['opacity']),
+    wordBreak: 'break-all',
   },
-  icon: {
-    margin: '0 10px',
-    color: theme.palette.text.primary,
-    '&:hover, &:focus': {
-      color: theme.palette.primary.light,
-    },
+  save: {
+    fontSize: 26,
   },
   saveButton: {
     marginLeft: 8,
     marginRight: 8,
   },
-  save: {
-    fontSize: 26,
-  },
-  close: {
-    fontSize: 26,
-  },
-  input: {
-    padding: '5px 8px',
-    ...theme.typography.body1,
-  },
-  headline: {
-    ...theme.typography.h1,
+  textField: {
+    animation: '$fadeIn .3s ease-in-out forwards',
+    margin: 0,
+    opacity: 0,
   },
   title: {
     ...theme.typography.h1,
-  },
-  editIcon: {
-    position: 'absolute',
-    marginTop: '0 !important',
-    right: 10,
-    [theme.breakpoints.up('sm')]: {
-      opacity: 0,
-      '&:focus': {
-        opacity: 1,
-      },
-    },
   },
 }));
 
 export type EditableTextVariant = 'h1' | 'h2' | 'table-cell';
 
 interface Props {
-  onEdit: () => void;
-  openForEdit: () => void;
   cancelEdit: () => void;
-  onInputChange: (text: string) => void;
-  text: string;
-  errorText?: string;
-  editable?: boolean;
-  typeVariant: EditableTextVariant;
   className?: string;
+  editable?: boolean;
+  errorText?: string;
   inputText: string;
   isEditing: boolean;
   loading: boolean;
+  onEdit: () => void;
+  onInputChange: (text: string) => void;
+  openForEdit: () => void;
+  text: string;
+  typeVariant: EditableTextVariant;
 }
 
 type PassThroughProps = Props & Omit<TextFieldProps, 'label'>;
@@ -144,18 +145,18 @@ type FinalProps = PassThroughProps;
 
 export const EditableInput: React.FC<FinalProps> = (props) => {
   const {
-    errorText,
-    editable,
-    onEdit,
-    openForEdit,
     cancelEdit,
+    className,
+    editable,
+    errorText,
+    inputText,
     isEditing,
+    loading,
+    onEdit,
     onInputChange,
+    openForEdit,
     text,
     typeVariant,
-    className,
-    inputText,
-    loading,
     ...rest
   } = props;
 
@@ -173,10 +174,10 @@ export const EditableInput: React.FC<FinalProps> = (props) => {
 
   const labelText = (
     <Typography
-      className={className ? className : classes.root}
-      variant={typeVariant === 'table-cell' ? 'body1' : 'h1'}
       aria-label={text}
+      className={className ? className : classes.root}
       data-qa-editable-text
+      variant={typeVariant === 'table-cell' ? 'body1' : 'h1'}
     >
       <strong>{text}</strong>
     </Typography>
@@ -187,63 +188,61 @@ export const EditableInput: React.FC<FinalProps> = (props) => {
       className={`${classes.initial} ${className} ${classes.container}`}
       data-testid={'editable-text'}
     >
-      <React.Fragment>
-        {labelText}
-        {/** pencil icon */}
-        <Button
-          className={`${classes.button} ${classes.editIcon}`}
-          onClick={openForEdit}
-          data-qa-edit-button
-          aria-label={`Edit ${text}`}
-        >
-          <Edit className={`${classes.icon} ${classes.edit}`} />
-        </Button>
-      </React.Fragment>
+      {labelText}
+      {/** pencil icon */}
+      <Button
+        aria-label={`Edit ${text}`}
+        className={`${classes.button} ${classes.editIcon}`}
+        data-qa-edit-button
+        onClick={openForEdit}
+      >
+        <Edit className={`${classes.icon} ${classes.edit}`} />
+      </Button>
     </div>
   ) : (
-    <ClickAwayListener onClickAway={cancelEdit} mouseEvent="onMouseDown">
+    <ClickAwayListener mouseEvent="onMouseDown" onClickAway={cancelEdit}>
       <div
         className={`${classes.containerEditing} ${classes.edit} ${className}`}
         data-qa-edit-field
       >
         <TextField
           {...rest}
-          loading={loading}
-          className={classes.textField}
-          type="text"
-          label="Edit Label"
-          hideLabel
-          onChange={(e: any) => onInputChange(e.target.value)}
-          onKeyDown={handleKeyPress}
-          value={inputText}
-          errorText={errorText}
-          InputProps={{ className: classes.inputRoot }}
           inputProps={{
             className: classNames({
               [classes.headline]: typeVariant === 'h1',
-              [classes.title]: typeVariant === 'h2',
               [classes.input]: true,
+              [classes.title]: typeVariant === 'h2',
             }),
           }}
+          InputProps={{ className: classes.inputRoot }}
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={true}
+          className={classes.textField}
           editable
+          errorText={errorText}
+          hideLabel
+          label="Edit Label"
+          loading={loading}
+          onChange={(e: any) => onInputChange(e.target.value)}
+          onKeyDown={handleKeyPress}
+          type="text"
+          value={inputText}
         />
         {!loading && (
           <>
             <Button
-              className={`${classes.button} ${classes.saveButton}`}
-              onClick={() => onEdit()}
-              data-qa-save-edit
               aria-label="Save new label"
+              className={`${classes.button} ${classes.saveButton}`}
+              data-qa-save-edit
+              onClick={() => onEdit()}
             >
               <Check className={`${classes.icon} ${classes.save}`} />
             </Button>
             <Button
-              className={classes.button}
-              onClick={cancelEdit}
-              data-qa-cancel-edit
               aria-label="Cancel label edit"
+              className={classes.button}
+              data-qa-cancel-edit
+              onClick={cancelEdit}
             >
               <Close className={`${classes.icon} ${classes.close}`} />
             </Button>

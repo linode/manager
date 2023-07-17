@@ -1,23 +1,25 @@
 import * as React from 'react';
-import TooltipIcon from 'src/assets/icons/get_help.svg';
-import Link from 'src/components/Link';
-import TopMenuIcon from './TopMenuIcon';
-import { StyledTopMenuIconWrapper } from './TopMenuIcon';
+import { useHistory } from 'react-router-dom';
+
+import HelpSVGIcon from 'src/assets/icons/get_help.svg';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+
+import { StyledTopMenuIconWrapper, TopMenuIcon } from './TopMenuIcon';
 
 export const Help = () => {
+  const history = useHistory();
+
   return (
-    <Link aria-label="Link to Linode Support" to="/support">
-      <StyledTopMenuIconWrapper
-        sx={{
-          marginLeft: [null, null, '8px'],
-        }}
+    <TopMenuIcon title="Help & Support">
+      <StyledLinkButton
+        aria-label="Help & Support"
+        onClick={() => history.push('/support')}
+        role="link"
       >
-        <TopMenuIcon title={'Help & Support'}>
-          <TooltipIcon status="help" />
-        </TopMenuIcon>
-      </StyledTopMenuIconWrapper>
-    </Link>
+        <StyledTopMenuIconWrapper>
+          <HelpSVGIcon status="help" />
+        </StyledTopMenuIconWrapper>
+      </StyledLinkButton>
+    </TopMenuIcon>
   );
 };
-
-export default React.memo(Help);

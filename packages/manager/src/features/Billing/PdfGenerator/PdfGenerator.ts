@@ -4,15 +4,19 @@ import {
   InvoiceItem,
   Payment,
 } from '@linode/api-v4/lib/account';
+import axios from 'axios';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
+
 import { ADDRESSES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
+
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import AkamaiLogo from './akamai-logo.png';
 import {
+  PdfResult,
   createFooter,
   createInvoiceItemsTable,
   createInvoiceTotalsTable,
@@ -20,7 +24,6 @@ import {
   createPaymentsTotalsTable,
   dateConversion,
   pageMargin,
-  PdfResult,
 } from './utils';
 
 const baseFont = 'helvetica';
@@ -56,7 +59,7 @@ const addLeftHeader = (
   doc.setFont(baseFont, 'normal');
 
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
-  const isInternational = !['US', 'CA'].includes(country);
+  const isInternational = !['CA', 'US'].includes(country);
 
   const getRemitAddress = (isAkamaiBilling: boolean) => {
     if (!isAkamaiBilling) {
@@ -147,8 +150,8 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
 };
 
 interface Title {
-  text: string;
   leftMargin?: number;
+  text: string;
 }
 // The `y` argument is the position (in pixels) in which the first text string should be added to the doc.
 const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
@@ -164,13 +167,25 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   doc.setFont(baseFont, 'normal');
 };
 
-export const printInvoice = (
+// M3-6177 only make one request to get the logo
+const getAkamaiLogo = () => {
+  return axios
+    .get(AkamaiLogo, { responseType: 'blob' })
+    .then((res) => {
+      return URL.createObjectURL(res.data);
+    })
+    .catch(() => {
+      return AkamaiLogo;
+    });
+};
+
+export const printInvoice = async (
   account: Account,
   invoice: Invoice,
   items: InvoiceItem[],
   taxes: FlagSet['taxBanner'] | FlagSet['taxes'],
   timezone?: string
-): PdfResult => {
+): Promise<PdfResult> => {
   try {
     const itemsPerPage = 12;
     const date = formatDate(invoice.date, {
@@ -217,9 +232,20 @@ export const printInvoice = (
       ? taxes?.provincial_tax_ids?.[account.state]
       : undefined;
 
+    const AkamaiLogoURL = await getAkamaiLogo();
+
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
-      doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, "MEDIUM");
+      doc.addImage(
+        AkamaiLogoURL,
+        'JPEG',
+        160,
+        10,
+        120,
+        40,
+        undefined,
+        'MEDIUM'
+      );
 
       const leftHeaderYPosition = addLeftHeader(
         doc,
@@ -255,8 +281,8 @@ export const printInvoice = (
   } catch (e) {
     reportException(Error('Error while generating Invoice PDF.'), e);
     return {
-      status: 'error',
       error: e,
+      status: 'error',
     };
   }
 };
@@ -277,7 +303,7 @@ export const printPayment = (
     });
     doc.setFontSize(10);
 
-    doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, "MEDIUM");
+    doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, 'MEDIUM');
 
     const leftHeaderYPosition = addLeftHeader(
       doc,
@@ -306,8 +332,8 @@ export const printPayment = (
   } catch (e) {
     reportException(Error('Error while generating Payment PDF.'), e);
     return {
-      status: 'error',
       error: e,
+      status: 'error',
     };
   }
 };

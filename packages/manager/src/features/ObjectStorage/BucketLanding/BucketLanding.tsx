@@ -1,38 +1,40 @@
-import * as React from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
-import OrderBy from 'src/components/OrderBy';
-import Typography from 'src/components/core/Typography';
-import useOpenClose from 'src/hooks/useOpenClose';
+import {
+  ObjectStorageBucket,
+  ObjectStorageCluster,
+} from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
-import { BucketDetailsDrawer } from './BucketDetailsDrawer';
-import { BucketLandingEmptyState } from './BucketLandingEmptyState';
-import { BucketTable } from './BucketTable';
-import { CancelNotice } from '../CancelNotice';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { makeStyles } from 'tss-react/mui';
 import { Notice } from 'src/components/Notice/Notice';
-import { readableBytes } from 'src/utilities/unitConversions';
-import { Theme } from '@mui/material/styles';
+import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { Typography } from 'src/components/Typography';
+import useOpenClose from 'src/hooks/useOpenClose';
 import {
   BucketError,
   useDeleteBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster,
-} from '@linode/api-v4/lib/object-storage';
+import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics';
+import { readableBytes } from 'src/utilities/unitConversions';
+
+import { CancelNotice } from '../CancelNotice';
+import { BucketDetailsDrawer } from './BucketDetailsDrawer';
+import { BucketLandingEmptyState } from './BucketLandingEmptyState';
+import { BucketTable } from './BucketTable';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -47,14 +49,14 @@ export const BucketLanding = () => {
 
   const {
     data: objectStorageClusters,
-    isLoading: areClustersLoading,
     error: clustersErrors,
+    isLoading: areClustersLoading,
   } = useObjectStorageClusters();
 
   const {
     data: objectStorageBucketsResponse,
-    isLoading: areBucketsLoading,
     error: bucketsErrors,
+    isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(objectStorageClusters);
 
   const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
@@ -178,12 +180,12 @@ export const BucketLanding = () => {
         >
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
             const bucketTableProps = {
-              orderBy,
-              order,
-              handleOrderChange,
-              handleClickRemove,
-              handleClickDetails,
               data: orderedData,
+              handleClickDetails,
+              handleClickRemove,
+              handleOrderChange,
+              order,
+              orderBy,
             };
             return <BucketTable {...bucketTableProps} />;
           }}
@@ -191,7 +193,7 @@ export const BucketLanding = () => {
         {/* If there's more than one Bucket, display the total usage. */}
         {objectStorageBucketsResponse.buckets.length > 1 ? (
           <Typography
-            style={{ marginTop: 18, width: '100%', textAlign: 'center' }}
+            style={{ marginTop: 18, textAlign: 'center', width: '100%' }}
             variant="body1"
           >
             Total storage used: {readableBytes(totalUsage).formatted}
@@ -202,16 +204,19 @@ export const BucketLanding = () => {
         />
       </Grid>
       <TypeToConfirmDialog
-        title={`Delete Bucket ${bucketLabel}`}
         entity={{
+          action: 'deletion',
+          name: bucketLabel,
+          primaryBtnText: 'Delete',
           type: 'Bucket',
-          label: bucketLabel,
         }}
-        open={removeBucketConfirmationDialog.isOpen}
-        loading={isLoading}
         errors={error}
-        onClose={closeRemoveBucketConfirmationDialog}
+        label={'Bucket Name'}
+        loading={isLoading}
         onClick={removeBucket}
+        onClose={closeRemoveBucketConfirmationDialog}
+        open={removeBucketConfirmationDialog.isOpen}
+        title={`Delete Bucket ${bucketLabel}`}
         typographyStyle={{ marginTop: '20px' }}
       >
         <Notice warning>
@@ -223,19 +228,19 @@ export const BucketLanding = () => {
         <Typography className={classes.copy}>
           A bucket must be empty before deleting it. Please{' '}
           <a
-            href="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
-            target="_blank"
             aria-describedby="external-site"
+            href="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
             rel="noopener noreferrer"
+            target="_blank"
           >
             delete all objects
           </a>
           , or use{' '}
           <a
-            href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
-            target="_blank"
             aria-describedby="external-site"
+            href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
             rel="noopener noreferrer"
+            target="_blank"
           >
             another tool
           </a>{' '}
@@ -249,14 +254,14 @@ export const BucketLanding = () => {
         )}
       </TypeToConfirmDialog>
       <BucketDetailsDrawer
-        open={bucketDetailDrawerOpen}
-        onClose={closeBucketDetailDrawer}
         bucketLabel={bucketForDetails?.label}
-        hostname={bucketForDetails?.hostname}
-        created={bucketForDetails?.created}
         cluster={bucketForDetails?.cluster}
-        size={bucketForDetails?.size}
+        created={bucketForDetails?.created}
+        hostname={bucketForDetails?.hostname}
         objectsNumber={bucketForDetails?.objects}
+        onClose={closeBucketDetailDrawer}
+        open={bucketDetailDrawerOpen}
+        size={bucketForDetails?.size}
       />
     </React.Fragment>
   );
@@ -292,7 +297,7 @@ const Banner = React.memo(({ regionsAffected }: BannerProps) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (
-    <Notice warning important>
+    <Notice important warning>
       <Typography component="div" style={{ fontSize: '1rem' }}>
         There was an error loading buckets in{' '}
         {moreThanOneRegionAffected

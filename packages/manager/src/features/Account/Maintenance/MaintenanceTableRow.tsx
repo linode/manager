@@ -1,32 +1,33 @@
+import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
+
 import { Hidden } from 'src/components/Hidden';
-import Tooltip from 'src/components/core/Tooltip';
-import Link from 'src/components/Link';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Link } from 'src/components/Link';
+import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Tooltip } from 'src/components/Tooltip';
+import { useProfile } from 'src/queries/profile';
 import { capitalize } from 'src/utilities/capitalize';
-import { StatusIcon, Status } from 'src/components/StatusIcon/StatusIcon';
-import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { truncate } from 'src/utilities/truncate';
-import { useProfile } from 'src/queries/profile';
 
 const statusTextMap: Record<AccountMaintenance['status'], string> = {
-  started: 'In Progress',
-  pending: 'Scheduled',
   completed: 'Completed',
+  pending: 'Scheduled',
+  started: 'In Progress',
 };
 
 const statusIconMap: Record<AccountMaintenance['status'], Status> = {
-  started: 'other',
-  pending: 'active',
   completed: 'inactive',
+  pending: 'active',
+  started: 'other',
 };
 
 export const MaintenanceTableRow = (props: AccountMaintenance) => {
-  const { entity, when, type, status, reason } = props;
+  const { entity, reason, status, type, when } = props;
 
   const { data: profile } = useProfile();
 

@@ -1,69 +1,71 @@
+import { Theme } from '@mui/material/styles';
+import { WithTheme, makeStyles, withTheme } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, withTheme, WithTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
+import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
+
 import { Stat, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   graphContainer: {
-    marginTop: theme.spacing(),
-    display: 'flex',
-    flexFlow: 'row wrap',
-    justifyContent: 'space-around',
     '& > div': {
       flexGrow: 1,
-      width: '33%',
       [theme.breakpoints.down('lg')]: {
         marginTop: theme.spacing(),
         width: '60%',
       },
+      width: '33%',
     },
+    display: 'flex',
+    flexFlow: 'row wrap',
+    justifyContent: 'space-around',
+    marginTop: theme.spacing(),
   },
 }));
 
 export interface Props {
-  isSwap: boolean;
   childOf: boolean;
-  sysInfoType: string;
-  isMounted: boolean;
-  timezone: string;
+  diskLabel: string;
+  endTime: number;
+  free: Stat[];
   iFree: Stat[];
   iTotal: Stat[];
-  free: Stat[];
-  total: Stat[];
-  reads: Stat[];
-  writes: Stat[];
-  diskLabel: string;
-  startTime: number;
-  endTime: number;
+  isMounted: boolean;
+  isSwap: boolean;
   loading: boolean;
+  reads: Stat[];
+  startTime: number;
+  sysInfoType: string;
+  timezone: string;
+  total: Stat[];
+  writes: Stat[];
 }
 
 type CombinedProps = Props & WithTheme;
 
 const Graphs: React.FC<CombinedProps> = (props) => {
   const {
-    isSwap,
     childOf,
-    sysInfoType,
     diskLabel,
-    theme,
-    loading,
-    timezone,
-    free,
-    total,
-    iFree,
-    isMounted,
-    iTotal,
-    startTime,
     endTime,
+    free,
+    iFree,
+    iTotal,
+    isMounted,
+    isSwap,
+    loading,
     reads,
+    startTime,
+    sysInfoType,
+    theme,
+    timezone,
+    total,
     writes,
   } = props;
 
@@ -92,32 +94,32 @@ const Graphs: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <GraphCard title={diskLabel} helperText={labelHelperText}>
+    <GraphCard helperText={labelHelperText} title={diskLabel}>
       <div className={classes.graphContainer}>
         {sysInfoType.toLowerCase() !== 'openvz' && (
           <div data-testid="diskio-graph">
             <LongviewLineGraph
-              loading={loading}
               data={[
                 {
+                  backgroundColor: theme.graphs.diskIO.write,
+                  borderColor: 'transparent',
                   data: convertData(writes, startTime, endTime, formatDiskIO),
                   label: 'Write',
-                  borderColor: 'transparent',
-                  backgroundColor: theme.graphs.diskIO.write,
                 },
                 {
+                  backgroundColor: theme.graphs.diskIO.read,
+                  borderColor: 'transparent',
                   data: convertData(reads, startTime, endTime, formatDiskIO),
                   label: 'Read',
-                  borderColor: 'transparent',
-                  backgroundColor: theme.graphs.diskIO.read,
                 },
               ]}
-              title="Disk I/O"
               ariaLabel="Disk I/O Graph"
+              loading={loading}
+              nativeLegend
               showToday={isToday}
               subtitle="ops/s"
               timezone={timezone}
-              nativeLegend
+              title="Disk I/O"
             />
           </div>
         )}
@@ -133,39 +135,39 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                 <LongviewLineGraph
                   data={[
                     {
+                      backgroundColor: theme.graphs.space,
+                      borderColor: 'transparent',
                       data: convertData(_free, startTime, endTime),
                       label: 'Space',
-                      borderColor: 'transparent',
-                      backgroundColor: theme.graphs.space,
                     },
                   ]}
-                  showToday={isToday}
-                  title="Space"
-                  subtitle="GB"
                   ariaLabel="Disk Space Graph"
-                  timezone={timezone}
                   nativeLegend
+                  showToday={isToday}
+                  subtitle="GB"
                   // @todo replace with byte-to-target converter after rebase
                   suggestedMax={total[0]?.y / 1024 / 1024 / 1024}
+                  timezone={timezone}
+                  title="Space"
                 />
               </div>
               <div data-testid="inodes-graph">
                 <LongviewLineGraph
                   data={[
                     {
+                      backgroundColor: theme.graphs.inodes,
+                      borderColor: 'transparent',
                       data: convertData(_inodes, startTime, endTime),
                       label: 'Inodes',
-                      borderColor: 'transparent',
-                      backgroundColor: theme.graphs.inodes,
                     },
                   ]}
-                  showToday={isToday}
-                  title="Inodes"
                   ariaLabel="Inodes Graph"
-                  timezone={timezone}
                   nativeLegend
+                  showToday={isToday}
                   // @todo replace with byte-to-target converter after rebase
                   suggestedMax={iTotal[0]?.y}
+                  timezone={timezone}
+                  title="Inodes"
                 />
               </div>
             </React.Fragment>
@@ -181,9 +183,9 @@ export const formatINodes = (
   itotal: StatWithDummyPoint[]
 ): StatWithDummyPoint[] => {
   return itotal.map((eachTotalStat, index) => {
-    const { y: totalY, x: totalX } = eachTotalStat;
+    const { x: totalX, y: totalY } = eachTotalStat;
     const { y: freeY } = pathOr(
-      { y: null, x: 0 },
+      { x: 0, y: null },
       [index],
       ifree
     ) as StatWithDummyPoint;

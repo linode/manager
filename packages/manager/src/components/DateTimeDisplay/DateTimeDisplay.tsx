@@ -1,26 +1,27 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
+import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 import formatDate, { TimeInterval } from 'src/utilities/formatDate';
 
 export interface DateTimeDisplayProps {
-  value: string;
-  format?: string;
-  displayTime?: boolean;
-  humanizeCutoff?: TimeInterval;
   className?: string;
+  displayTime?: boolean;
+  format?: string;
+  humanizeCutoff?: TimeInterval;
   styles?: React.CSSProperties;
+  value: string;
 }
 
 const DateTimeDisplay = (props: DateTimeDisplayProps) => {
-  const { format, humanizeCutoff, displayTime, value, className } = props;
+  const { className, displayTime, format, humanizeCutoff, value } = props;
   const { data: profile } = useProfile();
   return (
-    <Typography style={props.styles} component="span" className={className}>
+    <Typography className={className} component="span" style={props.styles}>
       {formatDate(value, {
+        displayTime,
         format,
         humanizeCutoff,
-        displayTime,
         timezone: profile?.timezone,
       })}
     </Typography>

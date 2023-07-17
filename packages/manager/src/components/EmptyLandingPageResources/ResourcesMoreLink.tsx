@@ -1,7 +1,8 @@
-import * as React from 'react';
-import Link from 'src/components/Link';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
 import { LinkProps } from 'react-router-dom';
+
+import { Link } from 'src/components/Link';
 
 type ResourcesMoreLinkProps = LinkProps & {
   external?: boolean;

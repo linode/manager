@@ -1,22 +1,19 @@
 import { CardType, CreditCardData } from '@linode/api-v4/lib/account/types';
+import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import GenericCardIcon from 'src/assets/icons/credit-card.svg';
 import AmexIcon from 'src/assets/icons/payment/amex.svg';
 import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
 import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
 import VisaIcon from 'src/assets/icons/payment/visa.svg';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
-import Box from '@mui/material/Box';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   card: {
     display: 'flex',
     [theme.breakpoints.down('sm')]: {
@@ -36,18 +33,22 @@ const useStyles = makeStyles()((theme: Theme) => ({
   icon: {
     display: 'flex',
     justifyContent: 'center',
-    width: 45,
     paddingLeft: 6,
     paddingRight: 6,
+    width: 45,
+  },
+  root: {
+    alignItems: 'center',
+    display: 'flex',
   },
 }));
 
 const iconMap = {
-  Visa: VisaIcon,
-  MasterCard: MastercardIcon,
   'American Express': AmexIcon,
   Discover: DiscoverIcon,
   JCB: JCBIcon,
+  MasterCard: MastercardIcon,
+  Visa: VisaIcon,
 };
 
 interface Props {
@@ -65,7 +66,7 @@ export const getIcon = (type: CardType | undefined) => {
 
 export const CreditCard = (props: Props) => {
   const {
-    creditCard: { card_type: type = undefined, last_four: lastFour, expiry },
+    creditCard: { card_type: type = undefined, expiry, last_four: lastFour },
     showIcon = true,
   } = props;
 

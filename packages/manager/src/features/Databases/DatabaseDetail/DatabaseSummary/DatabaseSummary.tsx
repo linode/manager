@@ -1,10 +1,12 @@
 import { Database } from '@linode/api-v4/lib/databases/types';
-import * as React from 'react';
-import Divider from 'src/components/core/Divider';
-import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+
+import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+
 import AccessControls from '../AccessControls';
 import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
 import ConnectionDetails from './DatabaseSummaryConnectionDetails';
@@ -36,14 +38,14 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
   return (
     <Paper>
       <Grid container spacing={2}>
-        <Grid xs={12} sm={4}>
+        <Grid sm={4} xs={12}>
           <ClusterConfiguration database={database} />
         </Grid>
-        <Grid xs={12} sm={8}>
+        <Grid sm={8} xs={12}>
           <ConnectionDetails database={database} />
         </Grid>
       </Grid>
-      <Divider spacingTop={28} spacingBottom={16} />
+      <Divider spacingBottom={16} spacingTop={28} />
       <AccessControls database={database} description={description} />
     </Paper>
   );

@@ -1,37 +1,33 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 
-type StrengthValues = null | 0 | 1 | 2 | 3 | 4;
+import { Typography } from 'src/components/Typography';
+
+type StrengthValues = 0 | 1 | 2 | 3 | 4 | null;
 
 interface Props {
-  strength: StrengthValues;
   hideStrengthLabel?: boolean;
+  strength: StrengthValues;
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  block: {
+    '&[class*="strength-"]': {
+      backgroundColor: theme.palette.primary.main,
+    },
+    backgroundColor: '#C9CACB',
+    height: '4px',
+    transition: 'background-color .5s ease-in-out',
+  },
+  blockOuter: {
+    padding: '4px !important' as '4px',
+  },
   root: {
     maxWidth: `calc(415px + ${theme.spacing(1)})`,
     [theme.breakpoints.down('sm')]: {
       maxWidth: `calc(100% + ${theme.spacing(1)})`,
-    },
-  },
-  block: {
-    backgroundColor: '#C9CACB',
-    height: '4px',
-    transition: 'background-color .5s ease-in-out',
-    '&[class*="strength-"]': {
-      backgroundColor: theme.palette.primary.main,
-    },
-  },
-  strengthText: {
-    position: 'relative',
-    fontSize: '.85rem',
-    textAlign: 'right',
-    [theme.breakpoints.down('sm')]: {
-      textAlign: 'center',
     },
   },
   strengthLabel: {
@@ -39,43 +35,48 @@ const useStyles = makeStyles()((theme: Theme) => ({
       display: 'none',
     },
   },
-  blockOuter: {
-    padding: '4px !important' as '4px',
+  strengthText: {
+    fontSize: '.85rem',
+    position: 'relative',
+    textAlign: 'right',
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'center',
+    },
   },
 }));
 
 export const StrengthIndicator = (props: Props) => {
   const { classes, cx } = useStyles();
 
-  const { strength, hideStrengthLabel } = props;
+  const { hideStrengthLabel, strength } = props;
 
   return (
     <Grid
-      container
       alignItems="flex-end"
-      spacing={1}
       className={classes.root}
+      container
       data-qa-strength={strength}
+      spacing={1}
       sx={{ paddingLeft: 0, paddingRight: 0 }}
     >
       {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
-        <Grid key={idx} xs={3} className={classes.blockOuter}>
+        <Grid className={classes.blockOuter} key={idx} xs={3}>
           <div
             className={cx({
-              [classes.block]: true,
               [`strength-${strength}`]:
                 strength !== undefined &&
                 strength !== null &&
                 idx <= scaledStrength(strength),
+              [classes.block]: true,
             })}
           />
         </Grid>
       ))}
-      <Grid xs={3} className="py0">
+      <Grid className="py0" xs={3}>
         <Typography
-          variant="caption"
           className={classes.strengthText}
           data-qa-password-strength
+          variant="caption"
         >
           {!hideStrengthLabel && (
             <span className={classes.strengthLabel}>Strength:</span>

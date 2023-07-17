@@ -1,13 +1,15 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
-import * as React from 'react';
-import Divider from 'src/components/core/Divider';
-import { useTheme, styled } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Box from '@mui/material/Box';
+import { styled, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
+
 import { ExtendedNotification } from './useFormattedNotifications';
 
 interface Props {
@@ -44,11 +46,11 @@ export const RenderNotification: React.FC<Props> = (props) => {
   return (
     <>
       <Box
-        data-test-id={notification.type}
         sx={{
-          display: 'flex',
           alignItem: 'flex-start',
+          display: 'flex',
         }}
+        data-test-id={notification.type}
       >
         <Box
           sx={{
@@ -57,12 +59,12 @@ export const RenderNotification: React.FC<Props> = (props) => {
         >
           <Box
             sx={{
-              display: 'flex',
-              lineHeight: '1rem',
               '& svg': {
                 height: '1.25rem',
                 width: '1.25rem',
               },
+              display: 'flex',
+              lineHeight: '1rem',
             }}
           >
             {severity === 'critical' ? (
@@ -88,7 +90,7 @@ export const RenderNotification: React.FC<Props> = (props) => {
           {notification.jsx ? (
             notification.jsx
           ) : linkTarget ? (
-            <StyledLink to={linkTarget} onClick={onClose}>
+            <StyledLink onClick={onClose} to={linkTarget}>
               {message}
             </StyledLink>
           ) : (
@@ -103,10 +105,10 @@ export const RenderNotification: React.FC<Props> = (props) => {
 
 const StyledLink = styled(Link)<Partial<Props>>(({ theme, ...props }) => ({
   ...(props.notification?.severity === 'critical' && {
-    color: `${theme.color.red} !important`,
     '&:hover': {
       textDecoration: `${theme.color.red} underline`,
     },
+    color: `${theme.color.red} !important`,
   }),
 }));
 

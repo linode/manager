@@ -1,37 +1,39 @@
 import * as React from 'react';
-import { Box } from 'src/components/Box';
+
 import AddNewLink from 'src/components/AddNewLink';
+import { Box } from 'src/components/Box';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableSortCell } from 'src/components/TableSortCell';
-import ActionMenu from './OAuthClientActionMenu';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useOAuthClientsQuery } from 'src/queries/accountOAuth';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { DeleteOAuthClientDialog } from './DeleteOAuthClientDialog';
-import { ResetOAuthClientDialog } from './ResetOAuthClientDialog';
-import { usePagination } from 'src/hooks/usePagination';
+import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
-import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
-import { EditOAuthClientDrawer } from './EditOAuthClientDrawer';
+import { usePagination } from 'src/hooks/usePagination';
+import { useOAuthClientsQuery } from 'src/queries/accountOAuth';
+
 import { SecretTokenDialog } from '../SecretTokenDialog/SecretTokenDialog';
+import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
+import { DeleteOAuthClientDialog } from './DeleteOAuthClientDialog';
+import { EditOAuthClientDrawer } from './EditOAuthClientDrawer';
+import ActionMenu from './OAuthClientActionMenu';
+import { ResetOAuthClientDialog } from './ResetOAuthClientDialog';
 
 const PREFERENCE_KEY = 'oauth-clients';
 
 const OAuthClients = () => {
   const pagination = usePagination(1, PREFERENCE_KEY);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'status',
       order: 'desc',
+      orderBy: 'status',
     },
     PREFERENCE_KEY
   );
@@ -42,8 +44,8 @@ const OAuthClients = () => {
       page_size: pagination.pageSize,
     },
     {
-      '+order_by': orderBy,
       '+order': order,
+      '+order_by': orderBy,
     }
   );
 
@@ -87,7 +89,7 @@ const OAuthClients = () => {
       return <TableRowEmpty colSpan={6} />;
     }
 
-    return data?.data.map(({ id, label, redirect_uri, public: isPublic }) => (
+    return data?.data.map(({ id, label, public: isPublic, redirect_uri }) => (
       <TableRow ariaLabel={label} key={id}>
         <TableCell>{label}</TableCell>
         <Hidden smDown>
@@ -99,11 +101,6 @@ const OAuthClients = () => {
         </Hidden>
         <TableCell actionCell>
           <ActionMenu
-            label={label}
-            onOpenResetDialog={() => {
-              setSelectedOAuthClientId(id);
-              setIsResetDialogOpen(true);
-            }}
             onOpenDeleteDialog={() => {
               setSelectedOAuthClientId(id);
               setIsDeleteDialogOpen(true);
@@ -112,6 +109,11 @@ const OAuthClients = () => {
               setSelectedOAuthClientId(id);
               setIsEditDrawerOpen(true);
             }}
+            onOpenResetDialog={() => {
+              setSelectedOAuthClientId(id);
+              setIsResetDialogOpen(true);
+            }}
+            label={label}
           />
         </TableCell>
       </TableRow>
@@ -124,8 +126,8 @@ const OAuthClients = () => {
       <Box
         display="flex"
         justifyContent="flex-end"
-        paddingRight={{ xs: 1, sm: 1, md: 0, lg: 0 }}
         marginBottom={1}
+        paddingRight={{ lg: 0, md: 0, sm: 1, xs: 1 }}
       >
         <AddNewLink
           label="Add an OAuth App"
@@ -137,18 +139,18 @@ const OAuthClients = () => {
           <TableRow>
             <TableSortCell
               active={orderBy === 'label'}
-              label="label"
               direction={order}
               handleClick={handleOrderChange}
+              label="label"
             >
               Label
             </TableSortCell>
             <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'public'}
-                label="public"
                 direction={order}
                 handleClick={handleOrderChange}
+                label="public"
               >
                 Access
               </TableSortCell>
@@ -163,41 +165,41 @@ const OAuthClients = () => {
         <TableBody>{renderContent()}</TableBody>
       </Table>
       <SecretTokenDialog
-        title="Client Secret"
-        open={isSecretModalOpen}
         onClose={() => setSecret(undefined)}
+        open={isSecretModalOpen}
+        title="Client Secret"
         value={secret}
       />
       <DeleteOAuthClientDialog
-        open={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        label={selectedOAuthClient?.label ?? ''}
         id={selectedOAuthClientId}
+        label={selectedOAuthClient?.label ?? ''}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
       />
       <ResetOAuthClientDialog
-        open={isResetDialogOpen}
-        onClose={() => setIsResetDialogOpen(false)}
-        label={selectedOAuthClient?.label ?? ''}
         id={selectedOAuthClientId}
+        label={selectedOAuthClient?.label ?? ''}
+        onClose={() => setIsResetDialogOpen(false)}
+        open={isResetDialogOpen}
         showSecret={showSecret}
       />
       <CreateOAuthClientDrawer
-        open={isCreateDrawerOpen}
         onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
         showSecret={showSecret}
       />
       <EditOAuthClientDrawer
-        open={isEditDrawerOpen}
-        onClose={() => setIsEditDrawerOpen(false)}
         client={selectedOAuthClient}
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
       />
       <PaginationFooter
-        page={pagination.page}
-        pageSize={pagination.pageSize}
         count={data?.results ?? 0}
+        eventCategory="oauth clients"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
-        eventCategory="oauth clients"
+        page={pagination.page}
+        pageSize={pagination.pageSize}
       />
     </>
   );

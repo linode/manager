@@ -2,8 +2,9 @@ import { Disk } from '@linode/api-v4/lib/linodes';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { defaultTo } from 'ramda';
 import * as React from 'react';
-import FormControl from 'src/components/core/FormControl';
+
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import FormControl from 'src/components/core/FormControl';
 import { titlecase } from 'src/features/Linodes/presentation';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
@@ -16,17 +17,17 @@ export interface ExtendedVolume extends Volume {
 }
 
 interface Props {
+  counter?: number;
   devices: {
     disks: ExtendedDisk[];
     volumes: ExtendedVolume[];
   };
-  onChange: (slot: string, id: string) => void;
-  getSelected: (slot: string) => string;
-  counter?: number;
-  slots: string[];
-  rescue?: boolean;
   disabled?: boolean;
   errorText?: string;
+  getSelected: (slot: string) => string;
+  onChange: (slot: string, id: string) => void;
+  rescue?: boolean;
+  slots: string[];
 }
 
 type CombinedProps = Props;
@@ -34,12 +35,12 @@ type CombinedProps = Props;
 const DeviceSelection: React.FC<CombinedProps> = (props) => {
   const {
     devices,
-    onChange,
-    getSelected,
-    slots,
-    rescue,
     disabled,
     errorText,
+    getSelected,
+    onChange,
+    rescue,
+    slots,
   } = props;
 
   const counter = defaultTo(0, props.counter) as number;
@@ -55,17 +56,17 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
           const device = titlecase(type);
           return {
             label: device,
-            value: type,
             options: (items as any[]).map(({ _id, label }) => {
               return { label, value: _id };
             }),
+            value: type,
           };
         });
 
         deviceList.unshift({
-          value: '',
           label: '',
-          options: [{ value: null, label: 'None' }],
+          options: [{ label: 'None', value: null }],
+          value: '',
         });
 
         const selectedDevice = getSelectedOptionFromGroupedOptions(
@@ -75,24 +76,24 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
 
         return counter < idx ? null : (
           <FormControl
-            updateFor={[selectedDevice, deviceList, errorText]}
-            key={slot}
             fullWidth
+            key={slot}
+            updateFor={[selectedDevice, deviceList, errorText]}
           >
             <Select
-              options={deviceList}
-              value={selectedDevice}
-              onChange={(e: Item<string>) => onChange(slot, e.value)}
-              disabled={disabled}
-              placeholder={'None'}
-              isClearable={false}
-              label={`/dev/${slot}`}
               errorText={
                 selectedDevice?.value === diskOrVolumeInErrReason && errorText
                   ? adjustedErrorText(errorText, selectedDevice.label)
                   : undefined
               }
+              disabled={disabled}
+              isClearable={false}
+              label={`/dev/${slot}`}
               noMarginTop
+              onChange={(e: Item<string>) => onChange(slot, e.value)}
+              options={deviceList}
+              placeholder={'None'}
+              value={selectedDevice}
             />
           </FormControl>
         );
@@ -100,14 +101,14 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
       {rescue && (
         <FormControl fullWidth>
           <Select
-            disabled
-            onChange={() => null}
             defaultValue={{ label: 'finnix', value: 'finnix' }}
-            name="rescueDevice_sdh"
+            disabled
             id="rescueDevice_sdh"
             label="/dev/sdh"
-            placeholder="Finnix Media"
+            name="rescueDevice_sdh"
             noMarginTop
+            onChange={() => null}
+            placeholder="Finnix Media"
           />
         </FormControl>
       )}

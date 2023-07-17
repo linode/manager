@@ -1,15 +1,17 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { createStyles, makeStyles, useTheme } from '@mui/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+import { debounce } from 'throttle-debounce';
+
 import PendingIcon from 'src/assets/icons/pending.svg';
-import Paper from 'src/components/core/Paper';
-import { createStyles, makeStyles, useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
   STATS_NOT_READY_API_MESSAGE,
@@ -25,20 +27,21 @@ import {
   formatPercentage,
   getMetrics,
 } from 'src/utilities/statMetrics';
-import { debounce } from 'throttle-debounce';
-import { getDateOptions } from './helpers';
+
 import NetworkGraph, { ChartProps } from './NetworkGraphs';
 import { StatsPanel } from './StatsPanel';
+import { getDateOptions } from './helpers';
 
 setUpCharts();
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      width: '100%',
-    },
     chartSelect: {
       maxWidth: 150,
+    },
+    emptyText: {
+      marginTop: theme.spacing(),
+      textAlign: 'center',
     },
     graphControls: {
       display: 'flex',
@@ -53,15 +56,15 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     grid: {
-      backgroundColor: theme.bg.offWhite,
-      border: `solid 1px ${theme.borderColors.divider}`,
-      marginBottom: theme.spacing(2),
-      '&.MuiGrid-item': {
-        padding: theme.spacing(2),
-      },
       '& h2': {
         fontSize: '1rem',
       },
+      '&.MuiGrid-item': {
+        padding: theme.spacing(2),
+      },
+      backgroundColor: theme.bg.offWhite,
+      border: `solid 1px ${theme.borderColors.divider}`,
+      marginBottom: theme.spacing(2),
       [theme.breakpoints.up(1100)]: {
         '&:first-of-type': {
           marginRight: theme.spacing(2),
@@ -72,9 +75,8 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '1rem',
       paddingRight: theme.spacing(2),
     },
-    emptyText: {
-      textAlign: 'center',
-      marginTop: theme.spacing(),
+    root: {
+      width: '100%',
     },
   })
 );
@@ -87,7 +89,7 @@ interface Props {
 const chartHeight = 160;
 
 const LinodeSummary: React.FC<Props> = (props) => {
-  const { linodeCreated, isBareMetalInstance } = props;
+  const { isBareMetalInstance, linodeCreated } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const theme = useTheme<Theme>();
@@ -96,7 +98,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;
 
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
 
   const options = getDateOptions(linodeCreated);
   const [rangeSelection, setRangeSelection] = React.useState('24');
@@ -106,15 +108,15 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
   const {
     data: statsData,
-    isLoading: statsLoading,
     error: statsError,
+    isLoading: statsLoading,
     refetch: refetchLinodeStats,
   } = useLinodeStats(id, isLast24Hours, linodeCreated);
 
   const {
     data: statsByDateData,
-    isLoading: statsByDateLoading,
     error: statsByDateError,
+    isLoading: statsByDateLoading,
   } = useLinodeStatsByDate(id, year, month, !isLast24Hours, linodeCreated);
 
   const stats = isLast24Hours ? statsData : statsByDateData;
@@ -157,27 +159,27 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
     return (
       <LineGraph
-        ariaLabel="CPU Usage Graph"
-        accessibleDataTable={{ unit: '%' }}
-        timezone={timezone}
-        chartHeight={chartHeight}
-        showToday={rangeSelection === '24'}
         data={[
           {
-            borderColor: 'transparent',
             backgroundColor: theme.graphs.cpu.percent,
+            borderColor: 'transparent',
             data,
             label: 'CPU %',
           },
         ]}
         legendRows={[
           {
-            legendTitle: 'CPU %',
-            legendColor: 'blue',
             data: metrics,
             format: formatPercentage,
+            legendColor: 'blue',
+            legendTitle: 'CPU %',
           },
         ]}
+        accessibleDataTable={{ unit: '%' }}
+        ariaLabel="CPU Usage Graph"
+        chartHeight={chartHeight}
+        showToday={rangeSelection === '24'}
+        timezone={timezone}
       />
     );
   };
@@ -190,21 +192,16 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
     return (
       <LineGraph
-        ariaLabel="Disk I/O Graph"
-        accessibleDataTable={{ unit: 'blocks/s' }}
-        timezone={timezone}
-        chartHeight={chartHeight}
-        showToday={rangeSelection === '24'}
         data={[
           {
-            borderColor: 'transparent',
             backgroundColor: theme.graphs.diskIO.read,
+            borderColor: 'transparent',
             data: data.io,
             label: 'I/O Rate',
           },
           {
-            borderColor: 'transparent',
             backgroundColor: theme.graphs.diskIO.swap,
+            borderColor: 'transparent',
             data: data.swap,
             label: 'Swap Rate',
           },
@@ -219,6 +216,11 @@ const LinodeSummary: React.FC<Props> = (props) => {
             format: formatNumber,
           },
         ]}
+        accessibleDataTable={{ unit: 'blocks/s' }}
+        ariaLabel="Disk I/O Graph"
+        chartHeight={chartHeight}
+        showToday={rangeSelection === '24'}
+        timezone={timezone}
       />
     );
   };
@@ -231,22 +233,22 @@ const LinodeSummary: React.FC<Props> = (props) => {
     return (
       <Paper>
         <ErrorState
-          CustomIcon={PendingIcon}
-          CustomIconStyles={{ width: 64, height: 64 }}
           errorText={
             <>
               <div>
-                <Typography variant="h2" className={classes.emptyText}>
+                <Typography className={classes.emptyText} variant="h2">
                   {STATS_NOT_READY_MESSAGE}
                 </Typography>
               </div>
               <div>
-                <Typography variant="body1" className={classes.emptyText}>
+                <Typography className={classes.emptyText} variant="body1">
                   CPU, Network, and Disk stats will be available shortly
                 </Typography>
               </div>
             </>
           }
+          CustomIcon={PendingIcon}
+          CustomIconStyles={{ height: 64, width: 64 }}
         />
       </Paper>
     );
@@ -256,7 +258,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
     return (
       <Paper>
         <ErrorState
-          CustomIconStyles={{ width: 64, height: 64 }}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={statsErrorString}
         />
       </Paper>
@@ -264,47 +266,47 @@ const LinodeSummary: React.FC<Props> = (props) => {
   }
 
   const chartProps: ChartProps = {
-    loading: isLoading,
     height: chartHeight,
-    timezone,
+    loading: isLoading,
     rangeSelection,
+    timezone,
   };
 
   return (
     <Paper>
-      <Grid container className={`${classes.root} m0`}>
+      <Grid className={`${classes.root} m0`} container>
         <Grid className={`${classes.graphControls} p0`} xs={12}>
           <Select
-            options={options}
-            defaultValue={options[0]}
-            onChange={handleChartRangeChange}
-            name="chartRange"
-            id="chartRange"
-            small
-            label="Select Time Range"
-            hideLabel
             className={classes.chartSelect}
+            defaultValue={options[0]}
+            hideLabel
+            id="chartRange"
             isClearable={false}
+            label="Select Time Range"
+            name="chartRange"
+            onChange={handleChartRangeChange}
+            options={options}
+            small
           />
         </Grid>
         {!isBareMetalInstance ? (
           <Grid
-            container
-            xs={12}
             className={`${classes.graphGrids}`}
+            container
             spacing={4}
+            xs={12}
           >
             <Grid className={classes.grid} xs={12}>
               <StatsPanel
-                title="CPU (%)"
                 renderBody={renderCPUChart}
+                title="CPU (%)"
                 {...chartProps}
               />
             </Grid>
             <Grid className={classes.grid} xs={12}>
               <StatsPanel
-                title="Disk I/O (blocks/s)"
                 renderBody={renderDiskIOChart}
+                title="Disk I/O (blocks/s)"
                 {...chartProps}
               />
             </Grid>

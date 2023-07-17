@@ -1,21 +1,24 @@
-import * as React from 'react';
-import Reload from 'src/assets/icons/reload.svg';
 import _Button, { ButtonProps as _ButtonProps } from '@mui/material/Button';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { useTheme, styled, Theme } from '@mui/material/styles';
+import { Theme, styled, useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { isPropValid } from '../../utilities/isPropValid';
-import { rotate360 } from '../../styles/keyframes';
+import * as React from 'react';
 
-export type ButtonType = 'primary' | 'secondary' | 'outlined';
+import Reload from 'src/assets/icons/reload.svg';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+
+import { rotate360 } from '../../styles/keyframes';
+import { isPropValid } from '../../utilities/isPropValid';
+
+export type ButtonType = 'outlined' | 'primary' | 'secondary';
 
 export interface ButtonProps extends _ButtonProps {
-  /** The button variant to render */
+  /**
+   * The button variant to render
+   * * @default 'secondary'
+   * */
   buttonType?: ButtonType;
   /** Additional css class to pass to the component */
   className?: string;
-  /** The `sx` prop can be either object or function */
-  sx?: SxProps<Theme>;
   /**
    * Reduce the padding on the x-axis
    * @default false
@@ -31,33 +34,36 @@ export interface ButtonProps extends _ButtonProps {
    * @default false
    */
   loading?: boolean;
-  /** Tooltip text */
-  tooltipText?: string;
+  /** The `sx` prop can be either object or function */
+  sx?: SxProps<Theme>;
   /** Tooltip analytics event */
   tooltipAnalyticsEvent?: () => void;
+  /** Tooltip text */
+  tooltipText?: string;
 }
 
 const StyledButton = styled(_Button, {
   shouldForwardProp: (prop) =>
     isPropValid(['compactX', 'compactY', 'loading', 'buttonType'], prop),
 })<ButtonProps>(({ theme, ...props }) => ({
-  ...(props.buttonType === 'secondary' &&
-    props.compactX && {
-      minWidth: 50,
-      paddingRight: 0,
-      paddingLeft: 0,
-    }),
-  ...(props.buttonType === 'secondary' &&
-    props.compactY && {
-      minHeight: 20,
-      paddingTop: 0,
-      paddingBottom: 0,
-    }),
+  ...(props.buttonType === 'secondary' && {
+    color: theme.textColors.linkActiveLight,
+  }),
+  ...(props.compactX && {
+    minWidth: 50,
+    paddingLeft: 0,
+    paddingRight: 0,
+  }),
+  ...(props.compactY && {
+    minHeight: 20,
+    paddingBottom: 0,
+    paddingTop: 0,
+  }),
   ...(props.loading && {
     '& svg': {
       animation: `${rotate360} 2s linear infinite`,
-      margin: '0 auto',
       height: `${theme.spacing(2)}`,
+      margin: '0 auto',
       width: `${theme.spacing(2)}`,
     },
     '&:disabled': {
@@ -68,12 +74,12 @@ const StyledButton = styled(_Button, {
 }));
 
 const Span = styled('span')({
-  display: 'flex',
-  alignItems: 'center',
   '@supports (-moz-appearance: none)': {
     /* Fix text alignment for Firefox */
     marginTop: 2,
   },
+  alignItems: 'center',
+  display: 'flex',
 });
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -90,8 +96,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       loading,
       sx,
-      tooltipText,
       tooltipAnalyticsEvent,
+      tooltipText,
       ...rest
     },
     ref
@@ -118,9 +124,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           compactY={compactY}
           disabled={disabled || loading}
           loading={loading}
+          ref={ref}
           sx={sx}
           variant={variant}
-          ref={ref}
         >
           <Span data-testid="loadingIcon">
             {loading ? <Reload /> : children}
@@ -128,10 +134,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         </StyledButton>
         {tooltipText && (
           <TooltipIcon
+            status="help"
             sxTooltipIcon={sxTooltipIcon}
             text={tooltipText}
             tooltipAnalyticsEvent={tooltipAnalyticsEvent}
-            status="help"
           />
         )}
       </React.Fragment>

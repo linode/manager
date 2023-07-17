@@ -20,67 +20,69 @@ describe('Delete a Domain', () => {
       group: 'test-group',
     });
 
-    cy.defer(createDomain(domainRequest)).then((domain: Domain) => {
-      cy.visitWithLogin('/domains');
+    cy.defer(createDomain(domainRequest), 'creating domain').then(
+      (domain: Domain) => {
+        cy.visitWithLogin('/domains');
 
-      // Confirm that domain is listed and initiate deletion.
-      cy.findByText(domain.domain)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          ui.actionMenu
-            .findByTitle(`Action menu for Domain ${domain}`)
-            .should('be.visible')
-            .click();
-        });
-      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+        // Confirm that domain is listed and initiate deletion.
+        cy.findByText(domain.domain)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(`Action menu for Domain ${domain}`)
+              .should('be.visible')
+              .click();
+          });
+        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
-      // Cancel deletion when prompted to confirm.
-      ui.dialog
-        .findByTitle(`Delete Domain ${domain.domain}?`)
-        .should('be.visible')
-        .within(() => {
-          ui.buttonGroup
-            .findButtonByTitle('Cancel')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
+        // Cancel deletion when prompted to confirm.
+        ui.dialog
+          .findByTitle(`Delete Domain ${domain.domain}?`)
+          .should('be.visible')
+          .within(() => {
+            ui.buttonGroup
+              .findButtonByTitle('Cancel')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
 
-      // Confirm that domain is still listed and initiate deletion again.
-      cy.findByText(domain.domain)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          ui.actionMenu
-            .findByTitle(`Action menu for Domain ${domain}`)
-            .should('be.visible')
-            .click();
-        });
-      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+        // Confirm that domain is still listed and initiate deletion again.
+        cy.findByText(domain.domain)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.actionMenu
+              .findByTitle(`Action menu for Domain ${domain}`)
+              .should('be.visible')
+              .click();
+          });
+        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
-      // Confirm deletion.
-      ui.dialog
-        .findByTitle(`Delete Domain ${domain.domain}?`)
-        .should('be.visible')
-        .within(() => {
-          // The button should be disabled before confirming the correct domain
-          ui.buttonGroup
-            .findButtonByTitle('Delete Domain')
-            .should('be.visible')
-            .should('be.disabled');
+        // Confirm deletion.
+        ui.dialog
+          .findByTitle(`Delete Domain ${domain.domain}?`)
+          .should('be.visible')
+          .within(() => {
+            // The button should be disabled before confirming the correct domain
+            ui.buttonGroup
+              .findButtonByTitle('Delete Domain')
+              .should('be.visible')
+              .should('be.disabled');
 
-          containsClick('Domain Name').type(domain.domain);
-          ui.buttonGroup
-            .findButtonByTitle('Delete Domain')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
+            containsClick('Domain Name').type(domain.domain);
+            ui.buttonGroup
+              .findButtonByTitle('Delete Domain')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
 
-      // Confirm that domain is deleted.
-      cy.visitWithLogin('/domains');
-      cy.findByText(domain.domain).should('not.exist');
-    });
+        // Confirm that domain is deleted.
+        cy.visitWithLogin('/domains');
+        cy.findByText(domain.domain).should('not.exist');
+      }
+    );
   });
 });

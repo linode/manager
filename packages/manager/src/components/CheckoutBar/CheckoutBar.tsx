@@ -1,7 +1,9 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
 import { DisplayPrice } from 'src/components/DisplayPrice';
+import { Typography } from 'src/components/Typography';
+
 import {
   StyledButton,
   StyledCheckoutSection,
@@ -10,30 +12,30 @@ import {
 } from './styles';
 
 interface CheckoutBarProps {
-  onDeploy: () => void;
-  heading: string;
+  agreement?: JSX.Element;
   calculatedPrice?: number;
+  children?: JSX.Element;
   disabled?: boolean;
+  footer?: JSX.Element;
+  heading: string;
   isMakingRequest?: boolean;
+  onDeploy: () => void;
   priceHelperText?: string;
   submitText?: string;
-  children?: JSX.Element;
-  footer?: JSX.Element;
-  agreement?: JSX.Element;
 }
 
 const CheckoutBar = (props: CheckoutBarProps) => {
   const {
-    onDeploy,
-    heading,
+    agreement,
     calculatedPrice,
+    children,
     disabled,
+    footer,
+    heading,
     isMakingRequest,
+    onDeploy,
     priceHelperText,
     submitText,
-    footer,
-    agreement,
-    children,
   } = props;
 
   const theme = useTheme();
@@ -43,20 +45,20 @@ const CheckoutBar = (props: CheckoutBarProps) => {
   return (
     <StyledRoot>
       <Typography
-        variant="h2"
         sx={{
           color: theme.color.headline,
           fontSize: '1.125rem',
           wordBreak: 'break-word',
         }}
         data-qa-order-summary
+        variant="h2"
       >
         {heading}
       </Typography>
       {children}
       {
         <StyledCheckoutSection data-qa-total-price>
-          <DisplayPrice price={price} interval="mo" />
+          <DisplayPrice interval="mo" price={price} />
           {priceHelperText && price > 0 && (
             <Typography
               sx={{
@@ -73,10 +75,10 @@ const CheckoutBar = (props: CheckoutBarProps) => {
       <StyledCheckoutSection>
         <StyledButton
           buttonType="primary"
-          disabled={disabled}
-          onClick={onDeploy}
           data-qa-deploy-linode
+          disabled={disabled}
           loading={isMakingRequest}
+          onClick={onDeploy}
         >
           {submitText ?? 'Create'}
         </StyledButton>

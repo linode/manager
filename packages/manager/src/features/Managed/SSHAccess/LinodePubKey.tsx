@@ -1,15 +1,16 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
+
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Box } from 'src/components/Box';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { useManagedSSHKey } from 'src/queries/managed/managed';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -18,82 +19,82 @@ const DOC_URL =
   'https://www.linode.com/docs/platform/linode-managed/#adding-the-public-key';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2.5),
-    minHeight: '112px',
-  },
-  errorState: {
-    padding: `calc(${theme.spacing(2)} - 1px)`,
-    '& > div': {
-      padding: 0,
-    },
-  },
-  loadingState: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  spinner: {
-    padding: theme.spacing(5),
-  },
-  icon: {
-    marginRight: theme.spacing(1),
-    marginBottom: `calc(${theme.spacing(1)} - 2px)`,
-    stroke: theme.color.offBlack,
-  },
-  sshKeyContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1,
-  },
-  sshKey: {
-    // NOTE A:
-    // I'm not confident about this CSS, but it works on recent versions
-    // of Chrome, Firefox, Safari, and Edge. If we run into inconsistencies
-    // in other environments, consider removing it and using the fallback
-    // provided in the component below.
-    display: '-webkit-box',
-    WebkitLineClamp: 3,
-    WebkitBoxOrient: 'vertical',
-    transition: 'all 1s ease-in',
-    overflow: 'hidden',
-    wordBreak: 'break-all',
-    fontFamily: '"Ubuntu Mono", monospace, sans-serif',
-    color: theme.color.grey1,
-    fontSize: '0.9rem',
-    [theme.breakpoints.up('md')]: {
-      padding: `0 ${theme.spacing(4)} 0 ${theme.spacing(1)}`,
-    },
-    [theme.breakpoints.up('lg')]: {
-      paddingRight: theme.spacing(6),
-    },
-    [theme.breakpoints.up('xl')]: {
-      paddingRight: theme.spacing(4),
-      paddingLeft: theme.spacing(4),
-    },
-    '&:hover': {
-      transition: 'all 1s ease-in',
-      WebkitLineClamp: 'unset',
-    },
-  },
   copyToClipboard: {
+    '& > button': {
+      marginTop: theme.spacing(1),
+      minWidth: 190,
+    },
     alignItems: 'flex-start',
     display: 'flex',
     justifyContent: 'flex-start',
     [theme.breakpoints.up('sm')]: {
       justifyContent: 'flex-end',
     },
-    '& > button': {
-      minWidth: 190,
-      marginTop: theme.spacing(1),
+  },
+  errorState: {
+    '& > div': {
+      padding: 0,
     },
+    padding: `calc(${theme.spacing(2)} - 1px)`,
+  },
+  icon: {
+    marginBottom: `calc(${theme.spacing(1)} - 2px)`,
+    marginRight: theme.spacing(1),
+    stroke: theme.color.offBlack,
+  },
+  loadingState: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  root: {
+    minHeight: '112px',
+    padding: theme.spacing(2.5),
+  },
+  spinner: {
+    padding: theme.spacing(5),
+  },
+  sshKey: {
+    // NOTE A:
+    // I'm not confident about this CSS, but it works on recent versions
+    // of Chrome, Firefox, Safari, and Edge. If we run into inconsistencies
+    // in other environments, consider removing it and using the fallback
+    '&:hover': {
+      WebkitLineClamp: 'unset',
+      transition: 'all 1s ease-in',
+    },
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 3,
+    color: theme.color.grey1,
+    // provided in the component below.
+    display: '-webkit-box',
+    fontFamily: '"Ubuntu Mono", monospace, sans-serif',
+    fontSize: '0.9rem',
+    overflow: 'hidden',
+    [theme.breakpoints.up('lg')]: {
+      paddingRight: theme.spacing(6),
+    },
+    [theme.breakpoints.up('md')]: {
+      padding: `0 ${theme.spacing(4)} 0 ${theme.spacing(1)}`,
+    },
+    [theme.breakpoints.up('xl')]: {
+      paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
+    },
+    transition: 'all 1s ease-in',
+    wordBreak: 'break-all',
+  },
+  sshKeyContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    flex: 1,
   },
 }));
 
 const LinodePubKey: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, isLoading, error } = useManagedSSHKey();
+  const { data, error, isLoading } = useManagedSSHKey();
 
   const [copied, setCopied] = React.useState<boolean>(false);
   const timeout = React.useRef<NodeJS.Timeout>();
@@ -131,7 +132,7 @@ const LinodePubKey: React.FC<{}> = () => {
   if (isLoading) {
     return (
       <Paper className={`${classes.root} ${classes.loadingState}`}>
-        <CircleProgress mini className={classes.spinner} />
+        <CircleProgress className={classes.spinner} mini />
       </Paper>
     );
   }
@@ -139,7 +140,7 @@ const LinodePubKey: React.FC<{}> = () => {
   return (
     <Paper className={classes.root}>
       <Grid container justifyContent="space-between" spacing={2}>
-        <Grid xs={12} md={3} lg={4}>
+        <Grid lg={4} md={3} xs={12}>
           <Box display="flex" flexDirection="row">
             <SSHKeyIcon className={classes.icon} />
             <Typography variant="h3">Linode Public Key</Typography>
@@ -147,10 +148,10 @@ const LinodePubKey: React.FC<{}> = () => {
           <Typography>
             You must{' '}
             <a
-              href={DOC_URL}
-              target="_blank"
               aria-describedby="external-site"
+              href={DOC_URL}
               rel="noopener noreferrer"
+              target="_blank"
             >
               install our public SSH key
             </a>{' '}
@@ -158,14 +159,14 @@ const LinodePubKey: React.FC<{}> = () => {
           </Typography>
         </Grid>
         {/* Hide the SSH key on x-small viewports */}
-        <Grid xs={12} sm={5} md={6} className={classes.sshKeyContainer}>
-          <Typography variant="subtitle1" className={classes.sshKey}>
+        <Grid className={classes.sshKeyContainer} md={6} sm={5} xs={12}>
+          <Typography className={classes.sshKey} variant="subtitle1">
             {data?.ssh_key || ''}
             {/* See NOTE A. If that CSS is removed, we can use the following instead: */}
             {/* pubKey.slice(0, 160)} . . . */}
           </Typography>
         </Grid>
-        <Grid xs={12} sm={4} md={3} lg={2} className={classes.copyToClipboard}>
+        <Grid className={classes.copyToClipboard} lg={2} md={3} sm={4} xs={12}>
           <Button buttonType="secondary" onClick={handleCopy}>
             {!copied ? 'Copy to clipboard' : 'Copied!'}
           </Button>

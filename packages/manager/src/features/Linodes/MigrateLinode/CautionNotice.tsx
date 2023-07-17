@@ -1,51 +1,52 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import Checkbox from 'src/components/CheckBox';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+
+import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  checkbox: {
+    marginLeft: theme.spacing(2),
+  },
+  header: {
+    marginLeft: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
   root: {
-    marginTop: 24,
-    marginBottom: theme.spacing(2),
-    padding: '4px 16px',
-    backgroundColor: theme.bg.bgPaper,
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
     '& ul:first-of-type': {
-      fontFamily: theme.font.normal,
       '& li': {
         fontSize: '0.875rem',
         marginBottom: theme.spacing(),
       },
+      fontFamily: theme.font.normal,
     },
-  },
-  header: {
-    marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    backgroundColor: theme.bg.bgPaper,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
+    marginBottom: theme.spacing(2),
+    marginTop: 24,
+    padding: '4px 16px',
   },
   volumes: {
-    marginTop: theme.spacing(),
     '& li': {
       fontFamily: theme.font.bold,
     },
-  },
-  checkbox: {
-    marginLeft: theme.spacing(2),
+    marginTop: theme.spacing(),
   },
 }));
 
 interface Props {
-  hasConfirmed: boolean;
-  setConfirmed: (value: boolean) => void;
   error?: string;
-  migrationTimeInMins: number;
+  hasConfirmed: boolean;
   linodeId: number | undefined;
   metadataWarning?: string;
+  migrationTimeInMins: number;
+  setConfirmed: (value: boolean) => void;
 }
 
 const CautionNotice = (props: Props) => {
@@ -123,10 +124,10 @@ const CautionNotice = (props: Props) => {
       </ul>
       {props.error && <Notice error text={props.error} />}
       <Checkbox
-        text="Accept"
+        checked={props.hasConfirmed}
         className={classes.checkbox}
         onChange={() => props.setConfirmed(!props.hasConfirmed)}
-        checked={props.hasConfirmed}
+        text="Accept"
       />
     </div>
   );

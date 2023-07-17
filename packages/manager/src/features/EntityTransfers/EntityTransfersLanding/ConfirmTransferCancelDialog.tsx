@@ -1,20 +1,21 @@
 import {
-  cancelTransfer,
   TransferEntities,
+  cancelTransfer,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { queryKey } from 'src/queries/entityTransfers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEntityTransferCancelEvent } from 'src/utilities/analytics';
-import { useQueryClient } from 'react-query';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles(() => ({
   actions: {
@@ -24,14 +25,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface Props {
+  entities?: TransferEntities;
   onClose: () => void;
   open: boolean;
   token?: string;
-  entities?: TransferEntities;
 }
 
 export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
-  const { onClose, open, token, entities } = props;
+  const { entities, onClose, open, token } = props;
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -87,9 +88,9 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
       </Button>
       <Button
         buttonType="primary"
-        onClick={handleCancelTransfer}
         disabled={submitting}
         loading={submitting}
+        onClick={handleCancelTransfer}
       >
         Cancel Service Transfer
       </Button>
@@ -103,18 +104,18 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
 
   return (
     <ConfirmationDialog
-      onClose={onClose}
-      title="Cancel this Service Transfer?"
-      open={open}
       actions={actions}
+      onClose={onClose}
+      open={open}
+      title="Cancel this Service Transfer?"
     >
       {
         // There could be multiple errors here that are relevant.
         submissionErrors
           ? submissionErrors.map((thisError, idx) => (
               <Notice
-                key={`form-submit-error-${idx}`}
                 error
+                key={`form-submit-error-${idx}`}
                 text={thisError.reason}
               />
             ))

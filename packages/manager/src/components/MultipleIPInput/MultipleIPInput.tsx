@@ -1,50 +1,48 @@
 // @todo: this import?
-import { InputBaseProps } from '@mui/material/InputBase';
 import Close from '@mui/icons-material/Close';
-import * as React from 'react';
-import { Button } from 'src/components/Button/Button';
-import InputLabel from 'src/components/core/InputLabel';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { InputBaseProps } from '@mui/material/InputBase';
 import Grid from '@mui/material/Unstable_Grid2';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
+import InputLabel from 'src/components/core/InputLabel';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addIP: {
-    paddingLeft: 0,
-    paddingTop: theme.spacing(1.5),
     '& span:first-of-type': {
       justifyContent: 'flex-start',
     },
+    paddingLeft: 0,
+    paddingTop: theme.spacing(1.5),
+  },
+  button: {
+    '& :hover, & :focus': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
+    '& > span': {
+      padding: 2,
+    },
+    marginLeft: `-${theme.spacing()}`,
+    marginTop: 4,
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
+  },
+  helperText: {
+    marginBottom: theme.spacing(),
   },
   input: {
     'nth-child(n+2)': {
       marginTop: theme.spacing(),
     },
-  },
-  root: {
-    marginTop: theme.spacing(),
-  },
-  button: {
-    marginTop: 4,
-    marginLeft: `-${theme.spacing()}`,
-    minWidth: 'auto',
-    minHeight: 'auto',
-    padding: 0,
-    '& > span': {
-      padding: 2,
-    },
-    '& :hover, & :focus': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
-    },
-  },
-  helperText: {
-    marginBottom: theme.spacing(),
   },
   ipNetmaskTooltipSection: {
     display: 'flex',
@@ -53,36 +51,39 @@ const useStyles = makeStyles()((theme: Theme) => ({
   required: {
     fontFamily: theme.font.normal,
   },
+  root: {
+    marginTop: theme.spacing(),
+  },
 }));
 
 interface Props {
-  title: string;
-  helperText?: string;
-  tooltip?: string;
-  placeholder?: string;
-  error?: string;
-  ips: ExtendedIP[];
-  onChange: (ips: ExtendedIP[]) => void;
-  onBlur?: (ips: ExtendedIP[]) => void;
-  inputProps?: InputBaseProps;
   className?: string;
-  required?: boolean;
+  error?: string;
   forDatabaseAccessControls?: boolean;
+  helperText?: string;
+  inputProps?: InputBaseProps;
+  ips: ExtendedIP[];
+  onBlur?: (ips: ExtendedIP[]) => void;
+  onChange: (ips: ExtendedIP[]) => void;
+  placeholder?: string;
+  required?: boolean;
+  title: string;
+  tooltip?: string;
 }
 
 export const MultipleIPInput = React.memo((props: Props) => {
   const {
+    className,
     error,
-    onChange,
-    onBlur,
-    ips,
-    title,
+    forDatabaseAccessControls,
     helperText,
-    tooltip,
+    ips,
+    onBlur,
+    onChange,
     placeholder,
     required,
-    forDatabaseAccessControls,
-    className,
+    title,
+    tooltip,
   } = props;
   const { classes, cx } = useStyles();
 
@@ -129,12 +130,12 @@ export const MultipleIPInput = React.memo((props: Props) => {
           <InputLabel>{title}</InputLabel>
           <TooltipIcon
             sxTooltipIcon={{
-              marginTop: '-15px',
               marginLeft: '-4px',
+              marginTop: '-15px',
             }}
+            status="help"
             text={tooltip}
             tooltipPosition="right"
-            status="help"
           />
         </div>
       ) : (
@@ -148,33 +149,33 @@ export const MultipleIPInput = React.memo((props: Props) => {
       {helperText && (
         <Typography className={classes.helperText}>{helperText}</Typography>
       )}
-      {error && <Notice error text={error} spacingTop={8} />}
+      {error && <Notice error spacingTop={8} text={error} />}
       {ips.map((thisIP, idx) => (
         <Grid
           container
-          key={`domain-transfer-ip-${idx}`}
+          data-testid="domain-transfer-input"
           direction="row"
           justifyContent="center"
-          data-testid="domain-transfer-input"
+          key={`domain-transfer-ip-${idx}`}
           spacing={2}
         >
           <Grid xs={11}>
             <TextField
-              className={classes.input}
-              // Prevent unique ID errors, since TextField sets the input element's ID to the label
-              label={`domain-transfer-ip-${idx}`}
               InputProps={{
                 'aria-label': `${title} ip-address-${idx}`,
                 ...props.inputProps,
               }}
-              value={thisIP.address}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, idx)
               }
-              onBlur={(e) => handleBlur(e, idx)}
+              className={classes.input}
               errorText={thisIP.error}
-              placeholder={placeholder}
               hideLabel
+              // Prevent unique ID errors, since TextField sets the input element's ID to the label
+              label={`domain-transfer-ip-${idx}`}
+              onBlur={(e) => handleBlur(e, idx)}
+              placeholder={placeholder}
+              value={thisIP.address}
             />
           </Grid>
           {/** Don't show the button for the first input since it won't do anything, unless this component is used in DBaaS */}
@@ -192,9 +193,9 @@ export const MultipleIPInput = React.memo((props: Props) => {
       ))}
       <Button
         buttonType="secondary"
-        onClick={addNewInput}
         className={classes.addIP}
         compactX
+        onClick={addNewInput}
       >
         Add an IP
       </Button>

@@ -1,7 +1,9 @@
-import ThirdPartyPayment from './ThirdPartyPayment';
+import * as React from 'react';
+
 import { paymentMethodFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import * as React from 'react';
+
+import ThirdPartyPayment from './ThirdPartyPayment';
 
 it('Displays credit card type and last four digits when payment method is Google Pay', () => {
   const googlePayPaymentMethod = paymentMethodFactory.build({
@@ -22,11 +24,11 @@ it('Displays credit card type and last four digits when payment method is Google
 
 it('Displays PayPal email address when payment method type is PayPal', () => {
   const payPalPaymentMethod = paymentMethodFactory.build({
-    is_default: false,
     data: {
-      paypal_id: '123456',
       email: 'testpaypaluser@example.com',
+      paypal_id: '123456',
     },
+    is_default: false,
     type: 'paypal',
   });
 

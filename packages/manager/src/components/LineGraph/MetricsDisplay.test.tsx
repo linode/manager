@@ -1,45 +1,46 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
 import {
-  metricsBySection,
   MetricsDisplay,
+  metricsBySection,
 } from 'src/components/LineGraph/MetricsDisplay';
+import { Typography } from 'src/components/Typography';
 import { light } from 'src/foundations/themes';
 import { formatPercentage } from 'src/utilities/statMetrics';
 
 describe('CPUMetrics', () => {
   const mockMetrics = {
-    max: 10,
     average: 5.5,
     last: 7.75,
-    total: 40,
     length: 3,
+    max: 10,
+    total: 40,
   };
 
   const wrapper = shallow(
     <MetricsDisplay
       classes={{
-        root: '',
-        legend: '',
-        red: '',
-        yellow: '',
         blue: 'blue',
-        green: '',
-        lightGreen: '',
         darkGreen: '',
-        text: '',
+        green: '',
+        legend: '',
+        lightGreen: '',
+        red: '',
+        root: '',
         tableHeadInner: '',
+        text: '',
+        yellow: '',
       }}
-      theme={light}
       rows={[
         {
-          legendTitle: 'Legend Title',
-          legendColor: 'blue',
           data: mockMetrics,
           format: formatPercentage,
+          legendColor: 'blue',
+          legendTitle: 'Legend Title',
         },
       ]}
+      theme={light}
     />
   );
 
@@ -80,16 +81,16 @@ describe('CPUMetrics', () => {
     wrapper.setProps({
       rows: [
         {
-          legendTitle: 'Legend Title 1',
-          legendColor: 'blue',
           data: mockMetrics,
           format: formatPercentage,
+          legendColor: 'blue',
+          legendTitle: 'Legend Title 1',
         },
         {
-          legendTitle: 'Legend Title 2',
-          legendColor: 'red',
-          data: { max: 80, average: 90, last: 100, total: 110 },
+          data: { average: 90, last: 100, max: 80, total: 110 },
           format: formatPercentage,
+          legendColor: 'red',
+          legendTitle: 'Legend Title 2',
         },
       ],
     });
@@ -98,7 +99,7 @@ describe('CPUMetrics', () => {
 });
 
 describe('metrics by section', () => {
-  const metrics = { max: 10, average: 5, last: 8, total: 80, length: 10 };
+  const metrics = { average: 5, last: 8, length: 10, max: 10, total: 80 };
   expect(metricsBySection(metrics)).toHaveLength(3);
   expect(metricsBySection(metrics)).toBeInstanceOf(Array);
   expect(metricsBySection(metrics)[0]).toEqual(metrics.max);

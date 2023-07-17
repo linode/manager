@@ -1,23 +1,24 @@
+import { Theme, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { Theme, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
 import { Box } from 'src/components/Box';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { sendEvent } from 'src/utilities/analytics';
 
 interface Props {
-  linodeStatus: string;
-  linodeId?: number;
   diskId?: number;
   label: string;
-  readOnly?: boolean;
+  linodeId?: number;
+  linodeStatus: string;
+  onDelete: () => void;
+  onImagize: () => void;
   onRename: () => void;
   onResize: () => void;
-  onImagize: () => void;
-  onDelete: () => void;
+  readOnly?: boolean;
 }
 
 export const LinodeDiskActionMenu = (props: Props) => {
@@ -26,14 +27,14 @@ export const LinodeDiskActionMenu = (props: Props) => {
   const history = useHistory();
 
   const {
-    linodeStatus,
-    readOnly,
-    linodeId,
     diskId,
-    onRename,
+    linodeId,
+    linodeStatus,
     onDelete,
-    onResize,
     onImagize,
+    onRename,
+    onResize,
+    readOnly,
   } = props;
 
   let _tooltip =
@@ -47,38 +48,38 @@ export const LinodeDiskActionMenu = (props: Props) => {
 
   const disabledProps = _tooltip
     ? {
-        tooltip: _tooltip,
         disabled: true,
+        tooltip: _tooltip,
       }
     : {};
 
   const actions: Action[] = [
     {
-      title: 'Rename',
-      onClick: onRename,
       disabled: readOnly,
+      onClick: onRename,
+      title: 'Rename',
       tooltip: readOnly ? _tooltip : '',
     },
     {
-      title: 'Resize',
       onClick: onResize,
+      title: 'Resize',
       ...disabledProps,
     },
     {
-      title: 'Imagize',
       onClick: onImagize,
+      title: 'Imagize',
       ...(readOnly ? disabledProps : {}),
     },
     {
-      title: 'Clone',
       onClick: () => {
         history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
       },
+      title: 'Clone',
       ...(readOnly ? disabledProps : {}),
     },
     {
-      title: 'Delete',
       onClick: onDelete,
+      title: 'Delete',
       ...disabledProps,
     },
   ];
@@ -87,25 +88,25 @@ export const LinodeDiskActionMenu = (props: Props) => {
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
-    <Box display="flex" justifyContent="flex-end" alignItems="center">
+    <Box alignItems="center" display="flex" justifyContent="flex-end">
       {!matchesSmDown &&
         inlineActions.map((action) => (
           <InlineMenuAction
-            key={action.title}
-            actionText={action.title}
-            onClick={action.onClick}
-            disabled={action.disabled}
-            tooltip={action.tooltip}
             tooltipAnalyticsEvent={
               action.title === 'Resize'
                 ? () =>
                     sendEvent({
-                      category: `Disk ${action.title} Flow`,
                       action: `Open:tooltip`,
+                      category: `Disk ${action.title} Flow`,
                       label: `${action.title} help icon tooltip`,
                     })
                 : undefined
             }
+            actionText={action.title}
+            disabled={action.disabled}
+            key={action.title}
+            onClick={action.onClick}
+            tooltip={action.tooltip}
           />
         ))}
       <ActionMenu

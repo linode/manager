@@ -1,33 +1,34 @@
-import * as React from 'react';
 import { SecurityQuestion } from '@linode/api-v4/lib/profile';
+import * as React from 'react';
+
 import Select, { Item } from 'src/components/EnhancedSelect';
-import InputLabel from 'src/components/core/InputLabel';
-import Typography from 'src/components/core/Typography';
 import { LinkButton } from 'src/components/LinkButton';
+import { Typography } from 'src/components/Typography';
+import InputLabel from 'src/components/core/InputLabel';
 
 interface Props {
-  questionResponse: SecurityQuestion | undefined;
+  index: number;
   isReadOnly?: boolean;
   onClickEdit: () => void;
   options: Item<number>[];
-  index: number;
+  questionResponse: SecurityQuestion | undefined;
   setFieldValue: (field: string, value: SecurityQuestion) => void;
 }
 
 export const Question = (props: Props) => {
   const {
-    questionResponse,
+    index,
     isReadOnly,
     onClickEdit,
     options,
-    index,
+    questionResponse,
     setFieldValue,
   } = props;
 
   const currentOption = questionResponse
     ? {
-        value: questionResponse.id,
         label: questionResponse.question,
+        value: questionResponse.id,
       }
     : undefined;
 
@@ -44,7 +45,7 @@ export const Question = (props: Props) => {
     return (
       <>
         <InputLabel>{label}</InputLabel>
-        <Typography variant="body1" style={{ fontSize: '0.875rem' }}>
+        <Typography style={{ fontSize: '0.875rem' }} variant="body1">
           {questionResponse?.question}
           <LinkButton onClick={onClickEdit} style={{ marginLeft: 10 }}>
             Edit
@@ -55,13 +56,13 @@ export const Question = (props: Props) => {
   }
   return (
     <Select
-      name={name}
-      label={label}
-      options={options}
-      placeholder="Select a question"
       defaultValue={currentOption}
       isClearable={false}
+      label={label}
+      name={name}
       onChange={onChange}
+      options={options}
+      placeholder="Select a question"
     />
   );
 };

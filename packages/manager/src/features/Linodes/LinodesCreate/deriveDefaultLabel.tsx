@@ -6,7 +6,7 @@ const MAX_LABEL_LENGTH = 28;
 // Only alpha-numeric chars, dashes, and underscores allowed by the API
 const labelRegex = /[^a-zA-Z0-9-_]/g;
 
-export type LabelArgTypes = string | null | undefined;
+export type LabelArgTypes = null | string | undefined;
 
 export const deriveDefaultLabel = (...args: LabelArgTypes[]): string => {
   const filtered = filter(Boolean)(args);

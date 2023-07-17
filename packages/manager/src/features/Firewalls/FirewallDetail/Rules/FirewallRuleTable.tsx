@@ -1,73 +1,49 @@
 import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles, useTheme } from '@mui/styles';
 import classNames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import {
   DragDropContext,
   Draggable,
-  Droppable,
   DropResult,
+  Droppable,
 } from 'react-beautiful-dnd';
+
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import { Button } from 'src/components/Button/Button';
-import Box from '@mui/material/Box';
-import { Hidden } from 'src/components/Hidden';
-import { makeStyles, useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { Hidden } from 'src/components/Hidden';
+import { Typography } from 'src/components/Typography';
 import {
   generateAddressesLabel,
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
 } from 'src/features/Firewalls/shared';
 import { capitalize } from 'src/utilities/capitalize';
+
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError, sortPortString } from './shared';
+
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-  undoButtonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignContent: 'center',
-    flexDirection: 'row',
-  },
-  undoButton: {
-    cursor: 'pointer',
-    backgroundColor: 'transparent',
-    border: 'none',
-  },
-  unmodified: {
-    backgroundColor: theme.bg.bgPaper,
-  },
-  highlight: {
-    backgroundColor: theme.bg.lightBlue1,
-  },
-  disabled: {
-    backgroundColor: 'rgba(247, 247, 247, 0.25)',
-    '& td': {
-      color: '#D2D3D4',
-    },
-  },
-  error: {
-    '& p': { color: theme.color.red },
+  addLabelButton: {
+    ...theme.applyLinkStyles,
   },
   button: {
     margin: '8px 0px',
+  },
+  disabled: {
+    '& td': {
+      color: '#D2D3D4',
+    },
+    backgroundColor: 'rgba(247, 247, 247, 0.25)',
   },
   dragIcon: {
     color: theme.color.grey8,
@@ -75,54 +51,81 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     top: 2,
   },
+  dragging: {
+    '& svg': {
+      color: theme.textColors.tableHeader,
+    },
+    border: `solid 0.5px ${theme.color.grey8}`,
+    boxShadow: '0 1px 1.5px 0 rgba(0, 0, 0, 0.15)',
+    display: 'table',
+  },
+  error: {
+    '& p': { color: theme.color.red },
+  },
+  footer: {
+    '&:before': {
+      content: '""',
+      display: 'block',
+      height: theme.spacing(),
+    },
+  },
+  header: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing(),
+    },
+  },
+  highlight: {
+    backgroundColor: theme.bg.lightBlue1,
+  },
   labelCol: {
     paddingLeft: 6,
   },
   ruleGrid: {
-    width: '100%',
     margin: 0,
-  },
-  ruleList: {
-    backgroundColor: theme.color.border3,
-    listStyle: 'none',
-    paddingLeft: 0,
     width: '100%',
-    margin: 0,
   },
   ruleHeaderRow: {
     backgroundColor: theme.bg.tableHeader,
     color: theme.textColors.tableHeader,
+    fontSize: '.875rem',
     fontWeight: 'bold',
     height: '46px',
-    fontSize: '.875rem',
+  },
+  ruleList: {
+    backgroundColor: theme.color.border3,
+    listStyle: 'none',
+    margin: 0,
+    paddingLeft: 0,
+    width: '100%',
   },
   ruleRow: {
     borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     color: theme.textColors.tableStatic,
   },
-  addLabelButton: {
-    ...theme.applyLinkStyles,
+  undoButton: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
   },
-  dragging: {
-    display: 'table',
-    border: `solid 0.5px ${theme.color.grey8}`,
-    boxShadow: '0 1px 1.5px 0 rgba(0, 0, 0, 0.15)',
-    '& svg': {
-      color: theme.textColors.tableHeader,
-    },
+  undoButtonContainer: {
+    alignContent: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
-  footer: {
-    '&:before': {
-      display: 'block',
-      content: '""',
-      height: theme.spacing(),
-    },
+  unmodified: {
+    backgroundColor: theme.bg.bgPaper,
   },
 }));
 
 const sxBox = {
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   width: '100%',
 };
 
@@ -131,17 +134,17 @@ const sxItemSpacing = {
 };
 
 interface RuleRow {
-  type: string;
-  label?: string | null;
-  description?: string | null;
   action?: string;
-  protocol: string;
-  ports: string;
   addresses: string;
-  id: number;
-  status: RuleStatus;
+  description?: null | string;
   errors?: FirewallRuleError[];
+  id: number;
+  label?: null | string;
   originalIndex: number;
+  ports: string;
+  protocol: string;
+  status: RuleStatus;
+  type: string;
 }
 
 // =============================================================================
@@ -152,34 +155,34 @@ interface RowActionHandlers {
   triggerCloneFirewallRule: (idx: number) => void;
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
-  triggerUndo: (idx: number) => void;
   triggerReorder: (startIdx: number, endIdx: number) => void;
+  triggerUndo: (idx: number) => void;
 }
 interface FirewallRuleTableProps extends RowActionHandlers {
   category: Category;
-  policy: FirewallPolicyType;
+  disabled: boolean;
   handlePolicyChange: (
     category: Category,
     newPolicy: FirewallPolicyType
   ) => void;
   openRuleDrawer: (category: Category, mode: FirewallRuleDrawerMode) => void;
+  policy: FirewallPolicyType;
   rulesWithStatus: ExtendedFirewallRule[];
-  disabled: boolean;
 }
 
 export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
   const {
     category,
+    disabled,
+    handlePolicyChange,
     openRuleDrawer,
     policy,
-    handlePolicyChange,
     rulesWithStatus,
-    disabled,
     triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
-    triggerUndo,
     triggerReorder,
+    triggerUndo,
   } = props;
 
   const classes = useStyles();
@@ -216,19 +219,19 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
         <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
         <Button
           buttonType="primary"
-          onClick={openDrawerForCreating}
           className={classes.button}
           disabled={disabled}
+          onClick={openDrawerForCreating}
         >
           Add an {capitalize(category)} Rule
         </Button>
       </div>
       <Box aria-label={`${category} Rules List`} className={classes.ruleGrid}>
         <Box
-          className={classes.ruleHeaderRow}
           aria-label={`${category} Rules List Headers`}
-          tabIndex={0}
+          className={classes.ruleHeaderRow}
           sx={sxBox}
+          tabIndex={0}
         >
           <Box
             sx={{
@@ -268,7 +271,6 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                 >
                   {rowData.length === 0 ? (
                     <Box
-                      data-testid={'table-row-empty'}
                       className={classNames(
                         classes.unmodified,
                         classes.ruleRow
@@ -281,32 +283,32 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                         padding: '8px',
                         width: '100%',
                       }}
+                      data-testid={'table-row-empty'}
                     >
                       <Box>{zeroRulesMessage}</Box>
                     </Box>
                   ) : (
                     rowData.map((thisRuleRow: RuleRow, index) => (
                       <Draggable
-                        key={thisRuleRow.id}
                         draggableId={String(thisRuleRow.id)}
                         index={index}
+                        key={thisRuleRow.id}
                       >
                         {(provided) => (
                           <li
-                            key={thisRuleRow.id}
-                            role="option"
-                            ref={provided.innerRef}
                             aria-label={
                               thisRuleRow.label ??
                               `firewall rule ${thisRuleRow.id}`
                             }
-                            aria-selected={false}
                             aria-roledescription={screenReaderMessage}
+                            aria-selected={false}
+                            key={thisRuleRow.id}
+                            ref={provided.innerRef}
+                            role="option"
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
                             <FirewallRuleTableRow
-                              disabled={disabled}
                               triggerCloneFirewallRule={
                                 triggerCloneFirewallRule
                               }
@@ -316,6 +318,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                               triggerOpenRuleDrawerForEditing={
                                 triggerOpenRuleDrawerForEditing
                               }
+                              disabled={disabled}
                               triggerUndo={triggerUndo}
                               {...thisRuleRow}
                             />
@@ -331,9 +334,9 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
           </DragDropContext>
           <PolicyRow
             category={category}
-            policy={policy}
             disabled={disabled}
             handlePolicyChange={onPolicyChange}
+            policy={policy}
           />
         </Box>
       </Box>
@@ -356,25 +359,25 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const {
-      id,
       action,
-      label,
-      protocol,
-      ports,
       addresses,
+      disabled,
+      errors,
+      id,
+      label,
+      originalIndex,
+      ports,
+      protocol,
       status,
       triggerCloneFirewallRule,
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing,
       triggerUndo,
-      errors,
-      disabled,
-      originalIndex,
     } = props;
 
     const actionMenuProps = {
-      idx: id,
       disabled: status === 'PENDING_DELETION' || disabled,
+      idx: id,
       triggerCloneFirewallRule,
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing,
@@ -382,45 +385,45 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
 
     return (
       <Box
-        key={id}
-        aria-label={label ?? `firewall rule ${id}`}
         className={classNames({
-          [classes.ruleGrid]: true,
-          [classes.ruleRow]: true,
-          // Highlight the row if it's been modified or reordered. ID is the
-          // current index, so if it doesn't match the original index we know
-          // that the rule has been moved.
-          [classes.unmodified]: status === 'NOT_MODIFIED',
+          [classes.disabled]: status === 'PENDING_DELETION' || disabled,
           [classes.highlight]:
             status === 'MODIFIED' || status === 'NEW' || originalIndex !== id,
-          [classes.disabled]: status === 'PENDING_DELETION' || disabled,
+          // Highlight the row if it's been modified or reordered. ID is the
+          // current index, so if it doesn't match the original index we know
+          [classes.ruleGrid]: true,
+          [classes.ruleRow]: true,
+          // that the rule has been moved.
+          [classes.unmodified]: status === 'NOT_MODIFIED',
         })}
         sx={{
           ...sxBox,
           fontSize: '0.875rem',
         }}
+        aria-label={label ?? `firewall rule ${id}`}
+        key={id}
       >
         <Box
-          aria-label={`Label: ${label}`}
           sx={{
             ...sxItemSpacing,
+            overflowWrap: 'break-word',
             paddingLeft: '8px',
             width: xsDown ? '50%' : '32%',
-            overflowWrap: 'break-word',
           }}
+          aria-label={`Label: ${label}`}
         >
           <DragIndicator
-            className={classes.dragIcon}
             aria-label="Drag indicator icon"
+            className={classes.dragIcon}
           />
           {label || (
             <button
-              className={classes.addLabelButton}
               style={{
                 color: disabled ? 'inherit' : '',
               }}
-              onClick={() => triggerOpenRuleDrawerForEditing(id)}
+              className={classes.addLabelButton}
               disabled={disabled}
+              onClick={() => triggerOpenRuleDrawerForEditing(id)}
             >
               Add a label
             </button>
@@ -462,12 +465,12 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             <div className={classes.undoButtonContainer}>
               <button
                 className={classNames({
-                  [classes.undoButton]: true,
                   [classes.highlight]: status !== 'PENDING_DELETION',
+                  [classes.undoButton]: true,
                 })}
-                onClick={() => triggerUndo(id)}
                 aria-label="Undo change to Firewall Rule"
                 disabled={disabled}
+                onClick={() => triggerUndo(id)}
               >
                 <Undo />
               </button>
@@ -484,9 +487,9 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
 
 interface PolicyRowProps {
   category: Category;
-  policy: FirewallPolicyType;
   disabled: boolean;
   handlePolicyChange: (newPolicy: FirewallPolicyType) => void;
+  policy: FirewallPolicyType;
 }
 
 const policyOptions: Item<FirewallPolicyType>[] = [
@@ -495,7 +498,7 @@ const policyOptions: Item<FirewallPolicyType>[] = [
 ];
 
 export const PolicyRow = React.memo((props: PolicyRowProps) => {
-  const { category, policy, disabled, handlePolicyChange } = props;
+  const { category, disabled, handlePolicyChange, policy } = props;
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -511,6 +514,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
   // Using a grid here to keep the Select and the helper text aligned
   // with the Action column.
   const sxBoxGrid = {
+    alignItems: 'center',
     backgroundColor: theme.bg.bgPaper,
     borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     color: theme.textColors.tableStatic,
@@ -519,9 +523,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     gridTemplateAreas: `'one two three four five'`,
     gridTemplateColumns: '32% 10% 10% 15% 120px',
     height: '40px',
-    alignItems: 'center',
     marginTop: '10px',
-    width: '100%',
     [theme.breakpoints.down('lg')]: {
       gridTemplateAreas: `'one two three four'`,
       gridTemplateColumns: '32% 15% 15% 120px',
@@ -530,13 +532,14 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
       gridTemplateAreas: `'one two'`,
       gridTemplateColumns: '50% 50%',
     },
+    width: '100%',
   };
 
   const sxBoxPolicyText = {
-    textAlign: 'right',
+    gridArea: '1 / 1 / 1 / 5',
     padding: '0px 15px 0px 15px',
 
-    gridArea: '1 / 1 / 1 / 5',
+    textAlign: 'right',
     [theme.breakpoints.down('lg')]: {
       gridArea: '1 / 1 / 1 / 4',
     },
@@ -560,18 +563,18 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
       <Box sx={sxBoxPolicyText}>{helperText}</Box>
       <Box sx={sxBoxPolicySelect}>
         <Select
-          label={`${category} policy`}
-          menuPlacement="top"
-          hideLabel
-          isClearable={false}
-          value={policyOptions.find(
-            (thisOption) => thisOption.value === policy
-          )}
-          options={policyOptions}
-          disabled={disabled}
           onChange={(selected: Item<FirewallPolicyType>) =>
             handlePolicyChange(selected.value)
           }
+          value={policyOptions.find(
+            (thisOption) => thisOption.value === policy
+          )}
+          disabled={disabled}
+          hideLabel
+          isClearable={false}
+          label={`${category} policy`}
+          menuPlacement="top"
+          options={policyOptions}
         />
       </Box>
     </Box>
@@ -579,15 +582,15 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
 });
 
 interface ConditionalErrorProps {
-  formField: string;
   errors?: FirewallRuleError[];
+  formField: string;
 }
 
 export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
   (props) => {
     const classes = useStyles();
 
-    const { formField, errors } = props;
+    const { errors, formField } = props;
 
     // It's possible to have multiple IP errors, but we only want to display ONE in the table row.
     const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
@@ -600,7 +603,7 @@ export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
             return null;
           }
           return (
-            <div key={thisError.idx} className={classes.error}>
+            <div className={classes.error} key={thisError.idx}>
               <Typography variant="body1">{thisError.reason}</Typography>
             </div>
           );
@@ -626,10 +629,10 @@ export const firewallRuleToRowData = (
 
     return {
       ...thisRule,
-      ports: sortPortString(thisRule.ports || ''),
-      type: generateRuleLabel(ruleType),
       addresses: generateAddressesLabel(thisRule.addresses),
       id: idx,
+      ports: sortPortString(thisRule.ports || ''),
+      type: generateRuleLabel(ruleType),
     };
   });
 };

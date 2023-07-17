@@ -1,37 +1,38 @@
 import {
-  getInvoiceItems,
   Invoice,
   InvoiceItem,
   Payment,
+  getInvoiceItems,
 } from '@linode/api-v4/lib/account';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
-import { TextTooltip } from 'src/components/TextTooltip';
+
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import InlineMenuAction from 'src/components/InlineMenuAction';
-import Link from 'src/components/Link';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import Grid from '@mui/material/Unstable_Grid2';
+import { TextTooltip } from 'src/components/TextTooltip';
+import { Typography } from 'src/components/Typography';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import useFlags from 'src/hooks/useFlags';
 import { useSet } from 'src/hooks/useSet';
 import { useAccount } from 'src/queries/account';
@@ -39,76 +40,79 @@ import {
   useAllAccountInvoices,
   useAllAccountPayments,
 } from 'src/queries/accountBilling';
+import { useProfile } from 'src/queries/profile';
 import { parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
+
 import { getTaxID } from '../../billingUtils';
-import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    padding: '8px 0',
+  activeSince: {
+    marginRight: theme.spacing(1.25),
+  },
+  dateColumn: {
+    width: '25%',
+  },
+  descriptionColumn: {
+    width: '25%',
+  },
+  flexContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
   },
   headerContainer: {
+    alignItems: 'center',
     backgroundColor: theme.color.white,
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
       alignItems: 'flex-start',
+      flexDirection: 'column',
     },
   },
   headerLeft: {
     display: 'flex',
+    flexGrow: 2,
     marginLeft: 10,
     paddingLeft: 20,
-    flexGrow: 2,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 0,
     },
   },
   headerRight: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     padding: 5,
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
       alignItems: 'flex-start',
+      flexDirection: 'column',
       marginLeft: 15,
       paddingLeft: 0,
     },
   },
-  flexContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   headline: {
     fontSize: '1rem',
-    marginTop: 8,
+    lineHeight: '1.5rem',
     marginBottom: 8,
     marginLeft: 15,
-    lineHeight: '1.5rem',
+    marginTop: 8,
   },
-  activeSince: {
-    marginRight: theme.spacing(1.25),
+  pdfDownloadColumn: {
+    '& > .loading': {
+      width: 115,
+    },
+    textAlign: 'right',
   },
-  transactionType: {
-    marginRight: theme.spacing(),
-    width: 200,
+  pdfError: {
+    color: theme.color.red,
   },
-  transactionDate: {
-    width: 130,
-  },
-  descriptionColumn: {
-    width: '25%',
-  },
-  dateColumn: {
-    width: '25%',
+  root: {
+    padding: '8px 0',
   },
   totalColumn: {
     [theme.breakpoints.up('md')]: {
@@ -116,26 +120,24 @@ const useStyles = makeStyles()((theme: Theme) => ({
       width: '10%',
     },
   },
-  pdfDownloadColumn: {
-    textAlign: 'right',
-    '& > .loading': {
-      width: 115,
-    },
+  transactionDate: {
+    width: 130,
   },
-  pdfError: {
-    color: theme.color.red,
+  transactionType: {
+    marginRight: theme.spacing(),
+    width: 200,
   },
 }));
 
 interface ActivityFeedItem {
+  date: string;
+  id: number;
   label: string;
   total: number;
-  date: string;
-  type: 'payment' | 'invoice';
-  id: number;
+  type: 'invoice' | 'payment';
 }
 
-type TransactionTypes = ActivityFeedItem['type'] | 'all';
+type TransactionTypes = 'all' | ActivityFeedItem['type'];
 const transactionTypeOptions: Item<TransactionTypes>[] = [
   { label: 'Invoices', value: 'invoice' },
   { label: 'Payments', value: 'payment' },
@@ -143,11 +145,11 @@ const transactionTypeOptions: Item<TransactionTypes>[] = [
 ];
 
 type DateRange =
+  | '6 Months'
+  | '12 Months'
   | '30 Days'
   | '60 Days'
   | '90 Days'
-  | '6 Months'
-  | '12 Months'
   | 'All Time';
 const transactionDateOptions: Item<DateRange>[] = [
   { label: '30 Days', value: '30 Days' },
@@ -208,14 +210,14 @@ export const BillingActivityPanel = (props: Props) => {
 
   const {
     data: payments,
-    isLoading: accountPaymentsLoading,
     error: accountPaymentsError,
+    isLoading: accountPaymentsLoading,
   } = useAllAccountPayments({}, filter);
 
   const {
     data: invoices,
-    isLoading: accountInvoicesLoading,
     error: accountInvoicesError,
+    isLoading: accountInvoicesLoading,
   } = useAllAccountInvoices({}, filter);
 
   const downloadInvoicePDF = React.useCallback(
@@ -239,10 +241,15 @@ export const BillingActivityPanel = (props: Props) => {
       pdfLoading.add(id);
 
       getAllInvoiceItems(invoiceId)
-        .then((invoiceItems) => {
+        .then(async (invoiceItems) => {
           pdfLoading.delete(id);
 
-          const result = printInvoice(account!, invoice, invoiceItems, taxes);
+          const result = await printInvoice(
+            account!,
+            invoice,
+            invoiceItems,
+            taxes
+          );
 
           if (result.status === 'error') {
             pdfErrors.add(id);
@@ -328,22 +335,22 @@ export const BillingActivityPanel = (props: Props) => {
     <Grid xs={12}>
       <div className={classes.root}>
         <div className={classes.headerContainer}>
-          <Typography variant="h2" className={classes.headline}>
+          <Typography className={classes.headline} variant="h2">
             {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
           </Typography>
           {isAkamaiCustomer ? (
             <div className={classes.headerLeft}>
               <TextTooltip
                 displayText="Usage History may not reflect finalized invoice"
-                tooltipText={AkamaiBillingInvoiceText}
                 sxTypography={{ paddingLeft: '4px' }}
+                tooltipText={AkamaiBillingInvoiceText}
               />
             </div>
           ) : null}
           <div className={classes.headerRight}>
             {accountActiveSince && (
               <div className={classes.flexContainer}>
-                <Typography variant="body1" className={classes.activeSince}>
+                <Typography className={classes.activeSince} variant="body1">
                   Account active since{' '}
                   {formatDate(accountActiveSince, {
                     displayTime: false,
@@ -354,51 +361,51 @@ export const BillingActivityPanel = (props: Props) => {
             )}
             <div className={classes.flexContainer}>
               <Select
-                className={classes.transactionType}
-                label="Transaction Types"
-                onChange={handleTransactionTypeChange}
                 value={
                   transactionTypeOptions.find(
                     (thisOption) => thisOption.value === selectedTransactionType
                   ) || null
                 }
+                className={classes.transactionType}
+                hideLabel
+                inline
                 isClearable={false}
                 isSearchable={false}
+                label="Transaction Types"
+                onChange={handleTransactionTypeChange}
                 options={transactionTypeOptions}
-                inline
                 small
-                hideLabel
               />
               <Select
-                className={classes.transactionDate}
-                label="Transaction Dates"
-                onChange={handleTransactionDateChange}
                 value={
                   transactionDateOptions.find(
                     (thisOption) => thisOption.value === selectedTransactionDate
                   ) || null
                 }
+                className={classes.transactionDate}
+                hideLabel
+                inline
                 isClearable={false}
                 isSearchable={false}
+                label="Transaction Dates"
+                onChange={handleTransactionDateChange}
                 options={transactionDateOptions}
-                inline
                 small
-                hideLabel
               />
             </div>
           </div>
         </div>
         <OrderBy
           data={selectedTransactionType === 'all' ? combinedData : filteredData}
-          orderBy={'date'}
           order={'desc'}
+          orderBy={'date'}
         >
           {React.useCallback(
             ({ data: orderedData }) => (
-              <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
+              <Paginate data={orderedData} pageSize={25} shouldScroll={false}>
                 {({
-                  data: paginatedAndOrderedData,
                   count,
+                  data: paginatedAndOrderedData,
                   handlePageChange,
                   handlePageSizeChange,
                   page,
@@ -422,13 +429,6 @@ export const BillingActivityPanel = (props: Props) => {
                       </TableHead>
                       <TableBody>
                         <TableContentWrapper
-                          loadingProps={{
-                            columns: 4,
-                          }}
-                          length={paginatedAndOrderedData.length}
-                          loading={
-                            accountPaymentsLoading || accountInvoicesLoading
-                          }
                           error={
                             accountPaymentsError || accountInvoicesError
                               ? [
@@ -439,11 +439,17 @@ export const BillingActivityPanel = (props: Props) => {
                                 ]
                               : undefined
                           }
+                          loading={
+                            accountPaymentsLoading || accountInvoicesLoading
+                          }
+                          loadingProps={{
+                            columns: 4,
+                          }}
+                          length={paginatedAndOrderedData.length}
                         >
                           {paginatedAndOrderedData.map((thisItem) => {
                             return (
                               <ActivityFeedItem
-                                key={`${thisItem.type}-${thisItem.id}`}
                                 downloadPDF={
                                   thisItem.type === 'invoice'
                                     ? downloadInvoicePDF
@@ -455,6 +461,7 @@ export const BillingActivityPanel = (props: Props) => {
                                 isLoading={pdfLoading.has(
                                   `${thisItem.type}-${thisItem.id}`
                                 )}
+                                key={`${thisItem.type}-${thisItem.id}`}
                                 {...thisItem}
                               />
                             );
@@ -464,11 +471,11 @@ export const BillingActivityPanel = (props: Props) => {
                     </Table>
                     <PaginationFooter
                       count={count}
+                      eventCategory="Billing Activity Table"
                       handlePageChange={handlePageChange}
                       handleSizeChange={handlePageSizeChange}
                       page={page}
                       pageSize={pageSize}
-                      eventCategory="Billing Activity Table"
                     />
                   </>
                 )}
@@ -509,13 +516,13 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
 
   const {
     date,
-    label,
-    total,
-    id,
-    type,
     downloadPDF,
     hasError,
+    id,
     isLoading,
+    label,
+    total,
+    type,
   } = props;
 
   const handleClick = React.useCallback(
@@ -528,9 +535,9 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   );
 
   const action = {
-    title: hasError ? 'Error. Click to try again.' : 'Download PDF',
     className: hasError ? classes.pdfError : '',
     onClick: handleClick,
+    title: hasError ? 'Error. Click to try again.' : 'Download PDF',
   };
 
   return (
@@ -552,8 +559,8 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
         <InlineMenuAction
           actionText={action.title}
           className={action.className}
-          onClick={action.onClick}
           loading={isLoading}
+          onClick={action.onClick}
         />
       </TableCell>
     </TableRow>
@@ -587,9 +594,9 @@ export const paymentToActivityFeedItem = (
   const total = Math.abs(usd);
 
   return {
-    label,
     date,
     id,
+    label,
     total,
     type: 'payment',
   };
@@ -637,8 +644,8 @@ export const getCutoffFromDateRange = (
  */
 export const makeFilter = (endDate?: string): any => {
   const filter: any = {
-    '+order_by': 'date',
     '+order': 'desc',
+    '+order_by': 'date',
   };
   if (endDate) {
     const filterEndDate = parseAPIDate(endDate);

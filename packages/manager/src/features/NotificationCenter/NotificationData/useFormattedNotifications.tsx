@@ -1,28 +1,30 @@
-import * as React from 'react';
-import RenderNotification from './RenderNotification';
-import Typography from 'src/components/core/Typography';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
-import { checkIfMaintenanceNotification } from './notificationUtils';
-import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { DateTime } from 'luxon';
-import { formatDate } from 'src/utilities/formatDate';
-import { Link } from 'src/components/Link';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { notificationContext as _notificationContext } from '../NotificationContext';
-import { NotificationItem } from '../NotificationSection';
-import { path } from 'ramda';
 import { Profile } from '@linode/api-v4';
-import { Region } from '@linode/api-v4/lib/regions';
-import { reportException } from 'src/exceptionReporting';
-import { styled } from '@mui/material/styles';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
 import {
   Notification,
   NotificationSeverity,
   NotificationType,
 } from '@linode/api-v4/lib/account';
+import { Region } from '@linode/api-v4/lib/regions';
+import { styled } from '@mui/material/styles';
+import { DateTime } from 'luxon';
+import { path } from 'ramda';
+import * as React from 'react';
+
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
+import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
+import { reportException } from 'src/exceptionReporting';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
+import { formatDate } from 'src/utilities/formatDate';
+
+import { notificationContext as _notificationContext } from '../NotificationContext';
+import { NotificationItem } from '../NotificationSection';
+import RenderNotification from './RenderNotification';
+import { checkIfMaintenanceNotification } from './notificationUtils';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
@@ -64,7 +66,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
      */
     return (
       !(thisNotification.type === 'payment_due' && dayOfMonth <= 3) &&
-      !['volume_migration_scheduled', 'volume_migration_imminent'].includes(
+      !['volume_migration_imminent', 'volume_migration_scheduled'].includes(
         thisNotification.type
       )
     );
@@ -72,15 +74,15 @@ export const useFormattedNotifications = (): NotificationItem[] => {
 
   if (volumeMigrationScheduledIsPresent && filteredNotifications) {
     filteredNotifications.push({
-      type: 'volume_migration_scheduled' as NotificationType,
+      body: null,
       entity: null,
-      when: null,
+      label: 'You have a scheduled Block Storage volume upgrade pending!',
       message:
         'You have pending volume migrations. Check the maintenance page for more details.',
-      label: 'You have a scheduled Block Storage volume upgrade pending!',
       severity: 'major',
+      type: 'volume_migration_scheduled' as NotificationType,
       until: null,
-      body: null,
+      when: null,
     });
   }
 
@@ -135,8 +137,8 @@ const interceptNotification = (
       <Typography>
         You have an{' '}
         <Link
-          to={`/support/tickets/${notification.entity?.id}`}
           onClick={onClose}
+          to={`/support/tickets/${notification.entity?.id}`}
         >
           important ticket
         </Link>{' '}
@@ -164,14 +166,14 @@ const interceptNotification = (
     const jsx = (
       <Typography>
         <Link
-          to={`/linodes/${notification?.entity?.id ?? ''}`}
           onClick={onClose}
+          to={`/linodes/${notification?.entity?.id ?? ''}`}
         >
           {notification?.entity?.label ?? 'One of your Linodes'}
         </Link>{' '}
         resides on a host that is pending critical maintenance. You should have
         received a{' '}
-        <Link to={'/support/tickets?type=open'} onClick={onClose}>
+        <Link onClick={onClose} to={'/support/tickets?type=open'}>
           support ticket
         </Link>{' '}
         that details how you will be affected. Please see the aforementioned
@@ -183,8 +185,8 @@ const interceptNotification = (
 
     return {
       ...notification,
+      jsx,
       label: `Maintenance Scheduled`,
-      severity: adjustSeverity(notification),
       message: notification.body
         ? linodeAttachedToNotification
           ? notification.body.replace(
@@ -193,7 +195,7 @@ const interceptNotification = (
             )
           : notification.body
         : notification.message,
-      jsx,
+      severity: adjustSeverity(notification),
     };
   }
 
@@ -202,7 +204,7 @@ const interceptNotification = (
     const jsx = (
       <Typography>
         You have a scheduled migration for{' '}
-        <Link to={`/linodes/${notification.entity?.id}`} onClick={onClose}>
+        <Link onClick={onClose} to={`/linodes/${notification.entity?.id}`}>
           {notification.entity?.label}
         </Link>
         , which will automatically execute on{' '}
@@ -223,7 +225,7 @@ const interceptNotification = (
     const jsx = (
       <Typography>
         You have a migration pending!{' '}
-        <Link to={`/linodes/${notification.entity?.id}`} onClick={onClose}>
+        <Link onClick={onClose} to={`/linodes/${notification.entity?.id}`}>
           {notification.entity?.label}
         </Link>{' '}
         must be offline before starting the migration.
@@ -289,13 +291,13 @@ const interceptNotification = (
     const jsx = (
       <Typography>
         <StyledLink
-          to="/account/billing"
           onClick={onClose}
           severity={notification.severity}
+          to="/account/billing"
         >
           {notification.message}
         </StyledLink>{' '}
-        <Link to="/account/billing/make-payment" onClick={onClose}>
+        <Link onClick={onClose} to="/account/billing/make-payment">
           Make a payment now.
         </Link>
       </Typography>
@@ -322,11 +324,11 @@ const interceptNotification = (
       <Typography>
         Attached Volumes are eligible for a free upgrade to NVMe-based Block
         Storage. Visit the{' '}
-        <Link to={'/account/maintenance/'} onClick={onClose}>
+        <Link onClick={onClose} to={'/account/maintenance/'}>
           Maintenance page
         </Link>{' '}
         to view scheduled upgrades or visit the{' '}
-        <Link to={'/volumes'} onClick={onClose}>
+        <Link onClick={onClose} to={'/volumes'}>
           Volumes page
         </Link>{' '}
         to begin self-service upgrades if available.
@@ -348,10 +350,10 @@ const interceptNotification = (
 const StyledLink = styled(Link)<Pick<Notification, 'severity'>>(
   ({ theme, ...props }) => ({
     ...(props.severity === 'critical' && {
-      color: `${theme.color.red} !important`,
       '&:hover': {
         textDecoration: `${theme.color.red} underline`,
       },
+      color: `${theme.color.red} !important`,
     }),
   })
 );
@@ -362,9 +364,9 @@ const formatNotificationForDisplay = (
   onClose: () => void,
   shouldIncludeInCount: boolean = true
 ): NotificationItem => ({
-  id: `notification-${idx}`,
   body: <RenderNotification notification={notification} onClose={onClose} />,
   countInTotal: shouldIncludeInCount,
+  id: `notification-${idx}`,
 });
 
 // For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.

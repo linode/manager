@@ -1,11 +1,14 @@
-import * as React from 'react';
-import Typography from 'src/components/core/Typography';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Typography } from 'src/components/Typography';
+
+import { PlansAvailabilityNotice } from '../PlansAvailabilityNotice';
 import { MetalNotice } from './MetalNotice';
 import { planTabInfoContent } from './utils';
-import { PlansAvailabilityNotice } from '../PlansAvailabilityNotice';
+
 import type { Region } from '@linode/api-v4';
-import { useTheme } from '@mui/material/styles';
 
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
@@ -33,29 +36,29 @@ export const PlanInformation = (props: PlanInformationProps) => {
     <>
       {planType === 'gpu' ? (
         <PlansAvailabilityNotice
-          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           hasSelectedRegion={hasSelectedRegion}
-          regionsData={regionsData || []}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           planType={planType}
+          regionsData={regionsData || []}
         />
       ) : null}
       {planType === 'metal' ? (
         <MetalNotice
-          hasDisabledClass={getDisabledClass('metal')}
           dataTestId="metal-notice"
+          hasDisabledClass={getDisabledClass('metal')}
         />
       ) : null}
       {planType === 'premium' ? (
         <PlansAvailabilityNotice
-          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           hasSelectedRegion={hasSelectedRegion}
-          regionsData={regionsData || []}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           planType={planType}
+          regionsData={regionsData || []}
         />
       ) : null}
       <Typography
         data-qa-prodedi
-        sx={{ marginTop: theme.spacing(1), marginBottom: theme.spacing(3) }}
+        sx={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }}
       >
         {planTabInfoContent[planType]?.typography}
       </Typography>

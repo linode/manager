@@ -1,33 +1,38 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import Dialog, { DialogProps } from 'src/components/core/Dialog';
 import DialogActions from 'src/components/core/DialogActions';
 import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    '& .MuiDialogTitle-root': {
-      marginBottom: 10,
+  actions: {
+    '& button': {
+      marginBottom: 0,
     },
+    justifyContent: 'flex-end',
+  },
+  dialogContent: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   error: {
     color: '#C44742',
     marginTop: theme.spacing(2),
   },
-  actions: {
-    justifyContent: 'flex-end',
-    '& button': {
-      marginBottom: 0,
+  root: {
+    '& .MuiDialogTitle-root': {
+      marginBottom: 10,
     },
   },
 }));
 
 export interface ConfirmationDialogProps extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
-  error?: string | JSX.Element;
+  error?: JSX.Element | string;
   onClose: () => void;
   title: string;
 }
@@ -35,7 +40,7 @@ export interface ConfirmationDialogProps extends DialogProps {
 export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   const { classes } = useStyles();
 
-  const { title, children, actions, error, onClose, ...dialogProps } = props;
+  const { actions, children, error, onClose, title, ...dialogProps } = props;
 
   return (
     <Dialog
@@ -45,15 +50,15 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
           onClose();
         }
       }}
-      className={classes.root}
       PaperProps={{ role: undefined }}
-      role="dialog"
-      data-qa-drawer
+      className={classes.root}
       data-qa-dialog
+      data-qa-drawer
       data-testid="drawer"
+      role="dialog"
     >
-      <DialogTitle title={title} onClose={onClose} />
-      <DialogContent data-qa-dialog-content className="dialog-content">
+      <DialogTitle onClose={onClose} title={title} />
+      <DialogContent className={classes.dialogContent} data-qa-dialog-content>
         {children}
         {error && (
           <DialogContentText className={`${classes.error} error-for-scroll`}>

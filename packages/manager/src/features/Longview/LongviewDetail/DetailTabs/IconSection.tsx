@@ -1,19 +1,21 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/longview/disk.svg';
 import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
 import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { IconTextLink } from 'src/components/IconTextLink/IconTextLink';
+import { Typography } from 'src/components/Typography';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { readableBytes } from 'src/utilities/unitConversions';
+
 import { LongviewPackage } from '../../request.types';
 import {
   getPackageNoticeText,
@@ -22,45 +24,45 @@ import {
 } from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  wrapHeader: {
-    wordBreak: 'break-all',
-  },
   headerSection: {
     marginBottom: `calc(${theme.spacing(3)} - 2)`,
   },
-  iconSection: {
-    marginBottom: `calc(${theme.spacing(2)} - 2)`,
-    '&:last-of-type': {
-      marginBottom: 0,
-    },
-  },
-  packageButton: {
-    fontSize: '0.875rem',
-    padding: 0,
-    '& svg': {
-      marginRight: 15,
-    },
-    '& g': {
-      stroke: theme.palette.primary.main,
-    },
-  },
-  packageStaticOuter: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  packageStaticIcon: {
-    marginRight: theme.spacing(1),
-  },
   iconItem: {
-    alignSelf: 'center',
-    marginLeft: 0,
     '& svg': {
       display: 'block',
       margin: '0 auto',
     },
+    alignSelf: 'center',
+    marginLeft: 0,
   },
   iconItemLast: {
     alignSelf: 'center',
+  },
+  iconSection: {
+    '&:last-of-type': {
+      marginBottom: 0,
+    },
+    marginBottom: `calc(${theme.spacing(2)} - 2)`,
+  },
+  packageButton: {
+    '& g': {
+      stroke: theme.palette.primary.main,
+    },
+    '& svg': {
+      marginRight: 15,
+    },
+    fontSize: '0.875rem',
+    padding: 0,
+  },
+  packageStaticIcon: {
+    marginRight: theme.spacing(1),
+  },
+  packageStaticOuter: {
+    alignItems: 'center',
+    display: 'flex',
+  },
+  wrapHeader: {
+    wordBreak: 'break-all',
   },
 }));
 
@@ -99,7 +101,7 @@ const IconSection: React.FC<Props> = (props) => {
     props.longviewClientData
   );
 
-  const uptime = pathOr<number | null>(
+  const uptime = pathOr<null | number>(
     null,
     ['Uptime'],
     props.longviewClientData
@@ -152,16 +154,16 @@ const IconSection: React.FC<Props> = (props) => {
   const storageInBytes = sumStorage(props.longviewClientData.Disk);
 
   return (
-    <Grid item xs={12} md={6} lg={3}>
+    <Grid item lg={3} md={6} xs={12}>
       <Grid
+        alignItems="flex-start"
+        className={classes.headerSection}
         container
         item
         wrap="nowrap"
-        alignItems="flex-start"
-        className={classes.headerSection}
       >
         <Grid item>
-          <Typography variant="h3" className={classes.wrapHeader}>
+          <Typography className={classes.wrapHeader} variant="h3">
             {props.client}
           </Typography>
           <Typography>{hostname}</Typography>
@@ -169,13 +171,13 @@ const IconSection: React.FC<Props> = (props) => {
         </Grid>
       </Grid>
       <Grid
+        alignItems="flex-start"
+        className={classes.iconSection}
         container
         item
         wrap="nowrap"
-        alignItems="flex-start"
-        className={classes.iconSection}
       >
-        <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
+        <Grid className={classes.iconItem} item md={2} sm={1} xs={2}>
           <ServerIcon />
         </Grid>
         <Grid item xs={10}>
@@ -185,13 +187,13 @@ const IconSection: React.FC<Props> = (props) => {
         </Grid>
       </Grid>
       <Grid
+        alignItems="center"
+        className={classes.iconSection}
         container
         item
         wrap="nowrap"
-        alignItems="center"
-        className={classes.iconSection}
       >
-        <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
+        <Grid className={classes.iconItem} item md={2} sm={1} xs={2}>
           <CPUIcon />
         </Grid>
         <Grid item xs={10}>
@@ -202,13 +204,13 @@ const IconSection: React.FC<Props> = (props) => {
         </Grid>
       </Grid>
       <Grid
+        alignItems="center"
+        className={classes.iconSection}
         container
         item
         wrap="nowrap"
-        alignItems="center"
-        className={classes.iconSection}
       >
-        <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
+        <Grid className={classes.iconItem} item md={2} sm={1} xs={2}>
           <RamIcon />
         </Grid>
         {convertedTotalMemory.value !== 0 && convertedTotalSwap.value !== 0 ? (
@@ -227,13 +229,13 @@ const IconSection: React.FC<Props> = (props) => {
         )}
       </Grid>
       <Grid
+        alignItems="center"
+        className={classes.iconSection}
         container
         item
         wrap="nowrap"
-        alignItems="center"
-        className={classes.iconSection}
       >
-        <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
+        <Grid className={classes.iconItem} item md={2} sm={1} xs={2}>
           <DiskIcon />
         </Grid>
 
@@ -257,33 +259,33 @@ const IconSection: React.FC<Props> = (props) => {
         )}
       </Grid>
       <Grid
+        alignItems="center"
+        className={classes.iconSection}
         container
         item
         wrap="nowrap"
-        alignItems="center"
-        className={classes.iconSection}
       >
         {packages && packages.length > 0 ? (
-          <Grid item xs={2} sm={1} md={2} className={classes.iconItemLast}>
+          <Grid className={classes.iconItemLast} item md={2} sm={1} xs={2}>
             <IconTextLink
-              className={classes.packageButton}
               SideIcon={PackageIcon}
+              className={classes.packageButton}
+              onClick={props.openPackageDrawer}
               text={packagesToUpdate}
               title={packagesToUpdate}
-              onClick={props.openPackageDrawer}
             >
               {packagesToUpdate}
             </IconTextLink>
           </Grid>
         ) : (
           <Grid
+            alignItems="center"
+            className={classes.packageStaticOuter}
             container
             item
             wrap="nowrap"
-            alignItems="center"
-            className={classes.packageStaticOuter}
           >
-            <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
+            <Grid className={classes.iconItem} item md={2} sm={1} xs={2}>
               <PackageIcon className={classes.packageStaticIcon} />
             </Grid>
             <Grid item xs={10}>

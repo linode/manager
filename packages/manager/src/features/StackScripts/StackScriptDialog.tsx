@@ -1,9 +1,10 @@
-import { getStackScript, StackScript } from '@linode/api-v4/lib/stackscripts';
+import { StackScript, getStackScript } from '@linode/api-v4/lib/stackscripts';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
-import { Dialog } from 'src/components/Dialog/Dialog';
+import { MapDispatchToProps, connect } from 'react-redux';
+
 import { CircleProgress } from 'src/components/CircleProgress';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
 import _StackScript from 'src/components/StackScript';
 import { ApplicationState } from 'src/store';
@@ -15,14 +16,14 @@ interface DispatchProps {
 }
 
 interface Props {
-  stackScriptId?: number;
   open: boolean;
+  stackScriptId?: number;
 }
 
 type CombinedProps = DispatchProps & Props;
 
 export const StackScriptDialog: React.FC<CombinedProps> = (props) => {
-  const { stackScriptId, open, closeDrawer } = props;
+  const { closeDrawer, open, stackScriptId } = props;
 
   const [stackScript, setStackScript] = React.useState<StackScript | undefined>(
     undefined
@@ -52,12 +53,12 @@ export const StackScriptDialog: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      title={title}
-      open={open}
-      onClose={closeDrawer}
-      fullWidth
       fullHeight
+      fullWidth
       maxWidth="md"
+      onClose={closeDrawer}
+      open={open}
+      title={title}
     >
       {loading ? (
         <CircleProgress />

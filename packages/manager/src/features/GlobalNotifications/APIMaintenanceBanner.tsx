@@ -1,8 +1,9 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import Typography from 'src/components/core/Typography';
+import * as React from 'react';
+
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 import { SuppliedMaintenanceData } from 'src/featureFlags';
 import { queryPresets } from 'src/queries/base';
 import { Maintenance, useMaintenanceQuery } from 'src/queries/statusPage';
@@ -63,9 +64,9 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
     return (
       <DismissibleBanner
         important
-        warning
-        preferenceKey={scheduledAPIMaintenance.id}
         key={scheduledAPIMaintenance.id}
+        preferenceKey={scheduledAPIMaintenance.id}
+        warning
       >
         <Stack>
           <Typography data-testid="scheduled-maintenance-banner">

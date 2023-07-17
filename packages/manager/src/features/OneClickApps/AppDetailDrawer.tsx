@@ -1,44 +1,40 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
-import { oneClickApps } from './oneClickApps';
 import Close from '@mui/icons-material/Close';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/core/Drawer';
-import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
+import { Typography } from 'src/components/Typography';
+import Drawer from 'src/components/core/Drawer';
 import { OCA } from 'src/features/OneClickApps/oneClickApps';
 import useFlags from 'src/hooks/useFlags';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
+
+import { oneClickApps } from './oneClickApps';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  logoContainer: {
-    height: 225,
-    padding: theme.spacing(2),
-    gap: theme.spacing(),
-  },
   appName: {
-    fontSize: '2.2rem',
-    fontFamily: theme.font.bold,
     color: '#fff !important',
+    fontFamily: theme.font.bold,
+    fontSize: '2.2rem',
     lineHeight: '2.5rem',
     textAlign: 'center',
   },
-  description: {
-    lineHeight: 1.5,
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  image: {
-    width: 50,
-  },
-  wrapLogo: {
-    marginLeft: `-${theme.spacing(3)}`,
-  },
-  wrapAppName: {
-    maxWidth: 'fit-content',
-    minWidth: 170,
+  button: {
+    '& :hover, & :focus, & :active': {
+      backgroundColor: 'unset !important',
+      color: 'white',
+    },
+    backgroundColor: 'unset !important',
+    borderRadius: '50%',
+    color: 'white',
+    margin: theme.spacing(2),
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: theme.spacing(2),
+    position: 'absolute',
   },
   container: {
     display: 'flex',
@@ -46,41 +42,47 @@ const useStyles = makeStyles((theme: Theme) => ({
     gap: theme.spacing(2),
     padding: theme.spacing(4),
   },
-  paper: {
-    width: 300,
-    [theme.breakpoints.up('sm')]: {
-      width: 480,
-    },
+  description: {
+    lineHeight: 1.5,
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
+  image: {
+    width: 50,
   },
   link: {
     fontSize: '0.875rem',
-    wordBreak: 'break-word',
     lineHeight: '24px',
+    wordBreak: 'break-word',
   },
-  button: {
-    position: 'absolute',
-    minWidth: 'auto',
-    minHeight: 'auto',
-    margin: theme.spacing(2),
+  logoContainer: {
+    gap: theme.spacing(),
+    height: 225,
     padding: theme.spacing(2),
-    color: 'white',
-    borderRadius: '50%',
-    backgroundColor: 'unset !important',
-    '& :hover, & :focus, & :active': {
-      color: 'white',
-      backgroundColor: 'unset !important',
+  },
+  paper: {
+    [theme.breakpoints.up('sm')]: {
+      width: 480,
     },
+    width: 300,
+  },
+  wrapAppName: {
+    maxWidth: 'fit-content',
+    minWidth: 170,
+  },
+  wrapLogo: {
+    marginLeft: `-${theme.spacing(3)}`,
   },
 }));
 
 interface Props {
-  stackScriptLabel: string;
-  open: boolean;
   onClose: () => void;
+  open: boolean;
+  stackScriptLabel: string;
 }
 
 export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
-  const { stackScriptLabel, open, onClose } = props;
+  const { onClose, open, stackScriptLabel } = props;
   const classes = useStyles();
   const { oneClickAppsDocsOverride } = useFlags();
 
@@ -114,16 +116,16 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
 
   return (
     <Drawer
-      open={open}
-      onClose={onClose}
       anchor="right"
       classes={{ paper: classes.paper }}
+      onClose={onClose}
+      open={open}
     >
       <Box display="flex" justifyContent="flex-end">
         <Button
+          aria-label="Close drawer"
           className={classes.button}
           onClick={onClose}
-          aria-label="Close drawer"
         >
           <Close />
         </Button>
@@ -131,39 +133,39 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
       {selectedApp ? (
         <>
           <Box
-            display="flex"
             alignItems="center"
-            justifyContent="center"
-            flexWrap="wrap"
             className={classes.logoContainer}
+            display="flex"
+            flexWrap="wrap"
+            justifyContent="center"
             style={gradient}
           >
             <img
-              className={classes.image}
               src={`/assets/white/${
                 REUSE_WHITE_ICONS[selectedApp?.logo_url] ||
                 selectedApp?.logo_url
               }`}
               alt={`${selectedApp.name} logo`}
+              className={classes.image}
             />
             <Typography
-              variant="h2"
-              className={classes.appName}
-              data-testid="app-name"
               dangerouslySetInnerHTML={{
                 __html: sanitizeHTML(selectedApp.name),
               }}
+              className={classes.appName}
+              data-testid="app-name"
+              variant="h2"
             />
           </Box>
           <Box className={classes.container}>
             <Box>
               <Typography variant="h3">{selectedApp.summary}</Typography>
               <Typography
-                variant="body1"
-                className={classes.description}
                 dangerouslySetInnerHTML={{
                   __html: sanitizeHTML(selectedApp.description),
                 }}
+                className={classes.description}
+                variant="body1"
               />
             </Box>
             {selectedApp.website ? (
@@ -171,9 +173,9 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                 <Typography variant="h3">Website</Typography>
                 <ExternalLink
                   className={classes.link}
+                  hideIcon
                   link={selectedApp.website}
                   text={selectedApp.website}
-                  hideIcon
                 />
               </Box>
             ) : null}
@@ -187,10 +189,10 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                   ).map((link, idx) => (
                     <ExternalLink
                       className={classes.link}
-                      key={`${selectedApp.name}-guide-${idx}`}
-                      text={link.title}
-                      link={link.href}
                       hideIcon
+                      key={`${selectedApp.name}-guide-${idx}`}
+                      link={link.href}
+                      text={link.title}
                     />
                   ))}
                 </Box>
@@ -202,8 +204,8 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                 <Box display="flex" flexDirection="column" style={{ gap: 6 }}>
                   {selectedApp.tips.map((tip, idx) => (
                     <Typography
-                      variant="body1"
                       key={`${selectedApp.name}-tip-${idx}`}
+                      variant="body1"
                     >
                       {tip}
                     </Typography>
@@ -215,11 +217,11 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
         </>
       ) : (
         <Box
+          alignItems="center"
           display="flex"
           flexDirection="column"
-          alignItems="center"
           justifyContent="center"
-          style={{ height: '100%', gap: 10 }}
+          style={{ gap: 10, height: '100%' }}
         >
           <Typography variant="h2">App Details Not Found</Typography>
           <Typography>

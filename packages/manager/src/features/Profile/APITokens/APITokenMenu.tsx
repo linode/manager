@@ -1,18 +1,19 @@
 import { Token } from '@linode/api-v4/lib/profile';
-import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {
-  token: Token;
-  type: string;
   isThirdPartyAccessToken: boolean;
-  openViewDrawer: (token: Token) => void;
   openEditDrawer: (token: Token) => void;
   openRevokeDialog: (token: Token, type: string) => void;
+  openViewDrawer: (token: Token) => void;
+  token: Token;
+  type: string;
 }
 
 export const APITokenMenu = (props: Props) => {
@@ -21,33 +22,33 @@ export const APITokenMenu = (props: Props) => {
 
   const {
     isThirdPartyAccessToken,
-    openViewDrawer,
     openEditDrawer,
     openRevokeDialog,
+    openViewDrawer,
     token,
     type,
   } = props;
 
   const actions = [
     {
-      title: 'View Scopes',
       onClick: () => {
         openViewDrawer(token);
       },
+      title: 'View Scopes',
     },
     !isThirdPartyAccessToken
       ? {
-          title: 'Rename',
           onClick: () => {
             openEditDrawer(token);
           },
+          title: 'Rename',
         }
       : null,
     {
-      title: 'Revoke',
       onClick: () => {
         openRevokeDialog(token, type);
       },
+      title: 'Revoke',
     },
   ].filter(Boolean) as Action[];
 
@@ -64,8 +65,8 @@ export const APITokenMenu = (props: Props) => {
     <>
       {actions.map((action) => (
         <InlineMenuAction
-          key={action.title}
           actionText={action.title}
+          key={action.title}
           onClick={action.onClick}
         />
       ))}

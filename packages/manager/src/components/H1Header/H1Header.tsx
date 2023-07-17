@@ -1,6 +1,7 @@
-import * as React from 'react';
 import { SxProps } from '@mui/system';
-import Typography from 'src/components/core/Typography';
+import * as React from 'react';
+
+import { Typography } from 'src/components/Typography';
 
 interface H1HeaderProps {
   className?: string;
@@ -25,17 +26,17 @@ export const H1Header = (props: H1HeaderProps) => {
 
   return (
     <Typography
-      className={className}
-      component={renderAsSecondary ? 'h2' : 'h1'}
-      data-qa-header={dataQaEl ? dataQaEl : ''}
-      ref={renderAsSecondary ? null : h1Header} // If we're rendering as an h2, we want to remove the autofocus functionality
-      tabIndex={0}
       sx={{
         '&:focus': {
           outline: 'none',
         },
         ...sx,
       }}
+      className={className}
+      component={renderAsSecondary ? 'h2' : 'h1'}
+      data-qa-header={dataQaEl ? dataQaEl : ''}
+      ref={renderAsSecondary ? null : h1Header} // If we're rendering as an h2, we want to remove the autofocus functionality
+      tabIndex={0}
       variant="h1"
     >
       {title}

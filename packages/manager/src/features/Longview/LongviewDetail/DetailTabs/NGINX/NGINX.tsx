@@ -1,14 +1,16 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
-import { Box } from 'src/components/Box';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
+
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
@@ -40,11 +42,11 @@ export const NGINX: React.FC<Props> = (props) => {
 
   const [version, setVersion] = React.useState<string | undefined>();
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    start: 0,
     end: 0,
+    start: 0,
   });
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['nginx'],
     clientAPIKey,
     time.start,
@@ -80,7 +82,7 @@ export const NGINX: React.FC<Props> = (props) => {
   }, [time, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const handleStatsChange = (start: number, end: number) => {
-    setTimeBox({ start, end });
+    setTimeBox({ end, start });
   };
 
   const nginx = data.Applications?.Nginx;
@@ -109,10 +111,10 @@ export const NGINX: React.FC<Props> = (props) => {
       <DocumentTitleSegment segment={'NGINX'} />
       <Grid item xs={12}>
         <Box
+          alignItems="center"
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
-          alignItems="center"
         >
           <div>
             <Typography className={classes.title} variant="h2">
@@ -121,27 +123,27 @@ export const NGINX: React.FC<Props> = (props) => {
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
           <TimeRangeSelect
-            small
             className={classes.root}
-            handleStatsChange={handleStatsChange}
             defaultValue="Past 30 Minutes"
-            label="Select Time Range"
+            handleStatsChange={handleStatsChange}
             hideLabel
+            label="Select Time Range"
+            small
           />
         </Box>
       </Grid>
-      <Grid item xs={12} className="py0">
+      <Grid className="py0" item xs={12}>
         <NGINXGraphs
           data={data?.Applications?.Nginx}
-          processesData={nginxProcesses.data?.Processes ?? {}}
-          processesLoading={nginxProcesses.loading}
-          processesError={nginxProcesses.error}
+          end={time.end}
+          error={lastUpdatedError?.[0]?.reason || error}
           isToday={isToday}
           loading={loading}
-          error={lastUpdatedError?.[0]?.reason || error}
-          timezone={timezone}
+          processesData={nginxProcesses.data?.Processes ?? {}}
+          processesError={nginxProcesses.error}
+          processesLoading={nginxProcesses.loading}
           start={time.start}
-          end={time.end}
+          timezone={timezone}
         />
       </Grid>
     </Grid>

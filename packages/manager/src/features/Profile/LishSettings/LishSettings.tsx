@@ -1,22 +1,23 @@
+import { Profile } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
+import { useTheme } from '@mui/material/styles';
+import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import FormControl from 'src/components/core/FormControl';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import Paper from 'src/components/core/Paper';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
-import { APIError } from '@linode/api-v4/lib/types';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { equals, lensPath, remove, set } from 'ramda';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
-import { Profile } from '@linode/api-v4/lib/profile';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import FormControl from 'src/components/core/FormControl';
+import Paper from 'src/components/core/Paper';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { useTheme } from '@mui/material/styles';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 export const LishSettings = () => {
   const theme = useTheme();
@@ -40,8 +41,8 @@ export const LishSettings = () => {
     : '';
   const hasErrorFor = getAPIErrorFor(
     {
-      lish_auth_method: 'authentication method',
       authorized_keys: 'ssh public keys',
+      lish_auth_method: 'authentication method',
     },
     errors
   );
@@ -51,9 +52,9 @@ export const LishSettings = () => {
 
   const modeOptions = [
     {
+      isDisabled: profile?.authentication_type !== 'password',
       label: 'Allow both password and key authentication',
       value: 'password_keys',
-      isDisabled: profile?.authentication_type !== 'password',
     },
     {
       label: 'Allow key authentication only',
@@ -83,8 +84,8 @@ export const LishSettings = () => {
     setSubmitting(false);
 
     updateProfile({
-      lish_auth_method: lishAuthMethod as any,
       authorized_keys: keys,
+      lish_auth_method: lishAuthMethod as any,
     })
       .then((profileData) => {
         setSubmitting(false);
@@ -131,6 +132,12 @@ export const LishSettings = () => {
           <>
             <FormControl sx={{ display: 'flex' }}>
               <Select
+                textFieldProps={{
+                  dataAttrs: {
+                    'data-qa-mode-select': true,
+                  },
+                  tooltipText,
+                }}
                 defaultValue={defaultMode}
                 errorText={authMethodError}
                 id="mode-select"
@@ -139,35 +146,28 @@ export const LishSettings = () => {
                 name="mode-select"
                 onChange={onListAuthMethodChange as any}
                 options={modeOptions}
-                textFieldProps={{
-                  dataAttrs: {
-                    'data-qa-mode-select': true,
-                  },
-                  tooltipText,
-                }}
               />
             </FormControl>
             {Array.from(Array(authorizedKeysCount)).map((value, idx) => (
               <Box key={idx} sx={{ margin: `${theme.spacing(1)} 0` }}>
                 <TextField
+                  sx={{
+                    [theme.breakpoints.up('md')]: {
+                      minWidth: 415,
+                    },
+                  }}
                   data-qa-public-key
                   key={idx}
                   label="SSH Public Key"
                   multiline
                   onChange={onPublicKeyChange(idx)}
                   rows={1.75}
-                  sx={{
-                    [theme.breakpoints.up('md')]: {
-                      minWidth: 415,
-                    },
-                  }}
                   value={authorizedKeys[idx] || ''}
                 />
                 {(idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
                 idx > 0 ? (
                   <Button
                     buttonType="outlined"
-                    compactX
                     data-qa-remove
                     onClick={onPublicKeyRemove(idx)}
                     sx={{ marginTop: theme.spacing() }}
@@ -182,7 +182,6 @@ export const LishSettings = () => {
             </Typography>
             <Button
               buttonType="outlined"
-              compactX
               onClick={addSSHPublicKeyField}
               sx={{ marginTop: theme.spacing() }}
             >
@@ -192,12 +191,12 @@ export const LishSettings = () => {
         )}
         <ActionsPanel>
           <Button
-            buttonType="primary"
-            data-qa-save
             disabled={
               lishAuthMethod === profile?.lish_auth_method &&
               equals(authorizedKeys, profile?.authorized_keys)
             }
+            buttonType="primary"
+            data-qa-save
             loading={submitting}
             onClick={onSubmit}
           >

@@ -1,67 +1,67 @@
-import React, { useMemo, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import React, { useEffect, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
+import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Tabs from 'src/components/core/ReachTabs';
+import { Typography } from 'src/components/Typography';
 import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import useEvents from 'src/hooks/useEvents';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
 import generateCurlCommand from 'src/utilities/generate-cURL';
 import generateCLICommand from 'src/utilities/generate-cli';
 
-import useEvents from 'src/hooks/useEvents';
-
 import CodeBlock from '../CodeBlock';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  guides: {
-    marginTop: 16,
-  },
-  modalIntroTypoClass: {
-    paddingBottom: '6px',
-  },
-  modalContent: {
-    overflowX: 'hidden',
-    paddingBottom: '0px',
-  },
-  tabsStyles: {
-    marginTop: '14px',
-  },
-  tabsContainer: {
-    paddingTop: theme.spacing(),
-  },
   actionPanelStyles: {
     marginTop: '18px !important',
     paddingBottom: 0,
     paddingTop: 0,
   },
+  guides: {
+    marginTop: 16,
+  },
+  modalContent: {
+    overflowX: 'hidden',
+    paddingBottom: '0px',
+  },
+  modalIntroTypoClass: {
+    paddingBottom: '6px',
+  },
   otherTools: {
     fontFamily: theme.font.bold,
-    fontWeight: 400,
     fontSize: '14px !important',
+    fontWeight: 400,
   },
   tabDescription: {
     marginTop: theme.spacing(2),
+  },
+  tabsContainer: {
+    paddingTop: theme.spacing(),
+  },
+  tabsStyles: {
+    marginTop: '14px',
   },
 }));
 
 export interface Props {
   isOpen: boolean;
   onClose: () => void;
-  route: string;
   payLoad: CreateLinodeRequest;
+  route: string;
 }
 
 const ApiAwarenessModal = (props: Props) => {
-  const { isOpen, onClose, route, payLoad } = props;
+  const { isOpen, onClose, payLoad, route } = props;
 
   const classes = useStyles();
   const history = useHistory();
@@ -85,14 +85,14 @@ const ApiAwarenessModal = (props: Props) => {
 
   const tabs = [
     {
+      routeName: route,
       title: 'cURL',
       type: 'API',
-      routeName: route,
     },
     {
+      routeName: route,
       title: 'Linode CLI',
       type: 'CLI',
-      routeName: route,
     },
   ];
 
@@ -110,13 +110,13 @@ const ApiAwarenessModal = (props: Props) => {
   return (
     <Dialog
       className={classes.modalContent}
-      title="Create Linode"
-      open={isOpen}
-      onClose={onClose}
-      maxWidth="sm"
       fullWidth
+      maxWidth="sm"
+      onClose={onClose}
+      open={isOpen}
+      title="Create Linode"
     >
-      <Typography variant="body1" className={classes.modalIntroTypoClass}>
+      <Typography className={classes.modalIntroTypoClass} variant="body1">
         Create a Linode in the command line using either cURL or the Linode CLI
         — both of which are powered by the Linode API. Select one of the methods
         below and paste the corresponding command into your local terminal. The
@@ -124,29 +124,27 @@ const ApiAwarenessModal = (props: Props) => {
         the Cloud Manager create form.
       </Typography>
       <Tabs
+        className={classes.tabsContainer}
         defaultIndex={0}
         onChange={handleTabChange}
-        className={classes.tabsContainer}
       >
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
-            <Typography variant="body1" className={classes.tabDescription}>
+            <Typography className={classes.tabDescription} variant="body1">
               Most Linode API requests need to be authenticated with a valid{' '}
               <ExternalLink
-                text="personal access token"
-                link="/profile/tokens"
                 onClick={() =>
                   sendApiAwarenessClickEvent('link', 'personal access token')
                 }
                 hideIcon
+                link="/profile/tokens"
+                text="personal access token"
               />
               . The command below assumes that your personal access token has
               been stored within the TOKEN shell variable. For more information,
               see{' '}
               <ExternalLink
-                text="Get Started with the Linode API"
-                link="https://www.linode.com/docs/products/tools/api/get-started/"
                 onClick={() =>
                   sendApiAwarenessClickEvent(
                     'link',
@@ -154,22 +152,24 @@ const ApiAwarenessModal = (props: Props) => {
                   )
                 }
                 hideIcon
+                link="https://www.linode.com/docs/products/tools/api/get-started/"
+                text="Get Started with the Linode API"
               />{' '}
               and{' '}
               <ExternalLink
-                text="Linode API Guides"
-                link="https://www.linode.com/docs/products/tools/api/guides/"
                 onClick={() =>
                   sendApiAwarenessClickEvent('link', 'Linode API Guides')
                 }
                 hideIcon
+                link="https://www.linode.com/docs/products/tools/api/guides/"
+                text="Linode API Guides"
               />
               .
             </Typography>
             <CodeBlock
               command={curlCommand}
-              language={'bash'}
               commandType={tabs[0].title}
+              language={'bash'}
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
@@ -177,8 +177,6 @@ const ApiAwarenessModal = (props: Props) => {
               Before running the command below, the Linode CLI needs to be
               installed and configured on your system. See the{' '}
               <ExternalLink
-                text="Install and Configure the Linode CLI"
-                link="https://www.linode.com/docs/products/tools/cli/guides/install/"
                 onClick={() =>
                   sendApiAwarenessClickEvent(
                     'link',
@@ -186,23 +184,25 @@ const ApiAwarenessModal = (props: Props) => {
                   )
                 }
                 hideIcon
+                link="https://www.linode.com/docs/products/tools/cli/guides/install/"
+                text="Install and Configure the Linode CLI"
               />{' '}
               guide for instructions. To learn more and to use the Linode CLI
               for tasks, review additional{' '}
               <ExternalLink
-                text="Linode CLI Guides"
-                link="https://www.linode.com/docs/products/tools/cli/guides/"
                 onClick={() =>
                   sendApiAwarenessClickEvent('link', 'Linode CLI Guides')
                 }
                 hideIcon
+                link="https://www.linode.com/docs/products/tools/cli/guides/"
+                text="Linode CLI Guides"
               />
               .
             </Typography>
             <CodeBlock
               command={cliCommand}
-              language={'bash'}
               commandType={tabs[1].title}
+              language={'bash'}
             />
           </SafeTabPanel>
         </TabPanels>
@@ -211,28 +211,28 @@ const ApiAwarenessModal = (props: Props) => {
         <Typography className={classes.otherTools}>
           Deploy and manage your infrastructure with the{' '}
           <ExternalLink
-            text="Linode Terraform Provider"
-            link="https://www.linode.com/products/linode-terraform-provider/"
             onClick={() =>
               sendApiAwarenessClickEvent('link', 'Linode Terraform Provider')
             }
             hideIcon
+            link="https://www.linode.com/products/linode-terraform-provider/"
+            text="Linode Terraform Provider"
           />{' '}
           and{' '}
           <ExternalLink
-            text="Ansible Collection"
-            link="https://www.linode.com/products/linode-ansible-collection/"
             onClick={() =>
               sendApiAwarenessClickEvent('link', 'Ansible Collection')
             }
             hideIcon
+            link="https://www.linode.com/products/linode-ansible-collection/"
+            text="Ansible Collection"
           />
           .{' '}
           <ExternalLink
-            text="View all tools"
+            hideIcon
             link="https://www.linode.com/docs/products/tools/api/developers/"
             onClick={() => sendApiAwarenessClickEvent('link', 'View all tools')}
-            hideIcon
+            text="View all tools"
           />{' '}
           with programmatic access to the Linode platform.
         </Typography>
@@ -240,9 +240,9 @@ const ApiAwarenessModal = (props: Props) => {
       <StyledActionPanel className={classes.actionPanelStyles}>
         <Button
           buttonType="secondary"
-          onClick={onClose}
-          data-testid="close-button"
           compactX
+          data-testid="close-button"
+          onClick={onClose}
         >
           Close
         </Button>

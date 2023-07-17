@@ -1,56 +1,73 @@
-import classNames from 'classnames';
-import { downloadFile } from 'src/utilities/downloadFile';
-import * as React from 'react';
-import FileDownload from 'src/assets/icons/download.svg';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import ToolTip from 'src/components/core/Tooltip';
+import { makeStyles } from '@mui/styles';
+import classNames from 'classnames';
+import * as React from 'react';
+
+import FileDownload from 'src/assets/icons/download.svg';
+import { Tooltip } from 'src/components/Tooltip';
+import { Typography } from 'src/components/Typography';
+import { downloadFile } from 'src/utilities/downloadFile';
 
 interface Props {
-  text: string;
+  /**
+   * Optional styles to be applied to the underlying button
+   */
   className?: string;
+  /**
+   * Optional text to show beside the download icon
+   */
   displayText?: string;
-  onClickCallback?: () => void;
+  /**
+   * The filename of the downloaded file. `.txt` is automatically appended.
+   */
   fileName: string;
+  /**
+   * Optional callback function that is called when the download button is clicked
+   */
+  onClickCallback?: () => void;
+  /**
+   * The text to be downloaded.
+   * It is also used in the `name` and `aria-label` of the underlying button.
+   */
+  text: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    position: 'relative',
-    padding: 4,
-    backgroundColor: 'transparent',
-    transition: theme.transitions.create(['background-color']),
-    borderRadius: 4,
-    border: 'none',
-    cursor: 'pointer',
-    color: theme.color.grey1,
-    '& svg': {
-      transition: theme.transitions.create(['color']),
-      color: theme.color.grey1,
-      margin: 0,
-      position: 'relative',
-      width: 20,
-      height: 20,
-    },
-    '&:hover': {
-      backgroundColor: theme.color.white,
-    },
+  displayText: {
+    color: theme.textColors.linkActiveLight,
+    marginLeft: 6,
   },
   flex: {
     display: 'flex',
     width: 'auto !important',
   },
-  displayText: {
-    color: theme.textColors.linkActiveLight,
-    marginLeft: 6,
+  root: {
+    '& svg': {
+      color: theme.color.grey1,
+      height: 20,
+      margin: 0,
+      position: 'relative',
+      transition: theme.transitions.create(['color']),
+      width: 20,
+    },
+    '&:hover': {
+      backgroundColor: theme.color.white,
+    },
+    backgroundColor: 'transparent',
+    border: 'none',
+    borderRadius: 4,
+    color: theme.color.grey1,
+    cursor: 'pointer',
+    padding: 4,
+    position: 'relative',
+    transition: theme.transitions.create(['background-color']),
   },
 }));
 
-export const DownloadTooltip: React.FC<Props> = (props) => {
+export const DownloadTooltip = (props: Props) => {
   const classes = useStyles();
 
-  const { text, className, displayText, onClickCallback, fileName } = props;
+  const { className, displayText, fileName, onClickCallback, text } = props;
 
   const handleIconClick = () => {
     downloadFile(`${fileName}.txt`, text);
@@ -60,24 +77,22 @@ export const DownloadTooltip: React.FC<Props> = (props) => {
   };
 
   return (
-    <ToolTip title="Download" placement="top" data-qa-copied>
+    <Tooltip data-qa-copied placement="top" title="Download">
       <button
+        className={classNames(className, {
+          [classes.flex]: Boolean(displayText),
+          [classes.root]: true,
+        })}
         aria-label={`Download ${text}`}
         name={text}
-        type="button"
         onClick={handleIconClick}
-        className={classNames(className, {
-          [classes.root]: true,
-          [classes.flex]: Boolean(displayText),
-        })}
+        type="button"
       >
         <FileDownload />
         {displayText && (
           <Typography className={classes.displayText}>{displayText}</Typography>
         )}
       </button>
-    </ToolTip>
+    </Tooltip>
   );
 };
-
-export default DownloadTooltip;

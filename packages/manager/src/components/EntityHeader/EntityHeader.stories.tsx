@@ -1,12 +1,15 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Button } from '../Button/Button';
-import Link from '../Link';
+import React from 'react';
+
 import { Box } from 'src/components/Box';
+import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+
+import { Button } from '../Button/Button';
+import { Link } from '../Link';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const sxBoxFlex = {
   alignItems: 'center',
@@ -14,8 +17,6 @@ const sxBoxFlex = {
 };
 
 const meta: Meta<typeof EntityHeader> = {
-  title: 'Components/EntityHeader',
-  component: EntityHeader,
   argTypes: {
     title: {
       table: {
@@ -24,6 +25,8 @@ const meta: Meta<typeof EntityHeader> = {
     },
   },
   args: {},
+  component: EntityHeader,
+  title: 'Components/EntityHeader',
 };
 
 export default meta;
@@ -32,21 +35,21 @@ type Story = StoryObj<typeof EntityHeader>;
 
 export const Default: Story = {
   args: {
+    isSummaryView: true,
     title: <Link to={`linodes/1234`}>linode-001</Link>,
     variant: 'h2',
-    isSummaryView: true,
   },
   render: (args) => {
     const sxActionItem = {
+      '&:hover': {
+        backgroundColor: '#3683dc',
+        color: '#fff',
+      },
       color: '#2575d0',
       fontFamily: '"LatoWeb", sans-serif',
       fontSize: '0.875rem',
       height: '34px',
       minWidth: 'auto',
-      '&:hover': {
-        backgroundColor: '#3683dc',
-        color: '#fff',
-      },
     };
 
     return (
@@ -68,46 +71,46 @@ export const Default: Story = {
           <LinodeActionMenu
             linodeBackups={{
               enabled: true,
+              last_successful: '2021-03-27T18:00:00',
               schedule: {
                 day: 'Saturday',
                 window: 'W0',
               },
-              last_successful: '2021-03-27T18:00:00',
+            }}
+            linodeType={{
+              addons: {
+                backups: {
+                  price: {
+                    hourly: 0.0015,
+                    monthly: 5,
+                  },
+                },
+              },
+              class: 'standard',
+              disk: 81920,
+              gpus: 0,
+              id: 'g6-standard-2',
+              label: 'Linode 2GB',
+              memory: 2048,
+              network_out: 125,
+              price: {
+                hourly: 0.0075,
+                monthly: 20,
+              },
+              successor: 'g6-standard-1',
+              transfer: 2000,
+              vcpus: 1,
             }}
             linodeId={12434}
             linodeLabel="linode-001"
             linodeRegion="us-east"
             linodeStatus="running"
-            linodeType={{
-              addons: {
-                backups: {
-                  price: {
-                    monthly: 5,
-                    hourly: 0.0015,
-                  },
-                },
-              },
-              transfer: 2000,
-              network_out: 125,
-              gpus: 0,
-              price: {
-                monthly: 20,
-                hourly: 0.0075,
-              },
-              class: 'standard',
-              successor: 'g6-standard-1',
-              disk: 81920,
-              id: 'g6-standard-2',
-              label: 'Linode 2GB',
-              memory: 2048,
-              vcpus: 1,
-            }}
-            onOpenPowerDialog={action('onOpenPowerDialog')}
             onOpenDeleteDialog={action('onOpenDeleteDialog')}
-            onOpenResizeDialog={action('onOpenResizeDialog')}
+            onOpenMigrateDialog={action('onOpenMigrateDialog')}
+            onOpenPowerDialog={action('onOpenPowerDialog')}
             onOpenRebuildDialog={action('onOpenRebuildDialog')}
             onOpenRescueDialog={action('onOpenRescueDialog')}
-            onOpenMigrateDialog={action('onOpenMigrateDialog')}
+            onOpenResizeDialog={action('onOpenResizeDialog')}
           />
         </Box>
       </EntityHeader>

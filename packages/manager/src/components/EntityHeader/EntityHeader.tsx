@@ -1,12 +1,13 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Typography, TypographyProps } from 'src/components/Typography';
 
 export interface HeaderProps {
   children?: React.ReactNode;
   isSummaryView?: boolean;
-  title?: string | JSX.Element;
+  title?: JSX.Element | string;
   variant?: TypographyProps['variant'];
 }
 
@@ -19,7 +20,7 @@ export const EntityHeader = ({
   return (
     <Wrapper>
       {isSummaryView ? (
-        <Typography variant={variant} sx={sxTypography}>
+        <Typography sx={sxTypography} variant={variant}>
           {title}
         </Typography>
       ) : null}
@@ -47,13 +48,13 @@ const Wrapper = styled('div', {
   display: 'flex',
   justifyContent: 'space-between',
   margin: 0,
-  width: '100%',
   [theme.breakpoints.down('sm')]: {
     flexWrap: 'wrap',
   },
+  width: '100%',
 }));
 
 const sxTypography = {
-  whiteSpace: 'nowrap',
   padding: 1,
+  whiteSpace: 'nowrap',
 };

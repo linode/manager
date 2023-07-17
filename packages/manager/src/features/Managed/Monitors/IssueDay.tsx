@@ -1,34 +1,35 @@
 import { ManagedIssue } from '@linode/api-v4';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import Bad from 'src/assets/icons/monitor-failed.svg';
 import Good from 'src/assets/icons/monitor-ok.svg';
 import TicketIcon from 'src/assets/icons/ticket.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Tooltip from 'src/components/core/Tooltip';
-import Grid from '@mui/material/Unstable_Grid2';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Tooltip } from 'src/components/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(2),
+  failureText: {
+    color: theme.color.red,
   },
   icon: {
-    marginLeft: theme.spacing(1),
-    transition: 'color 225ms ease-in-out',
     '&:hover': {
       color: theme.color.red,
     },
+    marginLeft: theme.spacing(1),
+    transition: 'color 225ms ease-in-out',
   },
-  failureText: {
-    color: theme.color.red,
+  root: {
+    marginTop: theme.spacing(2),
   },
 }));
 
 export interface Props {
-  issues: ManagedIssue[];
   day: string;
+  issues: ManagedIssue[];
 }
 
 interface DisplayProps {
@@ -43,18 +44,18 @@ const DayDisplay: React.FC<DisplayProps> = (props) => {
 
   return (
     <Grid
-      container
-      direction="row"
       alignItems="center"
       className={classes.root}
+      container
+      direction="row"
       spacing={2}
     >
       <Grid>{icon}</Grid>
       <Grid>
         <DateTimeDisplay
-          value={day}
           className={`${ticketUrl ? classes.failureText : ''}`}
           displayTime={false}
+          value={day}
         />
       </Grid>
       {ticketUrl && (
@@ -65,7 +66,7 @@ const DayDisplay: React.FC<DisplayProps> = (props) => {
           placement={'top'}
           title={'See the ticket associated with this incident'}
         >
-          <Link to={ticketUrl} className={classes.icon}>
+          <Link className={classes.icon} to={ticketUrl}>
             <TicketIcon />
           </Link>
         </Tooltip>
@@ -75,8 +76,8 @@ const DayDisplay: React.FC<DisplayProps> = (props) => {
 };
 
 const iconStyles = {
-  width: 30,
   height: 30,
+  width: 30,
 };
 
 export const IssueDay: React.FC<Props> = (props) => {
@@ -86,13 +87,13 @@ export const IssueDay: React.FC<Props> = (props) => {
 
   if (issues.length === 0) {
     // No issues for today
-    return <DayDisplay icon={<Good {...iconStyles} />} day={day} />;
+    return <DayDisplay day={day} icon={<Good {...iconStyles} />} />;
   }
 
   return (
     <DayDisplay
-      icon={<Bad {...iconStyles} />}
       day={day}
+      icon={<Bad {...iconStyles} />}
       // For now, not worrying about the possibility of multiple tickets opened in a single day
       ticketUrl={`/support/tickets/${issueLinks[0]}`}
     />

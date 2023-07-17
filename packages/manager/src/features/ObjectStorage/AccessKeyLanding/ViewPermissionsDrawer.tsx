@@ -1,19 +1,21 @@
-import * as React from 'react';
-import Drawer from 'src/components/Drawer';
-import Typography from 'src/components/core/Typography';
-import { AccessTable } from './AccessTable';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import * as React from 'react';
+
+import Drawer from 'src/components/Drawer';
+import { Typography } from 'src/components/Typography';
+
+import { AccessTable } from './AccessTable';
 
 export interface Props {
-  open: boolean;
-  onClose: () => void;
   objectStorageKey: ObjectStorageKey | null;
+  onClose: () => void;
+  open: boolean;
 }
 
 type CombinedProps = Props;
 
 export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
-  const { open, onClose, objectStorageKey } = props;
+  const { objectStorageKey, onClose, open } = props;
 
   if (objectStorageKey === null) {
     return null;
@@ -21,9 +23,9 @@ export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
 
   return (
     <Drawer
-      title={`Permissions for ${objectStorageKey.label}`}
-      open={open}
       onClose={onClose}
+      open={open}
+      title={`Permissions for ${objectStorageKey.label}`}
       wide
     >
       {objectStorageKey.bucket_access === null ? (
@@ -36,10 +38,10 @@ export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
             This access key has the following permissions:
           </Typography>
           <AccessTable
-            mode={'viewing'}
             bucket_access={objectStorageKey.bucket_access}
-            updateScopes={() => null}
             checked={objectStorageKey.limited}
+            mode={'viewing'}
+            updateScopes={() => null}
           />
         </>
       )}

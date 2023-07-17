@@ -1,13 +1,14 @@
 import { MonitorStatus } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { splitAt } from 'ramda';
 import * as React from 'react';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import {
   useDisableMonitorMutation,
   useEnableMonitorMutation,
@@ -15,12 +16,12 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export interface Props {
-  monitorID: number;
-  status: MonitorStatus;
   label: string;
+  monitorID: number;
   openDialog: (id: number, label: string) => void;
-  openMonitorDrawer: (id: number, mode: string) => void;
   openHistoryDrawer: (id: number, label: string) => void;
+  openMonitorDrawer: (id: number, mode: string) => void;
+  status: MonitorStatus;
 }
 
 export const MonitorActionMenu: React.FC<Props> = (props) => {
@@ -51,20 +52,19 @@ export const MonitorActionMenu: React.FC<Props> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'View Issue History',
       onClick: () => {
         openHistoryDrawer(monitorID, label);
       },
+      title: 'View Issue History',
     },
     {
-      title: 'Edit',
       onClick: () => {
         openMonitorDrawer(monitorID, 'edit');
       },
+      title: 'Edit',
     },
     status === 'disabled'
       ? {
-          title: 'Enable',
           onClick: () => {
             enableServiceMonitor()
               .then(() => {
@@ -76,9 +76,9 @@ export const MonitorActionMenu: React.FC<Props> = (props) => {
                 handleError('Error enabling this Service Monitor.', e);
               });
           },
+          title: 'Enable',
         }
       : {
-          title: 'Disable',
           onClick: () => {
             disableServiceMonitor()
               .then(() => {
@@ -90,12 +90,13 @@ export const MonitorActionMenu: React.FC<Props> = (props) => {
                 handleError('Error disabling this Service Monitor.', e);
               });
           },
+          title: 'Disable',
         },
     {
-      title: 'Delete',
       onClick: () => {
         openDialog(monitorID, label);
       },
+      title: 'Delete',
     },
   ];
 
@@ -108,8 +109,8 @@ export const MonitorActionMenu: React.FC<Props> = (props) => {
         inlineActions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
+              key={action.title}
               onClick={action.onClick}
             />
           );

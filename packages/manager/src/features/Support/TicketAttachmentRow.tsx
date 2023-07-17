@@ -1,38 +1,38 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 
 type ClassNames =
-  | 'root'
+  | 'attachmentIcon'
   | 'attachmentPaper'
   | 'attachmentRow'
-  | 'attachmentIcon';
+  | 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    attachmentIcon: {
+      color: theme.palette.text.primary,
+      paddingLeft: `0 !important`,
+    },
     attachmentPaper: {
-      marginTop: 4,
-      padding: `${theme.spacing(1.5)} ${theme.spacing(3)} 0`,
-      overflowX: 'auto',
       border: `1px solid ${theme.color.grey2}`,
+      marginTop: 4,
+      overflowX: 'auto',
+      padding: `${theme.spacing(1.5)} ${theme.spacing(3)} 0`,
     },
     attachmentRow: {
+      '&:last-child': {
+        border: 0,
+        marginBottom: 0,
+      },
       borderBottom: `1px solid ${theme.palette.divider}`,
       marginBottom: 12,
-      '&:last-child': {
-        marginBottom: 0,
-        border: 0,
-      },
     },
-    attachmentIcon: {
-      paddingLeft: `0 !important`,
-      color: theme.palette.text.primary,
-    },
+    root: {},
   });
 
 interface Props {
@@ -50,11 +50,11 @@ export const TicketAttachmentRow: React.FC<CombinedProps> = (props) => {
         {attachments.map((attachment, idx) => {
           return (
             <Grid
-              container
-              wrap="nowrap"
-              key={idx}
               className={classes.attachmentRow}
+              container
               data-qa-attachment-row
+              key={idx}
+              wrap="nowrap"
             >
               <Grid className={classes.attachmentIcon}>{icons[idx]}</Grid>
               <Grid>

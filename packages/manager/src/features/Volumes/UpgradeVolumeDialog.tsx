@@ -1,21 +1,22 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useSnackbar } from 'notistack';
 
 interface CopyProps {
-  label: string;
-  type: 'volume' | 'linode';
   isManyVolumes?: boolean;
+  label: string;
+  type: 'linode' | 'volume';
 }
 
 export const VolumeUpgradeCopy = (props: CopyProps) => {
-  const { label, type, isManyVolumes } = props;
+  const { isManyVolumes, label, type } = props;
 
   const prefix =
     type === 'linode'
@@ -35,20 +36,20 @@ export const VolumeUpgradeCopy = (props: CopyProps) => {
 };
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   id: number;
   label: string;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
-  const { open, onClose, id, label } = props;
+  const { id, label, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: migrateVolumes,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: migrateVolumes,
   } = useVolumesMigrateMutation();
 
   const onSubmit = () => {
@@ -65,7 +66,7 @@ export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
       <Button buttonType="secondary" onClick={onClose}>
         Cancel
       </Button>
-      <Button buttonType="primary" onClick={onSubmit} loading={isLoading}>
+      <Button buttonType="primary" loading={isLoading} onClick={onSubmit}>
         Enter Upgrade Queue
       </Button>
     </ActionsPanel>
@@ -73,17 +74,17 @@ export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
 
   return (
     <ConfirmationDialog
-      title={`Upgrade Volume ${label}`}
-      open={open}
-      onClose={onClose}
-      actions={actions}
       error={
         error
           ? getAPIErrorOrDefault(error, 'Unable to migrate volume.')[0].reason
           : undefined
       }
+      actions={actions}
+      onClose={onClose}
+      open={open}
+      title={`Upgrade Volume ${label}`}
     >
-      <VolumeUpgradeCopy type="volume" label={label} />
+      <VolumeUpgradeCopy label={label} type="volume" />
     </ConfirmationDialog>
   );
 };

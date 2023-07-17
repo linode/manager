@@ -1,29 +1,31 @@
+import { styled } from '@mui/material/styles';
+import { DateTime } from 'luxon';
 import * as React from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import DismissibleBanner from 'src/components/DismissibleBanner';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { PromotionalOfferCard } from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { Typography } from 'src/components/Typography';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
-import { DateTime } from 'luxon';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Link } from 'src/components/Link';
-import { MODE } from './AccessKeyLanding/types';
-import { styled } from '@mui/material/styles';
-import { useHistory, useParams } from 'react-router-dom';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+
+import { MODE } from './AccessKeyLanding/types';
+import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 
 const BucketLanding = React.lazy(() =>
   import('./BucketLanding/BucketLanding').then((module) => ({
@@ -41,15 +43,15 @@ export const ObjectStorageLanding = () => {
   const [mode, setMode] = React.useState<MODE>('creating');
   const { action, tab } = useParams<{
     action?: 'create';
-    tab?: 'buckets' | 'access-keys';
+    tab?: 'access-keys' | 'buckets';
   }>();
   const isCreateBucketOpen = tab === 'buckets' && action === 'create';
   const { _isRestrictedUser, accountSettings } = useAccountManagement();
   const { data: objectStorageClusters } = useObjectStorageClusters();
   const {
     data: objectStorageBucketsResponse,
-    isLoading: areBucketsLoading,
     error: bucketsErrors,
+    isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(objectStorageClusters);
   const userHasNoBucketCreated =
     objectStorageBucketsResponse?.buckets.length === 0;
@@ -57,12 +59,12 @@ export const ObjectStorageLanding = () => {
 
   const tabs = [
     {
-      title: 'Buckets',
       routeName: `/object-storage/buckets`,
+      title: 'Buckets',
     },
     {
-      title: 'Access Keys',
       routeName: `/object-storage/access-keys`,
+      title: 'Access Keys',
     },
   ];
 
@@ -150,11 +152,11 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
-                isRestrictedUser={_isRestrictedUser}
                 accessDrawerOpen={createOrEditDrawer.isOpen}
-                openAccessDrawer={openDrawer}
                 closeAccessDrawer={createOrEditDrawer.close}
+                isRestrictedUser={_isRestrictedUser}
                 mode={mode}
+                openAccessDrawer={openDrawer}
               />
             </SafeTabPanel>
           </TabPanels>
@@ -175,13 +177,13 @@ export const BillingNotice = React.memo(() => {
 
   return (
     <DismissibleBanner
-      warning
+      options={{
+        expiry: DateTime.utc().plus({ days: 30 }).toISO(),
+        label: NOTIFICATION_KEY,
+      }}
       important
       preferenceKey={NOTIFICATION_KEY}
-      options={{
-        label: NOTIFICATION_KEY,
-        expiry: DateTime.utc().plus({ days: 30 }).toISO(),
-      }}
+      warning
     >
       <Typography variant="body1">
         You are being billed for Object Storage but do not have any Buckets. You

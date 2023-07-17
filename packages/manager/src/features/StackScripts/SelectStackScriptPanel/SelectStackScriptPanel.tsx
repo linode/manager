@@ -2,29 +2,31 @@ import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import {
-  getStackScript,
   StackScript,
   UserDefinedField,
+  getStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
+
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Table } from 'src/components/Table';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import {
-  withProfile,
   WithProfileProps,
+  withProfile,
 } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncate } from 'src/utilities/truncate';
+
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
@@ -34,20 +36,12 @@ export interface ExtendedLinode extends Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'table' | 'selecting' | 'link' | 'panel' | 'inner';
+type ClassNames = 'inner' | 'link' | 'panel' | 'selecting' | 'table';
 
 const styles = (theme: Theme) =>
   createStyles({
-    table: {
-      backgroundColor: theme.color.white,
-      flexGrow: 1,
-      width: '100%',
-    },
-    selecting: {
-      maxHeight: '1000px',
-      minHeight: '400px',
-      overflowY: 'scroll',
-      paddingTop: 0,
+    inner: {
+      padding: 0,
     },
     link: {
       display: 'block',
@@ -61,15 +55,25 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(3),
       width: '100%',
     },
-    inner: {
-      padding: 0,
+    selecting: {
+      maxHeight: '1000px',
+      minHeight: '400px',
+      overflowY: 'scroll',
+      paddingTop: 0,
+    },
+    table: {
+      backgroundColor: theme.color.white,
+      flexGrow: 1,
+      width: '100%',
     },
   });
 
 interface Props extends RenderGuardProps {
-  selectedId: number | undefined;
-  selectedUsername?: string;
+  category: string;
+  disabled?: boolean;
   error?: string;
+  header: string;
+  isOnCreate?: boolean;
   onSelect: (
     id: number,
     label: string,
@@ -78,17 +82,15 @@ interface Props extends RenderGuardProps {
     userDefinedFields: UserDefinedField[]
   ) => void;
   publicImages: Record<string, Image>;
-  resetSelectedStackScript: () => void;
-  disabled?: boolean;
   request: (
     username: string,
     params?: Params,
     filter?: Filter,
     stackScriptGrants?: Grant[]
   ) => Promise<ResourcePage<StackScript>>;
-  category: string;
-  header: string;
-  isOnCreate?: boolean;
+  resetSelectedStackScript: () => void;
+  selectedId: number | undefined;
+  selectedUsername?: string;
 }
 
 type CombinedProps = Props &
@@ -103,13 +105,6 @@ interface State {
 }
 
 class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    stackScriptLoading: false,
-    stackScriptError: false,
-  };
-
-  mounted: boolean = false;
-
   componentDidMount() {
     const selected = +getQueryParamFromQueryString(
       location.search,
@@ -130,7 +125,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
           );
         })
         .catch((_) => {
-          this.setState({ stackScriptLoading: false, stackScriptError: true });
+          this.setState({ stackScriptError: true, stackScriptLoading: false });
         });
     }
     this.mounted = true;
@@ -140,20 +135,16 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  resetStackScript = () => {
-    this.setState({ stackScript: undefined, stackScriptLoading: false });
-  };
-
   render() {
     const {
       category,
       classes,
-      request,
-      selectedId,
       error,
       profile,
+      request,
+      selectedId,
     } = this.props;
-    const { stackScript, stackScriptLoading, stackScriptError } = this.state;
+    const { stackScript, stackScriptError, stackScriptLoading } = this.state;
 
     if (selectedId) {
       if (stackScriptLoading) {
@@ -164,9 +155,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
           <React.Fragment>
             <Table
               aria-label="List of StackScripts"
+              data-qa-select-stackscript
               noOverflow={true}
               tableClass={classes.table}
-              data-qa-select-stackscript
             >
               <StackScriptTableHead
                 currentFilterType={null}
@@ -174,24 +165,24 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               />
               <tbody>
                 <StackScriptSelectionRow
-                  key={stackScript.id}
-                  label={stackScript.label}
-                  stackScriptUsername={stackScript.username}
-                  disabledCheckedSelect
-                  description={truncate(stackScript.description, 100)}
-                  deploymentsActive={stackScript.deployments_active}
                   updated={formatDate(stackScript.updated, {
-                    timezone: profile.data?.timezone,
                     displayTime: false,
+                    timezone: profile.data?.timezone,
                   })}
                   checked={selectedId === stackScript.id}
-                  updateFor={[selectedId === stackScript.id]}
+                  deploymentsActive={stackScript.deployments_active}
+                  description={truncate(stackScript.description, 100)}
+                  disabledCheckedSelect
+                  key={stackScript.id}
+                  label={stackScript.label}
                   stackScriptID={stackScript.id}
+                  stackScriptUsername={stackScript.username}
+                  updateFor={[selectedId === stackScript.id]}
                 />
               </tbody>
             </Table>
             <div className={classes.link}>
-              <Button onClick={this.resetStackScript} buttonType="secondary">
+              <Button buttonType="secondary" onClick={this.resetStackScript}>
                 Choose another StackScript
               </Button>
             </div>
@@ -204,7 +195,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       <Paper className={classes.panel}>
         <div className={classes.inner}>
           {error && (
-            <Notice text={error} error spacingTop={8} spacingBottom={0} />
+            <Notice error spacingBottom={0} spacingTop={8} text={error} />
           )}
           {stackScriptError && (
             <Typography variant="body1">
@@ -213,21 +204,32 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
           )}
           <Paper className={classes.selecting}>
             <SelectStackScriptPanelContent
-              onSelect={this.props.onSelect}
-              resetStackScriptSelection={this.props.resetSelectedStackScript}
-              publicImages={this.props.publicImages}
-              currentUser={profile.data?.username || ''}
-              request={request}
-              key={category + '-tab'}
               category={category}
+              currentUser={profile.data?.username || ''}
               disabled={this.props.disabled}
               isOnCreate={this.props.isOnCreate}
+              key={category + '-tab'}
+              onSelect={this.props.onSelect}
+              publicImages={this.props.publicImages}
+              request={request}
+              resetStackScriptSelection={this.props.resetSelectedStackScript}
             />
           </Paper>
         </div>
       </Paper>
     );
   }
+
+  mounted: boolean = false;
+
+  resetStackScript = () => {
+    this.setState({ stackScript: undefined, stackScriptLoading: false });
+  };
+
+  state: State = {
+    stackScriptError: false,
+    stackScriptLoading: false,
+  };
 }
 
 const styled = withStyles(styles);

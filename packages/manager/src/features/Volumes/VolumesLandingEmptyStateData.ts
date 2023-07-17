@@ -4,6 +4,7 @@ import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
@@ -13,29 +14,29 @@ import type {
 export const headers: ResourcesHeaders = {
   description:
     'Attach scalable, fault-tolerant, and performant block storage volumes to your Linode Compute Instances or Kubernetes Clusters.',
-  subtitle: 'NVM block storage service',
+  subtitle: 'NVMe block storage service',
   title: 'Volumes',
 };
 
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      to: 'https://www.linode.com/docs/products/storage/block-storage/',
       text: 'Overview of Block Storage',
+      to: 'https://www.linode.com/docs/products/storage/block-storage/',
     },
     {
-      to: 'https://www.linode.com/docs/products/storage/block-storage/guides/',
       text: 'Create and Manage Block Storage Volumes',
+      to: 'https://www.linode.com/docs/products/storage/block-storage/guides/',
     },
     {
+      text: 'Configure a Volume on a Compute Instance',
       to:
         'https://www.linode.com/docs/products/storage/block-storage/guides/configure-volume/',
-      text: 'Configure a Volume on a Compute Instance',
     },
   ],
   moreInfo: {
-    to: docsLink,
     text: guidesMoreLinkText,
+    to: docsLink,
   },
   title: 'Getting Started Guides',
 };
@@ -43,25 +44,25 @@ export const gettingStartedGuides: ResourcesLinkSection = {
 export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
-      to: 'https://www.youtube.com/watch?v=7ti25oK7UMA',
+      external: true,
       text: 'How to Use Block Storage with Your Linode',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=7ti25oK7UMA',
     },
     {
-      to: 'https://www.youtube.com/watch?v=8G0cNZZIxNc',
+      external: true,
       text: 'Block Storage Vs Object Storage',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=8G0cNZZIxNc',
     },
     {
-      to: 'https://www.youtube.com/watch?v=Z9jZv_IHO2s',
+      external: true,
       text:
         'How to use Block Storage to Increase Space on Your Nextcloud Instance',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=Z9jZv_IHO2s',
     },
   ],
   moreInfo: {
-    to: youtubeChannelLink,
     text: youtubeMoreLinkText,
+    to: youtubeChannelLink,
   },
   title: 'Video Playlist',
 };

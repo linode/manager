@@ -1,50 +1,55 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import classNames from 'classnames';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
-import classNames from 'classnames';
+import { Typography } from 'src/components/Typography';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
   useKubenetesKubeConfigQuery,
 } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useSnackbar } from 'notistack';
 
 interface Props {
   clusterId: number;
   clusterLabel: string;
-  isResettingKubeConfig: boolean;
   handleOpenDrawer: () => void;
+  isResettingKubeConfig: boolean;
   setResetKubeConfigDialogOpen: (open: boolean) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  label: {
-    fontWeight: 'bold',
-    marginBottom: `calc(${theme.spacing(1)} - 3px)`,
-  },
-  kubeconfigElements: {
-    display: 'flex',
-    alignItems: 'center',
-    color: theme.palette.primary.main,
+  disabled: {
+    '& g': {
+      stroke: theme.palette.text.secondary,
+    },
+    color: theme.palette.text.secondary,
+    pointer: 'default',
+    pointerEvents: 'none',
   },
   kubeconfigElement: {
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    borderRight: '1px solid #c4c4c4',
     '&:hover': {
       opacity: 0.7,
     },
     '&:last-child': {
       borderRight: 'none',
     },
+    alignItems: 'center',
+    borderRight: '1px solid #c4c4c4',
+    cursor: 'pointer',
+    display: 'flex',
+  },
+  kubeconfigElements: {
+    alignItems: 'center',
+    color: theme.palette.primary.main,
+    display: 'flex',
   },
   kubeconfigFileText: {
     color: theme.textColors.linkActiveLight,
@@ -53,22 +58,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   kubeconfigIcons: {
     height: 16,
-    width: 16,
     margin: `0 ${theme.spacing(1)}`,
     objectFit: 'contain',
+    width: 16,
   },
-  disabled: {
-    color: theme.palette.text.secondary,
-    pointer: 'default',
-    pointerEvents: 'none',
-    '& g': {
-      stroke: theme.palette.text.secondary,
-    },
+  label: {
+    fontWeight: 'bold',
+    marginBottom: `calc(${theme.spacing(1)} - 3px)`,
   },
 }));
 
 const renderEndpoint = (
-  endpoint: string | undefined | null,
+  endpoint: null | string | undefined,
   endpointLoading: boolean,
   endpointError?: string
 ) => {
@@ -88,8 +89,8 @@ export const KubeConfigDisplay = (props: Props) => {
   const {
     clusterId,
     clusterLabel,
-    isResettingKubeConfig,
     handleOpenDrawer,
+    isResettingKubeConfig,
     setResetKubeConfigDialogOpen,
   } = props;
 
@@ -100,8 +101,8 @@ export const KubeConfigDisplay = (props: Props) => {
 
   const {
     data: endpoints,
-    isLoading: endpointsLoading,
     error: endpointsError,
+    isLoading: endpointsLoading,
   } = useAllKubernetesClusterAPIEndpointsQuery(clusterId);
 
   const downloadKubeConfig = async () => {
@@ -150,8 +151,8 @@ export const KubeConfigDisplay = (props: Props) => {
         </Typography>
         <div className={classes.kubeconfigElements}>
           <Box
-            onClick={downloadKubeConfig}
             className={classes.kubeconfigElement}
+            onClick={downloadKubeConfig}
           >
             <DownloadIcon
               className={classes.kubeconfigIcons}
@@ -161,24 +162,24 @@ export const KubeConfigDisplay = (props: Props) => {
               {`${clusterLabel}-kubeconfig.yaml`}
             </Typography>
           </Box>
-          <Box onClick={handleOpenDrawer} className={classes.kubeconfigElement}>
+          <Box className={classes.kubeconfigElement} onClick={handleOpenDrawer}>
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
           </Box>
           <Box
-            onClick={() => setResetKubeConfigDialogOpen(true)}
             className={classes.kubeconfigElement}
+            onClick={() => setResetKubeConfigDialogOpen(true)}
           >
             <ResetIcon
               className={classNames({
-                [classes.kubeconfigIcons]: true,
                 [classes.disabled]: isResettingKubeConfig,
+                [classes.kubeconfigIcons]: true,
               })}
             />
             <Typography
               className={classNames({
-                [classes.kubeconfigFileText]: true,
                 [classes.disabled]: isResettingKubeConfig,
+                [classes.kubeconfigFileText]: true,
               })}
             >
               Reset

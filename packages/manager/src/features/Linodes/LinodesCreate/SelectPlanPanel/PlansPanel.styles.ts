@@ -1,14 +1,14 @@
-import { isPropValid } from 'src/utilities/isPropValid';
 import { styled } from '@mui/material/styles';
+
 import { TableRow, TableRowProps } from 'src/components/TableRow';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 type StyledDisabledTableRowProps = Pick<TableRowProps, 'disabled'>;
 
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
-  fontSize: '0.9em',
   '& a': {
     color: theme.textColors.linkActiveLight,
   },
@@ -18,6 +18,7 @@ export const StyledTypography = styled(Typography, {
   '& p': {
     fontFamily: '"LatoWebBold", sans-serif',
   },
+  fontSize: '0.9em',
 }));
 
 export const StyledDisabledTableRow = styled(TableRow, {

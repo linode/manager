@@ -1,7 +1,8 @@
 import { LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 
 interface Props {
   linodeStatus: LinodeStatus;
@@ -16,7 +17,7 @@ export const HostMaintenance: React.FC<Props> = (props) => {
   }
   return (
     <Notice important warning>
-      <Typography variant="h3" style={{ paddingBottom: '8px' }}>
+      <Typography style={{ paddingBottom: '8px' }} variant="h3">
         <strong>
           An issue affecting the physical host this Linode resides on has been
           detected.

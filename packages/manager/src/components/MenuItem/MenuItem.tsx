@@ -1,129 +1,114 @@
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import * as React from 'react';
-import CircularProgress from 'src/components/core/CircularProgress';
-import { IconButton } from 'src/components/IconButton';
-import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-type CSSClasses =
-  | 'root'
-  | 'toolTip'
-  | 'labelWrapper'
-  | 'label'
-  | 'helpButton'
-  | 'helpIcon'
-  | 'circleProgress';
+import { IconButton } from 'src/components/IconButton';
+import CircularProgress from 'src/components/core/CircularProgress';
+import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
 
-interface Props {
-  tooltip?: string;
-  className?: string;
+interface WrapperMenuItemProps {
   isLoading?: boolean;
   ref?: any;
+  tooltip?: string;
 }
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      position: 'relative',
-      flexWrap: 'wrap',
-      '&.hasTooltip': {
-        opacity: 1,
-        paddingTop: `calc(${theme.spacing(1)} - 2)`,
-        paddingBottom: theme.spacing(1) + 2,
-        '&:hover, &:focus': {
-          background: 'transparent',
-          color: theme.palette.primary.main,
-          '& $toolTip': {
-            marginTop: theme.spacing(1),
-            maxHeight: 200,
-            opacity: 1,
-          },
-        },
-      },
+const useStyles = makeStyles()((theme: Theme) => ({
+  circleProgress: {
+    left: 0,
+    margin: '0 auto',
+    position: 'absolute',
+    right: 0,
+  },
+  helpButton: {
+    '&:hover, &:focus': {
+      color: theme.palette.primary.light,
     },
-    labelWrapper: {
-      display: 'flex',
-      flexBasis: '100%',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    label: {
-      opacity: 0.5,
-    },
-    toolTip: {
-      transition: theme.transitions.create(['max-height', 'opacity', 'margin']),
-      maxHeight: 0,
-      display: 'block',
-      color: theme.palette.text.primary,
-      opacity: 0,
-    },
-    helpButton: {
-      width: 28,
-      height: 28,
-      padding: 0,
-      color: theme.palette.primary.main,
-      pointerEvents: 'initial',
+    color: theme.palette.primary.main,
+    height: 28,
+    padding: 0,
+    pointerEvents: 'initial',
+    width: 28,
+  },
+  helpIcon: {
+    height: 20,
+    width: 20,
+  },
+  label: {
+    opacity: 0.5,
+  },
+  labelWrapper: {
+    alignItems: 'center',
+    display: 'flex',
+    flexBasis: '100%',
+    justifyContent: 'space-between',
+  },
+  root: {
+    '&.hasTooltip': {
       '&:hover, &:focus': {
-        color: theme.palette.primary.light,
+        '& $toolTip': {
+          marginTop: theme.spacing(1),
+          maxHeight: 200,
+          opacity: 1,
+        },
+        background: 'transparent',
+        color: theme.palette.primary.main,
       },
+      opacity: 1,
+      paddingBottom: theme.spacing(1) + 2,
+      paddingTop: `calc(${theme.spacing(1)} - 2)`,
     },
-    helpIcon: {
-      width: 20,
-      height: 20,
-    },
-    circleProgress: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      margin: '0 auto',
-    },
-  });
+    flexWrap: 'wrap',
+    position: 'relative',
+  },
+  toolTip: {
+    color: theme.palette.text.primary,
+    display: 'block',
+    maxHeight: 0,
+    opacity: 0,
+    transition: theme.transitions.create(['max-height', 'opacity', 'margin']),
+  },
+}));
 
-const handleClick = (e: any) => {
-  e.stopPropagation();
-};
-type CombinedProps = MenuItemProps & Props & WithStyles<CSSClasses>;
+type CombinedProps = MenuItemProps & WrapperMenuItemProps;
 
-class WrapperMenuItem extends React.Component<CombinedProps> {
-  render() {
-    const { tooltip, classes, className, isLoading, ...rest } = this.props;
+export const WrapperMenuItem = (props: CombinedProps) => {
+  const { classes } = useStyles();
+  const { className, isLoading, tooltip, ...rest } = props;
+  const shouldWrapLabel = isLoading || tooltip;
 
-    const shouldWrapLabel = isLoading || tooltip;
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+  };
 
-    return (
-      <MenuItem
-        {...rest}
-        className={`${classes.root} ${className} ${tooltip && 'hasTooltip'}`}
-      >
-        {isLoading && (
-          <CircularProgress size={20} className={classes.circleProgress} />
-        )}
-        <span className={shouldWrapLabel && classes.labelWrapper}>
-          <span className={shouldWrapLabel && classes.label}>
-            {this.props.children}
-          </span>
-          {tooltip && !isLoading && (
-            <IconButton
-              className={classes.helpButton}
-              onClick={handleClick}
-              data-qa-tooltip-icon
-              size="large"
-            >
-              <HelpOutline className={classes.helpIcon} />
-            </IconButton>
-          )}
+  return (
+    <MenuItem
+      {...rest}
+      className={`${classes.root} ${className} ${tooltip && 'hasTooltip'}`}
+    >
+      {isLoading && (
+        <CircularProgress className={classes.circleProgress} size={20} />
+      )}
+      <span className={shouldWrapLabel && classes.labelWrapper}>
+        <span className={shouldWrapLabel && classes.label}>
+          {props.children}
         </span>
-        {tooltip && (
-          <span className={classes.toolTip} data-qa-tooltip>
-            {tooltip}
-          </span>
+        {tooltip && !isLoading && (
+          <IconButton
+            className={classes.helpButton}
+            data-qa-tooltip-icon
+            onClick={(e) => handleClick(e)}
+            size="large"
+          >
+            <HelpOutline className={classes.helpIcon} />
+          </IconButton>
         )}
-      </MenuItem>
-    );
-  }
-}
-
-const styled = withStyles(styles);
-
-export default styled(WrapperMenuItem);
+      </span>
+      {tooltip && (
+        <span className={classes.toolTip} data-qa-tooltip>
+          {tooltip}
+        </span>
+      )}
+    </MenuItem>
+  );
+};

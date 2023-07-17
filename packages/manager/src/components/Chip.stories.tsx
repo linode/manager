@@ -1,6 +1,8 @@
 import React from 'react';
-import { Chip } from 'src/components/core/Chip';
-import type { ChipProps } from './core/Chip';
+
+import { Chip } from './Chip';
+
+import type { ChipProps } from './Chip';
 import type { Meta, StoryObj } from '@storybook/react';
 
 export const Default: StoryObj<ChipProps> = {
@@ -13,7 +15,7 @@ export const Default: StoryObj<ChipProps> = {
  * **Visual style:** solid color background.
  */
 export const Clickable: StoryObj<ChipProps> = {
-  render: (args) => <Chip {...args} label="Upgrade" clickable />,
+  render: (args) => <Chip {...args} clickable label="Upgrade" />,
 };
 
 /**
@@ -31,9 +33,9 @@ export const Custom: StoryObj<ChipProps> = {
     <Chip
       {...args}
       label="NVMe"
-      variant="outlined"
       outlineColor="green"
       size="small"
+      variant="outlined"
     />
   ),
 };
@@ -62,8 +64,8 @@ export const WithDeleteButton: StoryObj<ChipProps> = {
 };
 
 const meta: Meta<ChipProps> = {
-  title: 'Components/Core/Chip',
-  component: Chip,
   args: { label: 'Chip', onDelete: undefined },
+  component: Chip,
+  title: 'Components/Chip',
 };
 export default meta;

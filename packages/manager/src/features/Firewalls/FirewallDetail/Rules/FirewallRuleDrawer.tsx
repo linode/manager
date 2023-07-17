@@ -1,19 +1,21 @@
-import * as React from 'react';
-import Drawer from 'src/components/Drawer';
-import Typography from 'src/components/core/Typography';
-import { capitalize } from 'src/utilities/capitalize';
-import { FirewallRuleForm } from './FirewallRuleForm';
 import { Formik } from 'formik';
+import * as React from 'react';
+
+import Drawer from 'src/components/Drawer';
+import { Typography } from 'src/components/Typography';
+import { capitalize } from 'src/utilities/capitalize';
+
 import {
+  formValueToIPs,
   getInitialFormValues,
   getInitialIPs,
   itemsToPortString,
-  formValueToIPs,
   portStringToItems,
   validateForm,
   validateIPs,
 } from './FirewallRuleDrawer.utils';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { FirewallRuleForm } from './FirewallRuleForm';
+
 import type {
   FirewallRuleDrawerProps,
   FormState,
@@ -23,13 +25,14 @@ import type {
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 // =============================================================================
 // <FirewallRuleDrawer />
 // =============================================================================
 export const FirewallRuleDrawer = React.memo(
   (props: FirewallRuleDrawerProps) => {
-    const { isOpen, onClose, category, mode, ruleToModify } = props;
+    const { category, isOpen, mode, onClose, ruleToModify } = props;
 
     // Custom IPs are tracked separately from the form. The <MultipleIPs />
     // component consumes this state. We use this on form submission if the
@@ -61,11 +64,11 @@ export const FirewallRuleDrawer = React.memo(
     const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
     const onValidate = ({
+      addresses,
+      description,
+      label,
       ports,
       protocol,
-      label,
-      description,
-      addresses,
     }: FormState) => {
       // The validated IPs may have errors, so set them to state so we see the errors.
       const validatedIPs = validateIPs(ips, {
@@ -78,11 +81,11 @@ export const FirewallRuleDrawer = React.memo(
 
       return {
         ...validateForm({
-          protocol,
-          ports: _ports,
-          label,
-          description,
           addresses,
+          description,
+          label,
+          ports: _ports,
+          protocol,
         }),
         // This is a bit of a trick. If this function DOES NOT return an empty object, Formik will call
         // `onSubmit()`. If there are IP errors, we add them to the return object so Formik knows there
@@ -97,10 +100,10 @@ export const FirewallRuleDrawer = React.memo(
       const addresses = formValueToIPs(values.addresses, ips);
 
       const payload: FirewallRuleType = {
+        action: values.action,
+        addresses,
         ports,
         protocol,
-        addresses,
-        action: values.action,
       };
 
       payload.label = values.label === '' ? null : values.label;
@@ -112,25 +115,25 @@ export const FirewallRuleDrawer = React.memo(
     };
 
     return (
-      <Drawer title={title} open={isOpen} onClose={onClose}>
+      <Drawer onClose={onClose} open={isOpen} title={title}>
         <Formik
           initialValues={getInitialFormValues(ruleToModify)}
-          validateOnChange={false}
-          validateOnBlur={false}
           onSubmit={onSubmit}
           validate={onValidate}
+          validateOnBlur={false}
+          validateOnChange={false}
         >
           {(formikProps) => {
             return (
               <FirewallRuleForm
-                category={category}
                 addressesLabel={addressesLabel}
+                category={category}
                 ips={ips}
-                setIPs={setIPs}
-                presetPorts={presetPorts}
-                setPresetPorts={setPresetPorts}
                 mode={mode}
+                presetPorts={presetPorts}
                 ruleErrors={ruleToModify?.errors}
+                setIPs={setIPs}
+                setPresetPorts={setPresetPorts}
                 {...formikProps}
               />
             );

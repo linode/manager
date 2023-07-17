@@ -1,23 +1,24 @@
 import { FirewallDevice } from '@linode/api-v4';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
 
 export interface Props {
-  open: boolean;
-  onClose: () => void;
   device: FirewallDevice | undefined;
-  firewallLabel: string;
   firewallId: number;
+  firewallLabel: string;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const RemoveDeviceDialog = (props: Props) => {
-  const { device, firewallLabel, firewallId, onClose, open } = props;
+  const { device, firewallId, firewallLabel, onClose, open } = props;
 
-  const { mutateAsync, isLoading, error } = useRemoveFirewallDeviceMutation(
+  const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
     device?.id ?? -1
   );
@@ -29,31 +30,31 @@ export const RemoveDeviceDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      title={`Remove ${device?.entity.label} from ${firewallLabel}?`}
-      open={open}
-      onClose={onClose}
-      error={error?.[0]?.reason}
       actions={
         <ActionsPanel style={{ padding: 0 }}>
           <Button
             buttonType="secondary"
-            onClick={onClose}
             data-qa-cancel
             data-testid={'dialog-cancel'}
+            onClick={onClose}
           >
             Cancel
           </Button>
           <Button
             buttonType="primary"
-            onClick={onDelete}
-            loading={isLoading}
             data-qa-confirm
             data-testid={'dialog-confirm'}
+            loading={isLoading}
+            onClick={onDelete}
           >
             Remove
           </Button>
         </ActionsPanel>
       }
+      error={error?.[0]?.reason}
+      onClose={onClose}
+      open={open}
+      title={`Remove ${device?.entity.label} from ${firewallLabel}?`}
     >
       <Typography>
         Are you sure you want to remove {device?.entity.label} from{' '}

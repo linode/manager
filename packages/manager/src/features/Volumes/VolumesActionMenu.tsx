@@ -1,12 +1,28 @@
-import { splitAt } from 'ramda';
-import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useTheme } from '@mui/styles';
+import { splitAt } from 'ramda';
+import * as React from 'react';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface ActionHandlers {
+  handleAttach: (volumeId: number, label: string, linodeRegion: string) => void;
+  handleDelete: (volumeId: number, volumeLabel: string) => void;
+  handleDetach: (
+    volumeId: number,
+    volumeLabel: string,
+    linodeLabel: string,
+    linodeId: number
+  ) => void;
+  handleUpgrade?: (volumeId: number, label: string) => void;
+  openForClone: (
+    volumeId: number,
+    label: string,
+    size: number,
+    regionID: string
+  ) => void;
   openForConfig: (volumeLabel: string, volumePath: string) => void;
   openForEdit: (
     volumeId: number,
@@ -18,35 +34,20 @@ export interface ActionHandlers {
     volumeSize: number,
     volumeLabel: string
   ) => void;
-  openForClone: (
-    volumeId: number,
-    label: string,
-    size: number,
-    regionID: string
-  ) => void;
-  handleAttach: (volumeId: number, label: string, linodeRegion: string) => void;
-  handleUpgrade?: (volumeId: number, label: string) => void;
-  handleDetach: (
-    volumeId: number,
-    volumeLabel: string,
-    linodeLabel: string,
-    linodeId: number
-  ) => void;
-  handleDelete: (volumeId: number, volumeLabel: string) => void;
 }
 
 export interface Props extends ActionHandlers {
   attached: boolean;
-  isVolumesLanding: boolean;
   filesystemPath: string;
+  isVolumesLanding: boolean;
   label: string;
-  linodeLabel: string;
   linodeId: number;
+  linodeLabel: string;
   regionID: string;
+  size: number;
   volumeId: number;
   volumeLabel: string;
   volumeTags: string[];
-  size: number;
 }
 
 export const VolumesActionMenu = (props: Props) => {
@@ -56,37 +57,37 @@ export const VolumesActionMenu = (props: Props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleShowConfig = () => {
-    const { openForConfig, label, filesystemPath } = props;
+    const { filesystemPath, label, openForConfig } = props;
     openForConfig(label, filesystemPath);
   };
 
   const handleOpenEdit = () => {
-    const { openForEdit, volumeId, label, volumeTags } = props;
+    const { label, openForEdit, volumeId, volumeTags } = props;
     openForEdit(volumeId, label, volumeTags);
   };
 
   const handleResize = () => {
-    const { openForResize, volumeId, size, label } = props;
+    const { label, openForResize, size, volumeId } = props;
     openForResize(volumeId, size, label);
   };
 
   const handleClone = () => {
-    const { openForClone, volumeId, label, size, regionID } = props;
+    const { label, openForClone, regionID, size, volumeId } = props;
     openForClone(volumeId, label, size, regionID);
   };
 
   const handleAttach = () => {
-    const { handleAttach, volumeId, label, regionID } = props;
+    const { handleAttach, label, regionID, volumeId } = props;
     handleAttach(volumeId, label, regionID);
   };
 
   const handleDetach = () => {
     const {
       handleDetach,
+      linodeId,
+      linodeLabel,
       volumeId,
       volumeLabel,
-      linodeLabel,
-      linodeId,
     } = props;
     handleDetach(volumeId, volumeLabel, linodeLabel, linodeId);
   };
@@ -98,53 +99,53 @@ export const VolumesActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Show Config',
       onClick: () => {
         handleShowConfig();
       },
+      title: 'Show Config',
     },
     {
-      title: 'Edit',
       onClick: () => {
         handleOpenEdit();
       },
+      title: 'Edit',
     },
     {
-      title: 'Resize',
       onClick: () => {
         handleResize();
       },
+      title: 'Resize',
     },
     {
-      title: 'Clone',
       onClick: () => {
         handleClone();
       },
+      title: 'Clone',
     },
   ];
 
   if (!attached && isVolumesLanding) {
     actions.push({
-      title: 'Attach',
       onClick: () => {
         handleAttach();
       },
+      title: 'Attach',
     });
   } else {
     actions.push({
-      title: 'Detach',
       onClick: () => {
         handleDetach();
       },
+      title: 'Detach',
     });
   }
 
   actions.push({
-    title: 'Delete',
+    disabled: attached,
     onClick: () => {
       handleDelete();
     },
-    disabled: attached,
+    title: 'Delete',
     tooltip: attached
       ? 'Your volume must be detached before it can be deleted.'
       : undefined,
@@ -159,8 +160,8 @@ export const VolumesActionMenu = (props: Props) => {
         inlineActions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
+              key={action.title}
               onClick={action.onClick}
             />
           );

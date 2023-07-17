@@ -3,73 +3,75 @@ import Box from '@mui/material/Box';
 import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
+
 import { Button } from 'src/components/Button/Button';
+import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Chip } from 'src/components/core/Chip';
-import Divider from 'src/components/core/Divider';
-import Typography from 'src/components/core/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Divider } from 'src/components/Divider';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { ScriptCode } from 'src/components/ScriptCode/ScriptCode';
+import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-import { makeStyles } from 'tss-react/mui';
-import TooltipIcon from '../TooltipIcon';
+
+import { TooltipIcon } from '../TooltipIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.bg.bgPaper,
-    '.detailsWrapper &': {
-      padding: theme.spacing(4),
-    },
-  },
-  headerLabel: {
-    maxWidth: 'calc(100% - 80px)',
-  },
-  editBtn: {
-    minWidth: 'fit-content',
-  },
-  deployments: {
-    marginTop: theme.spacing(1),
-  },
   author: {
+    marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
   },
-  description: {
-    whiteSpace: 'pre-wrap',
-  },
-  heading: {
-    marginBottom: theme.spacing(1),
-  },
-  descriptionText: {
-    marginBottom: theme.spacing(2),
-  },
-  deploymentSection: {
+  compatibleImages: {
+    display: 'block',
     marginTop: theme.spacing(1),
-    fontSize: '1rem',
-  },
-  idSection: {
-    marginTop: theme.spacing(1),
-    fontSize: '1rem',
   },
   copyIcon: {
-    color: theme.palette.primary.main,
-    position: 'relative',
-    display: 'inline-block',
     '& svg': {
-      width: '1em',
       height: '1em',
+      width: '1em',
     },
+    color: theme.palette.primary.main,
+    display: 'inline-block',
+    position: 'relative',
   },
   dateTimeDisplay: {
     display: 'inline-block',
     fontSize: '1rem',
   },
-  compatibleImages: {
-    display: 'block',
+  deploymentSection: {
+    fontSize: '1rem',
     marginTop: theme.spacing(1),
+  },
+  deployments: {
+    marginTop: theme.spacing(1),
+  },
+  description: {
+    whiteSpace: 'pre-wrap',
+  },
+  descriptionText: {
+    marginBottom: theme.spacing(2),
+  },
+  editBtn: {
+    minWidth: 'fit-content',
+  },
+  headerLabel: {
+    maxWidth: 'calc(100% - 80px)',
+  },
+  heading: {
+    marginBottom: theme.spacing(1),
+  },
+  idSection: {
+    fontSize: '1rem',
+    marginTop: theme.spacing(1),
+  },
+  root: {
+    '.detailsWrapper &': {
+      padding: theme.spacing(4),
+    },
+    backgroundColor: theme.bg.bgPaper,
   },
 }));
 
@@ -86,15 +88,15 @@ interface StackScriptImages {
 export const StackScript = (props: StackScriptProps) => {
   const {
     data: {
-      username,
-      deployments_total,
       deployments_active,
+      deployments_total,
       description,
       id: stackscriptId,
-      script,
-      label,
-      updated,
       images,
+      label,
+      script,
+      updated,
+      username,
     },
     userCanModify,
   } = props;
@@ -123,18 +125,18 @@ export const StackScript = (props: StackScriptProps) => {
 
       if (image === 'any/all') {
         acc.available.push(
-          <Chip key={image} label="Any/All" component="span" />
+          <Chip component="span" key={image} label="Any/All" />
         );
         return acc;
       }
 
       if (imageObj) {
         acc.available.push(
-          <Chip key={imageObj.id} label={imageObj.label} component="span" />
+          <Chip component="span" key={imageObj.id} label={imageObj.label} />
         );
       } else {
         acc.deprecated.push(
-          <Chip key={image} label={image} component="span" />
+          <Chip component="span" key={image} label={image} />
         );
       }
 
@@ -156,40 +158,40 @@ export const StackScript = (props: StackScriptProps) => {
     <div className={classes.root}>
       <Box
         sx={{
-          display: 'flex',
           alignItems: 'flex-start',
+          display: 'flex',
           justifyContent: 'space-between',
         }}
       >
         <H1Header
           className={classes.headerLabel}
-          title={label}
           data-qa-stack-title={label}
+          title={label}
         />
         {userCanModify ? (
           <Button
-            buttonType="secondary"
-            className={classes.editBtn}
             onClick={() => {
               history.push(`/stackscripts/${stackscriptId}/edit`);
             }}
+            buttonType="secondary"
+            className={classes.editBtn}
           >
             Edit
           </Button>
         ) : null}
       </Box>
       <Typography
-        variant="h2"
         className={classes.author}
         data-qa-stack-author={username}
+        variant="h2"
       >
         by&nbsp;
-        <Link to={link} data-qa-community-stack-link>
+        <Link data-qa-community-stack-link to={link}>
           {username}
         </Link>
       </Typography>
 
-      <div data-qa-stack-deployments className={classes.deployments}>
+      <div className={classes.deployments} data-qa-stack-deployments>
         <Typography className={classes.deploymentSection}>
           <strong>{deployments_total}</strong> deployments
         </Typography>
@@ -199,23 +201,23 @@ export const StackScript = (props: StackScriptProps) => {
         <Typography className={classes.deploymentSection}>
           <strong>Last revision: </strong>
           <DateTimeDisplay
-            value={updated}
             className={classes.dateTimeDisplay}
+            value={updated}
           />
         </Typography>
         <Typography className={classes.idSection}>
           <strong>StackScript ID: </strong>
           {stackscriptId}
           <CopyTooltip
-            text={stackscriptId.toString()}
             className={classes.copyIcon}
+            text={stackscriptId.toString()}
           />
         </Typography>
-        <Divider spacingTop={16} spacingBottom={16} />
+        <Divider spacingBottom={16} spacingTop={16} />
       </div>
       {description && (
         <div className={classes.description}>
-          <Typography variant="h3" className={classes.heading}>
+          <Typography className={classes.heading} variant="h3">
             Description
           </Typography>
           <Typography
@@ -224,16 +226,16 @@ export const StackScript = (props: StackScriptProps) => {
           >
             {description}
           </Typography>
-          <Divider spacingTop={16} spacingBottom={16} />
+          <Divider spacingBottom={16} spacingTop={16} />
         </div>
       )}
       <div>
         <div
-          data-qa-compatible-distro
           className={classes.deploymentSection}
+          data-qa-compatible-distro
           style={{ marginTop: 0 }}
         >
-          <Typography variant="h3" className={classes.heading}>
+          <Typography className={classes.heading} variant="h3">
             Compatible Images
           </Typography>
           {imageChips.available.length > 0 ? (
@@ -243,31 +245,31 @@ export const StackScript = (props: StackScriptProps) => {
           )}
           {imageChips.deprecated.length > 0 ? (
             <>
-              <Divider spacingTop={16} spacingBottom={16} />
+              <Divider spacingBottom={16} spacingTop={16} />
               <Box
-                display="flex"
-                flexDirection="row"
                 alignItems="center"
                 className={classes.heading}
+                display="flex"
+                flexDirection="row"
               >
                 <Typography variant="h3">Deprecated Images</Typography>
                 <TooltipIcon
-                  text="You must update your StackScript to use a compatible Image to deploy it"
-                  tooltipPosition="bottom"
                   sxTooltipIcon={{
-                    padding: 0,
                     marginLeft: theme.spacing(),
+                    padding: 0,
                   }}
                   status="help"
+                  text="You must update your StackScript to use a compatible Image to deploy it"
+                  tooltipPosition="bottom"
                 />
               </Box>
               {imageChips.deprecated}
             </>
           ) : null}
         </div>
-        <Divider spacingTop={16} spacingBottom={16} />
+        <Divider spacingBottom={16} spacingTop={16} />
       </div>
-      <Typography variant="h3" className={classes.heading}>
+      <Typography className={classes.heading} variant="h3">
         Script
       </Typography>
       <ScriptCode script={script} />

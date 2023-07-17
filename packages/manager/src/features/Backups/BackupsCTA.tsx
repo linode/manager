@@ -1,29 +1,28 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useProfile } from 'src/queries/profile';
 import { handleOpen } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { MapState } from 'src/store/types';
-import { useProfile } from 'src/queries/profile';
+
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(1),
-    paddingRight: theme.spacing(2),
-    margin: `${theme.spacing(1)} 0 ${theme.spacing(3)} 0`,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  closeIcon: {
+    ...theme.applyLinkStyles,
+    lineHeight: '0.5rem',
+    marginLeft: 12,
   },
   enableButton: {
     height: 40,
@@ -33,10 +32,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   enableText: {
     ...theme.applyLinkStyles,
   },
-  closeIcon: {
-    ...theme.applyLinkStyles,
-    marginLeft: 12,
-    lineHeight: '0.5rem',
+  root: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: `${theme.spacing(1)} 0 ${theme.spacing(3)} 0`,
+    padding: theme.spacing(1),
+    paddingRight: theme.spacing(2),
   },
 }));
 
@@ -44,8 +46,8 @@ type CombinedProps = StateProps & DispatchProps;
 
 const BackupsCTA: React.FC<CombinedProps> = (props) => {
   const {
-    linodesWithoutBackups,
     actions: { openBackupsDrawer },
+    linodesWithoutBackups,
   } = props;
   const classes = useStyles();
 
@@ -62,9 +64,9 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
 
   return (
     <PreferenceToggle<boolean>
+      localStorageKey="BackupsCtaDismissed"
       preferenceKey="backups_cta_dismissed"
       preferenceOptions={[false, true]}
-      localStorageKey="BackupsCtaDismissed"
     >
       {({
         preference: isDismissed,
@@ -85,7 +87,7 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
               to protect your data and recover quickly in an emergency.
             </Typography>
             <span style={{ display: 'flex' }}>
-              <button onClick={dismissed} className={classes.closeIcon}>
+              <button className={classes.closeIcon} onClick={dismissed}>
                 <Close />
               </button>
             </span>

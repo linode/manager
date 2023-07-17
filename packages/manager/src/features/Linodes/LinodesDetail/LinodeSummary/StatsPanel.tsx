@@ -1,30 +1,31 @@
-import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
-import Typography from 'src/components/core/Typography';
+import * as React from 'react';
+
+import { CircleProgress } from 'src/components/CircleProgress';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles(() => ({
   graphsUnavailable: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     justifyContent: 'center',
     padding: 16,
     paddingTop: 0,
     width: '100%',
   },
   spinner: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     justifyContent: 'center',
     width: '100%',
   },
 }));
 
 interface Props {
-  renderBody: () => JSX.Element;
-  loading: boolean;
-  title: string;
   height: number;
+  loading: boolean;
+  renderBody: () => JSX.Element;
+  title: string;
 }
 
 export const StatsPanel: React.FC<Props> = (props) => {
@@ -34,7 +35,7 @@ export const StatsPanel: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Typography variant="h2" data-qa-stats-title>
+      <Typography data-qa-stats-title variant="h2">
         {title}
       </Typography>
       {loading ? (

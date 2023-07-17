@@ -1,17 +1,18 @@
-import * as React from 'react';
-import IPAddress from 'src/features/Linodes/LinodesLanding/IPAddress';
-import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import { Link, useParams } from 'react-router-dom';
+
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
-import { useRegionsQuery } from 'src/queries/regions';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+import IPAddress from 'src/features/Linodes/LinodesLanding/IPAddress';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+import { useRegionsQuery } from 'src/queries/regions';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export const SummaryPanel = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -44,18 +45,18 @@ export const SummaryPanel = () => {
     <StyledRootDiv>
       <StyledSummarySectionWrapper>
         <StyledSummarySection>
-          <StyledTitle variant="h3" data-qa-title>
+          <StyledTitle data-qa-title variant="h3">
             NodeBalancer Details
           </StyledTitle>
           <StyledSection>
-            <Typography variant="body1" data-qa-ports>
+            <Typography data-qa-ports variant="body1">
               <strong>Ports: </strong>
               {configPorts?.length === 0 && 'None'}
-              {configPorts?.map(({ port, configId }, i) => (
+              {configPorts?.map(({ configId, port }, i) => (
                 <React.Fragment key={configId}>
                   <Link
-                    to={`/nodebalancers/${nodebalancer?.id}/configurations/${configId}`}
                     className="secondaryLink"
+                    to={`/nodebalancers/${nodebalancer?.id}/configurations/${configId}`}
                   >
                     {port}
                   </Link>
@@ -77,20 +78,20 @@ export const SummaryPanel = () => {
             </Typography>
           </StyledSection>
           <StyledSection>
-            <Typography variant="body1" style={{ wordBreak: 'break-word' }}>
+            <Typography style={{ wordBreak: 'break-word' }} variant="body1">
               <strong>Host Name: </strong>
               {nodebalancer.hostname}
             </Typography>
           </StyledSection>
           <StyledSection>
-            <Typography variant="body1" data-qa-region>
+            <Typography data-qa-region variant="body1">
               <strong>Region:</strong> {region?.label}
             </Typography>
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
       <StyledSummarySection>
-        <StyledTitle variant="h3" data-qa-title>
+        <StyledTitle data-qa-title variant="h3">
           IP Addresses
         </StyledTitle>
         <StyledSection>
@@ -103,7 +104,7 @@ export const SummaryPanel = () => {
         </StyledSection>
       </StyledSummarySection>
       <StyledSummarySection>
-        <StyledTitle variant="h3" data-qa-title>
+        <StyledTitle data-qa-title variant="h3">
           Tags
         </StyledTitle>
         <TagsPanel
@@ -132,10 +133,10 @@ const StyledSummarySectionWrapper = styled('div', {
 const StyledSummarySection = styled(Paper, {
   label: 'StyledSummarySection',
 })(({ theme }) => ({
-  padding: theme.spacing(2.5),
+  height: '93%',
   marginBottom: theme.spacing(2),
   minHeight: '160px',
-  height: '93%',
+  padding: theme.spacing(2.5),
 }));
 
 const StyledTitle = styled(Typography, {
@@ -150,20 +151,20 @@ const StyledSection = styled('div', {
   marginBottom: theme.spacing(1),
   ...theme.typography.body1,
   '& .dif': {
-    position: 'relative',
-    width: 'auto',
     '& .chip': {
       position: 'absolute',
-      top: '-4px',
       right: -10,
+      top: '-4px',
     },
+    position: 'relative',
+    width: 'auto',
   },
 }));
 
 const StyledIPGrouping = styled('div', {
   label: 'StyledIPGrouping',
 })(() => ({
-  margin: '-2px 0 0 2px',
   display: 'flex',
   flexDirection: 'column',
+  margin: '-2px 0 0 2px',
 }));

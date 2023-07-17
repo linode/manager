@@ -1,38 +1,41 @@
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Radio } from 'src/components/Radio/Radio';
-import RadioGroup from 'src/components/core/RadioGroup';
 import Select from 'src/components/EnhancedSelect';
-import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
-import { capitalize } from 'src/utilities/capitalize';
-import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
-import { makeStyles } from '@mui/styles';
+import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
-import { PORT_PRESETS, PORT_PRESETS_ITEMS } from './shared';
-import { enforceIPMasks } from './FirewallRuleDrawer.utils';
+import { Radio } from 'src/components/Radio/Radio';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
 import {
   addressOptions,
   firewallOptionItemsShort,
   portPresets,
   protocolOptions,
 } from 'src/features/Firewalls/shared';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { capitalize } from 'src/utilities/capitalize';
+import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
+
+import { enforceIPMasks } from './FirewallRuleDrawer.utils';
+import { PORT_PRESETS, PORT_PRESETS_ITEMS } from './shared';
+
 import type { FirewallRuleFormProps } from './FirewallRuleDrawer.types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { Theme } from '@mui/material/styles';
+import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const ipNetmaskTooltipText =
   'If you do not specify a mask, /32 will be assumed for IPv4 addresses and /128 will be assumed for IPv6 addresses.';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  ipSelect: {
+  actionSection: {
     marginTop: theme.spacing(2),
   },
-  actionSection: {
+  ipSelect: {
     marginTop: theme.spacing(2),
   },
 }));
@@ -42,23 +45,23 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
     const classes = useStyles();
 
     const {
-      values,
-      errors,
-      status,
-      handleChange,
-      handleBlur,
-      handleSubmit,
-      setFieldValue,
       addressesLabel,
+      category,
+      errors,
+      handleBlur,
+      handleChange,
+      handleSubmit,
       ips,
-      setIPs,
-      presetPorts,
-      setPresetPorts,
       mode,
+      presetPorts,
       ruleErrors,
       setFieldError,
+      setFieldValue,
+      setIPs,
+      setPresetPorts,
+      status,
       touched,
-      category,
+      values,
     } = props;
 
     const hasCustomInput = presetPorts.some(
@@ -213,104 +216,104 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
     return (
       <form onSubmit={handleSubmit}>
         {status && (
-          <Notice key={status} text={status.generalError} error data-qa-error />
+          <Notice data-qa-error error key={status} text={status.generalError} />
         )}
         <Select
+          aria-label="Preset for firewall rule"
+          isClearable={false}
           label="Preset"
           name="type"
-          placeholder="Select a rule preset..."
-          aria-label="Preset for firewall rule"
-          options={firewallOptionItemsShort}
-          onChange={handleTypeChange}
-          isClearable={false}
           onBlur={handleBlur}
+          onChange={handleTypeChange}
+          options={firewallOptionItemsShort}
+          placeholder="Select a rule preset..."
         />
         <TextField
+          aria-label="Label for firewall rule"
+          errorText={errors.label}
           label="Label"
           name="label"
-          placeholder="Enter a label..."
-          aria-label="Label for firewall rule"
-          value={values.label}
-          errorText={errors.label}
-          onChange={handleTextFieldChange}
           onBlur={handleBlur}
+          onChange={handleTextFieldChange}
+          placeholder="Enter a label..."
           required
+          value={values.label}
         />
         <TextField
+          aria-label="Description for firewall rule"
+          errorText={errors.description}
           label="Description"
           name="description"
-          placeholder="Enter a description..."
-          aria-label="Description for firewall rule"
-          value={values.description}
-          errorText={errors.description}
-          onChange={handleTextFieldChange}
           onBlur={handleBlur}
+          onChange={handleTextFieldChange}
+          placeholder="Enter a description..."
+          value={values.description}
         />
         <Select
+          aria-label="Select rule protocol."
+          errorText={errors.protocol}
+          isClearable={false}
           label="Protocol"
           name="protocol"
-          placeholder="Select a protocol..."
-          aria-label="Select rule protocol."
-          value={protocolOptions.find((p) => p.value === values.protocol)}
-          errorText={errors.protocol}
-          options={protocolOptions}
-          onChange={handleProtocolChange}
           onBlur={handleBlur}
-          isClearable={false}
+          onChange={handleProtocolChange}
+          options={protocolOptions}
+          placeholder="Select a protocol..."
           required
+          value={protocolOptions.find((p) => p.value === values.protocol)}
         />
         <Select
-          isMulti
-          label="Ports"
-          errorText={generalPortError}
-          value={presetPorts}
-          options={portOptions}
-          onChange={handlePortPresetChange}
-          disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
           textFieldProps={{
             helperText: ['ICMP', 'IPENCAP'].includes(values.protocol)
               ? `Ports are not allowed for ${values.protocol} protocols.`
               : undefined,
           }}
+          disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
+          errorText={generalPortError}
+          isMulti
+          label="Ports"
+          onChange={handlePortPresetChange}
+          options={portOptions}
           required
+          value={presetPorts}
         />
         {hasCustomInput ? (
           <TextField
+            aria-label="Custom port range for firewall rule"
+            errorText={errors.ports}
             label="Custom Port Range"
             name="ports"
-            placeholder="Enter a custom port range..."
-            aria-label="Custom port range for firewall rule"
-            value={values.ports}
-            errorText={errors.ports}
-            onChange={handleTextFieldChange}
             onBlur={handleBlur}
+            onChange={handleTextFieldChange}
+            placeholder="Enter a custom port range..."
+            value={values.ports}
           />
         ) : null}
         <Select
+          aria-label={`Select rule ${addressesLabel}s.`}
+          errorText={errors.addresses}
+          isClearable={false}
           label={`${capitalize(addressesLabel)}s`}
           name="addresses"
-          placeholder={`Select ${addressesLabel}s...`}
-          aria-label={`Select rule ${addressesLabel}s.`}
-          options={addressOptions}
-          errorText={errors.addresses}
-          value={addressesValue}
-          onChange={handleAddressesChange}
           onBlur={handleBlur}
-          isClearable={false}
+          onChange={handleAddressesChange}
+          options={addressOptions}
+          placeholder={`Select ${addressesLabel}s...`}
           required
+          value={addressesValue}
         />
         {/* Show this field only if "IP / Netmask has been selected." */}
         {values.addresses === 'ip/netmask' && (
           <MultipleIPInput
-            title="IP / Netmask"
             aria-label="IP / Netmask for Firewall rule"
             className={classes.ipSelect}
-            ips={ips}
-            onChange={handleIPChange}
-            onBlur={handleIPBlur}
             inputProps={{ autoFocus: true }}
-            tooltip={ipNetmaskTooltipText}
+            ips={ips}
+            onBlur={handleIPBlur}
+            onChange={handleIPChange}
             placeholder={ipFieldPlaceholder}
+            title="IP / Netmask"
+            tooltip={ipNetmaskTooltipText}
           />
         )}
         <div className={classes.actionSection}>
@@ -320,16 +323,16 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           <RadioGroup
             aria-label="action"
             name="action"
-            value={values.action}
             onChange={handleActionChange}
             row
+            value={values.action}
           >
             <FormControlLabel
-              value="ACCEPT"
-              label="Accept"
               control={<Radio />}
+              label="Accept"
+              value="ACCEPT"
             />
-            <FormControlLabel value="DROP" label="Drop" control={<Radio />} />
+            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
             <Typography style={{ paddingTop: 4 }}>
               This will take precedence over the Firewall&rsquo;s {category}{' '}
               policy.
@@ -340,8 +343,8 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         <ActionsPanel>
           <Button
             buttonType="primary"
-            onClick={() => handleSubmit()}
             data-qa-submit
+            onClick={() => handleSubmit()}
           >
             {mode === 'create' ? 'Add Rule' : 'Add Changes'}
           </Button>

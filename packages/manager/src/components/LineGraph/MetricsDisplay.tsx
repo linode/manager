@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { Metrics } from 'src/utilities/statMetrics';
+
 import styled, { StyleProps } from './MetricDisplay.styles';
 
 interface MetricsDisplayProps {
@@ -13,17 +15,17 @@ interface MetricsDisplayProps {
 }
 
 interface MetricsDisplayRow {
-  legendColor:
-    | 'yellow'
-    | 'red'
-    | 'blue'
-    | 'green'
-    | 'purple'
-    | 'lightGreen'
-    | 'darkGreen';
-  legendTitle: string;
-  format: (n: number) => string;
   data: Metrics;
+  format: (n: number) => string;
+  legendColor:
+    | 'blue'
+    | 'darkGreen'
+    | 'green'
+    | 'lightGreen'
+    | 'purple'
+    | 'red'
+    | 'yellow';
+  legendTitle: string;
 }
 
 type CombinedProps = MetricsDisplayProps & StyleProps;
@@ -38,11 +40,11 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
           <TableCell>{''}</TableCell>
           {rowHeaders.map((section, idx) => (
             <TableCell
-              key={idx}
-              data-qa-header-cell
               className={classes.tableHeadInner}
+              data-qa-header-cell
+              key={idx}
             >
-              <Typography variant="body1" className={classes.text}>
+              <Typography className={classes.text} variant="body1">
                 {section}
               </Typography>
             </TableCell>
@@ -51,9 +53,9 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
       </TableHead>
       <TableBody>
         {rows.map((row) => {
-          const { legendTitle, legendColor, data, format } = row;
+          const { data, format, legendColor, legendTitle } = row;
           return (
-            <TableRow key={legendTitle} data-qa-metric-row>
+            <TableRow data-qa-metric-row key={legendTitle}>
               <TableCell className={classes.legend}>
                 <div className={classes[legendColor]} data-qa-legend-title>
                   <Typography component="span">{legendTitle}</Typography>
@@ -62,11 +64,11 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
               {metricsBySection(data).map((section, idx) => {
                 return (
                   <TableCell
+                    data-qa-body-cell
                     key={idx}
                     parentColumn={rowHeaders[idx]}
-                    data-qa-body-cell
                   >
-                    <Typography variant="body1" className={classes.text}>
+                    <Typography className={classes.text} variant="body1">
                       {format(section)}
                     </Typography>
                   </TableCell>

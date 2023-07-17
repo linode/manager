@@ -1,6 +1,8 @@
-import React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { fireEvent } from '@testing-library/react';
+import React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { TextTooltip } from './TextTooltip';
 
 describe('TextTooltip', () => {
@@ -30,7 +32,7 @@ describe('TextTooltip', () => {
       tooltipText: 'This is a tooltip',
     };
 
-    const { getByText, findByRole } = renderWithTheme(
+    const { findByRole, getByText } = renderWithTheme(
       <TextTooltip {...props} />
     );
     fireEvent.mouseEnter(getByText(props.displayText));
@@ -43,11 +45,11 @@ describe('TextTooltip', () => {
   it('Applies custom styles to the Typography component', () => {
     const props = {
       displayText: 'Hover me',
-      tooltipText: 'This is a tooltip',
       sxTypography: {
         color: 'red',
         fontSize: '18px',
       },
+      tooltipText: 'This is a tooltip',
     };
 
     const { getByText } = renderWithTheme(<TextTooltip {...props} />);

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useDeleteLinodeMutation,
@@ -10,20 +11,20 @@ import {
 
 interface Props {
   linodeId: number | undefined;
-  open: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  open: boolean;
 }
 
 export const DeleteLinodeDialog = (props: Props) => {
-  const { linodeId, open, onClose, onSuccess } = props;
+  const { linodeId, onClose, onSuccess, open } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
     linodeId !== undefined && open
   );
 
-  const { mutateAsync, error, isLoading, reset } = useDeleteLinodeMutation(
+  const { error, isLoading, mutateAsync, reset } = useDeleteLinodeMutation(
     linodeId ?? -1
   );
 
@@ -45,13 +46,19 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
-      title={`Delete ${linode?.label ?? ''}?`}
-      entity={{ type: 'Linode', label: linode?.label }}
-      open={open}
-      loading={isLoading}
+      entity={{
+        action: 'deletion',
+        name: linode?.label,
+        primaryBtnText: 'Delete',
+        type: 'Linode',
+      }}
       errors={error}
-      onClose={onClose}
+      label={'Linode Label'}
+      loading={isLoading}
       onClick={onDelete}
+      onClose={onClose}
+      open={open}
+      title={`Delete ${linode?.label ?? ''}?`}
     >
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>

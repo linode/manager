@@ -1,19 +1,24 @@
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import { Typography } from 'src/components/Typography';
+
 import TicketAttachmentRow from './TicketAttachmentRow';
 
-type ClassNames = 'root' | 'attachmentPaperWrapper';
+type ClassNames = 'attachmentPaperWrapper' | 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
+    attachmentPaperWrapper: {
+      overflowX: 'auto',
+    },
     root: {
       marginLeft: theme.spacing(7),
       maxWidth: 600,
@@ -21,9 +26,6 @@ const styles = (theme: Theme) =>
         marginLeft: theme.spacing(5),
         width: 'calc(100% - 32px)',
       },
-    },
-    attachmentPaperWrapper: {
-      overflowX: 'auto',
     },
   });
 
@@ -61,7 +63,7 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
   const icons = addIconsToAttachments(attachments);
 
   return (
-    <Grid container justifyContent="flex-start" className={classes.root}>
+    <Grid className={classes.root} container justifyContent="flex-start">
       <Grid className={classes.attachmentPaperWrapper}>
         <Typography variant="h3">Attachments</Typography>
         <TicketAttachmentRow
@@ -71,10 +73,10 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
         {attachments.length > 5 && (
           // eslint-disable-next-line jsx-a11y/click-events-have-key-events
           <div
-            onClick={toggle}
-            style={{ display: 'inline-block' }}
             data-qa-attachment-toggle
+            onClick={toggle}
             role="button"
+            style={{ display: 'inline-block' }}
             tabIndex={0}
           >
             <ShowMoreExpansion

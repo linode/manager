@@ -1,36 +1,36 @@
-import { styled, Theme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
-import Paper from '../core/Paper';
 
-import Typography from '../core/Typography';
 import Grid from '../Grid';
+import { Typography } from '../Typography';
+import Paper from '../core/Paper';
 import { SummaryItem } from './SummaryItem';
 
 interface Props {
-  heading: string;
-  children?: JSX.Element | null;
   agreement?: JSX.Element;
+  children?: JSX.Element | null;
   displaySections: SummaryItem[];
+  heading: string;
 }
 
 export interface SummaryItem {
-  title?: string;
-  details?: string | number;
-  monthly?: number;
+  details?: number | string;
   hourly?: number;
+  monthly?: number;
+  title?: string;
 }
 
 export const CheckoutSummary = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { heading, agreement, displaySections, children } = props;
+  const { agreement, children, displaySections, heading } = props;
 
   return (
     <StyledPaper data-qa-summary>
-      <StyledHeading variant="h2" data-qa-order-summary>
+      <StyledHeading data-qa-order-summary variant="h2">
         {heading}
       </StyledHeading>
       {displaySections.length === 0 ? (
@@ -40,8 +40,8 @@ export const CheckoutSummary = (props: Props) => {
       ) : null}
       <StyledSummary
         container
-        spacing={3}
         direction={matchesSmDown ? 'column' : 'row'}
+        spacing={3}
       >
         {displaySections.map((item) => (
           <SummaryItem key={`${item.title}-${item.details}`} {...item} />
@@ -54,8 +54,8 @@ export const CheckoutSummary = (props: Props) => {
 };
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(3),
   marginBottom: theme.spacing(3),
+  marginTop: theme.spacing(3),
 }));
 
 const StyledHeading = styled(Typography)(({ theme }) => ({
@@ -65,10 +65,10 @@ const StyledHeading = styled(Typography)(({ theme }) => ({
 const StyledSummary = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     '& > div': {
-      borderRight: 'solid 1px #9DA4A6',
       '&:last-child': {
         borderRight: 'none',
       },
+      borderRight: 'solid 1px #9DA4A6',
     },
   },
 }));

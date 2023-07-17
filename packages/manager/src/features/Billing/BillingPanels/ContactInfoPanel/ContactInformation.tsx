@@ -1,59 +1,61 @@
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
 import countryData from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
-import BillingContactDrawer from './EditBillingContactDrawer';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+
+import { Typography } from 'src/components/Typography';
+
 import {
-  BillingPaper,
-  BillingBox,
   BillingActionButton,
+  BillingBox,
+  BillingPaper,
 } from '../../BillingDetail';
+import BillingContactDrawer from './EditBillingContactDrawer';
 
 interface Props {
-  company: string;
-  firstName: string;
-  lastName: string;
   address1: string;
   address2: string;
   city: string;
-  state: string;
-  zip: string;
+  company: string;
   country: string;
   email: string;
+  firstName: string;
+  lastName: string;
   phone: string;
+  state: string;
   taxId: string;
+  zip: string;
 }
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
   '& .dif': {
-    position: 'relative',
-    width: 'auto',
     '& .MuiChip-root': {
       position: 'absolute',
-      top: '-4px',
       right: -10,
+      top: '-4px',
     },
+    position: 'relative',
+    width: 'auto',
   },
+  marginBottom: theme.spacing(1),
 }));
 
 const ContactInformation = (props: Props) => {
   const {
-    company,
-    firstName,
-    lastName,
     address1,
     address2,
     city,
-    state,
-    zip,
+    company,
     country,
     email,
+    firstName,
+    lastName,
     phone,
+    state,
     taxId,
+    zip,
   } = props;
 
   const history = useHistory<{
@@ -114,8 +116,8 @@ const ContactInformation = (props: Props) => {
   };
 
   return (
-    <Grid xs={12} md={6}>
-      <BillingPaper variant="outlined" data-qa-contact-summary>
+    <Grid md={6} xs={12}>
+      <BillingPaper data-qa-contact-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Billing Contact</Typography>
           <BillingActionButton
@@ -141,16 +143,16 @@ const ContactInformation = (props: Props) => {
             <Box sx={sxBox}>
               {(firstName || lastName) && (
                 <StyledTypography
-                  sx={{ wordBreak: 'break-all' }}
                   data-qa-contact-name
+                  sx={{ wordBreak: 'break-all' }}
                 >
                   {firstName} {lastName}
                 </StyledTypography>
               )}
               {company && (
                 <StyledTypography
-                  sx={{ wordBreak: 'break-all' }}
                   data-qa-company
+                  sx={{ wordBreak: 'break-all' }}
                 >
                   {company}
                 </StyledTypography>
@@ -173,8 +175,8 @@ const ContactInformation = (props: Props) => {
 
           <Box sx={sxBox}>
             <StyledTypography
-              sx={{ wordBreak: 'break-all' }}
               data-qa-contact-email
+              sx={{ wordBreak: 'break-all' }}
             >
               {email}
             </StyledTypography>
@@ -190,13 +192,13 @@ const ContactInformation = (props: Props) => {
         </Grid>
       </BillingPaper>
       <BillingContactDrawer
-        open={editContactDrawerOpen}
         onClose={() => {
           history.replace('/account/billing', { contactDrawerOpen: false });
           setEditContactDrawerOpen(false);
           setFocusEmail(false);
         }}
         focusEmail={focusEmail}
+        open={editContactDrawerOpen}
       />
     </Grid>
   );

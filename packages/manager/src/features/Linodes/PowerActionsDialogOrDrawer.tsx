@@ -1,14 +1,16 @@
+import { Config } from '@linode/api-v4/lib/linodes';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
-import Select from 'src/components/EnhancedSelect/Select';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Typography from 'src/components/core/Typography';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import Select from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/ExternalLink';
 import { Notice } from 'src/components/Notice/Notice';
-import { Config } from '@linode/api-v4/lib/linodes';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Typography } from 'src/components/Typography';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeConfigsQuery,
   useBootLinodeMutation,
@@ -16,21 +18,14 @@ import {
   useRebootLinodeMutation,
   useShutdownLinodeMutation,
 } from 'src/queries/linodes/linodes';
-import { resetEventsPolling } from 'src/eventsPolling';
 
-export type Action = 'Reboot' | 'Power Off' | 'Power On';
+export type Action = 'Power Off' | 'Power On' | 'Reboot';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(1.25),
-    alignItems: 'center',
-    lineHeight: '1.25rem',
-    fontSize: '0.875rem',
-  },
   dialog: {
     '& .dialog-content': {
-      paddingTop: 0,
       paddingBottom: 0,
+      paddingTop: 0,
     },
   },
   notice: {
@@ -38,13 +33,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '0.875rem !important',
     },
   },
+  root: {
+    alignItems: 'center',
+    fontSize: '0.875rem',
+    lineHeight: '1.25rem',
+    marginBottom: theme.spacing(1.25),
+  },
 }));
 
 interface Props {
-  linodeId: number | undefined;
-  isOpen: boolean;
-  onClose: () => void;
   action: Action;
+  isOpen: boolean;
+  linodeId: number | undefined;
+  onClose: () => void;
 }
 
 /**
@@ -59,7 +60,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { onClose, linodeId, isOpen, action } = props;
+  const { action, isOpen, linodeId, onClose } = props;
   const classes = useStyles();
 
   const { data: linode } = useLinodeQuery(
@@ -69,51 +70,51 @@ export const PowerActionsDialog = (props: Props) => {
 
   const {
     data: configs,
-    isLoading: configsLoading,
     error: configsError,
+    isLoading: configsLoading,
   } = useAllLinodeConfigsQuery(
     linodeId ?? -1,
     linodeId !== undefined && isOpen
   );
 
   const {
-    mutateAsync: bootLinode,
-    isLoading: isBooting,
     error: bootError,
+    isLoading: isBooting,
+    mutateAsync: bootLinode,
   } = useBootLinodeMutation(linodeId ?? -1);
 
   const {
-    mutateAsync: rebootLinode,
-    isLoading: isRebooting,
     error: rebootError,
+    isLoading: isRebooting,
+    mutateAsync: rebootLinode,
   } = useRebootLinodeMutation(linodeId ?? -1);
 
   const {
-    mutateAsync: shutdownLinode,
-    isLoading: isShuttingDown,
     error: shutdownError,
+    isLoading: isShuttingDown,
+    mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
 
-  const [selectedConfigID, setSelectConfigID] = React.useState<number | null>(
+  const [selectedConfigID, setSelectConfigID] = React.useState<null | number>(
     null
   );
 
   const mutationMap = {
-    Reboot: rebootLinode,
     'Power Off': shutdownLinode,
     'Power On': bootLinode,
+    Reboot: rebootLinode,
   } as const;
 
   const errorMap = {
-    Reboot: rebootError,
     'Power Off': shutdownError,
     'Power On': bootError,
+    Reboot: rebootError,
   };
 
   const loadingMap = {
-    Reboot: isRebooting,
     'Power Off': isShuttingDown,
     'Power On': isBooting,
+    Reboot: isRebooting,
   };
 
   const error = errorMap[action];
@@ -146,55 +147,55 @@ export const PowerActionsDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      className={classes.dialog}
-      open={isOpen}
-      title={`${action} Linode ${linode?.label ?? ''}?`}
-      onClose={onClose}
-      error={error?.[0].reason}
       actions={
         <ActionsPanel>
           <Button buttonType="secondary" onClick={props.onClose}>
             Cancel
           </Button>
-          <Button buttonType="primary" onClick={onSubmit} loading={isLoading}>
+          <Button buttonType="primary" loading={isLoading} onClick={onSubmit}>
             {props.action} Linode
           </Button>
         </ActionsPanel>
       }
+      className={classes.dialog}
+      error={error?.[0].reason}
+      onClose={onClose}
+      open={isOpen}
+      title={`${action} Linode ${linode?.label ?? ''}?`}
     >
       {props.action === 'Power On' ? (
         <Typography className={classes.root}>
           See the&nbsp;
           <ExternalLink
+            hideIcon
             link="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/"
             text="guide for setting up and securing a compute instance"
-            hideIcon
           />
           &nbsp;for more information.
         </Typography>
       ) : null}
       {showConfigSelect && (
         <Select
-          label="Config"
-          options={configOptions}
-          value={configOptions.find((o) => o.value === selectedConfigID)}
-          onChange={(o) => setSelectConfigID(o === null ? null : o.value)}
-          isLoading={configsLoading}
           errorText={configsError?.[0].reason}
+          isLoading={configsLoading}
+          label="Config"
+          onChange={(o) => setSelectConfigID(o === null ? null : o.value)}
+          options={configOptions}
           overflowPortal
+          value={configOptions.find((o) => o.value === selectedConfigID)}
         />
       )}
       {props.action === 'Power Off' && (
         <span>
-          <Notice warning className={classes.notice}>
+          <Notice className={classes.notice} warning>
             <strong>Note: </strong>
             Powered down Linodes will still accrue charges.
             <br />
             See the&nbsp;
             <ExternalLink
+              hideIcon
               link="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services"
               text="Billing and Payments documentation"
-              hideIcon
             />
             &nbsp;for more information.
           </Notice>

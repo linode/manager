@@ -1,39 +1,39 @@
+import { Theme } from '@mui/material/styles';
 import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { Button } from 'src/components/Button/Button';
-import Typography from 'src/components/core/Typography';
 import { H1Header } from 'src/components/H1Header/H1Header';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    height: '100vh',
-    backgroundColor: theme.bg.main,
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: `${theme.spacing(4)} ${theme.spacing(2)} 0px`,
-    '& h1': {
-      marginTop: theme.spacing(4),
-      marginBottom: theme.spacing(4),
-    },
-    '& p': {
-      marginTop: theme.spacing(2),
-      fontSize: theme.spacing(2),
-      lineHeight: theme.spacing(3),
-    },
-    '& button': {
-      marginTop: theme.spacing(8),
-      backgroundColor: '#00b159',
-      color: '#fff',
-    },
-  },
   logo: {
     width: '100px',
+  },
+  root: {
+    '& button': {
+      backgroundColor: '#00b159',
+      color: '#fff',
+      marginTop: theme.spacing(8),
+    },
+    '& h1': {
+      marginBottom: theme.spacing(4),
+      marginTop: theme.spacing(4),
+    },
+    '& p': {
+      fontSize: theme.spacing(2),
+      lineHeight: theme.spacing(3),
+      marginTop: theme.spacing(2),
+    },
+    alignItems: 'center',
+    backgroundColor: theme.bg.main,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
+    padding: `${theme.spacing(4)} ${theme.spacing(2)} 0px`,
   },
 }));
 
@@ -65,8 +65,8 @@ export const CancelLanding = React.memo(() => {
       </Typography>
       <Button
         buttonType="primary"
-        onClick={goToSurvey}
         data-testid="survey-button"
+        onClick={goToSurvey}
       >
         Take our exit survey
       </Button>

@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Link from 'src/components/Link';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
 import PointerIcon from 'src/assets/icons/pointer.svg';
+import { Link } from 'src/components/Link';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -15,99 +16,99 @@ const useStyles = makeStyles((theme: Theme) => {
     ? theme.textColors.linkActiveLight
     : theme.palette.primary.main;
   return {
-    appSection: {
-      display: 'grid',
-      gridTemplateColumns: `repeat(2, ${theme.spacing(20)})`,
-      columnGap: theme.spacing(3),
-      rowGap: theme.spacing(),
-      gridAutoFlow: 'row',
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
     appLink: {
-      display: 'flex',
-      alignItems: 'center',
-      gridColumn: 'span 1',
-      height: theme.spacing(4.75),
-      maxWidth: theme.spacing(20),
-      paddingLeft: theme.spacing(),
-      justifyContent: 'space-between',
-      backgroundColor,
-      fontSize: '0.875rem',
-      fontWeight: 700,
-      color: theme.palette.text.primary,
-      border: `1px solid ${borderColor}`,
-      '&:hover': {
-        textDecoration: 'none',
-      },
       '&:focus': {
         textDecoration: 'none',
       },
+      '&:hover': {
+        textDecoration: 'none',
+      },
+      alignItems: 'center',
+      backgroundColor,
+      border: `1px solid ${borderColor}`,
+      color: theme.palette.text.primary,
+      display: 'flex',
+      fontSize: '0.875rem',
+      fontWeight: 700,
+      gridColumn: 'span 1',
+      height: theme.spacing(4.75),
+      justifyContent: 'space-between',
+      maxWidth: theme.spacing(20),
+      paddingLeft: theme.spacing(),
     },
     appLinkIcon: {
-      display: 'flex',
-      height: '100%',
-      aspectRatio: '1 / 1',
       alignItems: 'center',
-      justifyContent: 'center',
+      aspectRatio: '1 / 1',
       borderLeft: `1px solid ${borderColor}`,
       color: iconColor,
+      display: 'flex',
+      height: '100%',
+      justifyContent: 'center',
+    },
+    appSection: {
+      columnGap: theme.spacing(3),
+      display: 'grid',
+      gridAutoFlow: 'row',
+      gridTemplateColumns: `repeat(2, ${theme.spacing(20)})`,
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(2),
+      rowGap: theme.spacing(),
     },
   };
 });
 
 const gaCategory = 'Linodes landing page empty';
 const linkGAEventTemplate = {
-  category: gaCategory,
   action: 'Click:link',
+  category: gaCategory,
 };
 
 const appsLinkData = [
   {
+    text: 'Wordpress',
     to:
       '/linodes/create?type=One-Click&appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress',
-    text: 'Wordpress',
   },
   {
+    text: 'Harbor',
     to:
       '/linodes/create?type=One-Click&appID=912262&utm_source=marketplace&utm_medium=website&utm_campaign=Harbor',
-    text: 'Harbor',
   },
   {
+    text: 'cPanel',
     to:
       '/linodes/create?type=One-Click&appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel',
-    text: 'cPanel',
   },
   {
+    text: 'Postgres Cluster',
     to:
       '/linodes/create?type=One-Click&appID=1068726&utm_source=marketplace&utm_medium=website&utm_campaign=Postgres_Cluster',
-    text: 'Postgres Cluster',
   },
   {
+    text: 'Prometheus & Grafana',
     to:
       '/linodes/create?type=One-Click&appID=985364&utm_source=marketplace&utm_medium=website&utm_campaign=Prometheus_Grafana',
-    text: 'Prometheus & Grafana',
   },
   {
+    text: 'Kali',
     to:
       '/linodes/create?type=One-Click&appID=1017300&utm_source=marketplace&utm_medium=website&utm_campaign=Kali',
-    text: 'Kali',
   },
 ];
 
 interface AppLinkProps {
-  to: string;
   text: string;
+  to: string;
 }
 
 const AppLink = (props: AppLinkProps) => {
-  const { to, text } = props;
+  const { text, to } = props;
   const classes = useStyles();
   return (
     <Link
+      className={classes.appLink}
       onClick={getLinkOnClick(linkGAEventTemplate, text)}
       to={to}
-      className={classes.appLink}
     >
       {text}
       <div className={classes.appLinkIcon}>

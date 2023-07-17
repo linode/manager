@@ -1,45 +1,46 @@
 import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { WithTheme, makeStyles, withTheme } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+
 import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
 import MonitorOK from 'src/assets/icons/monitor-ok.svg';
-import { makeStyles, withTheme, WithTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from 'src/components/Typography';
 
 export const useStyles = makeStyles((theme: Theme) => ({
+  error: {
+    '&:before': {
+      backgroundColor: theme.color.red,
+      content: '""',
+      height: 3,
+      left: -30,
+      position: 'absolute',
+      top: 7,
+      width: 16,
+    },
+    '&:last-of-type': {
+      marginBottom: 0,
+    },
+    color: theme.color.headline,
+    marginBottom: `calc(${theme.spacing(2)} - 3)`,
+    position: 'relative',
+    textAlign: 'left',
+  },
+  icon: {
+    '& svg': {
+      display: 'flex',
+      height: 56,
+      width: 56,
+    },
+  },
   root: {
     padding: `0`,
     textAlign: 'center',
     [theme.breakpoints.down('lg')]: {
       padding: `${theme.spacing(2)} 0 0`,
-    },
-  },
-  icon: {
-    '& svg': {
-      display: 'flex',
-      width: 56,
-      height: 56,
-    },
-  },
-  error: {
-    position: 'relative',
-    color: theme.color.headline,
-    marginBottom: `calc(${theme.spacing(2)} - 3)`,
-    textAlign: 'left',
-    '&:before': {
-      content: '""',
-      position: 'absolute',
-      top: 7,
-      left: -30,
-      backgroundColor: theme.color.red,
-      height: 3,
-      width: 16,
-    },
-    '&:last-of-type': {
-      marginBottom: 0,
     },
   },
   text: {
@@ -63,18 +64,18 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
 
   return (
     <Grid
+      alignItems="center"
+      className={classes.root}
       container
       direction="column"
-      alignItems="center"
       justifyContent="center"
-      className={classes.root}
     >
       <Grid>
         <Grid className={classes.icon}>
           {failedMonitors.length === 0 ? (
-            <MonitorOK width={iconSize} height={iconSize} />
+            <MonitorOK height={iconSize} width={iconSize} />
           ) : (
-            <MonitorFailed width={iconSize} height={iconSize} />
+            <MonitorFailed height={iconSize} width={iconSize} />
           )}
         </Grid>
       </Grid>
@@ -91,8 +92,8 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
         <Grid>
           {failedMonitors.map((thisMonitor, idx) => (
             <Typography
-              key={`failed-monitor-list-${idx}`}
               className={classes.error}
+              key={`failed-monitor-list-${idx}`}
               variant="body1"
             >
               {thisMonitor}

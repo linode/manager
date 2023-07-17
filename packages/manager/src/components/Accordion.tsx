@@ -1,5 +1,4 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import * as React from 'react';
 import {
   default as _Accordion,
   AccordionProps as _AccordionProps,
@@ -10,70 +9,72 @@ import AccordionDetails, {
 import AccordionSummary, {
   AccordionSummaryProps,
 } from '@mui/material/AccordionSummary';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
+
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography, TypographyProps } from 'src/components/Typography';
 
 const useStyles = makeStyles()({
   itemCount: {
-    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#2575d0',
     borderRadius: '50%',
     color: '#fff',
+    display: 'flex',
     fontSize: '0.875rem',
     fontWeight: 600,
     height: 30,
-    width: 30,
+    justifyContent: 'center',
     lineHeight: 0,
     position: 'absolute',
     right: 50,
+    width: 30,
   },
 });
 
 export interface AccordionProps extends _AccordionProps {
   /**
-   * A header placed at the top of the Accordion
-   */
-  heading: string | React.ReactNode;
-  /**
-   * Error text that shows as a `<Notice />` at the top of the Accordion's body
-   */
-  error?: string;
-  /**
-   * Warning text that shows as a `<Notice />` at the top of the Accordion's body
-   */
-  warning?: string;
-  /**
-   * Success text that shows as a `<Notice />` at the top of the Accordion's body
-   */
-  success?: string;
-  /**
    * Renders actions at the bottom of the Accordion's body
    */
-  actions?: (props: _AccordionProps) => null | JSX.Element;
-  /**
-   * Optional className to pass to the expand icon
-   */
-  expandIconClassNames?: string;
-  /**
-   * Props to pass to the underlying `AccordionSummary` MUI component
-   */
-  summaryProps?: AccordionSummaryProps;
-  /**
-   * Props to pass to heading's `<Typography />` component
-   */
-  headingProps?: TypographyProps;
+  actions?: (props: _AccordionProps) => JSX.Element | null;
   /**
    * Props to pass to the underlying `AccordionDetails` MUI component
    */
   detailProps?: AccordionDetailsProps;
   /**
+   * Error text that shows as a `<Notice />` at the top of the Accordion's body
+   */
+  error?: string;
+  /**
+   * Optional className to pass to the expand icon
+   */
+  expandIconClassNames?: string;
+  /**
+   * A header placed at the top of the Accordion
+   */
+  heading: React.ReactNode | string;
+  /**
    * A number to display in the Accordion's heading
    */
   headingNumberCount?: number;
+  /**
+   * Props to pass to heading's `<Typography />` component
+   */
+  headingProps?: TypographyProps;
+  /**
+   * Success text that shows as a `<Notice />` at the top of the Accordion's body
+   */
+  success?: string;
+  /**
+   * Props to pass to the underlying `AccordionSummary` MUI component
+   */
+  summaryProps?: AccordionSummaryProps;
+  /**
+   * Warning text that shows as a `<Notice />` at the top of the Accordion's body
+   */
+  warning?: string;
 }
 
 /**
@@ -93,17 +94,17 @@ export const Accordion = (props: AccordionProps) => {
   const { classes } = useStyles();
 
   const {
-    summaryProps,
-    detailProps,
-    headingProps,
-    heading,
     actions,
-    success,
-    warning,
-    error,
     defaultExpanded,
-    headingNumberCount,
+    detailProps,
+    error,
     expandIconClassNames,
+    heading,
+    headingNumberCount,
+    headingProps,
+    success,
+    summaryProps,
+    warning,
     ...accordionProps
   } = props;
 
@@ -122,14 +123,14 @@ export const Accordion = (props: AccordionProps) => {
       data-qa-panel={heading}
     >
       <AccordionSummary
-        onClick={handleClick}
         expandIcon={
           <KeyboardArrowDown className={`caret ${expandIconClassNames}`} />
         }
+        onClick={handleClick}
         {...summaryProps}
         data-qa-panel-summary={heading}
       >
-        <Typography {...headingProps} variant="h3" data-qa-panel-subheading>
+        <Typography {...headingProps} data-qa-panel-subheading variant="h3">
           {heading}
         </Typography>
         {headingNumberCount && headingNumberCount > 0 ? (
@@ -150,7 +151,7 @@ export const Accordion = (props: AccordionProps) => {
               />
             </Grid>
           ) : null}
-          <Grid xs={12} data-qa-grid-item>
+          <Grid data-qa-grid-item xs={12}>
             {props.children}
           </Grid>
         </Grid>

@@ -1,12 +1,12 @@
 import { Event } from '@linode/api-v4/lib/account';
-import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import eventMessageGenerator from 'src/eventMessageGenerator';
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import * as React from 'react';
 
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Typography } from 'src/components/Typography';
+import eventMessageGenerator from 'src/eventMessageGenerator';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
 type ClassNames = 'root';
@@ -14,10 +14,10 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(1),
       borderBottom: `1px solid ${theme.palette.divider}`,
-      width: '100%',
       margin: 0,
+      padding: theme.spacing(1),
+      width: '100%',
     },
   });
 
@@ -44,12 +44,12 @@ export const ActivityRow: React.FC<CombinedProps> = (props) => {
 
   return (
     <Grid
+      alignItems={'center'}
       className={classes.root}
       container
+      data-qa-activity-row
       direction={'row'}
       justifyContent={'space-between'}
-      alignItems={'center'}
-      data-qa-activity-row
     >
       <Grid>
         <Typography>

@@ -1,16 +1,18 @@
 import * as React from 'react';
+
 import {
   CardBaseGrid,
-  CardBaseHeadings,
   CardBaseHeading,
+  CardBaseHeadings,
   CardBaseIcon,
   CardBaseSubheading,
 } from './CardBase.styles';
+
 import type { SxProps } from '@mui/system';
 
 export interface CardBaseProps {
   checked?: boolean;
-  heading: string | JSX.Element;
+  heading: JSX.Element | string;
   headingDecoration?: JSX.Element;
   renderIcon?: () => JSX.Element;
   renderVariant?: () => JSX.Element | null;
@@ -37,8 +39,8 @@ export const CardBase = (props: CardBaseProps) => {
   const renderSubheadings = subheadings.map((subheading, idx) => {
     return (
       <CardBaseSubheading
-        key={idx}
         data-qa-select-card-subheading={subheading}
+        key={idx}
         sx={sxSubheading}
       >
         {subheading}
@@ -47,7 +49,7 @@ export const CardBase = (props: CardBaseProps) => {
   });
 
   return (
-    <CardBaseGrid checked={checked} container sx={sx} spacing={2}>
+    <CardBaseGrid checked={checked} container spacing={2} sx={sx}>
       {renderIcon && <CardBaseIcon sx={sxIcon}>{renderIcon()}</CardBaseIcon>}
       <CardBaseHeadings sx={sxHeading}>
         <CardBaseHeading data-qa-select-card-heading={heading}>

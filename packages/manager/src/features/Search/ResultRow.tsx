@@ -2,56 +2,57 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
+import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Tags } from 'src/components/Tags/Tags';
-import { Hidden } from 'src/components/Hidden';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import RegionIndicator from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    cursor: 'pointer',
-    paddingTop: '0 !important',
-    paddingBottom: '0 !important',
-    width: '100%',
-    transition: theme.transitions.create(['background-color']),
-  },
-  labelCell: {
-    width: '60%',
-    [theme.breakpoints.up('md')]: {
-      width: '35%',
-    },
-  },
-  regionCell: {
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '15%',
-    },
-  },
   createdCell: {
-    width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '20%',
     },
-  },
-  tagCell: {
     width: '100%',
+  },
+  labelCell: {
     [theme.breakpoints.up('md')]: {
-      width: '30%',
+      width: '35%',
     },
+    width: '60%',
+  },
+  link: {
+    color: theme.textColors.linkActiveLight,
+    display: 'block',
+    fontFamily: theme.font.bold,
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
+  },
+  regionCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '15%',
+    },
+    width: '100%',
+  },
+  root: {
+    cursor: 'pointer',
+    paddingBottom: '0 !important',
+    paddingTop: '0 !important',
+    transition: theme.transitions.create(['background-color']),
+    width: '100%',
   },
   tag: {
     margin: theme.spacing(0.5),
   },
-  link: {
-    display: 'block',
-    color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.bold,
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
+  tagCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '30%',
+    },
+    width: '100%',
   },
 }));
 
@@ -68,15 +69,15 @@ export const ResultRow: React.FC<CombinedProps> = (props) => {
 
   return (
     <TableRow
+      ariaLabel={result.label}
       className={classes.root}
       data-qa-result-row={result.label}
-      ariaLabel={result.label}
     >
       <TableCell className={classes.labelCell}>
         <Link
-          to={result.data.path}
           className={classes.link}
           title={result.label}
+          to={result.data.path}
         >
           {result.label}
         </Link>
@@ -95,7 +96,7 @@ export const ResultRow: React.FC<CombinedProps> = (props) => {
         </TableCell>
 
         <TableCell className={classes.tagCell}>
-          <Tags tags={result.data.tags} data-testid={'result-tags'} />
+          <Tags data-testid={'result-tags'} tags={result.data.tags} />
         </TableCell>
       </Hidden>
     </TableRow>

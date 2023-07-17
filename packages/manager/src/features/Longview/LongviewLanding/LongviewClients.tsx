@@ -3,26 +3,27 @@ import {
   LongviewClient,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
+import { Typography } from 'src/components/Typography';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
-import { useGrants, useProfile } from 'src/queries/profile';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
+
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
 import { getFinalUsedCPU } from './Gauges/CPU';
@@ -33,6 +34,9 @@ import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  cta: {
+    marginTop: theme.spacing(2),
+  },
   headingWrapper: {
     marginBottom: theme.spacing(),
     [theme.breakpoints.down('lg')]: {
@@ -44,29 +48,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& > div': {
       width: '300px',
     },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
     [theme.breakpoints.only('md')]: {
       '&.MuiGrid-item': {
         paddingLeft: 0,
       },
     },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  cta: {
-    marginTop: theme.spacing(2),
-  },
-  sortSelect: {
-    display: 'flex',
-    alignItems: 'center',
-    flexFlow: 'row nowrap',
-    width: 210,
-    [theme.breakpoints.up('xs')]: {
-      width: 221,
-    },
   },
   selectLabel: {
     minWidth: '65px',
+  },
+  sortSelect: {
+    alignItems: 'center',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    [theme.breakpoints.up('xs')]: {
+      width: 221,
+    },
+    width: 210,
   },
 }));
 
@@ -79,10 +80,9 @@ interface Props {
 export type CombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
-  WithSnackbarProps &
   StateProps;
 
-type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
+type SortKey = 'cpu' | 'load' | 'name' | 'network' | 'ram' | 'storage' | 'swap';
 
 export const LongviewClients: React.FC<CombinedProps> = (props) => {
   const { getLongviewClients } = props;
@@ -193,15 +193,15 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
   }, []);
 
   const {
+    activeSubscription,
+    deleteLongviewClient,
+    handleAddClient,
     longviewClientsData,
     longviewClientsError,
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
     lvClientData,
-    activeSubscription,
-    deleteLongviewClient,
-    handleAddClient,
     newClientLoading,
   } = props;
 
@@ -233,49 +233,49 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clients" />
-      <Grid container className={classes.headingWrapper} alignItems="center">
-        <Grid item className={classes.searchbar}>
+      <Grid alignItems="center" className={classes.headingWrapper} container>
+        <Grid className={classes.searchbar} item>
           <DebouncedSearchTextField
-            placeholder="Filter by client label or hostname"
-            label="Filter by client label or hostname"
-            hideLabel
-            onSearch={handleSearch}
             debounceTime={250}
+            hideLabel
+            label="Filter by client label or hostname"
+            onSearch={handleSearch}
+            placeholder="Filter by client label or hostname"
           />
         </Grid>
-        <Grid item className={`py0 ${classes.sortSelect}`}>
+        <Grid className={`py0 ${classes.sortSelect}`} item>
           <Typography className={classes.selectLabel}>Sort by: </Typography>
           <Select
-            small
-            isClearable={false}
-            options={sortOptions}
             value={sortOptions.find(
               (thisOption) => thisOption.value === sortKey
             )}
-            onChange={handleSortKeyChange}
-            label="Sort by"
             hideLabel
+            isClearable={false}
+            label="Sort by"
+            onChange={handleSortKeyChange}
+            options={sortOptions}
+            small
           />
         </Grid>
       </Grid>
       <LongviewList
+        createLongviewClient={handleAddClient}
         filteredData={sortedList}
+        loading={newClientLoading}
         longviewClientsError={longviewClientsError}
         longviewClientsLastUpdated={longviewClientsLastUpdated}
         longviewClientsLoading={longviewClientsLoading}
         longviewClientsResults={longviewClientsResults}
-        triggerDeleteLongviewClient={openDeleteDialog}
         openPackageDrawer={handleDrawerOpen}
-        createLongviewClient={handleAddClient}
-        loading={newClientLoading}
+        triggerDeleteLongviewClient={openDeleteDialog}
         userCanCreateLongviewClient={userCanCreateClient}
       />
       {!isLongviewPro && (
         <Grid
+          alignItems="center"
           className={classes.cta}
           container
           direction="column"
-          alignItems="center"
           justifyContent="center"
         >
           <Typography data-testid="longview-upgrade">
@@ -286,26 +286,26 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
         </Grid>
       )}
       <DeleteDialog
-        selectedLongviewClientID={selectedClientID}
-        selectedLongviewClientLabel={selectedClientLabel}
+        closeDialog={() => toggleDeleteDialog(false)}
         deleteClient={deleteLongviewClient}
         open={deleteDialogOpen}
-        closeDialog={() => toggleDeleteDialog(false)}
+        selectedLongviewClientID={selectedClientID}
+        selectedLongviewClientLabel={selectedClientLabel}
       />
       <SubscriptionDialog
-        isOpen={subscriptionDialogOpen}
-        isManaged={isManaged}
-        onClose={() => setSubscriptionDialogOpen(false)}
-        onSubmit={handleSubmit}
         clientLimit={
           isEmpty(activeSubscription)
             ? 10
             : (activeSubscription as LongviewSubscription).clients_included
         }
+        isManaged={isManaged}
+        isOpen={subscriptionDialogOpen}
+        onClose={() => setSubscriptionDialogOpen(false)}
+        onSubmit={handleSubmit}
       />
       <LongviewPackageDrawer
-        clientLabel={selectedClientLabel}
         clientID={selectedClientID || 0}
+        clientLabel={selectedClientLabel}
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
@@ -334,8 +334,7 @@ const connected = connect(mapStateToProps);
 export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
   connected,
-  withLongviewClients(),
-  withSnackbar
+  withLongviewClients()
 )(LongviewClients);
 
 /**
@@ -343,8 +342,8 @@ export default compose<CombinedProps, Props & RouteComponentProps>(
  * to reduce (a>b) {return -1 } boilerplate
  */
 export const sortFunc = (
-  a: string | number,
-  b: string | number,
+  a: number | string,
+  b: number | string,
   order: 'asc' | 'desc' = 'desc'
 ) => {
   let result: number;

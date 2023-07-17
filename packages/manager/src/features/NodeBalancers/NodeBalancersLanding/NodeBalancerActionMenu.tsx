@@ -1,16 +1,17 @@
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
-import { useHistory } from 'react-router-dom';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {
+  label: string;
   nodeBalancerId: number;
   toggleDialog: (nodeBalancerId: number, label: string) => void;
-  label: string;
 }
 
 export const NodeBalancerActionMenu = (props: Props) => {
@@ -19,26 +20,26 @@ export const NodeBalancerActionMenu = (props: Props) => {
 
   const history = useHistory();
 
-  const { nodeBalancerId, toggleDialog, label } = props;
+  const { label, nodeBalancerId, toggleDialog } = props;
 
   const actions: Action[] = [
     {
-      title: 'Configurations',
       onClick: () => {
         history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
       },
+      title: 'Configurations',
     },
     {
-      title: 'Settings',
       onClick: () => {
         history.push(`/nodebalancers/${nodeBalancerId}/settings`);
       },
+      title: 'Settings',
     },
     {
-      title: 'Delete',
       onClick: () => {
         toggleDialog(nodeBalancerId, label);
       },
+      title: 'Delete',
     },
   ];
 
@@ -48,8 +49,8 @@ export const NodeBalancerActionMenu = (props: Props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
+              key={action.title}
               onClick={action.onClick}
             />
           );

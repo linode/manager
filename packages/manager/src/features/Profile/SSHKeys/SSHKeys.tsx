@@ -1,17 +1,11 @@
-import * as React from 'react';
-import AddNewLink from 'src/components/AddNewLink';
-import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
-import EditSSHKeyDrawer from './EditSSHKeyDrawer';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Hidden } from 'src/components/Hidden';
-import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
-import { CreateSSHKeyDrawer } from './CreateSSHKeyDrawer';
-import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { parseAPIDate } from 'src/utilities/date';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import AddNewLink from 'src/components/AddNewLink';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Hidden } from 'src/components/Hidden';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -20,8 +14,16 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { Typography } from 'src/components/Typography';
+import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
+import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSSHKeysQuery } from 'src/queries/profile';
+import { parseAPIDate } from 'src/utilities/date';
+import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
+
+import { CreateSSHKeyDrawer } from './CreateSSHKeyDrawer';
+import EditSSHKeyDrawer from './EditSSHKeyDrawer';
 
 const PREFERENCE_KEY = 'ssh-keys';
 
@@ -38,7 +40,7 @@ export const SSHKeys = () => {
     page_size: pagination.pageSize,
   };
 
-  const { data, isLoading, error } = useSSHKeysQuery(params);
+  const { data, error, isLoading } = useSSHKeysQuery(params);
 
   const selectedKey = data?.data.find((key) => key.id === selectedKeyId);
 
@@ -96,14 +98,14 @@ export const SSHKeys = () => {
     <>
       <DocumentTitleSegment segment="SSH Keys" />
       <Grid
-        container
-        alignItems="flex-end"
-        justifyContent="flex-end"
-        spacing={2}
         sx={{
           margin: 0,
           width: '100%',
         }}
+        alignItems="flex-end"
+        container
+        justifyContent="flex-end"
+        spacing={2}
       >
         <StyledAddNewWrapperGridItem>
           <AddNewLink
@@ -126,35 +128,35 @@ export const SSHKeys = () => {
         <TableBody>{renderTableBody()}</TableBody>
       </Table>
       <PaginationFooter
-        page={pagination.page}
-        pageSize={pagination.pageSize}
         count={data?.results ?? 0}
+        eventCategory="ssh keys"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
-        eventCategory="ssh keys"
+        page={pagination.page}
+        pageSize={pagination.pageSize}
       />
       <DeleteSSHKeyDialog
         id={selectedKeyId}
         label={selectedKey?.label}
-        open={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
       />
       <EditSSHKeyDrawer
-        open={isEditDrawerOpen}
         onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
         sshKey={selectedKey}
       />
       <CreateSSHKeyDrawer
-        open={isCreateDrawerOpen}
         onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
       />
     </>
   );
 };
 
 const StyledAddNewWrapperGridItem = styled(Grid)(({ theme }) => ({
-  paddingTop: 0,
   paddingRight: 0,
+  paddingTop: 0,
 
   [theme.breakpoints.down('md')]: {
     marginRight: theme.spacing(),

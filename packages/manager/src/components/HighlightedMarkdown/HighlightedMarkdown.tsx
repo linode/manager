@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import * as hljs from 'highlight.js/lib/core';
-import * as React from 'react';
 import { Theme, useTheme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import 'src/formatted-text.css';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
-import { unsafe_MarkdownIt } from 'src/utilities/markdown';
-import sanitize from 'sanitize-html';
+import * as hljs from 'highlight.js/lib/core';
 import apache from 'highlight.js/lib/languages/apache';
 import bash from 'highlight.js/lib/languages/bash';
 import javascript from 'highlight.js/lib/languages/javascript';
 import nginx from 'highlight.js/lib/languages/nginx';
 import yaml from 'highlight.js/lib/languages/yaml';
+import * as React from 'react';
+import sanitize from 'sanitize-html';
+
+import { Typography } from 'src/components/Typography';
+import 'src/formatted-text.css';
+import { unsafe_MarkdownIt } from 'src/utilities/markdown';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);
@@ -20,24 +21,24 @@ hljs.registerLanguage('nginx', nginx);
 hljs.registerLanguage('yaml', yaml);
 
 export type SupportedLanguage =
-  | 'plaintext'
   | 'apache'
   | 'bash'
   | 'javascript'
   | 'nginx'
-  | 'yaml'
-  | 'shell';
+  | 'plaintext'
+  | 'shell'
+  | 'yaml';
 
 export interface HighlightedMarkdownProps {
   className?: string;
-  textOrMarkdown: string;
   language?: SupportedLanguage;
   sanitizeOptions?: sanitize.IOptions;
+  textOrMarkdown: string;
 }
 
 export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   const theme = useTheme<Theme>();
-  const { className, language, textOrMarkdown, sanitizeOptions } = props;
+  const { className, language, sanitizeOptions, textOrMarkdown } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   /**
@@ -75,16 +76,16 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
 
   return (
     <Typography
-      className={`formatted-text ${className}`}
+      dangerouslySetInnerHTML={{
+        __html: sanitizedHtml,
+      }}
       sx={{
         '& .hljs': {
           color: theme.color.offBlack,
         },
       }}
+      className={`formatted-text ${className}`}
       ref={rootRef}
-      dangerouslySetInnerHTML={{
-        __html: sanitizedHtml,
-      }}
     />
   );
 };

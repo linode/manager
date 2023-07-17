@@ -1,17 +1,19 @@
-import * as React from 'react';
-import CircularProgress from 'src/components/core/CircularProgress';
 import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
-import Paper from 'src/components/core/Paper';
+import * as React from 'react';
+
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';
 import Step3 from 'src/assets/referrals/step-3.svg';
-import Typography from 'src/components/core/Typography';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
+import CircularProgress from 'src/components/core/CircularProgress';
+import Paper from 'src/components/core/Paper';
 import { useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import {
   StyledEarnedGrid,
   StyledImageCopy,
@@ -25,20 +27,20 @@ import {
 export const Referrals = () => {
   const {
     data: profile,
-    isLoading: profileLoading,
     error: profileError,
+    isLoading: profileLoading,
   } = useProfile();
 
   if (profileError) {
     return (
       <Notice
-        error
         text={
           getAPIErrorOrDefault(
             profileError,
             'Unable to load referral information.'
           )[0].reason
         }
+        error
       />
     );
   }
@@ -47,7 +49,7 @@ export const Referrals = () => {
     return <CircularProgress />;
   }
 
-  const { url, total, completed, pending, credit } = profile?.referrals;
+  const { completed, credit, pending, total, url } = profile?.referrals;
   const allowReferral = Boolean(url);
 
   return (
@@ -55,7 +57,7 @@ export const Referrals = () => {
       <DocumentTitleSegment segment="Referrals" />
       <Grid container spacing={2} sx={{ maxWidth: 920 }}>
         <Grid>
-          <Typography variant="body1" style={{ marginBottom: 12 }}>
+          <Typography style={{ marginBottom: 12 }} variant="body1">
             When you refer friends or colleagues to Linode using your referral
             link, they&rsquo;ll receive a $100, 60-day credit once a valid
             payment method is added to their new account.
@@ -113,28 +115,28 @@ export const Referrals = () => {
           ) : null}
           {!allowReferral ? (
             <StyledLimitNotice
-              warning
-              spacingTop={8}
-              spacingBottom={0}
               sx={{
                 '&&': {
                   // '&&' is only needed because Notice is using makeStyles
                   padding: '8px',
                 },
               }}
+              spacingBottom={0}
+              spacingTop={8}
+              warning
             >
               Spend $25 with Linode to activate your personal referral link
             </StyledLimitNotice>
           ) : null}
           <StyledImagesGridContainer
+            sx={{
+              padding: 0,
+              width: '100%',
+            }}
             container
             direction="row"
             justifyContent="space-between"
             wrap="nowrap"
-            sx={{
-              width: '100%',
-              padding: 0,
-            }}
           >
             <StyledImageGrid>
               <Step1 />

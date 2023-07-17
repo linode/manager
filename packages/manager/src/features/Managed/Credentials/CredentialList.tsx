@@ -1,24 +1,25 @@
 import { CredentialPayload } from '@linode/api-v4/lib/managed/types';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+
+import AddNewLink from 'src/components/AddNewLink';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
 import { useDialog } from 'src/hooks/useDialog';
 import {
   useAllManagedCredentialsQuery,
@@ -32,11 +33,21 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+
 import AddCredentialDrawer from './AddCredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  addNewWrapper: {
+    '&.MuiGrid-item': {
+      paddingRight: 0,
+      paddingTop: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(),
+    },
+  },
   copy: {
     fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
@@ -49,15 +60,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     margin: 0,
     width: '100%',
   },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-      paddingRight: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
 }));
 
 export type FormikProps = FormikBag<{}, CredentialPayload>;
@@ -65,7 +67,7 @@ export type FormikProps = FormikBag<{}, CredentialPayload>;
 export const CredentialList = () => {
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { data, isLoading, error } = useAllManagedCredentialsQuery();
+  const { data, error, isLoading } = useAllManagedCredentialsQuery();
 
   const credentials = data || [];
 
@@ -86,11 +88,11 @@ export const CredentialList = () => {
   const { mutateAsync: updateCredential } = useUpdateCredentialMutation(editID);
 
   const {
-    dialog,
-    openDialog,
     closeDialog,
-    submitDialog,
+    dialog,
     handleError,
+    openDialog,
+    submitDialog,
   } = useDialog<number>((id) => deleteCredential({ id: id || -1 }));
 
   const selectedCredential = credentials.find(
@@ -128,7 +130,7 @@ export const CredentialList = () => {
 
   const handleCreate = (
     values: CredentialPayload,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     setStatus(undefined);
     createCredential(values)
@@ -149,7 +151,7 @@ export const CredentialList = () => {
 
   const handleUpdatePassword = (
     values: CredentialPayload,
-    { setSubmitting, setErrors, setStatus, setFieldValue }: FormikProps
+    { setErrors, setFieldValue, setStatus, setSubmitting }: FormikProps
   ) => {
     setStatus(undefined);
     if (!selectedCredential) {
@@ -178,7 +180,7 @@ export const CredentialList = () => {
 
   const handleUpdateLabel = (
     values: CredentialPayload,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     setStatus(undefined);
     if (!selectedCredential) {
@@ -220,14 +222,14 @@ export const CredentialList = () => {
         logged. You can revoke credentials at any time by deleting them.
       </Typography>
       <Grid
-        className={classes.header}
-        container
-        alignItems="center"
-        justifyContent="flex-end"
-        spacing={2}
         sx={{
           paddingRight: 0,
         }}
+        alignItems="center"
+        className={classes.header}
+        container
+        justifyContent="flex-end"
+        spacing={2}
       >
         <Grid className={classes.addNewWrapper}>
           <AddNewLink
@@ -236,12 +238,12 @@ export const CredentialList = () => {
           />
         </Grid>
       </Grid>
-      <OrderBy data={credentials} orderBy={'label'} order={'asc'}>
+      <OrderBy data={credentials} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
-              data,
               count,
+              data,
               handlePageChange,
               handlePageSizeChange,
               page,
@@ -253,20 +255,20 @@ export const CredentialList = () => {
                     <TableRow>
                       <TableSortCell
                         active={orderBy === 'label'}
-                        label={'label'}
+                        data-qa-credential-label-header
                         direction={order}
                         handleClick={handleOrderChange}
-                        data-qa-credential-label-header
+                        label={'label'}
                         style={{ width: '30%' }}
                       >
                         Credential
                       </TableSortCell>
                       <TableSortCell
                         active={orderBy === 'last_decrypted'}
-                        label={'last_decrypted'}
+                        data-qa-credential-decrypted-header
                         direction={order}
                         handleClick={handleOrderChange}
-                        data-qa-credential-decrypted-header
+                        label={'last_decrypted'}
                         style={{ width: '60%' }}
                       >
                         Last Decrypted
@@ -277,8 +279,8 @@ export const CredentialList = () => {
                   <TableBody>
                     <CredentialTableContent
                       credentials={data}
-                      loading={isLoading}
                       error={error}
+                      loading={isLoading}
                       openDialog={openDialog}
                       openForEdit={openForEdit}
                     />
@@ -286,11 +288,11 @@ export const CredentialList = () => {
                 </Table>
                 <PaginationFooter
                   count={count}
+                  eventCategory="managed credential table"
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
                   page={page}
                   pageSize={pageSize}
-                  eventCategory="managed credential table"
                 />
               </>
             )}
@@ -298,25 +300,25 @@ export const CredentialList = () => {
         )}
       </OrderBy>
       <DeletionDialog
-        open={dialog.isOpen}
         entity="credential"
+        error={dialog.error}
         label={dialog.entityLabel || ''}
         loading={dialog.isLoading}
-        error={dialog.error}
         onClose={closeDialog}
         onDelete={handleDelete}
+        open={dialog.isOpen}
       />
       <AddCredentialDrawer
-        open={isCreateDrawerOpen}
         onClose={() => setDrawerOpen(false)}
         onSubmit={handleCreate}
+        open={isCreateDrawerOpen}
       />
       <UpdateCredentialDrawer
-        open={isEditDrawerOpen}
         label={selectedCredential ? selectedCredential.label : ''}
         onClose={handleDrawerClose}
         onSubmitLabel={handleUpdateLabel}
         onSubmitPassword={handleUpdatePassword}
+        open={isEditDrawerOpen}
       />
     </>
   );

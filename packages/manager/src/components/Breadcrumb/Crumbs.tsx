@@ -1,19 +1,17 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+
+import { Typography } from 'src/components/Typography';
+
 import { FinalCrumb } from './FinalCrumb';
 import FinalCrumbPrefix from './FinalCrumbPrefix';
 import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  crumbsWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   crumb: {
     fontSize: '1.125rem',
     lineHeight: 'normal',
@@ -21,10 +19,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   crumbLink: {
-    color: theme.textColors.tableHeader,
     '&:hover': {
       textDecoration: 'underline',
     },
+    color: theme.textColors.tableHeader,
+  },
+  crumbsWrapper: {
+    alignItems: 'center',
+    display: 'flex',
   },
   noCap: {
     textTransform: 'initial',
@@ -32,37 +34,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   slash: {
     color: theme.textColors.tableHeader,
     fontSize: 20,
-    marginRight: 2,
     marginLeft: 2,
+    marginRight: 2,
   },
 }));
 
 export interface CrumbOverridesProps {
-  position: number;
-  linkTo?: LocationDescriptor;
   label?: string;
+  linkTo?: LocationDescriptor;
   noCap?: boolean;
+  position: number;
 }
 
 interface Props {
-  pathMap: string[];
   crumbOverrides?: CrumbOverridesProps[];
   firstAndLastOnly?: boolean;
-  labelTitle?: string;
   labelOptions?: LabelProps;
+  labelTitle?: string;
   onEditHandlers?: EditableProps;
+  pathMap: string[];
 }
 
 export const Crumbs = React.memo((props: Props) => {
   const classes = useStyles();
 
   const {
-    pathMap,
     crumbOverrides,
     firstAndLastOnly,
     labelOptions,
     labelTitle,
     onEditHandlers,
+    pathMap,
   } = props;
 
   const allCrumbsButLast = pathMap.slice(0, -1);
@@ -80,7 +82,7 @@ export const Crumbs = React.memo((props: Props) => {
           crumbOverrides && crumbOverrides.find((e) => e.position === key + 1);
 
         return (
-          <div key={key} className={classes.crumbsWrapper}>
+          <div className={classes.crumbsWrapper} key={key}>
             <Link
               to={
                 crumbOverrides && override
@@ -107,7 +109,7 @@ export const Crumbs = React.memo((props: Props) => {
                   : crumb}
               </Typography>
             </Link>
-            <Typography component="span" className={classes.slash}>
+            <Typography className={classes.slash} component="span">
               /
             </Typography>
           </div>

@@ -1,14 +1,16 @@
 import { KubernetesCluster } from '@linode/api-v4';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Typography } from 'src/components/Typography';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { useRegionsQuery } from 'src/queries/regions';
 import { pluralize } from 'src/utilities/pluralize';
+
 import {
   getTotalClusterMemoryCPUAndStorage,
   getTotalClusterPrice,
@@ -19,15 +21,9 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
-  },
-  mainGridContainer: {
-    position: 'relative',
-    [theme.breakpoints.up('lg')]: {
-      justifyContent: 'space-between',
-    },
+  iconTextOuter: {
+    flexBasis: '72%',
+    minWidth: 115,
   },
   item: {
     '&:first-of-type': {
@@ -36,12 +32,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:last-of-type': {
       paddingBottom: 0,
     },
-    paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
   },
-  iconTextOuter: {
-    flexBasis: '72%',
-    minWidth: 115,
+  mainGridContainer: {
+    position: 'relative',
+    [theme.breakpoints.up('lg')]: {
+      justifyContent: 'space-between',
+    },
+  },
+  root: {
+    marginBottom: theme.spacing(3),
+    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
   },
 }));
 
@@ -55,7 +57,7 @@ export const KubeClusterSpecs = (props: Props) => {
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
 
-  const { RAM, CPU, Storage } = getTotalClusterMemoryCPUAndStorage(
+  const { CPU, RAM, Storage } = getTotalClusterMemoryCPUAndStorage(
     pools ?? [],
     types ?? []
   );
@@ -83,10 +85,10 @@ export const KubeClusterSpecs = (props: Props) => {
   const kubeSpecItem = (spec: string, idx: number) => {
     return (
       <Grid
-        key={`spec-${idx}`}
-        wrap="nowrap"
         alignItems="center"
         className={classes.item}
+        key={`spec-${idx}`}
+        wrap="nowrap"
       >
         <Grid className={classes.iconTextOuter}>
           <Typography>{spec}</Typography>
@@ -96,7 +98,7 @@ export const KubeClusterSpecs = (props: Props) => {
   };
 
   return (
-    <Grid container direction="row" xs={12} lg={3} spacing={0}>
+    <Grid container direction="row" lg={3} spacing={0} xs={12}>
       <Grid lg={6}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
       <Grid lg={6}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
     </Grid>

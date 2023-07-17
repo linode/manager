@@ -10,7 +10,9 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
+
 import { useProfile } from 'src/queries/profile';
+
 import { queryPresets } from './base';
 
 export const queryKey = 'account-settings';

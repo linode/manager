@@ -1,9 +1,11 @@
 import { Database } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
-import Divider from 'src/components/core/Divider';
+
+import { Divider } from 'src/components/Divider';
+import { Typography } from 'src/components/Typography';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
 import { useProfile } from 'src/queries/profile';
+
 import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
@@ -57,36 +59,36 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     <>
       <Paper>
         <AccessControls database={database} description={accessControlCopy} />
-        <Divider spacingTop={28} spacingBottom={22} />
+        <Divider spacingBottom={22} spacingTop={28} />
         <DatabaseSettingsMenuItem
           buttonText="Reset Root Password"
           descriptiveText={resetRootPasswordCopy}
           onClick={onResetRootPassword}
           sectionTitle="Reset Root Password"
         />
-        <Divider spacingTop={28} spacingBottom={22} />
+        <Divider spacingBottom={22} spacingTop={28} />
         <DatabaseSettingsMenuItem
-          sectionTitle="Delete Cluster"
-          descriptiveText={deleteClusterCopy}
           buttonText="Delete Cluster"
+          descriptiveText={deleteClusterCopy}
           disabled={Boolean(profile?.restricted)}
           onClick={onDeleteCluster}
+          sectionTitle="Delete Cluster"
         />
-        <Divider spacingTop={28} spacingBottom={22} />
+        <Divider spacingBottom={22} spacingTop={28} />
         <MaintenanceWindow database={database} timezone={profile?.timezone} />
       </Paper>
       <DatabaseSettingsDeleteClusterDialog
-        open={isDeleteDialogOpen}
-        onClose={onDeleteClusterClose}
-        databaseID={database.id}
         databaseEngine={database.engine}
+        databaseID={database.id}
         databaseLabel={database.label}
+        onClose={onDeleteClusterClose}
+        open={isDeleteDialogOpen}
       />
       <DatabaseSettingsResetPasswordDialog
-        open={isResetRootPasswordDialogOpen}
-        onClose={onResetRootPasswordClose}
-        databaseID={database.id}
         databaseEngine={database.engine}
+        databaseID={database.id}
+        onClose={onResetRootPasswordClose}
+        open={isResetRootPasswordDialogOpen}
       />
     </>
   );

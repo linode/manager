@@ -1,41 +1,42 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Divider from 'src/components/core/Divider';
+
+import { Divider } from 'src/components/Divider';
+import { Tooltip } from 'src/components/Tooltip';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
-import Tooltip from 'src/components/core/Tooltip';
 
 interface Props extends PrimaryLink {
   closeMenu: () => void;
   dividerClasses?: string;
+  isCollapsed?: boolean;
   linkClasses: (href?: string) => string;
   listItemClasses: string;
-  isCollapsed?: boolean;
 }
 
 export interface PrimaryLink {
-  href?: string;
-  onClick?: () => void;
   QAKey: string;
   display: string;
-  logo?: React.ComponentType<any>;
+  href?: string;
   icon?: JSX.Element;
   isDisabled?: () => string;
+  logo?: React.ComponentType<any>;
+  onClick?: () => void;
 }
 
 export const NavItem = React.memo((props: Props) => {
   const {
-    href,
-    onClick,
     QAKey,
+    closeMenu,
     display,
-    isCollapsed,
+    href,
     icon,
+    isCollapsed,
     isDisabled,
     linkClasses,
     listItemClasses,
-    closeMenu,
+    onClick,
   } = props;
 
   if (!onClick && !href) {
@@ -50,27 +51,27 @@ export const NavItem = React.memo((props: Props) => {
     <React.Fragment>
       {href ? (
         <Link
-          to={href}
-          onClick={closeMenu}
-          data-qa-nav-item={QAKey}
           className={classNames({
             [linkClasses(href)]: true,
             listItemCollapsed: isCollapsed,
           })}
+          data-qa-nav-item={QAKey}
+          onClick={closeMenu}
+          to={href}
         >
           {icon && isCollapsed && <div className="icon">{icon}</div>}
           <ListItemText
-            primary={display}
-            disableTypography={true}
             className={classNames({
+              hiddenWhenCollapsed: isCollapsed,
               [listItemClasses]: true,
               primaryNavLink: true,
-              hiddenWhenCollapsed: isCollapsed,
             })}
+            disableTypography={true}
+            primary={display}
           />
         </Link>
       ) : (
-        <Tooltip title={isDisabled ? isDisabled() : ''} placement="left-end">
+        <Tooltip placement="left-end" title={isDisabled ? isDisabled() : ''}>
           <ListItem
             onClick={(e) => {
               props.closeMenu();
@@ -78,14 +79,14 @@ export const NavItem = React.memo((props: Props) => {
               onClick!();
             }}
             aria-live="polite"
-            disabled={!!isDisabled ? !!isDisabled() : false}
-            data-qa-nav-item={QAKey}
             className={linkClasses()}
+            data-qa-nav-item={QAKey}
+            disabled={!!isDisabled ? !!isDisabled() : false}
           >
             <ListItemText
-              primary={display}
-              disableTypography={true}
               className={listItemClasses}
+              disableTypography={true}
+              primary={display}
             />
           </ListItem>
         </Tooltip>

@@ -223,36 +223,39 @@ export const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
 export const AKAMAI_DATE = '2022-12-15 00:00:00';
 
 export const ADDRESSES = {
-  linode: {
-    entity: 'Linode',
-    address1: '249 Arch St.',
-    city: 'Philadelphia',
-    state: 'PA',
-    zip: '19106',
-    country: 'USA',
-  },
   akamai: {
-    us: {
-      entity: 'Akamai Technologies, Inc.',
-      address1: '145 Broadway',
-      city: 'Cambridge',
-      state: 'MA',
-      zip: '02142',
-      country: 'USA',
-    },
     international: {
-      entity: 'Akamai Technologies International AG',
       address1: 'Grafenauweg 8',
       city: 'Zug',
+      country: 'Switzerland',
+      entity: 'Akamai Technologies International AG',
       state: 'Zug',
       zip: 'CH-6300',
-      country: 'Switzerland',
     },
+    us: {
+      address1: '145 Broadway',
+      city: 'Cambridge',
+      country: 'USA',
+      entity: 'Akamai Technologies, Inc.',
+      state: 'MA',
+      zip: '02142',
+    },
+  },
+  linode: {
+    address1: '249 Arch St.',
+    city: 'Philadelphia',
+    country: 'USA',
+    entity: 'Linode',
+    state: 'PA',
+    zip: '19106',
   },
 };
 
 export const ACCESS_LEVELS = {
+  none: 'none',
   readOnly: 'read_only',
   readWrite: 'read_write',
-  none: 'none',
 };
+
+// Linode Community URL accessible from the TopMenu Community icon
+export const LINODE_COMMUNITY_URL = 'https://linode.com/community';

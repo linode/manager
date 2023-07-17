@@ -1,8 +1,9 @@
-import * as React from 'react';
 import { APIError } from '@linode/api-v4/lib/types';
-import Typography from 'src/components/core/Typography';
-import { SupportLink } from 'src/components/SupportLink';
 import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { SupportLink } from 'src/components/SupportLink';
+import { Typography } from 'src/components/Typography';
 
 interface Props {
   errors: APIError[];
@@ -26,12 +27,12 @@ export const SupportError = (props: Props) => {
         if (openTicket) {
           return (
             <SupportLink
-              key={`${substring}-${idx}`}
               text={
                 substring.match(/Open.*/)
                   ? 'Open a support ticket'
                   : 'open a support ticket'
               }
+              key={`${substring}-${idx}`}
             />
           );
         } else {

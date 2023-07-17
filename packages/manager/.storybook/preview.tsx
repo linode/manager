@@ -25,10 +25,6 @@ MINIMAL_VIEWPORTS.mobile1.styles = {
 export const DocsContainer = ({ children, context }) => {
   const isDark = useDarkMode();
 
-  React.useEffect(() => {
-    worker?.start();
-  }, []);
-
   return (
     <BaseContainer
       theme={{
@@ -48,6 +44,11 @@ const preview: Preview = {
       const isDark = useDarkMode();
       return wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
     },
+  ],
+  loaders: [
+    async () => ({
+      msw: await worker?.start(),
+    }),
   ],
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -75,6 +76,7 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/,
       },
+      sort: 'requiredFirst',
     },
     docs: {
       container: DocsContainer,

@@ -1,7 +1,8 @@
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
+import { Typography } from 'src/components/Typography';
 
 interface GuidanceProps {
   text: string;
@@ -31,9 +32,9 @@ const StyledTypography = styled(Typography)(() => ({
 }));
 
 const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
-  width: 16,
   height: 16,
+  marginRight: theme.spacing(1),
   position: 'relative',
   top: 3,
-  marginRight: theme.spacing(1),
+  width: 16,
 }));

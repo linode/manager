@@ -1,48 +1,50 @@
 import { Image } from '@linode/api-v4/lib/images';
+import Grid from '@mui/material/Unstable_Grid2';
 import produce from 'immer';
 import { DateTime } from 'luxon';
 import { equals, groupBy } from 'ramda';
 import * as React from 'react';
-import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
-import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
-import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
-import Grid from '@mui/material/Unstable_Grid2';
+import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
+import { ImageOption } from 'src/components/ImageSelect/ImageOption';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import { useAllImagesQuery } from 'src/queries/images';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
-import { distroIcons } from './icons';
-import { ImageOption } from 'src/components/ImageSelect/ImageOption';
 
-export type Variant = 'public' | 'private' | 'all';
+import { distroIcons } from './icons';
+
+export type Variant = 'all' | 'private' | 'public';
 
 interface ImageItem extends Item<string> {
-  created: string;
   className: string;
+  created: string;
   isCloudInitCompatible: boolean;
 }
 
 interface ImageSelectProps {
-  title: string;
-  selectedImageID?: string;
-  images: Image[];
-  error?: string;
-  variant?: Variant;
-  disabled?: boolean;
-  handleSelectImage: (selection?: string) => void;
   classNames?: string;
+  disabled?: boolean;
+  error?: string;
+  handleSelectImage: (selection?: string) => void;
+  images: Image[];
+  selectedImageID?: string;
+  title: string;
+  variant?: Variant;
 }
 
 export interface ImageProps
   extends Omit<BaseSelectProps<ImageItem>, 'onChange' | 'variant'> {
-  selectedImageID?: string;
   disabled: boolean;
+  error?: string;
   handleSelectImage: (selection?: string) => void;
   images: Image[];
-  error?: string;
+  selectedImageID?: string;
 }
 
 export const sortByImageVersion = (a: ImageItem, b: ImageItem) => {
@@ -89,12 +91,12 @@ export const imagesToGroupedItems = (images: Image[]) => {
           options: group
             .reduce((acc: ImageItem[], thisImage) => {
               const {
+                capabilities,
                 created,
                 eol,
                 id,
                 label,
                 vendor,
-                capabilities,
               } = thisImage;
               const differenceInMonths = DateTime.now().diff(
                 DateTime.fromISO(eol!),
@@ -103,16 +105,16 @@ export const imagesToGroupedItems = (images: Image[]) => {
               // if image is past its end of life, hide it, otherwise show it
               if (!eol || differenceInMonths < MAX_MONTHS_EOL_FILTER) {
                 acc.push({
-                  created,
-                  // Add suffix 'deprecated' to the image at end of life.
-                  label:
-                    differenceInMonths > 0 ? `${label} (deprecated)` : label,
-                  value: id,
-                  isCloudInitCompatible: capabilities?.includes('cloud-init'),
                   className: vendor
                     ? // Use Tux as a fallback.
                       `fl-${distroIcons[vendor] ?? 'tux'}`
                     : `fl-tux`,
+                  created,
+                  isCloudInitCompatible: capabilities?.includes('cloud-init'),
+                  // Add suffix 'deprecated' to the image at end of life.
+                  label:
+                    differenceInMonths > 0 ? `${label} (deprecated)` : label,
+                  value: id,
                 });
               }
 
@@ -126,18 +128,18 @@ export const imagesToGroupedItems = (images: Image[]) => {
 
 export const ImageSelect = (props: ImageSelectProps) => {
   const {
+    classNames,
     disabled,
     handleSelectImage,
     images,
     selectedImageID,
     title,
     variant,
-    classNames,
     ...reactSelectProps
   } = props;
 
   // Check for loading status and request errors in React Query
-  const { isLoading: _loading, error } = useAllImagesQuery();
+  const { error, isLoading: _loading } = useAllImagesQuery();
 
   const imageError = error
     ? getAPIErrorOrDefault(error, 'Unable to load Images')[0].reason
@@ -180,24 +182,24 @@ export const ImageSelect = (props: ImageSelectProps) => {
 
   return (
     <Paper data-qa-select-image-panel>
-      <Typography variant="h2" data-qa-tp={title}>
+      <Typography data-qa-tp={title} variant="h2">
         {title}
       </Typography>
       <Grid container>
         <Grid xs={12}>
           <Select
-            disabled={disabled}
-            label="Images"
-            isLoading={_loading}
-            placeholder="Choose an image"
-            options={options}
-            onChange={onChange}
             value={getSelectedOptionFromGroupedOptions(
               selectedImageID || '',
               options
             )}
-            errorText={imageError}
             components={{ Option: ImageOption, SingleValue: _SingleValue }}
+            disabled={disabled}
+            errorText={imageError}
+            isLoading={_loading}
+            label="Images"
+            onChange={onChange}
+            options={options}
+            placeholder="Choose an image"
             {...reactSelectProps}
             className={classNames}
           />

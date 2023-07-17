@@ -1,11 +1,12 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import { styled } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { Typography } from 'src/components/Typography';
 
 export const NodeBalancerLandingEmptyState = () => {
   const history = useHistory();
@@ -14,16 +15,16 @@ export const NodeBalancerLandingEmptyState = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="NodeBalancers" />
       <StyledPlaceholder
-        title="NodeBalancers"
-        isEntity
-        icon={NodeBalancer}
         buttonProps={[
           {
-            onClick: () => history.push('/nodebalancers/create'),
             children: 'Create NodeBalancer',
+            onClick: () => history.push('/nodebalancers/create'),
           },
         ]}
+        icon={NodeBalancer}
+        isEntity
         showTransferDisplay
+        title="NodeBalancers"
       >
         <Typography variant="subtitle1">
           <Link to="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/">

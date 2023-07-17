@@ -1,7 +1,10 @@
-import { parse as parseIP, parseCIDR } from 'ipaddr.js';
-import { PORT_PRESETS, sortString } from './shared';
-import { stringToExtendedIP } from 'src/utilities/ipUtils';
+import {
+  CUSTOM_PORTS_ERROR_MESSAGE,
+  isCustomPortsValid,
+} from '@linode/validation';
+import { parseCIDR, parse as parseIP } from 'ipaddr.js';
 import { uniq } from 'ramda';
+
 import {
   allIPs,
   allIPv4,
@@ -11,18 +14,18 @@ import {
   allowsAllIPs,
   predefinedFirewallFromRule,
 } from 'src/features/Firewalls/shared';
-import {
-  CUSTOM_PORTS_VALIDATION_REGEX,
-  CUSTOM_PORTS_ERROR_MESSAGE,
-} from '@linode/validation';
+import { stringToExtendedIP } from 'src/utilities/ipUtils';
+
+import { PORT_PRESETS, sortString } from './shared';
+
+import type { FormState } from './FirewallRuleDrawer.types';
+import type { ExtendedFirewallRule } from './firewallRuleEditor';
 import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
-import type { FormState } from './FirewallRuleDrawer.types';
-import type { ExtendedFirewallRule } from './firewallRuleEditor';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 import type { Item } from 'src/components/EnhancedSelect';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 
@@ -47,10 +50,10 @@ export const deriveTypeFromValuesAndIPs = (
   const protocol = values.protocol as FirewallRuleProtocol;
 
   const predefinedFirewall = predefinedFirewallFromRule({
+    action: 'ACCEPT',
+    addresses: formValueToIPs(values.addresses, ips),
     ports: values.ports,
     protocol,
-    addresses: formValueToIPs(values.addresses, ips),
-    action: 'ACCEPT',
   });
 
   if (predefinedFirewall) {
@@ -136,12 +139,12 @@ export const classifyIPs = (ips: ExtendedIP[]) => {
 
 const initialValues: FormState = {
   action: 'ACCEPT',
-  type: '',
-  ports: '',
   addresses: '',
-  protocol: '',
-  label: '',
   description: '',
+  label: '',
+  ports: '',
+  protocol: '',
+  type: '',
 };
 
 export const getInitialFormValues = (
@@ -153,12 +156,12 @@ export const getInitialFormValues = (
 
   return {
     action: ruleToModify.action,
+    addresses: getInitialAddressFormValue(ruleToModify.addresses),
+    description: ruleToModify?.description || '',
+    label: ruleToModify?.label || '',
     ports: portStringToItems(ruleToModify.ports)[1],
     protocol: ruleToModify.protocol,
-    addresses: getInitialAddressFormValue(ruleToModify.addresses),
     type: predefinedFirewallFromRule(ruleToModify) || '',
-    label: ruleToModify?.label || '',
-    description: ruleToModify?.description || '',
   };
 };
 
@@ -292,11 +295,11 @@ export const portStringToItems = (
 };
 
 export const validateForm = ({
-  protocol,
-  ports,
-  label,
-  description,
   addresses,
+  description,
+  label,
+  ports,
+  protocol,
 }: Partial<FormState>) => {
   const errors: Partial<FormState> = {};
 
@@ -332,7 +335,7 @@ export const validateForm = ({
 
   if ((protocol === 'ICMP' || protocol === 'IPENCAP') && ports) {
     errors.ports = `Ports are not allowed for ${protocol} protocols.`;
-  } else if (ports && !ports.match(CUSTOM_PORTS_VALIDATION_REGEX)) {
+  } else if (ports && !isCustomPortsValid(ports)) {
     errors.ports = CUSTOM_PORTS_ERROR_MESSAGE;
   }
 

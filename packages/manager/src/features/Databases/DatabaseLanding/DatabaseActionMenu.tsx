@@ -2,22 +2,23 @@ import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import InlineAction from 'src/components/InlineMenuAction';
 import { makeStyles } from 'tss-react/mui';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles()(() => ({
   root: {
-    padding: '0px !important',
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center',
+    padding: '0px !important',
   },
 }));
 
 export interface ActionHandlers {
-  triggerDeleteDatabase: (databaseID: number, databaseLabel: string) => void;
   [index: string]: any;
+  triggerDeleteDatabase: (databaseID: number, databaseLabel: string) => void;
 }
 
 interface Props extends ActionHandlers {
@@ -37,18 +38,18 @@ const DatabaseActionMenu = (props: CombinedProps) => {
 
   const actions: Action[] = [
     {
-      title: 'Resize',
       onClick: () => {
         alert('Resize not yet implemented');
       },
+      title: 'Resize',
     },
     {
-      title: 'Delete',
       onClick: () => {
         if (triggerDeleteDatabase !== undefined) {
           triggerDeleteDatabase(databaseID, databaseLabel);
         }
       },
+      title: 'Delete',
     },
   ];
 
@@ -57,9 +58,9 @@ const DatabaseActionMenu = (props: CombinedProps) => {
       {!matchesSmDown &&
         actions.map((thisAction) => {
           return (
-            <InlineAction
-              key={thisAction.title}
+            <InlineMenuAction
               actionText={thisAction.title}
+              key={thisAction.title}
               onClick={thisAction.onClick}
             />
           );

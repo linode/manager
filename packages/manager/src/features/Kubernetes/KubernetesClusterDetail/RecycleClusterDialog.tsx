@@ -1,9 +1,10 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import {
   localStorageWarning,
   nodesDeletionWarning,
@@ -11,16 +12,16 @@ import {
 import { useRecycleClusterMutation } from 'src/queries/kubernetes';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   clusterId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const RecycleClusterDialog = (props: Props) => {
-  const { open, onClose, clusterId } = props;
+  const { clusterId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useRecycleClusterMutation(
+  const { error, isLoading, mutateAsync } = useRecycleClusterMutation(
     clusterId
   );
 
@@ -37,18 +38,18 @@ export const RecycleClusterDialog = (props: Props) => {
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
-        onClick={onClose}
         data-qa-cancel
         data-testid={'dialog-cancel'}
+        onClick={onClose}
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onSubmit}
-        loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
+        loading={isLoading}
+        onClick={onSubmit}
       >
         Recycle All Cluster Nodes
       </Button>
@@ -57,11 +58,11 @@ export const RecycleClusterDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      title="Recycle all nodes in cluster?"
-      onClose={onClose}
       actions={actions}
       error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title="Recycle all nodes in cluster?"
     >
       <Typography>
         {nodesDeletionWarning} {localStorageWarning} This may take several

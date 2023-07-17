@@ -1,31 +1,32 @@
+import Switch, { SwitchProps } from '@mui/material/Switch';
 import * as React from 'react';
+
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
-import Switch, { SwitchProps } from '@mui/material/Switch';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 
 export interface ToggleProps extends SwitchProps {
-  tooltipText?: JSX.Element | string;
   interactive?: boolean;
+  tooltipText?: JSX.Element | string;
 }
 
 export const Toggle = (props: ToggleProps) => {
-  const { tooltipText, interactive, ...rest } = props;
+  const { interactive, tooltipText, ...rest } = props;
 
   return (
     <React.Fragment>
       <Switch
-        icon={<ToggleOff />}
         checkedIcon={<ToggleOn />}
-        data-qa-toggle={props.checked}
         color="primary"
+        data-qa-toggle={props.checked}
+        icon={<ToggleOff />}
         {...rest}
       />
       {tooltipText && (
         <TooltipIcon
-          text={tooltipText}
           interactive={interactive}
           status="help"
+          text={tooltipText}
         />
       )}
     </React.Fragment>

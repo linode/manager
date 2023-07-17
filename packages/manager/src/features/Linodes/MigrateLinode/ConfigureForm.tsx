@@ -1,40 +1,41 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
+import { Flag } from 'src/components/Flag';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
-import { Flag } from 'src/components/Flag';
-import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  currentRegion: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(),
+    marginBottom: theme.spacing(4),
+  },
   root: {
-    marginTop: theme.spacing(4),
-    padding: 0,
     '& > p:first-of-type': {
       color: theme.color.label,
       fontFamily: theme.font.bold,
-      marginTop: theme.spacing(2),
       marginBottom: theme.spacing(),
+      marginTop: theme.spacing(2),
     },
-  },
-  currentRegion: {
-    display: 'flex',
-    gap: theme.spacing(),
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(4),
+    padding: 0,
   },
 }));
 
 interface Props {
   currentRegion: string;
-  handleSelectRegion: (id: string) => void;
-  selectedRegion: string | null;
   errorText?: string;
+  handleSelectRegion: (id: string) => void;
   helperText?: string;
+  selectedRegion: null | string;
 }
 
 const ConfigureForm = (props: Props) => {
@@ -65,16 +66,16 @@ const ConfigureForm = (props: Props) => {
             (eachRegion) => eachRegion.id !== props.currentRegion
           ) ?? []
         }
-        handleSelection={props.handleSelectRegion}
-        selectedID={props.selectedRegion}
-        errorText={props.errorText}
-        textFieldProps={{
-          helperText: props.helperText,
-        }}
-        menuPlacement="top"
         styles={{
           menuList: (base: any) => ({ ...base, maxHeight: `30vh !important` }),
         }}
+        textFieldProps={{
+          helperText: props.helperText,
+        }}
+        errorText={props.errorText}
+        handleSelection={props.handleSelectRegion}
+        menuPlacement="top"
+        selectedID={props.selectedRegion}
       />
     </Paper>
   );

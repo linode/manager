@@ -1,57 +1,59 @@
 import {
-  acceptEntityTransfer,
   TransferEntities,
+  acceptEntityTransfer,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import {
-  queryKey,
   TRANSFER_FILTERS,
+  queryKey,
   useTransferQuery,
 } from 'src/queries/entityTransfers';
+import { useProfile } from 'src/queries/profile';
+import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics';
 import { pluralize } from 'src/utilities/pluralize';
+
 import { countByEntity } from '../utilities';
-import { useQueryClient } from 'react-query';
-import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  transferSummary: {
-    marginBottom: theme.spacing(),
-  },
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
   },
-  expiry: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
   entityTypeDisplay: {
     marginBottom: theme.spacing(),
+  },
+  expiry: {
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
+  list: {
+    listStyleType: 'none',
+    margin: 0,
+    paddingLeft: 0,
   },
   summary: {
     marginBottom: 4,
   },
-  list: {
-    listStyleType: 'none',
-    paddingLeft: 0,
-    margin: 0,
+  transferSummary: {
+    marginBottom: theme.spacing(),
   },
 }));
 
@@ -65,7 +67,7 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   const { onClose, open, token } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { data, isLoading, isError, error } = useTransferQuery(
+  const { data, error, isError, isLoading } = useTransferQuery(
     token ?? '',
     open
   );
@@ -139,9 +141,9 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
       </Button>
       <Button
         buttonType="primary"
-        onClick={handleAcceptTransfer}
         disabled={!hasConfirmed || isLoading || isError}
         loading={submitting}
+        onClick={handleAcceptTransfer}
       >
         Accept Transfer
       </Button>
@@ -150,38 +152,38 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
 
   return (
     <ConfirmationDialog
-      onClose={onClose}
-      title="Receive a Service Transfer"
-      open={open}
       actions={actions}
+      onClose={onClose}
+      open={open}
+      title="Receive a Service Transfer"
     >
       <DialogContent
-        isLoading={isLoading}
-        isError={isError || isOwnAccount}
-        errors={errors}
         entities={data?.entities ?? { linodes: [] }}
+        errors={errors}
         expiry={data?.expiry}
-        hasConfirmed={hasConfirmed}
         handleToggleConfirm={() => setHasConfirmed((confirmed) => !confirmed)}
-        submissionErrors={submissionErrors}
+        hasConfirmed={hasConfirmed}
+        isError={isError || isOwnAccount}
+        isLoading={isLoading}
         onClose={onClose}
         onSubmit={handleAcceptTransfer}
+        submissionErrors={submissionErrors}
       />
     </ConfirmationDialog>
   );
 };
 
 interface ContentProps {
-  hasConfirmed?: boolean;
-  isLoading: boolean;
-  isError: boolean;
-  errors: APIError[] | null;
   entities: TransferEntities;
+  errors: APIError[] | null;
   expiry?: string;
-  submissionErrors: APIError[] | null;
   handleToggleConfirm: () => void;
+  hasConfirmed?: boolean;
+  isError: boolean;
+  isLoading: boolean;
   onClose: () => void;
   onSubmit: () => void;
+  submissionErrors: APIError[] | null;
 }
 
 export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
@@ -189,8 +191,8 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
     entities,
     errors,
     expiry,
-    hasConfirmed,
     handleToggleConfirm,
+    hasConfirmed,
     isError,
     isLoading,
     submissionErrors,
@@ -231,8 +233,8 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
         submissionErrors
           ? submissionErrors.map((thisError, idx) => (
               <Notice
-                key={`form-submit-error-${idx}`}
                 error
+                key={`form-submit-error-${idx}`}
                 text={thisError.reason}
               />
             ))
@@ -267,7 +269,7 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
         <Typography className={classes.expiry}>{timeRemaining}</Typography>
       ) : null}
       <div>
-        <CheckBox
+        <Checkbox
           checked={hasConfirmed}
           onChange={handleToggleConfirm}
           text="I accept responsibility for the billing of services listed above."

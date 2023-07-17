@@ -1,10 +1,11 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+
+import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
+import { Typography } from 'src/components/Typography';
 import Dialog from 'src/components/core/Dialog';
 import DialogContent from 'src/components/core/DialogContent';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   restartButton: {
@@ -14,10 +15,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const TheApplicationIsOnFire: React.FC<{}> = (props) => {
   return (
-    <Dialog open PaperProps={{ role: undefined }} role="dialog">
+    <Dialog PaperProps={{ role: undefined }} open role="dialog">
       <DialogTitle title="Oh snap!" />
       <DialogContent>
-        <Typography variant="subtitle1" style={{ marginBottom: 16 }}>
+        <Typography style={{ marginBottom: 16 }} variant="subtitle1">
           Something went terribly wrong. Please {<ReloadLink />} and try again.
         </Typography>
       </DialogContent>

@@ -1,5 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import {
@@ -13,16 +14,26 @@ import {
 import { usePreferences } from 'src/queries/preferences';
 
 interface EntityInfo {
-  type: 'Linode' | 'Volume' | 'NodeBalancer' | 'Bucket';
-  label: string | undefined;
+  action?: 'cancellation' | 'deletion' | 'detachment' | 'restoration';
+  name?: string | undefined;
+  primaryBtnText: string;
+  subType?: 'CloseAccount' | 'Cluster' | 'ObjectStorage';
+  type:
+    | 'AccountSetting'
+    | 'Bucket'
+    | 'Database'
+    | 'Kubernetes'
+    | 'Linode'
+    | 'NodeBalancer'
+    | 'Volume';
 }
 
 interface TypeToConfirmDialogProps {
-  entity: EntityInfo;
   children: React.ReactNode;
+  entity: EntityInfo;
+  errors?: APIError[] | null | undefined;
+  label: string;
   loading: boolean;
-  confirmationText?: string | JSX.Element;
-  errors?: APIError[] | undefined | null;
   onClick: () => void;
 }
 
@@ -32,15 +43,16 @@ type CombinedProps = TypeToConfirmDialogProps &
 
 export const TypeToConfirmDialog = (props: CombinedProps) => {
   const {
-    open,
-    title,
-    onClose,
-    onClick,
-    loading,
-    entity,
     children,
-    confirmationText,
+    entity,
     errors,
+    label,
+    loading,
+    onClick,
+    onClose,
+    open,
+    textFieldStyle,
+    title,
     typographyStyle,
   } = props;
 
@@ -48,7 +60,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
 
   const { data: preferences } = usePreferences();
   const disabled =
-    preferences?.type_to_confirm !== false && confirmText !== entity.label;
+    preferences?.type_to_confirm !== false && confirmText !== entity.name;
 
   React.useEffect(() => {
     if (open) {
@@ -56,53 +68,65 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     }
   }, [open]);
 
+  const typeInstructions =
+    entity.action === 'cancellation'
+      ? `type your Username `
+      : `type  the name of the ${entity.type} ${entity.subType || ''} `;
+
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+      <Button
+        buttonType="secondary"
+        data-qa-cancel
+        data-testid={'dialog-cancel'}
+        onClick={onClose}
+      >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onClick}
-        loading={loading}
-        disabled={disabled}
         data-qa-confirm
+        data-testid={'dialog-confirm'}
+        disabled={disabled}
+        loading={loading}
+        onClick={onClick}
       >
-        {entity.type === 'Volume' && title.startsWith('Detach')
-          ? 'Detach'
-          : 'Delete'}
+        {entity.primaryBtnText}
       </Button>
     </ActionsPanel>
   );
 
   return (
     <ConfirmationDialog
-      open={open}
-      title={title}
-      onClose={onClose}
       actions={actions}
       error={errors ? errors[0].reason : undefined}
+      onClose={onClose}
+      open={open}
+      title={title}
     >
       {children}
       <TypeToConfirm
-        label={`${entity.type} ${entity.type !== 'Bucket' ? 'Label' : 'Name'}`}
         confirmationText={
-          confirmationText ? (
-            confirmationText
+          entity.subType === 'CloseAccount' ? (
+            ''
           ) : (
             <span>
-              To confirm deletion, type the name of the {entity.type} (
-              <b>{entity.label}</b>) in the field below:
+              To confirm {entity.action}, {typeInstructions}(
+              <b>{entity.name}</b>) in the field below:
             </span>
           )
         }
-        value={confirmText}
-        typographyStyle={typographyStyle}
-        data-testid={'dialog-confirm-text-input'}
-        expand
         onChange={(input) => {
           setConfirmText(input);
         }}
+        data-testid={'dialog-confirm-text-input'}
+        expand
+        hideInstructions={entity.subType === 'CloseAccount'}
+        label={label}
+        placeholder={entity.subType === 'CloseAccount' ? 'Username' : ''}
+        textFieldStyle={textFieldStyle}
+        typographyStyle={typographyStyle}
+        value={confirmText}
         visible={preferences?.type_to_confirm}
       />
     </ConfirmationDialog>

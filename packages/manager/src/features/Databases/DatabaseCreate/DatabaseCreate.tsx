@@ -9,37 +9,39 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
+
 import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Divider from 'src/components/core/Divider';
-import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Paper from 'src/components/core/Paper';
-import RadioGroup from 'src/components/core/RadioGroup';
-import Typography from 'src/components/core/Typography';
-import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
+import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { RegionOption } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Radio } from 'src/components/Radio/Radio';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import FormControl from 'src/components/core/FormControl';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Paper from 'src/components/core/Paper';
+import RadioGroup from 'src/components/core/RadioGroup';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import PlansPanel, {
@@ -62,66 +64,35 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  formControlLabel: {
-    marginBottom: theme.spacing(),
-  },
   btnCtn: {
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center',
     marginTop: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
       alignItems: 'flex-end',
+      flexDirection: 'column',
       marginTop: theme.spacing(),
     },
   },
+  chip: {
+    marginTop: 4,
+  },
   createBtn: {
-    whiteSpace: 'nowrap',
     [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
+    whiteSpace: 'nowrap',
   },
   createText: {
     marginLeft: theme.spacing(),
     marginRight: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(),
       marginRight: 0,
+      padding: theme.spacing(),
     },
-  },
-  selectPlanPanel: {
-    padding: 0,
-    margin: 0,
-  },
-  labelToolTipCtn: {
-    '& strong': {
-      padding: 8,
-    },
-    '& ul': {
-      margin: '4px',
-    },
-  },
-  nodeHelpIcon: {
-    padding: '0px 0px 0px 2px',
-    marginTop: '-2px',
-  },
-  chip: {
-    marginTop: 4,
-  },
-  tooltip: {
-    '& .MuiTooltip-tooltip': {
-      [theme.breakpoints.up('md')]: {
-        minWidth: 350,
-      },
-    },
-  },
-  notice: {
-    fontSize: 15,
-    lineHeight: '18px',
   },
   engineSelect: {
     '& .react-select__option--is-focused': {
@@ -132,12 +103,42 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
     },
   },
+  formControlLabel: {
+    marginBottom: theme.spacing(),
+  },
+  labelToolTipCtn: {
+    '& strong': {
+      padding: 8,
+    },
+    '& ul': {
+      margin: '4px',
+    },
+  },
+  nodeHelpIcon: {
+    marginTop: '-2px',
+    padding: '0px 0px 0px 2px',
+  },
+  notice: {
+    fontSize: 15,
+    lineHeight: '18px',
+  },
+  selectPlanPanel: {
+    margin: 0,
+    padding: 0,
+  },
+  tooltip: {
+    '& .MuiTooltip-tooltip': {
+      [theme.breakpoints.up('md')]: {
+        minWidth: 350,
+      },
+    },
+  },
 }));
 
 const engineIcons = {
-  mysql: <MySQLIcon width="24" height="24" />,
-  postgresql: <PostgreSQLIcon width="24" height="24" />,
-  mongodb: <MongoDBIcon width="24" height="24" />,
+  mongodb: <MongoDBIcon height="24" width="24" />,
+  mysql: <MySQLIcon height="24" width="24" />,
+  postgresql: <PostgreSQLIcon height="24" width="24" />,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {
@@ -171,11 +172,11 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
           options: groupedEngines[thisGroup]
             .map((engineObject) => ({
               ...engineObject,
+              flag: engineIcons[engineObject.engine],
               label: `${databaseEngineMap[engineObject.engine]} v${
                 engineObject.version
               }`,
               value: `${engineObject.engine}/${engineObject.version}`,
-              flag: engineIcons[engineObject.engine],
             }))
             .sort((a, b) => (a.version > b.version ? -1 : 1)),
         },
@@ -186,8 +187,8 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
 };
 
 interface NodePricing {
-  single: DatabasePriceObject | undefined;
   multi: DatabasePriceObject | undefined;
+  single: DatabasePriceObject | undefined;
 }
 
 const DatabaseCreate = () => {
@@ -197,20 +198,20 @@ const DatabaseCreate = () => {
 
   const {
     data: regionsData,
-    isLoading: regionsLoading,
     error: regionsError,
+    isLoading: regionsLoading,
   } = useRegionsQuery();
 
   const {
     data: engines,
-    isLoading: enginesLoading,
     error: enginesError,
+    isLoading: enginesLoading,
   } = useDatabaseEnginesQuery();
 
   const {
     data: dbtypes,
-    isLoading: typesLoading,
     error: typesError,
+    isLoading: typesLoading,
   } = useDatabaseTypesQuery();
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
@@ -289,36 +290,36 @@ const DatabaseCreate = () => {
   };
 
   const {
-    values,
     errors,
-    isSubmitting,
     handleSubmit,
-    setFieldValue,
+    isSubmitting,
     setFieldError,
+    setFieldValue,
     setSubmitting,
+    values,
   } = useFormik({
     initialValues: {
-      label: '',
-      engine: 'mysql' as Engine,
-      region: '',
-      type: '',
-      cluster_size: -1 as ClusterSize,
-      replication_type: 'none' as ComprehensiveReplicationType,
-      replication_commit_type: undefined, // specific to Postgres
       allow_list: [
         {
           address: '',
           error: '',
         },
       ],
+      cluster_size: -1 as ClusterSize,
+      compression_type: undefined, // specific to MongoDB
+      engine: 'mysql' as Engine,
+      label: '',
+      region: '',
+      replication_commit_type: undefined, // specific to Postgres
+      replication_type: 'none' as ComprehensiveReplicationType,
       ssl_connection: true,
       storage_engine: undefined, // specific to MongoDB
-      compression_type: undefined, // specific to MongoDB
+      type: '',
     },
-    validationSchema: createDatabaseSchema,
-    validateOnChange: false,
-    validate: handleIPValidation,
     onSubmit: submitForm,
+    validate: handleIPValidation,
+    validateOnChange: false,
+    validationSchema: createDatabaseSchema,
   });
 
   const selectedEngine = values.engine.split('/')[0] as Engine;
@@ -333,7 +334,7 @@ const DatabaseCreate = () => {
       const singleNodePricing = type.engines[selectedEngine].find(
         (cluster) => cluster.quantity === 1
       );
-      const price = singleNodePricing?.price ?? { monthly: null, hourly: null };
+      const price = singleNodePricing?.price ?? { hourly: null, monthly: null };
       const subHeadings = [
         `$${price.monthly}/mo ($${price.hourly}/hr)`,
         typeLabelDetails(type.memory, type.disk, type.vcpus),
@@ -367,7 +368,6 @@ const DatabaseCreate = () => {
 
   const nodeOptions = [
     {
-      value: 1,
       label: (
         <Typography>
           1 Node {` `}
@@ -379,9 +379,9 @@ const DatabaseCreate = () => {
           </span>
         </Typography>
       ),
+      value: 1,
     },
     {
-      value: 3,
       label: (
         <Typography>
           3 Nodes - High Availability (recommended)
@@ -393,6 +393,7 @@ const DatabaseCreate = () => {
           </span>
         </Typography>
       ),
+      value: 3,
     },
   ];
 
@@ -409,11 +410,11 @@ const DatabaseCreate = () => {
     const engineType = values.engine.split('/')[0];
 
     setNodePricing({
-      single: type.engines[engineType].find(
-        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
-      )?.price,
       multi: type.engines[engineType].find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
+      )?.price,
+      single: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
       )?.price,
     });
     setFieldValue(
@@ -442,15 +443,13 @@ const DatabaseCreate = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <ProductInformationBanner bannerLocation="Databases" warning important />
+      <ProductInformationBanner bannerLocation="Databases" important warning />
       <LandingHeader
-        title="Create"
         breadcrumbProps={{
-          pathname: location.pathname,
           crumbOverrides: [
             {
-              position: 1,
               label: 'Database Clusters',
+              position: 1,
             },
           ],
           labelOptions: {
@@ -458,7 +457,9 @@ const DatabaseCreate = () => {
               <BetaChip className={classes.chip} component="span" />
             ) : null,
           },
+          pathname: location.pathname,
         }}
+        title="Create"
       />
       <Paper>
         {createError ? <Notice error text={createError} /> : null}
@@ -468,38 +469,38 @@ const DatabaseCreate = () => {
             data-qa-label-input
             errorText={errors.label}
             label="Cluster Label"
-            tooltipText={labelToolTip}
-            tooltipClasses={classes.tooltip}
             onChange={(e) => setFieldValue('label', e.target.value)}
+            tooltipClasses={classes.tooltip}
+            tooltipText={labelToolTip}
             value={values.label}
           />
         </Grid>
-        <Divider spacingTop={38} spacingBottom={12} />
+        <Divider spacingBottom={12} spacingTop={38} />
         <Grid>
           <Typography variant="h2">Select Engine and Region</Typography>
           <Select
-            label="Database Engine"
+            onChange={(selected: Item<string>) => {
+              setFieldValue('engine', selected.value);
+            }}
             value={getSelectedOptionFromGroupedOptions(
               values.engine,
               engineOptions
             )}
             className={classes.engineSelect}
-            errorText={errors.engine}
-            options={engineOptions}
             components={{ Option: RegionOption, SingleValue: _SingleValue }}
-            placeholder={'Select a Database Engine'}
-            onChange={(selected: Item<string>) => {
-              setFieldValue('engine', selected.value);
-            }}
+            errorText={errors.engine}
             isClearable={false}
+            label="Database Engine"
+            options={engineOptions}
+            placeholder={'Select a Database Engine'}
           />
         </Grid>
         <Grid>
           <RegionSelect
-            errorText={errors.region}
             handleSelection={(selected: string) =>
               setFieldValue('region', selected)
             }
+            errorText={errors.region}
             regions={regionsData}
             selectedID={values.region}
           />
@@ -507,24 +508,24 @@ const DatabaseCreate = () => {
             <RegionHelperText />
           </div>
         </Grid>
-        <Divider spacingTop={38} spacingBottom={12} />
+        <Divider spacingBottom={12} spacingTop={38} />
         <Grid>
           <PlansPanel
-            data-qa-select-plan
-            error={errors.type}
-            types={displayTypes}
             onSelect={(selected: string) => {
               setFieldValue('type', selected);
             }}
-            selectedID={values.type}
-            header="Choose a Plan"
             className={classes.selectPlanPanel}
+            data-qa-select-plan
+            error={errors.type}
+            header="Choose a Plan"
             isCreate
+            selectedID={values.type}
+            types={displayTypes}
           />
         </Grid>
-        <Divider spacingTop={26} spacingBottom={12} />
+        <Divider spacingBottom={12} spacingTop={26} />
         <Grid>
-          <Typography variant="h2" style={{ marginBottom: 4 }}>
+          <Typography style={{ marginBottom: 4 }} variant="h2">
             Set Number of Nodes{' '}
           </Typography>
           <Typography style={{ marginBottom: 8 }}>
@@ -545,24 +546,24 @@ const DatabaseCreate = () => {
               <Notice error text={errors.cluster_size} />
             ) : null}
             <RadioGroup
-              style={{ marginTop: 0, marginBottom: 0 }}
+              style={{ marginBottom: 0, marginTop: 0 }}
               value={values.cluster_size}
             >
               {nodeOptions.map((nodeOption) => (
                 <FormControlLabel
-                  key={nodeOption.value}
-                  value={nodeOption.value}
-                  label={nodeOption.label}
+                  className={classes.formControlLabel}
                   control={<Radio />}
                   data-qa-radio={nodeOption.label}
-                  className={classes.formControlLabel}
+                  key={nodeOption.value}
+                  label={nodeOption.label}
+                  value={nodeOption.value}
                 />
               ))}
             </RadioGroup>
           </FormControl>
-          <Grid xs={12} md={8}>
+          <Grid md={8} xs={12}>
             {flags.databaseBeta ? (
-              <Notice success className={classes.notice}>
+              <Notice className={classes.notice} info>
                 <strong>
                   Notice: There is no charge for database clusters during beta.
                 </strong>{' '}
@@ -576,9 +577,9 @@ const DatabaseCreate = () => {
             ) : undefined}
           </Grid>
         </Grid>
-        <Divider spacingTop={26} spacingBottom={12} />
+        <Divider spacingBottom={12} spacingTop={26} />
         <Grid>
-          <Typography variant="h2" style={{ marginBottom: 4 }}>
+          <Typography style={{ marginBottom: 4 }} variant="h2">
             Add Access Controls
           </Typography>
           <Typography>
@@ -599,15 +600,15 @@ const DatabaseCreate = () => {
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
             {ipErrorsFromAPI
               ? ipErrorsFromAPI.map((apiError: APIError) => (
-                  <Notice key={apiError.reason} text={apiError.reason} error />
+                  <Notice error key={apiError.reason} text={apiError.reason} />
                 ))
               : null}
             <MultipleIPInput
-              title="Allowed IP Address(es) or Range(s)"
-              placeholder={ipFieldPlaceholder}
               ips={values.allow_list}
-              onChange={(address) => setFieldValue('allow_list', address)}
               onBlur={handleIPBlur}
+              onChange={(address) => setFieldValue('allow_list', address)}
+              placeholder={ipFieldPlaceholder}
+              title="Allowed IP Address(es) or Range(s)"
             />
           </Grid>
         </Grid>
@@ -618,10 +619,10 @@ const DatabaseCreate = () => {
           provision.
         </Typography>
         <Button
-          type="submit"
           buttonType="primary"
-          loading={isSubmitting}
           className={classes.createBtn}
+          loading={isSubmitting}
+          type="submit"
         >
           Create Database Cluster
         </Button>

@@ -1,23 +1,20 @@
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Accordion } from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
-import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import Typography from 'src/components/core/Typography';
-import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
-import { updateAccountSettingsData } from 'src/queries/accountSettings';
-import { usePreferences } from 'src/queries/preferences';
-import { useProfile } from 'src/queries/profile';
-import { queryKey } from 'src/queries/objectStorage';
+import * as React from 'react';
 import { useQueryClient } from 'react-query';
+import { Link } from 'react-router-dom';
 
+import { Accordion } from 'src/components/Accordion';
+import { Button } from 'src/components/Button/Button';
+import ExternalLink from 'src/components/ExternalLink';
+import { Notice } from 'src/components/Notice/Notice';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
+import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import { queryKey } from 'src/queries/objectStorage';
+import { useProfile } from 'src/queries/profile';
 interface Props {
   object_storage: AccountSettings['object_storage'];
 }
@@ -41,8 +38,8 @@ export const ObjectStorageContent = (props: ContentProps) => {
         </Grid>
         <Grid>
           <Button
-            data-testid="open-dialog-button"
             buttonType="outlined"
+            data-testid="open-dialog-button"
             onClick={openConfirmationModal}
           >
             Cancel Object Storage
@@ -61,8 +58,8 @@ export const ObjectStorageContent = (props: ContentProps) => {
       <Link to="/object-storage/access-keys">Access Key.</Link>{' '}
       <ExternalLink
         fixedIcon
-        text="Learn more."
         link="https://www.linode.com/docs/platform/object-storage/"
+        text="Learn more."
       />
     </Typography>
   );
@@ -73,13 +70,9 @@ export const EnableObjectStorage = (props: Props) => {
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
-  const [confirmText, setConfirmText] = React.useState('');
-  const { data: preferences } = usePreferences();
   const { data: profile } = useProfile();
   const queryClient = useQueryClient();
   const username = profile?.username;
-  const disabledConfirm =
-    preferences?.type_to_confirm !== false && confirmText !== username;
 
   const handleClose = () => {
     setOpen(false);
@@ -104,65 +97,38 @@ export const EnableObjectStorage = (props: Props) => {
       .catch(handleError);
   };
 
-  const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={handleClose}
-        data-testid="dialog-cancel"
-      >
-        Cancel
-      </Button>
-
-      <Button
-        buttonType="primary"
-        onClick={handleSubmit}
-        disabled={disabledConfirm}
-        loading={isLoading}
-        data-testid="dialog-confirm"
-      >
-        Confirm Cancellation
-      </Button>
-    </ActionsPanel>
-  );
-
   return (
     <>
-      <Accordion heading="Object Storage" defaultExpanded={true}>
+      <Accordion defaultExpanded={true} heading="Object Storage">
         <ObjectStorageContent
           object_storage={object_storage}
           openConfirmationModal={() => setOpen(true)}
         />
       </Accordion>
-      <ConfirmationDialog
+      <TypeToConfirmDialog
+        entity={{
+          action: 'cancellation',
+          name: username,
+          primaryBtnText: 'Confirm Cancellation',
+          subType: 'ObjectStorage',
+          type: 'AccountSetting',
+        }}
+        label={'Username'}
+        loading={isLoading}
+        onClick={handleSubmit}
+        onClose={handleClose}
         open={isOpen}
-        error={error}
-        onClose={() => handleClose()}
-        title="Cancel Object Storage"
-        actions={actions}
+        title={`Cancel Object Storage`}
       >
+        {error ? <Notice error text={error} /> : null}
         <Notice warning>
-          <Typography style={{ fontSize: '0.875rem' }}>
+          <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Canceling Object Storage will permanently
             delete all buckets and their objects. Object Storage Access Keys
             will be revoked.
           </Typography>
         </Notice>
-        <TypeToConfirm
-          data-testid="dialog-confirm-text-input"
-          label="Username"
-          onChange={(input) => setConfirmText(input)}
-          expand
-          value={confirmText}
-          confirmationText={
-            <span>
-              To confirm cancellation, type your username (<b>{username}</b>) in
-              the field below:
-            </span>
-          }
-          visible={preferences?.type_to_confirm}
-        />
-      </ConfirmationDialog>
+      </TypeToConfirmDialog>
     </>
   );
 };

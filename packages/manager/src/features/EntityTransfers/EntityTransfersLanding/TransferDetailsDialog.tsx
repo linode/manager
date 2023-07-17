@@ -1,40 +1,41 @@
 import { TransferEntities } from '@linode/api-v4/lib/entity-transfers/types';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
 import { Dialog } from 'src/components/Dialog/Dialog';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  token: {
-    marginBottom: theme.spacing(3),
+  entities: {
+    marginBottom: theme.spacing(2),
   },
   label: {
     color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
-  entities: {
-    marginBottom: theme.spacing(2),
+  token: {
+    marginBottom: theme.spacing(3),
   },
 }));
 
 export interface Props {
+  entities?: TransferEntities;
   isOpen: boolean;
   onClose: () => void;
   token: string;
-  entities?: TransferEntities;
 }
 
 export const TransferDetailsDialog: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { isOpen, onClose, token, entities } = props;
+  const { entities, isOpen, onClose, token } = props;
 
   return (
     <Dialog
-      title="Service Transfer Details"
       fullWidth
-      open={isOpen}
       onClose={onClose}
+      open={isOpen}
+      title="Service Transfer Details"
     >
       <div className={classes.token}>
         <Typography className={classes.label}>Token: </Typography>
@@ -44,7 +45,7 @@ export const TransferDetailsDialog: React.FC<Props> = (props) => {
       <div className={classes.entities}>
         {entities?.linodes.map((entity, idx) => {
           return (
-            <Typography key={idx} data-testid={idx}>
+            <Typography data-testid={idx} key={idx}>
               {entity}
             </Typography>
           );

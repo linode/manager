@@ -1,15 +1,16 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
+
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-import Typography from 'src/components/core/Typography';
 import Option from 'src/components/EnhancedSelect/components/Option';
+import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 interface Props extends OptionProps<any, any> {
   data: {
-    label: string;
     data: any;
+    label: string;
   };
   searchText: string;
 }
@@ -37,9 +38,9 @@ const SearchItem: React.FC<Props> = (props) => {
         [classes.algoliaRoot]: true,
         [classes.selectedMenuItem]: isFocused,
       })}
-      value={data.label}
       aria-describedby={!isFinal ? 'external-site' : undefined}
       attrs={{ ['data-qa-search-result']: source }}
+      value={data.label}
       {...props}
     >
       {isFinal ? (

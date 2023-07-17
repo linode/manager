@@ -2,39 +2,41 @@ import {
   AutoscaleSettings,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Button } from 'src/components/Button/Button';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Button } from 'src/components/Button/Button';
+import { Tooltip } from 'src/components/Tooltip';
+import { Typography } from 'src/components/Typography';
+
 import NodeTable from './NodeTable';
-import Tooltip from 'src/components/core/Tooltip';
 
 interface Props {
-  poolId: number;
-  typeLabel: string;
-  nodes: PoolNodeResponse[];
   autoscaler: AutoscaleSettings;
   handleClickResize: (poolId: number) => void;
+  isOnlyNodePool: boolean;
+  nodes: PoolNodeResponse[];
   openAutoscalePoolDialog: (poolId: number) => void;
   openDeletePoolDialog: (poolId: number) => void;
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
-  isOnlyNodePool: boolean;
+  poolId: number;
+  typeLabel: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  autoscaleText: {
+    alignSelf: 'center',
+    paddingRight: theme.spacing(2),
+  },
   button: {
     paddingRight: 8,
   },
-  autoscaleText: {
-    paddingRight: theme.spacing(2),
-    alignSelf: 'center',
-  },
   deletePoolBtn: {
-    paddingRight: 8,
     marginBottom: 3,
+    paddingRight: 8,
   },
 }));
 
@@ -42,26 +44,26 @@ const NodePool: React.FC<Props> = (props) => {
   const {
     autoscaler,
     handleClickResize,
+    isOnlyNodePool,
+    nodes,
     openAutoscalePoolDialog,
     openDeletePoolDialog,
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
-    nodes,
-    typeLabel,
     poolId,
-    isOnlyNodePool,
+    typeLabel,
   } = props;
 
   const classes = useStyles();
 
   return (
     <Grid
-      container
       alignItems="center"
+      container
+      data-qa-node-pool-id={poolId}
+      data-qa-node-pool-section
       justifyContent="space-between"
       spacing={2}
-      data-qa-node-pool-section
-      data-qa-node-pool-id={poolId}
     >
       <Grid>
         <Typography variant="h2">{typeLabel}</Typography>
@@ -72,8 +74,8 @@ const NodePool: React.FC<Props> = (props) => {
         }}
       >
         <Button
-          className={`${autoscaler.enabled ? classes.button : ''}`}
           buttonType="secondary"
+          className={`${autoscaler.enabled ? classes.button : ''}`}
           compactY
           onClick={() => openAutoscalePoolDialog(poolId)}
         >
@@ -99,15 +101,15 @@ const NodePool: React.FC<Props> = (props) => {
           Recycle Pool Nodes
         </Button>
         <Tooltip
-          title="Clusters must contain at least one node pool."
           disableFocusListener={!isOnlyNodePool}
           disableHoverListener={!isOnlyNodePool}
           disableTouchListener={!isOnlyNodePool}
+          title="Clusters must contain at least one node pool."
         >
           <div>
             <Button
-              className={classes.deletePoolBtn}
               buttonType="secondary"
+              className={classes.deletePoolBtn}
               compactY
               disabled={isOnlyNodePool}
               onClick={() => openDeletePoolDialog(poolId)}
@@ -118,16 +120,16 @@ const NodePool: React.FC<Props> = (props) => {
         </Tooltip>
       </Grid>
       <Grid
-        xs={12}
         sx={{
           paddingTop: 0,
         }}
+        xs={12}
       >
         <NodeTable
-          poolId={poolId}
           nodes={nodes}
-          typeLabel={typeLabel}
           openRecycleNodeDialog={openRecycleNodeDialog}
+          poolId={poolId}
+          typeLabel={typeLabel}
         />
       </Grid>
     </Grid>

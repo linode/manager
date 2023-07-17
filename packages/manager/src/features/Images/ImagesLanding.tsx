@@ -1,27 +1,22 @@
+import { Event, Image, ImageStatus } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import produce from 'immer';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Hidden } from 'src/components/Hidden';
-import imageEvents from 'src/store/selectors/imageEvents';
-import ImageRow, { ImageWithEvent } from './ImageRow';
-import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import LandingHeader from 'src/components/LandingHeader';
-import Paper from 'src/components/core/Paper';
-import produce from 'immer';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import Typography from 'src/components/core/Typography';
-import { APIError } from '@linode/api-v4/lib/types';
-import { ApplicationState } from 'src/store';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Event, Image, ImageStatus } from '@linode/api-v4';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { Handlers as ImageHandlers } from './ImagesActionMenu';
-import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
-import { listToItemsByID } from 'src/queries/base';
-import { makeStyles } from '@mui/styles';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Hidden } from 'src/components/Hidden';
+import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -29,20 +24,27 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Theme } from '@mui/material/styles';
-import { useHistory } from 'react-router-dom';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
-import { useSnackbar } from 'notistack';
+import { listToItemsByID } from 'src/queries/base';
 import {
   queryKey,
   removeImageFromCache,
   useDeleteImageMutation,
   useImagesQuery,
 } from 'src/queries/images';
+import { ApplicationState } from 'src/store';
+import imageEvents from 'src/store/selectors/imageEvents';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
+import ImageRow, { ImageWithEvent } from './ImageRow';
+import { Handlers as ImageHandlers } from './ImagesActionMenu';
+import { DrawerMode, ImagesDrawer } from './ImagesDrawer';
+import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: {
@@ -50,8 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
   },
   imageTableHeader: {
-    padding: theme.spacing(),
     marginLeft: theme.spacing(),
+    padding: theme.spacing(),
   },
   imageTableSubheader: {
     marginTop: theme.spacing(),
@@ -59,40 +61,40 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface ImageDrawerState {
-  open: boolean;
-  mode: DrawerMode;
+  description?: string;
   imageID?: string;
   label?: string;
-  description?: string;
-  selectedDisk: string | null;
+  mode: DrawerMode;
+  open: boolean;
+  selectedDisk: null | string;
   selectedLinode?: number;
 }
 
 interface ImageDialogState {
-  open: boolean;
-  submitting: boolean;
+  error?: string;
   image?: string;
   imageID?: string;
-  error?: string;
+  open: boolean;
   status?: ImageStatus;
+  submitting: boolean;
 }
 
 type CombinedProps = ImageDrawerState & ImageDialogState;
 
 const defaultDrawerState = {
-  open: false,
-  mode: 'edit' as DrawerMode,
-  label: '',
   description: '',
+  label: '',
+  mode: 'edit' as DrawerMode,
+  open: false,
   selectedDisk: null,
 };
 
 const defaultDialogState = {
-  open: false,
-  submitting: false,
+  error: undefined,
   image: '',
   imageID: '',
-  error: undefined,
+  open: false,
+  submitting: false,
 };
 
 export const ImagesLanding: React.FC<CombinedProps> = () => {
@@ -109,27 +111,27 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     'manual'
   );
   const {
+    handleOrderChange: handleManualImagesOrderChange,
     order: manualImagesOrder,
     orderBy: manualImagesOrderBy,
-    handleOrderChange: handleManualImagesOrderChange,
   } = useOrder(
     {
-      orderBy: 'label',
       order: 'asc',
+      orderBy: 'label',
     },
     `${queryKey}-manual-order`,
     'manual'
   );
 
   const manualImagesFilter = {
-    ['+order_by']: manualImagesOrderBy,
     ['+order']: manualImagesOrder,
+    ['+order_by']: manualImagesOrderBy,
   };
 
   const {
     data: manualImages,
-    isLoading: manualImagesLoading,
     error: manualImagesError,
+    isLoading: manualImagesLoading,
   } = useImagesQuery(
     {
       page: paginationForManualImages.page,
@@ -137,8 +139,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     },
     {
       ...manualImagesFilter,
-      type: 'manual',
       is_public: false,
+      type: 'manual',
     }
   );
 
@@ -149,27 +151,27 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     'automatic'
   );
   const {
+    handleOrderChange: handleAutomaticImagesOrderChange,
     order: automaticImagesOrder,
     orderBy: automaticImagesOrderBy,
-    handleOrderChange: handleAutomaticImagesOrderChange,
   } = useOrder(
     {
-      orderBy: 'label',
       order: 'asc',
+      orderBy: 'label',
     },
     `${queryKey}-automatic-order`,
     'automatic'
   );
 
   const automaticImagesFilter = {
-    ['+order_by']: automaticImagesOrderBy,
     ['+order']: automaticImagesOrder,
+    ['+order_by']: automaticImagesOrderBy,
   };
 
   const {
     data: automaticImages,
-    isLoading: automaticImagesLoading,
     error: automaticImagesError,
+    isLoading: automaticImagesLoading,
   } = useImagesQuery(
     {
       page: paginationForAutomaticImages.page,
@@ -177,8 +179,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     },
     {
       ...automaticImagesFilter,
-      type: 'automatic',
       is_public: false,
+      type: 'automatic',
     }
   );
 
@@ -215,12 +217,12 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
 
   const openDialog = (image: string, imageID: string, status: ImageStatus) => {
     setDialogState({
-      open: true,
-      submitting: false,
+      error: undefined,
       image,
       imageID,
-      error: undefined,
+      open: true,
       status,
+      submitting: false,
     });
   };
 
@@ -237,8 +239,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     }
     setDialogState((dialog) => ({
       ...dialog,
-      submitting: true,
       error: undefined,
+      submitting: true,
     }));
 
     deleteImage({ imageId: dialog.imageID! })
@@ -265,8 +267,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
         );
         setDialogState((dialog) => ({
           ...dialog,
-          submitting: false,
           error: _error,
+          submitting: false,
         }));
       });
   };
@@ -278,8 +280,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   ) => {
     removeImageFromCache(queryClient);
     history.push('/images/create/upload', {
-      imageLabel,
       imageDescription,
+      imageLabel,
     });
   };
 
@@ -289,20 +291,20 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
 
   const openForEdit = (label: string, description: string, imageID: string) => {
     setDrawer({
-      open: true,
-      mode: 'edit',
       description,
       imageID,
       label,
+      mode: 'edit',
+      open: true,
       selectedDisk: null,
     });
   };
 
   const openForRestore = (imageID: string) => {
     setDrawer({
-      open: true,
-      mode: 'restore',
       imageID,
+      mode: 'restore',
+      open: true,
       selectedDisk: null,
     });
   };
@@ -315,7 +317,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     });
   };
 
-  const changeSelectedLinode = (linodeId: number | null) => {
+  const changeSelectedLinode = (linodeId: null | number) => {
     setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
       selectedDisk: null,
@@ -323,7 +325,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     }));
   };
 
-  const changeSelectedDisk = (disk: string | null) => {
+  const changeSelectedDisk = (disk: null | string) => {
     setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
       selectedDisk: disk,
@@ -350,14 +352,14 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   const getActions = () => {
     return (
       <ActionsPanel>
-        <Button buttonType="secondary" onClick={closeDialog} data-qa-cancel>
+        <Button buttonType="secondary" data-qa-cancel onClick={closeDialog}>
           {dialogAction === 'cancel' ? 'Keep Image' : 'Cancel'}
         </Button>
         <Button
           buttonType="primary"
-          onClick={handleRemoveImage}
-          loading={dialog.submitting}
           data-qa-submit
+          loading={dialog.submitting}
+          onClick={handleRemoveImage}
         >
           {dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'}
         </Button>
@@ -375,29 +377,29 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   const renderImageDrawer = () => {
     return (
       <ImagesDrawer
-        open={drawer.open}
-        mode={drawer.mode}
-        label={drawer.label}
+        changeDescription={setDescription}
+        changeDisk={changeSelectedDisk}
+        changeLabel={setLabel}
+        changeLinode={changeSelectedLinode}
         description={drawer.description}
+        imageId={drawer.imageID}
+        label={drawer.label}
+        mode={drawer.mode}
+        onClose={closeImageDrawer}
+        open={drawer.open}
         selectedDisk={drawer.selectedDisk}
         selectedLinode={drawer.selectedLinode || null}
-        imageId={drawer.imageID}
-        changeDisk={changeSelectedDisk}
-        changeLinode={changeSelectedLinode}
-        changeLabel={setLabel}
-        changeDescription={setDescription}
-        onClose={closeImageDrawer}
       />
     );
   };
 
   const handlers: ImageHandlers = {
-    onRestore: openForRestore,
+    onCancelFailed: onCancelFailedClick,
+    onDelete: openDialog,
     onDeploy: deployNewLinode,
     onEdit: openForEdit,
-    onDelete: openDialog,
+    onRestore: openForRestore,
     onRetry: onRetryClick,
-    onCancelFailed: onCancelFailedClick,
   };
 
   const renderError = (_: APIError[]) => {
@@ -439,21 +441,21 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   }
 
   const noManualImages = (
-    <TableRowEmpty message={`No Custom Images to display.`} colSpan={5} />
+    <TableRowEmpty colSpan={5} message={`No Custom Images to display.`} />
   );
 
   const noAutomaticImages = (
-    <TableRowEmpty message={`No Recovery Images to display.`} colSpan={6} />
+    <TableRowEmpty colSpan={6} message={`No Recovery Images to display.`} />
   );
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
       <LandingHeader
-        title="Images"
+        docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
         entity="Image"
         onButtonClick={() => history.push('/images/create')}
-        docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
+        title="Images"
       />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
@@ -469,8 +471,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
               <TableSortCell
                 active={manualImagesOrderBy === 'label'}
                 direction={manualImagesOrder}
-                label="label"
                 handleClick={handleManualImagesOrderChange}
+                label="label"
               >
                 Image
               </TableSortCell>
@@ -481,8 +483,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
                 <TableSortCell
                   active={manualImagesOrderBy === 'created'}
                   direction={manualImagesOrder}
-                  label="created"
                   handleClick={handleManualImagesOrderChange}
+                  label="created"
                 >
                   Created
                 </TableSortCell>
@@ -490,8 +492,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
               <TableSortCell
                 active={manualImagesOrderBy === 'size'}
                 direction={manualImagesOrder}
-                label="size"
                 handleClick={handleManualImagesOrderChange}
+                label="size"
               >
                 Size
               </TableSortCell>
@@ -512,11 +514,11 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
         </Table>
         <PaginationFooter
           count={manualImages?.results ?? 0}
+          eventCategory="Custom Images Table"
           handlePageChange={paginationForManualImages.handlePageChange}
           handleSizeChange={paginationForManualImages.handlePageSizeChange}
           page={paginationForManualImages.page}
           pageSize={paginationForManualImages.pageSize}
-          eventCategory="Custom Images Table"
         />
       </Paper>
       <Paper className={classes.imageTable}>
@@ -533,8 +535,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
               <TableSortCell
                 active={automaticImagesOrderBy === 'label'}
                 direction={automaticImagesOrder}
-                label="label"
                 handleClick={handleAutomaticImagesOrderChange}
+                label="label"
               >
                 Image
               </TableSortCell>
@@ -545,8 +547,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
                 <TableSortCell
                   active={automaticImagesOrderBy === 'created'}
                   direction={automaticImagesOrder}
-                  label="created"
                   handleClick={handleAutomaticImagesOrderChange}
+                  label="created"
                 >
                   Created
                 </TableSortCell>
@@ -554,8 +556,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
               <TableSortCell
                 active={automaticImagesOrderBy === 'size'}
                 direction={automaticImagesOrder}
-                label="size"
                 handleClick={handleAutomaticImagesOrderChange}
+                label="size"
               >
                 Size
               </TableSortCell>
@@ -579,23 +581,23 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
         </Table>
         <PaginationFooter
           count={automaticImages?.results ?? 0}
+          eventCategory="Recovery Images Table"
           handlePageChange={paginationForAutomaticImages.handlePageChange}
           handleSizeChange={paginationForAutomaticImages.handlePageSizeChange}
           page={paginationForAutomaticImages.page}
           pageSize={paginationForAutomaticImages.pageSize}
-          eventCategory="Recovery Images Table"
         />
       </Paper>
       {renderImageDrawer()}
       <ConfirmationDialog
-        open={dialog.open}
         title={
           dialogAction === 'cancel'
             ? 'Cancel Upload'
             : `Delete Image ${dialog.image}`
         }
-        onClose={closeDialog}
         actions={getActions}
+        onClose={closeDialog}
+        open={dialog.open}
       >
         {dialog.error && <Notice error text={dialog.error} />}
         <Typography>{dialogMessage}</Typography>

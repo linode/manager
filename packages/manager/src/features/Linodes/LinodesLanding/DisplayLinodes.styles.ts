@@ -1,20 +1,21 @@
-import Typography from 'src/components/core/Typography';
-import { IconButton } from 'src/components/IconButton';
-import { isPropValid } from 'src/utilities/isPropValid';
 import { styled } from '@mui/material/styles';
+
+import { IconButton } from 'src/components/IconButton';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 export const StyledTagHeaderRow = styled(TableRow, {
   label: 'StyledTagHeaderRow',
 })(({ theme }) => ({
-  backgroundColor: 'transparent !important',
-  height: 'auto',
   '& td': {
-    // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-    padding: `${theme.spacing(1.25)} 0 2px`,
     borderBottom: 'none',
     borderTop: 'none',
+    // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
+    padding: `${theme.spacing(1.25)} 0 2px`,
   },
+  backgroundColor: 'transparent !important',
+  height: 'auto',
 }));
 
 export const StyledTagHeader = styled(Typography, {
@@ -27,31 +28,31 @@ export const StyledTagHeader = styled(Typography, {
 export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
   shouldForwardProp: (prop) => isPropValid(['isGroupedByTag'], prop),
-})<{ isGroupedByTag: boolean }>(({ theme, isGroupedByTag }) => ({
-  height: 46,
-  marginBottom: isGroupedByTag ? theme.spacing(4) : 0,
-  display: 'flex',
-  justifyContent: 'flex-end',
+})<{ isGroupedByTag: boolean }>(({ isGroupedByTag, theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.bg.tableHeader,
+  display: 'flex',
+  height: 46,
+  justifyContent: 'flex-end',
+  marginBottom: isGroupedByTag ? theme.spacing(4) : 0,
 }));
 
 export const StyledToggleButton = styled(IconButton, {
   label: 'StyledToggleButton',
   shouldForwardProp: (prop) => isPropValid(['isActive'], prop),
-})<{ isActive: boolean }>(({ theme, isActive }) => ({
-  color: isActive ? theme.palette.primary.main : theme.palette.grey[400],
-  padding: 10,
-  borderRadius: '100%',
-  '&:hover': {
-    backgroundColor: theme.palette.grey[300],
-    color: isActive ? theme.palette.primary.main : theme.palette.grey[600],
+})<{ isActive: boolean }>(({ isActive, theme }) => ({
+  '&.Mui-disabled': {
+    display: 'none',
   },
   '&:focus': {
     // Browser default until we get styling direction for focus states
     outline: '1px dotted #999',
   },
-  '&.Mui-disabled': {
-    display: 'none',
+  '&:hover': {
+    backgroundColor: theme.palette.grey[300],
+    color: isActive ? theme.palette.primary.main : theme.palette.grey[600],
   },
+  borderRadius: '100%',
+  color: isActive ? theme.palette.primary.main : theme.palette.grey[400],
+  padding: 10,
 }));

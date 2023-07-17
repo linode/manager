@@ -1,13 +1,15 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
-import { AccessSelect } from './AccessSelect';
-import { styled } from '@mui/material/styles';
 import {
   ACLType,
   getBucketAccess,
   updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+
+import { AccessSelect } from './AccessSelect';
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',
@@ -27,9 +29,6 @@ export const BucketAccess = React.memo((props: Props) => {
     <StyledRootContainer>
       <Typography variant="h2">Bucket Access</Typography>
       <AccessSelect
-        variant="bucket"
-        name={bucketName}
-        getAccess={() => getBucketAccess(clusterId, bucketName)}
         updateAccess={(acl: ACLType, cors_enabled: boolean) => {
           // Don't send the ACL with the payload if it's "custom", since it's
           // not valid (though it's a valid return type).
@@ -38,6 +37,9 @@ export const BucketAccess = React.memo((props: Props) => {
 
           return updateBucketAccess(clusterId, bucketName, payload);
         }}
+        getAccess={() => getBucketAccess(clusterId, bucketName)}
+        name={bucketName}
+        variant="bucket"
       />
     </StyledRootContainer>
   );

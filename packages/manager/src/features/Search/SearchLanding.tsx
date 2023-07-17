@@ -1,49 +1,68 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import { debounce } from 'throttle-debounce';
+
 import Error from 'src/assets/icons/error.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { useSpecificTypes } from 'src/queries/types';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
-import { debounce } from 'throttle-debounce';
+
+import { getImageLabelForLinode } from '../Images/utils';
 import ResultGroup from './ResultGroup';
 import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
-import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { getImageLabelForLinode } from '../Images/utils';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: 0,
-    '&.MuiGrid-container': {
-      width: 'calc(100% + 16px)',
+  emptyResult: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
+    [theme.breakpoints.down('md')]: {
+      padding: theme.spacing(4),
     },
+  },
+  emptyResultWrapper: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
+  },
+  errorIcon: {
+    color: theme.palette.text.primary,
+    height: 60,
+    marginBottom: theme.spacing(4),
+    width: 60,
   },
   headline: {
     marginBottom: theme.spacing(),
@@ -51,39 +70,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: theme.spacing(),
     },
   },
-  emptyResultWrapper: {
-    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyResult: {
-    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      padding: theme.spacing(4),
+  root: {
+    '&.MuiGrid-container': {
+      width: 'calc(100% + 16px)',
     },
-  },
-  errorIcon: {
-    width: 60,
-    height: 60,
-    color: theme.palette.text.primary,
-    marginBottom: theme.spacing(4),
+    padding: 0,
   },
 }));
 
 const displayMap = {
-  linodes: 'Linodes',
+  buckets: 'Buckets',
   domains: 'Domains',
-  volumes: 'Volumes',
-  nodebalancers: 'NodeBalancers',
   images: 'Images',
   kubernetesClusters: 'Kubernetes',
-  buckets: 'Buckets',
+  linodes: 'Linodes',
+  nodebalancers: 'NodeBalancers',
+  volumes: 'Volumes',
 };
 
 export type CombinedProps = SearchProps & RouteComponentProps<{}>;
@@ -104,8 +106,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const {
     data: objectStorageClusters,
-    isLoading: areClustersLoading,
     error: objectStorageClustersError,
+    isLoading: areClustersLoading,
   } = useObjectStorageClusters(!_isLargeAccount);
 
   const {
@@ -133,14 +135,14 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const {
     data: volumes,
-    isLoading: areVolumesLoading,
     error: volumesError,
+    isLoading: areVolumesLoading,
   } = useAllVolumesQuery({}, {}, !_isLargeAccount);
 
   const {
     data: _privateImages,
-    isLoading: areImagesLoading,
     error: imagesError,
+    isLoading: areImagesLoading,
   } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
 
   const { data: publicImages } = useAllImagesQuery(
@@ -151,8 +153,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const {
     data: linodes,
-    isLoading: areLinodesLoading,
     error: linodesError,
+    isLoading: areLinodesLoading,
   } = useAllLinodesQuery({}, {}, !_isLargeAccount);
 
   const { data: regions } = useRegionsQuery();
@@ -168,7 +170,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   });
 
   const [apiResults, setAPIResults] = React.useState<any>({});
-  const [apiError, setAPIError] = React.useState<string | null>(null);
+  const [apiError, setAPIError] = React.useState<null | string>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
 
   let query = '';
@@ -281,12 +283,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     areNodeBalancersLoading;
 
   return (
-    <Grid container className={classes.root} direction="column" spacing={2}>
+    <Grid className={classes.root} container direction="column" spacing={2}>
       <Grid>
         {!resultsEmpty && !loading && (
           <H1Header
-            title={`Search Results ${query && `for "${query}"`}`}
             className={classes.headline}
+            title={`Search Results ${query && `for "${query}"`}`}
           />
         )}
       </Grid>
@@ -311,7 +313,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         </Grid>
       )}
       {resultsEmpty && !loading && (
-        <Grid data-qa-empty-state className={classes.emptyResultWrapper}>
+        <Grid className={classes.emptyResultWrapper} data-qa-empty-state>
           <div className={classes.emptyResult}>
             <Error className={classes.errorIcon} />
             <Typography style={{ marginBottom: 16 }}>
@@ -320,7 +322,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
             <Typography className="resultq">
               {query && splitWord(query)}
             </Typography>
-            <Typography style={{ marginTop: 56 }} className="nothing">
+            <Typography className="nothing" style={{ marginTop: 56 }}>
               Sorry, no results for this one
             </Typography>
           </div>
@@ -330,10 +332,10 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         <Grid sx={{ padding: 0 }}>
           {Object.keys(finalResults).map((entityType, idx: number) => (
             <ResultGroup
-              key={idx}
               entity={displayMap[entityType]}
-              results={finalResults[entityType]}
               groupSize={100}
+              key={idx}
+              results={finalResults[entityType]}
             />
           ))}
         </Grid>

@@ -1,9 +1,10 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 
 const useStyles = makeStyles((theme: Theme) => ({
   emptyImagePanelText: {
@@ -13,24 +14,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  errorText: string | undefined;
   className?: string;
+  errorText: string | undefined;
 }
 
 export const ImageEmptyState: React.FC<Props> = (props) => {
-  const { errorText, className } = props;
+  const { className, errorText } = props;
   const classes = useStyles();
 
   return (
     <Paper className={className}>
       {errorText ? <Notice error text={errorText} /> : null}
-      <Typography variant="h2" data-qa-tp="Select Image">
+      <Typography data-qa-tp="Select Image" variant="h2">
         Select Image
       </Typography>
       <Typography
-        variant="body1"
         className={classes.emptyImagePanelText}
         data-qa-no-compatible-images
+        variant="body1"
       >
         No Compatible Images Available
       </Typography>

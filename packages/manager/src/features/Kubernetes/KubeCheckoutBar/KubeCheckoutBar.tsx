@@ -1,8 +1,9 @@
 import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
+
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import renderGuard from 'src/components/RenderGuard';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
@@ -16,35 +17,36 @@ import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
+
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
 
 export interface Props {
-  pools: KubeNodePoolResponse[];
-  submitting: boolean;
   createCluster: () => void;
-  updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
-  removePool: (poolIdx: number) => void;
-  highAvailability: boolean;
-  setHighAvailability: (ha: boolean) => void;
-  region: string | undefined;
   hasAgreed: boolean;
+  highAvailability: boolean;
+  pools: KubeNodePoolResponse[];
+  region: string | undefined;
+  removePool: (poolIdx: number) => void;
+  setHighAvailability: (ha: boolean) => void;
+  submitting: boolean;
   toggleHasAgreed: () => void;
+  updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
 }
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const {
-    pools,
-    submitting,
     createCluster,
-    removePool,
-    updatePool,
-    highAvailability,
-    setHighAvailability,
-    region,
     hasAgreed,
+    highAvailability,
+    pools,
+    region,
+    removePool,
+    setHighAvailability,
+    submitting,
     toggleHasAgreed,
+    updatePool,
   } = props;
 
   // Show a warning if any of the pools have fewer than 3 nodes
@@ -74,50 +76,50 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
 
   return (
     <CheckoutBar
-      data-qa-checkout-bar
-      heading="Cluster Summary"
-      calculatedPrice={getTotalClusterPrice(
-        pools,
-        types ?? [],
-        highAvailability
-      )}
-      isMakingRequest={submitting}
-      disabled={disableCheckout}
-      onDeploy={createCluster}
-      submitText="Create Cluster"
       agreement={
         showGDPRCheckbox ? (
           <EUAgreementCheckbox checked={hasAgreed} onChange={toggleHasAgreed} />
         ) : undefined
       }
+      calculatedPrice={getTotalClusterPrice(
+        pools,
+        types ?? [],
+        highAvailability
+      )}
+      data-qa-checkout-bar
+      disabled={disableCheckout}
+      heading="Cluster Summary"
+      isMakingRequest={submitting}
+      onDeploy={createCluster}
+      submitText="Create Cluster"
     >
       <>
         {pools.map((thisPool, idx) => (
           <NodePoolSummary
-            key={idx}
-            nodeCount={thisPool.count}
-            updateNodeCount={(updatedCount: number) =>
-              updatePool(idx, { ...thisPool, count: updatedCount })
-            }
-            onRemove={() => removePool(idx)}
-            price={getMonthlyPrice(thisPool.type, thisPool.count, types ?? [])}
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
+            updateNodeCount={(updatedCount: number) =>
+              updatePool(idx, { ...thisPool, count: updatedCount })
+            }
+            key={idx}
+            nodeCount={thisPool.count}
+            onRemove={() => removePool(idx)}
+            price={getMonthlyPrice(thisPool.type, thisPool.count, types ?? [])}
           />
         ))}
         {showHighAvailability ? (
           <>
-            <Divider dark spacingTop={16} spacingBottom={12} />
+            <Divider dark spacingBottom={12} spacingTop={16} />
             <HACheckbox
               checked={highAvailability}
               onChange={(e) => setHighAvailability(e.target.checked)}
             />
-            <Divider dark spacingTop={16} spacingBottom={0} />
+            <Divider dark spacingBottom={0} spacingTop={16} />
           </>
         ) : null}
         {showWarning && (
-          <Notice warning important text={nodeWarning} spacingTop={16} />
+          <Notice important spacingTop={16} text={nodeWarning} warning />
         )}
       </>
     </CheckoutBar>

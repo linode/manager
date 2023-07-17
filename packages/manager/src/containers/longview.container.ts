@@ -1,11 +1,12 @@
 import { Filter, Params } from '@linode/api-v4';
 import { LongviewClient } from '@linode/api-v4/lib/longview';
-import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
+import { InferableComponentEnhancerWithProps, connect } from 'react-redux';
+
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/longview/longview.reducer';
 import {
-  createLongviewClient as create,
   deleteLongviewClient as _delete,
+  createLongviewClient as create,
   getAllLongviewClients,
   updateLongviewClient as update,
 } from 'src/store/longview/longview.requests';
@@ -13,20 +14,20 @@ import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
 export interface DispatchProps {
+  createLongviewClient: (label?: string) => Promise<LongviewClient>;
+  deleteLongviewClient: (id: number) => Promise<{}>;
   getLongviewClients: (
     params?: Params,
     filters?: Filter
   ) => Promise<GetAllData<LongviewClient>>;
-  createLongviewClient: (label?: string) => Promise<LongviewClient>;
-  deleteLongviewClient: (id: number) => Promise<{}>;
   updateLongviewClient: (id: number, label: string) => Promise<LongviewClient>;
 }
 
 export interface StateProps {
-  longviewClientsError: State['error'];
-  longviewClientsLoading: State['loading'];
   longviewClientsData: State['data'];
+  longviewClientsError: State['error'];
   longviewClientsLastUpdated: State['lastUpdated'];
+  longviewClientsLoading: State['loading'];
   longviewClientsResults: State['results'];
 }
 
@@ -61,10 +62,10 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
   >(
     (state, ownProps) => {
       const {
-        loading,
-        error,
         data,
+        error,
         lastUpdated,
+        loading,
         results,
       } = state.longviewClients;
       if (mapStateToProps) {
@@ -78,18 +79,18 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       }
 
       return {
-        longviewClientsError: error,
-        longviewClientsLoading: loading,
         longviewClientsData: data,
-        longviewClientsResults: results,
+        longviewClientsError: error,
         longviewClientsLastUpdated: lastUpdated,
+        longviewClientsLoading: loading,
+        longviewClientsResults: results,
       };
     },
     (dispatch: ThunkDispatch) => ({
-      getLongviewClients: (params, filter) =>
-        dispatch(getAllLongviewClients({ params, filter })),
       createLongviewClient: (label) => dispatch(create({ label })),
       deleteLongviewClient: (id) => dispatch(_delete({ id })),
+      getLongviewClients: (params, filter) =>
+        dispatch(getAllLongviewClients({ filter, params })),
       updateLongviewClient: (id, label) => dispatch(update({ id, label })),
     })
   );

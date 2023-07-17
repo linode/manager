@@ -1,17 +1,19 @@
-import * as React from 'react';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Typography from 'src/components/core/Typography';
-import { AccessTable } from './AccessTable';
 import { Scope } from '@linode/api-v4/lib/object-storage/types';
-import { MODE } from './types';
+import * as React from 'react';
+
 import { Toggle } from 'src/components/Toggle';
+import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+
+import { AccessTable } from './AccessTable';
+import { MODE } from './types';
 
 interface Props {
-  mode: MODE;
-  checked: boolean;
   bucket_access: Scope[] | null;
-  updateScopes: (newScopes: Scope[]) => void;
+  checked: boolean;
   handleToggle: () => void;
+  mode: MODE;
+  updateScopes: (newScopes: Scope[]) => void;
 }
 
 export const LimitedAccessControls = React.memo((props: Props) => {
@@ -22,10 +24,10 @@ export const LimitedAccessControls = React.memo((props: Props) => {
       <FormControlLabel
         control={
           <Toggle
-            onChange={handleToggle}
             checked={checked}
             data-testid="limited-permissions-toggle"
             disabled={props.mode !== 'creating'}
+            onChange={handleToggle}
           />
         }
         label={'Limited Access'}

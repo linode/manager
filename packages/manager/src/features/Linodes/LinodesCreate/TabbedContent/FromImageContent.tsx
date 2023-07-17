@@ -1,14 +1,16 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import ImageSelect from 'src/components/ImageSelect';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
+
 import {
   BasicFromContentProps,
   ReduxStateProps,
@@ -24,9 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props extends BasicFromContentProps {
-  variant?: 'public' | 'private' | 'all';
-  imagePanelTitle?: string;
   error?: string;
+  imagePanelTitle?: string;
+  variant?: 'all' | 'private' | 'public';
 }
 
 export type CombinedProps = Props &
@@ -51,7 +53,7 @@ export const FromImageContent: React.FC<CombinedProps> = (props) => {
     return (
       <Grid className={`${classes.main} mlMain py0`}>
         <Paper>
-          <Placeholder title="My Images" icon={ImageIcon} isEntity>
+          <Placeholder icon={ImageIcon} isEntity title="My Images">
             <Typography variant="subtitle1">
               You don&rsquo;t have any private Images. Visit the{' '}
               <Link to="/images">Images section</Link> to create an Image from
@@ -66,14 +68,14 @@ export const FromImageContent: React.FC<CombinedProps> = (props) => {
   return (
     <Grid className={`${classes.main} mlMain py0`}>
       <ImageSelect
-        title={imagePanelTitle || 'Choose an Image'}
-        images={Object.keys(imagesData).map((eachKey) => imagesData[eachKey])}
-        handleSelectImage={props.updateImageID}
-        selectedImageID={props.selectedImageID}
-        error={error}
-        variant={variant}
-        disabled={userCannotCreateLinode}
         data-qa-select-image-panel
+        disabled={userCannotCreateLinode}
+        error={error}
+        handleSelectImage={props.updateImageID}
+        images={Object.keys(imagesData).map((eachKey) => imagesData[eachKey])}
+        selectedImageID={props.selectedImageID}
+        title={imagePanelTitle || 'Choose an Image'}
+        variant={variant}
       />
     </Grid>
   );

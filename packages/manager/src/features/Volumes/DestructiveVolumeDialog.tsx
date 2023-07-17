@@ -1,17 +1,18 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   useDeleteVolumeMutation,
   useDetachVolumeMutation,
 } from 'src/queries/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   warningCopy: {
@@ -21,19 +22,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  open: boolean;
-  mode: 'detach' | 'delete';
-  onClose: () => void;
-  volumeLabel: string;
-  volumeId: number;
-  linodeLabel?: string;
   linodeId?: number;
+  linodeLabel?: string;
+  mode: 'delete' | 'detach';
+  onClose: () => void;
+  open: boolean;
+  volumeId: number;
+  volumeLabel: string;
 }
 
 export const DestructiveVolumeDialog = (props: Props) => {
   const classes = useStyles();
 
-  const { volumeLabel: label, volumeId, linodeId, mode, open, onClose } = props;
+  const { linodeId, mode, onClose, open, volumeId, volumeLabel: label } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -43,15 +44,15 @@ export const DestructiveVolumeDialog = (props: Props) => {
   );
 
   const {
-    mutateAsync: detachVolume,
     error: detachError,
     isLoading: detachLoading,
+    mutateAsync: detachVolume,
   } = useDetachVolumeMutation();
 
   const {
-    mutateAsync: deleteVolume,
     error: deleteError,
     isLoading: deleteLoading,
+    mutateAsync: deleteVolume,
   } = useDeleteVolumeMutation();
 
   const onDetach = () => {
@@ -74,29 +75,18 @@ export const DestructiveVolumeDialog = (props: Props) => {
   const poweredOff = linode?.status === 'offline';
 
   const method = {
-    detach: onDetach,
     delete: onDelete,
-  }[props.mode];
-
-  const action = {
-    detach: {
-      verb: 'Detach',
-      noun: 'detachment',
-    },
-    delete: {
-      verb: 'Delete',
-      noun: 'deletion',
-    },
+    detach: onDetach,
   }[props.mode];
 
   const loading = {
-    detach: detachLoading,
     delete: deleteLoading,
+    detach: detachLoading,
   }[props.mode];
 
   const selectedError = {
-    detach: detachError,
     delete: deleteError,
+    detach: detachError,
   }[props.mode];
 
   const error = selectedError
@@ -104,24 +94,24 @@ export const DestructiveVolumeDialog = (props: Props) => {
     : undefined;
 
   const title = {
-    detach: `Detach ${label ? `Volume ${label}` : 'Volume'}?`,
     delete: `Delete ${label ? `Volume ${label}` : 'Volume'}?`,
+    detach: `Detach ${label ? `Volume ${label}` : 'Volume'}?`,
   }[props.mode];
 
   return (
     <TypeToConfirmDialog
-      title={title}
-      entity={{ type: 'Volume', label }}
-      open={open}
+      entity={{
+        action: mode === 'detach' ? 'detachment' : 'deletion',
+        name: label,
+        primaryBtnText: mode === 'detach' ? 'Detach' : 'Delete',
+        type: 'Volume',
+      }}
+      label={'Volume Label'}
       loading={loading}
-      onClose={onClose}
       onClick={method}
-      confirmationText={
-        <span>
-          To confirm {action.noun}, type the name of the Volume (<b>{label}</b>)
-          in the field below:
-        </span>
-      }
+      onClose={onClose}
+      open={open}
+      title={title}
       typographyStyle={{ marginTop: '10px' }}
     >
       {error && <Notice error text={error} />}

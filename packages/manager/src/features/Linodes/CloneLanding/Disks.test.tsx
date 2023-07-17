@@ -1,7 +1,9 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
+
 import { extDisk3, swapDisk } from 'src/__data__/disks';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+
 import { Disks, Props } from './Disks';
 
 const disks = [extDisk3, swapDisk];
@@ -9,13 +11,13 @@ const disks = [extDisk3, swapDisk];
 const mockHandleSelect = jest.fn();
 
 const props: Props = {
-  disks,
   diskSelection: {
-    18795181: { isSelected: false, associatedConfigIds: [] },
-    19040624: { isSelected: false, associatedConfigIds: [9859511] },
+    18795181: { associatedConfigIds: [], isSelected: false },
+    19040624: { associatedConfigIds: [9859511], isSelected: false },
   },
-  selectedConfigIds: [],
+  disks,
   handleSelect: (id: number) => mockHandleSelect(id),
+  selectedConfigIds: [],
 };
 
 describe('Disks', () => {
@@ -36,7 +38,7 @@ describe('Disks', () => {
   });
 
   it('renders an empty state when no configs', () => {
-    const { getByText, getByTestId } = render(
+    const { getByTestId, getByText } = render(
       wrapWithTheme(<Disks {...props} disks={[]} />)
     );
     expect(getByTestId('table-row-empty')).toBeDefined();

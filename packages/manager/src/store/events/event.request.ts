@@ -1,15 +1,17 @@
 import {
-  Event,
   getEvents as _getEvents,
+  Event,
   markEventSeen,
 } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
+
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { parseAPIDate } from 'src/utilities/date';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
+
 import { ThunkActionCreator } from '../types';
 import { addEvents, updateEventsAsSeen } from './event.actions';
 import { epoch, isInProgressEvent, isLongPendingEvent } from './event.helpers';
-import { parseAPIDate } from 'src/utilities/date';
 
 /**
  * Will send a filtered request for events which have been created on or after the most recent existing
@@ -20,9 +22,9 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   getState
 ) => {
   const {
-    mostRecentEventTime,
-    inProgressEvents,
     events: _events,
+    inProgressEvents,
+    mostRecentEventTime,
   } = getState().events;
 
   // Regardless of date created, we request events that are still in-progress.

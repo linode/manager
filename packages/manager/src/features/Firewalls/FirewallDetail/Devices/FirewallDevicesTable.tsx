@@ -1,28 +1,30 @@
 import { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
+
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import FirewallDeviceRow from './FirewallDeviceRow';
 
 interface Props {
   devices: FirewallDevice[];
+  disabled: boolean;
   error?: APIError[];
   loading: boolean;
-  disabled: boolean;
   triggerRemoveDevice: (deviceID: number) => void;
 }
 
 const FirewallTable = (props: Props) => {
-  const { devices, error, loading, disabled, triggerRemoveDevice } = props;
+  const { devices, disabled, error, loading, triggerRemoveDevice } = props;
 
   const _error = error
     ? // @todo change to Devices or make dynamic when NBs are possible as Devices
@@ -30,12 +32,12 @@ const FirewallTable = (props: Props) => {
     : undefined;
 
   return (
-    <OrderBy data={devices} orderBy={'entity:label'} order={'asc'}>
+    <OrderBy data={devices} order={'asc'} orderBy={'entity:label'}>
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({
-            data: paginatedAndOrderedData,
             count,
+            data: paginatedAndOrderedData,
             handlePageChange,
             handlePageSizeChange,
             page,
@@ -47,11 +49,11 @@ const FirewallTable = (props: Props) => {
                   <TableRow>
                     <TableSortCell
                       active={orderBy === 'entity:label'}
-                      label={'entity:label'}
-                      direction={order}
-                      handleClick={handleOrderChange}
                       colSpan={2}
                       data-qa-firewall-device-linode-header
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label={'entity:label'}
                     >
                       Linode
                     </TableSortCell>
@@ -59,17 +61,17 @@ const FirewallTable = (props: Props) => {
                 </TableHead>
                 <TableBody>
                   <TableContentWrapper
+                    error={_error}
                     length={paginatedAndOrderedData.length}
                     loading={loading}
-                    error={_error}
                   >
                     {paginatedAndOrderedData.map((thisDevice) => (
                       <FirewallDeviceRow
-                        key={`device-row-${thisDevice.id}`}
-                        deviceLabel={thisDevice.entity.label}
-                        deviceID={thisDevice.id}
                         deviceEntityID={thisDevice.entity.id}
+                        deviceID={thisDevice.id}
+                        deviceLabel={thisDevice.entity.label}
                         disabled={disabled}
+                        key={`device-row-${thisDevice.id}`}
                         triggerRemoveDevice={triggerRemoveDevice}
                       />
                     ))}
@@ -78,11 +80,11 @@ const FirewallTable = (props: Props) => {
               </Table>
               <PaginationFooter
                 count={count}
+                eventCategory="Firewall Devices Table"
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
                 page={page}
                 pageSize={pageSize}
-                eventCategory="Firewall Devices Table"
               />
             </>
           )}

@@ -1,29 +1,34 @@
 import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import TicketIcon from 'src/assets/icons/ticket.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Tooltip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Tooltip } from 'src/components/Tooltip';
+import { Typography } from 'src/components/Typography';
 import { ExtendedIssue } from 'src/queries/managed/types';
+
 import ActionMenu from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  label: {
-    fontFamily: theme.font.bold,
-    width: '30%',
+  errorStatus: {
+    color: theme.color.red,
   },
   icon: {
-    alignItems: 'center',
-    transition: 'color 225ms ease-in-out',
     '&:hover': {
       color: theme.color.red,
     },
+    alignItems: 'center',
+    transition: 'color 225ms ease-in-out',
+  },
+  label: {
+    fontFamily: theme.font.bold,
+    width: '30%',
   },
   monitorDescription: {
     paddingTop: theme.spacing(0.5),
@@ -33,25 +38,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'none',
     },
   },
-  errorStatus: {
-    color: theme.color.red,
-  },
 }));
 
 interface Props {
-  monitor: ManagedServiceMonitor;
   issues: ExtendedIssue[];
+  monitor: ManagedServiceMonitor;
   openDialog: (id: number, label: string) => void;
-  openMonitorDrawer: (id: number, mode: string) => void;
   openHistoryDrawer: (id: number, label: string) => void;
+  openMonitorDrawer: (id: number, mode: string) => void;
 }
 
 export const MonitorRow: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {
-    monitor,
     issues,
+    monitor,
     openDialog,
     openHistoryDrawer,
     openMonitorDrawer,
@@ -64,14 +66,14 @@ export const MonitorRow: React.FC<Props> = (props) => {
 
   return (
     <TableRow
-      key={monitor.id}
+      ariaLabel={`Monitor ${monitor.label}`}
+      className={classes.monitorRow}
       data-qa-monitor-cell={monitor.id}
       data-testid={'monitor-row'}
-      className={classes.monitorRow}
-      ariaLabel={`Monitor ${monitor.label}`}
+      key={monitor.id}
     >
       <TableCell className={classes.label} data-qa-monitor-label>
-        <Grid container wrap="nowrap" alignItems="center" spacing={2}>
+        <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <Grid className={classes.icon} style={{ display: 'flex' }}>
             <Icon height={30} width={30} />
           </Grid>
@@ -79,7 +81,7 @@ export const MonitorRow: React.FC<Props> = (props) => {
         </Grid>
       </TableCell>
       <TableCell data-qa-monitor-status>
-        <Grid container direction="row" alignItems="center" spacing={1}>
+        <Grid alignItems="center" container direction="row" spacing={1}>
           <Grid>
             <Typography
               className={
@@ -99,8 +101,8 @@ export const MonitorRow: React.FC<Props> = (props) => {
                 title={'See the open ticket associated with this incident'}
               >
                 <Link
-                  to={`/support/tickets/${issues[0].entity.id}`}
                   className={classes.icon}
+                  to={`/support/tickets/${issues[0].entity.id}`}
                 >
                   <TicketIcon />
                 </Link>
@@ -114,12 +116,12 @@ export const MonitorRow: React.FC<Props> = (props) => {
       </TableCell>
       <TableCell actionCell>
         <ActionMenu
-          status={monitor.status}
+          label={monitor.label}
           monitorID={monitor.id}
           openDialog={openDialog}
-          openMonitorDrawer={openMonitorDrawer}
           openHistoryDrawer={openHistoryDrawer}
-          label={monitor.label}
+          openMonitorDrawer={openMonitorDrawer}
+          status={monitor.status}
         />
       </TableCell>
     </TableRow>

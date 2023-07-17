@@ -1,19 +1,21 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
+import { Typography } from 'src/components/Typography';
+
 import { StyledCheckoutSection, SxTypography } from './styles';
 
 export interface DisplaySectionProps {
+  details?: number | string;
   title: string;
-  details?: string | number;
 }
 
 const DisplaySection = React.memo((props: DisplaySectionProps) => {
-  const { title, details } = props;
+  const { details, title } = props;
 
   return (
     <StyledCheckoutSection>
       {title && (
-        <Typography variant="h3" data-qa-subheading={title}>
+        <Typography data-qa-subheading={title} variant="h3">
           {title}
         </Typography>
       )}

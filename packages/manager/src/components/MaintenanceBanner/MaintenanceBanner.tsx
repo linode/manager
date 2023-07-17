@@ -1,22 +1,23 @@
 import { AccountMaintenance } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Typography from 'src/components/core/Typography';
+
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
+import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
-import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 
 interface Props {
+  maintenanceEnd?: null | string;
   /** please keep in mind here that it's possible the start time can be in the past */
-  maintenanceStart?: string | null;
-  maintenanceEnd?: string | null;
+  maintenanceStart?: null | string;
   type?: AccountMaintenance['type'];
 }
 
 export const MaintenanceBanner = React.memo((props: Props) => {
-  const { type, maintenanceEnd, maintenanceStart } = props;
+  const { maintenanceEnd, maintenanceStart, type } = props;
 
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
@@ -25,8 +26,8 @@ export const MaintenanceBanner = React.memo((props: Props) => {
 
   const {
     data: profile,
-    isLoading: profileLoading,
     error: profileError,
+    isLoading: profileLoading,
   } = useProfile();
 
   const getTimezoneMessage = () => {
@@ -67,7 +68,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
   }
 
   return (
-    <Notice warning important>
+    <Notice important warning>
       <Typography lineHeight="20px">
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>
@@ -89,8 +90,8 @@ export const MaintenanceBanner = React.memo((props: Props) => {
 
 const generateIntroText = (
   type?: AccountMaintenance['type'],
-  start?: string | null,
-  end?: string | null,
+  start?: null | string,
+  end?: null | string,
   timezone?: string
 ) => {
   const maintenanceInProgress = !!start

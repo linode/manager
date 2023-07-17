@@ -1,23 +1,24 @@
+import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
-import { pluralize } from 'src/utilities/pluralize';
+import { Typography } from 'src/components/Typography';
 import { useDeleteNodePoolMutation } from 'src/queries/kubernetes';
-import { KubeNodePoolResponse } from '@linode/api-v4';
+import { pluralize } from 'src/utilities/pluralize';
 
 interface Props {
   kubernetesClusterId: number;
   nodePool: KubeNodePoolResponse | undefined;
-  open: boolean;
   onClose: () => void;
+  open: boolean;
 }
 
 export const DeleteNodePoolDialog = (props: Props) => {
-  const { open, onClose, kubernetesClusterId, nodePool } = props;
+  const { kubernetesClusterId, nodePool, onClose, open } = props;
 
-  const { mutateAsync, isLoading, error } = useDeleteNodePoolMutation(
+  const { error, isLoading, mutateAsync } = useDeleteNodePoolMutation(
     kubernetesClusterId,
     nodePool?.id ?? -1
   );
@@ -34,18 +35,18 @@ export const DeleteNodePoolDialog = (props: Props) => {
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
-        onClick={onClose}
         data-qa-cancel
         data-testid={'dialog-cancel'}
+        onClick={onClose}
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onDelete}
-        loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
+        loading={isLoading}
+        onClick={onDelete}
       >
         Delete
       </Button>
@@ -54,11 +55,11 @@ export const DeleteNodePoolDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      title={'Delete Node Pool?'}
-      onClose={onClose}
       actions={actions}
       error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title={'Delete Node Pool?'}
     >
       <Typography>
         Are you sure you want to delete this Node Pool?{' '}

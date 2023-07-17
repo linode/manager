@@ -1,17 +1,18 @@
-import { fireEvent, waitFor } from '@testing-library/react';
 import { LongviewClient } from '@linode/api-v4/lib/longview';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
+
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
-  longviewSubscriptionFactory,
   longviewClientFactory,
+  longviewSubscriptionFactory,
 } from 'src/factories';
-
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import {
   CombinedProps,
-  filterLongviewClientsByQuery,
   LongviewClients,
+  filterLongviewClientsByQuery,
   sortClientsBy,
   sortFunc,
 } from './LongviewClients';
@@ -30,21 +31,19 @@ const arrayToData = (data: any[]): Record<string, LongviewClient> => {
 };
 
 const props: CombinedProps = {
+  activeSubscription: longviewSubscriptionFactory.build(),
+  createLongviewClient: jest.fn().mockResolvedValue({}),
+  deleteLongviewClient: jest.fn(),
+  getLongviewClients: jest.fn().mockResolvedValue([]),
+  handleAddClient: jest.fn(),
   longviewClientsData: arrayToData(clients),
   longviewClientsError: {},
   longviewClientsLastUpdated: 0,
   longviewClientsLoading: false,
   longviewClientsResults: clients.length,
-  createLongviewClient: jest.fn().mockResolvedValue({}),
-  deleteLongviewClient: jest.fn(),
-  getLongviewClients: jest.fn().mockResolvedValue([]),
-  updateLongviewClient: jest.fn(),
-  enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
-  activeSubscription: longviewSubscriptionFactory.build(),
   lvClientData: {},
-  handleAddClient: jest.fn(),
   newClientLoading: false,
+  updateLongviewClient: jest.fn(),
   ...reactRouterProps,
 };
 

@@ -1,36 +1,18 @@
 import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import BarPercent from 'src/components/BarPercent';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  header: {
-    paddingBottom: 10,
-  },
-  poolUsageProgress: {
-    marginBottom: theme.spacing(0.5),
-  },
-  legendItem: {
-    marginTop: 10,
-    display: 'flex',
-    alignItems: 'center',
-    '&:before': {
-      content: '""',
-      borderRadius: 5,
-      width: 20,
-      height: 20,
-
-      marginRight: 10,
-    },
-  },
   darkGreen: {
     '&:before': {
       backgroundColor: '#5ad865',
@@ -40,6 +22,25 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '&:before': {
       backgroundColor: theme.color.grey2,
     },
+  },
+  header: {
+    paddingBottom: 10,
+  },
+  legendItem: {
+    '&:before': {
+      borderRadius: 5,
+      content: '""',
+      height: 20,
+      marginRight: 10,
+
+      width: 20,
+    },
+    alignItems: 'center',
+    display: 'flex',
+    marginTop: 10,
+  },
+  poolUsageProgress: {
+    marginBottom: theme.spacing(0.5),
   },
 }));
 
@@ -54,14 +55,14 @@ export const NetworkTransfer: React.FC<Props> = (props) => {
 
   const linodeTransfer = useAPIRequest(
     () => getLinodeTransfer(linodeID),
-    { used: 0, quota: 0, billable: 0 },
+    { billable: 0, quota: 0, used: 0 },
     [linodeID]
   );
 
   const {
     data: accountTransfer,
-    isLoading: accountTransferLoading,
     error: accountTransferError,
+    isLoading: accountTransferLoading,
   } = useAccountTransfer();
 
   const linodeUsedInGB = readableBytes(linodeTransfer.data.used, {
@@ -79,13 +80,13 @@ export const NetworkTransfer: React.FC<Props> = (props) => {
         <strong>Monthly Network Transfer</strong>{' '}
       </Typography>
       <TransferContent
-        linodeUsedInGB={linodeUsedInGB}
-        totalUsedInGB={totalUsedInGB}
-        accountQuotaInGB={accountQuotaInGB}
         accountBillableInGB={accountTransfer?.billable || 0}
-        linodeLabel={linodeLabel}
+        accountQuotaInGB={accountQuotaInGB}
         error={error}
+        linodeLabel={linodeLabel}
+        linodeUsedInGB={linodeUsedInGB}
         loading={loading}
+        totalUsedInGB={totalUsedInGB}
       />
     </div>
   );
@@ -95,23 +96,23 @@ export const NetworkTransfer: React.FC<Props> = (props) => {
 // TransferContent (With loading and error states)
 // =============================================================================
 interface ContentProps {
+  accountBillableInGB: number;
+  accountQuotaInGB: number;
+  error: boolean;
   linodeLabel: string;
   linodeUsedInGB: number;
-  totalUsedInGB: number;
-  accountQuotaInGB: number;
-  accountBillableInGB: number;
   loading: boolean;
-  error: boolean;
+  totalUsedInGB: number;
 }
 
 const TransferContent: React.FC<ContentProps> = (props) => {
   const {
+    accountQuotaInGB,
     error,
     linodeLabel,
-    loading,
     linodeUsedInGB,
+    loading,
     totalUsedInGB,
-    accountQuotaInGB,
     // accountBillableInGB
   } = props;
   const { classes } = useStyles();
@@ -162,11 +163,11 @@ const TransferContent: React.FC<ContentProps> = (props) => {
   return (
     <div>
       <BarPercent
+        className={classes.poolUsageProgress}
         max={100}
+        rounded
         value={Math.ceil(linodeUsagePercent)}
         valueBuffer={Math.ceil(totalUsagePercent)}
-        className={classes.poolUsageProgress}
-        rounded
       />
       <Typography className={`${classes.legendItem} ${classes.darkGreen}`}>
         {linodeLabel} ({linodeUsedInGB} GB)

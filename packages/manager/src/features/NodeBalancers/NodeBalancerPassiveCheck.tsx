@@ -1,9 +1,11 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+
+import { Toggle } from 'src/components/Toggle';
+import { Typography } from 'src/components/Typography';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from 'src/components/core/Typography';
-import { Toggle } from 'src/components/Toggle';
+
 import type { NodeBalancerConfigPanelProps } from './types';
 
 export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
@@ -15,10 +17,10 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
   ) => props.onCheckPassiveChange(value);
 
   return (
-    <Grid xs={12} md={6} sx={{ padding: 0 }}>
+    <Grid md={6} sx={{ padding: 0 }} xs={12}>
       <Grid container spacing={2}>
         <Grid xs={12}>
-          <Typography variant="h2" data-qa-passive-checks-header>
+          <Typography data-qa-passive-checks-header variant="h2">
             Passive Checks
           </Typography>
         </Grid>
@@ -27,9 +29,9 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
             control={
               <Toggle
                 checked={checkPassive}
-                onChange={onCheckPassiveChange}
                 data-qa-passive-checks-toggle={checkPassive}
                 disabled={disabled}
+                onChange={onCheckPassiveChange}
               />
             }
             label="Passive Checks"

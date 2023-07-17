@@ -1,23 +1,23 @@
-import * as React from 'react';
-import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
-import { Box } from 'src/components/Box';
-import Logo from 'src/assets/logo/akamai-logo.svg';
 import BuildIcon from '@mui/icons-material/Build';
 import Stack from '@mui/material/Stack';
 import { Theme, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import Logo from 'src/assets/logo/akamai-logo.svg';
+import { Box } from 'src/components/Box';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 export const MaintenanceScreen = () => {
   const theme = useTheme<Theme>();
 
   return (
-    <Stack justifyContent="center" bgcolor={theme.bg.main} minHeight="100vh">
+    <Stack bgcolor={theme.bg.main} justifyContent="center" minHeight="100vh">
       <Box display="flex" justifyContent="center">
         <Logo width={215} />
       </Box>
       <ErrorState
-        CustomIcon={BuildIcon}
         CustomIconStyles={{
           color: theme.palette.text.primary,
         }}
@@ -33,6 +33,7 @@ export const MaintenanceScreen = () => {
             </Typography>
           </Stack>
         }
+        CustomIcon={BuildIcon}
       />
     </Stack>
   );

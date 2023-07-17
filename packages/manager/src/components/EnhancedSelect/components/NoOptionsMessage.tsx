@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { NoticeProps } from 'react-select/src/components/Menu';
-import Typography from 'src/components/core/Typography';
 
-interface Props extends NoticeProps<any, any> {}
+import { Typography } from 'src/components/Typography';
+
+type Props = NoticeProps<any, any>;
 
 type CombinedProps = Props;
 
 const NoOptionsMessage: React.FC<CombinedProps> = (props) => {
-  const { selectProps, innerProps, children } = props;
+  const { children, innerProps, selectProps } = props;
 
   return (
     <Typography

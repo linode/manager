@@ -1,44 +1,50 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import TableFooter from 'src/components/core/TableFooter';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
+import TableFooter from 'src/components/core/TableFooter';
 import { transitionText } from 'src/features/Linodes/transitions';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+
 import NodeActionMenu from './NodeActionMenu';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  table: {
-    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-    borderRight: `1px solid ${theme.borderColors.borderTable}`,
+  copy: {
+    '& svg': {
+      height: `12px`,
+      opacity: 0,
+      width: `12px`,
+    },
+    marginLeft: 4,
+    top: 1,
   },
-  labelCell: {
+  error: {
+    color: theme.color.red,
+  },
+  ipCell: {
     ...theme.applyTableHeaderStyles,
     width: '35%',
   },
-  statusCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '15%',
-  },
-  ipCell: {
+  labelCell: {
     ...theme.applyTableHeaderStyles,
     width: '35%',
   },
@@ -50,17 +56,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
   },
-  copy: {
-    top: 1,
-    marginLeft: 4,
-    '& svg': {
-      height: `12px`,
-      width: `12px`,
-      opacity: 0,
-    },
+  statusCell: {
+    ...theme.applyTableHeaderStyles,
+    width: '15%',
   },
-  error: {
-    color: theme.color.red,
+  table: {
+    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
   },
 }));
 
@@ -68,28 +70,28 @@ const useStyles = makeStyles((theme: Theme) => ({
 // NodeTable
 // =============================================================================
 export interface Props {
-  poolId: number;
   nodes: PoolNodeResponse[];
-  typeLabel: string;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
+  poolId: number;
+  typeLabel: string;
 }
 
 export const NodeTable: React.FC<Props> = (props) => {
-  const { nodes, poolId, typeLabel, openRecycleNodeDialog } = props;
+  const { nodes, openRecycleNodeDialog, poolId, typeLabel } = props;
 
   const classes = useStyles();
 
-  const { data: linodes, isLoading, error } = useAllLinodesQuery();
+  const { data: linodes, error, isLoading } = useAllLinodesQuery();
 
   const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
 
   return (
-    <OrderBy data={rowData} orderBy={'label'} order={'asc'}>
+    <OrderBy data={rowData} order={'asc'} orderBy={'label'}>
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({
-            data: paginatedAndOrderedData,
             count,
+            data: paginatedAndOrderedData,
             handlePageChange,
             handlePageSizeChange,
             page,
@@ -104,28 +106,28 @@ export const NodeTable: React.FC<Props> = (props) => {
                   <TableRow>
                     <TableSortCell
                       active={orderBy === 'label'}
-                      label={'label'}
+                      className={classes.labelCell}
                       direction={order}
                       handleClick={handleOrderChange}
-                      className={classes.labelCell}
+                      label={'label'}
                     >
                       Linode
                     </TableSortCell>
                     <TableSortCell
                       active={orderBy === 'instanceStatus'}
-                      label={'instanceStatus'}
+                      className={classes.statusCell}
                       direction={order}
                       handleClick={handleOrderChange}
-                      className={classes.statusCell}
+                      label={'instanceStatus'}
                     >
                       Status
                     </TableSortCell>
                     <TableSortCell
                       active={orderBy === 'ip'}
-                      label={'ip'}
+                      className={classes.ipCell}
                       direction={order}
                       handleClick={handleOrderChange}
-                      className={classes.ipCell}
+                      label={'ip'}
                     >
                       IP Address
                     </TableSortCell>
@@ -134,23 +136,23 @@ export const NodeTable: React.FC<Props> = (props) => {
                 </TableHead>
                 <TableBody>
                   <TableContentWrapper
-                    loadingProps={{ columns: 4 }}
-                    loading={isLoading}
                     length={paginatedAndOrderedData.length}
+                    loading={isLoading}
+                    loadingProps={{ columns: 4 }}
                   >
                     {paginatedAndOrderedData.map((eachRow) => {
                       return (
                         <NodeRow
-                          key={`node-row-${eachRow.nodeId}`}
-                          nodeId={eachRow.nodeId}
                           instanceId={eachRow.instanceId}
-                          label={eachRow.label}
                           instanceStatus={eachRow.instanceStatus}
                           ip={eachRow.ip}
-                          nodeStatus={eachRow.nodeStatus}
-                          typeLabel={typeLabel}
+                          key={`node-row-${eachRow.nodeId}`}
+                          label={eachRow.label}
                           linodeError={error ?? undefined}
+                          nodeId={eachRow.nodeId}
+                          nodeStatus={eachRow.nodeStatus}
                           openRecycleNodeDialog={openRecycleNodeDialog}
+                          typeLabel={typeLabel}
                         />
                       );
                     })}
@@ -166,11 +168,11 @@ export const NodeTable: React.FC<Props> = (props) => {
               </Table>
               <PaginationFooter
                 count={count}
+                eventCategory="Node Table"
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
                 page={page}
                 pageSize={pageSize}
-                eventCategory="Node Table"
               />
             </>
           )}
@@ -186,31 +188,31 @@ export default React.memo(NodeTable);
 // NodeRow
 // =============================================================================
 interface NodeRow {
-  nodeId: string;
   instanceId?: number;
-  label?: string;
   instanceStatus?: string;
   ip?: string;
+  label?: string;
+  nodeId: string;
   nodeStatus: string;
 }
 
 interface NodeRowProps extends NodeRow {
-  typeLabel: string;
   linodeError?: APIError[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
+  typeLabel: string;
 }
 
 export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
   const {
-    nodeId,
     instanceId,
-    label,
     instanceStatus,
     ip,
-    typeLabel,
-    nodeStatus,
+    label,
     linodeError,
+    nodeId,
+    nodeStatus,
     openRecycleNodeDialog,
+    typeLabel,
   } = props;
 
   const classes = useStyles();
@@ -238,7 +240,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
       data-qa-node-row={nodeId}
     >
       <TableCell>
-        <Grid container wrap="nowrap" alignItems="center">
+        <Grid alignItems="center" container wrap="nowrap">
           <Grid>
             <Typography>
               {linodeLink ? (
@@ -267,15 +269,15 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
           <Typography className={classes.error}>Error retrieving IP</Typography>
         ) : displayIP.length > 0 ? (
           <>
-            <CopyTooltip text={displayIP} copyableText />
+            <CopyTooltip copyableText text={displayIP} />
             <CopyTooltip className={classes.copy} text={displayIP} />
           </>
         ) : null}
       </TableCell>
       <TableCell>
         <NodeActionMenu
-          nodeId={nodeId}
           instanceLabel={label}
+          nodeId={nodeId}
           openRecycleNodeDialog={openRecycleNodeDialog}
         />
       </TableCell>
@@ -299,11 +301,11 @@ export const nodeToRow = (
   );
 
   return {
-    nodeId: node.id,
     instanceId: node.instance_id || undefined,
-    label: foundLinode?.label,
     instanceStatus: foundLinode?.status,
     ip: foundLinode?.ipv4[0],
+    label: foundLinode?.label,
+    nodeId: node.id,
     nodeStatus: node.status,
   };
 };

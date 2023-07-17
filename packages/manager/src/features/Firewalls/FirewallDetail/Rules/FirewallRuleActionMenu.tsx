@@ -1,13 +1,14 @@
-import * as React from 'react';
-import ActionMenu, { Action, ActionMenuProps } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+
+import ActionMenu, { Action, ActionMenuProps } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface Props extends Partial<ActionMenuProps> {
-  idx: number;
   disabled: boolean;
+  idx: number;
   triggerCloneFirewallRule: (idx: number) => void;
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
@@ -20,8 +21,8 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
-    idx,
     disabled,
+    idx,
     triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
@@ -30,25 +31,25 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'Edit',
       disabled,
       onClick: () => {
         triggerOpenRuleDrawerForEditing(idx);
       },
+      title: 'Edit',
     },
     {
-      title: 'Clone',
       disabled,
       onClick: () => {
         triggerCloneFirewallRule(idx);
       },
+      title: 'Clone',
     },
     {
-      title: 'Delete',
       disabled,
       onClick: () => {
         triggerDeleteFirewallRule(idx);
       },
+      title: 'Delete',
     },
   ];
 
@@ -58,9 +59,9 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
+              actionText={action.title}
               disabled={action.disabled}
               key={action.title}
-              actionText={action.title}
               onClick={action.onClick}
             />
           );

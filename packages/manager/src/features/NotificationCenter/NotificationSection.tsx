@@ -1,58 +1,60 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import type { Theme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
+
 import { Accordion } from 'src/components/Accordion';
+import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
-import { makeStyles } from 'tss-react/mui';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   inverted: {
     transform: 'rotate(180deg)',
   },
-  notificationSpacing: {
-    marginBottom: theme.spacing(2),
-    '& > div:not(:first-child)': {
-      padding: '0 20px',
-      margin: `${theme.spacing()} 0`,
-    },
-  },
   menuItemLink: {
     ...menuLinkStyle(theme.textColors.linkActiveLight),
   },
+  notificationSpacing: {
+    '& > div:not(:first-child)': {
+      margin: `${theme.spacing()} 0`,
+      padding: '0 20px',
+    },
+    marginBottom: theme.spacing(2),
+  },
   showMore: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    paddingTop: theme.spacing(),
-    display: 'flex',
-    alignItems: 'center',
     '&:hover': {
       textDecoration: 'none',
     },
+    alignItems: 'center',
+    display: 'flex',
+    fontSize: 14,
+    fontWeight: 'bold',
+    paddingTop: theme.spacing(),
   },
 }));
 
 export interface NotificationItem {
-  id: string;
-  body: string | JSX.Element;
+  body: JSX.Element | string;
   countInTotal: boolean;
+  id: string;
 }
 
 interface NotificationSectionProps {
-  header: string;
-  count?: number;
-  showMoreText?: string;
-  showMoreTarget?: string;
   content: NotificationItem[];
-  loading?: boolean;
+  count?: number;
   emptyMessage?: string;
+  header: string;
+  loading?: boolean;
+  showMoreTarget?: string;
+  showMoreText?: string;
 }
 
 export const NotificationSection = (props: NotificationSectionProps) => {
@@ -61,11 +63,11 @@ export const NotificationSection = (props: NotificationSectionProps) => {
   const {
     content,
     count,
-    header,
     emptyMessage,
+    header,
     loading,
-    showMoreText,
     showMoreTarget,
+    showMoreText,
   } = props;
 
   const _count = count ?? 5;
@@ -90,9 +92,9 @@ export const NotificationSection = (props: NotificationSectionProps) => {
                   {showMoreTarget && (
                     <strong>
                       <Link
-                        to={showMoreTarget}
                         className={classes.menuItemLink}
                         style={{ padding: 0 }}
+                        to={showMoreTarget}
                       >
                         {showMoreText ?? 'View history'}
                       </Link>
@@ -100,11 +102,11 @@ export const NotificationSection = (props: NotificationSectionProps) => {
                   )}
                 </StyledHeader>
                 <ContentBody
-                  loading={_loading}
-                  count={_count}
                   content={content}
-                  header={header}
+                  count={_count}
                   emptyMessage={emptyMessage}
+                  header={header}
+                  loading={_loading}
                 />
               </Box>
             </StyledRootContainer>
@@ -112,18 +114,18 @@ export const NotificationSection = (props: NotificationSectionProps) => {
 
           <Hidden smUp>
             <Accordion
-              heading={header}
               headingNumberCount={
                 content.length > 0 ? content.length : undefined
               }
               defaultExpanded={true}
+              heading={header}
             >
               <ContentBody
-                loading={_loading}
-                count={_count}
                 content={content}
-                header={header}
+                count={_count}
                 emptyMessage={emptyMessage}
+                header={header}
+                loading={_loading}
               />
             </Accordion>
           </Hidden>
@@ -137,17 +139,17 @@ export const NotificationSection = (props: NotificationSectionProps) => {
 // Body
 // =============================================================================
 interface BodyProps {
-  header: string;
   content: NotificationItem[];
   count: number;
   emptyMessage?: string;
+  header: string;
   loading: boolean;
 }
 
 const ContentBody = React.memo((props: BodyProps) => {
   const { classes } = useStyles();
 
-  const { header, content, count, emptyMessage, loading } = props;
+  const { content, count, emptyMessage, header, loading } = props;
 
   const [showAll, setShowAll] = React.useState(false);
 
@@ -175,14 +177,14 @@ const ContentBody = React.memo((props: BodyProps) => {
       {content.length > count ? (
         <StyledLToggleContainer display="flex" justifyContent="flex-end">
           <StyledLinkButton
-            onClick={() => setShowAll(!showAll)}
-            aria-label={`Display all ${content.length} items`}
-            data-test-id="showMoreButton"
             sx={{
-              fontWeight: 'bold',
               color: 'primary.main',
+              fontWeight: 'bold',
               textDecoration: 'none !important',
             }}
+            aria-label={`Display all ${content.length} items`}
+            data-test-id="showMoreButton"
+            onClick={() => setShowAll(!showAll)}
           >
             {showAll ? 'Collapse' : `${content.length - count} more`}
             <StyledCaret
@@ -236,18 +238,18 @@ const StyledLToggleContainer = styled(Box, {
 }));
 
 const StyledNotificationItem = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'content',
   label: 'StyledNotificationItem',
+  shouldForwardProp: (prop) => prop !== 'content',
 })<NotificationSectionProps>(({ theme, ...props }) => ({
-  display: 'flex',
-  fontSize: '0.875rem',
-  justifyContent: 'space-between',
-  width: '100%',
-  padding: props.header === 'Notifications' ? `${theme.spacing(1.5)} 20px` : 0,
   '& p': {
     color: theme.textColors.headlineStatic,
     lineHeight: '1.25rem',
   },
+  display: 'flex',
+  fontSize: '0.875rem',
+  justifyContent: 'space-between',
+  padding: props.header === 'Notifications' ? `${theme.spacing(1.5)} 20px` : 0,
+  width: '100%',
 }));
 
 const StyledCaret = styled(KeyboardArrowDown)(({ theme }) => ({
@@ -256,7 +258,7 @@ const StyledCaret = styled(KeyboardArrowDown)(({ theme }) => ({
 }));
 
 const StyledEmptyMessage = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(),
   marginBottom: theme.spacing(2.5),
+  marginTop: theme.spacing(),
   padding: `0 20px`,
 }));

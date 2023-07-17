@@ -2,49 +2,50 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import React, { useEffect, useState } from 'react';
+
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import Paper from 'src/components/core/Paper';
 import { Tab } from 'src/components/core/ReachTab';
 import { TabList } from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
 
 export interface Tab {
-  title: string;
   render: (props: any) => JSX.Element | null;
+  title: string;
 }
 
 interface TabbedPanelProps {
-  header: string;
-  error?: string | JSX.Element;
+  [index: string]: any;
+  bodyClass?: string;
   copy?: string;
+  docsLink?: JSX.Element;
+  error?: JSX.Element | string;
+  handleTabChange?: () => void;
+  header: string;
+  initTab?: number;
+  innerClass?: string;
+  noPadding?: boolean;
   rootClass?: string;
   sx?: SxProps;
-  innerClass?: string;
   tabs: Tab[];
-  [index: string]: any;
-  initTab?: number;
-  bodyClass?: string;
-  noPadding?: boolean;
-  handleTabChange?: () => void;
   value?: number;
-  docsLink?: JSX.Element;
 }
 
 const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   const {
-    header,
-    error,
     copy,
+    docsLink,
+    error,
+    handleTabChange,
+    header,
+    initTab,
+    innerClass,
     rootClass,
     sx,
-    innerClass,
     tabs,
-    handleTabChange,
-    docsLink,
-    initTab,
     ...rest
   } = props;
 
@@ -66,23 +67,23 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   return (
     <Paper
       className={rootClass}
-      sx={{ flexGrow: 1, ...sx }}
       data-qa-tp={header}
+      sx={{ flexGrow: 1, ...sx }}
     >
       <div className={innerClass}>
         {error && <Notice error>{error}</Notice>}
         <Grid container sx={{ display: 'flex' }}>
           {header !== '' && (
             <Grid xs={6}>
-              <Typography variant="h2" data-qa-tp-title>
+              <Typography data-qa-tp-title variant="h2">
                 {header}
               </Typography>
             </Grid>
           )}
           {docsLink ? (
             <Grid
-              xs={6}
               style={{ display: 'flex', flexDirection: 'row-reverse' }}
+              xs={6}
             >
               {docsLink}
             </Grid>
@@ -91,8 +92,8 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
         {copy && <StyledTypography data-qa-tp-copy>{copy}</StyledTypography>}
 
         <Tabs
-          onChange={tabChangeHandler}
           index={tabIndex}
+          onChange={tabChangeHandler}
           sx={{ position: 'relative' }}
         >
           <StyledTabList>
@@ -124,9 +125,6 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 
 const StyledTabList = styled(TabList)(({ theme }) => ({
   'div &[data-reach-tab-list]': {
-    boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
-    marginTop: 22,
-    marginBottom: theme.spacing(3),
     '&button': {
       '&:focus': {
         backgroundColor: theme.bg.tableHeader,
@@ -135,6 +133,9 @@ const StyledTabList = styled(TabList)(({ theme }) => ({
         backgroundColor: `red !important`,
       },
     },
+    boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
+    marginBottom: theme.spacing(3),
+    marginTop: 22,
   },
 }));
 

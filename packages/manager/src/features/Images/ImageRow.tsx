@@ -1,13 +1,15 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
+
 import { Hidden } from 'src/components/Hidden';
-import Typography from 'src/components/core/Typography';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
+
 import ActionMenu, { Handlers } from './ImagesActionMenu';
 
 export interface ImageWithEvent extends Image {
@@ -24,10 +26,10 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     expiry,
     id,
     label,
+    onCancelFailed,
+    onRetry,
     size,
     status,
-    onRetry,
-    onCancelFailed,
     ...rest
   } = props;
 
@@ -40,8 +42,8 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
       case 'creating':
         return (
           <ProgressDisplay
-            text="Creating"
             progress={progressFromEvent(event)}
+            text="Creating"
           />
         );
       case 'available':
@@ -68,7 +70,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <TableRow key={id} data-qa-image-cell={id}>
+    <TableRow data-qa-image-cell={id} key={id}>
       <TableCell data-qa-image-label>{label}</TableCell>
       <Hidden smDown>
         {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
@@ -93,21 +95,21 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
       <TableCell actionCell>
         {event?.status !== 'failed' ? (
           <ActionMenu
+            description={description}
             id={id}
             label={label}
-            description={description}
             status={status}
             {...rest}
           />
         ) : (
           <ActionMenu
+            description={description}
+            event={event}
             id={id}
             label={label}
-            description={description}
-            status={status}
-            event={event}
-            onRetry={onRetry}
             onCancelFailed={onCancelFailed}
+            onRetry={onRetry}
+            status={status}
           />
         )}
       </TableCell>
@@ -132,7 +134,7 @@ const progressFromEvent = (e?: Event) => {
 };
 
 const ProgressDisplay: React.FC<{
-  progress: undefined | number;
+  progress: number | undefined;
   text: string;
 }> = (props) => {
   const { progress, text } = props;

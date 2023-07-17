@@ -1,18 +1,3 @@
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
-import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { confirmObjectStorage } from '../utilities';
-import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
-import { Formik } from 'formik';
-import { LimitedAccessControls } from './LimitedAccessControls';
-import { MODE } from './types';
-import { Notice } from 'src/components/Notice/Notice';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import {
   AccessType,
   ObjectStorageBucket,
@@ -20,10 +5,27 @@ import {
   ObjectStorageKeyRequest,
   Scope,
 } from '@linode/api-v4/lib/object-storage';
+import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
+import { Formik } from 'formik';
+import * as React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel';
+import { Button } from 'src/components/Button/Button';
+import { CircleProgress } from 'src/components/CircleProgress';
+import Drawer from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import { useAccountSettings } from 'src/queries/accountSettings';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+
+import EnableObjectStorageModal from '../EnableObjectStorageModal';
+import { confirmObjectStorage } from '../utilities';
+import { LimitedAccessControls } from './LimitedAccessControls';
+import { MODE } from './types';
 
 export interface AccessKeyDrawerProps {
   isRestrictedUser: boolean;
@@ -36,8 +38,8 @@ export interface AccessKeyDrawerProps {
 }
 
 interface FormState {
-  label: string;
   bucket_access: Scope[] | null;
+  label: string;
 }
 
 /**
@@ -59,8 +61,8 @@ export const sortByCluster = (a: Scope, b: Scope) => {
 export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
   buckets
     .map((thisBucket) => ({
-      cluster: thisBucket.cluster,
       bucket_name: thisBucket.label,
+      cluster: thisBucket.cluster,
       permissions: 'none' as AccessType,
     }))
     .sort(sortByCluster);
@@ -68,11 +70,11 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
 export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const {
     isRestrictedUser,
-    open,
-    onClose,
-    onSubmit,
     mode,
     objectStorageKey,
+    onClose,
+    onSubmit,
+    open,
   } = props;
 
   const {
@@ -82,8 +84,8 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   const {
     data: objectStorageBucketsResponse,
-    isLoading: areBucketsLoading,
     error: bucketsError,
+    isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(objectStorageClusters);
   const { data: accountSettings } = useAccountSettings();
 
@@ -113,8 +115,8 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     !createMode && objectStorageKey ? objectStorageKey.label : '';
 
   const initialValues: FormState = {
-    label: initialLabelValue,
     bucket_access: getDefaultScopes(buckets),
+    label: initialLabelValue,
   };
 
   const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
@@ -137,9 +139,9 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   return (
     <Drawer
-      title={title}
-      open={open}
       onClose={onClose}
+      open={open}
+      title={title}
       wide={createMode && hasBuckets}
     >
       {areBucketsLoading || areClustersLoading ? (
@@ -147,21 +149,21 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
       ) : (
         <Formik
           initialValues={initialValues}
-          validationSchema={createObjectStorageKeysSchema}
-          validateOnChange={false}
-          validateOnBlur={true}
           onSubmit={handleSubmit}
+          validateOnBlur={true}
+          validateOnChange={false}
+          validationSchema={createObjectStorageKeysSchema}
         >
           {(formikProps) => {
             const {
-              values,
               errors,
-              handleChange,
               handleBlur,
+              handleChange,
               handleSubmit,
-              setFieldValue,
               isSubmitting,
+              setFieldValue,
               status,
+              values,
             } = formikProps;
 
             const beforeSubmit = () => {
@@ -185,7 +187,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             return (
               <>
                 {status && (
-                  <Notice key={status} text={status} error data-qa-error />
+                  <Notice data-qa-error error key={status} text={status} />
                 )}
 
                 {isRestrictedUser && (
@@ -201,11 +203,11 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                   <Typography>
                     Generate an Access Key for use with an{' '}
                     <a
-                      href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
-                      target="_blank"
                       aria-describedby="external-site"
-                      rel="noopener noreferrer"
                       className="h-u"
+                      href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
+                      rel="noopener noreferrer"
+                      target="_blank"
                     >
                       S3-compatible client
                     </a>
@@ -222,51 +224,51 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                 ) : null}
 
                 <TextField
-                  name="label"
-                  label="Label"
                   data-qa-add-label
-                  value={values.label}
+                  disabled={isRestrictedUser || mode === 'viewing'}
                   error={!!errors.label}
                   errorText={errors.label}
-                  onChange={handleChange}
+                  label="Label"
+                  name="label"
                   onBlur={handleBlur}
-                  disabled={isRestrictedUser || mode === 'viewing'}
+                  onChange={handleChange}
+                  value={values.label}
                 />
                 {createMode && !hidePermissionsTable ? (
                   <LimitedAccessControls
-                    mode={mode}
                     bucket_access={values.bucket_access}
-                    updateScopes={handleScopeUpdate}
-                    handleToggle={handleToggleAccess}
                     checked={limitedAccessChecked}
+                    handleToggle={handleToggleAccess}
+                    mode={mode}
+                    updateScopes={handleScopeUpdate}
                   />
                 ) : null}
                 <ActionsPanel>
                   <Button
                     buttonType="secondary"
-                    onClick={onClose}
                     data-qa-cancel
+                    onClick={onClose}
                   >
                     Cancel
                   </Button>
                   <Button
-                    buttonType="primary"
                     disabled={
                       isRestrictedUser ||
                       (mode !== 'creating' &&
                         values.label === initialLabelValue)
                     }
+                    buttonType="primary"
+                    data-qa-submit
                     loading={isSubmitting}
                     onClick={beforeSubmit}
-                    data-qa-submit
                   >
                     {createMode ? 'Create Access Key' : 'Save Changes'}
                   </Button>
                 </ActionsPanel>
                 <EnableObjectStorageModal
-                  open={dialogOpen}
-                  onClose={() => setDialogOpen(false)}
                   handleSubmit={handleSubmit}
+                  onClose={() => setDialogOpen(false)}
+                  open={dialogOpen}
                 />
               </>
             );

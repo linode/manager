@@ -1,11 +1,14 @@
-import { castDraft } from 'immer';
 import {
-  cloneLinode,
-  cloneLinodeDisk,
   Disk,
   Linode,
+  cloneLinode,
+  cloneLinodeDisk,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { castDraft } from 'immer';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import {
@@ -15,19 +18,24 @@ import {
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import {
+  useAllLinodeConfigsQuery,
+  useAllLinodesQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
 import Details from './Details';
@@ -36,12 +44,6 @@ import {
   curriedCloneLandingReducer,
   defaultState,
 } from './utilities';
-import {
-  useAllLinodeConfigsQuery,
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
@@ -50,24 +52,24 @@ const LinodesDetailHeader = React.lazy(
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(1),
-  },
-  paper: {
-    padding: `${theme.spacing(3)} ${theme.spacing(3)} 0`,
-  },
   appBar: {
     '& > div': {
       marginTop: 0,
     },
   },
-  outerContainer: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
   diskContainer: {
     marginTop: theme.spacing(4),
+  },
+  outerContainer: {
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+  },
+  paper: {
+    padding: `${theme.spacing(3)} ${theme.spacing(3)} 0`,
+  },
+  root: {
+    marginTop: theme.spacing(1),
   },
   title: {
     marginBottom: theme.spacing(2),
@@ -98,12 +100,12 @@ const CloneLanding = () => {
   const tabs = [
     // These must correspond to the routes inside the Switch
     {
-      title: 'Configuration Profiles',
       routeName: `${match.url}/configs`,
+      title: 'Configuration Profiles',
     },
     {
-      title: 'Disks',
       routeName: `${match.url}/disks`,
+      title: 'Disks',
     },
   ];
 
@@ -136,9 +138,9 @@ const CloneLanding = () => {
   // Update configs and disks if they change
   React.useEffect(() => {
     dispatch({
-      type: 'syncConfigsDisks',
       configs,
       disks,
+      type: 'syncConfigsDisks',
     });
     // We can't use `configs` and `disks` as deps, since they are arrays.
     // Instead we use a serialized representation of their IDs.
@@ -155,7 +157,7 @@ const CloneLanding = () => {
   React.useEffect(() => {
     const configFromQS = Number(queryParams.selectedConfig);
     if (configFromQS && configs) {
-      return dispatch({ type: 'toggleConfig', id: configFromQS });
+      return dispatch({ id: configFromQS, type: 'toggleConfig' });
     }
   }, [queryParams, configs]);
 
@@ -163,21 +165,21 @@ const CloneLanding = () => {
   React.useEffect(() => {
     const diskFromQS = Number(queryParams.selectedDisk);
     if (diskFromQS && disks) {
-      return dispatch({ type: 'toggleDisk', id: diskFromQS });
+      return dispatch({ id: diskFromQS, type: 'toggleDisk' });
     }
   }, [queryParams, disks]);
 
   // Helper functions for updating the state.
   const toggleConfig = (id: number) => {
-    return dispatch({ type: 'toggleConfig', id });
+    return dispatch({ id, type: 'toggleConfig' });
   };
 
   const toggleDisk = (id: number) => {
-    return dispatch({ type: 'toggleDisk', id });
+    return dispatch({ id, type: 'toggleDisk' });
   };
 
   const setSelectedLinodeId = (id: number) => {
-    return dispatch({ type: 'setSelectedLinodeId', id });
+    return dispatch({ id, type: 'setSelectedLinodeId' });
   };
 
   const setSubmitting = (value: boolean) => {
@@ -185,7 +187,7 @@ const CloneLanding = () => {
   };
 
   const setErrors = (errors?: APIError[]) => {
-    return dispatch({ type: 'setErrors', errors });
+    return dispatch({ errors, type: 'setErrors' });
   };
 
   const clearAll = () => dispatch({ type: 'clearAll' });
@@ -225,7 +227,7 @@ const CloneLanding = () => {
      * 1) Duplicate a single disk on the current Linode.
      * 2) Clone configs/disks to a different Linode.
      */
-    let request: () => Promise<Linode | Disk>;
+    let request: () => Promise<Disk | Linode>;
 
     // The selected Linode is the same as the current Linode -- duplicate the disk
     if (state.selectedLinodeId === linodeId) {
@@ -251,9 +253,9 @@ const CloneLanding = () => {
        */
       request = () =>
         cloneLinode(sourceLinodeId, {
-          linode_id: destinationLinodeId,
           configs: selectedConfigIds,
           disks: selectedDiskIds,
+          linode_id: destinationLinodeId,
         });
     }
 
@@ -285,15 +287,15 @@ const CloneLanding = () => {
       <MutationNotification linodeId={linodeId} />
       <Notifications />
       <LinodesDetailHeader />
-      <Grid container className={classes.root}>
-        <Grid xs={12} md={8} lg={9}>
+      <Grid className={classes.root} container>
+        <Grid lg={9} md={8} xs={12}>
           <Paper className={classes.paper}>
             <Typography
-              role="heading"
               aria-level={2}
-              variant="h2"
               className={classes.title}
               data-qa-title
+              role="heading"
+              variant="h2"
             >
               Clone
             </Typography>
@@ -310,9 +312,9 @@ const CloneLanding = () => {
                 <SafeTabPanel index={0}>
                   <div className={classes.outerContainer}>
                     <Configs
-                      configs={configsInState}
                       // Cast the results of the Immer state to a mutable data structure.
                       configSelection={castDraft(state.configSelection)}
+                      configs={configsInState}
                       handleSelect={toggleConfig}
                     />
                   </div>
@@ -328,11 +330,11 @@ const CloneLanding = () => {
                     </Typography>
                     <div className={classes.diskContainer}>
                       <Disks
-                        disks={disksInState}
                         // Cast the results of the Immer state to a mutable data structure.
                         diskSelection={castDraft(state.diskSelection)}
-                        selectedConfigIds={selectedConfigIds}
+                        disks={disksInState}
                         handleSelect={toggleDisk}
+                        selectedConfigIds={selectedConfigIds}
                       />
                     </div>
                   </div>
@@ -341,15 +343,12 @@ const CloneLanding = () => {
             </Tabs>
           </Paper>
         </Grid>
-        <Grid xs={12} md={4} lg={3}>
+        <Grid lg={3} md={4} xs={12}>
           <Details
-            currentLinodeId={linodeId}
             selectedConfigs={attachAssociatedDisksToConfigs(
               selectedConfigs,
               disks
             )}
-            // If a selected disk is associated with a selected config, we
-            // don't want it to appear in the Details component, since
             // cloning the config takes precedence.
             selectedDisks={disksInState.filter((disk) => {
               return (
@@ -366,16 +365,19 @@ const CloneLanding = () => {
                 ).length === 0
               );
             })}
-            selectedLinodeId={state.selectedLinodeId}
-            selectedLinodeRegion={selectedLinodeRegion}
-            thisLinodeRegion={linode?.region ?? ''}
+            // If a selected disk is associated with a selected config, we
+            // don't want it to appear in the Details component, since
+            clearAll={clearAll}
+            currentLinodeId={linodeId}
+            errorMap={errorMap}
+            handleClone={handleClone}
             handleSelectLinode={setSelectedLinodeId}
             handleToggleConfig={toggleConfig}
             handleToggleDisk={toggleDisk}
-            handleClone={handleClone}
             isSubmitting={state.isSubmitting}
-            errorMap={errorMap}
-            clearAll={clearAll}
+            selectedLinodeId={state.selectedLinodeId}
+            selectedLinodeRegion={selectedLinodeRegion}
+            thisLinodeRegion={linode?.region ?? ''}
           />
         </Grid>
       </Grid>

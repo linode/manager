@@ -1,15 +1,16 @@
-import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {
   label: string;
-  onOpenResetDialog: () => void;
   onOpenDeleteDialog: () => void;
   onOpenEditDrawer: () => void;
+  onOpenResetDialog: () => void;
 }
 
 export const OAuthClientActionMenu = (props: Props) => {
@@ -18,16 +19,16 @@ export const OAuthClientActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Edit',
       onClick: props.onOpenEditDrawer,
+      title: 'Edit',
     },
     {
-      title: 'Reset',
       onClick: props.onOpenResetDialog,
+      title: 'Reset',
     },
     {
-      title: 'Delete',
       onClick: props.onOpenDeleteDialog,
+      title: 'Delete',
     },
   ];
 
@@ -43,8 +44,8 @@ export const OAuthClientActionMenu = (props: Props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
+              key={action.title}
               onClick={action.onClick}
             />
           );

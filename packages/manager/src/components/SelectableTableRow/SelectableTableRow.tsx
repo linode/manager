@@ -1,18 +1,19 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
+
+import { Checkbox } from 'src/components/Checkbox';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 interface SelectableTableRowProps {
   children: JSX.Element[];
-  isChecked: boolean;
   handleToggleCheck: () => void;
+  isChecked: boolean;
 }
 
 export const SelectableTableRow = React.memo(
   (props: SelectableTableRowProps) => {
-    const { isChecked, handleToggleCheck } = props;
+    const { handleToggleCheck, isChecked } = props;
 
     return (
       <TableRow
@@ -23,12 +24,12 @@ export const SelectableTableRow = React.memo(
         }}
       >
         <StyledTableCell>
-          <CheckBox
-            checked={isChecked}
-            onChange={handleToggleCheck}
+          <Checkbox
             inputProps={{
               'aria-label': `Select all entities on page`,
             }}
+            checked={isChecked}
+            onChange={handleToggleCheck}
           />
         </StyledTableCell>
         {props.children}
@@ -40,12 +41,12 @@ export const SelectableTableRow = React.memo(
 const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
 })({
-  textAlign: 'center',
-  width: 25,
+  '& svg': {
+    height: 20,
+    width: 20,
+  },
   paddingLeft: 0,
   paddingRight: 0,
-  '& svg': {
-    width: 20,
-    height: 20,
-  },
+  textAlign: 'center',
+  width: 25,
 });

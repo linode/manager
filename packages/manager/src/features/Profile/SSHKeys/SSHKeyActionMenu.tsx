@@ -1,5 +1,6 @@
 import * as React from 'react';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {
   onDelete: () => void;

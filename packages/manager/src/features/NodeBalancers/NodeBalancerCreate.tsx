@@ -1,32 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Accordion } from 'src/components/Accordion';
-import Paper from 'src/components/core/Paper';
-import LandingHeader from 'src/components/LandingHeader';
-import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
-import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
-import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { isEURegion } from 'src/utilities/formatRegion';
-import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
-import { Notice } from 'src/components/Notice/Notice';
-import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
-import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useHistory } from 'react-router-dom';
-import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
-import { useRegionsQuery } from 'src/queries/regions';
 import {
   append,
   clone,
@@ -36,37 +10,66 @@ import {
   over,
   pathOr,
 } from 'ramda';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+
+import { Accordion } from 'src/components/Accordion';
+import ActionsPanel from 'src/components/ActionsPanel';
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
+import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import LandingHeader from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
+import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+import {
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
+import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
+import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
   transformConfigsForRequest,
 } from './utils';
-import {
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
-import type { APIError } from '@linode/api-v4/lib/types';
+
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface NodeBalancerFieldsState {
+  configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
   label?: string;
   region?: string;
   tags?: string[];
-  configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
 }
 
 const errorResources = {
+  address: 'address',
   label: 'label',
   region: 'region',
-  address: 'address',
   tags: 'tags',
 };
 
 const defaultDeleteConfigConfirmDialogState = {
-  submitting: false,
-  open: false,
   errors: undefined,
   idxToDelete: undefined,
+  open: false,
+  submitting: false,
 };
 
 const defaultFieldsStates = {
@@ -80,9 +83,9 @@ const NodeBalancerCreate = () => {
   const { data: regions } = useRegionsQuery();
 
   const {
-    mutateAsync: createNodeBalancer,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
   const history = useHistory();
@@ -96,10 +99,10 @@ const NodeBalancerCreate = () => {
     deleteConfigConfirmDialog,
     setDeleteConfigConfirmDialog,
   ] = React.useState<{
-    open: boolean;
-    submitting: boolean;
     errors?: APIError[];
     idxToDelete?: number;
+    open: boolean;
+    submitting: boolean;
   }>(defaultDeleteConfigConfirmDialogState);
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
@@ -282,8 +285,8 @@ const NodeBalancerCreate = () => {
   const onDeleteConfig = (configIdx: number) => () =>
     setDeleteConfigConfirmDialog({
       ...clone(defaultDeleteConfigConfirmDialogState),
-      open: true,
       idxToDelete: configIdx,
+      open: true,
     });
 
   const onRemoveConfig = () => {
@@ -389,16 +392,16 @@ const NodeBalancerCreate = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Create a NodeBalancer" />
       <LandingHeader
-        title="Create"
         breadcrumbProps={{
-          pathname: '/nodebalancers/create',
           breadcrumbDataAttrs: {
             'data-qa-create-nodebalancer-header': true,
           },
+          pathname: '/nodebalancers/create',
         }}
+        title="Create"
       />
       {generalError && !disabled && (
-        <Notice spacingTop={8} error>
+        <Notice error spacingTop={8}>
           {generalError}
         </Notice>
       )}
@@ -408,18 +411,18 @@ const NodeBalancerCreate = () => {
             "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
           }
           error={true}
-          spacingTop={16}
           important
+          spacingTop={16}
         />
       )}
       <Paper>
         <TextField
+          disabled={disabled}
           errorText={hasErrorFor('label')}
           label={'NodeBalancer Label'}
+          noMarginTop
           onChange={labelChange}
           value={nodeBalancerFields.label || ''}
-          disabled={disabled}
-          noMarginTop
         />
         <TagsInput
           value={
@@ -430,19 +433,19 @@ const NodeBalancerCreate = () => {
                 }))
               : []
           }
+          disabled={disabled}
           onChange={tagsChange}
           tagError={hasErrorFor('tags')}
-          disabled={disabled}
         />
       </Paper>
       <SelectRegionPanel
-        regions={regions ?? []}
-        error={hasErrorFor('region')}
-        selectedID={nodeBalancerFields.region}
-        handleSelection={regionChange}
         disabled={disabled}
+        error={hasErrorFor('region')}
+        handleSelection={regionChange}
+        regions={regions ?? []}
+        selectedID={nodeBalancerFields.region}
       />
-      <Box marginTop={2} marginBottom={2}>
+      <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
           const onChange = (key: keyof NodeBalancerConfigFieldsWithStatus) => (
             value: any
@@ -453,61 +456,28 @@ const NodeBalancerCreate = () => {
               heading={`Configuration - Port ${
                 nodeBalancerFields.configs[idx].port ?? ''
               }`}
-              key={idx}
               defaultExpanded
+              key={idx}
             >
               <NodeBalancerConfigPanel
-                nodeBalancerRegion={nodeBalancerFields.region}
-                errors={nodeBalancerConfig.errors}
-                configIdx={idx}
-                algorithm={nodeBalancerFields.configs[idx].algorithm!}
-                onAlgorithmChange={onChange('algorithm')}
-                checkPassive={nodeBalancerFields.configs[idx].check_passive!}
-                onCheckPassiveChange={onChange('check_passive')}
-                checkBody={nodeBalancerFields.configs[idx].check_body!}
-                onCheckBodyChange={onChange('check_body')}
-                checkPath={nodeBalancerFields.configs[idx].check_path!}
-                onCheckPathChange={onChange('check_path')}
-                port={nodeBalancerFields.configs[idx].port!}
-                onPortChange={onChange('port')}
-                protocol={nodeBalancerFields.configs[idx].protocol!}
-                proxyProtocol={nodeBalancerFields.configs[idx].proxy_protocol!}
-                onProtocolChange={(value) => {
-                  onChange('protocol')(value);
-                  afterProtocolUpdate(idx);
-                }}
-                onProxyProtocolChange={onChange('proxy_protocol')}
-                healthCheckType={nodeBalancerFields.configs[idx].check!}
+                healthCheckAttempts={
+                  nodeBalancerFields.configs[idx].check_attempts!
+                }
+                healthCheckInterval={
+                  nodeBalancerFields.configs[idx].check_interval!
+                }
+                healthCheckTimeout={
+                  nodeBalancerFields.configs[idx].check_timeout!
+                }
                 onHealthCheckTypeChange={(value) => {
                   onChange('check')(value);
                   afterHealthCheckTypeUpdate(idx);
                 }}
-                healthCheckAttempts={
-                  nodeBalancerFields.configs[idx].check_attempts!
-                }
-                onHealthCheckAttemptsChange={onChange('check_attempts')}
-                healthCheckInterval={
-                  nodeBalancerFields.configs[idx].check_interval!
-                }
-                onHealthCheckIntervalChange={onChange('check_interval')}
-                healthCheckTimeout={
-                  nodeBalancerFields.configs[idx].check_timeout!
-                }
-                onHealthCheckTimeoutChange={onChange('check_timeout')}
-                sessionStickiness={nodeBalancerFields.configs[idx].stickiness!}
-                onSessionStickinessChange={onChange('stickiness')}
-                sslCertificate={nodeBalancerFields.configs[idx].ssl_cert!}
-                onSslCertificateChange={onChange('ssl_cert')}
-                privateKey={nodeBalancerFields.configs[idx].ssl_key!}
-                onPrivateKeyChange={onChange('ssl_key')}
-                nodes={nodeBalancerFields.configs[idx].nodes}
-                addNode={addNodeBalancerConfigNode(idx)}
-                removeNode={removeNodeBalancerConfigNode(idx)}
-                onNodeLabelChange={(nodeIndex, value) =>
-                  onNodeLabelChange(idx, nodeIndex, value)
-                }
                 onNodeAddressChange={(nodeIndex, value) =>
                   onNodeAddressChange(idx, nodeIndex, value)
+                }
+                onNodeLabelChange={(nodeIndex, value) =>
+                  onNodeLabelChange(idx, nodeIndex, value)
                 }
                 onNodePortChange={(nodeIndex, value) =>
                   onNodePortChange(idx, nodeIndex, value)
@@ -515,8 +485,41 @@ const NodeBalancerCreate = () => {
                 onNodeWeightChange={(nodeIndex, value) =>
                   onNodeWeightChange(idx, nodeIndex, value)
                 }
-                onDelete={onDeleteConfig(idx)}
+                onProtocolChange={(value) => {
+                  onChange('protocol')(value);
+                  afterProtocolUpdate(idx);
+                }}
+                addNode={addNodeBalancerConfigNode(idx)}
+                algorithm={nodeBalancerFields.configs[idx].algorithm!}
+                checkBody={nodeBalancerFields.configs[idx].check_body!}
+                checkPassive={nodeBalancerFields.configs[idx].check_passive!}
+                checkPath={nodeBalancerFields.configs[idx].check_path!}
+                configIdx={idx}
                 disabled={disabled}
+                errors={nodeBalancerConfig.errors}
+                healthCheckType={nodeBalancerFields.configs[idx].check!}
+                nodeBalancerRegion={nodeBalancerFields.region}
+                nodes={nodeBalancerFields.configs[idx].nodes}
+                onAlgorithmChange={onChange('algorithm')}
+                onCheckBodyChange={onChange('check_body')}
+                onCheckPassiveChange={onChange('check_passive')}
+                onCheckPathChange={onChange('check_path')}
+                onDelete={onDeleteConfig(idx)}
+                onHealthCheckAttemptsChange={onChange('check_attempts')}
+                onHealthCheckIntervalChange={onChange('check_interval')}
+                onHealthCheckTimeoutChange={onChange('check_timeout')}
+                onPortChange={onChange('port')}
+                onPrivateKeyChange={onChange('ssl_key')}
+                onProxyProtocolChange={onChange('proxy_protocol')}
+                onSessionStickinessChange={onChange('stickiness')}
+                onSslCertificateChange={onChange('ssl_cert')}
+                port={nodeBalancerFields.configs[idx].port!}
+                privateKey={nodeBalancerFields.configs[idx].ssl_key!}
+                protocol={nodeBalancerFields.configs[idx].protocol!}
+                proxyProtocol={nodeBalancerFields.configs[idx].proxy_protocol!}
+                removeNode={removeNodeBalancerConfigNode(idx)}
+                sessionStickiness={nodeBalancerFields.configs[idx].stickiness!}
+                sslCertificate={nodeBalancerFields.configs[idx].ssl_cert!}
               />
             </Accordion>
           );
@@ -524,26 +527,26 @@ const NodeBalancerCreate = () => {
       </Box>
       <Button
         buttonType="outlined"
-        onClick={addNodeBalancer}
         disabled={disabled}
+        onClick={addNodeBalancer}
         sx={matchesSmDown ? { marginLeft: theme.spacing(2) } : null}
       >
         Add another Configuration
       </Button>
       <CheckoutSummary
-        heading={`Summary ${nodeBalancerFields.label ?? ''}`}
         displaySections={[
           { title: '$10/month' },
           { title: regionLabel },
-          { title: 'Configs', details: nodeBalancerFields.configs.length },
+          { details: nodeBalancerFields.configs.length, title: 'Configs' },
           {
-            title: 'Nodes',
             details: nodeBalancerFields.configs.reduce(
               (acc, config) => acc + config.nodes.length,
               0
             ),
+            title: 'Nodes',
           },
         ].filter((item) => Boolean(item.title))}
+        heading={`Summary ${nodeBalancerFields.label ?? ''}`}
       />
       <Box
         display="flex"
@@ -557,37 +560,37 @@ const NodeBalancerCreate = () => {
         ) : undefined}
         <Button
           buttonType="primary"
-          onClick={onCreate}
-          loading={isLoading}
           data-qa-deploy-nodebalancer
+          loading={isLoading}
+          onClick={onCreate}
           sx={matchesSmDown ? { marginRight: theme.spacing(1) } : null}
         >
           Create NodeBalancer
         </Button>
       </Box>
       <ConfirmationDialog
-        onClose={onCloseConfirmation}
-        title={'Delete this configuration?'}
-        error={confirmationConfigError()}
         actions={
           <ActionsPanel style={{ padding: 0 }}>
             <Button
               buttonType="secondary"
-              onClick={onCloseConfirmation}
               className="cancel"
+              onClick={onCloseConfirmation}
             >
               Cancel
             </Button>
             <Button
               buttonType="primary"
-              onClick={onRemoveConfig}
               loading={deleteConfigConfirmDialog.submitting}
+              onClick={onRemoveConfig}
             >
               Delete
             </Button>
           </ActionsPanel>
         }
+        error={confirmationConfigError()}
+        onClose={onCloseConfirmation}
         open={deleteConfigConfirmDialog.open}
+        title={'Delete this configuration?'}
       >
         <Typography>
           Are you sure you want to delete this NodeBalancer Configuration?
@@ -598,8 +601,8 @@ const NodeBalancerCreate = () => {
 };
 
 /* @todo: move to own file */
-export const lensFrom = (p1: (string | number)[]) => (
-  p2: (string | number)[]
+export const lensFrom = (p1: (number | string)[]) => (
+  p2: (number | string)[]
 ) => lensPath([...p1, ...p2]);
 
 const getPathAndFieldFromFieldString = (value: string) => {

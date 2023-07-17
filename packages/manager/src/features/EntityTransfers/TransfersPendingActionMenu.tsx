@@ -1,13 +1,14 @@
-import * as React from 'react';
-import { Action } from 'src/components/ActionMenu';
 import { makeStyles } from '@mui/styles';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import * as React from 'react';
+
+import { Action } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles(() => ({
   root: {
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center',
   },
 }));
 
@@ -24,10 +25,10 @@ const TransfersPendingActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'Cancel',
       onClick: () => {
         onCancelClick();
       },
+      title: 'Cancel',
     },
   ];
 
@@ -36,10 +37,10 @@ const TransfersPendingActionMenu: React.FC<CombinedProps> = (props) => {
       {actions.map((action) => {
         return (
           <InlineMenuAction
-            key={action.title}
             actionText={action.title}
-            onClick={action.onClick}
             disabled={action.disabled}
+            key={action.title}
+            onClick={action.onClick}
           />
         );
       })}

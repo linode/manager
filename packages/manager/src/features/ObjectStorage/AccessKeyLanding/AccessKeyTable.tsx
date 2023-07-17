@@ -1,23 +1,25 @@
-import * as React from 'react';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import Typography from 'src/components/core/Typography';
-import { AccessKeyMenu } from './AccessKeyMenu';
-import { APIError } from '@linode/api-v4/lib/types';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-import { OpenAccessDrawer } from './types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { Typography } from 'src/components/Typography';
+
+import { AccessKeyMenu } from './AccessKeyMenu';
+import { OpenAccessDrawer } from './types';
 
 export interface AccessKeyTableProps {
   data: ObjectStorageKey[] | undefined;
-  error: APIError[] | undefined | null;
+  error: APIError[] | null | undefined;
   isLoading: boolean;
   isRestrictedUser: boolean;
   openDrawer: OpenAccessDrawer;
@@ -61,14 +63,14 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
 
   const renderRows = (objectStorageKeys: ObjectStorageKey[]) => {
     return objectStorageKeys.map((eachKey: ObjectStorageKey) => (
-      <TableRow key={eachKey.id} data-qa-table-row={eachKey.label}>
+      <TableRow data-qa-table-row={eachKey.label} key={eachKey.id}>
         <TableCell parentColumn="Label">
-          <Typography variant="body1" component="h3" data-qa-key-label>
+          <Typography component="h3" data-qa-key-label variant="body1">
             {eachKey.label}
           </Typography>
         </TableCell>
         <TableCell parentColumn="Access Key">
-          <Typography variant="body1" data-qa-key-created>
+          <Typography data-qa-key-created variant="body1">
             {eachKey.access_key}
             <StyledCopyIcon text={eachKey.access_key} />
           </Typography>
@@ -106,12 +108,12 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
 };
 
 const StyledCopyIcon = styled(CopyTooltip)(({ theme }) => ({
-  marginLeft: theme.spacing(),
   '& svg': {
+    height: 12,
     top: 1,
     width: 12,
-    height: 12,
   },
+  marginLeft: theme.spacing(),
 }));
 
 const StyledLabelCell = styled(TableCell)(() => ({

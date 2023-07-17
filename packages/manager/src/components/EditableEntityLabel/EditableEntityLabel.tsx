@@ -1,10 +1,13 @@
-import * as React from 'react';
-import { useTheme, styled } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';
+import { styled, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+import { Typography } from 'src/components/Typography';
+
 import EditableInput from './EditableInput';
+
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 
 interface EditableEntityLabelProps {
   iconVariant?: EntityVariants;
@@ -45,24 +48,24 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
 
   return (
     <Grid
-      container
-      direction="row"
-      wrap="nowrap"
-      alignItems="center"
-      justifyContent="flex-start"
       sx={{
         margin: 0,
         minHeight: '40px',
       }}
+      alignItems="center"
+      container
+      direction="row"
+      justifyContent="flex-start"
+      wrap="nowrap"
     >
       {!isEditing && iconVariant && (
         <Grid className="py0 px0">
           <EntityIcon
-            variant={iconVariant}
-            status={status}
             style={{
               marginRight: theme.spacing(1),
             }}
+            status={status}
+            variant={iconVariant}
           />
         </Grid>
       )}
@@ -70,20 +73,20 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
         <Grid container>
           <Grid className="py0 px0">
             <StyledEditableInput
-              errorText={error}
-              loading={loading}
-              onEdit={onSubmit}
-              openForEdit={handleOpen}
               cancelEdit={handleClose}
-              onInputChange={(t: string) => setInputText(t)}
-              text={text}
+              errorText={error}
               inputText={inputText}
               isEditing={isEditing}
+              loading={loading}
+              onEdit={onSubmit}
+              onInputChange={(t: string) => setInputText(t)}
+              openForEdit={handleOpen}
+              text={text}
               typeVariant="table-cell"
             />
           </Grid>
           {subText && !isEditing && (
-            <Grid xs={12} className="py0 px0">
+            <Grid className="py0 px0" xs={12}>
               <Typography variant="body1">{subText}</Typography>
             </Grid>
           )}

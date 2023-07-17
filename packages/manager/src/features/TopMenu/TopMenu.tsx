@@ -1,64 +1,58 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import * as React from 'react';
-import { Hidden } from 'src/components/Hidden';
-import { AppBar } from 'src/components/AppBar';
-import { IconButton } from 'src/components/IconButton';
+import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
-import clsx from 'clsx';
+import * as React from 'react';
+
+import { AppBar } from 'src/components/AppBar';
+import { Hidden } from 'src/components/Hidden';
+import { IconButton } from 'src/components/IconButton';
 import { Toolbar } from 'src/components/Toolbar';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
+
 import { AddNewMenu } from './AddNewMenu/AddNewMenu';
-import Community from './Community';
-import Help from './Help';
+import { Community } from './Community';
+import { Help } from './Help';
 import NotificationMenu from './NotificationMenu';
 import SearchBar from './SearchBar';
-import TopMenuIcon from './TopMenuIcon';
+import { TopMenuIcon } from './TopMenuIcon';
 import UserMenu from './UserMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
-    height: 50,
-    color: theme.palette.text.primary,
     backgroundColor: theme.bg.bgPaper,
-    position: 'relative',
-    paddingRight: '0 !important',
+    color: theme.palette.text.primary,
     display: 'flex',
-    justifyContent: 'center',
     flexDirection: 'row',
+    height: 50,
+    justifyContent: 'center',
+    paddingRight: '0 !important',
+    position: 'relative',
   },
   toolbar: {
-    padding: 0,
     height: `50px !important`,
+    padding: 0,
     width: '100%',
   },
 }));
 
 interface Props {
-  isSideMenuOpen: boolean;
-  openSideMenu: () => void;
   desktopMenuToggle: () => void;
   isLoggedInAsCustomer: boolean;
+  isSideMenuOpen: boolean;
+  openSideMenu: () => void;
   username: string;
 }
 
 const TopMenu = (props: Props) => {
   const {
+    desktopMenuToggle,
+    isLoggedInAsCustomer,
     isSideMenuOpen,
     openSideMenu,
     username,
-    isLoggedInAsCustomer,
-    desktopMenuToggle,
   } = props;
 
-  const theme = useTheme();
   const classes = useStyles();
-
-  const communityIconStyles = {
-    [theme.breakpoints.down(370)]: {
-      ...theme.visually.hidden,
-    },
-  };
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'
@@ -74,7 +68,7 @@ const TopMenu = (props: Props) => {
             textAlign: 'center',
           }}
         >
-          <Typography style={{ fontSize: '1.2em', color: 'black' }}>
+          <Typography style={{ color: 'black', fontSize: '1.2em' }}>
             You are logged in as customer: <strong>{username}</strong>
           </Typography>
         </div>
@@ -82,34 +76,34 @@ const TopMenu = (props: Props) => {
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar} variant="dense">
           <Hidden mdDown>
-            <IconButton
-              color="inherit"
-              aria-label="open menu"
-              onClick={desktopMenuToggle}
-              size="large"
-              data-testid="open-nav-menu"
-            >
-              <TopMenuIcon title={navHoverText} key={navHoverText}>
+            <TopMenuIcon key={navHoverText} title={navHoverText}>
+              <IconButton
+                aria-label="open menu"
+                color="inherit"
+                data-testid="open-nav-menu"
+                onClick={desktopMenuToggle}
+                size="large"
+              >
                 <MenuIcon />
-              </TopMenuIcon>
-            </IconButton>
+              </IconButton>
+            </TopMenuIcon>
           </Hidden>
           <Hidden mdUp>
-            <IconButton
-              color="inherit"
-              aria-label="open menu"
-              onClick={openSideMenu}
-              size="large"
-            >
-              <TopMenuIcon title={navHoverText} key={navHoverText}>
+            <TopMenuIcon key={navHoverText} title={navHoverText}>
+              <IconButton
+                aria-label="open menu"
+                color="inherit"
+                onClick={openSideMenu}
+                size="large"
+              >
                 <MenuIcon />
-              </TopMenuIcon>
-            </IconButton>
+              </IconButton>
+            </TopMenuIcon>
           </Hidden>
           <AddNewMenu />
           <SearchBar />
           <Help />
-          <Community className={clsx(communityIconStyles)} />
+          <Community />
           <NotificationMenu />
           <UserMenu />
         </Toolbar>

@@ -1,38 +1,39 @@
 import FileCopy from '@mui/icons-material/FileCopy';
-import Typography from 'src/components/core/Typography';
 import { styled } from '@mui/material/styles';
+
+import { Typography } from 'src/components/Typography';
 
 export const StyledRootContainer = styled('div', {
   label: 'StyledRootContainer',
 })(() => ({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   position: 'relative',
 }));
 
 export const StyledFileCopy = styled(FileCopy, {
   label: 'StyledFileCopy',
 })(({ theme }) => ({
-  cursor: 'pointer',
-  transition: theme.transitions.create(['color', 'background-color']),
-  color: theme.color.grey1,
-  margin: 0,
-  position: 'relative',
-  width: 24,
-  height: 24,
-  padding: 4,
-  borderRadius: theme.shape.borderRadius,
   '&:hover': {
     backgroundColor: theme.color.grey1,
     color: theme.color.white,
   },
+  borderRadius: theme.shape.borderRadius,
+  color: theme.color.grey1,
+  cursor: 'pointer',
+  height: 24,
+  margin: 0,
+  padding: 4,
+  position: 'relative',
+  transition: theme.transitions.create(['color', 'background-color']),
+  width: 24,
 }));
 
 export const StyledPrefixWrapper = styled('div', {
   label: 'StyledPrefixWrapper',
 })(({ theme }) => ({
-  marginLeft: theme.spacing(1.5),
   display: 'flex',
+  marginLeft: theme.spacing(1.5),
   overflow: 'auto',
   whiteSpace: 'nowrap',
 }));
@@ -40,32 +41,23 @@ export const StyledPrefixWrapper = styled('div', {
 export const StyledSlash = styled(Typography, {
   label: 'StyledSlash',
 })(() => ({
-  marginRight: 4,
   marginLeft: 4,
+  marginRight: 4,
 }));
 
 export const StyledLink = styled(Typography, {
   label: 'StyledLink',
 })(({ theme }) => ({
-  color: theme.textColors.linkActiveLight,
-  cursor: 'pointer',
   '&:hover': {
     textDecoration: 'underline',
   },
+  color: theme.textColors.linkActiveLight,
+  cursor: 'pointer',
 }));
 
 export const StyledCopied = styled(Typography, {
   label: 'StyledCopied',
 })(({ theme }) => ({
-  fontSize: '.85rem',
-  left: -24,
-  color: theme.palette.text.primary,
-  padding: '6px 8px',
-  backgroundColor: theme.color.white,
-  position: 'absolute',
-  boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-  transition: 'opacity .5s ease-in-out',
-  animation: 'popUp 200ms ease-in-out forwards',
   '@keyframes popUp': {
     from: {
       opacity: 0,
@@ -78,4 +70,13 @@ export const StyledCopied = styled(Typography, {
       transform: 'scale(1)',
     },
   },
+  animation: 'popUp 200ms ease-in-out forwards',
+  backgroundColor: theme.color.white,
+  boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+  color: theme.palette.text.primary,
+  fontSize: '.85rem',
+  left: -24,
+  padding: '6px 8px',
+  position: 'absolute',
+  transition: 'opacity .5s ease-in-out',
 }));

@@ -1,35 +1,37 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
-import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import LandingHeader from 'src/components/LandingHeader';
-import Grid from '@mui/material/Unstable_Grid2';
-import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Notice } from 'src/components/Notice/Notice';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
-import DomainRecords from '../DomainRecords';
-import DeleteDomain from '../DeleteDomain';
-import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import {
   useDomainQuery,
   useDomainRecordsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
 
+import DeleteDomain from '../DeleteDomain';
+import DomainRecords from '../DomainRecords';
+import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
+
 const useStyles = makeStyles((theme: Theme) => ({
   ...summaryPanelStyles(theme),
-  error: {
-    marginTop: `${theme.spacing(3)} !important`,
-    marginBottom: `0 !important`,
+  delete: {
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: theme.spacing(),
+    },
   },
-  root: {
-    marginLeft: 0,
-    marginRight: 0,
-    marginBottom: theme.spacing(3),
+  error: {
+    marginBottom: `0 !important`,
+    marginTop: `${theme.spacing(3)} !important`,
   },
   main: {
     '&.MuiGrid-item': {
@@ -39,19 +41,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       order: 1,
     },
   },
+  root: {
+    marginBottom: theme.spacing(3),
+    marginLeft: 0,
+    marginRight: 0,
+  },
   tagsSection: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(2),
-      order: 2,
-    },
     '&.MuiGrid-item': {
       paddingLeft: 0,
       paddingRight: 0,
     },
-  },
-  delete: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(2),
+      order: 2,
     },
   },
 }));
@@ -82,7 +84,7 @@ export const DomainDetail = () => {
       return Promise.reject('No Domain found.');
     }
 
-    return updateDomain({ id: domain.id, domain: label }).catch((e) => {
+    return updateDomain({ domain: label, id: domain.id }).catch((e) => {
       setUpdateError(e[0].reason);
       return Promise.reject(e);
     });
@@ -123,18 +125,15 @@ export const DomainDetail = () => {
   return (
     <>
       <LandingHeader
-        title="Domain Details"
-        docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/dns-manager/"
         breadcrumbProps={{
-          pathname: location.pathname,
           labelOptions: { noCap: true },
           onEditHandlers: {
             editableTextTitle: domain.domain,
-            onEdit: handleLabelChange,
-            onCancel: resetEditableLabel,
             errorText: updateError,
+            onCancel: resetEditableLabel,
+            onEdit: handleLabelChange,
           },
+          pathname: location.pathname,
         }}
         extraActions={
           <DownloadDNSZoneFileButton
@@ -142,6 +141,9 @@ export const DomainDetail = () => {
             domainLabel={domain.domain}
           />
         }
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/guides/dns-manager/"
+        title="Domain Details"
       />
       {location.state && location.state.recordError && (
         <Notice
@@ -150,18 +152,18 @@ export const DomainDetail = () => {
           text={location.state.recordError}
         />
       )}
-      <Grid container className={classes.root}>
-        <Grid xs={12} className={classes.main}>
+      <Grid className={classes.root} container>
+        <Grid className={classes.main} xs={12}>
           <DomainRecords
             domain={domain}
-            updateDomain={updateDomain}
             domainRecords={records}
+            updateDomain={updateDomain}
             updateRecords={refetchRecords}
           />
         </Grid>
-        <Grid xs={12} className={classes.tagsSection}>
+        <Grid className={classes.tagsSection} xs={12}>
           <Paper className={classes.summarySection}>
-            <Typography variant="h3" className={classes.title} data-qa-title>
+            <Typography className={classes.title} data-qa-title variant="h3">
               Tags
             </Typography>
             <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />

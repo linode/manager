@@ -1,17 +1,18 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 export interface Props {
-  isOpen: boolean;
-  error?: string | JSX.Element;
-  submitting: boolean;
   currentPlan: string;
-  targetPlan: string;
+  error?: JSX.Element | string;
+  isOpen: boolean;
   onClose: () => void;
   onResize: () => void;
+  submitting: boolean;
+  targetPlan: string;
 }
 
 const renderActions = (
@@ -23,18 +24,18 @@ const renderActions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
-        onClick={onClose}
         data-qa-cancel
         data-testid={'resize-dialog-cancel'}
+        onClick={onClose}
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onResize}
-        loading={loading}
         data-qa-confirm
         data-testid={'resize-dialog-confirm'}
+        loading={loading}
+        onClick={onResize}
       >
         Resize
       </Button>
@@ -44,22 +45,22 @@ const renderActions = (
 
 export const ResizeDialog: React.FC<Props> = (props) => {
   const {
-    isOpen,
-    error,
-    submitting,
     currentPlan,
-    targetPlan,
+    error,
+    isOpen,
     onClose,
     onResize,
+    submitting,
+    targetPlan,
   } = props;
 
   return (
     <ConfirmationDialog
-      title="Confirm Linode Resize"
-      open={isOpen}
+      actions={renderActions(submitting, onClose, onResize)}
       error={error}
       onClose={onClose}
-      actions={renderActions(submitting, onClose, onResize)}
+      open={isOpen}
+      title="Confirm Linode Resize"
     >
       <Typography>
         Are you sure you want to resize your Linode from {currentPlan} to{' '}

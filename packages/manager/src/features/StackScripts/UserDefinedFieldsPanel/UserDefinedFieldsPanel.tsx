@@ -1,67 +1,69 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { Box } from 'src/components/Box';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+
 import AppInfo from '../../Linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  advDescription: {
+    margin: `${theme.spacing(2)} 0`,
+  },
+  clusterNotice: {
+    paddingTop: '1rem',
+  },
+  header: {
+    '& > img': {
+      height: 60,
+      width: 60,
+    },
+    alignItems: 'center',
+    columnGap: theme.spacing(),
+    display: 'flex',
+  },
+  marketplaceSpacing: {
+    paddingBottom: theme.spacing(),
+    paddingTop: theme.spacing(),
+  },
   root: {
-    padding: theme.spacing(3),
-    marginBottom: theme.spacing(3),
     '& > div:last-child': {
       border: 0,
       marginBottom: 0,
       paddingBottom: 0,
     },
-  },
-  advDescription: {
-    margin: `${theme.spacing(2)} 0`,
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(3),
   },
   username: {
     color: theme.color.grey1,
   },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: theme.spacing(),
-    '& > img': {
-      width: 60,
-      height: 60,
-    },
-  },
-  marketplaceSpacing: {
-    paddingTop: theme.spacing(),
-    paddingBottom: theme.spacing(),
-  },
-  clusterNotice: {
-    paddingTop: '1rem',
-  },
 }));
 
 interface Props {
+  appLogo?: JSX.Element;
   errors?: APIError[];
-  userDefinedFields?: UserDefinedField[];
   handleChange: (key: string, value: any) => void;
-  udf_data: any;
+  openDrawer?: (stackScriptLabel: string) => void;
   selectedLabel: string;
   selectedUsername: string;
-  appLogo?: JSX.Element;
-  openDrawer?: (stackScriptLabel: string) => void;
   setNumberOfNodesForAppCluster?: (num: number) => void;
+  udf_data: any;
+  userDefinedFields?: UserDefinedField[];
 }
 
 type CombinedProps = Props;
@@ -77,7 +79,7 @@ const renderField = (
 
   if (isHeader(field)) {
     return (
-      <Grid xs={12} lg={5} key={field.name} style={{ marginTop: 24 }}>
+      <Grid key={field.name} lg={5} style={{ marginTop: 24 }} xs={12}>
         <Divider />
         <Typography variant="h2">{field.label}</Typography>
       </Grid>
@@ -86,29 +88,29 @@ const renderField = (
 
   if (isMultiSelect(field)) {
     return (
-      <Grid xs={12} lg={5} key={field.name}>
+      <Grid key={field.name} lg={5} xs={12}>
         <UserDefinedMultiSelect
-          key={field.name}
-          field={field}
-          value={udf_data[field.name] || ''}
-          updateFormState={handleChange}
-          updateFor={[field.label, udf_data[field.name], error]}
-          isOptional={isOptional}
           error={error}
+          field={field}
+          isOptional={isOptional}
+          key={field.name}
+          updateFor={[field.label, udf_data[field.name], error]}
+          updateFormState={handleChange}
+          value={udf_data[field.name] || ''}
         />
       </Grid>
     );
   }
   if (isOneSelect(field)) {
     return (
-      <Grid xs={12} lg={5} key={field.name}>
+      <Grid key={field.name} lg={5} xs={12}>
         <UserDefinedSelect
+          error={error}
           field={field}
-          updateFormState={handleChange}
-          value={udf_data[field.name] || ''}
           isOptional={isOptional}
           key={field.name}
-          error={error}
+          updateFormState={handleChange}
+          value={udf_data[field.name] || ''}
         />{' '}
       </Grid>
     );
@@ -116,8 +118,25 @@ const renderField = (
   if (isPasswordField(field.name)) {
     const isTokenPassword = field.name === 'token_password';
     return (
-      <Grid xs={12} lg={5} key={field.name}>
+      <Grid key={field.name} lg={5} xs={12}>
         <UserDefinedText
+          tooltip={
+            isTokenPassword ? (
+              <>
+                {' '}
+                To create an API token, go to{' '}
+                <Link to="/profile/tokens">your profile.</Link>
+              </>
+            ) : undefined
+          }
+          error={error}
+          field={field}
+          isOptional={isOptional}
+          isPassword={true}
+          placeholder={isTokenPassword ? 'Enter your token' : field.example}
+          tooltipInteractive={isTokenPassword}
+          updateFor={[field.label, udf_data[field.name], error]}
+          updateFormState={handleChange}
           /**
            * we are explicitly passing the value to solve for the situation
            * where you're switching between stackscripts or one-click-apps
@@ -137,38 +156,21 @@ const renderField = (
            * prop or that bug will return
            */
           value={udf_data[field.name] || ''}
-          updateFormState={handleChange}
-          isPassword={true}
-          field={field}
-          updateFor={[field.label, udf_data[field.name], error]}
-          isOptional={isOptional}
-          placeholder={isTokenPassword ? 'Enter your token' : field.example}
-          error={error}
-          tooltip={
-            isTokenPassword ? (
-              <>
-                {' '}
-                To create an API token, go to{' '}
-                <Link to="/profile/tokens">your profile.</Link>
-              </>
-            ) : undefined
-          }
-          tooltipInteractive={isTokenPassword}
         />
       </Grid>
     );
   }
   return (
-    <Grid xs={12} lg={5} key={field.name}>
+    <Grid key={field.name} lg={5} xs={12}>
       <UserDefinedText
-        /** see comment above for why we're passing the value prop */
-        value={udf_data[field.name] || ''}
-        updateFormState={handleChange}
+        error={error}
         field={field}
-        updateFor={[field.label, udf_data[field.name], error]}
         isOptional={isOptional}
         placeholder={field.example}
-        error={error}
+        updateFor={[field.label, udf_data[field.name], error]}
+        updateFormState={handleChange}
+        /** see comment above for why we're passing the value prop */
+        value={udf_data[field.name] || ''}
       />
     </Grid>
   );
@@ -184,14 +186,14 @@ const handleOpenDrawer = (
 const UserDefinedFieldsPanel = (props: CombinedProps) => {
   const classes = useStyles();
   const {
-    userDefinedFields,
+    appLogo,
+    errors,
+    handleChange,
     openDrawer,
     selectedLabel,
-    handleChange,
-    udf_data,
-    errors,
-    appLogo,
     setNumberOfNodesForAppCluster,
+    udf_data,
+    userDefinedFields,
   } = props;
 
   const [requiredUDFs, optionalUDFs] = separateUDFsByRequiredStatus(
@@ -222,7 +224,7 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
     >
       <Box className={classes.header}>
         {appLogo}
-        <Typography variant="h2" data-qa-user-defined-field-header>
+        <Typography data-qa-user-defined-field-header variant="h2">
           <span>{`${selectedLabel} Setup`}</span>
         </Typography>
         {isDrawerOpenable ? (
@@ -250,9 +252,9 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
       })}
       {/* Optional Fields */}
       {optionalUDFs.length !== 0 && (
-        <ShowMoreExpansion name="Advanced Options" defaultExpanded={true}>
+        <ShowMoreExpansion defaultExpanded={true} name="Advanced Options">
           <>
-            <Typography variant="body1" className={classes.advDescription}>
+            <Typography className={classes.advDescription} variant="body1">
               These fields are additional configuration options and are not
               required for creation.
             </Typography>

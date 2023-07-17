@@ -1,5 +1,5 @@
-import React from 'react';
 import { default as _Box, BoxProps } from '@mui/material/Box';
+import React from 'react';
 
 /**
  * The Box component serves as a wrapper for creating simple layouts or styles.

@@ -1,32 +1,33 @@
 import { PaymentMethod, ThirdPartyPayment } from '@linode/api-v4/lib/account';
-import * as React from 'react';
-import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
-import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
-import { makeStyles, useTheme } from '@mui/styles';
+import Box from '@mui/material/Box';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Typography from 'src/components/core/Typography';
-import Box from '@mui/material/Box';
+import { makeStyles, useTheme } from '@mui/styles';
+import * as React from 'react';
+
+import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
+import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
+import { Typography } from 'src/components/Typography';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
-    display: 'flex',
-    // Safari's default setting for `alignItems` is `stretch` so defining it as
-    // `center` fixes the issue
     // https://stackoverflow.com/questions/57516373/image-stretching-in-flexbox-in-safari
     alignItems: 'center',
+    // Safari's default setting for `alignItems` is `stretch` so defining it as
+    // `center` fixes the issue
+    display: 'flex',
     justifyContent: 'center',
     paddingLeft: 6,
     paddingRight: 6,
     width: 45,
   },
-  paymentTextContainer: {
-    display: 'flex',
-  },
   paymentMethodLabel: {
     fontFamily: theme.font.bold,
     marginRight: theme.spacing(),
+  },
+  paymentTextContainer: {
+    display: 'flex',
   },
 }));
 

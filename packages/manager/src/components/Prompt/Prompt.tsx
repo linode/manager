@@ -27,16 +27,16 @@ import * as React from 'react';
 import { Prompt as ReactRouterPrompt, useHistory } from 'react-router-dom';
 
 interface ChildrenProps {
-  isModalOpen: boolean;
   handleCancel: () => void;
   handleConfirm: () => void;
+  isModalOpen: boolean;
 }
 
 interface PromptProps {
-  when: boolean;
-  confirmWhenLeaving?: boolean;
   children: (props: ChildrenProps) => React.ReactNode;
+  confirmWhenLeaving?: boolean;
   onConfirm?: (path: string) => void;
+  when: boolean;
 }
 
 // See: https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
@@ -108,8 +108,8 @@ export const Prompt = React.memo((props: PromptProps) => {
 
   return (
     <>
-      <ReactRouterPrompt when={props.when} message={handleNavigation} />
-      {props.children({ isModalOpen, handleCancel, handleConfirm })}
+      <ReactRouterPrompt message={handleNavigation} when={props.when} />
+      {props.children({ handleCancel, handleConfirm, isModalOpen })}
     </>
   );
 });

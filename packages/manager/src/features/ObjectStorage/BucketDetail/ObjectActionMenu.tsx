@@ -1,13 +1,14 @@
-import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface Handlers {
-  handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
+  handleClickDownload: (objectName: string, newTab: boolean) => void;
 }
 
 export interface Props extends Handlers {
@@ -18,21 +19,21 @@ export const ObjectActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { handleClickDownload, handleClickDelete, objectName } = props;
+  const { handleClickDelete, handleClickDownload, objectName } = props;
 
   const actions: Action[] = [
     {
-      title: 'Download',
       onClick: () => {
         const shouldOpenInNewTab = true;
         handleClickDownload(objectName, shouldOpenInNewTab);
       },
+      title: 'Download',
     },
     {
-      title: 'Delete',
       onClick: () => {
         handleClickDelete(objectName);
       },
+      title: 'Delete',
     },
   ];
 
@@ -48,8 +49,8 @@ export const ObjectActionMenu: React.FC<Props> = (props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
+              key={action.title}
               onClick={action.onClick}
             />
           );

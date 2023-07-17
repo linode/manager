@@ -1,9 +1,30 @@
+import { Labelable } from './commands';
+
 import type { LinodeVisitOptions } from './login.ts';
-import type { CommonRequestMockOptions } from './intercepts/common';
 
 declare global {
   namespace Cypress {
-    interface Chainable<Subject = any> {
+    interface Chainable {
+      /**
+       * Custom command to select DOM element by data-cy attribute.
+       * @example cy.dataCy('greeting')
+       */
+      checkSnapshot(subject: Cypress.PrevSubject, name: string): Chainable<>;
+
+      /**
+       * Yields a Cypress Promise from the given native Promise.
+       *
+       * @example cy.defer(new Promise('value')).then((val) => {...})
+       */
+      defer<T>(
+        promise: Promise<T>,
+        labelOrOptions?:
+          | Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
+          | string
+      ): Chainable<>;
+
+      // mockCommonRequests(options?: CommonRequestMockOptions | undefined): Chainable<>;
+
       /**
        * Custom command to select DOM element by data-cy attribute.
        * @example cy.dataCy('greeting')
@@ -13,21 +34,6 @@ declare global {
         linodeOptions?: LinodeVisitOptions,
         cypressOptions?: Partial<Cypress.VisitOptions>
       ): Chainable<any>;
-
-      /**
-       * Custom command to get a Cypress Promise that can be used in place of the given Promise.
-       *
-       * @example cy.defer(new Promise('value')).then((val) => {...})
-       */
-      defer(promise: Promise<any>): Chainable<>;
-
-      //mockCommonRequests(options?: CommonRequestMockOptions | undefined): Chainable<>;
-
-      /**
-       * Custom command to select DOM element by data-cy attribute.
-       * @example cy.dataCy('greeting')
-       */
-      checkSnapshot(subject: Cypress.PrevSubject, name: string): Chainable<>;
     }
   }
 }

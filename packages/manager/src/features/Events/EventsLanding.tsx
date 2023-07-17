@@ -1,67 +1,69 @@
 import { Event, getEvents } from '@linode/api-v4/lib/account';
 import { ResourcePage } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { compose as rCompose, concat, uniq } from 'ramda';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { useSnackbar } from 'notistack';
+import { concat, compose as rCompose, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
-import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+
 import { H1Header } from 'src/components/H1Header/H1Header';
+import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { Typography } from 'src/components/Typography';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
+
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  columnHeader: {
+    color: theme.textColors.tableHeader,
+    fontFamily: theme.font.bold,
+    fontSize: '0.875rem',
+  },
   header: {
     marginBottom: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
-  noMoreEvents: {
-    padding: theme.spacing(4),
-    textAlign: 'center',
-  },
   labelCell: {
-    width: '60%',
     minWidth: 200,
     paddingLeft: 10,
     [theme.breakpoints.down('sm')]: {
       width: '70%',
     },
+    width: '60%',
   },
-  columnHeader: {
-    fontFamily: theme.font.bold,
-    fontSize: '0.875rem',
-    color: theme.textColors.tableHeader,
+  noMoreEvents: {
+    padding: theme.spacing(4),
+    textAlign: 'center',
   },
 }));
 
 interface Props {
-  getEventsRequest?: typeof getEvents;
+  emptyMessage?: string; // Custom message for the empty state (i.e. no events).
   // isEventsLandingForEntity?: boolean;
   entityId?: number;
   errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
-  emptyMessage?: string; // Custom message for the empty state (i.e. no events).
+  getEventsRequest?: typeof getEvents;
 }
 
-type CombinedProps = Props & StateProps & WithSnackbarProps;
+type CombinedProps = Props & StateProps;
 
 const appendToEvents = (oldEvents: Event[], newEvents: Event[]) =>
   rCompose<Event[], Event[], Event[], Event[]>(
@@ -71,23 +73,23 @@ const appendToEvents = (oldEvents: Event[], newEvents: Event[]) =>
   )(newEvents);
 
 export interface ReducerState {
-  inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
-  reactStateEvents: Event[];
+  inProgressEvents: Record<number, number>;
   mostRecentEventTime: string;
+  reactStateEvents: Event[];
 }
 
 interface Payload {
-  inProgressEvents: Record<number, number>;
-  eventsFromRedux: ExtendedEvent[];
-  reactStateEvents: Event[];
-  mostRecentEventTime: string;
   entityId?: number;
+  eventsFromRedux: ExtendedEvent[];
+  inProgressEvents: Record<number, number>;
+  mostRecentEventTime: string;
+  reactStateEvents: Event[];
 }
 
 export interface ReducerActions {
-  type: 'append' | 'prepend';
   payload: Payload;
+  type: 'append' | 'prepend';
 }
 
 type EventsReducer = React.Reducer<ReducerState, ReducerActions>;
@@ -95,11 +97,11 @@ type EventsReducer = React.Reducer<ReducerState, ReducerActions>;
 export const reducer: EventsReducer = (state, action) => {
   const {
     payload: {
+      entityId,
       eventsFromRedux: nextReduxEvents,
       inProgressEvents: nextInProgressEvents,
-      reactStateEvents: nextReactEvents,
       mostRecentEventTime: nextMostRecentEventTime,
-      entityId,
+      reactStateEvents: nextReactEvents,
     },
   } = action;
 
@@ -108,12 +110,12 @@ export const reducer: EventsReducer = (state, action) => {
       if (
         shouldUpdateEvents(
           {
-            mostRecentEventTime: state.mostRecentEventTime,
             inProgressEvents: state.inProgressEvents,
+            mostRecentEventTime: state.mostRecentEventTime,
           },
           {
-            mostRecentEventTime: nextMostRecentEventTime,
             inProgressEvents: nextInProgressEvents,
+            mostRecentEventTime: nextMostRecentEventTime,
           }
         )
       ) {
@@ -153,26 +155,27 @@ export const reducer: EventsReducer = (state, action) => {
       }
       return {
         eventsFromRedux: nextReduxEvents,
-        reactStateEvents: nextReactEvents,
         inProgressEvents: nextInProgressEvents,
         mostRecentEventTime: nextMostRecentEventTime,
+        reactStateEvents: nextReactEvents,
       };
     case 'append':
     default:
       return {
+        eventsFromRedux: nextReduxEvents,
+        inProgressEvents: nextInProgressEvents,
+        mostRecentEventTime: nextMostRecentEventTime,
         reactStateEvents: appendToEvents(
           state.reactStateEvents,
           nextReactEvents
         ),
-        eventsFromRedux: nextReduxEvents,
-        inProgressEvents: nextInProgressEvents,
-        mostRecentEventTime: nextMostRecentEventTime,
       };
   }
 };
 
 export const EventsLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [loadMoreEvents, setLoadMoreEvents] = React.useState<boolean>(false);
@@ -182,10 +185,10 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
   const [initialLoaded, setInitialLoaded] = React.useState<boolean>(false);
 
   const [events, dispatch] = React.useReducer<EventsReducer>(reducer, {
-    inProgressEvents: props.inProgressEvents,
     eventsFromRedux: props.eventsFromRedux,
-    reactStateEvents: [],
+    inProgressEvents: props.inProgressEvents,
     mostRecentEventTime: props.mostRecentEventTime,
+    reactStateEvents: [],
   });
 
   const getNext = () => {
@@ -199,7 +202,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     getEventsRequest({ page: currentPage })
       .then(handleEventsRequestSuccess)
       .catch(() => {
-        props.enqueueSnackbar('There was an error loading more events', {
+        enqueueSnackbar('There was an error loading more events', {
           variant: 'error',
         });
         setLoading(false);
@@ -212,14 +215,14 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     setLoadMoreEvents(true);
     /** append our events to component state */
     dispatch({
-      type: 'append',
       payload: {
-        eventsFromRedux: props.eventsFromRedux,
-        reactStateEvents: response.data,
         entityId: props.entityId,
+        eventsFromRedux: props.eventsFromRedux,
         inProgressEvents: props.inProgressEvents,
         mostRecentEventTime: props.mostRecentEventTime,
+        reactStateEvents: response.data,
       },
+      type: 'append',
     });
     setLoading(false);
     setRequesting(false);
@@ -253,14 +256,14 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     const { eventsFromRedux, inProgressEvents } = props;
     /** in this case, we're getting new events from Redux, so we want to prepend */
     dispatch({
-      type: 'prepend',
       payload: {
+        entityId: props.entityId,
         eventsFromRedux,
         inProgressEvents,
-        reactStateEvents: events.reactStateEvents,
-        entityId: props.entityId,
         mostRecentEventTime: props.mostRecentEventTime,
+        reactStateEvents: events.reactStateEvents,
       },
+      type: 'prepend',
     });
   }, [
     events.reactStateEvents,
@@ -269,13 +272,13 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     props.inProgressEvents,
   ]);
 
-  const { entitiesLoading, errorMessage, entityId, emptyMessage } = props;
+  const { emptyMessage, entitiesLoading, entityId, errorMessage } = props;
   const isLoading = loading || entitiesLoading;
 
   return (
     <>
       {/* Only display this title on the main Events landing page */}
-      {!entityId && <H1Header title="Events" className={classes.header} />}
+      {!entityId && <H1Header className={classes.header} title="Events" />}
       <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
@@ -283,8 +286,8 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
               <TableCell style={{ padding: 0, width: '1%' }} />
             </Hidden>
             <TableCell
-              data-qa-events-subject-header
               className={`${classes.labelCell} ${classes.columnHeader}`}
+              data-qa-events-subject-header
             >
               Event
             </TableCell>
@@ -345,24 +348,24 @@ export const renderTableBody = (
     return (
       <TableRowLoading
         columns={4}
-        rows={5}
         responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
+        rows={5}
       />
     );
   } else if (error) {
     return (
       <TableRowError
         colSpan={12}
-        message={errorMessage}
         data-qa-events-table-error
+        message={errorMessage}
       />
     );
   } else if (filteredEvents.length === 0) {
     return (
       <TableRowEmpty
         colSpan={12}
-        message={emptyMessage}
         data-qa-events-table-empty
+        message={emptyMessage}
       />
     );
   } else {
@@ -371,15 +374,15 @@ export const renderTableBody = (
         {filteredEvents.map((thisEvent, idx) => (
           <EventRow
             entityId={entityId}
-            key={`event-list-item-${idx}`}
             event={thisEvent}
+            key={`event-list-item-${idx}`}
           />
         ))}
         {isRequesting && (
           <TableRowLoading
             columns={4}
-            rows={5}
             responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
+            rows={5}
           />
         )}
       </>
@@ -389,20 +392,20 @@ export const renderTableBody = (
 
 interface StateProps {
   entitiesLoading: boolean;
-  inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
+  inProgressEvents: Record<number, number>;
   mostRecentEventTime: string;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
   entitiesLoading: areEntitiesLoading(state.__resources),
-  inProgressEvents: state.events.inProgressEvents,
   eventsFromRedux: state.events.events,
+  inProgressEvents: state.events.inProgressEvents,
   mostRecentEventTime: state.events.mostRecentEventTime,
 });
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(connected, withSnackbar);
+const enhanced = compose<CombinedProps, Props>(connected);
 
 export default enhanced(EventsLanding);

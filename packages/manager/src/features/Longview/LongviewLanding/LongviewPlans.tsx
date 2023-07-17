@@ -1,64 +1,35 @@
 import {
-  getActiveLongviewPlan,
   LongviewSubscription,
+  getActiveLongviewPlan,
   updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
+
 import { Button } from 'src/components/Button/Button';
-import { Chip } from 'src/components/core/Chip';
-import CircularProgress from 'src/components/core/CircularProgress';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
+import { Chip } from 'src/components/Chip';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { SupportLink } from 'src/components/SupportLink';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useGrants, useProfile } from 'src/queries/profile';
+import CircularProgress from 'src/components/core/CircularProgress';
+import Paper from 'src/components/core/Paper';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(3),
-    paddingBottom: 4,
-  },
-  collapsedTable: {
-    minHeight: 0,
-  },
-  table: {
-    border: `1px solid ${theme.borderColors.borderTable}`,
-    '& td': {
-      whiteSpace: 'nowrap',
-    },
-    '& tbody tr': {
-      cursor: 'pointer',
-    },
-  },
-  radio: {
-    marginLeft: `-${theme.spacing(0.5)}`,
-    marginRight: theme.spacing(2),
-    padding: 2,
-  },
-  currentSubscriptionLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: 2,
-    paddingRight: theme.spacing(3),
-    [theme.breakpoints.down('lg')]: {
-      paddingRight: 0,
-    },
-  },
   chip: {
     borderRadius: 1,
     fontSize: '0.65rem',
@@ -67,19 +38,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(0.5),
     textTransform: 'uppercase',
   },
-  planCell: {
-    [theme.breakpoints.up('md')]: {
-      width: '40%',
-    },
-  },
   clientCell: {
     [theme.breakpoints.up('md')]: {
       width: '10%',
     },
   },
-  dataRetentionCell: {
-    [theme.breakpoints.up('md')]: {
-      width: '15%',
+  collapsedTable: {
+    minHeight: 0,
+  },
+  currentSubscriptionLabel: {
+    alignItems: 'center',
+    display: 'flex',
+    marginLeft: 2,
+    paddingRight: theme.spacing(3),
+    [theme.breakpoints.down('lg')]: {
+      paddingRight: 0,
     },
   },
   dataResolutionCell: {
@@ -87,14 +60,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '15%',
     },
   },
-  priceCell: {
+  dataRetentionCell: {
     [theme.breakpoints.up('md')]: {
       width: '15%',
     },
-  },
-  submitButton: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
   },
   disabledTableRow: {
     cursor: 'not-allowed !important',
@@ -106,6 +75,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& a:hover': {
       color: theme.palette.primary.main,
     },
+  },
+  planCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '40%',
+    },
+  },
+  priceCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '15%',
+    },
+  },
+  radio: {
+    marginLeft: `-${theme.spacing(0.5)}`,
+    marginRight: theme.spacing(2),
+    padding: 2,
+  },
+  root: {
+    padding: theme.spacing(3),
+    paddingBottom: 4,
+  },
+  submitButton: {
+    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(3),
+  },
+  table: {
+    '& tbody tr': {
+      cursor: 'pointer',
+    },
+    '& td': {
+      whiteSpace: 'nowrap',
+    },
+    border: `1px solid ${theme.borderColors.borderTable}`,
   },
 }));
 
@@ -126,9 +127,9 @@ export const managedText = (
     Longview Pro is included with Linode Managed. If you need additional
     clients, please{' '}
     <SupportLink
-      title="Request for additional Longview clients"
       description=""
       text="contact Support"
+      title="Request for additional Longview clients"
     />{' '}
     for additional Longview plan options.
   </span>
@@ -286,24 +287,24 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
                 </TableHead>
                 <TableBody>
                   <LongviewPlansTableBody
-                    loading={subscriptions.loading}
+                    currentSubscriptionOnAccount={currentSubscription}
+                    disabled={!mayUserModifyLVSubscription}
                     error={subscriptions.error}
-                    subscriptions={subscriptions.data}
+                    loading={subscriptions.loading}
                     onRadioSelect={onRadioSelect}
                     onRowSelect={setSelectedSub}
-                    currentSubscriptionOnAccount={currentSubscription}
                     selectedSub={selectedSub}
-                    disabled={!mayUserModifyLVSubscription}
+                    subscriptions={subscriptions.data}
                   />
                 </TableBody>
               </Table>
               <Button
                 buttonType="primary"
-                onClick={onSubmit}
                 className={classes.submitButton}
+                data-testid="submit-button"
                 disabled={isButtonDisabled}
                 loading={updateLoading}
-                data-testid="submit-button"
+                onClick={onSubmit}
               >
                 Change Plan
               </Button>
@@ -321,19 +322,19 @@ export default React.memo(LongviewPlans);
 // LongviewPlansTableBody
 // =============================================================================
 interface LongviewPlansTableBodyProps {
-  loading: boolean;
-  error: APIError[] | undefined;
-  subscriptions: LongviewSubscription[];
-  onRowSelect: (plan: string) => void;
-  onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
   currentSubscriptionOnAccount?: string;
-  selectedSub: string;
   disabled: boolean;
+  error: APIError[] | undefined;
+  loading: boolean;
+  onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
+  onRowSelect: (plan: string) => void;
+  selectedSub: string;
+  subscriptions: LongviewSubscription[];
 }
 
 export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = React.memo(
   (props) => {
-    const { loading, error, subscriptions, selectedSub, ...rest } = props;
+    const { error, loading, selectedSub, subscriptions, ...rest } = props;
 
     if (loading) {
       return <TableRowLoading columns={5} />;
@@ -348,28 +349,28 @@ export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = Rea
         {/* The first row is hard-coded, as the "free" plan is not returned from
       the API. */}
         <LongviewSubscriptionRow
-          key={LONGVIEW_FREE_ID}
-          id={LONGVIEW_FREE_ID}
-          plan="Longview Free"
           clients={10}
-          dataRetention="Limited to 12 hours"
           dataResolution="Every 5 minutes"
-          price="FREE"
+          dataRetention="Limited to 12 hours"
+          id={LONGVIEW_FREE_ID}
           isSelected={selectedSub === LONGVIEW_FREE_ID}
+          key={LONGVIEW_FREE_ID}
+          plan="Longview Free"
+          price="FREE"
           {...rest}
         />
         {/* We use data from /longview/subscriptions to generate the remaining
       rows. */}
         {subscriptions.map((sub) => (
           <LongviewSubscriptionRow
-            key={sub.id}
-            id={sub.id}
-            plan={sub.label}
             clients={sub.clients_included}
-            dataRetention="Unlimited"
             dataResolution="Every minute"
-            price={formatPrice(sub.price)}
+            dataRetention="Unlimited"
+            id={sub.id}
             isSelected={selectedSub === sub.id}
+            key={sub.id}
+            plan={sub.label}
+            price={formatPrice(sub.price)}
             {...rest}
           />
         ))}
@@ -382,33 +383,33 @@ export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = Rea
 // LongviewSubscriptionRow
 // =============================================================================
 interface LongviewSubscriptionRowProps {
-  id: string;
-  plan: string;
   clients: number;
-  dataRetention: string;
-  dataResolution: string;
-  price: string;
-  onRowSelect: (plan: string) => void;
-  onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
   currentSubscriptionOnAccount?: string;
-  isSelected: boolean;
+  dataResolution: string;
+  dataRetention: string;
   disabled: boolean;
+  id: string;
+  isSelected: boolean;
+  onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
+  onRowSelect: (plan: string) => void;
+  plan: string;
+  price: string;
 }
 
 export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = React.memo(
   (props) => {
     const {
-      id,
-      plan,
       clients,
-      dataRetention,
-      dataResolution,
-      price,
-      onRowSelect,
-      onRadioSelect,
       currentSubscriptionOnAccount,
-      isSelected,
+      dataResolution,
+      dataRetention,
       disabled,
+      id,
+      isSelected,
+      onRadioSelect,
+      onRowSelect,
+      plan,
+      price,
     } = props;
 
     const styles = useStyles();
@@ -422,31 +423,31 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
 
     return (
       <TableRow
-        key={id}
-        onClick={handleClick}
         className={classNames({
           [styles.disabledTableRow]: disabled,
         })}
-        data-testid={`lv-sub-table-row-${id}`}
         ariaLabel={plan}
+        data-testid={`lv-sub-table-row-${id}`}
+        key={id}
+        onClick={handleClick}
       >
         <TableCell data-testid={`plan-cell-${id}`}>
           <div className={styles.currentSubscriptionLabel}>
             <Radio
-              value={id}
               checked={isSelected}
-              onChange={onRadioSelect}
               className={styles.radio}
-              id={id}
               data-testid={`lv-sub-radio-${id}`}
               disabled={disabled}
+              id={id}
+              onChange={onRadioSelect}
+              value={id}
             />
             {plan}
             {currentSubscriptionOnAccount === id && (
               <Chip
+                className={styles.chip}
                 data-testid={`current-plan-${id}`}
                 label="Current Plan"
-                className={styles.chip}
               />
             )}
           </div>

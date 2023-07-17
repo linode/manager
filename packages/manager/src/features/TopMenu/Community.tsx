@@ -1,27 +1,27 @@
 import * as React from 'react';
-import Community from 'src/assets/icons/community_nav.svg';
-import Link from 'src/components/Link';
-import TopMenuIcon from './TopMenuIcon';
-import { StyledTopMenuIconWrapper } from './TopMenuIcon';
 
-type Props = {
-  className?: string;
-};
+import CommunitySVGIcon from 'src/assets/icons/community_nav.svg';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { LINODE_COMMUNITY_URL } from 'src/constants';
 
-export const Help = ({ className }: Props) => {
+import { StyledTopMenuIconWrapper, TopMenuIcon } from './TopMenuIcon';
+
+export const Community = () => {
+  const openInNewTab = (url: string) => {
+    window.open(url, '_blank', 'noopener noreferrer');
+  };
+
   return (
-    <Link
-      className={className}
-      aria-label="Link to Linode Community site"
-      to="https://linode.com/community"
-    >
-      <StyledTopMenuIconWrapper>
-        <TopMenuIcon title="Linode Cloud Community">
-          <Community />
-        </TopMenuIcon>
-      </StyledTopMenuIconWrapper>
-    </Link>
+    <TopMenuIcon title="Linode Cloud Community (opens in new tab)">
+      <StyledLinkButton
+        aria-label="Linode Cloud Community (opens in new tab)"
+        onClick={() => openInNewTab(LINODE_COMMUNITY_URL)}
+        role="link"
+      >
+        <StyledTopMenuIconWrapper>
+          <CommunitySVGIcon status="community" />
+        </StyledTopMenuIconWrapper>
+      </StyledLinkButton>
+    </TopMenuIcon>
   );
 };
-
-export default React.memo(Help);

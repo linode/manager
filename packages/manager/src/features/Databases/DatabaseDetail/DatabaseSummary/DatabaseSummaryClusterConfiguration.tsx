@@ -1,26 +1,28 @@
 import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import { Box } from 'src/components/Box';
-import Typography from 'src/components/core/Typography';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { Typography } from 'src/components/Typography';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import { makeStyles } from 'tss-react/mui';
+
 import {
   databaseEngineMap,
   databaseStatusMap,
 } from '../../DatabaseLanding/DatabaseRow';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  header: {
-    marginBottom: theme.spacing(2),
-  },
   configs: {
     fontSize: '0.875rem',
     lineHeight: '22px',
+  },
+  header: {
+    marginBottom: theme.spacing(2),
   },
   label: {
     fontFamily: theme.font.bold,
@@ -28,8 +30,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: theme.spacing(7),
   },
   status: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     textTransform: 'capitalize',
   },
 }));

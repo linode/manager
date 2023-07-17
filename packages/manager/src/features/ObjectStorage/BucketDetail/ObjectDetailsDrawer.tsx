@@ -1,30 +1,32 @@
-import * as React from 'react';
-import Divider from 'src/components/core/Divider';
-import Drawer from 'src/components/Drawer';
-import ExternalLink from 'src/components/ExternalLink';
-import formatDate from 'src/utilities/formatDate';
-import Typography from 'src/components/core/Typography';
-import { AccessSelect } from './AccessSelect';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { readableBytes } from 'src/utilities/unitConversions';
-import { styled } from '@mui/material/styles';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { useProfile } from 'src/queries/profile';
 import {
   ACLType,
   getObjectACL,
   updateObjectACL,
 } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { Divider } from 'src/components/Divider';
+import Drawer from 'src/components/Drawer';
+import ExternalLink from 'src/components/ExternalLink';
+import { Typography } from 'src/components/Typography';
+import { useProfile } from 'src/queries/profile';
+import formatDate from 'src/utilities/formatDate';
+import { truncateMiddle } from 'src/utilities/truncate';
+import { readableBytes } from 'src/utilities/unitConversions';
+
+import { AccessSelect } from './AccessSelect';
 
 export interface ObjectDetailsDrawerProps {
   bucketName: string;
   clusterId: string;
   displayName?: string;
-  lastModified?: string | null;
+  lastModified?: null | string;
   name?: string;
   onClose: () => void;
   open: boolean;
-  size?: number | null;
+  size?: null | number;
   url?: string;
 }
 
@@ -54,8 +56,8 @@ export const ObjectDetailsDrawer = React.memo(
 
     return (
       <Drawer
-        open={open}
         onClose={onClose}
+        open={open}
         title={truncateMiddle(displayName ?? 'Object Detail')}
       >
         {size ? (
@@ -64,7 +66,7 @@ export const ObjectDetailsDrawer = React.memo(
           </Typography>
         ) : null}
         {formattedLastModified && Boolean(profile) ? (
-          <Typography variant="subtitle2" data-testid="lastModified">
+          <Typography data-testid="lastModified" variant="subtitle2">
             Last modified: {formattedLastModified}
           </Typography>
         ) : null}
@@ -78,14 +80,14 @@ export const ObjectDetailsDrawer = React.memo(
 
         {open && name ? (
           <>
-            <Divider spacingTop={16} spacingBottom={16} />
+            <Divider spacingBottom={16} spacingTop={16} />
             <AccessSelect
-              variant="object"
-              name={name}
-              getAccess={() => getObjectACL(clusterId, bucketName, name)}
               updateAccess={(acl: ACLType) =>
                 updateObjectACL(clusterId, bucketName, name, acl)
               }
+              getAccess={() => getObjectACL(clusterId, bucketName, name)}
+              name={name}
+              variant="object"
             />
           </>
         ) : null}

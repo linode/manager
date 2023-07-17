@@ -1,7 +1,10 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { makeStyles } from 'tss-react/mui';
+
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from 'tss-react/mui';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 import {
   gPay,
@@ -9,47 +12,45 @@ import {
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
-import { useQueryClient } from 'react-query';
-import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles()(() => ({
   button: {
-    border: 0,
-    padding: 0,
-    backgroundColor: 'transparent',
-    cursor: 'pointer',
     '&:hover': {
       opacity: 0.7,
     },
+    backgroundColor: 'transparent',
+    border: 0,
+    cursor: 'pointer',
+    padding: 0,
   },
   disabled: {
-    cursor: 'default',
-    opacity: 0.3,
     '&:hover': {
       opacity: 0.3,
     },
+    cursor: 'default',
+    opacity: 0.3,
   },
 }));
 
 interface Props {
-  setMessage: (message: PaymentMessage) => void;
-  setProcessing: (processing: boolean) => void;
+  disabled: boolean;
   onClose: () => void;
   renderError: (errorMsg: string) => JSX.Element;
-  disabled: boolean;
+  setMessage: (message: PaymentMessage) => void;
+  setProcessing: (processing: boolean) => void;
 }
 
 export const GooglePayChip = (props: Props) => {
   const {
     disabled: disabledDueToProcessing,
-    setMessage,
-    setProcessing,
     onClose,
     renderError,
+    setMessage,
+    setProcessing,
   } = props;
   const { classes, cx } = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
-  const { data, isLoading, error: clientTokenError } = useClientToken();
+  const { data, error: clientTokenError, isLoading } = useClientToken();
   const queryClient = useQueryClient();
   const [initializationError, setInitializationError] = React.useState<boolean>(
     false
@@ -80,9 +81,9 @@ export const GooglePayChip = (props: Props) => {
     gPay(
       'add-recurring-payment',
       {
-        totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
-        currencyCode: 'USD',
         countryCode: 'US',
+        currencyCode: 'USD',
+        totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
       },
       handleMessage,
       setProcessing,
@@ -113,11 +114,11 @@ export const GooglePayChip = (props: Props) => {
           [classes.button]: true,
           [classes.disabled]: disabledDueToProcessing,
         })}
-        onClick={handlePay}
-        disabled={disabledDueToProcessing}
         data-qa-button="gpayChip"
+        disabled={disabledDueToProcessing}
+        onClick={handlePay}
       >
-        <GooglePayIcon width="49" height="26" />
+        <GooglePayIcon height="26" width="49" />
       </button>
     </Grid>
   );

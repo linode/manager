@@ -1,6 +1,8 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
+
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+
 import { Breadcrumb, BreadcrumbProps } from './Breadcrumb';
 
 const props: BreadcrumbProps = {
@@ -27,8 +29,8 @@ describe('Breadcrumb component', () => {
           {...props}
           onEditHandlers={{
             editableTextTitle: 'Editable text',
-            onEdit: jest.fn(),
             onCancel: jest.fn(),
+            onEdit: jest.fn(),
           }}
         />
       )

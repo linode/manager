@@ -1,21 +1,22 @@
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+
+import { Typography } from 'src/components/Typography';
 
 export const StyledHelperText = styled(Typography, {
   label: 'StyledHelperText',
 })(({ theme }) => ({
-  paddingTop: theme.spacing(),
   lineHeight: 1.5,
+  paddingTop: theme.spacing(),
 }));
 
 export const StyledFieldsWrapper = styled('div', {
   label: 'StyledTextFieldWrapper',
 })(() => ({
-  display: 'flex',
-  justifyContent: 'space-between',
   alignItems: 'flex-start',
+  display: 'flex',
   flexFlow: 'row wrap',
+  justifyContent: 'space-between',
 }));
 
 export const StyledCertWrapper = styled(Grid, {

@@ -1,10 +1,11 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
   banner: {
@@ -33,14 +34,14 @@ export const DomainBanner: React.FC<Props> = (props) => {
 
   return (
     <DismissibleBanner
-      warning
-      important
-      className={classes.dnsWarning}
-      preferenceKey={KEY}
       options={{
         expiry: DateTime.utc().plus({ days: 30 }).toISO(),
         label: KEY,
       }}
+      className={classes.dnsWarning}
+      important
+      preferenceKey={KEY}
+      warning
     >
       <>
         <Typography className={classes.banner}>

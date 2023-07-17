@@ -1,6 +1,7 @@
 import * as React from 'react';
+
 import { Action } from 'src/components/ActionMenu';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {
   contactId: number;
@@ -12,20 +13,20 @@ interface Props {
 export type CombinedProps = Props;
 
 export const ContactsActionMenu: React.FC<CombinedProps> = (props) => {
-  const { contactId, openDrawer, openDialog } = props;
+  const { contactId, openDialog, openDrawer } = props;
 
   const actions: Action[] = [
     {
-      title: 'Edit',
       onClick: () => {
         openDrawer(contactId);
       },
+      title: 'Edit',
     },
     {
-      title: 'Delete',
       onClick: () => {
         openDialog(contactId);
       },
+      title: 'Delete',
     },
   ];
 
@@ -35,8 +36,8 @@ export const ContactsActionMenu: React.FC<CombinedProps> = (props) => {
       {actions.map((action) => {
         return (
           <InlineMenuAction
-            key={action.title}
             actionText={action.title}
+            key={action.title}
             onClick={action.onClick}
           />
         );

@@ -1,4 +1,6 @@
 import { makePayment } from '@linode/api-v4/lib/account/payments';
+import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import {
   BraintreePayPalButtons,
   CreateOrderBraintreeActions,
@@ -8,44 +10,44 @@ import {
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import { makeStyles } from 'tss-react/mui';
-import Tooltip from 'src/components/core/Tooltip';
+
 import { CircleProgress } from 'src/components/CircleProgress';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Tooltip } from 'src/components/Tooltip';
 import { reportException } from 'src/exceptionReporting';
+import { getPaymentLimits } from 'src/features/Billing/billingUtils';
+import { useAccount } from 'src/queries/account';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
-import { SetSuccess } from './types';
-import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useAccount } from 'src/queries/account';
-import { getPaymentLimits } from 'src/features/Billing/billingUtils';
-import { useQueryClient } from 'react-query';
+
+import { SetSuccess } from './types';
 
 const useStyles = makeStyles()(() => ({
-  root: {
-    position: 'relative',
-  },
   loading: {
     padding: 4,
   },
   mask: {
-    width: 200,
     height: 38,
-    position: 'absolute',
-    zIndex: 10,
     left: 0,
+    position: 'absolute',
     top: 0,
+    width: 200,
+    zIndex: 10,
+  },
+  root: {
+    position: 'relative',
   },
 }));
 
 interface Props {
-  usd: string;
-  setSuccess: SetSuccess;
+  disabled: boolean;
+  renderError: (errorMsg: string) => JSX.Element;
   setError: (error: string) => void;
   setProcessing: (processing: boolean) => void;
-  renderError: (errorMsg: string) => JSX.Element;
-  disabled: boolean;
+  setSuccess: SetSuccess;
+  usd: string;
 }
 
 interface TransactionInfo {
@@ -57,23 +59,23 @@ export const PayPalButton = (props: Props) => {
   const { classes } = useStyles();
   const {
     data,
-    isLoading: clientTokenLoading,
     error: clientTokenError,
+    isLoading: clientTokenLoading,
   } = useClientToken();
-  const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+  const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
   const { data: account } = useAccount();
   const queryClient = useQueryClient();
 
   const {
-    usd,
     disabled: disabledDueToProcessing,
-    setSuccess,
+    renderError,
     setError,
     setProcessing,
-    renderError,
+    setSuccess,
+    usd,
   } = props;
 
-  const { min, max } = getPaymentLimits(account?.balance);
+  const { max, min } = getPaymentLimits(account?.balance);
 
   const disabledDueToPrice = +usd < min || +usd > max;
 
@@ -113,9 +115,9 @@ export const PayPalButton = (props: Props) => {
         type: 'resetOptions',
         value: {
           ...options,
-          vault: false,
           commit: true,
           intent: 'capture',
+          vault: false,
         },
       });
     }
@@ -147,9 +149,9 @@ export const PayPalButton = (props: Props) => {
     actions: CreateOrderBraintreeActions
   ): Promise<string> => {
     return actions.braintree.createPayment({
-      flow: 'checkout',
-      currency: 'USD',
       amount: stateRef!.current!.amount,
+      currency: 'USD',
+      flow: 'checkout',
       intent: 'capture',
     });
   };
@@ -215,10 +217,10 @@ export const PayPalButton = (props: Props) => {
   if (clientTokenLoading || isPending || !options['data-client-token']) {
     return (
       <Grid
-        container
-        className={classes.loading}
-        justifyContent="center"
         alignContent="center"
+        className={classes.loading}
+        container
+        justifyContent="center"
       >
         <CircleProgress mini />
       </Grid>
@@ -233,21 +235,21 @@ export const PayPalButton = (props: Props) => {
     <div className={classes.root}>
       {disabledDueToPrice && (
         <Tooltip
-          title={`Payment amount must be between $${min} and $${max}`}
           data-qa-help-tooltip
           enterTouchDelay={0}
           leaveTouchDelay={5000}
+          title={`Payment amount must be between $${min} and $${max}`}
         >
           <div className={classes.mask} />
         </Tooltip>
       )}
       <BraintreePayPalButtons
-        style={{ height: 35 }}
-        fundingSource={FUNDING.PAYPAL}
-        disabled={disabledDueToPrice || disabledDueToProcessing}
         createOrder={createOrder}
+        disabled={disabledDueToPrice || disabledDueToProcessing}
+        fundingSource={FUNDING.PAYPAL}
         onApprove={onApprove}
         onError={onError}
+        style={{ height: 35 }}
       />
     </div>
   );

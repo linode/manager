@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { worker } from '../mocks/testBrowser';
 
 export const ServiceWorkerTool: React.FC<{}> = (_) => {
@@ -30,10 +31,10 @@ export const ServiceWorkerTool: React.FC<{}> = (_) => {
         {workerActive ? 'Enabled' : 'Disabled'}
       </span>
       <input
-        type="checkbox"
         checked={workerActive}
         onChange={(e) => handleToggleWorker(e)}
         style={{ margin: 0 }}
+        type="checkbox"
       />
     </>
   );

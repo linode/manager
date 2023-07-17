@@ -1,11 +1,12 @@
-import * as React from 'react';
+import { IPRange } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useLinodeRemoveRangeMutation } from 'src/queries/linodes/networking';
-import { IPRange } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -14,13 +15,13 @@ interface Props {
 }
 
 export const DeleteRangeDialog = (props: Props) => {
-  const { open, onClose, range } = props;
+  const { onClose, open, range } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: removeRange,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: removeRange,
   } = useLinodeRemoveRangeMutation(range.range);
 
   const handleDeleteIP = async () => {
@@ -33,10 +34,6 @@ export const DeleteRangeDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
-      error={error?.[0].reason}
-      title={`Delete ${range.range}/${range.prefix}?`}
       actions={
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose}>
@@ -44,13 +41,17 @@ export const DeleteRangeDialog = (props: Props) => {
           </Button>
           <Button
             buttonType="primary"
-            onClick={handleDeleteIP}
             loading={isLoading}
+            onClick={handleDeleteIP}
           >
             Delete Range
           </Button>
         </ActionsPanel>
       }
+      error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title={`Delete ${range.range}/${range.prefix}?`}
     >
       <Typography>
         Are you sure you want to delete this IP Range? This action cannot be

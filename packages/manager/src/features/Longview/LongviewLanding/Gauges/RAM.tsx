@@ -1,28 +1,28 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { WithTheme, withTheme } from '@mui/styles';
-import Typography from 'src/components/core/Typography';
+
 import GaugePercent from 'src/components/GaugePercent';
+import { Typography } from 'src/components/Typography';
+import withClientData, {
+  Props as LVDataProps,
+} from 'src/containers/longview.stats.container';
+import { readableBytes } from 'src/utilities/unitConversions';
+
 import {
   generateTotalMemory,
   generateUsedMemory,
 } from '../../shared/utilities';
-import { baseGaugeProps, BaseProps as Props } from './common';
-
-import { readableBytes } from 'src/utilities/unitConversions';
-
-import withClientData, {
-  Props as LVDataProps,
-} from 'src/containers/longview.stats.container';
+import { BaseProps as Props, baseGaugeProps } from './common';
 
 type commbinedProps = Props & WithTheme & LVDataProps;
 
 const RAMGauge: React.FC<commbinedProps> = (props) => {
   const {
+    lastUpdatedError,
+    longviewClientData,
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData,
-    lastUpdatedError,
   } = props;
 
   const usedMemory = pathOr(
@@ -51,7 +51,7 @@ const RAMGauge: React.FC<commbinedProps> = (props) => {
 
   const generateText = (): {
     innerText: string;
-    subTitle: string | JSX.Element;
+    subTitle: JSX.Element | string;
   } => {
     if (error || lastUpdatedError) {
       return {
@@ -111,9 +111,9 @@ const RAMGauge: React.FC<commbinedProps> = (props) => {
   return (
     <GaugePercent
       {...baseGaugeProps}
+      filledInColor={props.theme.graphs.purple}
       max={totalMemory}
       value={finalUsedMemory}
-      filledInColor={props.theme.graphs.purple}
       {...generateText()}
     />
   );

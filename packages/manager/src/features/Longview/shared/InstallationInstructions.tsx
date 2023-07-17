@@ -1,40 +1,40 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  copyContainer: {
-    backgroundColor: theme.color.grey5,
-    margin: `${theme.spacing(1)} 0`,
-    borderRadius: theme.shape.borderRadius,
-    maxWidth: '100%',
+  apiKey: {
+    color: theme.color.grey1,
   },
   copyCode: {
     overflowX: 'auto',
   },
-  apiKey: {
-    color: theme.color.grey1,
+  copyContainer: {
+    backgroundColor: theme.color.grey5,
+    borderRadius: theme.shape.borderRadius,
+    margin: `${theme.spacing(1)} 0`,
+    maxWidth: '100%',
   },
   instruction: {
-    width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: 'auto',
       '&:not(:first-of-type)': {
-        position: 'relative',
-        marginLeft: theme.spacing(2),
-        paddingLeft: theme.spacing(2),
         '&:before': {
           content: "'|'",
+          left: `calc(-${theme.spacing(1)} + 2px)`,
           position: 'absolute',
           top: `calc(${theme.spacing(1)} - 3px)`,
-          left: `calc(-${theme.spacing(1)} + 2px)`,
         },
+        marginLeft: theme.spacing(2),
+        paddingLeft: theme.spacing(2),
+        position: 'relative',
       },
+      width: 'auto',
     },
+    width: '100%',
   },
 }));
 
@@ -62,15 +62,15 @@ const InstallationInstructions: React.FC<CombinedProps> = (props) => {
       </Grid>
       <Grid item xs={12}>
         <Grid
-          container
-          wrap="nowrap"
           alignItems="center"
           className={classes.copyContainer}
+          container
+          wrap="nowrap"
         >
-          <Grid item className="py0">
+          <Grid className="py0" item>
             <CopyTooltip text={command} />
           </Grid>
-          <Grid item className={`${classes.copyCode} py0`}>
+          <Grid className={`${classes.copyCode} py0`} item>
             <pre>
               <code>{command}</code>
             </pre>
@@ -86,31 +86,31 @@ const InstallationInstructions: React.FC<CombinedProps> = (props) => {
       </Grid>
       <Grid item xs={12}>
         <Grid container>
-          <Grid item className={classes.instruction}>
+          <Grid className={classes.instruction} item>
             <Typography>
               <a
-                href="https://www.linode.com/docs/platform/longview/troubleshooting-linode-longview/"
-                target="_blank"
                 aria-describedby="external-site"
+                href="https://www.linode.com/docs/platform/longview/troubleshooting-linode-longview/"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 Troubleshooting guide
               </a>
             </Typography>
           </Grid>
-          <Grid item className={classes.instruction}>
+          <Grid className={classes.instruction} item>
             <Typography>
               <a
-                href="https://www.linode.com/docs/platform/longview/what-is-longview/#install-the-longview-agent"
-                target="_blank"
                 aria-describedby="external-site"
+                href="https://www.linode.com/docs/platform/longview/what-is-longview/#install-the-longview-agent"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 Manual installation instructions
               </a>
             </Typography>
           </Grid>
-          <Grid item className={classes.instruction}>
+          <Grid className={classes.instruction} item>
             <Typography data-testid="api-key">
               API Key: <span className={classes.apiKey}>{props.APIKey}</span>
             </Typography>

@@ -1,18 +1,19 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { PlaceholderProps } from 'react-select';
-import Typography from 'src/components/core/Typography';
 
-interface Props extends PlaceholderProps<any, any> {}
+import { Typography } from 'src/components/Typography';
+
+type Props = PlaceholderProps<any, any>;
 
 export const SelectPlaceholder = (props: Props) => {
   return (
     <StyledTypography
       {...props.innerProps}
-      data-qa-select-placeholder
       data-qa-multi-select={
         props.isMulti ? props.selectProps.placeholder : false
       }
+      data-qa-select-placeholder
     >
       {props.children}
     </StyledTypography>
@@ -20,13 +21,13 @@ export const SelectPlaceholder = (props: Props) => {
 };
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  position: 'absolute',
-  left: '10px',
-  wordWrap: 'normal',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
   fontSize: '0.9rem',
+  left: '10px',
+  overflow: 'hidden',
+  position: 'absolute',
   [theme.breakpoints.only('xs')]: {
     fontSize: '1rem',
   },
+  whiteSpace: 'nowrap',
+  wordWrap: 'normal',
 }));

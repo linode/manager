@@ -1,24 +1,25 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Typography from 'src/components/core/Typography';
+
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { useNodebalancerDeleteMutation } from 'src/queries/nodebalancers';
 
 interface Props {
   id: number;
   label: string;
-  open: boolean;
   onClose: () => void;
+  open: boolean;
 }
 
 export const NodeBalancerDeleteDialog = ({
   id,
   label,
-  open,
   onClose,
+  open,
 }: Props) => {
-  const { mutateAsync, isLoading, error } = useNodebalancerDeleteMutation(id);
+  const { error, isLoading, mutateAsync } = useNodebalancerDeleteMutation(id);
   const { push } = useHistory();
 
   const onDelete = async () => {
@@ -29,16 +30,19 @@ export const NodeBalancerDeleteDialog = ({
 
   return (
     <TypeToConfirmDialog
-      title={`Delete ${label}?`}
       entity={{
+        action: 'deletion',
+        name: label,
+        primaryBtnText: 'Delete',
         type: 'NodeBalancer',
-        label,
       }}
-      open={open}
-      loading={isLoading}
       errors={error ?? undefined}
-      onClose={onClose}
+      label={'NodeBalancer Label'}
+      loading={isLoading}
       onClick={onDelete}
+      onClose={onClose}
+      open={open}
+      title={`Delete ${label}?`}
       typographyStyle={{ marginTop: '20px' }}
     >
       <Notice warning>

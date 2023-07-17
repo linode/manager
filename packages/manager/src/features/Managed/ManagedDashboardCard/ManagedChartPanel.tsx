@@ -2,11 +2,12 @@ import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import { Theme } from '@mui/material/styles';
 import { WithTheme, makeStyles, withTheme } from '@mui/styles';
 import * as React from 'react';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import {
   convertNetworkToUnit,
   formatNetworkTooltip,
@@ -18,49 +19,21 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    position: 'relative',
-  },
-  inner: {
-    paddingTop: 0,
-  },
-  graphControls: {
-    position: 'relative',
-    '&:before': {
-      content: '""',
-      position: 'absolute',
-      left: 0,
-      top: 52,
-      height: 'calc(100% - 102px);',
-      width: 1,
-      backgroundColor: theme.palette.divider,
-      [theme.breakpoints.down('sm')]: {
-        display: 'none',
-      },
-    },
-    /**
-     * hacky solution to solve for a bug where
-     * the canvas element under the chart kept ending up with a 0px height
-     * so that it was not appearing
-     */
-    '& canvas': {
-      height: `300px !important`,
-    },
-  },
   canvasContainer: {
     marginTop: theme.spacing(3),
   },
+  caption: {},
   chartSelect: {
     maxWidth: 150,
+    [theme.breakpoints.down('lg')]: {
+      marginBottom: theme.spacing(3),
+      marginLeft: theme.spacing(3),
+    },
     [theme.breakpoints.up('lg')]: {
       position: 'absolute !important' as 'absolute',
       right: 24,
       top: 0,
       zIndex: 2,
-    },
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(3),
-      marginBottom: theme.spacing(3),
     },
   },
   chartSelectCompact: {
@@ -69,7 +42,35 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: -6,
     },
   },
-  caption: {},
+  graphControls: {
+    /**
+     * hacky solution to solve for a bug where
+     * the canvas element under the chart kept ending up with a 0px height
+     * so that it was not appearing
+     */
+    '& canvas': {
+      height: `300px !important`,
+    },
+    '&:before': {
+      backgroundColor: theme.palette.divider,
+      content: '""',
+      height: 'calc(100% - 102px);',
+      left: 0,
+      position: 'absolute',
+      [theme.breakpoints.down('sm')]: {
+        display: 'none',
+      },
+      top: 52,
+      width: 1,
+    },
+    position: 'relative',
+  },
+  inner: {
+    paddingTop: 0,
+  },
+  root: {
+    position: 'relative',
+  },
 }));
 
 type CombinedProps = WithTheme;
@@ -89,7 +90,7 @@ const createTabs = (
   theme: Theme
 ) => {
   const summaryCopy = (
-    <Typography variant="body1" className={classes.caption}>
+    <Typography className={classes.caption} variant="body1">
       This graph represents combined usage for all Linodes on this account.
     </Typography>
   );
@@ -119,19 +120,19 @@ const createTabs = (
             <div>{summaryCopy}</div>
             <div className={classes.canvasContainer}>
               <LineGraph
-                ariaLabel="CPU Usage Graph"
-                accessibleDataTable={{ unit: '%' }}
-                timezone={timezone}
-                chartHeight={chartHeight}
-                showToday={true}
                 data={[
                   {
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.cpu.percent,
+                    borderColor: 'transparent',
                     data: formatData(data.cpu),
                     label: 'CPU %',
                   },
                 ]}
+                accessibleDataTable={{ unit: '%' }}
+                ariaLabel="CPU Usage Graph"
+                chartHeight={chartHeight}
+                showToday={true}
+                timezone={timezone}
               />
             </div>
           </div>
@@ -146,29 +147,29 @@ const createTabs = (
             <div>{summaryCopy}</div>
             <div className={classes.canvasContainer}>
               <LineGraph
-                ariaLabel="Network Transfer Graph"
-                timezone={timezone}
-                chartHeight={chartHeight}
-                showToday={true}
-                nativeLegend
-                unit="/s"
-                accessibleDataTable={{ unit: 'Kb/s"' }}
-                formatData={convertNetworkData}
-                formatTooltip={_formatTooltip}
                 data={[
                   {
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
+                    borderColor: 'transparent',
                     data: formatData(data.net_in),
                     label: 'Network Traffic In',
                   },
                   {
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
+                    borderColor: 'transparent',
                     data: formatData(data.net_out),
                     label: 'Network Traffic Out',
                   },
                 ]}
+                accessibleDataTable={{ unit: 'Kb/s"' }}
+                ariaLabel="Network Transfer Graph"
+                chartHeight={chartHeight}
+                formatData={convertNetworkData}
+                formatTooltip={_formatTooltip}
+                nativeLegend
+                showToday={true}
+                timezone={timezone}
+                unit="/s"
               />
             </div>
           </div>
@@ -183,19 +184,19 @@ const createTabs = (
             <div>{summaryCopy}</div>
             <div className={classes.canvasContainer}>
               <LineGraph
-                ariaLabel="Disk I/O Graph"
-                timezone={timezone}
-                chartHeight={chartHeight}
-                showToday={true}
-                accessibleDataTable={{ unit: 'op/s' }}
                 data={[
                   {
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.yellow,
+                    borderColor: 'transparent',
                     data: formatData(data.disk),
                     label: 'Disk I/O',
                   },
                 ]}
+                accessibleDataTable={{ unit: 'op/s' }}
+                ariaLabel="Disk I/O Graph"
+                chartHeight={chartHeight}
+                showToday={true}
+                timezone={timezone}
               />
             </div>
           </div>
@@ -211,7 +212,7 @@ export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
-  const { data, isLoading, error } = useManagedStatsQuery();
+  const { data, error, isLoading } = useManagedStatsQuery();
 
   if (error) {
     return (
@@ -241,13 +242,13 @@ export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
   return (
     <div className={classes.graphControls}>
       <TabbedPanel
-        rootClass={`tabbedPanel`}
-        innerClass={classes.inner}
+        copy={''}
         error={undefined} // Use custom error handling (above)
         header={''}
-        copy={''}
-        tabs={tabs}
         initTab={initialTab}
+        innerClass={classes.inner}
+        rootClass={`tabbedPanel`}
+        tabs={tabs}
       />
     </div>
   );

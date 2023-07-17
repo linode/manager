@@ -1,13 +1,11 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    width: '100% !important',
-  },
   container: {
     marginTop: theme.spacing(3),
   },
@@ -16,20 +14,23 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingBottom: 0,
   },
   headerAction: {
-    position: 'relative',
-    top: 6,
     left: `-${theme.spacing(2)}`,
     marginLeft: theme.spacing(0.5),
+    position: 'relative',
+    top: 6,
+  },
+  root: {
+    width: '100% !important',
   },
 }));
 
 interface Props {
-  title?: string;
-  className?: string;
   alignHeader?: 'flex-start' | 'space-between';
   alignItems?: 'center' | 'flex-start';
+  className?: string;
   headerAction?: () => JSX.Element | JSX.Element[] | null;
   noHeaderActionStyles?: boolean;
+  title?: string;
 }
 
 const DashboardCard: React.FC<Props> = (props) => {
@@ -37,29 +38,29 @@ const DashboardCard: React.FC<Props> = (props) => {
 
   const {
     alignHeader,
-    title,
+    alignItems,
+    className,
     headerAction,
     noHeaderActionStyles,
-    className,
-    alignItems,
+    title,
   } = props;
 
   return (
     <Grid
-      container
       className={cx(className, {
-        [classes.root]: true,
         [classes.container]: true,
+        [classes.root]: true,
       })}
+      container
       data-qa-card={title}
       spacing={2}
     >
       {(title || headerAction) && (
         <Grid xs={12}>
           <Grid
-            container
-            className={classes.header}
             alignItems={alignItems || 'flex-start'}
+            className={classes.header}
+            container
             justifyContent={alignHeader || 'space-between'}
             spacing={2}
           >
@@ -71,10 +72,10 @@ const DashboardCard: React.FC<Props> = (props) => {
             {headerAction && (
               <Grid className={'p0'}>
                 <Typography
-                  variant="body1"
                   className={
                     !noHeaderActionStyles ? classes.headerAction : undefined
                   }
+                  variant="body1"
                 >
                   {headerAction()}
                 </Typography>

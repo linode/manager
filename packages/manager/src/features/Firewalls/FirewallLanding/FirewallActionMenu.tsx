@@ -1,17 +1,18 @@
 import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
-import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
-import { useProfile, useGrants } from 'src/queries/profile';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 export interface ActionHandlers {
-  triggerEnableFirewall: (firewallID: number, firewallLabel: string) => void;
-  triggerDisableFirewall: (firewallID: number, firewallLabel: string) => void;
-  triggerDeleteFirewall: (firewallID: number, firewallLabel: string) => void;
   [index: string]: any;
+  triggerDeleteFirewall: (firewallID: number, firewallLabel: string) => void;
+  triggerDisableFirewall: (firewallID: number, firewallLabel: string) => void;
+  triggerEnableFirewall: (firewallID: number, firewallLabel: string) => void;
 }
 
 interface Props extends ActionHandlers {
@@ -32,9 +33,9 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
     firewallID,
     firewallLabel,
     firewallStatus,
-    triggerEnableFirewall,
-    triggerDisableFirewall,
     triggerDeleteFirewall,
+    triggerDisableFirewall,
+    triggerEnableFirewall,
   } = props;
 
   const userCanModifyFirewall =
@@ -54,18 +55,18 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions: Action[] = [
     {
-      title:
-        firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
       onClick: () => {
         handleEnableDisable();
       },
+      title:
+        firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
       ...disabledProps,
     },
     {
-      title: 'Delete',
       onClick: () => {
         triggerDeleteFirewall(firewallID, firewallLabel);
       },
+      title: 'Delete',
       ...disabledProps,
     },
   ];
@@ -84,9 +85,9 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
               disabled={action.disabled}
+              key={action.title}
               onClick={action.onClick}
               tooltip={action.tooltip}
             />

@@ -1,25 +1,26 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
+import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   section: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
     marginBottom: theme.spacing(2),
     paddingBottom: theme.spacing(2),
-    borderBottom: `1px solid ${theme.palette.divider}`,
   },
 }));
 
 interface Props {
+  onClose: () => void;
   open: boolean;
   range?: IPRange;
-  onClose: () => void;
 }
 
 export const ViewRangeDrawer = (props: Props) => {
@@ -33,8 +34,8 @@ export const ViewRangeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      open={props.open}
       onClose={props.onClose}
+      open={props.open}
       title={`Details for IP Range`}
     >
       {props.range && (
@@ -60,8 +61,8 @@ export const ViewRangeDrawer = (props: Props) => {
           <ActionsPanel>
             <Button
               buttonType="secondary"
-              onClick={props.onClose}
               data-qa-cancel
+              onClick={props.onClose}
             >
               Close
             </Button>

@@ -1,10 +1,12 @@
 import AttachFile from '@mui/icons-material/AttachFile';
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import { equals, remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+
 import { Button } from 'src/components/Button/Button';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
 import AttachFileListItem from './AttachFileListItem';
 import { FileAttachment } from './index';
 import { reshapeFiles } from './ticketUtils';
@@ -14,8 +16,8 @@ type ClassNames = 'attachFileButton';
 const styles = (theme: Theme) =>
   createStyles({
     attachFileButton: {
-      marginTop: theme.spacing(2),
       marginBottom: 4,
+      marginTop: theme.spacing(2),
     },
   });
 
@@ -27,7 +29,38 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class AttachFileForm extends React.Component<CombinedProps, {}> {
-  inputRef = React.createRef<HTMLInputElement>();
+  render() {
+    const { classes, files } = this.props;
+    return (
+      <React.Fragment>
+        <input
+          id="attach-file"
+          multiple
+          onChange={this.selectFile}
+          ref={this.inputRef}
+          style={{ display: 'none' }}
+          type="file"
+        />
+        <Button
+          buttonType="secondary"
+          className={classes.attachFileButton}
+          compactX
+          onClick={this.clickAttachButton}
+        >
+          <AttachFile />
+          Attach a file
+        </Button>
+        {files.map((file, idx) => (
+          <AttachFileListItem
+            file={file}
+            fileIdx={idx}
+            key={idx}
+            removeFile={this.removeFile}
+          />
+        ))}
+      </React.Fragment>
+    );
+  }
 
   shouldComponentUpdate(nextProps: CombinedProps) {
     return (
@@ -44,13 +77,15 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
 
   handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files: selectedFiles } = e.target;
-    const { updateFiles, files } = this.props;
+    const { files, updateFiles } = this.props;
 
     if (selectedFiles && selectedFiles.length) {
       const reshapedFiles = reshapeFiles(selectedFiles);
       updateFiles([...files, ...reshapedFiles]);
     }
   };
+
+  inputRef = React.createRef<HTMLInputElement>();
 
   removeFile = (fileIdx: number) => {
     const { files, updateFiles } = this.props;
@@ -68,39 +103,6 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
       this.inputRef.current.value = '';
     }
   };
-
-  render() {
-    const { classes, files } = this.props;
-    return (
-      <React.Fragment>
-        <input
-          ref={this.inputRef}
-          type="file"
-          multiple
-          id="attach-file"
-          style={{ display: 'none' }}
-          onChange={this.selectFile}
-        />
-        <Button
-          className={classes.attachFileButton}
-          buttonType="secondary"
-          compactX
-          onClick={this.clickAttachButton}
-        >
-          <AttachFile />
-          Attach a file
-        </Button>
-        {files.map((file, idx) => (
-          <AttachFileListItem
-            key={idx}
-            file={file}
-            fileIdx={idx}
-            removeFile={this.removeFile}
-          />
-        ))}
-      </React.Fragment>
-    );
-  }
 }
 
 const styled = withStyles(styles);

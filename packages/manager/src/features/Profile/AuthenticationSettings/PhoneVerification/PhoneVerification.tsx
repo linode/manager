@@ -1,17 +1,24 @@
+import { APIError } from '@linode/api-v4/lib/types';
+import { useFormik } from 'formik';
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import InputAdornment from 'src/components/core/InputAdornment';
-import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
-import { APIError } from '@linode/api-v4/lib/types';
-import { countries } from './countries';
-import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
-import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
 import { LinkButton } from 'src/components/LinkButton';
-import { useFormik } from 'formik';
-import { useQueryClient } from 'react-query';
-import { useSnackbar } from 'notistack';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import InputAdornment from 'src/components/core/InputAdornment';
+import {
+  queryKey,
+  updateProfileData,
+  useProfile,
+  useSendPhoneVerificationCodeMutation,
+  useVerifyPhoneVerificationCodeMutation,
+} from 'src/queries/profile';
+
 import {
   StyledButtonContainer,
   StyledCodeSentMessageBox,
@@ -22,18 +29,14 @@ import {
   StyledPhoneNumberTitle,
   StyledSelect,
 } from './PhoneVerification.styles';
-import {
-  queryKey,
-  updateProfileData,
-  useProfile,
-  useSendPhoneVerificationCodeMutation,
-  useVerifyPhoneVerificationCodeMutation,
-} from 'src/queries/profile';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import { countries } from './countries';
+import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
+
 import type {
   SendPhoneVerificationCodePayload,
   VerifyVerificationCodePayload,
 } from '@linode/api-v4/lib/profile/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export const PhoneVerification = () => {
   const { data: profile } = useProfile();
@@ -54,16 +57,16 @@ export const PhoneVerification = () => {
 
   const {
     data,
+    error: sendPhoneVerificationCodeError,
+    isLoading: isResending,
+    mutateAsync: resendPhoneVerificationCode,
     mutateAsync: sendPhoneVerificationCode,
     reset: resetSendCodeMutation,
-    error: sendPhoneVerificationCodeError,
-    mutateAsync: resendPhoneVerificationCode,
-    isLoading: isResending,
   } = useSendPhoneVerificationCodeMutation();
   const {
+    error: verifyError,
     mutateAsync: sendVerificationCode,
     reset: resetCodeMutation,
-    error: verifyError,
   } = useVerifyPhoneVerificationCodeMutation();
   const isCodeSent = data !== undefined;
   const onSubmitPhoneNumber = async (
@@ -107,8 +110,8 @@ export const PhoneVerification = () => {
 
   const sendCodeForm = useFormik<SendPhoneVerificationCodePayload>({
     initialValues: {
-      phone_number: '',
       iso_code: 'US',
+      phone_number: '',
     },
     onSubmit: onSubmitPhoneNumber,
   });
@@ -159,15 +162,15 @@ export const PhoneVerification = () => {
 
   const customStyles = {
     menu: () => ({
-      width: '500px',
       marginLeft: '-1px !important',
       marginTop: '0px !important',
+      width: '500px',
     }),
     singleValue: (provided: React.CSSProperties) =>
       ({
         ...provided,
-        textAlign: 'center',
         fontSize: '20px',
+        textAlign: 'center',
       } as const),
   };
   const selectedCountry = countries.find(
@@ -206,7 +209,7 @@ export const PhoneVerification = () => {
               <StyledPhoneNumberTitle variant="h3">
                 Phone Number
               </StyledPhoneNumberTitle>
-              <Box display="flex" alignItems="center" style={{ gap: 10 }}>
+              <Box alignItems="center" display="flex" style={{ gap: 10 }}>
                 <Typography>
                   {profile?.verified_phone_number
                     ? getFormattedNumber(profile.verified_phone_number)
@@ -217,22 +220,22 @@ export const PhoneVerification = () => {
             </>
           ) : isCodeSent ? (
             <TextField
-              label="Verification Code"
-              id="otp_code"
-              name="otp_code"
-              type="text"
-              onChange={verifyCodeForm.handleChange}
-              value={verifyCodeForm.values.otp_code}
-              errorText={verifyError?.[0].reason}
               helperText={
                 <LinkButton
-                  onClick={onResendVerificationCode}
                   isDisabled={isResending}
                   isLoading={isResending}
+                  onClick={onResendVerificationCode}
                 >
                   Resend verification code
                 </LinkButton>
               }
+              errorText={verifyError?.[0].reason}
+              id="otp_code"
+              label="Verification Code"
+              name="otp_code"
+              onChange={verifyCodeForm.handleChange}
+              type="text"
+              value={verifyCodeForm.values.otp_code}
             />
           ) : (
             <>
@@ -242,18 +245,6 @@ export const PhoneVerification = () => {
                 isPhoneInputFocused={isPhoneInputFocused}
               >
                 <StyledSelect
-                  label="ISO Code"
-                  onFocus={() => setIsPhoneInputFocused(true)}
-                  onBlur={() => setIsPhoneInputFocused(false)}
-                  styles={customStyles}
-                  menuPlacement="bottom"
-                  id="iso_code"
-                  name="iso_code"
-                  isClearable={false}
-                  value={{
-                    value: sendCodeForm.values.iso_code,
-                    label: getCountryFlag(sendCodeForm.values.iso_code),
-                  }}
                   isOptionSelected={(option) =>
                     sendCodeForm.values.iso_code === option.value
                   }
@@ -266,12 +257,22 @@ export const PhoneVerification = () => {
                     } ${getCountryFlag(counrty.code)}`,
                     value: counrty.code,
                   }))}
-                  noMarginTop
+                  value={{
+                    label: getCountryFlag(sendCodeForm.values.iso_code),
+                    value: sendCodeForm.values.iso_code,
+                  }}
                   hideLabel
+                  id="iso_code"
+                  isClearable={false}
+                  label="ISO Code"
+                  menuPlacement="bottom"
+                  name="iso_code"
+                  noMarginTop
+                  onBlur={() => setIsPhoneInputFocused(false)}
+                  onFocus={() => setIsPhoneInputFocused(true)}
+                  styles={customStyles}
                 />
                 <StyledPhoneNumberInput
-                  onFocus={() => setIsPhoneInputFocused(true)}
-                  onBlur={() => setIsPhoneInputFocused(false)}
                   InputProps={{
                     startAdornment: selectedCountry ? (
                       <InputAdornment position="end">
@@ -279,13 +280,15 @@ export const PhoneVerification = () => {
                       </InputAdornment>
                     ) : undefined,
                   }}
-                  label="Phone Number"
-                  id="phone_number"
-                  name="phone_number"
-                  type="tel"
-                  onChange={sendCodeForm.handleChange}
-                  value={sendCodeForm.values.phone_number}
                   hideLabel
+                  id="phone_number"
+                  label="Phone Number"
+                  name="phone_number"
+                  onBlur={() => setIsPhoneInputFocused(false)}
+                  onChange={sendCodeForm.handleChange}
+                  onFocus={() => setIsPhoneInputFocused(true)}
+                  type="tel"
+                  value={sendCodeForm.values.phone_number}
                 />
               </StyledInputContainer>
               {sendPhoneVerificationCodeError ? (
@@ -306,9 +309,9 @@ export const PhoneVerification = () => {
               </Button>
             ) : null}
             <Button
-              loading={isFormSubmitting}
-              disabled={isViewMode}
               buttonType="primary"
+              disabled={isViewMode}
+              loading={isFormSubmitting}
               type="submit"
             >
               {isCodeSent ? 'Verify Phone Number' : 'Send Verification Code'}

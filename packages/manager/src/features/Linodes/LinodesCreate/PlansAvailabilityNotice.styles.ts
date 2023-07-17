@@ -1,7 +1,9 @@
-import List from 'src/components/core/List';
-import Typography from 'src/components/core/Typography';
 import { styled } from '@mui/material/styles';
+
 import { TextTooltip } from 'src/components/TextTooltip';
+import { Typography } from 'src/components/Typography';
+import List from 'src/components/core/List';
+
 import type { Theme } from '@mui/material/styles';
 
 export const StyledNoticeTypography = styled(Typography, {
@@ -17,15 +19,15 @@ export const StyledTextTooltip = styled(TextTooltip, {
 export const StyledFormattedRegionList = styled(List, {
   label: 'StyledFormattedRegionList',
 })(({ theme }) => ({
-  padding: `${theme.spacing(0.5)} ${theme.spacing()}`,
   '& li': {
     padding: `4px 0`,
   },
+  padding: `${theme.spacing(0.5)} ${theme.spacing()}`,
 }));
 
 StyledTextTooltip.defaultProps = {
-  placement: 'bottom-start',
   minWidth: 225,
+  placement: 'bottom-start',
   sxTypography: {
     fontFamily: (theme: Theme) => theme.font.bold,
   },

@@ -1,17 +1,17 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { Button } from 'src/components/Button/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from 'src/components/Typography';
 import { ExtendedIssue } from 'src/queries/managed/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(),
-    textAlign: 'center',
+  happyTicket: {
+    color: theme.color.grey1,
   },
   openTicketButton: {
     [theme.breakpoints.down('md')]: {
@@ -19,8 +19,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: 12,
     },
   },
-  happyTicket: {
-    color: theme.color.grey1,
+  root: {
+    padding: theme.spacing(),
+    textAlign: 'center',
   },
   sadTicket: {
     color: theme.color.red,
@@ -42,16 +43,16 @@ export const MonitorTickets: React.FC<Props> = (props) => {
 
   return (
     <Grid
+      alignItems="center"
+      className={classes.root}
       container
       direction="column"
       justifyContent="center"
-      alignItems="center"
-      className={classes.root}
     >
       <Grid
         className={`${hasIssues ? classes.sadTicket : classes.happyTicket} py0`}
       >
-        <TicketIcon width={50} height={39} />
+        <TicketIcon height={39} width={50} />
       </Grid>
       <Grid>
         <Typography variant="h2">
@@ -70,7 +71,6 @@ export const MonitorTickets: React.FC<Props> = (props) => {
           </Typography>
         ) : (
           <Button
-            buttonType="primary"
             onClick={() =>
               history.push({
                 pathname: '/support/tickets',
@@ -80,6 +80,7 @@ export const MonitorTickets: React.FC<Props> = (props) => {
                 },
               })
             }
+            buttonType="primary"
             className={classes.openTicketButton}
           >
             Open a ticket

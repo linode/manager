@@ -2,9 +2,11 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
+import { Typography } from 'src/components/Typography';
 import { displayType } from 'src/features/Linodes/presentation';
 import { ExtendedType } from 'src/utilities/extendType';
+
 import { ExtendedLinode } from './types';
 
 /**
@@ -66,10 +68,10 @@ export const gpuPlanText = (useTypography?: boolean): JSX.Element => {
       <Typography>
         {gpuPlanTextSegments[0]}
         <a
-          href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
-          target="_blank"
           aria-describedby="external-site"
+          href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
           rel="noopener noreferrer"
+          target="_blank"
         >
           Here is a guide
         </a>{' '}
@@ -82,10 +84,10 @@ export const gpuPlanText = (useTypography?: boolean): JSX.Element => {
     <>
       {gpuPlanTextSegments[0]}
       <a
-        href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
-        target="_blank"
         aria-describedby="external-site"
+        href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
         rel="noopener noreferrer"
+        target="_blank"
       >
         {` `}Here is a guide
       </a>{' '}
@@ -100,8 +102,8 @@ export const getMonthlyAndHourlyNodePricing = (
   numberOfNodes: number
 ) => {
   return {
-    monthlyPrice: monthlyPrice * numberOfNodes,
     hourlyPrice: Math.round(hourlyPrice * numberOfNodes * 1000) / 1000,
+    monthlyPrice: monthlyPrice * numberOfNodes,
   };
 };
 

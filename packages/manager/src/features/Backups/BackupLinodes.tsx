@@ -1,22 +1,24 @@
-import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import * as React from 'react';
+
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { ExtendedType } from 'src/utilities/extendType';
+
 import { ExtendedLinode } from './types';
 
-type ClassNames = 'root' | 'error';
+type ClassNames = 'error' | 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     error: {
       color: theme.color.red,
       fontSize: 13,
     },
+    root: {},
   });
 
 interface Props {
@@ -25,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const displayPrice = (price: string | number) => {
+export const displayPrice = (price: number | string) => {
   if (typeof price === 'string') {
     return price;
   }
@@ -50,7 +52,7 @@ export const BackupLinodes: React.FC<CombinedProps> = (props) => {
                 <TableCell data-qa-linode-label parentColumn="Label">
                   <Typography variant="body1">{linode.label}</Typography>
                   {error && (
-                    <Typography variant="body1" className={classes.error}>
+                    <Typography className={classes.error} variant="body1">
                       {error}
                     </Typography>
                   )}

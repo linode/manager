@@ -1,4 +1,5 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
+
 import { State } from './event.reducer';
 
 export const eventsForLinode = (state: State, linodeId: number) => {

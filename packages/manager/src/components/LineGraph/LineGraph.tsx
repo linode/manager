@@ -1,3 +1,5 @@
+import { Theme, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   Chart,
   ChartData,
@@ -9,15 +11,15 @@ import {
 import 'chartjs-adapter-luxon';
 import { curry } from 'ramda';
 import * as React from 'react';
-import { useTheme, Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import AccessibleGraphData from './AccessibleGraphData';
-import Typography from 'src/components/core/Typography';
-import { TableRow } from 'src/components/TableRow';
+
 import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { setUpCharts } from 'src/utilities/charts';
 import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
+
+import AccessibleGraphData from './AccessibleGraphData';
 import {
   StyledButton,
   StyledButtonElement,
@@ -33,44 +35,44 @@ import {
 setUpCharts();
 
 export interface DataSet {
-  label: string;
+  backgroundColor?: string;
   borderColor: string;
   // this data property type might not be the perfect fit, but it works for
   // the data returned from /linodes/:linodeID/stats and
   // /nodebalancers/:nodebalancer/stats
+  data: [number, null | number][];
   // the first number will be a UTC data and the second will be the amount per second
   fill?: boolean | string;
-  backgroundColor?: string;
-  data: [number, number | null][];
+  label: string;
 }
 export interface LineGraphProps {
-  chartHeight?: number;
-  showToday: boolean;
-  suggestedMax?: number;
-  data: DataSet[];
-  timezone: string;
-  rowHeaders?: Array<string>;
-  legendRows?: Array<any>;
-  unit?: string;
   /**
    * `accessibleDataTable` is responsible to both rendering the accessible graph data table and an associated unit.
    */
   accessibleDataTable?: {
     unit: string;
   };
-  nativeLegend?: boolean; // Display chart.js native legend
-  formatData?: (value: number) => number | null;
-  formatTooltip?: (value: number) => string;
   ariaLabel?: string;
+  chartHeight?: number;
+  data: DataSet[];
+  formatData?: (value: number) => null | number;
+  formatTooltip?: (value: number) => string;
+  legendRows?: Array<any>;
+  nativeLegend?: boolean; // Display chart.js native legend
+  rowHeaders?: Array<string>;
+  showToday: boolean;
+  suggestedMax?: number;
   tabIndex?: number;
+  timezone: string;
+  unit?: string;
 }
 
 const lineOptions: ChartDataSets = {
-  borderWidth: 1,
   borderJoinStyle: 'miter',
+  borderWidth: 1,
   lineTension: 0,
-  pointRadius: 0,
   pointHitRadius: 10,
+  pointRadius: 0,
 };
 
 const humanizeLargeData = (value: number) => {
@@ -93,20 +95,20 @@ export const LineGraph = (props: LineGraphProps) => {
   const [hiddenDatasets, setHiddenDatasets] = React.useState<number[]>([]);
 
   const {
+    accessibleDataTable,
     ariaLabel,
     chartHeight,
+    data,
     formatData,
     formatTooltip,
-    suggestedMax,
-    showToday,
-    timezone,
-    data,
-    rowHeaders,
     legendRows,
     nativeLegend,
+    rowHeaders,
+    showToday,
+    suggestedMax,
     tabIndex,
+    timezone,
     unit,
-    accessibleDataTable,
   } = props;
 
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -137,48 +139,30 @@ export const LineGraph = (props: LineGraphProps) => {
     _tooltipUnit?: string
   ) => {
     const finalChartOptions: ChartOptions = {
-      maintainAspectRatio: false,
-      responsive: true,
       animation: { duration: 0 },
       legend: {
         display: _nativeLegend,
         position: _nativeLegend ? 'bottom' : undefined,
       },
+      maintainAspectRatio: false,
+      responsive: true,
       scales: {
-        yAxes: [
-          {
-            // Defines a fixed width for the Y-axis labels
-            afterFit(axes) {
-              axes.width = 35;
-            },
-            gridLines: {
-              borderDash: [3, 6],
-              drawTicks: false,
-              zeroLineWidth: 1,
-              zeroLineBorderDashOffset: 2,
-            },
-            ticks: {
-              beginAtZero: true,
-              fontColor: theme.textColors.tableHeader,
-              fontSize: 12,
-              fontStyle: 'normal',
-              maxTicksLimit: 8,
-              padding: 10,
-              suggestedMax: _suggestedMax ?? undefined,
-              callback(value: number, _index: number) {
-                return humanizeLargeData(value);
-              },
-            },
-          },
-        ],
         xAxes: [
           {
-            type: 'time',
+            adapters: {
+              date: {
+                zone: timezone,
+              },
+            },
             gridLines: {
               display: false,
             },
+            ticks: {
+              fontColor: theme.textColors.tableHeader,
+              fontSize: 12,
+              fontStyle: 'normal',
+            },
             time: {
-              stepSize: showToday ? 3 : 5,
               displayFormats: showToday
                 ? {
                     hour: 'HH:00',
@@ -188,38 +172,56 @@ export const LineGraph = (props: LineGraphProps) => {
                     hour: 'LLL dd',
                     minute: 'LLL dd',
                   },
+              stepSize: showToday ? 3 : 5,
             },
-            adapters: {
-              date: {
-                zone: timezone,
-              },
-            },
-            ticks: {
-              fontColor: theme.textColors.tableHeader,
-              fontSize: 12,
-              fontStyle: 'normal',
-            },
+            type: 'time',
             // This cast is because the type definition does not include adapters
           } as ChartXAxe,
         ],
+        yAxes: [
+          {
+            // Defines a fixed width for the Y-axis labels
+            afterFit(axes) {
+              axes.width = 35;
+            },
+            gridLines: {
+              borderDash: [3, 6],
+              drawTicks: false,
+              zeroLineBorderDashOffset: 2,
+              zeroLineWidth: 1,
+            },
+            ticks: {
+              beginAtZero: true,
+              callback(value: number, _index: number) {
+                return humanizeLargeData(value);
+              },
+              fontColor: theme.textColors.tableHeader,
+              fontSize: 12,
+              fontStyle: 'normal',
+              maxTicksLimit: 8,
+              padding: 10,
+              suggestedMax: _suggestedMax ?? undefined,
+            },
+          },
+        ],
       },
       tooltips: {
-        cornerRadius: 0,
         backgroundColor: '#fbfbfb',
         bodyFontColor: '#32363C',
-        displayColors: false,
-        titleFontColor: '#606469',
-        xPadding: 8,
-        yPadding: 10,
-        borderWidth: 0.5,
         borderColor: '#999',
-        caretPadding: 10,
-        position: 'nearest',
+        borderWidth: 0.5,
         callbacks: {
           label: _formatTooltip(data, formatTooltip, _tooltipUnit),
         },
+        caretPadding: 10,
+        cornerRadius: 0,
+        displayColors: false,
         intersect: false,
         mode: 'index',
+        position: 'nearest',
+        titleFontColor: '#606469',
+        xPadding: 8,
+        yPadding: 10,
       },
     };
 
@@ -252,12 +254,12 @@ export const LineGraph = (props: LineGraphProps) => {
         return acc;
       }, []);
       return {
-        label: dataSet.label,
-        borderColor: dataSet.borderColor,
         backgroundColor: dataSet.backgroundColor,
+        borderColor: dataSet.borderColor,
         data: timeData,
         fill: dataSet.fill,
         hidden: hiddenDatasets.includes(idx),
+        label: dataSet.label,
         ...lineOptions,
       };
     });
@@ -273,12 +275,12 @@ export const LineGraph = (props: LineGraphProps) => {
       }
 
       chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
-        type: 'line',
         data: {
           datasets: _formatData(),
         },
-        plugins,
         options: getChartOptions(suggestedMax, nativeLegend, unit),
+        plugins,
+        type: 'line',
       });
     }
   });
@@ -319,8 +321,8 @@ export const LineGraph = (props: LineGraphProps) => {
                 data.map((section) => (
                   <TableRow key={section.label}>
                     {finalRowHeaders.map((section, i) => (
-                      <TableCell key={i} data-qa-header-cell>
-                        <Typography variant="body1" sx={sxTypographyHeader}>
+                      <TableCell data-qa-header-cell key={i}>
+                        <Typography sx={sxTypographyHeader} variant="body1">
                           {section}
                         </Typography>
                       </TableCell>
@@ -339,8 +341,8 @@ export const LineGraph = (props: LineGraphProps) => {
                     }}
                   />
                   {finalRowHeaders.map((section, i) => (
-                    <TableCell key={i} data-qa-header-cell>
-                      <Typography variant="body1" sx={sxTypographyHeader}>
+                    <TableCell data-qa-header-cell key={i}>
+                      <Typography sx={sxTypographyHeader} variant="body1">
                         {section}
                       </Typography>
                     </TableCell>
@@ -356,14 +358,13 @@ export const LineGraph = (props: LineGraphProps) => {
                 const { data: metricsData, format } = legendRows[idx];
                 return (
                   <TableRow key={idx}>
-                    <StyledTableCell sx={sxLegend} noWrap>
+                    <StyledTableCell noWrap sx={sxLegend}>
                       <StyledButton
-                        onClick={() => handleLegendClick(idx)}
-                        data-qa-legend-title
                         aria-label={`Toggle ${title} visibility`}
+                        data-qa-legend-title
+                        onClick={() => handleLegendClick(idx)}
                       >
                         <StyledButtonElement
-                          hidden={hidden}
                           sx={{
                             background: bgColor,
                             borderColor: bgColor,
@@ -373,6 +374,7 @@ export const LineGraph = (props: LineGraphProps) => {
                             marginRight: theme.spacing(1),
                             width: '18px',
                           }}
+                          hidden={hidden}
                         />
                         <StyledButtonElement hidden={hidden}>
                           {title}
@@ -383,15 +385,15 @@ export const LineGraph = (props: LineGraphProps) => {
                       metricsBySection(metricsData).map((section, i) => {
                         return (
                           <StyledTableCell
-                            key={i}
                             parentColumn={
                               rowHeaders ? rowHeaders[idx] : undefined
                             }
                             data-qa-body-cell
+                            key={i}
                           >
                             <Typography
-                              variant="body1"
                               sx={{ ...sxTypography, color: theme.color.black }}
+                              variant="body1"
                             >
                               {format(section)}
                             </Typography>
@@ -407,18 +409,18 @@ export const LineGraph = (props: LineGraphProps) => {
       )}
       <StyledCanvasContainer>
         <canvas
+          aria-label={ariaLabel || 'Stats and metrics'}
           height={chartHeight || 300}
           ref={inputEl}
           role="img"
-          aria-label={ariaLabel || 'Stats and metrics'}
         />
       </StyledCanvasContainer>
       {accessibleDataTable?.unit && (
         <AccessibleGraphData
-          chartInstance={chartInstance.current}
-          ariaLabel={ariaLabel}
-          hiddenDatasets={hiddenDatasets}
           accessibleUnit={accessibleDataTable.unit}
+          ariaLabel={ariaLabel}
+          chartInstance={chartInstance.current}
+          hiddenDatasets={hiddenDatasets}
         />
       )}
     </StyledWrapper>

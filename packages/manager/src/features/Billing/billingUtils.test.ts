@@ -4,6 +4,7 @@ import {
   PAYMENT_MIN,
   PAYMENT_SOFT_MAX,
 } from 'src/constants';
+
 import {
   cleanCVV,
   getPaymentLimits,

@@ -1,23 +1,24 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(),
-  },
   example: {
     backgroundColor: theme.name === 'dark' ? theme.bg.white : theme.bg.offWhite,
     margin: `${theme.spacing(2)} 0`,
     padding: theme.spacing(2),
   },
+  header: {
+    marginBottom: theme.spacing(),
+    marginTop: theme.spacing(2),
+  },
 }));
 
 interface Props {
-  rootClass?: string;
   isReply?: boolean;
+  rootClass?: string;
 }
 
 type CombinedProps = Props;
@@ -31,10 +32,10 @@ const MarkdownReference: React.FC<CombinedProps> = (props) => {
         You can use Markdown to format your{' '}
         {props.isReply ? 'reply' : 'question'}. For more examples see this
         <a
-          target="_blank"
           aria-describedby="external-site"
-          rel="noopener noreferrer"
           href="http://demo.showdownjs.com/"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           {' '}
           Markdown cheatsheet.

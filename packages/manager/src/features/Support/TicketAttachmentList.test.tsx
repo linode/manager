@@ -1,12 +1,11 @@
+import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
+import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
-import InsertPhoto from '@mui/icons-material/InsertPhoto';
-
 import {
-  addIconsToAttachments,
   TicketAttachmentList,
+  addIconsToAttachments,
 } from './TicketAttachmentList';
 
 const props = {
@@ -19,9 +18,9 @@ const props = {
     'file6.txt',
     'file7.pdf',
   ],
+  classes: { attachmentPaperWrapper: '', root: '' },
   showMoreAttachments: false,
   toggle: jest.fn(),
-  classes: { root: '', attachmentPaperWrapper: '' },
 };
 
 const component = shallow(<TicketAttachmentList {...props} />);

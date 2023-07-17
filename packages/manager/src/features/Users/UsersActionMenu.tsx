@@ -1,15 +1,16 @@
-import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useProfile } from 'src/queries/profile';
 
 interface Props {
-  username: string;
   onDelete: (username: string) => void;
+  username: string;
 }
 
 type CombinedProps = Props;
@@ -25,23 +26,23 @@ const UsersActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'User Profile',
       onClick: () => {
         history.push(`/account/users/${username}`);
       },
+      title: 'User Profile',
     },
     {
-      title: 'User Permissions',
       onClick: () => {
         history.push(`/account/users/${username}/permissions`);
       },
+      title: 'User Permissions',
     },
     {
       disabled: username === profileUsername,
-      title: 'Delete',
       onClick: () => {
         onDelete(username);
       },
+      title: 'Delete',
       tooltip:
         username === profileUsername
           ? "You can't delete the currently active user."
@@ -61,10 +62,10 @@ const UsersActionMenu: React.FC<CombinedProps> = (props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
-              onClick={action.onClick}
               disabled={action.disabled}
+              key={action.title}
+              onClick={action.onClick}
             />
           );
         })

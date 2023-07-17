@@ -1,57 +1,58 @@
-import * as React from 'react';
 import Close from '@mui/icons-material/Close';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from 'src/components/core/Typography';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bannerOuter: {
+    alignItems: 'center',
     backgroundColor: theme.bg.mainContentBanner,
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing(2),
     position: 'sticky',
     top: 0,
     zIndex: 1110,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  closeIcon: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: theme.palette.text.primary,
+    cursor: 'pointer',
+    position: 'absolute',
+    right: 4,
   },
   header: {
-    width: '65%',
+    color: '#fff',
+    textAlign: 'center',
     [theme.breakpoints.down('md')]: {
       width: '90%',
     },
-    color: '#fff',
-    textAlign: 'center',
     [theme.breakpoints.only('xs')]: {
       paddingRight: 30,
     },
+    width: '65%',
   },
   link: {
     color: '#74AAE6',
   },
-  closeIcon: {
-    position: 'absolute',
-    right: 4,
-    cursor: 'pointer',
-    border: 'none',
-    color: theme.palette.text.primary,
-    backgroundColor: 'transparent',
-  },
 }));
 
 interface Props {
-  bannerText: string;
-  url: string;
-  linkText: string;
   bannerKey: string;
+  bannerText: string;
+  linkText: string;
   onClose: () => void;
+  url: string;
 }
 
 const MainContentBanner: React.FC<Props> = (props) => {
-  const { bannerText, url, linkText, bannerKey, onClose } = props;
+  const { bannerKey, bannerText, linkText, onClose, url } = props;
 
   const { refetch: refetchPrefrences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
@@ -76,18 +77,18 @@ const MainContentBanner: React.FC<Props> = (props) => {
 
   return (
     <Grid className={classes.bannerOuter} xs={12}>
-      <Typography variant="h2" className={classes.header}>
+      <Typography className={classes.header} variant="h2">
         {bannerText}&nbsp;
         {linkText && url && (
-          <Link to={url} className={classes.link}>
+          <Link className={classes.link} to={url}>
             {linkText}
           </Link>
         )}
       </Typography>
       <button
+        aria-label="Close"
         className={classes.closeIcon}
         onClick={dismiss}
-        aria-label="Close"
       >
         <Close />
       </button>

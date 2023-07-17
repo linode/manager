@@ -9,28 +9,21 @@ import {
 import '@reach/menu-button/styles.css';
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
-import KebabIcon from 'src/assets/icons/kebab.svg';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { makeStyles } from 'tss-react/mui';
 
+import KebabIcon from 'src/assets/icons/kebab.svg';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+
 export interface Action {
-  title: string;
   disabled?: boolean;
-  tooltip?: string;
   onClick: () => void;
+  title: string;
+  tooltip?: string;
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '&[data-reach-menu-button]': {
-      display: 'flex',
-      alignItems: 'center',
-      background: 'none',
-      fontSize: '1rem',
-      border: 'none',
-      padding: '10px',
-      color: theme.textColors.linkActiveLight,
-      cursor: 'pointer',
       '&:hover': {
         backgroundColor: '#3683dc',
         color: '#fff',
@@ -39,39 +32,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
         backgroundColor: '#3683dc',
         color: '#fff',
       },
-    },
-  },
-  icon: {
-    '& svg': {
-      fill: theme.palette.primary.main,
-    },
-  },
-  popover: {
-    zIndex: 1,
-  },
-  itemsOuter: {
-    '&[data-reach-menu-items]': {
-      padding: 0,
-      minWidth: 200,
-      background: '#3683dc',
+      alignItems: 'center',
+      background: 'none',
       border: 'none',
-      fontSize: 14,
-      color: '#fff',
-      textAlign: 'left',
-    },
-  },
-  item: {
-    '&[data-reach-menu-item]': {
+      color: theme.textColors.linkActiveLight,
+      cursor: 'pointer',
       display: 'flex',
-      justifyContent: 'space-between',
-      padding: theme.spacing(1.25),
-      paddingLeft: '16px',
-      borderBottom: '1px solid #5294e0',
-      background: '#3683dc',
-      color: '#fff',
-    },
-    '&[data-reach-menu-item][data-selected]': {
-      background: '#226dc3',
+      fontSize: '1rem',
+      padding: '10px',
     },
   },
   disabled: {
@@ -84,31 +52,64 @@ const useStyles = makeStyles()((theme: Theme) => ({
       color: '#93bcec',
     },
   },
+  icon: {
+    '& svg': {
+      fill: theme.palette.primary.main,
+    },
+  },
+  item: {
+    '&[data-reach-menu-item]': {
+      background: '#3683dc',
+      borderBottom: '1px solid #5294e0',
+      color: '#fff',
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: theme.spacing(1.25),
+      paddingLeft: '16px',
+    },
+    '&[data-reach-menu-item][data-selected]': {
+      background: '#226dc3',
+    },
+  },
+  itemsOuter: {
+    '&[data-reach-menu-items]': {
+      background: '#3683dc',
+      border: 'none',
+      color: '#fff',
+      fontSize: 14,
+      minWidth: 200,
+      padding: 0,
+      textAlign: 'left',
+    },
+  },
+  popover: {
+    zIndex: 1,
+  },
   tooltip: {
-    color: '#fff',
     '& :hover': {
       color: '#4d99f1',
     },
-    padding: '0 0 0 8px',
     '& svg': {
       height: 20,
       width: 20,
     },
+    color: '#fff',
+    padding: '0 0 0 8px',
   },
 }));
 
 export interface Props {
   actionsList: Action[];
-  toggleOpenCallback?: () => void;
-  // We want to require using aria label for these buttons
   // as they don't have text (just an icon)
   ariaLabel: string;
+  // We want to require using aria label for these buttons
   className?: string;
+  toggleOpenCallback?: () => void;
 }
 
 const ActionMenu = (props: Props) => {
   const { classes, cx } = useStyles();
-  const { toggleOpenCallback, actionsList } = props;
+  const { actionsList, toggleOpenCallback } = props;
 
   const { ariaLabel } = props;
 
@@ -129,15 +130,16 @@ const ActionMenu = (props: Props) => {
   }
 
   const sxTooltipIcon = {
-    color: '#fff',
-    '& :hover': {
-      color: '#4d99f1',
-    },
-    padding: '0 0 0 8px',
-    '& svg': {
+    '& .MuiSvgIcon-root': {
+      fill: '#fff',
       height: '20px',
       width: '20px',
     },
+    '& :hover': {
+      color: '#4d99f1',
+    },
+    color: '#fff',
+    padding: '0 0 0 8px',
   };
 
   return (
@@ -147,8 +149,8 @@ const ActionMenu = (props: Props) => {
           [classes.button]: true,
         })}
         aria-label={ariaLabel}
-        onMouseDown={handleClick}
         onKeyDown={handleKeyPress}
+        onMouseDown={handleClick}
       >
         <KebabIcon aria-hidden className={classes.icon} type="primary" />
       </MenuButton>
@@ -156,10 +158,9 @@ const ActionMenu = (props: Props) => {
         <MenuItems className={classes.itemsOuter}>
           {(actionsList as Action[]).map((a, idx) => (
             <MenuItem
-              key={idx}
               className={cx({
-                [classes.item]: true,
                 [classes.disabled]: a.disabled,
+                [classes.item]: true,
               })}
               onSelect={() => {
                 if (!a.disabled) {
@@ -168,16 +169,17 @@ const ActionMenu = (props: Props) => {
               }}
               data-qa-action-menu-item={a.title}
               disabled={a.disabled}
+              key={idx}
               valueText={a.title}
             >
               {a.title}
               {a.tooltip ? (
                 <TooltipIcon
                   data-qa-tooltip-icon
+                  status="help"
+                  sxTooltipIcon={sxTooltipIcon}
                   text={a.tooltip}
                   tooltipPosition="right"
-                  sxTooltipIcon={sxTooltipIcon}
-                  status="help"
                 />
               ) : null}
             </MenuItem>

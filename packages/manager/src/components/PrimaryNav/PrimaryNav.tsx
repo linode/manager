@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
+
 import Account from 'src/assets/icons/account.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -18,7 +19,7 @@ import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
@@ -28,39 +29,42 @@ import {
 } from 'src/queries/objectStorage';
 import { useStackScriptsOCA } from 'src/queries/stackscripts';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+
 import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
 
 type NavEntity =
-  | 'Linodes'
-  | 'Volumes'
-  | 'NodeBalancers'
-  | 'Domains'
-  | 'Longview'
-  | 'Kubernetes'
-  | 'Object Storage'
-  | 'Managed'
-  | 'Marketplace'
-  | 'Images'
-  | 'Firewalls'
+  | 'Account'
   | 'Account'
   | 'Dashboard'
-  | 'StackScripts'
   | 'Databases'
-  | 'Account'
-  | 'Help & Support';
+  | 'Domains'
+  | 'Firewalls'
+  | 'Global Load Balancers'
+  | 'Help & Support'
+  | 'Images'
+  | 'Kubernetes'
+  | 'Linodes'
+  | 'Longview'
+  | 'Managed'
+  | 'Marketplace'
+  | 'NodeBalancers'
+  | 'Object Storage'
+  | 'StackScripts'
+  | 'Volumes';
 
 interface PrimaryLink {
-  display: NavEntity;
-  href: string;
-  attr?: { [key: string]: any };
-  icon?: JSX.Element;
   activeLinks?: Array<string>;
-  onClick?: (e: React.ChangeEvent<any>) => void;
+  attr?: { [key: string]: any };
+  betaChipClassName?: string;
+  display: NavEntity;
   hide?: boolean;
+  href: string;
+  icon?: JSX.Element;
   isBeta?: boolean;
-  prefetchRequestFn?: () => void;
+  onClick?: (e: React.ChangeEvent<any>) => void;
   prefetchRequestCondition?: boolean;
+  prefetchRequestFn?: () => void;
 }
 
 export interface Props {
@@ -86,20 +90,20 @@ export const PrimaryNav = (props: Props) => {
 
   const {
     data: oneClickApps,
-    isLoading: oneClickAppsLoading,
     error: oneClickAppsError,
+    isLoading: oneClickAppsLoading,
   } = useStackScriptsOCA(enableMarketplacePrefetch);
 
   const {
     data: clusters,
-    isLoading: clustersLoading,
     error: clustersError,
+    isLoading: clustersLoading,
   } = useObjectStorageClusters(enableObjectPrefetch);
 
   const {
     data: buckets,
-    isLoading: bucketsLoading,
     error: bucketsError,
+    isLoading: bucketsLoading,
   } = useObjectStorageBuckets(clusters, enableObjectPrefetch);
 
   const allowObjPrefetch =
@@ -135,23 +139,32 @@ export const PrimaryNav = (props: Props) => {
     () => [
       [
         {
-          hide: !_isManagedAccount,
           display: 'Managed',
+          hide: !_isManagedAccount,
           href: '/managed',
           icon: <Managed />,
         },
       ],
       [
         {
+          activeLinks: ['/linodes', '/linodes/create'],
           display: 'Linodes',
           href: '/linodes',
-          activeLinks: ['/linodes', '/linodes/create'],
           icon: <Linode />,
         },
         {
           display: 'Volumes',
           href: '/volumes',
           icon: <Volume />,
+        },
+        {
+          betaChipClassName: 'beta-chip-aglb',
+          display: 'Global Load Balancers',
+          hide: !flags.aglb,
+          href: '/loadbalancers',
+          // TODO AGLB: replace icon when available
+          icon: <Domain />,
+          isBeta: true,
         },
         {
           display: 'NodeBalancers',
@@ -169,12 +182,12 @@ export const PrimaryNav = (props: Props) => {
           icon: <StackScript />,
         },
         {
-          display: 'Images',
-          href: '/images',
           activeLinks: [
             '/images/create/create-image',
             '/images/create/upload-image',
           ],
+          display: 'Images',
+          href: '/images',
           icon: <Image />,
         },
       ],
@@ -185,28 +198,28 @@ export const PrimaryNav = (props: Props) => {
           icon: <Domain />,
         },
         {
-          hide: !showDatabases,
           display: 'Databases',
+          hide: !showDatabases,
           href: '/databases',
           icon: <Database />,
           isBeta: flags.databaseBeta,
         },
         {
+          activeLinks: ['/kubernetes/create'],
           display: 'Kubernetes',
           href: '/kubernetes/clusters',
-          activeLinks: ['/kubernetes/create'],
           icon: <Kubernetes />,
         },
         {
-          display: 'Object Storage',
-          href: '/object-storage/buckets',
           activeLinks: [
             '/object-storage/buckets',
             '/object-storage/access-keys',
           ],
+          display: 'Object Storage',
+          href: '/object-storage/buckets',
           icon: <Storage />,
-          prefetchRequestFn: prefetchObjectStorage,
           prefetchRequestCondition: allowObjPrefetch,
+          prefetchRequestFn: prefetchObjectStorage,
         },
         {
           display: 'Longview',
@@ -214,12 +227,12 @@ export const PrimaryNav = (props: Props) => {
           icon: <Longview />,
         },
         {
+          attr: { 'data-qa-one-click-nav-btn': true },
           display: 'Marketplace',
           href: '/linodes/create?type=One-Click',
-          attr: { 'data-qa-one-click-nav-btn': true },
           icon: <OCA />,
-          prefetchRequestFn: prefetchMarketplace,
           prefetchRequestCondition: allowMarketplacePrefetch,
+          prefetchRequestFn: prefetchMarketplace,
         },
       ],
       [
@@ -241,21 +254,22 @@ export const PrimaryNav = (props: Props) => {
       allowObjPrefetch,
       allowMarketplacePrefetch,
       flags.databaseBeta,
+      flags.aglb,
     ]
   );
 
   return (
     <Grid
-      className={classes.menuGrid}
-      container
       alignItems="flex-start"
-      justifyContent="flex-start"
-      direction="column"
-      wrap="nowrap"
-      spacing={0}
+      className={classes.menuGrid}
       component="nav"
-      role="navigation"
+      container
+      direction="column"
       id="main-navigation"
+      justifyContent="flex-start"
+      role="navigation"
+      spacing={0}
+      wrap="nowrap"
     >
       <Grid>
         <div
@@ -264,30 +278,30 @@ export const PrimaryNav = (props: Props) => {
           })}
         >
           <Link
-            to={`/dashboard`}
-            onClick={closeMenu}
-            aria-label="Akamai - Dashboard"
-            title="Akamai - Dashboard"
             className={cx({
               [classes.logoContainer]: isCollapsed,
             })}
+            aria-label="Akamai - Dashboard"
+            onClick={closeMenu}
+            title="Akamai - Dashboard"
+            to={`/dashboard`}
           >
             <AkamaiLogo
-              width={128}
               className={cx(
                 {
                   [classes.logoAkamaiCollapsed]: isCollapsed,
                 },
                 classes.logo
               )}
+              width={128}
             />
           </Link>
         </div>
       </Grid>
       <div
         className={cx({
-          ['fade-in-table']: true,
           [classes.fadeContainer]: true,
+          ['fade-in-table']: true,
         })}
       >
         {primaryLinkGroups.map((thisGroup, idx) => {
@@ -299,16 +313,16 @@ export const PrimaryNav = (props: Props) => {
             <div key={idx}>
               <Divider
                 className={classes.divider}
-                spacingTop={12}
                 spacingBottom={12}
+                spacingTop={12}
               />
               {filteredLinks.map((thisLink) => {
                 const props = {
-                  key: thisLink.display,
                   closeMenu,
                   isCollapsed,
-                  locationSearch: location.search,
+                  key: thisLink.display,
                   locationPathname: location.pathname,
+                  locationSearch: location.search,
                   ...thisLink,
                 };
 
@@ -319,8 +333,8 @@ export const PrimaryNav = (props: Props) => {
                   thisLink.prefetchRequestCondition !== undefined ? (
                   <PrefetchPrimaryLink
                     {...props}
-                    prefetchRequestFn={thisLink.prefetchRequestFn}
                     prefetchRequestCondition={thisLink.prefetchRequestCondition}
+                    prefetchRequestFn={thisLink.prefetchRequestFn}
                   />
                 ) : (
                   <PrimaryLink {...props} />
@@ -340,13 +354,13 @@ interface PrimaryLinkProps extends PrimaryLink {
   closeMenu: () => void;
   isBeta?: boolean;
   isCollapsed: boolean;
-  locationSearch: string;
   locationPathname: string;
+  locationSearch: string;
   prefetchProps?: {
+    onBlur: LinkProps['onBlur'];
+    onFocus: LinkProps['onFocus'];
     onMouseEnter: LinkProps['onMouseEnter'];
     onMouseLeave: LinkProps['onMouseLeave'];
-    onFocus: LinkProps['onFocus'];
-    onBlur: LinkProps['onBlur'];
   };
 }
 
@@ -354,17 +368,18 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
   const { classes, cx } = useStyles();
 
   const {
+    activeLinks,
+    attr,
+    betaChipClassName,
+    closeMenu,
+    display,
+    href,
+    icon,
     isBeta,
     isCollapsed,
-    closeMenu,
-    href,
-    onClick,
-    attr,
-    activeLinks,
-    icon,
-    display,
-    locationSearch,
     locationPathname,
+    locationSearch,
+    onClick,
     prefetchProps,
   } = props;
 
@@ -374,37 +389,43 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
 
   return (
     <Link
-      to={href}
       onClick={(e: React.ChangeEvent<any>) => {
         closeMenu();
         if (onClick) {
           onClick(e);
         }
       }}
+      to={href}
       {...prefetchProps}
       {...attr}
       className={cx({
-        [classes.listItem]: true,
         [classes.active]: isActiveLink,
+        [classes.listItem]: true,
       })}
       aria-current={isActiveLink}
       data-testid={`menu-item-${display}`}
     >
       {icon && (
-        <div className="icon" aria-hidden>
+        <div aria-hidden className="icon">
           {icon}
         </div>
       )}
       <p
         className={cx({
           [classes.linkItem]: true,
-          primaryNavLink: true,
           hiddenWhenCollapsed: isCollapsed,
+          primaryNavLink: true,
         })}
       >
         {display}
         {isBeta ? (
-          <BetaChip className={classes.chip} color="primary" component="span" />
+          <BetaChip
+            className={cx(betaChipClassName ? betaChipClassName : '', {
+              [classes.chip]: true,
+            })}
+            color="primary"
+            component="span"
+          />
         ) : null}
       </p>
     </Link>
@@ -412,23 +433,23 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
 });
 
 interface PrefetchPrimaryLinkProps {
-  prefetchRequestFn: () => void;
   prefetchRequestCondition: boolean;
+  prefetchRequestFn: () => void;
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
 export const PrefetchPrimaryLink = React.memo(
   (props: PrimaryLinkProps & PrefetchPrimaryLinkProps) => {
-    const { makeRequest, cancelRequest } = usePrefetch(
+    const { cancelRequest, makeRequest } = usePrefetch(
       props.prefetchRequestFn,
       props.prefetchRequestCondition
     );
 
     const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
-      onMouseEnter: makeRequest,
-      onFocus: makeRequest,
-      onMouseLeave: cancelRequest,
       onBlur: cancelRequest,
+      onFocus: makeRequest,
+      onMouseEnter: makeRequest,
+      onMouseLeave: cancelRequest,
     };
 
     return <PrimaryLink {...props} prefetchProps={prefetchProps} />;

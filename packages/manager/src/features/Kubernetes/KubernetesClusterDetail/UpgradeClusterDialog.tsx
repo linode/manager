@@ -1,43 +1,45 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Typography } from 'src/components/Typography';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
-import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { HACopy } from '../KubeCheckoutBar/HACheckbox';
-import { useSnackbar } from 'notistack';
 import {
   localStorageWarning,
   nodesDeletionWarning,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
+
+import { HACopy } from '../KubeCheckoutBar/HACheckbox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   noticeHeader: {
     fontSize: '0.875rem',
   },
   noticeList: {
-    fontSize: '0.875rem',
-    marginTop: 4,
-    paddingLeft: theme.spacing(2),
     '& li': {
       marginBottom: 4,
     },
+    fontSize: '0.875rem',
+    marginTop: 4,
+    paddingLeft: theme.spacing(2),
   },
 }));
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   clusterID: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
-  const { open, onClose, clusterID } = props;
+  const { clusterID, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [checked, setChecked] = React.useState(false);
 
@@ -71,19 +73,19 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
     <ActionsPanel>
       <Button
         buttonType="secondary"
-        onClick={onClose}
         data-qa-cancel
         data-testid={'dialog-cancel'}
+        onClick={onClose}
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onUpgrade}
-        disabled={!checked}
-        loading={submitting}
         data-qa-confirm
         data-testid={'dialog-confirm'}
+        disabled={!checked}
+        loading={submitting}
+        onClick={onUpgrade}
       >
         Upgrade to HA
       </Button>
@@ -92,19 +94,19 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      title="Upgrade to High Availability"
-      onClose={onClose}
       actions={actions}
       error={error}
+      onClose={onClose}
+      open={open}
+      title="Upgrade to High Availability"
     >
       <HACopy />
-      <Typography variant="body1" style={{ marginTop: 12, marginBottom: 8 }}>
+      <Typography style={{ marginBottom: 8, marginTop: 12 }} variant="body1">
         Pricing for the HA control plane is ${HIGH_AVAILABILITY_PRICE} per month
         per cluster.
       </Typography>
-      <Notice warning spacingTop={16} spacingBottom={16}>
-        <Typography variant="h3" className={classes.noticeHeader}>
+      <Notice spacingBottom={16} spacingTop={16} warning>
+        <Typography className={classes.noticeHeader} variant="h3">
           Caution:
         </Typography>
         <ul className={classes.noticeList}>
@@ -116,7 +118,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
           </li>
         </ul>
       </Notice>
-      <CheckBox
+      <Checkbox
         checked={checked}
         onChange={toggleChecked}
         text="I agree to the additional fee on my monthly bill and understand HA upgrade can only be reversed by deleting my cluster."

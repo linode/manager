@@ -1,24 +1,26 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
-import { TableSortCell } from 'src/components/TableSortCell';
-import DatabaseBackupTableRow from './DatabaseBackupTableRow';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { useOrder } from 'src/hooks/useOrder';
-import { useParams } from 'react-router-dom';
-import RestoreFromBackupDialog from './RestoreFromBackupDialog';
 import { DatabaseBackup, Engine } from '@linode/api-v4/lib/databases';
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
+
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+import { useOrder } from 'src/hooks/useOrder';
 import {
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+
+import DatabaseBackupTableRow from './DatabaseBackupTableRow';
+import RestoreFromBackupDialog from './RestoreFromBackupDialog';
 
 export const DatabaseBackups = () => {
   const { databaseId, engine } = useParams<{
@@ -35,19 +37,19 @@ export const DatabaseBackups = () => {
 
   const {
     data: database,
-    isLoading: isDatabaseLoading,
     error: databaseError,
+    isLoading: isDatabaseLoading,
   } = useDatabaseQuery(engine, id);
 
   const {
     data: backups,
-    isLoading: isBackupsLoading,
     error: backupsError,
+    isLoading: isBackupsLoading,
   } = useDatabaseBackupsQuery(engine, id);
 
-  const { order, orderBy, handleOrderChange } = useOrder({
-    orderBy: 'created',
+  const { handleOrderChange, order, orderBy } = useOrder({
     order: 'desc',
+    orderBy: 'created',
   });
 
   const onRestore = (id: number) => {
@@ -68,24 +70,24 @@ export const DatabaseBackups = () => {
 
   const renderTableBody = () => {
     if (databaseError) {
-      return <TableRowError message={databaseError[0].reason} colSpan={3} />;
+      return <TableRowError colSpan={3} message={databaseError[0].reason} />;
     }
     if (backupsError) {
-      return <TableRowError message={backupsError[0].reason} colSpan={3} />;
+      return <TableRowError colSpan={3} message={backupsError[0].reason} />;
     }
     if (isDatabaseLoading || isBackupsLoading) {
       return <TableRowLoading columns={3} />;
     }
     if (backups?.results === 0) {
-      return <TableRowEmpty message="No backups to display." colSpan={3} />;
+      return <TableRowEmpty colSpan={3} message="No backups to display." />;
     }
     if (backups) {
       return backups.data
         .sort(sorter)
         .map((backup) => (
           <DatabaseBackupTableRow
-            key={backup.id}
             backup={backup}
+            key={backup.id}
             onRestore={onRestore}
           />
         ));
@@ -101,8 +103,8 @@ export const DatabaseBackups = () => {
             <TableSortCell
               active={orderBy === 'created'}
               direction={order}
-              label="created"
               handleClick={handleOrderChange}
+              label="created"
               style={{ width: 155 }}
             >
               Date Created
@@ -122,10 +124,10 @@ export const DatabaseBackups = () => {
       </Paper>
       {database && backupToRestore ? (
         <RestoreFromBackupDialog
-          open={isRestoreDialogOpen}
-          database={database}
           backup={backupToRestore}
+          database={database}
           onClose={() => setIsRestoreDialogOpen(false)}
+          open={isRestoreDialogOpen}
         />
       ) : null}
     </>

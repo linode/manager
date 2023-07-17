@@ -1,11 +1,12 @@
+import Button from '@mui/material/Button';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
-import Button from '@mui/material/Button';
-import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+
+import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { PromotionalOffer } from 'src/featureFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
@@ -14,81 +15,81 @@ import {
 } from 'src/utilities/sanitize-html/sanitizeHTML';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-    paddingBottom: 4,
-    backgroundColor: theme.bg.main,
-  },
-  fullWidth: {
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'flex-start',
-    '& svg': {
-      marginRight: theme.spacing(2),
-      marginBottom: `calc(${theme.spacing(1)} - 2)`,
-    },
-    '& p:last-child': {
-      marginTop: theme.spacing(1),
-    },
-  },
-  logo: {
-    marginBottom: theme.spacing(2),
-  },
-  copy: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  capMaxWidth: {
-    maxWidth: 400,
-  },
   alignLeft: {
     alignItems: 'flex-start',
   },
-  footnote: {
-    marginTop: theme.spacing(1),
-  },
-  centerText: {
-    textAlign: 'center',
-  },
-  buttonSection: {
-    margin: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
   button: {
-    backgroundColor: '#4FAD62',
-    color: 'white',
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
-    textAlign: 'center',
     '&:hover, &:focus': {
       backgroundColor: '#3f8a4e',
       color: 'white',
     },
+    backgroundColor: '#4FAD62',
+    color: 'white',
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    textAlign: 'center',
   },
   buttonSecondary: {
-    backgroundColor: 'inherit',
-    color: '#4FAD62',
-    border: '1px solid transparent',
-    transition: theme.transitions.create(['color', 'border-color']),
-    borderColor: '#4FAD62',
     '&:hover, &:focus': {
       backgroundColor: 'inherit',
-      color: '#72BD81',
       borderColor: '#72BD81',
+      color: '#72BD81',
     },
+    backgroundColor: 'inherit',
+    border: '1px solid transparent',
+    borderColor: '#4FAD62',
+    color: '#4FAD62',
+    transition: theme.transitions.create(['color', 'border-color']),
+  },
+  buttonSection: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    margin: theme.spacing(2),
+  },
+  capMaxWidth: {
+    maxWidth: 400,
+  },
+  centerText: {
+    textAlign: 'center',
+  },
+  copy: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+  },
+  footnote: {
+    marginTop: theme.spacing(1),
+  },
+  fullWidth: {
+    '& p:last-child': {
+      marginTop: theme.spacing(1),
+    },
+    '& svg': {
+      marginBottom: `calc(${theme.spacing(1)} - 2)`,
+      marginRight: theme.spacing(2),
+    },
+    alignContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  logo: {
+    marginBottom: theme.spacing(2),
+  },
+  root: {
+    alignItems: 'center',
+    backgroundColor: theme.bg.main,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    paddingBottom: 4,
   },
 }));
 
 export interface PromotionalOfferCardProps extends PromotionalOffer {
-  fullWidth?: boolean;
   className?: string;
+  fullWidth?: boolean;
 }
 
 export const PromotionalOfferCard = (props: PromotionalOfferCardProps) => {
@@ -109,27 +110,27 @@ export const PromotionalOfferCard = (props: PromotionalOfferCardProps) => {
   return (
     <Paper
       className={cx({
-        [classes.root]: true,
         [classes.fullWidth]: props.fullWidth,
+        [classes.root]: true,
         // Inject the className if given as as prop.
         [props.className ?? '']: Boolean(props.className),
       })}
     >
       {Logo && (
-        <Logo className={classes.logo} width={iconSize} height={iconSize} />
+        <Logo className={classes.logo} height={iconSize} width={iconSize} />
       )}
       <div
         className={cx({
-          [classes.copy]: true,
           [classes.alignLeft]: fullWidth,
+          [classes.copy]: true,
         })}
       >
         <Typography
-          variant="subtitle2"
           className={cx({
-            [classes.centerText]: !fullWidth,
             [classes.capMaxWidth]: !fullWidth,
+            [classes.centerText]: !fullWidth,
           })}
+          variant="subtitle2"
         >
           {offer.body}
         </Typography>
@@ -140,11 +141,11 @@ export const PromotionalOfferCard = (props: PromotionalOfferCardProps) => {
             than two buttons is a mistake. */}
             {offer.buttons.slice(0, 2).map((button) => (
               <Button
-                key={button.text}
                 className={cx({
                   [classes.button]: true,
                   [classes.buttonSecondary]: button.type === 'secondary',
                 })}
+                key={button.text}
                 {...buttonProps(button.href)}
               >
                 {button.text}
@@ -155,12 +156,12 @@ export const PromotionalOfferCard = (props: PromotionalOfferCardProps) => {
 
         {offer.footnote && (
           <Typography
-            variant="body1"
             className={cx({
-              [classes.footnote]: true,
-              [classes.centerText]: !fullWidth,
               [classes.capMaxWidth]: !fullWidth,
+              [classes.centerText]: !fullWidth,
+              [classes.footnote]: true,
             })}
+            variant="body1"
           >
             {offer.footnote}
           </Typography>
@@ -177,14 +178,14 @@ export const PromotionalOfferCard = (props: PromotionalOfferCardProps) => {
 export const promotionalOfferOrDefaults = (
   offer: PromotionalOffer
 ): PromotionalOffer => ({
-  name: checkStringOrDefault(offer.name),
+  alt: checkStringOrDefault(offer.alt),
   body: checkStringOrDefault(offer.body),
+  buttons: offer.buttons ?? [],
+  displayOnDashboard: offer.displayOnDashboard ?? false,
+  features: offer.features ?? ['None'],
   footnote: checkStringOrDefault(offer.footnote),
   logo: checkStringOrDefault(offer.logo),
-  alt: checkStringOrDefault(offer.alt),
-  features: offer.features ?? ['None'],
-  displayOnDashboard: offer.displayOnDashboard ?? false,
-  buttons: offer.buttons ?? [],
+  name: checkStringOrDefault(offer.name),
 });
 
 export const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {
@@ -224,8 +225,8 @@ const buttonProps = (url: string) => {
   } else if (offSiteURL.test(url)) {
     linkProps = {
       href: url,
-      target: '_blank',
       rel: 'noopener noreferrer',
+      target: '_blank',
     };
   }
   return linkProps;

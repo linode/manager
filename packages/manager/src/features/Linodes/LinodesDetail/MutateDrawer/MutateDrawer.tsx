@@ -1,44 +1,45 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import ListItem from 'src/components/core/ListItem';
-import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
+import ListItem from 'src/components/core/ListItem';
 
 interface MutateInfo {
-  vcpus: number | null;
-  memory: number | null;
-  disk: number | null;
-  transfer: number | null;
-  network_out: number | null;
+  disk: null | number;
+  memory: null | number;
+  network_out: null | number;
+  transfer: null | number;
+  vcpus: null | number;
 }
 
 interface Spec {
-  label: string;
-  newAmount: number | null;
   currentAmount: number;
+  label: string;
+  newAmount: null | number;
 }
 
 interface ExtendedUpgradeInfo {
-  vcpus: Spec;
-  memory: Spec;
   disk: Spec;
-  transfer: Spec;
+  memory: Spec;
   network_out: Spec;
+  transfer: Spec;
+  vcpus: Spec;
 }
 
 interface Props {
-  open: boolean;
-  handleClose: () => void;
-  initMutation: () => void;
-  mutateInfo: MutateInfo;
   currentTypeInfo: MutateInfo;
-  linodeId: number;
-  loading: boolean;
   error: string | undefined;
   estimatedTimeToUpgradeInMins: number;
+  handleClose: () => void;
+  initMutation: () => void;
   isMovingFromSharedToDedicated: boolean;
+  linodeId: number;
+  loading: boolean;
+  mutateInfo: MutateInfo;
+  open: boolean;
 }
 
 interface State {
@@ -53,41 +54,41 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
 
     this.state = {
       extendedUpgradeInfo: {
-        vcpus: {
-          label: 'vCPUs',
-          newAmount: props.mutateInfo.vcpus,
-          currentAmount: props.currentTypeInfo.vcpus,
-          unit: '',
-        },
-        memory: {
-          label: 'RAM',
-          newAmount: props.mutateInfo.memory,
-          currentAmount: props.currentTypeInfo.memory,
-          unit: 'MB',
-        },
         disk: {
+          currentAmount:
+            props.currentTypeInfo.disk !== null
+              ? props.currentTypeInfo.disk / 1024
+              : props.currentTypeInfo.disk,
           label: 'Storage',
           newAmount:
             props.mutateInfo.disk !== null
               ? props.mutateInfo.disk / 1024
               : props.mutateInfo.disk,
-          currentAmount:
-            props.currentTypeInfo.disk !== null
-              ? props.currentTypeInfo.disk / 1024
-              : props.currentTypeInfo.disk,
           unit: 'GB',
         },
-        transfer: {
-          label: 'Transfer',
-          newAmount: props.mutateInfo.transfer,
-          currentAmount: props.currentTypeInfo.transfer,
-          unit: 'GB',
+        memory: {
+          currentAmount: props.currentTypeInfo.memory,
+          label: 'RAM',
+          newAmount: props.mutateInfo.memory,
+          unit: 'MB',
         },
         network_out: {
+          currentAmount: props.currentTypeInfo.network_out,
           label: 'Outbound Mbits',
           newAmount: props.mutateInfo.network_out,
-          currentAmount: props.currentTypeInfo.network_out,
           unit: 'Mbits',
+        },
+        transfer: {
+          currentAmount: props.currentTypeInfo.transfer,
+          label: 'Transfer',
+          newAmount: props.mutateInfo.transfer,
+          unit: 'GB',
+        },
+        vcpus: {
+          currentAmount: props.currentTypeInfo.vcpus,
+          label: 'vCPUs',
+          newAmount: props.mutateInfo.vcpus,
+          unit: '',
         },
       },
     } as State;
@@ -95,17 +96,17 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      open,
-      handleClose,
-      loading,
       error,
       estimatedTimeToUpgradeInMins,
+      handleClose,
+      loading,
+      open,
     } = this.props;
 
     const { extendedUpgradeInfo } = this.state;
 
     return (
-      <Drawer open={open} onClose={handleClose} title="Free Upgrade Available">
+      <Drawer onClose={handleClose} open={open} title="Free Upgrade Available">
         {error && <Notice error text={error} />}
         <Typography>
           This Linode has pending upgrades. The resources that are affected
@@ -117,8 +118,8 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           <ul className="nonMUI-list">
             {Object.keys(extendedUpgradeInfo).map((newSpec) => {
               const {
-                label,
                 currentAmount,
+                label,
                 newAmount,
                 unit,
               } = extendedUpgradeInfo[newSpec];
@@ -139,7 +140,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             })}
           </ul>
         )}
-        <Typography variant="h2" style={{ marginTop: 32, marginBottom: 16 }}>
+        <Typography style={{ marginBottom: 16, marginTop: 32 }} variant="h2">
           How it Works
         </Typography>
         <Typography>
@@ -155,7 +156,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             running).
           </ListItem>
         </ol>
-        <Typography variant="body1" style={{ marginTop: 16 }}>
+        <Typography style={{ marginTop: 16 }} variant="body1">
           After the migration completes, you can take advantage of the new
           resources by resizing your disk images. We estimate this upgrade
           process will take{' '}
@@ -169,10 +170,9 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         </Typography>
         <ActionsPanel style={{ marginTop: 32 }}>
           <Button
+            buttonType="primary"
             loading={loading}
             onClick={this.props.initMutation}
-            buttonType="primary"
-            compactX
           >
             Enter the Upgrade Queue
           </Button>
@@ -183,10 +183,10 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         <Typography style={{ display: 'none' }}>
           {`Need help? Refer to the `}
           <a
-            href="google.com"
-            target="_blank"
             aria-describedby="external-site"
+            href="google.com"
             rel="noopener noreferrer"
+            target="_blank"
           >
             supporting documentation
           </a>

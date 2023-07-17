@@ -1,42 +1,44 @@
 import * as React from 'react';
+
 import DocsIcon from 'src/assets/icons/docs.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import PointerIcon from 'src/assets/icons/pointer.svg';
-import Typography from 'src/components/core/Typography';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
-import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
 import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
+import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { Typography } from 'src/components/Typography';
 import {
   getLinkOnClick,
   youtubeChannelLink,
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+
 import type {
   ResourcesHeaders,
-  linkAnalyticsEvent,
   ResourcesLinkSection,
+  linkAnalyticsEvent,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 interface ButtonProps {
-  onClick: () => void;
   children: string;
+  onClick: () => void;
 }
 
 interface ResourcesSectionProps {
-  /**
-   * The button's handlers and text
-   */
-  buttonProps: ButtonProps[];
   /**
    * The custom resource to be rendered between docs and youtube links
    * @example <AppsSection /> on linodes empty state landing
    */
   CustomResource?: () => JSX.Element;
+  /**
+   * The button's handlers and text
+   */
+  buttonProps: ButtonProps[];
   /**
    * Allow to set a custom max width for the description (better word wrapping)
    * */
@@ -62,23 +64,23 @@ interface ResourcesSectionProps {
    * */
   showTransferDisplay?: boolean;
   /**
-   * The data for the youtube links section
-   */
-  youtubeLinkData: ResourcesLinkSection;
-  /**
    * If true, the section will be 100% width (more than 2 columns)
    *
    * @example true on linodes empty state landing
    * @default true
    * */
   wide?: boolean;
+  /**
+   * The data for the youtube links section
+   */
+  youtubeLinkData: ResourcesLinkSection;
 }
 
 const GuideLinks = (
   guides: ResourcesLinkSection,
   linkAnalyticsEvent: linkAnalyticsEvent
 ) => (
-  <ResourceLinks links={guides.links} linkAnalyticsEvent={linkAnalyticsEvent} />
+  <ResourceLinks linkAnalyticsEvent={linkAnalyticsEvent} links={guides.links} />
 );
 
 const YoutubeLinks = (
@@ -86,37 +88,31 @@ const YoutubeLinks = (
   linkAnalyticsEvent: linkAnalyticsEvent
 ) => (
   <ResourceLinks
-    links={youtube.links}
     linkAnalyticsEvent={linkAnalyticsEvent}
+    links={youtube.links}
   />
 );
 
 export const ResourcesSection = (props: ResourcesSectionProps) => {
   const {
-    buttonProps,
     CustomResource = () => null,
+    buttonProps,
     descriptionMaxWidth,
     gettingStartedGuidesData,
     headers,
     icon,
     linkAnalyticsEvent,
     showTransferDisplay,
-    youtubeLinkData,
     wide = false,
+    youtubeLinkData,
   } = props;
-  const { title, subtitle, description } = headers;
+  const { description, subtitle, title } = headers;
 
   return (
     <Placeholder
-      buttonProps={buttonProps}
-      dataQAPlaceholder="resources-section"
-      descriptionMaxWidth={descriptionMaxWidth}
-      icon={icon}
-      isEntity
       linksSection={
         <ResourcesLinksSection wide={wide}>
           <ResourcesLinksSubSection
-            icon={<DocsIcon />}
             MoreLink={(props) => (
               <ResourcesMoreLink
                 onClick={getLinkOnClick(
@@ -130,20 +126,20 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                 <ResourcesLinkIcon icon={<PointerIcon />} iconType="pointer" />
               </ResourcesMoreLink>
             )}
+            icon={<DocsIcon />}
             title={gettingStartedGuidesData.title}
           >
             {GuideLinks(gettingStartedGuidesData, linkAnalyticsEvent)}
           </ResourcesLinksSubSection>
           {CustomResource && <CustomResource />}
           <ResourcesLinksSubSection
-            icon={<YoutubeIcon />}
             MoreLink={(props) => (
               <ResourcesMoreLink
-                external
                 onClick={getLinkOnClick(
                   linkAnalyticsEvent,
                   youtubeMoreLinkLabel
                 )}
+                external
                 to={youtubeChannelLink}
                 {...props}
               >
@@ -154,12 +150,18 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                 />
               </ResourcesMoreLink>
             )}
+            icon={<YoutubeIcon />}
             title={youtubeLinkData.title}
           >
             {YoutubeLinks(youtubeLinkData, linkAnalyticsEvent)}
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }
+      buttonProps={buttonProps}
+      dataQAPlaceholder="resources-section"
+      descriptionMaxWidth={descriptionMaxWidth}
+      icon={icon}
+      isEntity
       showTransferDisplay={showTransferDisplay}
       subtitle={subtitle}
       title={title}

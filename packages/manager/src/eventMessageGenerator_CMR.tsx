@@ -1,10 +1,12 @@
-import * as React from 'react';
 import { Event } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
-import Link from 'src/components/Link';
-import { formatEventWithAPIMessage } from 'src/eventMessageGenerator';
-import { ExtendedType } from './utilities/extendType';
 import { Region } from '@linode/api-v4/lib/regions';
+import * as React from 'react';
+
+import { Link } from 'src/components/Link';
+import { formatEventWithAPIMessage } from 'src/eventMessageGenerator';
+
+import { ExtendedType } from './utilities/extendType';
 
 export const eventMessageGenerator = (
   e: Event,

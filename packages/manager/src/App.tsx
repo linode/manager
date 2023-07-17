@@ -1,6 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
+import { ErrorBoundary } from '@sentry/react';
 import 'highlight.js/styles/a11y-dark.css';
 import 'highlight.js/styles/a11y-light.css';
 import { useSnackbar } from 'notistack';
@@ -8,11 +9,13 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { EventWithStore, events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
+
 import GoTo from './GoTo';
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
@@ -25,8 +28,12 @@ import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
 import { firewallEventsHandler } from './queries/firewalls';
-import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { imageEventsHandler } from './queries/images';
+import {
+  diskEventHandler,
+  linodeEventsHandler,
+} from './queries/linodes/events';
+import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { useMutatePreferences, usePreferences } from './queries/preferences';
 import { sshKeyEventHandler } from './queries/profile';
 import { supportTicketEventHandler } from './queries/support';
@@ -34,11 +41,6 @@ import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
-import { ErrorBoundary } from '@sentry/react';
-import {
-  diskEventHandler,
-  linodeEventsHandler,
-} from './queries/linodes/events';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -63,7 +65,6 @@ const BaseApp = withFeatureFlagProvider(
     const theme = preferences?.theme;
     const keyboardListener = React.useCallback(
       (event: KeyboardEvent) => {
-        const isOSMac = navigator.userAgent.includes('Mac');
         const letterForThemeShortcut = 'D';
         const letterForGoToOpen = 'K';
         const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
@@ -259,7 +260,7 @@ const BaseApp = withFeatureFlagProvider(
     return (
       <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
         {/** Accessibility helper */}
-        <a href="#main-content" className="skip-link">
+        <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
         <div hidden>
@@ -269,7 +270,7 @@ const BaseApp = withFeatureFlagProvider(
             Opens an external site in a new window
           </span>
         </div>
-        <GoTo open={goToOpen} onClose={() => setGoToOpen(false)} />
+        <GoTo onClose={() => setGoToOpen(false)} open={goToOpen} />
         {/** Update the LD client with the user's id as soon as we know it */}
         <IdentifyUser />
         <DocumentTitleSegment segment="Linode Manager" />
@@ -284,9 +285,9 @@ const BaseApp = withFeatureFlagProvider(
   })
 );
 
-export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
+export const hasOauthError = (...args: (APIError[] | Error | undefined)[]) => {
   return args.some((eachError) => {
-    const cleanedError: string | JSX.Element = pathOr(
+    const cleanedError: JSX.Element | string = pathOr(
       '',
       [0, 'reason'],
       eachError
@@ -296,3 +297,5 @@ export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
       : cleanedError.toLowerCase().includes('oauth');
   });
 };
+
+export const isOSMac = navigator.userAgent.includes('Mac');

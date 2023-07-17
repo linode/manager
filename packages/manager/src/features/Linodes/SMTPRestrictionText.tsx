@@ -1,15 +1,16 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
 import ExternalLink from 'src/components/ExternalLink';
 import { SupportLink } from 'src/components/SupportLink';
+import { Typography } from 'src/components/Typography';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { useAccount } from 'src/queries/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 export interface Props {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
   supportLink?: {
-    label: string;
     id: number;
+    label: string;
   };
 }
 
@@ -26,18 +27,18 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
       SMTP ports may be restricted on this Linode. Need to send email? Review
       our{' '}
       <ExternalLink
-        onClick={() => sendLinodeCreateDocsEvent('SMTP Notice Link')}
-        link="https://www.linode.com/docs/email/best-practices/running-a-mail-server/"
-        text="mail server guide"
         hideIcon
+        link="https://www.linode.com/docs/email/best-practices/running-a-mail-server/"
+        onClick={() => sendLinodeCreateDocsEvent('SMTP Notice Link')}
+        text="mail server guide"
       />
       , then{' '}
       {supportLink ? (
         <SupportLink
+          entity={{ id: supportLink.id, type: 'linode_id' }}
           text="open a support ticket"
-          title={`SMTP Restriction Removal on ${supportLink.label}`}
-          entity={{ type: 'linode_id', id: supportLink.id }}
           ticketType="smtp"
+          title={`SMTP Restriction Removal on ${supportLink.label}`}
         />
       ) : (
         'open a support ticket'

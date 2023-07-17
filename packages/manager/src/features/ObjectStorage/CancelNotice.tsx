@@ -1,6 +1,7 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 interface Props {
   className?: string;

@@ -1,18 +1,19 @@
-import * as React from 'react';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Typography from 'src/components/core/Typography';
-import { Accordion } from 'src/components/Accordion';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+
+import { Accordion } from 'src/components/Accordion';
 import { Toggle } from 'src/components/Toggle';
+import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 
 interface Props {
-  onChange: () => void;
   networkHelperEnabled: boolean;
+  onChange: () => void;
 }
 
-const NetworkHelper = ({ onChange, networkHelperEnabled }: Props) => {
+const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
   return (
-    <Accordion heading="Network Helper" defaultExpanded={true}>
+    <Accordion defaultExpanded={true} heading="Network Helper">
       <Grid container direction="column" spacing={2}>
         <Grid>
           <Typography variant="body1">
@@ -20,14 +21,14 @@ const NetworkHelper = ({ onChange, networkHelperEnabled }: Props) => {
             configuration into your Linode at boot.
           </Typography>
         </Grid>
-        <Grid container direction="row" alignItems="center">
+        <Grid alignItems="center" container direction="row">
           <Grid>
             <FormControlLabel
               control={
                 <Toggle
-                  onChange={onChange}
                   checked={networkHelperEnabled}
                   data-qa-toggle-network-helper
+                  onChange={onChange}
                 />
               }
               label={

@@ -29,7 +29,7 @@ describe('LinodeRescue', () => {
         sdg: null,
         sdh: null,
       });
-      const expected = { sdf: 'disk-123', sdd: 'disk-456' };
+      const expected = { sdd: 'disk-456', sdf: 'disk-123' };
 
       expect(result).toEqual(expected);
     });

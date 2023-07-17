@@ -1,7 +1,8 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
 import { styled } from '@mui/material/styles';
+
+import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 
 export const StyledResultsWrapper = styled('div', {
   label: 'StyledResultsWrapper',
@@ -9,8 +10,8 @@ export const StyledResultsWrapper = styled('div', {
   borderTop: '1px solid #D6D7D9',
   fontSize: '0.875rem',
   lineHeight: '1.125rem',
-  marginTop: theme.spacing(3),
   marginLeft: theme.spacing(),
+  marginTop: theme.spacing(3),
   paddingTop: theme.spacing(),
   width: 180,
 }));
@@ -31,43 +32,43 @@ export const StyledEarnedGrid = styled(Grid, {
 export const StyledLimitNotice = styled(Notice, {
   label: 'StyledLimitNotice',
 })(({ theme }) => ({
-  marginLeft: theme.spacing(),
   '& p': {
     color: `${theme.textColors.tableStatic} !important`,
     fontSize: '0.875rem',
   },
+  marginLeft: theme.spacing(),
 }));
 
 export const StyledImagesGridContainer = styled(Grid, {
   label: 'StyledImagesGridContainer',
 })(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  marginBottom: theme.spacing(),
-  maxWidth: 850,
   '& svg': {
     height: 145,
-    width: 145,
     [theme.breakpoints.only('sm')]: {
       height: 120,
       width: 120,
     },
+    width: 145,
   },
+  marginBottom: theme.spacing(),
+  marginTop: theme.spacing(4),
+  maxWidth: 850,
   [theme.breakpoints.down('sm')]: {
-    flexDirection: 'column',
     alignItems: 'center',
+    flexDirection: 'column',
   },
 }));
 
 export const StyledImageGrid = styled(Grid, {
   label: 'StyledImageGrid',
 })(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
   '& svg': {
     color: theme.name === 'light' ? '#ededf4' : '#83868c',
   },
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
   [theme.breakpoints.down('sm')]: {
     marginBottom: theme.spacing(2),
   },
@@ -78,8 +79,8 @@ export const StyledImageCopy = styled(Typography, {
 })(({ theme }) => ({
   color: theme.textColors.headlineStatic,
   fontFamily: theme.font.bold,
-  textAlign: 'center',
   marginTop: theme.spacing(2),
+  textAlign: 'center',
   [theme.breakpoints.up('sm')]: {
     maxWidth: 216,
   },

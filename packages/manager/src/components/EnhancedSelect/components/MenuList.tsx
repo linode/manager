@@ -3,6 +3,7 @@ import {
   MenuListComponentProps,
   components as reactSelectComponents,
 } from 'react-select';
+
 import { Guidance } from './Guidance';
 
 const Menu = (props: MenuListComponentProps<any, any>) => {

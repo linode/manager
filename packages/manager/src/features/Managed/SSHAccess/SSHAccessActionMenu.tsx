@@ -1,23 +1,24 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useTheme } from '@mui/styles';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export interface Props {
+  isEnabled: boolean;
   linodeId: number;
   linodeLabel: string;
-  isEnabled: boolean;
   openDrawer: (linodeId: number) => void;
 }
 
 export const SSHAccessActionMenu: React.FC<Props> = (props) => {
-  const { linodeId, isEnabled, openDrawer } = props;
+  const { isEnabled, linodeId, openDrawer } = props;
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -34,14 +35,13 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'Edit',
       onClick: () => {
         openDrawer(linodeId);
       },
+      title: 'Edit',
     },
     isEnabled
       ? {
-          title: 'Disable',
           onClick: () => {
             updateLinodeSettings({
               ssh: { access: false },
@@ -55,9 +55,9 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
                 handleError('Error disabling SSH Access for this Linode.', err);
               });
           },
+          title: 'Disable',
         }
       : {
-          title: 'Enable',
           onClick: () => {
             updateLinodeSettings({
               ssh: { access: true },
@@ -71,6 +71,7 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
                 handleError('Error enabling SSH Access for this Linode.', err);
               });
           },
+          title: 'Enable',
         },
   ];
 
@@ -86,8 +87,8 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
+              key={action.title}
               onClick={action.onClick}
             />
           );

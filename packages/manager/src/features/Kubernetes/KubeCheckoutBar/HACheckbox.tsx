@@ -1,11 +1,12 @@
-import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
-import { Box } from 'src/components/Box';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Box } from 'src/components/Box';
+import { Checkbox } from 'src/components/Checkbox';
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 
 export const HACopy = () => (
@@ -20,22 +21,22 @@ export const HACopy = () => (
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
+  checkbox: {
+    marginLeft: -8,
+    marginTop: -8,
+  },
   heading: {
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(),
     fontSize: '16px',
     fontWeight: 600,
-  },
-  checkbox: {
-    marginTop: -8,
-    marginLeft: -8,
+    paddingBottom: theme.spacing(),
+    paddingTop: theme.spacing(0.5),
   },
   price: {
-    marginTop: theme.spacing(),
     '& h3': {
       color: `${theme.palette.text.primary} !important`,
       fontFamily: theme.font.normal,
     },
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -57,12 +58,12 @@ const HACheckbox: React.FC<Props> = (props) => {
 
   return (
     <Box>
-      <Box display="flex" flexDirection="row" alignItems="flex-start">
-        <CheckBox
+      <Box alignItems="flex-start" display="flex" flexDirection="row">
+        <Checkbox
           checked={checked}
-          onChange={onChange}
           className={classes.checkbox}
           data-testid="ha-checkbox"
+          onChange={onChange}
         />
         <Box>
           <Typography className={classes.heading}>
@@ -73,9 +74,9 @@ const HACheckbox: React.FC<Props> = (props) => {
       </Box>
       <Box className={classes.price}>
         <DisplayPrice
-          price={HIGH_AVAILABILITY_PRICE}
           fontSize="14px"
           interval="month"
+          price={HIGH_AVAILABILITY_PRICE}
         />
       </Box>
     </Box>

@@ -1,14 +1,16 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { styled } from '@mui/material/styles';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
+import React from 'react';
+
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+
+import type { Meta, StoryObj } from '@storybook/react';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 
 const meta: Meta<typeof EntityIcon> = {
-  title: 'Components/EntityIcon',
-  component: EntityIcon,
   args: { variant: 'linode' },
+  component: EntityIcon,
+  title: 'Components/EntityIcon',
 };
 
 export default meta;
@@ -31,19 +33,19 @@ const variantList = [
 ];
 
 const sxGridItem = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  width: 125,
   '& svg': {
     color: '#333',
   },
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  width: 125,
 };
 
 export const Default: Story = {
   render: (args) => (
     <Grid container spacing={2}>
-      <Grid xs="auto" sx={{ ...sxGridItem, marginBottom: '20px' }}>
+      <Grid sx={{ ...sxGridItem, marginBottom: '20px' }} xs="auto">
         <EntityIcon {...args} />
       </Grid>
       <Grid container spacing={2}>

@@ -1,20 +1,22 @@
-import * as React from 'react';
-import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
-import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from 'src/components/core/Typography';
+import { PaymentMethod, deletePaymentMethod } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+
+import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
+import { Typography } from 'src/components/Typography';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { queryKey } from 'src/queries/accountPayment';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import {
   BillingActionButton,
   BillingBox,
   BillingPaper,
 } from '../../BillingDetail';
-import { useQueryClient } from 'react-query';
+import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 
 interface Props {
   error?: APIError[] | null;
@@ -24,7 +26,7 @@ interface Props {
 }
 
 const PaymentInformation = (props: Props) => {
-  const { loading, error, paymentMethods, isAkamaiCustomer } = props;
+  const { error, isAkamaiCustomer, loading, paymentMethods } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
@@ -82,8 +84,8 @@ const PaymentInformation = (props: Props) => {
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
   return (
-    <Grid xs={12} md={6}>
-      <BillingPaper variant="outlined" data-qa-billing-summary>
+    <Grid md={6} xs={12}>
+      <BillingPaper data-qa-billing-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Payment Methods</Typography>
           {!isAkamaiCustomer ? (
@@ -97,10 +99,10 @@ const PaymentInformation = (props: Props) => {
         </BillingBox>
         {!isAkamaiCustomer ? (
           <PaymentMethods
-            loading={loading}
             error={error}
-            paymentMethods={paymentMethods}
+            loading={loading}
             openDeleteDialog={openDeleteDialog}
+            paymentMethods={paymentMethods}
           />
         ) : (
           <Typography data-testid="akamai-customer-text">
@@ -111,17 +113,17 @@ const PaymentInformation = (props: Props) => {
           </Typography>
         )}
         <AddPaymentMethodDrawer
-          open={addDrawerOpen}
           onClose={closeAddDrawer}
+          open={addDrawerOpen}
           paymentMethods={paymentMethods}
         />
         <DeletePaymentMethodDialog
-          open={deleteDialogOpen}
+          error={deleteError}
+          loading={deleteLoading}
           onClose={closeDeleteDialog}
           onDelete={doDelete}
+          open={deleteDialogOpen}
           paymentMethod={deletePaymentMethodSelection}
-          loading={deleteLoading}
-          error={deleteError}
         />
       </BillingPaper>
     </Grid>

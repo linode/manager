@@ -3,22 +3,24 @@ import {
   getBucketAccess,
   updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Divider from 'src/components/core/Divider';
-import Typography from 'src/components/core/Typography';
+import { Divider } from 'src/components/Divider';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
+import { Typography } from 'src/components/Typography';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
+
 import { AccessSelect } from '../BucketDetail/AccessSelect';
-import { useProfile } from 'src/queries/profile';
-import { styled } from '@mui/material/styles';
 export interface BucketDetailsDrawerProps {
   bucketLabel?: string;
   cluster?: string;
@@ -27,7 +29,7 @@ export interface BucketDetailsDrawerProps {
   objectsNumber?: number;
   onClose: () => void;
   open: boolean;
-  size?: number | null;
+  size?: null | number;
 }
 
 export const BucketDetailsDrawer = React.memo(
@@ -60,18 +62,18 @@ export const BucketDetailsDrawer = React.memo(
 
     return (
       <Drawer
-        open={open}
         onClose={onClose}
+        open={open}
         title={truncateMiddle(bucketLabel ?? 'Bucket Detail')}
       >
         {formattedCreated ? (
-          <Typography variant="subtitle2" data-testid="createdTime">
+          <Typography data-testid="createdTime" variant="subtitle2">
             Created: {formattedCreated}
           </Typography>
         ) : null}
 
         {cluster ? (
-          <Typography variant="subtitle2" data-testid="cluster">
+          <Typography data-testid="cluster" variant="subtitle2">
             {region?.label ?? cluster}
           </Typography>
         ) : null}
@@ -88,7 +90,7 @@ export const BucketDetailsDrawer = React.memo(
         ) : null}
 
         {formattedCreated || cluster ? (
-          <Divider spacingTop={16} spacingBottom={16} />
+          <Divider spacingBottom={16} spacingTop={16} />
         ) : null}
 
         {typeof size === 'number' ? (
@@ -104,14 +106,11 @@ export const BucketDetailsDrawer = React.memo(
         ) : null}
 
         {typeof size === 'number' || typeof objectsNumber === 'number' ? (
-          <Divider spacingTop={16} spacingBottom={16} />
+          <Divider spacingBottom={16} spacingTop={16} />
         ) : null}
 
         {cluster && bucketLabel ? (
           <AccessSelect
-            variant="bucket"
-            name={bucketLabel}
-            getAccess={() => getBucketAccess(cluster, bucketLabel)}
             updateAccess={(acl: ACLType, cors_enabled: boolean) => {
               // Don't send the ACL with the payload if it's "custom", since it's
               // not valid (though it's a valid return type).
@@ -120,6 +119,9 @@ export const BucketDetailsDrawer = React.memo(
 
               return updateBucketAccess(cluster, bucketLabel, payload);
             }}
+            getAccess={() => getBucketAccess(cluster, bucketLabel)}
+            name={bucketLabel}
+            variant="bucket"
           />
         ) : null}
       </Drawer>

@@ -1,25 +1,26 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(2),
-    padding: theme.spacing(2),
     '& > h6': {
-      color: theme.color.grey1,
       '& > strong': {
         color: theme.color.headline,
       },
+      color: theme.color.grey1,
     },
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2),
   },
 }));
 
 interface Props {
-  title: string;
   helperText?: string;
+  title: string;
 }
 
 export const GraphCard: React.FC<Props> = (props) => {

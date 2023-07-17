@@ -1,54 +1,29 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+
 import { Button } from 'src/components/Button/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import Grid from 'src/components/Grid';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 import { DispatchProps } from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
+import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';
+
 import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
 import RestrictedUserLabel from './RestrictedUserLabel';
-import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& a': {
-      color: theme.textColors.linkActiveLight,
-    },
-    '& a:hover': {
-      color: theme.palette.primary.main,
-    },
-    [theme.breakpoints.down('lg')]: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-  },
-  updates: {
-    [theme.breakpoints.down('lg')]: {
-      marginRight: theme.spacing(2),
-    },
-  },
-  packageButton: {
-    fontSize: '0.875rem',
-    padding: 0,
-    textAlign: 'left',
-    '&:hover': {
-      textDecoration: 'underline',
-      color: 'inherit',
-      backgroundColor: 'inherit',
-    },
-  },
   lastUpdatedOuter: {
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing(1),
@@ -57,15 +32,42 @@ const useStyles = makeStyles((theme: Theme) => ({
   lastUpdatedText: {
     fontSize: '0.75rem',
   },
+  packageButton: {
+    '&:hover': {
+      backgroundColor: 'inherit',
+      color: 'inherit',
+      textDecoration: 'underline',
+    },
+    fontSize: '0.875rem',
+    padding: 0,
+    textAlign: 'left',
+  },
+  root: {
+    '& a': {
+      color: theme.textColors.linkActiveLight,
+    },
+    '& a:hover': {
+      color: theme.palette.primary.main,
+    },
+    [theme.breakpoints.down('lg')]: {
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+  },
+  updates: {
+    [theme.breakpoints.down('lg')]: {
+      marginRight: theme.spacing(2),
+    },
+  },
 }));
 
 interface Props {
   clientID: number;
   clientLabel: string;
   lastUpdatedError?: APIError[];
+  longviewClientLastUpdated?: number;
   openPackageDrawer: () => void;
   updateLongviewClient: DispatchProps['updateLongviewClient'];
-  longviewClientLastUpdated?: number;
   userCanModifyClient: boolean;
 }
 
@@ -107,7 +109,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
     ['SysInfo', 'hostname'],
     longviewClientData
   );
-  const uptime = pathOr<number | null>(null, ['Uptime'], longviewClientData);
+  const uptime = pathOr<null | number>(null, ['Uptime'], longviewClientData);
   const formattedUptime =
     uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
   const packages = pathOr<LongviewPackage[] | null>(
@@ -137,20 +139,20 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
     longviewClientLastUpdated !== 0;
 
   return (
-    <Grid container direction="column" className={classes.root}>
+    <Grid className={classes.root} container direction="column">
       <Grid item>
         {userCanModifyClient ? (
           <EditableEntityLabel
-            text={clientLabel}
-            subText={hostname}
-            onEdit={handleUpdateLabel}
             loading={updating}
+            onEdit={handleUpdateLabel}
+            subText={hostname}
+            text={clientLabel}
           />
         ) : (
           <RestrictedUserLabel label={clientLabel} subtext={hostname} />
         )}
       </Grid>
-      <Grid item className={classes.updates}>
+      <Grid className={classes.updates} item>
         {loading ? (
           <Typography>Loading...</Typography>
         ) : (
@@ -159,8 +161,8 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
             {numPackagesToUpdate > 0 ? (
               <Button
                 className={classes.packageButton}
-                title={packagesToUpdate}
                 onClick={() => openPackageDrawer()}
+                title={packagesToUpdate}
               >
                 {packagesToUpdate}
               </Button>
@@ -174,7 +176,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
         <Link to={`/longview/clients/${clientID}`}>View Details</Link>
         {!loading && (
           <div className={classes.lastUpdatedOuter}>
-            <Typography variant="caption" className={classes.lastUpdatedText}>
+            <Typography className={classes.lastUpdatedText} variant="caption">
               {formattedlastUpdatedTime}
             </Typography>
           </div>

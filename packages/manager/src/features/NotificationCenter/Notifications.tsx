@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { NotificationSection } from './NotificationSection';
+
 import { useFormattedNotifications } from './NotificationData/useFormattedNotifications';
+import { NotificationSection } from './NotificationSection';
 
 export const Notifications = () => {
   const notifications = useFormattedNotifications();
@@ -8,8 +9,8 @@ export const Notifications = () => {
   return (
     <NotificationSection
       content={notifications}
-      header="Notifications"
       emptyMessage="No notifications to display."
+      header="Notifications"
     />
   );
 };

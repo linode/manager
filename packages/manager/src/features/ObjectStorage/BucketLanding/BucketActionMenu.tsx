@@ -1,8 +1,10 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import ActionMenu from 'src/components/ActionMenu/';
 import { Hidden } from 'src/components/Hidden';
-import InlineMenuAction from 'src/components/InlineMenuAction';
-import { styled } from '@mui/material/styles';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface BucketActionMenuProps {
@@ -15,16 +17,16 @@ export interface BucketActionMenuProps {
 export const BucketActionMenu = (props: BucketActionMenuProps) => {
   const actions: Action[] = [
     {
-      title: 'Details',
       onClick: () => {
         props.onDetails();
       },
+      title: 'Details',
     },
     {
-      title: 'Delete',
       onClick: () => {
         props.onRemove();
       },
+      title: 'Delete',
     },
   ];
 
@@ -32,16 +34,16 @@ export const BucketActionMenu = (props: BucketActionMenuProps) => {
     <StyledRootContainer>
       <Hidden mdDown>
         <InlineMenuAction
-          actionText="Details"
           onClick={() => {
             props.onDetails();
           }}
+          actionText="Details"
         />
         <InlineMenuAction
-          actionText="Delete"
           onClick={() => {
             props.onRemove();
           }}
+          actionText="Delete"
         />
       </Hidden>
       <Hidden mdUp>

@@ -1,25 +1,28 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import classNames from 'classnames';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
-import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
-import { AddNodePoolDrawer } from './AddNodePoolDrawer';
-import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
-import { RecycleNodeDialog } from './RecycleNodeDialog';
-import NodePool from './NodePool';
-import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
-import { AutoscalePoolDialog } from './AutoscalePoolDialog';
+
 import { Button } from 'src/components/Button/Button';
-import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { RecycleClusterDialog } from '../RecycleClusterDialog';
-import classNames from 'classnames';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
+
+import { RecycleClusterDialog } from '../RecycleClusterDialog';
+import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
+import { AddNodePoolDrawer } from './AddNodePoolDrawer';
+import { AutoscalePoolDialog } from './AutoscalePoolDialog';
+import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
+import NodePool from './NodePool';
+import { RecycleNodeDialog } from './RecycleNodeDialog';
+import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
+
 import type { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,14 +31,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(),
   },
   displayTable: {
-    padding: '8px 8px 0px',
-    width: '100%',
     '& > div': {
       marginBottom: theme.spacing(3),
     },
     '& > div:last-child': {
       marginBottom: 0,
     },
+    padding: '8px 8px 0px',
+    width: '100%',
   },
   nodePoolHeader: {
     marginBottom: theme.spacing(),
@@ -47,8 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   nodePoolHeaderOuter: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
   },
 }));
 
@@ -65,8 +68,8 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const {
     data: pools,
-    isLoading,
     error: poolsError,
+    isLoading,
   } = useAllKubernetesNodePoolQuery(clusterID, { refetchInterval: 15000 });
 
   const [selectedNodeId, setSelectedNodeId] = useState<string>('');
@@ -116,15 +119,15 @@ export const NodePoolsDisplay = (props: Props) => {
   return (
     <>
       <Grid
-        container
         alignItems="center"
+        container
         justifyContent="space-between"
         spacing={2}
       >
         <Grid>
           <Typography
-            variant="h2"
             className={classNames(classes.nodePoolHeader)}
+            variant="h2"
           >
             Node Pools
           </Typography>
@@ -165,11 +168,10 @@ export const NodePoolsDisplay = (props: Props) => {
                 return (
                   <div key={id}>
                     <NodePool
-                      poolId={thisPool.id}
-                      typeLabel={typeLabel}
-                      nodes={nodes ?? []}
-                      autoscaler={thisPool.autoscaler}
-                      handleClickResize={handleOpenResizeDrawer}
+                      openAutoscalePoolDialog={(poolId) => {
+                        setSelectedPoolId(poolId);
+                        setIsAutoscaleDialogOpen(true);
+                      }}
                       openDeletePoolDialog={(id) => {
                         setSelectedPoolId(id);
                         setIsDeleteNodePoolOpen(true);
@@ -182,11 +184,12 @@ export const NodePoolsDisplay = (props: Props) => {
                         setSelectedNodeId(nodeId);
                         setIsRecycleNodeOpen(true);
                       }}
-                      openAutoscalePoolDialog={(poolId) => {
-                        setSelectedPoolId(poolId);
-                        setIsAutoscaleDialogOpen(true);
-                      }}
+                      autoscaler={thisPool.autoscaler}
+                      handleClickResize={handleOpenResizeDrawer}
                       isOnlyNodePool={pools?.length === 1}
+                      nodes={nodes ?? []}
+                      poolId={thisPool.id}
+                      typeLabel={typeLabel}
                     />
                   </div>
                 );
@@ -202,15 +205,15 @@ export const NodePoolsDisplay = (props: Props) => {
               clusterId={clusterID}
               clusterLabel={clusterLabel}
               clusterRegionId={clusterRegionId}
-              regionsData={regionsData}
-              open={addDrawerOpen}
               onClose={() => setAddDrawerOpen(false)}
+              open={addDrawerOpen}
+              regionsData={regionsData}
             />
             <ResizeNodePoolDrawer
-              open={isResizeDrawerOpen}
               kubernetesClusterId={clusterID}
-              onClose={() => setIsResizeDrawerOpen(false)}
               nodePool={selectedPool}
+              onClose={() => setIsResizeDrawerOpen(false)}
+              open={isResizeDrawerOpen}
             />
             <DeleteNodePoolDialog
               kubernetesClusterId={clusterID}
@@ -219,28 +222,28 @@ export const NodePoolsDisplay = (props: Props) => {
               open={isDeleteNodePoolOpen}
             />
             <AutoscalePoolDialog
+              clusterId={clusterID}
               handleOpenResizeDrawer={handleOpenResizeDrawer}
+              nodePool={selectedPool}
               onClose={() => setIsAutoscaleDialogOpen(false)}
               open={isAutoscaleDialogOpen}
-              nodePool={selectedPool}
-              clusterId={clusterID}
             />
             <RecycleNodeDialog
+              clusterId={clusterID}
+              nodeId={selectedNodeId}
               onClose={() => setIsRecycleNodeOpen(false)}
               open={isRecycleNodeOpen}
-              nodeId={selectedNodeId}
-              clusterId={clusterID}
             />
             <RecycleNodePoolDialog
-              open={isRecycleAllPoolNodesOpen}
-              onClose={() => setIsRecycleAllPoolNodesOpen(false)}
               clusterId={clusterID}
               nodePoolId={selectedPoolId}
+              onClose={() => setIsRecycleAllPoolNodesOpen(false)}
+              open={isRecycleAllPoolNodesOpen}
             />
             <RecycleClusterDialog
-              open={isRecycleClusterOpen}
-              onClose={() => setIsRecycleClusterOpen(false)}
               clusterId={clusterID}
+              onClose={() => setIsRecycleClusterOpen(false)}
+              open={isRecycleClusterOpen}
             />
           </Grid>
         )}

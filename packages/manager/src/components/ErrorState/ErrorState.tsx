@@ -1,16 +1,17 @@
-import * as React from 'react';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { SvgIconProps } from '@mui/material/SvgIcon';
-import { useTheme, styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { styled, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Typography } from 'src/components/Typography';
 
 interface ErrorStateProps {
-  compact?: boolean;
-  cozy?: boolean;
   CustomIcon?: React.ComponentType<SvgIconProps>;
   CustomIconStyles?: React.CSSProperties;
-  errorText: string | JSX.Element;
+  compact?: boolean;
+  cozy?: boolean;
+  errorText: JSX.Element | string;
 }
 
 export const ErrorState = (props: ErrorStateProps) => {
@@ -25,7 +26,7 @@ export const ErrorState = (props: ErrorStateProps) => {
   };
 
   return (
-    <ErrorStateRoot container justifyContent="center" alignItems="center">
+    <ErrorStateRoot alignItems="center" container justifyContent="center">
       <Grid data-testid="error-state">
         <StyledIconContainer>
           {CustomIcon ? (
@@ -40,9 +41,9 @@ export const ErrorState = (props: ErrorStateProps) => {
         </StyledIconContainer>
         {typeof props.errorText === 'string' ? (
           <Typography
+            data-qa-error-msg
             style={{ textAlign: 'center' }}
             variant="h3"
-            data-qa-error-msg
           >
             {props.errorText}
           </Typography>

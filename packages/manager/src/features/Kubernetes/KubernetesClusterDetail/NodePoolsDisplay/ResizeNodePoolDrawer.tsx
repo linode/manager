@@ -1,46 +1,48 @@
 import { KubeNodePoolResponse } from '@linode/api-v4';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
+
 import { getMonthlyPrice, nodeWarning } from '../../kubeUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  summary: {
-    fontWeight: 'bold',
-    lineHeight: '20px',
-    fontSize: '16px',
-  },
   helperText: {
     paddingBottom: `calc(${theme.spacing(2)} + 1px)`,
   },
   section: {
     paddingBottom: theme.spacing(3),
   },
+  summary: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    lineHeight: '20px',
+  },
 }));
 
 export interface Props {
-  open: boolean;
-  onClose: () => void;
-  nodePool: KubeNodePoolResponse | undefined;
   kubernetesClusterId: number;
+  nodePool: KubeNodePoolResponse | undefined;
+  onClose: () => void;
+  open: boolean;
 }
 
 const resizeWarning = `Resizing to fewer nodes will delete random nodes from
 the pool.`;
 
 export const ResizeNodePoolDrawer = (props: Props) => {
-  const { nodePool, onClose, open, kubernetesClusterId } = props;
+  const { kubernetesClusterId, nodePool, onClose, open } = props;
   const classes = useStyles();
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
@@ -50,9 +52,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     : undefined;
 
   const {
-    mutateAsync: updateNodePool,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateNodePool,
   } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
@@ -94,9 +96,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
-      title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
-      open={open}
       onClose={onClose}
+      open={open}
+      title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
     >
       {isLoadingTypes && <CircleProgress />}
       <form
@@ -120,9 +122,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
             Enter the number of nodes you'd like in this pool:
           </Typography>
           <EnhancedNumberInput
-            value={updatedCount}
-            setValue={handleChange}
             min={1}
+            setValue={handleChange}
+            value={updatedCount}
           />
         </div>
 
@@ -134,18 +136,18 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         </div>
 
         {updatedCount < nodePool.count && (
-          <Notice important warning text={resizeWarning} />
+          <Notice important text={resizeWarning} warning />
         )}
 
-        {updatedCount < 3 && <Notice important warning text={nodeWarning} />}
+        {updatedCount < 3 && <Notice important text={nodeWarning} warning />}
 
         <ActionsPanel>
           <Button
             buttonType="primary"
-            disabled={updatedCount === nodePool.count}
-            onClick={handleSubmit}
             data-qa-submit
+            disabled={updatedCount === nodePool.count}
             loading={isLoading}
+            onClick={handleSubmit}
           >
             Save Changes
           </Button>

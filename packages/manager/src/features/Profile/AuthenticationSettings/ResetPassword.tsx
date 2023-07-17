@@ -1,9 +1,10 @@
-import * as React from 'react';
-import { Box } from 'src/components/Box';
-import Typography from 'src/components/core/Typography';
-import { Link } from 'src/components/Link';
-import { LOGIN_ROOT } from 'src/constants';
 import { styled, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Box } from 'src/components/Box';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
+import { LOGIN_ROOT } from 'src/constants';
 
 interface Props {
   username?: string;
@@ -31,8 +32,8 @@ const StyledCopy = styled(Typography, {
   label: 'StyledCopy',
 })(({ theme }) => ({
   lineHeight: '20px',
-  marginTop: theme.spacing(),
   marginBottom: theme.spacing(),
+  marginTop: theme.spacing(),
 }));
 
 const StyledLink = styled(Link, {

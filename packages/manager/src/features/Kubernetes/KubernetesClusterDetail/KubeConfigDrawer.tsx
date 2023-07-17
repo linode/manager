@@ -1,52 +1,53 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+
 import Download from 'src/assets/icons/download.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Grid from '@mui/material/Unstable_Grid2';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import DrawerContent from 'src/components/DrawerContent';
-import { downloadFile } from 'src/utilities/downloadFile';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Typography } from 'src/components/Typography';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
+import { downloadFile } from 'src/utilities/downloadFile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     color: '#3683dc',
+  },
+  iconLink: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    font: 'inherit',
+    marginRight: theme.spacing(1),
+    padding: 0,
   },
   tooltip: {
     '& svg': {
       color: '#3683dc',
     },
   },
-  iconLink: {
-    marginRight: theme.spacing(1),
-    background: 'none',
-    border: 'none',
-    padding: 0,
-    font: 'inherit',
-    cursor: 'pointer',
-  },
 }));
 
 interface Props {
+  closeDrawer: () => void;
   clusterId: number;
   clusterLabel: string;
   open: boolean;
-  closeDrawer: () => void;
 }
 
 export const KubeConfigDrawer = (props: Props) => {
   const classes = useStyles();
-  const { clusterLabel, clusterId, closeDrawer, open } = props;
+  const { closeDrawer, clusterId, clusterLabel, open } = props;
 
   const {
     data,
     error,
+    isFetching,
     isLoading,
     refetch,
-    isFetching,
   } = useKubenetesKubeConfigQuery(clusterId, open);
 
   // refetchOnMount isnt good enough for this query because
@@ -58,12 +59,12 @@ export const KubeConfigDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer title={'View Kubeconfig'} open={open} onClose={closeDrawer} wide>
+    <Drawer onClose={closeDrawer} open={open} title={'View Kubeconfig'} wide>
       <DrawerContent
-        title={clusterLabel}
         error={!!error}
         errorMessage={error?.[0].reason}
         loading={isLoading}
+        title={clusterLabel}
       >
         <Grid container spacing={2}>
           <Grid>

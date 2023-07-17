@@ -1,29 +1,31 @@
-import * as React from 'react';
-import { DateTime } from 'luxon';
-import { parseAPIDate } from 'src/utilities/date';
-import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles } from '@mui/styles';
+import { DateTime } from 'luxon';
+import * as React from 'react';
+
+import { Divider } from 'src/components/Divider';
+import { Typography } from 'src/components/Typography';
+import { parseAPIDate } from 'src/utilities/date';
+
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hivelyContainer: {
+    alignItems: 'center',
+    borderTop: `1px solid ${theme.color.grey2}`,
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
     margin: `${theme.spacing(3)} ${theme.spacing(1)} 0`,
     paddingTop: theme.spacing(1),
-    borderTop: `1px solid ${theme.color.grey2}`,
-  },
-  hivelyLink: {
-    textDecoration: 'none',
-    color: theme.color.black,
-    marginRight: theme.spacing(2),
   },
   hivelyImage: {
-    width: '25px',
     margin: 3,
+    width: '25px',
+  },
+  hivelyLink: {
+    color: theme.color.black,
+    marginRight: theme.spacing(2),
+    textDecoration: 'none',
   },
   hivelyLinkIcon: {
     display: 'inline-block',
@@ -33,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   linodeUsername: string;
-  ticketId: string;
   replyId: string;
+  ticketId: string;
 }
 
 export const shouldRenderHively = (
@@ -64,7 +66,7 @@ export const shouldRenderHively = (
 
 export const Hively: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { linodeUsername, ticketId, replyId } = props;
+  const { linodeUsername, replyId, ticketId } = props;
   const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
 
   return (
@@ -72,59 +74,59 @@ export const Hively: React.FC<Props> = (props) => {
       <Divider />
       <Typography component="span">
         <a
+          aria-describedby="external-site"
           className={classes.hivelyLink}
           href={href + '3'}
-          target="_blank"
-          aria-describedby="external-site"
           rel="noopener noreferrer"
+          target="_blank"
         >
           How did I do?
         </a>
       </Typography>
       <span>
         <a
-          href={href + '3'}
-          target="_blank"
           aria-describedby="external-site"
-          rel="noopener noreferrer"
           className={classes.hivelyLinkIcon}
+          href={href + '3'}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <img
-            className={classes.hivelyImage}
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png'
             }
             alt="Face symbol outlined in green with a happy expression."
+            className={classes.hivelyImage}
           />
         </a>
         <a
-          href={href + '2'}
-          target="_blank"
           aria-describedby="external-site"
-          rel="noopener noreferrer"
           className={classes.hivelyLinkIcon}
+          href={href + '2'}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <img
-            className={classes.hivelyImage}
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png'
             }
             alt="Face symbol outlined in yellow with an indifferent expression."
+            className={classes.hivelyImage}
           />
         </a>
         <a
-          href={href + '1'}
-          target="_blank"
           aria-describedby="external-site"
-          rel="noopener noreferrer"
           className={classes.hivelyLinkIcon}
+          href={href + '1'}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <img
-            className={classes.hivelyImage}
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png'
             }
             alt="Face symbol outlined in red with an unhappy expression."
+            className={classes.hivelyImage}
           />
         </a>
       </span>

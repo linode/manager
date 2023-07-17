@@ -1,51 +1,53 @@
-import * as React from 'react';
-import { Chip } from 'src/components/core/Chip';
-import { Hidden } from 'src/components/Hidden';
+import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+
+import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import ActionMenu from './ClusterActionMenu';
-import { Link } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
-import {
-  getNextVersion,
-  getTotalClusterMemoryCPUAndStorage,
-} from '../kubeUtils';
 import {
   useAllKubernetesNodePoolQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { useRegionsQuery } from 'src/queries/regions';
+
+import {
+  getNextVersion,
+  getTotalClusterMemoryCPUAndStorage,
+} from '../kubeUtils';
+import { ClusterActionMenu } from './ClusterActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  link: {
-    display: 'block',
-    color: theme.textColors.linkActiveLight,
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-    },
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-  },
   clusterRow: {
     '&:before': {
       display: 'none',
     },
   },
-  version: {
-    display: 'flex',
+  labelStatusWrapper: {
     alignItems: 'center',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    whiteSpace: 'nowrap',
+  },
+  link: {
+    '&:hover, &:focus': {
+      textDecoration: 'underline',
+    },
+    color: theme.textColors.linkActiveLight,
+    display: 'block',
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
+  },
+  version: {
+    alignItems: 'center',
+    display: 'flex',
     justifyContent: 'flex-start',
   },
 }));
@@ -76,32 +78,32 @@ export const KubernetesClusterRow = (props: Props) => {
 
   const hasUpgrade = nextVersion !== null;
 
-  const { RAM, CPU } = getTotalClusterMemoryCPUAndStorage(
+  const { CPU, RAM } = getTotalClusterMemoryCPUAndStorage(
     pools ?? [],
     types ?? []
   );
 
   return (
     <TableRow
-      key={cluster.id}
+      ariaLabel={`Cluster ${cluster.label}`}
+      className={classes.clusterRow}
       data-qa-cluster-cell={cluster.id}
       data-testid={'cluster-row'}
-      className={classes.clusterRow}
-      ariaLabel={`Cluster ${cluster.label}`}
+      key={cluster.id}
     >
       <TableCell data-qa-cluster-label>
         <Grid
-          container
-          wrap="nowrap"
           alignItems="center"
+          container
           justifyContent="space-between"
+          wrap="nowrap"
         >
           <Grid className="py0">
             <div className={classes.labelStatusWrapper}>
               <Link
                 className={classes.link}
-                to={`/kubernetes/clusters/${cluster.id}/summary`}
                 tabIndex={0}
+                to={`/kubernetes/clusters/${cluster.id}/summary`}
               >
                 {cluster.label}
               </Link>
@@ -110,11 +112,11 @@ export const KubernetesClusterRow = (props: Props) => {
           {cluster.control_plane.high_availability ? (
             <Grid>
               <Chip
+                data-testid={'ha-chip'}
                 label="HA"
-                variant="outlined"
                 outlineColor="green"
                 size="small"
-                data-testid={'ha-chip'}
+                variant="outlined"
               />
             </Grid>
           ) : null}
@@ -126,11 +128,11 @@ export const KubernetesClusterRow = (props: Props) => {
             {cluster.k8s_version}
             {hasUpgrade ? (
               <Chip
-                onClick={openUpgradeDialog}
-                label="UPGRADE"
-                size="small"
                 clickable
                 inTable
+                label="UPGRADE"
+                onClick={openUpgradeDialog}
+                size="small"
               />
             ) : null}
           </div>
@@ -149,12 +151,12 @@ export const KubernetesClusterRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <ActionMenu
-          clusterId={cluster.id}
-          clusterLabel={cluster.label}
+        <ClusterActionMenu
           openDialog={() =>
             openDeleteDialog(cluster.id, cluster.label, pools ?? [])
           }
+          clusterId={cluster.id}
+          clusterLabel={cluster.label}
         />
       </TableCell>
     </TableRow>

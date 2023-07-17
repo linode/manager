@@ -1,21 +1,23 @@
 import * as React from 'react';
-import { Box } from 'src/components/Box';
+
 import { Accordion } from 'src/components/Accordion';
-import Link from 'src/components/Link';
+import { Box } from 'src/components/Box';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
-import { UserDataAccordionHeading } from './UserDataAccordionHeading';
-import { useExpandIconStyles } from './UserDataAccordion.styles';
+import { Typography } from 'src/components/Typography';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+
+import { useExpandIconStyles } from './UserDataAccordion.styles';
+import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 
 interface Props {
   createType?: CreateTypes;
-  userData: string | undefined;
-  onChange: (userData: string) => void;
   disabled?: boolean;
-  renderNotice?: JSX.Element;
+  onChange: (userData: string) => void;
   renderCheckbox?: JSX.Element;
+  renderNotice?: JSX.Element;
+  userData: string | undefined;
 }
 
 export const UserDataAccordion = (props: Props) => {
@@ -23,19 +25,19 @@ export const UserDataAccordion = (props: Props) => {
   const {
     createType,
     disabled,
-    userData,
     onChange,
-    renderNotice,
     renderCheckbox,
+    renderNotice,
+    userData,
   } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
 
   const checkFormat = ({
-    userData,
     hasInputValueChanged,
+    userData,
   }: {
-    userData: string;
     hasInputValueChanged: boolean;
+    userData: string;
   }) => {
     const userDataLower = userData.toLowerCase();
     const validPrefixes = ['#cloud-config', 'content-type: text/', '#!/bin/'];
@@ -58,60 +60,63 @@ export const UserDataAccordion = (props: Props) => {
 
   return (
     <Accordion
-      heading={<UserDataAccordionHeading createType={createType} />}
-      style={{
-        marginTop: renderNotice && renderCheckbox ? 0 : 24,
-      }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       headingProps={{
         variant: 'h2',
       }}
+      style={{
+        marginTop: renderNotice && renderCheckbox ? 0 : 24,
+      }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       summaryProps={{
         sx: {
-          padding: '5px 24px 0px 24px',
           alignItems: fromBackupOrFromLinode ? 'flex-start' : 'center',
+          padding: '5px 24px 0px 24px',
         },
       }}
-      detailProps={{ sx: sxDetails }}
       sx={{
         '&:before': {
           display: 'none',
         },
       }}
+      detailProps={{ sx: sxDetails }}
       expandIconClassNames={fromBackupOrFromLinode ? expandIconStyles : ''}
+      heading={<UserDataAccordionHeading createType={createType} />}
     >
       {renderNotice ? (
-        <Box marginBottom="16px" data-testid="render-notice">
+        <Box data-testid="render-notice" marginBottom="16px">
           {renderNotice}
         </Box>
       ) : null}
-      <Typography sx={{ marginBottom: 3 }}>
-        User data is a virtual machine&rsquo;s cloud-init metadata relating to a
-        user&rsquo;s local account, including username and user group(s). <br />
-        User data must be added before the Linode provisions.{' '}
+      <Typography sx={{ marginBottom: 1 }}>
+        User data is a feature of the Metadata service that enables you to
+        perform system configuration tasks (such as adding users and installing
+        software) by providing custom instructions or scripts to cloud-init. Any
+        user data should be added at this step and cannot be modified after the
+        the Linode has been created.{' '}
         <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
           Learn more.
         </Link>{' '}
       </Typography>
       {formatWarning ? (
-        <Notice warning spacingTop={16} spacingBottom={16}>
+        <Notice spacingBottom={16} spacingTop={16} warning>
           The user data may be formatted incorrectly.
         </Notice>
       ) : null}
       <TextField
-        label="User Data"
-        multiline
-        rows={1}
-        expand
+        onBlur={(e) =>
+          checkFormat({ hasInputValueChanged: false, userData: e.target.value })
+        }
         onChange={(e) => {
-          checkFormat({ userData: e.target.value, hasInputValueChanged: true });
+          checkFormat({ hasInputValueChanged: true, userData: e.target.value });
           onChange(e.target.value);
         }}
-        value={userData}
-        disabled={Boolean(disabled)}
-        onBlur={(e) =>
-          checkFormat({ userData: e.target.value, hasInputValueChanged: false })
-        }
         data-qa-user-data-input
+        disabled={Boolean(disabled)}
+        expand
+        label="User Data"
+        labelTooltipText="Compatible formats include cloud-config data and executable scripts."
+        multiline
+        rows={1}
+        value={userData}
       />
       {renderCheckbox ?? null}
     </Accordion>

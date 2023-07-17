@@ -1,3 +1,19 @@
+## [2023-07-11] - v0.26.0
+
+
+### Added:
+
+- Validation for VPC creation and updates ([#9361](https://github.com/linode/manager/pull/9361))
+
+### Fixed:
+
+- Firewall custom port validation ([#9336](https://github.com/linode/manager/pull/9336))
+
+## [2023-06-29] - v0.25.0
+
+### Fixed:
+- Firewall custom ports validation ([#9336](https://github.com/linode/manager/pull/9336))
+
 ## [2023-06-12] - v0.24.0
 
 ### Changed:
