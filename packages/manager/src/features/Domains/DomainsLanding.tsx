@@ -1,61 +1,43 @@
-import { Domain } from '@linode/api-v4/lib/domains';
-import { Theme } from '@mui/material/styles';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { Domain } from '@linode/api-v4/lib/domains';
+import { useSnackbar } from 'notistack';
 import { useHistory, useLocation } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
-
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { styled } from '@mui/material/styles';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Hidden } from 'src/components/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableSortCell } from 'src/components/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import {
-  useDeleteDomainMutation,
-  useDomainsQuery,
-  useUpdateDomainMutation,
-} from 'src/queries/domains';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import { CloneDomainDrawer } from './CloneDomainDrawer';
 import { DisableDomainDialog } from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
 import { DomainBanner } from './DomainBanner';
 import { DomainTableRow } from './DomainTableRow';
 import { DomainZoneImportDrawer } from './DomainZoneImportDrawer';
-import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
+import { useProfile } from 'src/queries/profile';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import {
+  useDeleteDomainMutation,
+  useDomainsQuery,
+  useUpdateDomainMutation,
+} from 'src/queries/domains';
+import { usePagination } from 'src/hooks/usePagination';
+import { useOrder } from 'src/hooks/useOrder';
+import { Table } from 'src/components/Table';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableBody } from 'src/components/TableBody';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { TableCell } from 'src/components/TableCell';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Hidden } from 'src/components/Hidden';
+import { CloneDomainDrawer } from './CloneDomainDrawer';
 import { EditDomainDrawer } from './EditDomainDrawer';
+import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  importButton: {
-    marginLeft: `-${theme.spacing()}`,
-    whiteSpace: 'nowrap',
-  },
-  root: {
-    // Adds spacing when the docs button wraps to make it look a little less awkward
-    [theme.breakpoints.down(380)]: {
-      '& .docsButton': {
-        paddingBottom: theme.spacing(2),
-      },
-    },
-  },
-}));
 
 interface DomainsLandingProps {
   // Since secondary Domains do not have a Detail page, we allow the consumer to
@@ -63,29 +45,28 @@ interface DomainsLandingProps {
   domainForEditing?: Domain;
 }
 
-const preferenceKey = 'domains';
+const PREFERENCE_KEY = 'domains';
 
 export const DomainsLanding = (props: DomainsLandingProps) => {
-  const { classes } = useStyles();
   const history = useHistory();
   const location = useLocation<{ recordError?: string }>();
 
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, PREFERENCE_KEY);
 
-  const { handleOrderChange, order, orderBy } = useOrder(
+  const { order, orderBy, handleOrderChange } = useOrder(
     {
-      order: 'asc',
       orderBy: 'domain',
+      order: 'asc',
     },
-    `${preferenceKey}-order`
+    `${PREFERENCE_KEY}-order`
   );
 
   const filter = {
-    ['+order']: order,
     ['+order_by']: orderBy,
+    ['+order']: order,
   };
 
   const { data: domains, error, isLoading } = useDomainsQuery(
@@ -115,9 +96,9 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   >();
 
   const {
-    error: deleteError,
-    isLoading: isDeleting,
     mutateAsync: deleteDomain,
+    isLoading: isDeleting,
+    error: deleteError,
   } = useDeleteDomainMutation(selectedDomain?.id ?? 0);
 
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
@@ -166,7 +147,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
     });
   };
 
-  const onDisableOrEnable = (action: 'disable' | 'enable', domain: Domain) => {
+  const onDisableOrEnable = (action: 'enable' | 'disable', domain: Domain) => {
     if (action === 'enable') {
       updateDomain({
         id: domain.id,
@@ -188,9 +169,9 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
 
   const handlers: DomainHandlers = {
     onClone,
-    onDisableOrEnable,
     onEdit,
     onRemove,
+    onDisableOrEnable,
   };
 
   if (isLoading) {
@@ -211,8 +192,8 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
           openImportZoneDrawer={openImportZoneDrawer}
         />
         <DomainZoneImportDrawer
-          onClose={closeImportZoneDrawer}
           open={importDrawerOpen}
+          onClose={closeImportZoneDrawer}
         />
       </>
     );
@@ -243,19 +224,15 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         <Notice error text={location.state.recordError} />
       )}
       <LandingHeader
+        title="Domains"
         extraActions={
-          <Button
-            buttonType="secondary"
-            className={classes.importButton}
-            onClick={openImportZoneDrawer}
-          >
+          <StyledButon onClick={openImportZoneDrawer} buttonType="secondary">
             Import a Zone
-          </Button>
+          </StyledButon>
         }
-        docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
         entity="Domain"
         onButtonClick={navigateToCreate}
-        title="Domains"
+        docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
       />
       <Table>
         <TableHead>
@@ -263,16 +240,16 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
             <TableSortCell
               active={orderBy === 'domain'}
               direction={order}
-              handleClick={handleOrderChange}
               label="domain"
+              handleClick={handleOrderChange}
             >
               Domain
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
-              handleClick={handleOrderChange}
               label="status"
+              handleClick={handleOrderChange}
             >
               Status
             </TableSortCell>
@@ -280,16 +257,16 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
               <TableSortCell
                 active={orderBy === 'type'}
                 direction={order}
-                handleClick={handleOrderChange}
                 label="type"
+                handleClick={handleOrderChange}
               >
                 Type
               </TableSortCell>
               <TableSortCell
                 active={orderBy === 'updated'}
                 direction={order}
-                handleClick={handleOrderChange}
                 label="updated"
+                handleClick={handleOrderChange}
               >
                 Last Modified
               </TableSortCell>
@@ -299,21 +276,21 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         </TableHead>
         <TableBody>
           {domains?.data.map((domain: Domain) => (
-            <DomainTableRow domain={domain} key={domain.id} {...handlers} />
+            <DomainTableRow key={domain.id} domain={domain} {...handlers} />
           ))}
         </TableBody>
       </Table>
       <PaginationFooter
         count={domains?.results || 0}
-        eventCategory="Domains Table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+        eventCategory="Domains Table"
       />
       <DomainZoneImportDrawer
-        onClose={closeImportZoneDrawer}
         open={importDrawerOpen}
+        onClose={closeImportZoneDrawer}
       />
       <DisableDomainDialog
         domain={selectedDomain}
@@ -321,30 +298,35 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         open={disableDialogOpen}
       />
       <CloneDomainDrawer
-        domain={selectedDomain}
-        onClose={() => setCloneDialogOpen(false)}
         open={cloneDialogOpen}
+        onClose={() => setCloneDialogOpen(false)}
+        domain={selectedDomain}
       />
       <EditDomainDrawer
-        domain={selectedDomain}
-        onClose={() => setEditDialogOpen(false)}
         open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        domain={selectedDomain}
       />
       <DeletionDialog
+        typeToConfirm
+        entity="domain"
+        open={removeDialogOpen}
+        label={selectedDomain?.domain ?? 'Unknown'}
+        loading={isDeleting}
         error={
           deleteError
             ? getAPIErrorOrDefault(deleteError, 'Error deleting Domain.')[0]
                 .reason
             : undefined
         }
-        entity="domain"
-        label={selectedDomain?.domain ?? 'Unknown'}
-        loading={isDeleting}
         onClose={closeRemoveDialog}
         onDelete={removeDomain}
-        open={removeDialogOpen}
-        typeToConfirm
       />
     </>
   );
 };
+
+const StyledButon = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
+  marginLeft: `-${theme.spacing()}`,
+  whiteSpace: 'nowrap',
+}));
