@@ -41,7 +41,7 @@ describeRegions('Capture Machine Images', (region: Region) => {
    * - Confirms that user is shown toast notifications related to the image's status.
    * - Confirms that the image finishes processing successfully.
    */
-  it('can capture a machine image from a Linode', () => {
+  it('can capture a Machine Image from a Linode', () => {
     const imageLabel = randomLabel();
     const imageDescription = randomPhrase();
 
