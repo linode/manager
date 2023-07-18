@@ -3,9 +3,7 @@ import * as DialogStories from './Dialog.stories';
 import * as DeletionDialogStories from '../DeletionDialog/DeletionDialog.stories';
 import * as ConfirmationDialogStories from '../ConfirmationDialog/ConfirmationDialog.stories';
 
-<Meta
-  title="Components/Dialog/Docs"
-/>
+<Meta of={DialogStories} />
 
 # Dialogs
 
@@ -30,10 +28,7 @@ A modal dialog is a window that appears on top of a parent screen. It's called '
 
 ### Dialog
 ---
-Coming soon...
-{/* TODO: Need to get this story working... */}
-{/* <Story of={DialogStories.Default} /> */}
-
+<Story of={DialogStories.Default} />
 
 ### Confirmation Dialog
 
@@ -47,8 +42,6 @@ A Confirmation Dialog is used for confirming a simple task.
 - Avoid “Are you sure?” language. Assume the user knows what they want to do while helping them avoid unintended consequences.
 
 <Canvas of={ConfirmationDialogStories.Default} />
-
-
 
 ### Deletion Dialog
 

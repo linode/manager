@@ -1,11 +1,11 @@
-import Box from '@mui/material/Box';
 import _Dialog, { DialogProps as _DialogProps } from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import { Notice } from 'src/components/Notice/Notice';
-import DialogContent from 'src/components/core/DialogContent';
 import { isPropValid } from 'src/utilities/isPropValid';
 import { convertForAria } from 'src/utilities/stringUtils';
 
