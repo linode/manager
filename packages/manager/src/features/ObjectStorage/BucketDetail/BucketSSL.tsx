@@ -47,11 +47,7 @@ export const BucketSSL = (props: Props) => {
         upload a custom certificate that will be used for the TLS portion of the
         HTTPS request instead. For more information, please see our guide on
         using{' '}
-        <Link
-          external
-          hideIcon
-          to="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/"
-        >
+        <Link to="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/">
           custom certificates for Object Storage buckets
         </Link>
         .

@@ -27,8 +27,6 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
       SMTP ports may be restricted on this Linode. Need to send email? Review
       our{' '}
       <Link
-        external
-        hideIcon
         onClick={() => sendLinodeCreateDocsEvent('SMTP Notice Link')}
         to="https://www.linode.com/docs/email/best-practices/running-a-mail-server/"
       >

@@ -12,13 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(0.5),
     ...theme.typography.body1,
   },
-  postLink: {
-    '&:hover': {
-      color: theme.palette.primary.main,
-      textDecoration: 'underline',
-    },
-    color: theme.textColors.linkActiveLight,
-  },
+
   postTitle: {
     marginBottom: theme.spacing(2),
   },
@@ -43,32 +37,17 @@ const PopularPosts: React.FC = () => {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <Link
-            absoluteIcon
-            className={classes.postLink}
-            external
-            to="https://www.linode.com/docs/getting-started/"
-          >
+          <Link to="https://www.linode.com/docs/getting-started/">
             Getting Started with Linode
           </Link>
         </div>
         <div className={classes.post}>
-          <Link
-            absoluteIcon
-            className={classes.postLink}
-            external
-            to="https://www.linode.com/docs/security/securing-your-server/"
-          >
+          <Link to="https://www.linode.com/docs/security/securing-your-server/">
             How to Secure Your Server
           </Link>
         </div>
         <div className={classes.post}>
-          <Link
-            absoluteIcon
-            className={classes.postLink}
-            external
-            to="https://www.linode.com/docs/troubleshooting/troubleshooting/"
-          >
+          <Link to="https://www.linode.com/docs/troubleshooting/troubleshooting/">
             Troubleshooting
           </Link>
         </div>
@@ -80,32 +59,17 @@ const PopularPosts: React.FC = () => {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <Link
-            absoluteIcon
-            className={classes.postLink}
-            external
-            to="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
-          >
+          <Link to="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance">
             My Linode is unreachable after maintenance
           </Link>
         </div>
         <div className={classes.post}>
-          <Link
-            absoluteIcon
-            className={classes.postLink}
-            external
-            to="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
-          >
+          <Link to="https://www.linode.com/community/questions/232/why-is-my-website-so-slow">
             Why is my website so slow?
           </Link>
         </div>
         <div className={classes.post}>
-          <Link
-            absoluteIcon
-            className={classes.postLink}
-            external
-            to="https://www.linode.com/community/questions/19082/i-just-created-my-first-linode-and-i-cant-send-emails-why"
-          >
+          <Link to="https://www.linode.com/community/questions/19082/i-just-created-my-first-linode-and-i-cant-send-emails-why">
             Ports 25, 465, and 587 blocked?
           </Link>
         </div>

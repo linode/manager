@@ -92,7 +92,7 @@ export const DisplaySettings = () => {
             Create, upload, and manage your globally recognized avatar from a
             single place with Gravatar.
           </StyledProfileCopy>
-          <StyledAddImageLink external fixedIcon to="https://en.gravatar.com/">
+          <StyledAddImageLink external to="https://en.gravatar.com/">
             Manage photo
           </StyledAddImageLink>
         </div>
