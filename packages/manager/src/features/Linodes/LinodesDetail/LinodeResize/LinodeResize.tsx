@@ -192,11 +192,7 @@ export const LinodeResize = (props: Props) => {
           website, or if you&rsquo;re not using your Linode as much as you
           thought, you can temporarily or permanently resize your Linode to a
           different plan.{' '}
-          <Link
-            external
-            fixedIcon
-            to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
-          >
+          <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
             Learn more.
           </Link>
         </Typography>
@@ -318,11 +314,7 @@ const getError = (error: APIError[] | null) => {
         The current disk size of your Linode is too large for the new service
         plan. Please resize your disk to accommodate the new plan. You can read
         our{' '}
-        <Link
-          external
-          hideIcon
-          to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
-        >
+        <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
           Resize Your Linode
         </Link>{' '}
         guide for more detailed instructions.

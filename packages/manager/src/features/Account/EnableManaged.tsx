@@ -44,9 +44,7 @@ export const ManagedContent = (props: ContentProps) => {
           Linode Managed includes Backups, Longview Pro, cPanel, and
           round-the-clock monitoring to help keep your systems up and running.
           +$100/month per Linode.{'  '}
-          <Link external fixedIcon to="https://linode.com/managed">
-            Learn more.
-          </Link>
+          <Link to="https://linode.com/managed">Learn more</Link>.
         </Typography>
       </Grid>
       <Grid>

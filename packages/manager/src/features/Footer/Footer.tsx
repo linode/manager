@@ -92,15 +92,9 @@ export const Footer = React.memo((props: Props) => {
             [classes.linkContainer]: true,
           })}
         >
-          <a
-            aria-describedby="external-site"
-            className={classes.link}
-            href="https://developers.linode.com"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
+          <Link className={classes.link} to="https://developers.linode.com">
             API Reference
-          </a>
+          </Link>
         </Grid>
         <Grid
           className={cx({
@@ -108,7 +102,7 @@ export const Footer = React.memo((props: Props) => {
             [classes.linkContainer]: true,
           })}
         >
-          <Link className={classes.link} external hideIcon to={FEEDBACK_LINK}>
+          <Link className={classes.link} to={FEEDBACK_LINK}>
             Provide Feedback
           </Link>
         </Grid>
@@ -124,14 +118,11 @@ const renderVersion = (className: string) => {
   }
 
   return (
-    <a
-      aria-describedby="external-site"
+    <Link
       className={className}
-      href={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
-      rel="noopener noreferrer"
-      target="_blank"
+      to={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
     >
       v{VERSION}
-    </a>
+    </Link>
   );
 };

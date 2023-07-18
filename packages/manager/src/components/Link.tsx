@@ -1,3 +1,4 @@
+import { sanitizeUrl } from '@braintree/sanitize-url';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -7,6 +8,7 @@ import type { LinkProps } from 'react-router-dom';
 import type { ExternalLinkProps } from 'src/components/ExternalLink/ExternalLink';
 
 interface Props extends LinkProps {
+  accessibleAriaLabel?: string;
   external?: boolean;
 }
 
@@ -19,26 +21,28 @@ const opensInNewTab = (href: string) => {
  */
 export const Link = (props: Props & ExternalLinkProps) => {
   const {
-    absoluteIcon,
+    accessibleAriaLabel,
     black,
     children,
     className,
     external,
-    fixedIcon,
-    hideIcon,
     onClick,
     to,
   } = props;
-  const doesLinkOPenInNewTab = opensInNewTab(props.to);
+  const sanitizedUrl = () => sanitizeUrl(to);
+  const shouldOpenInNewTab = opensInNewTab(sanitizedUrl());
+  // const isLinkText = typeof children === 'string';
+  const externalNotice = '- link opens in a new tab';
+  const ariaLabel = accessibleAriaLabel
+    ? `${accessibleAriaLabel} ${externalNotice}`
+    : `${children} ${externalNotice}`;
 
   if (external) {
     return (
       <ExternalLink
-        absoluteIcon={absoluteIcon}
+        ariaLabel={ariaLabel}
         black={black}
         className={className}
-        fixedIcon={fixedIcon}
-        hideIcon={hideIcon}
         onClick={onClick}
         to={to}
       >
@@ -46,11 +50,11 @@ export const Link = (props: Props & ExternalLinkProps) => {
       </ExternalLink>
     );
   } else {
-    return doesLinkOPenInNewTab ? (
+    return shouldOpenInNewTab ? (
       <a
-        aria-describedby="new-window"
+        aria-label={ariaLabel}
         className={className}
-        href={to}
+        href={sanitizedUrl()}
         onClick={onClick}
         rel="noopener noreferrer"
         target="_blank"

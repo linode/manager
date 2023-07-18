@@ -168,11 +168,7 @@ export const PowerActionsDialog = (props: Props) => {
       {props.action === 'Power On' ? (
         <Typography className={classes.root}>
           See the&nbsp;
-          <Link
-            external
-            hideIcon
-            to="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/"
-          >
+          <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/">
             guide for setting up and securing a compute instance
           </Link>
           &nbsp;for more information.
@@ -196,11 +192,7 @@ export const PowerActionsDialog = (props: Props) => {
             Powered down Linodes will still accrue charges.
             <br />
             See the&nbsp;
-            <Link
-              external
-              hideIcon
-              to="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services"
-            >
+            <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services">
               Billing and Payments documentation
             </Link>
             &nbsp;for more information.

@@ -19,11 +19,7 @@ export const copy: Record<
     custom: (
       <>
         This Bucket has a custom ACL. Use{' '}
-        <Link
-          external
-          hideIcon
-          to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
-        >
+        <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
           another S3-compatible tool
         </Link>{' '}
         to edit the ACL, or select a pre-defined ACL here.
@@ -58,11 +54,7 @@ export const copy: Record<
     custom: (
       <>
         This Object has a custom ACL. Use another{' '}
-        <Link
-          external
-          hideIcon
-          to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
-        >
+        <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
           S3-compatible tool
         </Link>{' '}
         to edit the ACL, or select a predefined ACL.

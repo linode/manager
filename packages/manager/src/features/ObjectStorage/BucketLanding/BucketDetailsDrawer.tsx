@@ -79,7 +79,7 @@ export const BucketDetailsDrawer = React.memo(
 
         {hostname ? (
           <StyledLinkContainer>
-            <Link external hideIcon to={`https://${hostname}`}>
+            <Link external to={`https://${hostname}`}>
               {truncateMiddle(hostname, 50)}
             </Link>
             <StyledCopyTooltip text={hostname} />

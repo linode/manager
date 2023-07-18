@@ -4,86 +4,50 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import Arrow from 'src/assets/icons/diagonalArrow.svg';
+import type { LinkProps } from 'react-router-dom';
 
-const useStyles = makeStyles<void, 'icon'>()(
-  (theme: Theme, _params, classes) => ({
-    absoluteIcon: {
-      [`& .${classes.icon}`]: {
-        bottom: 2,
-        left: 'initial',
-        opacity: 0,
-        position: 'absolute',
-        right: 0,
-      },
-      display: 'inline',
-      paddingRight: 26,
-      position: 'relative',
-    },
-    black: {
-      color: theme.palette.text.primary,
-    },
-    fixedIcon: {
-      display: 'inline-block',
-      fontSize: '0.8em',
-    },
-    icon: {
-      color: theme.palette.primary.main,
-      height: 14,
-      left: theme.spacing(1),
-      opacity: 0,
-      position: 'relative',
-      width: 14,
-    },
-    root: {
-      '&:hover': {
-        [`& .${classes.icon}`]: {
-          opacity: 1,
-        },
-      },
-      alignItems: 'baseline',
-      color:
-        theme.name === 'dark' ? theme.textColors.linkActiveLight : undefined,
-      display: 'inline-flex',
-    },
-  })
-);
+const useStyles = makeStyles<void, 'icon'>()((theme: Theme) => ({
+  black: {
+    color: theme.palette.text.primary,
+  },
+  icon: {
+    bottom: -1,
+    color: theme.palette.primary.main,
+    height: 14,
+    left: 4,
+    position: 'relative',
+    width: 14,
+  },
+  root: {
+    alignItems: 'baseline',
+    color: theme.name === 'dark' ? theme.textColors.linkActiveLight : undefined,
+    display: 'inline-flex',
+  },
+}));
 
 export interface ExternalLinkProps {
-  absoluteIcon?: boolean;
+  ariaLabel?: string;
   black?: boolean;
-  children: React.ReactNode;
+  children: LinkProps['children'];
   className?: string;
-  fixedIcon?: boolean;
-  hideIcon?: boolean;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-  to: string;
+  to: LinkProps['to'];
 }
 
 export const ExternalLink = (props: ExternalLinkProps) => {
   const { classes, cx } = useStyles();
-  const {
-    absoluteIcon,
-    black,
-    children,
-    className,
-    fixedIcon,
-    hideIcon,
-    onClick,
-    to,
-  } = props;
+  const { ariaLabel, black, children, className, onClick, to } = props;
 
   return (
     <a
       className={cx(
         classes.root,
         {
-          [classes.absoluteIcon]: absoluteIcon,
           [classes.black]: black,
         },
         className
       )}
-      aria-describedby="external-site"
+      aria-label={ariaLabel}
       data-qa-external-link
       href={sanitizeUrl(to)}
       onClick={onClick}
@@ -91,12 +55,7 @@ export const ExternalLink = (props: ExternalLinkProps) => {
       target="_blank"
     >
       {children}
-      {!hideIcon &&
-        (fixedIcon ? (
-          <OpenInNew className={classes.fixedIcon} />
-        ) : (
-          <Arrow className={classes.icon} />
-        ))}
+      <OpenInNew className={cx(classes.icon, { [classes.black]: black })} />
     </a>
   );
 };

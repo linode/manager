@@ -95,11 +95,7 @@ export const NGINX: React.FC<Props> = (props) => {
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
-          <Link
-            external
-            fixedIcon
-            to="https://www.linode.com/docs/platform/longview/longview-app-for-nginx/#troubleshooting"
-          >
+          <Link to="https://www.linode.com/docs/platform/longview/longview-app-for-nginx/#troubleshooting">
             guide
           </Link>{' '}
           for help troubleshooting the NGINX Longview app.

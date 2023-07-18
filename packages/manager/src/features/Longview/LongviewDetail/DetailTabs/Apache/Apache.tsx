@@ -83,11 +83,7 @@ export const Apache: React.FC<Props> = (props) => {
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
-          <Link
-            external
-            fixedIcon
-            to="https://www.linode.com/docs/platform/longview/longview-app-for-apache/#troubleshooting"
-          >
+          <Link to="https://www.linode.com/docs/platform/longview/longview-app-for-apache/#troubleshooting">
             guide
           </Link>{' '}
           for help troubleshooting the Apache Longview app.

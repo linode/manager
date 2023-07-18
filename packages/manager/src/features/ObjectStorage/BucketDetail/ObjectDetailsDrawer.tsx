@@ -73,7 +73,7 @@ export const ObjectDetailsDrawer = React.memo(
 
         {url ? (
           <StyledLinkContainer>
-            <Link external hideIcon to={url}>
+            <Link external to={url}>
               {truncateMiddle(url, 50)}
             </Link>
             <StyledCopyTooltip text={url} />
