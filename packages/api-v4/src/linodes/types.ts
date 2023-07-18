@@ -147,16 +147,39 @@ export type LinodeStatus =
   | 'restoring'
   | 'stopped';
 
-export type InterfacePurpose = 'public' | 'vlan';
+export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
+
+export interface ConfigInterfaceIPv4 {
+  vpc: string;
+  nat_1_1: string;
+}
+
+export interface ConfigInterfaceIPv6 {
+  vpc: string;
+}
 
 export interface Interface {
   id: number;
   label: string | null;
   purpose: InterfacePurpose;
   ipam_address: string | null;
+  primary?: boolean;
+  subnet?: number | null;
+  ipv4?: ConfigInterfaceIPv4;
+  ipv6?: ConfigInterfaceIPv6;
+  ip_ranges?: string[];
 }
 
 export type InterfacePayload = Omit<Interface, 'id'>;
+
+export interface ConfigInterfaceOrderPayload {
+  ids: number[];
+}
+
+export type UpdateConfigInterfacePayload = Pick<
+  Interface,
+  'primary' | 'ipv4' | 'ipv6' | 'ip_ranges'
+>;
 
 export interface Config {
   id: number;

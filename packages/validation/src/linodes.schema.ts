@@ -2,6 +2,7 @@ import { array, boolean, mixed, number, object, string } from 'yup';
 // We must use a default export for ipaddr.js so our packages node compatability
 // Refer to https://github.com/linode/manager/issues/8675
 import ipaddr from 'ipaddr.js';
+import { vpcsValidateIP } from './vpcs.schema';
 
 const validateIP = (ipAddress?: string | null) => {
   if (!ipAddress) {
@@ -20,12 +21,53 @@ const validateIP = (ipAddress?: string | null) => {
 
 const stackscript_data = array().of(object()).nullable(true);
 
+const IPv4 = string().test({
+  name: 'validateIPv4',
+  message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+  test: vpcsValidateIP,
+});
+
+const IPv6 = string().test({
+  name: 'validateIPv6',
+  message:
+    'Must be a valid IPv6 address, e.g. 2600:3c00::f03c:92ff:feeb:98f9/64.',
+  test: vpcsValidateIP,
+});
+
+const ipv4ConfigInterface = object({
+  vpc: string()
+    .when('purpose', {
+      is: 'vpc',
+      then: IPv4.notRequired(),
+    })
+    .notRequired(),
+  nat_1_1: string()
+    .when('purpose', {
+      is: 'vpc',
+      then: string().when('nat_1_1', {
+        is: 'any',
+        then: undefined, // do nothing when nat_1_1 is 'any'
+        otherwise: IPv4.notRequired(),
+      }),
+    })
+    .notRequired(),
+});
+
+const ipv6ConfigInterface = object({
+  vpc: string()
+    .when('purpose', {
+      is: 'vpc',
+      then: IPv6.notRequired(),
+    })
+    .notRequired(),
+});
+
 export const linodeInterfaceSchema = array()
   .of(
     object({
       purpose: mixed().oneOf(
-        [null, 'public', 'vlan'],
-        'Purpose must be null, public, or vlan.'
+        [null, 'public', 'vlan', 'vpc'], // @QUESTION: Double check re: whether null is (still) valid
+        'Purpose must be null, public, vlan, or vpc.'
       ),
       label: string()
         .when('purpose', {
@@ -41,10 +83,29 @@ export const linodeInterfaceSchema = array()
           otherwise: string().notRequired().nullable(true),
         })
         .nullable(true),
-      ipam_address: string().nullable(true).test({
-        name: 'validateIPAM',
-        message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
-        test: validateIP,
+      ipam_address: string().when('purpose', {
+        is: 'vlan',
+        then: string()
+          .required('IPAM Address is required')
+          .test({
+            name: 'validateIPAM',
+            message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+            test: validateIP,
+          })
+          .nullable(true),
+      }),
+      primary: boolean().nullable(true),
+      subnet: string()
+        .when('purpose', {
+          is: 'vpc',
+          then: number().required(),
+        })
+        .nullable(true),
+      ipv4: ipv4ConfigInterface,
+      ipv6: ipv6ConfigInterface,
+      ip_ranges: string().when('purpose', {
+        is: 'vpc',
+        then: array().of(string().test(validateIP)).max(1).notRequired(),
       }),
     })
   )
@@ -61,6 +122,17 @@ export const linodeInterfaceSchema = array()
       );
     }
   );
+
+export const UpdateConfigInterfaceOrderSchema = object({
+  ids: array().of(number()).required('The list of interface IDs is required.'),
+});
+
+export const UpdateConfigInterfaceSchema = object({
+  primary: boolean().notRequired(),
+  ipv4: ipv4ConfigInterface.notRequired(),
+  ipv6: ipv6ConfigInterface.notRequired(),
+  ip_ranges: array().of(string().test(validateIP)).max(1).notRequired(),
+});
 
 // const rootPasswordValidation = string().test(
 //   'is-strong-password',

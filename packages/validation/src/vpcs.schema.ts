@@ -11,7 +11,7 @@ const labelTestDetails = {
   testMessage: 'Must not contain two dashes in a row',
 };
 
-const validateIP = (value?: string): boolean => {
+export const vpcsValidateIP = (value?: string): boolean => {
   if (!value) {
     return false;
   }
@@ -64,7 +64,7 @@ export const createSubnetSchema = object().shape(
       .test({
         name: 'cidr',
         message: 'The IPv4 range must be in CIDR format',
-        test: validateIP,
+        test: vpcsValidateIP,
       })
       .notRequired()
       .ensure()
@@ -76,7 +76,7 @@ export const createSubnetSchema = object().shape(
       .test({
         name: 'cidr mask',
         message: 'Must be the subnet mask of the IP, e.g. /24',
-        test: validateIP,
+        test: vpcsValidateIP,
       })
       .notRequired()
       .ensure()
