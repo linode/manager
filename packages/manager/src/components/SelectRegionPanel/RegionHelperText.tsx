@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
 interface RegionHelperTextProps {
@@ -13,15 +14,9 @@ export const RegionHelperText = (props: RegionHelperTextProps) => {
     <Typography variant="body1">
       You can use
       {` `}
-      <a
-        aria-describedby="external-site"
-        href="https://www.linode.com/speed-test/"
-        onClick={onClick}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
+      <Link onClick={onClick} to="https://www.linode.com/speed-test/">
         our speedtest page
-      </a>
+      </Link>
       {` `}
       to find the best region for your current location.
     </Typography>

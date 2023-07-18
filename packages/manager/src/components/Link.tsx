@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { ExternalLink } from 'src/components/ExternalLink/ExternalLink';
+import { useStyles } from 'src/components/Link.styles';
 
 import type { LinkProps } from 'react-router-dom';
 import type { ExternalLinkProps } from 'src/components/ExternalLink/ExternalLink';
@@ -22,16 +23,16 @@ const opensInNewTab = (href: string) => {
 export const Link = (props: Props & ExternalLinkProps) => {
   const {
     accessibleAriaLabel,
-    black,
     children,
     className,
     external,
+    forceCopyColor,
     onClick,
     to,
   } = props;
+  const { classes, cx } = useStyles();
   const sanitizedUrl = () => sanitizeUrl(to);
   const shouldOpenInNewTab = opensInNewTab(sanitizedUrl());
-  // const isLinkText = typeof children === 'string';
   const externalNotice = '- link opens in a new tab';
   const ariaLabel = accessibleAriaLabel
     ? `${accessibleAriaLabel} ${externalNotice}`
@@ -41,8 +42,8 @@ export const Link = (props: Props & ExternalLinkProps) => {
     return (
       <ExternalLink
         ariaLabel={ariaLabel}
-        black={black}
         className={className}
+        forceCopyColor={forceCopyColor}
         onClick={onClick}
         to={to}
       >
@@ -52,8 +53,14 @@ export const Link = (props: Props & ExternalLinkProps) => {
   } else {
     return shouldOpenInNewTab ? (
       <a
+        className={cx(
+          classes.root,
+          {
+            [classes.copyColor]: forceCopyColor,
+          },
+          className
+        )}
         aria-label={ariaLabel}
-        className={className}
         href={sanitizedUrl()}
         onClick={onClick}
         rel="noopener noreferrer"

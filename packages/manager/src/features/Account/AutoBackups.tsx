@@ -1,10 +1,10 @@
-import OpenInNew from '@mui/icons-material/OpenInNew';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Accordion } from 'src/components/Accordion';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
@@ -60,16 +60,12 @@ const AutoBackups = (props: Props) => {
             all Linodes when they are initially created. For each Linode with
             Backups enabled, your account will be billed the additional hourly
             rate noted on the&nbsp;
-            <a
-              aria-describedby="external-site"
+            <Link
               data-qa-backups-price
-              href="https://www.linode.com/products/backups/"
-              rel="noopener noreferrer"
-              target="_blank"
+              to="https://www.linode.com/products/backups/"
             >
               Backups pricing page
-              <OpenInNew className={classes.icon} />
-            </a>
+            </Link>
             .
           </Typography>
         </Grid>
