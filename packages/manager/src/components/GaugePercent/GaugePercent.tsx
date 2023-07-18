@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import { withTheme, WithTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Chart } from 'chart.js';
-import { Box } from 'src/components/Box';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 interface Props {
   width?: number | string;
@@ -83,47 +83,57 @@ export const GaugePercent = (props: GaugePercentProps) => {
     }
   });
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: width,
-        height: `calc(${height}px + ${props.theme.spacing(3.75)})`,
-      }}
-    >
+    <StyledGaugeWrapperDiv {...props} height={height} width={width}>
       <canvas height={height} ref={graphRef} />
       {props.innerText && (
-        <Box
+        <StyledInnerTextDiv
           data-testid="gauge-innertext"
-          sx={(theme: Theme) => ({
-            position: 'absolute',
-            top: `calc(${height + 30}px / 2)`,
-            width: width,
-            textAlign: 'center',
-            fontSize: '1rem',
-            color: theme.palette.text.primary,
-          })}
+          {...props}
+          height={height}
+          width={width}
         >
           {props.innerText}
-        </Box>
+        </StyledInnerTextDiv>
       )}
       {props.subTitle && (
-        <Box
-          data-testid="gauge-subtext"
-          sx={(theme: Theme) => ({
-            position: 'absolute',
-            width: width,
-            textAlign: 'center',
-            top: `calc(${height}px + ${theme.spacing(1.25)})`,
-            fontSize: props.innerTextFontSize || theme.spacing(2.5),
-            color: theme.color.headline,
-          })}
-        >
+        <StyledSubTitleDiv data-testid="gauge-subtext" {...props}>
           {props.subTitle}
-        </Box>
+        </StyledSubTitleDiv>
       )}
-    </Box>
+    </StyledGaugeWrapperDiv>
   );
 };
+
+const StyledSubTitleDiv = styled('div', {
+  shouldForwardProp: (prop) =>
+    isPropValid(['width', 'height', 'innerTextFontSize'], prop),
+})<GaugePercentProps>(({ theme, ...props }) => ({
+  color: theme.color.headline,
+  fontSize: props.innerTextFontSize || theme.spacing(2.5),
+  position: 'absolute',
+  textAlign: 'center',
+  top: `calc(${props.height}px + ${theme.spacing(1.25)})`,
+  width: props.width,
+}));
+
+const StyledInnerTextDiv = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'height' && prop !== 'width',
+})<GaugePercentProps>(({ theme, height = 300, width }) => ({
+  position: 'absolute',
+  top: `calc(${height + 30}px / 2)`,
+  width: width,
+  textAlign: 'center',
+  fontSize: '1rem',
+  color: theme.palette.text.primary,
+}));
+
+const StyledGaugeWrapperDiv = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'height' && prop !== 'width',
+})<GaugePercentProps>(({ theme, height, width }) => ({
+  position: 'relative',
+  width: width,
+  height: `calc(${height}px + ${theme.spacing(3.75)})`,
+}));
 
 export default compose<GaugePercentProps, Props>(
   React.memo,
