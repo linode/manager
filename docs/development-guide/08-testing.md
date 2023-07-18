@@ -208,7 +208,7 @@ Environment variables related to Cypress logging and reporting, as well as repor
 
 | Environment Variable   | Description                                     | Example   | Default                    |
 |------------------------|-------------------------------------------------|-----------|----------------------------|
-| `CY_LOG_TEST_USER`     | Log test account information when tests begin   | `1`       | Unset; disabled by default |
+| `CY_TEST_USER_REPORT`  | Log test account information when tests begin   | `1`       | Unset; disabled by default |
 | `CY_TEST_JUNIT_REPORT` | Enable JUnit reporting                          | `1`       | Unset; disabled by default |
 
 ### Writing End-to-End Tests

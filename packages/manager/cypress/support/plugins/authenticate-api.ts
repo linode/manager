@@ -57,7 +57,7 @@ export const authenticateApi: CypressPlugin = async (
   // If enabled, report information about the API user.
   // This is disabled by default because we may not want to expose account
   // information to all environments (e.g. public GitHub Actions runs).
-  if (config.env?.['CY_LOG_TEST_USER']) {
+  if (config.env?.['CY_TEST_USER_REPORT']) {
     console.info('Test user information:');
     console.table({ Username: profile.username });
   }
