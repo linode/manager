@@ -124,10 +124,15 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
    * between different Image types/statuses.
    *
    * Leaving the logic in place in case until the decision has been officially OK'd.
+   *
+   * 7/2023 update: Below logic to move all actions to the dropdown menu didn't always work, so
+   * have ensured that all actions will always be in the dropdown menu. Leaving the previous logic
+   * in comments as a reference just in case, but this change makes it so that the actions list
+   * doesn't need to be split anymore at all...
    */
-  const splitActionsArrayIndex =
-    !matchesSmDown && status === 'pending_upload' ? 1 : 0;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+  // const splitActionsArrayIndex =
+  //   !matchesSmDown && status === 'pending_upload' ? 1 : 0;
+  const [inlineActions, menuActions] = splitAt(0, actions);
 
   return (
     <>
