@@ -3,22 +3,67 @@ import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
 import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { Box } from 'src/components/Box';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  header: {
-    marginBottom: theme.spacing(2),
+  actionBtnsCtn: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: `${theme.spacing(1)} 0`,
+  },
+  caCertBtn: {
+    '& svg': {
+      marginRight: theme.spacing(),
+    },
+    '&:hover': {
+      backgroundColor: 'transparent',
+      opacity: 0.7,
+    },
+    '&[disabled]': {
+      '& g': {
+        stroke: '#cdd0d5',
+      },
+      '&:hover': {
+        backgroundColor: 'inherit',
+        textDecoration: 'none',
+      },
+      // Override disabled background color defined for dark mode
+      backgroundColor: 'transparent',
+      color: '#cdd0d5',
+      cursor: 'default',
+    },
+    color: theme.palette.primary.main,
+    fontFamily: theme.font.normal,
+    fontSize: '0.875rem',
+    fontWeight: theme.typography.fontWeightRegular,
+    lineHeight: '1.125rem',
+    marginLeft: theme.spacing(),
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
+  },
+  connectionDetailsCtn: {
+    '& p': {
+      '& span': {
+        fontWeight: 'bold',
+      },
+      lineHeight: '1.5rem',
+    },
+    background: theme.bg.bgAccessRow,
+    border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
+    padding: '8px 15px',
   },
   copyToolTip: {
     '& svg': {
@@ -28,87 +73,43 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     marginRight: 12,
   },
-  inlineCopyToolTip: {
-    display: 'inline-flex',
-    '& svg': {
-      height: `16px`,
-      width: `16px`,
-    },
-    marginLeft: 4,
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-  },
-  actionBtnsCtn: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: `${theme.spacing(1)} 0`,
-  },
-  connectionDetailsCtn: {
-    padding: '8px 15px',
-    background: theme.bg.bgAccessRow,
-    border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
-    '& p': {
-      lineHeight: '1.5rem',
-      '& span': {
-        fontWeight: 'bold',
-      },
-    },
-  },
-  showBtn: {
-    color: theme.palette.primary.main,
-    marginLeft: theme.spacing(),
-    fontSize: '0.875rem',
-    minHeight: 'auto',
-    minWidth: 'auto',
-    padding: 0,
-  },
-  progressCtn: {
-    marginLeft: 22,
-    marginBottom: 2,
-    '& circle': {
-      stroke: theme.palette.primary.main,
-    },
-    alignSelf: 'flex-end',
-  },
   error: {
     color: theme.color.red,
     marginLeft: theme.spacing(2),
   },
-  caCertBtn: {
+  header: {
+    marginBottom: theme.spacing(2),
+  },
+  inlineCopyToolTip: {
     '& svg': {
-      marginRight: theme.spacing(),
+      height: `16px`,
+      width: `16px`,
     },
     '&:hover': {
-      opacity: 0.7,
       backgroundColor: 'transparent',
     },
-    color: theme.palette.primary.main,
-    marginLeft: theme.spacing(),
-    fontFamily: theme.font.normal,
-    fontWeight: theme.typography.fontWeightRegular,
-    fontSize: '0.875rem',
-    lineHeight: '1.125rem',
-    minHeight: 'auto',
-    minWidth: 'auto',
-    padding: 0,
-    '&[disabled]': {
-      // Override disabled background color defined for dark mode
-      backgroundColor: 'transparent',
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit',
-        textDecoration: 'none',
-      },
-      '& g': {
-        stroke: '#cdd0d5',
-      },
+    display: 'inline-flex',
+    marginLeft: 4,
+  },
+  progressCtn: {
+    '& circle': {
+      stroke: theme.palette.primary.main,
     },
+    alignSelf: 'flex-end',
+    marginBottom: 2,
+    marginLeft: 22,
   },
   provisioningText: {
     fontStyle: 'italic',
     fontWeight: 'lighter !important' as 'lighter',
+  },
+  showBtn: {
+    color: theme.palette.primary.main,
+    fontSize: '0.875rem',
+    marginLeft: theme.spacing(),
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
   },
 }));
 
@@ -117,8 +118,8 @@ interface Props {
 }
 
 const sxTooltipIcon = {
-  padding: '0px',
   marginLeft: '4px',
+  padding: '0px',
 };
 
 const privateHostCopy =
@@ -139,8 +140,8 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
 
   const {
     data: credentials,
-    isLoading: credentialsLoading,
     error: credentialsError,
+    isLoading: credentialsLoading,
     refetch: getDatabaseCredentials,
   } = useDatabaseCredentialsQuery(database.engine, database.id);
 
@@ -187,16 +188,16 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       });
   };
 
-  const disableShowBtn = ['provisioning', 'failed'].includes(database.status);
+  const disableShowBtn = ['failed', 'provisioning'].includes(database.status);
   const disableDownloadCACertificateBtn = database.status === 'provisioning';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (
       <Button
-        onClick={handleClick}
         className={classes.showBtn}
         disabled={disableShowBtn}
+        onClick={handleClick}
       >
         {btnText}
       </Button>
@@ -206,10 +207,10 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
   const caCertificateJSX = (
     <>
       <Button
-        onClick={handleDownloadCACertificate}
         className={classes.caCertBtn}
         disabled={disableDownloadCACertificateBtn}
         loading={isCACertDownloading}
+        onClick={handleDownloadCACertificate}
       >
         <DownloadIcon />
         Download CA Certificate
@@ -217,9 +218,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       {disableDownloadCACertificateBtn ? (
         <span className="tooltipIcon">
           <TooltipIcon
+            status="help"
             sxTooltipIcon={sxTooltipIcon}
             text="Your Database Cluster is currently provisioning."
-            status="help"
           />
         </span>
       ) : null}
@@ -259,13 +260,13 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           )}
           {disableShowBtn ? (
             <TooltipIcon
-              sxTooltipIcon={sxTooltipIcon}
-              status="help"
               text={
                 database.status === 'provisioning'
                   ? 'Your Database Cluster is currently provisioning.'
                   : 'Your root password is unavailable when your Database Cluster has failed.'
               }
+              status="help"
+              sxTooltipIcon={sxTooltipIcon}
             />
           ) : null}
           {showCredentials && credentials ? (
@@ -277,7 +278,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         </Box>
         <Box>
           {!isMongoReplicaSet ? (
-            <Box display="flex" flexDirection="row" alignItems="center">
+            <Box alignItems="center" display="flex" flexDirection="row">
               {database.hosts?.primary ? (
                 <>
                   <Typography>
@@ -292,9 +293,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                   />
                   {database.engine === 'mongodb' ? (
                     <TooltipIcon
+                      status="help"
                       sxTooltipIcon={sxTooltipIcon}
                       text={mongoHostHelperCopy}
-                      status="help"
                     />
                   ) : null}
                 </>
@@ -320,16 +321,16 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
               {database.peers && database.peers.length > 0
                 ? database.peers.map((hostname, i) => (
                     <Box
-                      key={hostname}
+                      alignItems="center"
                       display="flex"
                       flexDirection="row"
-                      alignItems="center"
+                      key={hostname}
                     >
                       <Typography
                         style={{
-                          marginTop: 0,
                           marginBottom: 0,
                           marginLeft: 16,
+                          marginTop: 0,
                         }}
                       >
                         <span style={{ fontWeight: 'normal' }}>{hostname}</span>
@@ -341,9 +342,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                       {/*  Display the helper text on the first hostname */}
                       {i === 0 ? (
                         <TooltipIcon
+                          status="help"
                           sxTooltipIcon={sxTooltipIcon}
                           text={mongoHostHelperCopy}
-                          status="help"
                         />
                       ) : null}
                     </Box>
@@ -353,7 +354,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           )}
         </Box>
         {database.hosts.secondary ? (
-          <Box display="flex" flexDirection="row" alignItems="center">
+          <Box alignItems="center" display="flex" flexDirection="row">
             <Typography>
               <span>private network host</span> = {database.hosts.secondary}
             </Typography>
@@ -362,9 +363,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
               text={database.hosts.secondary}
             />
             <TooltipIcon
+              status="help"
               sxTooltipIcon={sxTooltipIcon}
               text={privateHostCopy}
-              status="help"
             />
           </Box>
         ) : null}
@@ -373,7 +374,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         </Typography>
         {isMongoReplicaSet ? (
           database.replica_set ? (
-            <Box display="flex" flexDirection="row" alignItems="center">
+            <Box alignItems="center" display="flex" flexDirection="row">
               <Typography>
                 <span>replica set</span> ={' '}
                 <span style={{ fontWeight: 'normal' }}>

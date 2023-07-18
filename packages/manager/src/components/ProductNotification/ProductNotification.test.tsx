@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import {
   ProductNotification,
   ProductNotificationProps,
@@ -12,7 +14,7 @@ describe('ProductNotification', () => {
       text: 'This is a critical notification',
     };
 
-    const { getByText, container } = renderWithTheme(
+    const { container, getByText } = renderWithTheme(
       <ProductNotification {...props} />
     );
 

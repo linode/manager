@@ -1,12 +1,12 @@
+import { linode1 as mockLinode } from 'src/__data__/linodes';
 import { queryClientFactory } from 'src/queries/base';
 import { ApplicationState, storeFactory } from 'src/store';
-import { linode1 as mockLinode } from 'src/__data__/linodes';
 
 const mockState = {
   __resources: {
     linodes: {
-      results: 1,
       itemsById: { [mockLinode.id]: mockLinode },
+      results: 1,
     },
   },
 };

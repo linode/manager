@@ -24,64 +24,65 @@
 // words, one instance of the reducer manages "inbound" rules, and another
 // instance manages "outbound" rules.
 
-import produce, { Draft, castDraft } from 'immer';
 import { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
+import produce, { Draft, castDraft } from 'immer';
 import { compose, last, omit } from 'ramda';
+
 import { FirewallRuleError } from './shared';
 
 export type RuleStatus =
-  | 'NOT_MODIFIED'
   | 'MODIFIED'
   | 'NEW'
+  | 'NOT_MODIFIED'
   | 'PENDING_DELETION';
 
 export interface ExtendedFirewallRule extends FirewallRuleType {
-  status: RuleStatus;
-  index?: number;
   errors?: FirewallRuleError[];
+  index?: number;
   originalIndex: number;
+  status: RuleStatus;
 }
 
 export type RuleEditorState = ExtendedFirewallRule[][];
 
 export type RuleEditorAction =
   | {
-      type: 'NEW_RULE';
-      rule: FirewallRuleType;
+      endIdx: number;
+      startIdx: number;
+      type: 'REORDER';
     }
   | {
-      type: 'DELETE_RULE';
+      error: FirewallRuleError;
       idx: number;
+      type: 'SET_ERROR';
     }
   | {
-      type: 'MODIFY_RULE';
       idx: number;
       modifiedRule: Partial<FirewallRuleType>;
+      type: 'MODIFY_RULE';
     }
   | {
+      idx: number;
       type: 'CLONE_RULE';
-      idx: number;
     }
   | {
-      type: 'SET_ERROR';
       idx: number;
-      error: FirewallRuleError;
+      type: 'DELETE_RULE';
     }
   | {
+      idx: number;
       type: 'UNDO';
-      idx: number;
+    }
+  | {
+      rule: FirewallRuleType;
+      type: 'NEW_RULE';
+    }
+  | {
+      rules: FirewallRuleType[];
+      type: 'RESET';
     }
   | {
       type: 'DISCARD_CHANGES';
-    }
-  | {
-      type: 'RESET';
-      rules: FirewallRuleType[];
-    }
-  | {
-      type: 'REORDER';
-      startIdx: number;
-      endIdx: number;
     };
 
 const ruleEditorReducer = (
@@ -139,22 +140,22 @@ const ruleEditorReducer = (
         return;
       }
       const {
+        action: _action,
         addresses,
         description,
         label,
         ports,
         protocol,
-        action: _action,
       } = ruleToClone;
       draft.push([
         {
-          label,
-          description,
           action: _action,
           addresses,
+          description,
+          label,
+          originalIndex: draft.length,
           ports,
           protocol,
-          originalIndex: draft.length,
           status: 'NEW',
         },
       ]);

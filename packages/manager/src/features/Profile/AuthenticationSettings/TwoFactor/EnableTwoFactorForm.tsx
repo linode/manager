@@ -1,12 +1,14 @@
-import * as React from 'react';
-import Divider from 'src/components/core/Divider';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { APIError } from '@linode/api-v4/lib/types';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ConfirmToken } from './ConfirmToken';
 import { confirmTwoFactor } from '@linode/api-v4/lib/profile';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { APIError } from '@linode/api-v4/lib/types';
+import * as React from 'react';
+
+import { CircleProgress } from 'src/components/CircleProgress';
+import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import { ConfirmToken } from './ConfirmToken';
 import { QRCodeForm } from './QRCodeForm';
 
 interface Props {
@@ -82,15 +84,15 @@ export const EnableTwoFactorForm = (props: Props) => {
       ) : (
         <QRCodeForm secret={secret} secretLink={secretLink} />
       )}
-      <Divider spacingTop={44} spacingBottom={20} />
+      <Divider spacingBottom={20} spacingTop={44} />
       <ConfirmToken
         error={tokenError}
-        token={token}
-        submitting={submitting}
-        twoFactorConfirmed={twoFactorConfirmed}
         handleChange={handleTokenInputChange}
         onCancel={props.onCancel}
         onSubmit={onSubmit}
+        submitting={submitting}
+        token={token}
+        twoFactorConfirmed={twoFactorConfirmed}
       />
     </React.Fragment>
   );

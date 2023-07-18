@@ -1,26 +1,28 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
 import { Tab, TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
+
 import Preview from './PreviewReply';
 import Reply, { Props as ReplyProps } from './TicketReply';
 
 interface Props {
-  rootClass?: string;
   innerClass?: string;
   isReply?: boolean;
   required?: boolean;
+  rootClass?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    '& div[role="tablist"]': {
+      marginBottom: theme.spacing(),
+      marginTop: theme.spacing(),
+    },
     backgroundColor: 'transparent',
     padding: 0,
-    '& div[role="tablist"]': {
-      marginTop: theme.spacing(),
-      marginBottom: theme.spacing(),
-    },
   },
 }));
 
@@ -28,32 +30,32 @@ type CombinedProps = Props & ReplyProps;
 
 const TabbedReply: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { innerClass, rootClass, value, error, ...rest } = props;
+  const { error, innerClass, rootClass, value, ...rest } = props;
 
   const title = props.isReply ? 'Reply' : 'Description';
 
   const tabs: Tab[] = [
     {
-      title: props.required ? `${title} (required)` : title,
       render: () => {
-        return <Reply {...rest} value={value} error={error} />;
+        return <Reply {...rest} error={error} value={value} />;
       },
+      title: props.required ? `${title} (required)` : title,
     },
     {
-      title: 'Preview',
       render: () => {
-        return <Preview value={value} error={error} />;
+        return <Preview error={error} value={value} />;
       },
+      title: 'Preview',
     },
   ];
 
   return (
     <TabbedPanel
-      rootClass={rootClass || classes.root}
       header=""
-      tabs={tabs}
       innerClass={innerClass}
       noPadding
+      rootClass={rootClass || classes.root}
+      tabs={tabs}
     />
   );
 };

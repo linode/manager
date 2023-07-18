@@ -1,4 +1,5 @@
 import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
+
 import { devToolsEnabled } from 'src/dev-tools/load';
 const localStorageCache = {};
 
@@ -60,8 +61,8 @@ interface AuthGetAndSet {
 }
 
 interface SupportText {
-  title: string;
   description: string;
+  title: string;
 }
 
 interface TicketReply {
@@ -76,33 +77,37 @@ interface StackScriptData extends StackScriptPayload {
 
 export interface DevToolsEnv {
   apiRoot: string;
-  loginRoot: string;
   clientID: string;
   label: string;
+  loginRoot: string;
 }
 
 export interface Storage {
+  BackupsCtaDismissed: {
+    get: () => boolean;
+    set: (v: 'false' | 'true') => void;
+  };
   authentication: {
-    token: AuthGetAndSet;
+    expire: AuthGetAndSet;
     nonce: AuthGetAndSet;
     scopes: AuthGetAndSet;
-    expire: AuthGetAndSet;
+    token: AuthGetAndSet;
   };
-  pageSize: {
-    get: () => PageSize;
-    set: (perPage: PageSize) => void;
+  devToolsEnv: {
+    get: () => DevToolsEnv | null;
+    set: (devToolsEnv: DevToolsEnv) => void;
   };
   infinitePageSize: {
     get: () => PageSize;
     set: (perPage: PageSize) => void;
   };
-  BackupsCtaDismissed: {
-    get: () => boolean;
-    set: (v: 'true' | 'false') => void;
+  pageSize: {
+    get: () => PageSize;
+    set: (perPage: PageSize) => void;
   };
-  typeToConfirm: {
-    get: () => boolean;
-    set: (v: 'true' | 'false') => void;
+  stackScriptInProgress: {
+    get: () => StackScriptData;
+    set: (s: StackScriptData) => void;
   };
   supportText: {
     get: () => SupportText;
@@ -112,21 +117,21 @@ export interface Storage {
     get: () => TicketReply;
     set: (v: TicketReply) => void;
   };
-  stackScriptInProgress: {
-    get: () => StackScriptData;
-    set: (s: StackScriptData) => void;
-  };
-  devToolsEnv: {
-    get: () => DevToolsEnv | null;
-    set: (devToolsEnv: DevToolsEnv) => void;
+  typeToConfirm: {
+    get: () => boolean;
+    set: (v: 'false' | 'true') => void;
   };
 }
 
 export const storage: Storage = {
+  BackupsCtaDismissed: {
+    get: () => getStorage(BACKUPSCTA_DISMISSED),
+    set: () => setStorage(BACKUPSCTA_DISMISSED, 'true'),
+  },
   authentication: {
-    token: {
-      get: () => getStorage(TOKEN),
-      set: (v) => setStorage(TOKEN, v),
+    expire: {
+      get: () => getStorage(EXPIRE),
+      set: (v) => setStorage(EXPIRE, v),
     },
     nonce: {
       get: () => getStorage(NONCE),
@@ -136,16 +141,18 @@ export const storage: Storage = {
       get: () => getStorage(SCOPES),
       set: (v) => setStorage(SCOPES, v),
     },
-    expire: {
-      get: () => getStorage(EXPIRE),
-      set: (v) => setStorage(EXPIRE, v),
+    token: {
+      get: () => getStorage(TOKEN),
+      set: (v) => setStorage(TOKEN, v),
     },
   },
-  pageSize: {
+  devToolsEnv: {
     get: () => {
-      return parseInt(getStorage(PAGE_SIZE, '25'), 10);
+      const value = getStorage(DEV_TOOLS_ENV);
+      return isDevToolsEnvValid(value) ? value : undefined;
     },
-    set: (v) => setStorage(PAGE_SIZE, `${v}`),
+    set: (devToolsEnv) =>
+      setStorage(DEV_TOOLS_ENV, JSON.stringify(devToolsEnv)),
   },
   // Page Size of Linodes Landing page.
   infinitePageSize: {
@@ -160,45 +167,39 @@ export const storage: Storage = {
     },
     set: (v) => setStorage(INFINITE_PAGE_SIZE, `${v}`),
   },
-  BackupsCtaDismissed: {
-    get: () => getStorage(BACKUPSCTA_DISMISSED),
-    set: () => setStorage(BACKUPSCTA_DISMISSED, 'true'),
+  pageSize: {
+    get: () => {
+      return parseInt(getStorage(PAGE_SIZE, '25'), 10);
+    },
+    set: (v) => setStorage(PAGE_SIZE, `${v}`),
   },
-  typeToConfirm: {
-    get: () => getStorage(TYPE_TO_CONFIRM),
-    set: (v) => setStorage(TYPE_TO_CONFIRM, 'true'),
+  stackScriptInProgress: {
+    get: () =>
+      getStorage(STACKSCRIPT, {
+        id: -1,
+        images: [],
+        label: '',
+        script: '',
+      }),
+    set: (s) => setStorage(STACKSCRIPT, JSON.stringify(s)),
   },
   supportText: {
-    get: () => getStorage(SUPPORT, { title: '', description: '' }),
+    get: () => getStorage(SUPPORT, { description: '', title: '' }),
     set: (v) => setStorage(SUPPORT, JSON.stringify(v)),
   },
   ticketReply: {
     get: () => getStorage(TICKET, { text: '' }),
     set: (v) => setStorage(TICKET, JSON.stringify(v)),
   },
-  stackScriptInProgress: {
-    get: () =>
-      getStorage(STACKSCRIPT, {
-        id: -1,
-        script: '',
-        label: '',
-        images: [],
-      }),
-    set: (s) => setStorage(STACKSCRIPT, JSON.stringify(s)),
-  },
-  devToolsEnv: {
-    get: () => {
-      const value = getStorage(DEV_TOOLS_ENV);
-      return isDevToolsEnvValid(value) ? value : undefined;
-    },
-    set: (devToolsEnv) =>
-      setStorage(DEV_TOOLS_ENV, JSON.stringify(devToolsEnv)),
+  typeToConfirm: {
+    get: () => getStorage(TYPE_TO_CONFIRM),
+    set: (v) => setStorage(TYPE_TO_CONFIRM, 'true'),
   },
 };
 
 export const {
-  authentication,
   BackupsCtaDismissed,
+  authentication,
   stackScriptInProgress,
   supportText,
   ticketReply,

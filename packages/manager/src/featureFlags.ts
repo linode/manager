@@ -1,4 +1,5 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
+
 import { Doc } from './features/OneClickApps/oneClickApps';
 // These flags should correspond with active features flags in LD
 
@@ -8,9 +9,9 @@ export interface TaxDetail {
 }
 
 interface Taxes {
+  country_tax?: TaxDetail;
   // If there is no date, assume the tax should be applied
   date?: string;
-  country_tax?: TaxDetail;
   provincial_tax_ids?: Record<string, TaxDetail>;
 }
 
@@ -18,68 +19,70 @@ interface Taxes {
  * @deprecated deprecated in favor of `Taxes` for Akamai Tax information
  */
 interface TaxBanner {
-  tax_name: string;
-  date: string;
   country_tax?: TaxDetail;
+  date: string;
   provincial_tax_ids?: Record<string, TaxDetail>;
+  tax_name: string;
 }
 
 interface TaxCollectionRegion {
-  name: string;
   date?: string;
+  name: string;
 }
 
 interface TaxCollectionBanner {
-  date: string;
   action?: boolean;
+  date: string;
   regions?: TaxCollectionRegion[];
 }
 
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
-  promos: boolean;
-  taxBanner: TaxBanner;
-  taxes: Taxes;
+  aglb: boolean;
+  apiMaintenance: APIMaintenance;
+  databaseBeta: boolean;
+  databases: boolean;
+  ipv6Sharing: boolean;
+  kubernetesDashboardAvailability: boolean;
+  mainContentBanner: MainContentBanner;
+  metadata: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
-  promotionalOffers: PromotionalOffer[];
-  mainContentBanner: MainContentBanner;
-  databases: boolean;
-  tpaProviders: Provider[];
-  ipv6Sharing: boolean;
-  referralBannerText: ReferralBannerText;
-  apiMaintenance: APIMaintenance;
   productInformationBanners: ProductInformationBannerFlag[];
-  kubernetesDashboardAvailability: boolean;
+  promos: boolean;
+  promotionalOffers: PromotionalOffer[];
+  referralBannerText: ReferralBannerText;
   regionDropdown: boolean;
+  taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
-  databaseBeta: boolean;
-  metadata: boolean;
+  taxes: Taxes;
+  tpaProviders: Provider[];
+  vpc: boolean;
 }
 
 type PromotionalOfferFeature =
+  | 'Kubernetes'
   | 'Linodes'
-  | 'Volumes'
   | 'NodeBalancers'
   | 'Object Storage'
-  | 'Kubernetes';
+  | 'Volumes';
 
 interface PromotionalOfferButton {
-  text: string;
   href: string;
+  text: string;
   type: 'primary' | 'secondary';
 }
 
 export interface PromotionalOffer {
-  name: string;
+  alt: string;
   body: string;
+  buttons: PromotionalOfferButton[];
+  displayOnDashboard: boolean;
+  features: PromotionalOfferFeature[];
   footnote: string;
   logo: string;
-  alt: string;
-  features: PromotionalOfferFeature[];
-  displayOnDashboard: boolean;
-  buttons: PromotionalOfferButton[];
+  name: string;
 }
 
 /**
@@ -89,27 +92,27 @@ export interface PromotionalOffer {
 export type FlagSet = Partial<Flags>;
 
 export interface MainContentBanner {
+  key: string;
   link: {
     text: string;
     url: string;
   };
   text: string;
-  key: string;
 }
 
 export interface Provider {
-  name: TPAProvider;
   displayName: string;
-  icon: any;
   href: string;
+  icon: any;
+  name: TPAProvider;
 }
 
 interface ReferralBannerText {
-  text: string;
   link?: {
     text: string;
     url: string;
   };
+  text: string;
 }
 
 export type ProductInformationBannerLocation =
@@ -128,20 +131,20 @@ export type ProductInformationBannerLocation =
   | 'Volumes';
 
 export interface ProductInformationBannerFlag {
-  // `key` should be unique across product information banners
-  key: string;
-  // `message` is rendered as Markdown (to support links)
-  message: string;
   // `bannerLocation` is the location where the banner will be rendered
   bannerLocation: ProductInformationBannerLocation;
   // The date where the banner should no longer be displayed.
   expirationDate: string;
+  // `key` should be unique across product information banners
+  key: string;
+  // `message` is rendered as Markdown (to support links)
+  message: string;
 }
 
 export interface SuppliedMaintenanceData {
+  body?: string;
   id: string;
   title?: string;
-  body?: string;
 }
 export interface APIMaintenance {
   maintenances: SuppliedMaintenanceData[];

@@ -1,20 +1,23 @@
+import { Scope } from '@linode/api-v4/lib/object-storage/types';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
+
+import { objectStorageBucketFactory } from 'src/factories/objectStorage';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { AccessKeyDrawer, getDefaultScopes } from './AccessKeyDrawer';
 import { getUpdatedScopes } from './AccessTable';
 import { MODE } from './types';
-import { objectStorageBucketFactory } from 'src/factories/objectStorage';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
-import { screen } from '@testing-library/react';
+
 import type { AccessKeyDrawerProps } from './AccessKeyDrawer';
 
 describe('AccessKeyDrawer', () => {
   const props: AccessKeyDrawerProps = {
-    open: true,
-    onSubmit: jest.fn(),
-    onClose: jest.fn(),
-    mode: 'creating' as MODE,
     isRestrictedUser: false,
+    mode: 'creating' as MODE,
+    onClose: jest.fn(),
+    onSubmit: jest.fn(),
+    open: true,
   };
   renderWithTheme(<AccessKeyDrawer {...props} />);
   it('renders without crashing', () => {
@@ -30,8 +33,8 @@ describe('AccessKeyDrawer', () => {
     it('should return objects with the correct shape', () => {
       const bucket = mockBuckets[0];
       expect(getDefaultScopes([bucket])[0]).toEqual({
-        cluster: bucket.cluster,
         bucket_name: bucket.label,
+        cluster: bucket.cluster,
         permissions: 'none',
       });
     });
@@ -76,8 +79,8 @@ describe('AccessKeyDrawer', () => {
 
     it('should handle crappy input', () => {
       const newScope = {
-        cluster: 'totally-fake',
         bucket_name: 'not-real',
+        cluster: 'totally-fake',
         permissions: 'read_only',
       } as Scope;
       expect(getUpdatedScopes(mockScopes, newScope)).toEqual(mockScopes);

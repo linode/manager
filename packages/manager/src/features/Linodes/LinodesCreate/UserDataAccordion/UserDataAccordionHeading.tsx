@@ -1,9 +1,10 @@
 import * as React from 'react';
+
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
+import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { Box } from 'src/components/Box';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 interface Props {
@@ -11,14 +12,14 @@ interface Props {
 }
 
 export const UserDataAccordionHeading = ({ createType }: Props) => {
-  const warningMessageMap: Record<CreateTypes, string | null> = {
+  const warningMessageMap: Record<CreateTypes, null | string> = {
+    fromApp: null,
     fromBackup:
       'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.',
+    fromImage: null,
     fromLinode:
       'Existing user data is not cloned. You may add new user data now.',
-    fromApp: null,
     fromStackScript: null,
-    fromImage: null,
   };
 
   const warningMessage = createType ? warningMessageMap[createType] : null;
@@ -28,22 +29,22 @@ export const UserDataAccordionHeading = ({ createType }: Props) => {
       <Box display="flex">
         Add User Data <BetaChip component="span" />
         <TooltipIcon
-          sxTooltipIcon={{ padding: '0 8px', alignItems: 'baseline' }}
           text={
             <>
-              User data is a virtual machine&rsquo;s cloud-init metadata
-              relating to a user&rsquo;s local account.{' '}
+              User data allows you to provide additional custom data to
+              cloud-init to further configure your system.{' '}
               <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
                 Learn more.
               </Link>
             </>
           }
-          status="help"
           interactive
+          status="help"
+          sxTooltipIcon={{ alignItems: 'baseline', padding: '0 8px' }}
         />
       </Box>
       {warningMessage ? (
-        <Notice warning spacingTop={16} spacingBottom={16}>
+        <Notice spacingBottom={16} spacingTop={16} warning>
           {warningMessage}
         </Notice>
       ) : null}

@@ -1,9 +1,10 @@
 import * as React from 'react';
+
 import { Notice } from 'src/components/Notice/Notice';
 
 export interface ProductNotificationProps {
   onClick?: () => void;
-  severity: 'minor' | 'major' | 'critical';
+  severity: 'critical' | 'major' | 'minor';
   text: string;
 }
 

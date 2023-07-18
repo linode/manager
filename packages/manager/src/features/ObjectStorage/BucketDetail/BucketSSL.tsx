@@ -1,31 +1,33 @@
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import Paper from 'src/components/core/Paper';
-import { Typography } from 'src/components/Typography';
-import ExternalLink from 'src/components/ExternalLink';
+import { ObjectStorageBucketSSLRequest } from '@linode/api-v4/lib/object-storage';
 import Grid from '@mui/material/Unstable_Grid2';
-import { TextField } from 'src/components/TextField';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { ObjectStorageBucketSSLRequest } from '@linode/api-v4/lib/object-storage';
-import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel';
+import { Button } from 'src/components/Button/Button';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import ExternalLink from 'src/components/ExternalLink';
+import { Notice } from 'src/components/Notice/Notice';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
+import {
+  useBucketSSLDeleteMutation,
+  useBucketSSLMutation,
+  useBucketSSLQuery,
+} from 'src/queries/objectStorage';
+import { getErrorMap } from 'src/utilities/errorUtils';
+
 import {
   StyledCertWrapper,
   StyledFieldsWrapper,
   StyledHelperText,
   StyledKeyWrapper,
 } from './BucketSSL.styles';
-import {
-  useBucketSSLDeleteMutation,
-  useBucketSSLMutation,
-  useBucketSSLQuery,
-} from 'src/queries/objectStorage';
 
 interface Props {
   bucketName: string;
@@ -46,8 +48,8 @@ export const BucketSSL = (props: Props) => {
         HTTPS request instead. For more information, please see our guide on
         using{' '}
         <ExternalLink
-          link="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/"
           hideIcon
+          link="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/"
           text="custom certificates for Object Storage buckets"
         />
         .
@@ -59,7 +61,7 @@ export const BucketSSL = (props: Props) => {
 
 export const SSLBody = (props: Props) => {
   const { bucketName, clusterId } = props;
-  const { data, isLoading, error } = useBucketSSLQuery(clusterId, bucketName);
+  const { data, error, isLoading } = useBucketSSLQuery(clusterId, bucketName);
   const hasSSL = Boolean(data?.ssl);
 
   if (isLoading) {
@@ -80,7 +82,7 @@ export const SSLBody = (props: Props) => {
 const AddCertForm = (props: Props) => {
   const { bucketName, clusterId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync, isLoading, error } = useBucketSSLMutation(
+  const { error, isLoading, mutateAsync } = useBucketSSLMutation(
     clusterId,
     bucketName
   );
@@ -104,41 +106,41 @@ const AddCertForm = (props: Props) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       {errorMap.none && (
-        <Notice error text={errorMap.none} spacingTop={8} spacingBottom={0} />
+        <Notice error spacingBottom={0} spacingTop={8} text={errorMap.none} />
       )}
       <StyledFieldsWrapper>
-        <StyledCertWrapper xs={12} md={6}>
+        <StyledCertWrapper md={6} xs={12}>
           <TextField
-            label="Certificate"
-            name="certificate"
-            onChange={formik.handleChange}
-            value={formik.values.certificate}
-            multiline
-            fullWidth={false}
-            rows="3"
             data-testid="ssl-cert-input"
             errorText={errorMap.certificate}
+            fullWidth={false}
+            label="Certificate"
+            multiline
+            name="certificate"
+            onChange={formik.handleChange}
+            rows="3"
             sx={{ '& > div': { minWidth: '100%' } }}
+            value={formik.values.certificate}
           />
         </StyledCertWrapper>
-        <StyledKeyWrapper xs={12} md={6}>
+        <StyledKeyWrapper md={6} xs={12}>
           <TextField
-            label="Private Key"
-            name="private_key"
-            fullWidth
-            onChange={formik.handleChange}
-            value={formik.values.private_key}
-            multiline
-            rows="3"
             data-testid="ssl-cert-input"
             errorText={errorMap.private_key}
+            fullWidth
+            label="Private Key"
+            multiline
+            name="private_key"
+            onChange={formik.handleChange}
+            rows="3"
             sx={{ '& > div': { minWidth: '100%' } }}
+            value={formik.values.private_key}
           />
         </StyledKeyWrapper>
       </StyledFieldsWrapper>
       <Grid>
         <ActionsPanel>
-          <Button loading={isLoading} buttonType="primary" type="submit">
+          <Button buttonType="primary" loading={isLoading} type="submit">
             Upload Certificate
           </Button>
         </ActionsPanel>
@@ -152,9 +154,9 @@ const RemoveCertForm = (props: Props) => {
   const [open, setOpen] = React.useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const {
-    mutateAsync: deleteSSLCert,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: deleteSSLCert,
   } = useBucketSSLDeleteMutation(clusterId, bucketName);
 
   const removeCertificate = async () => {
@@ -170,15 +172,15 @@ const RemoveCertForm = (props: Props) => {
     <ActionsPanel>
       <Button
         buttonType="secondary"
-        onClick={() => setOpen(false)}
         disabled={isLoading}
+        onClick={() => setOpen(false)}
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={removeCertificate}
         loading={isLoading}
+        onClick={removeCertificate}
       >
         Remove certificate
       </Button>
@@ -187,7 +189,7 @@ const RemoveCertForm = (props: Props) => {
 
   return (
     <>
-      <Notice success spacingTop={8}>
+      <Notice info spacingTop={8}>
         A TLS certificate has already been uploaded for this Bucket. To upload a
         new certificate, remove the current certificate.{` `}
       </Notice>
@@ -195,11 +197,11 @@ const RemoveCertForm = (props: Props) => {
         Remove Certificate
       </Button>
       <ConfirmationDialog
-        title="Remove TLS certificate"
-        open={open}
-        onClose={() => setOpen(false)}
         actions={actions}
         error={error?.[0].reason}
+        onClose={() => setOpen(false)}
+        open={open}
+        title="Remove TLS certificate"
       >
         <Typography>
           Are you sure you want to remove all certificates from this Bucket?

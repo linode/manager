@@ -4,35 +4,46 @@ import {
   LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { makeStyles } from 'tss-react/mui';
+
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Box } from 'src/components/Box';
-import Divider from 'src/components/core/Divider';
+import { Dialog } from 'src/components/Dialog/Dialog';
+import { Divider } from 'src/components/Divider';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import ExternalLink from 'src/components/ExternalLink';
+import { Notice } from 'src/components/Notice/Notice';
+import { Radio } from 'src/components/Radio/Radio';
+import { TextField } from 'src/components/TextField';
+import { Toggle } from 'src/components/Toggle';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormGroup from 'src/components/core/FormGroup';
 import FormHelperText from 'src/components/core/FormHelperText';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import ExternalLink from 'src/components/ExternalLink';
-import Grid from '@mui/material/Unstable_Grid2';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle';
 import DeviceSelection from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
+import {
+  useLinodeConfigCreateMutation,
+  useLinodeConfigUpdateMutation,
+} from 'src/queries/linodes/configs';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import {
+  useAllLinodeKernelsQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
@@ -46,25 +57,16 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import InterfaceSelect, {
   ExtendedInterface,
 } from '../LinodeSettings/InterfaceSelect';
 import KernelSelect from '../LinodeSettings/KernelSelect';
-import { useQueryClient } from 'react-query';
-import {
-  useAllLinodeKernelsQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useLinodeConfigCreateMutation,
-  useLinodeConfigUpdateMutation,
-} from 'src/queries/linodes/configs';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
-    marginTop: theme.spacing(),
     marginLeft: 1,
+    marginTop: theme.spacing(),
   },
   divider: {
     margin: '36px 8px 12px',
@@ -76,57 +78,57 @@ const useStyles = makeStyles()((theme: Theme) => ({
       order: 3,
     },
   },
-  tooltip: {
-    maxWidth: 350,
-  },
   formGroup: {
-    alignItems: 'flex-start',
     '&.MuiFormGroup-root[role="radiogroup"]': {
       marginBottom: 0,
     },
+    alignItems: 'flex-start',
+  },
+  tooltip: {
+    maxWidth: 350,
   },
 }));
 
 interface Helpers {
-  updatedb_disabled: boolean;
+  devtmpfs_automount: boolean;
   distro: boolean;
   modules_dep: boolean;
   network: boolean;
-  devtmpfs_automount: boolean;
+  updatedb_disabled: boolean;
 }
 
-type RunLevel = 'default' | 'single' | 'binbash';
+type RunLevel = 'binbash' | 'default' | 'single';
 type VirtMode = 'fullvirt' | 'paravirt';
 type MemoryLimit = 'no_limit' | 'set_limit';
 
 interface EditableFields {
-  useCustomRoot: boolean;
-  label: string;
-  devices: DevicesAsStrings;
-  initrd: string | number | null;
-  kernel?: string;
   comments?: string;
-  memory_limit?: number;
-  run_level?: RunLevel;
-  virt_mode?: VirtMode;
+  devices: DevicesAsStrings;
   helpers: Helpers;
-  root_device: string;
-  setMemoryLimit: MemoryLimit;
+  initrd: null | number | string;
   interfaces: ExtendedInterface[];
+  kernel?: string;
+  label: string;
+  memory_limit?: number;
+  root_device: string;
+  run_level?: RunLevel;
+  setMemoryLimit: MemoryLimit;
+  useCustomRoot: boolean;
+  virt_mode?: VirtMode;
 }
 
 interface Props {
-  open: boolean;
   config: Config | undefined;
-  onClose: () => void;
-  linodeId: number;
   isReadOnly: boolean;
+  linodeId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 const defaultInterface = {
-  purpose: 'none',
-  label: '',
   ipam_address: '',
+  label: '',
+  purpose: 'none',
 } as ExtendedInterface;
 
 /**
@@ -145,16 +147,15 @@ const padInterfaceList = (interfaces: ExtendedInterface[]) => {
 
 const defaultInterfaceList = padInterfaceList([
   {
-    purpose: 'public',
-    label: '',
     ipam_address: '',
+    label: '',
+    purpose: 'public',
   },
 ]);
 
 const defaultFieldsValues = {
   comments: '',
   devices: {},
-  initrd: '',
   helpers: {
     devtmpfs_automount: true,
     distro: true,
@@ -162,15 +163,16 @@ const defaultFieldsValues = {
     network: true,
     updatedb_disabled: true,
   },
-  kernel: 'linode/latest-64bit',
+  initrd: '',
   interfaces: defaultInterfaceList,
+  kernel: 'linode/latest-64bit',
   label: '',
   memory_limit: 0,
   root_device: '/dev/sda',
   run_level: 'default' as RunLevel,
+  setMemoryLimit: 'no_limit' as MemoryLimit,
   useCustomRoot: false,
   virt_mode: 'paravirt' as VirtMode,
-  setMemoryLimit: 'no_limit' as MemoryLimit,
 };
 
 const pathsOptions = [
@@ -215,14 +217,14 @@ const deviceCounterDefault = 1;
 const finnixDiskID = 25669;
 
 export const LinodeConfigDialog = (props: Props) => {
-  const { open, onClose, config, isReadOnly, linodeId } = props;
+  const { config, isReadOnly, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
     data: kernels,
-    isLoading: kernelsLoading,
     error: kernelsError,
+    isLoading: kernelsLoading,
   } = useAllLinodeKernelsQuery(
     {},
     { [linode?.hypervisor ?? 'kvm']: true },
@@ -258,45 +260,45 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const showVlans = regionHasVLANS;
 
-  const { values, resetForm, setFieldValue, ...formik } = useFormik({
+  const { resetForm, setFieldValue, values, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
+    onSubmit: (values) => onSubmit(values),
+    validate: (values) => onValidate(values),
     validateOnChange: false,
     validateOnMount: false,
-    validate: (values) => onValidate(values),
-    onSubmit: (values) => onSubmit(values),
   });
 
   const convertStateToData = (
     state: EditableFields
   ): LinodeConfigCreationData => {
     const {
-      label,
-      devices,
-      initrd,
-      kernel,
       comments,
-      memory_limit,
-      run_level,
-      virt_mode,
-      setMemoryLimit,
-      interfaces,
+      devices,
       helpers,
+      initrd,
+      interfaces,
+      kernel,
+      label,
+      memory_limit,
       root_device,
+      run_level,
+      setMemoryLimit,
+      virt_mode,
     } = state;
 
     return {
-      label,
-      devices: createDevicesFromStrings(devices),
-      initrd: initrd !== '' ? initrd : null,
-      kernel,
       comments,
+      devices: createDevicesFromStrings(devices),
+      helpers,
+      initrd: initrd !== '' ? initrd : null,
+      interfaces: interfacesToPayload(interfaces),
+      kernel,
+      label,
       /** if the user did not toggle the limit radio button, send a value of 0 */
       memory_limit: setMemoryLimit === 'no_limit' ? 0 : memory_limit,
-      interfaces: interfacesToPayload(interfaces),
+      root_device,
       run_level,
       virt_mode,
-      helpers,
-      root_device,
     };
   };
 
@@ -426,20 +428,20 @@ export const LinodeConfigDialog = (props: Props) => {
 
         resetForm({
           values: {
-            useCustomRoot: isUsingCustomRoot(config.root_device),
-            label: config.label,
-            devices,
-            initrd: initrdFromConfig,
-            kernel: config.kernel,
             comments: config.comments,
-            memory_limit: config.memory_limit,
-            run_level: config.run_level,
-            virt_mode: config.virt_mode,
+            devices,
             helpers: config.helpers,
-            root_device: config.root_device,
+            initrd: initrdFromConfig,
             interfaces: interfacesToState(config.interfaces),
+            kernel: config.kernel,
+            label: config.label,
+            memory_limit: config.memory_limit,
+            root_device: config.root_device,
+            run_level: config.run_level,
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
+            useCustomRoot: isUsingCustomRoot(config.root_device),
+            virt_mode: config.virt_mode,
           },
         });
       } else {
@@ -504,24 +506,24 @@ export const LinodeConfigDialog = (props: Props) => {
       const categoryTitle = titlecase(category);
       return {
         label: categoryTitle,
-        value: category,
         options: [
-          ...items.map(({ label, id }) => {
+          ...items.map(({ id, label }) => {
             return {
               label,
-              value: String(id) as string | number | null,
+              value: String(id) as null | number | string,
             };
           }),
           { label: 'Recovery – Finnix (initrd)', value: String(finnixDiskID) },
         ],
+        value: category,
       };
     }
   );
 
   categorizedInitrdOptions.unshift({
     label: '',
-    value: '',
     options: [{ label: 'None', value: null }],
+    value: '',
   });
 
   /**
@@ -578,47 +580,47 @@ export const LinodeConfigDialog = (props: Props) => {
 
   return (
     <Dialog
-      title={`${config ? 'Edit' : 'Add'} Configuration`}
-      open={open}
-      onClose={onClose}
       fullHeight
       fullWidth
+      onClose={onClose}
+      open={open}
+      title={`${config ? 'Edit' : 'Add'} Configuration`}
     >
       <Grid container direction="row">
-        <DialogContent loading={kernelsLoading} errors={kernelsError}>
+        <DialogContent errors={kernelsError} loading={kernelsLoading}>
           <React.Fragment>
             {generalError && (
               <Grid>
                 <Notice
                   error
                   errorGroup="linode-config-dialog"
-                  text={generalError}
                   spacingBottom={0}
+                  text={generalError}
                 />
               </Grid>
             )}
             <Grid xs={12}>
               <TextField
+                disabled={isReadOnly}
+                errorGroup="linode-config-dialog"
+                errorText={formik.errors.label}
                 label="Label"
                 name="label"
+                onChange={formik.handleChange}
                 required
                 value={values.label}
-                onChange={formik.handleChange}
-                errorText={formik.errors.label}
-                errorGroup="linode-config-dialog"
-                disabled={isReadOnly}
               />
 
               <TextField
-                label="Comments"
-                name="comments"
-                value={values.comments}
-                onChange={formik.handleChange}
-                multiline={true}
-                rows={1.5}
-                errorText={formik.errors.comments}
-                errorGroup="linode-config-dialog"
                 disabled={isReadOnly}
+                errorGroup="linode-config-dialog"
+                errorText={formik.errors.comments}
+                label="Comments"
+                multiline={true}
+                name="comments"
+                onChange={formik.handleChange}
+                rows={1.5}
+                value={values.comments}
               />
             </Grid>
 
@@ -628,31 +630,31 @@ export const LinodeConfigDialog = (props: Props) => {
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
-                  htmlFor="virt_mode"
+                  aria-describedby="virtModeCaption"
                   component="label"
                   disabled={isReadOnly}
-                  aria-describedby="virtModeCaption"
+                  htmlFor="virt_mode"
                 >
                   VM Mode
                 </FormLabel>
                 <RadioGroup
-                  className={classes.formGroup}
                   aria-label="virt_mode"
+                  className={classes.formGroup}
                   name="virt_mode"
-                  value={values.virt_mode}
                   onChange={formik.handleChange}
+                  value={values.virt_mode}
                 >
                   <FormControlLabel
-                    value="paravirt"
-                    label="Paravirtualization"
-                    disabled={isReadOnly}
                     control={<Radio />}
+                    disabled={isReadOnly}
+                    label="Paravirtualization"
+                    value="paravirt"
                   />
                   <FormControlLabel
-                    value="fullvirt"
-                    label="Full virtualization"
-                    disabled={isReadOnly}
                     control={<Radio />}
+                    disabled={isReadOnly}
+                    label="Full virtualization"
+                    value="fullvirt"
                   />
                   <FormHelperText id="virtModeCaption">
                     Controls if devices inside your virtual machine are
@@ -669,46 +671,46 @@ export const LinodeConfigDialog = (props: Props) => {
               <Typography variant="h3">Boot Settings</Typography>
               {kernels && (
                 <KernelSelect
+                  errorText={formik.errors.kernel}
                   kernels={kernels}
-                  selectedKernel={values.kernel}
                   onChange={handleChangeKernel}
                   readOnly={isReadOnly}
-                  errorText={formik.errors.kernel}
+                  selectedKernel={values.kernel}
                 />
               )}
 
               <FormControl
-                updateFor={[values.run_level, classes]}
-                fullWidth
                 disabled={isReadOnly}
+                fullWidth
+                updateFor={[values.run_level, classes]}
               >
-                <FormLabel htmlFor="run_level" component="label">
+                <FormLabel component="label" htmlFor="run_level">
                   Run Level
                 </FormLabel>
                 <RadioGroup
-                  className={classes.formGroup}
                   aria-label="run_level"
+                  className={classes.formGroup}
                   name="run_level"
-                  value={values.run_level}
                   onChange={formik.handleChange}
+                  value={values.run_level}
                 >
                   <FormControlLabel
-                    value="default"
+                    control={<Radio />}
+                    disabled={isReadOnly}
                     label="Run Default Level"
-                    disabled={isReadOnly}
-                    control={<Radio />}
+                    value="default"
                   />
                   <FormControlLabel
-                    value="single"
+                    control={<Radio />}
+                    disabled={isReadOnly}
                     label="Single user mode"
-                    disabled={isReadOnly}
-                    control={<Radio />}
+                    value="single"
                   />
                   <FormControlLabel
-                    value="binbash"
-                    label="init=/bin/bash"
-                    disabled={isReadOnly}
                     control={<Radio />}
+                    disabled={isReadOnly}
+                    label="init=/bin/bash"
+                    value="binbash"
                   />
                 </RadioGroup>
               </FormControl>
@@ -726,46 +728,46 @@ export const LinodeConfigDialog = (props: Props) => {
               */}
               <FormControl updateFor={[values.setMemoryLimit, classes]}>
                 <FormLabel
-                  htmlFor="memory_limit"
                   component="label"
                   disabled={isReadOnly}
+                  htmlFor="memory_limit"
                 >
                   Memory Limit
                 </FormLabel>
                 <RadioGroup
-                  className={classes.formGroup}
                   aria-label="memory_limit"
+                  className={classes.formGroup}
                   name="setMemoryLimit"
-                  value={values.setMemoryLimit}
                   onChange={formik.handleChange}
+                  value={values.setMemoryLimit}
                 >
                   <FormControlLabel
-                    value="no_limit"
-                    label="Do not set any limits on memory usage"
-                    disabled={isReadOnly}
                     control={<Radio />}
+                    disabled={isReadOnly}
+                    label="Do not set any limits on memory usage"
+                    value="no_limit"
                   />
                   <FormControlLabel
-                    value="set_limit"
-                    label="Limit the amount of RAM this config uses"
-                    disabled={isReadOnly}
                     control={<Radio />}
+                    disabled={isReadOnly}
+                    label="Limit the amount of RAM this config uses"
+                    value="set_limit"
                   />
                 </RadioGroup>
               </FormControl>
 
               {values.setMemoryLimit === 'set_limit' && (
                 <TextField
-                  type="number"
-                  name="memory_limit"
-                  label="Memory Limit Allotment (in MB)"
-                  value={values.memory_limit}
-                  min={0}
-                  max={linode?.specs.memory}
-                  onChange={formik.handleChange}
-                  helperText={`Max: ${linode?.specs.memory} MB`}
-                  errorText={formik.errors.memory_limit}
                   disabled={isReadOnly}
+                  errorText={formik.errors.memory_limit}
+                  helperText={`Max: ${linode?.specs.memory} MB`}
+                  label="Memory Limit Allotment (in MB)"
+                  max={linode?.specs.memory}
+                  min={0}
+                  name="memory_limit"
+                  onChange={formik.handleChange}
+                  type="number"
+                  value={values.memory_limit}
                 />
               )}
             </Grid>
@@ -776,18 +778,15 @@ export const LinodeConfigDialog = (props: Props) => {
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 counter={deviceCounter}
-                slots={deviceSlots}
                 devices={availableDevices}
-                onChange={handleDevicesChanges}
-                getSelected={(slot) => pathOr('', [slot], values.devices)}
-                errorText={formik.errors.devices as string}
                 disabled={isReadOnly}
+                errorText={formik.errors.devices as string}
+                getSelected={(slot) => pathOr('', [slot], values.devices)}
+                onChange={handleDevicesChanges}
+                slots={deviceSlots}
               />
               <FormControl fullWidth>
                 <Select
-                  label="initrd"
-                  onChange={handleInitrdChange}
-                  options={categorizedInitrdOptions}
                   defaultValue={getSelectedOptionFromGroupedOptions(
                     initrdFromConfig,
                     categorizedInitrdOptions
@@ -796,59 +795,62 @@ export const LinodeConfigDialog = (props: Props) => {
                     values.initrd,
                     categorizedInitrdOptions
                   )}
-                  placeholder="None"
                   isClearable={false}
+                  label="initrd"
                   noMarginTop
+                  onChange={handleInitrdChange}
+                  options={categorizedInitrdOptions}
+                  placeholder="None"
                 />
               </FormControl>
               <Button
                 buttonType="secondary"
-                onClick={() => setDeviceCounter((counter) => counter + 1)}
                 className={classes.button}
                 compactX
                 disabled={isReadOnly || deviceCounter >= deviceSlots.length - 1}
+                onClick={() => setDeviceCounter((counter) => counter + 1)}
               >
                 Add a Device
               </Button>
 
               <FormControl className={classes.formGroup} fullWidth>
                 <FormControlLabel
-                  label="Use Custom Root"
-                  name="useCustomRoot"
                   control={
                     <Toggle
                       checked={useCustomRoot}
-                      onChange={handleToggleCustomRoot}
                       disabled={isReadOnly}
+                      onChange={handleToggleCustomRoot}
                     />
                   }
+                  label="Use Custom Root"
+                  name="useCustomRoot"
                 />
                 {!useCustomRoot ? (
                   <Select
-                    options={pathsOptions}
-                    label="Root Device"
                     value={pathsOptions.find(
                       (device) => device.value === values.root_device
                     )}
-                    onChange={handleRootDeviceChange}
-                    name="root_device"
-                    id="root_device"
-                    errorText={formik.errors.root_device}
-                    placeholder="None"
                     disabled={isReadOnly}
+                    errorText={formik.errors.root_device}
+                    id="root_device"
                     isClearable={false}
+                    label="Root Device"
+                    name="root_device"
+                    onChange={handleRootDeviceChange}
+                    options={pathsOptions}
+                    placeholder="None"
                   />
                 ) : (
                   <TextField
+                    disabled={isReadOnly}
+                    errorGroup="linode-config-dialog"
+                    errorText={formik.errors.root_device}
+                    fullWidth
+                    inputProps={{ id: 'root_device', name: 'root_device' }}
                     label="Custom"
                     name="root_device"
-                    value={values.root_device}
                     onChange={formik.handleChange}
-                    inputProps={{ name: 'root_device', id: 'root_device' }}
-                    fullWidth
-                    errorText={formik.errors.root_device}
-                    errorGroup="linode-config-dialog"
-                    disabled={isReadOnly}
+                    value={values.root_device}
                   />
                 )}
               </FormControl>
@@ -858,16 +860,13 @@ export const LinodeConfigDialog = (props: Props) => {
 
             {showVlans ? (
               <Grid xs={12}>
-                <Box display="flex" alignItems="center">
+                <Box alignItems="center" display="flex">
                   <Typography variant="h3">Network Interfaces</Typography>
                   <TooltipIcon
-                    status="help"
                     sxTooltipIcon={{
-                      paddingTop: 0,
                       paddingBottom: 0,
+                      paddingTop: 0,
                     }}
-                    classes={{ tooltip: classes.tooltip }}
-                    interactive
                     text={
                       <Typography>
                         Configure the network that a selected interface will
@@ -875,13 +874,16 @@ export const LinodeConfigDialog = (props: Props) => {
                         VLAN). Each Linode can have up to three Network
                         Interfaces. For more information, see our{' '}
                         <ExternalLink
-                          text="Network Interfaces guide"
-                          link="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance"
                           hideIcon
+                          link="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance"
+                          text="Network Interfaces guide"
                         />
                         .
                       </Typography>
                     }
+                    classes={{ tooltip: classes.tooltip }}
+                    interactive
+                    status="help"
                   />
                 </Box>
                 {formik.errors.interfaces ? (
@@ -890,20 +892,20 @@ export const LinodeConfigDialog = (props: Props) => {
                 {values.interfaces.map((thisInterface, idx) => {
                   return (
                     <InterfaceSelect
-                      key={`eth${idx}-interface`}
-                      slotNumber={idx}
-                      readOnly={isReadOnly}
-                      region={linode?.region}
-                      labelError={formik.errors[`interfaces[${idx}].label`]}
-                      ipamError={
-                        formik.errors[`interfaces[${idx}].ipam_address`]
-                      }
-                      label={thisInterface.label}
-                      purpose={thisInterface.purpose}
-                      ipamAddress={thisInterface.ipam_address}
                       handleChange={(newInterface: Interface) =>
                         handleInterfaceChange(idx, newInterface)
                       }
+                      ipamError={
+                        formik.errors[`interfaces[${idx}].ipam_address`]
+                      }
+                      ipamAddress={thisInterface.ipam_address}
+                      key={`eth${idx}-interface`}
+                      label={thisInterface.label}
+                      labelError={formik.errors[`interfaces[${idx}].label`]}
+                      purpose={thisInterface.purpose}
+                      readOnly={isReadOnly}
+                      region={linode?.region}
+                      slotNumber={idx}
                     />
                   );
                 })}
@@ -925,82 +927,82 @@ export const LinodeConfigDialog = (props: Props) => {
               >
                 <FormGroup className={classes.formGroup}>
                   <FormControlLabel
-                    label="Enable distro helper"
-                    name="helpers.distro"
-                    className={classes.formControlToggle}
                     control={
                       <Toggle
                         checked={values.helpers.distro}
-                        onChange={formik.handleChange}
                         disabled={isReadOnly}
+                        onChange={formik.handleChange}
                         tooltipText="Helps maintain correct inittab/upstart console device"
                       />
                     }
+                    className={classes.formControlToggle}
+                    label="Enable distro helper"
+                    name="helpers.distro"
                   />
 
                   <FormControlLabel
-                    label="Disable updatedb"
-                    name="helpers.updatedb_disabled"
-                    className={classes.formControlToggle}
                     control={
                       <Toggle
                         checked={values.helpers.updatedb_disabled}
-                        onChange={formik.handleChange}
                         disabled={isReadOnly}
+                        onChange={formik.handleChange}
                         tooltipText="Disables updatedb cron job to avoid disk thrashing"
                       />
                     }
+                    className={classes.formControlToggle}
+                    label="Disable updatedb"
+                    name="helpers.updatedb_disabled"
                   />
 
                   <FormControlLabel
-                    label="Enable modules.dep helper"
-                    name="helpers.modules_dep"
-                    className={classes.formControlToggle}
                     control={
                       <Toggle
                         checked={values.helpers.modules_dep}
-                        onChange={formik.handleChange}
                         disabled={isReadOnly}
+                        onChange={formik.handleChange}
                         tooltipText="Creates a modules dependency file for the kernel you run"
                       />
                     }
+                    className={classes.formControlToggle}
+                    label="Enable modules.dep helper"
+                    name="helpers.modules_dep"
                   />
 
                   <FormControlLabel
-                    label="Auto-mount devtmpfs"
-                    name="helpers.devtmpfs_automount"
-                    className={classes.formControlToggle}
                     control={
                       <Toggle
                         checked={values.helpers.devtmpfs_automount}
-                        onChange={formik.handleChange}
                         disabled={isReadOnly}
+                        onChange={formik.handleChange}
                         tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
                       />
                     }
+                    className={classes.formControlToggle}
+                    label="Auto-mount devtmpfs"
+                    name="helpers.devtmpfs_automount"
                   />
 
                   <FormControlLabel
-                    label="Auto-configure networking"
-                    name="helpers.network"
-                    className={classes.formControlToggle}
                     control={
                       <Toggle
-                        checked={values.helpers.network}
-                        onChange={formik.handleChange}
-                        disabled={isReadOnly}
                         tooltipText={
                           <>
                             Automatically configure static networking
                             <ExternalLink
-                              text="(more info)"
                               link="https://www.linode.com/docs/platform/network-helper/"
+                              text="(more info)"
                             />
                           </>
                         }
+                        checked={values.helpers.network}
+                        disabled={isReadOnly}
                         interactive={true}
+                        onChange={formik.handleChange}
                       />
                     }
+                    className={classes.formControlToggle}
+                    label="Auto-configure networking"
+                    name="helpers.network"
                   />
                 </FormGroup>
               </FormControl>
@@ -1013,10 +1015,10 @@ export const LinodeConfigDialog = (props: Props) => {
           Cancel
         </Button>
         <Button
-          onClick={formik.submitForm}
           buttonType="primary"
           disabled={isReadOnly}
           loading={formik.isSubmitting}
+          onClick={formik.submitForm}
         >
           {config ? 'Save Changes' : 'Add Configuration'}
         </Button>
@@ -1026,13 +1028,13 @@ export const LinodeConfigDialog = (props: Props) => {
 };
 
 interface ConfigFormProps {
-  loading: boolean;
-  errors: APIError[] | null;
   children: JSX.Element;
+  errors: APIError[] | null;
+  loading: boolean;
 }
 
 const DialogContent: React.FC<ConfigFormProps> = (props) => {
-  const { loading, errors } = props;
+  const { errors, loading } = props;
 
   if (loading) {
     return <CircleProgress />;

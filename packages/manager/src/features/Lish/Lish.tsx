@@ -1,58 +1,60 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Tab } from 'src/components/TabLinkList/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import {
   useLinodeLishTokenQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
+
 import Glish from './Glish';
 import Weblish from './Weblish';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  tabs: {
-    backgroundColor: 'black',
-    margin: 0,
-    '& [role="tablist"]': {
-      display: 'flex',
-      backgroundColor: theme.bg.offWhite,
-      margin: 0,
-      overflow: 'hidden',
+  notFound: {
+    '& h1': {
+      color: '#f4f4f4 !important',
     },
+    color: '#f4f4f4 !important',
+  },
+  progress: {
+    height: 'auto',
+  },
+  tabs: {
     '& [role="tab"]': {
+      '&[aria-selected="true"]': {
+        '&:hover': {
+          backgroundColor: theme.palette.primary.light,
+          color: 'white',
+        },
+        backgroundColor: theme.palette.primary.main,
+        borderBottom: 'none !important',
+        color: 'white !important',
+      },
       backgroundColor: theme.bg.offWhite,
       color: theme.color.tableHeaderText,
       flex: 'auto',
       margin: 0,
       maxWidth: 'none !important',
-      '&[aria-selected="true"]': {
-        backgroundColor: theme.palette.primary.main,
-        borderBottom: 'none !important',
-        color: 'white !important',
-        '&:hover': {
-          backgroundColor: theme.palette.primary.light,
-          color: 'white',
-        },
-      },
     },
-  },
-  progress: {
-    height: 'auto',
-  },
-  notFound: {
-    color: '#f4f4f4 !important',
-    '& h1': {
-      color: '#f4f4f4 !important',
+    '& [role="tablist"]': {
+      backgroundColor: theme.bg.offWhite,
+      display: 'flex',
+      margin: 0,
+      overflow: 'hidden',
     },
+    backgroundColor: 'black',
+    margin: 0,
   },
 }));
 
@@ -65,14 +67,14 @@ const Lish = () => {
 
   const {
     data: linode,
-    isLoading: isLinodeLoading,
     error: linodeError,
+    isLoading: isLinodeLoading,
   } = useLinodeQuery(id);
 
   const {
     data,
-    isLoading: isTokenLoading,
     error: tokenError,
+    isLoading: isTokenLoading,
     refetch,
   } = useLinodeLishTokenQuery(id);
 
@@ -105,13 +107,13 @@ const Lish = () => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
-      title: 'Weblish',
       routeName: `/linodes/${id}/lish/weblish`,
+      title: 'Weblish',
     },
     !isBareMetal
       ? {
-          title: 'Glish',
           routeName: `/linodes/${id}/lish/glish`,
+          title: 'Glish',
         }
       : null,
   ].filter(Boolean) as Tab[];
@@ -152,8 +154,6 @@ const Lish = () => {
     <React.Fragment>
       {linode && token && (
         <Tabs
-          className={classes.tabs}
-          onChange={navToURL}
           index={
             type &&
             tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type) !==
@@ -161,22 +161,24 @@ const Lish = () => {
               ? tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type)
               : 0
           }
+          className={classes.tabs}
+          onChange={navToURL}
         >
           <TabLinkList tabs={tabs} />
           <TabPanels>
-            <SafeTabPanel index={0} data-qa-tab="Weblish">
+            <SafeTabPanel data-qa-tab="Weblish" index={0}>
               <Weblish
-                token={token}
                 linode={linode}
                 refreshToken={refreshToken}
+                token={token}
               />
             </SafeTabPanel>
             {!isBareMetal && (
-              <SafeTabPanel index={1} data-qa-tab="Glish">
+              <SafeTabPanel data-qa-tab="Glish" index={1}>
                 <Glish
-                  token={token}
                   linode={linode}
                   refreshToken={refreshToken}
+                  token={token}
                 />
               </SafeTabPanel>
             )}

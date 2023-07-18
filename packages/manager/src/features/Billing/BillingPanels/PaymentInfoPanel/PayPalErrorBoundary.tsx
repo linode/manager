@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { reportException } from 'src/exceptionReporting';
 
 interface State {
@@ -9,7 +10,7 @@ interface Props {
   renderError: (errorMsg: string) => JSX.Element;
 }
 
-class PayPalErrorBoundary extends React.Component<Props, State> {
+export class PayPalErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { error: false };
@@ -32,5 +33,3 @@ class PayPalErrorBoundary extends React.Component<Props, State> {
     return this.props.children;
   }
 }
-
-export default PayPalErrorBoundary;

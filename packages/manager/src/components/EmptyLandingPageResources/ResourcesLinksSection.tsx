@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
 interface ResourcesLinksSectionProps {
-  children: JSX.Element[] | JSX.Element;
+  children: JSX.Element | JSX.Element[];
   /**
    * If true, the section will be 100% width (more than 2 columns)
    *
@@ -22,8 +22,8 @@ const StyledResourcesLinksSection = styled('div', {
   maxWidth: props.wide === false ? 762 : '100%',
   [theme.breakpoints.down(props.wide ? 'lg' : 'md')]: {
     gridAutoFlow: 'row',
-    rowGap: theme.spacing(8),
     justifyItems: 'start',
+    rowGap: theme.spacing(8),
   },
 }));
 

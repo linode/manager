@@ -1,27 +1,27 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { Provider } from 'react-redux';
 
 import { linodes } from 'src/__data__/linodes';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { queryClientFactory } from 'src/queries/base';
+import { storeFactory } from 'src/store';
 
 import { CombinedProps, FromLinodeContent } from './FromLinodeContent';
-import { Provider } from 'react-redux';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { storeFactory } from 'src/store';
-import { queryClientFactory } from 'src/queries/base';
 
 const store = storeFactory(queryClientFactory());
 
 const mockProps: CombinedProps = {
-  updateDiskSize: jest.fn(),
-  updateImageID: jest.fn(),
-  updateLinodeID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
   accountBackupsEnabled: false,
   imagesData: {},
   linodesData: linodes,
   regionsData: [],
   typesData: [],
+  updateDiskSize: jest.fn(),
+  updateImageID: jest.fn(),
+  updateLinodeID: jest.fn(),
+  updateRegionID: jest.fn(),
+  updateTypeID: jest.fn(),
   userCannotCreateLinode: false,
 };
 

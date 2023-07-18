@@ -1,14 +1,16 @@
 import * as React from 'react';
+
 import { rest, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+
 import PrimaryNav from './PrimaryNav';
 
 const props = {
   closeMenu: jest.fn(),
-  toggleTheme: jest.fn(),
-  toggleSpacing: jest.fn(),
   isCollapsed: false,
+  toggleSpacing: jest.fn(),
+  toggleTheme: jest.fn(),
 };
 
 const queryClient = queryClientFactory();
@@ -22,10 +24,10 @@ describe('PrimaryNav', () => {
     );
 
     const {
-      getByTestId,
-      rerender,
-      queryByTestId,
       findByTestId,
+      getByTestId,
+      queryByTestId,
+      rerender,
     } = renderWithTheme(<PrimaryNav {...props} />, { queryClient });
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
 

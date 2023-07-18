@@ -3,6 +3,6 @@ import Snackbar, {
 } from '@mui/material/Snackbar';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface SnackbarProps extends _SnackbarProps {}
+export type SnackbarProps = _SnackbarProps;
 
 export default Snackbar;

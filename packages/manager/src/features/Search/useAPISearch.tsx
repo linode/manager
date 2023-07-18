@@ -1,18 +1,19 @@
 import { getDomains } from '@linode/api-v4/lib/domains';
-import { getImages, Image } from '@linode/api-v4/lib/images';
+import { Image, getImages } from '@linode/api-v4/lib/images';
 import { getKubernetesClusters } from '@linode/api-v4/lib/kubernetes';
 import { getLinodes } from '@linode/api-v4/lib/linodes';
 import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { Region } from '@linode/api-v4/lib/regions';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { flatten } from 'ramda';
-import React from 'react';
 import { useCallback } from 'react';
+import React from 'react';
+
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useSpecificTypes } from 'src/queries/types';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
 import {
   domainToSearchableItem,
   formatLinode,
@@ -23,10 +24,11 @@ import {
 } from 'src/store/selectors/getSearchEntities';
 import { ExtendedType, extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { refinedSearch } from './refinedSearch';
-import { SearchableItem, SearchResults } from './search.interfaces';
-import { emptyResults, separateResultsByEntity } from './utils';
+
 import { getImageLabelForLinode } from '../Images/utils';
+import { refinedSearch } from './refinedSearch';
+import { SearchResults, SearchableItem } from './search.interfaces';
+import { emptyResults, separateResultsByEntity } from './utils';
 
 interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;
@@ -45,8 +47,8 @@ export const useAPISearch = (conductedSearch: boolean): Search => {
     (searchText: string) => {
       if (!searchText || searchText === '') {
         return Promise.resolve({
-          searchResultsByEntity: emptyResults,
           combinedResults: [],
+          searchResultsByEntity: emptyResults,
         });
       }
 

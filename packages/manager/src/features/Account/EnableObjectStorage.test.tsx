@@ -23,7 +23,7 @@ describe('EnableObjectStorage Component', () => {
   });
 
   it('Should open confirmation dialog on Cancel Object Storage', async () => {
-    const { getByTestId, findByTitle } = renderWithTheme(
+    const { findByTitle, getByTestId } = renderWithTheme(
       <EnableObjectStorage object_storage={'active'} />
     );
     const button = getByTestId('open-dialog-button');
@@ -35,7 +35,7 @@ describe('EnableObjectStorage Component', () => {
   });
 
   it('Should close confirmation dialog on Cancel', async () => {
-    const { getByTestId, findByTitle } = renderWithTheme(
+    const { findByTitle, getByTestId } = renderWithTheme(
       <EnableObjectStorage object_storage={'active'} />
     );
     const dialogButton = getByTestId('open-dialog-button');

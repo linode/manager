@@ -1,10 +1,12 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
+import { makeStyles } from 'tss-react/mui';
+
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import { makeStyles } from 'tss-react/mui';
-import Divider from '../core/Divider';
+import Paper from 'src/components/core/Paper';
+
+import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
 const PasswordInput = React.lazy(
@@ -13,55 +15,55 @@ const PasswordInput = React.lazy(
 
 const useStyles = makeStyles<void, 'passwordInputOuter'>()(
   (theme: Theme, _params, classes) => ({
-    root: {
-      marginTop: theme.spacing(3),
-    },
     isOptional: {
       [`& .${classes.passwordInputOuter}`]: {
         marginTop: 0,
       },
     },
     passwordInputOuter: {},
+    root: {
+      marginTop: theme.spacing(3),
+    },
   })
 );
 
 interface Props {
-  password: string | null;
+  authorizedUsers?: string[];
+  className?: string;
+  disabled?: boolean;
+  disabledReason?: JSX.Element | string;
   error?: string;
   handleChange: (value: string) => void;
   heading?: string;
-  label?: string;
-  required?: boolean;
-  placeholder?: string;
-  disabled?: boolean;
-  disabledReason?: string | JSX.Element;
-  tooltipInteractive?: boolean;
   hideStrengthLabel?: boolean;
-  className?: string;
-  small?: boolean;
   isOptional?: boolean;
+  label?: string;
+  password: null | string;
   passwordHelperText?: string;
+  placeholder?: string;
+  required?: boolean;
   setAuthorizedUsers?: (usernames: string[]) => void;
-  authorizedUsers?: string[];
+  small?: boolean;
+  tooltipInteractive?: boolean;
 }
 
 const AccessPanel = (props: Props) => {
   const {
-    error,
-    label,
-    required,
-    placeholder,
+    authorizedUsers,
+    className,
     disabled,
     disabledReason,
-    tooltipInteractive,
-    hideStrengthLabel,
-    className,
-    isOptional,
-    passwordHelperText,
-    password,
+    error,
     handleChange: _handleChange,
+    hideStrengthLabel,
+    isOptional,
+    label,
+    password,
+    passwordHelperText,
+    placeholder,
+    required,
     setAuthorizedUsers,
-    authorizedUsers,
+    tooltipInteractive,
   } = props;
 
   const { classes, cx } = useStyles();
@@ -73,38 +75,38 @@ const AccessPanel = (props: Props) => {
     <Paper
       className={cx(
         {
-          [classes.root]: true,
           [classes.isOptional]: isOptional,
+          [classes.root]: true,
         },
         className
       )}
     >
-      {error ? <Notice text={error} error /> : null}
+      {error ? <Notice error text={error} /> : null}
       <React.Suspense fallback={<SuspenseLoader />}>
         <PasswordInput
-          name="password"
-          data-qa-password-input
+          autoComplete="off"
           className={classes.passwordInputOuter}
-          required={required}
+          data-qa-password-input
           disabled={disabled}
           disabledReason={disabledReason || ''}
-          tooltipInteractive={tooltipInteractive}
-          autoComplete="off"
-          value={password || ''}
-          label={label || 'Root Password'}
-          placeholder={placeholder || 'Enter a password.'}
-          onChange={handleChange}
-          hideStrengthLabel={hideStrengthLabel}
           helperText={passwordHelperText}
+          hideStrengthLabel={hideStrengthLabel}
+          label={label || 'Root Password'}
+          name="password"
+          onChange={handleChange}
+          placeholder={placeholder || 'Enter a password.'}
+          required={required}
+          tooltipInteractive={tooltipInteractive}
+          value={password || ''}
         />
       </React.Suspense>
       {setAuthorizedUsers !== undefined && authorizedUsers !== undefined ? (
         <>
-          <Divider spacingTop={44} spacingBottom={20} />
+          <Divider spacingBottom={20} spacingTop={44} />
           <UserSSHKeyPanel
-            setAuthorizedUsers={setAuthorizedUsers}
             authorizedUsers={authorizedUsers}
             disabled={disabled}
+            setAuthorizedUsers={setAuthorizedUsers}
           />
         </>
       ) : null}

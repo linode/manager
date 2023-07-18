@@ -1,29 +1,30 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Tooltip from 'src/components/core/Tooltip';
+
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Tooltip } from 'src/components/Tooltip';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(1),
+  disabled: {
+    cursor: 'not-allowed !important',
   },
   focused: {
     backgroundColor: theme.palette.primary.main,
     color: 'white',
   },
-  disabled: {
-    cursor: 'not-allowed !important',
+  root: {
+    padding: theme.spacing(1),
   },
 }));
 
 export interface RegionItem extends Item<string> {
-  flag: JSX.Element | null;
   country: string;
-  disabledMessage?: string | JSX.Element;
+  disabledMessage?: JSX.Element | string;
+  flag: JSX.Element | null;
 }
 interface RegionOptionProps extends OptionProps<any, any> {
   data: RegionItem;
@@ -36,25 +37,25 @@ export const RegionOption = (props: RegionOptionProps) => {
   return (
     <Option
       className={cx({
-        [classes.root]: true,
-        [classes.focused]: props.isFocused,
         [classes.disabled]: isDisabled,
+        [classes.focused]: props.isFocused,
+        [classes.root]: true,
       })}
-      value={data.value}
       attrs={{ ['data-qa-region-select-item']: data.value }}
+      value={data.value}
       {...props}
       data-testid={data.value}
     >
       {isDisabled ? (
         <Tooltip
-          title={data.disabledMessage ?? ''}
-          enterTouchDelay={500}
           enterDelay={500}
+          enterTouchDelay={500}
+          title={data.disabledMessage ?? ''}
         >
           <Grid
+            alignItems="center"
             container
             direction="row"
-            alignItems="center"
             justifyContent="flex-start"
             spacing={2}
           >
@@ -64,9 +65,9 @@ export const RegionOption = (props: RegionOptionProps) => {
         </Tooltip>
       ) : (
         <Grid
+          alignItems="center"
           container
           direction="row"
-          alignItems="center"
           justifyContent="flex-start"
           spacing={2}
         >

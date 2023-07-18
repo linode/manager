@@ -1,41 +1,43 @@
+import { PaymentMethod } from '@linode/api-v4';
+import { ActivePromotion } from '@linode/api-v4/lib/account/types';
+import { GridSize } from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Breakpoint } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
-import Divider from 'src/components/core/Divider';
-import Grid from '@mui/material/Unstable_Grid2';
-import PaymentDrawer from './PaymentDrawer';
-import PromoDialog from './PromoDialog';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { Divider } from 'src/components/Divider';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { ActivePromotion } from '@linode/api-v4/lib/account/types';
-import { BillingPaper } from '../../BillingDetail';
-import { Breakpoint } from '@mui/material/styles';
-import { GridSize } from '@mui/material/Grid';
-import { isWithinDays } from 'src/utilities/date';
-import { PaymentMethod } from '@linode/api-v4';
-import { PromoDisplay } from './PromoDisplay';
-import { styled, useTheme } from '@mui/material/styles';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { useGrants } from 'src/queries/profile';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useGrants } from 'src/queries/profile';
+import { isWithinDays } from 'src/utilities/date';
+
+import { BillingPaper } from '../../BillingDetail';
+import PaymentDrawer from './PaymentDrawer';
+import PromoDialog from './PromoDialog';
+import { PromoDisplay } from './PromoDisplay';
 
 const GridContainer = styled(Grid)({
   marginBottom: 0,
 });
 
 interface BillingSummaryProps {
-  promotions?: ActivePromotion[];
-  paymentMethods: PaymentMethod[] | undefined;
-  balanceUninvoiced: number;
   balance: number;
+  balanceUninvoiced: number;
+  paymentMethods: PaymentMethod[] | undefined;
+  promotions?: ActivePromotion[];
 }
 
 export const BillingSummary = (props: BillingSummaryProps) => {
   const theme = useTheme();
   const { data: notifications } = useNotificationsQuery();
-  const { account, _isRestrictedUser } = useAccountManagement();
+  const { _isRestrictedUser, account } = useAccountManagement();
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
     false
@@ -52,7 +54,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
       notification.severity === 'critical'
   );
 
-  const { promotions, paymentMethods, balanceUninvoiced, balance } = props;
+  const { balance, balanceUninvoiced, paymentMethods, promotions } = props;
 
   // On-the-fly route matching so this component can open the drawer itself.
   const routeForMakePayment = '/account/billing/make-payment';
@@ -130,7 +132,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   // The layout changes if there are promotions.
   const gridDimensions: Partial<Record<Breakpoint, GridSize>> =
-    promotions && promotions.length > 0 ? { xs: 12, md: 4 } : { xs: 12, sm: 6 };
+    promotions && promotions.length > 0 ? { md: 4, xs: 12 } : { sm: 6, xs: 12 };
 
   const balanceJSX =
     balance > 0 ? (
@@ -161,29 +163,29 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   return (
     <>
-      <GridContainer container xs={12} spacing={2}>
+      <GridContainer container spacing={2} xs={12}>
         <Grid {...gridDimensions} sm={6}>
           <BillingPaper variant="outlined">
             <Typography variant="h3">Account Balance</Typography>
             <Divider />
             <Box
-              marginTop="12px"
+              alignItems="center"
               display="flex"
               justifyContent="space-between"
-              alignItems="center"
+              marginTop="12px"
             >
               <Typography
-                variant={balance === 0 ? 'body1' : 'h3'}
+                data-testid="account-balance-text"
                 style={{ marginRight: 8 }}
                 sx={sxBalance}
-                data-testid="account-balance-text"
+                variant={balance === 0 ? 'body1' : 'h3'}
               >
                 {accountBalanceText}
               </Typography>
-              <Typography variant="h3" sx={sxBalance}>
+              <Typography sx={sxBalance} variant="h3">
                 <Currency
-                  quantity={Math.abs(balance)}
                   dataAttrs={{ 'data-testid': 'account-balance-value' }}
+                  quantity={Math.abs(balance)}
                 />
               </Typography>
             </Box>
@@ -195,10 +197,10 @@ export const BillingSummary = (props: BillingSummaryProps) => {
                 }}
               >
                 <Button
-                  onClick={openPromoDialog}
                   sx={{
                     ...theme.applyLinkStyles,
                   }}
+                  onClick={openPromoDialog}
                 >
                   Add a promo code
                 </Button>
@@ -207,7 +209,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
           </BillingPaper>
         </Grid>
         {promotions && promotions?.length > 0 ? (
-          <Grid xs={12} sm={6} md={4}>
+          <Grid md={4} sm={6} xs={12}>
             <BillingPaper variant="outlined">
               <Typography variant="h3">Promotions</Typography>
 
@@ -225,31 +227,31 @@ export const BillingSummary = (props: BillingSummaryProps) => {
         ) : null}
         <Grid {...gridDimensions}>
           <BillingPaper variant="outlined">
-            <Box display="flex" alignItems="center">
+            <Box alignItems="center" display="flex">
               <Typography variant="h3">Accrued Charges</Typography>
               <TooltipIcon
+                status="help"
                 sxTooltipIcon={{ padding: '0 8px' }}
                 text={accruedChargesHelperText}
-                status="help"
               />
             </Box>
             <Divider />
             <Box
-              marginTop="12px"
+              alignItems="center"
               display="flex"
               justifyContent="space-between"
-              alignItems="center"
+              marginTop="12px"
             >
               <Typography>Since last invoice</Typography>
               <Typography
-                variant="h3"
                 sx={{
                   color: theme.palette.text.primary,
                 }}
+                variant="h3"
               >
                 <Currency
-                  quantity={balanceUninvoiced}
                   dataAttrs={{ 'data-testid': 'accrued-charges-value' }}
+                  quantity={balanceUninvoiced}
                 />
               </Typography>
             </Box>
@@ -257,12 +259,12 @@ export const BillingSummary = (props: BillingSummaryProps) => {
         </Grid>
       </GridContainer>
       <PaymentDrawer
+        onClose={closePaymentDrawer}
+        open={paymentDrawerOpen}
         paymentMethods={paymentMethods}
         selectedPaymentMethod={selectedPaymentMethod}
-        open={paymentDrawerOpen}
-        onClose={closePaymentDrawer}
       />
-      <PromoDialog open={isPromoDialogOpen} onClose={closePromoDialog} />
+      <PromoDialog onClose={closePromoDialog} open={isPromoDialogOpen} />
     </>
   );
 };

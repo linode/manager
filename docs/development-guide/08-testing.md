@@ -194,13 +194,22 @@ These environment variables are used by Cloud Manager's UI tests to override reg
 |----------------------|-------------------------------------------------|-----------|---------------------------------------|
 | `CY_TEST_REGION`     | ID of region to test (as used by Linode APIv4). | `us-east` | Unset; regions are selected at random |
 
+###### Run Splitting
+These environment variables facilitate splitting the Cypress run between multiple runners without the use of any third party services. This can be useful for improving Cypress test performance in some circumstances.
+
+| Environment Variable      | Description                                | Example        | Default                    |
+|---------------------------|--------------------------------------------|----------------|----------------------------|
+| `CY_TEST_SPLIT_RUN`       | Enable run splitting                       | `1`            | Unset; disabled by default |
+| `CY_TEST_SPLIT_RUN_INDEX` | Numeric index for each Cypress test runner | `1`, `2`, etc. | Unset                      |
+| `CY_TEST_SPLIT_RUN_TOTAL` | Total number of runners for the tests      | `2`            | Unset                      |
+
 ###### Logging & Reporting
 Environment variables related to Cypress logging and reporting, as well as report generation.
 
-| Environment Variable | Description                                     | Example   | Default                    |
-|----------------------|-------------------------------------------------|-----------|----------------------------|
-| `CY_LOG_TEST_USER`   | Log test account information when tests begin   | `1`       | Unset; disabled by default |
-
+| Environment Variable   | Description                                     | Example   | Default                    |
+|------------------------|-------------------------------------------------|-----------|----------------------------|
+| `CY_LOG_TEST_USER`     | Log test account information when tests begin   | `1`       | Unset; disabled by default |
+| `CY_TEST_JUNIT_REPORT` | Enable JUnit reporting                          | `1`       | Unset; disabled by default |
 
 ### Writing End-to-End Tests
 

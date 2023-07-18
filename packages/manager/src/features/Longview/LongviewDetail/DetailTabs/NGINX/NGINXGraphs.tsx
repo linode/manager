@@ -1,24 +1,26 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
-import { WithTheme, withTheme } from '@mui/styles';
+
 import Grid from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
+import Paper from 'src/components/core/Paper';
+
 import { LongviewProcesses, NginxResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ProcessGraphs, { useStyles } from '../ProcessGraphs';
 
 interface Props {
   data?: NginxResponse;
-  error?: string;
-  loading: boolean;
-  timezone: string;
-  isToday: boolean;
-  start: number;
   end: number;
+  error?: string;
+  isToday: boolean;
+  loading: boolean;
   processesData: LongviewProcesses;
-  processesLoading: boolean;
   processesError?: string;
+  processesLoading: boolean;
+  start: number;
+  timezone: string;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -26,16 +28,16 @@ type CombinedProps = Props & WithTheme;
 export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
+    end,
     error,
     isToday,
     loading,
-    timezone,
-    start,
-    end,
     processesData,
-    processesLoading,
     processesError,
+    processesLoading,
+    start,
     theme,
+    timezone,
   } = props;
 
   const classes = useStyles();
@@ -44,10 +46,10 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
 
   const graphProps = {
     error,
-    timezone,
     loading,
-    showToday: isToday,
     nativeLegend: true,
+    showToday: isToday,
+    timezone,
   };
 
   return (
@@ -55,70 +57,70 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
       <Grid container direction="column" spacing={0}>
         <Grid item xs={12}>
           <LongviewLineGraph
-            title="Requests"
-            subtitle="requests/s"
-            unit=" requests/s"
-            ariaLabel="Requests Per Second Graph"
             data={[
               {
-                label: 'Requests',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.requests,
+                borderColor: 'transparent',
                 data: _convertData(data?.requests ?? [], start, end),
+                label: 'Requests',
               },
             ]}
+            ariaLabel="Requests Per Second Graph"
+            subtitle="requests/s"
+            title="Requests"
+            unit=" requests/s"
             {...graphProps}
           />
         </Grid>
         <Grid item xs={12}>
           <Grid container direction="row">
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+            <Grid className={classes.smallGraph} item sm={6} xs={12}>
               <LongviewLineGraph
-                title="Connections"
-                subtitle="connections/s"
-                unit=" connections/s"
-                ariaLabel="Connections Per Second Graph"
                 data={[
                   {
-                    label: 'Accepted',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.accepted,
+                    borderColor: 'transparent',
                     data: _convertData(data?.accepted_cons ?? [], start, end),
+                    label: 'Accepted',
                   },
                   {
-                    label: 'Handled',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.handled,
+                    borderColor: 'transparent',
                     data: _convertData(data?.handled_cons ?? [], start, end),
+                    label: 'Handled',
                   },
                 ]}
+                ariaLabel="Connections Per Second Graph"
+                subtitle="connections/s"
+                title="Connections"
+                unit=" connections/s"
                 {...graphProps}
               />
             </Grid>
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+            <Grid className={classes.smallGraph} item sm={6} xs={12}>
               <LongviewLineGraph
-                title="Workers"
-                ariaLabel="Workers Graph"
                 data={[
                   {
-                    label: 'Waiting',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.waiting,
+                    borderColor: 'transparent',
                     data: _convertData(data?.waiting ?? [], start, end),
+                    label: 'Waiting',
                   },
                   {
-                    label: 'Reading',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.reading,
+                    borderColor: 'transparent',
                     data: _convertData(data?.reading ?? [], start, end),
+                    label: 'Reading',
                   },
                   {
-                    label: 'Writing',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.writing,
+                    borderColor: 'transparent',
                     data: _convertData(data?.writing ?? [], start, end),
+                    label: 'Writing',
                   },
                 ]}
+                ariaLabel="Workers Graph"
+                title="Workers"
                 {...graphProps}
               />
             </Grid>
@@ -126,12 +128,12 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
         </Grid>
         <ProcessGraphs
           data={processesData}
-          loading={processesLoading}
-          error={processesError || error}
-          timezone={timezone}
-          isToday={isToday}
-          start={start}
           end={end}
+          error={processesError || error}
+          isToday={isToday}
+          loading={processesLoading}
+          start={start}
+          timezone={timezone}
         />
       </Grid>
     </Paper>

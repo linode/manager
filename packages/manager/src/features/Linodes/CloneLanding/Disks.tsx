@@ -1,17 +1,19 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
-import { makeStyles } from '@mui/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Grid from '@mui/material/Unstable_Grid2';
+
+import { Checkbox } from 'src/components/Checkbox';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+
 import { DiskSelection } from './utilities';
 
 const useStyles = makeStyles(() => ({
@@ -24,31 +26,31 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface Props {
-  disks: Disk[];
   diskSelection: DiskSelection;
-  selectedConfigIds: number[];
+  disks: Disk[];
   handleSelect: (id: number) => void;
+  selectedConfigIds: number[];
 }
 
 export const Disks: React.FC<Props> = (props) => {
-  const { disks, diskSelection, selectedConfigIds, handleSelect } = props;
+  const { diskSelection, disks, handleSelect, selectedConfigIds } = props;
 
   const classes = useStyles();
 
   return (
     <Paginate data={disks}>
       {({
+        count,
         data: paginatedData,
         handlePageChange,
         handlePageSizeChange,
         page,
         pageSize,
-        count,
       }) => {
         return (
           <React.Fragment>
             <Grid container>
-              <Grid xs={12} md={9}>
+              <Grid md={9} xs={12}>
                 <Table aria-label="List of Disks">
                   <TableHead>
                     <TableRow>
@@ -78,14 +80,14 @@ export const Disks: React.FC<Props> = (props) => {
                           ).length > 0;
 
                         return (
-                          <TableRow key={disk.id} data-qa-disk={disk.label}>
+                          <TableRow data-qa-disk={disk.label} key={disk.id}>
                             <TableCell>
-                              <CheckBox
-                                text={disk.label}
+                              <Checkbox
                                 checked={isDiskSelected || isConfigSelected}
+                                data-testid={`checkbox-${disk.id}`}
                                 disabled={isConfigSelected}
                                 onChange={() => handleSelect(disk.id)}
-                                data-testid={`checkbox-${disk.id}`}
+                                text={disk.label}
                               />
                             </TableCell>
                             <TableCell>{disk.size} MB</TableCell>
@@ -99,11 +101,11 @@ export const Disks: React.FC<Props> = (props) => {
             </Grid>
             <PaginationFooter
               count={count}
-              page={page}
-              pageSize={pageSize}
+              eventCategory="linode disks"
               handlePageChange={handlePageChange}
               handleSizeChange={handlePageSizeChange}
-              eventCategory="linode disks"
+              page={page}
+              pageSize={pageSize}
             />
           </React.Fragment>
         );

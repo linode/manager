@@ -3,31 +3,31 @@ export interface SearchResults {
   searchResultsByEntity: SearchResultsByEntity;
 }
 
-export interface SearchableItem<T = string | number> {
-  value: T;
-  label: string;
-  entityType: SearchableEntityType;
+export interface SearchableItem<T = number | string> {
   data?: any;
+  entityType: SearchableEntityType;
+  label: string;
+  value: T;
 }
 
 export type SearchableEntityType =
-  | 'linode'
-  | 'volume'
+  | 'bucket'
   | 'domain'
   | 'image'
-  | 'nodebalancer'
   | 'kubernetesCluster'
-  | 'bucket';
+  | 'linode'
+  | 'nodebalancer'
+  | 'volume';
 
 // These are the properties on our entities we'd like to search
-export type SearchField = 'tags' | 'label' | 'ips' | 'type';
+export type SearchField = 'ips' | 'label' | 'tags' | 'type';
 
 export interface SearchResultsByEntity {
-  linodes: SearchableItem[];
-  volumes: SearchableItem[];
-  nodebalancers: SearchableItem[];
+  buckets: SearchableItem[];
   domains: SearchableItem[];
   images: SearchableItem[];
   kubernetesClusters: SearchableItem[];
-  buckets: SearchableItem[];
+  linodes: SearchableItem[];
+  nodebalancers: SearchableItem[];
+  volumes: SearchableItem[];
 }

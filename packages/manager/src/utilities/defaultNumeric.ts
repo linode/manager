@@ -4,7 +4,7 @@
  */
 export const defaultNumeric = (
   defaultValue: number,
-  value?: null | string | number
+  value?: null | number | string
 ) => {
   /** convert value to number if it's not undefined or null */
   const valueToNumber = !!value ? +value : value;

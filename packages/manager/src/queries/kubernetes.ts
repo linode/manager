@@ -1,8 +1,14 @@
 import {
   CreateKubeClusterPayload,
+  CreateNodePoolData,
+  KubeNodePoolResponse,
+  KubernetesCluster,
+  KubernetesDashboardResponse,
+  KubernetesEndpointResponse,
+  KubernetesVersion,
+  UpdateNodePoolData,
   createKubernetesCluster,
   createNodePool,
-  CreateNodePoolData,
   deleteKubernetesCluster,
   deleteNodePool,
   getKubeConfig,
@@ -12,18 +18,12 @@ import {
   getKubernetesClusters,
   getKubernetesVersions,
   getNodePools,
-  KubeNodePoolResponse,
-  KubernetesCluster,
-  KubernetesDashboardResponse,
-  KubernetesEndpointResponse,
-  KubernetesVersion,
   recycleAllNodes,
   recycleClusterNodes,
   recycleNode,
   resetKubeConfig,
   updateKubernetesCluster,
   updateNodePool,
-  UpdateNodePoolData,
 } from '@linode/api-v4';
 import {
   APIError,
@@ -32,7 +32,9 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+
 import { getAll } from 'src/utilities/getAll';
+
 import { queryPresets, updateInPaginatedStore } from './base';
 
 export const queryKey = `kubernetes`;
@@ -75,10 +77,10 @@ export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
     [queryKey, 'cluster', id, 'endpoints'],
     () => getAllAPIEndpointsForCluster(id),
     {
+      keepPreviousData: true,
+      refetchOnMount: true,
       retry: true,
       retryDelay: 5000,
-      refetchOnMount: true,
-      keepPreviousData: true,
     }
   );
 };
@@ -100,9 +102,9 @@ export const useKubenetesKubeConfigQuery = (
     },
     {
       enabled,
+      refetchOnMount: true,
       retry: true,
       retryDelay: 5000,
-      refetchOnMount: true,
     }
   );
 

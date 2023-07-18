@@ -3,6 +3,6 @@ import RadioGroup, {
 } from '@mui/material/RadioGroup';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface RadioGroupProps extends _RadioGroupProps {}
+export type RadioGroupProps = _RadioGroupProps;
 
 export default RadioGroup;

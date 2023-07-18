@@ -1,35 +1,44 @@
-import { Config } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
-import { TableBody } from 'src/components/TableBody';
-import Grid from '@mui/material/Unstable_Grid2';
+
+import GridView from 'src/assets/icons/grid-view.svg';
+import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate, { PaginationProps } from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
+import { TableBody } from 'src/components/TableBody';
+import { Tooltip } from 'src/components/Tooltip';
 import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import TableWrapper from './TableWrapper';
-import Tooltip from 'src/components/core/Tooltip';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import GridView from 'src/assets/icons/grid-view.svg';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+
 import {
   StyledControlHeader,
   StyledToggleButton,
 } from './DisplayLinodes.styles';
+import TableWrapper from './TableWrapper';
+
+import type { Config } from '@linode/api-v4/lib/linodes';
 
 export interface RenderLinodesProps extends PaginationProps {
   data: Props['data'];
-  showHead?: boolean;
   openDialog: Props['openDialog'];
   openPowerActionDialog: Props['openPowerActionDialog'];
+  showHead?: boolean;
 }
 
 interface Props {
+  component: React.ComponentType<RenderLinodesProps>;
+  count: number;
+  data: LinodeWithMaintenance[];
+  display: 'grid' | 'list';
+  linodeViewPreference: 'grid' | 'list';
+  linodesAreGrouped: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
@@ -37,15 +46,9 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  count: number;
-  display: 'grid' | 'list';
-  component: React.ComponentType<RenderLinodesProps>;
-  data: LinodeWithMaintenance[];
   someLinodesHaveMaintenance: boolean;
-  toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;
-  linodeViewPreference: 'grid' | 'list';
-  linodesAreGrouped: boolean;
+  toggleLinodeView: () => 'grid' | 'list';
   updatePageUrl: (page: number) => void;
 }
 
@@ -54,17 +57,17 @@ type CombinedProps = Props &
 
 export const DisplayLinodes = React.memo((props: CombinedProps) => {
   const {
+    component: Component,
     count,
     data,
     display,
-    component: Component,
-    order,
-    orderBy,
     handleOrderChange,
-    toggleLinodeView,
-    toggleGroupLinodes,
     linodeViewPreference,
     linodesAreGrouped,
+    order,
+    orderBy,
+    toggleGroupLinodes,
+    toggleLinodeView,
     updatePageUrl,
     ...rest
   } = props;
@@ -109,17 +112,17 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
           ...rest,
           count,
           data: paginatedData,
-          pageSize,
-          page,
-          handlePageSizeChange,
           handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
         };
         const tableWrapperProps = {
+          dataLength: paginatedData.length,
           handleOrderChange,
           order,
           orderBy,
           someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
-          dataLength: paginatedData.length,
         };
         return (
           <React.Fragment>
@@ -128,8 +131,8 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
                 {...tableWrapperProps}
                 linodeViewPreference={linodeViewPreference}
                 linodesAreGrouped={linodesAreGrouped}
-                toggleLinodeView={toggleLinodeView}
                 toggleGroupLinodes={toggleGroupLinodes}
+                toggleLinodeView={toggleLinodeView}
               >
                 <TableBody>
                   <Component showHead {...componentProps} />
@@ -138,18 +141,18 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
             )}
             {display === 'grid' && (
               <>
-                <Grid xs={12} className={'px0'}>
+                <Grid className={'px0'} xs={12}>
                   <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
                     <div
-                      id="displayViewDescription"
                       className="visually-hidden"
+                      id="displayViewDescription"
                     >
                       Currently in {linodeViewPreference} view
                     </div>
                     <Tooltip placement="top" title="List view">
                       <StyledToggleButton
-                        aria-label="Toggle display"
                         aria-describedby={'displayViewDescription'}
+                        aria-label="Toggle display"
                         disableRipple
                         isActive={true}
                         onClick={toggleLinodeView}
@@ -159,18 +162,18 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
                       </StyledToggleButton>
                     </Tooltip>
 
-                    <div id="groupByDescription" className="visually-hidden">
+                    <div className="visually-hidden" id="groupByDescription">
                       {linodesAreGrouped
                         ? 'group by tag is currently enabled'
                         : 'group by tag is currently disabled'}
                     </div>
                     <Tooltip placement="top-end" title="Group by tag">
                       <StyledToggleButton
-                        aria-label={`Toggle group by tag`}
                         aria-describedby={'groupByDescription'}
-                        onClick={toggleGroupLinodes}
+                        aria-label={`Toggle group by tag`}
                         disableRipple
                         isActive={linodesAreGrouped}
+                        onClick={toggleGroupLinodes}
                         size="large"
                       >
                         <GroupByTag />
@@ -185,11 +188,11 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
               {
                 <PaginationFooter
                   count={data.length}
+                  eventCategory={'linodes landing'}
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
-                  pageSize={pageSize}
                   page={queryPage}
-                  eventCategory={'linodes landing'}
+                  pageSize={pageSize}
                   // Disabling showAll as it is impacting page performance.
                   showAll={false}
                 />

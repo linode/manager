@@ -1,12 +1,14 @@
-import { shallow } from 'enzyme';
-import * as React from 'react';
-import { StackScriptCreate } from './StackScriptCreate';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
-import { UseQueryResult } from 'react-query';
 import { Grants, Profile } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
+import { shallow } from 'enzyme';
+import * as React from 'react';
+import { UseQueryResult } from 'react-query';
+
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
 import { queryClientFactory } from 'src/queries/base';
+
+import { StackScriptCreate } from './StackScriptCreate';
 
 const images = normalizeEntities(imageFactory.buildList(10));
 const queryClient = queryClientFactory();
@@ -15,18 +17,18 @@ describe('StackScriptCreate', () => {
   const component = shallow(
     <StackScriptCreate
       {...reactRouterProps}
-      mode="create"
       classes={{
         backButton: '',
         createTitle: '',
       }}
-      imagesData={images}
-      imagesLoading={false}
-      imagesLastUpdated={0}
       profile={
         { data: profileFactory.build() } as UseQueryResult<Profile, APIError[]>
       }
       grants={{ data: {} } as UseQueryResult<Grants, APIError[]>}
+      imagesData={images}
+      imagesLastUpdated={0}
+      imagesLoading={false}
+      mode="create"
       queryClient={queryClient}
     />
   );

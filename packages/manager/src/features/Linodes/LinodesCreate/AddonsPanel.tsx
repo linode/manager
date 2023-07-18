@@ -1,29 +1,34 @@
 import { Interface, Linode } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import CheckBox from 'src/components/CheckBox';
-import Divider from 'src/components/core/Divider';
+
+import { Checkbox } from 'src/components/Checkbox';
+import { Currency } from 'src/components/Currency';
+import { Divider } from 'src/components/Divider';
+import { Notice } from 'src/components/Notice/Notice';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
-import { Currency } from 'src/components/Currency';
-import Grid from '@mui/material/Unstable_Grid2';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import AttachVLAN from './AttachVLAN';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
+import AttachVLAN from './AttachVLAN';
+
 const useStyles = makeStyles((theme: Theme) => ({
-  vlan: {
-    marginTop: theme.spacing(3),
-  },
   addons: {
     marginTop: theme.spacing(3),
   },
-  title: {
-    marginBottom: theme.spacing(2),
+  caption: {
+    marginTop: -8,
+    paddingLeft: `calc(${theme.spacing(2)} + 18px)`, // 34,
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: `calc(${theme.spacing(4)} + 18px)`, // 50
+    },
   },
   label: {
     '& > span:last-child': {
@@ -36,57 +41,61 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  caption: {
-    marginTop: -8,
-    paddingLeft: `calc(${theme.spacing(2)} + 18px)`, // 34,
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: `calc(${theme.spacing(4)} + 18px)`, // 50
-    },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  vlan: {
+    marginTop: theme.spacing(3),
   },
 }));
 
 export interface AddonsPanelProps {
-  backups: boolean;
   accountBackups: boolean;
-  backupsMonthly?: number | null;
-  isPrivateIPChecked: boolean;
+  backups: boolean;
+  backupsMonthly?: null | number;
   changeBackups: () => void;
+  createType: CreateTypes;
+  disabled?: boolean;
+  handleVLANChange: (updatedInterface: Interface) => void;
+  ipamAddress: string;
+  ipamError?: string;
+  isPrivateIPChecked: boolean;
+  labelError?: string;
+  linodesData?: Linode[];
+  selectedImageID?: string;
+  selectedLinodeID?: number;
+  selectedRegionID?: string; // Used for filtering VLANs
+  selectedTypeID?: string;
   togglePrivateIP: () => void;
   vlanLabel: string;
-  ipamAddress: string;
-  handleVLANChange: (updatedInterface: Interface) => void;
-  disabled?: boolean;
-  selectedImageID?: string;
-  selectedTypeID?: string;
-  labelError?: string;
-  ipamError?: string;
-  selectedRegionID?: string; // Used for filtering VLANs
-  createType: CreateTypes;
-  selectedLinodeID?: number;
-  linodesData?: Linode[];
 }
 
 export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const {
     accountBackups,
     changeBackups,
-    togglePrivateIP,
+    createType,
     disabled,
-    vlanLabel,
-    labelError,
+    handleVLANChange,
     ipamAddress,
     ipamError,
-    handleVLANChange,
     isPrivateIPChecked,
+    labelError,
+    linodesData,
+    selectedImageID,
     selectedLinodeID,
     selectedRegionID,
-    selectedImageID,
     selectedTypeID,
-    createType,
-    linodesData,
+    togglePrivateIP,
+    vlanLabel,
   } = props;
 
   const classes = useStyles();
+
+  const { data: image } = useImageQuery(
+    selectedImageID ?? '',
+    Boolean(selectedImageID)
+  );
 
   // The VLAN section is shown when the user is not creating by cloning (cloning copies the network interfaces)
   const showVlans = createType !== 'fromLinode';
@@ -116,6 +125,29 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     );
   };
 
+  const checkBackupsWarning = () => {
+    if (accountBackups || props.backups) {
+      if (selectedLinodeID) {
+        const selectedLinode = linodesData?.find(
+          (linode) => linode.id === selectedLinodeID
+        );
+        if (
+          selectedLinode?.image?.includes('private/') ||
+          !selectedLinode?.image
+        ) {
+          return true;
+        }
+      } else if (selectedImageID && !image?.is_public) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  // The backups warning is shown when the user checks to enable backups, but they are using a custom image that may not be compatible.
+  const showBackupsWarning = checkBackupsWarning();
+
   // Check whether the source Linode has been allocated a private IP to select/unselect the 'Private IP' checkbox.
   React.useEffect(() => {
     if (selectedLinodeID) {
@@ -139,48 +171,54 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
       {showVlans ? (
         <Paper className={classes.vlan} data-qa-add-ons>
           <AttachVLAN
-            vlanLabel={vlanLabel}
-            labelError={labelError}
+            handleVLANChange={handleVLANChange}
+            helperText={vlanDisabledReason}
             ipamAddress={ipamAddress}
             ipamError={ipamError}
+            labelError={labelError}
             readOnly={disabled || Boolean(vlanDisabledReason)}
-            helperText={vlanDisabledReason}
-            handleVLANChange={handleVLANChange}
             region={selectedRegionID}
+            vlanLabel={vlanLabel}
           />
         </Paper>
       ) : null}
       <Paper className={classes.addons} data-qa-add-ons>
-        <Typography variant="h2" className={classes.title}>
+        <Typography className={classes.title} variant="h2">
           Add-ons{' '}
           {backupsDisabledReason ? (
-            <TooltipIcon text={backupsDisabledReason} status="help" />
+            <TooltipIcon status="help" text={backupsDisabledReason} />
           ) : null}
         </Typography>
         <Grid container>
+          {showBackupsWarning && (
+            <Notice warning>
+              Linodes must have a disk formatted with an ext3 or ext4 file
+              system to use the backup service.
+            </Notice>
+          )}
           <Grid xs={12}>
             <FormControlLabel
-              className={classes.label}
               control={
-                <CheckBox
-                  checked={accountBackups || props.backups}
-                  onChange={changeBackups}
-                  disabled={accountBackups || disabled || isBareMetal}
+                <Checkbox
                   data-qa-check-backups={
                     accountBackups
                       ? 'auto backup enabled'
                       : 'auto backup disabled'
                   }
+                  checked={accountBackups || props.backups}
+                  disabled={accountBackups || disabled || isBareMetal}
+                  onChange={changeBackups}
                 />
               }
               label={
-                <Grid container spacing={2} alignItems="center">
+                <Grid alignItems="center" container spacing={2}>
                   <Grid>Backups</Grid>
                   {renderBackupsPrice()}
                 </Grid>
               }
+              className={classes.label}
             />
-            <Typography variant="body1" className={classes.caption}>
+            <Typography className={classes.caption} variant="body1">
               {accountBackups ? (
                 <React.Fragment>
                   You have enabled automatic backups for your account. This
@@ -203,16 +241,16 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           <Grid xs={12}>
             <Divider />
             <FormControlLabel
-              className={classes.label}
               control={
-                <CheckBox
-                  data-testid="private_ip"
+                <Checkbox
                   checked={isPrivateIPChecked}
-                  onChange={togglePrivateIP}
                   data-qa-check-private-ip
+                  data-testid="private_ip"
                   disabled={disabled}
+                  onChange={togglePrivateIP}
                 />
               }
+              className={classes.label}
               label="Private IP"
             />
           </Grid>

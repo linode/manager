@@ -7,8 +7,8 @@ export const securityQuestionsToItems = (
   questions: SecurityQuestion[] = []
 ) => {
   return questions.map((questionData) => ({
-    value: questionData.id,
     label: questionData.question,
+    value: questionData.id,
   }));
 };
 

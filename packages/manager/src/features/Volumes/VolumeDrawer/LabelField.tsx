@@ -1,42 +1,43 @@
 import * as React from 'react';
-import { TooltipProps } from 'src/components/core/Tooltip';
+
 import { TextField } from 'src/components/TextField';
+import { TooltipProps } from 'src/components/Tooltip';
 
 interface Props {
-  onBlur: (e: any) => void;
-  onChange: (e: React.ChangeEvent<any>) => void;
-  name: string;
-  value: string;
   disabled?: boolean;
   error?: string;
+  name: string;
+  onBlur: (e: any) => void;
+  onChange: (e: React.ChangeEvent<any>) => void;
   textFieldStyles?: string;
   tooltipClasses?: string;
   tooltipPosition?: TooltipProps['placement'];
-  tooltipText?: string | JSX.Element;
+  tooltipText?: JSX.Element | string;
+  value: string;
 }
 
 type CombinedProps = Props;
 
 const LabelField: React.FC<CombinedProps> = ({
-  name,
-  value,
   error,
+  name,
   onBlur,
   onChange,
   textFieldStyles,
+  value,
   ...rest
 }) => {
   return (
     <TextField
       className={textFieldStyles}
+      data-qa-volume-label
+      errorText={error}
       label="Label"
       name={name}
-      value={value}
-      errorText={error}
       onBlur={onBlur}
       onChange={onChange}
       required
-      data-qa-volume-label
+      value={value}
       {...rest}
     />
   );

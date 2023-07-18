@@ -1,54 +1,56 @@
+import { WithStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
+
 import { Hidden } from 'src/components/Hidden';
-import { withStyles, WithStyles } from '@mui/styles';
-import { Typography } from 'src/components/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
+
 import { ClassNames, styles } from '../StackScriptRowHelpers';
 
 export interface Props {
-  label: string;
+  canAddLinodes: boolean;
+  canModify: boolean;
+  // change until we're actually using it.
+  category: StackScriptCategory | string;
+  deploymentsTotal: number;
   description: string;
   images: string[];
-  deploymentsTotal: number;
-  updated: string;
+  isPublic: boolean;
+  label: string;
   stackScriptID: number;
   stackScriptUsername: string;
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
-  canModify: boolean;
-  canAddLinodes: boolean;
-  isPublic: boolean;
   // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
   // Leaving this in as an escape hatch now, since there's a bunch of code in
   // /LandingPanel that uses different values for categories that we shouldn't
-  // change until we're actually using it.
-  category: StackScriptCategory | string;
+  updated: string;
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
 export const StackScriptRow: React.FC<CombinedProps> = (props) => {
   const {
+    canAddLinodes,
+    canModify,
+    category,
     classes,
-    label,
+    deploymentsTotal,
     description,
     images,
-    deploymentsTotal,
-    updated,
+    isPublic,
+    label,
     stackScriptID,
     stackScriptUsername,
     triggerDelete,
     triggerMakePublic,
-    canModify,
-    isPublic,
-    category,
-    canAddLinodes,
+    updated,
   } = props;
 
   const communityStackScript = category === 'community';
@@ -57,7 +59,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
     return (
       <>
         <Link className={classes.link} to={`/stackscripts/${stackScriptID}`}>
-          <Typography variant="h3" className={classes.libTitle}>
+          <Typography className={classes.libTitle} variant="h3">
             {stackScriptUsername && (
               <span
                 className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
@@ -69,7 +71,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
           </Typography>
         </Link>
         {description && (
-          <Typography variant="body1" className={classes.libDescription}>
+          <Typography className={classes.libDescription} variant="body1">
             {description}
           </Typography>
         )}
@@ -79,9 +81,9 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
 
   return (
     <TableRow
-      data-qa-table-row={label}
       ariaLabel={label}
       className={classes.row}
+      data-qa-table-row={label}
     >
       <TableCell className={classes.libTitle} data-qa-stackscript-title>
         {renderLabel()}
@@ -95,7 +97,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
         </TableCell>
       </Hidden>
       <Hidden lgDown>
-        <TableCell data-qa-stackscript-images className={classes.images}>
+        <TableCell className={classes.images} data-qa-stackscript-images>
           {images.includes('any/all') ? 'Any/All' : images.join(',  ')}
         </TableCell>
       </Hidden>
@@ -108,15 +110,15 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
       )}
       <TableCell actionCell className={classes.row}>
         <StackScriptsActionMenu
+          canAddLinodes={canAddLinodes}
+          canModify={canModify}
+          category={category}
+          isPublic={isPublic}
           stackScriptID={stackScriptID}
-          stackScriptUsername={stackScriptUsername}
           stackScriptLabel={label}
+          stackScriptUsername={stackScriptUsername}
           triggerDelete={triggerDelete}
           triggerMakePublic={triggerMakePublic}
-          canModify={canModify}
-          canAddLinodes={canAddLinodes}
-          isPublic={isPublic}
-          category={category}
         />
       </TableCell>
     </TableRow>

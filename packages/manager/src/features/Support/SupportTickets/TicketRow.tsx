@@ -1,12 +1,13 @@
+import { SupportTicket } from '@linode/api-v4/lib/support';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
-import { Typography } from 'src/components/Typography';
-import { Hidden } from 'src/components/Hidden';
+import { Link } from 'react-router-dom';
+
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { SupportTicket } from '@linode/api-v4/lib/support';
-import { Link } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
+import { Typography } from 'src/components/Typography';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 const useStyles = makeStyles(() => ({
@@ -23,7 +24,7 @@ const renderEntityLink = (ticket: SupportTicket) => {
   const target = getLinkTargets(ticket.entity);
   return ticket.entity ? (
     target !== null ? (
-      <Link to={target} className="secondaryLink">
+      <Link className="secondaryLink" to={target}>
         {ticket.entity.label}
       </Link>
     ) : (
@@ -42,10 +43,10 @@ export const TicketRow = ({ ticket }: Props) => {
 
   return (
     <TableRow
-      data-qa-support-ticket={ticket.id}
-      key={`ticket-${ticket.id}`}
-      data-testid="ticket-row"
       ariaLabel={`Ticket subject ${ticket.summary}`}
+      data-qa-support-ticket={ticket.id}
+      data-testid="ticket-row"
+      key={`ticket-${ticket.id}`}
     >
       <TableCell data-qa-support-subject>
         <Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link>
@@ -53,7 +54,7 @@ export const TicketRow = ({ ticket }: Props) => {
       <Hidden mdDown>
         <TableCell data-qa-support-id>{ticket.id}</TableCell>
       </Hidden>
-      <TableCell data-qa-support-entity className={classes.regarding}>
+      <TableCell className={classes.regarding} data-qa-support-entity>
         {renderEntityLink(ticket)}
       </TableCell>
       <Hidden smDown>

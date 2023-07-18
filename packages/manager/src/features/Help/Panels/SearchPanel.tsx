@@ -1,15 +1,17 @@
-import * as React from 'react';
-import AlgoliaSearchBar from './AlgoliaSearchBar';
-import Paper from 'src/components/core/Paper';
-import { H1Header } from 'src/components/H1Header/H1Header';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import { H1Header } from 'src/components/H1Header/H1Header';
+import Paper from 'src/components/core/Paper';
+
+import AlgoliaSearchBar from './AlgoliaSearchBar';
 
 export const SearchPanel = () => {
   return (
     <StyledRootContainer>
       <StyledH1Header
-        title="What can we help you with?"
         data-qa-search-heading
+        title="What can we help you with?"
       />
       <AlgoliaSearchBar />
     </StyledRootContainer>

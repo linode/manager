@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { MaintenanceTable } from './MaintenanceTable';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+
+import { MaintenanceTable } from './MaintenanceTable';
 
 const MaintenanceLanding = () => {
   return (

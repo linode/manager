@@ -1,14 +1,15 @@
 import { disks, extDisk2, extDisk3, extDiskCopy } from 'src/__data__/disks';
 import { linodeConfig2, linodeConfigs } from 'src/__data__/linodeConfigs';
+
 import {
-  attachAssociatedDisksToConfigs,
   CloneLandingState,
-  createConfigDiskSelection,
-  curriedCloneLandingReducer as reducer,
   ExtendedConfig,
+  attachAssociatedDisksToConfigs,
+  createConfigDiskSelection,
   getAllDisks,
   getAssociatedDisks,
   getEstimatedCloneTime,
+  curriedCloneLandingReducer as reducer,
 } from './utilities';
 
 describe('utilities', () => {
@@ -16,14 +17,14 @@ describe('utilities', () => {
     const baseState: CloneLandingState = {
       configSelection: {
         1000: {
-          isSelected: true,
           associatedDiskIds: [],
+          isSelected: true,
         },
       },
       diskSelection: {
         2000: {
-          isSelected: false,
           associatedConfigIds: [],
+          isSelected: false,
         },
       },
       isSubmitting: false,
@@ -32,24 +33,24 @@ describe('utilities', () => {
 
     it('toggles given config', () => {
       const newState = reducer(baseState, {
-        type: 'toggleConfig',
         id: 1000,
+        type: 'toggleConfig',
       });
       expect(newState.configSelection[1000].isSelected).toBe(false);
     });
 
     it('toggles given disk', () => {
       const newState = reducer(baseState, {
-        type: 'toggleDisk',
         id: 2000,
+        type: 'toggleDisk',
       });
       expect(newState.diskSelection[2000].isSelected).toBe(true);
     });
 
     it('sets the selectedLinodeId', () => {
       const newState = reducer(baseState, {
-        type: 'setSelectedLinodeId',
         id: 3000,
+        type: 'setSelectedLinodeId',
       });
       expect(newState.selectedLinodeId).toBe(3000);
     });
@@ -64,8 +65,8 @@ describe('utilities', () => {
 
     it('sets errors', () => {
       const newState = reducer(baseState, {
-        type: 'setErrors',
         errors: [{ reason: 'ERROR' }],
+        type: 'setErrors',
       });
       expect(newState.errors).toEqual([{ reason: 'ERROR' }]);
     });
@@ -75,12 +76,12 @@ describe('utilities', () => {
         ...baseState,
         diskSelection: {
           2000: {
-            isSelected: true,
             associatedConfigIds: [],
+            isSelected: true,
           },
         },
-        selectedLinodeId: 3000,
         errors: [{ reason: 'ERROR' }],
+        selectedLinodeId: 3000,
       };
 
       const newState = reducer(state, {
@@ -95,9 +96,9 @@ describe('utilities', () => {
     it('adds configs', () => {
       const state: CloneLandingState = { ...baseState };
       const newState = reducer(state, {
-        type: 'syncConfigsDisks',
         configs: linodeConfigs,
         disks: [],
+        type: 'syncConfigsDisks',
       });
       linodeConfigs.forEach((eachConfig) => {
         expect(newState.configSelection).toHaveProperty(String(eachConfig.id));
@@ -107,9 +108,9 @@ describe('utilities', () => {
     it('adds disks', () => {
       const state: CloneLandingState = { ...baseState };
       const newState = reducer(state, {
-        type: 'syncConfigsDisks',
         configs: [],
         disks,
+        type: 'syncConfigsDisks',
       });
       disks.forEach((eachDisk) => {
         expect(newState.diskSelection).toHaveProperty(String(eachDisk.id));
@@ -121,15 +122,15 @@ describe('utilities', () => {
         ...baseState,
         configSelection: {
           1234: {
-            isSelected: true,
             associatedDiskIds: [],
+            isSelected: true,
           },
         },
       };
       const newState = reducer(state, {
-        type: 'syncConfigsDisks',
         configs: [...linodeConfigs, linodeConfig2],
         disks: [],
+        type: 'syncConfigsDisks',
       });
       expect(newState.configSelection['1234']).toHaveProperty(
         'isSelected',
@@ -142,15 +143,15 @@ describe('utilities', () => {
         ...baseState,
         diskSelection: {
           19040623: {
-            isSelected: true,
             associatedConfigIds: [],
+            isSelected: true,
           },
         },
       };
       const newState = reducer(state, {
-        type: 'syncConfigsDisks',
         configs: [],
         disks,
+        type: 'syncConfigsDisks',
       });
       expect(newState.diskSelection['19040623']).toHaveProperty(
         'isSelected',
@@ -163,16 +164,16 @@ describe('utilities', () => {
         ...baseState,
         errors: [{ reason: 'ERROR' }],
       };
-      expect(reducer(state, { type: 'toggleConfig', id: 1000 }).errors).toBe(
+      expect(reducer(state, { id: 1000, type: 'toggleConfig' }).errors).toBe(
         undefined
       );
-      expect(reducer(state, { type: 'toggleDisk', id: 2000 }).errors).toBe(
+      expect(reducer(state, { id: 2000, type: 'toggleDisk' }).errors).toBe(
         undefined
       );
       expect(
         reducer(state, {
-          type: 'setSelectedLinodeId',
           id: 3000,
+          type: 'setSelectedLinodeId',
         }).errors
       ).toBe(undefined);
     });

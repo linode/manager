@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { getValues } from '../../../request';
 import { AllData, LongviewFieldName } from '../../../request.types';
 
@@ -27,9 +28,9 @@ export const useGraphs = (
       setData({});
     }
     return getValues(clientAPIKey, {
+      end,
       fields: requestFields,
       start,
-      end,
     })
       .then((response) => {
         if (mounted.current) {
@@ -63,5 +64,5 @@ export const useGraphs = (
     };
   }, [clientAPIKey]);
 
-  return { error, data, loading, request };
+  return { data, error, loading, request };
 };

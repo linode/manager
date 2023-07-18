@@ -1,9 +1,10 @@
 import * as React from 'react';
-import Divider from '../core/Divider';
+
+import { Divider } from '../Divider';
 import { DisplaySection } from './DisplaySection';
 
 interface DisplaySectionListProps {
-  displaySections?: { title: string; details?: string | number }[];
+  displaySections?: { details?: number | string; title: string }[];
 }
 
 const DisplaySectionList = ({ displaySections }: DisplaySectionListProps) => {
@@ -13,13 +14,13 @@ const DisplaySectionList = ({ displaySections }: DisplaySectionListProps) => {
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {displaySections.map(({ title, details }, idx) => (
+      {displaySections.map(({ details, title }, idx) => (
         <React.Fragment key={`fragment-${title}-${idx}`}>
-          {idx !== 0 && <Divider light spacingTop={0} spacingBottom={0} />}
+          {idx !== 0 && <Divider light spacingBottom={0} spacingTop={0} />}
           <DisplaySection
+            details={details}
             key={`${title}-${idx}`}
             title={title}
-            details={details}
           />
         </React.Fragment>
       ))}

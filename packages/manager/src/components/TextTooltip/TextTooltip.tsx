@@ -1,7 +1,9 @@
-import * as React from 'react';
-import ToolTip from 'src/components/core/Tooltip';
-import { Typography } from 'src/components/Typography';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Tooltip } from 'src/components/Tooltip';
+import { Typography } from 'src/components/Typography';
+
 import type { SxProps } from '@mui/material';
 import type { TooltipProps } from '@mui/material/Tooltip';
 import type { TypographyProps } from 'src/components/Typography';
@@ -44,8 +46,6 @@ export const TextTooltip = (props: TextTooltipProps) => {
 
   return (
     <StyledRootTooltip
-      enterTouchDelay={0}
-      placement={placement ? placement : 'bottom'}
       PopperProps={{
         sx: {
           '& > div': {
@@ -53,16 +53,18 @@ export const TextTooltip = (props: TextTooltipProps) => {
           },
         },
       }}
+      enterTouchDelay={0}
+      placement={placement ? placement : 'bottom'}
       title={tooltipText}
     >
-      <Typography component="span" variant={variant} sx={sxTypography}>
+      <Typography component="span" sx={sxTypography} variant={variant}>
         {displayText}
       </Typography>
     </StyledRootTooltip>
   );
 };
 
-const StyledRootTooltip = styled(ToolTip, {
+const StyledRootTooltip = styled(Tooltip, {
   label: 'StyledRootTooltip',
 })(({ theme }) => ({
   borderRadius: 4,

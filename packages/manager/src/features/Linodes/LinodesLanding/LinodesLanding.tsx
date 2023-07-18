@@ -1,92 +1,94 @@
-import { Config } from '@linode/api-v4/lib/linodes/types';
-import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
-  withProfile,
   WithProfileProps,
+  withProfile,
 } from 'src/containers/profile.container';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import { BackupsCTA } from 'src/features/Backups';
+import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
-import { MapState } from 'src/store/types';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
 } from 'src/utilities/analytics';
+
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
-import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
-import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
+import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
+import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
+import { Action, PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
+import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import { DisplayLinodes } from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
+import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
 import { ExtendedStatus, statusToPriority } from './utils';
-import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
-import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
-import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
-import { DeleteLinodeDialog } from './DeleteLinodeDialog';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
-import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+
+import type { Config } from '@linode/api-v4/lib/linodes/types';
+import type { APIError } from '@linode/api-v4/lib/types';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import type { MapState } from 'src/store/types';
 
 interface State {
-  powerDialogOpen: boolean;
-  powerDialogAction?: Action;
+  deleteDialogOpen: boolean;
   enableBackupsDialogOpen: boolean;
+  groupByTag: boolean;
+  linodeMigrateOpen: boolean;
+  linodeResizeOpen: boolean;
+  powerDialogAction?: Action;
+  powerDialogOpen: boolean;
+  rebuildDialogOpen: boolean;
+  rescueDialogOpen: boolean;
   selectedLinodeConfigs?: Config[];
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
-  deleteDialogOpen: boolean;
-  rebuildDialogOpen: boolean;
-  rescueDialogOpen: boolean;
-  groupByTag: boolean;
-  linodeResizeOpen: boolean;
-  linodeMigrateOpen: boolean;
 }
 
 export interface LinodeHandlers {
-  onOpenPowerDialog: (action: Action) => void;
   onOpenDeleteDialog: () => void;
-  onOpenResizeDialog: () => void;
+  onOpenMigrateDialog: () => void;
+  onOpenPowerDialog: (action: Action) => void;
   onOpenRebuildDialog: () => void;
   onOpenRescueDialog: () => void;
-  onOpenMigrateDialog: () => void;
+  onOpenResizeDialog: () => void;
 }
 
 interface Params {
+  groupByTag?: 'false' | 'true';
   view?: string;
-  groupByTag?: 'true' | 'false';
 }
 
 type RouteProps = RouteComponentProps<Params>;
 
 export interface Props {
   LandingHeader?: React.ReactElement;
-  someLinodesHaveScheduledMaintenance: boolean;
   linodesData: LinodeWithMaintenance[];
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
+  someLinodesHaveScheduledMaintenance: boolean;
 }
 
 type CombinedProps = Props &
@@ -94,19 +96,258 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   StyleProps &
-  WithSnackbarProps &
   WithProfileProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
-  state: State = {
-    enableBackupsDialogOpen: false,
-    powerDialogOpen: false,
-    deleteDialogOpen: false,
-    rebuildDialogOpen: false,
-    rescueDialogOpen: false,
-    groupByTag: false,
-    linodeResizeOpen: false,
-    linodeMigrateOpen: false,
+  render() {
+    const {
+      classes,
+      linodesCount,
+      linodesData,
+      linodesInTransition,
+      linodesRequestError,
+      linodesRequestLoading,
+    } = this.props;
+
+    const params = new URLSearchParams(this.props.location.search);
+
+    const view =
+      params.has('view') && ['grid', 'list'].includes(params.get('view')!)
+        ? (params.get('view') as 'grid' | 'list')
+        : undefined;
+
+    const componentProps = {
+      count: linodesCount,
+      openDialog: this.openDialog,
+      openPowerActionDialog: this.openPowerDialog,
+      someLinodesHaveMaintenance: this.props
+        .someLinodesHaveScheduledMaintenance,
+    };
+
+    if (linodesRequestError) {
+      let errorText: JSX.Element | string =
+        linodesRequestError?.[0]?.reason ?? 'Error loading Linodes';
+
+      if (
+        typeof errorText === 'string' &&
+        errorText.toLowerCase() === 'this linode has been suspended'
+      ) {
+        errorText = (
+          <React.Fragment>
+            One or more of your Linodes is suspended. Please{' '}
+            <Link to="/support/tickets">open a support ticket </Link>
+            if you have questions.
+          </React.Fragment>
+        );
+      }
+
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText={errorText} />
+        </React.Fragment>
+      );
+    }
+
+    if (linodesRequestLoading) {
+      return <CircleProgress />;
+    }
+
+    if (this.props.linodesCount === 0) {
+      return <LinodesLandingEmptyState />;
+    }
+
+    return (
+      <React.Fragment>
+        <LinodeResize
+          linodeId={this.state.selectedLinodeID}
+          onClose={this.closeDialogs}
+          open={this.state.linodeResizeOpen}
+        />
+        <MigrateLinode
+          linodeId={this.state.selectedLinodeID ?? -1}
+          onClose={this.closeDialogs}
+          open={this.state.linodeMigrateOpen}
+        />
+        <LinodeRebuildDialog
+          linodeId={this.state.selectedLinodeID ?? -1}
+          onClose={this.closeDialogs}
+          open={this.state.rebuildDialogOpen}
+        />
+        <RescueDialog
+          linodeId={this.state.selectedLinodeID ?? -1}
+          onClose={this.closeDialogs}
+          open={this.state.rescueDialogOpen}
+        />
+        <EnableBackupsDialog
+          linodeId={this.state.selectedLinodeID ?? -1}
+          onClose={this.closeDialogs}
+          open={this.state.enableBackupsDialogOpen}
+        />
+        {this.props.someLinodesHaveScheduledMaintenance && (
+          <MaintenanceBanner />
+        )}
+        <DocumentTitleSegment segment="Linodes" />
+        <PreferenceToggle<boolean>
+          localStorageKey="GROUP_LINODES"
+          preferenceKey="linodes_group_by_tag"
+          preferenceOptions={[false, true]}
+          toggleCallbackFnDebounced={sendGroupByAnalytic}
+        >
+          {({
+            preference: linodesAreGrouped,
+            togglePreference: toggleGroupLinodes,
+          }: PreferenceToggleProps<boolean>) => {
+            return (
+              <PreferenceToggle<'grid' | 'list'>
+                localStorageKey="LINODE_VIEW"
+                preferenceKey="linodes_view_style"
+                preferenceOptions={['list', 'grid']}
+                toggleCallbackFn={this.changeViewInstant}
+                toggleCallbackFnDebounced={this.changeViewDelayed}
+                /**
+                 * we want the URL query param to take priority here, but if it's
+                 * undefined, just use the user preference
+                 */
+                value={view}
+              >
+                {({
+                  preference: linodeViewPreference,
+                  togglePreference: toggleLinodeView,
+                }: PreferenceToggleProps<'grid' | 'list'>) => {
+                  return (
+                    <React.Fragment>
+                      <React.Fragment>
+                        <BackupsCTA />
+                        {this.props.LandingHeader ? (
+                          this.props.LandingHeader
+                        ) : (
+                          <div>
+                            <LandingHeader
+                              onButtonClick={() =>
+                                this.props.history.push('/linodes/create')
+                              }
+                              docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                              entity="Linode"
+                              title="Linodes"
+                            />
+                          </div>
+                        )}
+                      </React.Fragment>
+
+                      <OrderBy
+                        data={(linodesData ?? []).map((linode) => {
+                          // Determine the priority of this Linode's status.
+                          // We have to check for "Maintenance" and "Busy" since these are
+                          // not actual Linode statuses (we derive them client-side).
+                          let _status: ExtendedStatus = linode.status;
+                          if (linode.maintenance) {
+                            _status = 'maintenance';
+                          } else if (linodesInTransition.has(linode.id)) {
+                            _status = 'busy';
+                          }
+
+                          return {
+                            ...linode,
+                            _statusPriority: statusToPriority(_status),
+                            displayStatus: linode.maintenance
+                              ? 'maintenance'
+                              : linode.status,
+                          };
+                        })}
+                        orderBy={
+                          this.props.someLinodesHaveScheduledMaintenance
+                            ? '_statusPriority'
+                            : 'label'
+                        }
+                        // If there are Linodes with scheduled maintenance, default to
+                        // sorting by status priority so they are more visible.
+                        order="asc"
+                        preferenceKey={'linodes-landing'}
+                      >
+                        {({ data, handleOrderChange, order, orderBy }) => {
+                          const finalProps = {
+                            ...componentProps,
+                            data,
+                            handleOrderChange,
+                            order,
+                            orderBy,
+                          };
+
+                          return linodesAreGrouped ? (
+                            <DisplayGroupedLinodes
+                              {...finalProps}
+                              component={
+                                linodeViewPreference === 'grid'
+                                  ? CardView
+                                  : ListView
+                              }
+                              display={linodeViewPreference}
+                              linodeViewPreference={linodeViewPreference}
+                              linodesAreGrouped={true}
+                              toggleGroupLinodes={toggleGroupLinodes}
+                              toggleLinodeView={toggleLinodeView}
+                            />
+                          ) : (
+                            <DisplayLinodes
+                              {...finalProps}
+                              component={
+                                linodeViewPreference === 'grid'
+                                  ? CardView
+                                  : ListView
+                              }
+                              display={linodeViewPreference}
+                              linodeViewPreference={linodeViewPreference}
+                              linodesAreGrouped={false}
+                              toggleGroupLinodes={toggleGroupLinodes}
+                              toggleLinodeView={toggleLinodeView}
+                              updatePageUrl={this.updatePageUrl}
+                            />
+                          );
+                        }}
+                      </OrderBy>
+                      <Grid
+                        className={classes.CSVwrapper}
+                        container
+                        justifyContent="flex-end"
+                      >
+                        <Grid className={classes.CSVlinkContainer}>
+                          <LinodesLandingCSVDownload />
+                        </Grid>
+                      </Grid>
+                    </React.Fragment>
+                  );
+                }}
+              </PreferenceToggle>
+            );
+          }}
+        </PreferenceToggle>
+        <TransferDisplay />
+
+        {!!this.state.selectedLinodeID && !!this.state.selectedLinodeLabel && (
+          <React.Fragment>
+            <PowerActionsDialog
+              action={this.state.powerDialogAction ?? 'Power On'}
+              isOpen={this.state.powerDialogOpen}
+              linodeId={this.state.selectedLinodeID}
+              onClose={this.closeDialogs}
+            />
+            <DeleteLinodeDialog
+              linodeId={this.state.selectedLinodeID}
+              onClose={this.closeDialogs}
+              open={this.state.deleteDialogOpen}
+            />
+          </React.Fragment>
+        )}
+      </React.Fragment>
+    );
+  }
+
+  /**
+   * when you change the linode view, send analytics event, debounced.
+   */
+  changeViewDelayed = (style: 'grid' | 'list') => {
+    sendLinodesViewEvent(eventCategory, style);
   };
 
   /**
@@ -122,29 +363,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     history.push(`?${query.toString()}`);
   };
 
-  updatePageUrl = (page: number) => {
-    this.props.history.push(`?page=${page}`);
-  };
-
-  /**
-   * when you change the linode view, send analytics event, debounced.
-   */
-  changeViewDelayed = (style: 'grid' | 'list') => {
-    sendLinodesViewEvent(eventCategory, style);
-  };
-
-  openPowerDialog = (
-    bootAction: Action,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => {
+  closeDialogs = () => {
     this.setState({
-      powerDialogOpen: true,
-      powerDialogAction: bootAction,
-      selectedLinodeConfigs: linodeConfigs,
-      selectedLinodeID: linodeID,
-      selectedLinodeLabel: linodeLabel,
+      deleteDialogOpen: false,
+      enableBackupsDialogOpen: false,
+      linodeMigrateOpen: false,
+      linodeResizeOpen: false,
+      powerDialogOpen: false,
+      rebuildDialogOpen: false,
+      rescueDialogOpen: false,
     });
   };
 
@@ -187,261 +414,35 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   };
 
-  closeDialogs = () => {
+  openPowerDialog = (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => {
     this.setState({
-      powerDialogOpen: false,
-      deleteDialogOpen: false,
-      rebuildDialogOpen: false,
-      rescueDialogOpen: false,
-      linodeResizeOpen: false,
-      linodeMigrateOpen: false,
-      enableBackupsDialogOpen: false,
+      powerDialogAction: bootAction,
+      powerDialogOpen: true,
+      selectedLinodeConfigs: linodeConfigs,
+      selectedLinodeID: linodeID,
+      selectedLinodeLabel: linodeLabel,
     });
   };
 
-  render() {
-    const {
-      linodesRequestError,
-      linodesRequestLoading,
-      linodesCount,
-      linodesData,
-      classes,
-      linodesInTransition,
-    } = this.props;
+  state: State = {
+    deleteDialogOpen: false,
+    enableBackupsDialogOpen: false,
+    groupByTag: false,
+    linodeMigrateOpen: false,
+    linodeResizeOpen: false,
+    powerDialogOpen: false,
+    rebuildDialogOpen: false,
+    rescueDialogOpen: false,
+  };
 
-    const params = new URLSearchParams(this.props.location.search);
-
-    const view =
-      params.has('view') && ['grid', 'list'].includes(params.get('view')!)
-        ? (params.get('view') as 'grid' | 'list')
-        : undefined;
-
-    const componentProps = {
-      count: linodesCount,
-      someLinodesHaveMaintenance: this.props
-        .someLinodesHaveScheduledMaintenance,
-      openPowerActionDialog: this.openPowerDialog,
-      openDialog: this.openDialog,
-    };
-
-    if (linodesRequestError) {
-      let errorText: string | JSX.Element =
-        linodesRequestError?.[0]?.reason ?? 'Error loading Linodes';
-
-      if (
-        typeof errorText === 'string' &&
-        errorText.toLowerCase() === 'this linode has been suspended'
-      ) {
-        errorText = (
-          <React.Fragment>
-            One or more of your Linodes is suspended. Please{' '}
-            <Link to="/support/tickets">open a support ticket </Link>
-            if you have questions.
-          </React.Fragment>
-        );
-      }
-
-      return (
-        <React.Fragment>
-          <DocumentTitleSegment segment="Linodes" />
-          <ErrorState errorText={errorText} />
-        </React.Fragment>
-      );
-    }
-
-    if (linodesRequestLoading) {
-      return <CircleProgress />;
-    }
-
-    if (this.props.linodesCount === 0) {
-      return <LinodesLandingEmptyState />;
-    }
-
-    return (
-      <React.Fragment>
-        <LinodeResize
-          open={this.state.linodeResizeOpen}
-          onClose={this.closeDialogs}
-          linodeId={this.state.selectedLinodeID}
-        />
-        <MigrateLinode
-          open={this.state.linodeMigrateOpen}
-          onClose={this.closeDialogs}
-          linodeId={this.state.selectedLinodeID ?? -1}
-        />
-        <LinodeRebuildDialog
-          open={this.state.rebuildDialogOpen}
-          onClose={this.closeDialogs}
-          linodeId={this.state.selectedLinodeID ?? -1}
-        />
-        <RescueDialog
-          open={this.state.rescueDialogOpen}
-          onClose={this.closeDialogs}
-          linodeId={this.state.selectedLinodeID ?? -1}
-        />
-        <EnableBackupsDialog
-          open={this.state.enableBackupsDialogOpen}
-          onClose={this.closeDialogs}
-          linodeId={this.state.selectedLinodeID ?? -1}
-        />
-        {this.props.someLinodesHaveScheduledMaintenance && (
-          <MaintenanceBanner />
-        )}
-        <DocumentTitleSegment segment="Linodes" />
-        <PreferenceToggle<boolean>
-          localStorageKey="GROUP_LINODES"
-          preferenceOptions={[false, true]}
-          preferenceKey="linodes_group_by_tag"
-          toggleCallbackFnDebounced={sendGroupByAnalytic}
-        >
-          {({
-            preference: linodesAreGrouped,
-            togglePreference: toggleGroupLinodes,
-          }: PreferenceToggleProps<boolean>) => {
-            return (
-              <PreferenceToggle<'grid' | 'list'>
-                preferenceKey="linodes_view_style"
-                localStorageKey="LINODE_VIEW"
-                preferenceOptions={['list', 'grid']}
-                toggleCallbackFnDebounced={this.changeViewDelayed}
-                toggleCallbackFn={this.changeViewInstant}
-                /**
-                 * we want the URL query param to take priority here, but if it's
-                 * undefined, just use the user preference
-                 */
-                value={view}
-              >
-                {({
-                  preference: linodeViewPreference,
-                  togglePreference: toggleLinodeView,
-                }: PreferenceToggleProps<'list' | 'grid'>) => {
-                  return (
-                    <React.Fragment>
-                      <React.Fragment>
-                        <BackupsCTA />
-                        {this.props.LandingHeader ? (
-                          this.props.LandingHeader
-                        ) : (
-                          <div>
-                            <LandingHeader
-                              title="Linodes"
-                              entity="Linode"
-                              onButtonClick={() =>
-                                this.props.history.push('/linodes/create')
-                              }
-                              docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                            />
-                          </div>
-                        )}
-                      </React.Fragment>
-
-                      <OrderBy
-                        preferenceKey={'linodes-landing'}
-                        data={(linodesData ?? []).map((linode) => {
-                          // Determine the priority of this Linode's status.
-                          // We have to check for "Maintenance" and "Busy" since these are
-                          // not actual Linode statuses (we derive them client-side).
-                          let _status: ExtendedStatus = linode.status;
-                          if (linode.maintenance) {
-                            _status = 'maintenance';
-                          } else if (linodesInTransition.has(linode.id)) {
-                            _status = 'busy';
-                          }
-
-                          return {
-                            ...linode,
-                            displayStatus: linode.maintenance
-                              ? 'maintenance'
-                              : linode.status,
-                            _statusPriority: statusToPriority(_status),
-                          };
-                        })}
-                        // If there are Linodes with scheduled maintenance, default to
-                        // sorting by status priority so they are more visible.
-                        order="asc"
-                        orderBy={
-                          this.props.someLinodesHaveScheduledMaintenance
-                            ? '_statusPriority'
-                            : 'label'
-                        }
-                      >
-                        {({ data, handleOrderChange, order, orderBy }) => {
-                          const finalProps = {
-                            ...componentProps,
-                            data,
-                            handleOrderChange,
-                            order,
-                            orderBy,
-                          };
-
-                          return linodesAreGrouped ? (
-                            <DisplayGroupedLinodes
-                              {...finalProps}
-                              display={linodeViewPreference}
-                              toggleLinodeView={toggleLinodeView}
-                              toggleGroupLinodes={toggleGroupLinodes}
-                              linodesAreGrouped={true}
-                              linodeViewPreference={linodeViewPreference}
-                              component={
-                                linodeViewPreference === 'grid'
-                                  ? CardView
-                                  : ListView
-                              }
-                            />
-                          ) : (
-                            <DisplayLinodes
-                              {...finalProps}
-                              display={linodeViewPreference}
-                              toggleLinodeView={toggleLinodeView}
-                              toggleGroupLinodes={toggleGroupLinodes}
-                              updatePageUrl={this.updatePageUrl}
-                              linodesAreGrouped={false}
-                              linodeViewPreference={linodeViewPreference}
-                              component={
-                                linodeViewPreference === 'grid'
-                                  ? CardView
-                                  : ListView
-                              }
-                            />
-                          );
-                        }}
-                      </OrderBy>
-                      <Grid
-                        container
-                        className={classes.CSVwrapper}
-                        justifyContent="flex-end"
-                      >
-                        <Grid className={classes.CSVlinkContainer}>
-                          <LinodesLandingCSVDownload />
-                        </Grid>
-                      </Grid>
-                    </React.Fragment>
-                  );
-                }}
-              </PreferenceToggle>
-            );
-          }}
-        </PreferenceToggle>
-        <TransferDisplay />
-
-        {!!this.state.selectedLinodeID && !!this.state.selectedLinodeLabel && (
-          <React.Fragment>
-            <PowerActionsDialog
-              isOpen={this.state.powerDialogOpen}
-              action={this.state.powerDialogAction ?? 'Power On'}
-              linodeId={this.state.selectedLinodeID}
-              onClose={this.closeDialogs}
-            />
-            <DeleteLinodeDialog
-              open={this.state.deleteDialogOpen}
-              onClose={this.closeDialogs}
-              linodeId={this.state.selectedLinodeID}
-            />
-          </React.Fragment>
-        )}
-      </React.Fragment>
-    );
-  }
+  updatePageUrl = (page: number) => {
+    this.props.history.push(`?page=${page}`);
+  };
 }
 
 const eventCategory = 'linodes landing';
@@ -480,7 +481,6 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const enhanced = compose<CombinedProps, Props>(
   withRouter,
-  withSnackbar,
   connected,
   styled,
   withFeatureFlagConsumer,

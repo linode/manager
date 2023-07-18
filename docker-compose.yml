@@ -35,6 +35,14 @@ x-e2e-env:
   # Cloud Manager-specific test configuration.
   CY_TEST_SUITE: ${CY_TEST_SUITE}
   CY_TEST_REGION: ${CY_TEST_REGION}
+
+  # Cypress environment variables for alternative parallelization.
+  CY_TEST_SPLIT_RUN: ${CY_TEST_SPLIT_RUN}
+  CY_TEST_SPLIT_RUN_TOTAL: ${CY_TEST_SPLIT_RUN_TOTAL}
+  CY_TEST_SPLIT_RUN_INDEX: ${CY_TEST_SPLIT_RUN_INDEX}
+
+  # Cypress reporting.
+  CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
   CY_LOG_TEST_USER: ${CY_LOG_TEST_USER}
 
   # Cloud Manager build environment.

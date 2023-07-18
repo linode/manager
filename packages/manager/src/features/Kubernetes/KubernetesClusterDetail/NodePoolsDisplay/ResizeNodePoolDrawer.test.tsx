@@ -1,8 +1,10 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
+
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { ResizeNodePoolDrawer, Props } from './ResizeNodePoolDrawer';
+
+import { Props, ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
 const pool = nodePoolFactory.build({
   type: 'g6-standard-1',
@@ -10,10 +12,10 @@ const pool = nodePoolFactory.build({
 const smallPool = nodePoolFactory.build({ count: 2 });
 
 const props: Props = {
-  open: true,
-  onClose: jest.fn(),
-  nodePool: pool,
   kubernetesClusterId: 1,
+  nodePool: pool,
+  onClose: jest.fn(),
+  open: true,
 };
 
 describe('ResizeNodePoolDrawer', () => {

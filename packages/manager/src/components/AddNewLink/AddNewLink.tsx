@@ -1,32 +1,34 @@
 import * as React from 'react';
-import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
+
+import { Tooltip, TooltipProps } from 'src/components/Tooltip';
+
 import { Button } from '../Button/Button';
 
 export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
-  display?: string;
   disabled?: boolean;
   disabledReason?: string;
+  display?: string;
   label: string;
   onClick: (e?: React.MouseEvent<HTMLElement>) => void;
 }
 
 const AddNewLink = (props: Props) => {
   const {
+    className,
     disabled,
     disabledReason,
     display,
     label,
     onClick,
-    className,
     ...remainingPropsAsTooltipProps
   } = props;
 
   const baseProps = {
+    className,
     disabled,
     onClick,
     text: label,
     title: label,
-    className,
   };
 
   if (!!disabled && !!disabledReason) {

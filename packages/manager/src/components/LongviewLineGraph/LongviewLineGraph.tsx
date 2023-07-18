@@ -1,44 +1,45 @@
-import * as React from 'react';
-import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   DataSet,
   LineGraph,
   LineGraphProps,
 } from 'src/components/LineGraph/LineGraph';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  message: {
+    left: '50%',
+    position: 'absolute',
+    top: '45%',
+    transform: 'translate(-50%, -50%)',
+  },
   title: {
-    color: theme.color.headline,
-    fontWeight: 'bold',
-    fontSize: '1rem',
     '& > span': {
       color: theme.palette.text.primary,
     },
-  },
-  message: {
-    position: 'absolute',
-    left: '50%',
-    top: '45%',
-    transform: 'translate(-50%, -50%)',
+    color: theme.color.headline,
+    fontSize: '1rem',
+    fontWeight: 'bold',
   },
 }));
 
 export interface LongViewLineGraphProps extends LineGraphProps {
-  title: string;
-  subtitle?: string;
+  ariaLabel?: string;
   error?: string;
   loading?: boolean;
-  ariaLabel?: string;
+  subtitle?: string;
+  title: string;
 }
 
 export const LongviewLineGraph = React.memo((props: LongViewLineGraphProps) => {
   const { classes } = useStyles();
 
-  const { error, loading, title, subtitle, ariaLabel, ...rest } = props;
+  const { ariaLabel, error, loading, subtitle, title, ...rest } = props;
 
   const message = error // Error state is separate, don't want to put text on top of it
     ? undefined
@@ -58,7 +59,7 @@ export const LongviewLineGraph = React.memo((props: LongViewLineGraphProps) => {
           </React.Fragment>
         )}
       </Typography>
-      <Divider spacingTop={16} spacingBottom={16} />
+      <Divider spacingBottom={16} spacingTop={16} />
       <div style={{ position: 'relative' }}>
         {error ? (
           <div style={{ height: props.chartHeight || '300px' }}>

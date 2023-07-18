@@ -1,59 +1,61 @@
+import { Disk } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
+
 import AddNewLink from 'src/components/AddNewLink';
 import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import { Typography } from 'src/components/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Disk } from '@linode/api-v4/lib/linodes';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { sendEvent } from 'src/utilities/analytics';
-import { LinodeDiskRow } from './LinodeDiskRow';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useParams } from 'react-router-dom';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile';
-import { DeleteDiskDialog } from './DeleteDiskDialog';
+import { sendEvent } from 'src/utilities/analytics';
+
 import { CreateDiskDrawer } from './CreateDiskDrawer';
+import { CreateImageFromDiskDialog } from './CreateImageFromDiskDialog';
+import { DeleteDiskDialog } from './DeleteDiskDialog';
+import { LinodeDiskRow } from './LinodeDiskRow';
 import { RenameDiskDrawer } from './RenameDiskDrawer';
 import { ResizeDiskDrawer } from './ResizeDiskDrawer';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { CreateImageFromDiskDialog } from './CreateImageFromDiskDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    width: '100%',
-  },
-  headline: {
-    marginTop: 8,
-    marginBottom: 8,
-    marginLeft: 15,
-    lineHeight: '1.5rem',
+  addNewWrapper: {
+    '&.MuiGrid-item': {
+      padding: 5,
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: `-${theme.spacing(1.5)}`,
+    },
   },
   addNewWrapperContainer: {
     display: 'flex',
     flexDirection: 'row',
   },
-  addNewWrapper: {
-    [theme.breakpoints.down('sm')]: {
-      marginLeft: `-${theme.spacing(1.5)}`,
-    },
-    '&.MuiGrid-item': {
-      padding: 5,
-    },
+  headline: {
+    lineHeight: '1.5rem',
+    marginBottom: 8,
+    marginLeft: 15,
+    marginTop: 8,
+  },
+  root: {
+    backgroundColor: theme.color.white,
+    margin: 0,
+    width: '100%',
   },
 }));
 
@@ -63,7 +65,7 @@ export const LinodeDisks = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
-  const { data: disks, isLoading, error } = useAllLinodeDisksQuery(id);
+  const { data: disks, error, isLoading } = useAllLinodeDisksQuery(id);
   const { data: linode } = useLinodeQuery(id);
   const { data: grants } = useGrants();
 
@@ -124,15 +126,15 @@ export const LinodeDisks = () => {
 
     return disks?.map((disk) => (
       <LinodeDiskRow
-        key={disk.id}
         disk={disk}
+        key={disk.id}
         linodeId={id}
         linodeStatus={linode?.status ?? 'offline'}
-        readOnly={readOnly}
+        onDelete={() => onDelete(disk)}
+        onImagize={() => onImagize(disk)}
         onRename={() => onRename(disk)}
         onResize={() => onResize(disk)}
-        onImagize={() => onImagize(disk)}
-        onDelete={() => onDelete(disk)}
+        readOnly={readOnly}
       />
     ));
   };
@@ -140,55 +142,55 @@ export const LinodeDisks = () => {
   return (
     <React.Fragment>
       <Grid
+        alignItems="flex-end"
         className={classes.root}
         container
-        alignItems="flex-end"
         justifyContent="space-between"
         spacing={1}
       >
-        <Grid ref={disksHeaderRef} className="p0">
-          <Typography variant="h3" className={classes.headline}>
+        <Grid className="p0" ref={disksHeaderRef}>
+          <Typography className={classes.headline} variant="h3">
             Disks
           </Typography>
         </Grid>
         <span className={classes.addNewWrapperContainer}>
           {!freeDiskSpace ? (
             <TooltipIcon
-              text={noFreeDiskSpaceWarning}
-              status="help"
               tooltipAnalyticsEvent={() =>
                 sendEvent({
-                  category: `Disk Resize Flow`,
                   action: `Open:tooltip`,
+                  category: `Disk Resize Flow`,
                   label: `Add a Disk help icon tooltip`,
                 })
               }
+              status="help"
+              text={noFreeDiskSpaceWarning}
             />
           ) : undefined}
           <Grid className={classes.addNewWrapper}>
             <AddNewLink
-              onClick={() => setIsCreateDrawerOpen(true)}
-              label="Add a Disk"
               disabled={readOnly || !freeDiskSpace}
+              label="Add a Disk"
+              onClick={() => setIsCreateDrawerOpen(true)}
             />
           </Grid>
         </span>
       </Grid>
       <OrderBy
         data={disks ?? []}
-        orderBy={'created'}
         order={'asc'}
+        orderBy={'created'}
         preferenceKey="linode-disks"
       >
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData} scrollToRef={disksHeaderRef}>
             {({
+              count,
               data: paginatedData,
               handlePageChange,
               handlePageSizeChange,
               page,
               pageSize,
-              count,
             }) => {
               return (
                 <React.Fragment>
@@ -198,34 +200,34 @@ export const LinodeDisks = () => {
                         <TableRow>
                           <TableSortCell
                             active={orderBy === 'label'}
-                            label="label"
                             direction={order}
                             handleClick={handleOrderChange}
+                            label="label"
                           >
                             Label
                           </TableSortCell>
                           <TableSortCell
                             active={orderBy === 'filesystem'}
-                            label="filesystem"
                             direction={order}
                             handleClick={handleOrderChange}
+                            label="filesystem"
                           >
                             Type
                           </TableSortCell>
                           <TableSortCell
                             active={orderBy === 'size'}
-                            label="size"
                             direction={order}
                             handleClick={handleOrderChange}
+                            label="size"
                           >
                             Size
                           </TableSortCell>
                           <Hidden mdDown>
                             <TableSortCell
                               active={orderBy === 'created'}
-                              label="created"
                               direction={order}
                               handleClick={handleOrderChange}
+                              label="created"
                             >
                               Created
                             </TableSortCell>
@@ -237,12 +239,12 @@ export const LinodeDisks = () => {
                     </Table>
                   </Grid>
                   <PaginationFooter
-                    page={page}
-                    pageSize={pageSize}
                     count={count}
+                    eventCategory="linode disks"
                     handlePageChange={handlePageChange}
                     handleSizeChange={handlePageSizeChange}
-                    eventCategory="linode disks"
+                    page={page}
+                    pageSize={pageSize}
                   />
                 </React.Fragment>
               );
@@ -251,33 +253,33 @@ export const LinodeDisks = () => {
         )}
       </OrderBy>
       <DeleteDiskDialog
-        open={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
         disk={selectedDisk}
         linodeId={id}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
       />
       <CreateDiskDrawer
-        open={isCreateDrawerOpen}
-        onClose={() => setIsCreateDrawerOpen(false)}
         linodeId={id}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
       />
       <RenameDiskDrawer
-        open={isRenameDrawerOpen}
-        onClose={() => setIsRenameDrawerOpen(false)}
-        linodeId={id}
         disk={selectedDisk}
+        linodeId={id}
+        onClose={() => setIsRenameDrawerOpen(false)}
+        open={isRenameDrawerOpen}
       />
       <ResizeDiskDrawer
-        open={isResizeDrawerOpen}
-        onClose={() => setIsResizeDrawerOpen(false)}
-        linodeId={id}
         disk={selectedDisk}
+        linodeId={id}
+        onClose={() => setIsResizeDrawerOpen(false)}
+        open={isResizeDrawerOpen}
       />
       <CreateImageFromDiskDialog
-        open={isImageDialogOpen}
-        onClose={() => setIsImageDialogOpen(false)}
         disk={selectedDisk}
         linodeId={id}
+        onClose={() => setIsImageDialogOpen(false)}
+        open={isImageDialogOpen}
       />
     </React.Fragment>
   );

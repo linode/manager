@@ -1,6 +1,12 @@
 export * from './account';
 
+export * from './aglb';
+
+export * from './databases';
+
 export * from './domains';
+
+export * from './entity-transfers';
 
 export * from './firewalls';
 
@@ -15,6 +21,8 @@ export * from './longview';
 export * from './managed';
 
 export * from './networking';
+
+export * from './nodebalancers';
 
 export * from './object-storage';
 
@@ -34,11 +42,7 @@ export * from './vlans';
 
 export * from './volumes';
 
-export * from './nodebalancers';
-
-export * from './databases';
-
-export * from './entity-transfers';
+export * from './vpcs';
 
 export {
   baseRequest,

@@ -1,4 +1,5 @@
 import { Entity, EventAction } from '@linode/api-v4/lib/account';
+
 import { nonClickEvents } from 'src/constants';
 
 export const getEngineFromDatabaseEntityURL = (url: string) => {
@@ -7,8 +8,8 @@ export const getEngineFromDatabaseEntityURL = (url: string) => {
 
 export const getLinkForEvent = (
   action: EventAction,
-  entity: null | Entity,
-  deleted: undefined | string | boolean
+  entity: Entity | null,
+  deleted: boolean | string | undefined
 ) => {
   const type = entity?.type;
   const id = entity?.id;
@@ -60,7 +61,7 @@ export const getLinkForEvent = (
     return `/images`;
   }
 
-  if (['linode_snapshot', 'backups_enable'].includes(action)) {
+  if (['backups_enable', 'linode_snapshot'].includes(action)) {
     return `/linodes/${id}/backup`;
   }
 

@@ -1,16 +1,29 @@
-import * as React from 'react';
-import { Button } from 'src/components/Button/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
+
 import AddDeviceDrawer from './AddDeviceDrawer';
 import FirewallDevicesTable from './FirewallDevicesTable';
 import RemoveDeviceDialog from './RemoveDeviceDialog';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  actions: {
+    '&.MuiGrid-item': {
+      paddingTop: 0,
+    },
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBottom: theme.spacing(),
+    [theme.breakpoints.only('sm')]: {
+      marginRight: theme.spacing(),
+    },
+  },
   copy: {
     fontSize: '0.875rem',
     marginTop: theme.spacing(),
@@ -19,30 +32,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(),
     },
   },
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginBottom: theme.spacing(),
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-    },
-    [theme.breakpoints.only('sm')]: {
-      marginRight: theme.spacing(),
-    },
-  },
 }));
 
 interface Props {
+  disabled: boolean;
   firewallID: number;
   firewallLabel: string;
-  disabled: boolean;
 }
 
 const FirewallLinodesLanding = (props: Props) => {
-  const { firewallID, firewallLabel, disabled } = props;
+  const { disabled, firewallID, firewallLabel } = props;
   const classes = useStyles();
 
-  const { data: devices, isLoading, error } = useAllFirewallDevicesQuery(
+  const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(
     firewallID
   );
 
@@ -94,22 +96,22 @@ const FirewallLinodesLanding = (props: Props) => {
         </Grid>
       </Grid>
       <FirewallDevicesTable
-        devices={devices ?? []}
-        error={error ?? undefined}
-        loading={isLoading}
-        disabled={disabled}
         triggerRemoveDevice={(id) => {
           setSelectedDeviceId(id);
           setIsRemoveDeviceDialogOpen(true);
         }}
+        devices={devices ?? []}
+        disabled={disabled}
+        error={error ?? undefined}
+        loading={isLoading}
       />
-      <AddDeviceDrawer open={addDeviceDrawerOpen} onClose={handleClose} />
+      <AddDeviceDrawer onClose={handleClose} open={addDeviceDrawerOpen} />
       <RemoveDeviceDialog
-        open={isRemoveDeviceDialogOpen}
-        onClose={() => setIsRemoveDeviceDialogOpen(false)}
         device={selectedDevice}
-        firewallLabel={firewallLabel}
         firewallId={firewallID}
+        firewallLabel={firewallLabel}
+        onClose={() => setIsRemoveDeviceDialogOpen(false)}
+        open={isRemoveDeviceDialogOpen}
       />
     </>
   );

@@ -1,12 +1,14 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { MultipleIPInput } from './MultipleIPInput';
 
 const baseProps = {
-  title: 'My Input',
   ips: [{ address: 'ip1' }, { address: 'ip2' }, { address: 'ip3' }],
   onChange: jest.fn(),
+  title: 'My Input',
 };
 
 describe('MultipleIPInput', () => {

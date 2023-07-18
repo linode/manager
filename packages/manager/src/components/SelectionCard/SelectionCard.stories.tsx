@@ -1,26 +1,29 @@
-import * as React from 'react';
 import Alarm from '@mui/icons-material/Alarm';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import DE from 'flag-icons/flags/4x3/de.svg';
 import US from 'flag-icons/flags/4x3/us.svg';
+import * as React from 'react';
+
 import { Chip } from 'src/components/Chip';
+
 import { SelectionCard } from './SelectionCard';
-import type { Meta, StoryObj } from '@storybook/react';
+
 import type { SelectionCardProps } from './SelectionCard';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const iconOptions = {
+  Alarm: () => <Alarm />,
+  'Arch Linux': () => <span className="fl-archlinux" />,
+  'DE Flag': () => <DE height="24" viewBox="0 0 640 480" width="32" />,
+  Debian: () => <span className="fl-debian" />,
   None: () => null,
   Photo: () => <InsertPhoto />,
-  Alarm: () => <Alarm />,
-  'DE Flag': () => <DE width="32" height="24" viewBox="0 0 640 480" />,
-  'US Flag': () => <US width="32" height="24" viewBox="0 0 720 480" />,
-  'Arch Linux': () => <span className="fl-archlinux" />,
-  Debian: () => <span className="fl-debian" />,
+  'US Flag': () => <US height="24" viewBox="0 0 720 480" width="32" />,
 };
 
 const variantOptions = {
+  Chip: () => <Chip component="span" label="DEFAULT" />,
   None: () => null,
-  Chip: () => <Chip label="DEFAULT" component="span" />,
 };
 
 export const Default: StoryObj<SelectionCardProps> = {
@@ -33,7 +36,7 @@ export const Default: StoryObj<SelectionCardProps> = {
       };
 
       return (
-        <SelectionCard {...args} onClick={handleChange} checked={checked} />
+        <SelectionCard {...args} checked={checked} onClick={handleChange} />
       );
     };
 
@@ -42,17 +45,6 @@ export const Default: StoryObj<SelectionCardProps> = {
 };
 
 const meta: Meta<SelectionCardProps> = {
-  title: 'Components/SelectionCard',
-  component: SelectionCard,
-  args: {
-    heading: 'Photos',
-    subheadings: ['Use a photo', 'Select up to 3'],
-    checked: false,
-    disabled: false,
-    renderIcon: iconOptions.Photo,
-    renderVariant: variantOptions.Chip,
-    tooltip: '',
-  },
   argTypes: {
     renderIcon: {
       control: { type: 'select' },
@@ -63,6 +55,17 @@ const meta: Meta<SelectionCardProps> = {
       options: variantOptions,
     },
   },
+  args: {
+    checked: false,
+    disabled: false,
+    heading: 'Photos',
+    renderIcon: iconOptions.Photo,
+    renderVariant: variantOptions.Chip,
+    subheadings: ['Use a photo', 'Select up to 3'],
+    tooltip: '',
+  },
+  component: SelectionCard,
+  title: 'Components/SelectionCard',
 };
 
 export default meta;

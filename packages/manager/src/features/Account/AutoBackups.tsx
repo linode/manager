@@ -1,55 +1,56 @@
-import { makeStyles } from 'tss-react/mui';
+import OpenInNew from '@mui/icons-material/OpenInNew';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import { Accordion } from 'src/components/Accordion';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
-import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  footnote: {
+  enableBackupsButton: {
+    ...theme.applyLinkStyles,
     fontSize: '0.875rem',
+  },
+  footnote: {
     cursor: 'pointer',
+    fontSize: '0.875rem',
   },
   icon: {
     display: 'inline-block',
     fontSize: '0.8em',
     marginLeft: `calc(${theme.spacing(1)} / 3)`,
   },
-  enableBackupsButton: {
-    ...theme.applyLinkStyles,
-    fontSize: '0.875rem',
-  },
 }));
 
 interface Props {
   backups_enabled: boolean;
   hasLinodesWithoutBackups: boolean;
+  isManagedCustomer: boolean;
   onChange: () => void;
   openBackupsDrawer: () => void;
-  isManagedCustomer: boolean;
 }
 
 const AutoBackups = (props: Props) => {
   const {
     backups_enabled,
     hasLinodesWithoutBackups,
+    isManagedCustomer,
     onChange,
     openBackupsDrawer,
-    isManagedCustomer,
   } = props;
 
   const { classes } = useStyles();
 
   return (
-    <Accordion heading="Backup Auto Enrollment" defaultExpanded={true}>
+    <Accordion defaultExpanded={true} heading="Backup Auto Enrollment">
       <Grid container direction="column" spacing={2}>
         <Grid>
           {!!isManagedCustomer ? (
-            <Notice success spacingBottom={20}>
+            <Notice info spacingBottom={20}>
               You&rsquo;re a Managed customer, which means your Linodes are
               already automatically backed up - no need to toggle this setting.
             </Notice>
@@ -60,11 +61,11 @@ const AutoBackups = (props: Props) => {
             Backups enabled, your account will be billed the additional hourly
             rate noted on the&nbsp;
             <a
+              aria-describedby="external-site"
               data-qa-backups-price
               href="https://www.linode.com/products/backups/"
-              target="_blank"
-              aria-describedby="external-site"
               rel="noopener noreferrer"
+              target="_blank"
             >
               Backups pricing page
               <OpenInNew className={classes.icon} />
@@ -72,15 +73,15 @@ const AutoBackups = (props: Props) => {
             .
           </Typography>
         </Grid>
-        <Grid container direction="row" alignItems="center">
+        <Grid alignItems="center" container direction="row">
           <Grid>
             <FormControlLabel
               control={
                 <Toggle
-                  onChange={onChange}
                   checked={!!isManagedCustomer ? true : backups_enabled}
                   data-qa-toggle-auto-backup
                   disabled={!!isManagedCustomer}
+                  onChange={onChange}
                 />
               }
               label={
@@ -93,12 +94,12 @@ const AutoBackups = (props: Props) => {
         </Grid>
         {!isManagedCustomer && !backups_enabled && hasLinodesWithoutBackups && (
           <Grid>
-            <Typography variant="body1" className={classes.footnote}>
+            <Typography className={classes.footnote} variant="body1">
               For existing Linodes without backups,&nbsp;
               <button
+                className={classes.enableBackupsButton}
                 data-qa-backup-existing
                 onClick={openBackupsDrawer}
-                className={classes.enableBackupsButton}
               >
                 enable now
               </button>

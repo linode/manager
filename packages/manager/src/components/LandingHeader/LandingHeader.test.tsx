@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import LandingHeader from './LandingHeader';
+
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import LandingHeader from './LandingHeader';
 
 describe('LandingHeader', () => {
   it('should render a title', () => {
@@ -34,10 +36,10 @@ describe('LandingHeader', () => {
     renderWithTheme(
       <LinodeThemeWrapper>
         <LandingHeader
-          title="My Title"
           breadcrumbProps={{
             pathname: '/my/path/to/somewhere',
           }}
+          title="My Title"
         />
       </LinodeThemeWrapper>
     );
@@ -65,8 +67,8 @@ describe('LandingHeader', () => {
     const { getByText } = renderWithTheme(
       <LinodeThemeWrapper>
         <LandingHeader
-          docsLink="https://www.linode.com/docs/products/compute/compute-instances/faqs/"
           docsLabel="Docs"
+          docsLink="https://www.linode.com/docs/products/compute/compute-instances/faqs/"
         />
       </LinodeThemeWrapper>
     );
@@ -90,8 +92,8 @@ describe('LandingHeader', () => {
       <LinodeThemeWrapper>
         <LandingHeader
           createButtonText="Create My Entity"
-          onButtonClick={() => null}
           disabledCreateButton
+          onButtonClick={() => null}
         />
       </LinodeThemeWrapper>
     );
@@ -125,15 +127,15 @@ describe('LandingHeader', () => {
       <LinodeThemeWrapper>
         <LandingHeader
           breadcrumbProps={{
-            pathname: '/my/path/to/somewhere',
             crumbOverrides: [
               {
-                position: 1,
                 label: 'My First Crumb',
                 linkTo: '/someRoute',
                 noCap: true,
+                position: 1,
               },
             ],
+            pathname: '/my/path/to/somewhere',
           }}
         />
       </LinodeThemeWrapper>
