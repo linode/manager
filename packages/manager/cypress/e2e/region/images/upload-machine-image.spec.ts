@@ -7,12 +7,19 @@ import { randomLabel, randomPhrase } from 'support/util/random';
 import { describeRegions } from 'support/util/regions';
 
 describeRegions('Upload Machine Images', (region: Region) => {
-  it('can upload a machine image', () => {
+  /*
+   * - Confirms that users can upload Machine Images to the targeted region.
+   * - Confirms that user is redirected back to landing page.
+   * - Confirms that uploaded Image is listed on the landing page.
+   * - Confirms that Image uploads successfully and landing page reflects its status.
+   */
+  it('can upload a Machine Image', () => {
     const imageLabel = randomLabel();
     const imageDescription = randomPhrase();
     const imageFile = 'machine-images/test-image.gz';
 
     interceptUploadImage().as('uploadImage');
+    // Navigate to Image upload page, enter label, select region, and upload Image file.
     cy.visitWithLogin('/images/create/upload');
     cy.findByText('Label').should('be.visible').click().type(imageLabel);
 
@@ -34,6 +41,7 @@ describeRegions('Upload Machine Images', (region: Region) => {
       });
     });
 
+    // Wait for Image upload request and confirm toast notification is shown.
     cy.wait('@uploadImage');
     ui.toast.assertMessage(
       `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
