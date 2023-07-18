@@ -26,7 +26,6 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes';
-import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -99,7 +98,7 @@ const splitWord = (word: any) => {
 };
 
 export const SearchLanding: React.FC<CombinedProps> = (props) => {
-  const { entities, errors, search, searchResultsByEntity } = props;
+  const { entities, search, searchResultsByEntity } = props;
 
   const classes = useStyles();
   const { _isLargeAccount } = useAccountManagement();
@@ -112,6 +111,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const {
     data: objectStorageBuckets,
+    error: bucketsError,
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(objectStorageClusters, !_isLargeAccount);
 
@@ -234,38 +234,35 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     searchableLinodes,
   ]);
 
-  const getErrorMessage = (errors: ErrorObject): string => {
-    const errorString: string[] = [];
-    if (linodesError) {
-      errorString.push('Linodes');
-    }
-    if (domainsError) {
-      errorString.push('Domains');
-    }
-    if (volumesError) {
-      errorString.push('Volumes');
-    }
-    if (imagesError) {
-      errorString.push('Images');
-    }
-    if (nodebalancersError) {
-      errorString.push('NodeBalancers');
-    }
-    if (kubernetesClustersError) {
-      errorString.push('Kubernetes');
-    }
-    if (objectStorageClustersError) {
-      errorString.push('Object Storage');
-    }
-    if (objectStorageBuckets?.errors && !objectStorageClustersError) {
-      const regionsWithErrors = objectStorageBuckets.errors
-        .map((e) => e.cluster.region)
-        .join(', ');
-      errorString.push(`Object Storage in ${regionsWithErrors}`);
-    }
+  const getErrorMessage = () => {
+    const errorConditions: [unknown, string][] = [
+      [linodesError, 'Linodes'],
+      [bucketsError, 'Buckets'],
+      [domainsError, 'Domains'],
+      [volumesError, 'Volumes'],
+      [imagesError, 'Images'],
+      [nodebalancersError, 'NodeBalancers'],
+      [kubernetesClustersError, 'Kubernetes'],
+      [objectStorageClustersError, 'Object Storage'],
+      [
+        objectStorageBuckets?.errors && !objectStorageClustersError,
+        `Object Storage in ${objectStorageBuckets?.errors
+          .map((e) => e.cluster.region)
+          .join(', ')}`,
+      ],
+    ];
 
-    const joined = errorString.join(', ');
-    return `Could not retrieve search results for: ${joined}`;
+    const matchingConditions = errorConditions.filter(
+      (condition) => condition[0]
+    );
+
+    if (matchingConditions.length > 0) {
+      return `Could not retrieve search results for: ${matchingConditions
+        .map((condition) => condition[1])
+        .join(', ')}`;
+    } else {
+      return false;
+    }
   };
 
   const finalResults = _isLargeAccount ? apiResults : searchResultsByEntity;
@@ -282,6 +279,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     areImagesLoading ||
     areNodeBalancersLoading;
 
+  const errorMessage = getErrorMessage();
+
   return (
     <Grid className={classes.root} container direction="column" spacing={2}>
       <Grid>
@@ -292,9 +291,9 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
           />
         )}
       </Grid>
-      {errors.hasErrors && (
+      {errorMessage && (
         <Grid>
-          <Notice error text={getErrorMessage(errors)} />
+          <Notice error text={errorMessage} />
         </Grid>
       )}
       {apiError && (

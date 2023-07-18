@@ -12,9 +12,6 @@ import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
 
 import { ApplicationState } from 'src/store';
-import entitiesErrors, {
-  ErrorObject,
-} from 'src/store/selectors/entitiesErrors';
 import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import {
   bucketToSearchableItem,
@@ -50,7 +47,6 @@ export interface SearchProps extends HandlerProps {
   combinedResults: SearchableItem[];
   entities: SearchableItem[];
   entitiesLoading: boolean;
-  errors: ErrorObject;
   searchResultsByEntity: SearchResultsByEntity;
 }
 
@@ -81,7 +77,6 @@ export default () => (Component: React.ComponentType<any>) => {
     return {
       entities: [],
       entitiesLoading: entitiesLoading(state.__resources),
-      errors: entitiesErrors(state.__resources),
     };
   });
 

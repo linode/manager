@@ -16,8 +16,7 @@ const findInProgressEvent = (e: Event[]) => (id: number) => {
       return event;
     }
   }
-
-  return;
+  return undefined;
 };
 
 export default createSelector(
