@@ -15,8 +15,6 @@ import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { ErrorBoundary } from 'src/components/ErrorBoundary';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import { TextField } from 'src/components/TextField';
@@ -571,119 +569,113 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     null;
 
   return (
-    <ErrorBoundary fallback={<ErrorState errorText="" />}>
-      <Dialog
-        fullHeight
-        fullWidth
-        onClose={close}
-        open={open}
-        title={ticketTypeMap[ticketType].dialogTitle}
-      >
-        {props.children || (
-          <React.Fragment>
-            {generalError && (
-              <Notice data-qa-notice error text={generalError} />
-            )}
+    <Dialog
+      fullHeight
+      fullWidth
+      onClose={close}
+      open={open}
+      title={ticketTypeMap[ticketType].dialogTitle}
+    >
+      {props.children || (
+        <React.Fragment>
+          {generalError && <Notice data-qa-notice error text={generalError} />}
 
-            <Typography data-qa-support-ticket-helper-text>
-              {ticketTypeMap[ticketType].helperText}
-            </Typography>
-            <TextField
-              data-qa-ticket-summary
-              errorText={summaryError}
-              inputProps={{ maxLength: 64 }}
-              label="Title"
-              onChange={handleSummaryInputChange}
-              placeholder="Enter a title for your ticket."
-              required
-              value={summary}
+          <Typography data-qa-support-ticket-helper-text>
+            {ticketTypeMap[ticketType].helperText}
+          </Typography>
+          <TextField
+            data-qa-ticket-summary
+            errorText={summaryError}
+            inputProps={{ maxLength: 64 }}
+            label="Title"
+            onChange={handleSummaryInputChange}
+            placeholder="Enter a title for your ticket."
+            required
+            value={summary}
+          />
+          {ticketType === 'smtp' ? (
+            <SupportTicketSMTPFields
+              formState={smtpFields}
+              handleChange={handleSMTPFieldChange}
             />
-            {ticketType === 'smtp' ? (
-              <SupportTicketSMTPFields
-                formState={smtpFields}
-                handleChange={handleSMTPFieldChange}
+          ) : (
+            <React.Fragment>
+              {props.hideProductSelection ? null : (
+                <React.Fragment>
+                  <Select
+                    data-qa-ticket-entity-type
+                    isClearable={false}
+                    label="What is this regarding?"
+                    onChange={handleEntityTypeChange}
+                    options={topicOptions}
+                    value={selectedTopic}
+                  />
+                  {!['general', 'none'].includes(entityType) && (
+                    <>
+                      <Select
+                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
+                        data-qa-ticket-entity-id
+                        disabled={entityOptions.length === 0}
+                        errorText={entityError || inputError}
+                        isClearable={false}
+                        isLoading={areEntitiesLoading}
+                        onChange={handleEntityIDChange}
+                        options={entityOptions}
+                        placeholder={`Select a ${entityIdToNameMap[entityType]}`}
+                        value={selectedEntity}
+                      />
+                      {!areEntitiesLoading && entityOptions.length === 0 ? (
+                        <FormHelperText>
+                          You don&rsquo;t have any{' '}
+                          {entityIdToNameMap[entityType]}s on your account.
+                        </FormHelperText>
+                      ) : null}
+                    </>
+                  )}
+                </React.Fragment>
+              )}
+              <TabbedReply
+                placeholder={
+                  "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                }
+                error={descriptionError}
+                handleChange={handleDescriptionInputChange}
+                innerClass={classes.innerReply}
+                required
+                rootClass={classes.rootReply}
+                value={description}
               />
-            ) : (
-              <React.Fragment>
-                {props.hideProductSelection ? null : (
-                  <React.Fragment>
-                    <Select
-                      data-qa-ticket-entity-type
-                      isClearable={false}
-                      label="What is this regarding?"
-                      onChange={handleEntityTypeChange}
-                      options={topicOptions}
-                      value={selectedTopic}
-                    />
-                    {!['general', 'none'].includes(entityType) && (
-                      <>
-                        <Select
-                          label={
-                            entityIdToNameMap[entityType] ?? 'Entity Select'
-                          }
-                          data-qa-ticket-entity-id
-                          disabled={entityOptions.length === 0}
-                          errorText={entityError || inputError}
-                          isClearable={false}
-                          isLoading={areEntitiesLoading}
-                          onChange={handleEntityIDChange}
-                          options={entityOptions}
-                          placeholder={`Select a ${entityIdToNameMap[entityType]}`}
-                          value={selectedEntity}
-                        />
-                        {!areEntitiesLoading && entityOptions.length === 0 ? (
-                          <FormHelperText>
-                            You don&rsquo;t have any{' '}
-                            {entityIdToNameMap[entityType]}s on your account.
-                          </FormHelperText>
-                        ) : null}
-                      </>
-                    )}
-                  </React.Fragment>
-                )}
-                <TabbedReply
-                  placeholder={
-                    "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-                  }
-                  error={descriptionError}
-                  handleChange={handleDescriptionInputChange}
-                  innerClass={classes.innerReply}
-                  required
-                  rootClass={classes.rootReply}
-                  value={description}
-                />
-                <Accordion
-                  detailProps={{ className: classes.expPanelSummary }}
-                  heading="Formatting Tips"
-                >
-                  <Reference />
-                </Accordion>
-                <AttachFileForm files={files} updateFiles={updateFiles} />
-              </React.Fragment>
-            )}
-            <StyledActionPanel>
-              <Button
-                buttonType="secondary"
-                data-qa-cancel
-                data-testid="cancel"
-                onClick={onCancel}
+              <Accordion
+                detailProps={{ className: classes.expPanelSummary }}
+                heading="Formatting Tips"
               >
-                Cancel
-              </Button>
-              <Button
-                buttonType="primary"
-                data-qa-submit
-                data-testid="submit"
-                disabled={!requirementsMet}
-                loading={submitting}
-                onClick={onSubmit}
-              >
-                Open Ticket
-              </Button>
-            </StyledActionPanel>
-          </React.Fragment>
-        )}
-      </Dialog>
-    </ErrorBoundary>
+                <Reference />
+              </Accordion>
+              <AttachFileForm files={files} updateFiles={updateFiles} />
+            </React.Fragment>
+          )}
+          <StyledActionPanel>
+            <Button
+              buttonType="secondary"
+              data-qa-cancel
+              data-testid="cancel"
+              onClick={onCancel}
+            >
+              Cancel
+            </Button>
+            <Button
+              buttonType="primary"
+              data-qa-submit
+              data-testid="submit"
+              disabled={!requirementsMet}
+              loading={submitting}
+              onClick={onSubmit}
+            >
+              Open Ticket
+            </Button>
+          </StyledActionPanel>
+        </React.Fragment>
+      )}
+    </Dialog>
   );
 };
