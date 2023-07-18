@@ -1,9 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { useRecentEventForLinode } from './useRecentEventForLinode';
-import { rest, server } from 'src/mocks/testServer';
+
 import { eventFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
+
+import { useRecentEventForLinode } from './useRecentEventForLinode';
 
 describe('recentEventForLinode selector', () => {
   beforeEach(() => {
@@ -14,10 +16,10 @@ describe('recentEventForLinode selector', () => {
             makeResourcePage([
               eventFactory.build({
                 action: 'lke_node_create',
-                percent_complete: 15,
-                entity: { type: 'linode', id: 999, label: 'linode-1' },
+                entity: { id: 999, label: 'linode-1', type: 'linode' },
                 message:
                   'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+                percent_complete: 15,
               }),
             ])
           )

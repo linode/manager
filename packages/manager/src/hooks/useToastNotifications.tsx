@@ -1,11 +1,12 @@
-import { EventStatus } from '@linode/api-v4/lib/account/types';
+import { EventAction, EventStatus } from '@linode/api-v4/lib/account/types';
+import { styled } from '@mui/material/styles';
 import { WithSnackbarProps, useSnackbar } from 'notistack';
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import { SupportLink } from 'src/components/SupportLink';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics';
-import { styled } from '@mui/material/styles';
 
 export const useToastNotifications = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -14,218 +15,154 @@ export const useToastNotifications = () => {
     eventHandler: (event) => {
       const label = event.entity?.label ?? '';
       const secondaryLabel = event.secondary_entity?.label ?? '';
-      switch (event.action) {
-        case 'volume_attach':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Volume ${label} successfully attached.`,
-            failureMessage: `Error attaching Volume ${label}.`,
-          });
-          break;
-        case 'volume_detach':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Volume ${label} successfully detached.`,
-            failureMessage: `Error detaching Volume ${label}.`,
-          });
-        case 'volume_create':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Volume ${label} successfully created.`,
-            failureMessage: `Error creating Volume ${label}.`,
-          });
-        case 'volume_delete':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Volume successfully deleted.`,
-            failureMessage: `Error deleting Volume.`,
-          });
-        case 'disk_imagize':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            persistFailureMessage: true,
-            successMessage: `Image ${secondaryLabel} created successfully.`,
-            failureMessage: `There was a problem creating Image ${secondaryLabel}.`,
-            link: formatLink(
-              'Learn more about image technical specifications.',
-              'https://www.linode.com/docs/products/tools/images/#technical-specifications'
-            ),
-          });
-        case 'disk_resize':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            persistFailureMessage: true,
-            successMessage: `Disk ${secondaryLabel} resized successfully.`,
-            failureMessage: `Disk resize failed.`,
-            link: formatLink(
-              'Learn more about resizing restrictions.',
-              'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/',
-              () =>
-                sendLinodeDiskEvent(
-                  'Resize',
-                  'Click:link',
-                  'Disk resize failed toast'
-                )
-            ),
-          });
-        case 'image_upload':
-          const isDeletion = event.message === 'Upload canceled.';
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            persistFailureMessage: true,
-            successMessage: `Image ${label} is now available.`,
-            failureMessage: isDeletion
+
+      const eventToasts: Partial<
+        Record<
+          EventAction,
+          Pick<
+            ToastOptions,
+            | 'failureMessage'
+            | 'link'
+            | 'persistFailureMessage'
+            | 'persistSuccessMessage'
+            | 'successMessage'
+          >
+        >
+      > = {
+        backups_restore: {
+          failureMessage: `Backup restoration failed for ${label}.`,
+          link: formatLink(
+            'Learn more about limits and considerations.',
+            'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+          ),
+          persistFailureMessage: true,
+        },
+        disk_delete: {
+          failureMessage: `Unable to delete disk ${secondaryLabel} ${
+            label ? ` on ${label}` : ''
+          }. Is it attached to a configuration profile that is in use?`,
+          successMessage: `Disk ${secondaryLabel} deleted successfully.`,
+        },
+        disk_imagize: {
+          failureMessage: `There was a problem creating Image ${secondaryLabel}.`,
+          link: formatLink(
+            'Learn more about image technical specifications.',
+            'https://www.linode.com/docs/products/tools/images/#technical-specifications'
+          ),
+          persistFailureMessage: true,
+          successMessage: `Image ${secondaryLabel} created successfully.`,
+        },
+        disk_resize: {
+          failureMessage: `Disk resize failed.`,
+          link: formatLink(
+            'Learn more about resizing restrictions.',
+            'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/',
+            () =>
+              sendLinodeDiskEvent(
+                'Resize',
+                'Click:link',
+                'Disk resize failed toast'
+              )
+          ),
+          persistFailureMessage: true,
+          successMessage: `Disk ${secondaryLabel} resized successfully.`,
+        },
+        image_delete: {
+          failureMessage: `Error deleting Image ${label}.`,
+          successMessage: `Image ${label} deleted successfully.`,
+        },
+        image_upload: {
+          failureMessage:
+            event.message === 'Upload canceled.'
               ? undefined
               : `There was a problem uploading image ${label}: ${event.message?.replace(
                   /(\d+)/g,
                   '$1 MB'
                 )}`,
-          });
-          break;
-        case 'image_delete':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Image ${label} deleted successfully.`,
-            failureMessage: `Error deleting Image ${label}.`,
-          });
-          break;
-        case 'disk_delete':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Disk ${secondaryLabel} deleted successfully.`,
-            failureMessage: `Unable to delete disk ${secondaryLabel} ${
-              label ? ` on ${label}` : ''
-            }. Is it attached to a configuration profile that is in use?`,
-          });
-          break;
-        case 'linode_snapshot':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            persistFailureMessage: true,
-            failureMessage: `Snapshot backup failed on Linode ${label}.`,
-            link: formatLink(
-              'Learn more about limits and considerations.',
-              'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
-            ),
-          });
-          break;
-        case 'backups_restore':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            persistFailureMessage: true,
-            failureMessage: `Backup restoration failed for ${label}.`,
-            link: formatLink(
-              'Learn more about limits and considerations.',
-              'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
-            ),
-          });
-          break;
+          persistFailureMessage: true,
+          successMessage: `Image ${label} is now available.`,
+        },
+        linode_snapshot: {
+          failureMessage: `Snapshot backup failed on Linode ${label}.`,
+          link: formatLink(
+            'Learn more about limits and considerations.',
+            'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+          ),
+          persistFailureMessage: true,
+        },
+        volume_attach: {
+          failureMessage: `Error attaching Volume ${label}.`,
+          successMessage: `Volume ${label} successfully attached.`,
+        },
+        volume_create: {
+          failureMessage: `Error creating Volume ${label}.`,
+          successMessage: `Volume ${label} successfully created.`,
+        },
+        volume_delete: {
+          failureMessage: `Error deleting Volume.`,
+          successMessage: `Volume successfully deleted.`,
+        },
+        volume_detach: {
+          failureMessage: `Error detaching Volume ${label}.`,
+          successMessage: `Volume ${label} successfully detached.`,
+        },
+
         /**
          * These create/delete failures are hypothetical.
          * We don't know if it's possible for these to fail,
          * but are including handling to be safe.
          */
-        case 'linode_config_delete':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            failureMessage: `Error deleting config ${secondaryLabel}.`,
-          });
-          break;
-        case 'linode_config_create':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            failureMessage: `Error creating config ${secondaryLabel}.`,
-          });
-          break;
-        case 'linode_clone':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Linode ${label} has been cloned successfully to ${secondaryLabel}.`,
-            failureMessage: `Error cloning Linode ${label}.`,
-          });
-          break;
-        case 'linode_migrate_datacenter':
-        case 'linode_migrate':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Linode ${label} has been migrated successfully.`,
-            failureMessage: `Error migrating Linode ${label}.`,
-          });
-          break;
-        case 'linode_resize':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Linode ${label} has been resized successfully.`,
-            failureMessage: `Error resizing Linode ${label}.`,
-          });
-          break;
-        case 'firewall_enable':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            failureMessage: `Error enabling Firewall ${label}.`,
-          });
-          break;
-        case 'firewall_disable':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            failureMessage: `Error disabling Firewall ${label}.`,
-          });
-          break;
-        case 'firewall_delete':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            failureMessage: `Error deleting Firewall ${label}.`,
-          });
-          break;
-        case 'firewall_device_add':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            failureMessage: `Error adding ${secondaryLabel} to Firewall ${label}.`,
-          });
-          break;
-        case 'firewall_device_remove':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            failureMessage: `Error removing ${secondaryLabel} from Firewall ${label}.`,
-          });
-          break;
-        case 'longviewclient_create':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Longview Client ${label} successfully created.`,
-            failureMessage: `Error creating Longview Client ${label}.`,
-          });
-          break;
-        case 'linode_migrate':
-          toastSuccessAndFailure({
-            enqueueSnackbar,
-            eventStatus: event.status,
-            successMessage: `Linode ${label} migrated successfully.`,
-            failureMessage: `Linode ${label} migration failed.`,
-          });
-          break;
+        // eslint-disable-next-line perfectionist/sort-objects
+        firewall_delete: {
+          failureMessage: `Error deleting Firewall ${label}.`,
+        },
+        firewall_device_add: {
+          failureMessage: `Error adding ${secondaryLabel} to Firewall ${label}.`,
+        },
+        firewall_device_remove: {
+          failureMessage: `Error removing ${secondaryLabel} from Firewall ${label}.`,
+        },
+        firewall_disable: {
+          failureMessage: `Error disabling Firewall ${label}.`,
+        },
+        firewall_enable: {
+          failureMessage: `Error enabling Firewall ${label}.`,
+        },
+        linode_clone: {
+          failureMessage: `Error cloning Linode ${label}.`,
+          successMessage: `Linode ${label} has been cloned successfully to ${secondaryLabel}.`,
+        },
+        linode_config_create: {
+          failureMessage: `Error creating config ${secondaryLabel}.`,
+        },
+        linode_config_delete: {
+          failureMessage: `Error deleting config ${secondaryLabel}.`,
+        },
+        linode_migrate: {
+          failureMessage: `Linode ${label} migration failed.`,
+          successMessage: `Linode ${label} migrated successfully.`,
+        },
+        linode_migrate_datacenter: {
+          failureMessage: `Error migrating Linode ${label}.`,
+          successMessage: `Linode ${label} has been migrated successfully.`,
+        },
+        linode_resize: {
+          failureMessage: `Error resizing Linode ${label}.`,
+          successMessage: `Linode ${label} has been resized successfully.`,
+        },
+        longviewclient_create: {
+          failureMessage: `Error creating Longview Client ${label}.`,
+          successMessage: `Longview Client ${label} successfully created.`,
+        },
+      };
+
+      const toast = eventToasts[event.action];
+      if (toast) {
+        toastSuccessAndFailure({
+          ...toast,
+          enqueueSnackbar,
+          eventStatus: event.status,
+        });
       }
     },
   });
@@ -234,22 +171,22 @@ export const useToastNotifications = () => {
 interface ToastOptions {
   enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'];
   eventStatus: EventStatus;
-  persistSuccessMessage?: boolean;
-  persistFailureMessage?: boolean;
-  successMessage?: string;
   failureMessage?: string;
   link?: JSX.Element;
+  persistFailureMessage?: boolean;
+  persistSuccessMessage?: boolean;
+  successMessage?: string;
 }
 
 const toastSuccessAndFailure = (options: ToastOptions) => {
   const {
     enqueueSnackbar,
     eventStatus,
-    persistSuccessMessage,
-    persistFailureMessage,
-    successMessage,
     failureMessage,
     link,
+    persistFailureMessage,
+    persistSuccessMessage,
+    successMessage,
   } = options;
   let formattedFailureMessage;
 
@@ -258,8 +195,8 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
     Boolean(successMessage)
   ) {
     return enqueueSnackbar(successMessage, {
-      variant: 'success',
       persist: persistSuccessMessage,
+      variant: 'success',
     });
   } else if (['failed'].includes(eventStatus) && Boolean(failureMessage)) {
     const hasSupportLink = failureMessage?.includes('contact Support') ?? false;
@@ -277,8 +214,8 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
     );
 
     return enqueueSnackbar(formattedFailureMessage ?? failureMessage, {
-      variant: 'error',
       persist: persistFailureMessage,
+      variant: 'error',
     });
   } else {
     return;
@@ -287,7 +224,7 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
-    <StyledToastNotificationLink to={link} onClick={handleClick}>
+    <StyledToastNotificationLink onClick={handleClick} to={link}>
       {text}
     </StyledToastNotificationLink>
   );

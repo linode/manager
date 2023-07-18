@@ -11,6 +11,7 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
+
 import {
   DISABLE_EVENT_THROTTLE,
   INTERVAL,
@@ -127,8 +128,8 @@ const useEventsPolling = (
 ) => {
   const queryKey = eventsPollingQueryKey(customFilter);
   const {
-    pollingInterval,
     incrementPollingInterval,
+    pollingInterval,
     resetPollingInterval,
   } = usePollingInterval(queryKey);
 
@@ -153,10 +154,6 @@ const useEventsPolling = (
       ).then((response) => response.data),
     {
       enabled,
-      refetchInterval: pollingInterval,
-      retryDelay: 5000,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
       onSuccess: (events) => {
         incrementPollingInterval();
         const newLatestEventTime = events.reduce(
@@ -176,6 +173,10 @@ const useEventsPolling = (
 
         events.reverse().forEach(eventHandler);
       },
+      refetchInterval: pollingInterval,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retryDelay: 5000,
     }
   );
 
@@ -189,14 +190,14 @@ const usePollingInterval = (pollingQueryKey: QueryKey) => {
     queryClient.getQueryData<number>(queryKey)
   );
   return {
-    pollingInterval: DISABLE_EVENT_THROTTLE
-      ? 500
-      : intervalMultiplier * INTERVAL,
     incrementPollingInterval: () =>
       queryClient.setQueryData<number>(
         queryKey,
         Math.min(intervalMultiplier + 1, 16)
       ),
+    pollingInterval: DISABLE_EVENT_THROTTLE
+      ? 500
+      : intervalMultiplier * INTERVAL,
     resetPollingInterval: () => queryClient.setQueryData<number>(queryKey, 1),
   };
 };
@@ -228,7 +229,7 @@ const updateEventsCache = (
   }
 };
 
-type EventLocation = { pageIdx: number; eventIdx: number };
+type EventLocation = { eventIdx: number; pageIdx: number };
 
 const locateEvent = (
   eventsCache: InfiniteData<ResourcePage<Event>>,
@@ -238,7 +239,7 @@ const locateEvent = (
     const page = eventsCache.pages[pageIdx];
     for (let eventIdx = 0; eventIdx < page.data.length; eventIdx++) {
       if (page.data[eventIdx].id === eventId) {
-        return { pageIdx, eventIdx };
+        return { eventIdx, pageIdx };
       }
     }
   }

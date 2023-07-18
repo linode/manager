@@ -1,6 +1,7 @@
 import { Event } from '@linode/api-v4';
 import React from 'react';
 import { QueryClient, useQueryClient } from 'react-query';
+
 import { oauthClientsEventHandler } from 'src/queries/accountOAuth';
 import { databaseEventsHandler } from 'src/queries/databases';
 import { domainEventsHandler } from 'src/queries/domains';
