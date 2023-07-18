@@ -1,5 +1,6 @@
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
+import { ErrorBoundary } from '@sentry/react';
 import 'highlight.js/styles/a11y-dark.css';
 import 'highlight.js/styles/a11y-light.css';
 import * as React from 'react';
@@ -14,7 +15,6 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import GoTo from './GoTo';
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
-import { ErrorBoundary } from './components/ErrorBoundary';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAppEventHandlers } from './hooks/useAppEventHandlers';
