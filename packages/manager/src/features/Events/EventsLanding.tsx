@@ -23,7 +23,6 @@ import { Typography } from 'src/components/Typography';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
-import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
@@ -272,8 +271,8 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     props.inProgressEvents,
   ]);
 
-  const { emptyMessage, entitiesLoading, entityId, errorMessage } = props;
-  const isLoading = loading || entitiesLoading;
+  const { emptyMessage, entityId, errorMessage } = props;
+  const isLoading = loading;
 
   return (
     <>
@@ -391,14 +390,12 @@ export const renderTableBody = (
 };
 
 interface StateProps {
-  entitiesLoading: boolean;
   eventsFromRedux: ExtendedEvent[];
   inProgressEvents: Record<number, number>;
   mostRecentEventTime: string;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-  entitiesLoading: areEntitiesLoading(state.__resources),
   eventsFromRedux: state.events.events,
   inProgressEvents: state.events.inProgressEvents,
   mostRecentEventTime: state.events.mostRecentEventTime,

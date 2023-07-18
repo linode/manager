@@ -8,11 +8,8 @@ import {
 import { Domain } from '@linode/api-v4/lib/domains';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
 
-import { ApplicationState } from 'src/store';
-import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import {
   bucketToSearchableItem,
   domainToSearchableItem,
@@ -73,15 +70,7 @@ export default () => (Component: React.ComponentType<any>) => {
     });
   };
 
-  const connected = connect((state: ApplicationState) => {
-    return {
-      entities: [],
-      entitiesLoading: entitiesLoading(state.__resources),
-    };
-  });
-
   return compose<SearchProps, {}>(
-    connected,
     withStateHandlers<any, any, any>(
       { searchResultsByEntity: emptyResults },
       {
