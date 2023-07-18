@@ -1,13 +1,10 @@
+import type { Region } from '@linode/api-v4';
 import 'cypress-file-upload';
-import { describeRegions } from 'support/util/regions';
+import { imageUploadProcessingTimeout } from 'support/constants/images';
+import { interceptUploadImage } from 'support/intercepts/images';
 import { ui } from 'support/ui';
 import { randomLabel, randomPhrase } from 'support/util/random';
-import { interceptUploadImage } from 'support/intercepts/images';
-import type { Region } from '@linode/api-v4';
-
-// Length of time to wait for Image to finish processing, milliseconds.
-// 5 minutes.
-const imageProcessingTimeout = 300000;
+import { describeRegions } from 'support/util/regions';
 
 describeRegions('Upload Machine Images', (region: Region) => {
   it('can upload a machine image', () => {
@@ -47,7 +44,7 @@ describeRegions('Upload Machine Images', (region: Region) => {
     cy.findByText(imageLabel).should('be.visible');
 
     ui.toast.assertMessage(`Image ${imageLabel} is now available.`, {
-      timeout: imageProcessingTimeout,
+      timeout: imageUploadProcessingTimeout,
     });
 
     cy.findByText(imageLabel)
