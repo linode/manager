@@ -30,7 +30,7 @@ export const getAccountBetas = (params?: Params, filter?: Filter) =>
  */
 export const getAccountBeta = (betaId: string) =>
   Request<AccountBeta>(
-    setURL(`${API_ROOT}/account/betas/${betaId}`),
+    setURL(`${API_ROOT}/account/betas/${encodeURIComponent(betaId)}`),
     setMethod('GET')
   );
 
