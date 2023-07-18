@@ -217,7 +217,7 @@ export const PhoneVerification = () => {
                 </Typography>
                 <LinkButton
                   onClick={onEdit}
-                  style={{ position: 'relative', top: -2 }}
+                  style={{ bottom: 2, position: 'relative' }}
                 >
                   Edit
                 </LinkButton>
