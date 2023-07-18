@@ -42,16 +42,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   link: {
-    '&:hover, &:focus': {
-      color: theme.color.black,
-      textDecoration: 'underline',
-    },
-    color: theme.palette.text.primary,
     fontSize: '90%',
     [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(1),
     },
-    transition: theme.transitions.create('color'),
   },
   linkContainer: {
     [theme.breakpoints.down('sm')]: {
@@ -92,7 +86,11 @@ export const Footer = React.memo((props: Props) => {
             [classes.linkContainer]: true,
           })}
         >
-          <Link className={classes.link} to="https://developers.linode.com">
+          <Link
+            className={classes.link}
+            forceCopyColor
+            to="https://developers.linode.com"
+          >
             API Reference
           </Link>
         </Grid>
@@ -102,7 +100,7 @@ export const Footer = React.memo((props: Props) => {
             [classes.linkContainer]: true,
           })}
         >
-          <Link className={classes.link} to={FEEDBACK_LINK}>
+          <Link className={classes.link} forceCopyColor to={FEEDBACK_LINK}>
             Provide Feedback
           </Link>
         </Grid>
@@ -120,6 +118,7 @@ const renderVersion = (className: string) => {
   return (
     <Link
       className={className}
+      forceCopyColor
       to={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
     >
       v{VERSION}
