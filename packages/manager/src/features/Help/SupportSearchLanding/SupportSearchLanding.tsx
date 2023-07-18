@@ -90,7 +90,7 @@ export class SupportSearchLanding extends React.Component<
     const [docs, community] = searchResults;
 
     return (
-      <Grid container direction="column">
+      <Grid container direction="column" sx={{ margin: '8px' }}>
         <Box
           sx={{
             marginBottom: '16px',

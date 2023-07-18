@@ -84,11 +84,12 @@ export const PopularPosts = () => {
           </Typography>
           {renderPopularDocs()}
         </Grid>
-        <Grid data-qa-community-link sm={6} sx={withSeparator} xs={12}></Grid>
-        <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h3">
-          Most Popular Community Posts:
-        </Typography>
-        {renderPopularForumPosts()}
+        <Grid data-qa-community-link sm={6} sx={withSeparator} xs={12}>
+          <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h3">
+            Most Popular Community Posts:
+          </Typography>
+          {renderPopularForumPosts()}
+        </Grid>
       </Grid>
     </Paper>
   );
@@ -101,7 +102,9 @@ const StyledPostDiv = styled('div', {
   ...theme.typography.body1,
 }));
 
-const StyledExternalLink = styled(ExternalLink)(({ theme }) => ({
+const StyledExternalLink = styled(ExternalLink, {
+  label: 'StyledExternalLink',
+})(({ theme }) => ({
   '&:hover': {
     color: theme.palette.primary.main,
     textDecoration: 'underline',

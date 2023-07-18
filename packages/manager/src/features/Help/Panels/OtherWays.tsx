@@ -39,8 +39,7 @@ export const OtherWays = () => {
         </Grid>
         <Grid sm={6} xs={12}>
           <Tile
-            description={`Ask questions, find answers, and connect with other members
-              of the Linode Community.`}
+            description="Ask questions, find answers, and connect with other members of the Linode Community."
             icon={<Community />}
             link="https://linode.com/community/questions"
             title="Community Q&A"
