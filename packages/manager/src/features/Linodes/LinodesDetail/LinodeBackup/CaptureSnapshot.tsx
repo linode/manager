@@ -11,7 +11,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -50,6 +50,8 @@ export const CaptureSnapshot = ({ isReadOnly, linodeId }: Props) => {
     isLoading: isSnapshotLoading,
     mutateAsync: takeSnapshot,
   } = useLinodeBackupSnapshotMutation(linodeId);
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const [
     isSnapshotConfirmationDialogOpen,

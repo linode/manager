@@ -29,7 +29,7 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { EventWithStore } from 'src/events';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
@@ -197,10 +197,10 @@ export const useInfiniteNodebalancersQuery = (filter: Filter) =>
     }
   );
 
-export const nodebalanacerEventHandler = ({
+export const nodebalanacerEventHandler: AppEventHandler = (
   event,
-  queryClient,
-}: EventWithStore) => {
+  queryClient
+) => {
   if (event.action.startsWith('nodebalancer_config')) {
     queryClient.invalidateQueries([
       queryKey,

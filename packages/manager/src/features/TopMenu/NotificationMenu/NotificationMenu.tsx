@@ -89,7 +89,9 @@ export const NotificationMenu = () => {
   React.useEffect(() => {
     if (prevOpen && !notificationContext.menuOpen) {
       // Dismiss seen notifications after the menu has closed.
-      markEventsAsSeen(eventNotifications[0].originalId);
+      if (eventNotifications.length > 0) {
+        markEventsAsSeen(eventNotifications[0].originalId);
+      }
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
   }, [

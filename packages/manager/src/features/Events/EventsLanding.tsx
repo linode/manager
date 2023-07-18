@@ -21,9 +21,12 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { Typography } from 'src/components/Typography';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { ApplicationState } from 'src/store';
-import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
-import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
+import {
+  isInProgressEvent,
+  removeBlocklistedEvents,
+} from 'src/utilities/eventUtils';
+import { partition } from 'src/utilities/partition';
 
 import EventRow from './EventRow';
 
@@ -76,18 +79,19 @@ export const EventsLanding = (props: CombinedProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    data: eventsData,
     error,
+    events,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useEventsInfiniteQuery(filter);
+  } = useEventsInfiniteQuery({ filter });
 
-  const events = eventsData?.pages.reduce(
-    (events, page) => [...events, ...page.data],
-    []
+  const [inProgressEvents, completedEvents] = partition(
+    isInProgressEvent,
+    events ?? []
   );
+  const sortedEvents = [...inProgressEvents, ...completedEvents];
 
   const loading = isLoading || isFetchingNextPage || entitiesLoading;
 
@@ -134,20 +138,20 @@ export const EventsLanding = (props: CombinedProps) => {
             errorMessage,
             entityId,
             error ? 'Error' : undefined,
-            events,
+            sortedEvents,
             emptyMessage
           )}
         </TableBody>
       </Table>
-      {hasNextPage && events !== undefined && !loading ? (
+      {hasNextPage && sortedEvents !== undefined && !loading ? (
         <Waypoint onEnter={() => fetchNextPage()}>
           <div />
         </Waypoint>
       ) : (
         !loading &&
         !error &&
-        events &&
-        events.length > 0 && (
+        sortedEvents &&
+        sortedEvents.length > 0 && (
           <Typography className={classes.noMoreEvents}>
             No more events to show
           </Typography>
@@ -207,16 +211,10 @@ export const renderTableBody = (
 
 interface StateProps {
   entitiesLoading: boolean;
-  eventsFromRedux: ExtendedEvent[];
-  inProgressEvents: Record<number, number>;
-  mostRecentEventTime: string;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
   entitiesLoading: areEntitiesLoading(state.__resources),
-  eventsFromRedux: state.events.events,
-  inProgressEvents: state.events.inProgressEvents,
-  mostRecentEventTime: state.events.mostRecentEventTime,
 });
 
 const connected = connect(mapStateToProps);

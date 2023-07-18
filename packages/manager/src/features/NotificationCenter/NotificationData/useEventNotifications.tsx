@@ -1,11 +1,12 @@
 import { Event, EventAction } from '@linode/api-v4';
-import { partition } from 'ramda';
 import * as React from 'react';
 
 import { useEventsInfiniteQuery } from 'src/queries/events';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
-import { ExtendedEvent } from 'src/store/events/event.types';
-import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
+import {
+  isInProgressEvent,
+  removeBlocklistedEvents,
+} from 'src/utilities/eventUtils';
+import { partition } from 'src/utilities/partition';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
@@ -22,16 +23,17 @@ const unwantedEvents: EventAction[] = [
 ];
 
 export const useEventNotifications = () => {
-  const { data: eventsData } = useEventsInfiniteQuery();
-  const events = removeBlocklistedEvents(
-    eventsData?.pages
-      .reduce((events, page) => [...events, ...page.data], [])
-      .slice(0, 25),
+  const { events } = useEventsInfiniteQuery();
+  const filteredEvents = removeBlocklistedEvents(
+    events?.slice(0, 25),
     unwantedEvents
   );
   const notificationContext = React.useContext(_notificationContext);
 
-  const [inProgress, completed] = partition<Event>(isInProgressEvent, events);
+  const [inProgress, completed] = partition<Event>(
+    isInProgressEvent,
+    filteredEvents
+  );
 
   const allEvents = [
     ...inProgress.map((thisEvent) =>
@@ -48,7 +50,7 @@ export const useEventNotifications = () => {
 };
 
 const formatEventForDisplay = (
-  event: ExtendedEvent,
+  event: Event,
   onClose: () => void
 ): NotificationItem => ({
   body: <RenderEvent event={event} onClose={onClose} />,
@@ -58,7 +60,7 @@ const formatEventForDisplay = (
 });
 
 const formatProgressEventForDisplay = (
-  event: ExtendedEvent,
+  event: Event,
   onClose: () => void
 ): NotificationItem => ({
   body: <RenderProgressEvent event={event} onClose={onClose} />,

@@ -1,4 +1,5 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import { FormControl, FormControlLabel, FormHelperText } from '@mui/material';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -9,10 +10,7 @@ import { Checkbox } from 'src/components/Checkbox';
 import Drawer from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
-import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
   useAllLinodesQuery,
@@ -31,6 +29,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   const { backup, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: linode } = useLinodeQuery(linodeId, open);
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const {
     data: linodes,

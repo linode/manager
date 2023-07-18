@@ -1,12 +1,7 @@
-import {
-  Event,
-  getEvents,
-  markEventRead,
-  markEventSeen,
-} from '@linode/api-v4/lib/account';
+import { Event, getEvents, markEventSeen } from '@linode/api-v4/lib/account';
 import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   InfiniteData,
   QueryClient,
@@ -16,108 +11,102 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { INTERVAL, ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
-import { generateInFilter } from 'src/utilities/requestFilters';
+
+import {
+  DISABLE_EVENT_THROTTLE,
+  INTERVAL,
+  ISO_DATETIME_NO_TZ_FORMAT,
+} from 'src/constants';
+import { parseAPIDate } from 'src/utilities/date';
+import {
+  isInProgressEvent,
+  isLongPendingEvent,
+  mostRecentCreated,
+} from 'src/utilities/eventUtils';
+import { generatePollingFilter } from 'src/utilities/requestFilters';
 
 const queryKey = 'events';
-const eventsPollingQueryKey = (filter?: Filter) => [
-  queryKey,
-  'polling',
-  filter,
-];
 const infiniteEventsQueryKey = (filter: Filter | undefined = {}) => [
   queryKey,
   'infinite',
   ...(filter ? [filter] : []),
 ];
+const eventsPollingQueryKey = (filter?: Filter) => [
+  queryKey,
+  'polling',
+  filter,
+];
+const pollingIntervalQueryKey = (pollingQueryKey: QueryKey) => [
+  queryKey,
+  'interval',
+  pollingQueryKey,
+];
 
-export const useEventsPolling = (options: {
+export interface EventsQueryOptions {
   enabled?: boolean;
   eventHandler?: (event: Event) => void;
   filter?: Filter;
-}) => {
+}
+
+export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
   const { enabled = true, eventHandler, filter } = options;
 
-  const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
-  const [mountTime] = React.useState(Date.now);
-
-  useQuery<Event[], APIError[]>(
-    eventsPollingQueryKey(filter),
-    async () => {
-      const events = await getEvents(
-        { page_size: 25 },
-        {
-          read: false,
-          created: {
-            '+gte': DateTime.fromMillis(mountTime, { zone: 'utc' }).toFormat(
-              ISO_DATETIME_NO_TZ_FORMAT
-            ),
-          },
-          ...filter,
-        }
-      ).then((response) => response.data);
-      await markCompletedEventsAsRead(events);
-      setIntervalMultiplier(Math.min(intervalMultiplier + 1, 16));
-      return events;
-    },
-    {
-      enabled,
-      refetchInterval: INTERVAL * intervalMultiplier,
-      retryDelay: 5000,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      onSuccess: (events) =>
-        eventHandler && events.reverse().forEach(eventHandler),
-    }
-  );
-
-  return { resetEventsPolling: () => setIntervalMultiplier(1) };
-};
-
-export const useEventsInfiniteQuery = (filter?: Filter) => {
   const queryClient = useQueryClient();
   const queryKey = infiniteEventsQueryKey(filter);
 
-  const eventsCache = queryClient.getQueryData<
-    InfiniteData<ResourcePage<Event>>
-  >(queryKey);
-
-  const incompleteEvents = React.useMemo(
-    () =>
-      eventsCache?.pages
-        .reduce((events, page) => [...events, ...page.data], [])
-        .filter(incompleteEvent),
-    [eventsCache]
+  const [mountTimestamp] = useState<string>(() =>
+    DateTime.fromMillis(Date.now(), { zone: 'utc' }).toFormat(
+      ISO_DATETIME_NO_TZ_FORMAT
+    )
   );
 
-  // Update existing events or invalidate when new events come in
-  useEventsPolling({
-    eventHandler: (event) => updateEventsCache(queryClient, queryKey, event),
-    filter,
-  });
-  useEventsPolling({
-    enabled: incompleteEvents && incompleteEvents.length > 0,
-    eventHandler: (event) => updateEventsCache(queryClient, queryKey, event),
-    filter: {
-      created: undefined,
-      '+or': [
-        ...generateInFilter(
-          'id',
-          incompleteEvents?.map((event) => event.id) ?? []
-        ),
-      ],
-    },
-  });
+  const incompleteEvents = queryClient
+    .getQueryData<InfiniteData<ResourcePage<Event>>>(queryKey)
+    ?.pages.reduce((events, page) => [...events, ...page.data], [])
+    .filter(incompleteEvent);
 
-  return useInfiniteQuery<ResourcePage<Event>, APIError[]>(
+  const pollingEventHandler = React.useCallback(
+    (event: Event) => {
+      updateEventsCache(queryClient, queryKey, event);
+      if (eventHandler) {
+        eventHandler(event);
+      }
+    },
+    [eventHandler, queryClient, queryKey]
+  );
+
+  // Poll for new events and updates to in-progress events
+  const { resetEventsPolling } = useEventsPolling(
+    incompleteEvents ?? [],
+    enabled,
+    pollingEventHandler,
+    filter
+  );
+
+  const queryResult = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     queryKey,
-    ({ pageParam }) => getEvents({ page: pageParam, page_size: 25 }, filter),
+    ({ pageParam }) =>
+      getEvents(
+        { page: pageParam, page_size: 25 },
+        {
+          created: { '+lte': mountTimestamp }, // Exclude new events as these will offset the page ordering
+          ...filter,
+        }
+      ),
     {
       getNextPageParam: ({ page, pages }) =>
         page < pages ? page + 1 : undefined,
     }
   );
+
+  return {
+    ...queryResult,
+    events: queryResult.data?.pages.reduce(
+      (events, page) => [...events, ...page.data],
+      []
+    ),
+    resetEventsPolling,
+  };
 };
 
 export const useMarkEventsAsSeen = () => {
@@ -131,6 +120,88 @@ export const useMarkEventsAsSeen = () => {
   );
 };
 
+const useEventsPolling = (
+  inProgressEvents: Event[],
+  enabled: boolean,
+  eventHandler: (event: Event) => void,
+  customFilter: Filter = {}
+) => {
+  const queryKey = eventsPollingQueryKey(customFilter);
+  const {
+    incrementPollingInterval,
+    pollingInterval,
+    resetPollingInterval,
+  } = usePollingInterval(queryKey);
+
+  // This solves the 'split-second' problem:
+  // We overlap the filter by 1 second to avoid missing events that occurred just after we polled (during the same second).
+  // We keep track of the latest completed events and specifically filter them out to avoid duplication.
+  const [latestEventTime, setLatestEventTime] = React.useState(Date.now);
+  const [ignoreEvents, setIgnoreEvents] = React.useState<Event[]>();
+
+  useQuery<Event[], APIError[]>(
+    queryKey,
+    () =>
+      getEvents(
+        undefined,
+        generatePollingFilter(
+          DateTime.fromMillis(latestEventTime, { zone: 'utc' }).toFormat(
+            ISO_DATETIME_NO_TZ_FORMAT
+          ),
+          inProgressEvents.map((event) => event.id),
+          ignoreEvents?.map((event) => event.id)
+        )
+      ).then((response) => response.data),
+    {
+      enabled,
+      onSuccess: (events) => {
+        incrementPollingInterval();
+        const newLatestEventTime = events.reduce(
+          mostRecentCreated,
+          latestEventTime
+        );
+
+        setLatestEventTime(newLatestEventTime);
+        setIgnoreEvents(
+          [...(ignoreEvents ?? []), ...events].filter(
+            (event) =>
+              parseAPIDate(event.created).valueOf() === newLatestEventTime &&
+              !isInProgressEvent(event) &&
+              !isLongPendingEvent(event)
+          )
+        );
+
+        events.reverse().forEach(eventHandler);
+      },
+      refetchInterval: pollingInterval,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retryDelay: 5000,
+    }
+  );
+
+  return { resetEventsPolling: resetPollingInterval };
+};
+
+const usePollingInterval = (pollingQueryKey: QueryKey) => {
+  const queryKey = pollingIntervalQueryKey(pollingQueryKey);
+  const queryClient = useQueryClient();
+  const { data: intervalMultiplier = 1 } = useQuery(queryKey, () =>
+    queryClient.getQueryData<number>(queryKey)
+  );
+  return {
+    incrementPollingInterval: () =>
+      queryClient.setQueryData<number>(
+        queryKey,
+        Math.min(intervalMultiplier + 1, 16)
+      ),
+    pollingInterval: DISABLE_EVENT_THROTTLE
+      ? 500
+      : intervalMultiplier * INTERVAL,
+    resetPollingInterval: () => queryClient.setQueryData<number>(queryKey, 1),
+  };
+};
+
 const updateEventsCache = (
   queryClient: QueryClient,
   queryKey: QueryKey,
@@ -140,36 +211,39 @@ const updateEventsCache = (
     InfiniteData<ResourcePage<Event>>
   >(queryKey);
 
-  if (eventsCache) {
+  if (eventsCache?.pages.length) {
     const eventLocation = locateEvent(eventsCache, event.id);
     if (eventLocation) {
       eventsCache.pages[eventLocation.pageIdx].data[
         eventLocation.eventIdx
       ] = event;
-      queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
-        queryKey,
-        eventsCache
-      );
     } else {
-      queryClient.invalidateQueries(queryKey);
+      eventsCache.pages[0].data.unshift(event);
+      eventsCache.pages[0].results++;
     }
+
+    queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
+      queryKey,
+      eventsCache
+    );
   }
 };
 
-type EventLocation = { pageIdx: number; eventIdx: number };
+type EventLocation = { eventIdx: number; pageIdx: number };
 
 const locateEvent = (
   eventsCache: InfiniteData<ResourcePage<Event>>,
   eventId: number
-): EventLocation | void => {
+): EventLocation | undefined => {
   for (let pageIdx = 0; pageIdx < eventsCache.pages.length; pageIdx++) {
     const page = eventsCache.pages[pageIdx];
     for (let eventIdx = 0; eventIdx < page.data.length; eventIdx++) {
       if (page.data[eventIdx].id === eventId) {
-        return { pageIdx, eventIdx };
+        return { eventIdx, pageIdx };
       }
     }
   }
+  return undefined;
 };
 
 const incompleteEvent = (event: Event) =>
@@ -178,31 +252,23 @@ const incompleteEvent = (event: Event) =>
   // The same event will change its status from `notification` to `finished`.
   (event.action === 'database_create' && event.status === 'notification');
 
-const markCompletedEventsAsRead = async (events: Event[]) => {
-  const completedEvents = events.filter((event) => !incompleteEvent(event));
-  await Promise.all(completedEvents.map((event) => markEventRead(event.id)));
-};
-
 const updateSeenEvents = (latestId: number, queryClient: QueryClient) => {
   for (const [queryKey, data] of queryClient.getQueriesData<
     InfiniteData<ResourcePage<Event>>
   >(infiniteEventsQueryKey(undefined))) {
     let foundLatestSeenEvent = false;
-    const updatedData = {
-      ...data,
-      pages: data.pages.map((page) => ({
-        ...page,
-        data: page.data.map((event) =>
-          foundLatestSeenEvent || event.id === latestId
-            ? ((foundLatestSeenEvent = true), { ...event, seen: true })
-            : event
-        ),
-      })),
-    };
 
-    queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
-      queryKey,
-      updatedData
+    data.pages.forEach((page) =>
+      page.data.forEach((event) => {
+        if (event.id === latestId) {
+          foundLatestSeenEvent = true;
+        }
+        if (foundLatestSeenEvent) {
+          event.seen = true;
+        }
+      })
     );
+
+    queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(queryKey, data);
   }
 };
