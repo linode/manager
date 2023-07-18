@@ -51,7 +51,7 @@ const handleLoginChange = (provider: TPAProvider) => {
     : window.open(
         `${LOGIN_ROOT}/tpa/enable/` + `${provider}`,
         '_blank',
-        'noopener'
+        'noopener noreferrer'
       );
 };
 
@@ -70,9 +70,10 @@ const renderActions = (onClose: () => void, provider: TPAProvider) => {
           onClose();
           handleLoginChange(provider);
         }}
-        aria-describedby="external-site"
+        aria-label="Change login - opens in new tab"
         buttonType="primary"
         data-testid="confirm-login-change"
+        role="link"
       >
         Change login
       </Button>
