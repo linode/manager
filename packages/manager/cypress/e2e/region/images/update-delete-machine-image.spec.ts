@@ -60,7 +60,7 @@ describeRegions('Delete Machine Images', (region: Region) => {
    * - Confirms that Image can be deleted.
    * - Confirms that deleted Image is removed from the landing page.
    */
-  it('can update and delete a machine image', () => {
+  it('can update and delete a Machine Image', () => {
     const newLabel = randomLabel();
     const newDescription = randomPhrase();
 
