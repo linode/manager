@@ -13,11 +13,13 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
+import useFlags from 'src/hooks/useFlags';
 import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
-import { AttachVLAN } from './AttachVLAN';
+import AttachVLAN from './AttachVLAN';
+import { VLANAccordion } from './VLANAccordion';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addons: {
@@ -88,6 +90,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
 
   const { data: image } = useImageQuery(
     selectedImageID ?? '',
@@ -163,8 +166,21 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   return (
     <>
-      {showVlans && (
-        <AttachVLAN
+      {!flags.vpc &&
+        showVlans && ( // @TODO Delete this conditional and AttachVLAN component once VPC is released
+          <AttachVLAN
+            handleVLANChange={handleVLANChange}
+            helperText={vlanDisabledReason}
+            ipamAddress={ipamAddress}
+            ipamError={ipamError}
+            labelError={labelError}
+            readOnly={disabled || Boolean(vlanDisabledReason)}
+            region={selectedRegionID}
+            vlanLabel={vlanLabel}
+          />
+        )}
+      {flags.vpc && showVlans && (
+        <VLANAccordion
           handleVLANChange={handleVLANChange}
           helperText={vlanDisabledReason}
           ipamAddress={ipamAddress}
