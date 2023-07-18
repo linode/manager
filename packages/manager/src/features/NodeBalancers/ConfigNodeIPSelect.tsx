@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import type { TextFieldProps } from 'src/components/TextField';
@@ -23,7 +23,12 @@ export const ConfigNodeIPSelect = React.memo(
     const { handleChange: _handleChange, inputId } = props;
 
     const handleChange = (linode: Linode) => {
+      if (!linode?.id) {
+        return;
+      }
+
       setSelectedLinode(linode.id);
+
       const thisLinodesPrivateIP = linode.ipv4.find((ipv4) =>
         ipv4.match(privateIPRegex)
       );
@@ -35,41 +40,19 @@ export const ConfigNodeIPSelect = React.memo(
     };
 
     return (
-      <LinodeSelect
+      <LinodeSelectV2
+        id={inputId}
         noMarginTop
-        inputId={inputId}
-        textFieldProps={props.textfieldProps}
-        value={
-          props.nodeAddress
-            ? {
-                value: props.nodeAddress,
-                label: props.nodeAddress,
-              }
-            : null
-        }
-        selectedLinode={selectedLinode}
+        value={selectedLinode}
         noOptionsMessage={`No options - please ensure you have at least 1 Linode
       with a private IP located in the selected region.`}
-        generalError={props.errorText}
-        handleChange={handleChange}
-        label="IP Address"
+        errorText={props.errorText}
+        onSelectionChange={handleChange}
         disabled={props.disabled}
-        small
-        placeholder="Enter IP Address"
-        valueOverride={(linode) => {
-          return linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex));
-        }}
-        labelOverride={(linode) => {
-          return (
-            <div>
-              <strong>
-                {linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
-              </strong>
-              <div>{` ${linode.label}`}</div>
-            </div>
-          );
-        }}
-        filterCondition={(linode) => {
+        placeholder="IP Address"
+        clearable
+        showIPAddressLabel
+        optionsFilter={(linode) => {
           /**
            * if the Linode doesn't have an private IP OR if the Linode
            * is in a different region that the NodeBalancer, don't show it

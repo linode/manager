@@ -1,27 +1,37 @@
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import {
+import type { Meta, StoryObj } from '@storybook/react';
+import type {
   LinodeMultiSelectProps,
-  LinodeSelectV2,
   LinodeSingleSelectProps,
 } from './LinodeSelectV2';
-
-/** Default Linode Select */
-export const Default: StoryObj<
-  LinodeSingleSelectProps | LinodeMultiSelectProps
-> = {
-  render: (args: LinodeSingleSelectProps | LinodeMultiSelectProps) => (
-    <LinodeSelectV2 {...args} />
-  ),
-};
-
-/* Linode Multi-select */
-export const MultiSelect: StoryObj<LinodeMultiSelectProps> = {
-  render: (args: LinodeMultiSelectProps) => <LinodeSelectV2 {...args} />,
-};
+import { LinodeSelectV2 } from './LinodeSelectV2';
+import { action } from '@storybook/addon-actions';
 
 const meta: Meta<LinodeSingleSelectProps | LinodeMultiSelectProps> = {
   title: 'Components/Linode Select',
   component: LinodeSelectV2,
+  argTypes: {
+    onSelectionChange: {
+      action: 'onSelectionChange',
+    },
+  },
+  args: {
+    onSelectionChange: action('onSelectionChange'),
+  },
 };
+
 export default meta;
+
+type Story = StoryObj<typeof LinodeSelectV2>;
+
+/** Default Linode Select */
+export const Default: Story = {
+  args: {},
+  render: (args) => <LinodeSelectV2 {...args} />,
+};
+
+/* Linode Multi-select */
+export const MultiSelect: Story = {
+  args: {},
+  render: (args) => <LinodeSelectV2 {...args} />,
+};

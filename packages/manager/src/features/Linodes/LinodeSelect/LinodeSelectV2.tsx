@@ -14,6 +14,7 @@ import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
 import { CustomPopper, RemoveIcon, SelectedIcon } from './LinodeSelect.styles';
 import { SxProps } from '@mui/system';
+import { privateIPRegex } from 'src/utilities/ipUtils';
 
 interface LinodeSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */
@@ -22,12 +23,18 @@ interface LinodeSelectProps {
   disabled?: boolean;
   /** Hint displayed with error styling. */
   errorText?: string;
+  /** The ID of the input. */
+  id?: string;
   /** Filter sent to the API when retrieving account Linodes. */
   filter?: Filter;
   /** Hint displayed in normal styling. */
   helperText?: string;
+  /** Overrides the default label. */
+  showIPAddressLabel?: boolean;
   /** Adds styling to indicate a loading state. */
   loading?: boolean;
+  /** Optionally disable top margin for input label */
+  noMarginTop?: boolean;
   /** Message displayed when no options match the user's search. */
   noOptionsMessage?: string;
   /** Called when the input loses focus. */
@@ -74,14 +81,17 @@ export const LinodeSelectV2 = (
     errorText,
     filter,
     helperText,
+    id,
     loading,
     multiple,
+    noMarginTop,
     noOptionsMessage,
     onBlur,
     onSelectionChange,
     optionsFilter,
     placeholder,
     region,
+    showIPAddressLabel,
     sx,
     value,
   } = props;
@@ -106,8 +116,23 @@ export const LinodeSelectV2 = (
     ? filteredLinodes?.filter(optionsFilter)
     : linodes;
 
+  const handleInputChange = (_: React.SyntheticEvent, value: string) => {
+    // Return the private IP address as the value for backend nodes in the NodeBalancer config
+    if (showIPAddressLabel) {
+      const privateIP = filteredLinodesByOptions
+        ?.find((linode) => linode.label === value)
+        ?.ipv4.find((eachIP) => eachIP.match(privateIPRegex));
+
+      // TODO: This is causing issues when trying to select a different Linode: http://localhost:3000/nodebalancers/create
+      return setInputValue(privateIP ?? '');
+    }
+
+    return setInputValue(value);
+  };
+
   return (
     <Autocomplete
+      id={id}
       value={mapIdsToLinodes(value, linodes)}
       options={filteredLinodesByOptions ?? []}
       getOptionLabel={(linode) => linode.label}
@@ -134,18 +159,19 @@ export const LinodeSelectV2 = (
       }
       renderInput={(params) => (
         <TextField
-          label="Linodes"
+          label={multiple ? 'Linodes' : 'Linode'}
           placeholder={
             placeholder || (multiple ? 'Select Linodes' : 'Select a Linode')
           }
           loading={linodesDataLoading}
           errorText={error?.[0].reason ?? errorText}
           helperText={helperText}
+          noMarginTop={noMarginTop}
           {...params}
         />
       )}
       inputValue={inputValue}
-      onInputChange={(_, value) => setInputValue(value)}
+      onInputChange={handleInputChange}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
@@ -159,19 +185,30 @@ export const LinodeSelectV2 = (
         },
       }}
       disableCloseOnSelect={multiple}
-      renderOption={(props, option, { selected }) => (
-        <li {...props}>
-          <Box
-            sx={{
-              flexGrow: 1,
-            }}
-          >
-            {option.label}
-          </Box>
-          <SelectedIcon visible={selected} />
-          {multiple && <RemoveIcon visible={selected} />}
-        </li>
-      )}
+      renderOption={(props, option, { selected }) => {
+        return (
+          <li {...props}>
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              {showIPAddressLabel ? (
+                <div>
+                  <strong>
+                    {option.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
+                  </strong>
+                  <div>{option.label}</div>
+                </div>
+              ) : (
+                option.label
+              )}
+            </Box>
+            <SelectedIcon visible={selected} />
+            {multiple && <RemoveIcon visible={selected} />}
+          </li>
+        );
+      }}
       PopperComponent={CustomPopper}
       popupIcon={<KeyboardArrowDownIcon />}
       disableClearable={!clearable}

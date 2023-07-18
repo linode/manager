@@ -392,6 +392,13 @@ export const lightTheme: ThemeOptions = {
     },
     MuiAutocomplete: {
       styleOverrides: {
+        hasPopupIcon: {
+          '&.MuiAutocomplete-root': {
+            '& .MuiAutocomplete-inputRoot': {
+              paddingRight: '34px',
+            },
+          },
+        },
         option: {
           fontSize: '0.9rem',
           padding: '10px !important',
@@ -412,7 +419,7 @@ export const lightTheme: ThemeOptions = {
         },
         endAdornment: {
           top: 'unset',
-          paddingRight: 8,
+          paddingRight: 4,
           '.MuiAutocomplete-clearIndicator': {
             visibility: 'visible !important',
           },
