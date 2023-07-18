@@ -2,15 +2,15 @@
  * @file Image update and deletion region tests.
  */
 
-import type { Region, Image } from '@linode/api-v4';
-import { describeRegions } from 'support/util/regions';
+import type { Image, Region } from '@linode/api-v4';
 import { uploadImage } from '@linode/api-v4';
-import { randomLabel, randomPhrase } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
-import { pollImageStatus } from 'support/util/polling';
-import { SimpleBackoffMethod } from 'support/util/backoff';
 import { imageUploadProcessingTimeout } from 'support/constants/images';
 import { ui } from 'support/ui';
+import { SimpleBackoffMethod } from 'support/util/backoff';
+import { pollImageStatus } from 'support/util/polling';
+import { randomLabel, randomPhrase } from 'support/util/random';
+import { describeRegions } from 'support/util/regions';
 
 /**
  * Uploads a machine image and waits for it to become available.
@@ -53,16 +53,26 @@ const uploadMachineImage = async (region: Region, data: Blob) => {
 
 authenticate();
 describeRegions('Delete Machine Images', (region: Region) => {
+  /*
+   * - Updates and deletes a Machine Image for the targeted region.
+   * - Confirms that Image label and description can be updated.
+   * - Confirms that landing page content changes to reflect updated Image.
+   * - Confirms that Image can be deleted.
+   * - Confirms that deleted Image is removed from the landing page.
+   */
   it('can update and delete a machine image', () => {
     const newLabel = randomLabel();
     const newDescription = randomPhrase();
 
+    // Upload a machine image using the `test-image.gz` fixture.
+    // Wait for machine image to become ready, then begin test.
     cy.fixture('machine-images/test-image.gz', null).then(
       (imageFileContents) => {
         cy.defer(uploadMachineImage(region, imageFileContents), {
           label: 'uploading Machine Image',
           timeout: imageUploadProcessingTimeout,
         }).then((image: Image) => {
+          // Navigate to Images landing page, find Image and click its Edit menu item.
           cy.visitWithLogin('/images');
           cy.findByText(image.label)
             .should('be.visible')
@@ -77,6 +87,7 @@ describeRegions('Delete Machine Images', (region: Region) => {
 
           ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
 
+          // Update Image label and description.
           ui.drawer
             .findByTitle('Edit Image')
             .should('be.visible')
@@ -100,6 +111,7 @@ describeRegions('Delete Machine Images', (region: Region) => {
                 .click();
             });
 
+          // Confirm that new label is shown on landing page, initiate delete.
           cy.findByText(newLabel)
             .should('be.visible')
             .closest('tr')
@@ -112,6 +124,7 @@ describeRegions('Delete Machine Images', (region: Region) => {
 
           ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
+          // Confirm Image delete prompt.
           ui.dialog
             .findByTitle(`Delete Image ${newLabel}`)
             .should('be.visible')
@@ -123,6 +136,7 @@ describeRegions('Delete Machine Images', (region: Region) => {
                 .click();
             });
 
+          // Confirm that Image is deleted successfully.
           ui.toast.assertMessage('Image has been scheduled for deletion.');
           ui.toast.assertMessage(`Image ${newLabel} deleted successfully.`);
           cy.findByText(image.label).should('not.exist');

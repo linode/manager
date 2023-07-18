@@ -59,12 +59,10 @@ describeRegions('Capture Machine Images', (region: Region) => {
 
       // Select Linode that we just created via the API.
       cy.findByLabelText('Linodes').should('be.visible').click();
-
       ui.autocompletePopper.findByTitle(linode.label).click();
 
       // Select the Linode's disk.
       cy.contains('Select a Disk').click().type(disk.label);
-
       ui.autocompletePopper.findByTitle(disk.label).click();
 
       // Specify a label and description for the captured image, click submit.
@@ -90,6 +88,7 @@ describeRegions('Capture Machine Images', (region: Region) => {
       ui.toast.assertMessage(`Image ${imageLabel} created successfully.`, {
         timeout: imageCaptureProcessingTimeout,
       });
+
       cy.findByText(imageLabel)
         .should('be.visible')
         .closest('tr')
