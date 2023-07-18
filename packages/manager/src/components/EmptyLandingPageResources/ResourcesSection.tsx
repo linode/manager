@@ -1,10 +1,8 @@
 import * as React from 'react';
 
 import DocsIcon from 'src/assets/icons/docs.svg';
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import PointerIcon from 'src/assets/icons/pointer.svg';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
-import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
 import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
@@ -123,7 +121,9 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                 {...props}
               >
                 {gettingStartedGuidesData.moreInfo.text}
-                <ResourcesLinkIcon icon={<PointerIcon />} iconType="pointer" />
+                <span style={{ left: 2, position: 'relative', top: 4 }}>
+                  <PointerIcon />
+                </span>
               </ResourcesMoreLink>
             )}
             icon={<DocsIcon />}
@@ -144,10 +144,6 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                 {...props}
               >
                 {youtubeMoreLinkText}
-                <ResourcesLinkIcon
-                  icon={<ExternalLinkIcon />}
-                  iconType="external"
-                />
               </ResourcesMoreLink>
             )}
             icon={<YoutubeIcon />}
