@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import { WithTheme, withTheme } from '@mui/styles';
 import { Typography } from 'src/components/Typography';
-import GaugePercent from 'src/components/GaugePercent';
+import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';

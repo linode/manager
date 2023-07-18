@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { compose } from 'recompose';
-import { withTheme, WithTheme } from '@mui/styles';
-import { styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { Chart } from 'chart.js';
-import { isPropValid } from 'src/utilities/isPropValid';
+import {
+  StyledSubTitleDiv,
+  StyledInnerTextDiv,
+  StyledGaugeWrapperDiv,
+} from './GaugePercent.styles';
 
-interface Props {
+export interface GaugePercentProps {
   width?: number | string;
   height?: number;
   filledInColor?: string;
@@ -17,9 +19,8 @@ interface Props {
   subTitle?: string | JSX.Element | null;
 }
 
-type GaugePercentProps = Props & WithTheme;
-
-export const GaugePercent = (props: GaugePercentProps) => {
+export const GaugePercent = React.memo((props: GaugePercentProps) => {
+  const theme = useTheme();
   const width = props.width || 300;
   const height = props.height || 300;
 
@@ -38,14 +39,14 @@ export const GaugePercent = (props: GaugePercentProps) => {
     {
       borderWidth: 0,
       hoverBackgroundColor: [
-        props.filledInColor || props.theme.palette.primary.main,
-        props.nonFilledInColor || props.theme.color.grey2,
+        props.filledInColor || theme.palette.primary.main,
+        props.nonFilledInColor || theme.color.grey2,
       ],
       /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
       data: [props.value, finalMax],
       backgroundColor: [
-        props.filledInColor || props.theme.palette.primary.main,
-        props.nonFilledInColor || props.theme.color.grey2,
+        props.filledInColor || theme.palette.primary.main,
+        props.nonFilledInColor || theme.color.grey2,
       ],
     },
   ];
@@ -83,59 +84,27 @@ export const GaugePercent = (props: GaugePercentProps) => {
     }
   });
   return (
-    <StyledGaugeWrapperDiv {...props} height={height} width={width}>
+    <StyledGaugeWrapperDiv width={width} height={height}>
       <canvas height={height} ref={graphRef} />
       {props.innerText && (
         <StyledInnerTextDiv
           data-testid="gauge-innertext"
-          {...props}
-          height={height}
           width={width}
+          height={height}
         >
           {props.innerText}
         </StyledInnerTextDiv>
       )}
       {props.subTitle && (
-        <StyledSubTitleDiv data-testid="gauge-subtext" {...props}>
+        <StyledSubTitleDiv
+          data-testid="gauge-subtext"
+          width={width}
+          height={height}
+          innerTextFontSize={props.innerTextFontSize}
+        >
           {props.subTitle}
         </StyledSubTitleDiv>
       )}
     </StyledGaugeWrapperDiv>
   );
-};
-
-const StyledSubTitleDiv = styled('div', {
-  shouldForwardProp: (prop) =>
-    isPropValid(['width', 'height', 'innerTextFontSize'], prop),
-})<GaugePercentProps>(({ theme, ...props }) => ({
-  color: theme.color.headline,
-  fontSize: props.innerTextFontSize || theme.spacing(2.5),
-  position: 'absolute',
-  textAlign: 'center',
-  top: `calc(${props.height}px + ${theme.spacing(1.25)})`,
-  width: props.width,
-}));
-
-const StyledInnerTextDiv = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'height' && prop !== 'width',
-})<GaugePercentProps>(({ theme, height = 300, width }) => ({
-  position: 'absolute',
-  top: `calc(${height + 30}px / 2)`,
-  width: width,
-  textAlign: 'center',
-  fontSize: '1rem',
-  color: theme.palette.text.primary,
-}));
-
-const StyledGaugeWrapperDiv = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'height' && prop !== 'width',
-})<GaugePercentProps>(({ theme, height, width }) => ({
-  position: 'relative',
-  width: width,
-  height: `calc(${height}px + ${theme.spacing(3.75)})`,
-}));
-
-export default compose<GaugePercentProps, Props>(
-  React.memo,
-  withTheme
-)(GaugePercent);
+});
