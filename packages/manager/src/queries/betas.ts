@@ -19,4 +19,4 @@ export const useBetasQuery = (params?: Params, filter?: Filter) =>
   );
 
 export const useBetaQuery = (id: string) =>
-  useQuery<Beta, APIError[]>([queryKey, 'beta', id], () => getBeta(id), {});
+  useQuery<Beta, APIError[]>([queryKey, 'beta', id], () => getBeta(id));
