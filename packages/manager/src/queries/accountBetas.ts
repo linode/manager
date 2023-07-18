@@ -13,7 +13,7 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 
-export const queryKey = 'account-beta';
+export const queryKey = 'account-betas';
 
 export const useAccountBetasQuery = (params?: Params, filter?: Filter) =>
   useQuery<ResourcePage<AccountBeta>, APIError[]>(

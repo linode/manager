@@ -7,11 +7,11 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 
-export const queryKey = 'beta';
+export const queryKey = 'betas';
 
 export const useBetasQuery = (params?: Params, filter?: Filter) =>
   useQuery<ResourcePage<Beta>, APIError[]>(
-    [`${queryKey}-list`, params, filter],
+    [queryKey, 'paginated', params, filter],
     () => getBetas(params, filter),
     {
       keepPreviousData: true,
@@ -19,6 +19,4 @@ export const useBetasQuery = (params?: Params, filter?: Filter) =>
   );
 
 export const useBetaQuery = (id: string) =>
-  useQuery<Beta, APIError[]>([queryKey, id], () => getBeta(id), {
-    keepPreviousData: true,
-  });
+  useQuery<Beta, APIError[]>([queryKey, 'beta', id], () => getBeta(id), {});
