@@ -13,7 +13,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 export const Default: StoryObj<typeof TableFooter> = {
   args: {
-    children: <Typography>This is a table footer</Typography>,
+    children: (
+      <TableRow>
+        <TableCell colSpan={3}>
+          <Typography>This is a Table Footer</Typography>
+        </TableCell>
+      </TableRow>
+    ),
   },
   render: (args) => {
     return (
