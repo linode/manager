@@ -50,10 +50,8 @@ const renderBanner = (statusWarnings: string[]): JSX.Element => {
         {moreThanOneRegionAffected ? 'these facilities' : 'this facility'},
         there is no need to open a support ticket at this time. Please monitor
         our{` `}
-        <Link external hideIcon to="https://status.linode.com">
-          status blog
-        </Link>{' '}
-        for further information. Thank you for your patience and understanding.
+        <Link to="https://status.linode.com">status blog</Link> for further
+        information. Thank you for your patience and understanding.
       </Typography>
     </>
   );

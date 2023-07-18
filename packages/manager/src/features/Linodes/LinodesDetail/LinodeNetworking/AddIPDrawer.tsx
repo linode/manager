@@ -275,10 +275,7 @@ const AddIPDrawer = (props: Props) => {
         <Typography>
           IPv6 addresses are allocated as ranges, which you can choose to
           distribute and further route yourself.{' '}
-          <Link
-            external
-            to="https://www.linode.com/docs/guides/an-overview-of-ipv6-on-linode/"
-          >
+          <Link to="https://www.linode.com/docs/guides/an-overview-of-ipv6-on-linode/">
             Learn more
           </Link>
           .

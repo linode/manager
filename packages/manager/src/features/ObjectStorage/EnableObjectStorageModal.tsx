@@ -43,11 +43,7 @@ export const EnableObjectStorageModal = ({
         Linode Object Storage costs a flat rate of <strong>$5/month</strong>,
         and includes 250 GB of storage and 1 TB of outbound data transfer.
         Beyond that, it's <strong>$0.02 per GB per month.</strong>{' '}
-        <Link
-          external
-          fixedIcon
-          to="https://www.linode.com/docs/platform/object-storage/pricing-and-limitations/"
-        >
+        <Link to="https://www.linode.com/docs/platform/object-storage/pricing-and-limitations/">
           Learn more.
         </Link>
       </Typography>

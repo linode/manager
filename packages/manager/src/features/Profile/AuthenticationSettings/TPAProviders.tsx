@@ -139,7 +139,7 @@ export const TPAProviders = (props: Props) => {
             <StyledCopy variant="body1">
               If you need to reset your password or set up Two-Factor
               Authentication (2FA), please visit the{' '}
-              <Link external hideIcon to={currentProvider.href}>
+              <Link to={currentProvider.href}>
                 {`${currentProvider.displayName}` + ` website`}
               </Link>
               .

@@ -174,7 +174,6 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                 <Link
                   className={classes.link}
                   external
-                  hideIcon
                   to={selectedApp.website}
                 >
                   {selectedApp.website}
@@ -191,8 +190,6 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                   ).map((link, idx) => (
                     <Link
                       className={classes.link}
-                      external
-                      hideIcon
                       key={`${selectedApp.name}-guide-${idx}`}
                       to={link.href}
                     >

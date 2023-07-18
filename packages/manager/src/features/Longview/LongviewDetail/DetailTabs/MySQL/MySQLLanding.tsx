@@ -84,11 +84,7 @@ export const MySQLLanding: React.FC<Props> = (props) => {
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
-          <Link
-            external
-            fixedIcon
-            to="https://www.linode.com/docs/platform/longview/longview-app-for-mysql/#troubleshooting"
-          >
+          <Link to="https://www.linode.com/docs/platform/longview/longview-app-for-mysql/#troubleshooting">
             guide
           </Link>{' '}
           for help troubleshooting the MySQL Longview app.

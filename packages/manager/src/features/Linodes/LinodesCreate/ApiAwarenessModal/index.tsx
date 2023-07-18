@@ -135,8 +135,6 @@ const ApiAwarenessModal = (props: Props) => {
                 onClick={() =>
                   sendApiAwarenessClickEvent('link', 'personal access token')
                 }
-                external
-                hideIcon
                 to="/profile/tokens"
               >
                 personal access token
@@ -151,8 +149,6 @@ const ApiAwarenessModal = (props: Props) => {
                     'Get Started with the Linode API'
                   )
                 }
-                external
-                hideIcon
                 to="https://www.linode.com/docs/products/tools/api/get-started/"
               >
                 Get Started with the Linode API
@@ -162,8 +158,6 @@ const ApiAwarenessModal = (props: Props) => {
                 onClick={() =>
                   sendApiAwarenessClickEvent('link', 'Linode API Guides')
                 }
-                external
-                hideIcon
                 to="https://www.linode.com/docs/products/tools/api/guides/"
               >
                 Linode API Guides
@@ -187,8 +181,6 @@ const ApiAwarenessModal = (props: Props) => {
                     'Install and Configure the Linode CLI'
                   )
                 }
-                external
-                hideIcon
                 to="https://www.linode.com/docs/products/tools/cli/guides/install/"
               >
                 Install and Configure the Linode CLI
@@ -199,8 +191,6 @@ const ApiAwarenessModal = (props: Props) => {
                 onClick={() =>
                   sendApiAwarenessClickEvent('link', 'Linode CLI Guides')
                 }
-                external
-                hideIcon
                 to="https://www.linode.com/docs/products/tools/cli/guides/"
               >
                 Linode CLI Guides
@@ -222,8 +212,6 @@ const ApiAwarenessModal = (props: Props) => {
             onClick={() =>
               sendApiAwarenessClickEvent('link', 'Linode Terraform Provider')
             }
-            external
-            hideIcon
             to="https://www.linode.com/products/linode-terraform-provider/"
           >
             Linode Terraform Provider
@@ -233,18 +221,14 @@ const ApiAwarenessModal = (props: Props) => {
             onClick={() =>
               sendApiAwarenessClickEvent('link', 'Ansible Collection')
             }
-            external
-            hideIcon
             to="https://www.linode.com/products/linode-ansible-collection/"
           >
             Ansible Collection
           </Link>
           .{' '}
           <Link
-            hideIcon
-            external
-            to="https://www.linode.com/docs/products/tools/api/developers/"
             onClick={() => sendApiAwarenessClickEvent('link', 'View all tools')}
+            to="https://www.linode.com/docs/products/tools/api/developers/"
           >
             View all tools
           </Link>{' '}
