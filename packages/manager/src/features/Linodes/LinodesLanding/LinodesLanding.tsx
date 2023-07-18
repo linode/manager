@@ -1,11 +1,7 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
-import { MapDispatchToProps, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -23,13 +19,11 @@ import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.cont
 import { BackupsCTA } from 'src/features/Backups';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
-import { ApplicationState } from 'src/store';
-import { deleteLinode } from 'src/store/linodes/linode.requests';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
 } from 'src/utilities/analytics';
+import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
@@ -41,7 +35,10 @@ import CardView from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import { DisplayLinodes } from './DisplayLinodes';
-import styled, { StyleProps } from './LinodesLanding.styles';
+import {
+  StyledLinkContainerGrid,
+  StyledWrapperGrid,
+} from './LinodesLanding.styles';
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
@@ -83,7 +80,7 @@ interface Params {
 
 type RouteProps = RouteComponentProps<Params>;
 
-export interface Props {
+export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
   linodesData: LinodeWithMaintenance[];
   linodesRequestError?: APIError[];
@@ -91,18 +88,14 @@ export interface Props {
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
-type CombinedProps = Props &
+type CombinedProps = LinodesLandingProps &
   StateProps &
-  DispatchProps &
   RouteProps &
-  StyleProps &
   WithProfileProps;
 
-export class ListLinodes extends React.Component<CombinedProps, State> {
+class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
-      classes,
-      linodesCount,
       linodesData,
       linodesInTransition,
       linodesRequestError,
@@ -117,7 +110,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         : undefined;
 
     const componentProps = {
-      count: linodesCount,
       openDialog: this.openDialog,
       openPowerActionDialog: this.openPowerDialog,
       someLinodesHaveMaintenance: this.props
@@ -153,7 +145,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       return <CircleProgress />;
     }
 
-    if (this.props.linodesCount === 0) {
+    if (this.props.linodesData.length === 0) {
       return <LinodesLandingEmptyState />;
     }
 
@@ -306,15 +298,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           );
                         }}
                       </OrderBy>
-                      <Grid
-                        className={classes.CSVwrapper}
-                        container
-                        justifyContent="flex-end"
-                      >
-                        <Grid className={classes.CSVlinkContainer}>
+                      <StyledWrapperGrid container justifyContent="flex-end">
+                        <StyledLinkContainerGrid>
                           <LinodesLandingCSVDownload />
-                        </Grid>
-                      </Grid>
+                        </StyledLinkContainerGrid>
+                      </StyledWrapperGrid>
                     </React.Fragment>
                   );
                 }}
@@ -452,37 +440,20 @@ const sendGroupByAnalytic = (value: boolean) => {
 };
 
 interface StateProps {
-  linodesCount: number;
   linodesInTransition: Set<number>;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = (state) => {
+const mapStateToProps: MapState<StateProps, LinodesLandingProps> = (state) => {
   return {
-    linodesCount: state.__resources.linodes.results,
     linodesInTransition: _linodesInTransition(state.events.events),
   };
 };
 
-interface DispatchProps {
-  deleteLinode: (
-    linodeId: number,
-    queryClient: QueryClient
-  ) => Promise<Record<string, never>>;
-}
+const connected = connect(mapStateToProps, undefined);
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
-) => ({
-  deleteLinode: (linodeId: number, queryClient: QueryClient) =>
-    dispatch(deleteLinode({ linodeId, queryClient })),
-});
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
-export const enhanced = compose<CombinedProps, Props>(
+export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
   connected,
-  styled,
   withFeatureFlagConsumer,
   withProfile
 );

@@ -12,7 +12,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -76,7 +76,7 @@ export const ObjectDetailsDrawer = React.memo(
             <Link external to={url}>
               {truncateMiddle(url, 50)}
             </Link>
-            <StyledCopyTooltip text={url} />
+            <StyledCopyTooltip sx={{ marginLeft: 4 }} text={url} />
           </StyledLinkContainer>
         ) : null}
 

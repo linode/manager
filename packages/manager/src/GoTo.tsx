@@ -1,13 +1,13 @@
+import Dialog from '@mui/material/Dialog';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import MUIDialog from 'src/components/core/Dialog';
 
-import useAccountManagement from './hooks/useAccountManagement';
-import useFlags from './hooks/useFlags';
+import { useAccountManagement } from './hooks/useAccountManagement';
+import { useFlags } from './hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   input: {
@@ -58,9 +58,7 @@ interface Props {
   open: boolean;
 }
 
-type CombinedProps = Props;
-
-const GoTo: React.FC<CombinedProps> = (props) => {
+const GoTo = (props: Props) => {
   const classes = useStyles();
   const routerHistory = useHistory();
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
@@ -91,6 +89,11 @@ const GoTo: React.FC<CombinedProps> = (props) => {
         display: 'Load Balancers',
         hide: !flags.aglb,
         href: '/loadbalancers',
+      },
+      {
+        display: 'VPC',
+        hide: !flags.vpc,
+        href: '/vpc',
       },
       {
         display: 'NodeBalancers',
@@ -164,7 +167,7 @@ const GoTo: React.FC<CombinedProps> = (props) => {
   ]);
 
   return (
-    <MUIDialog
+    <Dialog
       classes={dialogClasses}
       onClose={props.onClose}
       open={props.open}
@@ -190,7 +193,7 @@ const GoTo: React.FC<CombinedProps> = (props) => {
           placeholder="Go to..."
         />
       </div>
-    </MUIDialog>
+    </Dialog>
   );
 };
 

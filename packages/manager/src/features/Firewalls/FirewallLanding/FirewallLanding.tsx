@@ -17,11 +17,11 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import CreateFirewallDrawer from './CreateFirewallDrawer';
+import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
-import FirewallDialog, { Mode } from './FirewallDialog';
+import { FirewallDialog, Mode } from './FirewallDialog';
 import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
-import FirewallRow from './FirewallRow';
+import { FirewallRow } from './FirewallRow';
 
 const preferenceKey = 'firewalls';
 

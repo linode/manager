@@ -11,7 +11,7 @@ import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { TPADialog } from './TPADialog';
 import {
@@ -139,7 +139,7 @@ export const TPAProviders = (props: Props) => {
             <StyledCopy variant="body1">
               If you need to reset your password or set up Two-Factor
               Authentication (2FA), please visit the{' '}
-              <Link to={currentProvider.href}>
+              <Link external to={currentProvider.href}>
                 {`${currentProvider.displayName}` + ` website`}
               </Link>
               .

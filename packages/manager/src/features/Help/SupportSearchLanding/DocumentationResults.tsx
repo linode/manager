@@ -1,14 +1,13 @@
-import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
+import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import ListItem from 'src/components/core/ListItem';
-import { Paper } from 'src/components/Paper';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(3),
@@ -30,12 +29,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
   },
   searchItem: {
-    '&:hover': {
-      backgroundColor: theme.bg.offWhite,
+    '&:last-child': {
+      borderBottom: 0,
     },
     backgroundColor: theme.color.white,
     borderBottom: `1px solid ${theme.palette.divider}`,
-    position: 'initial',
+    fontSize: '0.9rem',
   },
 }));
 
@@ -53,10 +52,8 @@ interface Props {
   target: string;
 }
 
-type CombinedProps = Props;
-
-const DocumentationResults: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const DocumentationResults = (props: Props) => {
+  const { classes } = useStyles();
   const { results, sectionTitle, target } = props;
 
   const renderResults = () => {
@@ -65,26 +62,23 @@ const DocumentationResults: React.FC<CombinedProps> = (props) => {
         className={classes.searchItem}
         component="a"
         key={idx}
-        onClick={() => window.open(result.data.href, '_newtab')}
         role="menuitem"
         tabIndex={0}
       >
-        <Typography
-          className={classes.label}
-          data-qa-search-result
-          variant="body1"
-        >
-          {result.label}
-          <OpenInNew className={classes.icon} />
-        </Typography>
+        <Link to={result.data.href}>{result.label}</Link>
       </ListItem>
     ));
   };
 
-  const renderEmptyState = () => {
+  const renderEmptyState = (): JSX.Element => {
     return (
       <Paper className={classes.noResultsContainer}>
-        <Typography variant="body1">No results</Typography>
+        <Typography
+          data-testid="data-qa-documentation-no-results"
+          variant="body1"
+        >
+          No results
+        </Typography>
       </Paper>
     );
   };
@@ -109,5 +103,3 @@ const DocumentationResults: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default DocumentationResults;

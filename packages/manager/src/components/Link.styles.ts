@@ -4,8 +4,8 @@ import type { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles<void, 'iconContainer'>()(
   (theme: Theme) => ({
-    copyColor: {
-      '&:hover, &:focus': {
+    forceCopyColor: {
+      '&:hover, &:focus, & svg': {
         color: theme.color.black,
       },
       color: theme.palette.text.primary,
@@ -13,6 +13,7 @@ export const useStyles = makeStyles<void, 'iconContainer'>()(
     },
     iconContainer: {
       '& svg': {
+        color: theme.textColors.linkActiveLight,
         height: 12,
         width: 12,
       },
@@ -27,9 +28,7 @@ export const useStyles = makeStyles<void, 'iconContainer'>()(
     },
     root: {
       alignItems: 'baseline',
-      color:
-        theme.name === 'dark' ? theme.textColors.linkActiveLight : undefined,
-      display: 'inline-block',
+      color: theme.textColors.linkActiveLight,
     },
   })
 );

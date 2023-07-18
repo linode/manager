@@ -22,8 +22,8 @@ import { Typography } from 'src/components/Typography';
 import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
+import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { RenderLinodesProps } from './DisplayLinodes';
 import {

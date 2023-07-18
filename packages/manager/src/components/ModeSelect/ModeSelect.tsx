@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { Radio } from 'src/components/Radio/Radio';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { RadioGroup } from 'src/components/RadioGroup';
 
 export interface Mode<modes> {
   label: string;

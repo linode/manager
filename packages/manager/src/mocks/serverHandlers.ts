@@ -84,11 +84,13 @@ import {
   securityQuestionsFactory,
   stackScriptFactory,
   staticObjects,
+  subnetFactory,
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
   updateLoadbalancerFactory,
   volumeFactory,
+  vpcFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountUserFactory } from 'src/factories/accountUsers';
@@ -370,6 +372,28 @@ const aglb = [
   }),
   rest.delete('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+];
+
+const vpc = [
+  rest.get('*/vpcs', (req, res, ctx) => {
+    const vpcsWithSubnet1 = vpcFactory.buildList(5, {
+      subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
+    });
+    const vpcsWithSubnet2 = vpcFactory.buildList(5, {
+      region: 'eu-west',
+      subnets: subnetFactory.buildList(Math.floor(Math.random() * 20) + 1),
+    });
+    const vpcsWithoutSubnet = vpcFactory.buildList(20);
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...vpcsWithSubnet1,
+          ...vpcsWithSubnet2,
+          ...vpcsWithoutSubnet,
+        ])
+      )
+    );
   }),
 ];
 
@@ -1374,6 +1398,7 @@ export const handlers = [
   ...statusPage,
   ...databases,
   ...aglb,
+  ...vpc,
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.

@@ -6,15 +6,15 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { useProfile } from 'src/queries/profile';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -128,17 +128,15 @@ const UserProfile: React.FC<Props> = (props) => {
             onChange={changeUsername}
             value={username}
           />
-          <ActionsPanel>
-            <Button
-              buttonType="primary"
-              data-qa-submit
-              disabled={username === originalUsername}
-              loading={accountSaving}
-              onClick={saveAccount}
-            >
-              Save
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled: username === originalUsername,
+              label: 'Save',
+              loading: accountSaving,
+              onClick: saveAccount,
+            }}
+          />
         </Paper>
         <Paper className={classes.wrapper}>
           {profileSuccess && (
@@ -163,21 +161,18 @@ const UserProfile: React.FC<Props> = (props) => {
             onChange={changeEmail}
             value={email}
           />
-          <ActionsPanel>
-            <Button
-              // This should be disabled if this is NOT the current user.
-              disabled={
+          <ActionsPanel
+            // This should be disabled if this is NOT the current user.
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled:
                 profile?.username !== originalUsername ||
-                email === originalEmail
-              }
-              buttonType="primary"
-              data-qa-submit
-              loading={profileSaving}
-              onClick={saveProfile}
-            >
-              Save
-            </Button>
-          </ActionsPanel>
+                email === originalEmail,
+              label: 'Save',
+              loading: profileSaving,
+              onClick: saveProfile,
+            }}
+          />
         </Paper>
       </>
     );

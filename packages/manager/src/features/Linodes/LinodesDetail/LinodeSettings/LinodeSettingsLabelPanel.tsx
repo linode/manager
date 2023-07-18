@@ -1,10 +1,10 @@
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import {
@@ -50,17 +50,15 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
   return (
     <Accordion
       actions={() => (
-        <ActionsPanel>
-          <Button
-            buttonType="primary"
-            data-qa-label-save
-            disabled={isReadOnly || !formik.dirty}
-            loading={isLoading}
-            onClick={() => formik.handleSubmit()}
-          >
-            Save
-          </Button>
-        </ActionsPanel>
+        <StyledActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'label-save',
+            disabled: isReadOnly || !formik.dirty,
+            label: 'Save',
+            loading: isLoading,
+            onClick: () => formik.handleSubmit(),
+          }}
+        />
       )}
       defaultExpanded
       heading="Linode Label"
@@ -79,3 +77,10 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
     </Accordion>
   );
 };
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})({
+  justifyContent: 'flex-start',
+  margin: 0,
+});

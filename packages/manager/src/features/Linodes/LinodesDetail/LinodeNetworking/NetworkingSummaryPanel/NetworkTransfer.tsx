@@ -1,8 +1,7 @@
 import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import BarPercent from 'src/components/BarPercent';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -12,38 +11,6 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  darkGreen: {
-    '&:before': {
-      backgroundColor: '#5ad865',
-    },
-  },
-  grey: {
-    '&:before': {
-      backgroundColor: theme.color.grey2,
-    },
-  },
-  header: {
-    paddingBottom: 10,
-  },
-  legendItem: {
-    '&:before': {
-      borderRadius: 5,
-      content: '""',
-      height: 20,
-      marginRight: 10,
-
-      width: 20,
-    },
-    alignItems: 'center',
-    display: 'flex',
-    marginTop: 10,
-  },
-  poolUsageProgress: {
-    marginBottom: theme.spacing(0.5),
-  },
-}));
-
 interface Props {
   linodeID: number;
   linodeLabel: string;
@@ -51,7 +18,6 @@ interface Props {
 
 export const NetworkTransfer: React.FC<Props> = (props) => {
   const { linodeID, linodeLabel } = props;
-  const { classes } = useStyles();
 
   const linodeTransfer = useAPIRequest(
     () => getLinodeTransfer(linodeID),
@@ -76,7 +42,7 @@ export const NetworkTransfer: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <Typography className={classes.header}>
+      <Typography sx={{ paddingBottom: `10px` }}>
         <strong>Monthly Network Transfer</strong>{' '}
       </Typography>
       <TransferContent
@@ -115,7 +81,7 @@ const TransferContent: React.FC<ContentProps> = (props) => {
     totalUsedInGB,
     // accountBillableInGB
   } = props;
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   /**
    * In this component we display three pieces of information:
@@ -163,22 +129,56 @@ const TransferContent: React.FC<ContentProps> = (props) => {
   return (
     <div>
       <BarPercent
-        className={classes.poolUsageProgress}
+        sx={{ marginBottom: `${theme.spacing(0.5)}px` }}
         max={100}
         rounded
         value={Math.ceil(linodeUsagePercent)}
         valueBuffer={Math.ceil(totalUsagePercent)}
       />
-      <Typography className={`${classes.legendItem} ${classes.darkGreen}`}>
+      <StyledGreenTypography>
         {linodeLabel} ({linodeUsedInGB} GB)
-      </Typography>
-      <Typography className={`${classes.legendItem} ${classes.grey}`}>
+      </StyledGreenTypography>
+      <StyledGreyTypography>
         Remaining ({remainingInGB} GB)
-      </Typography>
+      </StyledGreyTypography>
       {/* @todo: display overages  */}
     </div>
   );
 };
+
+const sxLegendItemBefore = {
+  borderRadius: 5,
+  content: '""',
+  height: 20,
+  marginRight: 10,
+  width: 20,
+};
+
+const sxLegendItem = {
+  alignItems: 'center',
+  display: 'flex',
+  marginTop: 10,
+};
+
+const StyledGreyTypography = styled(Typography, {
+  label: 'StyledGreyTypography',
+})(({ theme }) => ({
+  ...sxLegendItem,
+  '&:before': {
+    ...sxLegendItemBefore,
+    backgroundColor: theme.color.grey2,
+  },
+}));
+
+const StyledGreenTypography = styled(Typography, {
+  label: 'StyledGreenTypography ',
+})({
+  ...sxLegendItem,
+  '&:before': {
+    ...sxLegendItemBefore,
+    backgroundColor: '#5ad865',
+  },
+});
 
 export default React.memo(NetworkTransfer);
 
