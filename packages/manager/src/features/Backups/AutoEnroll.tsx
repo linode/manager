@@ -60,8 +60,6 @@ export const AutoEnroll: React.FC<CombinedProps> = (props) => {
                     the additional hourly rate noted on the `}
               <Link
                 data-qa-backups-price
-                external
-                fixedIcon
                 to="https://www.linode.com/products/backups/"
               >
                 Backups pricing page

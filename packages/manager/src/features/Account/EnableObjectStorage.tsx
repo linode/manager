@@ -51,17 +51,14 @@ export const ObjectStorageContent = (props: ContentProps) => {
   return (
     <Typography variant="body1">
       Content storage and delivery for unstructured data. Great for multimedia,
-      static sites, software delivery, archives, and data backups. To get
-      started with Object Storage, create a{' '}
+      static sites, software delivery, archives, and data backups. <br />
+      To get started with Object Storage, create a{' '}
       <Link to="/object-storage/buckets">Bucket</Link> or an{' '}
       <Link to="/object-storage/access-keys">Access Key.</Link>{' '}
-      <Link
-        external
-        fixedIcon
-        to="https://www.linode.com/docs/platform/object-storage/"
-      >
-        Learn more.
+      <Link to="https://www.linode.com/docs/platform/object-storage/">
+        Learn more
       </Link>
+      .
     </Typography>
   );
 };

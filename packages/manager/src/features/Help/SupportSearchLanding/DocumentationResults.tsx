@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#3683DC',
   },
   link: {
+    display: 'inline-block',
     fontFamily: theme.font.bold,
     marginTop: theme.spacing(2),
   },
@@ -103,7 +104,6 @@ const DocumentationResults: React.FC<CombinedProps> = (props) => {
       <Link
         className={classes.link}
         data-qa-view-more={sectionTitle}
-        external
         to={target}
       >{`View more ${sectionTitle}`}</Link>
     </>

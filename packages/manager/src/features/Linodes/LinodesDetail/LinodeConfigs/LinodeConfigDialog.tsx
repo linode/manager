@@ -873,11 +873,7 @@ export const LinodeConfigDialog = (props: Props) => {
                         connect to (either &quot;Public Internet&quot; or a
                         VLAN). Each Linode can have up to three Network
                         Interfaces. For more information, see our{' '}
-                        <Link
-                          hideIcon
-                          external
-                          to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance"
-                        >
+                        <Link to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance">
                           Network Interfaces guide
                         </Link>
                         .
@@ -990,10 +986,7 @@ export const LinodeConfigDialog = (props: Props) => {
                         tooltipText={
                           <>
                             Automatically configure static networking
-                            <Link
-                              external
-                              to="https://www.linode.com/docs/platform/network-helper/"
-                            >
+                            <Link to="https://www.linode.com/docs/platform/network-helper/">
                               (more info)
                             </Link>
                           </>
