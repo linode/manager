@@ -34,7 +34,6 @@ export interface RenderLinodesProps extends PaginationProps {
 
 interface Props {
   component: React.ComponentType<RenderLinodesProps>;
-  count: number;
   data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
   linodeViewPreference: 'grid' | 'list';
@@ -58,7 +57,6 @@ type CombinedProps = Props &
 export const DisplayLinodes = React.memo((props: CombinedProps) => {
   const {
     component: Component,
-    count,
     data,
     display,
     handleOrderChange,
@@ -81,6 +79,7 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
       return acc;
     }, 0);
   }, [JSON.stringify(data)]);
+  const count = data.length;
   const pageSize =
     numberOfLinodesWithMaintenance > infinitePageSize
       ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)

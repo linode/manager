@@ -19,6 +19,8 @@ import {
 export interface OrderByProps<T> extends State {
   data: T[];
   handleOrderChange: (orderBy: string, order: Order) => void;
+  order: Order;
+  orderBy: string;
 }
 
 interface State {
@@ -218,9 +220,8 @@ export const OrderBy = <T extends unknown>(props: CombinedProps<T>) => {
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
 
-  const downstreamProps = {
+  const downstreamProps: OrderByProps<T> = {
     ...props,
-    count: props.data.length,
     data: sortedData,
     handleOrderChange,
     order,

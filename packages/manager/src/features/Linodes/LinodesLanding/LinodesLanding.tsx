@@ -102,7 +102,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
       classes,
-      linodesCount,
       linodesData,
       linodesInTransition,
       linodesRequestError,
@@ -117,7 +116,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         : undefined;
 
     const componentProps = {
-      count: linodesCount,
       openDialog: this.openDialog,
       openPowerActionDialog: this.openPowerDialog,
       someLinodesHaveMaintenance: this.props
@@ -153,7 +151,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       return <CircleProgress />;
     }
 
-    if (this.props.linodesCount === 0) {
+    if (this.props.linodesData.length === 0) {
       return <LinodesLandingEmptyState />;
     }
 
@@ -452,13 +450,11 @@ const sendGroupByAnalytic = (value: boolean) => {
 };
 
 interface StateProps {
-  linodesCount: number;
   linodesInTransition: Set<number>;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
-    linodesCount: state.__resources.linodes.results,
     linodesInTransition: _linodesInTransition(state.events.events),
   };
 };
