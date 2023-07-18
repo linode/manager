@@ -17,10 +17,12 @@ const opensInNewTab = (href: string) => {
   return href.match(/http/) || href.match(/mailto/);
 };
 
+export type CombinedLinkProps = Props & ExternalLinkProps;
+
 /**
  * A wrapper around React Router's `Link` component that will open external links in a new window when a non-relative URL is provided.
  */
-export const Link = (props: Props & ExternalLinkProps) => {
+export const Link = (props: CombinedLinkProps) => {
   const {
     accessibleAriaLabel,
     children,
@@ -61,6 +63,7 @@ export const Link = (props: Props & ExternalLinkProps) => {
           className
         )}
         aria-label={ariaLabel}
+        data-testid="external-link"
         href={sanitizedUrl()}
         onClick={onClick}
         rel="noopener noreferrer"
@@ -69,7 +72,7 @@ export const Link = (props: Props & ExternalLinkProps) => {
         {children}
       </a>
     ) : (
-      <RouterLink {...props} />
+      <RouterLink {...props} data-testid="internal-link" />
     );
   }
 };

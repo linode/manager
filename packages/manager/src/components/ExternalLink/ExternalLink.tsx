@@ -30,6 +30,7 @@ export const ExternalLink = (props: ExternalLinkProps) => {
       )}
       aria-label={ariaLabel}
       data-qa-external-link
+      data-testid="external-site-link"
       href={sanitizeUrl(to)}
       onClick={onClick}
       rel="noopener noreferrer"
