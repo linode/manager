@@ -1,3 +1,11 @@
+/* 
+
+This component allows for dynamism in what is displayed as the tab/window title depending
+on where the user is in the application. Example: "Linodes | Akamai Cloud Manager" when on 
+the Linodes landing page. More context: https://github.com/linode/manager/pull/9406
+
+*/
+
 import { reverse } from 'ramda';
 import * as React from 'react';
 import usePrevious from 'src/hooks/usePrevious';
