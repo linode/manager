@@ -215,7 +215,12 @@ export const PhoneVerification = () => {
                     ? getFormattedNumber(profile.verified_phone_number)
                     : 'No Phone Number'}
                 </Typography>
-                <LinkButton onClick={onEdit}>Edit</LinkButton>
+                <LinkButton
+                  onClick={onEdit}
+                  style={{ position: 'relative', top: -2 }}
+                >
+                  Edit
+                </LinkButton>
               </Box>
             </>
           ) : isCodeSent ? (
