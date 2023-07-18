@@ -1,7 +1,6 @@
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -15,18 +14,11 @@ import { useTypeQuery } from 'src/queries/types';
 import { addUsedDiskSpace } from '../LinodeStorage/LinodeDisks';
 import MutateDrawer from '../MutateDrawer';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  pendingMutationLink: {
-    ...theme.applyLinkStyles,
-  },
-}));
-
 interface Props {
   linodeId: number;
 }
 
 export const MutationNotification = (props: Props) => {
-  const { classes } = useStyles();
   const { linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
@@ -89,19 +81,18 @@ export const MutationNotification = (props: Props) => {
               : estimatedTimeToUpgradeInMins)}
           {estimatedTimeToUpgradeInMins < 1 ? ` minute` : ` minutes`}. To learn
           more,&nbsp;
-          <span
+          <StyledSpan
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 setIsMutationDrawerOpen(true);
               }
             }}
-            className={classes.pendingMutationLink}
             onClick={() => setIsMutationDrawerOpen(true)}
             role="button"
             tabIndex={0}
           >
             click here
-          </span>
+          </StyledSpan>
           .
         </Typography>
       </Notice>
@@ -145,6 +136,10 @@ export const MutationNotification = (props: Props) => {
     </>
   );
 };
+
+const StyledSpan = styled('span', { label: 'StyledSpan' })(({ theme }) => ({
+  ...theme.applyLinkStyles,
+}));
 
 // Hack solution to determine if a type is moving from shared CPU cores to dedicated.
 const isMovingFromSharedToDedicated = (typeA: string, typeB: string) => {

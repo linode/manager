@@ -1,7 +1,6 @@
 import React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useResetOAuthClientMutation } from 'src/queries/accountOAuth';
@@ -33,14 +32,14 @@ export const ResetOAuthClientDialog = ({
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" loading={isLoading} onClick={onReset}>
-            Reset Secret
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Reset Secret',
+            loading: isLoading,
+            onClick: onReset,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       }
       error={error?.[0].reason}
       onClose={onClose}

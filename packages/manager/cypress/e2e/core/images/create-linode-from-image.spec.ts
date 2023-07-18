@@ -29,14 +29,6 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
     });
   }).as('mockLinodeRequest');
 
-  cy.intercept(
-    'GET',
-    apiMatcher(`linode/instances/${mockLinode.id}`),
-    (req) => {
-      req.reply(mockLinode);
-    }
-  ).as('mockLinodeResponse');
-
   cy.visitWithLogin(url);
 
   cy.wait('@mockImage');
@@ -62,7 +54,6 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   getClick('[data-qa-deploy-linode="true"]');
 
   cy.wait('@mockLinodeRequest');
-  cy.wait('@mockLinodeResponse');
 
   fbtVisible(mockLinode.label);
   fbtVisible(region.label);

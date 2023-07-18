@@ -24,7 +24,7 @@ import MainContent from './MainContent';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAuthentication } from './hooks/useAuthentication';
-import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
+import { useFeatureFlagsLoad } from './hooks/useFeatureFlagLoad';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
@@ -43,6 +43,7 @@ import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
+// import { useConfigInterfacesQuery } from 'src/queries/linodes/configs';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -62,6 +63,14 @@ const BaseApp = withDocumentTitleProvider(
       const { loggedInAsCustomer } = useAuthentication();
 
       const { enqueueSnackbar } = useSnackbar();
+
+      // const testLinodeID = your linode ID here
+      // const testConfigID = your linode config ID here
+      // const { data: configInterfaces } = useConfigInterfacesQuery(
+      //   testLinodeID,
+      //   testConfigID
+      // );
+      // console.log(configInterfaces);
 
       const [goToOpen, setGoToOpen] = React.useState(false);
 

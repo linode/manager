@@ -15,15 +15,15 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableFooter } from 'src/components/TableFooter';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import TableFooter from 'src/components/core/TableFooter';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import NodeActionMenu from './NodeActionMenu';
 
@@ -294,7 +294,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
  */
 export const nodeToRow = (
   node: PoolNodeResponse,
-  linodes: LinodeWithMaintenanceAndDisplayStatus[]
+  linodes: LinodeWithMaintenance[]
 ): NodeRow => {
   const foundLinode = linodes.find(
     (thisLinode) => thisLinode.id === node.instance_id

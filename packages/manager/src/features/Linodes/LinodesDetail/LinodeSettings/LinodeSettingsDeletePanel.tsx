@@ -8,7 +8,7 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
-  useLinodeDeleteMutation,
+  useDeleteLinodeMutation,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 
@@ -23,7 +23,7 @@ export const LinodeSettingsDeletePanel = ({ isReadOnly, linodeId }: Props) => {
     error,
     isLoading,
     mutateAsync: deleteLinode,
-  } = useLinodeDeleteMutation(linodeId);
+  } = useDeleteLinodeMutation(linodeId);
 
   const history = useHistory();
 

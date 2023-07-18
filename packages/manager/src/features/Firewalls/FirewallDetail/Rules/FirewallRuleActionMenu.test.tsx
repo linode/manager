@@ -2,11 +2,14 @@ import * as React from 'react';
 
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 
-import FirewallRuleActionMenu, { Props } from './FirewallRuleActionMenu';
+import {
+  FirewallRuleActionMenu,
+  FirewallRuleActionMenuProps,
+} from './FirewallRuleActionMenu';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
 
-const props: Props = {
+const props: FirewallRuleActionMenuProps = {
   disabled: false,
   idx: 1,
   triggerCloneFirewallRule: jest.fn(),

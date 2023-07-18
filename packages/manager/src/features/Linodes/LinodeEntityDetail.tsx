@@ -24,7 +24,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography, TypographyProps } from 'src/components/Typography';
-import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
@@ -37,7 +37,7 @@ import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { pluralize } from 'src/utilities/pluralize';
 

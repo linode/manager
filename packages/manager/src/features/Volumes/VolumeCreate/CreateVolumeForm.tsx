@@ -3,9 +3,9 @@ import { Region } from '@linode/api-v4/lib/regions/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Theme, useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import * as React from 'react';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -13,10 +13,9 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import Form from 'src/components/core/Form';
-import { Paper } from 'src/components/Paper';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
@@ -28,7 +27,6 @@ import {
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
-import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
@@ -41,7 +39,8 @@ import {
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
-import ConfigSelect, {
+import {
+  ConfigSelect,
   initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
@@ -127,20 +126,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
-  const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
-
   const { data: accountAgreements } = useAccountAgreements();
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-
-  // This is to keep track of this linodeId's errors so we can select it from the Redux store for the error message.
-  const { error: configsError } = useSelector((state: ApplicationState) => {
-    return state.__resources.linodeConfigs[linodeId] ?? { error: {} };
-  });
-
-  const configErrorMessage = configsError?.read
-    ? 'Unable to load configs for this Linode.' // More specific than the API error message
-    : undefined;
 
   const regionsWithBlockStorage =
     regions
@@ -266,11 +254,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           if (linode !== null) {
             setFieldValue('linode_id', linode.id);
             setFieldValue('region', linode.region);
-            setLinodeId(linode.id);
           } else {
             // If the LinodeSelect is cleared, reset the values for Region and Config
             setFieldValue('linode_id', initialValueDefaultId);
-            setLinodeId(initialValueDefaultId);
           }
         };
 
@@ -359,19 +345,29 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     display="flex"
                   >
                     <LinodeSelect
-                      filterCondition={(linode: Linode) =>
-                        regionsWithBlockStorage.includes(linode.region)
-                      }
+                      optionsFilter={(linode: Linode) => {
+                        const linodeRegion = linode.region;
+                        const valuesRegion = values.region;
+
+                        /** When values.region is empty, all Linodes with
+                         * block storage support will be displayed, regardless
+                         * of their region. However, if a region is selected,
+                         * only Linodes from the chosen region with block storage
+                         * support will be shown. */
+                        return isNilOrEmpty(valuesRegion)
+                          ? regionsWithBlockStorage.includes(linodeRegion)
+                          : regionsWithBlockStorage.includes(linodeRegion) &&
+                              linodeRegion === valuesRegion;
+                      }}
+                      sx={{
+                        width: '320px',
+                      }}
+                      clearable
                       disabled={doesNotHavePermission}
-                      handleChange={handleLinodeChange}
-                      isClearable
-                      label="Linode"
-                      linodeError={linodeError || configErrorMessage}
-                      name="linodeId"
+                      errorText={linodeError}
                       onBlur={handleBlur}
-                      region={values.region}
-                      selectedLinode={values.linode_id}
-                      width={320}
+                      onSelectionChange={handleLinodeChange}
+                      value={values.linode_id}
                     />
                     {renderSelectTooltip(
                       'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'

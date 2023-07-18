@@ -1,12 +1,10 @@
-import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 
 import { prefixArrayToString } from '../utilities';
 import {
-  StyledCopied,
-  StyledFileCopy,
+  StyledCopyTooltip,
   StyledLink,
   StyledPrefixWrapper,
   StyledRootContainer,
@@ -20,19 +18,9 @@ interface Props {
 }
 
 export const BucketBreadcrumb = (props: Props) => {
-  const [copied, setCopied] = React.useState<boolean>(false);
-  let timeout: ReturnType<typeof setTimeout>;
-  const iconOnClick = (value: string) => {
-    setCopied(!copied);
-    timeout = setTimeout(() => setCopied(false), 1500);
-    copy(value);
-  };
   const { bucketName, history, prefix } = props;
   const { width } = useWindowDimensions();
-
-  React.useEffect(() => {
-    return () => clearTimeout(timeout);
-  }, []);
+  const bucketPath = bucketName + '/' + prefix;
 
   // Split the prefix into discrete sections for displaying in the component.
   // 'my/path/to/objects/` > ['my', 'path', 'to', 'objects]
@@ -46,8 +34,6 @@ export const BucketBreadcrumb = (props: Props) => {
 
   return (
     <StyledRootContainer>
-      {copied && <StyledCopied data-qa-copied>Copied!</StyledCopied>}
-      <StyledFileCopy onClick={() => iconOnClick(bucketName + '/' + prefix)} />
       <StyledPrefixWrapper>
         {/* Bucket name */}
         <StyledLink
@@ -58,7 +44,6 @@ export const BucketBreadcrumb = (props: Props) => {
         >
           {bucketName}
         </StyledLink>
-
         {/* Ellipsis (if prefix is truncated) */}
         {shouldTruncatePrefix && (
           <StyledSlash variant="body1">/ ...</StyledSlash>
@@ -91,6 +76,7 @@ export const BucketBreadcrumb = (props: Props) => {
           );
         })}
       </StyledPrefixWrapper>
+      <StyledCopyTooltip text={bucketPath} placement="bottom" />
     </StyledRootContainer>
   );
 };

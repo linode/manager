@@ -7,8 +7,7 @@ import { QueryClient } from 'react-query';
 import { MapDispatchToProps, MapStateToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
@@ -210,26 +209,21 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
             />
           </Grid>
           <Grid>
-            <ActionsPanel style={{ margin: 0, padding: 0 }}>
-              <Button
-                buttonType="secondary"
-                className="cancel"
-                data-qa-cancel
-                data-testid={'cancel'}
-                onClick={close}
-              >
-                Cancel
-              </Button>
-              <Button
-                buttonType="primary"
-                data-qa-submit
-                data-testid={'submit'}
-                loading={loading || enabling || enrolling}
-                onClick={this.handleSubmit}
-              >
-                Confirm
-              </Button>
-            </ActionsPanel>
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                label: 'Confirm',
+                loading: loading || enabling || enrolling,
+                onClick: this.handleSubmit,
+              }}
+              secondaryButtonProps={{
+                className: 'cancel',
+                'data-testid': 'cancel',
+                label: 'Cancel',
+                onClick: close,
+              }}
+              style={{ margin: 0, padding: 0 }}
+            />
           </Grid>
           <Grid>
             <BackupsTable linodes={extendedLinodes} loading={loading} />

@@ -42,7 +42,7 @@ describe('EnableObjectStorage Component', () => {
     fireEvent.click(dialogButton);
 
     const dialog = await findByTitle('Cancel Object Storage');
-    const cancelButton = getByTestId('dialog-cancel');
+    const cancelButton = getByTestId('cancel');
     fireEvent.click(cancelButton);
 
     expect(dialog).not.toBeVisible();

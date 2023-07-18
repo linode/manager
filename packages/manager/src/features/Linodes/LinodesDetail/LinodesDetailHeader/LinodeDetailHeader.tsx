@@ -12,7 +12,7 @@ import {
   Action,
   PowerActionsDialog,
 } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import useEditableLabelState from 'src/hooks/useEditableLabelState';
+import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
@@ -240,6 +240,7 @@ const LinodeDetailHeader = () => {
       <DeleteLinodeDialog
         linodeId={matchedLinodeId}
         onClose={closeDialogs}
+        onSuccess={() => history.replace('/linodes')}
         open={deleteDialogOpen}
       />
       <LinodeResize

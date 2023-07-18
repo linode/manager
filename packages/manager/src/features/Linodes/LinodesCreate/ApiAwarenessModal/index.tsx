@@ -1,11 +1,9 @@
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import React, { useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -16,42 +14,10 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import useEvents from 'src/hooks/useEvents';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
-import generateCurlCommand from 'src/utilities/generate-cURL';
-import generateCLICommand from 'src/utilities/generate-cli';
+import { generateCurlCommand } from 'src/utilities/generate-cURL';
+import { generateCLICommand } from 'src/utilities/generate-cli';
 
 import CodeBlock from '../CodeBlock';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  actionPanelStyles: {
-    marginTop: '18px !important',
-    paddingBottom: 0,
-    paddingTop: 0,
-  },
-  guides: {
-    marginTop: 16,
-  },
-  modalContent: {
-    overflowX: 'hidden',
-    paddingBottom: '0px',
-  },
-  modalIntroTypoClass: {
-    paddingBottom: '6px',
-  },
-  otherTools: {
-    fontFamily: theme.font.bold,
-    fontSize: '14px !important',
-    fontWeight: 400,
-  },
-  tabDescription: {
-    marginTop: theme.spacing(2),
-  },
-  tabsContainer: {
-    paddingTop: theme.spacing(),
-  },
-  tabsStyles: {
-    marginTop: '14px',
-  },
-}));
 
 export interface Props {
   isOpen: boolean;
@@ -63,7 +29,7 @@ export interface Props {
 const ApiAwarenessModal = (props: Props) => {
   const { isOpen, onClose, payLoad, route } = props;
 
-  const classes = useStyles();
+  const theme = useTheme();
   const history = useHistory();
   const { events } = useEvents();
 
@@ -109,14 +75,17 @@ const ApiAwarenessModal = (props: Props) => {
 
   return (
     <Dialog
-      className={classes.modalContent}
+      sx={{
+        overflowX: 'hidden',
+        paddingBottom: '0px',
+      }}
       fullWidth
       maxWidth="sm"
       onClose={onClose}
       open={isOpen}
       title="Create Linode"
     >
-      <Typography className={classes.modalIntroTypoClass} variant="body1">
+      <Typography sx={{ paddingBottom: '6px' }} variant="body1">
         Create a Linode in the command line using either cURL or the Linode CLI
         — both of which are powered by the Linode API. Select one of the methods
         below and paste the corresponding command into your local terminal. The
@@ -124,14 +93,14 @@ const ApiAwarenessModal = (props: Props) => {
         the Cloud Manager create form.
       </Typography>
       <Tabs
-        className={classes.tabsContainer}
+        sx={{ paddingTop: theme.spacing() }}
         defaultIndex={0}
         onChange={handleTabChange}
       >
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
-            <Typography className={classes.tabDescription} variant="body1">
+            <Typography sx={{ marginTop: theme.spacing(2) }} variant="body1">
               Most Linode API requests need to be authenticated with a valid{' '}
               <Link
                 onClick={() =>
@@ -208,7 +177,13 @@ const ApiAwarenessModal = (props: Props) => {
         </TabPanels>
       </Tabs>
       <Notice marketing spacingBottom={0} spacingTop={24}>
-        <Typography className={classes.otherTools}>
+        <Typography
+          sx={{
+            fontFamily: theme.font.bold,
+            fontSize: '14px !important',
+            fontWeight: 400,
+          }}
+        >
           Deploy and manage your infrastructure with the{' '}
           <Link
             onClick={() =>
@@ -237,16 +212,15 @@ const ApiAwarenessModal = (props: Props) => {
           with programmatic access to the Linode platform.
         </Typography>
       </Notice>
-      <StyledActionPanel className={classes.actionPanelStyles}>
-        <Button
-          buttonType="secondary"
-          compactX
-          data-testid="close-button"
-          onClick={onClose}
-        >
-          Close
-        </Button>
-      </StyledActionPanel>
+      <ActionsPanel
+        sx={{ marginTop: '18px !important', paddingBottom: 0, paddingTop: 0 }}
+        secondaryButtonProps={{
+          compactX: true,
+          'data-testid': 'close-button',
+          label: 'Close',
+          onClick: onClose,
+        }}
+      />
     </Dialog>
   );
 };

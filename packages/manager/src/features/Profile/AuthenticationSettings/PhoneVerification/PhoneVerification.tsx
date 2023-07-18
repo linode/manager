@@ -10,7 +10,7 @@ import { Button } from 'src/components/Button/Button';
 import { LinkButton } from 'src/components/LinkButton';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 import {
   queryKey,
   updateProfileData,
@@ -216,8 +216,12 @@ export const PhoneVerification = () => {
                     : 'No Phone Number'}
                 </Typography>
                 <LinkButton
+                  style={{
+                    bottom: -0.5,
+                    fontSize: '0.85rem',
+                    position: 'relative',
+                  }}
                   onClick={onEdit}
-                  style={{ position: 'relative', top: -2 }}
                 >
                   Edit
                 </LinkButton>

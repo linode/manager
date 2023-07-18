@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
-import FormControlLabel from 'src/components/core/FormControlLabel';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 
 import { AccessTable } from './AccessTable';
 import { MODE } from './types';

@@ -7,9 +7,6 @@ import { CombinedProps, FromBackupsContent } from './FromBackupsContent';
 
 const mockProps: CombinedProps = {
   accountBackupsEnabled: false,
-  classes: {
-    main: '',
-  },
   imagesData: {},
   linodesData: [],
   regionsData: [],

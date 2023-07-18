@@ -5,21 +5,20 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import * as Bluebird from 'bluebird';
 import { update } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
 import { Accordion } from 'src/components/Accordion';
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { FormHelperText } from 'src/components/FormHelperText';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import FormHelperText from 'src/components/core/FormHelperText';
 import { useAccount } from 'src/queries/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
@@ -33,6 +32,7 @@ import {
   getErrorMap,
   getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
+import { reduceAsync } from 'src/utilities/reduceAsync';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
@@ -46,7 +46,6 @@ import SupportTicketSMTPFields, {
   smtpDialogTitle,
   smtpHelperText,
 } from './SupportTicketSMTPFields';
-import { Link } from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -353,7 +352,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setFiles(newFiles);
   };
 
-  /* Reducer passed into Bluebird.reduce() below.
+  /* Reducer passed into reduceAsync (previously Bluebird.reduce) below.
    * Unfortunately, this reducer has side effects. Uploads each file and accumulates a list of
    * any upload errors. Also tracks loading state of each individual file. */
   const attachFileReducer = (
@@ -411,7 +410,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
     /* Upload each file as an attachment, and return a Promise that will resolve to
      *  an array of aggregated errors that may have occurred for individual uploads. */
-    return Bluebird.reduce(filesWithTarget, attachFileReducer, {
+    return reduceAsync(filesWithTarget, attachFileReducer, {
       errors: [],
       success: [],
     });
@@ -606,12 +605,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                   {!['general', 'none'].includes(entityType) && (
                     <>
                       <Select
-                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
                         data-qa-ticket-entity-id
                         disabled={entityOptions.length === 0}
                         errorText={entityError || inputError}
                         isClearable={false}
                         isLoading={areEntitiesLoading}
+                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
                         onChange={handleEntityIDChange}
                         options={entityOptions}
                         placeholder={`Select a ${entityIdToNameMap[entityType]}`}
@@ -647,26 +646,20 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               <AttachFileForm files={files} updateFiles={updateFiles} />
             </React.Fragment>
           )}
-          <StyledActionPanel>
-            <Button
-              buttonType="secondary"
-              data-qa-cancel
-              data-testid="cancel"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              data-qa-submit
-              data-testid="submit"
-              disabled={!requirementsMet}
-              loading={submitting}
-              onClick={onSubmit}
-            >
-              Open Ticket
-            </Button>
-          </StyledActionPanel>
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled: !requirementsMet,
+              label: 'Open Ticket',
+              loading: submitting,
+              onClick: onSubmit,
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: onCancel,
+            }}
+          />
         </React.Fragment>
       )}
     </Dialog>

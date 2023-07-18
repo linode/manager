@@ -3,8 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
@@ -70,26 +69,20 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-        onClick={onClose}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
-        disabled={!checked}
-        loading={submitting}
-        onClick={onUpgrade}
-      >
-        Upgrade to HA
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        disabled: !checked,
+        label: 'Upgrade to HA',
+        loading: submitting,
+        onClick: onUpgrade,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
+    />
   );
 
   return (
