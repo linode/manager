@@ -1,5 +1,5 @@
 import React from 'react';
-
+import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -40,7 +40,20 @@ export const ExternalSite: StoryObj<LinkProps> = {
   name: 'External Site',
   render: (args: LinkProps) => (
     <Link {...args} external to="https://google.com">
-      https://google.com
+      See more at https://google.com
+    </Link>
+  ),
+};
+
+/**
+ * This story features an Icon only as a child of Link component, and without having provided a custom `accessibleAriaLabel`
+ * This example will generate a console error
+ */
+export const IconOnly: StoryObj<LinkProps> = {
+  name: 'Icon Only (w/ error)',
+  render: (args: LinkProps) => (
+    <Link {...args} to="https://google.com">
+      <DocsIcon />
     </Link>
   ),
 };

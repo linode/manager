@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -7,6 +8,12 @@ import { useStyles } from 'src/components/Link.styles';
 
 import type { LinkProps as _LinkProps } from 'react-router-dom';
 import type { ExternalLinkProps } from 'src/components/ExternalLink/ExternalLink';
+
+import {
+  childrenContainsNoText,
+  flattenChildrenIntoAriaLabel,
+  opensInNewTab,
+} from 'src/utilities/link';
 
 export interface LinkProps extends _LinkProps, ExternalLinkProps {
   /**
@@ -24,7 +31,7 @@ export interface LinkProps extends _LinkProps, ExternalLinkProps {
   /**
    * The content of the component.
    */
-  children: React.ReactNode;
+  children: _LinkProps['children'];
   /**
    * Optional prop to force the link color to match the general copy.<br />
    * Example: footer links
@@ -32,10 +39,6 @@ export interface LinkProps extends _LinkProps, ExternalLinkProps {
    */
   forceCopyColor?: boolean;
 }
-
-const opensInNewTab = (href: string) => {
-  return href.match(/http/) || href.match(/mailto/);
-};
 
 /**
  * A wrapper around React Router's `Link` <a target="_blank" href="https://reactrouter.com/en/main/components/link">component</a> that will open external links (rendering `a` tags) in a new window when a non-relative URL is provided.<br />
@@ -71,10 +74,24 @@ export const Link = (props: LinkProps) => {
   const { classes, cx } = useStyles();
   const sanitizedUrl = () => sanitizeUrl(to);
   const shouldOpenInNewTab = opensInNewTab(sanitizedUrl());
+  const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(children);
   const externalNotice = '- link opens in a new tab';
   const ariaLabel = accessibleAriaLabel
     ? `${accessibleAriaLabel} ${externalNotice}`
-    : `${children} ${externalNotice}`;
+    : `${childrenAsAriaLabel} ${externalNotice}`;
+
+  if (childrenContainsNoText(children) && !accessibleAriaLabel) {
+    // eslint-disable-next-line no-console
+    console.error(
+      'Link component must have text content to be accessible to screen readers. Please provide an accessibleAriaLabel prop or text content.'
+    );
+  }
+
+  const routerLinkProps = omit(props, [
+    'accessibleAriaLabel',
+    'external',
+    'forceCopyColor',
+  ]);
 
   if (external) {
     return (
@@ -109,7 +126,7 @@ export const Link = (props: LinkProps) => {
       </a>
     ) : (
       <RouterLink
-        {...props}
+        {...routerLinkProps}
         data-testid="internal-link"
         className={cx(
           classes.root,
