@@ -115,7 +115,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
     this.updateRequestedTypes();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: CombinedProps) {
     const { close, dismissSuccess } = this.props.actions;
     const { autoEnroll, enableSuccess, updatedCount } = this.props;
     if (enableSuccess) {
@@ -131,7 +131,16 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       dismissSuccess();
       close();
     }
-    this.updateRequestedTypes();
+    if (
+      BackupDrawer.getLinodesWithoutBackups(this.props.linodesData).some(
+        (linode) =>
+          !BackupDrawer.getLinodesWithoutBackups(prevProps.linodesData).find(
+            (prevLinode) => prevLinode.type == linode.type
+          )
+      )
+    ) {
+      this.updateRequestedTypes();
+    }
   }
 
   render() {
@@ -151,7 +160,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
 
     const extendedTypeData = requestedTypesData.map(extendType);
     const extendedLinodes = enhanceLinodes(
-      this.getLinodesWithoutBackups(),
+      BackupDrawer.getLinodesWithoutBackups(this.props.linodesData),
       enableErrors,
       extendedTypeData
     );
@@ -230,8 +239,8 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
     );
   }
 
-  getLinodesWithoutBackups = () =>
-    this.props.linodesData?.filter((linode) => !linode.backups.enabled) ?? [];
+  static getLinodesWithoutBackups = (linodes: Linode[] | undefined) =>
+    linodes?.filter((linode) => !linode.backups.enabled) ?? [];
 
   handleSubmit = () => {
     const {
@@ -240,19 +249,19 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       queryClient,
     } = this.props;
     if (accountSettings.data?.backups_enabled) {
-      enable(this.getLinodesWithoutBackups());
+      enable(BackupDrawer.getLinodesWithoutBackups(this.props.linodesData));
     } else {
       enroll(
         accountSettings.data?.backups_enabled ?? false,
         queryClient,
-        this.getLinodesWithoutBackups()
+        BackupDrawer.getLinodesWithoutBackups(this.props.linodesData)
       );
     }
   };
 
   updateRequestedTypes = () => {
     this.props.setRequestedTypes(
-      this.getLinodesWithoutBackups()
+      BackupDrawer.getLinodesWithoutBackups(this.props.linodesData)
         .map((linode) => linode.type)
         .filter(isNotNullOrUndefined)
     );
