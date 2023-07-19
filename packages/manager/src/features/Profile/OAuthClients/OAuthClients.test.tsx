@@ -1,10 +1,12 @@
-import React from 'react';
-import OAuthClients from './OAuthClients';
-import { oauthClientFactory } from 'src/factories/accountOAuth';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { rest, server } from 'src/mocks/testServer';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import React from 'react';
+
+import { oauthClientFactory } from 'src/factories/accountOAuth';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import OAuthClients from './OAuthClients';
 
 describe('Maintenance Table Row', () => {
   const clients = oauthClientFactory.buildList(3);
@@ -16,7 +18,7 @@ describe('Maintenance Table Row', () => {
       })
     );
 
-    const { getByText, getByTestId } = renderWithTheme(<OAuthClients />);
+    const { getByTestId, getByText } = renderWithTheme(<OAuthClients />);
 
     await waitForElementToBeRemoved(getByTestId('table-row-loading'));
 

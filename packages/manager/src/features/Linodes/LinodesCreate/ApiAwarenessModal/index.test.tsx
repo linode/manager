@@ -1,15 +1,15 @@
-import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import ApiAwarenessModal, { Props } from '.';
 
 const defaultProps: Props = {
-  payLoad: {},
   isOpen: false,
   onClose: jest.fn(),
+  payLoad: {},
   route: '',
 };
 

@@ -1,17 +1,35 @@
-import { BrowserOptions, Event as SentryEvent, init } from '@sentry/browser';
+import {
+  BrowserOptions,
+  BrowserTracing,
+  Event as SentryEvent,
+  init,
+} from '@sentry/react';
+
 import { SENTRY_URL } from 'src/constants';
-import redactAccessToken from 'src/utilities/redactAccessToken';
 import deepStringTransform from 'src/utilities/deepStringTransform';
+import redactAccessToken from 'src/utilities/redactAccessToken';
+
 import packageJson from '../package.json';
 
 export const initSentry = () => {
   if (SENTRY_URL) {
     init({
-      dsn: SENTRY_URL,
-      release: packageJson.version,
-      environment: import.meta.env.PROD ? 'production' : 'development',
-      beforeSend,
+      allowUrls: [
+        /** anything from either *.linode.com/* or localhost:3000 */
+        /linode.com{1}/g,
+        /localhost:3000{1}/g,
+      ],
       autoSessionTracking: false,
+      beforeSend,
+      denyUrls: [
+        // New Relic script
+        /new-relic\.js/i,
+        // Chrome extensions
+        /extensions\//i,
+        /^chrome:\/\//i,
+      ],
+      dsn: SENTRY_URL,
+      environment: import.meta.env.PROD ? 'production' : 'development',
       ignoreErrors: [
         // Random plugins/extensions
         'top.GLOBALS',
@@ -59,18 +77,8 @@ export const initSentry = () => {
         // This is apparently a benign error: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
         'ResizeObserver loop limit exceeded',
       ],
-      allowUrls: [
-        /** anything from either *.linode.com/* or localhost:3000 */
-        /linode.com{1}/g,
-        /localhost:3000{1}/g,
-      ],
-      denyUrls: [
-        // New Relic script
-        /new-relic\.js/i,
-        // Chrome extensions
-        /extensions\//i,
-        /^chrome:\/\//i,
-      ],
+      integrations: [new BrowserTracing()],
+      release: packageJson.version,
     });
   }
 };
@@ -136,7 +144,7 @@ export const normalizeErrorMessage = (sentryErrorMessage: any): string => {
     return sentryErrorMessage[0].reason;
   }
 
-  if (['undefined', 'function'].includes(typeof sentryErrorMessage)) {
+  if (['function', 'undefined'].includes(typeof sentryErrorMessage)) {
     return 'Unknown error';
   }
 

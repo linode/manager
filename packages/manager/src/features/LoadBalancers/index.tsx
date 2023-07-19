@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
+
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const LoadBalancerLanding = React.lazy(
@@ -11,8 +12,8 @@ const LoadBalancerDetail = React.lazy(
 const LoadBalancerCreate = React.lazy(
   () => import('./LoadBalancerCreate/LoadBalancerCreate')
 );
-const EntryPointCreate = React.lazy(
-  () => import('./EntryPoints/EntryPointCreate/EntryPointCreate')
+const ServiceTargetCreate = React.lazy(
+  () => import('./ServiceTargets/ServiceTargetCreate/ServiceTargetCreate')
 );
 const RouteCreate = React.lazy(
   () => import('./Routes/RouteCreate/RouteCreate')
@@ -24,8 +25,8 @@ const LoadBalancer = () => {
       <Switch>
         <Route component={RouteCreate} path="/loadbalancers/routes/create" />
         <Route
-          component={EntryPointCreate}
-          path="/loadbalancers/entrypoints/create"
+          component={ServiceTargetCreate}
+          path="/loadbalancers/service-target/create"
         />
         <Route component={LoadBalancerCreate} path="/loadbalancers/create" />
         <Route

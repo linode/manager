@@ -1,5 +1,6 @@
 import { StateHandlerMap, StateUpdaters, withStateHandlers } from 'recompose';
-import { storage, Storage } from 'src/utilities/storage';
+
+import { Storage, storage } from 'src/utilities/storage';
 
 const localStorageContainer = <TState, TUpdaters, TOuter>(
   mapState: (s: Storage) => TState,

@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+
 import { TableSortCell } from './TableSortCell';
 
 interface Props {
@@ -9,14 +10,14 @@ interface Props {
 export const StyledTableSortCell = styled(TableSortCell, {
   label: 'StyledTableSortCell',
 })<Props>(({ theme, ...props }) => ({
-  width: props.width || '40%',
-  [theme.breakpoints.down('lg')]: {
-    width: props.mobileWidth || '25%',
-  },
   '&:hover': {
-    cursor: 'pointer',
     '& span': {
       color: theme.textColors.linkActiveLight,
     },
+    cursor: 'pointer',
   },
+  [theme.breakpoints.down('lg')]: {
+    width: props.mobileWidth || '25%',
+  },
+  width: props.width || '40%',
 }));

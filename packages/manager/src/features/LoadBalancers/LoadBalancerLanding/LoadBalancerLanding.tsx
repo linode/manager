@@ -1,5 +1,6 @@
 import React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -11,28 +12,28 @@ import Tabs from 'src/components/core/ReachTabs';
 const RouteLanding = React.lazy(
   () => import('../Routes/RouteLanding/RouteLanding')
 );
-const EntryPointLanding = React.lazy(
-  () => import('../EntryPoints/EntryPointLanding/EntryPointLanding')
+const ServiceTargetLanding = React.lazy(
+  () => import('../ServiceTargets/ServiceTargetLanding/ServiceTargetLanding')
 );
 
 const LoadBalancerLanding = () => {
   const history = useHistory();
   const { tab } = useParams<{
-    tab?: 'routes' | 'entrypoints';
+    tab?: 'routes' | 'service-targets';
   }>();
 
   const tabs = [
     {
-      title: 'Load Balancers',
       routeName: `/loadbalancers`,
+      title: 'Load Balancers',
     },
     {
-      title: 'Routes',
       routeName: `/loadbalancers/routes`,
+      title: 'Routes',
     },
     {
+      routeName: `/loadbalancers/service-targets`,
       title: 'Service Targets',
-      routeName: `/loadbalancers/entrypoints`,
     },
   ];
 
@@ -51,7 +52,7 @@ const LoadBalancerLanding = () => {
   const createButtonText = tab
     ? tab === 'routes'
       ? 'Create Route'
-      : tab === 'entrypoints'
+      : tab === 'service-targets'
       ? 'Create Service Target'
       : 'Create Load Balancer'
     : 'Create Load Balancer';
@@ -59,8 +60,8 @@ const LoadBalancerLanding = () => {
   const createButtonAction = () => {
     if (tab === 'routes') {
       history.push(`/loadbalancers/routes/create`);
-    } else if (tab === 'entrypoints') {
-      history.push(`/loadbalancers/entrypoints/create`);
+    } else if (tab === 'service-targets') {
+      history.push(`/loadbalancers/service-targets/create`);
     } else {
       history.push(`/loadbalancers/create`);
     }
@@ -90,7 +91,7 @@ const LoadBalancerLanding = () => {
               <RouteLanding />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
-              <EntryPointLanding />
+              <ServiceTargetLanding />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>

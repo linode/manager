@@ -1,8 +1,11 @@
 import React from 'react';
+
+import { regionFactory } from 'src/factories/regions';
 import { formatPlanTypes } from 'src/utilities/planNotices';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
-import { regionFactory } from 'src/factories/regions';
+
 import type { PlansAvailabilityNoticeProps } from './PlansAvailabilityNotice';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 
@@ -21,10 +24,10 @@ describe('PlansAvailabilityNotice', () => {
       const formattedPlanType = formatPlanTypes(planType);
 
       const props: PlansAvailabilityNoticeProps = {
-        isSelectedRegionEligibleForPlan: false,
         hasSelectedRegion: true,
-        regionsData: mockedRegionData,
+        isSelectedRegionEligibleForPlan: false,
         planType,
+        regionsData: mockedRegionData,
       };
 
       const { getByTestId } = renderWithTheme(
@@ -47,10 +50,10 @@ describe('PlansAvailabilityNotice', () => {
     () => {
       const formattedPlanType = formatPlanTypes(planType);
       const props: PlansAvailabilityNoticeProps = {
-        isSelectedRegionEligibleForPlan: false,
         hasSelectedRegion: false,
-        regionsData: mockedRegionData,
+        isSelectedRegionEligibleForPlan: false,
         planType,
+        regionsData: mockedRegionData,
       };
 
       const { getByTestId } = renderWithTheme(
@@ -72,10 +75,10 @@ describe('PlansAvailabilityNotice', () => {
     `renders no ${planType} notice when isSelectedRegionPremium is true`,
     () => {
       const props: PlansAvailabilityNoticeProps = {
-        isSelectedRegionEligibleForPlan: true,
         hasSelectedRegion: true,
-        regionsData: mockedRegionData,
+        isSelectedRegionEligibleForPlan: true,
         planType,
+        regionsData: mockedRegionData,
       };
 
       const { queryByTestId } = renderWithTheme(

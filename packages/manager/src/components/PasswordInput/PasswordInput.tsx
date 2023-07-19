@@ -1,24 +1,26 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
 import zxcvbn from 'zxcvbn';
-import { StrengthIndicator } from '../PasswordInput/StrengthIndicator';
+
 import { TextFieldProps } from 'src/components/TextField';
+
+import { StrengthIndicator } from '../PasswordInput/StrengthIndicator';
 import { HideShowText } from './HideShowText';
 
 interface Props extends TextFieldProps {
-  disabledReason?: string | JSX.Element;
+  disabledReason?: JSX.Element | string;
   hideStrengthLabel?: boolean;
   hideValidation?: boolean;
 }
 
 const PasswordInput = (props: Props) => {
   const {
-    value,
-    required,
     disabledReason,
-    tooltipInteractive,
     hideStrengthLabel,
     hideValidation,
+    required,
+    tooltipInteractive,
+    value,
     ...rest
   } = props;
 
@@ -29,18 +31,18 @@ const PasswordInput = (props: Props) => {
       <Grid xs={12}>
         <HideShowText
           {...rest}
-          tooltipText={disabledReason}
-          tooltipInteractive={tooltipInteractive}
-          value={value}
           fullWidth
           required={required}
+          tooltipInteractive={tooltipInteractive}
+          tooltipText={disabledReason}
+          value={value}
         />
       </Grid>
       {!hideValidation && (
         <Grid xs={12}>
           <StrengthIndicator
-            strength={strength}
             hideStrengthLabel={hideStrengthLabel}
+            strength={strength}
           />
         </Grid>
       )}

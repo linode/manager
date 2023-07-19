@@ -2,11 +2,12 @@
  * @file Cypress intercepts and mocks for Image API requests.
  */
 
-import type { Image, ImageStatus } from '@linode/api-v4/types';
+import { imageFactory } from '@src/factories';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
-import { imageFactory } from '@src/factories';
 import { getFilters } from 'support/util/request';
+
+import type { Image, ImageStatus } from '@linode/api-v4/types';
 
 /**
  * Intercepts POST request to create a Image.
@@ -90,8 +91,8 @@ export const mockGetImage = (
   return cy.intercept('GET', apiMatcher(`images/${encodedId}*`), (req) => {
     return req.reply(
       imageFactory.build({
-        label,
         id,
+        label,
         status,
       })
     );

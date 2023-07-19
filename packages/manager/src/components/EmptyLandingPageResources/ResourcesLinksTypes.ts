@@ -1,27 +1,27 @@
 interface ResourcesLink {
-  to: string;
-  text: string;
   external?: boolean;
+  text: string;
+  to: string;
 }
 
 export interface linkAnalyticsEvent {
-  category: string;
   action: string;
+  category: string;
 }
 
 export interface ResourcesHeaders {
-  title: string;
-  subtitle: string;
   description: string;
+  subtitle: string;
+  title: string;
 }
 
 export interface ResourcesLinks {
-  links: ResourcesLink[];
   linkAnalyticsEvent: linkAnalyticsEvent;
+  links: ResourcesLink[];
 }
 
 export interface ResourcesLinkSection {
-  title: string;
   links: ResourcesLinks['links'];
   moreInfo: ResourcesLink;
+  title: string;
 }

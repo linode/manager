@@ -6,10 +6,11 @@ import {
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
+
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { CircleProgress } from 'src/components/CircleProgress';
 
 const LinodesDetailHeader = React.lazy(
   () => import('./LinodesDetailHeader/LinodeDetailHeader')
@@ -20,12 +21,12 @@ const LinodesDetailNavigation = React.lazy(
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
 
 const LinodeDetail = () => {
-  const { url, path } = useRouteMatch();
+  const { path, url } = useRouteMatch();
   const { linodeId } = useParams<{ linodeId: string }>();
 
   const id = Number(linodeId);
 
-  const { data: linode, isLoading, error } = useLinodeQuery(id);
+  const { data: linode, error, isLoading } = useLinodeQuery(id);
 
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
@@ -44,7 +45,7 @@ const LinodeDetail = () => {
           LinodeDetail, though, because we'd like to use the same context, so we don't
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
-        <Route path={`${path}/clone`} component={CloneLanding} />
+        <Route component={CloneLanding} path={`${path}/clone`} />
 
         <Route
           render={() => (

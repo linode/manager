@@ -1,5 +1,7 @@
 import {
+  createSubnetSchema,
   createVPCSchema,
+  modifySubnetSchema,
   updateVPCSchema,
 } from '@linode/validation/lib/vpcs.schema';
 import { BETA_API_ROOT as API_ROOT } from '../constants';
@@ -11,7 +13,14 @@ import Request, {
   setXFilter,
 } from '../request';
 import { Filter, ResourcePage as Page, Params } from '../types';
-import { CreateVPCPayload, UpdateVPCPayload, VPC } from './types';
+import {
+  CreateSubnetPayload,
+  CreateVPCPayload,
+  ModifySubnetPayload,
+  Subnet,
+  UpdateVPCPayload,
+  VPC,
+} from './types';
 
 // VPC methods
 /**
@@ -79,3 +88,82 @@ export const deleteVPC = (vpcID: number) =>
   );
 
 // Subnet methods
+/**
+ * getSubnets
+ *
+ * Return a paginated list of subnets under a specified VPC.
+ *
+ */
+export const getSubnets = (vpcID: number, params?: Params, filter?: Filter) =>
+  Request<Page<Subnet>>(
+    setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/subnets`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
+  );
+
+/**
+ * getSubnet
+ *
+ * Return details for a single specified subnet under a specified VPC.
+ *
+ */
+export const getSubnet = (vpcID: number, subnetID: number) =>
+  Request<Subnet>(
+    setURL(
+      `${API_ROOT}/vpcs/${encodeURIComponent(
+        vpcID
+      )}/subnets/${encodeURIComponent(subnetID)}`
+    ),
+    setMethod('GET')
+  );
+
+/**
+ * createSubnet
+ *
+ * Create a new subnet under an existing VPC.
+ *
+ */
+export const createSubnet = (vpcID: number, data: CreateSubnetPayload) =>
+  Request<Subnet>(
+    setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/subnets`),
+    setMethod('POST'),
+    setData(data, createSubnetSchema)
+  );
+
+/**
+ * modifySubnet
+ *
+ * Modify an existing subnet.
+ *
+ */
+export const modifySubnet = (
+  vpcID: number,
+  subnetID: number,
+  data: ModifySubnetPayload
+) =>
+  Request<Subnet>(
+    setURL(
+      `${API_ROOT}/vpcs/${encodeURIComponent(
+        vpcID
+      )}/subnets/${encodeURIComponent(subnetID)}`
+    ),
+    setMethod('PUT'),
+    setData(data, modifySubnetSchema)
+  );
+
+/**
+ * deleteSubnet
+ *
+ * Delete a single specified subnet belonging to a specified VPC.
+ *
+ */
+export const deleteSubnet = (vpcID: number, subnetID: number) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/vpcs/${encodeURIComponent(
+        vpcID
+      )}/subnets/${encodeURIComponent(subnetID)}`
+    ),
+    setMethod('DELETE')
+  );

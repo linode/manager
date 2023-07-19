@@ -1,18 +1,19 @@
-import * as React from 'react';
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
-import { connect, MapDispatchToProps } from 'react-redux';
+import * as React from 'react';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+
 import {
   WithApplicationStoreProps,
   withApplicationStore,
 } from 'src/containers/withApplicationStore.container';
 import {
-  withQueryClient,
   WithQueryClientProps,
+  withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';
@@ -38,62 +39,8 @@ type CombinedProps = Props &
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
-    showChildren: false,
     hasEnsuredAllTypes: false,
-  };
-
-  static defaultProps = {
-    isAuthenticated: false,
-  };
-
-  /**
-   * We make a series of requests for data on app load. The flow is:
-   * 1. App begins load; users see splash screen
-   * 2. Initial requests (in makeInitialRequests) are made (account, profile, etc.)
-   * 3. Initial requests complete; app is marked as done loading
-   * 4. As splash screen goes away, secondary requests (in makeSecondaryRequests -- Linodes, types, regions)
-   * are kicked off
-   */
-  makeInitialRequests = async () => {
-    // When loading Lish we avoid all this extra data loading
-    if (window.location?.pathname?.match(/linodes\/[0-9]+\/lish/)) {
-      return;
-    }
-
-    // Initial Requests: Things we need immediately (before rendering the app)
-    const dataFetchingPromises: Promise<any>[] = [
-      // Fetch user's account information
-      this.props.queryClient.prefetchQuery({
-        queryFn: getAccountInfo,
-        queryKey: accountQueryKey,
-      }),
-
-      // Username and whether a user is restricted
-      this.props.queryClient.prefetchQuery({
-        queryFn: getProfile,
-        queryKey: 'profile',
-      }),
-
-      // Is a user managed
-      this.props.queryClient.prefetchQuery({
-        queryKey: 'account-settings',
-        queryFn: getAccountSettings,
-      }),
-
-      // Is this a large account? (should we use API or Redux-based search/pagination)
-      this.props.checkAccountSize(),
-    ];
-
-    // Start events polling
-    startEventsInterval(this.props.store, this.props.queryClient);
-
-    try {
-      await Promise.all(dataFetchingPromises);
-    } catch {
-      /** We choose to do nothing, relying on the Redux error state. */
-    } finally {
-      this.props.markAppAsDoneLoading();
-    }
+    showChildren: false,
   };
 
   componentDidMount() {
@@ -150,38 +97,92 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     // eslint-disable-next-line
     return <React.Fragment>{showChildren ? children : null}</React.Fragment>;
   }
+
+  static defaultProps = {
+    isAuthenticated: false,
+  };
+
+  /**
+   * We make a series of requests for data on app load. The flow is:
+   * 1. App begins load; users see splash screen
+   * 2. Initial requests (in makeInitialRequests) are made (account, profile, etc.)
+   * 3. Initial requests complete; app is marked as done loading
+   * 4. As splash screen goes away, secondary requests (in makeSecondaryRequests -- Linodes, types, regions)
+   * are kicked off
+   */
+  makeInitialRequests = async () => {
+    // When loading Lish we avoid all this extra data loading
+    if (window.location?.pathname?.match(/linodes\/[0-9]+\/lish/)) {
+      return;
+    }
+
+    // Initial Requests: Things we need immediately (before rendering the app)
+    const dataFetchingPromises: Promise<any>[] = [
+      // Fetch user's account information
+      this.props.queryClient.prefetchQuery({
+        queryFn: getAccountInfo,
+        queryKey: accountQueryKey,
+      }),
+
+      // Username and whether a user is restricted
+      this.props.queryClient.prefetchQuery({
+        queryFn: getProfile,
+        queryKey: 'profile',
+      }),
+
+      // Is a user managed
+      this.props.queryClient.prefetchQuery({
+        queryFn: getAccountSettings,
+        queryKey: 'account-settings',
+      }),
+
+      // Is this a large account? (should we use API or Redux-based search/pagination)
+      this.props.checkAccountSize(),
+    ];
+
+    // Start events polling
+    startEventsInterval(this.props.store, this.props.queryClient);
+
+    try {
+      await Promise.all(dataFetchingPromises);
+    } catch {
+      /** We choose to do nothing, relying on the Redux error state. */
+    } finally {
+      this.props.markAppAsDoneLoading();
+    }
+  };
 }
 
 interface StateProps {
   isAuthenticated: boolean;
-  linodesLoading: boolean;
-  linodesLastUpdated: number;
   linodes: Linode[];
+  linodesLastUpdated: number;
+  linodesLoading: boolean;
   pendingUpload: PendingUploadState;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   isAuthenticated: Boolean(state.authentication.token),
-  linodesLoading: state.__resources.linodes.loading,
-  linodesLastUpdated: state.__resources.linodes.lastUpdated,
   linodes: Object.values(state.__resources.linodes.itemsById),
+  linodesLastUpdated: state.__resources.linodes.lastUpdated,
+  linodesLoading: state.__resources.linodes.loading,
   pendingUpload: state.pendingUpload,
 });
 
 interface DispatchProps {
-  initSession: () => void;
   checkAccountSize: () => Promise<null>;
-  requestLinodes: () => Promise<GetAllData<Linode>>;
+  initSession: () => void;
   markAppAsDoneLoading: () => void;
+  requestLinodes: () => Promise<GetAllData<Linode>>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => ({
-  initSession: () => dispatch(handleInitTokens()),
   checkAccountSize: () => dispatch(checkAccountSize()),
-  requestLinodes: () => dispatch(requestLinodes({})),
+  initSession: () => dispatch(handleInitTokens()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
+  requestLinodes: () => dispatch(requestLinodes({})),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

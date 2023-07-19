@@ -1,13 +1,16 @@
-import * as React from 'react';
-import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from '@mui/material/Unstable_Grid2';
-import InputAdornment from 'src/components/core/InputAdornment';
+import * as React from 'react';
+
 import Select from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputAdornment from 'src/components/core/InputAdornment';
+
 import { setErrorMap } from './utils';
-import type { Item } from 'src/components/EnhancedSelect';
+
 import type { NodeBalancerConfigPanelProps } from './types';
+import type { Item } from 'src/components/EnhancedSelect';
 
 interface ActiveCheckProps extends NodeBalancerConfigPanelProps {
   errorMap: Record<string, string | undefined>;
@@ -72,14 +75,14 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
       value: 'connection',
     },
     {
+      disabled: protocol === 'tcp',
       label: 'HTTP Status',
       value: 'http',
-      disabled: protocol === 'tcp',
     },
     {
+      disabled: protocol === 'tcp',
       label: 'HTTP Body',
       value: 'http_body',
-      disabled: protocol === 'tcp',
     },
   ];
 
@@ -88,31 +91,31 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
   });
 
   return (
-    <Grid xs={12} md={6} sx={{ padding: 0 }}>
+    <Grid md={6} sx={{ padding: 0 }} xs={12}>
       <Grid container spacing={2}>
         <Grid xs={12}>
-          <Typography variant="h2" data-qa-active-checks-header>
+          <Typography data-qa-active-checks-header variant="h2">
             Active Health Checks
           </Typography>
         </Grid>
         <Grid xs={12}>
           <Select
-            options={typeOptions}
-            label="Type"
-            inputId={`type-${configIdx}`}
-            value={defaultType || typeOptions[0]}
-            onChange={onHealthCheckTypeChange}
-            errorText={errorMap.check}
-            errorGroup={forEdit ? `${configIdx}` : undefined}
             textFieldProps={{
               dataAttrs: {
                 'data-qa-active-check-select': true,
               },
             }}
-            small
             disabled={disabled}
+            errorGroup={forEdit ? `${configIdx}` : undefined}
+            errorText={errorMap.check}
+            inputId={`type-${configIdx}`}
             isClearable={false}
+            label="Type"
             noMarginTop
+            onChange={onHealthCheckTypeChange}
+            options={typeOptions}
+            small
+            value={defaultType || typeOptions[0]}
           />
           <FormHelperText>
             Active health checks proactively check the health of back-end nodes.{' '}
@@ -123,20 +126,20 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
           <React.Fragment>
             <Grid xs={12}>
               <TextField
-                type="number"
-                label="Interval"
                 InputProps={{
                   'aria-label': 'Active Health Check Interval',
                   endAdornment: (
                     <InputAdornment position="end">seconds</InputAdornment>
                   ),
                 }}
-                value={healthCheckInterval}
-                onChange={onHealthCheckIntervalChange}
-                errorText={errorMap.check_interval}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
                 data-qa-active-check-interval
                 disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.check_interval}
+                label="Interval"
+                onChange={onHealthCheckIntervalChange}
+                type="number"
+                value={healthCheckInterval}
               />
               <FormHelperText>
                 Seconds between health check probes
@@ -144,39 +147,39 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             </Grid>
             <Grid xs={12}>
               <TextField
-                type="number"
-                label="Timeout"
                 InputProps={{
                   'aria-label': 'Active Health Check Timeout',
                   endAdornment: (
                     <InputAdornment position="end">seconds</InputAdornment>
                   ),
                 }}
-                value={healthCheckTimeout}
-                onChange={onHealthCheckTimeoutChange}
-                errorText={errorMap.check_timeout}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
                 data-qa-active-check-timeout
                 disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.check_timeout}
+                label="Timeout"
+                onChange={onHealthCheckTimeoutChange}
+                type="number"
+                value={healthCheckTimeout}
               />
               <FormHelperText>
                 Seconds to wait before considering the probe a failure. 1-30.
                 Must be less than check_interval.
               </FormHelperText>
             </Grid>
-            <Grid xs={12} lg={6}>
+            <Grid lg={6} xs={12}>
               <TextField
-                type="number"
-                label="Attempts"
-                value={healthCheckAttempts}
-                onChange={onHealthCheckAttemptsChange}
-                errorText={errorMap.check_attempts}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
                 InputProps={{
                   'aria-label': 'Active Health Check Attempts',
                 }}
                 data-qa-active-check-attempts
                 disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.check_attempts}
+                label="Attempts"
+                onChange={onHealthCheckAttemptsChange}
+                type="number"
+                value={healthCheckAttempts}
               />
               <FormHelperText>
                 Number of failed probes before taking a node out of rotation.
@@ -184,28 +187,28 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               </FormHelperText>
             </Grid>
             {['http', 'http_body'].includes(healthCheckType) && (
-              <Grid xs={12} lg={6}>
+              <Grid lg={6} xs={12}>
                 <TextField
+                  disabled={disabled}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
+                  errorText={errorMap.check_path}
                   label="Check HTTP Path"
-                  value={checkPath || ''}
                   onChange={onCheckPathChange}
                   required={['http', 'http_body'].includes(healthCheckType)}
-                  errorText={errorMap.check_path}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  disabled={disabled}
+                  value={checkPath || ''}
                 />
               </Grid>
             )}
             {healthCheckType === 'http_body' && (
-              <Grid xs={12} md={4}>
+              <Grid md={4} xs={12}>
                 <TextField
+                  disabled={disabled}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
+                  errorText={errorMap.check_body}
                   label="Expected HTTP Body"
-                  value={checkBody}
                   onChange={onCheckBodyChange}
                   required={healthCheckType === 'http_body'}
-                  errorText={errorMap.check_body}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  disabled={disabled}
+                  value={checkBody}
                 />
               </Grid>
             )}

@@ -1,42 +1,43 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { IconButton } from 'src/components/IconButton';
 import { truncate } from 'src/utilities/truncate';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(1),
-    padding: `${theme.spacing(2)} ${theme.spacing(1)}`,
-    position: 'relative',
-    '& pre': {
-      backgroundColor: theme.bg.tableHeader,
-    },
-  },
   expButton: {
-    position: 'absolute',
-    top: -43,
-    right: 0,
-    left: 'auto',
     '& svg': {
       stroke: theme.textColors.tableHeader,
     },
+    left: 'auto',
+    position: 'absolute',
+    right: 0,
+    top: -43,
+  },
+  expand: {
+    transform: 'rotate(180deg)',
+  },
+  root: {
+    '& pre': {
+      backgroundColor: theme.bg.tableHeader,
+    },
+    marginTop: theme.spacing(1),
+    padding: `${theme.spacing(2)} ${theme.spacing(1)}`,
+    position: 'relative',
   },
   toggle: {
     height: 22,
     width: 22,
   },
-  expand: {
-    transform: 'rotate(180deg)',
-  },
 }));
 
 interface Props {
-  text: string;
   open?: boolean;
+  text: string;
 }
 
 const TicketDetailText: React.FC<Props> = (props) => {
@@ -49,14 +50,14 @@ const TicketDetailText: React.FC<Props> = (props) => {
   const ticketReplyBody = panelOpen ? text : truncatedText;
 
   return (
-    <Grid container className={classes.root} spacing={2}>
+    <Grid className={classes.root} container spacing={2}>
       <Grid style={{ width: '100%' }}>
         <HighlightedMarkdown textOrMarkdown={ticketReplyBody} />
       </Grid>
       {truncatedText !== text && (
         <IconButton
-          className={classes.expButton}
           aria-label="Expand full answer"
+          className={classes.expButton}
           onClick={() => togglePanel(!panelOpen)}
           size="large"
         >

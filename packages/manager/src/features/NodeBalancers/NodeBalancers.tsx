@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 
 const NodeBalancerDetail = React.lazy(() =>
@@ -16,11 +17,11 @@ const NodeBalancers = () => {
   return (
     <React.Suspense fallback={<CircleProgress />}>
       <Switch>
-        <Route component={NodeBalancersLanding} path="/nodebalancers" exact />
+        <Route component={NodeBalancersLanding} exact path="/nodebalancers" />
         <Route
           component={NodeBalancerCreate}
-          path="/nodebalancers/create"
           exact
+          path="/nodebalancers/create"
         />
         <Route
           component={NodeBalancerDetail}

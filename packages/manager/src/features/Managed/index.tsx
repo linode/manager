@@ -5,6 +5,7 @@ import {
   Switch,
   withRouter,
 } from 'react-router-dom';
+
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const ManagedLanding = React.lazy(() => import('./ManagedLanding'));

@@ -16,15 +16,15 @@ export const clearUserInput = () => {
   // Add more things here as needed, right now we only cache
   // Support ticket title/description.
 
-  supportText.set({ title: '', description: '' });
-  ticketReply.set({ ticketId: -1, text: '' });
+  supportText.set({ description: '', title: '' });
+  ticketReply.set({ text: '', ticketId: -1 });
   stackScriptInProgress.set({
-    id: '',
-    label: '',
-    script: '',
-    rev_note: '',
     description: '',
+    id: '',
     images: [],
+    label: '',
+    rev_note: '',
+    script: '',
     updated: '',
   });
 };

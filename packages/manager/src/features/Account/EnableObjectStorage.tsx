@@ -1,19 +1,20 @@
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import { Link } from 'react-router-dom';
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Notice } from 'src/components/Notice/Notice';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
-import { useProfile } from 'src/queries/profile';
 import { queryKey } from 'src/queries/objectStorage';
-import { useQueryClient } from 'react-query';
+import { useProfile } from 'src/queries/profile';
 interface Props {
   object_storage: AccountSettings['object_storage'];
 }
@@ -37,8 +38,8 @@ export const ObjectStorageContent = (props: ContentProps) => {
         </Grid>
         <Grid>
           <Button
-            data-testid="open-dialog-button"
             buttonType="outlined"
+            data-testid="open-dialog-button"
             onClick={openConfirmationModal}
           >
             Cancel Object Storage
@@ -57,8 +58,8 @@ export const ObjectStorageContent = (props: ContentProps) => {
       <Link to="/object-storage/access-keys">Access Key.</Link>{' '}
       <ExternalLink
         fixedIcon
-        text="Learn more."
         link="https://www.linode.com/docs/platform/object-storage/"
+        text="Learn more."
       />
     </Typography>
   );
@@ -98,26 +99,26 @@ export const EnableObjectStorage = (props: Props) => {
 
   return (
     <>
-      <Accordion heading="Object Storage" defaultExpanded={true}>
+      <Accordion defaultExpanded={true} heading="Object Storage">
         <ObjectStorageContent
           object_storage={object_storage}
           openConfirmationModal={() => setOpen(true)}
         />
       </Accordion>
       <TypeToConfirmDialog
-        title={`Cancel Object Storage`}
-        label={'Username'}
         entity={{
-          type: 'AccountSetting',
-          subType: 'ObjectStorage',
           action: 'cancellation',
           name: username,
           primaryBtnText: 'Confirm Cancellation',
+          subType: 'ObjectStorage',
+          type: 'AccountSetting',
         }}
-        open={isOpen}
+        label={'Username'}
         loading={isLoading}
-        onClose={handleClose}
         onClick={handleSubmit}
+        onClose={handleClose}
+        open={isOpen}
+        title={`Cancel Object Storage`}
       >
         {error ? <Notice error text={error} /> : null}
         <Notice warning>

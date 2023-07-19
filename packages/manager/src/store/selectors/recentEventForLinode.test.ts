@@ -1,4 +1,5 @@
 import { entityFactory, eventFactory } from 'src/factories/events';
+
 import recentEventForLinode from './recentEventForLinode';
 
 describe('recentEventForLinode selector', () => {

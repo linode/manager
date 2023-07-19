@@ -4,12 +4,12 @@ import {
 } from './MainContent';
 
 const mainContentBanner = {
-  text: 'Test Text',
+  key: 'Test Text Key',
   link: {
     text: 'Test anchor text',
     url: 'https://linode.com',
   },
-  key: 'Test Text Key',
+  text: 'Test Text',
 };
 
 describe('checkFlagsForMainContentBanner', () => {

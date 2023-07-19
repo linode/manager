@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
+
 import { ApplicationState } from 'src/store';
 import { setFeatureFlagsLoaded as _setFeatureFlagsLoaded } from 'src/store/featureFlagsLoad/featureFlagsLoad.actions';
+
 import { Dispatch } from './types';
 
 export const useFeatureFlagsLoad = () => {

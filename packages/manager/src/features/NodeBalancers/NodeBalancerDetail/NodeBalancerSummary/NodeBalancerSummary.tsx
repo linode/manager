@@ -1,11 +1,13 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useNodeBalancerQuery } from 'src/queries/nodebalancers';
+
 import { SummaryPanel } from './SummaryPanel';
 import { TablesPanel } from './TablesPanel';
-import { useNodeBalancerQuery } from 'src/queries/nodebalancers';
-import { useParams } from 'react-router-dom';
 
 export const NodeBalancerSummary = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -16,10 +18,10 @@ export const NodeBalancerSummary = () => {
     <div>
       <DocumentTitleSegment segment={`${nodebalancer?.label} - Summary`} />
       <Grid container spacing={2}>
-        <StyledMainGridItem xs={12} md={8} lg={9}>
+        <StyledMainGridItem lg={9} md={8} xs={12}>
           <TablesPanel />
         </StyledMainGridItem>
-        <StyledSidebarGridItem xs={12} md={4} lg={3}>
+        <StyledSidebarGridItem lg={3} md={4} xs={12}>
           <SummaryPanel />
         </StyledSidebarGridItem>
       </Grid>

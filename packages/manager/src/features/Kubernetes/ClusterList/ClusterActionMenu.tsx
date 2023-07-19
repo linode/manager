@@ -1,11 +1,12 @@
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { Hidden } from 'src/components/Hidden';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';
 import { downloadFile } from 'src/utilities/downloadFile';
@@ -26,16 +27,16 @@ export const ClusterActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Download kubeconfig',
       onClick: () => {
         downloadKubeConfig();
       },
+      title: 'Download kubeconfig',
     },
     {
-      title: 'Delete',
       onClick: () => {
         openDialog();
       },
+      title: 'Delete',
     },
   ];
 
@@ -71,8 +72,8 @@ export const ClusterActionMenu = (props: Props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
+              key={action.title}
               onClick={action.onClick}
             />
           );

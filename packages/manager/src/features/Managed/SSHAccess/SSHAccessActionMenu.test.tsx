@@ -1,9 +1,11 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
+
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
+
 import {
-  Props,
   SSHAccessActionMenu as ActionMenu,
+  Props,
 } from './SSHAccessActionMenu';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
@@ -11,8 +13,8 @@ jest.mock('src/components/ActionMenu/ActionMenu');
 const mockOpenDrawer = jest.fn();
 
 const props: Props = {
-  linodeId: 1,
   isEnabled: true,
+  linodeId: 1,
   linodeLabel: 'label',
   openDrawer: mockOpenDrawer,
 };

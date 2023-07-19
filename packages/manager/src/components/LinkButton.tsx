@@ -1,18 +1,19 @@
-import * as React from 'react';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
+import * as React from 'react';
+
 import { Box } from './Box';
 import CircularProgress from './core/CircularProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  link: {
-    ...theme.applyLinkStyles,
-  },
   disabled: {
     color: theme.palette.text.primary,
-    pointerEvents: 'none',
     cursor: 'default',
+    pointerEvents: 'none',
+  },
+  link: {
+    ...theme.applyLinkStyles,
   },
   spinner: {
     marginLeft: theme.spacing(),
@@ -20,10 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  children: React.ReactNode | string;
+  className?: string;
   isDisabled?: boolean;
   isLoading?: boolean;
-  className?: string;
-  children: React.ReactNode | string;
   onClick: () => void;
   style?: React.CSSProperties;
 }
@@ -31,17 +32,16 @@ interface Props {
 export const LinkButton = (props: Props) => {
   const classes = useStyles();
   const {
-    isLoading = false,
-    isDisabled = false,
-    onClick,
-    className,
     children,
+    className,
+    isDisabled = false,
+    isLoading = false,
+    onClick,
     style,
   } = props;
 
   const Button = () => (
     <button
-      style={style}
       className={classNames(
         {
           [classes.disabled]: isDisabled,
@@ -51,6 +51,7 @@ export const LinkButton = (props: Props) => {
       )}
       disabled={isDisabled}
       onClick={onClick}
+      style={style}
     >
       {children}
     </button>
@@ -58,9 +59,9 @@ export const LinkButton = (props: Props) => {
 
   if (isLoading) {
     return (
-      <Box display="flex" alignItems="center">
+      <Box alignItems="center" display="flex">
         <Button />
-        <CircularProgress size={12} className={classes.spinner} />
+        <CircularProgress className={classes.spinner} size={12} />
       </Box>
     );
   }

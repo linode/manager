@@ -1,9 +1,11 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
+
 import { Box } from 'src/components/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { TextField } from 'src/components/TextField';
 import {
@@ -13,22 +15,22 @@ import {
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import { isToday as _isToday } from 'src/utilities/isToday';
+
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import ProcessesGraphs from './ProcessesGraphs';
 import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
 import { Process } from './types';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  filterInput: {
+    width: 300,
+  },
   root: {
     [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
-  },
-  filterInput: {
-    width: 300,
   },
   selectTimeRange: {
     width: 200,
@@ -36,8 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  clientID?: number;
   clientAPIKey?: string;
+  clientID?: number;
   lastUpdated?: number;
   lastUpdatedError?: APIError[];
   timezone: string;
@@ -74,17 +76,17 @@ const ProcessesLanding: React.FC<Props> = (props) => {
 
   // For the TimeRangeSelect.
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    start: 0,
     end: 0,
+    start: 0,
   });
   const handleStatsChange = (start: number, end: number) => {
-    setTimeBox({ start, end });
+    setTimeBox({ end, start });
   };
 
   const isToday = _isToday(time.start, time.end);
 
   // We get all the data needed for the table and Graphs in one request.
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['processes'],
     clientAPIKey,
     time.start,
@@ -129,54 +131,54 @@ const ProcessesLanding: React.FC<Props> = (props) => {
     <>
       <DocumentTitleSegment segment="Processes" />
       <Grid container spacing={4}>
-        <Grid item xs={12} lg={7}>
+        <Grid item lg={7} xs={12}>
           <Box
+            className={classes.root}
             display="flex"
             justifyContent="space-between"
-            className={classes.root}
           >
             <TextField
-              className={classes.filterInput}
-              placeholder="Filter by process or user..."
-              label="Filter by process or user"
-              hideLabel
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setInputText(e.target.value)
               }
+              className={classes.filterInput}
+              hideLabel
+              label="Filter by process or user"
+              placeholder="Filter by process or user..."
             />
             <TimeRangeSelect
-              handleStatsChange={handleStatsChange}
-              defaultValue={'Past 30 Minutes'}
-              label="Select Time Range"
               className={classes.selectTimeRange}
+              defaultValue={'Past 30 Minutes'}
+              handleStatsChange={handleStatsChange}
               hideLabel
+              label="Select Time Range"
             />
           </Box>
           <ProcessesTable
-            processesData={memoizedFilteredData}
+            error={lastUpdatedError?.[0]?.reason || error}
             // It's correct to set loading to `true` when
             // processes.lastUpdated === 0. The reason we do this is to avoid
             // a state where we haven't made the request to get processes yet
             // (since we're waiting on lastUpdated) and thus processes.loading
             // is `false` but we don't have any data to show. Instead of showing
+            processesData={memoizedFilteredData}
             // an empty state, we want to show a loader.
             processesLoading={loading || lastUpdated === 0}
-            error={lastUpdatedError?.[0]?.reason || error}
             selectedProcess={selectedProcess}
             setSelectedProcess={setSelectedProcess}
           />
         </Grid>
-        <Grid item xs={12} lg={5}>
+        <Grid item lg={5} xs={12}>
           <ProcessesGraphs
+            clientAPIKey={clientAPIKey || ''}
+            error={lastUpdatedError?.[0]?.reason || error}
+            isToday={isToday}
+            lastUpdated={lastUpdated}
             processesData={data}
             processesLoading={loading || lastUpdated === 0}
-            error={lastUpdatedError?.[0]?.reason || error}
             selectedProcess={selectedProcess}
-            timezone={timezone}
             time={time}
-            isToday={isToday}
-            clientAPIKey={clientAPIKey || ''}
-            lastUpdated={lastUpdated}
+            timezone={timezone}
           />
         </Grid>
       </Grid>
@@ -204,15 +206,15 @@ export const extendData = (
       const userProcess = processesData.Processes![processName][user];
 
       extendedData.push({
-        id: `${processName}-${user}`,
-        name: processName,
-        user,
-        maxCount: statMax(userProcess.count),
+        averageCPU: statAverage(userProcess.cpu),
         averageIO:
           statAverage(userProcess.ioreadkbytes) +
           statAverage(userProcess.iowritekbytes),
-        averageCPU: statAverage(userProcess.cpu),
         averageMem: statAverage(userProcess.mem),
+        id: `${processName}-${user}`,
+        maxCount: statMax(userProcess.count),
+        name: processName,
+        user,
       });
     });
   });

@@ -1,19 +1,21 @@
-import * as React from 'react';
 import {
   render,
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+
 import { paymentFactory } from 'src/factories/billing';
 import { rest, server } from 'src/mocks/testServer';
-import PaymentDrawer, { getMinimumPayment } from './PaymentDrawer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
+import PaymentDrawer, { getMinimumPayment } from './PaymentDrawer';
+
 const props = {
-  paymentMethods: [],
-  open: true,
   onClose: jest.fn(),
+  open: true,
+  paymentMethods: [],
 };
 
 describe('Make a Payment Panel', () => {

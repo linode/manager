@@ -1,4 +1,5 @@
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
+
 import { selectDefaultConfig } from './PowerActionsDialogOrDrawer';
 
 describe('Default config selection logic', () => {

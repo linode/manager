@@ -9,12 +9,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Autocomplete, Box } from '@mui/material';
 import React from 'react';
+import { SxProps } from '@mui/system';
+
 import { TextField } from 'src/components/TextField';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
-import { CustomPopper, RemoveIcon, SelectedIcon } from './LinodeSelect.styles';
-import { SxProps } from '@mui/system';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+
+import { CustomPopper, RemoveIcon, SelectedIcon } from './LinodeSelect.styles';
 
 interface LinodeSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */
@@ -23,14 +25,12 @@ interface LinodeSelectProps {
   disabled?: boolean;
   /** Hint displayed with error styling. */
   errorText?: string;
-  /** The ID of the input. */
-  id?: string;
   /** Filter sent to the API when retrieving account Linodes. */
   filter?: Filter;
   /** Hint displayed in normal styling. */
   helperText?: string;
-  /** Overrides the default label. */
-  showIPAddressLabel?: boolean;
+  /** The ID of the input. */
+  id?: string;
   /** Adds styling to indicate a loading state. */
   loading?: boolean;
   /** Optionally disable top margin for input label */
@@ -47,33 +47,35 @@ interface LinodeSelectProps {
   region?: string;
   /* Displays an indication that the input is required. */
   required?: boolean;
+  /** Overrides the default label. */
+  showIPAddressLabel?: boolean;
   /* Adds custom styles to the component. */
   sx?: SxProps;
 }
 
 export interface LinodeMultiSelectProps extends LinodeSelectProps {
-  /* Called when the value changes */
-  onSelectionChange: (selected: Linode[]) => void;
   /* Enable multi-select. */
   multiple: true;
+  /* Called when the value changes */
+  onSelectionChange: (selected: Linode[]) => void;
   /* Current value of the input. */
   value: number[];
 }
 
 export interface LinodeSingleSelectProps extends LinodeSelectProps {
-  /* Called when the value changes */
-  onSelectionChange: (selected: Linode | null) => void;
   /* Enable single-select. */
   multiple?: false;
+  /* Called when the value changes */
+  onSelectionChange: (selected: Linode | null) => void;
   /* Current value of the input. */
-  value: number | null;
+  value: null | number;
 }
 
 /**
  * A select input allowing selection between account Linodes.
  */
 export const LinodeSelectV2 = (
-  props: LinodeSingleSelectProps | LinodeMultiSelectProps
+  props: LinodeMultiSelectProps | LinodeSingleSelectProps
 ) => {
   const {
     clearable = true,
@@ -98,10 +100,10 @@ export const LinodeSelectV2 = (
 
   const {
     data: linodesData,
-    isLoading: linodesDataLoading,
     error,
-    hasNextPage,
     fetchNextPage,
+    hasNextPage,
+    isLoading: linodesDataLoading,
   } = useInfiniteLinodesQuery(filter);
 
   const [inputValue, setInputValue] = React.useState('');
@@ -125,46 +127,6 @@ export const LinodeSelectV2 = (
 
   return (
     <Autocomplete
-      id={id}
-      value={mapIdsToLinodes(value, linodes)}
-      options={filteredLinodesByOptions ?? []}
-      getOptionLabel={getOptionLabel}
-      clearOnBlur={false}
-      ChipProps={{ deleteIcon: <CloseIcon /> }}
-      multiple={multiple}
-      loading={linodesDataLoading || loading}
-      disabled={disabled}
-      onChange={(_, value) =>
-        multiple && Array.isArray(value)
-          ? onSelectionChange(value)
-          : !multiple && !Array.isArray(value) && onSelectionChange(value)
-      }
-      onBlur={onBlur}
-      noOptionsText={
-        <i>
-          {noOptionsMessage ??
-            getDefaultNoOptionsMessage(
-              error,
-              linodesDataLoading,
-              filteredLinodesByOptions
-            )}
-        </i>
-      }
-      renderInput={(params) => (
-        <TextField
-          label={multiple ? 'Linodes' : 'Linode'}
-          placeholder={
-            placeholder || (multiple ? 'Select Linodes' : 'Select a Linode')
-          }
-          loading={linodesDataLoading}
-          errorText={error?.[0].reason ?? errorText}
-          helperText={helperText}
-          noMarginTop={noMarginTop}
-          {...params}
-        />
-      )}
-      inputValue={value === null ? '' : inputValue}
-      onInputChange={(_, value) => setInputValue(value)}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
@@ -177,7 +139,35 @@ export const LinodeSelectV2 = (
           }
         },
       }}
-      disableCloseOnSelect={multiple}
+      noOptionsText={
+        <i>
+          {noOptionsMessage ??
+            getDefaultNoOptionsMessage(
+              error,
+              linodesDataLoading,
+              filteredLinodesByOptions
+            )}
+        </i>
+      }
+      onChange={(_, value) =>
+        multiple && Array.isArray(value)
+          ? onSelectionChange(value)
+          : !multiple && !Array.isArray(value) && onSelectionChange(value)
+      }
+      renderInput={(params) => (
+        <TextField
+          placeholder={
+            placeholder || multiple ? 'Select Linodes' : 'Select a Linode'
+          }
+          errorText={error?.[0].reason ?? errorText}
+          helperText={helperText}
+          inputId={params.id}
+          label={multiple ? 'Linodes' : 'Linode'}
+          loading={linodesDataLoading}
+          noMarginTop={noMarginTop}
+          {...params}
+        />
+      )}
       renderOption={(props, option, { selected }) => {
         return (
           <li {...props}>
@@ -202,10 +192,23 @@ export const LinodeSelectV2 = (
           </li>
         );
       }}
+      ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
-      popupIcon={<KeyboardArrowDownIcon />}
+      clearOnBlur={false}
       disableClearable={!clearable}
+      disableCloseOnSelect={multiple}
+      disabled={disabled}
+      getOptionLabel={getOptionLabel}
+      id={id}
+      inputValue={value === null ? '' : inputValue}
+      loading={linodesDataLoading || loading}
+      multiple={multiple}
+      onBlur={onBlur}
+      onInputChange={(_, value) => setInputValue(value)}
+      options={filteredLinodesByOptions ?? []}
+      popupIcon={<KeyboardArrowDownIcon />}
       sx={sx}
+      value={mapIdsToLinodes(value, linodes)}
     />
   );
 };

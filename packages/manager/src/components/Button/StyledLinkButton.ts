@@ -10,16 +10,16 @@ import { styled } from '@mui/material/styles';
 export const StyledLinkButton = styled('button', {
   label: 'StyledLinkButton',
 })(({ theme }) => ({
-  background: 'none',
-  color: theme.textColors.linkActiveLight,
-  border: 'none',
-  font: 'inherit',
-  padding: 0,
-  cursor: 'pointer',
-  minWidth: 0,
   '&:hover': {
-    color: theme.palette.primary.main,
     backgroundColor: 'transparent',
+    color: theme.palette.primary.main,
     textDecoration: 'underline',
   },
+  background: 'none',
+  border: 'none',
+  color: theme.textColors.linkActiveLight,
+  cursor: 'pointer',
+  font: 'inherit',
+  minWidth: 0,
+  padding: 0,
 }));

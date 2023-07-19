@@ -4,7 +4,7 @@
 
 // The number of Linode APIvr requests that are allowed.
 // Set to `null` to allow any number of APIv4 requests.
-const maxRequests: number | null = null;
+const maxRequests: null | number = null;
 
 // Whether a test should fail immediately upon passing `maxRequests` threshold.
 // If `false`, the test will continue running but will fail upon finishing.
@@ -24,10 +24,10 @@ beforeEach(() => {
   cy.wrap([]).as('linodeApiV4Request');
   cy.intercept(
     {
-      url: /\/v4(?:beta)?\/.*/,
       middleware: true,
+      url: /\/v4(?:beta)?\/.*/,
     },
-    (req) => {
+    () => {
       requests++;
       // Short-circuit if `maxRequests` is null.
       if (maxRequests === null) {

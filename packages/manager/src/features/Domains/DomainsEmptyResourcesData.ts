@@ -2,6 +2,7 @@ import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
@@ -19,23 +20,23 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      to: 'https://www.linode.com/docs/products/networking/dns-manager/',
       text: 'Overview of DNS Manager',
+      to: 'https://www.linode.com/docs/products/networking/dns-manager/',
     },
     {
+      text: 'Getting Started with DNS Manager',
       to:
         'https://www.linode.com/docs/products/networking/dns-manager/get-started/',
-      text: 'Getting Started with DNS Manager',
     },
     {
+      text: 'Create a Domain Zone',
       to:
         'https://www.linode.com/docs/products/networking/dns-manager/guides/create-domain/',
-      text: 'Create a Domain Zone',
     },
   ],
   moreInfo: {
-    to: 'https://www.linode.com/docs/products/networking/dns-manager/guides/',
     text: 'View additional DNS Manager guides',
+    to: 'https://www.linode.com/docs/products/networking/dns-manager/guides/',
   },
   title: 'Getting Started Guides',
 };
@@ -43,24 +44,24 @@ export const gettingStartedGuides: ResourcesLinkSection = {
 export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
-      to: 'https://www.youtube.com/watch?v=ganwcCm53Qs',
+      external: true,
       text: 'Linode DNS Manager | Total Control Over Your DNS Records',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=ganwcCm53Qs',
     },
     {
-      to: 'https://www.youtube.com/watch?v=Vb1JsfZlFLE',
+      external: true,
       text: 'Using Domains with Your Server | Common DNS Configurations',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=Vb1JsfZlFLE',
     },
     {
-      to: 'https://www.youtube.com/watch?v=mKfx4ryuMtY',
-      text: 'Connect a Domain to a Linode Server',
       external: true,
+      text: 'Connect a Domain to a Linode Server',
+      to: 'https://www.youtube.com/watch?v=mKfx4ryuMtY',
     },
   ],
   moreInfo: {
-    to: youtubeChannelLink,
     text: youtubeMoreLinkText,
+    to: youtubeChannelLink,
   },
   title: 'Video Playlist',
 };

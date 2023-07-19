@@ -3,7 +3,7 @@ import * as React from 'react';
 import { components as reactSelectComponents } from 'react-select';
 import { MultiValueProps } from 'react-select';
 
-interface Props extends MultiValueProps<any> {}
+type Props = MultiValueProps<any>;
 
 type CombinedProps = Props;
 

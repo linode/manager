@@ -1,20 +1,22 @@
 import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
-import { EventWithStore } from 'src/events';
-import {
+  ReplyRequest,
+  SupportReply,
+  SupportTicket,
   closeSupportTicket,
   createReply,
   getTicket,
   getTicketReplies,
   getTickets,
-  ReplyRequest,
-  SupportReply,
-  SupportTicket,
 } from '@linode/api-v4/lib/support';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
+
+import { EventWithStore } from 'src/events';
+
 import type {
   APIError,
   Filter,

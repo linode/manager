@@ -1,15 +1,14 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
-
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 const setValue = jest.fn();
 
 const props = {
-  value: 1,
   setValue,
+  value: 1,
 };
 
 const disabledProps = {
@@ -64,7 +63,7 @@ describe('EnhancedNumberInput', () => {
 
   it('should respect min values', () => {
     const { getByTestId } = render(
-      wrapWithTheme(<EnhancedNumberInput {...props} value={0} min={1} />)
+      wrapWithTheme(<EnhancedNumberInput {...props} min={1} value={0} />)
     );
 
     const input = getByTestId('textfield-input') as HTMLInputElement;
@@ -74,7 +73,7 @@ describe('EnhancedNumberInput', () => {
 
   it('should respect max values', () => {
     const { getByTestId } = render(
-      wrapWithTheme(<EnhancedNumberInput {...props} value={6} max={5} />)
+      wrapWithTheme(<EnhancedNumberInput {...props} max={5} value={6} />)
     );
 
     const input = getByTestId('textfield-input') as HTMLInputElement;

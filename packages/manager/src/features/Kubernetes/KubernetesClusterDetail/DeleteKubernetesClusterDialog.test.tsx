@@ -1,18 +1,20 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
+
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import {
-  Props,
   DeleteKubernetesClusterDialog,
+  Props,
 } from './DeleteKubernetesClusterDialog';
 
 const props: Props = {
-  open: true,
-  clusterLabel: 'this-cluster',
   clusterId: 1,
+  clusterLabel: 'this-cluster',
   onClose: jest.fn(),
+  open: true,
 };
 
 const queryClient = new QueryClient();
@@ -42,7 +44,7 @@ describe('Kubernetes deletion dialog', () => {
       })
     );
 
-    const { getByTestId, findByTestId } = renderWithTheme(
+    const { findByTestId, getByTestId } = renderWithTheme(
       <DeleteKubernetesClusterDialog {...props} />
     );
     const button = getByTestId('dialog-confirm');

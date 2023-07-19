@@ -4,6 +4,7 @@ import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
@@ -20,28 +21,28 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
+      text: 'Get Started with the Linode Kubernetes Engine (LKE)',
       to:
         'https://www.linode.com/docs/products/compute/kubernetes/get-started/',
-      text: 'Get Started with the Linode Kubernetes Engine (LKE)',
     },
     {
+      text: 'Create and Administer a Kubernetes Cluster on LKE',
       to:
         'https://www.linode.com/docs/products/compute/kubernetes/guides/create-lke-cluster',
-      text: 'Create and Administer a Kubernetes Cluster on LKE',
     },
     {
+      text: 'Using the Kubernetes Dashboard',
       to:
         'https://www.linode.com/docs/guides/using-the-kubernetes-dashboard-on-lke/',
-      text: 'Using the Kubernetes Dashboard',
     },
     {
-      to: 'https://www.linode.com/docs/guides/beginners-guide-to-kubernetes/',
       text: 'A Beginner\u{2019}s Guide to Kubernetes',
+      to: 'https://www.linode.com/docs/guides/beginners-guide-to-kubernetes/',
     },
   ],
   moreInfo: {
-    to: docsLink,
     text: guidesMoreLinkText,
+    to: docsLink,
   },
   title: 'Getting Started Guides',
 };
@@ -49,29 +50,29 @@ export const gettingStartedGuides: ResourcesLinkSection = {
 export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
-      to: 'https://www.youtube.com/watch?v=erthAqqdD_c',
+      external: true,
       text: 'Easily Deploy a Kubernetes Cluster on LKE',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=erthAqqdD_c',
     },
     {
-      to: 'https://www.youtube.com/watch?v=VYUr_WvXCsY',
+      external: true,
       text: 'Enable High Availability on an LKE Cluster',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=VYUr_WvXCsY',
     },
     {
-      to: 'https://www.youtube.com/watch?v=odPmyT5DONg',
+      external: true,
       text: 'Use a Load Balancer with an LKE Cluster',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=odPmyT5DONg',
     },
     {
-      to: 'https://www.youtube.com/watch?v=1564_DrFRSE',
-      text: 'Use TOBS (The Observability Stack) with LKE',
       external: true,
+      text: 'Use TOBS (The Observability Stack) with LKE',
+      to: 'https://www.youtube.com/watch?v=1564_DrFRSE',
     },
   ],
   moreInfo: {
-    to: youtubeChannelLink,
     text: youtubeMoreLinkText,
+    to: youtubeChannelLink,
   },
   title: 'Video Playlist',
 };

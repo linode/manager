@@ -1,26 +1,28 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
+
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
-    display: 'block',
-    color: theme.textColors.linkActiveLight,
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
     '&:hover, &:focus': {
       textDecoration: 'underline',
     },
+    color: theme.textColors.linkActiveLight,
+    display: 'block',
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
   },
 }));
 
@@ -29,19 +31,19 @@ export type Props = Firewall & ActionHandlers;
 export const FirewallRow = (props: Props) => {
   const classes = useStyles();
 
-  const { id, label, status, rules, ...actionHandlers } = props;
+  const { id, label, rules, status, ...actionHandlers } = props;
 
-  const { data: devices, isLoading, error } = useAllFirewallDevicesQuery(id);
+  const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
 
   const count = getCountOfRules(rules);
 
   return (
     <TableRow
-      data-testid={`firewall-row-${id}`}
       ariaLabel={`Firewall ${label}`}
+      data-testid={`firewall-row-${id}`}
     >
       <TableCell>
-        <Link className={classes.link} to={`/firewalls/${id}`} tabIndex={0}>
+        <Link className={classes.link} tabIndex={0} to={`/firewalls/${id}`}>
           {label}
         </Link>
       </TableCell>
@@ -100,7 +102,7 @@ const getLinodesCellString = (
   data: FirewallDevice[],
   loading: boolean,
   error?: APIError[]
-): string | JSX.Element => {
+): JSX.Element | string => {
   if (loading) {
     return 'Loading...';
   }
@@ -123,9 +125,9 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
       {firstThree.map((thisDevice, idx) => (
         <Link
           className="link secondaryLink"
+          data-testid="firewall-row-link"
           key={thisDevice.id}
           to={`/linodes/${thisDevice.entity.id}`}
-          data-testid="firewall-row-link"
         >
           {idx > 0 && `, `}
           {thisDevice.entity.label}

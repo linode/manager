@@ -1,14 +1,16 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import Paper from 'src/components/core/Paper';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import {
   LongviewPortsResponse,
   LongviewTopProcesses,
 } from 'src/features/Longview/request.types';
+
 import LongviewPackageDrawer from '../../LongviewPackageDrawer';
 import ActiveConnections from './ActiveConnections';
 import GaugesSection from './GaugesSection';
@@ -19,18 +21,18 @@ import TopProcesses from './TopProcesses';
 
 interface Props {
   client: string;
-  clientID: number;
   clientAPIKey: string;
+  clientID: number;
+  lastUpdated?: number;
+  lastUpdatedError?: APIError[];
+  listeningPortsData: LongviewPortsResponse;
+  listeningPortsError?: APIError[];
+  listeningPortsLoading: boolean;
   longviewClientData: LVDataProps['longviewClientData'];
   timezone: string;
   topProcessesData: LongviewTopProcesses;
-  topProcessesLoading: boolean;
   topProcessesError?: APIError[];
-  lastUpdated?: number;
-  lastUpdatedError?: APIError[];
-  listeningPortsLoading: boolean;
-  listeningPortsError?: APIError[];
-  listeningPortsData: LongviewPortsResponse;
+  topProcessesLoading: boolean;
 }
 
 export type CombinedProps = Props;
@@ -38,18 +40,18 @@ export type CombinedProps = Props;
 export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
   const {
     client,
-    clientID,
-    longviewClientData,
     clientAPIKey,
+    clientID,
     lastUpdated,
+    lastUpdatedError,
     listeningPortsData,
     listeningPortsError,
     listeningPortsLoading,
-    topProcessesData,
-    topProcessesLoading,
-    topProcessesError,
-    lastUpdatedError,
+    longviewClientData,
     timezone,
+    topProcessesData,
+    topProcessesError,
+    topProcessesLoading,
   } = props;
 
   /**
@@ -76,16 +78,16 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
         <Grid item xs={12}>
           <Paper>
             <Grid
-              container
-              justifyContent="space-between"
               alignItems="flex-start"
+              container
               item
-              xs={12}
+              justifyContent="space-between"
               spacing={0}
+              xs={12}
             >
               <IconSection
-                longviewClientData={longviewClientData}
                 client={client}
+                longviewClientData={longviewClientData}
                 openPackageDrawer={() => setDrawerOpen(true)}
               />
               <GaugesSection
@@ -94,36 +96,36 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
               />
               <TopProcesses
                 clientID={clientID}
-                topProcessesData={topProcessesData}
-                topProcessesLoading={topProcessesLoading}
-                topProcessesError={topProcessesError}
                 lastUpdatedError={lastUpdatedError}
+                topProcessesData={topProcessesData}
+                topProcessesError={topProcessesError}
+                topProcessesLoading={topProcessesLoading}
               />
             </Grid>
           </Paper>
         </Grid>
         <OverviewGraphs
           clientAPIKey={clientAPIKey}
-          timezone={timezone}
           lastUpdated={lastUpdated}
           lastUpdatedError={!!lastUpdatedError}
+          timezone={timezone}
         />
-        <Grid container justifyContent="space-between" item spacing={0}>
+        <Grid container item justifyContent="space-between" spacing={0}>
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
-            servicesLoading={listeningPortsLoading && !lastUpdated}
             servicesError={portsError}
+            servicesLoading={listeningPortsLoading && !lastUpdated}
           />
           <ActiveConnections
             connections={pathOr([], ['Ports', 'active'], listeningPortsData)}
-            connectionsLoading={listeningPortsLoading && !lastUpdated}
             connectionsError={portsError}
+            connectionsLoading={listeningPortsLoading && !lastUpdated}
           />
         </Grid>
       </Grid>
       <LongviewPackageDrawer
-        clientLabel={client}
         clientID={clientID}
+        clientLabel={client}
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />

@@ -1,16 +1,23 @@
-import * as React from 'react';
-import { Tab as ReachTab, TabProps } from '@reach/tabs';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
+import { Tab as ReachTab, TabProps } from '@reach/tabs';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   tab: {
     '&[data-reach-tab]': {
-      display: 'inline-flex',
-      flexShrink: 0,
+      '&:focus': {
+        backgroundColor: theme.color.grey7,
+      },
+      '&:hover': {
+        backgroundColor: theme.color.grey7,
+        color: `${theme.palette.primary.main} !important`,
+      },
       alignItems: 'center',
       borderBottom: '2px solid transparent',
       color: theme.textColors.linkActiveLight,
+      display: 'inline-flex',
+      flexShrink: 0,
       fontSize: '0.9rem',
       lineHeight: 1.3,
       marginTop: theme.spacing(0.5),
@@ -19,13 +26,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       minWidth: 50,
       padding: '6px 16px',
       textDecoration: 'none',
-      '&:focus': {
-        backgroundColor: theme.color.grey7,
-      },
-      '&:hover': {
-        backgroundColor: theme.color.grey7,
-        color: `${theme.palette.primary.main} !important`,
-      },
     },
     '&[data-reach-tab][data-selected]': {
       borderBottom: `3px solid ${theme.textColors.linkActiveLight}`,

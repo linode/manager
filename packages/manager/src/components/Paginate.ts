@@ -1,5 +1,6 @@
 import { clamp, slice } from 'ramda';
 import * as React from 'react';
+
 import scrollTo from 'src/utilities/scrollTo';
 import { storage } from 'src/utilities/storage';
 
@@ -25,10 +26,10 @@ export const createDisplayPage = <T extends any>(
 };
 
 export interface PaginationProps extends State {
+  count: number;
+  data: any[];
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (pageSize: number) => void;
-  data: any[];
-  count: number;
 }
 
 interface State {
@@ -37,21 +38,39 @@ interface State {
 }
 
 interface Props {
-  data: any[];
   children: (p: PaginationProps) => React.ReactNode;
+  data: any[];
   page?: number;
   pageSize?: number;
-  scrollToRef?: React.RefObject<any>;
   pageSizeSetter?: (v: number) => void;
+  scrollToRef?: React.RefObject<any>;
   shouldScroll?: boolean;
   updatePageUrl?: (page: number) => void;
 }
 
 export default class Paginate extends React.Component<Props, State> {
-  state: State = {
-    page: this.props.page || 1,
-    pageSize: this.props.pageSize || storage.pageSize.get() || 25,
-  };
+  render() {
+    let view;
+    // update view based on page url
+    if (this.props.updatePageUrl) {
+      view = createDisplayPage(this.props.page || 1, this.state.pageSize);
+    }
+    // update view based on state
+    else {
+      view = createDisplayPage(this.state.page, this.state.pageSize);
+    }
+
+    const props = {
+      ...this.props,
+      ...this.state,
+      count: this.props.data.length,
+      data: view(this.props.data),
+      handlePageChange: this.handlePageChange,
+      handlePageSizeChange: this.handlePageSizeChange,
+    };
+
+    return this.props.children(props);
+  }
 
   handlePageChange = (page: number) => {
     if (this.props.shouldScroll ?? true) {
@@ -74,26 +93,8 @@ export default class Paginate extends React.Component<Props, State> {
     }
   };
 
-  render() {
-    let view;
-    // update view based on page url
-    if (this.props.updatePageUrl) {
-      view = createDisplayPage(this.props.page || 1, this.state.pageSize);
-    }
-    // update view based on state
-    else {
-      view = createDisplayPage(this.state.page, this.state.pageSize);
-    }
-
-    const props = {
-      ...this.props,
-      ...this.state,
-      handlePageChange: this.handlePageChange,
-      handlePageSizeChange: this.handlePageSizeChange,
-      data: view(this.props.data),
-      count: this.props.data.length,
-    };
-
-    return this.props.children(props);
-  }
+  state: State = {
+    page: this.props.page || 1,
+    pageSize: this.props.pageSize || storage.pageSize.get() || 25,
+  };
 }

@@ -2,10 +2,11 @@
  * @file Cypress intercepts and mocks for Cloud Manager StackScript operations.
  */
 
-import type { StackScript } from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
+
+import type { StackScript } from '@linode/api-v4/types';
 
 /**
  * Intercepts GET request to list StackScripts.
@@ -68,8 +69,8 @@ export const interceptCreateStackScript = (): Cypress.Chainable<null> => {
  */
 export const mockDeleteStackScript = (id: number): Cypress.Chainable<null> => {
   return cy.intercept('DELETE', apiMatcher(`linode/stackscripts/${id}`), {
-    statusCode: 200,
     body: {},
+    statusCode: 200,
   });
 };
 
@@ -102,8 +103,8 @@ export const mockUpdateStackScript = (
  */
 export const mockUpdateStackScriptError = (
   id: number,
-  err_field: string | null = null,
-  err_message: string | null = null
+  err_field: null | string = null,
+  err_message: null | string = null
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
@@ -112,8 +113,8 @@ export const mockUpdateStackScriptError = (
       {
         errors: [
           {
-            reason: err_message,
             field: err_field,
+            reason: err_message,
           },
         ],
       },

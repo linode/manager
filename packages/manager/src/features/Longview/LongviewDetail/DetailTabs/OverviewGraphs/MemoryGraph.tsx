@@ -1,11 +1,13 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { withTheme, WithTheme } from '@mui/styles';
+
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import {
   convertBytesToTarget,
   readableBytes,
 } from 'src/utilities/unitConversions';
+
 import { Stat } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
 import { generateUsedMemory, getMaxUnit } from '../../../shared/utilities';
@@ -26,7 +28,7 @@ export const MemoryGraph: React.FC<CombinedProps> = (props) => {
     timezone,
   } = props;
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['memory'],
     clientAPIKey,
     start,
@@ -58,42 +60,42 @@ export const MemoryGraph: React.FC<CombinedProps> = (props) => {
 
   return (
     <LongviewLineGraph
-      title="Memory"
-      subtitle={unit}
-      ariaLabel="Memory Usage Graph"
-      formatData={(value: number) => convertBytesToTarget(unit, value)}
-      formatTooltip={(value: number) => readableBytes(value).formatted}
-      error={error}
-      loading={loading}
-      showToday={isToday}
-      timezone={timezone}
-      nativeLegend
       data={[
         {
-          label: 'Swap',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.swap,
+          borderColor: 'transparent',
           data: _convertData(swap, start, end, formatMemory),
+          label: 'Swap',
         },
         {
-          label: 'Buffers',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.buffers,
+          borderColor: 'transparent',
           data: _convertData(buffers, start, end, formatMemory),
+          label: 'Buffers',
         },
         {
-          label: 'Cache',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.cache,
+          borderColor: 'transparent',
           data: _convertData(cache, start, end, formatMemory),
+          label: 'Cache',
         },
         {
-          label: 'Used',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.used,
+          borderColor: 'transparent',
           data: _convertData(used, start, end, formatMemory),
+          label: 'Used',
         },
       ]}
+      ariaLabel="Memory Usage Graph"
+      error={error}
+      formatData={(value: number) => convertBytesToTarget(unit, value)}
+      formatTooltip={(value: number) => readableBytes(value).formatted}
+      loading={loading}
+      nativeLegend
+      showToday={isToday}
+      subtitle={unit}
+      timezone={timezone}
+      title="Memory"
     />
   );
 };

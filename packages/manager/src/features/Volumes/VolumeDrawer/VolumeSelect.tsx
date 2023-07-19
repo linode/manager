@@ -1,19 +1,20 @@
-import * as React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
+import * as React from 'react';
+
 import { TextField } from 'src/components/TextField';
 import { useInfiniteVolumesQuery } from 'src/queries/volumes';
 
 interface Props {
-  error?: string;
-  onChange: (volumeId: number | null) => void;
-  onBlur: (e: any) => void;
-  value: number;
-  region?: string;
   disabled?: boolean;
+  error?: string;
+  onBlur: (e: any) => void;
+  onChange: (volumeId: null | number) => void;
+  region?: string;
+  value: number;
 }
 
 const VolumeSelect = (props: Props) => {
-  const { error, onBlur, disabled, onChange, value, region } = props;
+  const { disabled, error, onBlur, onChange, region, value } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
@@ -28,15 +29,15 @@ const VolumeSelect = (props: Props) => {
 
   const {
     data,
-    isLoading,
     fetchNextPage,
     hasNextPage,
+    isLoading,
   } = useInfiniteVolumesQuery({
     ...searchFilter,
     ...(region ? { region } : {}),
+    '+order': 'asc',
     // linode_id: null,  <- if the API let us, we would do this
     '+order_by': 'label',
-    '+order': 'asc',
   });
 
   const options = data?.pages
@@ -47,15 +48,6 @@ const VolumeSelect = (props: Props) => {
 
   return (
     <Autocomplete
-      disabled={disabled}
-      options={options ?? []}
-      value={selectedVolume}
-      onChange={(event, value) => onChange(value?.id ?? -1)}
-      inputValue={inputValue}
-      onInputChange={(event, value) => {
-        setInputValue(value);
-      }}
-      isOptionEqualToValue={(option) => option.id === selectedVolume?.id}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
@@ -68,20 +60,29 @@ const VolumeSelect = (props: Props) => {
           }
         },
       }}
-      loading={isLoading}
+      onInputChange={(event, value) => {
+        setInputValue(value);
+      }}
       renderInput={(params) => (
         <TextField
-          label="Volume"
-          placeholder="Select a Volume"
           helperText={
             region && "Only volumes in this Linode's region are attachable."
           }
-          onBlur={onBlur}
-          loading={isLoading}
           errorText={error}
+          label="Volume"
+          loading={isLoading}
+          onBlur={onBlur}
+          placeholder="Select a Volume"
           {...params}
         />
       )}
+      disabled={disabled}
+      inputValue={inputValue}
+      isOptionEqualToValue={(option) => option.id === selectedVolume?.id}
+      loading={isLoading}
+      onChange={(event, value) => onChange(value?.id ?? -1)}
+      options={options ?? []}
+      value={selectedVolume}
     />
   );
 };

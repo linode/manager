@@ -7,13 +7,13 @@ import { Filter } from '@linode/api-v4';
  *   would produce { '+or': [1, 22, 333, 4444] }
  *   and reads as "where `id` is 1, 22, 333, or 4444."
  */
-export const generateInFilter = (keyName: string, arr: (string | number)[]) => {
+export const generateInFilter = (keyName: string, arr: (number | string)[]) => {
   return arr.map((el) => ({ [keyName]: el }));
 };
 
 export const generateNeqFilter = (
   keyName: string,
-  arr: (string | number)[]
+  arr: (number | string)[]
 ) => {
   return arr.map((el) => ({ [keyName]: { '+neq': el } }));
 };
