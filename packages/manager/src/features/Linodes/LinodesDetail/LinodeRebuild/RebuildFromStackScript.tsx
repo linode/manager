@@ -334,6 +334,24 @@ export const RebuildFromStackScript = (props: Props) => {
                 password={values.root_pass}
                 passwordHelperText={passwordHelperText}
               />
+              <TypeToConfirm
+                confirmationText={
+                  <span>
+                    To confirm these changes, type the label of the Linode (
+                    <strong>{linodeLabel}</strong>) in the field below:
+                  </span>
+                }
+                onChange={(input) => {
+                  setConfirmationText(input);
+                }}
+                hideLabel
+                label="Linode Label"
+                textFieldStyle={{ marginBottom: 16 }}
+                title="Confirm"
+                typographyStyle={{ marginBottom: 8 }}
+                value={confirmationText}
+                visible={preferences?.type_to_confirm}
+              />
               <ActionsPanel
                 className={classes.actionPanel}
                 primaryButtonDataTestId="rebuild"
@@ -341,26 +359,7 @@ export const RebuildFromStackScript = (props: Props) => {
                 primaryButtonHandler={handleRebuildButtonClick}
                 primaryButtonText="Rebuild Linode"
                 showPrimary
-              >
-                <TypeToConfirm
-                  confirmationText={
-                    <span>
-                      To confirm these changes, type the label of the Linode (
-                      <strong>{linodeLabel}</strong>) in the field below:
-                    </span>
-                  }
-                  onChange={(input) => {
-                    setConfirmationText(input);
-                  }}
-                  hideLabel
-                  label="Linode Label"
-                  textFieldStyle={{ marginBottom: 16 }}
-                  title="Confirm"
-                  typographyStyle={{ marginBottom: 8 }}
-                  value={confirmationText}
-                  visible={preferences?.type_to_confirm}
-                />
-              </ActionsPanel>
+              />
             </form>
             <StackScriptDialog />
           </Grid>
