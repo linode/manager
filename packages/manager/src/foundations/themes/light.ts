@@ -298,9 +298,6 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.white,
             transition: 'background-color 0.2s',
           },
-          '&[aria-selected="true"]': {
-            color: primaryColors.main,
-          },
           fontSize: '0.9rem',
           padding: '10px !important',
         },
