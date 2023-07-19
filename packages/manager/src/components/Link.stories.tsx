@@ -1,4 +1,5 @@
 import React from 'react';
+
 import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';
 
@@ -37,9 +38,12 @@ export const External: StoryObj<LinkProps> = {
  * It will open in a new tab and feature an external link icon.
  */
 export const ExternalSite: StoryObj<LinkProps> = {
+  args: {
+    external: true,
+  },
   name: 'External Site',
   render: (args: LinkProps) => (
-    <Link {...args} external to="https://google.com">
+    <Link {...args} to="https://google.com">
       See more at https://google.com
     </Link>
   ),
@@ -50,10 +54,10 @@ export const ExternalSite: StoryObj<LinkProps> = {
  * This example will generate a console error
  */
 export const IconOnly: StoryObj<LinkProps> = {
-  name: 'Icon Only',
   args: {
     accessibleAriaLabel: 'This is safe',
   },
+  name: 'Icon Only',
   render: (args: LinkProps) => (
     <Link {...args} to="https://google.com">
       <DocsIcon />
