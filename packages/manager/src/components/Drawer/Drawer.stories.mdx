@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from 'src/components/Typography';
 import { Button } from 'src/components/Button/Button';
-import ActionsPanel from '../ActionsPanel';
+import ActionsPanel from '../ActionsPanel/ActionsPanel';
 import { TextField } from '../TextField';
 import Drawer from './Drawer';
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
@@ -92,23 +92,23 @@ _Props extend MUI's DrawerProps_
           defaultValue: { summary: 'false' },
         },
         type: {
-          required: true
+          required: true,
         },
         control: {
-          type: null
-        }
+          type: null,
+        },
       },
       onClose: {
         description: 'The handler called when the "X" button is clicked',
         type: {
-          required: true
-        }
+          required: true,
+        },
       },
       title: {
         description: 'The title displayed at the top of the Drawer',
         type: {
-          required: true
-        }
+          required: true,
+        },
       },
       wide: {
         description:
@@ -151,4 +151,5 @@ export const DrawerSourceCode = `
     </Button>
   </ActionsPanel>
 </Drawer>
+
 `
