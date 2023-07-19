@@ -76,10 +76,7 @@ export const BucketBreadcrumb = (props: Props) => {
           );
         })}
       </StyledPrefixWrapper>
-      <StyledCopyTooltip
-        text={bucketPath}
-        placement="bottom"
-      ></StyledCopyTooltip>
+      <StyledCopyTooltip text={bucketPath} placement="bottom" />
     </StyledRootContainer>
   );
 };

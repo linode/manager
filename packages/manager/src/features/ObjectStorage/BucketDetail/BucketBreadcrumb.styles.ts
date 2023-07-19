@@ -46,7 +46,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
   paddingLeft: theme.spacing(1),
   borderRadius: theme.shape.borderRadius,
   svg: {
-    height: `16px`,
-    width: `16px`,
+    height: 16,
+    width: 16,
   },
 }));
