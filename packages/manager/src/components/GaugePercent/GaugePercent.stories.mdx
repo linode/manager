@@ -9,11 +9,11 @@ import { Typography } from 'src/components/Typography';
 - **Chart.js** is the charting tool we use for gauges
 - Best used to show percentages
 
-export const Template = (args) => <Gauge {...args} />;
+export const Template = (args) => <GaugePercent {...args} />;
 
 <Canvas>
   <Story
-    name="Gauge"
+    name="GaugePercent"
     args={{
       value: 50,
       max: 200,
@@ -79,4 +79,4 @@ export const Template = (args) => <Gauge {...args} />;
   </Story>
 </Canvas>
 
-<ArgsTable story="Gauge" sort="requiredFirst"/>
+<ArgsTable story="GaugePercent" sort="requiredFirst"/>
