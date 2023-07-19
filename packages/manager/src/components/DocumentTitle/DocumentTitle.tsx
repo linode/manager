@@ -63,11 +63,9 @@ export const DocumentTitleSegment = (props: Props) => {
   );
 };
 
-type Wrapper = <Props>(
+export const withDocumentTitleProvider = <Props extends {}>(
   Component: React.ComponentType<Props>
-) => React.FC<Props>;
-
-export const withDocumentTitleProvider: Wrapper = (Component) => (props) => {
+) => (props: Props) => {
   let titleSegments: string[] = [];
 
   const updateDocumentTitle = () => {
