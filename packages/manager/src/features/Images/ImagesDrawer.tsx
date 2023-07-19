@@ -320,10 +320,6 @@ export const ImagesDrawer = (props: CombinedProps) => {
 
       {['create', 'restore'].includes(mode) && (
         <LinodeSelectV2
-          value={selectedLinode}
-          errorText={linodeError}
-          clearable={false}
-          disabled={!canCreateImage}
           onSelectionChange={(linode) => {
             if (linode !== null) {
               handleLinodeChange(linode.id);
@@ -332,6 +328,10 @@ export const ImagesDrawer = (props: CombinedProps) => {
           optionsFilter={(linode) =>
             availableLinodes ? availableLinodes.includes(linode.id) : true
           }
+          clearable={false}
+          disabled={!canCreateImage}
+          errorText={linodeError}
+          value={selectedLinode}
         />
       )}
 

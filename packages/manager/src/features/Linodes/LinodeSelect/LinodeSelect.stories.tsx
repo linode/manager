@@ -1,15 +1,15 @@
+import { action } from '@storybook/addon-actions';
 import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+
+import { LinodeSelectV2 } from './LinodeSelectV2';
+
 import type {
   LinodeMultiSelectProps,
   LinodeSingleSelectProps,
 } from './LinodeSelectV2';
-import { LinodeSelectV2 } from './LinodeSelectV2';
-import { action } from '@storybook/addon-actions';
+import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<LinodeSingleSelectProps | LinodeMultiSelectProps> = {
-  title: 'Components/Linode Select',
-  component: LinodeSelectV2,
+const meta: Meta<LinodeMultiSelectProps | LinodeSingleSelectProps> = {
   argTypes: {
     onSelectionChange: {
       action: 'onSelectionChange',
@@ -18,6 +18,8 @@ const meta: Meta<LinodeSingleSelectProps | LinodeMultiSelectProps> = {
   args: {
     onSelectionChange: action('onSelectionChange'),
   },
+  component: LinodeSelectV2,
+  title: 'Components/Linode Select',
 };
 
 export default meta;

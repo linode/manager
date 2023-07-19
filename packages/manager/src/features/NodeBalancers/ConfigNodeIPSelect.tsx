@@ -1,30 +1,32 @@
-import * as React from 'react';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import { Linode } from '@linode/api-v4/lib/linodes';
+import * as React from 'react';
+
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+
 import type { TextFieldProps } from 'src/components/TextField';
 
 interface ConfigNodeIPSelectProps {
-  selectedRegion?: string;
-  handleChange: (nodeIndex: number, ipAddress: string) => void;
-  nodeIndex: number;
   disabled?: boolean;
-  inputId?: string;
   errorText?: string;
+  handleChange: (nodeIndex: number, ipAddress: string) => void;
+  inputId?: string;
   nodeAddress?: string;
+  nodeIndex: number;
+  selectedRegion?: string;
   textfieldProps: Omit<TextFieldProps, 'label'>;
 }
 
 export const ConfigNodeIPSelect = React.memo(
   (props: ConfigNodeIPSelectProps) => {
-    const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
+    const [selectedLinode, setSelectedLinode] = React.useState<null | number>(
       null
     );
     const {
       handleChange: _handleChange,
       inputId,
-      nodeIndex,
       nodeAddress,
+      nodeIndex,
     } = props;
 
     const handleChange = (linode: Linode) => {
@@ -46,17 +48,8 @@ export const ConfigNodeIPSelect = React.memo(
 
     return (
       <LinodeSelectV2
-        id={inputId}
-        noMarginTop
-        value={nodeAddress === '' ? null : selectedLinode}
         noOptionsMessage={`No options - please ensure you have at least 1 Linode
       with a private IP located in the selected region.`}
-        errorText={props.errorText}
-        onSelectionChange={handleChange}
-        disabled={props.disabled}
-        placeholder="IP Address"
-        clearable
-        showIPAddressLabel
         optionsFilter={(linode) => {
           /**
            * if the Linode doesn't have an private IP OR if the Linode
@@ -68,6 +61,15 @@ export const ConfigNodeIPSelect = React.memo(
             linode.region === props.selectedRegion
           );
         }}
+        clearable
+        disabled={props.disabled}
+        errorText={props.errorText}
+        id={inputId}
+        noMarginTop
+        onSelectionChange={handleChange}
+        placeholder="IP Address"
+        showIPAddressLabel
+        value={nodeAddress === '' ? null : selectedLinode}
       />
     );
   }

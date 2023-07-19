@@ -359,19 +359,19 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     display="flex"
                   >
                     <LinodeSelectV2
-                      disabled={doesNotHavePermission}
                       optionsFilter={(linode: Linode) =>
                         regionsWithBlockStorage.includes(linode.region)
                       }
-                      onSelectionChange={handleLinodeChange}
-                      errorText={linodeError || configErrorMessage}
-                      onBlur={handleBlur}
-                      value={values.linode_id === -1 ? null : values.linode_id}
-                      region={values.region}
-                      clearable
                       sx={{
                         width: '320px',
                       }}
+                      clearable
+                      disabled={doesNotHavePermission}
+                      errorText={linodeError || configErrorMessage}
+                      onBlur={handleBlur}
+                      onSelectionChange={handleLinodeChange}
+                      region={values.region}
+                      value={values.linode_id === -1 ? null : values.linode_id}
                     />
                     {renderSelectTooltip(
                       'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'

@@ -11,9 +11,9 @@ import { Typography } from 'src/components/Typography';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import { useRegionsQuery } from 'src/queries/regions';
 
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import {
   EstimatedCloneTimeMode,
   ExtendedConfig,
@@ -254,8 +254,6 @@ export const Configs: React.FC<Props> = (props) => {
       )}
 
       <LinodeSelectV2
-        placeholder="Destination"
-        value={selectedLinodeId}
         onSelectionChange={(linode) => {
           if (linode !== null) {
             handleSelectLinode(linode.id);
@@ -266,8 +264,10 @@ export const Configs: React.FC<Props> = (props) => {
             ? (linode: Linode) => linode.id !== currentLinodeId
             : undefined
         }
-        errorText={linodeError}
         clearable={false}
+        errorText={linodeError}
+        placeholder="Destination"
+        value={selectedLinodeId}
       />
 
       {linodeError && (
