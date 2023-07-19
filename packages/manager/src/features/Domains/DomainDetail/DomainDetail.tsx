@@ -190,4 +190,6 @@ const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
   [theme.breakpoints.down('lg')]: {
     marginLeft: theme.spacing(),
   },
+  display: 'flex',
+  justifyContent: 'flex-end',
 }));

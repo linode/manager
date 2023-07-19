@@ -60,7 +60,6 @@ export const DeleteDomain = (props: DeleteDomainProps) => {
 };
 
 const StyledButton = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
-  float: 'right',
   [theme.breakpoints.down('lg')]: {
     marginRight: theme.spacing(),
   },
