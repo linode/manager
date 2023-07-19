@@ -21,7 +21,15 @@ export interface LinkProps extends _LinkProps, ExternalLinkProps {
    * @default false
    */
   external?: boolean;
+  /**
+   * The content of the component.
+   */
   children: React.ReactNode;
+  /**
+   * Optional prop to force the link color to match the general copy.<br />
+   * Example: footer links
+   * @default false
+   */
   forceCopyColor?: boolean;
 }
 
@@ -30,7 +38,11 @@ const opensInNewTab = (href: string) => {
 };
 
 /**
- * A wrapper around React Router's `Link` <a target="_blank" href="https://reactrouter.com/en/main/components/link">component</a> that will open external links in a new window when a non-relative URL is provided.<br />
+ * A wrapper around React Router's `Link` <a target="_blank" href="https://reactrouter.com/en/main/components/link">component</a> that will open external links (rendering `a` tags) in a new window when a non-relative URL is provided.<br />
+ * The link can be:
+ * - a relative URL, which will render a `Link` component from React Router.
+ * - an absolute, same domain/subdomain URL (ex: linode.com, akamai.com) that will render an `a` tag with `target="_blank"`.
+ * - an absolute URL with the `external` prop, which will render an `a` tag with `target="_blank"` and an external link icon.<br />
  * <br />
  *
  * **Link Usage**
