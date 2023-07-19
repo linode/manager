@@ -1,32 +1,47 @@
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import type { Meta, StoryObj } from '@storybook/react';
-import type { LinkProps } from 'react-router-dom';
+import type { LinkProps } from 'src/components/Link';
 
-// TODO: remove the typography component from this story once M3-6772 is handled
+/**
+ * An instance of Link component given a relative URL, rendering a React Router `Link` component.
+ */
 export const Default: StoryObj<LinkProps> = {
+  render: (args: LinkProps) => <Link {...args}>{args.children}</Link>,
+};
+
+/**
+ * An instance of Link component given an absolute URL, rendering an `a` tag with `target="_blank"`.
+ * This version does not provide an `external` prop, usually meaning it belongs to the same domain or subdomain.<br />
+ * **Example**: a documentation link<br />
+ * It will open in a new tab since not being relative (internal).
+ */
+export const External: StoryObj<LinkProps> = {
+  name: 'External Link (new tab, same domain/subdomain)',
   render: (args: LinkProps) => (
-    <Typography variant="body1">
-      <Link {...args} to="/">
-        {args.children} (internal link)
-      </Link>
-    </Typography>
+    <Link
+      {...args}
+      to="https://www.linode.com/docs/products/compute/compute-instances/faqs"
+    >
+      https://www.linode.com/docs/products/compute/compute-instances/faqs
+    </Link>
   ),
 };
 
 /**
- * **@deprecated**<br />
- * This story is deprecated and will be removed in a future release.
- * Please use the `ExternalLink` component when you need to render an external link.
+ * An instance of Link component given an absolute URL, rendering an `a` tag with `target="_blank"`.
+ * This version provides an `external` prop, usually belonging to the same domain or a subdomain.<br />
+ * **Example**: a link to a third party provider<br />
+ * It will open in a new tab and feature an external link icon.
  */
-export const External: StoryObj<LinkProps> = {
+export const ExternalSite: StoryObj<LinkProps> = {
+  name: 'External Site (new tab, different domain/subdomain)',
   render: (args: LinkProps) => (
-    <Typography variant="h2">
-      <Link {...args}>{args.children} (as header, external link)</Link>
-    </Typography>
+    <Link {...args} external to="https://google.com">
+      https://google.com
+    </Link>
   ),
 };
 
@@ -36,7 +51,7 @@ const meta: Meta<LinkProps> = {
       control: {
         type: 'text',
       },
-      description: 'The text or content of the link.',
+      description: 'The content of the component.',
       table: {
         type: {
           summary: 'ReactNode',
@@ -55,6 +70,7 @@ const meta: Meta<LinkProps> = {
         },
       },
     },
+    external: {},
     onClick: {
       action: 'clicked',
       description: 'A function that will be called onClick.',
@@ -89,8 +105,9 @@ const meta: Meta<LinkProps> = {
     },
   },
   args: {
-    children: 'This is a link',
-    to: 'https://www.akamai.com',
+    children: 'An internal link',
+    forceCopyColor: false,
+    to: '/internal-link',
   },
   component: Link,
   title: 'Components/Link',
