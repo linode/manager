@@ -1,5 +1,14 @@
+/* 
+
+This component allows for dynamism in what is displayed as the tab/window title depending
+on where the user is in the application. Example: "Linodes | Akamai Cloud Manager" when on 
+the Linodes landing page. More context: https://github.com/linode/manager/pull/9406
+
+*/
+
 import { reverse } from 'ramda';
 import * as React from 'react';
+import usePrevious from 'src/hooks/usePrevious';
 
 interface DocumentTitleSegmentsContext {
   appendSegment: (segment: string) => void;
@@ -21,76 +30,69 @@ interface Props {
   segment: string;
 }
 
-class InnerDocumentTitleSegment extends React.Component<
-  Props & DocumentTitleSegmentsContext
-> {
-  componentDidMount() {
-    this.props.appendSegment(this.props.segment);
-  }
+const InnerDocumentTitleSegment = (
+  props: Props & DocumentTitleSegmentsContext
+) => {
+  const { appendSegment, removeSegment, segment } = props;
 
-  componentDidUpdate(prevProps: Props & DocumentTitleSegmentsContext) {
-    if (prevProps.segment !== this.props.segment) {
-      this.props.removeSegment(prevProps.segment);
-      this.props.appendSegment(this.props.segment);
-    }
-  }
+  const prevSegment = usePrevious(segment) ?? '';
 
-  componentWillUnmount() {
-    this.props.removeSegment(this.props.segment);
-  }
+  React.useEffect(() => {
+    appendSegment(segment);
 
-  render() {
-    return null;
-  }
-}
-
-export class DocumentTitleSegment extends React.Component<Props> {
-  render() {
-    return (
-      <DocumentTitleSegmentsConsumer>
-        {(value: DocumentTitleSegmentsContext) => (
-          <InnerDocumentTitleSegment segment={this.props.segment} {...value} />
-        )}
-      </DocumentTitleSegmentsConsumer>
-    );
-  }
-}
-
-/* tslint:disable-next-line */
-export function withDocumentTitleProvider<P>(
-  Component: React.ComponentType<P>
-) {
-  return class DocumentTitleProviderManager extends React.Component<
-    P,
-    DocumentTitleSegmentsContext
-  > {
-    render() {
-      return (
-        <DocumentTitleSegmentsProvider value={this.state}>
-          <Component {...this.props} />
-        </DocumentTitleSegmentsProvider>
-      );
+    if (prevSegment !== segment) {
+      removeSegment(prevSegment);
+      appendSegment(segment);
     }
 
-    state: DocumentTitleSegmentsContext = {
-      appendSegment: (segment: string) => {
-        this.titleSegments = [...this.titleSegments, segment];
-        this.updateDocumentTitle();
-      },
+    return () => removeSegment(segment);
+  });
 
-      removeSegment: (segment: string) => {
-        const targetIdx = this.titleSegments.findIndex((el) => el === segment);
-        this.titleSegments.splice(targetIdx, 1);
-        this.updateDocumentTitle();
-      },
-    };
+  return null;
+};
 
-    /* Make this a class property to avoid race conditions with setState */
-    titleSegments: string[] = [];
+export const DocumentTitleSegment = (props: Props) => {
+  const { segment } = props;
 
-    updateDocumentTitle = () => {
-      const newTitle = reverse(this.titleSegments).join(' | ');
-      document.title = newTitle;
-    };
+  return (
+    <DocumentTitleSegmentsConsumer>
+      {(value: DocumentTitleSegmentsContext) => (
+        <InnerDocumentTitleSegment segment={segment} {...value} />
+      )}
+    </DocumentTitleSegmentsConsumer>
+  );
+};
+
+type Wrapper = (Component: React.ComponentType<{}>) => React.FC<unknown>;
+
+export const withDocumentTitleProvider: Wrapper = (
+  Component: React.ComponentType<{}>
+) => (props) => {
+  let titleSegments: string[] = [];
+
+  const updateDocumentTitle = () => {
+    const newTitle = reverse(titleSegments).join(' | ');
+    document.title = newTitle;
   };
-}
+
+  const appendSegment: DocumentTitleSegmentsContext['appendSegment'] = (
+    segment: string
+  ) => {
+    titleSegments = [...titleSegments, segment];
+    updateDocumentTitle();
+  };
+
+  const removeSegment: DocumentTitleSegmentsContext['removeSegment'] = (
+    segment: string
+  ) => {
+    const targetIdx = titleSegments.findIndex((el) => el === segment);
+    titleSegments.splice(targetIdx, 1);
+    updateDocumentTitle();
+  };
+
+  return (
+    <DocumentTitleSegmentsProvider value={{ appendSegment, removeSegment }}>
+      <Component {...props} />
+    </DocumentTitleSegmentsProvider>
+  );
+};
