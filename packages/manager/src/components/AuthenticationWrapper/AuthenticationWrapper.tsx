@@ -1,5 +1,4 @@
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
@@ -149,17 +148,11 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
 interface StateProps {
   isAuthenticated: boolean;
-  linodes: Linode[];
-  linodesLastUpdated: number;
-  linodesLoading: boolean;
   pendingUpload: PendingUploadState;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   isAuthenticated: Boolean(state.authentication.token),
-  linodes: Object.values(state.__resources.linodes.itemsById),
-  linodesLastUpdated: state.__resources.linodes.lastUpdated,
-  linodesLoading: state.__resources.linodes.loading,
   pendingUpload: state.pendingUpload,
 });
 
