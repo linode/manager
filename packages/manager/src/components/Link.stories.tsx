@@ -50,7 +50,10 @@ export const ExternalSite: StoryObj<LinkProps> = {
  * This example will generate a console error
  */
 export const IconOnly: StoryObj<LinkProps> = {
-  name: 'Icon Only (w/ error)',
+  name: 'Icon Only',
+  args: {
+    accessibleAriaLabel: 'This is safe',
+  },
   render: (args: LinkProps) => (
     <Link {...args} to="https://google.com">
       <DocsIcon />
