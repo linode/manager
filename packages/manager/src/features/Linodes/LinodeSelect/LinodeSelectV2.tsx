@@ -16,7 +16,7 @@ import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
 
-import { CustomPopper, RemoveIcon, SelectedIcon } from './LinodeSelect.styles';
+import { CustomPopper, SelectedIcon } from './LinodeSelect.styles';
 
 interface LinodeSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */
@@ -188,7 +188,6 @@ export const LinodeSelectV2 = (
               )}
             </Box>
             <SelectedIcon visible={selected} />
-            {multiple && <RemoveIcon visible={selected} />}
           </li>
         );
       }}
