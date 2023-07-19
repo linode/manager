@@ -158,7 +158,7 @@ describe('linode landing checks', () => {
 
   it('checks the landing labels and buttons', () => {
     getVisible('h1[data-qa-header="Linodes"]');
-    getVisible('a[data-testid="external-link"]');
+    getVisible('a[aria-label="Docs - link opens in a new tab"]');
     fbtVisible('Create Linode');
   });
 
