@@ -10,7 +10,6 @@ const store = storeFactory(queryClient);
 
 const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
-    getLinodesPage={jest.fn()}
     initSession={jest.fn()}
     isAuthenticated={false}
     linodes={[]}

@@ -1,4 +1,3 @@
-import { ResourcePage } from '@linode/api-v4';
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
@@ -22,7 +21,6 @@ import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
-import { getLinodesPage } from 'src/store/linodes/linode.requests';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { MapState } from 'src/store/types';
 
@@ -129,9 +127,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
         queryFn: getAccountSettings,
         queryKey: 'account-settings',
       }),
-
-      // Fetch first page of Linodes (TODO: remove once the Linodes RQ migration is complete)
-      this.props.getLinodesPage(),
     ];
 
     // Start events polling
@@ -169,7 +164,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => ({
 });
 
 interface DispatchProps {
-  getLinodesPage: () => Promise<ResourcePage<Linode>>;
   initSession: () => void;
   markAppAsDoneLoading: () => void;
 }
@@ -177,8 +171,6 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => ({
-  getLinodesPage: () =>
-    dispatch(getLinodesPage({ params: { page_size: 100 } })),
   initSession: () => dispatch(handleInitTokens()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
 });
