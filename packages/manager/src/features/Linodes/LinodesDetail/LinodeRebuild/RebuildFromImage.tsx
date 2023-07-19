@@ -39,7 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& button': {
       alignSelf: 'flex-end',
     },
-    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    marginTop: 0,
+    paddingTop: 0,
   },
   error: {
     marginTop: theme.spacing(2),
@@ -275,14 +277,7 @@ export const RebuildFromImage = (props: Props) => {
                   />
                 </>
               ) : null}
-              <ActionsPanel
-                className={classes.actionPanel}
-                primaryButtonDataTestId="rebuild-button"
-                primaryButtonDisabled={submitButtonDisabled || disabled}
-                primaryButtonHandler={handleRebuildButtonClick}
-                primaryButtonText="Rebuild Linode"
-                showPrimary
-              >
+              <Grid sx={{ marginTop: '16px' }}>
                 <TypeToConfirm
                   confirmationText={
                     <span>
@@ -301,7 +296,15 @@ export const RebuildFromImage = (props: Props) => {
                   value={confirmationText}
                   visible={preferences?.type_to_confirm}
                 />
-              </ActionsPanel>
+                <ActionsPanel
+                  className={classes.actionPanel}
+                  primaryButtonDataTestId="rebuild-button"
+                  primaryButtonDisabled={submitButtonDisabled || disabled}
+                  primaryButtonHandler={handleRebuildButtonClick}
+                  primaryButtonText="Rebuild Linode"
+                  showPrimary
+                />
+              </Grid>
             </form>
           </Grid>
         );
