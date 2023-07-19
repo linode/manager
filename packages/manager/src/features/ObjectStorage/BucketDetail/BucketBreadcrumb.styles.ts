@@ -79,4 +79,7 @@ export const StyledCopied = styled(Typography, {
   padding: '6px 8px',
   position: 'absolute',
   transition: 'opacity .5s ease-in-out',
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: theme.spacing(3),
+  },
 }));
