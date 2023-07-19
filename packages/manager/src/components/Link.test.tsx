@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -96,6 +97,28 @@ describe('Link component', () => {
     expect(linkElement).toHaveTextContent(/External Link/);
     expect(linkElement.getAttribute('aria-label')).toBe(
       'Accessible aria label - link opens in a new tab'
+    );
+  });
+
+  it('properly flattens an array of children into an aria label', () => {
+    const mockProps: LinkProps = {
+      children: [
+        <span key={1}>
+          <DocsIcon />
+        </span>,
+        <span key={2}>Second child</span>,
+      ],
+      to: 'https://example.com',
+    };
+
+    const { getByTestId } = renderWithTheme(<Link {...mockProps} />);
+    const linkElement = getByTestId('external-link');
+
+    expect(linkElement).toBeInTheDocument();
+    expect(linkElement.tagName).toBe('A');
+    expect(linkElement).toHaveTextContent(/Second child/);
+    expect(linkElement.getAttribute('aria-label')).toBe(
+      'Second child - link opens in a new tab'
     );
   });
 });
