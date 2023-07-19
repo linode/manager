@@ -48,7 +48,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       width: 480,
     },
     width: '100%',
-    maxWidth: 480,
+    maxWidth: 445,
   },
   title: {
     wordBreak: 'break-word',
