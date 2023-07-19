@@ -1,6 +1,6 @@
-import FileCopy from '@mui/icons-material/FileCopy';
 import { styled } from '@mui/material/styles';
 
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Typography } from 'src/components/Typography';
 
 export const StyledRootContainer = styled('div', {
@@ -11,31 +11,15 @@ export const StyledRootContainer = styled('div', {
   position: 'relative',
 }));
 
-export const StyledFileCopy = styled(FileCopy, {
-  label: 'StyledFileCopy',
-})(({ theme }) => ({
-  '&:hover': {
-    backgroundColor: theme.color.grey1,
-    color: theme.color.white,
-  },
-  borderRadius: theme.shape.borderRadius,
-  color: theme.color.grey1,
-  cursor: 'pointer',
-  height: 24,
-  margin: 0,
-  padding: 4,
-  position: 'relative',
-  transition: theme.transitions.create(['color', 'background-color']),
-  width: 24,
-}));
-
 export const StyledPrefixWrapper = styled('div', {
   label: 'StyledPrefixWrapper',
 })(({ theme }) => ({
   display: 'flex',
-  marginLeft: theme.spacing(1.5),
   overflow: 'auto',
   whiteSpace: 'nowrap',
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: theme.spacing(1),
+  },
 }));
 
 export const StyledSlash = styled(Typography, {
@@ -55,31 +39,14 @@ export const StyledLink = styled(Typography, {
   cursor: 'pointer',
 }));
 
-export const StyledCopied = styled(Typography, {
-  label: 'StyledCopied',
+export const StyledCopyTooltip = styled(CopyTooltip, {
+  label: 'StyledCopyTooltip',
 })(({ theme }) => ({
-  '@keyframes popUp': {
-    from: {
-      opacity: 0,
-      top: -10,
-      transform: 'scale(.1)',
-    },
-    to: {
-      opacity: 1,
-      top: -45,
-      transform: 'scale(1)',
-    },
-  },
-  animation: 'popUp 200ms ease-in-out forwards',
-  backgroundColor: theme.color.white,
-  boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-  color: theme.palette.text.primary,
-  fontSize: '.85rem',
-  left: -24,
-  padding: '6px 8px',
-  position: 'absolute',
-  transition: 'opacity .5s ease-in-out',
-  [theme.breakpoints.down('lg')]: {
-    marginLeft: theme.spacing(3),
+  paddingTop: theme.spacing(1),
+  paddingLeft: theme.spacing(1),
+  borderRadius: theme.shape.borderRadius,
+  svg: {
+    height: `16px`,
+    width: `16px`,
   },
 }));
