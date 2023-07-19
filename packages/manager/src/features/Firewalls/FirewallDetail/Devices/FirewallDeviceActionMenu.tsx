@@ -6,16 +6,14 @@ export interface ActionHandlers {
   triggerRemoveDevice: (deviceID: number, label: string) => void;
 }
 
-export interface Props extends ActionHandlers {
+export interface FirewallDeviceActionMenuProps extends ActionHandlers {
   deviceEntityID: string;
   deviceID: number;
   deviceLabel: string;
   disabled: boolean;
 }
 
-type CombinedProps = Props;
-
-const FirewallDeviceActionMenu: React.FC<CombinedProps> = (props) => {
+const FirewallDeviceActionMenu = (props: FirewallDeviceActionMenuProps) => {
   const { deviceID, deviceLabel, disabled, triggerRemoveDevice } = props;
 
   return (

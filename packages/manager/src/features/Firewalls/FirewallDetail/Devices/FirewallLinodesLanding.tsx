@@ -1,6 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -12,28 +11,6 @@ import AddDeviceDrawer from './AddDeviceDrawer';
 import FirewallDevicesTable from './FirewallDevicesTable';
 import RemoveDeviceDialog from './RemoveDeviceDialog';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  actions: {
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-    },
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginBottom: theme.spacing(),
-    [theme.breakpoints.only('sm')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-  copy: {
-    fontSize: '0.875rem',
-    marginTop: theme.spacing(),
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-}));
-
 interface Props {
   disabled: boolean;
   firewallID: number;
@@ -42,7 +19,6 @@ interface Props {
 
 const FirewallLinodesLanding = (props: Props) => {
   const { disabled, firewallID, firewallLabel } = props;
-  const classes = useStyles();
 
   const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(
     firewallID
@@ -80,12 +56,12 @@ const FirewallLinodesLanding = (props: Props) => {
       ) : null}
       <Grid container direction="column">
         <Grid style={{ paddingBottom: 0 }}>
-          <Typography className={classes.copy}>
+          <StyledTypography>
             The following Linodes have been assigned to this Firewall. A Linode
             can only be assigned to a single Firewall.
-          </Typography>
+          </StyledTypography>
         </Grid>
-        <Grid className={classes.actions}>
+        <StyledGrid>
           <Button
             buttonType="primary"
             disabled={disabled}
@@ -93,7 +69,7 @@ const FirewallLinodesLanding = (props: Props) => {
           >
             Add Linodes to Firewall
           </Button>
-        </Grid>
+        </StyledGrid>
       </Grid>
       <FirewallDevicesTable
         triggerRemoveDevice={(id) => {
@@ -116,5 +92,28 @@ const FirewallLinodesLanding = (props: Props) => {
     </>
   );
 };
+
+const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    fontSize: '0.875rem',
+    marginTop: theme.spacing(),
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing(),
+    },
+  })
+);
+
+const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+  '&.MuiGrid-item': {
+    paddingTop: 0,
+  },
+  display: 'flex',
+  justifyContent: 'flex-end',
+  marginBottom: theme.spacing(),
+  [theme.breakpoints.only('sm')]: {
+    marginRight: theme.spacing(),
+  },
+}));
 
 export default React.memo(FirewallLinodesLanding);

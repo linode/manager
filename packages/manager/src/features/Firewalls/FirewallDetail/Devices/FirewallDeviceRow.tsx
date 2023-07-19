@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import ActionMenu, { Props as ActionProps } from './FirewallDeviceActionMenu';
+import ActionMenu, {
+  FirewallDeviceActionMenuProps as ActionProps,
+} from './FirewallDeviceActionMenu';
 
-export const FirewallDeviceRow: React.FC<ActionProps> = (props) => {
+export const FirewallDeviceRow = (props: ActionProps) => {
   const { deviceEntityID, deviceID, deviceLabel } = props;
 
   return (

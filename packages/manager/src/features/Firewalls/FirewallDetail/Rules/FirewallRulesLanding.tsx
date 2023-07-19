@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -31,7 +31,7 @@ import type {
 } from '@linode/api-v4/lib/firewalls';
 import type { APIError } from '@linode/api-v4/lib/types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   actions: {
     float: 'right',
   },
@@ -66,7 +66,7 @@ interface Drawer {
 }
 
 const FirewallRulesLanding = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { disabled, firewallID, rules } = props;
   const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
     firewallID

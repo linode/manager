@@ -1,7 +1,7 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ import { capitalize } from 'src/utilities/capitalize';
 
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   link: {
     '&:hover, &:focus': {
       textDecoration: 'underline',
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type Props = Firewall & ActionHandlers;
 
 export const FirewallRow = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { id, label, rules, status, ...actionHandlers } = props;
 

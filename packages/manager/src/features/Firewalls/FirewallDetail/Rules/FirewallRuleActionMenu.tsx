@@ -14,9 +14,7 @@ export interface Props extends Partial<ActionMenuProps> {
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
 }
 
-type CombinedProps = Props;
-
-const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
+const FirewallRuleActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 

@@ -2,8 +2,8 @@ import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import Box from '@mui/material/Box';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { makeStyles, useTheme } from '@mui/styles';
-import classNames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/styles';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import {
@@ -32,7 +32,7 @@ import { Category, FirewallRuleError, sortPortString } from './shared';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   addLabelButton: {
     ...theme.applyLinkStyles,
   },
@@ -158,6 +158,7 @@ interface RowActionHandlers {
   triggerReorder: (startIdx: number, endIdx: number) => void;
   triggerUndo: (idx: number) => void;
 }
+
 interface FirewallRuleTableProps extends RowActionHandlers {
   category: Category;
   disabled: boolean;
@@ -185,7 +186,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
     triggerUndo,
   } = props;
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const theme: Theme = useTheme();
   const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -271,10 +272,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                 >
                   {rowData.length === 0 ? (
                     <Box
-                      className={classNames(
-                        classes.unmodified,
-                        classes.ruleRow
-                      )}
+                      className={cx(classes.unmodified, classes.ruleRow)}
                       sx={{
                         alignItems: 'center',
                         display: 'flex',
@@ -352,138 +350,135 @@ type FirewallRuleTableRowProps = RuleRow &
     disabled: boolean;
   };
 
-const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
-  (props) => {
-    const classes = useStyles();
-    const theme: Theme = useTheme();
-    const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
+  const { classes, cx } = useStyles();
+  const theme: Theme = useTheme();
+  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const {
-      action,
-      addresses,
-      disabled,
-      errors,
-      id,
-      label,
-      originalIndex,
-      ports,
-      protocol,
-      status,
-      triggerCloneFirewallRule,
-      triggerDeleteFirewallRule,
-      triggerOpenRuleDrawerForEditing,
-      triggerUndo,
-    } = props;
+  const {
+    action,
+    addresses,
+    disabled,
+    errors,
+    id,
+    label,
+    originalIndex,
+    ports,
+    protocol,
+    status,
+    triggerCloneFirewallRule,
+    triggerDeleteFirewallRule,
+    triggerOpenRuleDrawerForEditing,
+    triggerUndo,
+  } = props;
 
-    const actionMenuProps = {
-      disabled: status === 'PENDING_DELETION' || disabled,
-      idx: id,
-      triggerCloneFirewallRule,
-      triggerDeleteFirewallRule,
-      triggerOpenRuleDrawerForEditing,
-    };
+  const actionMenuProps = {
+    disabled: status === 'PENDING_DELETION' || disabled,
+    idx: id,
+    triggerCloneFirewallRule,
+    triggerDeleteFirewallRule,
+    triggerOpenRuleDrawerForEditing,
+  };
 
-    return (
+  return (
+    <Box
+      className={cx({
+        [classes.disabled]: status === 'PENDING_DELETION' || disabled,
+        [classes.highlight]:
+          status === 'MODIFIED' || status === 'NEW' || originalIndex !== id,
+        // Highlight the row if it's been modified or reordered. ID is the
+        // current index, so if it doesn't match the original index we know
+        [classes.ruleGrid]: true,
+        [classes.ruleRow]: true,
+        // that the rule has been moved.
+        [classes.unmodified]: status === 'NOT_MODIFIED',
+      })}
+      sx={{
+        ...sxBox,
+        fontSize: '0.875rem',
+      }}
+      aria-label={label ?? `firewall rule ${id}`}
+      key={id}
+    >
       <Box
-        className={classNames({
-          [classes.disabled]: status === 'PENDING_DELETION' || disabled,
-          [classes.highlight]:
-            status === 'MODIFIED' || status === 'NEW' || originalIndex !== id,
-          // Highlight the row if it's been modified or reordered. ID is the
-          // current index, so if it doesn't match the original index we know
-          [classes.ruleGrid]: true,
-          [classes.ruleRow]: true,
-          // that the rule has been moved.
-          [classes.unmodified]: status === 'NOT_MODIFIED',
-        })}
         sx={{
-          ...sxBox,
-          fontSize: '0.875rem',
+          ...sxItemSpacing,
+          overflowWrap: 'break-word',
+          paddingLeft: '8px',
+          width: xsDown ? '50%' : '32%',
         }}
-        aria-label={label ?? `firewall rule ${id}`}
-        key={id}
+        aria-label={`Label: ${label}`}
       >
-        <Box
-          sx={{
-            ...sxItemSpacing,
-            overflowWrap: 'break-word',
-            paddingLeft: '8px',
-            width: xsDown ? '50%' : '32%',
-          }}
-          aria-label={`Label: ${label}`}
-        >
-          <DragIndicator
-            aria-label="Drag indicator icon"
-            className={classes.dragIcon}
-          />
-          {label || (
-            <button
-              style={{
-                color: disabled ? 'inherit' : '',
-              }}
-              className={classes.addLabelButton}
-              disabled={disabled}
-              onClick={() => triggerOpenRuleDrawerForEditing(id)}
-            >
-              Add a label
-            </button>
-          )}{' '}
-        </Box>
-        <Hidden lgDown>
-          <Box
-            aria-label={`Protocol: ${protocol}`}
-            sx={{ ...sxItemSpacing, width: '10%' }}
+        <DragIndicator
+          aria-label="Drag indicator icon"
+          className={classes.dragIcon}
+        />
+        {label || (
+          <button
+            style={{
+              color: disabled ? 'inherit' : '',
+            }}
+            className={classes.addLabelButton}
+            disabled={disabled}
+            onClick={() => triggerOpenRuleDrawerForEditing(id)}
           >
-            {protocol}
-            <ConditionalError errors={errors} formField="protocol" />
-          </Box>
-        </Hidden>
-        <Hidden smDown>
-          <Box
-            aria-label={`Ports: ${ports}`}
-            sx={{ ...sxItemSpacing, width: '15%' }}
-          >
-            {ports === '1-65535' ? 'All Ports' : ports}
-            <ConditionalError errors={errors} formField="ports" />
-          </Box>
-          <Box
-            aria-label={`Addresses: ${addresses}`}
-            sx={{ ...sxItemSpacing, width: '15%' }}
-          >
-            {addresses}{' '}
-            <ConditionalError errors={errors} formField="addresses" />
-          </Box>
-        </Hidden>
-        <Box
-          aria-label={`Action: ${action}`}
-          sx={{ ...sxItemSpacing, width: '5%' }}
-        >
-          {capitalize(action?.toLocaleLowerCase() ?? '')}
-        </Box>
-        <Box sx={{ ...sxItemSpacing, marginLeft: 'auto' }}>
-          {status !== 'NOT_MODIFIED' ? (
-            <div className={classes.undoButtonContainer}>
-              <button
-                className={classNames({
-                  [classes.highlight]: status !== 'PENDING_DELETION',
-                  [classes.undoButton]: true,
-                })}
-                aria-label="Undo change to Firewall Rule"
-                disabled={disabled}
-                onClick={() => triggerUndo(id)}
-              >
-                <Undo />
-              </button>
-              <FirewallRuleActionMenu {...actionMenuProps} />
-            </div>
-          ) : (
-            <FirewallRuleActionMenu {...actionMenuProps} />
-          )}
-        </Box>
+            Add a label
+          </button>
+        )}{' '}
       </Box>
-    );
-  }
-);
+      <Hidden lgDown>
+        <Box
+          aria-label={`Protocol: ${protocol}`}
+          sx={{ ...sxItemSpacing, width: '10%' }}
+        >
+          {protocol}
+          <ConditionalError errors={errors} formField="protocol" />
+        </Box>
+      </Hidden>
+      <Hidden smDown>
+        <Box
+          aria-label={`Ports: ${ports}`}
+          sx={{ ...sxItemSpacing, width: '15%' }}
+        >
+          {ports === '1-65535' ? 'All Ports' : ports}
+          <ConditionalError errors={errors} formField="ports" />
+        </Box>
+        <Box
+          aria-label={`Addresses: ${addresses}`}
+          sx={{ ...sxItemSpacing, width: '15%' }}
+        >
+          {addresses} <ConditionalError errors={errors} formField="addresses" />
+        </Box>
+      </Hidden>
+      <Box
+        aria-label={`Action: ${action}`}
+        sx={{ ...sxItemSpacing, width: '5%' }}
+      >
+        {capitalize(action?.toLocaleLowerCase() ?? '')}
+      </Box>
+      <Box sx={{ ...sxItemSpacing, marginLeft: 'auto' }}>
+        {status !== 'NOT_MODIFIED' ? (
+          <div className={classes.undoButtonContainer}>
+            <button
+              className={cx({
+                [classes.highlight]: status !== 'PENDING_DELETION',
+                [classes.undoButton]: true,
+              })}
+              aria-label="Undo change to Firewall Rule"
+              disabled={disabled}
+              onClick={() => triggerUndo(id)}
+            >
+              <Undo />
+            </button>
+            <FirewallRuleActionMenu {...actionMenuProps} />
+          </div>
+        ) : (
+          <FirewallRuleActionMenu {...actionMenuProps} />
+        )}
+      </Box>
+    </Box>
+  );
+});
 
 interface PolicyRowProps {
   category: Category;
@@ -586,32 +581,30 @@ interface ConditionalErrorProps {
   formField: string;
 }
 
-export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
-  (props) => {
-    const classes = useStyles();
+export const ConditionalError = React.memo((props: ConditionalErrorProps) => {
+  const { classes } = useStyles();
 
-    const { errors, formField } = props;
+  const { errors, formField } = props;
 
-    // It's possible to have multiple IP errors, but we only want to display ONE in the table row.
-    const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
+  // It's possible to have multiple IP errors, but we only want to display ONE in the table row.
+  const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
 
-    return (
-      // eslint-disable-next-line react/jsx-no-useless-fragment
-      <>
-        {uniqueByFormField.map((thisError) => {
-          if (formField !== thisError.formField || !thisError.reason) {
-            return null;
-          }
-          return (
-            <div className={classes.error} key={thisError.idx}>
-              <Typography variant="body1">{thisError.reason}</Typography>
-            </div>
-          );
-        })}
-      </>
-    );
-  }
-);
+  return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {uniqueByFormField.map((thisError) => {
+        if (formField !== thisError.formField || !thisError.reason) {
+          return null;
+        }
+        return (
+          <div className={classes.error} key={thisError.idx}>
+            <Typography variant="body1">{thisError.reason}</Typography>
+          </div>
+        );
+      })}
+    </>
+  );
+});
 
 // =============================================================================
 // Utilities
