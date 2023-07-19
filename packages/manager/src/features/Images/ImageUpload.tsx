@@ -305,22 +305,20 @@ export const ImageUpload: React.FC<Props> = (props) => {
             setCancelFn={setCancelFn}
             setErrors={setErrors}
           />
-          <ActionsPanel>
-            <Typography>
-              Or, upload an image using the{' '}
-              <button
-                className={classes.cliModalButton}
-                onClick={() => setLinodeCLIModalOpen(true)}
-              >
-                Linode CLI
-              </button>
-              . For more information, please see{' '}
-              <Link to="https://www.linode.com/docs/guides/linode-cli">
-                our guide on using the Linode CLI
-              </Link>
-              .
-            </Typography>
-          </ActionsPanel>
+          <Typography sx={{ paddingBottom: 8, paddingTop: 16 }}>
+            Or, upload an image using the{' '}
+            <button
+              className={classes.cliModalButton}
+              onClick={() => setLinodeCLIModalOpen(true)}
+            >
+              Linode CLI
+            </button>
+            . For more information, please see{' '}
+            <Link to="https://www.linode.com/docs/guides/linode-cli">
+              our guide on using the Linode CLI
+            </Link>
+            .
+          </Typography>
         </div>
       </Paper>
       <LinodeCLIModal
