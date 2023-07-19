@@ -4,9 +4,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
-import { compose } from 'recompose';
 
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Hidden } from 'src/components/Hidden';
@@ -20,8 +18,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
 import { useEventsInfiniteQuery } from 'src/queries/events';
-import { ApplicationState } from 'src/store';
-import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import {
   isInProgressEvent,
   removeBlocklistedEvents,
@@ -64,16 +60,10 @@ interface EventsLandingProps {
   getEventsRequest?: typeof getEvents;
 }
 
-type CombinedProps = EventsLandingProps & StateProps;
+type CombinedProps = EventsLandingProps;
 
 export const EventsLanding = (props: CombinedProps) => {
-  const {
-    emptyMessage,
-    entitiesLoading,
-    entityId,
-    errorMessage,
-    filter,
-  } = props;
+  const { emptyMessage, entityId, errorMessage, filter } = props;
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -93,7 +83,7 @@ export const EventsLanding = (props: CombinedProps) => {
   );
   const sortedEvents = [...inProgressEvents, ...completedEvents];
 
-  const loading = isLoading || isFetchingNextPage || entitiesLoading;
+  const loading = isLoading || isFetchingNextPage;
 
   React.useEffect(() => {
     if (error) {
@@ -209,16 +199,4 @@ export const renderTableBody = (
   }
 };
 
-interface StateProps {
-  entitiesLoading: boolean;
-}
-
-const mapStateToProps = (state: ApplicationState) => ({
-  entitiesLoading: areEntitiesLoading(state.__resources),
-});
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose<CombinedProps, EventsLandingProps>(connected);
-
-export default enhanced(EventsLanding);
+export default EventsLanding;
