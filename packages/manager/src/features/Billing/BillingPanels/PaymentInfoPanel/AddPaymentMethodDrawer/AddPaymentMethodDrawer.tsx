@@ -5,7 +5,7 @@ import { VariantType } from 'notistack';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
