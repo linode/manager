@@ -2,10 +2,8 @@ import { styled } from '@mui/material/styles';
 import { isPropValid } from 'src/utilities/isPropValid';
 import { GaugePercentProps } from './GaugePercent';
 
-type StyledGaugePercentProps = Pick<
-  GaugePercentProps,
-  'width' | 'height' | 'innerTextFontSize'
->;
+type StyledGaugePercentProps = Pick<GaugePercentProps, 'innerTextFontSize'> &
+  Required<Pick<GaugePercentProps, 'width' | 'height'>>;
 
 const propKeys = ['width', 'height', 'innerTextFontSize'];
 
@@ -22,7 +20,7 @@ export const StyledSubTitleDiv = styled('div', {
 
 export const StyledInnerTextDiv = styled('div', {
   shouldForwardProp: (prop) => isPropValid(propKeys, prop),
-})<StyledGaugePercentProps>(({ theme, height = 300, width }) => ({
+})<StyledGaugePercentProps>(({ theme, height, width }) => ({
   position: 'absolute',
   top: `calc(${height + 30}px / 2)`,
   width: width,
