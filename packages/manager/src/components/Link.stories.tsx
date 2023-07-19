@@ -19,7 +19,7 @@ export const Default: StoryObj<LinkProps> = {
  * It will open in a new tab since not being relative (internal).
  */
 export const External: StoryObj<LinkProps> = {
-  name: 'External Link (new tab, same domain/subdomain)',
+  name: 'External Link',
   render: (args: LinkProps) => (
     <Link
       {...args}
@@ -37,7 +37,7 @@ export const External: StoryObj<LinkProps> = {
  * It will open in a new tab and feature an external link icon.
  */
 export const ExternalSite: StoryObj<LinkProps> = {
-  name: 'External Site (new tab, different domain/subdomain)',
+  name: 'External Site',
   render: (args: LinkProps) => (
     <Link {...args} external to="https://google.com">
       https://google.com
@@ -70,7 +70,6 @@ const meta: Meta<LinkProps> = {
         },
       },
     },
-    external: {},
     onClick: {
       action: 'clicked',
       description: 'A function that will be called onClick.',
@@ -106,6 +105,7 @@ const meta: Meta<LinkProps> = {
   },
   args: {
     children: 'An internal link',
+    external: false,
     forceCopyColor: false,
     to: '/internal-link',
   },
