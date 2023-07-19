@@ -74,6 +74,7 @@ export const EditIPRDNSDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonDataTestId="submit"
           primaryButtonLoading={isLoading}
+          primaryButtonText="Save"
           primaryButtonType="submit"
           secondaryButtonHandler={onClose}
           secondaryButtonText="cancel"
