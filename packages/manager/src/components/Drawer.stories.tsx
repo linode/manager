@@ -1,5 +1,4 @@
 import { action } from '@storybook/addon-actions';
-import { useArgs } from '@storybook/client-api';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
@@ -23,36 +22,35 @@ export const Default: Story = {
     title: 'My Drawer',
   },
   render: (args) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [{ open }, setArgs] = useArgs();
-    return (
-      <>
-        <Button buttonType="primary" onClick={() => setArgs({ open: true })}>
-          Click to open Drawer
-        </Button>
-        <Drawer {...args} onClose={() => setArgs({ open: false })} open={open}>
-          <Typography>
-            This is some test copy which acts as content for this Drawer
-            component. It's very interesting and you should read all of it. This
-            text has to be sufficiently long to test that it doesn't expand the
-            drawer to an unreasonable width.
-          </Typography>
-          <TextField
-            label="Input Some Text"
-            placeholder="This is a placeholder"
-          />
-          <ActionsPanel>
-            <Button
-              buttonType="secondary"
-              onClick={() => setArgs({ open: false })}
-            >
-              Cancel
-            </Button>
-            <Button buttonType="primary">Save</Button>
-          </ActionsPanel>
-        </Drawer>
-      </>
-    );
+    const DrawerExampleWrapper = () => {
+      const [open, setOpen] = React.useState(args.open);
+      return (
+        <>
+          <Button buttonType="primary" onClick={() => setOpen(true)}>
+            Click to open Drawer
+          </Button>
+          <Drawer {...args} onClose={() => setOpen(false)} open={open}>
+            <Typography>
+              This is some test copy which acts as content for this Drawer
+              component. It's very interesting and you should read all of it.
+              This text has to be sufficiently long to test that it doesn't
+              expand the drawer to an unreasonable width.
+            </Typography>
+            <TextField
+              label="Input Some Text"
+              placeholder="This is a placeholder"
+            />
+            <ActionsPanel>
+              <Button buttonType="secondary" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+              <Button buttonType="primary">Save</Button>
+            </ActionsPanel>
+          </Drawer>
+        </>
+      );
+    };
+    return <DrawerExampleWrapper />;
   },
 };
 

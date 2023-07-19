@@ -10,7 +10,14 @@ import { Typography } from 'src/components/Typography';
 import { convertForAria } from 'src/utilities/stringUtils';
 
 interface Props extends DrawerProps {
+  /**
+   * Title that appears at the top of the drawer
+   */
   title: string;
+  /**
+   * Increaces the Drawers width from 480px to 700px on desktop-sized viewports
+   * @default false
+   */
   wide?: boolean;
 }
 
