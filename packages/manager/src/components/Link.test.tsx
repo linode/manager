@@ -4,11 +4,11 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import type { CombinedLinkProps } from 'src/components/Link';
+import type { LinkProps } from 'src/components/Link';
 
 describe('Link component', () => {
   it('renders an internal link when "external" prop is not provided', () => {
-    const mockProps: CombinedLinkProps = {
+    const mockProps: LinkProps = {
       children: 'Internal Link',
       to: '/internal',
     };
@@ -23,7 +23,7 @@ describe('Link component', () => {
   });
 
   it('renders an external link when "external" prop is true', () => {
-    const mockProps: CombinedLinkProps = {
+    const mockProps: LinkProps = {
       children: 'External Link',
       external: true,
       to: 'https://example.com',
@@ -42,7 +42,7 @@ describe('Link component', () => {
   });
 
   it('opens external links in a new tab when "external" prop is not provided', () => {
-    const mockProps: CombinedLinkProps = {
+    const mockProps: LinkProps = {
       children: 'External Link',
       to: 'https://example.com',
     };
@@ -61,7 +61,7 @@ describe('Link component', () => {
 
   it('calls the onClick handler when the link is clicked', () => {
     const mockOnClick = jest.fn();
-    const mockProps: CombinedLinkProps = {
+    const mockProps: LinkProps = {
       children: 'External Link',
       external: true,
       onClick: mockOnClick,
@@ -81,7 +81,7 @@ describe('Link component', () => {
   });
 
   it('uses a custom aria label if an "accessibleAriaLabel" is passed to the component', () => {
-    const mockProps: CombinedLinkProps = {
+    const mockProps: LinkProps = {
       accessibleAriaLabel: 'Accessible aria label',
       children: 'External Link',
       external: true,

@@ -24,7 +24,7 @@ export const ExternalLink = (props: ExternalLinkProps) => {
       className={cx(
         classes.root,
         {
-          [classes.copyColor]: forceCopyColor,
+          [classes.forceCopyColor]: forceCopyColor,
         },
         className
       )}
@@ -39,7 +39,7 @@ export const ExternalLink = (props: ExternalLinkProps) => {
       {children}
       <span
         className={cx(classes.iconContainer, {
-          [classes.copyColor]: forceCopyColor,
+          [classes.forceCopyColor]: forceCopyColor,
         })}
       >
         <ExternalLinkIcon />

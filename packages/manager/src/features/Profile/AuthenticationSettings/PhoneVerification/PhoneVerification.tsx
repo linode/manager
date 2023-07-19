@@ -216,8 +216,12 @@ export const PhoneVerification = () => {
                     : 'No Phone Number'}
                 </Typography>
                 <LinkButton
+                  style={{
+                    bottom: -0.5,
+                    fontSize: '0.85rem',
+                    position: 'relative',
+                  }}
                   onClick={onEdit}
-                  style={{ bottom: 2, position: 'relative' }}
                 >
                   Edit
                 </LinkButton>
