@@ -9,6 +9,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
 import {
   DocumentTitleSegment,
   withDocumentTitleProvider,
@@ -269,7 +270,7 @@ const BaseApp = withDocumentTitleProvider(
       return (
         <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
           {/** Accessibility helper */}
-          <a href="#main-content" className="skip-link">
+          <a className="skip-link" href="#main-content">
             Skip to main content
           </a>
           <div hidden>
@@ -279,7 +280,7 @@ const BaseApp = withDocumentTitleProvider(
               Opens an external site in a new window
             </span>
           </div>
-          <GoTo open={goToOpen} onClose={() => setGoToOpen(false)} />
+          <GoTo onClose={() => setGoToOpen(false)} open={goToOpen} />
           {/** Update the LD client with the user's id as soon as we know it */}
           <IdentifyUser />
           <DocumentTitleSegment segment="Akamai Cloud Manager" />
