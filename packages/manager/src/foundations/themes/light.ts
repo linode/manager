@@ -283,7 +283,6 @@ export const lightTheme: ThemeOptions = {
         listbox: {
           backgroundColor: bg.white,
           border: `1px solid ${primaryColors.main}`,
-          marginTop: '-1px',
           padding: '4px',
         },
         loading: {
@@ -300,6 +299,21 @@ export const lightTheme: ThemeOptions = {
           },
           fontSize: '0.9rem',
           padding: '10px !important',
+        },
+        popper: {
+          // To remove the double border of listbox and input
+          '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"]': {
+              '.MuiAutocomplete-listbox': {
+                borderTop: 0,
+              },
+            },
+            '&[data-popper-placement="top"]': {
+              '.MuiAutocomplete-listbox': {
+                borderBottom: 0,
+              },
+            },
+          },
         },
         tag: {
           '.MuiChip-deleteIcon': {

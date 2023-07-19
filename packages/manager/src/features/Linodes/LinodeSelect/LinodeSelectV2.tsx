@@ -13,7 +13,6 @@ import React from 'react';
 
 import { TextField } from 'src/components/TextField';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
-import { privateIPRegex } from 'src/utilities/ipUtils';
 import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
 
 import { CustomPopper, SelectedIcon } from './LinodeSelect.styles';
@@ -45,6 +44,10 @@ interface LinodeSelectProps {
   placeholder?: string;
   /* The region to filter Linodes by. */
   region?: string;
+  /* Render a custom option. */
+  renderOption?: (linode: Linode, selected: boolean) => JSX.Element;
+  /* Render a custom option label. */
+  renderOptionLabel?: (linode: Linode) => string;
   /* Displays an indication that the input is required. */
   required?: boolean;
   /** Overrides the default label. */
@@ -93,7 +96,8 @@ export const LinodeSelectV2 = (
     optionsFilter,
     placeholder,
     region,
-    showIPAddressLabel,
+    renderOption,
+    renderOptionLabel,
     sx,
     value,
   } = props;
@@ -118,13 +122,6 @@ export const LinodeSelectV2 = (
     ? filteredLinodes?.filter(optionsFilter)
     : linodes;
 
-  const getOptionLabel = (linode: Linode) => {
-    if (showIPAddressLabel) {
-      return linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex)) ?? '';
-    }
-    return linode.label;
-  };
-
   return (
     <Autocomplete
       ListboxProps={{
@@ -139,6 +136,9 @@ export const LinodeSelectV2 = (
           }
         },
       }}
+      getOptionLabel={(linode: Linode) =>
+        renderOptionLabel ? renderOptionLabel(linode) : linode.label
+      }
       noOptionsText={
         <i>
           {noOptionsMessage ??
@@ -171,23 +171,20 @@ export const LinodeSelectV2 = (
       renderOption={(props, option, { selected }) => {
         return (
           <li {...props}>
-            <Box
-              sx={{
-                flexGrow: 1,
-              }}
-            >
-              {showIPAddressLabel ? (
-                <div>
-                  <strong>
-                    {option.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
-                  </strong>
-                  <div>{option.label}</div>
-                </div>
-              ) : (
-                option.label
-              )}
-            </Box>
-            <SelectedIcon visible={selected} />
+            {renderOption ? (
+              renderOption(option, selected)
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                  }}
+                >
+                  {option.label}
+                </Box>
+                <SelectedIcon visible={selected} />
+              </>
+            )}
           </li>
         );
       }}
@@ -197,7 +194,6 @@ export const LinodeSelectV2 = (
       disableClearable={!clearable}
       disableCloseOnSelect={multiple}
       disabled={disabled}
-      getOptionLabel={getOptionLabel}
       id={id}
       inputValue={value === null ? '' : inputValue}
       loading={linodesDataLoading || loading}

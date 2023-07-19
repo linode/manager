@@ -1,6 +1,8 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
+import { Box } from '@mui/material';
 import * as React from 'react';
 
+import { SelectedIcon } from 'src/features/Linodes/LinodeSelect/LinodeSelect.styles';
 import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
@@ -61,6 +63,24 @@ export const ConfigNodeIPSelect = React.memo(
             linode.region === props.selectedRegion
           );
         }}
+        renderOption={(linode, selected) => (
+          <>
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              <strong>
+                {linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
+              </strong>
+              <div>{linode.label}</div>
+            </Box>
+            <SelectedIcon visible={selected} />
+          </>
+        )}
+        renderOptionLabel={(linode) =>
+          linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex)) ?? ''
+        }
         clearable
         disabled={props.disabled}
         errorText={props.errorText}
