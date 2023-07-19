@@ -1,28 +1,26 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import InputAdornment from 'src/components/core/InputAdornment';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import InputAdornment from 'src/components/core/InputAdornment';
+import Paper from 'src/components/core/Paper';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-  labelField: {
-    '& input': {
-      paddingLeft: 0,
-    },
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    paddingBottom: 0,
   },
   gridWithTips: {
     maxWidth: '50%',
@@ -31,34 +29,37 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
-  tips: {
-    marginLeft: theme.spacing(4),
-    marginTop: `${theme.spacing(4)} !important`,
-    padding: theme.spacing(4),
-    backgroundColor: theme.palette.divider,
-    [theme.breakpoints.down('xl')]: {
-      marginLeft: 0,
+  labelField: {
+    '& input': {
+      paddingLeft: 0,
     },
-    [theme.breakpoints.down('lg')]: {
-      paddingLeft: theme.spacing(2),
-    },
-  },
-  scriptTextarea: {
-    maxWidth: '100%',
   },
   revisionTextarea: {
     maxWidth: '100%',
   },
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    paddingBottom: 0,
+  root: {
+    padding: theme.spacing(2),
+  },
+  scriptTextarea: {
+    maxWidth: '100%',
+  },
+  tips: {
+    backgroundColor: theme.palette.divider,
+    marginLeft: theme.spacing(4),
+    marginTop: `${theme.spacing(4)} !important`,
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('lg')]: {
+      paddingLeft: theme.spacing(2),
+    },
+    [theme.breakpoints.down('xl')]: {
+      marginLeft: 0,
+    },
   },
 }));
 
 interface TextFieldHandler {
-  value: string;
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string;
 }
 
 interface Images {
@@ -70,26 +71,26 @@ interface Images {
 
 interface Props {
   currentUser: string;
-  images: Images;
-  label: TextFieldHandler;
-  revision: TextFieldHandler;
   description: TextFieldHandler;
-  script: TextFieldHandler;
+  disableSubmit: boolean;
+  disabled?: boolean;
   errors?: APIError[];
-  onSubmit: () => void;
+  images: Images;
+  isSubmitting: boolean;
+  label: TextFieldHandler;
+  mode: 'create' | 'edit';
   onCancel: () => void;
   onSelectChange: (image: Item<string>[]) => void;
-  isSubmitting: boolean;
-  disabled?: boolean;
-  mode: 'create' | 'edit';
-  disableSubmit: boolean;
+  onSubmit: () => void;
+  revision: TextFieldHandler;
+  script: TextFieldHandler;
 }
 
 type CombinedProps = Props;
 
 const errorResources = {
-  label: 'A label',
   images: 'Images',
+  label: 'A label',
   script: 'A script',
 };
 
@@ -98,19 +99,19 @@ const errorResources = {
 export const StackScriptForm: React.FC<CombinedProps> = (props) => {
   const {
     currentUser,
-    label,
-    revision,
     description,
-    script,
+    disableSubmit,
+    disabled,
     errors,
+    images,
+    isSubmitting,
+    label,
+    mode,
+    onCancel,
     onSelectChange,
     onSubmit,
-    onCancel,
-    isSubmitting,
-    images,
-    mode,
-    disabled,
-    disableSubmit,
+    revision,
+    script,
   } = props;
 
   const classes = useStyles();
@@ -128,41 +129,41 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
                 <InputAdornment position="end">{currentUser} /</InputAdornment>
               ),
             }}
+            className={classes.labelField}
+            data-qa-stackscript-label
+            disabled={disabled}
+            errorText={hasErrorFor('label')}
             label="StackScript Label"
-            required
             onChange={label.handler}
             placeholder="Enter a label"
-            value={label.value}
-            errorText={hasErrorFor('label')}
+            required
             tooltipText="StackScript labels must be between 3 and 128 characters."
-            className={classes.labelField}
-            disabled={disabled}
-            data-qa-stackscript-label
+            value={label.value}
           />
           <TextField
-            multiline
-            rows={1}
-            label="Description"
-            placeholder="Enter a description"
-            onChange={description.handler}
-            value={description.value}
-            disabled={disabled}
             data-qa-stackscript-description
+            disabled={disabled}
+            label="Description"
+            multiline
+            onChange={description.handler}
+            placeholder="Enter a description"
+            rows={1}
+            value={description.value}
           />
           <ImageSelect
-            images={images.available}
-            onSelect={onSelectChange}
-            required
-            value={selectedImages}
-            isMulti
-            label="Target Images"
-            imageFieldError={hasErrorFor('images')}
             helperText={
               'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.'
             }
-            disabled={disabled}
             anyAllOption
             data-qa-stackscript-target-select
+            disabled={disabled}
+            imageFieldError={hasErrorFor('images')}
+            images={images.available}
+            isMulti
+            label="Target Images"
+            onSelect={onSelectChange}
+            required
+            value={selectedImages}
           />
         </Grid>
         <Grid className={classes.gridWithTips}>
@@ -181,42 +182,42 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
         </Grid>
       </Grid>
       <TextField
-        multiline
-        rows={3}
-        label="Script"
-        placeholder={`#!/bin/bash \n\n# Your script goes here`}
-        onChange={script.handler}
-        value={script.value}
-        errorText={hasErrorFor('script')}
-        required
         InputProps={{ className: classes.scriptTextarea }}
-        disabled={disabled}
         data-qa-stackscript-script
+        disabled={disabled}
+        errorText={hasErrorFor('script')}
+        label="Script"
+        multiline
+        onChange={script.handler}
+        placeholder={`#!/bin/bash \n\n# Your script goes here`}
+        required
+        rows={3}
+        value={script.value}
       />
       <TextField
-        label="Revision Note"
-        placeholder="Enter a revision note"
-        onChange={revision.handler}
-        value={revision.value}
         InputProps={{ className: classes.revisionTextarea }}
-        disabled={disabled}
         data-qa-stackscript-revision
+        disabled={disabled}
+        label="Revision Note"
+        onChange={revision.handler}
+        placeholder="Enter a revision note"
+        value={revision.value}
       />
       <ActionsPanel
+        primaryButtonText={
+          mode === 'edit' ? 'Save Changes' : 'Create StackScript'
+        }
         className={classes.actions}
-        showPrimary
         primaryButtonDataTestId="save"
         primaryButtonDisabled={disabled || disableSubmit}
         primaryButtonHandler={onSubmit}
         primaryButtonLoading={isSubmitting}
-        primaryButtonText={
-          mode === 'edit' ? 'Save Changes' : 'Create StackScript'
-        }
-        showSecondary
         secondaryButtonDataTestId="cancel"
         secondaryButtonDisabled={disabled}
         secondaryButtonHandler={onCancel}
         secondaryButtonText="Reset"
+        showPrimary
+        showSecondary
       />
     </Paper>
   );

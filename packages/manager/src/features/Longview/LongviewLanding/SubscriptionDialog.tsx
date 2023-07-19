@@ -1,13 +1,15 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
+
 import { managedText } from './LongviewPlans';
 
 interface Props {
   clientLimit: number;
-  isOpen: boolean;
   isManaged: boolean;
+  isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
 }
@@ -17,13 +19,13 @@ export const SubscriptionDialog: React.FC<Props> = (props) => {
 
   const actions = () => (
     <ActionsPanel
-      showPrimary
       primaryButtonHandler={onSubmit}
       primaryButtonRole="link"
       primaryButtonText={isManaged ? 'Contact Support' : 'View upgrade options'}
-      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
     />
   );
 
@@ -39,10 +41,10 @@ export const SubscriptionDialog: React.FC<Props> = (props) => {
 
   return (
     <ConfirmationDialog
-      title="Maximum Clients Reached"
-      open={isOpen}
-      onClose={onClose}
       actions={actions}
+      onClose={onClose}
+      open={isOpen}
+      title="Maximum Clients Reached"
     >
       <Typography variant="body1">{text}</Typography>
     </ConfirmationDialog>

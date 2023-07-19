@@ -1,30 +1,31 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 
 interface Props {
-  open: boolean;
   onClose: () => void;
+  open: boolean;
   scratchCode: string;
 }
 
 export const ScratchCodeDialog = (props: Props) => {
-  const { open, onClose, scratchCode } = props;
+  const { onClose, open, scratchCode } = props;
 
   return (
     <ConfirmationDialog
-      open={open}
-      title="Scratch Code"
-      onClose={onClose}
       actions={
         <ActionsPanel
-          showSecondary
-          secondaryButtonText="Got it"
-          secondaryButtonHandler={onClose}
           secondaryButtonDataTestId="submit"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Got it"
+          showSecondary
         />
       }
+      onClose={onClose}
+      open={open}
+      title="Scratch Code"
     >
       <Typography>
         {`This scratch code can be used in place of two-factor authentication in the event

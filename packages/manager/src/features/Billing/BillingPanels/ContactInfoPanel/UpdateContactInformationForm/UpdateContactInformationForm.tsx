@@ -1,29 +1,31 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import countryData, { Region } from 'country-region-data';
+import { useFormik } from 'formik';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { makeStyles } from 'tss-react/mui';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import { Country } from './types';
-import { useAccount, useMutateAccount } from 'src/queries/account';
-import { useFormik } from 'formik';
 import useFlags from 'src/hooks/useFlags';
+import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { getErrorMap } from 'src/utilities/errorUtils';
+
+import { Country } from './types';
 
 interface Props {
-  onClose: () => void;
   focusEmail: boolean;
+  onClose: () => void;
 }
 
 const excludedUSRegions = ['Micronesia', 'Marshall Islands', 'Palau'];
 
-const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
+const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: account } = useAccount();
-  const { mutateAsync, isLoading, error } = useMutateAccount();
+  const { error, isLoading, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
   const { classes } = useStyles();
   const flags = useFlags();
@@ -32,18 +34,18 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
+      address_1: account?.address_1,
+      address_2: account?.address_2,
+      city: account?.city,
+      company: account?.company,
+      country: account?.country,
       email: account?.email,
       first_name: account?.first_name,
       last_name: account?.last_name,
-      company: account?.company,
-      address_1: account?.address_1,
-      address_2: account?.address_2,
-      country: account?.country,
-      state: account?.state,
-      city: account?.city,
-      zip: account?.zip,
       phone: account?.phone,
+      state: account?.state,
       tax_id: account?.tax_id,
+      zip: account?.zip,
     },
     async onSubmit(values) {
       await mutateAsync(values);
@@ -91,8 +93,8 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
 
   const countryResults: Item<string>[] = countryData.map((country: Country) => {
     return {
-      value: country.countryShortCode,
       label: country.countryName,
+      value: country.countryShortCode,
     };
   });
 
@@ -111,14 +113,14 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
   const regionResults = countryRegions.map((region) => {
     if (formik.values.country === 'US' && region.name === 'Virgin Islands') {
       return {
-        value: region.shortCode,
         label: 'Virgin Islands, U.S.',
+        value: region.shortCode,
       };
     }
 
     return {
-      value: region.shortCode,
       label: region.name,
+      value: region.shortCode,
     };
   });
 
@@ -130,8 +132,8 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
     );
 
     filteredRegionResults.push({
-      value: 'UM',
       label: 'United States Minor Outlying Islands',
+      value: 'UM',
     });
   } else {
     filteredRegionResults = regionResults;
@@ -149,8 +151,8 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
         className={classes.mainFormContainer}
         columnSpacing={2}
         container
-        spacing={0}
         data-qa-update-contact
+        spacing={0}
       >
         {generalError && (
           <Grid xs={12}>
@@ -159,197 +161,197 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
         )}
         <Grid xs={12}>
           <TextField
-            label="Email"
+            data-qa-contact-email
             errorText={errorMap.email}
             helperTextPosition="top"
             inputRef={emailRef}
+            label="Email"
             name="email"
             onChange={formik.handleChange}
             required
             type="email"
             value={formik.values.email}
-            data-qa-contact-email
           />
         </Grid>
-        <Grid xs={12} sm={6}>
+        <Grid sm={6} xs={12}>
           <TextField
-            label="First Name"
+            data-qa-contact-first-name
             errorText={errorMap.first_name}
+            label="First Name"
             name="first_name"
             onChange={formik.handleChange}
             value={formik.values.first_name}
-            data-qa-contact-first-name
           />
         </Grid>
-        <Grid xs={12} sm={6}>
+        <Grid sm={6} xs={12}>
           <TextField
+            data-qa-contact-last-name
+            errorText={errorMap.last_name}
             label="Last Name"
             name="last_name"
-            errorText={errorMap.last_name}
             onChange={formik.handleChange}
             value={formik.values.last_name}
-            data-qa-contact-last-name
           />
         </Grid>
         <Grid xs={12}>
           <TextField
+            data-qa-company
+            errorText={errorMap.company}
             label="Company Name"
             name="company"
-            errorText={errorMap.company}
             onChange={formik.handleChange}
             value={formik.values.company}
-            data-qa-company
           />
         </Grid>
         <Grid xs={12}>
           <TextField
+            data-qa-contact-address-1
+            errorText={errorMap.address_1}
             label="Address"
             name="address_1"
-            errorText={errorMap.address_1}
             onChange={formik.handleChange}
             value={formik.values.address_1}
-            data-qa-contact-address-1
           />
         </Grid>
         <Grid xs={12}>
           <TextField
+            data-qa-contact-address-2
+            errorText={errorMap.address_2}
             label="Address 2"
             name="address_2"
-            errorText={errorMap.address_2}
             onChange={formik.handleChange}
             value={formik.values.address_2}
-            data-qa-contact-address-2
           />
         </Grid>
 
-        <Grid xs={12} sm={6}>
+        <Grid sm={6} xs={12}>
           <EnhancedSelect
-            label="Country"
-            errorText={errorMap.country}
-            isClearable={false}
-            onChange={(item) => formik.setFieldValue('country', item.value)}
-            options={countryResults}
-            placeholder="Select a Country"
-            required={flags.regionDropdown}
-            value={countryResults.find(
-              ({ value }) => value === formik.values.country
-            )}
             textFieldProps={{
               dataAttrs: {
                 'data-qa-contact-country': true,
               },
             }}
+            value={countryResults.find(
+              ({ value }) => value === formik.values.country
+            )}
+            errorText={errorMap.country}
+            isClearable={false}
+            label="Country"
+            onChange={(item) => formik.setFieldValue('country', item.value)}
+            options={countryResults}
+            placeholder="Select a Country"
+            required={flags.regionDropdown}
           />
         </Grid>
-        <Grid xs={12} sm={6}>
+        <Grid sm={6} xs={12}>
           {flags.regionDropdown &&
           (formik.values.country === 'US' || formik.values.country == 'CA') ? (
             <EnhancedSelect
-              label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
-              errorText={errorMap.state}
-              isClearable={false}
-              onChange={(item) => formik.setFieldValue('state', item.value)}
-              options={filteredRegionResults}
               placeholder={
                 formik.values.country === 'US' ? 'state' : 'province'
-              }
-              required={flags.regionDropdown}
-              value={
-                filteredRegionResults.find(
-                  ({ value }) => value === formik.values.state
-                ) ?? null
               }
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-contact-state-province': true,
                 },
               }}
+              value={
+                filteredRegionResults.find(
+                  ({ value }) => value === formik.values.state
+                ) ?? null
+              }
+              errorText={errorMap.state}
+              isClearable={false}
+              label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
+              onChange={(item) => formik.setFieldValue('state', item.value)}
+              options={filteredRegionResults}
+              required={flags.regionDropdown}
             />
           ) : (
             <TextField
-              label="State / Province"
+              data-qa-contact-state-province
               errorText={errorMap.state}
+              label="State / Province"
               name="state"
               onChange={formik.handleChange}
               placeholder="Enter region"
               required={flags.regionDropdown}
               value={formik.values.state}
-              data-qa-contact-state-province
             />
           )}
         </Grid>
-        <Grid xs={12} sm={6}>
+        <Grid sm={6} xs={12}>
           <TextField
+            data-qa-contact-city
+            errorText={errorMap.city}
             label="City"
             name="city"
-            errorText={errorMap.city}
             onChange={formik.handleChange}
             value={formik.values.city}
-            data-qa-contact-city
           />
         </Grid>
-        <Grid xs={12} sm={6}>
+        <Grid sm={6} xs={12}>
           <TextField
+            data-qa-contact-post-code
+            errorText={errorMap.zip}
             label="Postal Code"
             name="zip"
-            errorText={errorMap.zip}
             onChange={formik.handleChange}
             value={formik.values.zip}
-            data-qa-contact-post-code
           />
         </Grid>
         <Grid xs={12}>
           <TextField
-            label="Phone"
-            type="tel"
-            name="phone"
-            errorText={errorMap.phone}
-            onChange={formik.handleChange}
-            value={formik.values.phone}
             data-qa-contact-phone
+            errorText={errorMap.phone}
+            label="Phone"
+            name="phone"
+            onChange={formik.handleChange}
+            type="tel"
+            value={formik.values.phone}
           />
         </Grid>
         <Grid xs={12}>
           <TextField
+            data-qa-contact-tax-id
+            errorText={errorMap.tax_id}
             label="Tax ID"
             name="tax_id"
-            errorText={errorMap.tax_id}
-            value={formik.values.tax_id}
             onChange={formik.handleChange}
-            data-qa-contact-tax-id
+            value={formik.values.tax_id}
           />
         </Grid>
       </Grid>
       <ActionsPanel
         className={classes.actions}
-        showPrimary
         primaryButtonDataTestId="save-contact-info"
         primaryButtonLoading={isLoading}
         primaryButtonText="Save Changes"
         primaryButtonType="submit"
-        showSecondary
         secondaryButtonDataTestId="reset-contact-info"
         secondaryButtonHandler={onClose}
         secondaryButtonText="Cancel"
+        showPrimary
+        showSecondary
       />
     </form>
   );
 };
 
 const useStyles = makeStyles()({
-  mainFormContainer: {
-    maxWidth: 860,
-    '& .MuiGrid-item:not(:first-of-type) label': {
-      marginTop: 0,
-    },
-  },
   actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    paddingBottom: 0,
     '& button': {
       marginBottom: 0,
     },
+    display: 'flex',
+    justifyContent: 'flex-end',
+    paddingBottom: 0,
+  },
+  mainFormContainer: {
+    '& .MuiGrid-item:not(:first-of-type) label': {
+      marginTop: 0,
+    },
+    maxWidth: 860,
   },
 });
 

@@ -1,38 +1,40 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { isEmpty, splitAt } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
-import { Hidden } from 'src/components/Hidden';
+
 import { Button } from 'src/components/Button/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { Typography } from 'src/components/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
+
 import ResultRow from './ResultRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    marginTop: theme.spacing(),
+    width: '10%',
+  },
   entityHeading: {
     marginBottom: theme.spacing(),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
-  button: {
-    marginTop: theme.spacing(),
-    width: '10%',
-  },
 }));
 
 interface Props {
   entity: string;
-  results: Item[];
   groupSize: number;
+  results: Item[];
 }
 interface HandlerProps {
   showMore: boolean;
@@ -44,7 +46,7 @@ type CombinedProps = Props & HandlerProps;
 export const ResultGroup: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { entity, groupSize, results, toggle, showMore } = props;
+  const { entity, groupSize, results, showMore, toggle } = props;
 
   if (isEmpty(results)) {
     return null;
@@ -56,9 +58,9 @@ export const ResultGroup: React.FC<CombinedProps> = (props) => {
   return (
     <Grid>
       <Typography
-        variant="h2"
-        data-qa-entity-header={entity}
         className={classes.entityHeading}
+        data-qa-entity-header={entity}
+        variant="h2"
       >
         {capitalize(entity)}
       </Typography>
@@ -75,14 +77,14 @@ export const ResultGroup: React.FC<CombinedProps> = (props) => {
         </TableHead>
         <TableBody>
           {initial.map((result, idx: number) => (
-            <ResultRow key={idx} result={result} data-qa-result-row-component />
+            <ResultRow data-qa-result-row-component key={idx} result={result} />
           ))}
           {showMore &&
             hidden.map((result, idx: number) => (
               <ResultRow
+                data-qa-result-row-component
                 key={idx}
                 result={result}
-                data-qa-result-row-component
               />
             ))}
         </TableBody>
@@ -90,9 +92,9 @@ export const ResultGroup: React.FC<CombinedProps> = (props) => {
       {!isEmpty(hidden) && (
         <Button
           buttonType="primary"
-          onClick={toggle}
           className={classes.button}
           data-qa-show-more-toggle
+          onClick={toggle}
         >
           {showMore ? 'Show Less' : 'Show All'}
         </Button>

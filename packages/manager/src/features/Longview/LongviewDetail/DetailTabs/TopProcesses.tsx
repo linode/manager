@@ -1,25 +1,27 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { Box } from 'src/components/Box';
-import { makeStyles } from '@mui/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { Typography } from 'src/components/Typography';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
 import {
   LongviewTopProcesses,
   TopProcessStat,
 } from 'src/features/Longview/request.types';
 import { readableBytes } from 'src/utilities/unitConversions';
+
 import { formatCPU } from '../../shared/formatters';
 
 const useStyles = makeStyles(() => ({
@@ -32,21 +34,21 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface Props {
-  topProcessesData: LongviewTopProcesses;
-  topProcessesLoading: boolean;
-  topProcessesError?: APIError[];
-  lastUpdatedError?: APIError[];
   clientID: number;
+  lastUpdatedError?: APIError[];
+  topProcessesData: LongviewTopProcesses;
+  topProcessesError?: APIError[];
+  topProcessesLoading: boolean;
 }
 
 export const TopProcesses: React.FC<Props> = (props) => {
   const classes = useStyles();
   const {
-    topProcessesData,
-    topProcessesLoading,
-    topProcessesError,
-    lastUpdatedError,
     clientID,
+    lastUpdatedError,
+    topProcessesData,
+    topProcessesError,
+    topProcessesLoading,
   } = props;
 
   const errorMessage = Boolean(topProcessesError || lastUpdatedError)
@@ -54,52 +56,52 @@ export const TopProcesses: React.FC<Props> = (props) => {
     : undefined;
 
   return (
-    <Grid item xs={12} lg={4}>
+    <Grid item lg={4} xs={12}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
         <Link
-          to={`/longview/clients/${clientID}/processes`}
           className={classes.detailsLink}
+          to={`/longview/clients/${clientID}/processes`}
         >
           View Details
         </Link>
       </Box>
       <OrderBy
         data={extendTopProcesses(topProcessesData)}
-        orderBy={'cpu'}
         order={'desc'}
+        orderBy={'cpu'}
         preferenceKey="top-processes"
       >
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Table spacingTop={16} aria-label="List of Top Processes">
+          <Table aria-label="List of Top Processes" spacingTop={16}>
             <TableHead>
               <TableRow>
                 <TableSortCell
-                  data-qa-table-header="Process"
                   active={orderBy === 'name'}
-                  label="name"
+                  data-qa-table-header="Process"
                   direction={order}
                   handleClick={handleOrderChange}
+                  label="name"
                   style={{ width: '40%' }}
                 >
                   Process
                 </TableSortCell>
                 <TableSortCell
-                  data-qa-table-header="CPU"
                   active={orderBy === 'cpu'}
-                  label="cpu"
+                  data-qa-table-header="CPU"
                   direction={order}
                   handleClick={handleOrderChange}
+                  label="cpu"
                   style={{ width: '25%' }}
                 >
                   CPU
                 </TableSortCell>
                 <TableSortCell
-                  data-qa-table-header="Memory"
                   active={orderBy === 'mem'}
-                  label="mem"
+                  data-qa-table-header="Memory"
                   direction={order}
                   handleClick={handleOrderChange}
+                  label="mem"
                   style={{ width: '15%' }}
                 >
                   Memory
@@ -141,37 +143,37 @@ const renderLoadingErrorData = (
       .slice(0, 6)
       .map((thisTopProcessStat, idx) => (
         <TopProcessRow
-          key={`longview-top-process-${idx}`}
-          name={thisTopProcessStat.name}
           cpu={thisTopProcessStat.cpu}
+          key={`longview-top-process-${idx}`}
           mem={thisTopProcessStat.mem}
+          name={thisTopProcessStat.name}
         />
       ))
   );
 };
 
 interface TopProcessRowProps {
-  name: string;
   cpu: number;
   mem: number;
+  name: string;
 }
 
 export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(
   (props) => {
-    const { name, cpu, mem } = props;
+    const { cpu, mem, name } = props;
 
     // Memory is given from the API in KB.
     const memInBytes = mem * 1024;
 
     return (
       <TableRow ariaLabel={name} data-testid="longview-top-process-row">
-        <TableCell parentColumn="Process" data-qa-top-process-process>
+        <TableCell data-qa-top-process-process parentColumn="Process">
           {name}
         </TableCell>
-        <TableCell parentColumn="CPU" data-qa-top-process-cpu>
+        <TableCell data-qa-top-process-cpu parentColumn="CPU">
           {formatCPU(cpu)}
         </TableCell>
-        <TableCell parentColumn="Memory" data-qa-top-process-memory>
+        <TableCell data-qa-top-process-memory parentColumn="Memory">
           {readableBytes(memInBytes, { round: 0 }).formatted}
         </TableCell>
       </TableRow>

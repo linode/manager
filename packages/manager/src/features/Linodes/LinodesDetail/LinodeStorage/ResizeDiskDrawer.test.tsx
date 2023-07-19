@@ -1,8 +1,10 @@
 import React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { rest, server } from 'src/mocks/testServer';
+
 import { linodeDiskFactory, linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { ResizeDiskDrawer } from './ResizeDiskDrawer';
 
 describe('ResizeDiskDrawer', () => {
@@ -22,10 +24,10 @@ describe('ResizeDiskDrawer', () => {
 
     const { findByText, getByDisplayValue, getByText } = renderWithTheme(
       <ResizeDiskDrawer
-        open={true}
-        onClose={jest.fn()}
-        linodeId={1}
         disk={disk}
+        linodeId={1}
+        onClose={jest.fn()}
+        open={true}
       />
     );
 
@@ -64,10 +66,10 @@ describe('ResizeDiskDrawer', () => {
 
     const { findByText } = renderWithTheme(
       <ResizeDiskDrawer
-        open={true}
-        onClose={jest.fn()}
-        linodeId={1}
         disk={diskToResize}
+        linodeId={1}
+        onClose={jest.fn()}
+        open={true}
       />
     );
 

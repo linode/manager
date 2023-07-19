@@ -1,4 +1,5 @@
 import { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
+
 import {
   basename,
   confirmObjectStorage,
@@ -12,30 +13,30 @@ import {
 } from './utilities';
 
 const folder: ObjectStorageObject = {
-  name: 'my-folder',
   etag: null,
   last_modified: null,
+  name: 'my-folder',
   owner: null,
   size: null,
 };
 const object1: ObjectStorageObject = {
-  name: 'file1.txt',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
+  name: 'file1.txt',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
   size: 0,
 };
 const object2: ObjectStorageObject = {
-  name: 'my-folder/file2.txt',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
+  name: 'my-folder/file2.txt',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
   size: 0,
 };
 const object3: ObjectStorageObject = {
-  name: 'my-folder/',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
+  name: 'my-folder/',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
   size: 0,
 };
@@ -135,35 +136,35 @@ describe('Object Storage utilities', () => {
   describe('getElementToAddToTable', () => {
     it('should return files', () => {
       expect(tableUpdateAction('', 'file.txt')).toEqual({
-        type: 'FILE',
         name: 'file.txt',
+        type: 'FILE',
       });
       expect(tableUpdateAction('hello/', 'hello/file.txt')).toEqual({
-        type: 'FILE',
         name: 'file.txt',
+        type: 'FILE',
       });
       expect(tableUpdateAction('hello/world/', 'hello/world/file.txt')).toEqual(
         {
-          type: 'FILE',
           name: 'file.txt',
+          type: 'FILE',
         }
       );
     });
 
     it('should return folders', () => {
       expect(tableUpdateAction('', 'hello/file.txt')).toEqual({
-        type: 'FOLDER',
         name: 'hello',
+        type: 'FOLDER',
       });
       expect(tableUpdateAction('hello/', 'hello/world/file.txt')).toEqual({
-        type: 'FOLDER',
         name: 'world',
+        type: 'FOLDER',
       });
       expect(
         tableUpdateAction('hello/world/', 'hello/world/path/file.txt')
       ).toEqual({
-        type: 'FOLDER',
         name: 'path',
+        type: 'FOLDER',
       });
     });
 
@@ -205,10 +206,10 @@ describe('Object Storage utilities', () => {
     const handleSubmit = jest.fn();
     const openConfirmationDialog = jest.fn();
     const mockFormikProps = {
-      validateForm,
-      setFieldTouched,
-      setFieldError,
       handleSubmit,
+      setFieldError,
+      setFieldTouched,
+      validateForm,
     } as any;
 
     it("doesn't call the confirmation handler if OBJ is active", async () => {

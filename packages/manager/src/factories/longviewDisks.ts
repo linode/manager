@@ -1,4 +1,5 @@
 import * as Factory from 'factory.ts';
+
 import { Disk, LongviewDisk } from 'src/features/Longview/request.types';
 
 const mockStats = [
@@ -8,13 +9,13 @@ const mockStats = [
 ];
 
 export const diskFactory = Factory.Sync.makeFactory<Disk>({
-  reads: mockStats,
-  writes: mockStats,
+  childof: 0,
+  children: 0,
+  dm: 0,
   isswap: 0,
   mounted: 1,
-  childof: 0,
-  dm: 0,
-  children: 0,
+  reads: mockStats,
+  writes: mockStats,
 });
 
 export const longviewDiskFactory = Factory.Sync.makeFactory<LongviewDisk>({

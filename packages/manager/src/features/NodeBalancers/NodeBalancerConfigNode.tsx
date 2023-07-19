@@ -1,49 +1,51 @@
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Divider } from 'src/components/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
-import MenuItem from 'src/components/core/MenuItem';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { Chip } from 'src/components/Chip';
+import { Divider } from 'src/components/Divider';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { Chip } from 'src/components/Chip';
-import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
+import MenuItem from 'src/components/core/MenuItem';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
 import { NodeBalancerConfigNodeFields } from './types';
-import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
 
 export interface NodeBalancerConfigNodeProps {
-  node: NodeBalancerConfigNodeFields;
-  idx: number;
-  forEdit: boolean;
-  disabled: boolean;
   configIdx?: number;
+  disabled: boolean;
+  forEdit: boolean;
+  idx: number;
+  node: NodeBalancerConfigNodeFields;
   nodeBalancerRegion?: string;
-  onNodeLabelChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeAddressChange: (nodeIdx: number, value: string) => void;
-  onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onNodeLabelChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeModeChange: (
     e: React.ChangeEvent<HTMLInputElement>,
     nodeId: number
   ) => void;
   onNodePortChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   removeNode: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
     const {
-      disabled,
-      node,
-      idx,
-      forEdit,
       configIdx,
+      disabled,
+      forEdit,
+      idx,
+      node,
       nodeBalancerRegion,
       onNodeAddressChange,
       onNodeLabelChange,
       onNodeModeChange,
-      onNodeWeightChange,
       onNodePortChange,
+      onNodeWeightChange,
       removeNode,
     } = props;
 
@@ -59,13 +61,13 @@ export const NodeBalancerConfigNode = React.memo(
 
     return (
       <React.Fragment>
-        <Grid data-qa-node xs={12} sx={{ padding: 0 }}>
+        <Grid data-qa-node sx={{ padding: 0 }} xs={12}>
           {idx !== 0 && (
             <Grid xs={12}>
               <Divider
                 style={{
-                  marginTop: forEdit ? 8 : 24,
                   marginBottom: 24,
+                  marginTop: forEdit ? 8 : 24,
                 }}
               />
             </Grid>
@@ -77,42 +79,42 @@ export const NodeBalancerConfigNode = React.memo(
           )}
           <Grid container spacing={2}>
             <Grid
-              xs={6}
-              sm={forEdit ? 4 : 6}
-              lg={forEdit ? 2 : 4}
               sx={{
                 '.MuiInputLabel-root': {
                   marginTop: 0,
                 },
               }}
+              lg={forEdit ? 2 : 4}
+              sm={forEdit ? 4 : 6}
+              xs={6}
             >
               <TextField
-                label="Label"
-                value={node.label}
-                inputId={`node-label-${configIdx}-${idx}`}
-                inputProps={{ 'data-node-idx': idx }}
-                onChange={onNodeLabelChange}
-                errorText={nodesErrorMap.label}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
                 data-qa-backend-ip-label
                 disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={nodesErrorMap.label}
+                inputId={`node-label-${configIdx}-${idx}`}
+                inputProps={{ 'data-node-idx': idx }}
+                label="Label"
+                onChange={onNodeLabelChange}
+                value={node.label}
               />
             </Grid>
             {node.status && (
-              <Grid xs={6} sm={4} lg={2}>
-                <StyledStatusHeader variant="h3" data-qa-active-checks-header>
+              <Grid lg={2} sm={4} xs={6}>
+                <StyledStatusHeader data-qa-active-checks-header variant="h3">
                   Status
                   <div>
-                    <StyledStatusChip label={node.status} component="div" />
+                    <StyledStatusChip component="div" label={node.status} />
                   </div>
                 </StyledStatusHeader>
               </Grid>
             )}
           </Grid>
         </Grid>
-        <Grid xs={12} sx={{ padding: 0 }}>
-          <Grid key={idx} container data-qa-node spacing={2}>
-            <Grid xs={12} sm={3} lg={forEdit ? 2 : 4}>
+        <Grid sx={{ padding: 0 }} xs={12}>
+          <Grid container data-qa-node key={idx} spacing={2}>
+            <Grid lg={forEdit ? 2 : 4} sm={3} xs={12}>
               <ConfigNodeIPSelect
                 textfieldProps={{
                   dataAttrs: {
@@ -120,69 +122,69 @@ export const NodeBalancerConfigNode = React.memo(
                   },
                 }}
                 disabled={disabled}
-                handleChange={onNodeAddressChange}
-                selectedRegion={nodeBalancerRegion}
-                nodeIndex={idx}
                 errorText={nodesErrorMap.address}
-                nodeAddress={node.address}
+                handleChange={onNodeAddressChange}
                 inputId={`ip-select-node-${configIdx}-${idx}`}
+                nodeAddress={node.address}
+                nodeIndex={idx}
+                selectedRegion={nodeBalancerRegion}
               />
             </Grid>
-            <Grid xs={6} sm={3} lg={2}>
+            <Grid lg={2} sm={3} xs={6}>
               <TextField
-                type="number"
-                label="Port"
-                value={node.port}
-                inputProps={{ 'data-node-idx': idx }}
-                onChange={onNodePortChange}
-                errorText={nodesErrorMap.port}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
                 data-qa-backend-ip-port
-                noMarginTop
                 disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={nodesErrorMap.port}
+                inputProps={{ 'data-node-idx': idx }}
+                label="Port"
+                noMarginTop
+                onChange={onNodePortChange}
+                type="number"
+                value={node.port}
               />
             </Grid>
-            <Grid xs={6} sm={3} lg={2}>
+            <Grid lg={2} sm={3} xs={6}>
               <TextField
-                type="number"
-                label="Weight"
-                value={node.weight}
-                inputProps={{ 'data-node-idx': idx }}
-                onChange={onNodeWeightChange}
-                errorText={nodesErrorMap.weight}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
                 data-qa-backend-ip-weight
-                noMarginTop
                 disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={nodesErrorMap.weight}
+                inputProps={{ 'data-node-idx': idx }}
+                label="Weight"
+                noMarginTop
+                onChange={onNodeWeightChange}
+                type="number"
+                value={node.weight}
               />
             </Grid>
             {forEdit && (
-              <Grid xs={6} sm={3} lg={2}>
+              <Grid lg={2} sm={3} xs={6}>
                 <TextField
-                  // className={classes.mode}
-                  label="Mode"
-                  inputId={`mode-${idx}`}
-                  value={node.mode}
-                  select
-                  inputProps={{ 'data-node-idx': idx }}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     onNodeModeChange(e, idx)
                   }
-                  errorText={nodesErrorMap.mode}
                   data-qa-backend-ip-mode
-                  noMarginTop
                   disabled={disabled}
+                  errorText={nodesErrorMap.mode}
+                  inputId={`mode-${idx}`}
+                  inputProps={{ 'data-node-idx': idx }}
+                  // className={classes.mode}
+                  label="Mode"
+                  noMarginTop
+                  select
+                  value={node.mode}
                 >
-                  <MenuItem value="accept" data-node-idx={idx}>
+                  <MenuItem data-node-idx={idx} value="accept">
                     Accept
                   </MenuItem>
-                  <MenuItem value="reject" data-node-idx={idx}>
+                  <MenuItem data-node-idx={idx} value="reject">
                     Reject
                   </MenuItem>
-                  <MenuItem value="backup" data-node-idx={idx}>
+                  <MenuItem data-node-idx={idx} value="backup">
                     Backup
                   </MenuItem>
-                  <MenuItem value="drain" data-node-idx={idx}>
+                  <MenuItem data-node-idx={idx} value="drain">
                     Drain
                   </MenuItem>
                 </TextField>
@@ -190,14 +192,14 @@ export const NodeBalancerConfigNode = React.memo(
             )}
             {(forEdit || idx !== 0) && (
               <StyledActionsPanel
-                showSecondary
-                //What is purpose of this attribute?
                 // data-node-idx={idx}
                 secondaryButtonDataTestId="remove-node"
+                // What is purpose of this attribute?
                 secondaryButtonDisabled={disabled}
                 secondaryButtonHandler={removeNode}
                 secondaryButtonSx={{ minWidth: 'auto', padding: 0, top: 8 }}
                 secondaryButtonText="Remove"
+                showSecondary
               />
             )}
           </Grid>
@@ -208,19 +210,19 @@ export const NodeBalancerConfigNode = React.memo(
 );
 
 const StyledActionsPanel = styled(ActionsPanel)(({ theme }) => ({
-  display: 'flex',
+  '& .remove': {
+    margin: 0,
+    padding: theme.spacing(2.5),
+  },
   alignItems: 'flex-end',
-  paddingLeft: theme.spacing(2),
+  display: 'flex',
   marginLeft: `-${theme.spacing()}`,
+  paddingLeft: theme.spacing(2),
   [theme.breakpoints.down('lg')]: {
     marginTop: `-${theme.spacing()}`,
   },
   [theme.breakpoints.down('sm')]: {
     marginTop: 0,
-  },
-  '& .remove': {
-    margin: 0,
-    padding: theme.spacing(2.5),
   },
 }));
 

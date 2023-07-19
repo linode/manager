@@ -1,26 +1,31 @@
-import { Formik, FormikHelpers } from 'formik';
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
-import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { Formik, FormikHelpers } from 'formik';
+import * as React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import Drawer from 'src/components/Drawer';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
+import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
+
 import { DEFAULTS } from './common';
-import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  helperText: {
+    marginBottom: theme.spacing(1.25),
+  },
   ip: {
     [theme.breakpoints.down('md')]: {
       paddingBottom: '0px !important',
@@ -31,21 +36,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: '0px !important',
     },
   },
-  helperText: {
-    marginBottom: theme.spacing(1.25),
-  },
 }));
 
 interface Props {
-  isOpen: boolean;
   closeDrawer: () => void;
+  isOpen: boolean;
   linodeSetting?: ManagedLinodeSetting;
 }
 
 const EditSSHAccessDrawer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { isOpen, closeDrawer, linodeSetting } = props;
+  const { closeDrawer, isOpen, linodeSetting } = props;
 
   const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
     linodeSetting?.id || -1
@@ -56,8 +58,8 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
     : 'Edit SSH Access';
 
   const onSubmit = (
-    values: Omit<ManagedLinodeSetting, 'id' | 'label' | 'group'>,
-    { setErrors, setSubmitting, setStatus }: FormikHelpers<ManagedLinodeSetting>
+    values: Omit<ManagedLinodeSetting, 'group' | 'id' | 'label'>,
+    { setErrors, setStatus, setSubmitting }: FormikHelpers<ManagedLinodeSetting>
   ) => {
     // It probably isn't possible to end up here without linodeSetting,
     // but we'll include an early return to make TypeScript happy.
@@ -74,7 +76,7 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
       String(values.ssh.port) !== '' ? values.ssh.port : DEFAULTS.port;
 
     updateLinodeSettings({
-      ssh: { ...values.ssh, user, port },
+      ssh: { ...values.ssh, port, user },
     })
       .then(() => {
         setSubmitting(false);
@@ -92,7 +94,7 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
   };
 
   return (
-    <Drawer title={title} open={isOpen} onClose={closeDrawer}>
+    <Drawer onClose={closeDrawer} open={isOpen} title={title}>
       {!linodeSetting ? null : (
         <>
           {/* We're intentionally not validating with Formik, because we want to allow "Port" to
@@ -103,24 +105,24 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
               // These values are nested this way to mach the API request/response.
               ssh: {
                 access: linodeSetting.ssh.access,
-                user: linodeSetting.ssh.user,
                 ip: linodeSetting.ssh.ip,
                 port: linodeSetting.ssh.port,
+                user: linodeSetting.ssh.user,
               },
             }}
             onSubmit={onSubmit}
           >
             {({
-              values,
               errors,
-              status,
-              handleChange,
               handleBlur,
+              handleChange,
               handleSubmit,
               isSubmitting,
               setFieldValue,
+              status,
+              values,
             }) => {
-              const { access, user, ip, port } = values.ssh;
+              const { access, ip, port, user } = values.ssh;
 
               const userError = errors['ssh.user'];
 
@@ -133,11 +135,11 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
               return (
                 <>
                   {status && (
-                    <Notice key={status} text={status.generalError} error />
+                    <Notice error key={status} text={status.generalError} />
                   )}
 
                   <form>
-                    <Typography variant="body1" className={classes.helperText}>
+                    <Typography className={classes.helperText} variant="body1">
                       We’ll use the default settings for User Account (
                       {DEFAULTS.user}) and Port ({DEFAULTS.port}) if you leave
                       those fields empty.
@@ -146,8 +148,8 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                     <FormControlLabel
                       control={
                         <Toggle
-                          name="ssh.access"
                           checked={access}
+                          name="ssh.access"
                           onChange={() => setFieldValue('ssh.access', !access)}
                         />
                       }
@@ -155,24 +157,19 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                     />
 
                     <TextField
-                      name="ssh.user"
-                      label="User Account"
-                      value={user}
                       error={!!userError}
                       errorText={userError}
-                      onChange={handleChange}
+                      label="User Account"
+                      name="ssh.user"
                       onBlur={handleBlur}
+                      onChange={handleChange}
                       placeholder={user || DEFAULTS.user}
+                      value={user}
                     />
 
                     <Grid container spacing={2}>
-                      <Grid xs={12} md={8} className={classes.ip}>
+                      <Grid className={classes.ip} md={8} xs={12}>
                         <IPSelect
-                          linodeId={linodeSetting.id}
-                          value={{
-                            label: ip === 'any' ? 'Any' : ip,
-                            value: ip,
-                          }}
                           customizeOptions={(options) => [
                             // The first option should always be "Any".
                             {
@@ -193,29 +190,34 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                           handleChange={(selectedIp: string) =>
                             setFieldValue('ssh.ip', selectedIp)
                           }
+                          value={{
+                            label: ip === 'any' ? 'Any' : ip,
+                            value: ip,
+                          }}
                           errorText={ipError}
+                          linodeId={linodeSetting.id}
                         />
                       </Grid>
 
-                      <Grid xs={12} md={4} className={classes.port}>
+                      <Grid className={classes.port} md={4} xs={12}>
                         <TextField
-                          name="ssh.port"
-                          label="Port"
-                          type="number"
-                          value={port}
                           error={!!portError}
                           errorText={portError}
-                          onChange={handleChange}
+                          label="Port"
+                          name="ssh.port"
                           onBlur={handleBlur}
+                          onChange={handleChange}
                           placeholder={String(port || DEFAULTS.port)}
+                          type="number"
+                          value={port}
                         />
                       </Grid>
                     </Grid>
                     <ActionsPanel
-                      showPrimary
                       primaryButtonHandler={() => handleSubmit()}
                       primaryButtonLoading={isSubmitting}
                       primaryButtonText="Save Changes"
+                      showPrimary
                     />
                   </form>
                 </>

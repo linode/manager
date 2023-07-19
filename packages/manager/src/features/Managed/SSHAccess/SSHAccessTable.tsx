@@ -1,41 +1,43 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import produce from 'immer';
 import * as React from 'react';
+
 import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { useAllLinodeSettingsQuery } from 'src/queries/managed/managed';
-import { DEFAULTS } from './common';
+
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';
 import SSHAccessTableContent from './SSHAccessTableContent';
+import { DEFAULTS } from './common';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(4),
     '&:before': {
       display: 'none',
     },
+    marginTop: theme.spacing(4),
   },
 }));
 
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data: settings, isLoading, error } = useAllLinodeSettingsQuery();
+  const { data: settings, error, isLoading } = useAllLinodeSettingsQuery();
 
   const data = settings || [];
 
-  const [selectedLinodeId, setSelectedLinodeId] = React.useState<number | null>(
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
     null
   );
 
@@ -58,7 +60,7 @@ const SSHAccessTable: React.FC<{}> = () => {
 
   return (
     <>
-      <OrderBy data={normalizedData} orderBy="label" order="asc">
+      <OrderBy data={normalizedData} order="asc" orderBy="label">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
             <Paginate data={orderedData}>
@@ -78,47 +80,47 @@ const SSHAccessTable: React.FC<{}> = () => {
                           <TableRow>
                             <TableSortCell
                               active={orderBy === 'label'}
-                              label={'label'}
+                              data-qa-ssh-linode-header
                               direction={order}
                               handleClick={handleOrderChange}
-                              data-qa-ssh-linode-header
+                              label={'label'}
                             >
                               Linode
                             </TableSortCell>
                             <TableSortCell
                               active={orderBy === 'ssh:access'}
-                              label={'ssh:access'}
+                              data-qa-ssh-access-header
                               direction={order}
                               handleClick={handleOrderChange}
-                              data-qa-ssh-access-header
+                              label={'ssh:access'}
                             >
                               SSH Access
                             </TableSortCell>
                             <Hidden smDown>
                               <TableSortCell
                                 active={orderBy === 'ssh:user'}
-                                label={'ssh:user'}
+                                data-qa-ssh-user-header
                                 direction={order}
                                 handleClick={handleOrderChange}
-                                data-qa-ssh-user-header
+                                label={'ssh:user'}
                               >
                                 User
                               </TableSortCell>
                               <TableSortCell
                                 active={orderBy === 'ssh:ip'}
-                                label={'ssh:ip'}
+                                data-qa-ssh-ip-header
                                 direction={order}
                                 handleClick={handleOrderChange}
-                                data-qa-ssh-ip-header
+                                label={'ssh:ip'}
                               >
                                 IP
                               </TableSortCell>
                               <TableSortCell
                                 active={orderBy === 'ssh:port'}
-                                label={'ssh:port'}
+                                data-qa-ssh-port-header
                                 direction={order}
                                 handleClick={handleOrderChange}
-                                data-qa-ssh-port-header
+                                label={'ssh:port'}
                               >
                                 Port
                               </TableSortCell>
@@ -128,24 +130,24 @@ const SSHAccessTable: React.FC<{}> = () => {
                         </TableHead>
                         <TableBody>
                           <SSHAccessTableContent
-                            linodeSettings={paginatedData}
-                            loading={isLoading}
                             openDrawer={(linodeId: number) => {
                               setSelectedLinodeId(linodeId);
                               drawer.open();
                             }}
                             error={error}
+                            linodeSettings={paginatedData}
+                            loading={isLoading}
                           />
                         </TableBody>
                       </Table>
                     </div>
                     <PaginationFooter
                       count={count}
+                      eventCategory="managed ssh access table"
                       handlePageChange={handlePageChange}
                       handleSizeChange={handlePageSizeChange}
                       page={page}
                       pageSize={pageSize}
-                      eventCategory="managed ssh access table"
                     />
                   </>
                 );
@@ -155,8 +157,8 @@ const SSHAccessTable: React.FC<{}> = () => {
         }}
       </OrderBy>
       <EditSSHAccessDrawer
-        isOpen={drawer.isOpen}
         closeDrawer={drawer.close}
+        isOpen={drawer.isOpen}
         linodeSetting={normalizedData.find((l) => l.id === selectedLinodeId)}
       />
     </>

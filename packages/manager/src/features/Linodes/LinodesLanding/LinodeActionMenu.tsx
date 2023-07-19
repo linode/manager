@@ -1,15 +1,16 @@
 import { LinodeBackups, LinodeType } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
-import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useSpecificTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import {
   sendLinodeActionEvent,
@@ -17,16 +18,17 @@ import {
   sendMigrationNavigationEvent,
 } from 'src/utilities/analytics';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+
 import { LinodeHandlers } from './LinodesLanding';
 
 export interface Props extends LinodeHandlers {
+  inListView?: boolean;
+  linodeBackups: LinodeBackups;
   linodeId: number;
   linodeLabel: string;
   linodeRegion: string;
-  linodeType?: LinodeType;
-  linodeBackups: LinodeBackups;
   linodeStatus: string;
-  inListView?: boolean;
+  linodeType?: LinodeType;
 }
 
 // When we clone a Linode from the action menu, we pass in several query string
@@ -34,13 +36,13 @@ export interface Props extends LinodeHandlers {
 export const buildQueryStringForLinodeClone = (
   linodeId: number,
   linodeRegion: string,
-  linodeType: string | null,
+  linodeType: null | string,
   types: ExtendedType[] | null | undefined,
   regions: Region[]
 ): string => {
   const params: Record<string, string> = {
-    type: 'Clone Linode',
     linodeID: String(linodeId),
+    type: 'Clone Linode',
   };
 
   // If the type of this Linode is a valid (current) type, use it in the QS
@@ -58,11 +60,11 @@ export const buildQueryStringForLinodeClone = (
 
 export const LinodeActionMenu: React.FC<Props> = (props) => {
   const {
+    inListView,
     linodeId,
     linodeRegion,
     linodeStatus,
     linodeType,
-    inListView,
   } = props;
 
   const theme = useTheme<Theme>();
@@ -109,38 +111,37 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
   const actions = [
     inListView || matchesSmDown
       ? {
-          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
-          disabled: !['running', 'offline'].includes(linodeStatus) || readOnly,
-          tooltip: readOnly ? noPermissionTooltipText : undefined,
+          disabled: !['offline', 'running'].includes(linodeStatus) || readOnly,
           onClick: handlePowerAction,
+          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+          tooltip: readOnly ? noPermissionTooltipText : undefined,
         }
       : null,
     inListView || matchesSmDown
       ? {
-          title: 'Reboot',
           disabled: linodeStatus !== 'running' || readOnly,
-          tooltip: readOnly ? noPermissionTooltipText : undefined,
           onClick: () => {
             sendLinodeActionMenuItemEvent('Reboot Linode');
             props.onOpenPowerDialog('Reboot');
           },
+          title: 'Reboot',
+          tooltip: readOnly ? noPermissionTooltipText : undefined,
           ...readOnlyProps,
         }
       : null,
     inListView || matchesSmDown
       ? {
-          title: 'Launch LISH Console',
           onClick: () => {
             sendLinodeActionMenuItemEvent('Launch Console');
             lishLaunch(linodeId);
           },
+          title: 'Launch LISH Console',
           ...readOnlyProps,
         }
       : null,
     isBareMetalInstance
       ? null
       : {
-          title: 'Clone',
           onClick: () => {
             sendLinodeActionMenuItemEvent('Clone');
             history.push({
@@ -154,63 +155,64 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
               ),
             });
           },
+          title: 'Clone',
           ...maintenanceProps,
           ...readOnlyProps,
         },
     isBareMetalInstance
       ? null
       : {
-          title: 'Resize',
           onClick: () => {
             props.onOpenResizeDialog();
           },
+          title: 'Resize',
           ...maintenanceProps,
           ...readOnlyProps,
         },
     {
-      title: 'Rebuild',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
         props.onOpenRebuildDialog();
       },
+      title: 'Rebuild',
       ...maintenanceProps,
       ...readOnlyProps,
     },
     {
-      title: 'Rescue',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
         props.onOpenRescueDialog();
       },
+      title: 'Rescue',
       ...maintenanceProps,
       ...readOnlyProps,
     },
     isBareMetalInstance
       ? null
       : {
-          title: 'Migrate',
           onClick: () => {
             sendMigrationNavigationEvent('/linodes');
             sendLinodeActionMenuItemEvent('Migrate');
             props.onOpenMigrateDialog();
           },
+          title: 'Migrate',
           ...readOnlyProps,
         },
     {
-      title: 'Delete',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Delete Linode');
         props.onOpenDeleteDialog();
       },
+      title: 'Delete',
       ...readOnlyProps,
     },
   ].filter(Boolean) as ExtendedAction[];
 
   return (
     <ActionMenu
-      toggleOpenCallback={toggleOpenActionMenu}
       actionsList={actions}
       ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
+      toggleOpenCallback={toggleOpenActionMenu}
     />
   );
 };

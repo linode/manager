@@ -1,10 +1,12 @@
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Typography } from 'src/components/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
-import { CancelNotice } from '../CancelNotice';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Typography } from 'src/components/Typography';
+
+import { CancelNotice } from '../CancelNotice';
 
 interface RevokeKeysDialogProps {
   errors?: APIError[];
@@ -29,14 +31,14 @@ export const RevokeAccessKeyDialog = (props: RevokeKeysDialogProps) => {
 
   const actions = () => (
     <ActionsPanel
-      showPrimary
       primaryButtonHandler={handleSubmit}
       primaryButtonLoading={isLoading}
       primaryButtonText="Revoke"
-      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={handleClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
     />
   );
 

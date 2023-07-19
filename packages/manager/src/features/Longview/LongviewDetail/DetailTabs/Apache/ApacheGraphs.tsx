@@ -1,9 +1,10 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
-import { WithTheme, withTheme } from '@mui/styles';
+
 import Grid from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
+import Paper from 'src/components/core/Paper';
 import {
   convertNetworkToUnit,
   formatNetworkTooltip,
@@ -11,21 +12,22 @@ import {
   statMax,
 } from 'src/features/Longview/shared/utilities';
 import roundTo from 'src/utilities/roundTo';
+
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ProcessGraphs, { useStyles } from '../ProcessGraphs';
 
 interface Props {
   data?: ApacheResponse;
-  error?: string;
-  loading: boolean;
-  timezone: string;
-  isToday: boolean;
-  start: number;
   end: number;
+  error?: string;
+  isToday: boolean;
+  loading: boolean;
   processesData: LongviewProcesses;
-  processesLoading: boolean;
   processesError?: string;
+  processesLoading: boolean;
+  start: number;
+  timezone: string;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -33,16 +35,16 @@ type CombinedProps = Props & WithTheme;
 export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
+    end,
     error,
     isToday,
     loading,
-    timezone,
-    start,
-    end,
-    theme,
     processesData,
-    processesLoading,
     processesError,
+    processesLoading,
+    start,
+    theme,
+    timezone,
   } = props;
 
   const classes = useStyles();
@@ -79,11 +81,11 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
   );
 
   const graphProps = {
-    timezone,
-    showToday: isToday,
-    loading,
     error,
+    loading,
     nativeLegend: true,
+    showToday: isToday,
+    timezone,
   };
 
   return (
@@ -91,114 +93,114 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
       <Grid container direction="column" spacing={0}>
         <Grid item xs={12}>
           <LongviewLineGraph
-            title="Requests"
-            subtitle="requests/s"
-            ariaLabel="Requests Per Second Graph"
             data={[
               {
-                label: 'Requests',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.requests,
+                borderColor: 'transparent',
                 data: _convertData(totalAccesses, start, end),
+                label: 'Requests',
               },
             ]}
+            ariaLabel="Requests Per Second Graph"
+            subtitle="requests/s"
+            title="Requests"
             {...graphProps}
           />
         </Grid>
         <Grid item xs={12}>
           <Grid container direction="row">
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+            <Grid className={classes.smallGraph} item sm={6} xs={12}>
               <LongviewLineGraph
-                title="Throughput"
-                subtitle={`${networkUnit}/s`}
-                unit={'/s'}
-                ariaLabel="Throughput Graph"
-                formatData={(value: number) =>
-                  roundTo(convertNetworkToUnit(value * 8, networkUnit))
-                }
-                formatTooltip={formatNetworkTooltip}
                 data={[
                   {
-                    label: 'Throughput',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
+                    borderColor: 'transparent',
                     data: _convertData(
                       totalKBytes,
                       start,
                       end,
                       kilobytesToBytes
                     ),
+                    label: 'Throughput',
                   },
                 ]}
+                formatData={(value: number) =>
+                  roundTo(convertNetworkToUnit(value * 8, networkUnit))
+                }
+                ariaLabel="Throughput Graph"
+                formatTooltip={formatNetworkTooltip}
+                subtitle={`${networkUnit}/s`}
+                title="Throughput"
+                unit={'/s'}
                 {...graphProps}
               />
             </Grid>
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+            <Grid className={classes.smallGraph} item sm={6} xs={12}>
               <LongviewLineGraph
-                title="Workers"
-                ariaLabel="Workers Graph"
                 data={[
                   {
-                    label: 'Waiting',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.waiting,
+                    borderColor: 'transparent',
                     data: _convertData(workersWaiting, start, end),
+                    label: 'Waiting',
                   },
                   {
-                    label: 'Starting',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.starting,
+                    borderColor: 'transparent',
                     data: _convertData(workersStarting, start, end),
+                    label: 'Starting',
                   },
                   {
-                    label: 'Reading',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.reading,
+                    borderColor: 'transparent',
                     data: _convertData(workersReading, start, end),
+                    label: 'Reading',
                   },
                   {
-                    label: 'Sending',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.sending,
+                    borderColor: 'transparent',
                     data: _convertData(workersSending, start, end),
+                    label: 'Sending',
                   },
                   {
-                    label: 'Keepalive',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.keepAlive,
+                    borderColor: 'transparent',
                     data: _convertData(workersKeepAlive, start, end),
+                    label: 'Keepalive',
                   },
                   {
-                    label: 'DNS Lookup',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.DNSLookup,
+                    borderColor: 'transparent',
                     data: _convertData(workersDNSLookup, start, end),
+                    label: 'DNS Lookup',
                   },
                   {
-                    label: 'Closing',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.closing,
+                    borderColor: 'transparent',
                     data: _convertData(workersClosing, start, end),
+                    label: 'Closing',
                   },
                   {
-                    label: 'Logging',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.logging,
+                    borderColor: 'transparent',
                     data: _convertData(workersLogging, start, end),
+                    label: 'Logging',
                   },
                   {
-                    label: 'Finishing',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.finishing,
+                    borderColor: 'transparent',
                     data: _convertData(workersFinishing, start, end),
+                    label: 'Finishing',
                   },
                   {
-                    label: 'Cleanup',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.cleanup,
+                    borderColor: 'transparent',
                     data: _convertData(workersCleanup, start, end),
+                    label: 'Cleanup',
                   },
                 ]}
+                ariaLabel="Workers Graph"
+                title="Workers"
                 {...graphProps}
               />
             </Grid>
@@ -206,19 +208,19 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
         </Grid>
         <ProcessGraphs
           data={processesData}
-          loading={processesLoading}
-          error={processesError || error}
-          timezone={timezone}
-          isToday={isToday}
-          start={start}
           end={end}
+          error={processesError || error}
+          isToday={isToday}
+          loading={processesLoading}
+          start={start}
+          timezone={timezone}
         />
       </Grid>
     </Paper>
   );
 };
 
-export const kilobytesToBytes = (value: number | null) => {
+export const kilobytesToBytes = (value: null | number) => {
   if (value === null) {
     return null;
   }

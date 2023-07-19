@@ -1,28 +1,28 @@
+import { action } from '@storybook/addon-actions';
 import React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { action } from '@storybook/addon-actions';
+
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ConfirmationDialog> = {
-  title: 'Components/Dialog/ConfirmationDialog',
-  component: ConfirmationDialog,
   argTypes: {
     actions: {
-      description:
-        'Items that get rendered in the footer of the Dialog. Typicaly you put an `<ActionsPanel />` with `<Button />`s in it.',
       control: {
         type: 'jsx',
       },
+      description:
+        'Items that get rendered in the footer of the Dialog. Typicaly you put an `<ActionsPanel />` with `<Button />`s in it.',
     },
     children: { description: 'The contents of the Modal.' },
     error: { description: 'Error that will be shown in the dialog.' },
     maxWidth: {
-      options: ['xs', 'sm', 'md', 'lg', 'xl', false],
       control: {
         type: 'select',
       },
       if: { arg: 'fullWidth' },
+      options: ['xs', 'sm', 'md', 'lg', 'xl', false],
     },
     onClose: {
       action: 'onClose',
@@ -34,10 +34,10 @@ const meta: Meta<typeof ConfirmationDialog> = {
   args: {
     actions: (
       <ActionsPanel
-        showPrimary
         primaryButtonText="Continue"
-        showSecondary
         secondaryButtonText="Cancel"
+        showPrimary
+        showSecondary
       />
     ),
     children:
@@ -54,6 +54,8 @@ const meta: Meta<typeof ConfirmationDialog> = {
     style: { position: 'unset' },
     title: 'Enable this feature?',
   },
+  component: ConfirmationDialog,
+  title: 'Components/Dialog/ConfirmationDialog',
 };
 
 export default meta;

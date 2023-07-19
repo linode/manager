@@ -20,16 +20,16 @@ const CookieWarning: React.FC<{}> = () => {
       the Linode Cloud Manager, please enable cookies for cloud.linode.com and
       login.linode.com
       <a
-        href="https://orteil.dashnet.org/cookieclicker/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
         style={{
-          position: 'absolute',
           bottom: 0,
-          right: 0,
           margin: '1em',
+          position: 'absolute',
+          right: 0,
         }}
+        aria-describedby="external-site"
+        href="https://orteil.dashnet.org/cookieclicker/"
+        rel="noopener noreferrer"
+        target="_blank"
       >
         :)
       </a>

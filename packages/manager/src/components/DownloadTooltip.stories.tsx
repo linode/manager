@@ -1,19 +1,20 @@
-import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+
 import { DownloadTooltip } from './DownloadTooltip';
 
 const meta: Meta<typeof DownloadTooltip> = {
-  title: 'Components/Tooltip/Download Tooltip',
   component: DownloadTooltip,
+  title: 'Components/Tooltip/Download Tooltip',
 };
 
 type Story = StoryObj<typeof DownloadTooltip>;
 
 export const Default: Story = {
-  render: (args) => <DownloadTooltip {...args} />,
   args: {
     text: 'This is a DownloadTooltip',
   },
+  render: (args) => <DownloadTooltip {...args} />,
 };
 
 export default meta;

@@ -1,9 +1,10 @@
 import { path } from 'ramda';
 import * as React from 'react';
+
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { isNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
-type PreferenceValue = boolean | string | number;
+type PreferenceValue = boolean | number | string;
 
 export interface PreferenceToggleProps<T> {
   preference: T;
@@ -18,24 +19,24 @@ interface RenderChildrenProps<T> {
 type RenderChildren<T> = (props: RenderChildrenProps<T>) => JSX.Element;
 
 interface Props<T = PreferenceValue> {
-  preferenceKey: string;
-  preferenceOptions: [T, T];
-  value?: T;
-  toggleCallbackFn?: (value: T) => void;
-  toggleCallbackFnDebounced?: (value: T) => void;
+  children: RenderChildren<T>;
   initialSetCallbackFn?: (value: T) => void;
   localStorageKey?: string;
-  children: RenderChildren<T>;
+  preferenceKey: string;
+  preferenceOptions: [T, T];
+  toggleCallbackFn?: (value: T) => void;
+  toggleCallbackFnDebounced?: (value: T) => void;
+  value?: T;
 }
 
 export const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
   const {
-    value,
+    children,
     preferenceKey,
     preferenceOptions,
-    toggleCallbackFnDebounced,
     toggleCallbackFn,
-    children,
+    toggleCallbackFnDebounced,
+    value,
   } = props;
 
   /** will be undefined and render-block children unless otherwise specified */

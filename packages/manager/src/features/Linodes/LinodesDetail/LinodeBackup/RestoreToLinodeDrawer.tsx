@@ -1,39 +1,40 @@
+import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
-import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
 import Drawer from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
-import { useFormik } from 'formik';
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
-import { useSnackbar } from 'notistack';
+import FormControl from 'src/components/core/FormControl';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
   useAllLinodesQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
-  open: boolean;
-  linodeId: number;
   backup: LinodeBackup | undefined;
+  linodeId: number;
   onClose: () => void;
+  open: boolean;
 }
 
 export const RestoreToLinodeDrawer = (props: Props) => {
-  const { linodeId, backup, open, onClose } = props;
+  const { backup, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: linode } = useLinodeQuery(linodeId, open);
 
   const {
     data: linodes,
-    isLoading: linodesLoading,
     error: linodeError,
+    isLoading: linodesLoading,
   } = useAllLinodesQuery(
     {},
     {
@@ -43,24 +44,24 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   );
 
   const {
-    mutateAsync: restoreBackup,
     error,
     isLoading,
+    mutateAsync: restoreBackup,
     reset: resetMutation,
   } = useLinodeBackupRestoreMutation();
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      overwrite: false,
       linode_id: linodeId,
+      overwrite: false,
     },
     async onSubmit(values) {
       await restoreBackup({
-        linodeId,
         backupId: backup?.id ?? -1,
-        targetLinodeId: values.linode_id ?? -1,
+        linodeId,
         overwrite: values.overwrite,
+        targetLinodeId: values.linode_id ?? -1,
       });
       enqueueSnackbar(
         `Started restoring Linode ${selectedLinodeOption?.label} from a backup`,
@@ -79,7 +80,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   }, [open]);
 
   const linodeOptions =
-    linodes?.map(({ label, id }) => {
+    linodes?.map(({ id, label }) => {
       return { label, value: id };
     }) ?? [];
 
@@ -91,8 +92,8 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      open={open}
       onClose={onClose}
+      open={open}
       title={`Restore Backup from ${backup?.created}`}
     >
       <form onSubmit={formik.handleSubmit}>
@@ -103,25 +104,25 @@ export const RestoreToLinodeDrawer = (props: Props) => {
               'data-qa-select-linode': true,
             },
           }}
-          value={selectedLinodeOption}
-          options={linodeOptions}
-          onChange={(item) => formik.setFieldValue('linode_id', item.value)}
           errorText={linodeError?.[0].reason ?? errorMap.linode_id}
-          placeholder="Select a Linode"
-          label="Linode"
           isClearable={false}
           isLoading={linodesLoading}
+          label="Linode"
+          onChange={(item) => formik.setFieldValue('linode_id', item.value)}
+          options={linodeOptions}
+          placeholder="Select a Linode"
+          value={selectedLinodeOption}
         />
         <FormControl sx={{ paddingLeft: 0.4 }}>
           <FormControlLabel
-            label="Overwrite Linode"
             control={
               <Checkbox
-                name="overwrite"
                 checked={formik.values.overwrite}
+                name="overwrite"
                 onChange={formik.handleChange}
               />
             }
+            label="Overwrite Linode"
           />
           <FormHelperText sx={{ marginLeft: 0 }}>
             Overwriting will delete all disks and configs on the target Linode
@@ -133,26 +134,26 @@ export const RestoreToLinodeDrawer = (props: Props) => {
         )}
         {formik.values.overwrite && (
           <Notice
-            spacingTop={12}
-            spacingBottom={0}
-            warning
             text={`This will delete all disks and configs on ${
               selectedLinodeOption
                 ? `Linode ${selectedLinodeOption.label}`
                 : 'the selcted Linode'
             }`}
+            spacingBottom={0}
+            spacingTop={12}
+            warning
           />
         )}
         <ActionsPanel
-          showPrimary
-          primaryButtonType="submit"
-          primaryButtonLoading={isLoading}
           primaryButtonDataTestId="restore-submit"
+          primaryButtonLoading={isLoading}
           primaryButtonText="Restore"
-          showSecondary
-          secondaryButtonHandler={onClose}
+          primaryButtonType="submit"
           secondaryButtonDataTestId="restore-cancel"
+          secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
+          showPrimary
+          showSecondary
         />
       </form>
     </Drawer>

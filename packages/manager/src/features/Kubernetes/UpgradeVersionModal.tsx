@@ -1,23 +1,24 @@
+import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
-import { useSnackbar } from 'notistack';
-import {
-  useKubernetesClusterMutation,
-  useKubernetesVersionQuery,
-} from 'src/queries/kubernetes';
 import {
   getNextVersion,
   localStorageWarning,
 } from 'src/features/Kubernetes/kubeUtils';
+import {
+  useKubernetesClusterMutation,
+  useKubernetesVersionQuery,
+} from 'src/queries/kubernetes';
 
 interface Props {
   clusterID: number;
   clusterLabel: string;
-  isOpen: boolean;
   currentVersion: string;
+  isOpen: boolean;
   onClose: () => void;
 }
 
@@ -90,30 +91,30 @@ export const UpgradeDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      style={{ padding: 0 }}
-      showPrimary
-      primaryButtonDataTestId="confirm"
       primaryButtonHandler={
         hasUpdatedSuccessfully ? onSubmitRecycleDialog : onSubmitUpgradeDialog
       }
-      primaryButtonLoading={submitting}
       primaryButtonText={
         hasUpdatedSuccessfully ? 'Recycle All Nodes' : 'Upgrade Version'
       }
-      showSecondary
+      primaryButtonDataTestId="confirm"
+      primaryButtonLoading={submitting}
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
+      style={{ padding: 0 }}
     />
   );
 
   return (
     <ConfirmationDialog
-      title={dialogTitle}
-      error={error}
-      open={isOpen}
-      onClose={onClose}
       actions={actions}
+      error={error}
+      onClose={onClose}
+      open={isOpen}
+      title={dialogTitle}
     >
       <Typography>
         {hasUpdatedSuccessfully ? (

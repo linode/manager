@@ -1,65 +1,67 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
 import { Dialog } from 'src/components/Dialog/Dialog';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile';
+
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  helperText: {
     paddingBottom: theme.spacing(2),
+  },
+  root: {
     '& + div': {
-      padding: 0,
       '& .MuiPaper-root': {
-        padding: 0,
-        '& > div': {
-          padding: 0,
-        },
         '& .MuiTableCell-head': {
           top: theme.spacing(11),
         },
+        '& > div': {
+          padding: 0,
+        },
+        padding: 0,
       },
       '& .notice': {
         padding: theme.spacing(2),
       },
+      padding: 0,
     },
+    paddingBottom: theme.spacing(2),
   },
   title: {
     marginBottom: theme.spacing(2),
-  },
-  helperText: {
-    paddingBottom: theme.spacing(2),
   },
 }));
 
 interface Props {
   linodeId: number | undefined;
-  open: boolean;
   onClose: () => void;
+  open: boolean;
 }
 
 type MODES =
-  | 'fromImage'
+  | 'fromAccountStackScript'
   | 'fromCommunityStackScript'
-  | 'fromAccountStackScript';
+  | 'fromImage';
 
 const options = [
-  { value: 'fromImage', label: 'From Image' },
-  { value: 'fromCommunityStackScript', label: 'From Community StackScript' },
-  { value: 'fromAccountStackScript', label: 'From Account StackScript' },
+  { label: 'From Image', value: 'fromImage' },
+  { label: 'From Community StackScript', value: 'fromCommunityStackScript' },
+  { label: 'From Account StackScript', value: 'fromAccountStackScript' },
 ];
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
 export const LinodeRebuildDialog = (props: Props) => {
-  const { linodeId, open, onClose } = props;
+  const { linodeId, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -94,18 +96,18 @@ export const LinodeRebuildDialog = (props: Props) => {
 
   return (
     <Dialog
-      title={`Rebuild Linode ${linode?.label ?? ''}`}
-      open={open}
-      onClose={onClose}
+      fullHeight
       fullWidth
       maxWidth="md"
-      fullHeight
+      onClose={onClose}
+      open={open}
+      title={`Rebuild Linode ${linode?.label ?? ''}`}
     >
       <div className={classes.root}>
         {unauthorized && <LinodePermissionsError />}
         {hostMaintenance && <HostMaintenanceError />}
         {rebuildError && <Notice error>{rebuildError}</Notice>}
-        <Typography data-qa-rebuild-desc className={classes.helperText}>
+        <Typography className={classes.helperText} data-qa-rebuild-desc>
           If you can&rsquo;t rescue an existing disk, it&rsquo;s time to rebuild
           your Linode. There are a couple of different ways you can do this:
           either restore from a backup or start over with a fresh Linux
@@ -116,48 +118,48 @@ export const LinodeRebuildDialog = (props: Props) => {
           </strong>
         </Typography>
         <EnhancedSelect
-          options={options}
-          defaultValue={options.find((option) => option.value === mode)}
           onChange={(selected: Item<MODES>) => {
             setMode(selected.value);
             setRebuildError('');
           }}
-          isClearable={false}
+          defaultValue={options.find((option) => option.value === mode)}
           disabled={disabled}
-          label="From Image"
           hideLabel
+          isClearable={false}
+          label="From Image"
+          options={options}
         />
       </div>
       {mode === 'fromImage' && (
         <RebuildFromImage
-          passwordHelperText={passwordHelperText}
           disabled={disabled}
+          handleRebuildError={handleRebuildError}
           linodeId={linodeId ?? -1}
           linodeLabel={linode?.label}
-          handleRebuildError={handleRebuildError}
           onClose={onClose}
+          passwordHelperText={passwordHelperText}
         />
       )}
       {mode === 'fromCommunityStackScript' && (
         <RebuildFromStackScript
-          type="community"
-          passwordHelperText={passwordHelperText}
           disabled={disabled}
+          handleRebuildError={handleRebuildError}
           linodeId={linodeId ?? -1}
           linodeLabel={linode?.label}
-          handleRebuildError={handleRebuildError}
           onClose={onClose}
+          passwordHelperText={passwordHelperText}
+          type="community"
         />
       )}
       {mode === 'fromAccountStackScript' && (
         <RebuildFromStackScript
-          type="account"
-          passwordHelperText={passwordHelperText}
           disabled={disabled}
+          handleRebuildError={handleRebuildError}
           linodeId={linodeId ?? -1}
           linodeLabel={linode?.label}
-          handleRebuildError={handleRebuildError}
           onClose={onClose}
+          passwordHelperText={passwordHelperText}
+          type="account"
         />
       )}
     </Dialog>

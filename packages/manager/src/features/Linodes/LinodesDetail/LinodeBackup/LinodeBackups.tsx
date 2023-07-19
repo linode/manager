@@ -1,31 +1,33 @@
-import * as React from 'react';
-import { Table } from 'src/components/Table';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { Button } from 'src/components/Button/Button';
-import Paper from 'src/components/core/Paper';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { Typography } from 'src/components/Typography';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
-import { LinodePermissionsError } from '../LinodePermissionsError';
-import BackupsPlaceholder from './BackupsPlaceholder';
-import BackupTableRow from './BackupTableRow';
+import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import { Box, Stack } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
-import { useTypeQuery } from 'src/queries/types';
 import { makeStyles } from 'tss-react/mui';
-import { CancelBackupsDialog } from './CancelBackupsDialog';
+
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { ScheduleSettings } from './ScheduleSettings';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { Typography } from 'src/components/Typography';
+import Paper from 'src/components/core/Paper';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { useTypeQuery } from 'src/queries/types';
+
+import { LinodePermissionsError } from '../LinodePermissionsError';
+import BackupTableRow from './BackupTableRow';
+import BackupsPlaceholder from './BackupsPlaceholder';
+import { CancelBackupsDialog } from './CancelBackupsDialog';
 import { CaptureSnapshot } from './CaptureSnapshot';
+import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
+import { ScheduleSettings } from './ScheduleSettings';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -104,9 +106,9 @@ export const LinodeBackups = () => {
   if (!linode?.backups.enabled) {
     return (
       <BackupsPlaceholder
-        linodeId={id}
         backupsMonthlyPrice={backupsMonthlyPrice}
         disabled={doesNotHavePermission}
+        linodeId={id}
       />
     );
   }
@@ -138,35 +140,35 @@ export const LinodeBackups = () => {
               <>
                 {backups?.automatic.map((backup: LinodeBackup, idx: number) => (
                   <BackupTableRow
-                    key={idx}
                     backup={backup}
                     disabled={doesNotHavePermission}
                     handleDeploy={() => handleDeploy(backup)}
                     handleRestore={() => onRestoreBackup(backup)}
+                    key={idx}
                   />
                 ))}
                 {Boolean(backups?.snapshot.current) && (
                   <BackupTableRow
-                    backup={backups!.snapshot.current!}
-                    disabled={doesNotHavePermission}
                     handleDeploy={() =>
                       handleDeploy(backups!.snapshot.current!)
                     }
                     handleRestore={() =>
                       onRestoreBackup(backups!.snapshot.current!)
                     }
+                    backup={backups!.snapshot.current!}
+                    disabled={doesNotHavePermission}
                   />
                 )}
                 {Boolean(backups?.snapshot.in_progress) && (
                   <BackupTableRow
-                    backup={backups!.snapshot.in_progress!}
-                    disabled={doesNotHavePermission}
                     handleDeploy={() =>
                       handleDeploy(backups!.snapshot.in_progress!)
                     }
                     handleRestore={() =>
                       onRestoreBackup(backups!.snapshot.in_progress!)
                     }
+                    backup={backups!.snapshot.in_progress!}
+                    disabled={doesNotHavePermission}
                   />
                 )}
               </>
@@ -179,37 +181,37 @@ export const LinodeBackups = () => {
           </TableBody>
         </Table>
       </Paper>
-      <CaptureSnapshot linodeId={id} isReadOnly={doesNotHavePermission} />
-      <ScheduleSettings linodeId={id} isReadOnly={doesNotHavePermission} />
+      <CaptureSnapshot isReadOnly={doesNotHavePermission} linodeId={id} />
+      <ScheduleSettings isReadOnly={doesNotHavePermission} linodeId={id} />
       <Box>
         <Button
           buttonType="outlined"
           className={classes.cancelButton}
+          data-qa-cancel
           disabled={doesNotHavePermission}
           onClick={() => setIsCancelBackupsDialogOpen(true)}
-          data-qa-cancel
         >
           Cancel Backups
         </Button>
         <Typography
           className={classes.cancelCopy}
-          variant="body1"
           data-qa-cancel-desc
+          variant="body1"
         >
           Please note that when you cancel backups associated with this Linode,
           this will remove all existing backups.
         </Typography>
       </Box>
       <RestoreToLinodeDrawer
-        open={isRestoreDrawerOpen}
-        linodeId={id}
         backup={selectedBackup}
+        linodeId={id}
         onClose={() => setIsRestoreDrawerOpen(false)}
+        open={isRestoreDrawerOpen}
       />
       <CancelBackupsDialog
         isOpen={isCancelBackupsDialogOpen}
-        onClose={() => setIsCancelBackupsDialogOpen(false)}
         linodeId={id}
+        onClose={() => setIsCancelBackupsDialogOpen(false)}
       />
     </Stack>
   );

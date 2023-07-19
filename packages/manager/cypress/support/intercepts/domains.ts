@@ -2,9 +2,10 @@
  * @file Cypress intercepts and mocks for Domain API requests.
  */
 
-import type { Domain, DomainRecord, ZoneFile } from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+
+import type { Domain, DomainRecord, ZoneFile } from '@linode/api-v4/types';
 
 /**
  * Intercepts POST request to create a Domain.

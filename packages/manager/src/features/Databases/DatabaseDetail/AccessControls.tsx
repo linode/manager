@@ -2,44 +2,24 @@ import { Database } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { TableBody } from 'src/components/TableBody';
-import { Typography } from 'src/components/Typography';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases';
 import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
-import { makeStyles } from 'tss-react/mui';
+
 import AddAccessControlDrawer from './AddAccessControlDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  topSection: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-  sectionTitleAndText: {
-    width: '100%',
-  },
-  sectionTitle: {
-    marginBottom: '0.25rem',
-  },
-  sectionText: {
-    marginBottom: '1rem',
-    width: '65%',
-    marginRight: 0,
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
   addAccessControlBtn: {
     minWidth: 214,
     [theme.breakpoints.down('md')]: {
@@ -47,23 +27,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
       marginBottom: '1rem',
     },
   },
-  table: {
-    width: '50%',
-    border: `solid 1px ${theme.borderColors.borderTable}`,
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  row: {
-    '&:last-of-type td': {
-      borderBottom: 'none',
-    },
-  },
   cell: {
-    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
     borderBottom: `solid 1px ${theme.borderColors.borderTable}`,
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   removeButton: {
     float: 'right',
@@ -74,6 +42,40 @@ const useStyles = makeStyles()((theme: Theme) => ({
   restrictWarningText: {
     fontSize: '0.875rem,',
   },
+  row: {
+    '&:last-of-type td': {
+      borderBottom: 'none',
+    },
+  },
+  sectionText: {
+    marginBottom: '1rem',
+    marginRight: 0,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    width: '65%',
+  },
+  sectionTitle: {
+    marginBottom: '0.25rem',
+  },
+  sectionTitleAndText: {
+    width: '100%',
+  },
+  table: {
+    border: `solid 1px ${theme.borderColors.borderTable}`,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    width: '50%',
+  },
+  topSection: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('md')]: {
+      flexDirection: 'column',
+    },
+  },
 }));
 
 interface Props {
@@ -83,7 +85,7 @@ interface Props {
 
 export const AccessControls = (props: Props) => {
   const {
-    database: { id, engine, allow_list: allowList },
+    database: { allow_list: allowList, engine, id },
     description,
   } = props;
 
@@ -95,7 +97,7 @@ export const AccessControls = (props: Props) => {
   const [
     accessControlToBeRemoved,
     setAccessControlToBeRemoved,
-  ] = React.useState<string | null>(null);
+  ] = React.useState<null | string>(null);
 
   const [
     addAccessControlDrawerOpen,
@@ -105,8 +107,8 @@ export const AccessControls = (props: Props) => {
   const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
 
   const {
-    mutateAsync: updateDatabase,
     isLoading: databaseUpdating,
+    mutateAsync: updateDatabase,
   } = useDatabaseMutation(engine, id);
 
   React.useEffect(() => {
@@ -152,10 +154,10 @@ export const AccessControls = (props: Props) => {
       <Table className={classes.table} data-qa-access-controls>
         <TableBody>
           {accessControlsList.map((accessControl) => (
-            <TableRow key={`${accessControl}-row`} className={classes.row}>
+            <TableRow className={classes.row} key={`${accessControl}-row`}>
               <TableCell
-                key={`${accessControl}-tablecell`}
                 className={classes.cell}
+                key={`${accessControl}-tablecell`}
               >
                 {accessControl}
                 <InlineMenuAction
@@ -173,13 +175,13 @@ export const AccessControls = (props: Props) => {
 
   const actionsPanel = (
     <ActionsPanel
-      showPrimary
       primaryButtonHandler={handleRemoveIPAddress}
       primaryButtonLoading={databaseUpdating}
       primaryButtonText="Remove IP Address"
-      showSecondary
       secondaryButtonHandler={handleDialogClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
     />
   );
 
@@ -193,17 +195,17 @@ export const AccessControls = (props: Props) => {
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <AddNewLink
+          className={classes.addAccessControlBtn}
           label="Manage Access Controls"
           onClick={() => setAddAccessControlDrawerOpen(true)}
-          className={classes.addAccessControlBtn}
         />
       </div>
       {ipTable(allowList)}
       <ConfirmationDialog
-        open={isDialogOpen}
-        onClose={handleDialogClose}
-        title={`Remove IP Address ${accessControlToBeRemoved}`}
         actions={actionsPanel}
+        onClose={handleDialogClose}
+        open={isDialogOpen}
+        title={`Remove IP Address ${accessControlToBeRemoved}`}
       >
         {error ? <Notice error text={error} /> : null}
         <Typography data-testid="ip-removal-confirmation-warning">
@@ -214,10 +216,10 @@ export const AccessControls = (props: Props) => {
         </Typography>
       </ConfirmationDialog>
       <AddAccessControlDrawer
-        open={addAccessControlDrawerOpen}
-        onClose={() => setAddAccessControlDrawerOpen(false)}
-        updateDatabase={updateDatabase}
         allowList={extendedIPs}
+        onClose={() => setAddAccessControlDrawerOpen(false)}
+        open={addAccessControlDrawerOpen}
+        updateDatabase={updateDatabase}
       />
     </>
   );

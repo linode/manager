@@ -1,4 +1,5 @@
 import { imageFactory, normalizeEntities } from 'src/factories';
+
 import { safeGetImageLabel } from './safeGetImageLabel';
 
 const normalizedImages = normalizeEntities(imageFactory.buildList(10));

@@ -2,17 +2,18 @@
  * @file Cypress intercepts and mocks for Cloud Manager profile requests.
  */
 
-import { makeResponse } from 'support/util/response';
-import { paginateResponse } from 'support/util/paginate';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
+import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
+
 import type {
+  OAuthClient,
   Profile,
-  UserPreferences,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
   Token,
-  OAuthClient,
+  UserPreferences,
 } from '@linode/api-v4/types';
 
 /**
@@ -134,8 +135,8 @@ export const mockEnableTwoFactorAuth = (
   // TODO Create an expiration date based on the current time.
   const expiry = '2025-05-01T03:59:59';
   return cy.intercept('POST', apiMatcher('profile/tfa-enable'), {
-    secret: secretString,
     expiry,
+    secret: secretString,
   });
 };
 

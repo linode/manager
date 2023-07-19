@@ -1,50 +1,51 @@
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+
 import { Button } from 'src/components/Button/Button';
 import Collapse from 'src/components/core/Collapse';
 
 const useStyles = makeStyles<void, 'caret'>()(
   (theme: Theme, _params, classes) => ({
+    caret: {
+      '&.rotate': {
+        transform: 'rotate(90deg)',
+        transition: 'transform .3s ease-in-out',
+      },
+      color: theme.palette.primary.main,
+      fontSize: 28,
+      marginRight: theme.spacing(0.5),
+      transition: 'transform .1s ease-in-out',
+    },
     root: {
-      paddingLeft: 0,
-      paddingRight: 0,
-      backgroundColor: 'transparent !important',
-      display: 'flex',
-      alignItems: 'center',
-      fontFamily: theme.font.bold,
-      width: 'auto',
-      color: theme.color.headline,
-      transition: theme.transitions.create('color'),
       '&:hover': {
-        color: theme.palette.primary.main,
         [`& .${classes.caret}`]: {
           color: theme.palette.primary.light,
         },
+        color: theme.palette.primary.main,
       },
-    },
-    caret: {
-      color: theme.palette.primary.main,
-      marginRight: theme.spacing(0.5),
-      fontSize: 28,
-      transition: 'transform .1s ease-in-out',
-      '&.rotate': {
-        transition: 'transform .3s ease-in-out',
-        transform: 'rotate(90deg)',
-      },
+      alignItems: 'center',
+      backgroundColor: 'transparent !important',
+      color: theme.color.headline,
+      display: 'flex',
+      fontFamily: theme.font.bold,
+      paddingLeft: 0,
+      paddingRight: 0,
+      transition: theme.transitions.create('color'),
+      width: 'auto',
     },
   })
 );
 
 interface ShowMoreExpansionProps {
-  name: string;
-  defaultExpanded?: boolean;
   children?: JSX.Element;
+  defaultExpanded?: boolean;
+  name: string;
 }
 
 const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
-  const { name, defaultExpanded, children } = props;
+  const { children, defaultExpanded, name } = props;
 
   const { classes } = useStyles();
 
@@ -57,13 +58,13 @@ const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
   return (
     <React.Fragment>
       <Button
-        className={classes.root}
-        aria-haspopup="true"
-        role="button"
         aria-expanded={open ? 'true' : 'false'}
+        aria-haspopup="true"
+        className={classes.root}
         data-qa-show-more-expanded={open ? 'true' : 'false'}
-        onClick={handleNameClick}
         data-qa-show-more-toggle
+        onClick={handleNameClick}
+        role="button"
       >
         {open ? (
           <KeyboardArrowRight className={classes.caret + ' rotate'} />
@@ -72,7 +73,7 @@ const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
         )}
         <div>{name}</div>
       </Button>
-      <Collapse in={open} className={open ? 'pOpen' : ''}>
+      <Collapse className={open ? 'pOpen' : ''} in={open}>
         {open ? <div>{children}</div> : null}
       </Collapse>
     </React.Fragment>

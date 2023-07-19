@@ -1,28 +1,30 @@
-import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
-import { compose as recompose } from 'recompose';
-import { Button } from 'src/components/Button/Button';
-import { withStyles, WithStyles } from '@mui/styles';
-import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import { WithStyles, withStyles } from '@mui/styles';
+import * as React from 'react';
+import { MapDispatchToProps, connect } from 'react-redux';
+import { compose as recompose } from 'recompose';
+
+import { Button } from 'src/components/Button/Button';
 import { Radio } from 'src/components/Radio/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { openStackScriptDialog as openStackScriptDialogAction } from 'src/store/stackScriptDialog';
+
 import { ClassNames, styles } from '../StackScriptRowHelpers';
 
 export interface Props {
-  label: string;
-  description: string;
-  deploymentsActive: number;
-  updated: string;
-  disabledCheckedSelect?: boolean;
-  onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
+  deploymentsActive: number;
+  description: string;
+  disabled?: boolean;
+  disabledCheckedSelect?: boolean;
+  label: string;
+  onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
   stackScriptID: number;
   stackScriptUsername: string;
-  disabled?: boolean;
+  updated: string;
 }
 
 interface DispatchProps {
@@ -40,16 +42,16 @@ export class StackScriptSelectionRow extends React.Component<
 > {
   render() {
     const {
-      classes,
-      onSelect,
-      disabledCheckedSelect,
       checked,
-      label,
+      classes,
       description,
+      disabled,
+      disabledCheckedSelect,
+      label,
+      onSelect,
+      openStackScriptDialog,
       stackScriptID,
       stackScriptUsername,
-      openStackScriptDialog,
-      disabled,
     } = this.props;
 
     const renderLabel = () => {
@@ -58,26 +60,26 @@ export class StackScriptSelectionRow extends React.Component<
         openStackScriptDialog(stackScriptID);
       };
       return (
-        <Grid container alignItems="center" className={classes.selectionGrid}>
+        <Grid alignItems="center" className={classes.selectionGrid} container>
           <Grid className={classes.selectionGridDetails}>
             <Typography variant="h3">
               {stackScriptUsername && (
                 <label
-                  htmlFor={`${stackScriptID}`}
                   className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
+                  htmlFor={`${stackScriptID}`}
                 >
                   {stackScriptUsername} /&nbsp;
                 </label>
               )}
               <label
-                htmlFor={`${stackScriptID}`}
                 className={classes.libRadioLabel}
+                htmlFor={`${stackScriptID}`}
               >
                 {label}
               </label>
             </Typography>
             {description && (
-              <Typography variant="body1" className={classes.libDescription}>
+              <Typography className={classes.libDescription} variant="body1">
                 {description}
               </Typography>
             )}
@@ -97,13 +99,13 @@ export class StackScriptSelectionRow extends React.Component<
     };
 
     return (
-      <TableRow data-qa-table-row={label} ariaLabel={label}>
+      <TableRow ariaLabel={label} data-qa-table-row={label}>
         <TableCell>
           <Radio
             checked={!disabled && checked}
             disabled={disabledCheckedSelect || disabled}
-            onChange={onSelect}
             id={`${stackScriptID}`}
+            onChange={onSelect}
           />
         </TableCell>
         <TableCell

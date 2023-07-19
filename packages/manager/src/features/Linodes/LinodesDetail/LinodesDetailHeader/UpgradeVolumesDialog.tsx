@@ -1,22 +1,24 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Paper from 'src/components/core/Paper';
 import { Typography } from 'src/components/Typography';
-import { useSnackbar } from 'notistack';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import Paper from 'src/components/core/Paper';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
+import { queryKey } from 'src/queries/accountNotifications';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import { ExtendedLinode } from '../types';
-import { useQueryClient } from 'react-query';
-import { queryKey } from 'src/queries/accountNotifications';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   linode: ExtendedLinode;
+  onClose: () => void;
+  open: boolean;
   upgradeableVolumeIds: number[];
 }
 
@@ -29,15 +31,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const UpgradeVolumesDialog = (props: Props) => {
-  const { open, onClose, linode, upgradeableVolumeIds } = props;
+  const { linode, onClose, open, upgradeableVolumeIds } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const queryClient = useQueryClient();
 
   const {
-    mutateAsync: migrateVolumes,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: migrateVolumes,
   } = useVolumesMigrateMutation();
 
   const numUpgradeableVolumes = upgradeableVolumeIds.length;
@@ -56,33 +58,33 @@ export const UpgradeVolumesDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      showPrimary
       primaryButtonHandler={onSubmit}
       primaryButtonLoading={isLoading}
       primaryButtonText="Enter Upgrade Queue"
-      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
     />
   );
 
   return (
     <ConfirmationDialog
-      title={`Upgrade Volume${numUpgradeableVolumes === 1 ? '' : 's'}`}
-      open={open}
-      onClose={onClose}
-      actions={actions}
       error={
         error
           ? getAPIErrorOrDefault(error, 'Unable to migrate volumes.')[0].reason
           : undefined
       }
+      actions={actions}
+      onClose={onClose}
+      open={open}
+      title={`Upgrade Volume${numUpgradeableVolumes === 1 ? '' : 's'}`}
     >
       <Typography>
         <VolumeUpgradeCopy
-          type="linode"
-          label={linode.label}
           isManyVolumes={numUpgradeableVolumes > 1}
+          label={linode.label}
+          type="linode"
         />
         <Paper className={classes.notice}>
           As part of the upgrade process, this Linode may be rebooted and will

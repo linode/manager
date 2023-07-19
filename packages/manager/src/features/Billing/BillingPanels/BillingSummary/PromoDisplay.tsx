@@ -1,14 +1,15 @@
+import {
+  ActivePromotion,
+  PromotionServiceType,
+} from '@linode/api-v4/lib/account/types';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+
 import { Box } from 'src/components/Box';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useTheme } from '@mui/material/styles';
-import {
-  ActivePromotion,
-  PromotionServiceType,
-} from '@linode/api-v4/lib/account/types';
 
 type PromoDisplayProps = ActivePromotion;
 
@@ -44,18 +45,18 @@ const PromoDisplay = React.memo(
     return (
       <Box marginTop="12px">
         <Box
-          display="flex"
-          justifyContent="space-between"
           alignItems="flex-start"
+          display="flex"
           flexWrap="wrap"
+          justifyContent="space-between"
         >
-          <Box display="flex" alignItems="center">
+          <Box alignItems="center" display="flex">
             <Typography
-              variant="h3"
               sx={{
                 color: theme.palette.text.primary,
                 wordBreak: 'break-word',
               }}
+              variant="h3"
             >
               {summary}
             </Typography>
@@ -63,17 +64,17 @@ const PromoDisplay = React.memo(
               sxTooltipIcon={{
                 padding: `0px 8px`,
               }}
-              text={description}
               status="help"
+              text={description}
             />
           </Box>
           {!Number.isNaN(parsedCreditRemaining) && (
             <Typography
-              variant="h3"
               sx={{
                 color: theme.color.green,
                 marginBottom: '4px',
               }}
+              variant="h3"
             >
               <Currency quantity={parsedCreditRemaining} /> remaining
             </Typography>
@@ -81,7 +82,7 @@ const PromoDisplay = React.memo(
         </Box>
         {expire_dt && (
           <Typography>
-            Expires: <DateTimeDisplay value={expire_dt} displayTime={false} />
+            Expires: <DateTimeDisplay displayTime={false} value={expire_dt} />
           </Typography>
         )}
         {service_type !== 'all' && SERVICE_TYPES[service_type] && (

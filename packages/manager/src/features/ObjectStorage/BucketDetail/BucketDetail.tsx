@@ -1,48 +1,47 @@
+import {
+  ObjectStorageClusterID,
+  ObjectStorageObject,
+  ObjectStorageObjectListResponse,
+  getObjectList,
+  getObjectURL,
+} from '@linode/api-v4/lib/object-storage';
+import produce from 'immer';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { Waypoint } from 'react-waypoint';
+import { debounce } from 'throttle-debounce';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Hidden } from 'src/components/Hidden';
-import ObjectTableContent from './ObjectTableContent';
-import produce from 'immer';
-import { BucketBreadcrumb } from './BucketBreadcrumb';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { CreateFolderDrawer } from './CreateFolderDrawer';
-import { debounce } from 'throttle-debounce';
-import { deleteObject as _deleteObject } from '../requests';
-import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
-import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
-import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
-import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
-import { sendDownloadObjectEvent } from 'src/utilities/analytics';
+import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { useQueryClient } from 'react-query';
-import { useSnackbar } from 'notistack';
-import { Waypoint } from 'react-waypoint';
-import {
-  displayName,
-  generateObjectUrl,
-  isEmptyObjectForFolder,
-  tableUpdateAction,
-} from '../utilities';
-import {
-  getObjectList,
-  getObjectURL,
-  ObjectStorageClusterID,
-  ObjectStorageObject,
-  ObjectStorageObjectListResponse,
-} from '@linode/api-v4/lib/object-storage';
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import {
   prefixToQueryKey,
   queryKey,
   updateBucket,
   useObjectBucketDetailsInfiniteQuery,
 } from 'src/queries/objectStorage';
+import { sendDownloadObjectEvent } from 'src/utilities/analytics';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
+import { truncateMiddle } from 'src/utilities/truncate';
+
+import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
+import { deleteObject as _deleteObject } from '../requests';
+import {
+  displayName,
+  generateObjectUrl,
+  isEmptyObjectForFolder,
+  tableUpdateAction,
+} from '../utilities';
+import { BucketBreadcrumb } from './BucketBreadcrumb';
 import {
   StyledCreateFolderButton,
   StyledFooter,
@@ -50,10 +49,13 @@ import {
   StyledSizeColumn,
   StyledTryAgainButton,
 } from './BucketDetail.styles';
+import { CreateFolderDrawer } from './CreateFolderDrawer';
+import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
+import ObjectTableContent from './ObjectTableContent';
 
 interface MatchParams {
-  clusterId: ObjectStorageClusterID;
   bucketName: string;
+  clusterId: ObjectStorageClusterID;
 }
 
 export const BucketDetail = () => {
@@ -70,11 +72,11 @@ export const BucketDetail = () => {
   const {
     data,
     error,
-    isLoading,
     fetchNextPage,
     hasNextPage,
     isFetching,
     isFetchingNextPage,
+    isLoading,
   } = useObjectBucketDetailsInfiniteQuery(clusterId, bucketName, prefix);
   const [
     isCreateFolderDrawerOpen,
@@ -147,8 +149,8 @@ export const BucketDetail = () => {
 
     if (objectToDelete.endsWith('/')) {
       const itemsInFolderData = await getObjectList(clusterId, bucketName, {
-        prefix: objectToDelete,
         delimiter: OBJECT_STORAGE_DELIMITER,
+        prefix: objectToDelete,
       });
 
       // Exclude the empty object the represents a folder so we can
@@ -193,13 +195,13 @@ export const BucketDetail = () => {
 
   const updateStore = (pages: ObjectStorageObjectListResponse[]) => {
     queryClient.setQueryData<{
-      pages: ObjectStorageObjectListResponse[];
       pageParams: string[];
+      pages: ObjectStorageObjectListResponse[];
     }>(
       [queryKey, clusterId, bucketName, 'objects', ...prefixToQueryKey(prefix)],
       (data) => ({
-        pages,
         pageParams: data?.pageParams || [],
+        pages,
       })
     );
   };
@@ -239,10 +241,10 @@ export const BucketDetail = () => {
     }
 
     const object: ObjectStorageObject = {
-      name: prefix + objectName,
       etag: '',
-      owner: '',
       last_modified: new Date().toISOString(),
+      name: prefix + objectName,
+      owner: '',
       size: sizeInBytes,
     };
 
@@ -279,10 +281,10 @@ export const BucketDetail = () => {
     }
 
     const folder: ObjectStorageObject = {
-      name: `${prefix + objectName}/`,
       etag: null,
-      owner: null,
       last_modified: null,
+      name: `${prefix + objectName}/`,
+      owner: null,
       size: null,
     };
 
@@ -327,17 +329,17 @@ export const BucketDetail = () => {
   return (
     <>
       <BucketBreadcrumb
-        prefix={prefix}
-        history={history}
         bucketName={bucketName}
+        history={history}
+        prefix={prefix}
       />
       <ObjectUploader
-        clusterId={clusterId}
         bucketName={bucketName}
-        prefix={prefix}
+        clusterId={clusterId}
         maybeAddObjectToTable={maybeAddObjectToTable}
+        prefix={prefix}
       />
-      <Box display="flex" justifyContent="flex-end" mt={1.5} mb={0.5}>
+      <Box display="flex" justifyContent="flex-end" mb={0.5} mt={1.5}>
         <StyledCreateFolderButton
           buttonType="outlined"
           onClick={() => setIsCreateFolderDrawerOpen(true)}
@@ -360,12 +362,12 @@ export const BucketDetail = () => {
         <TableBody>
           <ObjectTableContent
             data={data?.pages || []}
-            isFetching={isFetching}
-            isFetchingNextPage={isFetchingNextPage}
             error={error ? error : undefined}
-            handleClickDownload={handleDownload}
             handleClickDelete={handleClickDelete}
             handleClickDetails={handleClickDetails}
+            handleClickDownload={handleDownload}
+            isFetching={isFetching}
+            isFetchingNextPage={isFetchingNextPage}
             numOfDisplayedObjects={numOfDisplayedObjects}
             prefix={prefix}
           />
@@ -394,53 +396,53 @@ export const BucketDetail = () => {
         </StyledFooter>
       )}
       <ConfirmationDialog
-        open={deleteObjectDialogOpen}
-        onClose={closeDeleteObjectDialog}
+        actions={() => (
+          <ActionsPanel
+            primaryButtonDataTestId="submit-rebuild"
+            primaryButtonHandler={deleteObject}
+            primaryButtonLoading={deleteObjectLoading}
+            primaryButtonText="Delete"
+            secondaryButtonDataTestId="cancel"
+            secondaryButtonHandler={closeDeleteObjectDialog}
+            secondaryButtonText="Cancel"
+            showPrimary
+            showSecondary
+          />
+        )}
         title={
           objectToDelete
             ? `Delete ${truncateMiddle(displayName(objectToDelete))}`
             : 'Delete object'
         }
-        actions={() => (
-          <ActionsPanel
-            showPrimary
-            primaryButtonDataTestId="submit-rebuild"
-            primaryButtonHandler={deleteObject}
-            primaryButtonLoading={deleteObjectLoading}
-            primaryButtonText="Delete"
-            showSecondary
-            secondaryButtonDataTestId="cancel"
-            secondaryButtonHandler={closeDeleteObjectDialog}
-            secondaryButtonText="Cancel"
-          />
-        )}
         error={deleteObjectError}
+        onClose={closeDeleteObjectDialog}
+        open={deleteObjectDialogOpen}
       >
         Are you sure you want to delete this object?
       </ConfirmationDialog>
       <ObjectDetailsDrawer
-        open={objectDetailDrawerOpen}
-        onClose={closeObjectDetailsDrawer}
-        bucketName={bucketName}
-        clusterId={clusterId}
-        displayName={selectedObject?.name}
-        name={selectedObject?.name}
-        lastModified={selectedObject?.last_modified}
-        size={selectedObject?.size}
         url={
           selectedObject
             ? generateObjectUrl(clusterId, bucketName, selectedObject.name)
                 .absolute
             : undefined
         }
+        bucketName={bucketName}
+        clusterId={clusterId}
+        displayName={selectedObject?.name}
+        lastModified={selectedObject?.last_modified}
+        name={selectedObject?.name}
+        onClose={closeObjectDetailsDrawer}
+        open={objectDetailDrawerOpen}
+        size={selectedObject?.size}
       />
       <CreateFolderDrawer
         bucketName={bucketName}
         clusterId={clusterId}
-        prefix={prefix}
-        open={isCreateFolderDrawerOpen}
-        onClose={() => setIsCreateFolderDrawerOpen(false)}
         maybeAddObjectToTable={maybeAddObjectToTable}
+        onClose={() => setIsCreateFolderDrawerOpen(false)}
+        open={isCreateFolderDrawerOpen}
+        prefix={prefix}
       />
     </>
   );

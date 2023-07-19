@@ -1,13 +1,14 @@
-import generateCurlCommand from './generate-cURL';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
+
+import generateCurlCommand from './generate-cURL';
 
 const linodeRequest = createLinodeRequestFactory.build();
 const linodeData = {
   ...linodeRequest,
-  stackscript_id: 10079,
   stackscript_data: {
     gh_username: 'linode',
   },
+  stackscript_id: 10079,
 };
 
 const createLinodePath = '/linode/instance';

@@ -1,12 +1,13 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+
 import { storage } from 'src/utilities/storage';
 
 interface EnvironmentOption {
-  label: string;
   apiRoot: string;
-  loginRoot: string;
   clientID: string;
+  label: string;
+  loginRoot: string;
 }
 
 // Parse a node env to collect environment options. Set environment variables as follows:
@@ -34,10 +35,10 @@ export const getOptions = (env: Partial<ImportMetaEnv>) => {
     return [
       ...acc,
       {
-        label: env[thisEnvVariable] ?? '',
         apiRoot: env[`${base}_API_ROOT`] ?? '',
-        loginRoot: env[`${base}_LOGIN_ROOT`] ?? '',
         clientID: env[`${base}_CLIENT_ID`] ?? '',
+        label: env[thisEnvVariable] ?? '',
+        loginRoot: env[`${base}_LOGIN_ROOT`] ?? '',
       },
     ];
   }, []);
@@ -56,7 +57,7 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
   return (
     <Grid container>
       <Grid xs={12}>
-        <h4 style={{ marginTop: 0, marginBottom: 8 }}>Environment</h4>
+        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Environment</h4>
       </Grid>
       <Grid xs={12}>
         <select
@@ -69,7 +70,7 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
           defaultValue={currentEnvLabel}
           style={{ marginRight: 8 }}
         >
-          <option value="" disabled>
+          <option disabled value="">
             Select an environment
           </option>
           {options.map((thisOption) => {

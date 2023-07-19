@@ -1,40 +1,41 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 export interface Props {
-  open: boolean;
-  onClose: () => void;
   handleSubmit: () => void;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const EnableObjectStorageModal = ({
-  open,
-  onClose,
   handleSubmit,
+  onClose,
+  open,
 }: Props) => {
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={close}
-      title="Just to confirm..."
       actions={() => (
         <ActionsPanel
-          showPrimary
           primaryButtonHandler={() => {
             onClose();
             handleSubmit();
           }}
           primaryButtonText="Enable Object Storage"
-          showSecondary
           secondaryButtonDataTestId="cancel"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
+          showPrimary
+          showSecondary
         />
       )}
+      onClose={close}
+      open={open}
+      title="Just to confirm..."
     >
       <Typography variant="subtitle1">
         Linode Object Storage costs a flat rate of <strong>$5/month</strong>,
@@ -42,11 +43,11 @@ export const EnableObjectStorageModal = ({
         Beyond that, it's <strong>$0.02 per GB per month.</strong>{' '}
         <ExternalLink
           fixedIcon
-          text="Learn more."
           link="https://www.linode.com/docs/platform/object-storage/pricing-and-limitations/"
+          text="Learn more."
         />
       </Typography>
-      <Typography variant="subtitle1" style={{ marginTop: 8 }}>
+      <Typography style={{ marginTop: 8 }} variant="subtitle1">
         To discontinue billing, you'll need to cancel Object Storage in your{' '}
         <Link to="/account/settings">Account Settings</Link>.
       </Typography>

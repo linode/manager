@@ -3,22 +3,22 @@ import {
   uploadAttachment,
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as Bluebird from 'bluebird';
 import { update } from 'ramda';
 import * as React from 'react';
+import { debounce } from 'throttle-debounce';
+
 import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import FormHelperText from 'src/components/core/FormHelperText';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { ErrorBoundary } from 'src/components/ErrorBoundary';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import FormHelperText from 'src/components/core/FormHelperText';
 import { useAccount } from 'src/queries/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
@@ -34,7 +34,7 @@ import {
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-import { debounce } from 'throttle-debounce';
+
 import AttachFileForm from '../AttachFileForm';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
@@ -49,15 +49,15 @@ import SupportTicketSMTPFields, {
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
     backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
-    paddingTop: theme.spacing(1),
     borderTop: `1px solid ${theme.bg.main}`,
+    paddingTop: theme.spacing(1),
   },
   innerReply: {
-    padding: 0,
     '& div[role="tablist"]': {
-      marginTop: theme.spacing(),
       marginBottom: theme.spacing(),
+      marginTop: theme.spacing(),
     },
+    padding: 0,
   },
   rootReply: {
     marginBottom: theme.spacing(2),
@@ -66,8 +66,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Accumulator {
-  success: string[];
   errors: AttachmentError[];
+  success: string[];
 }
 
 interface AttachmentWithTarget {
@@ -76,41 +76,37 @@ interface AttachmentWithTarget {
 }
 
 export type EntityType =
-  | 'linode_id'
-  | 'volume_id'
-  | 'domain_id'
-  | 'nodebalancer_id'
-  | 'lkecluster_id'
   | 'database_id'
+  | 'domain_id'
   | 'firewall_id'
+  | 'general'
+  | 'linode_id'
+  | 'lkecluster_id'
+  | 'nodebalancer_id'
   | 'none'
-  | 'general';
+  | 'volume_id';
 
-export type TicketType = 'smtp' | 'general';
+export type TicketType = 'general' | 'smtp';
 
 interface TicketTypeData {
   dialogTitle: string;
-  helperText: string | JSX.Element;
+  helperText: JSX.Element | string;
 }
 
 export interface SupportTicketDialogProps {
+  children?: React.ReactNode;
+  hideProductSelection?: boolean;
+  keepOpenOnSuccess?: boolean;
+  onClose: () => void;
+  onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
   open: boolean;
-  prefilledTitle?: string;
   prefilledDescription?: string;
   prefilledEntity?: EntityForTicketDetails;
   prefilledTicketType?: TicketType;
-  onClose: () => void;
-  onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
-  keepOpenOnSuccess?: boolean;
-  hideProductSelection?: boolean;
-  children?: React.ReactNode;
+  prefilledTitle?: string;
 }
 
 const ticketTypeMap: Record<TicketType, TicketTypeData> = {
-  smtp: {
-    dialogTitle: smtpDialogTitle,
-    helperText: smtpHelperText,
-  },
   general: {
     dialogTitle: 'Open a Support Ticket',
     helperText: (
@@ -119,10 +115,10 @@ const ticketTypeMap: Record<TicketType, TicketTypeData> = {
         Please keep in mind that not all topics are within the scope of our support.
         For overall system status, please see `}
         <a
-          href="https://status.linode.com"
-          target="_blank"
           aria-describedby="external-site"
+          href="https://status.linode.com"
           rel="noopener noreferrer"
+          target="_blank"
         >
           status.linode.com
         </a>
@@ -130,36 +126,40 @@ const ticketTypeMap: Record<TicketType, TicketTypeData> = {
       </>
     ),
   },
+  smtp: {
+    dialogTitle: smtpDialogTitle,
+    helperText: smtpHelperText,
+  },
 };
 
 const entityMap: Record<string, EntityType> = {
-  Linodes: 'linode_id',
-  Volumes: 'volume_id',
-  Domains: 'domain_id',
-  NodeBalancers: 'nodebalancer_id',
-  Kubernetes: 'lkecluster_id',
   Databases: 'database_id',
+  Domains: 'domain_id',
   Firewalls: 'firewall_id',
+  Kubernetes: 'lkecluster_id',
+  Linodes: 'linode_id',
+  NodeBalancers: 'nodebalancer_id',
+  Volumes: 'volume_id',
 };
 
 const entityIdToNameMap: Record<EntityType, string> = {
-  linode_id: 'Linode',
-  volume_id: 'Volume',
-  domain_id: 'Domain',
-  nodebalancer_id: 'NodeBalancer',
-  lkecluster_id: 'Kubernetes Cluster',
   database_id: 'Database Cluster',
+  domain_id: 'Domain',
   firewall_id: 'Firewall',
-  none: '',
   general: '',
+  linode_id: 'Linode',
+  lkecluster_id: 'Kubernetes Cluster',
+  nodebalancer_id: 'NodeBalancer',
+  none: '',
+  volume_id: 'Volume',
 };
 
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {
     return type === 'domain_id'
       ? // Domains don't have labels
-        { value: entity.id, label: entity.domain }
-      : { value: entity.id, label: entity.label };
+        { label: entity.domain, value: entity.id }
+      : { label: entity.label, value: entity.id };
   });
 };
 
@@ -174,9 +174,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const {
     open,
     prefilledDescription,
-    prefilledTitle,
     prefilledEntity,
     prefilledTicketType,
+    prefilledTitle,
   } = props;
 
   const { data: account } = useAccount();
@@ -202,11 +202,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   // SMTP ticket information
   const [smtpFields, setSMTPFields] = React.useState({
-    customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
     companyName: '',
-    useCase: '',
+    customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
     emailDomains: '',
     publicInfo: '',
+    useCase: '',
   });
 
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
@@ -225,47 +225,47 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   // React Query entities
   const {
     data: databases,
-    isLoading: databasesLoading,
     error: databasesError,
+    isLoading: databasesLoading,
   } = useAllDatabasesQuery(entityType === 'database_id');
 
   const {
     data: firewalls,
-    isLoading: firewallsLoading,
     error: firewallsError,
+    isLoading: firewallsLoading,
   } = useAllFirewallsQuery(entityType === 'firewall_id');
 
   const {
     data: domains,
-    isLoading: domainsLoading,
     error: domainsError,
+    isLoading: domainsLoading,
   } = useAllDomainsQuery(entityType === 'domain_id');
   const {
     data: nodebalancers,
-    isLoading: nodebalancersLoading,
     error: nodebalancersError,
+    isLoading: nodebalancersLoading,
   } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
 
   const {
     data: clusters,
-    isLoading: clustersLoading,
     error: clustersError,
+    isLoading: clustersLoading,
   } = useAllKubernetesClustersQuery(entityType === 'lkecluster_id');
 
   const {
     data: linodes,
-    isLoading: linodesLoading,
     error: linodesError,
+    isLoading: linodesLoading,
   } = useAllLinodesQuery({}, {}, entityType === 'linode_id');
 
   const {
     data: volumes,
-    isLoading: volumesLoading,
     error: volumesError,
+    isLoading: volumesLoading,
   } = useAllVolumesQuery({}, {}, entityType === 'volume_id');
 
   const saveText = (_title: string, _description: string) => {
-    storage.supportText.set({ title: _title, description: _description });
+    storage.supportText.set({ description: _description, title: _title });
   };
 
   // Has to be a ref or else the timeout is redone with each render
@@ -373,7 +373,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         setFiles((oldFiles: FileAttachment[]) =>
           update(
             idx,
-            { file: null, uploading: false, uploaded: true, name: '' },
+            { file: null, name: '', uploaded: true, uploading: false },
             oldFiles
           )
         );
@@ -418,8 +418,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     /* Upload each file as an attachment, and return a Promise that will resolve to
      *  an array of aggregated errors that may have occurred for individual uploads. */
     return Bluebird.reduce(filesWithTarget, attachFileReducer, {
-      success: [],
       errors: [],
+      success: [],
     });
   };
 
@@ -427,7 +427,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     const { onSuccess } = props;
     const _description =
       ticketType === 'smtp' ? formatDescription(smtpFields) : description;
-    if (!['none', 'general'].includes(entityType) && !entityID) {
+    if (!['general', 'none'].includes(entityType) && !entityID) {
       setErrors([
         {
           field: 'input',
@@ -441,8 +441,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
     createSupportTicket({
       description: _description,
-      summary,
       [entityType]: Number(entityID),
+      summary,
     })
       .then((response) => {
         setErrors(undefined);
@@ -501,12 +501,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const getEntityOptions = (): Item<any, string>[] => {
     const reactQueryEntityDataMap = {
       database_id: databases,
-      firewall_id: firewalls,
       domain_id: domains,
-      volume_id: volumes,
+      firewall_id: firewalls,
+      linode_id: linodes,
       lkecluster_id: clusters,
       nodebalancer_id: nodebalancers,
-      linode_id: linodes,
+      volume_id: volumes,
     };
 
     if (!reactQueryEntityDataMap[entityType]) {
@@ -516,9 +516,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     // domain's don't have a label so we map the domain as the label
     if (entityType === 'domain_id') {
       return (
-        reactQueryEntityDataMap[entityType]?.map(({ id, domain }) => ({
-          value: id,
+        reactQueryEntityDataMap[entityType]?.map(({ domain, id }) => ({
           label: domain,
+          value: id,
         })) || []
       );
     }
@@ -526,8 +526,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     return (
       reactQueryEntityDataMap[entityType]?.map(
         ({ id, label }: { id: number; label: string }) => ({
-          value: id,
           label,
+          value: id,
         })
       ) || []
     );
@@ -535,26 +535,26 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const loadingMap: Record<EntityType, boolean> = {
     database_id: databasesLoading,
-    firewall_id: firewallsLoading,
     domain_id: domainsLoading,
-    volume_id: volumesLoading,
+    firewall_id: firewallsLoading,
+    general: false,
+    linode_id: linodesLoading,
     lkecluster_id: clustersLoading,
     nodebalancer_id: nodebalancersLoading,
-    linode_id: linodesLoading,
     none: false,
-    general: false,
+    volume_id: volumesLoading,
   };
 
   const errorMap: Record<EntityType, APIError[] | null> = {
     database_id: databasesError,
-    firewall_id: firewallsError,
     domain_id: domainsError,
-    volume_id: volumesError,
+    firewall_id: firewallsError,
+    general: null,
+    linode_id: linodesError,
     lkecluster_id: clustersError,
     nodebalancer_id: nodebalancersError,
-    linode_id: linodesError,
     none: null,
-    general: null,
+    volume_id: volumesError,
   };
 
   const entityOptions = getEntityOptions();
@@ -568,111 +568,105 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     null;
 
   return (
-    <ErrorBoundary fallback={<ErrorState errorText="" />}>
-      <Dialog
-        open={open}
-        onClose={close}
-        fullHeight
-        fullWidth
-        title={ticketTypeMap[ticketType].dialogTitle}
-      >
-        {props.children || (
-          <React.Fragment>
-            {generalError && (
-              <Notice error text={generalError} data-qa-notice />
-            )}
+    <Dialog
+      fullHeight
+      fullWidth
+      onClose={close}
+      open={open}
+      title={ticketTypeMap[ticketType].dialogTitle}
+    >
+      {props.children || (
+        <React.Fragment>
+          {generalError && <Notice data-qa-notice error text={generalError} />}
 
-            <Typography data-qa-support-ticket-helper-text>
-              {ticketTypeMap[ticketType].helperText}
-            </Typography>
-            <TextField
-              label="Title"
-              placeholder="Enter a title for your ticket."
-              required
-              value={summary}
-              onChange={handleSummaryInputChange}
-              inputProps={{ maxLength: 64 }}
-              errorText={summaryError}
-              data-qa-ticket-summary
+          <Typography data-qa-support-ticket-helper-text>
+            {ticketTypeMap[ticketType].helperText}
+          </Typography>
+          <TextField
+            data-qa-ticket-summary
+            errorText={summaryError}
+            inputProps={{ maxLength: 64 }}
+            label="Title"
+            onChange={handleSummaryInputChange}
+            placeholder="Enter a title for your ticket."
+            required
+            value={summary}
+          />
+          {ticketType === 'smtp' ? (
+            <SupportTicketSMTPFields
+              formState={smtpFields}
+              handleChange={handleSMTPFieldChange}
             />
-            {ticketType === 'smtp' ? (
-              <SupportTicketSMTPFields
-                handleChange={handleSMTPFieldChange}
-                formState={smtpFields}
+          ) : (
+            <React.Fragment>
+              {props.hideProductSelection ? null : (
+                <React.Fragment>
+                  <Select
+                    data-qa-ticket-entity-type
+                    isClearable={false}
+                    label="What is this regarding?"
+                    onChange={handleEntityTypeChange}
+                    options={topicOptions}
+                    value={selectedTopic}
+                  />
+                  {!['general', 'none'].includes(entityType) && (
+                    <>
+                      <Select
+                        data-qa-ticket-entity-id
+                        disabled={entityOptions.length === 0}
+                        errorText={entityError || inputError}
+                        isClearable={false}
+                        isLoading={areEntitiesLoading}
+                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
+                        onChange={handleEntityIDChange}
+                        options={entityOptions}
+                        placeholder={`Select a ${entityIdToNameMap[entityType]}`}
+                        value={selectedEntity}
+                      />
+                      {!areEntitiesLoading && entityOptions.length === 0 ? (
+                        <FormHelperText>
+                          You don&rsquo;t have any{' '}
+                          {entityIdToNameMap[entityType]}s on your account.
+                        </FormHelperText>
+                      ) : null}
+                    </>
+                  )}
+                </React.Fragment>
+              )}
+              <TabbedReply
+                placeholder={
+                  "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                }
+                error={descriptionError}
+                handleChange={handleDescriptionInputChange}
+                innerClass={classes.innerReply}
+                required
+                rootClass={classes.rootReply}
+                value={description}
               />
-            ) : (
-              <React.Fragment>
-                {props.hideProductSelection ? null : (
-                  <React.Fragment>
-                    <Select
-                      options={topicOptions}
-                      label="What is this regarding?"
-                      value={selectedTopic}
-                      onChange={handleEntityTypeChange}
-                      data-qa-ticket-entity-type
-                      isClearable={false}
-                    />
-                    {!['none', 'general'].includes(entityType) && (
-                      <>
-                        <Select
-                          options={entityOptions}
-                          value={selectedEntity}
-                          disabled={entityOptions.length === 0}
-                          errorText={entityError || inputError}
-                          placeholder={`Select a ${entityIdToNameMap[entityType]}`}
-                          label={
-                            entityIdToNameMap[entityType] ?? 'Entity Select'
-                          }
-                          onChange={handleEntityIDChange}
-                          data-qa-ticket-entity-id
-                          isLoading={areEntitiesLoading}
-                          isClearable={false}
-                        />
-                        {!areEntitiesLoading && entityOptions.length === 0 ? (
-                          <FormHelperText>
-                            You don&rsquo;t have any{' '}
-                            {entityIdToNameMap[entityType]}s on your account.
-                          </FormHelperText>
-                        ) : null}
-                      </>
-                    )}
-                  </React.Fragment>
-                )}
-                <TabbedReply
-                  required
-                  error={descriptionError}
-                  handleChange={handleDescriptionInputChange}
-                  value={description}
-                  innerClass={classes.innerReply}
-                  rootClass={classes.rootReply}
-                  placeholder={
-                    "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-                  }
-                />
-                <Accordion
-                  heading="Formatting Tips"
-                  detailProps={{ className: classes.expPanelSummary }}
-                >
-                  <Reference />
-                </Accordion>
-                <AttachFileForm files={files} updateFiles={updateFiles} />
-              </React.Fragment>
-            )}
-            <ActionsPanel
-              primaryButtonDataTestId="submit"
-              primaryButtonDisabled={!requirementsMet}
-              primaryButtonHandler={onSubmit}
-              primaryButtonLoading={submitting}
-              primaryButtonText="Open Ticket"
-              secondaryButtonDataTestId="cancel"
-              secondaryButtonHandler={onCancel}
-              secondaryButtonText=" Cancel"
-              showPrimary
-              showSecondary
-            />
-          </React.Fragment>
-        )}
-      </Dialog>
-    </ErrorBoundary>
+              <Accordion
+                detailProps={{ className: classes.expPanelSummary }}
+                heading="Formatting Tips"
+              >
+                <Reference />
+              </Accordion>
+              <AttachFileForm files={files} updateFiles={updateFiles} />
+            </React.Fragment>
+          )}
+          <ActionsPanel
+            primaryButtonDataTestId="submit"
+            primaryButtonDisabled={!requirementsMet}
+            primaryButtonHandler={onSubmit}
+            primaryButtonLoading={submitting}
+            primaryButtonText="Open Ticket"
+            secondaryButtonDataTestId="cancel"
+            secondaryButtonHandler={onCancel}
+            secondaryButtonText=" Cancel"
+            showPrimary
+            showSecondary
+          />
+        </React.Fragment>
+      )}
+    </Dialog>
   );
 };

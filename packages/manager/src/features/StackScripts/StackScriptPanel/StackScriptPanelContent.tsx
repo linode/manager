@@ -6,19 +6,21 @@ import {
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { StackScriptsRequest } from 'src/features/StackScripts/types';
+
 import StackScriptBase, {
   StateProps,
 } from '../StackScriptBase/StackScriptBase';
 import StackScriptsSection from './StackScriptsSection';
 
 interface DialogVariantProps {
+  error?: string;
   open: boolean;
   submitting: boolean;
-  error?: string;
 }
 interface DialogState {
   delete: DialogVariantProps;
@@ -108,8 +110,8 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
       ...defaultDialogState,
       delete: {
         ...dialog.delete,
-        submitting: true,
         error: undefined,
+        submitting: true,
       },
     });
     deleteStackScript(dialog.stackScriptID!)
@@ -127,9 +129,9 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
         setDialogState({
           ...defaultDialogState,
           delete: {
+            error: e[0].reason,
             open: true,
             submitting: false,
-            error: e[0].reason,
           },
           makePublic: {
             open: false,
@@ -167,13 +169,13 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const renderConfirmDeleteActions = () => {
     return (
       <ActionsPanel
-        showPrimary
         primaryButtonHandler={handleDeleteStackScript}
         primaryButtonLoading={dialog.delete.submitting}
         primaryButtonText="Delete StackScript"
-        showSecondary
         secondaryButtonHandler={handleCloseDialog}
         secondaryButtonText="Cancel"
+        showPrimary
+        showSecondary
       />
     );
   };
@@ -181,12 +183,12 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const renderConfirmMakePublicActions = () => {
     return (
       <ActionsPanel
-        showPrimary
         primaryButtonHandler={handleMakePublic}
         primaryButtonText="Yes, make me a star!"
-        showSecondary
         secondaryButtonHandler={handleCloseDialog}
         secondaryButtonText="Cancel"
+        showPrimary
+        showSecondary
       />
     );
   };
@@ -194,11 +196,11 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const renderDeleteStackScriptDialog = () => {
     return (
       <ConfirmationDialog
-        title={`Delete StackScript ${dialog.stackScriptLabel}?`}
-        open={dialog.delete.open}
         actions={renderConfirmDeleteActions}
-        onClose={handleCloseDialog}
         error={dialog.delete.error}
+        onClose={handleCloseDialog}
+        open={dialog.delete.open}
+        title={`Delete StackScript ${dialog.stackScriptLabel}?`}
       >
         <Typography>
           Are you sure you want to delete this StackScript?
@@ -210,10 +212,10 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const renderMakePublicDialog = () => {
     return (
       <ConfirmationDialog
-        title={`Woah, just a word of caution...`}
-        open={dialog.makePublic.open}
         actions={renderConfirmMakePublicActions}
         onClose={handleCloseDialog}
+        open={dialog.makePublic.open}
+        title={`Woah, just a word of caution...`}
       >
         <Typography>
           Are you sure you want to make {dialog.stackScriptLabel} public? This
@@ -227,13 +229,13 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <StackScriptsSection
-        isSorting={props.isSorting}
+        category={props.category}
+        currentUser={props.currentUser}
         data={props.listOfStackScripts}
+        isSorting={props.isSorting}
         publicImages={props.publicImages}
         triggerDelete={handleOpenDeleteDialog}
         triggerMakePublic={handleOpenMakePublicDialog}
-        currentUser={props.currentUser}
-        category={props.category}
       />
       {renderDeleteStackScriptDialog()}
       {renderMakePublicDialog()}

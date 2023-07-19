@@ -1,5 +1,6 @@
 import { Reducer } from 'redux';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+
 import { CreateTypes, handleChangeCreateType } from './linodeCreate.actions';
 
 export interface State {

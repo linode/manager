@@ -1,24 +1,25 @@
+import { OAuthClient, OAuthClientRequest } from '@linode/api-v4';
+import { useFormik } from 'formik';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
-import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { useFormik } from 'formik';
+import FormControl from 'src/components/core/FormControl';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import { useUpdateOAuthClientMutation } from 'src/queries/accountOAuth';
-import { OAuthClient, OAuthClientRequest } from '@linode/api-v4';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   client: OAuthClient | undefined;
+  onClose: () => void;
+  open: boolean;
 }
 
-export const EditOAuthClientDrawer = ({ open, onClose, client }: Props) => {
-  const { mutateAsync, error, isLoading, reset } = useUpdateOAuthClientMutation(
+export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
+  const { error, isLoading, mutateAsync, reset } = useUpdateOAuthClientMutation(
     client?.id ?? ''
   );
 
@@ -49,40 +50,40 @@ export const EditOAuthClientDrawer = ({ open, onClose, client }: Props) => {
   const hasErrorFor = getAPIErrorsFor(errorResources, error ?? undefined);
 
   return (
-    <Drawer title="Create OAuth App" open={open} onClose={onClose}>
-      {hasErrorFor('none') && <Notice text={hasErrorFor('none')} error />}
+    <Drawer onClose={onClose} open={open} title="Create OAuth App">
+      {hasErrorFor('none') && <Notice error text={hasErrorFor('none')} />}
       <form onSubmit={formik.handleSubmit}>
         <TextField
-          name="label"
           errorText={hasErrorFor('label')}
           label="Label"
+          name="label"
           onChange={formik.handleChange}
           value={formik.values.label}
         />
         <TextField
-          name="redirect_uri"
-          label="Callback URL"
           errorText={hasErrorFor('redirect_uri')}
-          value={formik.values.redirect_uri}
+          label="Callback URL"
+          name="redirect_uri"
           onChange={formik.handleChange}
+          value={formik.values.redirect_uri}
         />
         <FormControl>
           <FormControlLabel
-            label="Public"
             control={
-              <Checkbox name="public" checked={client?.public} disabled />
+              <Checkbox checked={client?.public} disabled name="public" />
             }
+            label="Public"
           />
         </FormControl>
         <ActionsPanel
-          showPrimary
           primaryButtonDisabled={!formik.dirty}
           primaryButtonLoading={isLoading}
           primaryButtonText=" Save Changes"
           primaryButtonType="submit"
-          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
+          showPrimary
+          showSecondary
         />
       </form>
     </Drawer>

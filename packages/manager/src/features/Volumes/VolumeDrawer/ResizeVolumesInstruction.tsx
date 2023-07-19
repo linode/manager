@@ -1,28 +1,30 @@
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
+
 import NoticePanel from './NoticePanel';
 
-type ClassNames = 'root' | 'copySection' | 'copyField';
+type ClassNames = 'copyField' | 'copySection' | 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    copySection: {
-      marginTop: theme.spacing(2),
-    },
     copyField: {
       marginTop: theme.spacing(1),
     },
+    copySection: {
+      marginTop: theme.spacing(2),
+    },
+    root: {},
   });
 
 interface Props {
-  volumeLabel: string;
-  onClose: () => void;
   message?: string;
+  onClose: () => void;
+  volumeLabel: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -45,10 +47,10 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
         </Typography>
         <CopyableTextField
           className={classes.copyField}
-          value={`umount /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}`}
           data-qa-umount
-          label="Make sure the volume is unmounted for safety"
           hideLabel
+          label="Make sure the volume is unmounted for safety"
+          value={`umount /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}`}
         />
       </div>
 
@@ -59,17 +61,17 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
         </Typography>
         <CopyableTextField
           className={classes.copyField}
-          value={`e2fsck -f /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}`}
           data-qa-check-filesystem
-          label="Run a file system check"
           hideLabel
+          label="Run a file system check"
+          value={`e2fsck -f /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}`}
         />
         <CopyableTextField
           className={classes.copyField}
-          value={`resize2fs /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}`}
           data-qa-resize-filesystem
-          label="Resize file system to fill the new volume"
           hideLabel
+          label="Resize file system to fill the new volume"
+          value={`resize2fs /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}`}
         />
       </div>
 
@@ -79,16 +81,16 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
         </Typography>
         <CopyableTextField
           className={classes.copyField}
-          value={`mount /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel}`}
           data-qa-mount
-          label="Mount back onto the filesystem"
           hideLabel
+          label="Mount back onto the filesystem"
+          value={`mount /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel}`}
         />
       </div>
       <ActionsPanel
-        showPrimary
         primaryButtonHandler={onClose}
         primaryButtonText="Close"
+        showPrimary
       />
     </React.Fragment>
   );

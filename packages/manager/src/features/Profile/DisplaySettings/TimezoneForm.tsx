@@ -1,14 +1,15 @@
+import { Theme, styled } from '@mui/material/styles';
+import { DateTime } from 'luxon';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
+import timezones from 'src/assets/timezones/timezones';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import timezones from 'src/assets/timezones/timezones';
-import { Typography } from 'src/components/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { DateTime } from 'luxon';
-import { Theme, styled } from '@mui/material/styles';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { Typography } from 'src/components/Typography';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { useSnackbar } from 'notistack';
 
 interface Props {
   loggedInAsCustomer: boolean;
@@ -47,7 +48,7 @@ export const TimezoneForm = (props: Props) => {
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
-  const { mutateAsync: updateProfile, isLoading, error } = useMutateProfile();
+  const { error, isLoading, mutateAsync: updateProfile } = useMutateProfile();
   const [value, setValue] = React.useState<Item<string> | null>(null);
   const timezone = profile?.timezone ?? '';
 
@@ -97,18 +98,18 @@ export const TimezoneForm = (props: Props) => {
           placeholder={'Choose a Timezone'}
         />
         <ActionsPanel
-          showPrimary
+          primaryButtonSx={{
+            backgroundColor: 'red',
+            color: 'white',
+            marginTop: (theme: Theme) => theme.breakpoints.up('md') && 16,
+            minWidth: 180,
+          }}
           primaryButtonDataTestId="tz-submit"
           primaryButtonDisabled={disabled}
           primaryButtonHandler={onSubmit}
           primaryButtonLoading={isLoading}
           primaryButtonText="Update Timezone"
-          primaryButtonSx={{
-            minWidth: 180,
-            marginTop: (theme: Theme) => theme.breakpoints.up('md') && 16,
-            backgroundColor: 'red',
-            color: 'white',
-          }}
+          showPrimary
         />
       </StyledRootContainer>
     </>
@@ -127,7 +128,7 @@ const StyledLoggedInAsCustomerNotice = styled('div', {
   label: 'StyledLoggedInAsCustomerNotice',
 })(({ theme }) => ({
   backgroundColor: theme.color.red,
-  padding: 16,
   marginBottom: 8,
+  padding: 16,
   textAlign: 'center',
 }));

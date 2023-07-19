@@ -1,16 +1,17 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 
 export interface Props {
-  isOpen: boolean;
-  error?: string | JSX.Element;
-  submitting: boolean;
   currentPlan: string;
-  targetPlan: string;
+  error?: JSX.Element | string;
+  isOpen: boolean;
   onClose: () => void;
   onResize: () => void;
+  submitting: boolean;
+  targetPlan: string;
 }
 
 const renderActions = (
@@ -20,38 +21,38 @@ const renderActions = (
 ) => {
   return (
     <ActionsPanel
-      style={{ padding: 0 }}
-      showPrimary
+      primaryButtonDataTestId="confirm"
       primaryButtonHandler={onResize}
       primaryButtonLoading={loading}
-      primaryButtonDataTestId="confirm"
       primaryButtonText="Resize"
-      showSecondary
-      secondaryButtonHandler={onClose}
       secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
+      style={{ padding: 0 }}
     />
   );
 };
 
 export const ResizeDialog: React.FC<Props> = (props) => {
   const {
-    isOpen,
-    error,
-    submitting,
     currentPlan,
-    targetPlan,
+    error,
+    isOpen,
     onClose,
     onResize,
+    submitting,
+    targetPlan,
   } = props;
 
   return (
     <ConfirmationDialog
-      title="Confirm Linode Resize"
-      open={isOpen}
+      actions={renderActions(submitting, onClose, onResize)}
       error={error}
       onClose={onClose}
-      actions={renderActions(submitting, onClose, onResize)}
+      open={isOpen}
+      title="Confirm Linode Resize"
     >
       <Typography>
         Are you sure you want to resize your Linode from {currentPlan} to{' '}

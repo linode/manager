@@ -1,7 +1,9 @@
-import * as React from 'react';
-import { Button } from 'src/components/Button/Button';
-import { CSVLink } from 'react-csv';
 import { SxProps } from '@mui/system';
+import * as React from 'react';
+import { CSVLink } from 'react-csv';
+
+import { Button } from 'src/components/Button/Button';
+
 import type { ButtonType } from 'src/components/Button/Button';
 
 interface DownloadCSVProps {
@@ -11,7 +13,7 @@ interface DownloadCSVProps {
   csvRef?: React.RefObject<any>;
   data: unknown[];
   filename: string;
-  headers: { label: string; key: string }[];
+  headers: { key: string; label: string }[];
   onClick: () => void;
   sx?: SxProps;
   text?: string;

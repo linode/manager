@@ -1,14 +1,16 @@
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import { SupportLink } from 'src/components/SupportLink';
-import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { useQueryClient } from 'react-query';
+import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
 import { queryKey } from 'src/queries/accountNotifications';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
+import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 
 const ComplianceUpdateModal = () => {
   const [error, setError] = React.useState('');
@@ -18,8 +20,8 @@ const ComplianceUpdateModal = () => {
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
   const {
-    mutateAsync: updateAccountAgreements,
     isLoading,
+    mutateAsync: updateAccountAgreements,
   } = useMutateAccountAgreements();
 
   const handleAgree = () => {
@@ -41,26 +43,26 @@ const ComplianceUpdateModal = () => {
 
   return (
     <ConfirmationDialog
-      open={complianceModelContext.isOpen}
-      onClose={complianceModelContext.close}
-      title="Compliance Update"
       actions={() => (
         <ActionsPanel
-          showPrimary
-          primaryButtonHandler={handleAgree}
-          primaryButtonLoading={isLoading}
-          primaryButtonDisabled={!checked}
-          primaryButtonText="Agree"
-          showSecondary
           secondaryButtonHandler={() => {
             setChecked(false);
             complianceModelContext.close();
           }}
+          primaryButtonDisabled={!checked}
+          primaryButtonHandler={handleAgree}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Agree"
           secondaryButtonDataTestId="cancel"
           secondaryButtonText="Close"
+          showPrimary
+          showSecondary
         />
       )}
       error={error}
+      onClose={complianceModelContext.close}
+      open={complianceModelContext.isOpen}
+      title="Compliance Update"
     >
       <Typography>
         Recent legal changes now require users located in Europe, or with
@@ -71,11 +73,11 @@ const ComplianceUpdateModal = () => {
         After your review, please click the box below if the agreement is
         acceptable, or{' '}
         <SupportLink
-          text="open a Support Ticket"
           onClick={() => {
             setChecked(false);
             complianceModelContext.close();
           }}
+          text="open a Support Ticket"
           title="Updates to the new EU Model Contact"
         />{' '}
         if you have any questions.

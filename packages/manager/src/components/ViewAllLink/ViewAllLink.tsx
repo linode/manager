@@ -1,23 +1,29 @@
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 
-type ClassNames = 'link' | 'noCount' | 'count' | 'countNumber';
+type ClassNames = 'count' | 'countNumber' | 'link' | 'noCount';
 
 interface Props {
-  text: string;
-  link: string;
+  className?: any;
   count?: number;
   external?: boolean;
-  className?: any;
+  link: string;
+  text: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const styles = (theme: Theme) =>
   createStyles({
+    count: {
+      marginRight: theme.spacing(0.5),
+    },
+    countNumber: {
+      fontFamily: theme.font.bold,
+    },
     link: {
       '&:hover': {
         textDecoration: 'underline',
@@ -26,16 +32,10 @@ const styles = (theme: Theme) =>
     noCount: {
       marginLeft: theme.spacing(1),
     },
-    count: {
-      marginRight: theme.spacing(0.5),
-    },
-    countNumber: {
-      fontFamily: theme.font.bold,
-    },
   });
 
 const ViewAllLink: React.FC<CombinedProps> = (props) => {
-  const { classes, count, text, link, external, className } = props;
+  const { className, classes, count, external, link, text } = props;
   return (
     <>
       {count && (
@@ -49,7 +49,6 @@ const ViewAllLink: React.FC<CombinedProps> = (props) => {
       )}
       {!external ? (
         <Link
-          to={link}
           className={classNames(
             {
               [classes.link]: true,
@@ -58,20 +57,21 @@ const ViewAllLink: React.FC<CombinedProps> = (props) => {
             className
           )}
           data-qa-view-all-link
+          to={link}
         >
           {text}
         </Link>
       ) : (
         <a
-          href={link}
           className={classNames({
             [classes.link]: true,
             [classes.noCount]: !count,
           })}
-          data-qa-view-all-link
-          target="_blank"
           aria-describedby="external-site"
+          data-qa-view-all-link
+          href={link}
           rel="noopener noreferrer"
+          target="_blank"
         >
           {text}
         </a>

@@ -1,16 +1,17 @@
 import { Engine } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { useDatabaseCredentialsMutation } from 'src/queries/databases';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  databaseID: number;
   databaseEngine: Engine;
+  databaseID: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 // I feel like this pattern should be its own component due to how common it is
@@ -21,23 +22,23 @@ const renderActions = (
 ) => {
   return (
     <ActionsPanel
-      showPrimary
       primaryButtonDataTestId="confirm"
       primaryButtonHandler={onConfirm}
       primaryButtonLoading={loading}
       primaryButtonText="Reset Root Password"
-      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
     />
   );
 };
 
 export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
-  const { open, onClose, databaseEngine, databaseID } = props;
+  const { databaseEngine, databaseID, onClose, open } = props;
 
-  const { mutateAsync, isLoading, error } = useDatabaseCredentialsMutation(
+  const { error, isLoading, mutateAsync } = useDatabaseCredentialsMutation(
     databaseEngine,
     databaseID
   );
@@ -49,10 +50,10 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
 
   return (
     <ConfirmationDialog
+      actions={renderActions(onClose, onResetRootPassword, isLoading)}
+      onClose={onClose}
       open={open}
       title="Reset Root Password"
-      onClose={onClose}
-      actions={renderActions(onClose, onResetRootPassword, isLoading)}
     >
       {error ? <Notice error>{error[0].reason}</Notice> : undefined}
       <Typography>

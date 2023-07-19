@@ -1,12 +1,13 @@
+import { TPAProvider } from '@linode/api-v4/lib/profile';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Typography } from 'src/components/Typography';
-import useFlags from 'src/hooks/useFlags';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Typography } from 'src/components/Typography';
 import { LOGIN_ROOT } from 'src/constants';
 import { Provider } from 'src/featureFlags';
-import { styled } from '@mui/material/styles';
-import { TPAProvider } from '@linode/api-v4/lib/profile';
+import useFlags from 'src/hooks/useFlags';
 export interface TPADialogProps {
   currentProvider: Provider;
   newProvider: TPAProvider;
@@ -16,7 +17,7 @@ export interface TPADialogProps {
 
 export const TPADialog = (props: TPADialogProps) => {
   const flags = useFlags();
-  const { currentProvider, newProvider, open, onClose } = props;
+  const { currentProvider, newProvider, onClose, open } = props;
   // Get list of providers from LaunchDarkly
   const providers = flags.tpaProviders ?? [];
   const displayName =
@@ -25,12 +26,12 @@ export const TPADialog = (props: TPADialogProps) => {
 
   return (
     <StyledConfirmationDialog
-      title={`Change login method to ${displayName}?`}
       actions={() => renderActions(onClose, newProvider)}
-      open={open}
       onClose={onClose}
+      open={open}
+      title={`Change login method to ${displayName}?`}
     >
-      <Typography variant="body1" sx={{ lineHeight: '1.25rem' }}>
+      <Typography sx={{ lineHeight: '1.25rem' }} variant="body1">
         This will disable your login via{' '}
         {currentProvider.displayName === 'Linode'
           ? 'username and password'
@@ -56,19 +57,19 @@ const handleLoginChange = (provider: TPAProvider) => {
 const renderActions = (onClose: () => void, provider: TPAProvider) => {
   return (
     <ActionsPanel
-      className="p0"
-      showSecondary
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
-      secondaryButtonDataTestId="confirm-cancel"
-      showPrimary
-      primaryButtonDataTestId="confirm-login-change"
-      primaryButtonText="Change login"
-      primaryButtonAriaDescribedBy="external-site"
       primaryButtonHandler={() => {
         onClose();
         handleLoginChange(provider);
       }}
+      className="p0"
+      primaryButtonAriaDescribedBy="external-site"
+      primaryButtonDataTestId="confirm-login-change"
+      primaryButtonText="Change login"
+      secondaryButtonDataTestId="confirm-cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
     />
   );
 };
@@ -77,7 +78,7 @@ const StyledConfirmationDialog = styled(ConfirmationDialog, {
   label: 'StyledConfirmationDialog',
 })(() => ({
   '& .dialog-content': {
-    paddingTop: 0,
     paddingBottom: 0,
+    paddingTop: 0,
   },
 }));

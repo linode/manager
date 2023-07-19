@@ -1,11 +1,13 @@
 import { CredentialPayload } from '@linode/api-v4/lib/managed';
 import { Formik } from 'formik';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TextField } from 'src/components/TextField';
+
 import { creationSchema } from './credential.schema';
 
 const PasswordInput = React.lazy(
@@ -13,97 +15,97 @@ const PasswordInput = React.lazy(
 );
 
 export interface Props {
-  open: boolean;
   onClose: () => void;
   onSubmit: (values: CredentialPayload, formikProps: any) => void;
+  open: boolean;
 }
 
 type CombinedProps = Props;
 
 const CredentialDrawer: React.FC<CombinedProps> = (props) => {
-  const { open, onClose, onSubmit } = props;
+  const { onClose, onSubmit, open } = props;
 
   return (
-    <Drawer title={'Add Credential'} open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title={'Add Credential'}>
       <Formik
         initialValues={{
           label: '',
           password: '',
           username: '',
         }}
-        validationSchema={creationSchema}
-        validateOnChange={false}
-        validateOnBlur={false}
         onSubmit={onSubmit}
+        validateOnBlur={false}
+        validateOnChange={false}
+        validationSchema={creationSchema}
       >
         {({
-          values,
           errors,
-          status,
-          handleChange,
           handleBlur,
+          handleChange,
           handleSubmit,
           isSubmitting,
+          status,
+          values,
         }) => (
           <>
             {status && (
               <Notice
+                data-qa-error
+                error
                 key={status}
                 text={status.generalError}
-                error
-                data-qa-error
               />
             )}
 
             <form onSubmit={handleSubmit}>
               <TextField
-                label="Label"
-                name="label"
+                data-qa-add-label
                 error={!!errors.label}
                 errorText={errors.label}
+                label="Label"
+                name="label"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.label}
-                data-qa-add-label
               />
 
               <TextField
-                label="Username"
-                name="username"
+                data-qa-add-username
                 error={!!errors.username}
                 errorText={errors.username}
+                label="Username"
+                name="username"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 optional
                 value={values.username}
-                data-qa-add-username
               />
 
               <React.Suspense fallback={<SuspenseLoader />}>
                 <PasswordInput
-                  label="Password"
-                  name="password"
+                  data-qa-add-password
                   error={!!errors.password}
                   errorText={errors.password}
                   // This credential could be anything so might be counterproductive to validate strength
                   hideValidation
+                  label="Password"
+                  name="password"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   type="password"
                   value={values.password}
-                  data-qa-add-password
                 />
               </React.Suspense>
               <ActionsPanel
-                showPrimary
                 primaryButtonDataTestId="submit"
                 primaryButtonHandler={() => handleSubmit()}
                 primaryButtonLoading={isSubmitting}
                 primaryButtonText="Add Credential"
-                showSecondary
                 secondaryButtonDataTestId="cancel"
                 secondaryButtonHandler={onClose}
                 secondaryButtonText="Cancel"
+                showPrimary
+                showSecondary
               />
             </form>
           </>

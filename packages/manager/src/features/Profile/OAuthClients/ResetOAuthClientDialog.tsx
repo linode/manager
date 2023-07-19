@@ -1,25 +1,26 @@
 import React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useResetOAuthClientMutation } from 'src/queries/accountOAuth';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   id: string;
   label: string;
+  onClose: () => void;
+  open: boolean;
   showSecret: (s: string) => void;
 }
 
 export const ResetOAuthClientDialog = ({
-  open,
-  onClose,
   id,
   label,
+  onClose,
+  open,
   showSecret,
 }: Props) => {
-  const { mutateAsync, isLoading, error } = useResetOAuthClientMutation(id);
+  const { error, isLoading, mutateAsync } = useResetOAuthClientMutation(id);
 
   const onReset = () => {
     mutateAsync().then((data) => {
@@ -30,21 +31,21 @@ export const ResetOAuthClientDialog = ({
 
   return (
     <ConfirmationDialog
-      error={error?.[0].reason}
-      title={`Reset secret for ${label}?`}
-      open={open}
-      onClose={onClose}
       actions={
         <ActionsPanel
-          showPrimary
           primaryButtonHandler={onReset}
           primaryButtonLoading={isLoading}
           primaryButtonText="Reset Secret"
-          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
+          showPrimary
+          showSecondary
         />
       }
+      error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title={`Reset secret for ${label}?`}
     >
       <Typography>
         Are you sure you want to permanently reset the secret for this app?

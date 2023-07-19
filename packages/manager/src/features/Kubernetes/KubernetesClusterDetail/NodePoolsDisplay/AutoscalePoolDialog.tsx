@@ -1,78 +1,79 @@
+import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
-import { useFormik } from 'formik';
-import * as React from 'react';
-import classNames from 'classnames';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
+import { makeStyles } from '@mui/styles';
+import classNames from 'classnames';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
-import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
+import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useSnackbar } from 'notistack';
 
 interface Props {
   clusterId: number;
-  nodePool: KubeNodePoolResponse | undefined;
-  open: boolean;
   handleOpenResizeDrawer: (poolId: number) => void;
+  nodePool: KubeNodePoolResponse | undefined;
   onClose: () => void;
+  open: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  slash: {
-    alignSelf: 'end',
-    padding: '0px !important',
-    '& p': {
-      fontSize: '1rem',
-      padding: `${theme.spacing(2)} 0`,
-    },
-  },
-  inputContainer: {
-    '& label': {
-      marginTop: 13,
-    },
-  },
   disabled: {
     opacity: 0.5,
   },
   errorText: {
     color: theme.color.red,
   },
-  resize: {
-    fontSize: 'inherit',
-    marginTop: -3.2,
-    marginLeft: -4,
-    marginRight: 0,
-    minHeight: 0,
-    padding: 0,
+  input: {
+    '& input': {
+      width: 70,
+    },
+    minWidth: 'auto',
+  },
+  inputContainer: {
+    '& label': {
+      marginTop: 13,
+    },
   },
   notice: {
     fontFamily: theme.font.bold,
     fontSize: 15,
   },
-  input: {
-    minWidth: 'auto',
-    '& input': {
-      width: 70,
+  resize: {
+    fontSize: 'inherit',
+    marginLeft: -4,
+    marginRight: 0,
+    marginTop: -3.2,
+    minHeight: 0,
+    padding: 0,
+  },
+  slash: {
+    '& p': {
+      fontSize: '1rem',
+      padding: `${theme.spacing(2)} 0`,
     },
+    alignSelf: 'end',
+    padding: '0px !important',
   },
 }));
 
 export const AutoscalePoolDialog = (props: Props) => {
-  const { nodePool, open, handleOpenResizeDrawer, onClose, clusterId } = props;
+  const { clusterId, handleOpenResizeDrawer, nodePool, onClose, open } = props;
   const autoscaler = nodePool?.autoscaler;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useUpdateNodePoolMutation(
+  const { error, isLoading, mutateAsync } = useUpdateNodePoolMutation(
     clusterId,
     nodePool?.id ?? -1
   );
@@ -92,21 +93,21 @@ export const AutoscalePoolDialog = (props: Props) => {
   };
 
   const {
-    values,
     errors,
-    isSubmitting,
     handleChange,
     handleReset,
     handleSubmit,
+    isSubmitting,
+    values,
   } = useFormik({
+    enableReinitialize: true,
     initialValues: {
       enabled: autoscaler?.enabled ?? false,
-      min: autoscaler?.min ?? 1,
       max: autoscaler?.max ?? 1,
+      min: autoscaler?.min ?? 1,
     },
-    enableReinitialize: true,
-    validationSchema: AutoscaleNodePoolSchema,
     onSubmit,
+    validationSchema: AutoscaleNodePoolSchema,
   });
 
   const warning =
@@ -116,16 +117,8 @@ export const AutoscalePoolDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      title="Autoscale Pool"
-      onClose={handleClose}
-      error={error?.[0].reason}
       actions={
         <ActionsPanel
-          style={{ padding: 0 }}
-          showPrimary
-          primaryButtonHandler={() => handleSubmit()}
-          primaryButtonLoading={isLoading || isSubmitting}
           primaryButtonDisabled={
             (values.enabled === autoscaler?.enabled &&
               values.min === autoscaler?.min &&
@@ -133,26 +126,34 @@ export const AutoscalePoolDialog = (props: Props) => {
             Object.keys(errors).length !== 0
           }
           primaryButtonDataTestId="confirm"
+          primaryButtonHandler={() => handleSubmit()}
+          primaryButtonLoading={isLoading || isSubmitting}
           primaryButtonText="Save Changes"
-          showSecondary
           secondaryButtonDataTestId="cancel"
           secondaryButtonHandler={handleClose}
           secondaryButtonText="Cancel"
+          showPrimary
+          showSecondary
+          style={{ padding: 0 }}
         />
       }
+      error={error?.[0].reason}
+      onClose={handleClose}
+      open={open}
+      title="Autoscale Pool"
     >
       {warning ? (
-        <Notice warning className={classes.notice}>
+        <Notice className={classes.notice} warning>
           {warning}
           <div>
             <Button
-              buttonType="secondary"
-              className={classes.resize}
-              compactX
               onClick={() => {
                 handleClose();
                 handleOpenResizeDrawer(nodePool?.id ?? -1);
               }}
+              buttonType="secondary"
+              className={classes.resize}
+              compactX
             >
               Resize
             </Button>
@@ -170,51 +171,51 @@ export const AutoscalePoolDialog = (props: Props) => {
       </Typography>
       <form onSubmit={handleSubmit}>
         <FormControlLabel
-          label="Autoscaler"
           control={
             <Toggle
-              name="enabled"
               checked={values.enabled}
-              onChange={handleChange}
               disabled={isSubmitting}
+              name="enabled"
+              onChange={handleChange}
             />
           }
+          label="Autoscaler"
           style={{ marginTop: 12 }}
         />
-        <Grid container className={classes.inputContainer} spacing={2}>
+        <Grid className={classes.inputContainer} container spacing={2}>
           <Grid>
             <TextField
-              name="min"
-              label="Min"
-              type="number"
-              value={values.min}
-              onChange={handleChange}
+              className={classes.input}
               disabled={!values.enabled || isSubmitting}
               error={Boolean(errors.min)}
-              className={classes.input}
+              label="Min"
+              name="min"
+              onChange={handleChange}
+              type="number"
+              value={values.min}
             />
           </Grid>
           <Grid
             className={classNames({
-              [classes.slash]: true,
               [classes.disabled]: !values.enabled,
+              [classes.slash]: true,
             })}
           >
             <Typography>/</Typography>
           </Grid>
           <Grid>
             <TextField
-              name="max"
-              label="Max"
-              type="number"
-              value={values.max}
-              onChange={handleChange}
+              className={classes.input}
               disabled={!values.enabled || isSubmitting}
               error={Boolean(errors.max)}
-              className={classes.input}
+              label="Max"
+              name="max"
+              onChange={handleChange}
+              type="number"
+              value={values.max}
             />
           </Grid>
-          <Grid xs={12} style={{ padding: '0 8px' }}>
+          <Grid style={{ padding: '0 8px' }} xs={12}>
             {errors.min ? (
               <Typography className={classes.errorText}>
                 {errors.min}

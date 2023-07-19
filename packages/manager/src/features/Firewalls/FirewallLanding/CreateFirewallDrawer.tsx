@@ -2,6 +2,7 @@ import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
@@ -26,13 +27,13 @@ export interface Props {
 }
 
 const initialValues: CreateFirewallPayload = {
+  devices: {
+    linodes: [],
+  },
   label: '',
   rules: {
     inbound_policy: 'ACCEPT',
     outbound_policy: 'ACCEPT',
-  },
-  devices: {
-    linodes: [],
   },
 };
 
@@ -43,28 +44,25 @@ const CreateFirewallDrawer = (props: Props) => {
    * We'll eventually want to check the read_write firewall
    * grant here too, but it doesn't exist yet.
    */
-  const { _isRestrictedUser, _hasGrant } = useAccountManagement();
+  const { _hasGrant, _isRestrictedUser } = useAccountManagement();
   const { data: grants } = useGrants();
 
   const { mutateAsync } = useCreateFirewall();
 
   const {
-    values,
     errors,
-    status,
-    handleChange,
     handleBlur,
+    handleChange,
     handleSubmit,
     isSubmitting,
     setFieldValue,
+    status,
+    values,
   } = useFormik({
     initialValues,
-    validationSchema: CreateFirewallSchema,
-    validateOnChange: false,
-    validateOnBlur: false,
     onSubmit(
       values: CreateFirewallPayload,
-      { setSubmitting, setErrors, setStatus }
+      { setErrors, setStatus, setSubmitting }
     ) {
       // Clear drawer error state
       setStatus(undefined);
@@ -107,6 +105,9 @@ const CreateFirewallDrawer = (props: Props) => {
           );
         });
     },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: CreateFirewallSchema,
   });
 
   const userCannotAddFirewall =
@@ -131,7 +132,7 @@ const CreateFirewallDrawer = (props: Props) => {
     errors.rules;
 
   return (
-    <Drawer open={open} onClose={onClose} title="Create Firewall">
+    <Drawer onClose={onClose} open={open} title="Create Firewall">
       <form onSubmit={handleSubmit}>
         {userCannotAddFirewall ? (
           <Notice
@@ -141,51 +142,51 @@ const CreateFirewallDrawer = (props: Props) => {
         ) : null}
         {generalError && (
           <Notice
+            data-qa-error
+            error
             key={status}
             text={status?.generalError ?? 'An unexpected error occurred'}
-            error
-            data-qa-error
           />
         )}
         <TextField
-          aria-label="Label for your new Firewall"
-          label="Label"
-          disabled={userCannotAddFirewall}
-          name="label"
-          value={values.label}
-          onChange={handleChange}
-          errorText={errors.label}
-          onBlur={handleBlur}
           inputProps={{
             autoFocus: true,
           }}
+          aria-label="Label for your new Firewall"
+          disabled={userCannotAddFirewall}
+          errorText={errors.label}
+          label="Label"
+          name="label"
+          onBlur={handleBlur}
+          onChange={handleChange}
+          value={values.label}
         />
         <LinodeSelectV2
-          multiple
-          disabled={userCannotAddFirewall}
-          helperText={firewallHelperText}
-          errorText={errors['devices.linodes']}
           onSelectionChange={(selected) =>
             setFieldValue(
               'devices.linodes',
               selected.map((linode) => linode.id)
             )
           }
-          value={values.devices?.linodes ?? []}
-          optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
+          disabled={userCannotAddFirewall}
+          errorText={errors['devices.linodes']}
+          helperText={firewallHelperText}
+          multiple
           onBlur={handleBlur}
+          optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
+          value={values.devices?.linodes ?? []}
         />
         <ActionsPanel
-          showSecondary
-          secondaryButtonHandler={onClose}
-          secondaryButtonDataTestId="cancel"
-          secondaryButtonText="Cancel"
-          showPrimary
-          primaryButtonText="Create Firewall"
           primaryButtonDataTestId="submit"
           primaryButtonDisabled={userCannotAddFirewall}
           primaryButtonLoading={isSubmitting}
+          primaryButtonText="Create Firewall"
           primaryButtonType="submit"
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+          showPrimary
+          showSecondary
         />
       </form>
     </Drawer>

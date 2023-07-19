@@ -1,64 +1,66 @@
-import * as React from 'react';
-import ActionsPanel from '../ActionsPanel/ActionsPanel';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import ThirdPartyPayment from './ThirdPartyPayment';
-import Grid from '../Grid';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+
+import ActionsPanel from '../ActionsPanel/ActionsPanel';
+import Grid from '../Grid';
+import ThirdPartyPayment from './ThirdPartyPayment';
 
 export const useStyles = makeStyles((theme: Theme) => ({
-  item: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   container: {
     flexWrap: 'nowrap',
     marginTop: theme.spacing(1),
   },
+  item: {
+    alignItems: 'center',
+    display: 'flex',
+  },
 }));
 
 interface Props {
-  open: boolean;
+  error: string | undefined;
+  loading: boolean;
   onClose: () => void;
   onDelete: () => void;
-  loading: boolean;
-  error: string | undefined;
+  open: boolean;
   paymentMethod: PaymentMethod | undefined;
 }
 
 export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
-  const { open, onClose, loading, onDelete, error, paymentMethod } = props;
+  const { error, loading, onClose, onDelete, open, paymentMethod } = props;
   const classes = useStyles();
 
   const actions = (
     <ActionsPanel
-      showPrimary
       primaryButtonHandler={onDelete}
       primaryButtonLoading={loading}
       primaryButtonText="Delete"
-      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
       style={{ padding: 0 }}
     />
   );
 
   return (
     <ConfirmationDialog
-      title="Delete Payment Method"
-      error={error}
-      open={open}
-      onClose={onClose}
       actions={actions}
+      error={error}
+      onClose={onClose}
+      open={open}
+      title="Delete Payment Method"
     >
       Are you sure you want to delete this payment method?
-      <Grid container className={classes.container}>
+      <Grid className={classes.container} container>
         <Grid
-          item
           className={classes.item}
-          style={{ paddingLeft: 0, paddingBottom: 0 }}
+          item
+          style={{ paddingBottom: 0, paddingLeft: 0 }}
         >
           {paymentMethod && paymentMethod.type === 'credit_card' ? (
             <CreditCard creditCard={paymentMethod.data} />

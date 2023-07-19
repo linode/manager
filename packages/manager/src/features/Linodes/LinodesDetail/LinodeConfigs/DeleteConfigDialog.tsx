@@ -1,23 +1,24 @@
-import React from 'react';
-import { Typography } from 'src/components/Typography';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Config } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
+import React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Typography } from 'src/components/Typography';
 import { useLinodeConfigDeleteMutation } from 'src/queries/linodes/configs';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  linodeId: number;
   config: Config | undefined;
+  linodeId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const DeleteConfigDialog = (props: Props) => {
-  const { open, onClose, linodeId, config } = props;
+  const { config, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useLinodeConfigDeleteMutation(
+  const { error, isLoading, mutateAsync } = useLinodeConfigDeleteMutation(
     linodeId,
     config?.id ?? -1
   );
@@ -30,24 +31,24 @@ export const DeleteConfigDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      style={{ padding: 0 }}
-      showPrimary
       primaryButtonHandler={onDelete}
       primaryButtonLoading={isLoading}
       primaryButtonText="Delete"
-      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
+      style={{ padding: 0 }}
     />
   );
 
   return (
     <ConfirmationDialog
-      title="Confirm Delete"
-      error={error?.[0].reason}
-      open={open}
-      onClose={onClose}
       actions={actions}
+      error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title="Confirm Delete"
     >
       <Typography>
         Are you sure you want to delete &quot;{config?.label}&quot;?

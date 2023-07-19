@@ -1,25 +1,26 @@
+import { extendedTypes } from 'src/__data__/ExtendedType';
+import { typeFactory } from 'src/factories/types';
+
 import {
   determineInitialPlanCategoryTab,
   getPlanSelectionsByPlanType,
   planTypeOrder,
 } from './utils';
-import { typeFactory } from 'src/factories/types';
-import { extendedTypes } from 'src/__data__/ExtendedType';
 
-const standard = typeFactory.build({ id: 'g6-standard-1', class: 'standard' });
-const metal = typeFactory.build({ id: 'g6-metal-alpha-2', class: 'metal' });
+const standard = typeFactory.build({ class: 'standard', id: 'g6-standard-1' });
+const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
 const dedicated = typeFactory.build({
-  id: 'g6-dedicated-2',
   class: 'dedicated',
+  id: 'g6-dedicated-2',
 });
 const prodedicated = typeFactory.build({
-  id: 'g6-prodedicated-alpha-2',
   class: 'prodedicated',
+  id: 'g6-prodedicated-alpha-2',
 });
-const nanode = typeFactory.build({ id: 'g6-nanode-1', class: 'nanode' });
-const premium = typeFactory.build({ id: 'g6-premium-2', class: 'premium' });
-const highmem = typeFactory.build({ id: 'g6-highmem-1', class: 'highmem' });
-const gpu = typeFactory.build({ id: 'g6-gpu-1', class: 'gpu' });
+const nanode = typeFactory.build({ class: 'nanode', id: 'g6-nanode-1' });
+const premium = typeFactory.build({ class: 'premium', id: 'g6-premium-2' });
+const highmem = typeFactory.build({ class: 'highmem', id: 'g6-highmem-1' });
+const gpu = typeFactory.build({ class: 'gpu', id: 'g6-gpu-1' });
 
 describe('getPlanSelectionsByPlanType', () => {
   it('should return an object with plans grouped by type', () => {

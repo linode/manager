@@ -1,30 +1,31 @@
+import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Drawer from 'src/components/Drawer/Drawer';
 import { TextField } from 'src/components/TextField';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { useFormik } from 'formik';
 import { useCreateObjectUrlMutation } from 'src/queries/objectStorage';
 
 interface Props {
-  open: boolean;
   bucketName: string;
   clusterId: string;
-  prefix: string;
-  onClose: () => void;
   maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
+  onClose: () => void;
+  open: boolean;
+  prefix: string;
 }
 
 export const CreateFolderDrawer = (props: Props) => {
   const {
-    open,
-    onClose,
     bucketName,
     clusterId,
     maybeAddObjectToTable,
+    onClose,
+    open,
     prefix,
   } = props;
 
-  const { mutateAsync, isLoading, error } = useCreateObjectUrlMutation(
+  const { error, isLoading, mutateAsync } = useCreateObjectUrlMutation(
     clusterId,
     bucketName
   );
@@ -33,20 +34,12 @@ export const CreateFolderDrawer = (props: Props) => {
     initialValues: {
       name: '',
     },
-    validate(values) {
-      if (values.name === '') {
-        return {
-          name: 'Folder name required.',
-        };
-      }
-      return {};
-    },
     async onSubmit({ name }, helpers) {
       const newObjectAbsolutePath = prefix + name + '/';
 
-      const { url, exists } = await mutateAsync({
-        name: newObjectAbsolutePath,
+      const { exists, url } = await mutateAsync({
         method: 'PUT',
+        name: newObjectAbsolutePath,
         options: {
           content_type: 'application/octet-stream',
         },
@@ -58,14 +51,22 @@ export const CreateFolderDrawer = (props: Props) => {
       }
 
       fetch(url, {
-        method: 'PUT',
         headers: {
           'Content-Type': 'application/octet-stream',
         },
+        method: 'PUT',
       });
 
       maybeAddObjectToTable(newObjectAbsolutePath, 0);
       onClose();
+    },
+    validate(values) {
+      if (values.name === '') {
+        return {
+          name: 'Folder name required.',
+        };
+      }
+      return {};
     },
   });
 
@@ -76,22 +77,22 @@ export const CreateFolderDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer title="Create Folder" open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title="Create Folder">
       <form onSubmit={formik.handleSubmit}>
         <TextField
+          errorText={formik.errors.name ?? error?.[0]?.reason}
           label="Folder Name"
           name="name"
           onChange={formik.handleChange}
-          errorText={formik.errors.name ?? error?.[0]?.reason}
         />
         <ActionsPanel
-          showPrimary
           primaryButtonLoading={isLoading}
           primaryButtonText="Create"
           primaryButtonType="submit"
-          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
+          showPrimary
+          showSecondary
         />
       </form>
     </Drawer>

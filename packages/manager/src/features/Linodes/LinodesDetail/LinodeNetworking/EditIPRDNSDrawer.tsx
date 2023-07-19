@@ -1,29 +1,30 @@
-import * as React from 'react';
 import { IPAddress } from '@linode/api-v4/lib/networking';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Typography } from 'src/components/Typography';
-import Drawer from 'src/components/Drawer';
-import { TextField } from 'src/components/TextField';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { useLinodeIPMutation } from 'src/queries/linodes/networking';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   ip: IPAddress | undefined;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const EditIPRDNSDrawer = (props: Props) => {
-  const { open, onClose, ip } = props;
+  const { ip, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: updateIP,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateIP,
     reset,
   } = useLinodeIPMutation();
 
@@ -54,31 +55,31 @@ export const EditIPRDNSDrawer = (props: Props) => {
   const errorMap = getErrorMap(['rdns'], error);
 
   return (
-    <Drawer open={open} onClose={onClose} title="Edit Reverse DNS">
+    <Drawer onClose={onClose} open={open} title="Edit Reverse DNS">
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && <Notice error>{errorMap.none}</Notice>}
         <TextField
-          placeholder="Enter a domain name"
-          label="Enter a domain name"
-          hideLabel
-          value={formik.values.rdns}
+          data-qa-domain-name
           errorText={errorMap.rdns}
+          hideLabel
+          label="Enter a domain name"
           name="rdns"
           onChange={formik.handleChange}
-          data-qa-domain-name
+          placeholder="Enter a domain name"
+          value={formik.values.rdns}
         />
         <Typography variant="body1">
           Leave this field blank to reset RDNS
         </Typography>
         <ActionsPanel
-          style={{ marginTop: 16 }}
-          showPrimary
           primaryButtonDataTestId="submit"
           primaryButtonLoading={isLoading}
           primaryButtonType="submit"
-          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="cancel"
+          showPrimary
+          showSecondary
+          style={{ marginTop: 16 }}
         />
       </form>
     </Drawer>

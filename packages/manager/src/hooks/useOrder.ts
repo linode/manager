@@ -1,11 +1,12 @@
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { debounce } from 'throttle-debounce';
+
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
 import { Order } from 'src/components/Pagey/Pagey';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { OrderSet } from 'src/types/ManagerPreferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { debounce } from 'throttle-debounce';
 
 /**
  * useOrder is a hook that allows you to handle ordering tables. It takes into account
@@ -81,5 +82,5 @@ export const useOrder = (
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
 
-  return { order, orderBy, handleOrderChange };
+  return { handleOrderChange, order, orderBy };
 };

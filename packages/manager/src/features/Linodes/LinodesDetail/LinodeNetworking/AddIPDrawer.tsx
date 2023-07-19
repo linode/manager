@@ -1,53 +1,62 @@
 import { IPv6Prefix } from '@linode/api-v4/lib/networking';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { Radio } from 'src/components/Radio/Radio';
-import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { Link as ExternalLink } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
+import { Radio } from 'src/components/Radio/Radio';
+import { Tooltip } from 'src/components/Tooltip';
+import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
 import {
   useAllocateIPMutation,
   useCreateIPv6RangeMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
-import { Notice } from 'src/components/Notice/Notice';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(2),
   },
-  ipv6: {
-    marginTop: theme.spacing(4),
-  },
   ipSubheader: {
     marginTop: '1rem',
+  },
+  ipv6: {
+    marginTop: theme.spacing(4),
   },
   radioButtons: {
     marginTop: '0 !important',
   },
 }));
 
-type IPType = 'v4Public' | 'v4Private';
+type IPType = 'v4Private' | 'v4Public';
 
 const ipOptions: Item<IPType>[] = [
-  { value: 'v4Public', label: 'Public' },
-  { value: 'v4Private', label: 'Private' },
+  { label: 'Public', value: 'v4Public' },
+  { label: 'Private', value: 'v4Private' },
 ];
 
 const prefixOptions = [
-  { value: '64', label: '/64' },
-  { value: '56', label: '/56' },
+  { label: '/64', value: '64' },
+  { label: '/56', value: '56' },
 ];
 
 // @todo: Pre-fill support tickets.
 const explainerCopy: Record<IPType, JSX.Element> = {
+  v4Private: (
+    <>
+      Add a private IP address to your Linode. Data sent explicitly to and from
+      private IP addresses in the same data center does not incur transfer quota
+      usage. To ensure that the private IP is properly configured once added,
+      it&rsquo;s best to reboot your Linode.
+    </>
+  ),
   v4Public: (
     <>
       Public IP addresses, over and above the one included with each Linode,
@@ -55,14 +64,6 @@ const explainerCopy: Record<IPType, JSX.Element> = {
       Address you must request one. Please open a{' '}
       <Link to="support/tickets">Support Ticket</Link> if you have not done so
       already.
-    </>
-  ),
-  v4Private: (
-    <>
-      Add a private IP address to your Linode. Data sent explicitly to and from
-      private IP addresses in the same data center does not incur transfer quota
-      usage. To ensure that the private IP is properly configured once added,
-      it&rsquo;s best to reboot your Linode.
     </>
   ),
 };
@@ -83,32 +84,32 @@ const IPv6ExplanatoryCopy = {
 };
 
 const tooltipCopy: Record<IPType, JSX.Element | null> = {
-  v4Public: null,
   v4Private: <>This Linode already has a private IP address.</>,
+  v4Public: null,
 };
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   linodeId: number;
+  onClose: () => void;
+  open: boolean;
   readOnly: boolean;
 }
 
 const AddIPDrawer = (props: Props) => {
-  const { open, onClose, readOnly, linodeId } = props;
+  const { linodeId, onClose, open, readOnly } = props;
   const { classes } = useStyles();
 
   const {
-    mutateAsync: allocateIPAddress,
-    isLoading: ipv4Loading,
     error: ipv4Error,
+    isLoading: ipv4Loading,
+    mutateAsync: allocateIPAddress,
     reset: resetIPv4,
   } = useAllocateIPMutation(linodeId);
 
   const {
-    mutateAsync: createIPv6Range,
-    isLoading: ipv6Loading,
     error: ipv6Error,
+    isLoading: ipv6Loading,
+    mutateAsync: createIPv6Range,
     reset: resetIPv6,
   } = useCreateIPv6RangeMutation();
 
@@ -132,7 +133,7 @@ const AddIPDrawer = (props: Props) => {
 
   const handleIPv4Change = (
     e: React.ChangeEvent<HTMLInputElement>,
-    value: 'v4Public' | 'v4Private'
+    value: 'v4Private' | 'v4Public'
   ) => {
     setSelectedIPv4(value);
   };
@@ -147,8 +148,8 @@ const AddIPDrawer = (props: Props) => {
   const handleAllocateIPv4 = async () => {
     // Only IPv4 addresses can currently be allocated.
     await allocateIPAddress({
-      type: 'ipv4',
       public: selectedIPv4 === 'v4Public',
+      type: 'ipv4',
     });
     onClose();
   };
@@ -178,35 +179,35 @@ const AddIPDrawer = (props: Props) => {
       : null;
 
   return (
-    <Drawer open={open} onClose={onClose} title="Add an IP Address">
+    <Drawer onClose={onClose} open={open} title="Add an IP Address">
       <React.Fragment>
         <Typography variant="h2">IPv4</Typography>
         {Boolean(ipv4Error) && (
-          <Notice error text={ipv4Error?.[0].reason} spacingTop={8} />
+          <Notice error spacingTop={8} text={ipv4Error?.[0].reason} />
         )}
-        <Typography variant="h3" className={classes.ipSubheader}>
+        <Typography className={classes.ipSubheader} variant="h3">
           Select type
         </Typography>
         <RadioGroup
           aria-label="ip-option"
-          name="Select IPv4 type"
-          value={selectedIPv4}
-          onChange={handleIPv4Change}
           className={classes.radioButtons}
           data-qa-ip-options-radio-group
+          name="Select IPv4 type"
+          onChange={handleIPv4Change}
+          value={selectedIPv4}
         >
           {ipOptions.map((option, idx) => (
             <FormControlLabel
-              key={idx}
-              value={option.value}
-              label={option.label}
               control={<Radio />}
               data-qa-radio={option.label}
+              key={idx}
+              label={option.label}
+              value={option.value}
             />
           ))}
         </RadioGroup>
         {selectedIPv4 && (
-          <Typography variant="body1" className={classes.copy}>
+          <Typography className={classes.copy} variant="body1">
             {explainerCopy[selectedIPv4]}
           </Typography>
         )}
@@ -215,54 +216,54 @@ const AddIPDrawer = (props: Props) => {
           <Tooltip placement="bottom-end" title={_tooltipCopy}>
             <div style={{ display: 'inline' }}>
               <ActionsPanel
-                showPrimary
                 primaryButtonDisabled={disabledIPv4}
                 primaryButtonHandler={handleAllocateIPv4}
                 primaryButtonLoading={ipv4Loading}
                 primaryButtonSx={{ marginBottom: 8 }}
                 primaryButtonText="Allocate"
+                showPrimary
               />
             </div>
           </Tooltip>
         ) : (
           <ActionsPanel
-            showPrimary
             primaryButtonDisabled={disabledIPv4}
             primaryButtonHandler={handleAllocateIPv4}
             primaryButtonLoading={ipv4Loading}
             primaryButtonSx={{ marginBottom: 8 }}
             primaryButtonText="Allocate"
+            showPrimary
           />
         )}
-        <Typography variant="h2" className={classes.ipv6}>
+        <Typography className={classes.ipv6} variant="h2">
           IPv6
         </Typography>
         {Boolean(ipv6Error) && (
-          <Notice error text={ipv6Error?.[0].reason} spacingTop={8} />
+          <Notice error spacingTop={8} text={ipv6Error?.[0].reason} />
         )}
-        <Typography variant="h3" className={classes.ipSubheader}>
+        <Typography className={classes.ipSubheader} variant="h3">
           Select prefix
         </Typography>
         <RadioGroup
           aria-label="prefix-option"
-          name="Select prefix"
-          value={selectedIPv6Prefix}
-          onChange={handleIPv6Change}
           className={classes.radioButtons}
           data-qa-ip-options-radio-group
+          name="Select prefix"
+          onChange={handleIPv6Change}
+          value={selectedIPv6Prefix}
         >
           {prefixOptions.map((option, idx) => (
             <FormControlLabel
-              key={idx}
-              value={option.value}
-              label={option.label}
               control={<Radio />}
               data-qa-radio={option.label}
+              key={idx}
+              label={option.label}
+              value={option.value}
             />
           ))}
         </RadioGroup>
         {selectedIPv6Prefix && (
-          <Typography variant="body1" style={{ marginBottom: '1rem' }}>
+          <Typography style={{ marginBottom: '1rem' }} variant="body1">
             {IPv6ExplanatoryCopy[selectedIPv6Prefix]}
           </Typography>
         )}
@@ -275,12 +276,12 @@ const AddIPDrawer = (props: Props) => {
           .
         </Typography>
         <ActionsPanel
-          showPrimary
           primaryButtonDisabled={disabledIPv6}
           primaryButtonHandler={handleCreateIPv6Range}
           primaryButtonLoading={ipv6Loading}
           primaryButtonSx={{ marginBottom: 8 }}
           primaryButtonText="Allocate"
+          showPrimary
         />
       </React.Fragment>
     </Drawer>

@@ -1,13 +1,15 @@
-import * as React from 'react';
 import { WithTheme, withTheme } from '@mui/styles';
-import { Typography } from 'src/components/Typography';
+import * as React from 'react';
+
 import GaugePercent from 'src/components/GaugePercent';
+import { Typography } from 'src/components/Typography';
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
+
 import { sumStorage } from '../../shared/utilities';
-import { baseGaugeProps, BaseProps as Props } from './common';
+import { BaseProps as Props, baseGaugeProps } from './common';
 
 type CombinedProps = Props & LVDataProps & WithTheme;
 
@@ -18,10 +20,10 @@ export const getUsedStorage = (data: LVDataProps['longviewClientData']) => {
 
 const StorageGauge: React.FC<CombinedProps> = (props) => {
   const {
+    lastUpdatedError,
+    longviewClientData,
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData,
-    lastUpdatedError,
   } = props;
 
   const storageInBytes = sumStorage(longviewClientData.Disk);
@@ -33,14 +35,11 @@ const StorageGauge: React.FC<CombinedProps> = (props) => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={storageInBytes ? storageInBytes.total : 0}
-      value={usedStorage}
       innerText={innerText(
         readableBytes(usedStorage).formatted,
         loading,
         !!error || !!lastUpdatedError
       )}
-      filledInColor={props.theme.graphs.orange}
       subTitle={
         <>
           <Typography>
@@ -53,6 +52,9 @@ const StorageGauge: React.FC<CombinedProps> = (props) => {
           )}
         </>
       }
+      filledInColor={props.theme.graphs.orange}
+      max={storageInBytes ? storageInBytes.total : 0}
+      value={usedStorage}
     />
   );
 };

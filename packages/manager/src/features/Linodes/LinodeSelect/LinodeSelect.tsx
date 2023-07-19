@@ -1,69 +1,71 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { Region } from '@linode/api-v4/lib/regions';
 import { groupBy } from 'ramda';
 import * as React from 'react';
+
 import EnhancedSelect, {
   GroupType,
   Item,
 } from 'src/components/EnhancedSelect/Select';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { TextFieldProps } from 'src/components/TextField';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-type Override = keyof Linode | ((linode: Linode) => any);
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type { Region } from '@linode/api-v4/lib/regions';
+
+type Override = ((linode: Linode) => any) | keyof Linode;
 
 interface Props {
-  generalError?: string;
-  linodeError?: string;
   className?: string;
-  selectedLinode: number | null;
   disabled?: boolean;
-  region?: string;
-  handleChange: (linode: Linode | null) => void;
-  textFieldProps?: Omit<TextFieldProps, 'label'>;
-  groupByRegion?: boolean;
-  placeholder?: string;
-  valueOverride?: Override;
-  labelOverride?: Override;
   filterCondition?: (linode: Linode) => boolean;
-  label?: string;
-  noOptionsMessage?: string;
-  small?: boolean;
-  noMarginTop?: boolean;
-  value?: Item<any> | null;
+  generalError?: string;
+  groupByRegion?: boolean;
+  handleChange: (linode: Linode | null) => void;
   inputId?: string;
+  isClearable?: boolean;
+  label?: string;
+  labelOverride?: Override;
+  linodeError?: string;
+  name?: string;
+  noMarginTop?: boolean;
+  noOptionsMessage?: string;
   // Formik stuff to be passed down to the inner Select
   onBlur?: (e: any) => void;
-  name?: string;
-  width?: number;
-  isClearable?: boolean;
+  placeholder?: string;
+  region?: string;
   required?: boolean;
+  selectedLinode: null | number;
+  small?: boolean;
+  textFieldProps?: Omit<TextFieldProps, 'label'>;
+  value?: Item<any> | null;
+  valueOverride?: Override;
+  width?: number;
 }
 
 export const LinodeSelect = (props: Props) => {
   const {
+    className,
     disabled,
+    filterCondition,
     generalError,
+    groupByRegion,
     handleChange,
+    inputId,
+    isClearable,
+    labelOverride,
     linodeError,
+    noOptionsMessage,
+    placeholder,
     region,
     selectedLinode,
-    groupByRegion,
-    className,
-    placeholder,
-    valueOverride,
-    labelOverride,
-    filterCondition,
     value,
-    inputId,
-    noOptionsMessage,
+    valueOverride,
     width,
-    isClearable,
     ...rest
   } = props;
 
-  const { data: allLinodes, isLoading, error } = useAllLinodesQuery();
+  const { data: allLinodes, error, isLoading } = useAllLinodesQuery();
 
   const { data: regions } = useRegionsQuery();
 
@@ -102,6 +104,9 @@ export const LinodeSelect = (props: Props) => {
   return (
     <div style={{ width: width ? width : '100%' }}>
       <EnhancedSelect
+        errorText={getErrorStringOrDefault(
+          generalError || linodeError || error || ''
+        )}
         value={
           // Use the `value` prop if provided.
           typeof value === 'undefined'
@@ -113,22 +118,19 @@ export const LinodeSelect = (props: Props) => {
               : linodeFromItems(options as Item<number>[], selectedLinode)
             : value
         }
-        label={props.label || 'Linode'}
         className={className}
-        noMarginTop={props.noMarginTop}
-        placeholder={placeholder || 'Select a Linode'}
-        options={options}
         disabled={disabled}
-        small={props.small}
-        isLoading={isLoading}
         inputId={inputId}
-        onChange={onChange}
-        errorText={getErrorStringOrDefault(
-          generalError || linodeError || error || ''
-        )}
         isClearable={isClearable}
-        textFieldProps={props.textFieldProps}
+        isLoading={isLoading}
+        label={props.label || 'Linode'}
+        noMarginTop={props.noMarginTop}
         noOptionsMessage={() => noOptionsMessage || defaultNoOptionsMessage}
+        onChange={onChange}
+        options={options}
+        placeholder={placeholder || 'Select a Linode'}
+        small={props.small}
+        textFieldProps={props.textFieldProps}
         {...rest}
       />
     </div>
@@ -150,25 +152,25 @@ export const linodesToItems = (
     : linodes;
 
   return maybeFilteredLinodes.map((thisLinode) => ({
-    value:
-      typeof valueOverride === 'function'
-        ? valueOverride(thisLinode)
-        : !!valueOverride
-        ? thisLinode[valueOverride]
-        : thisLinode.id,
+    data: thisLinode,
     label:
       typeof labelOverride === 'function'
         ? labelOverride(thisLinode)
         : !!labelOverride
         ? labelOverride
         : thisLinode.label,
-    data: thisLinode,
+    value:
+      typeof valueOverride === 'function'
+        ? valueOverride(thisLinode)
+        : !!valueOverride
+        ? thisLinode[valueOverride]
+        : thisLinode.id,
   }));
 };
 
 export const linodeFromItems = (
   linodes: Item<number>[],
-  linodeId: number | null
+  linodeId: null | number
 ): Item<number> | null => {
   if (!linodeId) {
     return null;
@@ -213,7 +215,7 @@ export const linodesToGroupedItems = (
 
 export const linodeFromGroupedItems = (
   groupedOptions: GroupType<number>[],
-  linodeId: number | null
+  linodeId: null | number
 ) => {
   // I wanted to use Ramda's `flatten()` but the typing is not good.
   const flattenedOptions: Item<number>[] = [];

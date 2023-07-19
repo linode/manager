@@ -1,10 +1,12 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
+
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 interface Props {
@@ -20,15 +22,15 @@ const renderActions = (
   modalConfirmationButtonText: string
 ) => (
   <ActionsPanel
-    showPrimary
     primaryButtonDataTestId="confirm"
     primaryButtonHandler={onClose}
     primaryButtonText={modalConfirmationButtonText}
+    showPrimary
   />
 );
 
 export const SecretTokenDialog = (props: Props) => {
-  const { title, value, objectStorageKey, open, onClose } = props;
+  const { objectStorageKey, onClose, open, title, value } = props;
 
   const modalConfirmationButtonText = objectStorageKey
     ? 'I Have Saved My Secret Key'
@@ -47,13 +49,13 @@ export const SecretTokenDialog = (props: Props) => {
       title={title}
     >
       <StyledNotice
-        spacingTop={8}
-        warning
         text={`${
           objectStorageKey ? 'Your keys have been generated.' : ''
         } For security purposes, we can only display your ${
           objectStorageKey ? 'secret key' : title.toLowerCase()
         } once, after which it can\u{2019}t be recovered. Be sure to keep it in a safe place.`}
+        spacingTop={8}
+        warning
       />
       {objectStorageKey ? (
         <>
@@ -93,8 +95,8 @@ const StyledNotice = styled(Notice, {
 })(() => ({
   '& .noticeText': {
     color: 'inherit',
-    lineHeight: 'inherit',
     fontFamily: 'inherit',
     fontSize: '0.875rem',
+    lineHeight: 'inherit',
   },
 }));

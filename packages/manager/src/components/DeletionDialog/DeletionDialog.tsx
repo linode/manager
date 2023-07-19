@@ -1,23 +1,25 @@
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useTheme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
-import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Notice } from 'src/components/Notice/Notice';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+import { Typography } from 'src/components/Typography';
 import { titlecase } from 'src/features/Linodes/presentation';
-import { capitalize } from 'src/utilities/capitalize';
-import { DialogProps } from '../Dialog/Dialog';
 import { usePreferences } from 'src/queries/preferences';
+import { capitalize } from 'src/utilities/capitalize';
+
+import { DialogProps } from '../Dialog/Dialog';
 
 interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
-  open: boolean;
-  error?: string;
   entity: string;
-  onClose: () => void;
-  onDelete: () => void;
+  error?: string;
   label: string;
   loading: boolean;
+  onClose: () => void;
+  onDelete: () => void;
+  open: boolean;
   typeToConfirm?: boolean;
 }
 
@@ -27,10 +29,10 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
     entity,
     error,
     label,
+    loading,
     onClose,
     onDelete,
     open,
-    loading,
     typeToConfirm,
     ...rest
   } = props;
@@ -40,19 +42,19 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
     typeToConfirm && preferences?.type_to_confirm !== false;
   const renderActions = () => (
     <ActionsPanel
-      style={{ padding: 0 }}
-      showSecondary
-      secondaryButtonText="Cancel"
-      secondaryButtonHandler={onClose}
-      secondaryButtonDataTestId="cancel"
-      showPrimary
-      primaryButtonHandler={onDelete}
       primaryButtonDisabled={
         typeToConfirmRequired && confirmationText !== label
       }
-      primaryButtonLoading={loading}
       primaryButtonDataTestId="confirm"
+      primaryButtonHandler={onDelete}
+      primaryButtonLoading={loading}
       primaryButtonText={` Delete ${titlecase(entity)}`}
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
+      style={{ padding: 0 }}
     />
   );
 
@@ -65,10 +67,10 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
 
   return (
     <ConfirmationDialog
+      actions={renderActions}
+      onClose={onClose}
       open={open}
       title={`Delete ${titlecase(entity)} ${label}?`}
-      onClose={onClose}
-      actions={renderActions}
       {...rest}
     >
       {error && <Notice error text={error} />}
@@ -79,25 +81,25 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
         </Typography>
       </Notice>
       <TypeToConfirm
-        onChange={(input) => {
-          setConfirmationText(input);
-        }}
-        value={confirmationText}
-        label={`${capitalize(entity)} Name:`}
-        placeholder={label}
-        visible={typeToConfirmRequired}
         confirmationText={
           <Typography
-            component={'span'}
             sx={{
-              paddingTop: theme.spacing(2),
               paddingBottom: theme.spacing(),
+              paddingTop: theme.spacing(2),
             }}
+            component={'span'}
           >
             To confirm deletion, type the name of the {entity} (
             <strong>{label}</strong>) in the field below:
           </Typography>
         }
+        onChange={(input) => {
+          setConfirmationText(input);
+        }}
+        label={`${capitalize(entity)} Name:`}
+        placeholder={label}
+        value={confirmationText}
+        visible={typeToConfirmRequired}
       />
     </ConfirmationDialog>
   );

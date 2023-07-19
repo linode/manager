@@ -1,11 +1,13 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
-import * as React from 'react';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Linode } from '@linode/api-v4/lib/linodes';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import * as React from 'react';
 import { Terminal } from 'xterm';
+
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 
 type ClassNames = 'errorState';
 
@@ -20,36 +22,22 @@ const styles = () =>
 
 interface Props {
   linode: Linode;
-  token: string;
   refreshToken: () => Promise<void>;
+  token: string;
 }
 
 interface State {
-  renderingLish: boolean;
   error: string;
+  renderingLish: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class Weblish extends React.Component<CombinedProps, State> {
-  state: State = {
-    renderingLish: true,
-    error: '',
-  };
-
-  mounted: boolean = false;
-  socket: WebSocket;
-
-  terminal: Terminal;
-
   componentDidMount() {
     this.mounted = true;
     resizeViewPort(1080, 730);
     this.connect();
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -62,6 +50,9 @@ export class Weblish extends React.Component<CombinedProps, State> {
       this.terminal.dispose();
       this.connect();
     }
+  }
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   connect() {
@@ -80,14 +71,43 @@ export class Weblish extends React.Component<CombinedProps, State> {
     });
   }
 
+  render() {
+    const { error } = this.state;
+    const { classes } = this.props;
+
+    if (error) {
+      return (
+        <div className={classes.errorState}>
+          <ErrorState errorText={error} />
+        </div>
+      );
+    }
+
+    /*
+     * The loading states have to render with the terminal div because
+     * the messages from the websocket connection are sent during this loading period,
+     * and if you're rendering a loading state, then get a message from websockets,
+     * then render the terminal div, you end up with a blank black screen
+     */
+    return (
+      <div>
+        {this.socket && this.socket.readyState === this.socket.OPEN ? (
+          <div className="terminal" id="terminal" />
+        ) : (
+          <CircleProgress />
+        )}
+      </div>
+    );
+  }
+
   renderTerminal() {
     const { linode, refreshToken } = this.props;
     const { group, label } = linode;
 
     this.terminal = new Terminal({
       cols: 120,
-      rows: 40,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
+      rows: 40,
       screenReaderMode: true,
     });
 
@@ -147,34 +167,16 @@ export class Weblish extends React.Component<CombinedProps, State> {
     window.document.title = `${linodeLabel} - Linode Lish Console`;
   }
 
-  render() {
-    const { error } = this.state;
-    const { classes } = this.props;
+  mounted: boolean = false;
 
-    if (error) {
-      return (
-        <div className={classes.errorState}>
-          <ErrorState errorText={error} />
-        </div>
-      );
-    }
+  socket: WebSocket;
 
-    /*
-     * The loading states have to render with the terminal div because
-     * the messages from the websocket connection are sent during this loading period,
-     * and if you're rendering a loading state, then get a message from websockets,
-     * then render the terminal div, you end up with a blank black screen
-     */
-    return (
-      <div>
-        {this.socket && this.socket.readyState === this.socket.OPEN ? (
-          <div id="terminal" className="terminal" />
-        ) : (
-          <CircleProgress />
-        )}
-      </div>
-    );
-  }
+  state: State = {
+    error: '',
+    renderingLish: true,
+  };
+
+  terminal: Terminal;
 }
 
 const styled = withStyles(styles);

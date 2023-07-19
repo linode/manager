@@ -1,5 +1,5 @@
-import * as Factory from 'factory.ts';
 import { Grant, Grants } from '@linode/api-v4/lib/account';
+import * as Factory from 'factory.ts';
 
 export const grantFactory = Factory.Sync.makeFactory<Grant>({
   id: Factory.each((i) => i),
@@ -8,7 +8,21 @@ export const grantFactory = Factory.Sync.makeFactory<Grant>({
 });
 
 export const grantsFactory = Factory.Sync.makeFactory<Grants>({
+  database: [
+    {
+      id: 0,
+      label: 'example-entity',
+      permissions: 'read_only',
+    },
+  ],
   domain: [
+    {
+      id: 123,
+      label: 'example-entity',
+      permissions: 'read_only',
+    },
+  ],
+  firewall: [
     {
       id: 123,
       label: 'example-entity',
@@ -28,13 +42,6 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
     cancel_account: false,
     longview_subscription: true,
   },
-  firewall: [
-    {
-      id: 123,
-      label: 'example-entity',
-      permissions: 'read_only',
-    },
-  ],
   image: [
     {
       id: 123,
@@ -73,13 +80,6 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
   volume: [
     {
       id: 123,
-      label: 'example-entity',
-      permissions: 'read_only',
-    },
-  ],
-  database: [
-    {
-      id: 0,
       label: 'example-entity',
       permissions: 'read_only',
     },

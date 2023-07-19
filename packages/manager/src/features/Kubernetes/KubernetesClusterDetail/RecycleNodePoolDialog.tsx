@@ -1,5 +1,6 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
@@ -10,18 +11,18 @@ import {
 import { useRecycleNodePoolMutation } from 'src/queries/kubernetes';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   clusterId: number;
   nodePoolId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const RecycleNodePoolDialog = (props: Props) => {
-  const { open, onClose, clusterId, nodePoolId } = props;
+  const { clusterId, nodePoolId, onClose, open } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useRecycleNodePoolMutation(
+  const { error, isLoading, mutateAsync } = useRecycleNodePoolMutation(
     clusterId,
     nodePoolId
   );
@@ -37,26 +38,26 @@ export const RecycleNodePoolDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      style={{ padding: 0 }}
-      showPrimary
       primaryButtonDataTestId="confirm"
       primaryButtonHandler={onRecycle}
       primaryButtonLoading={isLoading}
       primaryButtonText="Recycle Pool Nodes"
-      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
+      style={{ padding: 0 }}
     />
   );
 
   return (
     <ConfirmationDialog
-      open={open}
-      title="Recycle node pool?"
-      onClose={onClose}
       actions={actions}
       error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title="Recycle node pool?"
     >
       <Typography>
         {nodesDeletionWarning} {localStorageWarning} This may take several

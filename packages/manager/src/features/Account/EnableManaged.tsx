@@ -1,18 +1,19 @@
 import { enableManaged } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+
 import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from '@mui/material/Unstable_Grid2';
 import { SupportLink } from 'src/components/SupportLink';
-import { pluralize } from 'src/utilities/pluralize';
+import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
-import { useQueryClient } from 'react-query';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { pluralize } from 'src/utilities/pluralize';
 
 interface Props {
   isManaged: boolean;
@@ -45,8 +46,8 @@ export const ManagedContent = (props: ContentProps) => {
           +$100/month per Linode.{'  '}
           <ExternalLink
             fixedIcon
-            text="Learn more."
             link="https://linode.com/managed"
+            text="Learn more."
           />
         </Typography>
       </Grid>
@@ -92,32 +93,32 @@ export const EnableManaged = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      showPrimary
       primaryButtonDataTestId="submit-managed-enrollment"
       primaryButtonHandler={handleSubmit}
       primaryButtonLoading={isLoading}
       primaryButtonText="Add Linode Managed"
-      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={handleClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
     />
   );
 
   return (
     <>
-      <Accordion heading="Linode Managed" defaultExpanded={true}>
+      <Accordion defaultExpanded={true} heading="Linode Managed">
         <ManagedContent
           isManaged={isManaged}
           openConfirmationModal={() => setOpen(true)}
         />
       </Accordion>
       <ConfirmationDialog
-        open={isOpen}
+        actions={actions}
         error={error}
         onClose={() => handleClose()}
+        open={isOpen}
         title="Just to confirm..."
-        actions={actions}
       >
         <Typography variant="subtitle1">
           Linode Managed costs an additional{' '}

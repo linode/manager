@@ -1,20 +1,22 @@
-import * as React from 'react';
-import { Button } from 'src/components/Button/Button';
+import { SxProps, styled } from '@mui/material/styles';
 import cx from 'classnames';
+import * as React from 'react';
+
+import { Button } from 'src/components/Button/Button';
 import RenderGuard from 'src/components/RenderGuard';
-import { styled, SxProps } from '@mui/material/styles';
+
 import { Box, BoxProps } from '../Box';
 
 interface ActionPanelProps extends BoxProps {
   /**
-   * Renders primary type actionable button.
-   */
-  showPrimary?: boolean;
-
-  /**
    * primary type actionable button custom aria descripton.
    */
   primaryButtonAriaDescribedBy?: string;
+
+  /**
+   * The data-testid for secondary type actionable button.
+   */
+  primaryButtonDataTestId?: string;
 
   /**
    * If true disables primary type actionable button.
@@ -38,24 +40,14 @@ interface ActionPanelProps extends BoxProps {
   primaryButtonRole?: string;
 
   /**
-   * The text for primary type actionable button.
-   */
-  primaryButtonText?: string;
-
-  /**
-   * The data-testid for secondary type actionable button.
-   */
-  primaryButtonDataTestId?: string;
-
-  /**
-   * The primaryButtonType defines type of button.
-   */
-  primaryButtonType?: 'button' | 'submit' | 'reset' | undefined;
-
-  /**
    * The primaryButton sx props.
    */
   primaryButtonSx?: SxProps;
+
+  /**
+   * The text for primary type actionable button.
+   */
+  primaryButtonText?: string;
 
   /**
    * The text for primary type actionable button tooltip.
@@ -63,9 +55,26 @@ interface ActionPanelProps extends BoxProps {
   primaryButtonToolTip?: string;
 
   /**
-   * Renders secondary type actionable button.
+   * The primaryButtonType defines type of button.
    */
-  showSecondary?: boolean;
+  primaryButtonType?: 'button' | 'reset' | 'submit' | undefined;
+
+  /**
+   * The eliminates left and right padding.
+   * @default false
+   */
+  secondaryButtonCompactX?: boolean;
+
+  /**
+   * The eliminates top and bottom padding.
+   * @default false
+   */
+  secondaryButtonCompactY?: boolean;
+
+  /**
+   * The data-testid for secondary type actionable button.
+   */
+  secondaryButtonDataTestId?: string;
 
   /**
    * If true disables secondary type actionable button.
@@ -89,33 +98,24 @@ interface ActionPanelProps extends BoxProps {
   secondaryButtonText?: string;
 
   /**
-   * The data-testid for secondary type actionable button.
-   */
-  secondaryButtonDataTestId?: string;
-
-  /**
-   * The eliminates left and right padding.
-   * @default false
-   */
-  secondaryButtonCompactX?: boolean;
-
-  /**
-   * The eliminates top and bottom padding.
-   * @default false
-   */
-  secondaryButtonCompactY?: boolean;
-
-  /**
    * The text for secondary type actionable button tooltip.
    */
   secondaryButtonToolTip?: string;
+
+  /**
+   * Renders primary type actionable button.
+   */
+  showPrimary?: boolean;
+
+  /**
+   * Renders secondary type actionable button.
+   */
+  showSecondary?: boolean;
 }
 
 const ActionsPanel = (props: ActionPanelProps) => {
   const {
     className,
-    showPrimary,
-    showSecondary,
     primaryButtonAriaDescribedBy,
     primaryButtonDataTestId,
     primaryButtonDisabled,
@@ -126,7 +126,6 @@ const ActionsPanel = (props: ActionPanelProps) => {
     primaryButtonText,
     primaryButtonToolTip,
     primaryButtonType,
-    showSecondary: secondary,
     secondaryButtonCompactX,
     secondaryButtonCompactY,
     secondaryButtonDataTestId,
@@ -134,6 +133,8 @@ const ActionsPanel = (props: ActionPanelProps) => {
     secondaryButtonHandler,
     secondaryButtonSx,
     secondaryButtonText,
+    showPrimary,
+    showSecondary,
     ...rest
   } = props;
 
@@ -142,8 +143,8 @@ const ActionsPanel = (props: ActionPanelProps) => {
 
   return (
     <StyledBox
-      data-qa-buttons
       className={cx(className, 'actionPanel')}
+      data-qa-buttons
       {...rest}
     >
       {showSecondary ? (
@@ -183,21 +184,21 @@ const ActionsPanel = (props: ActionPanelProps) => {
 };
 
 const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
-  display: 'flex',
-  justifyContent: 'flex-end',
-  marginTop: spacing(2),
-  paddingTop: spacing(2),
-  paddingBottom: spacing(1),
-  '& > button': {
-    marginBottom: spacing(1),
-  },
   '& > :first-of-type': {
-    marginRight: spacing(),
     marginLeft: 0,
+    marginRight: spacing(),
   },
   '& > :only-child': {
     marginRight: 0,
   },
+  '& > button': {
+    marginBottom: spacing(1),
+  },
+  display: 'flex',
+  justifyContent: 'flex-end',
+  marginTop: spacing(2),
+  paddingBottom: spacing(1),
+  paddingTop: spacing(2),
 }));
 
 export default RenderGuard(ActionsPanel);

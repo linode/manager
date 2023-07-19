@@ -1,49 +1,34 @@
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 
 type ClassNames =
-  | 'loaderWrapper'
   | 'emptyState'
-  | 'table'
-  | 'searchWrapper'
-  | 'searchBar'
   | 'landing'
-  | 'stackscriptPlaceholder';
+  | 'loaderWrapper'
+  | 'searchBar'
+  | 'searchWrapper'
+  | 'stackscriptPlaceholder'
+  | 'table';
 
 const styles = (theme: Theme) =>
   createStyles({
+    emptyState: {
+      color: theme.palette.text.primary,
+    },
+    landing: {
+      backgroundColor: `${theme.bg.app} !important`,
+      marginTop: `-${theme.spacing()}`,
+    },
     loaderWrapper: {
       display: 'flex',
       justifyContent: 'center',
       padding: theme.spacing(2),
     },
-    emptyState: {
-      color: theme.palette.text.primary,
-    },
-    table: {
-      backgroundColor: theme.bg.bgPaper,
-      overflow: 'scroll',
-    },
-    searchWrapper: {
-      display: 'flex',
-      flexWrap: 'nowrap',
-      backgroundColor: theme.bg.bgPaper,
-      paddingTop: theme.spacing(),
-      paddingBottom: '8px !important',
-      position: 'sticky',
-      top: 0,
-      width: '100%',
-      zIndex: 11,
-      [theme.breakpoints.up('sm')]: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      },
-    },
     searchBar: {
-      backgroundColor: theme.color.white,
-      flexBasis: '100%',
-      marginTop: 0,
+      '& + button': {
+        paddingBottom: 0,
+        paddingTop: 0,
+      },
       '& .input': {
         backgroundColor: theme.bg.bgPaper,
         border: `1px solid ${theme.color.grey3}`,
@@ -57,24 +42,39 @@ const styles = (theme: Theme) =>
       '& > input': {
         padding: theme.spacing(),
       },
-      '& + button': {
-        paddingTop: 0,
-        paddingBottom: 0,
-      },
+      backgroundColor: theme.color.white,
+      flexBasis: '100%',
+      marginTop: 0,
     },
-    landing: {
-      backgroundColor: `${theme.bg.app} !important`,
-      marginTop: `-${theme.spacing()}`,
+    searchWrapper: {
+      backgroundColor: theme.bg.bgPaper,
+      display: 'flex',
+      flexWrap: 'nowrap',
+      paddingBottom: '8px !important',
+      paddingTop: theme.spacing(),
+      position: 'sticky',
+      [theme.breakpoints.up('sm')]: {
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+      },
+      top: 0,
+      width: '100%',
+      zIndex: 11,
     },
     // Styles to override base placeholder styles for StackScript null state
     stackscriptPlaceholder: {
-      padding: `${theme.spacing(1)} 0`,
-      margin: 0,
-      width: '100%',
       '& svg': {
         marginTop: 4,
         transform: 'scale(0.8)',
       },
+      margin: 0,
+      padding: `${theme.spacing(1)} 0`,
+      width: '100%',
+    },
+    table: {
+      backgroundColor: theme.bg.bgPaper,
+      overflow: 'scroll',
     },
   });
 

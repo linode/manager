@@ -1,18 +1,19 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useDeleteSSHKeyMutation } from 'src/queries/profile';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   id: number;
   label?: string;
+  onClose: () => void;
+  open: boolean;
 }
 
-const DeleteSSHKeyDialog = ({ id, open, onClose, label }: Props) => {
-  const { mutateAsync, isLoading, error } = useDeleteSSHKeyMutation(id);
+const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
+  const { error, isLoading, mutateAsync } = useDeleteSSHKeyMutation(id);
 
   const onDelete = async () => {
     await mutateAsync();
@@ -21,22 +22,22 @@ const DeleteSSHKeyDialog = ({ id, open, onClose, label }: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
-      title="Delete SSH Key"
-      error={error?.[0].reason}
       actions={
         <ActionsPanel
-          showPrimary
           primaryButtonDataTestId="confirm-delete"
           primaryButtonHandler={onDelete}
           primaryButtonLoading={isLoading}
-          showSecondary
           secondaryButtonDataTestId="cancel-delete"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
+          showPrimary
+          showSecondary
         />
       }
+      error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title="Delete SSH Key"
     >
       <Typography>Are you sure you want to delete SSH key {label}?</Typography>
     </ConfirmationDialog>

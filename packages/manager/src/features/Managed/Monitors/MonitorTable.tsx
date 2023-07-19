@@ -1,21 +1,22 @@
 import { ManagedServicePayload } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import AddNewLink from 'src/components/AddNewLink';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useDialog } from 'src/hooks/useDialog';
@@ -33,6 +34,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+
 import MonitorDrawer from '../MonitorDrawer';
 import HistoryDrawer from './HistoryDrawer';
 import MonitorTableContent from './MonitorTableContent';
@@ -62,11 +64,11 @@ export const MonitorTable = () => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, isLoading, error } = useAllManagedMonitorsQuery();
+  const { data, error, isLoading } = useAllManagedMonitorsQuery();
   const {
     data: issues,
-    isLoading: areIssuesLoading,
     error: issuesError,
+    isLoading: areIssuesLoading,
   } = useAllManagedIssuesQuery();
   const { data: credentials } = useAllManagedCredentialsQuery();
   const { data: contacts } = useAllManagedContactsQuery();
@@ -90,11 +92,11 @@ export const MonitorTable = () => {
   const monitors = data || [];
 
   const {
-    dialog,
-    openDialog,
     closeDialog,
-    submitDialog,
+    dialog,
     handleError,
+    openDialog,
+    submitDialog,
   } = useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
 
   const [historyDrawerOpen, setHistoryDrawerOpen] = React.useState<boolean>(
@@ -152,7 +154,7 @@ export const MonitorTable = () => {
 
   const submitMonitorForm = (
     values: ManagedServicePayload,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     const _success = () => {
       setSubmitting(false);
@@ -191,24 +193,24 @@ export const MonitorTable = () => {
   return (
     <>
       <DocumentTitleSegment segment="Monitors" />
-      <Grid container justifyContent="flex-end" alignItems="flex-end">
+      <Grid alignItems="flex-end" container justifyContent="flex-end">
         <Grid>
-          <Grid container alignItems="flex-end">
+          <Grid alignItems="flex-end" container>
             <Grid className={classes.addNewWrapper}>
               <AddNewLink
-                onClick={() => setMonitorDrawerOpen(true)}
                 label="Add Monitor"
+                onClick={() => setMonitorDrawerOpen(true)}
               />
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <OrderBy data={monitors} orderBy={'label'} order={'asc'}>
+      <OrderBy data={monitors} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
-              data,
               count,
+              data,
               handlePageChange,
               handlePageSizeChange,
               page,
@@ -220,29 +222,29 @@ export const MonitorTable = () => {
                     <TableRow className={classes.headers}>
                       <TableSortCell
                         active={orderBy === 'label'}
-                        label={'label'}
-                        direction={order}
-                        handleClick={handleOrderChange}
                         className={classes.labelHeader}
                         data-qa-monitor-label-header
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        label={'label'}
                       >
                         Monitor
                       </TableSortCell>
                       <TableSortCell
                         active={orderBy === 'status'}
-                        label={'status'}
+                        data-qa-monitor-status-header
                         direction={order}
                         handleClick={handleOrderChange}
-                        data-qa-monitor-status-header
+                        label={'status'}
                       >
                         Status
                       </TableSortCell>
                       <TableSortCell
                         active={orderBy === 'address'}
-                        label={'address'}
+                        data-qa-monitor-resource-header
                         direction={order}
                         handleClick={handleOrderChange}
-                        data-qa-monitor-resource-header
+                        label={'address'}
                       >
                         Resource
                       </TableSortCell>
@@ -251,23 +253,23 @@ export const MonitorTable = () => {
                   </TableHead>
                   <TableBody>
                     <MonitorTableContent
-                      monitors={data}
+                      error={error}
                       issues={issues || []}
                       loading={isLoading}
-                      error={error}
+                      monitors={data}
                       openDialog={openDialog}
-                      openMonitorDrawer={handleMonitorDrawerOpen}
                       openHistoryDrawer={handleHistoryDrawerOpen}
+                      openMonitorDrawer={handleMonitorDrawerOpen}
                     />
                   </TableBody>
                 </Table>
                 <PaginationFooter
                   count={count}
+                  eventCategory="managed service monitor table"
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
                   page={page}
                   pageSize={pageSize}
-                  eventCategory="managed service monitor table"
                 />
               </>
             )}
@@ -275,32 +277,32 @@ export const MonitorTable = () => {
         )}
       </OrderBy>
       <DeletionDialog
-        label={dialog.entityLabel || ''}
         entity="monitor"
-        onDelete={handleDelete}
-        onClose={closeDialog}
-        open={dialog.isOpen}
         error={dialog.error}
+        label={dialog.entityLabel || ''}
         loading={dialog.isLoading}
+        onClose={closeDialog}
+        onDelete={handleDelete}
+        open={dialog.isOpen}
       />
       <MonitorDrawer
-        open={monitorDrawerOpen}
-        onClose={handleDrawerClose}
-        onSubmit={submitMonitorForm}
+        credentials={credentials || []}
+        groups={groups}
         mode={drawerMode}
         monitor={monitors.find((m) => m.id === editID)}
-        groups={groups}
-        credentials={credentials || []}
+        onClose={handleDrawerClose}
+        onSubmit={submitMonitorForm}
+        open={monitorDrawerOpen}
       />
       <HistoryDrawer
-        open={historyDrawerOpen}
-        onClose={() => setHistoryDrawerOpen(false)}
-        monitorLabel={editLabel}
         issues={issues?.filter((thisIssue) =>
           thisIssue.services.includes(editID)
         )}
-        loading={areIssuesLoading}
         error={issuesError}
+        loading={areIssuesLoading}
+        monitorLabel={editLabel}
+        onClose={() => setHistoryDrawerOpen(false)}
+        open={historyDrawerOpen}
       />
     </>
   );

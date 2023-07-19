@@ -1,22 +1,23 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useDisableTwoFactorMutation } from 'src/queries/profile';
 
 interface Props {
-  open: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  open: boolean;
 }
 
 export const DisableTwoFactorDialog = (props: Props) => {
-  const { open, onClose, onSuccess } = props;
+  const { onClose, onSuccess, open } = props;
 
   const {
-    mutateAsync: disableTwoFactor,
     error,
     isLoading,
+    mutateAsync: disableTwoFactor,
     reset,
   } = useDisableTwoFactorMutation();
 
@@ -34,25 +35,25 @@ export const DisableTwoFactorDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      showPrimary
       primaryButtonDataTestId="submit"
       primaryButtonHandler={handleDisableTFA}
       primaryButtonLoading={isLoading}
       primaryButtonText="Disable Two-factor Authentication"
-      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
     />
   );
 
   return (
     <ConfirmationDialog
+      actions={actions}
+      error={error?.[0].reason}
+      onClose={onClose}
       open={open}
       title="Disable Two-Factor Authentication"
-      onClose={onClose}
-      error={error?.[0].reason}
-      actions={actions}
     >
       <Typography>
         Are you sure you want to disable two-factor authentication?

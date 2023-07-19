@@ -1,20 +1,22 @@
+import { ACLType } from '@linode/api-v4/lib/object-storage';
+import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import EnhancedSelect from 'src/components/EnhancedSelect';
 import ExternalLink from 'src/components/ExternalLink';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { Typography } from 'src/components/Typography';
-import useOpenClose from 'src/hooks/useOpenClose';
-import { ACLType } from '@linode/api-v4/lib/object-storage';
-import { bucketACLOptions, objectACLOptions } from '../utilities';
-import { capitalize } from 'src/utilities/capitalize';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { copy } from './AccessSelect.data';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { Notice } from 'src/components/Notice/Notice';
-import { Theme, styled } from '@mui/material/styles';
 import { Toggle } from 'src/components/Toggle';
+import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import useOpenClose from 'src/hooks/useOpenClose';
+import { capitalize } from 'src/utilities/capitalize';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
+import { bucketACLOptions, objectACLOptions } from '../utilities';
+import { copy } from './AccessSelect.data';
 
 interface AccessPayload {
   acl: ACLType;
@@ -29,7 +31,7 @@ export interface Props {
 }
 
 export const AccessSelect = React.memo((props: Props) => {
-  const { getAccess, updateAccess, name, variant } = props;
+  const { getAccess, name, updateAccess, variant } = props;
   // Access data for this Object (from the API).
   const [aclData, setACLData] = React.useState<ACLType | null>(null);
   const [corsData, setCORSData] = React.useState(true);
@@ -44,7 +46,7 @@ export const AccessSelect = React.memo((props: Props) => {
   const [updateAccessError, setUpdateAccessError] = React.useState('');
   const [updateAccessSuccess, setUpdateAccessSuccess] = React.useState(false);
   // State for dealing with the confirmation modal when selecting read/write.
-  const { open: openDialog, isOpen, close: closeDialog } = useOpenClose();
+  const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
 
   React.useEffect(() => {
@@ -135,12 +137,6 @@ export const AccessSelect = React.memo((props: Props) => {
       {errorText ? <Notice error text={errorText} /> : null}
 
       <EnhancedSelect
-        label="Access Control List (ACL)"
-        placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
-        isClearable={false}
-        options={_options}
-        isLoading={accessLoading}
-        disabled={accessLoading}
         onChange={(selected) => {
           if (selected) {
             setUpdateAccessSuccess(false);
@@ -152,6 +148,12 @@ export const AccessSelect = React.memo((props: Props) => {
           (thisOption) => thisOption.value === selectedACL ?? 'private'
         )}
         data-testid="acl-select"
+        disabled={accessLoading}
+        isClearable={false}
+        isLoading={accessLoading}
+        label="Access Control List (ACL)"
+        options={_options}
+        placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
       />
 
       <div style={{ marginTop: 8, minHeight: 16 }}>
@@ -164,15 +166,15 @@ export const AccessSelect = React.memo((props: Props) => {
 
       {variant === 'bucket' ? (
         <FormControlLabel
-          style={{ marginTop: 16, display: 'block' }}
           control={
             <Toggle
+              checked={selectedCORSOption}
               disabled={accessLoading}
               onChange={() => setSelectedCORSOption((prev) => !prev)}
-              checked={selectedCORSOption}
             />
           }
           label={CORSLabel}
+          style={{ display: 'block', marginTop: 16 }}
         />
       ) : null}
 
@@ -181,16 +183,15 @@ export const AccessSelect = React.memo((props: Props) => {
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
           <ExternalLink
-            text="S3-compatible tool"
             hideIcon
             link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
+            text="S3-compatible tool"
           />
           .
         </Typography>
       ) : null}
 
       <ActionsPanel
-        showPrimary
         primaryButtonDisabled={
           aclData === selectedACL && corsData === selectedCORSOption
         }
@@ -202,30 +203,31 @@ export const AccessSelect = React.memo((props: Props) => {
             handleSubmit();
           }
         }}
-        primaryButtonLoading={updateAccessLoading}
         primaryButtonSx={(theme: Theme) => ({
           marginTop: theme.spacing(3),
         })}
+        primaryButtonLoading={updateAccessLoading}
         primaryButtonText="Save"
+        showPrimary
         style={{ padding: 0 }}
       />
 
       <ConfirmationDialog
-        title={`Confirm ${label} Access`}
-        open={isOpen}
-        onClose={closeDialog}
         actions={() => (
           <ActionsPanel
-            style={{ padding: 0 }}
-            showSecondary
-            secondaryButtonHandler={closeDialog}
-            secondaryButtonText="Cancel"
-            secondaryButtonDataTestId="cancel"
-            showPrimary
             primaryButtonHandler={handleSubmit}
             primaryButtonText="Confirm"
+            secondaryButtonDataTestId="cancel"
+            secondaryButtonHandler={closeDialog}
+            secondaryButtonText="Cancel"
+            showPrimary
+            showSecondary
+            style={{ padding: 0 }}
           />
         )}
+        onClose={closeDialog}
+        open={isOpen}
+        title={`Confirm ${label} Access`}
       >
         Are you sure you want to set access for {name} to Public Read/Write?
         Everyone will be able to list, create, overwrite, and delete Objects in
@@ -237,4 +239,6 @@ export const AccessSelect = React.memo((props: Props) => {
 
 export const StyledSubmitButton = styled(Button, {
   label: 'StyledFileUploadsContainer',
-})(({ theme }) => ({}));
+})(({ theme }) => ({
+  marginTop: theme.spacing(3),
+}));

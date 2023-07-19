@@ -1,36 +1,37 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 
 interface Props {
-  isSubmitting: boolean;
-  onSubmit?: () => void;
-  onCancel?: () => void;
   disabled?: boolean;
+  isSubmitting: boolean;
+  onCancel?: () => void;
+  onSubmit?: () => void;
   submitText?: string;
 }
 
 type CombinedProps = Props;
 
 const VolumesActionsPanel: React.FC<CombinedProps> = ({
-  onSubmit,
+  disabled,
   isSubmitting,
   onCancel,
-  disabled,
+  onSubmit,
   submitText,
 }) => {
   return (
-    //We could remove this with ActionsPanel component.
+    // We could remove this with ActionsPanel component.
     <ActionsPanel
-      showPrimary
       primaryButtonDataTestId="submit"
       primaryButtonDisabled={disabled}
       primaryButtonHandler={onSubmit}
       primaryButtonLoading={isSubmitting}
       primaryButtonText={submitText ?? 'Submit'}
-      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onCancel}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
     />
   );
 };

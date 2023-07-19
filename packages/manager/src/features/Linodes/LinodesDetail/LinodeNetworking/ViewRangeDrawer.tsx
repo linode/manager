@@ -1,24 +1,25 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Drawer from 'src/components/Drawer';
+import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   section: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
     marginBottom: theme.spacing(2),
     paddingBottom: theme.spacing(2),
-    borderBottom: `1px solid ${theme.palette.divider}`,
   },
 }));
 
 interface Props {
+  onClose: () => void;
   open: boolean;
   range?: IPRange;
-  onClose: () => void;
 }
 
 export const ViewRangeDrawer = (props: Props) => {
@@ -32,8 +33,8 @@ export const ViewRangeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      open={props.open}
       onClose={props.onClose}
+      open={props.open}
       title={`Details for IP Range`}
     >
       {props.range && (
@@ -57,10 +58,10 @@ export const ViewRangeDrawer = (props: Props) => {
           </div>
 
           <ActionsPanel
-            showSecondary
             secondaryButtonDataTestId="cancel"
             secondaryButtonHandler={props.onClose}
             secondaryButtonText="Close"
+            showSecondary
           />
         </React.Fragment>
       )}

@@ -1,22 +1,23 @@
-import * as React from 'react';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useLinodeIPDeleteMutation } from 'src/queries/linodes/networking';
 
 interface Props {
-  onClose: () => void;
-  open: boolean;
   address: string;
   linodeId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const DeleteIPDialog = (props: Props) => {
-  const { open, onClose, linodeId, address } = props;
+  const { address, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: removeIP, isLoading, error } = useLinodeIPDeleteMutation(
+  const { error, isLoading, mutateAsync: removeIP } = useLinodeIPDeleteMutation(
     linodeId,
     address
   );
@@ -29,21 +30,21 @@ export const DeleteIPDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
-      error={error?.[0].reason}
-      title={`Delete ${address}?`}
       actions={
         <ActionsPanel
-          showPrimary
           primaryButtonHandler={handleDeleteIP}
           primaryButtonLoading={isLoading}
           primaryButtonText="Delete IP"
-          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
+          showPrimary
+          showSecondary
         />
       }
+      error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title={`Delete ${address}?`}
     >
       <Typography>
         Are you sure you want to delete this IP Address? This action cannot be

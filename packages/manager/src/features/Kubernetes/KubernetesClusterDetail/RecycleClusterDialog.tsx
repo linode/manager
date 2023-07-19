@@ -1,5 +1,6 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
@@ -10,16 +11,16 @@ import {
 import { useRecycleClusterMutation } from 'src/queries/kubernetes';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   clusterId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const RecycleClusterDialog = (props: Props) => {
-  const { open, onClose, clusterId } = props;
+  const { clusterId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useRecycleClusterMutation(
+  const { error, isLoading, mutateAsync } = useRecycleClusterMutation(
     clusterId
   );
 
@@ -34,26 +35,26 @@ export const RecycleClusterDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      style={{ padding: 0 }}
-      showPrimary
       primaryButtonDataTestId="confirm"
       primaryButtonHandler={onSubmit}
       primaryButtonLoading={isLoading}
       primaryButtonText="Recycle All Cluster Nodes"
-      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
+      showPrimary
+      showSecondary
+      style={{ padding: 0 }}
     />
   );
 
   return (
     <ConfirmationDialog
-      open={open}
-      title="Recycle all nodes in cluster?"
-      onClose={onClose}
       actions={actions}
       error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title="Recycle all nodes in cluster?"
     >
       <Typography>
         {nodesDeletionWarning} {localStorageWarning} This may take several
