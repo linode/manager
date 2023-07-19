@@ -1,7 +1,7 @@
-const PRODUCTION = import.meta.env.PROD;
-
 // whether or not this is a Vite production build
-export const isProductionBuild = PRODUCTION;
+// This does not necessarily Cloud is running in a production environment.
+// For example, cloud.dev.linode.com is technically a production build.
+export const isProductionBuild = import.meta.env.PROD;
 
 // allow us to explicity enable dev tools
 export const ENABLE_DEV_TOOLS = Boolean(
