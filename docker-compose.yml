@@ -26,19 +26,24 @@ x-e2e-env:
   COMMIT_INFO_SHA: ${GIT_COMMIT}
 
   # Cypress environment variables for run environment and CI configuration.
-  CYPRESS_BASE_URL: http://web:3000
+  CYPRESS_BASE_URL: ${CYPRESS_BASE_URL}
   CYPRESS_PULL_REQUEST_ID: ${CHANGE_ID}
   CYPRESS_PULL_REQUEST_URL: ${CHANGE_URL}
   CYPRESS_RECORD: ${CYPRESS_RECORD}
   CYPRESS_RECORD_KEY: ${CYPRESS_RECORD_KEY}
+
+  # Cloud Manager-specific test configuration.
+  CY_TEST_SUITE: ${CY_TEST_SUITE}
+  CY_TEST_REGION: ${CY_TEST_REGION}
 
   # Cypress environment variables for alternative parallelization.
   CY_TEST_SPLIT_RUN: ${CY_TEST_SPLIT_RUN}
   CY_TEST_SPLIT_RUN_TOTAL: ${CY_TEST_SPLIT_RUN_TOTAL}
   CY_TEST_SPLIT_RUN_INDEX: ${CY_TEST_SPLIT_RUN_INDEX}
 
-  # Cypress result reporting.
+  # Cypress reporting.
   CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
+  CY_TEST_USER_REPORT: ${CY_TEST_USER_REPORT}
 
   # Cloud Manager build environment.
   HOME: /home/node
@@ -52,7 +57,7 @@ x-e2e-env:
   HUDSON_HOME: ${HUDSON_HOME}
   HUDSON_URL: ${HUDSON_URL}
 
-# Volumes that will be exposed to every Cypress runner.
+# Volumes that will be exposed to every end-to-end Cypress runner.
 x-e2e-volumes:
   &default-volumes
   - ./.git:/home/node/app/.git
@@ -76,9 +81,12 @@ x-e2e-runners:
       condition: service_healthy
   env_file: ./packages/manager/.env
   volumes: *default-volumes
+  entrypoint: ['yarn', 'cy:ci', '--record', '--parallel', "--ci-build-id=${BUILD_ID}"]
 
 services:
   # Serves a local instance of Cloud Manager for Cypress to use for its tests.
+  # Not all of the runner containers require a local instance of Cypress, but
+  # this service can be used in all cases.
   web:
     build:
       context: .
@@ -97,7 +105,7 @@ services:
       timeout: 10s
       retries: 10
 
-  # Cypress runners.
+  # Cypress runners for end-to-end tests.
   e2e-1:
     <<: *default-runner
     container_name: cloud-e2e-1
@@ -125,3 +133,14 @@ services:
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH_4}
+
+  region-1:
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: e2e
+    env_file: ./packages/manager/.env
+    volumes: *default-volumes
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH_1}
