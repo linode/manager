@@ -205,7 +205,7 @@ const customFingerPrintMap = {
  * Derives a environment name from the APP_ROOT environment variable
  * so a Sentry issue is identified by the correct environment name.
  */
-export const getSentryEnvironment = () => {
+const getSentryEnvironment = () => {
   if (APP_ROOT === 'https://cloud.linode.com') {
     return 'production';
   }
