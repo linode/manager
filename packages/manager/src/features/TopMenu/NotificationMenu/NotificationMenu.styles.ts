@@ -1,6 +1,8 @@
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+
 import { isPropValid } from 'src/utilities/isPropValid';
+
 import { StyledTopMenuIconWrapper } from '../TopMenuIcon';
 
 export const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
@@ -14,8 +16,8 @@ export const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
 
 export const StyledButton = styled(Button)(({ theme }) => ({
   margin: 0,
-  padding: 0,
   minWidth: 'unset',
+  padding: 0,
   ...(theme.name === 'light'
     ? {
         '&:hover': {
