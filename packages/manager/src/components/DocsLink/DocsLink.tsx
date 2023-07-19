@@ -5,14 +5,26 @@ import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';
 import { sendHelpButtonClickEvent } from 'src/utilities/analytics';
 
-interface Props {
+export interface DocsLinkProps {
+  /** The label to use for analytics purposes */
   analyticsLabel?: string;
+  /** The URL to link to */
   href: string;
+  /**
+   * The clickable text of the link
+   * @default Docs
+   * */
   label?: string;
+  /** A callback function when the link is clicked */
   onClick?: () => void;
 }
 
-export const DocsLink = (props: Props) => {
+/**
+ * - The Docs link breaks the pattern of an external link with the position and size of the icon.
+ * - The Docs link is usually featured on create flows in the top right corner of the page, next to the create button.
+ * - Consider displaying the title of a key guide or product document as the link instead of the generic “Docs”.
+ */
+export const DocsLink = (props: DocsLinkProps) => {
   const { analyticsLabel, href, label, onClick } = props;
 
   return (
