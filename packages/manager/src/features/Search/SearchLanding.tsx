@@ -245,7 +245,9 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
       [kubernetesClustersError, 'Kubernetes'],
       [objectStorageClustersError, 'Object Storage'],
       [
-        objectStorageBuckets?.errors && !objectStorageClustersError,
+        objectStorageBuckets &&
+          objectStorageBuckets.errors.length > 0 &&
+          !objectStorageClustersError,
         `Object Storage in ${objectStorageBuckets?.errors
           .map((e) => e.cluster.region)
           .join(', ')}`,
