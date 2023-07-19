@@ -1,6 +1,5 @@
 import { registerSelectors } from 'reselect-tools';
 
-import inProgressEventForLinode from './inProgressEventForLinode';
 import inProgressEvents from './inProgressEvents';
 import recentEventForLinode from './recentEventForLinode';
 
@@ -10,7 +9,6 @@ import recentEventForLinode from './recentEventForLinode';
 
 export const initReselectDevtools = () => {
   registerSelectors({
-    inProgressEventForLinode,
     inProgressEvents,
     recentEventForLinode,
   });
