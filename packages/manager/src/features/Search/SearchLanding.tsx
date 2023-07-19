@@ -102,60 +102,60 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const { entities, errors, search, searchResultsByEntity } = props;
 
   const classes = useStyles();
-  const _isLargeAccount = useIsLargeAccount();
+  const isLargeAccount = useIsLargeAccount();
 
   const {
     data: objectStorageClusters,
     error: objectStorageClustersError,
     isLoading: areClustersLoading,
-  } = useObjectStorageClusters(!_isLargeAccount);
+  } = useObjectStorageClusters(!isLargeAccount);
 
   const {
     data: objectStorageBuckets,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets(objectStorageClusters, !_isLargeAccount);
+  } = useObjectStorageBuckets(objectStorageClusters, !isLargeAccount);
 
   const {
     data: domains,
     error: domainsError,
     isLoading: areDomainsLoading,
-  } = useAllDomainsQuery(!_isLargeAccount);
+  } = useAllDomainsQuery(!isLargeAccount);
 
   const {
     data: kubernetesClusters,
     error: kubernetesClustersError,
     isLoading: areKubernetesClustersLoading,
-  } = useAllKubernetesClustersQuery(!_isLargeAccount);
+  } = useAllKubernetesClustersQuery(!isLargeAccount);
 
   const {
     data: nodebalancers,
     error: nodebalancersError,
     isLoading: areNodeBalancersLoading,
-  } = useAllNodeBalancersQuery(!_isLargeAccount);
+  } = useAllNodeBalancersQuery(!isLargeAccount);
 
   const {
     data: volumes,
     error: volumesError,
     isLoading: areVolumesLoading,
-  } = useAllVolumesQuery({}, {}, !_isLargeAccount);
+  } = useAllVolumesQuery({}, {}, !isLargeAccount);
 
   const {
     data: _privateImages,
     error: imagesError,
     isLoading: areImagesLoading,
-  } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
+  } = useAllImagesQuery({}, { is_public: false }, !isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
 
   const { data: publicImages } = useAllImagesQuery(
     {},
     { is_public: true },
-    !_isLargeAccount
+    !isLargeAccount
   );
 
   const {
     data: linodes,
     error: linodesError,
     isLoading: areLinodesLoading,
-  } = useAllLinodesQuery({}, {}, !_isLargeAccount);
+  } = useAllLinodesQuery({}, {}, !isLargeAccount);
 
   const { data: regions } = useRegionsQuery();
 
@@ -203,7 +203,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   ).current;
 
   React.useEffect(() => {
-    if (_isLargeAccount) {
+    if (isLargeAccount) {
       _searchAPI(query);
     } else {
       search(
@@ -222,7 +222,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     query,
     entities,
     search,
-    _isLargeAccount,
+    isLargeAccount,
     _searchAPI,
     objectStorageBuckets,
     domains,
@@ -268,7 +268,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     return `Could not retrieve search results for: ${joined}`;
   };
 
-  const finalResults = _isLargeAccount ? apiResults : searchResultsByEntity;
+  const finalResults = isLargeAccount ? apiResults : searchResultsByEntity;
 
   const resultsEmpty = equals(finalResults, emptyResults);
 
