@@ -364,7 +364,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       onSelectionChange={handleLinodeChange}
                       errorText={linodeError || configErrorMessage}
                       onBlur={handleBlur}
-                      value={values.linode_id}
+                      value={values.linode_id === -1 ? null : values.linode_id}
                       region={values.region}
                       clearable
                       sx={{

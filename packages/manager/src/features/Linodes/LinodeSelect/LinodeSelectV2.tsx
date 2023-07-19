@@ -116,18 +116,11 @@ export const LinodeSelectV2 = (
     ? filteredLinodes?.filter(optionsFilter)
     : linodes;
 
-  const handleInputChange = (_: React.SyntheticEvent, value: string) => {
-    // Return the private IP address as the value for backend nodes in the NodeBalancer config
+  const getOptionLabel = (linode: Linode) => {
     if (showIPAddressLabel) {
-      const privateIP = filteredLinodesByOptions
-        ?.find((linode) => linode.label === value)
-        ?.ipv4.find((eachIP) => eachIP.match(privateIPRegex));
-
-      // TODO: This is causing issues when trying to select a different Linode: http://localhost:3000/nodebalancers/create
-      return setInputValue(privateIP ?? '');
+      return linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex)) ?? '';
     }
-
-    return setInputValue(value);
+    return linode.label;
   };
 
   return (
@@ -135,7 +128,7 @@ export const LinodeSelectV2 = (
       id={id}
       value={mapIdsToLinodes(value, linodes)}
       options={filteredLinodesByOptions ?? []}
-      getOptionLabel={(linode) => linode.label}
+      getOptionLabel={getOptionLabel}
       clearOnBlur={false}
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       multiple={multiple}
@@ -170,8 +163,8 @@ export const LinodeSelectV2 = (
           {...params}
         />
       )}
-      inputValue={inputValue}
-      onInputChange={handleInputChange}
+      inputValue={value === null ? '' : inputValue}
+      onInputChange={(_, value) => setInputValue(value)}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;

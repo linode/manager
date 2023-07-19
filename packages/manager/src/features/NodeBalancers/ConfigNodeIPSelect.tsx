@@ -20,7 +20,12 @@ export const ConfigNodeIPSelect = React.memo(
     const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
       null
     );
-    const { handleChange: _handleChange, inputId } = props;
+    const {
+      handleChange: _handleChange,
+      inputId,
+      nodeIndex,
+      nodeAddress,
+    } = props;
 
     const handleChange = (linode: Linode) => {
       if (!linode?.id) {
@@ -36,14 +41,14 @@ export const ConfigNodeIPSelect = React.memo(
        * we can be sure the selection has a private IP because of the
        * filterCondition prop in the render method below
        */
-      _handleChange(props.nodeIndex, thisLinodesPrivateIP!);
+      _handleChange(nodeIndex, thisLinodesPrivateIP!);
     };
 
     return (
       <LinodeSelectV2
         id={inputId}
         noMarginTop
-        value={selectedLinode}
+        value={nodeAddress === '' ? null : selectedLinode}
         noOptionsMessage={`No options - please ensure you have at least 1 Linode
       with a private IP located in the selected region.`}
         errorText={props.errorText}
