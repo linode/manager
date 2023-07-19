@@ -8,7 +8,7 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Divider } from 'src/components/Divider';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
