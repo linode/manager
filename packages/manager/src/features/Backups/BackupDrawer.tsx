@@ -77,7 +77,7 @@ interface StateProps {
   updatedCount: number;
 }
 
-type CombinedProps = DispatchProps &
+type BackupDrawerProps = DispatchProps &
   StateProps &
   WithSnackbarProps &
   WithSpecificTypesProps &
@@ -109,12 +109,12 @@ export const getTotalPrice = (linodes: ExtendedLinode[]) => {
     );
   }, 0);
 };
-export class BackupDrawer extends React.Component<CombinedProps, {}> {
+export class BackupDrawer extends React.Component<BackupDrawerProps, {}> {
   componentDidMount(): void {
     this.updateRequestedTypes();
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: BackupDrawerProps) {
     const { close, dismissSuccess } = this.props.actions;
     const { autoEnroll, enableSuccess, updatedCount } = this.props;
     if (enableSuccess) {
@@ -328,7 +328,7 @@ export const enhanceLinodes = (
 
 const mapStateToProps: MapStateToProps<
   StateProps,
-  CombinedProps,
+  BackupDrawerProps,
   ApplicationState
 > = (state: ApplicationState) => {
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
@@ -349,11 +349,12 @@ const mapStateToProps: MapStateToProps<
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<BackupDrawerProps, {}>(
   connected,
   // this awkward line avoids fetching all types until this dialog is opened
-  (comp: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
-    withSpecificTypes(comp, props.open)(props),
+  (comp: React.ComponentType<BackupDrawerProps>) => (
+    props: BackupDrawerProps
+  ) => withSpecificTypes(comp, props.open)(props),
   withSnackbar,
   withAccountSettings,
   withQueryClient,
