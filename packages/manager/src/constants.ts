@@ -1,5 +1,5 @@
 // whether or not this is a Vite production build
-// This does not necessarily Cloud is running in a production environment.
+// This does not necessarily mean Cloud is running in a production environment.
 // For example, cloud.dev.linode.com is technically a production build.
 export const isProductionBuild = import.meta.env.PROD;
 
