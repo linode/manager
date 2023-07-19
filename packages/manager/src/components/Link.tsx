@@ -1,21 +1,19 @@
-import { omit } from 'lodash';
 import { sanitizeUrl } from '@braintree/sanitize-url';
+import { omit } from 'lodash';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { ExternalLink } from 'src/components/ExternalLink/ExternalLink';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { useStyles } from 'src/components/Link.styles';
-
-import type { LinkProps as _LinkProps } from 'react-router-dom';
-import type { ExternalLinkProps } from 'src/components/ExternalLink/ExternalLink';
-
 import {
   childrenContainsNoText,
   flattenChildrenIntoAriaLabel,
   opensInNewTab,
 } from 'src/utilities/link';
 
-export interface LinkProps extends _LinkProps, ExternalLinkProps {
+import type { LinkProps as _LinkProps } from 'react-router-dom';
+
+export interface LinkProps extends _LinkProps {
   /**
    * This property can override the value of the copy passed by default to the aria label from the children.
    * This is useful when the text of the link is unavailable, not descriptive enough, or a single icon is used as the child.
@@ -28,10 +26,6 @@ export interface LinkProps extends _LinkProps, ExternalLinkProps {
    * @default false
    */
   external?: boolean;
-  /**
-   * The content of the component.
-   */
-  children: _LinkProps['children'];
   /**
    * Optional prop to force the link color to match the general copy.<br />
    * Example: footer links
@@ -93,49 +87,44 @@ export const Link = (props: LinkProps) => {
     'forceCopyColor',
   ]);
 
-  if (external) {
-    return (
-      <ExternalLink
-        ariaLabel={ariaLabel}
-        className={className}
-        forceCopyColor={forceCopyColor}
-        onClick={onClick}
-        to={to}
-      >
-        {children}
-      </ExternalLink>
-    );
-  } else {
-    return shouldOpenInNewTab ? (
-      <a
-        className={cx(
-          classes.root,
-          {
+  return shouldOpenInNewTab ? (
+    <a
+      className={cx(
+        classes.root,
+        {
+          [classes.forceCopyColor]: forceCopyColor,
+        },
+        className
+      )}
+      aria-label={ariaLabel}
+      data-testid={external ? 'external-site-link' : 'external-link'}
+      href={sanitizedUrl()}
+      onClick={onClick}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      {children}
+      {external && (
+        <span
+          className={cx(classes.iconContainer, {
             [classes.forceCopyColor]: forceCopyColor,
-          },
-          className
-        )}
-        aria-label={ariaLabel}
-        data-testid="external-link"
-        href={sanitizedUrl()}
-        onClick={onClick}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        {children}
-      </a>
-    ) : (
-      <RouterLink
-        {...routerLinkProps}
-        data-testid="internal-link"
-        className={cx(
-          classes.root,
-          {
-            [classes.forceCopyColor]: forceCopyColor,
-          },
-          className
-        )}
-      />
-    );
-  }
+          })}
+        >
+          <ExternalLinkIcon />
+        </span>
+      )}
+    </a>
+  ) : (
+    <RouterLink
+      {...routerLinkProps}
+      className={cx(
+        classes.root,
+        {
+          [classes.forceCopyColor]: forceCopyColor,
+        },
+        className
+      )}
+      data-testid="internal-link"
+    />
+  );
 };
