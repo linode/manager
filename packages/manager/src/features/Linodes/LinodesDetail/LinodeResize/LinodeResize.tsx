@@ -15,9 +15,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
 import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
@@ -74,6 +74,8 @@ export const LinodeResize = (props: Props) => {
 
   const { data: grants } = useGrants();
   const { data: preferences } = usePreferences(open);
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const { enqueueSnackbar } = useSnackbar();
 

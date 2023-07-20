@@ -1,5 +1,4 @@
 import { linode1 as mockLinode } from 'src/__data__/linodes';
-import { queryClientFactory } from 'src/queries/base';
 import { ApplicationState, storeFactory } from 'src/store';
 
 const mockState = {
@@ -13,7 +12,7 @@ const mockState = {
 
 import { getEntityByIDFromStore } from './getEntityByIDFromStore';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 store.getState = () => mockState as ApplicationState;
 
 describe('getEntityByIDFromStore utility function', () => {

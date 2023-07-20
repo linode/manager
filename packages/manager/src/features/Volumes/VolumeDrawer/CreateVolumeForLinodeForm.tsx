@@ -15,7 +15,7 @@ import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { Typography } from 'src/components/Typography';
 import Form from 'src/components/core/Form';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { MapState } from 'src/store/types';
@@ -31,6 +31,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
+import { modes } from '.';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { ModeSelection } from './ModeSelection';
@@ -38,7 +39,6 @@ import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
-import { modes } from './modes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textWrapper: {
@@ -75,6 +75,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const disabled = profile?.restricted && !grants?.global.add_volumes;
 

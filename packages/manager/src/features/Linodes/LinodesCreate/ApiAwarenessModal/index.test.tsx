@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -30,9 +30,9 @@ describe('ApiAwarenessModal', () => {
     renderComponent({ isOpen: true });
     screen.getByText('Create Linode');
   });
-  it('Should invoke onClose handler upon cliking close button', () => {
+  it('Should invoke onClose handler upon cliking close button', async () => {
     renderComponent({ isOpen: true });
-    userEvent.click(screen.getByTestId('close-button'));
-    expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
+    userEvent.click(await screen.findByTestId('close-button'));
+    await waitFor(() => expect(defaultProps.onClose).toHaveBeenCalledTimes(1));
   });
 });

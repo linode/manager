@@ -20,9 +20,9 @@ import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import useFlags from 'src/hooks/useFlags';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -92,6 +92,8 @@ export const RebuildFromImage = (props: Props) => {
   const flags = useFlags();
 
   const { data: _imagesData, error: imagesError } = useAllImagesQuery();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 

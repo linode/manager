@@ -1,10 +1,9 @@
 import { ResizeVolumeSchema } from '@linode/validation/lib/volumes.schema';
-import { Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
-import Form from 'src/components/core/Form';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useResizeVolumeMutation } from 'src/queries/volumes';
 import {
   handleFieldErrors,
@@ -39,6 +38,8 @@ export const ResizeVolumeForm = (props: Props) => {
 
   const initialValues = { size: volumeSize };
   const validationSchema = ResizeVolumeSchema(volumeSize);
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   return (
     <Formik

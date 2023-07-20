@@ -45,6 +45,7 @@ export interface NotificationItem {
   body: JSX.Element | string;
   countInTotal: boolean;
   id: string;
+  originalId: number;
 }
 
 interface NotificationSectionProps {
@@ -53,22 +54,17 @@ interface NotificationSectionProps {
   emptyMessage?: string;
   header: string;
   loading?: boolean;
-  showMoreTarget?: string;
-  showMoreText?: string;
+  showMore?: {
+    onClick?: () => void;
+    target: string;
+    text: string;
+  };
 }
 
 export const NotificationSection = (props: NotificationSectionProps) => {
   const { classes } = useStyles();
 
-  const {
-    content,
-    count,
-    emptyMessage,
-    header,
-    loading,
-    showMoreTarget,
-    showMoreText,
-  } = props;
+  const { content, count, emptyMessage, header, loading, showMore } = props;
 
   const _count = count ?? 5;
   const _loading = Boolean(loading); // false if not provided
@@ -89,14 +85,15 @@ export const NotificationSection = (props: NotificationSectionProps) => {
               <Box sx={{ width: '100%' }}>
                 <StyledHeader>
                   <Typography variant="h3">{header}</Typography>
-                  {showMoreTarget && (
+                  {showMore && (
                     <strong>
                       <Link
                         className={classes.menuItemLink}
+                        onClick={showMore.onClick}
                         style={{ padding: 0 }}
-                        to={showMoreTarget}
+                        to={showMore.target}
                       >
-                        {showMoreText ?? 'View history'}
+                        {showMore.text}
                       </Link>
                     </strong>
                   )}

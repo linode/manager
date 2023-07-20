@@ -1,7 +1,6 @@
 import { ShallowWrapper, shallow } from 'enzyme';
 import * as React from 'react';
 
-import { queryClientFactory } from 'src/queries/base';
 import { storeFactory } from 'src/store';
 
 import {
@@ -10,7 +9,7 @@ import {
   withLabelGenerator,
 } from './withLabelGenerator';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 const RawComponent = withLabelGenerator(() => <div />);
 
 describe('withLabelGenerator HOC', () => {
