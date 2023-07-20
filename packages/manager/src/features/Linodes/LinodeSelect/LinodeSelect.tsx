@@ -44,8 +44,6 @@ interface LinodeSelectProps {
   optionsFilter?: (linode: Linode) => boolean;
   /* Displayed when the input is blank. */
   placeholder?: string;
-  /* The region to filter Linodes by. */
-  region?: string;
   /* Render a custom option. */
   renderOption?: (linode: Linode, selected: boolean) => JSX.Element;
   /* Render a custom option label. */
@@ -98,7 +96,6 @@ export const LinodeSelect = (
     options,
     optionsFilter,
     placeholder,
-    region,
     renderOption,
     renderOptionLabel,
     sx,
@@ -117,12 +114,8 @@ export const LinodeSelect = (
 
   const linodes = linodesData?.pages.flatMap((page) => page.data);
 
-  const filteredLinodes = Boolean(region)
-    ? linodes?.filter((thisLinode) => thisLinode.region === region)
-    : linodes;
-
-  const filteredLinodesByOptions = optionsFilter
-    ? filteredLinodes?.filter(optionsFilter)
+  const filteredLinodes = optionsFilter
+    ? linodes?.filter(optionsFilter)
     : linodes;
 
   React.useEffect(() => {
@@ -158,7 +151,7 @@ export const LinodeSelect = (
             getDefaultNoOptionsMessage(
               error,
               linodesDataLoading,
-              filteredLinodesByOptions
+              filteredLinodes
             )}
         </i>
       }
@@ -214,7 +207,7 @@ export const LinodeSelect = (
       multiple={multiple}
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
-      options={options || (filteredLinodesByOptions ?? [])}
+      options={options || (filteredLinodes ?? [])}
       popupIcon={<KeyboardArrowDownIcon />}
       sx={sx}
       value={mapIdsToLinodes(value, linodes)}

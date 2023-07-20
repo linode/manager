@@ -13,10 +13,10 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import Form from 'src/components/core/Form';
-import { Paper } from 'src/components/Paper';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
@@ -359,9 +359,20 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     display="flex"
                   >
                     <LinodeSelect
-                      optionsFilter={(linode: Linode) =>
-                        regionsWithBlockStorage.includes(linode.region)
-                      }
+                      optionsFilter={(linode: Linode) => {
+                        const linodeRegion = linode.region;
+                        const valuesRegion = values.region;
+
+                        /** When values.region is empty, all Linodes with
+                         * block storage support will be displayed, regardless
+                         * of their region. However, if a region is selected,
+                         * only Linodes from the chosen region with block storage
+                         * support will be shown. */
+                        return isNilOrEmpty(valuesRegion)
+                          ? regionsWithBlockStorage.includes(linodeRegion)
+                          : regionsWithBlockStorage.includes(linodeRegion) &&
+                              linodeRegion === valuesRegion;
+                      }}
                       sx={{
                         width: '320px',
                       }}
@@ -370,7 +381,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       errorText={linodeError || configErrorMessage}
                       onBlur={handleBlur}
                       onSelectionChange={handleLinodeChange}
-                      region={values.region}
                       value={values.linode_id === -1 ? null : values.linode_id}
                     />
                     {renderSelectTooltip(
