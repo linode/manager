@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import ActionsPanel from './ActionsPanel';
+import ActionsPanel from './ActionsPanel/ActionsPanel';
 import { Button } from './Button/Button';
 import { Drawer } from './Drawer';
 import { TextField } from './TextField';
@@ -40,12 +40,13 @@ export const Default: Story = {
               label="Input Some Text"
               placeholder="This is a placeholder"
             />
-            <ActionsPanel>
-              <Button buttonType="secondary" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-              <Button buttonType="primary">Save</Button>
-            </ActionsPanel>
+            <ActionsPanel
+              primaryButtonText="Save"
+              secondaryButtonHandler={() => setOpen(false)}
+              secondaryButtonText="Cancel"
+              showPrimary
+              showSecondary
+            />
           </Drawer>
         </>
       );
