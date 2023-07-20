@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';

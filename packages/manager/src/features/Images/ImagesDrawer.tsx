@@ -8,7 +8,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';

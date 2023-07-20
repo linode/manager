@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import ListItem from 'src/components/core/ListItem';

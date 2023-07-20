@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TextField } from 'src/components/TextField';

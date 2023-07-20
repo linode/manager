@@ -5,7 +5,7 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -189,17 +189,17 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
             title="Allowed IP Address(es) or Range(s)"
           />
           <ActionsPanel
-            showPrimary
             primaryButtonDisabled={!formTouched}
             primaryButtonLoading={isSubmitting}
             primaryButtonSx={{ marginBottom: 8 }}
             primaryButtonText="Update Access Controls"
             primaryButtonType="submit"
-            showSecondary
             secondaryButtonDisabled={isSubmitting}
             secondaryButtonHandler={onClose}
             secondaryButtonSx={{ marginBottom: 8 }}
             secondaryButtonText="Cancel"
+            showPrimary
+            showSecondary
           />
         </form>
       </React.Fragment>

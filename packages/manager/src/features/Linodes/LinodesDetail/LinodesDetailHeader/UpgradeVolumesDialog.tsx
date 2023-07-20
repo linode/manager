@@ -7,7 +7,7 @@ import { useQueryClient } from 'react-query';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
 import { queryKey } from 'src/queries/accountNotifications';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';

@@ -1,7 +1,7 @@
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Typography } from 'src/components/Typography';
 
 import { AccessTable } from './AccessTable';

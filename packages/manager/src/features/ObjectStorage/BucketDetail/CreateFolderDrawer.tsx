@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Drawer from 'src/components/Drawer/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { TextField } from 'src/components/TextField';
 import { useCreateObjectUrlMutation } from 'src/queries/objectStorage';
 

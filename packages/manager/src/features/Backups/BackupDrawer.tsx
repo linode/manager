@@ -9,7 +9,7 @@ import { compose } from 'recompose';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
