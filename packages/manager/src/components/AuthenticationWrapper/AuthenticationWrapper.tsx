@@ -14,7 +14,6 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
@@ -127,9 +126,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
         queryKey: 'account-settings',
       }),
     ];
-
-    // Start events polling
-    startEventsInterval(this.props.store, this.props.queryClient);
 
     try {
       await Promise.all(dataFetchingPromises);

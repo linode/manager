@@ -9,7 +9,7 @@ import { compose } from 'recompose';
 
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { useProfile } from 'src/queries/profile';
 import { handleOpen } from 'src/store/backupDrawer';

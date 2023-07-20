@@ -19,13 +19,12 @@ import withGlobalErrors, {
 } from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context';
 import BackupDrawer from 'src/features/Backups';
-import Footer from 'src/features/Footer';
+import { Footer } from 'src/features/Footer/Footer';
 import GlobalNotifications from 'src/features/GlobalNotifications';
 import {
   notificationContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
-import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -364,7 +363,6 @@ const MainContent = (props: CombinedProps) => {
               </>
             </NotificationProvider>
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-            <ToastNotifications />
             <VolumeDrawer />
             <BackupDrawer />
           </ComplianceUpdateProvider>

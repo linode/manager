@@ -14,7 +14,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import {
   WithProfileProps,
   withProfile,

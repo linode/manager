@@ -1,14 +1,12 @@
 import Popper from '@mui/material/Popper';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 
 import Bell from 'src/assets/icons/notification.svg';
-import { Button } from 'src/components/Button/Button';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import Events from 'src/features/NotificationCenter/Events';
 import {
   notificationContext as _notificationContext,
@@ -21,20 +19,13 @@ import Notifications from 'src/features/NotificationCenter/Notifications';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import usePrevious from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { markAllSeen } from 'src/store/events/event.request';
-import { ThunkDispatch } from 'src/store/types';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { useMarkEventsAsSeen } from 'src/queries/events';
 
-import { StyledTopMenuIconWrapper, TopMenuIcon } from '../TopMenuIcon';
-
-const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
-  label: 'NotificationIconWrapper',
-  shouldForwardProp: (prop) => isPropValid(['isMenuOpen'], prop),
-})<{
-  isMenuOpen: boolean;
-}>(({ ...props }) => ({
-  color: props.isMenuOpen ? '#606469' : '#c9c7c7',
-}));
+import { TopMenuIcon } from '../TopMenuIcon';
+import {
+  NotificationIconWrapper,
+  StyledButton,
+} from './NotificationMenu.styles';
 
 const NotificationIconBadge = styled('div')(({ theme }) => ({
   alignItems: 'center',
@@ -54,11 +45,13 @@ const NotificationIconBadge = styled('div')(({ theme }) => ({
 export const NotificationMenu = () => {
   const theme = useTheme();
 
+  const notificationContext = React.useContext(_notificationContext);
+
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
   const eventNotifications = useEventNotifications();
-  const notificationContext = React.useContext(_notificationContext);
+  const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
     eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
@@ -66,8 +59,6 @@ export const NotificationMenu = () => {
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const prevOpen = usePrevious(notificationContext.menuOpen);
-
-  const dispatch = useDispatch<ThunkDispatch>();
 
   const handleNotificationMenuToggle = () => {
     if (!notificationContext.menuOpen) {
@@ -98,29 +89,24 @@ export const NotificationMenu = () => {
   React.useEffect(() => {
     if (prevOpen && !notificationContext.menuOpen) {
       // Dismiss seen notifications after the menu has closed.
-      dispatch(markAllSeen());
+      if (eventNotifications.length > 0) {
+        markEventsAsSeen(eventNotifications[0].originalId);
+      }
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
   }, [
-    notificationContext.menuOpen,
     dismissNotifications,
+    eventNotifications,
+    markEventsAsSeen,
+    notificationContext.menuOpen,
     notifications,
-    dispatch,
     prevOpen,
   ]);
 
   return (
     <>
       <TopMenuIcon title="Notifications">
-        <Button
-          sx={{
-            '&:hover': {
-              backgroundColor: 'unset',
-            },
-            margin: 0,
-            minWidth: 'unset',
-            padding: 0,
-          }}
+        <StyledButton
           aria-haspopup="true"
           aria-label="Notifications"
           disableRipple
@@ -134,7 +120,7 @@ export const NotificationMenu = () => {
               <NotificationIconBadge>{numNotifications}</NotificationIconBadge>
             ) : null}
           </NotificationIconWrapper>
-        </Button>
+        </StyledButton>
       </TopMenuIcon>
 
       <Popper
