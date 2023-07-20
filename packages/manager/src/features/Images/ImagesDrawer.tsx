@@ -9,9 +9,7 @@ import { useHistory } from 'react-router-dom';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
-import { ErrorBoundary } from 'src/components/ErrorBoundary';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -309,113 +307,111 @@ export const ImagesDrawer = (props: CombinedProps) => {
   const diskError = hasErrorFor('disk_id');
 
   return (
-    <ErrorBoundary fallback={<ErrorState errorText="" />}>
-      <Drawer onClose={onClose} open={open} title={titleMap[mode]}>
-        {!canCreateImage ? (
-          <Notice
-            error
-            text="You don't have permissions to create a new Image. Please contact an account administrator for details."
-          />
-        ) : null}
-        {generalError && <Notice data-qa-notice error text={generalError} />}
+    <Drawer onClose={onClose} open={open} title={titleMap[mode]}>
+      {!canCreateImage ? (
+        <Notice
+          error
+          text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+        />
+      ) : null}
+      {generalError && <Notice data-qa-notice error text={generalError} />}
 
-        {notice && <Notice data-qa-notice info text={notice} />}
+      {notice && <Notice data-qa-notice info text={notice} />}
 
-        {['create', 'restore'].includes(mode) && (
-          <LinodeSelect
-            filterCondition={(linode) =>
-              availableLinodes ? availableLinodes.includes(linode.id) : true
+      {['create', 'restore'].includes(mode) && (
+        <LinodeSelect
+          filterCondition={(linode) =>
+            availableLinodes ? availableLinodes.includes(linode.id) : true
+          }
+          handleChange={(linode) => {
+            if (linode !== null) {
+              handleLinodeChange(linode.id);
             }
-            handleChange={(linode) => {
-              if (linode !== null) {
-                handleLinodeChange(linode.id);
-              }
-            }}
-            disabled={!canCreateImage}
-            isClearable={false}
-            linodeError={linodeError}
-            selectedLinode={selectedLinode}
+          }}
+          disabled={!canCreateImage}
+          isClearable={false}
+          linodeError={linodeError}
+          selectedLinode={selectedLinode}
+        />
+      )}
+
+      {['create', 'imagize'].includes(mode) && (
+        <>
+          <DiskSelect
+            data-qa-disk-select
+            disabled={mode === 'imagize' || !canCreateImage}
+            diskError={diskError}
+            disks={disks}
+            handleChange={handleDiskChange}
+            selectedDisk={selectedDisk}
+            updateFor={[disks, selectedDisk, diskError, classes]}
           />
-        )}
+          <Typography className={classes.helperText} variant="body1">
+            Linode Images are limited to {IMAGE_DEFAULT_LIMIT} MB of data per
+            disk by default. Please ensure that your disk content does not
+            exceed this size limit, or open a Support ticket to request a higher
+            limit. Additionally, Linode Images cannot be created if you are
+            using raw disks or disks that have been formatted using custom
+            filesystems.
+          </Typography>
+        </>
+      )}
 
-        {['create', 'imagize'].includes(mode) && (
-          <>
-            <DiskSelect
-              data-qa-disk-select
-              disabled={mode === 'imagize' || !canCreateImage}
-              diskError={diskError}
-              disks={disks}
-              handleChange={handleDiskChange}
-              selectedDisk={selectedDisk}
-              updateFor={[disks, selectedDisk, diskError, classes]}
-            />
-            <Typography className={classes.helperText} variant="body1">
-              Linode Images are limited to {IMAGE_DEFAULT_LIMIT} MB of data per
-              disk by default. Please ensure that your disk content does not
-              exceed this size limit, or open a Support ticket to request a
-              higher limit. Additionally, Linode Images cannot be created if you
-              are using raw disks or disks that have been formatted using custom
-              filesystems.
-            </Typography>
-          </>
-        )}
-
-        {['create', 'edit', 'imagizing'].includes(mode) && (
-          <React.Fragment>
-            <TextField
-              data-qa-image-label
-              disabled={!canCreateImage}
-              error={Boolean(labelError)}
-              errorText={labelError}
-              label="Label"
-              onChange={changeLabel}
-              value={label}
-            />
-            <TextField
-              data-qa-image-description
-              disabled={!canCreateImage}
-              error={Boolean(descriptionError)}
-              errorText={descriptionError}
-              label="Description"
-              multiline
-              onChange={changeDescription}
-              rows={1}
-              value={description}
-            />
-          </React.Fragment>
-        )}
-
-        <ActionsPanel
-          updateFor={[
-            requirementsMet,
-            classes,
-            submitting,
-            mode,
-            label,
-            description,
-          ]}
-          style={{ marginTop: 16 }}
-        >
-          <Button
-            buttonType="secondary"
-            className="cancel"
-            data-qa-cancel
+      {['create', 'edit', 'imagizing'].includes(mode) && (
+        <React.Fragment>
+          <TextField
+            data-qa-image-label
             disabled={!canCreateImage}
-            onClick={close}
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            disabled={requirementsMet || !canCreateImage}
-            loading={submitting}
-            onClick={onSubmit}
-          >
-            {buttonTextMap[mode] ?? 'Submit'}
-          </Button>
-        </ActionsPanel>
-      </Drawer>
-    </ErrorBoundary>
+            error={Boolean(labelError)}
+            errorText={labelError}
+            label="Label"
+            onChange={changeLabel}
+            value={label}
+          />
+          <TextField
+            data-qa-image-description
+            disabled={!canCreateImage}
+            error={Boolean(descriptionError)}
+            errorText={descriptionError}
+            label="Description"
+            multiline
+            onChange={changeDescription}
+            rows={1}
+            value={description}
+          />
+        </React.Fragment>
+      )}
+
+      <ActionsPanel
+        updateFor={[
+          requirementsMet,
+          classes,
+          submitting,
+          mode,
+          label,
+          description,
+        ]}
+        style={{ marginTop: 16 }}
+      >
+        <Button
+          buttonType="secondary"
+          className="cancel"
+          data-qa-cancel
+          disabled={!canCreateImage}
+          onClick={close}
+        >
+          Cancel
+        </Button>
+        <Button
+          buttonType="primary"
+          data-qa-submit
+          disabled={requirementsMet || !canCreateImage}
+          loading={submitting}
+          onClick={onSubmit}
+        >
+          {buttonTextMap[mode] ?? 'Submit'}
+        </Button>
+      </ActionsPanel>
+    </Drawer>
   );
 };
