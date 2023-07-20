@@ -15,12 +15,7 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { FlagSet } from 'src/featureFlags';
 import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
-import {
-  ApplicationState,
-  ApplicationStore,
-  defaultState,
-  storeFactory,
-} from 'src/store';
+import { ApplicationState, defaultState, storeFactory } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = jest.fn().mockImplementation((query) => {
@@ -54,9 +49,7 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const { customStore, queryClient: passedQueryClient } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
-  const storeToPass = customStore
-    ? baseStore(customStore)
-    : storeFactory(queryClient);
+  const storeToPass = customStore ? baseStore(customStore) : storeFactory();
 
   // we have to call setupInterceptors so that our API error normalization works as expected
   // I'm sorry that it makes us pass it the "ApplicationStore"
@@ -84,29 +77,6 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
       </QueryClientProvider>
     </Provider>
   );
-};
-
-/**
- * Wraps children with just the Redux Store. This is
- * useful for testing React hooks that need to access
- * the Redux store.
- * @example
- * ```ts
- * const { result } = renderHook(() => useOrder(defaultOrder), {
- *   wrapper: wrapWithStore,
- * });
- * ```
- * @param param {object} contains children to render
- * @returns {JSX.Element} wrapped component with Redux available for use
- */
-export const wrapWithStore = (props: {
-  children: React.ReactNode;
-  queryClient?: QueryClient;
-  store?: ApplicationStore;
-}) => {
-  const queryClient = props.queryClient ?? queryClientFactory();
-  const store = props.store ?? storeFactory(queryClient);
-  return <Provider store={store}>{props.children}</Provider>;
 };
 
 // When wrapping a TableRow component to test, we'll get an invalid DOM nesting

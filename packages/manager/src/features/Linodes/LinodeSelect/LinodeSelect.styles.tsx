@@ -23,6 +23,7 @@ export const CustomPopper = (props: PopperProps) => {
             ? { width: `calc(${props.style.width} + 2px)` }
             : { width: props.style.width + 2 }
           : {}),
+        zIndex: 1,
       }}
       data-qa-autocomplete-popper
       modifiers={[{ enabled: false, name: 'preventOverflow' }]}

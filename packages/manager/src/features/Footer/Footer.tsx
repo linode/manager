@@ -1,8 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import ExternalLink from 'src/components/ExternalLink';
 
@@ -12,7 +11,7 @@ interface Props {
   desktopMenuIsOpen: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     backgroundColor: theme.bg.main,
     margin: 0,
@@ -71,15 +70,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 
-export const Footer: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const Footer = React.memo((props: Props) => {
+  const { classes, cx } = useStyles();
 
   const { desktopMenuIsOpen } = props;
 
   return (
     <footer role="contentinfo">
       <Grid
-        className={classNames({
+        className={cx({
           [classes.container]: true,
           [classes.desktopMenuIsOpen]: desktopMenuIsOpen,
         })}
@@ -89,7 +88,7 @@ export const Footer: React.FC<Props> = (props) => {
       >
         <Grid className={classes.version}>{renderVersion(classes.link)}</Grid>
         <Grid
-          className={classNames({
+          className={cx({
             [classes.linkContainer]: true,
           })}
         >
@@ -104,7 +103,7 @@ export const Footer: React.FC<Props> = (props) => {
           </a>
         </Grid>
         <Grid
-          className={classNames({
+          className={cx({
             [classes.feedbackLink]: true,
             [classes.linkContainer]: true,
           })}
@@ -119,7 +118,7 @@ export const Footer: React.FC<Props> = (props) => {
       </Grid>
     </footer>
   );
-};
+});
 
 const renderVersion = (className: string) => {
   const VERSION = packageJson.version;
@@ -139,5 +138,3 @@ const renderVersion = (className: string) => {
     </a>
   );
 };
-
-export default React.memo(Footer);

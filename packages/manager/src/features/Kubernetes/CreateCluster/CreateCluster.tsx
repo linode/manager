@@ -21,7 +21,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,

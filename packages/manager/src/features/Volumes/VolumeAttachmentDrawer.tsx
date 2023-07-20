@@ -5,13 +5,13 @@ import { number, object } from 'yup';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
@@ -70,6 +70,8 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
     return { label: config.label, value: `${config.id}` };
   });
 
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
+
   React.useEffect(() => {
     if (configs.length === 1) {
       formik.setFieldValue('config_id', configs[0].id);
@@ -124,16 +126,16 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
         )}
         {generalError && <Notice error={true} text={generalError} />}
         <LinodeSelectV2
-          value={formik.values.linode_id}
-          optionsFilter={(linode) => linode.region === linodeRegion}
           onSelectionChange={(linode) => {
             if (linode !== null) {
               formik.setFieldValue('linode_id', linode.id);
             }
           }}
-          errorText={formik.errors.linode_id ?? linodeError}
-          disabled={disabled || readOnly}
           clearable={false}
+          disabled={disabled || readOnly}
+          errorText={formik.errors.linode_id ?? linodeError}
+          optionsFilter={(linode) => linode.region === linodeRegion}
+          value={formik.values.linode_id}
         />
         {!linodeError && (
           <FormHelperText>

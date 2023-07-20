@@ -7,10 +7,10 @@ import * as React from 'react';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
-import Paper from 'src/components/core/Paper';
 import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import { useRegionsQuery } from 'src/queries/regions';
 

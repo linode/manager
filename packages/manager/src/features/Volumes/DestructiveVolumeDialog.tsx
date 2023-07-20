@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   useDeleteVolumeMutation,
@@ -54,6 +54,8 @@ export const DestructiveVolumeDialog = (props: Props) => {
     isLoading: deleteLoading,
     mutateAsync: deleteVolume,
   } = useDeleteVolumeMutation();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const onDetach = () => {
     detachVolume({ id: volumeId }).then(() => {
