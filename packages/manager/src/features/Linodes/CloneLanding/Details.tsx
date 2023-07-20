@@ -10,7 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { LinodeSelect } from '../LinodeSelect/LinodeSelect';

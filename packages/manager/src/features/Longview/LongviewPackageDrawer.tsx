@@ -4,7 +4,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

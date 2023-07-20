@@ -11,7 +11,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,

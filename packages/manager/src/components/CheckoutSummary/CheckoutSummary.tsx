@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import Grid from '../Grid';
 import { Typography } from '../Typography';
-import Paper from '../core/Paper';
+import { Paper } from '../Paper';
 import { SummaryItem } from './SummaryItem';
 
 interface Props {

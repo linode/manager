@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 import DNSResolvers from './DNSResolvers';

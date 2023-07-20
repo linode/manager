@@ -3,7 +3,7 @@ import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
 
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import {
   WithProfileProps,
   withProfile,

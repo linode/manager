@@ -20,7 +20,7 @@ import { IconButton } from 'src/components/IconButton';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';

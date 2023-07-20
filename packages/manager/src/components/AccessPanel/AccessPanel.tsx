@@ -4,7 +4,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 
 import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';

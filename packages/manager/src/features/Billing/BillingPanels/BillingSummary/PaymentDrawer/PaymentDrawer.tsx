@@ -11,7 +11,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import { Divider } from 'src/components/Divider';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { Notice } from 'src/components/Notice/Notice';

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import { TextField, TextFieldProps } from 'src/components/TextField';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 
 interface LabelAndTagsProps {
   error?: string;

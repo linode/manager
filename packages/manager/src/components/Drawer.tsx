@@ -1,4 +1,5 @@
 import Close from '@mui/icons-material/Close';
+import _Drawer, { DrawerProps } from '@mui/material/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
@@ -6,11 +7,17 @@ import { makeStyles } from 'tss-react/mui';
 
 import { IconButton } from 'src/components/IconButton';
 import { Typography } from 'src/components/Typography';
-import _Drawer, { DrawerProps } from 'src/components/core/Drawer';
 import { convertForAria } from 'src/utilities/stringUtils';
 
-export interface Props extends DrawerProps {
+interface Props extends DrawerProps {
+  /**
+   * Title that appears at the top of the drawer
+   */
   title: string;
+  /**
+   * Increaces the Drawers width from 480px to 700px on desktop-sized viewports
+   * @default false
+   */
   wide?: boolean;
 }
 
@@ -59,7 +66,18 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const Drawer = (props: Props) => {
+/**
+ * ## Overview
+ * - Drawers are essentially modal dialogs that appear on the right of the screen rather than the center.
+ * - Like traditional modals, they block interaction with the page content.
+ * - They are elevated above the app’s UI and don’t affect the screen’s layout grid.
+ *
+ * ## Behavior
+ *
+ * - Clicking a button on the screen opens the drawer.
+ * - Drawers can be closed by pressing the `esc` key, clicking the “X” icon, or clicking the “Cancel” button.
+ */
+export const Drawer = (props: Props) => {
   const { classes } = useStyles();
 
   const { children, onClose, title, wide, ...rest } = props;
@@ -123,5 +141,3 @@ const Drawer = (props: Props) => {
     </_Drawer>
   );
 };
-
-export default Drawer;

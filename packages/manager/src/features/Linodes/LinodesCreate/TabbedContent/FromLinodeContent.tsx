@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';

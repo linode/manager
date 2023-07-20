@@ -10,7 +10,7 @@ import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { ImageOption } from 'src/components/ImageSelect/ImageOption';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import { useAllImagesQuery } from 'src/queries/images';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';

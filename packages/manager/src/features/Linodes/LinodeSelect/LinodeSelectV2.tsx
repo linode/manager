@@ -93,6 +93,7 @@ export const LinodeSelectV2 = (
 
   return (
     <Autocomplete
+      disablePortal={true}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 
 type ClassNames = 'root';
 

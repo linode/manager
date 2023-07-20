@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
 import ExternalLink from 'src/components/ExternalLink';
+import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -18,6 +19,7 @@ import {
 
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
+// @TODO Delete this file when VPC is released
 const useStyles = makeStyles((theme: Theme) => ({
   paragraphBreak: {
     marginTop: theme.spacing(2),
@@ -29,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     display: 'flex',
     marginBottom: theme.spacing(2),
+  },
+  vlan: {
+    marginTop: theme.spacing(3),
   },
 }));
 
@@ -85,7 +90,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   )}.`;
 
   return (
-    <>
+    <Paper className={classes.vlan} data-qa-add-ons>
       <Typography className={classes.title} variant="h2">
         Attach a VLAN{' '}
         {helperText ? <TooltipIcon status="help" text={helperText} /> : null}
@@ -122,7 +127,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
       </Grid>
-    </>
+    </Paper>
   );
 };
 
