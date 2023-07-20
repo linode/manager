@@ -19,7 +19,7 @@ import withGlobalErrors, {
 } from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context';
 import BackupDrawer from 'src/features/Backups';
-import Footer from 'src/features/Footer';
+import { Footer } from 'src/features/Footer/Footer';
 import GlobalNotifications from 'src/features/GlobalNotifications';
 import {
   notificationContext,
