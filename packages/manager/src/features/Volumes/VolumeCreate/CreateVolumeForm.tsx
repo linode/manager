@@ -5,7 +5,7 @@ import { Theme, useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { Formik } from 'formik';
 import * as React from 'react';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -28,7 +28,6 @@ import {
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
-import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
@@ -127,20 +126,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
-  const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
-
   const { data: accountAgreements } = useAccountAgreements();
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-
-  // This is to keep track of this linodeId's errors so we can select it from the Redux store for the error message.
-  const { error: configsError } = useSelector((state: ApplicationState) => {
-    return state.__resources.linodeConfigs[linodeId] ?? { error: {} };
-  });
-
-  const configErrorMessage = configsError?.read
-    ? 'Unable to load configs for this Linode.' // More specific than the API error message
-    : undefined;
 
   const regionsWithBlockStorage =
     regions
@@ -266,11 +254,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           if (linode !== null) {
             setFieldValue('linode_id', linode.id);
             setFieldValue('region', linode.region);
-            setLinodeId(linode.id);
           } else {
             // If the LinodeSelect is cleared, reset the values for Region and Config
             setFieldValue('linode_id', initialValueDefaultId);
-            setLinodeId(initialValueDefaultId);
           }
         };
 
@@ -366,7 +352,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       handleChange={handleLinodeChange}
                       isClearable
                       label="Linode"
-                      linodeError={linodeError || configErrorMessage}
+                      linodeError={linodeError}
                       name="linodeId"
                       onBlur={handleBlur}
                       region={values.region}

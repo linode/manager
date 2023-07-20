@@ -6,15 +6,14 @@ import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate, { PaginationProps } from 'src/components/Paginate';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableBody } from 'src/components/TableBody';
 import { Tooltip } from 'src/components/Tooltip';
 import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import { LinodeWithMaintenance } from 'src/utilities/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import {
@@ -51,8 +50,7 @@ interface Props {
   updatePageUrl: (page: number) => void;
 }
 
-type CombinedProps = Props &
-  OrderByProps<LinodeWithMaintenanceAndDisplayStatus>;
+type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
 
 export const DisplayLinodes = React.memo((props: CombinedProps) => {
   const {

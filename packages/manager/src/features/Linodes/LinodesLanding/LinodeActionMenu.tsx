@@ -11,17 +11,17 @@ import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
-import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent,
 } from 'src/utilities/analytics';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { getPermissionsForLinode } from 'src/utilities/linodes';
 
 import { LinodeHandlers } from './LinodesLanding';
 
-export interface Props extends LinodeHandlers {
+export interface LinodeActionMenuProps extends LinodeHandlers {
   inListView?: boolean;
   linodeBackups: LinodeBackups;
   linodeId: number;
@@ -58,7 +58,7 @@ export const buildQueryStringForLinodeClone = (
   return new URLSearchParams(params).toString();
 };
 
-export const LinodeActionMenu: React.FC<Props> = (props) => {
+export const LinodeActionMenu: React.FC<LinodeActionMenuProps> = (props) => {
   const {
     inListView,
     linodeId,

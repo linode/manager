@@ -27,9 +27,9 @@ import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
-  useAllLinodeConfigsQuery,
   useAllLinodesQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';

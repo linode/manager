@@ -22,8 +22,8 @@ import { Typography } from 'src/components/Typography';
 import TableFooter from 'src/components/core/TableFooter';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import NodeActionMenu from './NodeActionMenu';
 
@@ -294,7 +294,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
  */
 export const nodeToRow = (
   node: PoolNodeResponse,
-  linodes: LinodeWithMaintenanceAndDisplayStatus[]
+  linodes: LinodeWithMaintenance[]
 ): NodeRow => {
   const foundLinode = linodes.find(
     (thisLinode) => thisLinode.id === node.instance_id

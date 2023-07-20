@@ -1,5 +1,4 @@
 import {
-  Config,
   CreateLinodeRequest,
   Kernel,
   Linode,
@@ -8,7 +7,6 @@ import {
   createLinode,
   deleteLinode,
   getLinode,
-  getLinodeConfigs,
   getLinodeKernel,
   getLinodeKernels,
   getLinodeLishToken,
@@ -102,14 +100,6 @@ export const useLinodeUpdateMutation = (id: number) => {
   );
 };
 
-export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
-  return useQuery<Config[], APIError[]>(
-    [queryKey, 'linode', id, 'configs'],
-    () => getAllLinodeConfigs(id),
-    { enabled }
-  );
-};
-
 export const useAllLinodeKernelsQuery = (
   params: Params = {},
   filter: Filter = {},
@@ -155,11 +145,6 @@ const getAllLinodeKernelsRequest = (
       { ...params, ...passedParams },
       { ...filter, ...passedFilter }
     )
-  )().then((data) => data.data);
-
-const getAllLinodeConfigs = (id: number) =>
-  getAll<Config>((params, filter) =>
-    getLinodeConfigs(id, params, filter)
   )().then((data) => data.data);
 
 export const useDeleteLinodeMutation = (id: number) => {
@@ -217,15 +202,6 @@ export const useLinodeChangePasswordMutation = (id: number) =>
   useMutation<{}, APIError[], { root_pass: string }>(({ root_pass }) =>
     changeLinodePassword(id, root_pass)
   );
-
-export const useLinodeDeleteMutation = (id: number) => {
-  const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteLinode(id), {
-    onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
-    },
-  });
-};
 
 export const useLinodeMigrateMutation = (id: number) => {
   const queryClient = useQueryClient();

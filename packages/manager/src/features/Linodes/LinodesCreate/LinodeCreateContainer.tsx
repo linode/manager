@@ -58,7 +58,6 @@ import {
 import { simpleMutationHandlers } from 'src/queries/base';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 import {
   sendCreateLinodeEvent,
@@ -117,7 +116,6 @@ type CombinedProps = WithSnackbarProps &
   WithTypesProps &
   WithLinodesProps &
   RegionsProps &
-  DispatchProps &
   FeatureFlagConsumerProps &
   RouteComponentProps<{}, any, any> &
   WithProfileProps &
@@ -769,11 +767,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           });
         }
 
-        /** if cloning a Linode, upsert Linode in redux */
-        if (createType === 'fromLinode') {
-          this.props.upsertLinode(response);
-        }
-
         /** Analytics creation event */
         handleAnalytics(
           createType,
@@ -825,11 +818,7 @@ const mapStateToProps: MapState<CreateType, CombinedProps> = (state) => ({
   createType: state.createLinode.type,
 });
 
-interface DispatchProps {
-  upsertLinode: (l: Linode) => void;
-}
-
-const connected = connect(mapStateToProps, { upsertLinode });
+const connected = connect(mapStateToProps);
 
 export default recompose<CombinedProps, {}>(
   withImages,
