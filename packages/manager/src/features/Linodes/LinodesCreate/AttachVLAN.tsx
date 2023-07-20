@@ -6,9 +6,9 @@ import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
 import ExternalLink from 'src/components/ExternalLink';
+import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';

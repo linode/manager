@@ -5,7 +5,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import Grid from 'src/components/Grid';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import withLongviewClients, {
   DispatchProps,
 } from 'src/containers/longview.container';

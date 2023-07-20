@@ -1,9 +1,9 @@
+import Drawer from '@mui/material/Drawer';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-import Drawer from 'src/components/core/Drawer';
 
 import PrimaryNav from './PrimaryNav/PrimaryNav';
 
