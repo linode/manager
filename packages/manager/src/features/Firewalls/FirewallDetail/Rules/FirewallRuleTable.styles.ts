@@ -34,6 +34,17 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
+// looking into converting the rest of the ^ into styled components, but we'll see...
+// export const ConditionalStyledButton = styled('button', { label: 'ConditionalStyledButton' })(({
+//   theme, ...props }) => ({
+//     backgroundColor: 'transparent',
+//     border: 'none',
+//     cursor: 'pointer',
+//     ...(props.status !== 'PENDING_DELETION' ? {
+//       backgroundColor: theme.bg.lightBlue1,
+//     } : {})
+// }))
+
 export const sxBox = {
   alignItems: 'center',
   display: 'flex',
