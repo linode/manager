@@ -12,7 +12,7 @@ import { TableRow } from 'src/components/TableRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
-import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
+import { FirewallActionMenu, ActionHandlers } from './FirewallActionMenu';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   link: {
@@ -28,7 +28,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export type Props = Firewall & ActionHandlers;
 
-export const FirewallRow = (props: Props) => {
+export const FirewallRow = React.memo((props: Props) => {
   const { classes } = useStyles();
 
   const { id, label, rules, status, ...actionHandlers } = props;
@@ -58,7 +58,7 @@ export const FirewallRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <ActionMenu
+        <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}
           firewallStatus={status}
@@ -67,7 +67,7 @@ export const FirewallRow = (props: Props) => {
       </TableCell>
     </TableRow>
   );
-};
+});
 
 /**
  *
@@ -141,5 +141,3 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
     </>
   );
 };
-
-export default React.memo(FirewallRow);

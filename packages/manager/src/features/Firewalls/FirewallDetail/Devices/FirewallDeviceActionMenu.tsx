@@ -13,17 +13,17 @@ export interface FirewallDeviceActionMenuProps extends ActionHandlers {
   disabled: boolean;
 }
 
-const FirewallDeviceActionMenu = (props: FirewallDeviceActionMenuProps) => {
-  const { deviceID, deviceLabel, disabled, triggerRemoveDevice } = props;
+export const FirewallDeviceActionMenu = React.memo(
+  (props: FirewallDeviceActionMenuProps) => {
+    const { deviceID, deviceLabel, disabled, triggerRemoveDevice } = props;
 
-  return (
-    <InlineMenuAction
-      actionText="Remove"
-      disabled={disabled}
-      key="Remove"
-      onClick={() => triggerRemoveDevice(deviceID, deviceLabel)}
-    />
-  );
-};
-
-export default React.memo(FirewallDeviceActionMenu);
+    return (
+      <InlineMenuAction
+        actionText="Remove"
+        disabled={disabled}
+        key="Remove"
+        onClick={() => triggerRemoveDevice(deviceID, deviceLabel)}
+      />
+    );
+  }
+);

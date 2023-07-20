@@ -7,9 +7,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
-import AddDeviceDrawer from './AddDeviceDrawer';
-import FirewallDevicesTable from './FirewallDevicesTable';
-import RemoveDeviceDialog from './RemoveDeviceDialog';
+import { AddDeviceDrawer } from './AddDeviceDrawer';
+import { FirewallDevicesTable } from './FirewallDevicesTable';
+import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 
 interface Props {
   disabled: boolean;

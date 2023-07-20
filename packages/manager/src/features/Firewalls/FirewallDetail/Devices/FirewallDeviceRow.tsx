@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import ActionMenu, {
+import {
+  FirewallDeviceActionMenu,
   FirewallDeviceActionMenuProps as ActionProps,
 } from './FirewallDeviceActionMenu';
 
-export const FirewallDeviceRow = (props: ActionProps) => {
+export const FirewallDeviceRow = React.memo((props: ActionProps) => {
   const { deviceEntityID, deviceID, deviceLabel } = props;
 
   return (
@@ -22,10 +23,8 @@ export const FirewallDeviceRow = (props: ActionProps) => {
         </Link>
       </TableCell>
       <TableCell actionCell>
-        <ActionMenu {...props} />
+        <FirewallDeviceActionMenu {...props} />
       </TableCell>
     </TableRow>
   );
-};
-
-export default React.memo(FirewallDeviceRow);
+});

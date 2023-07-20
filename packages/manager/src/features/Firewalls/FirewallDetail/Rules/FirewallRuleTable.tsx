@@ -26,7 +26,7 @@ import {
 } from 'src/features/Firewalls/shared';
 import { capitalize } from 'src/utilities/capitalize';
 
-import FirewallRuleActionMenu from './FirewallRuleActionMenu';
+import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError, sortPortString } from './shared';
 

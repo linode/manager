@@ -15,7 +15,7 @@ export interface Props {
   open: boolean;
 }
 
-export const RemoveDeviceDialog = (props: Props) => {
+export const RemoveDeviceDialog = React.memo((props: Props) => {
   const { device, firewallId, firewallLabel, onClose, open } = props;
 
   const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
@@ -62,6 +62,4 @@ export const RemoveDeviceDialog = (props: Props) => {
       </Typography>
     </ConfirmationDialog>
   );
-};
-
-export default React.memo(RemoveDeviceDialog);
+});

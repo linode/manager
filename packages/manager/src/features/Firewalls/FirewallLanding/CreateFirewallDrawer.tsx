@@ -38,7 +38,7 @@ const initialValues: CreateFirewallPayload = {
   },
 };
 
-const CreateFirewallDrawer = (props: Props) => {
+export const CreateFirewallDrawer = React.memo((props: Props) => {
   const { onClose, open } = props;
 
   /**
@@ -195,6 +195,4 @@ const CreateFirewallDrawer = (props: Props) => {
       </form>
     </Drawer>
   );
-};
-
-export default React.memo(CreateFirewallDrawer);
+});

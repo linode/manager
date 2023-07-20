@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -31,27 +30,6 @@ import type {
 } from '@linode/api-v4/lib/firewalls';
 import type { APIError } from '@linode/api-v4/lib/types';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  actions: {
-    float: 'right',
-  },
-  copy: {
-    fontSize: '0.875rem',
-    lineHeight: 1.5,
-    paddingBottom: theme.spacing(1),
-  },
-  mobileSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-  table: {
-    marginBottom: theme.spacing(4),
-    marginTop: theme.spacing(2),
-  },
-}));
-
 interface Props {
   disabled: boolean;
   firewallID: number;
@@ -66,7 +44,6 @@ interface Drawer {
 }
 
 const FirewallRulesLanding = (props: Props) => {
-  const { classes } = useStyles();
   const { disabled, firewallID, rules } = props;
   const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
     firewallID
@@ -315,7 +292,7 @@ const FirewallRulesLanding = (props: Props) => {
         <Notice error spacingTop={8} text={generalErrors[0].reason} />
       )}
 
-      <div className={classes.table}>
+      <StyledDiv>
         <FirewallRuleTable
           triggerCloneFirewallRule={(idx: number) =>
             handleCloneRule('inbound', idx)
@@ -335,8 +312,8 @@ const FirewallRulesLanding = (props: Props) => {
           triggerDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
           triggerUndo={(idx) => handleUndo('inbound', idx)}
         />
-      </div>
-      <div className={classes.table}>
+      </StyledDiv>
+      <StyledDiv>
         <FirewallRuleTable
           triggerCloneFirewallRule={(idx: number) =>
             handleCloneRule('outbound', idx)
@@ -356,7 +333,7 @@ const FirewallRulesLanding = (props: Props) => {
           triggerDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
           triggerUndo={(idx) => handleUndo('outbound', idx)}
         />
-      </div>
+      </StyledDiv>
       <FirewallRuleDrawer
         category={ruleDrawer.category}
         isOpen={ruleDrawer.isOpen}
@@ -365,7 +342,7 @@ const FirewallRulesLanding = (props: Props) => {
         onSubmit={ruleDrawer.mode === 'create' ? handleAddRule : handleEditRule}
         ruleToModify={ruleToModify}
       />
-      <ActionsPanel className={classes.actions}>
+      <StyledActionsPanel>
         <Button
           buttonType="secondary"
           disabled={!hasUnsavedChanges || disabled}
@@ -381,7 +358,7 @@ const FirewallRulesLanding = (props: Props) => {
         >
           Save Changes
         </Button>
-      </ActionsPanel>
+      </StyledActionsPanel>
       <DiscardChangesDialog
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);
@@ -399,6 +376,17 @@ const FirewallRulesLanding = (props: Props) => {
     </>
   );
 };
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})({
+  float: 'right',
+});
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
+  marginBottom: theme.spacing(4),
+  marginTop: theme.spacing(2),
+}));
 
 export default React.memo(FirewallRulesLanding);
 
