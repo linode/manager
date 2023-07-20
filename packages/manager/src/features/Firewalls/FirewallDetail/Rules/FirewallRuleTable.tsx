@@ -2,8 +2,7 @@ import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import Box from '@mui/material/Box';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { makeStyles } from 'tss-react/mui';
-import { useTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import {
@@ -13,9 +12,7 @@ import {
   Droppable,
 } from 'react-beautiful-dnd';
 
-import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Undo from 'src/assets/icons/undo.svg';
-import { Button } from 'src/components/Button/Button';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Hidden } from 'src/components/Hidden';
 import { Typography } from 'src/components/Typography';
@@ -29,109 +26,21 @@ import { capitalize } from 'src/utilities/capitalize';
 import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError, sortPortString } from './shared';
+import {
+  useStyles,
+  sxBox,
+  sxItemSpacing,
+  StyledDragIndicator,
+  MoreStyledLinkButton,
+  StyledErrorDiv,
+  StyledButton,
+  StyledHeaderDiv,
+  StyledBox,
+  StyledUl,
+  StyledButtonDiv,
+} from './FirewallRuleTable.styles';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  addLabelButton: {
-    ...theme.applyLinkStyles,
-  },
-  button: {
-    margin: '8px 0px',
-  },
-  disabled: {
-    '& td': {
-      color: '#D2D3D4',
-    },
-    backgroundColor: 'rgba(247, 247, 247, 0.25)',
-  },
-  dragIcon: {
-    color: theme.color.grey8,
-    marginRight: theme.spacing(1.5),
-    position: 'relative',
-    top: 2,
-  },
-  dragging: {
-    '& svg': {
-      color: theme.textColors.tableHeader,
-    },
-    border: `solid 0.5px ${theme.color.grey8}`,
-    boxShadow: '0 1px 1.5px 0 rgba(0, 0, 0, 0.15)',
-    display: 'table',
-  },
-  error: {
-    '& p': { color: theme.color.red },
-  },
-  footer: {
-    '&:before': {
-      content: '""',
-      display: 'block',
-      height: theme.spacing(),
-    },
-  },
-  header: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-  highlight: {
-    backgroundColor: theme.bg.lightBlue1,
-  },
-  labelCol: {
-    paddingLeft: 6,
-  },
-  ruleGrid: {
-    margin: 0,
-    width: '100%',
-  },
-  ruleHeaderRow: {
-    backgroundColor: theme.bg.tableHeader,
-    color: theme.textColors.tableHeader,
-    fontSize: '.875rem',
-    fontWeight: 'bold',
-    height: '46px',
-  },
-  ruleList: {
-    backgroundColor: theme.color.border3,
-    listStyle: 'none',
-    margin: 0,
-    paddingLeft: 0,
-    width: '100%',
-  },
-  ruleRow: {
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    color: theme.textColors.tableStatic,
-  },
-  undoButton: {
-    backgroundColor: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-  },
-  undoButtonContainer: {
-    alignContent: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  unmodified: {
-    backgroundColor: theme.bg.bgPaper,
-  },
-}));
-
-const sxBox = {
-  alignItems: 'center',
-  display: 'flex',
-  width: '100%',
-};
-
-const sxItemSpacing = {
-  padding: `0 8px`,
-};
 
 interface RuleRow {
   action?: string;
@@ -216,21 +125,19 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
 
   return (
     <>
-      <div className={classes.header}>
+      <StyledHeaderDiv>
         <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
-        <Button
+        <StyledButton
           buttonType="primary"
-          className={classes.button}
           disabled={disabled}
           onClick={openDrawerForCreating}
         >
           Add an {capitalize(category)} Rule
-        </Button>
-      </div>
+        </StyledButton>
+      </StyledHeaderDiv>
       <Box aria-label={`${category} Rules List`} className={classes.ruleGrid}>
-        <Box
+        <StyledBox
           aria-label={`${category} Rules List Headers`}
-          className={classes.ruleHeaderRow}
           sx={sxBox}
           tabIndex={0}
         >
@@ -260,16 +167,12 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
             </Box>
           </Hidden>
           <Box sx={{ ...sxItemSpacing, width: '5%' }}>Action</Box>
-        </Box>
+        </StyledBox>
         <Box sx={{ ...sxBox, flexDirection: 'column' }}>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable" isDropDisabled={disabled}>
               {(provided) => (
-                <ul
-                  className={classes.ruleList}
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
+                <StyledUl ref={provided.innerRef} {...provided.droppableProps}>
                   {rowData.length === 0 ? (
                     <Box
                       className={cx(classes.unmodified, classes.ruleRow)}
@@ -326,7 +229,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                     ))
                   )}
                   {provided.placeholder}
-                </ul>
+                </StyledUl>
               )}
             </Droppable>
           </DragDropContext>
@@ -409,21 +312,14 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
         }}
         aria-label={`Label: ${label}`}
       >
-        <DragIndicator
-          aria-label="Drag indicator icon"
-          className={classes.dragIcon}
-        />
+        <StyledDragIndicator aria-label="Drag indicator icon" />
         {label || (
-          <button
-            style={{
-              color: disabled ? 'inherit' : '',
-            }}
-            className={classes.addLabelButton}
+          <MoreStyledLinkButton
             disabled={disabled}
             onClick={() => triggerOpenRuleDrawerForEditing(id)}
           >
             Add a label
-          </button>
+          </MoreStyledLinkButton>
         )}{' '}
       </Box>
       <Hidden lgDown>
@@ -458,7 +354,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       </Box>
       <Box sx={{ ...sxItemSpacing, marginLeft: 'auto' }}>
         {status !== 'NOT_MODIFIED' ? (
-          <div className={classes.undoButtonContainer}>
+          <StyledButtonDiv>
             <button
               className={cx({
                 [classes.highlight]: status !== 'PENDING_DELETION',
@@ -471,7 +367,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               <Undo />
             </button>
             <FirewallRuleActionMenu {...actionMenuProps} />
-          </div>
+          </StyledButtonDiv>
         ) : (
           <FirewallRuleActionMenu {...actionMenuProps} />
         )}
@@ -582,8 +478,6 @@ interface ConditionalErrorProps {
 }
 
 export const ConditionalError = React.memo((props: ConditionalErrorProps) => {
-  const { classes } = useStyles();
-
   const { errors, formField } = props;
 
   // It's possible to have multiple IP errors, but we only want to display ONE in the table row.
@@ -597,9 +491,9 @@ export const ConditionalError = React.memo((props: ConditionalErrorProps) => {
           return null;
         }
         return (
-          <div className={classes.error} key={thisError.idx}>
+          <StyledErrorDiv key={thisError.idx}>
             <Typography variant="body1">{thisError.reason}</Typography>
-          </div>
+          </StyledErrorDiv>
         );
       })}
     </>

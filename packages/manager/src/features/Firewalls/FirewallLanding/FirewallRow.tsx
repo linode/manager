@@ -1,7 +1,6 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -14,23 +13,9 @@ import { capitalize } from 'src/utilities/capitalize';
 
 import { FirewallActionMenu, ActionHandlers } from './FirewallActionMenu';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  link: {
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-    },
-    color: theme.textColors.linkActiveLight,
-    display: 'block',
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
-  },
-}));
-
 export type Props = Firewall & ActionHandlers;
 
 export const FirewallRow = React.memo((props: Props) => {
-  const { classes } = useStyles();
-
   const { id, label, rules, status, ...actionHandlers } = props;
 
   const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
@@ -43,9 +28,9 @@ export const FirewallRow = React.memo((props: Props) => {
       data-testid={`firewall-row-${id}`}
     >
       <TableCell>
-        <Link className={classes.link} tabIndex={0} to={`/firewalls/${id}`}>
+        <StyledLink tabIndex={0} to={`/firewalls/${id}`}>
           {label}
-        </Link>
+        </StyledLink>
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
@@ -141,3 +126,13 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
     </>
   );
 };
+
+const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
+  '&:hover, &:focus': {
+    textDecoration: 'underline',
+  },
+  color: theme.textColors.linkActiveLight,
+  display: 'block',
+  fontSize: '.875rem',
+  lineHeight: '1.125rem',
+}));
