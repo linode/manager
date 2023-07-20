@@ -38,6 +38,8 @@ interface LinodeSelectProps {
   noOptionsMessage?: string;
   /** Called when the input loses focus. */
   onBlur?: (e: React.FocusEvent) => void;
+  /* The options to display in the select. */
+  options?: Linode[];
   /** Determine which Linodes should be available as options. */
   optionsFilter?: (linode: Linode) => boolean;
   /* Displayed when the input is blank. */
@@ -93,6 +95,7 @@ export const LinodeSelectV2 = (
     noOptionsMessage,
     onBlur,
     onSelectionChange,
+    options,
     optionsFilter,
     placeholder,
     region,
@@ -170,7 +173,7 @@ export const LinodeSelectV2 = (
       )}
       renderOption={(props, option, { selected }) => {
         return (
-          <li {...props}>
+          <li {...props} data-testid={'keklol'}>
             {renderOption ? (
               renderOption(option, selected)
             ) : (
@@ -200,7 +203,7 @@ export const LinodeSelectV2 = (
       multiple={multiple}
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
-      options={filteredLinodesByOptions ?? []}
+      options={options || (filteredLinodesByOptions ?? [])}
       popupIcon={<KeyboardArrowDownIcon />}
       sx={sx}
       value={mapIdsToLinodes(value, linodes)}
