@@ -60,9 +60,7 @@ interface EventsLandingProps {
   getEventsRequest?: typeof getEvents;
 }
 
-type CombinedProps = EventsLandingProps;
-
-export const EventsLanding = (props: CombinedProps) => {
+export const EventsLanding = (props: EventsLandingProps) => {
   const { emptyMessage, entityId, errorMessage, filter } = props;
 
   const classes = useStyles();
