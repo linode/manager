@@ -23,7 +23,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import CircularProgress from 'src/components/core/CircularProgress';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { useGrants, useProfile } from 'src/queries/profile';

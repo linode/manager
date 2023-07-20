@@ -8,7 +8,7 @@ import { Button } from 'src/components/Button/Button';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import Events from 'src/features/NotificationCenter/Events';
 import {
   notificationContext as _notificationContext,

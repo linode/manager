@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',

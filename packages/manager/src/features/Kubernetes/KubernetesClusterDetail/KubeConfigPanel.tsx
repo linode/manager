@@ -8,7 +8,7 @@ import Download from 'src/assets/icons/download.svg';
 import View from 'src/assets/icons/view.svg';
 import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

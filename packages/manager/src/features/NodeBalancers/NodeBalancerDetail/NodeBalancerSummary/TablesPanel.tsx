@@ -9,7 +9,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import {
   NODEBALANCER_STATS_NOT_READY_API_MESSAGE,

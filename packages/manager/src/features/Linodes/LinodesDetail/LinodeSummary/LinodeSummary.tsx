@@ -11,7 +11,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
   STATS_NOT_READY_API_MESSAGE,

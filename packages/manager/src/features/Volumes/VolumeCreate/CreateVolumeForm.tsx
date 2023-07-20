@@ -16,7 +16,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import Form from 'src/components/core/Form';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';

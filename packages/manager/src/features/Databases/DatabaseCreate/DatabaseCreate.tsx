@@ -40,7 +40,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';

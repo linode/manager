@@ -11,7 +11,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
