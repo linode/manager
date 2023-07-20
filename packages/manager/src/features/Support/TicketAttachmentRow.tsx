@@ -4,7 +4,7 @@ import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 
 type ClassNames =
   | 'attachmentIcon'

@@ -7,7 +7,7 @@ import { compose } from 'recompose';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Notice } from 'src/components/Notice/Notice';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import AppPanelSection from 'src/features/Linodes/LinodesCreate/AppPanelSection';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
