@@ -19,7 +19,7 @@ import Form from 'src/components/core/Form';
 import { Paper } from 'src/components/Paper';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -358,7 +358,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     className={classes.linodeSelect}
                     display="flex"
                   >
-                    <LinodeSelectV2
+                    <LinodeSelect
                       optionsFilter={(linode: Linode) =>
                         regionsWithBlockStorage.includes(linode.region)
                       }

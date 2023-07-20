@@ -11,7 +11,7 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import {
@@ -253,7 +253,7 @@ export const Configs: React.FC<Props> = (props) => {
         <Typography>Estimated time: {estimatedCloneTime}</Typography>
       )}
 
-      <LinodeSelectV2
+      <LinodeSelect
         onSelectionChange={(linode) => {
           if (linode !== null) {
             handleSelectLinode(linode.id);

@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import * as React from 'react';
 
 import { SelectedIcon } from 'src/features/Linodes/LinodeSelect/LinodeSelect.styles';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
 import type { TextFieldProps } from 'src/components/TextField';
@@ -49,7 +49,7 @@ export const ConfigNodeIPSelect = React.memo(
     };
 
     return (
-      <LinodeSelectV2
+      <LinodeSelect
         noOptionsMessage={`No options - please ensure you have at least 1 Linode
       with a private IP located in the selected region.`}
         optionsFilter={(linode) => {

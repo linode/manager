@@ -15,7 +15,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
   useCreateImageMutation,
@@ -321,7 +321,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
       {notice && <Notice data-qa-notice info text={notice} />}
 
       {['create', 'restore'].includes(mode) && (
-        <LinodeSelectV2
+        <LinodeSelect
           onSelectionChange={(linode) => {
             if (linode !== null) {
               handleLinodeChange(linode.id);

@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Notification menu crashing older Safari versions ([#9360](https://github.com/linode/manager/pull/9360))
 - Confirmation modal overflow on mobile ([#9289](https://github.com/linode/manager/pull/9289))
 - Layout issue with Create Access Key Drawer for Object Storage ([#9296](https://github.com/linode/manager/pull/9296))
-- LinodeSelectV2 label association ([#9298](https://github.com/linode/manager/pull/9298))
+- LinodeSelect label association ([#9298](https://github.com/linode/manager/pull/9298))
 - Missing icons in DBaaS engine selection field ([#9306](https://github.com/linode/manager/pull/9306))
 - Disable delete button for public IP addresses if it's the only IP address ([#9332](https://github.com/linode/manager/pull/9332))
 - Action Menu tooltip icon color deprecation ([#9352](https://github.com/linode/manager/pull/9352))

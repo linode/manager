@@ -6,7 +6,7 @@ import React from 'react';
 import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LinodeSelectV2 } from './LinodeSelectV2';
+import { LinodeSelect } from './LinodeSelect';
 
 const fakeLinodeData = linodeFactory.build({
   id: 1,
@@ -17,7 +17,7 @@ const fakeLinodeData = linodeFactory.build({
 
 const TEXTFIELD_ID = 'textfield-input';
 
-describe('LinodeSelectV2', () => {
+describe('LinodeSelect', () => {
   test('renders custom options using renderOption', async () => {
     // Create a mock renderOption function
     const mockRenderOption = (linode: Linode, selected: boolean) => (
@@ -28,7 +28,7 @@ describe('LinodeSelectV2', () => {
 
     // Render the component with the custom renderOption function
     renderWithTheme(
-      <LinodeSelectV2
+      <LinodeSelect
         multiple={false}
         onSelectionChange={jest.fn()} // Placeholder, as there's no callback
         options={[fakeLinodeData]}
@@ -57,7 +57,7 @@ describe('LinodeSelectV2', () => {
     const onSelectionChange = jest.fn();
 
     renderWithTheme(
-      <LinodeSelectV2
+      <LinodeSelect
         multiple={false}
         noOptionsMessage={customNoOptionsMessage} // Pass the custom message via prop
         onSelectionChange={onSelectionChange}
@@ -83,7 +83,7 @@ describe('LinodeSelectV2', () => {
     const onSelectionChange = jest.fn();
 
     renderWithTheme(
-      <LinodeSelectV2
+      <LinodeSelect
         multiple={false}
         onSelectionChange={onSelectionChange}
         options={option}
@@ -108,7 +108,7 @@ describe('LinodeSelectV2', () => {
     const onSelectionChange = jest.fn();
 
     renderWithTheme(
-      <LinodeSelectV2
+      <LinodeSelect
         multiple={false}
         noOptionsMessage={customNoOptionsMessage}
         onSelectionChange={onSelectionChange}
@@ -133,7 +133,7 @@ describe('LinodeSelectV2', () => {
     const onSelectionChange = jest.fn();
 
     renderWithTheme(
-      <LinodeSelectV2
+      <LinodeSelect
         multiple={false}
         noOptionsMessage={customNoOptionsMessage}
         onSelectionChange={onSelectionChange}
@@ -157,7 +157,7 @@ describe('LinodeSelectV2', () => {
     const onSelectionChange = jest.fn();
 
     renderWithTheme(
-      <LinodeSelectV2
+      <LinodeSelect
         multiple={false}
         noOptionsMessage={customNoOptionsMessage}
         onSelectionChange={onSelectionChange}

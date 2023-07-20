@@ -10,7 +10,7 @@ import Select, { Item } from 'src/components/EnhancedSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -125,7 +125,7 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
           />
         )}
         {generalError && <Notice error={true} text={generalError} />}
-        <LinodeSelectV2
+        <LinodeSelect
           onSelectionChange={(linode) => {
             if (linode !== null) {
               formik.setFieldValue('linode_id', linode.id);

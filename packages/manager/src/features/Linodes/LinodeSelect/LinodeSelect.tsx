@@ -79,7 +79,7 @@ export interface LinodeSingleSelectProps extends LinodeSelectProps {
 /**
  * A select input allowing selection between account Linodes.
  */
-export const LinodeSelectV2 = (
+export const LinodeSelect = (
   props: LinodeMultiSelectProps | LinodeSingleSelectProps
 ) => {
   const {
@@ -137,7 +137,6 @@ export const LinodeSelectV2 = (
 
   return (
     <Autocomplete
-      disablePortal={true}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
@@ -184,7 +183,7 @@ export const LinodeSelectV2 = (
       )}
       renderOption={(props, option, { selected }) => {
         return (
-          <li {...props} data-testid={'keklol'}>
+          <li {...props}>
             {renderOption ? (
               renderOption(option, selected)
             ) : (
@@ -207,6 +206,7 @@ export const LinodeSelectV2 = (
       clearOnBlur={false}
       disableClearable={!clearable}
       disableCloseOnSelect={multiple}
+      disablePortal={true}
       disabled={disabled}
       id={id}
       inputValue={inputValue}
