@@ -5,7 +5,7 @@ import { VariantType } from 'notistack';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -14,7 +14,7 @@ import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 
 import GooglePayChip from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';
-import PayPalErrorBoundary from '../PayPalErrorBoundary';
+import { PayPalErrorBoundary } from '../PayPalErrorBoundary';
 import AddCreditCardForm from './AddCreditCardForm';
 
 interface Props {

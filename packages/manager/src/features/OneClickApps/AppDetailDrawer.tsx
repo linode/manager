@@ -1,4 +1,5 @@
 import Close from '@mui/icons-material/Close';
+import Drawer from '@mui/material/Drawer';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
@@ -7,7 +8,6 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import ExternalLink from 'src/components/ExternalLink';
 import { Typography } from 'src/components/Typography';
-import Drawer from 'src/components/core/Drawer';
 import { OCA } from 'src/features/OneClickApps/oneClickApps';
 import useFlags from 'src/hooks/useFlags';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';

@@ -7,7 +7,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 
 type ClassNames = 'header' | 'root' | 'toggleLabel' | 'toggleLabelText';
 

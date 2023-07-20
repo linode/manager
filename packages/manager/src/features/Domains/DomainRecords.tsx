@@ -21,7 +21,6 @@ import {
 } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -99,506 +98,14 @@ const createLink = (title: string, handler: () => void) => (
 );
 
 class DomainRecords extends React.Component<CombinedProps, State> {
-  eventsSubscription$: Subscription;
-
-  static defaultDrawerState: DrawerState = {
-    open: false,
-    mode: 'create',
-    type: 'NS',
-  };
-
-  updateDrawer = (fn: (d: DrawerState) => DrawerState) =>
-    this.setState(over(lensPath(['drawer']), fn));
-
-  updateConfirmDialog = (fn: (d: ConfirmationState) => ConfirmationState) =>
-    this.setState(over(lensPath(['confirmDialog']), fn), () => {
-      scrollErrorIntoView();
-    });
-
-  resetDrawer = () => this.updateDrawer(() => DomainRecords.defaultDrawerState);
-
-  openForCreation = (type: RecordType) =>
-    this.updateDrawer(() => ({
-      open: true,
-      submitting: false,
-      mode: 'create',
-      type,
-    }));
-
-  openForEditing = (
-    type: RecordType | DomainType,
-    fields: Partial<DomainRecord> | Partial<Domain>
-  ) =>
-    this.updateDrawer(() => ({
-      open: true,
-      submitting: false,
-      mode: 'edit',
-      type,
-      fields,
-    }));
-
-  openForEditPrimaryDomain = (f: Partial<Domain>) =>
-    this.openForEditing('master', f);
-
-  openForEditSecondaryDomain = (f: Partial<Domain>) =>
-    this.openForEditing('slave', f);
-
-  openForCreateNSRecord = () => this.openForCreation('NS');
-  openForEditNSRecord = (
-    f: Pick<DomainRecord, 'id' | 'target' | 'name' | 'ttl_sec'>
-  ) => this.openForEditing('NS', f);
-
-  openForCreateMXRecord = () => this.openForCreation('MX');
-  openForEditMXRecord = (
-    f: Pick<DomainRecord, 'id' | 'target' | 'priority' | 'name' | 'ttl_sec'>
-  ) => this.openForEditing('MX', f);
-
-  openForCreateARecord = () => this.openForCreation('AAAA');
-  openForEditARecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('AAAA', f);
-
-  openForCreateCNAMERecord = () => this.openForCreation('CNAME');
-  openForEditCNAMERecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('CNAME', f);
-
-  openForCreateTXTRecord = () => this.openForCreation('TXT');
-  openForEditTXTRecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('TXT', f);
-
-  openForCreateSRVRecord = () => this.openForCreation('SRV');
-  openForEditSRVRecord = (
-    f: Pick<
-      DomainRecord,
-      'id' | 'name' | 'priority' | 'weight' | 'port' | 'target' | 'protocol'
-    >
-  ) => this.openForEditing('SRV', f);
-
-  openForCreateCAARecord = () => this.openForCreation('CAA');
-  openForEditCAARecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('CAA', f);
-
-  confirmDeletion = (recordId: number) =>
-    this.updateConfirmDialog((confirmDialog) => ({
-      ...confirmDialog,
-      open: true,
-      recordId,
-    }));
-
-  deleteDomainRecord = () => {
-    const {
-      domain: { id: domainId },
-    } = this.props;
-    const {
-      confirmDialog: { recordId },
-    } = this.state;
-    if (!domainId || !recordId) {
-      return;
-    }
-
-    this.updateConfirmDialog((c) => ({
-      ...c,
-      submitting: true,
-      errors: undefined,
-    }));
-
-    deleteDomainRecord(domainId, recordId)
-      .then(() => {
-        this.props.updateRecords();
-
-        this.updateConfirmDialog((_) => ({
-          open: false,
-          submitting: false,
-          errors: undefined,
-          recordId: undefined,
-        }));
-      })
-      .catch((errorResponse) => {
-        const errors = getAPIErrorOrDefault(errorResponse);
-        this.updateConfirmDialog((c) => ({
-          ...c,
-          submitting: false,
-          errors,
-        }));
-      });
-    this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
-  };
-
-  handleOpenSOADrawer = (d: Domain) => {
-    return d.type === 'master'
-      ? this.openForEditPrimaryDomain(d)
-      : this.openForEditSecondaryDomain(d);
-  };
-
-  generateTypes = (): IType[] => [
-    /** SOA Record */
-    {
-      title: 'SOA Record',
-      orderBy: 'domain',
-      order: 'asc',
-      data: [this.props.domain],
-      columns: [
-        {
-          title: 'Primary Domain',
-          render: (d: Domain) => d.domain,
-        },
-        {
-          title: 'Email',
-          render: (d: Domain) => d.soa_email,
-        },
-        {
-          title: 'Default TTL',
-          render: compose(msToReadable, pathOr(0, ['ttl_sec'])),
-        },
-        {
-          title: 'Refresh Rate',
-          render: compose(msToReadable, pathOr(0, ['refresh_sec'])),
-        },
-        {
-          title: 'Retry Rate',
-          render: compose(msToReadable, pathOr(0, ['retry_sec'])),
-        },
-        {
-          title: 'Expire Time',
-          render: compose(msToReadable, pathOr(0, ['expire_sec'])),
-        },
-        {
-          title: '',
-          render: (d: Domain) => {
-            return d.type === 'master' ? (
-              <DomainRecordActionMenu
-                editPayload={d}
-                onEdit={this.handleOpenSOADrawer}
-                label={this.props.domain.domain}
-              />
-            ) : null;
-          },
-        },
-      ],
-    },
-
-    /** NS Record */
-    {
-      title: 'NS Record',
-      orderBy: 'target',
-      order: 'asc',
-      data: getNSRecords(this.props),
-      columns: [
-        {
-          title: 'Name Server',
-          render: (r: DomainRecord) => r.target,
-        },
-        {
-          title: 'Subdomain',
-          render: (r: DomainRecord) => {
-            const sd = r.name;
-            const {
-              domain: { domain },
-            } = this.props;
-            return isEmpty(sd) ? domain : `${sd}.${domain}`;
-          },
-        },
-        {
-          title: 'TTL',
-          render: getTTL,
-        },
-        {
-          title: '',
-          /**
-           * If the NS is one of Linode's, don't display the Action menu since the user
-           * cannot make changes to Linode's nameservers.
-           */
-          render: ({ id, name, target, ttl_sec }: DomainRecord) =>
-            id === -1 ? null : (
-              <DomainRecordActionMenu
-                editPayload={{
-                  id,
-                  name,
-                  target,
-                  ttl_sec,
-                }}
-                label={name}
-                onEdit={this.openForEditNSRecord}
-                deleteData={{
-                  recordID: id,
-                  onDelete: this.confirmDeletion,
-                }}
-              />
-            ),
-        },
-      ],
-      link: () => createLink('Add an NS Record', this.openForCreateNSRecord),
-    },
-
-    /** MX Record */
-    {
-      title: 'MX Record',
-      orderBy: 'target',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('MX')),
-      columns: [
-        {
-          title: 'Mail Server',
-          render: (r: DomainRecord) => r.target,
-        },
-        {
-          title: 'Preference',
-          render: (r: DomainRecord) => String(r.priority),
-        },
-        {
-          title: 'Subdomain',
-          render: (r: DomainRecord) => r.name,
-        },
-        {
-          title: 'TTL',
-          render: getTTL,
-        },
-        {
-          title: '',
-          render: ({ id, name, priority, target, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              onEdit={this.openForEditMXRecord}
-              editPayload={{
-                id,
-                name,
-                priority,
-                target,
-                ttl_sec,
-              }}
-              label={name}
-              deleteData={{
-                recordID: id,
-                onDelete: this.confirmDeletion,
-              }}
-            />
-          ),
-        },
-      ],
-      link: () => createLink('Add a MX Record', this.openForCreateMXRecord),
-    },
-
-    /** A/AAAA Record */
-    {
-      title: 'A/AAAA Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(
-        (r) => typeEq('AAAA', r) || typeEq('A', r)
-      ),
-      columns: [
-        {
-          title: 'Hostname',
-          render: (r: DomainRecord) => r.name || this.props.domain.domain,
-        },
-        { title: 'IP Address', render: (r: DomainRecord) => r.target },
-        { title: 'TTL', render: getTTL },
-        {
-          title: '',
-          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              editPayload={{
-                id,
-                name,
-                target,
-                ttl_sec,
-              }}
-              onEdit={this.openForEditARecord}
-              label={name || this.props.domain.domain}
-              deleteData={{
-                recordID: id,
-                onDelete: this.confirmDeletion,
-              }}
-            />
-          ),
-        },
-      ],
-      link: () => createLink('Add an A/AAAA Record', this.openForCreateARecord),
-    },
-
-    /** CNAME Record */
-    {
-      title: 'CNAME Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('CNAME')),
-      columns: [
-        { title: 'Hostname', render: (r: DomainRecord) => r.name },
-        { title: 'Aliases to', render: (r: DomainRecord) => r.target },
-        { title: 'TTL', render: getTTL },
-        {
-          title: '',
-          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              editPayload={{
-                id,
-                name,
-                target,
-                ttl_sec,
-              }}
-              label={name}
-              onEdit={this.openForEditCNAMERecord}
-              deleteData={{
-                recordID: id,
-                onDelete: this.confirmDeletion,
-              }}
-            />
-          ),
-        },
-      ],
-      link: () =>
-        createLink('Add a CNAME Record', this.openForCreateCNAMERecord),
-    },
-
-    /** TXT Record */
-    {
-      title: 'TXT Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('TXT')),
-      columns: [
-        { title: 'Hostname', render: (r: DomainRecord) => r.name },
-        {
-          title: 'Value',
-          render: (r: DomainRecord) => truncateEnd(r.target, 100),
-        },
-        { title: 'TTL', render: getTTL },
-        {
-          title: '',
-          render: ({ id, target, name, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              editPayload={{
-                id,
-                name,
-                target,
-                ttl_sec,
-              }}
-              label={name}
-              onEdit={this.openForEditTXTRecord}
-              deleteData={{
-                recordID: id,
-                onDelete: this.confirmDeletion,
-              }}
-            />
-          ),
-        },
-      ],
-      link: () => createLink('Add a TXT Record', this.openForCreateTXTRecord),
-    },
-    /** SRV Record */
-    {
-      title: 'SRV Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('SRV')),
-      columns: [
-        { title: 'Name', render: (r: DomainRecord) => r.name },
-        {
-          title: 'Domain',
-          render: () => this.props.domain.domain,
-        },
-        {
-          title: 'Priority',
-          render: (r: DomainRecord) => String(r.priority),
-        },
-        {
-          title: 'Weight',
-          render: (r: DomainRecord) => String(r.weight),
-        },
-        { title: 'Port', render: (r: DomainRecord) => String(r.port) },
-        { title: 'Target', render: (r: DomainRecord) => r.target },
-        { title: 'TTL', render: getTTL },
-        {
-          title: '',
-          render: ({
-            id,
-            service,
-            port,
-            priority,
-            protocol,
-            target,
-            weight,
-          }: DomainRecord) => (
-            <DomainRecordActionMenu
-              editPayload={{
-                id,
-                service,
-                port,
-                priority,
-                protocol,
-                target,
-                weight,
-              }}
-              label={this.props.domain.domain}
-              onEdit={this.openForEditSRVRecord}
-              deleteData={{
-                recordID: id,
-                onDelete: this.confirmDeletion,
-              }}
-            />
-          ),
-        },
-      ],
-      link: () => createLink('Add an SRV Record', this.openForCreateSRVRecord),
-    },
-
-    /** CAA Record */
-    {
-      title: 'CAA Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('CAA')),
-      columns: [
-        { title: 'Name', render: (r: DomainRecord) => r.name },
-        { title: 'Tag', render: (r: DomainRecord) => r.tag },
-        {
-          title: 'Value',
-          render: (r: DomainRecord) => r.target,
-        },
-        { title: 'TTL', render: getTTL },
-        {
-          title: '',
-          render: ({ id, name, tag, target, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              editPayload={{
-                id,
-                name,
-                tag,
-                target,
-                ttl_sec,
-              }}
-              label={name}
-              onEdit={this.openForEditCAARecord}
-              deleteData={{
-                recordID: id,
-                onDelete: this.confirmDeletion,
-              }}
-            />
-          ),
-        },
-      ],
-      link: () => createLink('Add a CAA Record', this.openForCreateCAARecord),
-    },
-  ];
-
-  handleCloseDialog = () => {
-    this.updateConfirmDialog(() => ({
-      open: false,
-      submitting: false,
-      recordId: undefined,
-    }));
-  };
-
   constructor(props: CombinedProps) {
     super(props);
     this.state = {
-      drawer: DomainRecords.defaultDrawerState,
       confirmDialog: {
         open: false,
         submitting: false,
       },
+      drawer: DomainRecords.defaultDrawerState,
       types: this.generateTypes(),
     };
   }
@@ -612,26 +119,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     }
   }
 
-  renderDialogActions = () => {
-    return (
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={this.handleCloseDialog}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={this.deleteDomainRecord}
-          loading={this.state.confirmDialog.submitting}
-        >
-          Delete
-        </Button>
-      </ActionsPanel>
-    );
-  };
-
   render() {
     const { domain, domainRecords } = this.props;
-    const { drawer, confirmDialog } = this.state;
+    const { confirmDialog, drawer } = this.state;
 
     return (
       <>
@@ -642,18 +132,18 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           return (
             <div key={eachTypeIdx}>
               <StyledGrid
+                alignItems="center"
                 container
                 justifyContent="space-between"
-                alignItems="center"
                 spacing={2}
               >
                 <Grid ref={ref} sx={{ paddingLeft: 0, paddingRight: 0 }}>
                   <Typography
-                    role="heading"
                     aria-level={2}
-                    variant="h2"
                     className="m0"
                     data-qa-domain-record={type.title}
+                    role="heading"
+                    variant="h2"
                   >
                     {type.title}
                   </Typography>
@@ -674,9 +164,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                   return (
                     <Paginate
                       data={orderedData}
-                      scrollToRef={ref}
                       pageSize={storage.infinitePageSize.get()}
                       pageSizeSetter={storage.infinitePageSize.set}
+                      scrollToRef={ref}
                     >
                       {({
                         count,
@@ -710,20 +200,20 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                                   paginatedData.map((data, idx) => {
                                     return (
                                       <TableRow
-                                        key={idx}
                                         data-qa-record-row={type.title}
+                                        key={idx}
                                       >
                                         {type.columns.length > 0 &&
                                           type.columns.map(
                                             (
-                                              { title, render },
+                                              { render, title },
                                               columnIndex
                                             ) => {
                                               return (
                                                 <StyledTableCell
-                                                  parentColumn={title}
-                                                  key={columnIndex}
                                                   data-qa-column={title}
+                                                  key={columnIndex}
+                                                  parentColumn={title}
                                                 >
                                                   {render(data)}
                                                 </StyledTableCell>
@@ -738,11 +228,11 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                             </Table>
                             <PaginationFooter
                               count={count}
+                              eventCategory={`${type.title.toLowerCase()} panel`}
                               handlePageChange={handlePageChange}
                               handleSizeChange={handlePageSizeChange}
                               page={page}
                               pageSize={pageSize}
-                              eventCategory={`${type.title.toLowerCase()} panel`}
                               // Disabling show All as it is impacting page performance.
                               showAll={false}
                             />
@@ -757,33 +247,547 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           );
         })}
         <ConfirmationDialog
-          open={confirmDialog.open}
-          onClose={this.handleCloseDialog}
-          title="Confirm Deletion"
-          actions={this.renderDialogActions}
           error={
             confirmDialog.errors
               ? getErrorStringOrDefault(confirmDialog.errors)
               : undefined
           }
+          actions={this.renderDialogActions}
+          onClose={this.handleCloseDialog}
+          open={confirmDialog.open}
+          title="Confirm Deletion"
         >
           Are you sure you want to delete this record?
         </ConfirmationDialog>
         <DomainRecordDrawer
-          open={drawer.open}
           domain={this.props.domain.domain}
           domainId={this.props.domain.id}
-          onClose={this.resetDrawer}
           mode={drawer.mode}
+          onClose={this.resetDrawer}
+          open={drawer.open}
           records={domainRecords}
           type={drawer.type}
-          updateRecords={this.props.updateRecords}
           updateDomain={this.props.updateDomain}
+          updateRecords={this.props.updateRecords}
           {...drawer.fields}
         />
       </>
     );
   }
+
+  confirmDeletion = (recordId: number) =>
+    this.updateConfirmDialog((confirmDialog) => ({
+      ...confirmDialog,
+      open: true,
+      recordId,
+    }));
+
+  static defaultDrawerState: DrawerState = {
+    mode: 'create',
+    open: false,
+    type: 'NS',
+  };
+
+  deleteDomainRecord = () => {
+    const {
+      domain: { id: domainId },
+    } = this.props;
+    const {
+      confirmDialog: { recordId },
+    } = this.state;
+    if (!domainId || !recordId) {
+      return;
+    }
+
+    this.updateConfirmDialog((c) => ({
+      ...c,
+      errors: undefined,
+      submitting: true,
+    }));
+
+    deleteDomainRecord(domainId, recordId)
+      .then(() => {
+        this.props.updateRecords();
+
+        this.updateConfirmDialog((_) => ({
+          errors: undefined,
+          open: false,
+          recordId: undefined,
+          submitting: false,
+        }));
+      })
+      .catch((errorResponse) => {
+        const errors = getAPIErrorOrDefault(errorResponse);
+        this.updateConfirmDialog((c) => ({
+          ...c,
+          errors,
+          submitting: false,
+        }));
+      });
+    this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
+  };
+
+  generateTypes = (): IType[] => [
+    /** SOA Record */
+    {
+      columns: [
+        {
+          render: (d: Domain) => d.domain,
+          title: 'Primary Domain',
+        },
+        {
+          render: (d: Domain) => d.soa_email,
+          title: 'Email',
+        },
+        {
+          render: compose(msToReadable, pathOr(0, ['ttl_sec'])),
+          title: 'Default TTL',
+        },
+        {
+          render: compose(msToReadable, pathOr(0, ['refresh_sec'])),
+          title: 'Refresh Rate',
+        },
+        {
+          render: compose(msToReadable, pathOr(0, ['retry_sec'])),
+          title: 'Retry Rate',
+        },
+        {
+          render: compose(msToReadable, pathOr(0, ['expire_sec'])),
+          title: 'Expire Time',
+        },
+        {
+          render: (d: Domain) => {
+            return d.type === 'master' ? (
+              <DomainRecordActionMenu
+                editPayload={d}
+                label={this.props.domain.domain}
+                onEdit={this.handleOpenSOADrawer}
+              />
+            ) : null;
+          },
+          title: '',
+        },
+      ],
+      data: [this.props.domain],
+      order: 'asc',
+      orderBy: 'domain',
+      title: 'SOA Record',
+    },
+
+    /** NS Record */
+    {
+      columns: [
+        {
+          render: (r: DomainRecord) => r.target,
+          title: 'Name Server',
+        },
+        {
+          render: (r: DomainRecord) => {
+            const sd = r.name;
+            const {
+              domain: { domain },
+            } = this.props;
+            return isEmpty(sd) ? domain : `${sd}.${domain}`;
+          },
+          title: 'Subdomain',
+        },
+        {
+          render: getTTL,
+          title: 'TTL',
+        },
+        {
+          /**
+           * If the NS is one of Linode's, don't display the Action menu since the user
+           * cannot make changes to Linode's nameservers.
+           */
+          render: ({ id, name, target, ttl_sec }: DomainRecord) =>
+            id === -1 ? null : (
+              <DomainRecordActionMenu
+                deleteData={{
+                  onDelete: this.confirmDeletion,
+                  recordID: id,
+                }}
+                editPayload={{
+                  id,
+                  name,
+                  target,
+                  ttl_sec,
+                }}
+                label={name}
+                onEdit={this.openForEditNSRecord}
+              />
+            ),
+          title: '',
+        },
+      ],
+      data: getNSRecords(this.props),
+      link: () => createLink('Add an NS Record', this.openForCreateNSRecord),
+      order: 'asc',
+      orderBy: 'target',
+      title: 'NS Record',
+    },
+
+    /** MX Record */
+    {
+      columns: [
+        {
+          render: (r: DomainRecord) => r.target,
+          title: 'Mail Server',
+        },
+        {
+          render: (r: DomainRecord) => String(r.priority),
+          title: 'Preference',
+        },
+        {
+          render: (r: DomainRecord) => r.name,
+          title: 'Subdomain',
+        },
+        {
+          render: getTTL,
+          title: 'TTL',
+        },
+        {
+          render: ({ id, name, priority, target, ttl_sec }: DomainRecord) => (
+            <DomainRecordActionMenu
+              deleteData={{
+                onDelete: this.confirmDeletion,
+                recordID: id,
+              }}
+              editPayload={{
+                id,
+                name,
+                priority,
+                target,
+                ttl_sec,
+              }}
+              label={name}
+              onEdit={this.openForEditMXRecord}
+            />
+          ),
+          title: '',
+        },
+      ],
+      data: this.props.domainRecords.filter(typeEq('MX')),
+      link: () => createLink('Add a MX Record', this.openForCreateMXRecord),
+      order: 'asc',
+      orderBy: 'target',
+      title: 'MX Record',
+    },
+
+    /** A/AAAA Record */
+    {
+      columns: [
+        {
+          render: (r: DomainRecord) => r.name || this.props.domain.domain,
+          title: 'Hostname',
+        },
+        { render: (r: DomainRecord) => r.target, title: 'IP Address' },
+        { render: getTTL, title: 'TTL' },
+        {
+          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
+            <DomainRecordActionMenu
+              deleteData={{
+                onDelete: this.confirmDeletion,
+                recordID: id,
+              }}
+              editPayload={{
+                id,
+                name,
+                target,
+                ttl_sec,
+              }}
+              label={name || this.props.domain.domain}
+              onEdit={this.openForEditARecord}
+            />
+          ),
+          title: '',
+        },
+      ],
+      data: this.props.domainRecords.filter(
+        (r) => typeEq('AAAA', r) || typeEq('A', r)
+      ),
+      link: () => createLink('Add an A/AAAA Record', this.openForCreateARecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'A/AAAA Record',
+    },
+
+    /** CNAME Record */
+    {
+      columns: [
+        { render: (r: DomainRecord) => r.name, title: 'Hostname' },
+        { render: (r: DomainRecord) => r.target, title: 'Aliases to' },
+        { render: getTTL, title: 'TTL' },
+        {
+          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
+            <DomainRecordActionMenu
+              deleteData={{
+                onDelete: this.confirmDeletion,
+                recordID: id,
+              }}
+              editPayload={{
+                id,
+                name,
+                target,
+                ttl_sec,
+              }}
+              label={name}
+              onEdit={this.openForEditCNAMERecord}
+            />
+          ),
+          title: '',
+        },
+      ],
+      data: this.props.domainRecords.filter(typeEq('CNAME')),
+      link: () =>
+        createLink('Add a CNAME Record', this.openForCreateCNAMERecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'CNAME Record',
+    },
+
+    /** TXT Record */
+    {
+      columns: [
+        { render: (r: DomainRecord) => r.name, title: 'Hostname' },
+        {
+          render: (r: DomainRecord) => truncateEnd(r.target, 100),
+          title: 'Value',
+        },
+        { render: getTTL, title: 'TTL' },
+        {
+          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
+            <DomainRecordActionMenu
+              deleteData={{
+                onDelete: this.confirmDeletion,
+                recordID: id,
+              }}
+              editPayload={{
+                id,
+                name,
+                target,
+                ttl_sec,
+              }}
+              label={name}
+              onEdit={this.openForEditTXTRecord}
+            />
+          ),
+          title: '',
+        },
+      ],
+      data: this.props.domainRecords.filter(typeEq('TXT')),
+      link: () => createLink('Add a TXT Record', this.openForCreateTXTRecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'TXT Record',
+    },
+    /** SRV Record */
+    {
+      columns: [
+        { render: (r: DomainRecord) => r.name, title: 'Name' },
+        {
+          render: () => this.props.domain.domain,
+          title: 'Domain',
+        },
+        {
+          render: (r: DomainRecord) => String(r.priority),
+          title: 'Priority',
+        },
+        {
+          render: (r: DomainRecord) => String(r.weight),
+          title: 'Weight',
+        },
+        { render: (r: DomainRecord) => String(r.port), title: 'Port' },
+        { render: (r: DomainRecord) => r.target, title: 'Target' },
+        { render: getTTL, title: 'TTL' },
+        {
+          render: ({
+            id,
+            port,
+            priority,
+            protocol,
+            service,
+            target,
+            weight,
+          }: DomainRecord) => (
+            <DomainRecordActionMenu
+              deleteData={{
+                onDelete: this.confirmDeletion,
+                recordID: id,
+              }}
+              editPayload={{
+                id,
+                port,
+                priority,
+                protocol,
+                service,
+                target,
+                weight,
+              }}
+              label={this.props.domain.domain}
+              onEdit={this.openForEditSRVRecord}
+            />
+          ),
+          title: '',
+        },
+      ],
+      data: this.props.domainRecords.filter(typeEq('SRV')),
+      link: () => createLink('Add an SRV Record', this.openForCreateSRVRecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'SRV Record',
+    },
+
+    /** CAA Record */
+    {
+      columns: [
+        { render: (r: DomainRecord) => r.name, title: 'Name' },
+        { render: (r: DomainRecord) => r.tag, title: 'Tag' },
+        {
+          render: (r: DomainRecord) => r.target,
+          title: 'Value',
+        },
+        { render: getTTL, title: 'TTL' },
+        {
+          render: ({ id, name, tag, target, ttl_sec }: DomainRecord) => (
+            <DomainRecordActionMenu
+              deleteData={{
+                onDelete: this.confirmDeletion,
+                recordID: id,
+              }}
+              editPayload={{
+                id,
+                name,
+                tag,
+                target,
+                ttl_sec,
+              }}
+              label={name}
+              onEdit={this.openForEditCAARecord}
+            />
+          ),
+          title: '',
+        },
+      ],
+      data: this.props.domainRecords.filter(typeEq('CAA')),
+      link: () => createLink('Add a CAA Record', this.openForCreateCAARecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'CAA Record',
+    },
+  ];
+
+  handleCloseDialog = () => {
+    this.updateConfirmDialog(() => ({
+      open: false,
+      recordId: undefined,
+      submitting: false,
+    }));
+  };
+
+  handleOpenSOADrawer = (d: Domain) => {
+    return d.type === 'master'
+      ? this.openForEditPrimaryDomain(d)
+      : this.openForEditSecondaryDomain(d);
+  };
+
+  openForCreateARecord = () => this.openForCreation('AAAA');
+
+  openForCreateCAARecord = () => this.openForCreation('CAA');
+
+  openForCreateCNAMERecord = () => this.openForCreation('CNAME');
+
+  openForCreateMXRecord = () => this.openForCreation('MX');
+
+  openForCreateNSRecord = () => this.openForCreation('NS');
+
+  openForCreateSRVRecord = () => this.openForCreation('SRV');
+
+  openForCreateTXTRecord = () => this.openForCreation('TXT');
+
+  openForCreation = (type: RecordType) =>
+    this.updateDrawer(() => ({
+      mode: 'create',
+      open: true,
+      submitting: false,
+      type,
+    }));
+
+  openForEditARecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+  ) => this.openForEditing('AAAA', f);
+
+  openForEditCAARecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
+  ) => this.openForEditing('CAA', f);
+
+  openForEditCNAMERecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+  ) => this.openForEditing('CNAME', f);
+
+  openForEditMXRecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
+  ) => this.openForEditing('MX', f);
+
+  openForEditNSRecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+  ) => this.openForEditing('NS', f);
+
+  openForEditPrimaryDomain = (f: Partial<Domain>) =>
+    this.openForEditing('master', f);
+
+  openForEditSRVRecord = (
+    f: Pick<
+      DomainRecord,
+      'id' | 'name' | 'port' | 'priority' | 'protocol' | 'target' | 'weight'
+    >
+  ) => this.openForEditing('SRV', f);
+
+  openForEditSecondaryDomain = (f: Partial<Domain>) =>
+    this.openForEditing('slave', f);
+
+  openForEditTXTRecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+  ) => this.openForEditing('TXT', f);
+
+  openForEditing = (
+    type: DomainType | RecordType,
+    fields: Partial<Domain> | Partial<DomainRecord>
+  ) =>
+    this.updateDrawer(() => ({
+      fields,
+      mode: 'edit',
+      open: true,
+      submitting: false,
+      type,
+    }));
+
+  renderDialogActions = () => {
+    return (
+      <ActionsPanel>
+        <Button buttonType="secondary" onClick={this.handleCloseDialog}>
+          Cancel
+        </Button>
+        <Button
+          buttonType="primary"
+          loading={this.state.confirmDialog.submitting}
+          onClick={this.deleteDomainRecord}
+        >
+          Delete
+        </Button>
+      </ActionsPanel>
+    );
+  };
+
+  resetDrawer = () => this.updateDrawer(() => DomainRecords.defaultDrawerState);
+
+  updateConfirmDialog = (fn: (d: ConfirmationState) => ConfirmationState) =>
+    this.setState(over(lensPath(['confirmDialog']), fn), () => {
+      scrollErrorIntoView();
+    });
+
+  updateDrawer = (fn: (d: DrawerState) => DrawerState) =>
+    this.setState(over(lensPath(['drawer']), fn));
 }
 
 const msToReadable = (v: number): null | string =>

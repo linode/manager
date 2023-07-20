@@ -2,24 +2,26 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TableCell } from 'src/components/TableCell';
 
-export const StyledGrid = styled(Grid, { label: 'StyledDiv' })(({ theme }) => ({
-  margin: 0,
-  marginTop: theme.spacing(2),
-  width: '100%',
-  '& .MuiGrid-item': {
-    paddingLeft: 0,
-    paddingRight: 0,
-  },
-  '& .domain-btn': {
-    [theme.breakpoints.down('lg')]: {
+export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(
+  ({ theme }) => ({
+    margin: 0,
+    marginTop: theme.spacing(2),
+    width: '100%',
+    '& .MuiGrid-item': {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    '& .domain-btn': {
+      [theme.breakpoints.down('lg')]: {
+        marginRight: theme.spacing(),
+      },
+    },
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
-  },
-  [theme.breakpoints.down('md')]: {
-    marginLeft: theme.spacing(),
-    marginRight: theme.spacing(),
-  },
-}));
+  })
+);
 
 export const StyledTableCell = styled(TableCell, { label: 'StyledTabelCell' })(
   ({ theme }) => ({

@@ -8,7 +8,7 @@ import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelec
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';

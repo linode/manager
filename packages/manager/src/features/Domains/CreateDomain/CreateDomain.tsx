@@ -24,7 +24,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { reportException } from 'src/exceptionReporting';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
