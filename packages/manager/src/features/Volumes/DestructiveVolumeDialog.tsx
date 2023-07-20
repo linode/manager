@@ -1,4 +1,3 @@
-import { Typography } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
@@ -6,6 +5,7 @@ import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {

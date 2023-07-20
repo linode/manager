@@ -1,6 +1,6 @@
-import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import { Button } from 'src/components/Button/Button';
 import { isPropValid } from 'src/utilities/isPropValid';
 
 import { StyledTopMenuIconWrapper } from '../TopMenuIcon';
