@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { Tab } from 'src/components/core/ReachTab';
 import { TabList } from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
