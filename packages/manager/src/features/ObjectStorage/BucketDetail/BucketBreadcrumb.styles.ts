@@ -37,6 +37,7 @@ export const StyledLink = styled(Typography, {
   },
   color: theme.textColors.linkActiveLight,
   cursor: 'pointer',
+  fontSize: 16,
 }));
 
 export const StyledCopyTooltip = styled(CopyTooltip, {
