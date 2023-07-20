@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { IconButton } from 'src/components/IconButton';
 
 export const StyledPaper = styled(Paper)(({ theme }) => ({
