@@ -14,7 +14,7 @@ import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import useEvents from 'src/hooks/useEvents';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
 import generateCurlCommand from 'src/utilities/generate-cURL';
 import generateCLICommand from 'src/utilities/generate-cli';
@@ -65,16 +65,14 @@ const ApiAwarenessModal = (props: Props) => {
 
   const classes = useStyles();
   const history = useHistory();
-  const { events } = useEvents();
+  const { events } = useEventsInfiniteQuery();
 
-  const createdLinode = events.filter(
+  const createdLinode = events?.find(
     (event) =>
       (event.action === 'linode_create' || event.action === 'linode_clone') &&
       event.entity?.label === payLoad.label &&
       (event.status === 'scheduled' || event.status === 'started')
   );
-
-  const isLinodeCreated = createdLinode.length === 1;
 
   const curlCommand = useMemo(
     () => generateCurlCommand(payLoad, '/linode/instances'),
@@ -101,11 +99,11 @@ const ApiAwarenessModal = (props: Props) => {
   };
 
   useEffect(() => {
-    if (isLinodeCreated && isOpen) {
+    if (createdLinode && isOpen) {
       onClose();
       history.replace(`/linodes/${createdLinode[0].entity?.id}`);
     }
-  }, [isLinodeCreated]);
+  }, [createdLinode, history, isOpen, onClose]);
 
   return (
     <Dialog

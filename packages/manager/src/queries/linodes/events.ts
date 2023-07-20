@@ -1,13 +1,13 @@
-import { EventWithStore } from 'src/events';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 import { queryKey } from './linodes';
 
-export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
+export const linodeEventsHandler: AppEventHandler = (_, queryClient) => {
   // For now, invalidate any linode query. We can fine tune later.
   queryClient.invalidateQueries([queryKey]);
 };
 
-export const diskEventHandler = ({ event, queryClient }: EventWithStore) => {
+export const diskEventHandler: AppEventHandler = (event, queryClient, _) => {
   const linodeId = event.entity?.id;
 
   if (

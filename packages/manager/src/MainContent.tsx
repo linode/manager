@@ -25,7 +25,6 @@ import {
   notificationContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
-import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -364,7 +363,6 @@ const MainContent = (props: CombinedProps) => {
               </>
             </NotificationProvider>
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-            <ToastNotifications />
             <VolumeDrawer />
             <BackupDrawer />
           </ComplianceUpdateProvider>
