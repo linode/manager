@@ -13,7 +13,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import Select, { Item } from 'src/components/EnhancedSelect';
 import ImageSelect from 'src/components/ImageSelect';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { APP_ROOT } from 'src/constants';
 import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { TextField } from 'src/components/TextField';
 import { useCreateObjectUrlMutation } from 'src/queries/objectStorage';
 
