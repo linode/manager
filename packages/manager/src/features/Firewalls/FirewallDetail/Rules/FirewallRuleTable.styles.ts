@@ -65,13 +65,6 @@ export const MoreStyledLinkButton = styled(StyledLinkButton, {
   color: props.disabled ? 'inherit' : '',
 }));
 
-// const Disabled = styled(Grid, { name: 'Disabled' })(({ theme }) => ({
-//   '& td': {
-//     color: '#D2D3D4',
-//   },
-//   backgroundColor: 'rgba(247, 247, 247, 0.25)',
-// }));
-
 export const StyledDragIndicator = styled(DragIndicator, {
   name: 'StyledDragIndicator',
 })(({ theme }) => ({
@@ -100,15 +93,6 @@ export const StyledHeaderDiv = styled('div', { name: 'StyledHeaderDiv' })(
   })
 );
 
-// const Highlight = styled(Grid, { name: 'Highlight' })(({ theme }) => ({
-//   backgroundColor: theme.bg.lightBlue1,
-// }));
-
-// const RuleGrid = styled(Grid, { name: 'RuleGrid' })({
-//   margin: 0,
-//   width: '100%',
-// });
-
 export const StyledBox = styled(Box, { name: 'StyledBox' })(({ theme }) => ({
   backgroundColor: theme.bg.tableHeader,
   color: theme.textColors.tableHeader,
@@ -125,24 +109,9 @@ export const StyledUl = styled('ul', { name: 'StyledUl' })(({ theme }) => ({
   width: '100%',
 }));
 
-// const RuleRow = styled(Grid, { name: 'RuleRow' })(({ theme }) => ({
-//   borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-//   color: theme.textColors.tableStatic,
-// }));
-
-// const UndoButton = styled(Grid, { name: 'UndoButton' })({
-//   backgroundColor: 'transparent',
-//   border: 'none',
-//   cursor: 'pointer',
-// });
-
 export const StyledButtonDiv = styled('div', { name: 'StyledButtonDiv' })({
   alignContent: 'center',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-end',
 });
-
-// const Unmodified = styled(Grid, { name: 'Unmodified' })(({ theme }) => ({
-//   backgroundColor: theme.bg.bgPaper,
-// }));
