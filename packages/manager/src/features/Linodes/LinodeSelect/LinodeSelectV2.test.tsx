@@ -15,6 +15,8 @@ const fakeLinodeData = linodeFactory.build({
   region: 'eu-west',
 });
 
+const TEXTFIELD_ID = 'textfield-input';
+
 describe('LinodeSelectV2', () => {
   test('renders custom options using renderOption', async () => {
     // Create a mock renderOption function
@@ -35,8 +37,9 @@ describe('LinodeSelectV2', () => {
       />
     );
 
+    const input = screen.getByTestId(TEXTFIELD_ID);
+
     // Open the dropdown
-    const input = screen.getByTestId('textfield-input');
     userEvent.click(input);
 
     // Wait for the options to load (use some unique identifier for the options)
@@ -49,7 +52,6 @@ describe('LinodeSelectV2', () => {
     });
   });
   test('should display custom no options message', async () => {
-    // Mock the props
     const customNoOptionsMessage = 'Custom No Options Message';
     const options: Linode[] = []; // Assuming no options are available
     const onSelectionChange = jest.fn();
@@ -64,7 +66,7 @@ describe('LinodeSelectV2', () => {
       />
     );
 
-    const input = screen.getByTestId('textfield-input');
+    const input = screen.getByTestId(TEXTFIELD_ID);
 
     // Open the dropdown
     userEvent.click(input);
@@ -90,7 +92,7 @@ describe('LinodeSelectV2', () => {
     );
 
     // Open the dropdown
-    const input = screen.getByTestId('textfield-input');
+    const input = screen.getByTestId(TEXTFIELD_ID);
     userEvent.click(input);
 
     await waitFor(() => {
@@ -115,7 +117,7 @@ describe('LinodeSelectV2', () => {
       />
     );
 
-    const input = screen.getByTestId('textfield-input');
+    const input = screen.getByTestId(TEXTFIELD_ID);
 
     // Open the dropdown
     userEvent.click(input);
@@ -125,36 +127,54 @@ describe('LinodeSelectV2', () => {
     });
   });
 
-  // test('should not display no options message when user input matches an option', async () => {
-  //   const customNoOptionsMessage = 'Custom No Options Message';
-  //   const option = linodeFactory.build({ id: 1, label: 'Linode 1' });
-  //   const onSelectionChange = jest.fn();
+  test('should display no options message when user input does not match an option', async () => {
+    const customNoOptionsMessage = 'Custom No Options Message';
+    const option = linodeFactory.build({ id: 1, label: 'Linode 1' });
+    const onSelectionChange = jest.fn();
 
-  //   renderWithTheme(
-  //     <LinodeSelectV2
-  //       multiple={false}
-  //       noOptionsMessage={customNoOptionsMessage}
-  //       onSelectionChange={onSelectionChange}
-  //       options={[option]}
-  //       value={null}
-  //     />
-  //   );
+    renderWithTheme(
+      <LinodeSelectV2
+        multiple={false}
+        noOptionsMessage={customNoOptionsMessage}
+        onSelectionChange={onSelectionChange}
+        options={[option]}
+        value={null}
+      />
+    );
 
-  //   const input = screen.getByTestId('textfield-input');
+    const input = screen.getByTestId(TEXTFIELD_ID);
 
-  //   userEvent.type(input, 'Linode 2');
+    userEvent.type(input, 'Linode 2');
 
-  //   await waitFor(() => {
-  //     expect(screen.getByText(customNoOptionsMessage)).toBeInTheDocument();
-  //   });
+    await waitFor(() => {
+      expect(screen.getByText(customNoOptionsMessage)).toBeInTheDocument();
+    });
+  });
 
-  //   // The custom no options message should not be displayed when user input matches an option
-  //   userEvent.type(input, 'Linode 1');
+  test('should not display no options message when user input matches an option', async () => {
+    const customNoOptionsMessage = 'Custom No Options Message';
+    const option = linodeFactory.build({ id: 1, label: 'Linode 1' });
+    const onSelectionChange = jest.fn();
 
-  //   await waitFor(() => {
-  //     expect(
-  //       screen.queryByText(customNoOptionsMessage)
-  //     ).not.toBeInTheDocument();
-  //   });
-  // });
+    renderWithTheme(
+      <LinodeSelectV2
+        multiple={false}
+        noOptionsMessage={customNoOptionsMessage}
+        onSelectionChange={onSelectionChange}
+        options={[option]}
+        value={null}
+      />
+    );
+
+    const input = screen.getByTestId(TEXTFIELD_ID);
+
+    // The custom no options message should not be displayed when user input matches an option
+    userEvent.type(input, 'Linode 1');
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText(customNoOptionsMessage)
+      ).not.toBeInTheDocument();
+    });
+  });
 });

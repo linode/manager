@@ -125,6 +125,16 @@ export const LinodeSelectV2 = (
     ? filteredLinodes?.filter(optionsFilter)
     : linodes;
 
+  React.useEffect(() => {
+    /** We want to clear the input value when the value prop changes to null.
+     * This is for use cases where a user changes their region and the Linode
+     * they had selected is no longer available.
+     */
+    if (value === null) {
+      setInputValue('');
+    }
+  }, [value]);
+
   return (
     <Autocomplete
       ListboxProps={{
@@ -198,7 +208,7 @@ export const LinodeSelectV2 = (
       disableCloseOnSelect={multiple}
       disabled={disabled}
       id={id}
-      inputValue={value === null ? '' : inputValue}
+      inputValue={inputValue}
       loading={linodesDataLoading || loading}
       multiple={multiple}
       onBlur={onBlur}
