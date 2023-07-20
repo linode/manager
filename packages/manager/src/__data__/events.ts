@@ -1,7 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
 
-import { ExtendedEvent } from 'src/store/events/event.types';
-
 export const events: Event[] = [
   {
     action: 'linode_reboot',
@@ -575,8 +573,7 @@ export const uniqueEvents: Event[] = [
   },
 ];
 
-export const reduxEvent: ExtendedEvent = {
-  _initial: false,
+export const reduxEvent: Event = {
   action: 'linode_boot',
   created: '2018-12-02T20:23:43',
   duration: 0,

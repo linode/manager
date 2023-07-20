@@ -1,7 +1,7 @@
 import { Token } from '@linode/api-v4/lib/profile/types';
 import * as React from 'react';
 
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';

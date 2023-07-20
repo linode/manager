@@ -6,7 +6,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useRebootLinodeMutation } from 'src/queries/linodes/linodes';
 
 interface Props {
@@ -19,6 +19,8 @@ interface Props {
 export const BootConfigDialog = (props: Props) => {
   const { config, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const { error, isLoading, mutateAsync } = useRebootLinodeMutation(linodeId);
 
