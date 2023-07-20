@@ -161,7 +161,7 @@ export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
 
 export const useAllNodeBalancerConfigsQuery = (id: number) =>
   useQuery<NodeBalancerConfig[], APIError[]>(
-    [queryKey, 'nodebalanacer', id, 'configs'],
+    [queryKey, 'nodebalancer', id, 'configs'],
     () => getAllNodeBalancerConfigs(id),
     { refetchInterval: 20000 }
   );
@@ -197,7 +197,7 @@ export const useInfiniteNodebalancersQuery = (filter: Filter) =>
     }
   );
 
-export const nodebalanacerEventHandler: AppEventHandler = (
+export const nodebalancerEventHandler: AppEventHandler = (
   event,
   queryClient
 ) => {

@@ -12,7 +12,7 @@ import {
   diskEventHandler,
   linodeEventsHandler,
 } from 'src/queries/linodes/events';
-import { nodebalanacerEventHandler } from 'src/queries/nodebalancers';
+import { nodebalancerEventHandler } from 'src/queries/nodebalancers';
 import { sshKeyEventHandler } from 'src/queries/profile';
 import { supportTicketEventHandler } from 'src/queries/support';
 import { tokenEventHandler } from 'src/queries/tokens';
@@ -72,7 +72,7 @@ export const useAppEventHandlers = () => {
       },
       {
         filter: (event) => event.action.startsWith('nodebalancer'),
-        handlers: [nodebalanacerEventHandler],
+        handlers: [nodebalancerEventHandler],
       },
       {
         filter: (event) => event.action.startsWith('oauth_client'),
