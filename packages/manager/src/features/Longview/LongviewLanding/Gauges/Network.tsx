@@ -2,7 +2,7 @@ import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import GaugePercent from 'src/components/GaugePercent';
+import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import { Typography } from 'src/components/Typography';
 import withClientStats, {
   Props as LVDataProps,

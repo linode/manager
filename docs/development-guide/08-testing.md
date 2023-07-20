@@ -203,12 +203,13 @@ These environment variables facilitate splitting the Cypress run between multipl
 | `CY_TEST_SPLIT_RUN_INDEX` | Numeric index for each Cypress test runner | `1`, `2`, etc. | Unset                      |
 | `CY_TEST_SPLIT_RUN_TOTAL` | Total number of runners for the tests      | `2`            | Unset                      |
 
-##### Reporting
-These environment variables allow users to manage JUnit test result reporting.
+###### Logging & Reporting
+Environment variables related to Cypress logging and reporting, as well as report generation.
 
-| Environment Variable      | Description            | Example        | Default                    |
-|---------------------------|------------------------|----------------|----------------------------|
-| `CY_TEST_JUNIT_REPORT`    | Enable JUnit reporting | `1`            | Unset; disabled by default |
+| Environment Variable   | Description                                     | Example   | Default                    |
+|------------------------|-------------------------------------------------|-----------|----------------------------|
+| `CY_TEST_USER_REPORT`  | Log test account information when tests begin   | `1`       | Unset; disabled by default |
+| `CY_TEST_JUNIT_REPORT` | Enable JUnit reporting                          | `1`       | Unset; disabled by default |
 
 ### Writing End-to-End Tests
 
