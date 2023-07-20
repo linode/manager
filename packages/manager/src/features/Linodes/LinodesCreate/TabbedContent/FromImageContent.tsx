@@ -8,7 +8,7 @@ import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import ImageSelect from 'src/components/ImageSelect';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
 import {

@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import ExternalLink from 'src/components/ExternalLink';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 
 export const PopularPosts = () => {
   const theme = useTheme();

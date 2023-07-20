@@ -13,7 +13,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
