@@ -603,6 +603,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       udfs: defaultData,
     });
   };
+
   setTags = (tags: Tag[]) => this.setState({ tags });
 
   setTypeID = (id: string) => {
@@ -623,6 +624,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   setUDFs = (udfs: any) => this.setState({ udfs });
+
   setUserData = (userData: string) => this.setState({ userData });
 
   state: State = {
