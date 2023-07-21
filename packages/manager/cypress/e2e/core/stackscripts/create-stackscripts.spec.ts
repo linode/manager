@@ -11,6 +11,7 @@ import { createLinodeRequestFactory } from 'src/factories';
 import { createLinode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { createImage } from '@linode/api-v4/lib/images';
 import { chooseRegion } from 'support/util/regions';
+import { SimpleBackoffMethod } from 'support/util/backoff';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -109,6 +110,7 @@ const createLinodeAndImage = async () => {
       label: randomLabel(),
       region: chooseRegion().id,
       root_pass: randomString(32),
+      type: 'g6-nanode-1',
     })
   );
 
@@ -119,10 +121,14 @@ const createLinodeAndImage = async () => {
   const diskId = (await getLinodeDisks(linode.id)).data[0].id;
   const image = await createImage(diskId, randomLabel(), randomPhrase());
 
-  await pollImageStatus(image.id, 'available', {
-    initialDelay: 60000,
-    maxAttempts: 15,
-  });
+  await pollImageStatus(
+    image.id,
+    'available',
+    new SimpleBackoffMethod(10000, {
+      initialDelay: 45000,
+      maxAttempts: 30,
+    })
+  );
 
   return image;
 };
@@ -140,8 +146,8 @@ describe('Create stackscripts', () => {
   it('creates a StackScript and deploys a Linode with it', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
-    const stackscriptImage = 'Alpine 3.17';
-    const stackscriptImageTag = 'alpine3.17';
+    const stackscriptImage = 'Alpine 3.18';
+    const stackscriptImageTag = 'alpine3.18';
 
     const linodeLabel = randomLabel();
     const linodeRegion = chooseRegion();
@@ -271,13 +277,13 @@ describe('Create stackscripts', () => {
      */
     const imageSamples = [
       { label: 'AlmaLinux 9', sel: 'linode/almalinux9' },
-      { label: 'Alpine 3.17', sel: 'linode/alpine3.17' },
+      { label: 'Alpine 3.18', sel: 'linode/alpine3.18' },
       { label: 'Arch Linux', sel: 'linode/arch' },
       { label: 'CentOS Stream 9', sel: 'linode/centos-stream9' },
-      { label: 'Debian 11', sel: 'linode/debian11' },
-      { label: 'Fedora 37', sel: 'linode/fedora37' },
+      { label: 'Debian 12', sel: 'linode/debian12' },
+      { label: 'Fedora 38', sel: 'linode/fedora38' },
       { label: 'Rocky Linux 9', sel: 'linode/rocky9' },
-      { label: 'Ubuntu 22.10', sel: 'linode/ubuntu22.10' },
+      { label: 'Ubuntu 23.04', sel: 'linode/ubuntu23.04' },
     ];
 
     interceptCreateStackScript().as('createStackScript');
@@ -287,7 +293,7 @@ describe('Create stackscripts', () => {
     cy.visitWithLogin('/stackscripts/create');
     cy.defer(createLinodeAndImage(), {
       label: 'creating Linode and Image',
-      timeout: 180000,
+      timeout: 360000,
     }).then((privateImage) => {
       cy.fixture(stackscriptBasicPath).then((stackscriptBasic) => {
         fillOutStackscriptForm(
