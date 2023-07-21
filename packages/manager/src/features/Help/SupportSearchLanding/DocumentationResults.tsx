@@ -4,9 +4,9 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import ExternalLink from 'src/components/ExternalLink';
+import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import ListItem from 'src/components/core/ListItem';
-import { Paper } from 'src/components/Paper';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   header: {

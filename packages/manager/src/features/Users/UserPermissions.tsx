@@ -23,12 +23,12 @@ import { Divider } from 'src/components/Divider';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { Paper } from 'src/components/Paper';
 import { Tab } from 'src/components/core/ReachTab';
 import { TabList } from 'src/components/core/ReachTabList';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -179,7 +179,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       if (updateFns.length) {
         this.setState((compose as any)(...updateFns));
       }
-      return;
+      // return;
     }
   };
 

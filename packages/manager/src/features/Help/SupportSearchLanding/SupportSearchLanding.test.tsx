@@ -5,15 +5,12 @@ import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { H1Header } from 'src/components/H1Header/H1Header';
 
-import { CombinedProps, SupportSearchLanding } from './SupportSearchLanding';
+import SupportSearchLanding, { CombinedProps } from './SupportSearchLanding';
 
 const classes = {
   backButton: '',
-  root: '',
   searchBar: '',
   searchBoxInner: '',
-  searchField: '',
-  searchHeading: '',
   searchIcon: '',
 };
 

@@ -3,8 +3,8 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import ExternalLink from 'src/components/ExternalLink';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 
 export const PopularPosts = () => {
   const theme = useTheme();
