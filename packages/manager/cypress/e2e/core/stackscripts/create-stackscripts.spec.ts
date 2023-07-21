@@ -287,7 +287,7 @@ describe('Create stackscripts', () => {
     cy.visitWithLogin('/stackscripts/create');
     cy.defer(createLinodeAndImage(), {
       label: 'creating Linode and Image',
-      timeout: 180000,
+      timeout: 360000,
     }).then((privateImage) => {
       cy.fixture(stackscriptBasicPath).then((stackscriptBasic) => {
         fillOutStackscriptForm(
