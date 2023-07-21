@@ -264,7 +264,7 @@ describe('Create stackscripts', () => {
    * - Confirms that private images can be selected when deploying with "Any/All" StackScripts.
    * - Confirms that a Linode can be deployed using StackScript with private image.
    */
-  it.only('creates a StackScript with Any/All target image', () => {
+  it('creates a StackScript with Any/All target image', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     const stackscriptImage = 'Any/All';
