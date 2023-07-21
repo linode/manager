@@ -33,7 +33,7 @@ export const External: StoryObj<LinkProps> = {
 
 /**
  * An instance of Link component given an absolute URL, rendering an `a` tag with `target="_blank"`.
- * This version provides an `external` prop, usually belonging to the same domain or a subdomain.<br />
+ * This version provides an `external` prop, to be used when the site does not belong to the same domain or a subdomain.<br />
  * **Example**: a link to a third party provider<br />
  * It will open in a new tab and feature an external link icon.
  */
