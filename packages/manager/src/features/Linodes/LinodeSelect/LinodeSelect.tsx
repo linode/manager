@@ -25,6 +25,8 @@ interface LinodeSelectProps {
   helperText?: string;
   /** The ID of the input. */
   id?: string;
+  /** Override the default "Linode" or "Linodes" label */
+  label?: string;
   /** Adds styling to indicate a loading state. */
   loading?: boolean;
   /** Optionally disable top margin for input label */
@@ -82,6 +84,7 @@ export const LinodeSelect = (
     filter,
     helperText,
     id,
+    label,
     loading,
     multiple,
     noMarginTop,
@@ -167,7 +170,7 @@ export const LinodeSelect = (
           errorText={error?.[0].reason ?? errorText}
           helperText={helperText}
           inputId={params.id}
-          label={multiple ? 'Linodes' : 'Linode'}
+          label={label ? label : multiple ? 'Linodes' : 'Linode'}
           loading={linodesDataLoading}
           noMarginTop={noMarginTop}
           {...params}

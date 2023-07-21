@@ -2,8 +2,8 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import { Box } from '@mui/material';
 import * as React from 'react';
 
-import { SelectedIcon } from 'src/features/Linodes/LinodeSelect/LinodeSelect.styles';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { SelectedIcon } from 'src/features/Linodes/LinodeSelect/LinodeSelect.styles';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
 import type { TextFieldProps } from 'src/components/TextField';
@@ -85,9 +85,10 @@ export const ConfigNodeIPSelect = React.memo(
         disabled={props.disabled}
         errorText={props.errorText}
         id={inputId}
+        label="IP Address"
         noMarginTop
         onSelectionChange={handleChange}
-        placeholder="IP Address"
+        placeholder="Enter IP Address"
         showIPAddressLabel
         value={nodeAddress === '' ? null : selectedLinode}
       />
