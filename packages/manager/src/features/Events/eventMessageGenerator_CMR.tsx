@@ -4,9 +4,9 @@ import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { formatEventWithAPIMessage } from 'src/eventMessageGenerator';
+import { formatEventWithAPIMessage } from 'src/features/Events/eventMessageGenerator';
 
-import { ExtendedType } from './utilities/extendType';
+import { ExtendedType } from '../../utilities/extendType';
 
 export const eventMessageGenerator = (
   e: Event,
