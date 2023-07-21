@@ -28,6 +28,8 @@ export const StyledFirewallRuleBox = styled(Box, {
   ({ theme, status, disabled, originalIndex, ruleId }) => ({
     margin: 0,
     fontSize: '0.875rem',
+    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    color: theme.textColors.tableStatic,
     ...sxBox,
 
     // Conditional styles
