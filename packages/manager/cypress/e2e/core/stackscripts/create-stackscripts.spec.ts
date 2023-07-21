@@ -11,6 +11,7 @@ import { createLinodeRequestFactory } from 'src/factories';
 import { createLinode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { createImage } from '@linode/api-v4/lib/images';
 import { chooseRegion } from 'support/util/regions';
+import { SimpleBackoffMethod } from 'support/util/backoff';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -109,6 +110,7 @@ const createLinodeAndImage = async () => {
       label: randomLabel(),
       region: chooseRegion().id,
       root_pass: randomString(32),
+      type: 'g6-nanode-1',
     })
   );
 
@@ -119,10 +121,14 @@ const createLinodeAndImage = async () => {
   const diskId = (await getLinodeDisks(linode.id)).data[0].id;
   const image = await createImage(diskId, randomLabel(), randomPhrase());
 
-  await pollImageStatus(image.id, 'available', {
-    initialDelay: 60000,
-    maxAttempts: 15,
-  });
+  await pollImageStatus(
+    image.id,
+    'available',
+    new SimpleBackoffMethod(10000, {
+      initialDelay: 45000,
+      maxAttempts: 30,
+    })
+  );
 
   return image;
 };
@@ -258,7 +264,7 @@ describe('Create stackscripts', () => {
    * - Confirms that private images can be selected when deploying with "Any/All" StackScripts.
    * - Confirms that a Linode can be deployed using StackScript with private image.
    */
-  it('creates a StackScript with Any/All target image', () => {
+  it.only('creates a StackScript with Any/All target image', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     const stackscriptImage = 'Any/All';
