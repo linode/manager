@@ -27,17 +27,19 @@ import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError, sortPortString } from './shared';
 import {
-  useStyles,
   sxBox,
   sxItemSpacing,
-  StyledDragIndicator,
   MoreStyledLinkButton,
-  StyledErrorDiv,
-  StyledButton,
-  StyledHeaderDiv,
-  StyledBox,
-  StyledUl,
   StyledButtonDiv,
+  StyledDragIndicator,
+  StyledErrorDiv,
+  StyledFirewallRuleBox,
+  StyledFirewallRuleButton,
+  StyledFirewallTableButton,
+  StyledHeaderDiv,
+  StyledInnerBox,
+  StyledUl,
+  StyledUlBox,
 } from './FirewallRuleTable.styles';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
@@ -95,7 +97,6 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
     triggerUndo,
   } = props;
 
-  const { classes, cx } = useStyles();
   const theme: Theme = useTheme();
   const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -127,16 +128,19 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
     <>
       <StyledHeaderDiv>
         <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
-        <StyledButton
+        <StyledFirewallTableButton
           buttonType="primary"
           disabled={disabled}
           onClick={openDrawerForCreating}
         >
           Add an {capitalize(category)} Rule
-        </StyledButton>
+        </StyledFirewallTableButton>
       </StyledHeaderDiv>
-      <Box aria-label={`${category} Rules List`} className={classes.ruleGrid}>
-        <StyledBox
+      <Box
+        aria-label={`${category} Rules List`}
+        sx={{ margin: 0, width: '100%' }}
+      >
+        <StyledInnerBox
           aria-label={`${category} Rules List Headers`}
           sx={sxBox}
           tabIndex={0}
@@ -167,27 +171,16 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
             </Box>
           </Hidden>
           <Box sx={{ ...sxItemSpacing, width: '5%' }}>Action</Box>
-        </StyledBox>
+        </StyledInnerBox>
         <Box sx={{ ...sxBox, flexDirection: 'column' }}>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable" isDropDisabled={disabled}>
               {(provided) => (
                 <StyledUl ref={provided.innerRef} {...provided.droppableProps}>
                   {rowData.length === 0 ? (
-                    <Box
-                      className={cx(classes.unmodified, classes.ruleRow)}
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        fontSize: '0.875rem',
-                        justifyContent: 'center',
-                        padding: '8px',
-                        width: '100%',
-                      }}
-                      data-testid={'table-row-empty'}
-                    >
+                    <StyledUlBox data-testid={'table-row-empty'}>
                       <Box>{zeroRulesMessage}</Box>
-                    </Box>
+                    </StyledUlBox>
                   ) : (
                     rowData.map((thisRuleRow: RuleRow, index) => (
                       <Draggable
@@ -248,13 +241,12 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
 // =============================================================================
 // <FirewallRuleTableRow />
 // =============================================================================
-type FirewallRuleTableRowProps = RuleRow &
+export type FirewallRuleTableRowProps = RuleRow &
   Omit<RowActionHandlers, 'triggerReorder'> & {
     disabled: boolean;
   };
 
 const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
-  const { classes, cx } = useStyles();
   const theme: Theme = useTheme();
   const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -284,22 +276,11 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
   };
 
   return (
-    <Box
-      className={cx({
-        [classes.disabled]: status === 'PENDING_DELETION' || disabled,
-        [classes.highlight]:
-          status === 'MODIFIED' || status === 'NEW' || originalIndex !== id,
-        // Highlight the row if it's been modified or reordered. ID is the
-        // current index, so if it doesn't match the original index we know
-        [classes.ruleGrid]: true,
-        [classes.ruleRow]: true,
-        // that the rule has been moved.
-        [classes.unmodified]: status === 'NOT_MODIFIED',
-      })}
-      sx={{
-        ...sxBox,
-        fontSize: '0.875rem',
-      }}
+    <StyledFirewallRuleBox
+      status={status}
+      disabled={disabled}
+      originalIndex={originalIndex}
+      ruleId={id}
       aria-label={label ?? `firewall rule ${id}`}
       key={id}
     >
@@ -355,24 +336,21 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       <Box sx={{ ...sxItemSpacing, marginLeft: 'auto' }}>
         {status !== 'NOT_MODIFIED' ? (
           <StyledButtonDiv>
-            <button
-              className={cx({
-                [classes.highlight]: status !== 'PENDING_DELETION',
-                [classes.undoButton]: true,
-              })}
+            <StyledFirewallRuleButton
+              status={status}
               aria-label="Undo change to Firewall Rule"
               disabled={disabled}
               onClick={() => triggerUndo(id)}
             >
               <Undo />
-            </button>
+            </StyledFirewallRuleButton>
             <FirewallRuleActionMenu {...actionMenuProps} />
           </StyledButtonDiv>
         ) : (
           <FirewallRuleActionMenu {...actionMenuProps} />
         )}
       </Box>
-    </Box>
+    </StyledFirewallRuleBox>
   );
 });
 

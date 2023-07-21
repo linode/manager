@@ -3,47 +3,14 @@ import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Box from '@mui/material/Box';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
 
-export const useStyles = makeStyles()((theme: Theme) => ({
-  disabled: {
-    '& td': {
-      color: '#D2D3D4',
-    },
-    backgroundColor: 'rgba(247, 247, 247, 0.25)',
-  },
-  highlight: {
-    backgroundColor: theme.bg.lightBlue1,
-  },
-  ruleGrid: {
-    margin: 0,
-    width: '100%',
-  },
-  ruleRow: {
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    color: theme.textColors.tableStatic,
-  },
-  undoButton: {
-    backgroundColor: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-  },
-  unmodified: {
-    backgroundColor: theme.bg.bgPaper,
-  },
-}));
+type StyledFirewallRuleButtonProps = Pick<FirewallRuleTableRowProps, 'status'>;
 
-// looking into converting the rest of the ^ into styled components, but we'll see...
-// export const ConditionalStyledButton = styled('button', { label: 'ConditionalStyledButton' })(({
-//   theme, ...props }) => ({
-//     backgroundColor: 'transparent',
-//     border: 'none',
-//     cursor: 'pointer',
-//     ...(props.status !== 'PENDING_DELETION' ? {
-//       backgroundColor: theme.bg.lightBlue1,
-//     } : {})
-// }))
+type StyledFirewallRuleBoxProps = StyledFirewallRuleButtonProps &
+  Pick<FirewallRuleTableRowProps, 'disabled' | 'originalIndex'> & {
+    ruleId: number;
+  };
 
 export const sxBox = {
   alignItems: 'center',
@@ -55,7 +22,70 @@ export const sxItemSpacing = {
   padding: `0 8px`,
 };
 
-export const StyledButton = styled(Button, { label: 'StyledButton' })({
+export const StyledFirewallRuleBox = styled(Box, {
+  label: 'StyledFirewallRuleBox',
+})<StyledFirewallRuleBoxProps>(
+  ({ theme, status, disabled, originalIndex, ruleId }) => ({
+    margin: 0,
+    fontSize: '0.875rem',
+    ...sxBox,
+
+    // Conditional styles
+    // Highlight the row if it's been modified or reordered. ID is the current index,
+    // so if it doesn't match the original index we know that the rule has been moved.
+    ...(status === 'PENDING_DELETION' || disabled
+      ? {
+          '& td': { color: '#D2D3D4' },
+          backgroundColor: 'rgba(247, 247, 247, 0.25)',
+        }
+      : {}),
+    ...(status === 'MODIFIED' || status === 'NEW' || originalIndex !== ruleId
+      ? { backgroundColor: theme.bg.lightBlue1 }
+      : {}),
+    ...(status === 'NOT_MODIFIED' ? { backgroundColor: theme.bg.bgPaper } : {}),
+  })
+);
+
+export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
+  ({ theme }) => ({
+    backgroundColor: theme.bg.tableHeader,
+    color: theme.textColors.tableHeader,
+    fontSize: '.875rem',
+    fontWeight: 'bold',
+    height: '46px',
+  })
+);
+
+export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
+  ({ theme }) => ({
+    backgroundColor: theme.bg.bgPaper,
+    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    color: theme.textColors.tableStatic,
+    alignItems: 'center',
+    display: 'flex',
+    fontSize: '0.875rem',
+    justifyContent: 'center',
+    padding: '8px',
+    width: '100%',
+  })
+);
+
+export const StyledFirewallRuleButton = styled('button', {
+  label: 'StyledFirewallRuleButton',
+})<StyledFirewallRuleButtonProps>(({ theme, status }) => ({
+  backgroundColor: 'transparent',
+  border: 'none',
+  cursor: 'pointer',
+
+  // Conditional styles
+  ...(status !== 'PENDING_DELETION'
+    ? { backgroundColor: theme.bg.lightBlue1 }
+    : {}),
+}));
+
+export const StyledFirewallTableButton = styled(Button, {
+  label: 'StyledFirewallTableButton',
+})({
   margin: '8px 0px',
 });
 
@@ -65,22 +95,20 @@ export const MoreStyledLinkButton = styled(StyledLinkButton, {
   color: props.disabled ? 'inherit' : '',
 }));
 
-export const StyledDragIndicator = styled(DragIndicator, {
-  name: 'StyledDragIndicator',
-})(({ theme }) => ({
-  color: theme.color.grey8,
-  marginRight: theme.spacing(1.5),
-  position: 'relative',
-  top: 2,
-}));
+export const StyledButtonDiv = styled('div', { label: 'StyledButtonDiv' })({
+  alignContent: 'center',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+});
 
-export const StyledErrorDiv = styled('div', { name: 'StyledErrorDiv' })(
+export const StyledErrorDiv = styled('div', { label: 'StyledErrorDiv' })(
   ({ theme }) => ({
     '& p': { color: theme.color.red },
   })
 );
 
-export const StyledHeaderDiv = styled('div', { name: 'StyledHeaderDiv' })(
+export const StyledHeaderDiv = styled('div', { label: 'StyledHeaderDiv' })(
   ({ theme }) => ({
     alignItems: 'center',
     display: 'flex',
@@ -93,25 +121,19 @@ export const StyledHeaderDiv = styled('div', { name: 'StyledHeaderDiv' })(
   })
 );
 
-export const StyledBox = styled(Box, { name: 'StyledBox' })(({ theme }) => ({
-  backgroundColor: theme.bg.tableHeader,
-  color: theme.textColors.tableHeader,
-  fontSize: '.875rem',
-  fontWeight: 'bold',
-  height: '46px',
+export const StyledDragIndicator = styled(DragIndicator, {
+  label: 'StyledDragIndicator',
+})(({ theme }) => ({
+  color: theme.color.grey8,
+  marginRight: theme.spacing(1.5),
+  position: 'relative',
+  top: 2,
 }));
 
-export const StyledUl = styled('ul', { name: 'StyledUl' })(({ theme }) => ({
+export const StyledUl = styled('ul', { label: 'StyledUl' })(({ theme }) => ({
   backgroundColor: theme.color.border3,
   listStyle: 'none',
   margin: 0,
   paddingLeft: 0,
   width: '100%',
 }));
-
-export const StyledButtonDiv = styled('div', { name: 'StyledButtonDiv' })({
-  alignContent: 'center',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-end',
-});
