@@ -58,7 +58,7 @@ export const buildQueryStringForLinodeClone = (
   return new URLSearchParams(params).toString();
 };
 
-export const LinodeActionMenu: React.FC<LinodeActionMenuProps> = (props) => {
+export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const {
     inListView,
     linodeId,
@@ -220,5 +220,3 @@ export const LinodeActionMenu: React.FC<LinodeActionMenuProps> = (props) => {
 interface ExtendedAction extends Action {
   className?: string;
 }
-
-export default LinodeActionMenu;
