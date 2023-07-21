@@ -1,4 +1,5 @@
 import { APIWarning } from '../types';
+import { Beta } from '../betas/types';
 
 export interface User {
   username: string;
@@ -355,7 +356,6 @@ export interface Event {
   time_remaining: null | string;
   username: string | null;
   secondary_entity: Entity | null;
-  _initial?: boolean;
   message: string | null;
 }
 /**
@@ -454,4 +454,12 @@ export interface AccountLogin {
   restricted: boolean;
   username: string;
   status: AccountLoginStatus;
+}
+
+export interface AccountBeta extends Beta {
+  enrolled: string;
+}
+
+export interface EnrollInBetaPayload {
+  id: string;
 }

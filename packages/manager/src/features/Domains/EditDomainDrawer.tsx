@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
@@ -23,13 +23,13 @@ import {
 
 import { transferHelperText as helperText } from './domainUtils';
 
-interface Props {
+interface EditDomainDrawerProps {
   domain: Domain | undefined;
   onClose: () => void;
   open: boolean;
 }
 
-export const EditDomainDrawer = (props: Props) => {
+export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
   const { domain, onClose, open } = props;
 
   const { data: profile } = useProfile();

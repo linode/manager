@@ -5,19 +5,19 @@ import { useHistory } from 'react-router-dom';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useImportZoneMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-interface Props {
+interface DomainZoneImportDrawerProps {
   onClose: () => void;
   open: boolean;
 }
 
-const DomainZoneImportDrawer = (props: Props) => {
+export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
   const { onClose: _onClose, open } = props;
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -93,5 +93,3 @@ const DomainZoneImportDrawer = (props: Props) => {
     </Drawer>
   );
 };
-
-export default DomainZoneImportDrawer;

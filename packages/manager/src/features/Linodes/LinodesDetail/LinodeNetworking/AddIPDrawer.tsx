@@ -6,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { Link as ExternalLink } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
