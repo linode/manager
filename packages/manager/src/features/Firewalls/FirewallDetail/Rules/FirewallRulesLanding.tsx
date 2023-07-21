@@ -12,7 +12,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import { FirewallRuleTable } from './FirewallRuleTable';
-import curriedFirewallRuleEditorReducer, {
+import {
+  curriedFirewallRuleEditorReducer,
   hasModified as _hasModified,
   editorStateToRules,
   initRuleEditorState,
