@@ -14,13 +14,13 @@ import RadioGroup from 'src/components/core/RadioGroup';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 
-interface Props {
+interface CloneDomainDrawerProps {
   domain: Domain | undefined;
   onClose: () => void;
   open: boolean;
 }
 
-export const CloneDomainDrawer = (props: Props) => {
+export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
   const { domain, onClose: _onClose, open } = props;
 
   const { data: profile } = useProfile();

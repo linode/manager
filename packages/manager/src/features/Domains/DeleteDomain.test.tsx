@@ -3,12 +3,12 @@ import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { DeleteDomain, Props } from './DeleteDomain';
+import { DeleteDomain, DeleteDomainProps } from './DeleteDomain';
 
 const domainId = 1;
 const domainLabel = 'example.com';
 
-const props: Props = {
+const props: DeleteDomainProps = {
   domainId,
   domainLabel,
 };

@@ -23,13 +23,13 @@ import {
 
 import { transferHelperText as helperText } from './domainUtils';
 
-interface Props {
+interface EditDomainDrawerProps {
   domain: Domain | undefined;
   onClose: () => void;
   open: boolean;
 }
 
-export const EditDomainDrawer = (props: Props) => {
+export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
   const { domain, onClose, open } = props;
 
   const { data: profile } = useProfile();
