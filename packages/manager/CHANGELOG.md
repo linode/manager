@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-07-24] - v1.98.0
+
+### Added:
+
+- Hover state on table rows ([#9367](https://github.com/linode/manager/pull/9367))
+
+### Fixed:
+
+- Misleading MNTP percentage for accounts with no active services ([#9362](https://github.com/linode/manager/pull/9362))
+- LinodeSelect styling ([#9417](https://github.com/linode/manager/pull/9417))
+- Behavior of logo and menu items in SideMenu ([#9431](https://github.com/linode/manager/pull/9431))
+- TopMenu bug that prevented tooltips from showing via tab key navigation ([#9371](https://github.com/linode/manager/pull/9371))
+
+### Tech Stories:
+
+- Improve Sentry's environment identification ([#9428](https://github.com/linode/manager/pull/9428))
+- Update Sentry and enable performance monitoring ([#9337](https://github.com/linode/manager/pull/9337))
+- RQ-ify Events ([#9416](https://github.com/linode/manager/pull/9416))
+- MUI v5 Migration - `SRC > Components > DocumentTitle` ([#9406](https://github.com/linode/manager/pull/9406))
+- MUI v5 Migration - `SRC > Components > Paper` ([#9410](https://github.com/linode/manager/pull/9410))
+- MUI v5 Migration `SRC > Features > Footer` ([#9415](https://github.com/linode/manager/pull/9415))
+- MUI v5 Migration - `SRC > Component > GaugePercent` ([#9420](https://github.com/linode/manager/pull/9420))
+- MUI v5 Migration - `SRC > Components > Drawer` ([#9423](https://github.com/linode/manager/pull/9423))
+- MUI v5 Migration - `SRC > Components > SectionErrorBoundary` ([#9329](https://github.com/linode/manager/pull/9329))
+
+### Upcoming Features:
+
+- Set up initial AGLB RQ work with useLoadBalancers ([#9392](https://github.com/linode/manager/pull/9392))
+- Add primary navigation AGLB entry (feature flagged & Beta) ([#9404](https://github.com/linode/manager/pull/9404))
+- Add LoadBalancer create menu entry  (feature flagged & Beta)  ([#9405](https://github.com/linode/manager/pull/9405))
+- Add skeleton AGLB Service Target landing page and unit tests ([#9397](https://github.com/linode/manager/pull/9397))
+- Add initial AGLB routes, folders, pages, and tabs ([#9376](https://github.com/linode/manager/pull/9376))
+- React Query queries for VPC Subnets ([#9390](https://github.com/linode/manager/pull/9390))
+- Make VLAN section in Linode Create an Accordion ([#9414](https://github.com/linode/manager/pull/9414))
+
 ## [2023-07-11] - v1.97.0
 
 

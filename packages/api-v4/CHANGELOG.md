@@ -1,3 +1,13 @@
+## [2023-07-24] - v0.97.0
+
+### Added:
+
+- Endpoints for VPC Subnets ([#9390](https://github.com/linode/manager/pull/9390))
+
+### Removed:
+
+- Unused `_initial` field in `Event` ([#9416](https://github.com/linode/manager/pull/9416))
+
 ## [2023-07-11] - v0.96.0
 
 
