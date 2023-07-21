@@ -3,17 +3,16 @@ import { path } from 'ramda';
 
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
-
 import {
   formatEventWithAppendedText,
   formatEventWithUsername,
-} from './features/Events/Event.helpers';
-import { escapeRegExp } from './utilities/escapeRegExp';
+} from 'src/features/Events/Event.helpers';
+import { escapeRegExp } from 'src/utilities/escapeRegExp';
+import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
-type EventMessageCreator = (e: Event) => string;
+export type EventMessageCreator = (e: Event) => string;
 
-interface CreatorsForStatus {
+export interface CreatorsForStatus {
   failed?: EventMessageCreator;
   finished?: EventMessageCreator;
   notification?: EventMessageCreator;

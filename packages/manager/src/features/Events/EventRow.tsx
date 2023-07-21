@@ -11,7 +11,7 @@ import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/Highligh
 import { RenderGuard } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import eventMessageGenerator from 'src/eventMessageGenerator';
+import eventMessageGenerator from 'src/features/Events/eventMessageGenerator';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
