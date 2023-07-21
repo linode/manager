@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';
@@ -14,7 +14,7 @@ import { Tooltip } from 'src/components/Tooltip';
 
 import { StyledToggleButton } from './DisplayLinodes.styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   controlHeader: {
     backgroundColor: theme.bg.tableHeader,
     display: 'flex',
@@ -73,7 +73,7 @@ interface Props {
 type CombinedProps<T> = Props & Omit<OrderByProps<T>, 'data'>;
 
 const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const {
     handleOrderChange,

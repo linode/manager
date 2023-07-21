@@ -46,7 +46,8 @@ import CardView from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import { DisplayLinodes } from './DisplayLinodes';
-import styled, { StyleProps } from './LinodesLanding.styles';
+import { styles, StyleProps } from './LinodesLanding.styles';
+import { withStyles } from 'tss-react/mui';
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
@@ -93,26 +94,27 @@ export interface Props {
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   someLinodesHaveScheduledMaintenance: boolean;
+  classes?: StyleProps;
 }
 
 type CombinedProps = Props &
   StateProps &
   DispatchProps &
   RouteProps &
-  StyleProps &
   WithProfileProps &
   WithEventsInfiniteQueryProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
-      classes,
       events,
       linodesCount,
       linodesData,
       linodesRequestError,
       linodesRequestLoading,
     } = this.props;
+
+    const classes = withStyles.getClasses(this.props);
 
     const params = new URLSearchParams(this.props.location.search);
 
@@ -484,13 +486,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
+// lowkey don't know how this will work, but first trying to get rid of all the type errors
 export const enhanced = compose<CombinedProps, Props>(
   withRouter,
   connected,
-  styled,
   withFeatureFlagConsumer,
   withProfile,
   withEventsInfiniteQuery()
 );
 
-export default enhanced(ListLinodes);
+export default enhanced(withStyles(ListLinodes, styles));

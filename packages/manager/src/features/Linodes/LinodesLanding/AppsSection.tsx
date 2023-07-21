@@ -1,12 +1,12 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import PointerIcon from 'src/assets/icons/pointer.svg';
 import { Link } from 'src/components/Link';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles()((theme: Theme) => {
   const isDarkTheme = theme.name === 'dark';
   const backgroundColor = isDarkTheme
     ? theme.bg.primaryNavPaper
@@ -103,7 +103,7 @@ interface AppLinkProps {
 
 const AppLink = (props: AppLinkProps) => {
   const { text, to } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Link
       className={classes.appLink}
@@ -123,7 +123,7 @@ const appLinks = appsLinkData.map((linkData) => (
 ));
 
 const AppsSection = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return <div className={classes.appSection}>{appLinks}</div>;
 };

@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
@@ -11,7 +11,7 @@ import { useProfile } from 'src/queries/profile';
 
 import { RenderLinodesProps } from './DisplayLinodes';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   '@keyframes pulse': {
     to: {
       backgroundColor: `hsla(40, 100%, 55%, 0)`,
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const CardView = (props: RenderLinodesProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: profile } = useProfile();
 

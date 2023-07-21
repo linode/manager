@@ -37,7 +37,7 @@ import { useStyles } from './LinodeRow.style';
 type Props = Linode & { handlers: LinodeHandlers };
 
 export const LinodeRow = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { backups, handlers, id, ipv4, label, region, status, type } = props;
 
   const notificationContext = React.useContext(_notificationContext);
