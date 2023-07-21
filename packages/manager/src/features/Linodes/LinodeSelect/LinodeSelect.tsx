@@ -158,7 +158,11 @@ export const LinodeSelect = (
       renderInput={(params) => (
         <TextField
           placeholder={
-            placeholder || multiple ? 'Select Linodes' : 'Select a Linode'
+            placeholder
+              ? placeholder
+              : multiple
+              ? 'Select Linodes'
+              : 'Select a Linode'
           }
           errorText={error?.[0].reason ?? errorText}
           helperText={helperText}
