@@ -8,7 +8,7 @@ import { loadEnvironmentConfig } from './cypress/support/plugins/load-env-config
 import { nodeVersionCheck } from './cypress/support/plugins/node-version-check';
 import { regionOverrideCheck } from './cypress/support/plugins/region-override-check';
 import { vitePreprocess } from './cypress/support/plugins/vite-preprocessor';
-import { oauthTokenCheck } from './cypress/support/plugins/oauth-token-check';
+import { authenticateApi } from './cypress/support/plugins/authenticate-api';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 import { splitCypressRun } from './cypress/support/plugins/split-run';
 import { enableJunitReport } from './cypress/support/plugins/junit-report';
@@ -51,7 +51,7 @@ export default defineConfig({
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         nodeVersionCheck,
-        oauthTokenCheck,
+        authenticateApi,
         configureTestSuite,
         vitePreprocess,
         disableGoogleSafeBrowsing,

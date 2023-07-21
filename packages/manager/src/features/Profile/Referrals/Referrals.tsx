@@ -10,7 +10,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import CircularProgress from 'src/components/core/CircularProgress';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

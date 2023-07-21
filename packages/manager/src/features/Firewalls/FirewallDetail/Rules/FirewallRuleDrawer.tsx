@@ -1,7 +1,7 @@
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
 

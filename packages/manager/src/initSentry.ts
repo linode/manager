@@ -1,6 +1,11 @@
-import { BrowserOptions, Event as SentryEvent, init } from '@sentry/browser';
+import {
+  BrowserOptions,
+  BrowserTracing,
+  Event as SentryEvent,
+  init,
+} from '@sentry/react';
 
-import { SENTRY_URL } from 'src/constants';
+import { APP_ROOT, SENTRY_URL } from 'src/constants';
 import deepStringTransform from 'src/utilities/deepStringTransform';
 import redactAccessToken from 'src/utilities/redactAccessToken';
 
@@ -24,7 +29,7 @@ export const initSentry = () => {
         /^chrome:\/\//i,
       ],
       dsn: SENTRY_URL,
-      environment: import.meta.env.PROD ? 'production' : 'development',
+      environment: getSentryEnvironment(),
       ignoreErrors: [
         // Random plugins/extensions
         'top.GLOBALS',
@@ -72,6 +77,7 @@ export const initSentry = () => {
         // This is apparently a benign error: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
         'ResizeObserver loop limit exceeded',
       ],
+      integrations: [new BrowserTracing()],
       release: packageJson.version,
     });
   }
@@ -193,4 +199,21 @@ const customFingerPrintMap = {
   /** group all local storage errors together */
   localstorage: 'Local Storage Error',
   quotaExceeded: 'Local Storage Error',
+};
+
+/**
+ * Derives a environment name from the APP_ROOT environment variable
+ * so a Sentry issue is identified by the correct environment name.
+ */
+const getSentryEnvironment = () => {
+  if (APP_ROOT === 'https://cloud.linode.com') {
+    return 'production';
+  }
+  if (APP_ROOT.includes('staging')) {
+    return 'staging';
+  }
+  if (APP_ROOT.includes('dev')) {
+    return 'dev';
+  }
+  return 'local';
 };
