@@ -1,7 +1,7 @@
 import { Disk, Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -21,7 +21,7 @@ import {
   getEstimatedCloneTime,
 } from './utilities';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   clearButton: {
     top: `-${theme.spacing(0.5)}`,
   },
@@ -110,7 +110,7 @@ export const Configs: React.FC<Props> = (props) => {
 
   const region = regions?.find((r) => r.id === thisLinodeRegion);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const noneError = errorMap.none;
   // When duplicating a disk on the SAME Linode, if there's not a enough space,

@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -10,7 +10,7 @@ import { Paper } from 'src/components/Paper';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   currentRegion: {
     alignItems: 'center',
     display: 'flex',
@@ -39,7 +39,7 @@ interface Props {
 }
 
 const ConfigureForm = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { currentRegion } = props;
 
   const { data: regions } = useRegionsQuery();

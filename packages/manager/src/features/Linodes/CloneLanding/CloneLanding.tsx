@@ -7,7 +7,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { castDraft } from 'immer';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
@@ -51,7 +51,7 @@ const LinodesDetailHeader = React.lazy(
   () => import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader')
 );
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   appBar: {
     '& > div': {
       marginTop: 0,
@@ -89,7 +89,7 @@ const CloneLanding = () => {
   const { data: linodes } = useAllLinodesQuery();
   const { data: linode } = useLinodeQuery(linodeId);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const configs = _configs ?? [];
   const disks = _disks ?? [];

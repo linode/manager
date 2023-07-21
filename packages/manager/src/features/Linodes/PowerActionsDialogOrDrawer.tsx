@@ -1,6 +1,6 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -21,7 +21,7 @@ import {
 
 export type Action = 'Power Off' | 'Power On' | 'Reboot';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   dialog: {
     '& .dialog-content': {
       paddingBottom: 0,
@@ -61,7 +61,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
 
 export const PowerActionsDialog = (props: Props) => {
   const { action, isOpen, linodeId, onClose } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,

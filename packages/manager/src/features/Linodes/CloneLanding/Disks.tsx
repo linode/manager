@@ -1,6 +1,6 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -16,7 +16,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
 import { DiskSelection } from './utilities';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   labelCol: {
     width: '65%',
   },
@@ -35,7 +35,7 @@ export interface Props {
 export const Disks: React.FC<Props> = (props) => {
   const { diskSelection, disks, handleSelect, selectedConfigIds } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Paginate data={disks}>

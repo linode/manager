@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
@@ -10,7 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   checkbox: {
     marginLeft: theme.spacing(2),
   },
@@ -50,7 +50,7 @@ interface Props {
 }
 
 const CautionNotice = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   // This is not great, but lets us get all of the volumes for a Linode while keeping
   // the React Query store in a paginated shape. We want to keep data in a paginated shape

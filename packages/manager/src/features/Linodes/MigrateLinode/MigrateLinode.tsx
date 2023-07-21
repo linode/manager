@@ -1,6 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -40,7 +40,7 @@ import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   actionWrapper: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -81,7 +81,7 @@ interface Props {
 
 export const MigrateLinode = React.memo((props: Props) => {
   const { linodeId, onClose, open } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(
