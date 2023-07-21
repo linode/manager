@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { createStyles, makeStyles, useTheme } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -34,52 +35,56 @@ import { getDateOptions } from './helpers';
 
 setUpCharts();
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    chartSelect: {
-      maxWidth: 150,
+const useStyles = makeStyles()((theme: Theme) => ({
+  chartSelect: {
+    maxWidth: 150,
+  },
+
+  emptyText: {
+    marginTop: theme.spacing(),
+    textAlign: 'center',
+  },
+
+  graphControls: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBottom: theme.spacing(),
+  },
+
+  graphGrids: {
+    flexWrap: 'nowrap',
+    margin: 0,
+    [theme.breakpoints.down(1100)]: {
+      flexWrap: 'wrap',
     },
-    emptyText: {
-      marginTop: theme.spacing(),
-      textAlign: 'center',
-    },
-    graphControls: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      marginBottom: theme.spacing(),
-    },
-    graphGrids: {
-      flexWrap: 'nowrap',
-      margin: 0,
-      [theme.breakpoints.down(1100)]: {
-        flexWrap: 'wrap',
-      },
-    },
-    grid: {
-      '& h2': {
-        fontSize: '1rem',
-      },
-      '&.MuiGrid-item': {
-        padding: theme.spacing(2),
-      },
-      backgroundColor: theme.bg.offWhite,
-      border: `solid 1px ${theme.borderColors.divider}`,
-      marginBottom: theme.spacing(2),
-      [theme.breakpoints.up(1100)]: {
-        '&:first-of-type': {
-          marginRight: theme.spacing(2),
-        },
-      },
-    },
-    labelRangeSelect: {
+  },
+
+  grid: {
+    '& h2': {
       fontSize: '1rem',
-      paddingRight: theme.spacing(2),
     },
-    root: {
-      width: '100%',
+    '&.MuiGrid-item': {
+      padding: theme.spacing(2),
     },
-  })
-);
+    backgroundColor: theme.bg.offWhite,
+    border: `solid 1px ${theme.borderColors.divider}`,
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.up(1100)]: {
+      '&:first-of-type': {
+        marginRight: theme.spacing(2),
+      },
+    },
+  },
+
+  labelRangeSelect: {
+    fontSize: '1rem',
+    paddingRight: theme.spacing(2),
+  },
+
+  root: {
+    width: '100%',
+  },
+}));
 
 interface Props {
   isBareMetalInstance: boolean;
@@ -93,7 +98,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const theme = useTheme<Theme>();
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;

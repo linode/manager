@@ -1,10 +1,10 @@
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Typography } from 'src/components/Typography';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   graphsUnavailable: {
     alignItems: 'center',
     display: 'flex',
@@ -29,7 +29,7 @@ interface Props {
 }
 
 export const StatsPanel: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { height, loading, renderBody, title } = props;
 

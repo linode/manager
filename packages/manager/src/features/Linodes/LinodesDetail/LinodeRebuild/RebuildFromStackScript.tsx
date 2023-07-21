@@ -4,7 +4,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
@@ -37,7 +37,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   actionPanel: {
     '& button': {
       alignSelf: 'flex-end',
@@ -94,7 +94,7 @@ export const RebuildFromStackScript = (props: Props) => {
 
   const { data: preferences } = usePreferences();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: imagesData } = useAllImagesQuery();

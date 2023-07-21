@@ -1,7 +1,7 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -33,7 +33,7 @@ import { LinodeDiskRow } from './LinodeDiskRow';
 import { RenameDiskDrawer } from './RenameDiskDrawer';
 import { ResizeDiskDrawer } from './ResizeDiskDrawer';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   addNewWrapper: {
     '&.MuiGrid-item': {
       padding: 5,
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const LinodeDisks = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const disksHeaderRef = React.useRef(null);
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);

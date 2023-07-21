@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
@@ -11,7 +11,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     margin: `${theme.spacing(3)} 0 ${theme.spacing(3)} 0`,
     padding: 0,
@@ -43,7 +43,7 @@ export const ImageAndPassword = (props: Props) => {
 
   const { data: grants } = useGrants();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: imagesData, error: imagesError } = useAllImagesQuery();
   const _imagesError = imagesError

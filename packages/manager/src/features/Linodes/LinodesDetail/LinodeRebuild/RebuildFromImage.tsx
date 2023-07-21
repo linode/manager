@@ -6,7 +6,7 @@ import {
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
@@ -35,7 +35,7 @@ import { extendValidationSchema } from 'src/utilities/validatePassword';
 
 import { StyledNotice } from './RebuildFromImage.styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   actionPanel: {
     '& button': {
       alignSelf: 'flex-end',
@@ -87,7 +87,7 @@ export const RebuildFromImage = (props: Props) => {
 
   const { data: preferences } = usePreferences();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
 

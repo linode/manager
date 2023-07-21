@@ -1,7 +1,7 @@
 import { Event } from '@linode/api-v4/lib/account';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -11,24 +11,23 @@ import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conve
 
 type ClassNames = 'root';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      margin: 0,
-      padding: theme.spacing(1),
-      width: '100%',
-    },
-  });
+const styles = (theme: Theme) => ({
+  root: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    margin: 0,
+    padding: theme.spacing(1),
+    width: '100%',
+  },
+});
 
 interface Props {
   event: Event;
+  classes?: Partial<Record<ClassNames, string>>;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export const ActivityRow: React.FC<CombinedProps> = (props) => {
-  const { classes, event } = props;
+export const ActivityRow = (props: Props) => {
+  const { event } = props;
+  const classes = withStyles.getClasses(props);
 
   const message = eventMessageGenerator(event);
 
@@ -63,6 +62,4 @@ export const ActivityRow: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ActivityRow);
+export default withStyles(ActivityRow, styles);

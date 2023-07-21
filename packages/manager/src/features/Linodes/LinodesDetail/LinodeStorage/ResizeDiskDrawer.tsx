@@ -1,7 +1,7 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import { ResizeLinodeDiskSchema } from '@linode/validation';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -27,7 +27,7 @@ import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { calculateDiskFree } from './CreateDiskDrawer';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   formHelperTextLink: {
     display: 'block',
     marginTop: theme.spacing(1),
@@ -52,7 +52,7 @@ const handleLinkClick = (label: string) => {
 export const ResizeDiskDrawer = (props: Props) => {
   const { disk, linodeId, onClose, open } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
 

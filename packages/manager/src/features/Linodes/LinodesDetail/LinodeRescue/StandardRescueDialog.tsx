@@ -1,7 +1,7 @@
 import { rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
@@ -26,7 +26,7 @@ import { LinodePermissionsError } from '../LinodePermissionsError';
 import DeviceSelection, { ExtendedDisk } from './DeviceSelection';
 import RescueDescription from './RescueDescription';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     marginTop: theme.spacing(),
   },
@@ -88,7 +88,7 @@ export const getDefaultDeviceMapAndCounter = (
 export const StandardRescueDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,

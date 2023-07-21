@@ -1,7 +1,7 @@
 import { Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -34,7 +34,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   resizeTitle: {
     alignItems: 'center',
     display: 'flex',
@@ -57,7 +57,7 @@ interface Props {
 }
 
 export const LinodeResize = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(

@@ -5,7 +5,7 @@ import {
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
@@ -14,7 +14,7 @@ import { TextField } from 'src/components/TextField';
 import { useVlansQuery } from 'src/queries/vlans';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   divider: {
     margin: `${theme.spacing(4.5)} ${theme.spacing()} ${theme.spacing(1.5)} `,
     width: `calc(100% - ${theme.spacing(2)})`,
@@ -41,7 +41,7 @@ export interface ExtendedInterface extends Omit<InterfacePayload, 'purpose'> {
 }
 
 export const InterfaceSelect: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const theme = useTheme();
   const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
 

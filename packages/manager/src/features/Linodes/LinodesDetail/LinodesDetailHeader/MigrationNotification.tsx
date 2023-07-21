@@ -1,7 +1,7 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -18,7 +18,7 @@ import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   migrationLink: {
     ...theme.applyLinkStyles,
   },
@@ -33,7 +33,7 @@ interface Props {
 }
 
 const MigrationNotification: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const {

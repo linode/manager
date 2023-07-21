@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Dialog } from 'src/components/Dialog/Dialog';
@@ -14,7 +14,7 @@ import { LinodePermissionsError } from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   helperText: {
     paddingBottom: theme.spacing(2),
   },
@@ -79,7 +79,7 @@ export const LinodeRebuildDialog = (props: Props) => {
   const unauthorized = isReadOnly;
   const disabled = hostMaintenance || unauthorized;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [mode, setMode] = React.useState<MODES>('fromImage');
   const [rebuildError, setRebuildError] = React.useState<string>('');

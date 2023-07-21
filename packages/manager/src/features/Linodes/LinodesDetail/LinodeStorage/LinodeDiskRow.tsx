@@ -1,6 +1,6 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import BarPercent from 'src/components/BarPercent';
@@ -13,7 +13,7 @@ import { isInProgressEvent } from 'src/utilities/eventUtils';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   bar: {
     paddingLeft: theme.spacing(),
     width: 250,
@@ -60,7 +60,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
     readOnly,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { events } = useEventsInfiniteQuery();
 
   const diskEventLabelMap = {

@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -38,7 +38,7 @@ import {
   openForResize,
 } from 'src/store/volumeForm';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   addNewWrapper: {
     '&.MuiGrid-item': {
       padding: 5,
@@ -135,7 +135,7 @@ export const LinodeVolumes = connected((props: Props) => {
 
   const pagination = usePagination(1, preferenceKey);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const regions = useRegionsQuery().data ?? [];
 
