@@ -89,10 +89,12 @@ export const SearchBar = (props: CombinedProps) => {
 
   const history = useHistory();
 
-  const isLargeAccount = useIsLargeAccount();
+  const isLargeAccount = useIsLargeAccount(searchActive);
 
-  // Only request things if the search bar is open/active.
-  const shouldMakeRequests = searchActive && !isLargeAccount;
+  // Only request things if the search bar is open/active and we
+  // know if the account is large or not
+  const shouldMakeRequests =
+    searchActive && isLargeAccount !== undefined && !isLargeAccount;
 
   const { data: objectStorageClusters } = useObjectStorageClusters(
     shouldMakeRequests
