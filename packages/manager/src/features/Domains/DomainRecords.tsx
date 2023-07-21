@@ -1,15 +1,12 @@
 import {
+  deleteDomainRecord,
   Domain,
   DomainRecord,
   DomainType,
   RecordType,
   UpdateDomainPayload,
-  deleteDomainRecord,
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import {
   compose,
   equals,
@@ -24,22 +21,22 @@ import {
 } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import { Subscription } from 'rxjs/Subscription';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { StyledGrid, StyledTableCell, StyledDiv } from './DomainRecords.styles';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
+import { Typography } from 'src/components/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { Typography } from 'src/components/Typography';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -50,96 +47,48 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { truncateEnd } from 'src/utilities/truncate';
+import { DomainRecordActionMenu } from './DomainRecordActionMenu';
+import { DomainRecordDrawer } from './DomainRecordDrawer';
 
-import ActionMenu from './DomainRecordActionMenu';
-import DomainRecordDrawer from './DomainRecordDrawer';
-
-type ClassNames = 'cells' | 'linkContainer' | 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    cells: {
-      '& .data': {
-        maxWidth: 300,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        [theme.breakpoints.up('md')]: {
-          maxWidth: 750,
-        },
-        whiteSpace: 'nowrap',
-      },
-      '&:last-of-type': {
-        display: 'flex',
-        justifyContent: 'flex-end',
-      },
-      whiteSpace: 'nowrap',
-      width: 'auto',
-    },
-    linkContainer: {
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(),
-        marginRight: theme.spacing(),
-      },
-    },
-    root: {
-      '& .MuiGrid-item': {
-        paddingLeft: 0,
-        paddingRight: 0,
-      },
-      '& .domain-btn': {
-        [theme.breakpoints.down('lg')]: {
-          marginRight: theme.spacing(),
-        },
-      },
-      margin: 0,
-      marginTop: theme.spacing(2),
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(),
-        marginRight: theme.spacing(),
-      },
-      width: '100%',
-    },
-  });
-
-interface Props {
+interface DomainRecordsProps {
   domain: Domain;
   domainRecords: DomainRecord[];
-  updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
   updateRecords: () => void;
+  updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
 }
 
 interface ConfirmationState {
-  errors?: APIError[];
   open: boolean;
-  recordId?: number;
   submitting: boolean;
+  errors?: APIError[];
+  recordId?: number;
 }
 
 interface DrawerState {
-  fields?: Partial<Domain> | Partial<DomainRecord>;
-  mode: 'create' | 'edit';
   open: boolean;
-  type: DomainType | RecordType;
+  mode: 'create' | 'edit';
+  type: RecordType | DomainType;
+  fields?: Partial<DomainRecord> | Partial<Domain>;
 }
 
 interface State {
-  confirmDialog: ConfirmationState;
-  drawer: DrawerState;
   types: IType[];
+  drawer: DrawerState;
+  confirmDialog: ConfirmationState;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & FeatureFlagConsumerProps;
+type CombinedProps = DomainRecordsProps & FeatureFlagConsumerProps;
 
 interface IType {
-  columns: {
-    render: (r: Domain | DomainRecord) => JSX.Element | null | string;
-    title: string;
-  }[];
-  data: any[];
-  link?: () => JSX.Element | null;
-  order: 'asc' | 'desc';
-  orderBy: 'domain' | 'name' | 'target';
   title: string;
+  data: any[];
+  order: 'asc' | 'desc';
+  orderBy: 'name' | 'target' | 'domain';
+  columns: {
+    title: string;
+    render: (r: DomainRecord | Domain) => null | string | JSX.Element;
+  }[];
+  link?: () => null | JSX.Element;
 }
 
 const createLink = (title: string, handler: () => void) => (
@@ -171,7 +120,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, domain, domainRecords } = this.props;
+    const { domain, domainRecords } = this.props;
     const { confirmDialog, drawer } = this.state;
 
     return (
@@ -182,9 +131,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
           return (
             <div key={eachTypeIdx}>
-              <Grid
+              <StyledGrid
                 alignItems="center"
-                className={classes.root}
                 container
                 justifyContent="space-between"
                 spacing={2}
@@ -203,12 +151,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 {type.link && (
                   <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
                     {' '}
-                    <div className={classes.linkContainer}>
-                      {type.link()}
-                    </div>{' '}
+                    <StyledDiv>{type.link()}</StyledDiv>{' '}
                   </Grid>
                 )}
-              </Grid>
+              </StyledGrid>
               <OrderBy
                 data={type.data}
                 order={type.order}
@@ -264,14 +210,13 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                                               columnIndex
                                             ) => {
                                               return (
-                                                <TableCell
-                                                  className={classes.cells}
+                                                <StyledTableCell
                                                   data-qa-column={title}
                                                   key={columnIndex}
                                                   parentColumn={title}
                                                 >
                                                   {render(data)}
-                                                </TableCell>
+                                                </StyledTableCell>
                                               );
                                             }
                                           )}
@@ -382,8 +327,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
   };
 
-  eventsSubscription$: Subscription;
-
   generateTypes = (): IType[] => [
     /** SOA Record */
     {
@@ -415,7 +358,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         {
           render: (d: Domain) => {
             return d.type === 'master' ? (
-              <ActionMenu
+              <DomainRecordActionMenu
                 editPayload={d}
                 label={this.props.domain.domain}
                 onEdit={this.handleOpenSOADrawer}
@@ -459,7 +402,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
            */
           render: ({ id, name, target, ttl_sec }: DomainRecord) =>
             id === -1 ? null : (
-              <ActionMenu
+              <DomainRecordActionMenu
                 deleteData={{
                   onDelete: this.confirmDeletion,
                   recordID: id,
@@ -505,7 +448,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           render: ({ id, name, priority, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -542,7 +485,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -577,7 +520,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -614,7 +557,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -667,7 +610,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
             target,
             weight,
           }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -707,7 +650,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, tag, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -747,15 +690,19 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       ? this.openForEditPrimaryDomain(d)
       : this.openForEditSecondaryDomain(d);
   };
+
   openForCreateARecord = () => this.openForCreation('AAAA');
 
   openForCreateCAARecord = () => this.openForCreation('CAA');
+
   openForCreateCNAMERecord = () => this.openForCreation('CNAME');
 
   openForCreateMXRecord = () => this.openForCreation('MX');
+
   openForCreateNSRecord = () => this.openForCreation('NS');
 
   openForCreateSRVRecord = () => this.openForCreation('SRV');
+
   openForCreateTXTRecord = () => this.openForCreation('TXT');
 
   openForCreation = (type: RecordType) =>
@@ -765,6 +712,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       submitting: false,
       type,
     }));
+
   openForEditARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('AAAA', f);
@@ -772,6 +720,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   openForEditCAARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CAA', f);
+
   openForEditCNAMERecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CNAME', f);
@@ -779,6 +728,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   openForEditMXRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('MX', f);
+
   openForEditNSRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('NS', f);
@@ -867,83 +817,80 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
   flatten,
   prepend([
     {
-      id: -1,
-      name: '',
-      port: 0,
       priority: 0,
+      type: 'NS',
+      name: '',
+      id: -1,
       protocol: null,
-      service: null,
+      weight: 0,
       tag: null,
+      port: 0,
       target: 'ns1.linode.com',
+      service: null,
       ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
     },
     {
-      id: -1,
-      name: '',
-      port: 0,
       priority: 0,
+      type: 'NS',
+      name: '',
+      id: -1,
       protocol: null,
-      service: null,
+      weight: 0,
       tag: null,
+      port: 0,
       target: 'ns2.linode.com',
+      service: null,
       ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
     },
     {
-      id: -1,
-      name: '',
-      port: 0,
       priority: 0,
+      type: 'NS',
+      name: '',
+      id: -1,
       protocol: null,
-      service: null,
+      weight: 0,
       tag: null,
+      port: 0,
       target: 'ns3.linode.com',
+      service: null,
       ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
     },
     {
-      id: -1,
-      name: '',
-      port: 0,
       priority: 0,
+      type: 'NS',
+      name: '',
+      id: -1,
       protocol: null,
-      service: null,
+      weight: 0,
       tag: null,
+      port: 0,
       target: 'ns4.linode.com',
+      service: null,
       ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
     },
     {
-      id: -1,
-      name: '',
-      port: 0,
       priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns5.linode.com',
-      ttl_sec: 0,
       type: 'NS',
+      name: '',
+      id: -1,
+      protocol: null,
       weight: 0,
+      tag: null,
+      port: 0,
+      target: 'ns5.linode.com',
+      service: null,
+      ttl_sec: 0,
     },
   ])
 );
 
 const getNSRecords = compose<
-  Props,
+  DomainRecordsProps,
   DomainRecord[],
   DomainRecord[],
   DomainRecord[]
 >(prependLinodeNS, filter(typeEq('NS')), pathOr([], ['domainRecords']));
 
-const styled = withStyles(styles);
-
-export default recompose<CombinedProps, Props>(
-  styled,
-  withFeatureFlags
-)(DomainRecords);
+export default recompose<CombinedProps, DomainRecordsProps>(withFeatureFlags)(
+  DomainRecords
+);

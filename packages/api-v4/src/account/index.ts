@@ -1,5 +1,7 @@
 export * from './account';
 
+export * from './betas';
+
 export * from './events';
 
 export * from './invoices';

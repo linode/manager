@@ -1,65 +1,24 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-
 import { CircleProgress } from 'src/components/CircleProgress';
+import { styled } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
+import LandingHeader from 'src/components/LandingHeader';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
-import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
+import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
+import DomainRecords from '../DomainRecords';
+import { DeleteDomain } from '../DeleteDomain';
+import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
+import { Paper } from 'src/components/Paper';
 import {
   useDomainQuery,
   useDomainRecordsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
 
-import DeleteDomain from '../DeleteDomain';
-import DomainRecords from '../DomainRecords';
-import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  ...summaryPanelStyles(theme),
-  delete: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-  error: {
-    marginBottom: `0 !important`,
-    marginTop: `${theme.spacing(3)} !important`,
-  },
-  main: {
-    '&.MuiGrid-item': {
-      padding: 0,
-    },
-    [theme.breakpoints.up('md')]: {
-      order: 1,
-    },
-  },
-  root: {
-    marginBottom: theme.spacing(3),
-    marginLeft: 0,
-    marginRight: 0,
-  },
-  tagsSection: {
-    '&.MuiGrid-item': {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(2),
-      order: 2,
-    },
-  },
-}));
-
 export const DomainDetail = () => {
-  const classes = useStyles();
   const params = useParams<{ domainId: string }>();
   const domainId = Number(params.domainId);
 
@@ -84,7 +43,7 @@ export const DomainDetail = () => {
       return Promise.reject('No Domain found.');
     }
 
-    return updateDomain({ domain: label, id: domain.id }).catch((e) => {
+    return updateDomain({ id: domain.id, domain: label }).catch((e) => {
       setUpdateError(e[0].reason);
       return Promise.reject(e);
     });
@@ -125,15 +84,18 @@ export const DomainDetail = () => {
   return (
     <>
       <LandingHeader
+        title="Domain Details"
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/guides/dns-manager/"
         breadcrumbProps={{
+          pathname: location.pathname,
           labelOptions: { noCap: true },
           onEditHandlers: {
             editableTextTitle: domain.domain,
-            errorText: updateError,
-            onCancel: resetEditableLabel,
             onEdit: handleLabelChange,
+            onCancel: resetEditableLabel,
+            errorText: updateError,
           },
-          pathname: location.pathname,
         }}
         extraActions={
           <DownloadDNSZoneFileButton
@@ -141,44 +103,93 @@ export const DomainDetail = () => {
             domainLabel={domain.domain}
           />
         }
-        docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/dns-manager/"
-        title="Domain Details"
       />
       {location.state && location.state.recordError && (
-        <Notice
-          className={classes.error}
-          error
-          text={location.state.recordError}
-        />
+        <StyledNotice error text={location.state.recordError} />
       )}
-      <Grid className={classes.root} container>
-        <Grid className={classes.main} xs={12}>
+      <StyledRootGrid container>
+        <StyledMainGrid xs={12}>
           <DomainRecords
             domain={domain}
-            domainRecords={records}
             updateDomain={updateDomain}
+            domainRecords={records}
             updateRecords={refetchRecords}
           />
-        </Grid>
-        <Grid className={classes.tagsSection} xs={12}>
-          <Paper className={classes.summarySection}>
-            <Typography className={classes.title} data-qa-title variant="h3">
+        </StyledMainGrid>
+        <StyledTagSectionGrid xs={12}>
+          <StyledPaper>
+            <StyledTypography variant="h3" data-qa-title>
               Tags
-            </Typography>
+            </StyledTypography>
             <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
-          </Paper>
-          <div className={classes.delete}>
+          </StyledPaper>
+          <StyledDiv>
             <DeleteDomain
               domainId={domain.id}
               domainLabel={domain.domain}
               onSuccess={() => history.push('/domains')}
             />
-          </div>
-        </Grid>
-      </Grid>
+          </StyledDiv>
+        </StyledTagSectionGrid>
+      </StyledRootGrid>
     </>
   );
 };
 
-export default DomainDetail;
+const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    marginBottom: theme.spacing(2),
+  })
+);
+
+const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
+  padding: theme.spacing(2.5),
+  marginBottom: theme.spacing(2),
+  minHeight: '160px',
+  height: '93%',
+}));
+
+const StyledNotice = styled(Notice, { label: 'StyledNotice' })(({ theme }) => ({
+  marginTop: `${theme.spacing(3)} !important`,
+  marginBottom: `0 !important`,
+}));
+
+const StyledRootGrid = styled(Grid, { label: 'StyledRootGrid' })(
+  ({ theme }) => ({
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: theme.spacing(3),
+  })
+);
+
+const StyledMainGrid = styled(Grid, { label: 'StyledMainGrid' })(
+  ({ theme }) => ({
+    '&.MuiGrid-item': {
+      padding: 0,
+    },
+    [theme.breakpoints.up('md')]: {
+      order: 1,
+    },
+  })
+);
+
+const StyledTagSectionGrid = styled(Grid, { label: 'StyledTagGrid' })(
+  ({ theme }) => ({
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(2),
+      order: 2,
+    },
+    '&.MuiGrid-item': {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+  })
+);
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: theme.spacing(),
+  },
+  display: 'flex',
+  justifyContent: 'flex-end',
+}));

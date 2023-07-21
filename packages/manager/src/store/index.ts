@@ -1,4 +1,3 @@
-import { QueryClient } from 'react-query';
 import { useStore } from 'react-redux';
 import {
   Store,
@@ -9,10 +8,6 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 
-import accountManagement, {
-  State as AccountManagementState,
-  defaultState as defaultAccountManagementState,
-} from 'src/store/accountManagement/accountManagement.reducer';
 import { State as AuthState } from 'src/store/authentication';
 import authentication, {
   defaultState as authenticationDefaultState,
@@ -21,10 +16,6 @@ import backups, {
   State as BackupDrawerState,
   defaultState as backupsDefaultState,
 } from 'src/store/backupDrawer';
-import events, {
-  State as EventsState,
-  defaultState as eventsDefaultState,
-} from 'src/store/events/event.reducer';
 import globalErrors, {
   State as GlobalErrorState,
   defaultState as defaultGlobalErrorState,
@@ -33,7 +24,6 @@ import linodeCreateReducer, {
   State as LinodeCreateState,
   defaultState as linodeCreateDefaultState,
 } from 'src/store/linodeCreate/linodeCreate.reducer';
-import linodeConfigEvents from 'src/store/linodes/config/config.events';
 import linodeConfigs, {
   State as LinodeConfigsState,
   defaultState as defaultLinodeConfigsState,
@@ -42,12 +32,10 @@ import linodeDisks, {
   State as LinodeDisksState,
   defaultState as defaultLinodeDisksState,
 } from 'src/store/linodes/disk/disk.reducer';
-import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   State as LinodesState,
   defaultState as defaultLinodesState,
 } from 'src/store/linodes/linodes.reducer';
-import longviewEvents from 'src/store/longview/longview.events';
 import longview, {
   State as LongviewState,
   defaultState as defaultLongviewState,
@@ -73,8 +61,6 @@ import initialLoad, {
   State as InitialLoadState,
   defaultState as initialLoadState,
 } from './initialLoad/initialLoad.reducer';
-import diskEvents from './linodes/disk/disk.events';
-import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import mockFeatureFlags, {
   MockFeatureFlagState,
   defaultMockFeatureFlagState,
@@ -92,14 +78,12 @@ initReselectDevtools();
  * Default State
  */
 const __resourcesDefaultState = {
-  accountManagement: defaultAccountManagementState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
   linodes: defaultLinodesState,
 };
 
 export interface ResourcesState {
-  accountManagement: AccountManagementState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
   linodes: LinodesState;
@@ -110,7 +94,6 @@ export interface ApplicationState {
   authentication: AuthState;
   backups: BackupDrawerState;
   createLinode: LinodeCreateState;
-  events: EventsState;
   featureFlagsLoad: FeatureFlagsLoadState;
   globalErrors: GlobalErrorState;
   initialLoad: InitialLoadState;
@@ -127,7 +110,6 @@ export const defaultState: ApplicationState = {
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
   createLinode: linodeCreateDefaultState,
-  events: eventsDefaultState,
   featureFlagsLoad: featureFlagsLoadState,
   globalErrors: defaultGlobalErrorState,
   initialLoad: initialLoadState,
@@ -143,7 +125,6 @@ export const defaultState: ApplicationState = {
  * Reducers
  */
 const __resources = combineReducers({
-  accountManagement,
   linodeConfigs,
   linodeDisks,
   linodes,
@@ -154,7 +135,6 @@ const reducers = combineReducers<ApplicationState>({
   authentication,
   backups,
   createLinode: linodeCreateReducer,
-  events,
   featureFlagsLoad,
   globalErrors,
   initialLoad,
@@ -166,23 +146,17 @@ const reducers = combineReducers<ApplicationState>({
   volumeDrawer,
 });
 
-const enhancersFactory = (queryClient: QueryClient) =>
+const enhancersFactory = () =>
   compose(
-    applyMiddleware(
-      thunk,
-      combineEventsMiddleware(
-        [linodeEvents, longviewEvents, diskEvents, linodeConfigEvents],
-        queryClient
-      )
-    ),
+    applyMiddleware(thunk),
     reduxDevTools ? reduxDevTools() : (f: any) => f
   ) as any;
 
 // We need an instance of the query client for some event event handlers
-export const storeFactory = (queryClient: QueryClient) =>
-  createStore(reducers, defaultState, enhancersFactory(queryClient));
+export const storeFactory = () =>
+  createStore(reducers, defaultState, enhancersFactory());
 
-export type ApplicationStore = Store<ApplicationState>;
+export type ApplicationStore = Store<ApplicationState, any>;
 
 export const useApplicationStore = (): ApplicationStore =>
   useStore<ApplicationState>();

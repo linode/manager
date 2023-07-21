@@ -11,7 +11,7 @@ import * as React from 'react';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { reportException } from 'src/exceptionReporting';
 import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';

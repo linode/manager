@@ -12,20 +12,19 @@ import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import NotFound from 'src/components/NotFound';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
-import SideMenu from 'src/components/SideMenu';
+import { SideMenu } from 'src/components/SideMenu';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context';
 import BackupDrawer from 'src/features/Backups';
-import Footer from 'src/features/Footer';
+import { Footer } from 'src/features/Footer/Footer';
 import GlobalNotifications from 'src/features/GlobalNotifications';
 import {
   notificationContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
-import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -139,7 +138,11 @@ type CombinedProps = Props & GlobalErrorProps;
 const Account = React.lazy(() => import('src/features/Account'));
 const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
 const Volumes = React.lazy(() => import('src/features/Volumes'));
-const Domains = React.lazy(() => import('src/features/Domains'));
+const Domains = React.lazy(() =>
+  import('src/features/Domains').then((module) => ({
+    default: module.DomainsRoutes,
+  }))
+);
 const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
@@ -364,7 +367,6 @@ const MainContent = (props: CombinedProps) => {
               </>
             </NotificationProvider>
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-            <ToastNotifications />
             <VolumeDrawer />
             <BackupDrawer />
           </ComplianceUpdateProvider>
