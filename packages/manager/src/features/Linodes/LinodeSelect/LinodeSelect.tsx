@@ -1,16 +1,11 @@
-/**
- * The plan is to eventually replace the existing `LinodeSelect` and
- * `LinodeMultiSelect` components with this one. Once that happens,
- * remove 'V2' from this component's name.
- */
-
 import { APIError, Filter, Linode } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Autocomplete, Box } from '@mui/material';
+import { Autocomplete } from '@mui/material';
 import { SxProps } from '@mui/system';
 import React from 'react';
 
+import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
