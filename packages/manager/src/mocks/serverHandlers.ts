@@ -12,10 +12,12 @@ import { MockData } from 'src/dev-tools/mockDataController';
 import {
   VLANFactory,
   abuseTicketNotificationFactory,
+  accountBetaFactory,
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
   appTokenFactory,
+  betaFactory,
   contactFactory,
   createEntrypointFactory,
   createLoadbalancerFactory,
@@ -1351,6 +1353,21 @@ export const handlers = [
     );
   }),
   rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/betas', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
+  }),
+  rest.get('*/betas/:id', (req, res, ctx) => {
+    return res(ctx.json(betaFactory.build({ id: req.params.id })));
+  }),
+  rest.get('*/account/betas', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(accountBetaFactory.buildList(5))));
+  }),
+  rest.get('*/account/betas/:id', (req, res, ctx) => {
+    return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+  }),
+  rest.post('*/account/betas', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   ...entityTransfers,
