@@ -13,9 +13,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
   useCreateImageMutation,
   useUpdateImageMutation,
@@ -111,6 +111,8 @@ export const ImagesDrawer = (props: CombinedProps) => {
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
   const { mutateAsync: createImage } = useCreateImageMutation();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   React.useEffect(() => {
     setMounted(true);

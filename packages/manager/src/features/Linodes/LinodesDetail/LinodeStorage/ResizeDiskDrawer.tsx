@@ -15,7 +15,7 @@ import { TextField } from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskResizeMutation,
@@ -63,6 +63,8 @@ export const ResizeDiskDrawer = (props: Props) => {
   const { data: disks } = useAllLinodeDisksQuery(linodeId, open);
 
   const { data: linode } = useLinodeQuery(linodeId, open);
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const maximumSize = calculateDiskFree(linode, disks, disk?.id ?? 0);
 

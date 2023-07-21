@@ -9,8 +9,8 @@ import Select, { Item } from 'src/components/EnhancedSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
@@ -68,6 +68,8 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
   const configChoices = configs.map((config) => {
     return { label: config.label, value: `${config.id}` };
   });
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   React.useEffect(() => {
     if (configs.length === 1) {

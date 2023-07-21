@@ -6,7 +6,6 @@ import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
@@ -30,15 +29,18 @@ import { Paper } from 'src/components/Paper';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { listToItemsByID } from 'src/queries/base';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
   queryKey,
   removeImageFromCache,
   useDeleteImageMutation,
   useImagesQuery,
 } from 'src/queries/images';
-import { ApplicationState } from 'src/store';
-import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import {
+  isEventImageUpload,
+  isEventInProgressDiskImagize,
+} from 'src/utilities/eventUtils';
 
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
@@ -185,19 +187,23 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
 
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
-  const eventState = useSelector((state: ApplicationState) => state.events);
-  const events = imageEvents(eventState);
+  const { events } = useEventsInfiniteQuery();
+  const imageEvents =
+    events?.filter(
+      (thisEvent: Event) =>
+        isEventInProgressDiskImagize(thisEvent) || isEventImageUpload(thisEvent)
+    ) ?? [];
 
   // Private images with the associated events tied in.
   const manualImagesData = getImagesWithEvents(
     manualImages?.data ?? [],
-    events
+    imageEvents
   );
 
   // Automatic images with the associated events tied in.
   const automaticImagesData = getImagesWithEvents(
     automaticImages?.data ?? [],
-    events
+    imageEvents
   );
 
   const [drawer, setDrawer] = React.useState<ImageDrawerState>(

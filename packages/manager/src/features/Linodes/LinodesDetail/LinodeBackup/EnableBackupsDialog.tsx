@@ -5,7 +5,7 @@ import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Currency } from 'src/components/Currency';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
@@ -37,6 +37,8 @@ export const EnableBackupsDialog = (props: Props) => {
   );
 
   const price = type?.addons?.backups?.price?.monthly ?? 0;
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const { enqueueSnackbar } = useSnackbar();
 
