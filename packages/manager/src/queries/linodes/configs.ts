@@ -82,7 +82,6 @@ export const useLinodeConfigUpdateMutation = (
 };
 
 // Config Interface queries
-// @QUESTION: Will this take any params & filters?
 export const useConfigInterfacesQuery = (linodeID: number, configID: number) => {
   return useQuery<Interface[], APIError[]>(
     [queryKey, 'linode', linodeID, configQueryKey, 'config', configID, interfaceQueryKey],
