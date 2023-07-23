@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 
 import packageJson from '../../../package.json';
 
@@ -42,16 +42,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   link: {
-    '&:hover, &:focus': {
-      color: theme.color.black,
-      textDecoration: 'underline',
-    },
-    color: theme.palette.text.primary,
     fontSize: '90%',
     [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(1),
     },
-    transition: theme.transitions.create('color'),
   },
   linkContainer: {
     [theme.breakpoints.down('sm')]: {
@@ -92,15 +86,13 @@ export const Footer = React.memo((props: Props) => {
             [classes.linkContainer]: true,
           })}
         >
-          <a
-            aria-describedby="external-site"
+          <Link
             className={classes.link}
-            href="https://developers.linode.com"
-            rel="noopener noreferrer"
-            target="_blank"
+            forceCopyColor
+            to="https://developers.linode.com"
           >
             API Reference
-          </a>
+          </Link>
         </Grid>
         <Grid
           className={cx({
@@ -108,12 +100,9 @@ export const Footer = React.memo((props: Props) => {
             [classes.linkContainer]: true,
           })}
         >
-          <ExternalLink
-            className={classes.link}
-            hideIcon
-            link={FEEDBACK_LINK}
-            text="Provide Feedback"
-          />
+          <Link className={classes.link} forceCopyColor to={FEEDBACK_LINK}>
+            Provide Feedback
+          </Link>
         </Grid>
       </Grid>
     </footer>
@@ -127,14 +116,12 @@ const renderVersion = (className: string) => {
   }
 
   return (
-    <a
-      aria-describedby="external-site"
+    <Link
       className={className}
-      href={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
-      rel="noopener noreferrer"
-      target="_blank"
+      forceCopyColor
+      to={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
     >
       v{VERSION}
-    </a>
+    </Link>
   );
 };

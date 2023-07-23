@@ -20,6 +20,7 @@ import {
   getAllDisks,
   getEstimatedCloneTime,
 } from './utilities';
+import { Link } from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   clearButton: {
@@ -275,23 +276,11 @@ export const Configs: React.FC<Props> = (props) => {
       {linodeError && (
         <Typography className={classes.errorText} variant="body1">
           {linodeError}{' '}
-          <a
-            aria-describedby="external-site"
-            href={errorMessageLinks.shrink}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Shrink your existing disks
-          </a>{' '}
+          <Link to={errorMessageLinks.shrink}>Shrink your existing disks</Link>{' '}
           or{' '}
-          <a
-            aria-describedby="external-site"
-            href={errorMessageLinks.resize}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
+          <Link to={errorMessageLinks.resize}>
             resize your Linode to a larger plan.
-          </a>
+          </Link>
         </Typography>
       )}
 

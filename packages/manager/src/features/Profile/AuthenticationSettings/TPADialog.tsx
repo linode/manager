@@ -47,11 +47,11 @@ const handleLoginChange = (provider: TPAProvider) => {
   // If the selected provider is 'password', that means the user has decided
   // to disable TPA and revert to using Linode credentials
   return provider === 'password'
-    ? window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener')
+    ? window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener noreferrer')
     : window.open(
         `${LOGIN_ROOT}/tpa/enable/` + `${provider}`,
         '_blank',
-        'noopener'
+        'noopener noreferrer'
       );
 };
 
@@ -70,9 +70,10 @@ const renderActions = (onClose: () => void, provider: TPAProvider) => {
           onClose();
           handleLoginChange(provider);
         }}
-        aria-describedby="external-site"
+        aria-label="Change login - opens in new tab"
         buttonType="primary"
         data-testid="confirm-login-change"
+        role="link"
       >
         Change login
       </Button>
