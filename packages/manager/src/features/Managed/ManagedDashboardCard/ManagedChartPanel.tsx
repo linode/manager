@@ -1,6 +1,7 @@
 import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import { Theme } from '@mui/material/styles';
-import { WithTheme, makeStyles, withTheme } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
+import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -23,7 +24,7 @@ import {
   StyledRootDiv,
 } from './ManagedChartPanel.styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
   inner: {
     paddingTop: 0,
   },
@@ -165,7 +166,7 @@ const createTabs = (
 
 export const ManagedChartPanel = (props: ManagedChartPanelProps) => {
   const { theme } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
   const { data, error, isLoading } = useManagedStatsQuery();
