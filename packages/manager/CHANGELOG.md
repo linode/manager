@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Behavior of logo and menu items in SideMenu ([#9431](https://github.com/linode/manager/pull/9431))
 - TopMenu bug that prevented tooltips from showing via tab key navigation ([#9371](https://github.com/linode/manager/pull/9371))
 - Make "edit" button for images landing page consistent ([#9424](https://github.com/linode/manager/pull/9424))
+- Temporarily hide Wazuh Marketplace app ([#9442](https://github.com/linode/manager/pull/9442))
 
 ### Tech Stories:
 
