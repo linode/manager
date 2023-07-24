@@ -12,8 +12,8 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { resetEventsPolling } from 'src/eventsPolling';
 import usePrevious from 'src/hooks/usePrevious';
-import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -103,8 +103,6 @@ export const StandardRescueDialog = (props: Props) => {
     { region: linode?.region },
     open
   );
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();

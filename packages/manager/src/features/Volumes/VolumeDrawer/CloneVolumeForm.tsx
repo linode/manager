@@ -1,9 +1,10 @@
 import { CloneVolumeSchema } from '@linode/validation/lib/volumes.schema';
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import Form from 'src/components/core/Form';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { useCloneVolumeMutation } from 'src/queries/volumes';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -30,8 +31,6 @@ export const CloneVolumeForm = (props: Props) => {
   const { onClose, volumeId, volumeLabel, volumeRegion, volumeSize } = props;
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   return (
     <Formik

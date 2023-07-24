@@ -3,10 +3,11 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 
 import { profileFactory } from './factories';
+import { queryClientFactory } from './queries/base';
 import { getURL, handleError, injectEuuidToProfile } from './request';
 import { storeFactory } from './store';
 
-const store = storeFactory();
+const store = storeFactory(queryClientFactory());
 
 const baseErrorConfig: AxiosRequestConfig = {
   headers: {},
