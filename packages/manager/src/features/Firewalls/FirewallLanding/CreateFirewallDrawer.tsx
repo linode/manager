@@ -22,7 +22,7 @@ import { getEntityIdsByPermission } from 'src/utilities/grants';
 export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
   'Only Linodes you have permission to modify are shown.';
 
-export interface CreateFirewallDrawer {
+export interface CreateFirewallDrawerProps {
   onClose: () => void;
   open: boolean;
 }
@@ -39,7 +39,7 @@ const initialValues: CreateFirewallPayload = {
 };
 
 export const CreateFirewallDrawer = React.memo(
-  (props: CreateFirewallDrawer) => {
+  (props: CreateFirewallDrawerProps) => {
     const { onClose, open } = props;
 
     /**
