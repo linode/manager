@@ -6,7 +6,7 @@ import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import EnhancedSelect from 'src/components/EnhancedSelect';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
@@ -182,11 +182,9 @@ export const AccessSelect = React.memo((props: Props) => {
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
-          <ExternalLink
-            hideIcon
-            link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
-            text="S3-compatible tool"
-          />
+          <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
+            S3-compatible tool
+          </Link>
           .
         </Typography>
       ) : null}

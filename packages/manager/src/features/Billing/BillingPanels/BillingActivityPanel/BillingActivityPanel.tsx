@@ -10,7 +10,6 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -169,7 +168,7 @@ const AkamaiBillingInvoiceText = (
     any negotiated terms and conditions. Condensed and finalized invoice is
     available within{' '}
     <Link to="https://control.akamai.com/apps/billing">
-      Akamai Control Center &gt; Billing <ExternalLinkIcon />
+      Akamai Control Center &gt; Billing
     </Link>
     .
   </Typography>

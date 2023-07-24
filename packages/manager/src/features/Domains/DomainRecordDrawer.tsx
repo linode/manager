@@ -44,7 +44,7 @@ import {
   isValidDomainRecord,
 } from './domainUtils';
 
-interface Props
+interface DomainRecordDrawerProps
   extends Partial<Omit<DomainRecord, 'type'>>,
     Partial<Omit<Domain, 'type'>> {
   domain: string;
@@ -108,8 +108,11 @@ interface NumberFieldProps extends AdjustedTextFieldProps {
   defaultValue?: number;
 }
 
-class DomainRecordDrawer extends React.Component<Props, State> {
-  componentDidUpdate(prevProps: Props) {
+export class DomainRecordDrawer extends React.Component<
+  DomainRecordDrawerProps,
+  State
+> {
+  componentDidUpdate(prevProps: DomainRecordDrawerProps) {
     if (this.props.open && !prevProps.open) {
       // Drawer is opening, set the fields according to props
       this.setState({
@@ -449,7 +452,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
    * the defaultFieldState is used to pre-populate the drawer with either
    * editable data or defaults.
    */
-  static defaultFieldsState = (props: Partial<Props>) => ({
+  static defaultFieldsState = (props: Partial<DomainRecordDrawerProps>) => ({
     axfr_ips: getInitialIPs(props.axfr_ips),
     domain: props.domain,
     expire_sec: props.expire_sec ?? 0,
@@ -883,5 +886,3 @@ export const castFormValuesToNumeric = (
     });
   });
 };
-
-export default DomainRecordDrawer;

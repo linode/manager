@@ -8,8 +8,6 @@ import {
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import {
   compose,
   equals,
@@ -50,57 +48,11 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { truncateEnd } from 'src/utilities/truncate';
 
-import ActionMenu from './DomainRecordActionMenu';
-import DomainRecordDrawer from './DomainRecordDrawer';
+import { DomainRecordActionMenu } from './DomainRecordActionMenu';
+import { DomainRecordDrawer } from './DomainRecordDrawer';
+import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
 
-type ClassNames = 'cells' | 'linkContainer' | 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    cells: {
-      '& .data': {
-        maxWidth: 300,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        [theme.breakpoints.up('md')]: {
-          maxWidth: 750,
-        },
-        whiteSpace: 'nowrap',
-      },
-      '&:last-of-type': {
-        display: 'flex',
-        justifyContent: 'flex-end',
-      },
-      whiteSpace: 'nowrap',
-      width: 'auto',
-    },
-    linkContainer: {
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(),
-        marginRight: theme.spacing(),
-      },
-    },
-    root: {
-      '& .MuiGrid-item': {
-        paddingLeft: 0,
-        paddingRight: 0,
-      },
-      '& .domain-btn': {
-        [theme.breakpoints.down('lg')]: {
-          marginRight: theme.spacing(),
-        },
-      },
-      margin: 0,
-      marginTop: theme.spacing(2),
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(),
-        marginRight: theme.spacing(),
-      },
-      width: '100%',
-    },
-  });
-
-interface Props {
+interface DomainRecordsProps {
   domain: Domain;
   domainRecords: DomainRecord[];
   updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
@@ -127,7 +79,7 @@ interface State {
   types: IType[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & FeatureFlagConsumerProps;
+type CombinedProps = DomainRecordsProps & FeatureFlagConsumerProps;
 
 interface IType {
   columns: {
@@ -170,7 +122,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, domain, domainRecords } = this.props;
+    const { domain, domainRecords } = this.props;
     const { confirmDialog, drawer } = this.state;
 
     return (
@@ -181,9 +133,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
           return (
             <div key={eachTypeIdx}>
-              <Grid
+              <StyledGrid
                 alignItems="center"
-                className={classes.root}
                 container
                 justifyContent="space-between"
                 spacing={2}
@@ -202,12 +153,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 {type.link && (
                   <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
                     {' '}
-                    <div className={classes.linkContainer}>
-                      {type.link()}
-                    </div>{' '}
+                    <StyledDiv>{type.link()}</StyledDiv>{' '}
                   </Grid>
                 )}
-              </Grid>
+              </StyledGrid>
               <OrderBy
                 data={type.data}
                 order={type.order}
@@ -263,14 +212,13 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                                               columnIndex
                                             ) => {
                                               return (
-                                                <TableCell
-                                                  className={classes.cells}
+                                                <StyledTableCell
                                                   data-qa-column={title}
                                                   key={columnIndex}
                                                   parentColumn={title}
                                                 >
                                                   {render(data)}
-                                                </TableCell>
+                                                </StyledTableCell>
                                               );
                                             }
                                           )}
@@ -412,7 +360,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         {
           render: (d: Domain) => {
             return d.type === 'master' ? (
-              <ActionMenu
+              <DomainRecordActionMenu
                 editPayload={d}
                 label={this.props.domain.domain}
                 onEdit={this.handleOpenSOADrawer}
@@ -456,7 +404,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
            */
           render: ({ id, name, target, ttl_sec }: DomainRecord) =>
             id === -1 ? null : (
-              <ActionMenu
+              <DomainRecordActionMenu
                 deleteData={{
                   onDelete: this.confirmDeletion,
                   recordID: id,
@@ -502,7 +450,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           render: ({ id, name, priority, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -539,7 +487,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -574,7 +522,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -611,7 +559,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -664,7 +612,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
             target,
             weight,
           }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -704,7 +652,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, tag, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -940,15 +888,12 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
 );
 
 const getNSRecords = compose<
-  Props,
+  DomainRecordsProps,
   DomainRecord[],
   DomainRecord[],
   DomainRecord[]
 >(prependLinodeNS, filter(typeEq('NS')), pathOr([], ['domainRecords']));
 
-const styled = withStyles(styles);
-
-export default recompose<CombinedProps, Props>(
-  styled,
-  withFeatureFlags
-)(DomainRecords);
+export default recompose<CombinedProps, DomainRecordsProps>(withFeatureFlags)(
+  DomainRecords
+);

@@ -10,7 +10,7 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
@@ -47,11 +47,9 @@ export const BucketSSL = (props: Props) => {
         upload a custom certificate that will be used for the TLS portion of the
         HTTPS request instead. For more information, please see our guide on
         using{' '}
-        <ExternalLink
-          hideIcon
-          link="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/"
-          text="custom certificates for Object Storage buckets"
-        />
+        <Link to="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/">
+          custom certificates for Object Storage buckets
+        </Link>
         .
       </StyledHelperText>
       <SSLBody bucketName={bucketName} clusterId={clusterId} />

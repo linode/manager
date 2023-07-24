@@ -11,12 +11,14 @@ import {
   youtubeLinkData,
 } from './DomainsEmptyResourcesData';
 
-interface Props {
+interface DomainsEmptyLandingStateProps {
   navigateToCreate: () => void;
   openImportZoneDrawer: () => void;
 }
 
-export const DomainsEmptyLandingState = (props: Props) => {
+export const DomainsEmptyLandingState = (
+  props: DomainsEmptyLandingStateProps
+) => {
   const { navigateToCreate, openImportZoneDrawer } = props;
 
   return (

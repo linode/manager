@@ -1,13 +1,12 @@
 import { IPv6Prefix } from '@linode/api-v4/lib/networking';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { Link as ExternalLink } from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { Tooltip } from 'src/components/Tooltip';
@@ -274,9 +273,9 @@ const AddIPDrawer = (props: Props) => {
         <Typography>
           IPv6 addresses are allocated as ranges, which you can choose to
           distribute and further route yourself.{' '}
-          <ExternalLink to="https://www.linode.com/docs/guides/an-overview-of-ipv6-on-linode/">
+          <Link to="https://www.linode.com/docs/guides/an-overview-of-ipv6-on-linode/">
             Learn more
-          </ExternalLink>
+          </Link>
           .
         </Typography>
         <ActionsPanel

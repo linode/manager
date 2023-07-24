@@ -45,6 +45,7 @@ import SupportTicketSMTPFields, {
   smtpDialogTitle,
   smtpHelperText,
 } from './SupportTicketSMTPFields';
+import { Link } from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -114,15 +115,7 @@ const ticketTypeMap: Record<TicketType, TicketTypeData> = {
         {`We love our customers, and we\u{2019}re here to help if you need us.
         Please keep in mind that not all topics are within the scope of our support.
         For overall system status, please see `}
-        <a
-          aria-describedby="external-site"
-          href="https://status.linode.com"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          status.linode.com
-        </a>
-        .
+        <Link to="https://status.linode.com">status.linode.com</Link>.
       </>
     ),
   },
