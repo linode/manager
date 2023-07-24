@@ -36,7 +36,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import MonitorDrawer from '../MonitorDrawer';
-import HistoryDrawer from './HistoryDrawer';
+import { HistoryDrawer } from './HistoryDrawer';
 import MonitorTableContent from './MonitorTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
