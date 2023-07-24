@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useCodeBlockStyles = makeStyles((theme: Theme) => ({
+export const useCodeBlockStyles = makeStyles()((theme: Theme) => ({
   commandDisplay: {
     '& pre': {
       marginBottom: 0,

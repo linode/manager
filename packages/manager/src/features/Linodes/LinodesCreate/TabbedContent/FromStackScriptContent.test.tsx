@@ -19,11 +19,6 @@ const mockImages = imageFactory.buildList(10);
 const mockProps: CombinedProps = {
   accountBackupsEnabled: false,
   category: 'community',
-  classes: {
-    emptyImagePanel: '',
-    emptyImagePanelText: '',
-    main: '',
-  },
   handleSelectUDFs: jest.fn(),
   header: '',
   imagesData: {},

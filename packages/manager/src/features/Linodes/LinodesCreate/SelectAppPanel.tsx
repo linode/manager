@@ -1,6 +1,6 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -16,20 +16,19 @@ import { AppsData } from './types';
 
 type ClassNames = 'loading' | 'panel';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    loading: {
-      '& >div:first-of-type': {
-        height: 450,
-      },
-    },
-    panel: {
-      boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
+const styles = (theme: Theme) => ({
+  loading: {
+    '& >div:first-of-type': {
       height: 450,
-      marginBottom: theme.spacing(3),
-      overflowY: 'auto',
     },
-  });
+  },
+  panel: {
+    boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
+    height: 450,
+    marginBottom: theme.spacing(3),
+    overflowY: 'auto' as const,
+  },
+});
 
 interface Props extends AppsData {
   disabled: boolean;
@@ -46,16 +45,15 @@ interface Props extends AppsData {
   openDrawer: (stackScriptLabel: string) => void;
   searchValue?: string;
   selectedStackScriptID?: number;
+  classes?: Partial<Record<ClassNames, string>>;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class SelectAppPanel extends React.PureComponent<CombinedProps> {
+class SelectAppPanel extends React.PureComponent<Props> {
   componentDidMount() {
     this.clickAppIfQueryParamExists();
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: Props) {
     if (
       typeof prevProps.appInstances === 'undefined' &&
       typeof this.props.appInstances !== 'undefined'
@@ -69,7 +67,6 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       appInstances,
       appInstancesError,
       appInstancesLoading,
-      classes,
       disabled,
       error,
       handleClick,
@@ -79,6 +76,8 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       searchValue,
       selectedStackScriptID,
     } = this.props;
+
+    const classes = withStyles.getClasses(this.props);
 
     if (appInstancesError) {
       return (
@@ -196,9 +195,6 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
   };
 }
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
-)(SelectAppPanel);
+export default compose<Props, Props>(React.memo)(
+  withStyles(SelectAppPanel, styles)
+);

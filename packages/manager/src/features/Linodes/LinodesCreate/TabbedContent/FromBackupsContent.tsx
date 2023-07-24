@@ -4,8 +4,7 @@ import {
   getLinodeBackups,
 } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 
@@ -30,17 +29,6 @@ export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
 }
 
-type ClassNames = 'main';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    main: {
-      [theme.breakpoints.up('md')]: {
-        maxWidth: '100%',
-      },
-    },
-  });
-
 interface Props {
   disabled?: boolean;
 }
@@ -55,8 +43,7 @@ interface State {
 export type CombinedProps = Props &
   BackupFormStateHandlers &
   ReduxStateProps &
-  WithLinodesTypesRegionsAndImages &
-  WithStyles<ClassNames>;
+  WithLinodesTypesRegionsAndImages;
 
 const errorResources = {
   backup_id: 'Backup ID',
@@ -88,7 +75,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   render() {
     const { isGettingBackups, selectedLinodeWithBackups } = this.state;
     const {
-      classes,
       disabled,
       errors,
       imagesData,
@@ -109,7 +95,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <Grid className={`${classes.main} mlMain py0`}>
+      <StyledGrid className={`mlMain py0`}>
         {!userHasBackups ? (
           <Paper>
             <Placeholder
@@ -166,7 +152,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
             />
           </React.Fragment>
         )}
-      </Grid>
+      </StyledGrid>
     );
   }
 
@@ -250,6 +236,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
+const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    maxWidth: '100%',
+  },
 
-export default styled(FromBackupsContent);
+  // todo: may need to add the stylings from the other classes too (py0, mlMain)
+  // same as stackScript grid -- worth moving to common style file or nah if this is super small?
+}));
+
+export default FromBackupsContent;

@@ -1,7 +1,7 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -20,17 +20,16 @@ export interface ExtendedLinode extends Linode {
 
 type ClassNames = 'panelBody' | 'root';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    panelBody: {
-      padding: `${theme.spacing(2)} 0 0`,
-    },
-    root: {
-      backgroundColor: theme.color.white,
-      flexGrow: 1,
-      width: '100%',
-    },
-  });
+const styles = (theme: Theme) => ({
+  panelBody: {
+    padding: `${theme.spacing(2)} 0 0`,
+  },
+  root: {
+    backgroundColor: theme.color.white,
+    flexGrow: 1,
+    width: '100%',
+  },
+});
 
 interface Notice {
   level: 'error' | 'warning'; // most likely only going to need these two 'warning'; 'warning';
@@ -45,16 +44,13 @@ interface Props {
   linodes: ExtendedLinode[];
   notice?: Notice;
   selectedLinodeID?: number;
+  classes?: Partial<Record<ClassNames, string>>;
 }
 
-type StyledProps = Props & WithStyles<ClassNames>;
-
-type CombinedProps = StyledProps;
-
-class SelectLinodePanel extends React.Component<CombinedProps> {
+class SelectLinodePanel extends React.Component<Props> {
   render() {
-    const { classes, disabled, error, header, linodes, notice } = this.props;
-
+    const { disabled, error, header, linodes, notice } = this.props;
+    const classes = withStyles.getClasses(this.props);
     return (
       <Paginate data={linodes}>
         {({
@@ -119,9 +115,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  styled
-)(SelectLinodePanel);
+// TODO Connie
+export default compose<Props, Props & RenderGuardProps>(RenderGuard)(
+  withStyles(SelectLinodePanel, styles)
+);

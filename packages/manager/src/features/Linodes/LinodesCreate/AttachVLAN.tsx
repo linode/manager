@@ -1,7 +1,7 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -20,7 +20,7 @@ import {
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 // @TODO Delete this file when VPC is released
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   paragraphBreak: {
     marginTop: theme.spacing(2),
   },
@@ -62,7 +62,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
     vlanLabel,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const queryClient = useQueryClient();
 

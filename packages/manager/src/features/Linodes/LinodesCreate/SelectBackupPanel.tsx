@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -40,23 +40,22 @@ export interface LinodeWithBackups extends Linode {
 
 type ClassNames = 'panelBody' | 'root' | 'wrapper';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    panelBody: {
-      padding: `${theme.spacing(2)} 0 0`,
-      width: '100%',
-    },
-    root: {
-      backgroundColor: theme.color.white,
-      flexGrow: 1,
-      marginTop: theme.spacing(3),
-      width: '100%',
-    },
-    wrapper: {
-      minHeight: 120,
-      padding: theme.spacing(1),
-    },
-  });
+const styles = (theme: Theme) => ({
+  panelBody: {
+    padding: `${theme.spacing(2)} 0 0`,
+    width: '100%',
+  },
+  root: {
+    backgroundColor: theme.color.white,
+    flexGrow: 1,
+    marginTop: theme.spacing(3),
+    width: '100%',
+  },
+  wrapper: {
+    minHeight: 120,
+    padding: theme.spacing(1),
+  },
+});
 
 interface BackupInfo {
   details: string;
@@ -71,15 +70,14 @@ interface Props {
   selectedBackupID?: number;
   selectedLinodeID?: number;
   selectedLinodeWithBackups?: LinodeWithBackups;
+  classes?: Partial<Record<ClassNames, string>>;
 }
 
 interface State {
   backups?: LinodeBackup[];
 }
 
-type StyledProps = Props & WithStyles<ClassNames>;
-
-type CombinedProps = StyledProps & WithProfileProps;
+type CombinedProps = Props & WithProfileProps;
 
 class SelectBackupPanel extends React.Component<CombinedProps, State> {
   getBackupInfo(backup: LinodeBackup) {
@@ -104,12 +102,13 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      classes,
       error,
       loading,
       selectedLinodeID,
       selectedLinodeWithBackups,
     } = this.props;
+
+    const classes = withStyles.getClasses(this.props);
 
     const aggregatedBackups = selectedLinodeWithBackups
       ? aggregateBackups(selectedLinodeWithBackups.currentBackups)
@@ -176,10 +175,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
-  styled,
   withProfile
-)(SelectBackupPanel);
+)(withStyles(SelectBackupPanel, styles));

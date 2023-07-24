@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ import {
 } from '../types';
 import { extendLinodes } from '../utilities';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   main: {
     [theme.breakpoints.up('md')]: {
       maxWidth: '100%',
@@ -39,7 +39,7 @@ export type CombinedProps = CloneFormStateHandlers &
   WithLinodesTypesRegionsAndImages;
 
 export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const {
     errors,

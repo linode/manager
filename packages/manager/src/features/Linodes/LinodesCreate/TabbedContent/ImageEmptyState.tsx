@@ -1,12 +1,12 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   emptyImagePanelText: {
     marginTop: theme.spacing(1),
     padding: `${theme.spacing(1)} 0`,
@@ -20,7 +20,7 @@ interface Props {
 
 export const ImageEmptyState: React.FC<Props> = (props) => {
   const { className, errorText } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Paper className={className}>

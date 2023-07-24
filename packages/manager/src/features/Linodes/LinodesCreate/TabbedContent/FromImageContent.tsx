@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ import {
   WithTypesRegionsAndImages,
 } from '../types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   main: {
     [theme.breakpoints.up('md')]: {
       maxWidth: '100%',
@@ -37,7 +37,7 @@ export type CombinedProps = Props &
   WithTypesRegionsAndImages;
 
 export const FromImageContent: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const {
     error,

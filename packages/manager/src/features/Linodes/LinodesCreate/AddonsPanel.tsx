@@ -1,6 +1,6 @@
 import { Interface, Linode } from '@linode/api-v4/lib/linodes';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ import { privateIPRegex } from 'src/utilities/ipUtils';
 import AttachVLAN from './AttachVLAN';
 import { VLANAccordion } from './VLANAccordion';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   addons: {
     marginTop: theme.spacing(3),
   },
@@ -89,7 +89,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     vlanLabel,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const flags = useFlags();
 
   const { data: image } = useImageQuery(

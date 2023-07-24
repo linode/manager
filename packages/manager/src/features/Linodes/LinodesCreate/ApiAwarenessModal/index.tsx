@@ -1,6 +1,6 @@
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import React, { useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ import generateCLICommand from 'src/utilities/generate-cli';
 
 import CodeBlock from '../CodeBlock';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   actionPanelStyles: {
     marginTop: '18px !important',
     paddingBottom: 0,
@@ -63,7 +63,7 @@ export interface Props {
 const ApiAwarenessModal = (props: Props) => {
   const { isOpen, onClose, payLoad, route } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   const { events } = useEventsInfiniteQuery();
 

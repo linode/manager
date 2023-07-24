@@ -13,7 +13,7 @@ export interface Props {
 
 const CodeBlock = (props: Props) => {
   const { command, commandType, language } = props;
-  const classes = useCodeBlockStyles();
+  const { classes } = useCodeBlockStyles();
 
   const handleCopyIconClick = () => {
     sendApiAwarenessClickEvent('Copy Icon', commandType);

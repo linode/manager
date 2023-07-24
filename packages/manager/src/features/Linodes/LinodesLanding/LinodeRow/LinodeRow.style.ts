@@ -1,7 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
-// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
 export const useStyles = makeStyles()((theme: Theme) => ({
   bodyRow: {
     '& [data-qa-copy-ip] button:focus > svg': {

@@ -2,7 +2,7 @@ import { InterfacePayload, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
 import classNames from 'classnames';
 import cloneDeep from 'lodash/cloneDeep';
 import * as React from 'react';
@@ -88,50 +88,50 @@ type ClassNames =
   | 'messageGroupMaxWidth'
   | 'stackScriptWrapper';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    buttonGroup: {
-      marginTop: theme.spacing(3),
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'flex-end',
-      },
+const styles = (theme: Theme) => ({
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-end',
     },
-    createButton: {
-      marginLeft: theme.spacing(1),
-      [theme.breakpoints.down('md')]: {
-        marginRight: theme.spacing(1),
-      },
+  },
+  createButton: {
+    marginLeft: theme.spacing(1),
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(1),
     },
-    form: {
-      width: '100%',
+  },
+  form: {
+    width: '100%',
+  },
+  imageSelect: {
+    '& .MuiPaper-root': {
+      padding: 0,
     },
-    imageSelect: {
-      '& .MuiPaper-root': {
-        padding: 0,
-      },
+  },
+  messageGroup: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    flexGrow: 1,
+    gap: theme.spacing(2),
+    [(theme.breakpoints.down('sm'), theme.breakpoints.down('md'))]: {
+      margin: theme.spacing(1),
     },
-    messageGroup: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      gap: theme.spacing(2),
-      [(theme.breakpoints.down('sm'), theme.breakpoints.down('md'))]: {
-        margin: theme.spacing(1),
-      },
+  },
+  messageGroupMaxWidth: {
+    maxWidth: '70%',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 'unset',
     },
-    messageGroupMaxWidth: {
-      maxWidth: '70%',
-      [theme.breakpoints.down('sm')]: {
-        maxWidth: 'unset',
-      },
+  },
+  stackScriptWrapper: {
+    '& [role="tablist"]': {
+      marginBottom: theme.spacing(),
+      marginTop: theme.spacing(2),
     },
-    stackScriptWrapper: {
-      '& [role="tablist"]': {
-        marginBottom: theme.spacing(),
-        marginTop: theme.spacing(2),
-      },
-    },
-  });
+  },
+});
+
 interface Props {
   backupsMonthlyPrice?: null | number;
   checkValidation: LinodeCreateValidation;
@@ -167,6 +167,7 @@ interface Props {
   updateUserData: (userData: string) => void;
   userData: string | undefined;
   vlanLabel: null | string;
+  classes?: Partial<Record<ClassNames, string>>;
 }
 
 const errorMap = [
@@ -196,7 +197,6 @@ type CombinedProps = Props &
   ImagesProps &
   WithLinodesProps &
   RegionsProps &
-  WithStyles<ClassNames> &
   WithTypesProps &
   RouteComponentProps<{}> &
   FeatureFlagConsumerProps;
@@ -269,7 +269,6 @@ export class LinodeCreate extends React.PureComponent<
     const {
       accountBackupsEnabled,
       backupsMonthlyPrice,
-      classes,
       errors,
       formIsSubmitting,
       handleAgreementChange,
@@ -302,6 +301,8 @@ export class LinodeCreate extends React.PureComponent<
       userCannotCreateLinode,
       ...rest
     } = this.props;
+
+    const classes = withStyles.getClasses(this.props);
 
     const hasErrorFor = getErrorMap(errorMap, errors);
 
@@ -880,10 +881,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
   setTab: (value) => dispatch(handleChangeCreateType(value)),
 });
 
-const styled = withStyles(styles);
-
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, InnerProps>(connected, styled);
+const enhanced = recompose<CombinedProps, InnerProps>(connected);
 
-export default enhanced(LinodeCreate);
+export default enhanced(withStyles(LinodeCreate, styles));
