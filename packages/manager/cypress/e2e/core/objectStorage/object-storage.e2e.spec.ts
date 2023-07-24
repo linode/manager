@@ -305,7 +305,7 @@ describe('object storage end-to-end tests', () => {
         .should('be.visible')
         .within(() => {
           // Confirm that object is not public by default.
-          cy.get('[data-qa-external-link]')
+          cy.get('[data-testid="external-site-link"]')
             .should('be.visible')
             .invoke('attr', 'href')
             .as('bucketObjectUrl');

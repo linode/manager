@@ -10,7 +10,7 @@ const store = storeFactory();
 
 const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
-    checkAccountSize={jest.fn()}
+    getLinodesPage={jest.fn()}
     initSession={jest.fn()}
     isAuthenticated={false}
     linodes={[]}
@@ -19,7 +19,6 @@ const component = shallow<AuthenticationWrapper>(
     markAppAsDoneLoading={jest.fn()}
     pendingUpload={false}
     queryClient={queryClient}
-    requestLinodes={jest.fn()}
     store={store}
   >
     <div />

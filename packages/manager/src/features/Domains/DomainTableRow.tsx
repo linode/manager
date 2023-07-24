@@ -1,60 +1,41 @@
 import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
+import { styled } from '@mui/material/styles';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-
-import ActionMenu, { Handlers } from './DomainActionMenu';
+import { DomainActionMenu, Handlers } from './DomainActionMenu';
 import { getDomainDisplayType } from './domainUtils';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    ...theme.applyLinkStyles,
-  },
-  labelStatusWrapper: {
-    alignItems: 'center',
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    whiteSpace: 'nowrap',
-  },
-}));
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 type CombinedProps = { domain: Domain } & Handlers;
 
-const DomainTableRow: React.FC<CombinedProps> = (props) => {
-  const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;
-
-  const classes = useStyles();
+export const DomainTableRow = React.memo((props: CombinedProps) => {
+  const { domain, onDisableOrEnable, onClone, onRemove, onEdit } = props;
 
   return (
     <TableRow
-      ariaLabel={`Domain ${domain.domain}`}
-      data-qa-domain-cell={domain.domain}
       key={domain.id}
+      data-qa-domain-cell={domain.domain}
+      ariaLabel={`Domain ${domain.domain}`}
     >
       <TableCell data-qa-domain-label>
-        <div className={classes.labelStatusWrapper}>
+        <StyledDiv>
           {domain.type !== 'slave' ? (
-            <Link tabIndex={0} to={`/domains/${domain.id}`}>
+            <Link to={`/domains/${domain.id}`} tabIndex={0}>
               {domain.domain}
             </Link>
           ) : (
-            <button
-              className={classes.button}
-              onClick={() => props.onEdit(domain)}
-            >
+            <StyledLinkButton onClick={() => props.onEdit(domain)}>
               {domain.domain}
-            </button>
+            </StyledLinkButton>
           )}
-        </div>
+        </StyledDiv>
       </TableCell>
-      <TableCell data-qa-domain-status statusCell>
+      <TableCell statusCell data-qa-domain-status>
         <StatusIcon status={domainStatusToIconStatus(domain.status)} />
         {humanizeDomainStatus(domain.status)}
       </TableCell>
@@ -67,17 +48,17 @@ const DomainTableRow: React.FC<CombinedProps> = (props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <ActionMenu
+        <DomainActionMenu
           domain={domain}
-          onClone={onClone}
           onDisableOrEnable={onDisableOrEnable}
-          onEdit={onEdit}
           onRemove={onRemove}
+          onClone={onClone}
+          onEdit={onEdit}
         />
       </TableCell>
     </TableRow>
   );
-};
+});
 
 const humanizeDomainStatus = (status: DomainStatus) => {
   switch (status) {
@@ -109,4 +90,9 @@ const domainStatusToIconStatus = (status: DomainStatus) => {
   }
 };
 
-export default React.memo(DomainTableRow);
+const StyledDiv = styled('div', { label: 'StyledDiv' })({
+  alignItems: 'center',
+  display: 'flex',
+  flexFlow: 'row nowrap',
+  whiteSpace: 'nowrap',
+});
