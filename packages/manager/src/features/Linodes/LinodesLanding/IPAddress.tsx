@@ -1,5 +1,3 @@
-import { Theme } from '@mui/material/styles';
-import { withStyles } from 'tss-react/mui';
 import copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
@@ -7,85 +5,24 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import {
+  StyledIPLinkDiv,
+  StyledRootDiv,
+  StyledCopyTooltip,
+  StyledRenderIPDiv,
+} from './IPAddress.styles';
 
-type CSSClasses =
-  | 'hide'
-  | 'icon'
-  | 'ipLink'
-  | 'multipleAddresses'
-  | 'right'
-  | 'root'
-  | 'row';
-
-const styles = (theme: Theme) => ({
-  hide: {
-    '&:focus': {
-      opacity: 1,
-    },
-    [theme.breakpoints.up('md')]: {
-      // Hide until the component is hovered,
-      // when props.showCopyOnHover is true (only on desktop)
-      opacity: 0,
-    },
-    transition: theme.transitions.create(['opacity']),
-  },
-  icon: {
-    '& svg': {
-      height: 12,
-      top: 1,
-      width: 12,
-    },
-  },
-  ipLink: {
-    color: theme.palette.primary.main,
-    display: 'inline-block',
-    position: 'relative' as const,
-    top: -1,
-    transition: theme.transitions.create(['color']),
-  },
-  multipleAddresses: {
-    '&:not(:last-child)': {
-      marginBottom: theme.spacing(0.5),
-    },
-  },
-  right: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-    marginLeft: theme.spacing(0.5),
-  },
-  root: {
-    '&:hover': {
-      '& $hide': {
-        opacity: 1,
-      },
-    },
-    '&:last-child': {
-      marginBottom: 0,
-    },
-    marginBottom: theme.spacing(0.5),
-    maxWidth: '100%',
-    width: '100%',
-  },
-  row: {
-    alignItems: 'flex-start',
-    display: 'flex',
-    width: '100%',
-  },
-});
-
-interface Props {
+export interface IPAddressProps {
   ips: string[];
   showAll?: boolean;
   showCopyOnHover?: boolean;
   showMore?: boolean;
-  classes?: Partial<Record<CSSClasses, string>>;
 }
 
 export const sortIPAddress = (ip1: string, ip2: string) =>
   (privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1);
 
-export class IPAddress extends React.Component<Props> {
+export class IPAddress extends React.Component<IPAddressProps> {
   componentWillUnmount() {
     if (this.copiedTimeout !== null) {
       window.clearTimeout(this.copiedTimeout);
@@ -94,14 +31,13 @@ export class IPAddress extends React.Component<Props> {
 
   render() {
     const { ips, showAll, showMore } = this.props;
-    const classes = withStyles.getClasses(this.props);
 
     const formattedIPS = ips
       .map((ip) => ip.replace('/64', ''))
       .sort(sortIPAddress);
 
     return (
-      <div className={`${!showAll && 'dif'} ${classes.root}`}>
+      <StyledRootDiv className={`${!showAll && 'dif'}`}>
         {!showAll
           ? this.renderIP(formattedIPS[0])
           : formattedIPS.map((a, i) => {
@@ -120,7 +56,7 @@ export class IPAddress extends React.Component<Props> {
             items={tail(formattedIPS)}
           />
         )}
-      </div>
+      </StyledRootDiv>
     );
   }
 
@@ -135,29 +71,27 @@ export class IPAddress extends React.Component<Props> {
   copiedTimeout: null | number = null;
 
   renderCopyIcon = (ip: string) => {
-    const { classes, showCopyOnHover } = this.props;
+    const { showCopyOnHover } = this.props;
 
     return (
-      <div className={`${classes?.ipLink}`} data-qa-copy-ip>
-        <CopyTooltip
-          className={`${classes?.icon} ${showCopyOnHover ? classes?.hide : ''}
-            ${classes?.right} copy`}
+      <StyledIPLinkDiv data-qa-copy-ip>
+        <StyledCopyTooltip
+          sx={{ margin: 0 }}
+          showCopyOnHover={showCopyOnHover}
+          data-testid={`CopyTooltip`}
+          className={`copy`}
           text={ip}
         />
-      </div>
+      </StyledIPLinkDiv>
     );
   };
 
   renderIP = (ip: string, key?: number) => {
-    const { classes, showAll } = this.props;
     return (
-      <div
-        className={`${classes?.row} ${showAll && classes?.multipleAddresses}`}
-        key={key}
-      >
+      <StyledRenderIPDiv key={key}>
         <CopyTooltip copyableText data-qa-copy-ip-text text={ip} />
         {this.renderCopyIcon(ip)}
-      </div>
+      </StyledRenderIPDiv>
     );
   };
 
@@ -166,4 +100,4 @@ export class IPAddress extends React.Component<Props> {
   };
 }
 
-export default withStyles(IPAddress, styles);
+export default IPAddress;
