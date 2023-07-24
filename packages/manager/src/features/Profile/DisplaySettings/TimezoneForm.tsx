@@ -98,17 +98,19 @@ export const TimezoneForm = (props: Props) => {
           placeholder={'Choose a Timezone'}
         />
         <ActionsPanel
-          primaryButtonSx={{
-            backgroundColor: 'red',
-            color: 'white',
-            marginTop: (theme: Theme) => theme.breakpoints.up('md') && 16,
-            minWidth: 180,
+          primaryButtonProps={{
+            'data-testid': 'tz-submit',
+            disabled,
+            label: 'Update Timezone',
+            loading: isLoading,
+            onClick: onSubmit,
+            sx: {
+              backgroundColor: 'red',
+              color: 'white',
+              marginTop: (theme: Theme) => theme.breakpoints.up('md') && 16,
+              minWidth: 180,
+            },
           }}
-          primaryButtonDataTestId="tz-submit"
-          primaryButtonDisabled={disabled}
-          primaryButtonHandler={onSubmit}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Update Timezone"
           showPrimary
         />
       </StyledRootContainer>

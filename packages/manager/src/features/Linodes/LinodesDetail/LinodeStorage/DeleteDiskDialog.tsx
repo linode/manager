@@ -38,13 +38,17 @@ export const DeleteDiskDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonDataTestId="confirm-delete"
-          primaryButtonHandler={onDelete}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Delete"
-          secondaryButtonDataTestId="cancel-delete"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'confirm-delete',
+            label: 'Delete',
+            loading: isLoading,
+            onClick: onDelete,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel-delete',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
           style={{ padding: 0 }}

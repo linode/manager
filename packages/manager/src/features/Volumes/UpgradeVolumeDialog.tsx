@@ -62,11 +62,12 @@ export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonHandler={onSubmit}
-      primaryButtonLoading={isLoading}
-      primaryButtonText="Enter Upgrade Queue"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        label: 'Enter Upgrade Queue',
+        loading: isLoading,
+        onClick: onSubmit,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
       showPrimary
       showSecondary
     />

@@ -10,8 +10,8 @@ import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Paper } from 'src/components/Paper';
+import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import useFlags from 'src/hooks/useFlags';
 import {
@@ -226,11 +226,15 @@ export const KubeSummaryPanel = (props: Props) => {
       <ConfirmationDialog
         actions={
           <ActionsPanel
-            primaryButtonHandler={() => handleResetKubeConfig()}
-            primaryButtonLoading={isResettingKubeConfig}
-            primaryButtonText="Reset Kubeconfig"
-            secondaryButtonHandler={() => setResetKubeConfigDialogOpen(false)}
-            secondaryButtonText="Cancel"
+            primaryButtonProps={{
+              label: 'Reset Kubeconfig',
+              loading: isResettingKubeConfig,
+              onClick: () => handleResetKubeConfig(),
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              onClick: () => setResetKubeConfigDialogOpen(false),
+            }}
             showPrimary
             showSecondary
           />

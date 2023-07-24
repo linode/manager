@@ -43,13 +43,17 @@ export const RevokeTokenDialog = ({ onClose, open, token, type }: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonDataTestId="revoke-button"
-          primaryButtonHandler={onRevoke}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Revoke"
-          secondaryButtonDataTestId="cancel-button"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'revoke-button',
+            label: 'Revoke',
+            loading: isLoading,
+            onClick: onRevoke,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel-button',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
         />

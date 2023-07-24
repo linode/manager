@@ -539,15 +539,19 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
         )}
       </Grid>
       <ActionsPanel
-        primaryButtonDataTestId="ip-transfer-save"
-        primaryButtonDisabled={readOnly || linodes.length === 0}
-        primaryButtonHandler={onSubmit}
-        primaryButtonLoading={submitting}
-        primaryButtonText="Save"
-        secondaryButtonDataTestId={'ip-transfer-reset'}
-        secondaryButtonDisabled={submitting || linodes.length === 0}
-        secondaryButtonHandler={onReset}
-        secondaryButtonText="Reset Form"
+        primaryButtonProps={{
+          'data-testid': 'ip-transfer-save',
+          disabled: readOnly || linodes.length === 0,
+          label: 'Save',
+          loading: submitting,
+          onClick: onSubmit,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'ip-transfer-reset',
+          disabled: submitting || linodes.length === 0,
+          label: 'Reset Form',
+          onClick: onReset,
+        }}
         showPrimary
         showSecondary
       />

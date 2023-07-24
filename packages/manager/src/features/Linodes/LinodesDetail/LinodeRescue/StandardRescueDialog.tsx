@@ -244,10 +244,12 @@ export const StandardRescueDialog = (props: Props) => {
               Add Disk
             </Button>
             <ActionsPanel
-              primaryButtonDataTestId="submit"
-              primaryButtonDisabled={disabled}
-              primaryButtonHandler={onSubmit}
-              primaryButtonText="Reboot into Rescue Mode"
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                disabled,
+                label: 'Reboot into Rescue Mode',
+                onClick: onSubmit,
+              }}
               showPrimary
             />
           </Paper>

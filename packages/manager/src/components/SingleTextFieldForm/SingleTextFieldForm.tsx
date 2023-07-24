@@ -90,16 +90,18 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
           value={value}
         />
         <ActionsPanel
-          primaryButtonSx={(theme: Theme) => ({
-            minWidth: 180,
-            [theme.breakpoints.up('md')]: {
-              marginTop: 2,
-            },
-          })}
-          primaryButtonDisabled={disabled || value === initialValue}
-          primaryButtonHandler={handleSubmit}
-          primaryButtonLoading={submitting}
-          primaryButtonText={`Update ${label}`}
+          primaryButtonProps={{
+            disabled: disabled || value === initialValue,
+            label: `Update ${label}`,
+            loading: submitting,
+            onClick: handleSubmit,
+            sx: (theme: Theme) => ({
+              minWidth: 180,
+              [theme.breakpoints.up('md')]: {
+                marginTop: 2,
+              },
+            }),
+          }}
           showPrimary
         />
       </Box>

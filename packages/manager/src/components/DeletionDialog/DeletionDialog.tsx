@@ -42,16 +42,18 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
     typeToConfirm && preferences?.type_to_confirm !== false;
   const renderActions = () => (
     <ActionsPanel
-      primaryButtonDisabled={
-        typeToConfirmRequired && confirmationText !== label
-      }
-      primaryButtonDataTestId="confirm"
-      primaryButtonHandler={onDelete}
-      primaryButtonLoading={loading}
-      primaryButtonText={` Delete ${titlecase(entity)}`}
-      secondaryButtonDataTestId="cancel"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        disabled: typeToConfirmRequired && confirmationText !== label,
+        label: ` Delete ${titlecase(entity)}`,
+        loading,
+        onClick: onDelete,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
       showPrimary
       showSecondary
       style={{ padding: 0 }}

@@ -211,11 +211,13 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   const renderExpansionActions = () => {
     return (
       <ActionsPanel
-        primaryButtonDataTestId="alerts-save"
-        primaryButtonDisabled={isReadOnly || !formik.dirty}
-        primaryButtonHandler={() => formik.handleSubmit()}
-        primaryButtonLoading={isLoading}
-        primaryButtonText="Save"
+        primaryButtonProps={{
+          'data-testid': 'alerts-save',
+          disabled: isReadOnly || !formik.dirty,
+          label: 'Save',
+          loading: isLoading,
+          onClick: () => formik.handleSubmit(),
+        }}
         showPrimary
       />
     );

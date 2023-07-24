@@ -31,11 +31,12 @@ export const DeleteConfigDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonHandler={onDelete}
-      primaryButtonLoading={isLoading}
-      primaryButtonText="Delete"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        label: 'Delete',
+        loading: isLoading,
+        onClick: onDelete,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
       showPrimary
       showSecondary
       style={{ padding: 0 }}

@@ -13,10 +13,10 @@ import { FileUploader } from 'src/components/FileUploader/FileUploader';
 import { Link } from 'src/components/Link';
 import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
@@ -203,10 +203,14 @@ export const ImageUpload: React.FC<Props> = (props) => {
             <ConfirmationDialog
               actions={() => (
                 <ActionsPanel
-                  primaryButtonHandler={handleConfirm}
-                  primaryButtonText="Leave Page"
-                  secondaryButtonHandler={handleCancel}
-                  secondaryButtonText="Cancel"
+                  primaryButtonProps={{
+                    label: 'Leave Page',
+                    onClick: handleConfirm,
+                  }}
+                  secondaryButtonProps={{
+                    label: 'Cancel',
+                    onClick: handleCancel,
+                  }}
                   showPrimary
                   showSecondary
                 />

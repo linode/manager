@@ -90,9 +90,11 @@ export const ViewIPDrawer = (props: Props) => {
           </div>
 
           <ActionsPanel
-            secondaryButtonDataTestId="cancel"
-            secondaryButtonHandler={props.onClose}
-            secondaryButtonText="Close"
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Close',
+              onClick: props.onClose,
+            }}
             showSecondary
           />
         </React.Fragment>

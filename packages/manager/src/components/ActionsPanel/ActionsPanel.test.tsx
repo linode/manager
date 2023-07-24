@@ -15,7 +15,10 @@ describe('ActionsPanel', () => {
 
   it('should render primary button when showPrimary prop is true', () => {
     renderWithTheme(
-      <ActionsPanel primaryButtonDataTestId={primaryButtonTestId} showPrimary />
+      <ActionsPanel
+        primaryButtonProps={{ 'data-testid': primaryButtonTestId }}
+        showPrimary
+      />
     );
     expect(screen.getByTestId(primaryButtonTestId)).toBeInTheDocument();
   });
@@ -23,7 +26,7 @@ describe('ActionsPanel', () => {
   it('should not render primary button when showPrimary prop is false', () => {
     renderWithTheme(
       <ActionsPanel
-        primaryButtonDataTestId={primaryButtonTestId}
+        primaryButtonProps={{ 'data-testid': primaryButtonTestId }}
         showPrimary={false}
       />
     );
@@ -33,7 +36,7 @@ describe('ActionsPanel', () => {
   it('should render secondary button when showSecondary prop is true', () => {
     renderWithTheme(
       <ActionsPanel
-        secondaryButtonDataTestId={secondaryButtonTestId}
+        secondaryButtonProps={{ 'data-testid': secondaryButtonTestId }}
         showSecondary
       />
     );
@@ -43,7 +46,7 @@ describe('ActionsPanel', () => {
   it('should not render secondary button when showSecondary prop is false', () => {
     renderWithTheme(
       <ActionsPanel
-        secondaryButtonDataTestId={secondaryButtonTestId}
+        secondaryButtonProps={{ 'data-testid': secondaryButtonTestId }}
         showSecondary={false}
       />
     );
@@ -54,8 +57,10 @@ describe('ActionsPanel', () => {
     const mockHandler = jest.fn();
     renderWithTheme(
       <ActionsPanel
-        primaryButtonDataTestId={primaryButtonTestId}
-        primaryButtonHandler={mockHandler}
+        primaryButtonProps={{
+          'data-testid': primaryButtonTestId,
+          onClick: mockHandler,
+        }}
         showPrimary
       />
     );
@@ -67,8 +72,10 @@ describe('ActionsPanel', () => {
     const mockHandler = jest.fn();
     renderWithTheme(
       <ActionsPanel
-        secondaryButtonDataTestId={secondaryButtonTestId}
-        secondaryButtonHandler={mockHandler}
+        secondaryButtonProps={{
+          'data-testid': secondaryButtonTestId,
+          onClick: mockHandler,
+        }}
         showSecondary
       />
     );

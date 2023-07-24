@@ -76,12 +76,13 @@ const DomainZoneImportDrawer = (props: Props) => {
           value={formik.values.remote_nameserver}
         />
         <ActionsPanel
-          primaryButtonDisabled={!formik.dirty}
-          primaryButtonLoading={formik.isSubmitting}
-          primaryButtonText="Import"
-          primaryButtonType="submit"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            disabled: !formik.dirty,
+            label: 'Import',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

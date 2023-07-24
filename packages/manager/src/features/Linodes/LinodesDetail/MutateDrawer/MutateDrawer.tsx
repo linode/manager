@@ -168,9 +168,11 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           , but that may vary based on host and network load.
         </Typography>
         <ActionsPanel
-          primaryButtonHandler={this.props.initMutation}
-          primaryButtonLoading={loading}
-          primaryButtonText="Enter the Upgrade Queue"
+          primaryButtonProps={{
+            label: 'Enter the Upgrade Queue',
+            loading,
+            onClick: this.props.initMutation,
+          }}
           showPrimary
           style={{ marginTop: 32 }}
         />

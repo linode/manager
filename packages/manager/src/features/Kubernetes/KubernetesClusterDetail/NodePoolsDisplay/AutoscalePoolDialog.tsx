@@ -119,19 +119,22 @@ export const AutoscalePoolDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonDisabled={
-            (values.enabled === autoscaler?.enabled &&
-              values.min === autoscaler?.min &&
-              values.max === autoscaler?.max) ||
-            Object.keys(errors).length !== 0
-          }
-          primaryButtonDataTestId="confirm"
-          primaryButtonHandler={() => handleSubmit()}
-          primaryButtonLoading={isLoading || isSubmitting}
-          primaryButtonText="Save Changes"
-          secondaryButtonDataTestId="cancel"
-          secondaryButtonHandler={handleClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'confirm',
+            disabled:
+              (values.enabled === autoscaler?.enabled &&
+                values.min === autoscaler?.min &&
+                values.max === autoscaler?.max) ||
+              Object.keys(errors).length !== 0,
+            label: 'Save Changes',
+            loading: isLoading || isSubmitting,
+            onClick: () => handleSubmit(),
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: handleClose,
+          }}
           showPrimary
           showSecondary
           style={{ padding: 0 }}

@@ -323,14 +323,18 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         </Grid>
       </Grid>
       <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'save-contact-info',
+          label: 'Save Changes',
+          loading: isLoading,
+          type: 'submit',
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'reset-contact-info',
+          label: 'Cancel',
+          onClick: onClose,
+        }}
         className={classes.actions}
-        primaryButtonDataTestId="save-contact-info"
-        primaryButtonLoading={isLoading}
-        primaryButtonText="Save Changes"
-        primaryButtonType="submit"
-        secondaryButtonDataTestId="reset-contact-info"
-        secondaryButtonHandler={onClose}
-        secondaryButtonText="Cancel"
         showPrimary
         showSecondary
       />

@@ -235,11 +235,13 @@ const ApiAwarenessModal = (props: Props) => {
         </Typography>
       </Notice>
       <ActionsPanel
+        secondaryButtonProps={{
+          compactX: true,
+          'data-testid': 'close-button',
+          label: 'Close',
+          onClick: onClose,
+        }}
         className={classes.actionPanelStyles}
-        secondaryButtonCompactX
-        secondaryButtonDataTestId="close-button"
-        secondaryButtonHandler={onClose}
-        secondaryButtonText="Close"
         showSecondary
       />
     </Dialog>

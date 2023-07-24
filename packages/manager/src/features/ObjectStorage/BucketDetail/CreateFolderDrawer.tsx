@@ -86,11 +86,12 @@ export const CreateFolderDrawer = (props: Props) => {
           onChange={formik.handleChange}
         />
         <ActionsPanel
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Create"
-          primaryButtonType="submit"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            label: 'Create',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

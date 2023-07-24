@@ -17,13 +17,17 @@ export const CaptureSnapshotConfirmationDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonDataTestId="confirm"
-      primaryButtonHandler={onSnapshot}
-      primaryButtonLoading={loading}
-      primaryButtonText="Take Snapshot"
-      secondaryButtonDataTestId="cancel"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        label: 'Take Snapshot',
+        loading,
+        onClick: onSnapshot,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
       showPrimary
       showSecondary
       style={{ padding: 0 }}

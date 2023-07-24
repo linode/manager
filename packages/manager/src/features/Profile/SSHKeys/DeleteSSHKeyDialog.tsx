@@ -24,12 +24,16 @@ const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonDataTestId="confirm-delete"
-          primaryButtonHandler={onDelete}
-          primaryButtonLoading={isLoading}
-          secondaryButtonDataTestId="cancel-delete"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'confirm-delete',
+            loading: isLoading,
+            onClick: onDelete,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel-delete',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
         />

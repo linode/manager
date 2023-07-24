@@ -12,9 +12,9 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import {
   useBucketSSLDeleteMutation,
   useBucketSSLMutation,
@@ -140,9 +140,11 @@ const AddCertForm = (props: Props) => {
       </StyledFieldsWrapper>
       <Grid>
         <ActionsPanel
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Upload Certificate"
-          primaryButtonType="submit"
+          primaryButtonProps={{
+            label: 'Upload Certificate',
+            loading: isLoading,
+            type: 'submit',
+          }}
           showPrimary
         />
       </Grid>
@@ -170,22 +172,18 @@ const RemoveCertForm = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        disabled={isLoading}
-        onClick={() => setOpen(false)}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        loading={isLoading}
-        onClick={removeCertificate}
-      >
-        Remove certificate
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        label: 'Remove certificate',
+        loading: isLoading,
+        onClick: removeCertificate,
+      }}
+      secondaryButtonProps={{
+        disabled: isLoading,
+        label: 'Cancel',
+        onClick: () => setOpen(false),
+      }}
+    />
   );
 
   return (

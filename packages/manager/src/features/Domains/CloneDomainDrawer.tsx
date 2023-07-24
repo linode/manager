@@ -4,7 +4,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
@@ -88,21 +87,18 @@ export const CloneDomainDrawer = (props: Props) => {
           onChange={formik.handleChange}
           value={formik.values.domain}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            data-testid="create-domain-submit"
-            disabled={!formik.dirty}
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Create Domain
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'create-domain-submit',
+            disabled: !formik.dirty,
+            label: 'Create Domain',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ 'data-testid': 'cancel', onClick: onClose }}
+          showPrimary
+          showSecondary
+        />
       </form>
     </Drawer>
   );

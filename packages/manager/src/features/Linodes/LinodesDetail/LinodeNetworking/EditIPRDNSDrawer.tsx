@@ -72,12 +72,13 @@ export const EditIPRDNSDrawer = (props: Props) => {
           Leave this field blank to reset RDNS
         </Typography>
         <ActionsPanel
-          primaryButtonDataTestId="submit"
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Save"
-          primaryButtonType="submit"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="cancel"
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            label: 'Save',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'cancel', onClick: onClose }}
           showPrimary
           showSecondary
           style={{ marginTop: 16 }}

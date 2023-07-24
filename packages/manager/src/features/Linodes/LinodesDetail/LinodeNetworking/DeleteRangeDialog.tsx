@@ -35,11 +35,12 @@ export const DeleteRangeDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonHandler={handleDeleteIP}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Delete Range"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            label: 'Delete Range',
+            loading: isLoading,
+            onClick: handleDeleteIP,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

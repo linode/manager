@@ -35,13 +35,17 @@ export const DisableTwoFactorDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonDataTestId="submit"
-      primaryButtonHandler={handleDisableTFA}
-      primaryButtonLoading={isLoading}
-      primaryButtonText="Disable Two-factor Authentication"
-      secondaryButtonDataTestId="cancel"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        'data-testid': 'submit',
+        label: 'Disable Two-factor Authentication',
+        loading: isLoading,
+        onClick: handleDisableTFA,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
       showPrimary
       showSecondary
     />

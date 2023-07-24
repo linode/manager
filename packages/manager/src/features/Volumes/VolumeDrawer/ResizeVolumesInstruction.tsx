@@ -88,8 +88,7 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
         />
       </div>
       <ActionsPanel
-        primaryButtonHandler={onClose}
-        primaryButtonText="Close"
+        primaryButtonProps={{ label: 'Close', onClick: onClose }}
         showPrimary
       />
     </React.Fragment>

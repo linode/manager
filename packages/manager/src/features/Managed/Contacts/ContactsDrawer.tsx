@@ -205,9 +205,11 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                 />
 
                 <ActionsPanel
-                  primaryButtonHandler={() => handleSubmit()}
-                  primaryButtonLoading={isSubmitting}
-                  primaryButtonText={isEditing ? 'Save Changes' : 'Add Contact'}
+                  primaryButtonProps={{
+                    label: isEditing ? 'Save Changes' : 'Add Contact',
+                    loading: isSubmitting,
+                    onClick: () => handleSubmit(),
+                  }}
                   showPrimary
                 />
               </form>

@@ -98,16 +98,17 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonToolTip={
-        linode?.status !== 'offline'
-          ? 'Your Linode must be fully powered down in order to change your root password'
-          : ''
-      }
-      primaryButtonDataTestId="password-save"
-      primaryButtonDisabled={isReadOnly || linode?.status !== 'offline'}
-      primaryButtonHandler={onSubmit}
-      primaryButtonLoading={isLoading}
-      primaryButtonText="Save"
+      primaryButtonProps={{
+        'data-testid': 'password - save',
+        disabled: isReadOnly || linode?.status !== 'offline',
+        label: 'Save',
+        loading: isLoading,
+        onClick: onSubmit,
+        tooltipText:
+          linode?.status !== 'offline'
+            ? 'Your Linode must be fully powered down in order to change your root password'
+            : '',
+      }}
       showPrimary
     />
   );

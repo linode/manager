@@ -30,13 +30,17 @@ export const DeleteOAuthClientDialog = ({
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonDataTestId="button-confirm"
-          primaryButtonHandler={onDelete}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Delete"
-          secondaryButtonDataTestId="button-cancel"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'button-confirm',
+            label: 'Delete',
+            loading: isLoading,
+            onClick: onDelete,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'button-cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
         />

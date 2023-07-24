@@ -299,11 +299,13 @@ export const RebuildFromImage = (props: Props) => {
                   visible={preferences?.type_to_confirm}
                 />
                 <ActionsPanel
+                  primaryButtonProps={{
+                    'data-testid': 'rebuild-button',
+                    disabled: submitButtonDisabled || disabled,
+                    label: 'Rebuild Linode',
+                    onClick: handleRebuildButtonClick,
+                  }}
                   className={classes.actionPanel}
-                  primaryButtonDataTestId="rebuild-button"
-                  primaryButtonDisabled={submitButtonDisabled || disabled}
-                  primaryButtonHandler={handleRebuildButtonClick}
-                  primaryButtonText="Rebuild Linode"
                   showPrimary
                 />
               </Grid>

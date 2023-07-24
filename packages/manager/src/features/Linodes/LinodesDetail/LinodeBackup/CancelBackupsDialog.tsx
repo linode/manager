@@ -2,7 +2,6 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useEventsInfiniteQuery } from 'src/queries/events';
@@ -40,23 +39,20 @@ export const CancelBackupsDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button
-            buttonType="secondary"
-            data-qa-cancel-cancel
-            onClick={onClose}
-          >
-            Close
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-confirm-cancel
-            loading={isLoading}
-            onClick={onCancelBackups}
-          >
-            Cancel Backups
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'confirm-cancel',
+            label: 'Cancel Backups',
+            loading: isLoading,
+            onClick: onCancelBackups,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel-cancel',
+            label: 'Close',
+            onClick: onClose,
+          }}
+          style={{ padding: 0 }}
+        />
       }
       error={error?.[0].reason}
       onClose={onClose}

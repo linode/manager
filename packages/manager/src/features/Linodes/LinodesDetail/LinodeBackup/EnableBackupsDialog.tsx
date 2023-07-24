@@ -59,13 +59,17 @@ export const EnableBackupsDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonDataTestId="confirm-enable-backups"
-      primaryButtonHandler={handleEnableBackups}
-      primaryButtonLoading={isLoading}
-      primaryButtonText="Enable Backups"
-      secondaryButtonDataTestId="cancel-cance"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Close"
+      primaryButtonProps={{
+        'data-testid': 'confirm-enable-backups',
+        label: 'Enable Backups',
+        loading: isLoading,
+        onClick: handleEnableBackups,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel-cance',
+        label: 'Close',
+        onClick: onClose,
+      }}
       showPrimary
       showSecondary
       style={{ padding: 0 }}

@@ -200,13 +200,18 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
           </Grid>
           <Grid>
             <ActionsPanel
-              primaryButtonDataTestId="submit"
-              primaryButtonHandler={this.handleSubmit}
-              primaryButtonLoading={loading || enabling || enrolling}
-              primaryButtonText="Confirm"
-              secondaryButtonDataTestId="cancel"
-              secondaryButtonHandler={close}
-              secondaryButtonText="Cancel"
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                label: 'Confirm',
+                loading: loading || enabling || enrolling,
+                onClick: this.handleSubmit,
+              }}
+              secondaryButtonProps={{
+                className: 'cancel',
+                'data-testid': 'cancel',
+                label: 'Cancel',
+                onClick: close,
+              }}
               showPrimary
               showSecondary
               style={{ margin: 0, padding: 0 }}

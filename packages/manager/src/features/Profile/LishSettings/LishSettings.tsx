@@ -10,10 +10,10 @@ import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
-import { Paper } from 'src/components/Paper';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -190,14 +190,15 @@ export const LishSettings = () => {
           </>
         )}
         <ActionsPanel
-          primaryButtonDisabled={
-            lishAuthMethod === profile?.lish_auth_method &&
-            equals(authorizedKeys, profile?.authorized_keys)
-          }
-          primaryButtonDataTestId="save"
-          primaryButtonHandler={onSubmit}
-          primaryButtonLoading={submitting}
-          primaryButtonText="Save"
+          primaryButtonProps={{
+            'data-testid': 'save',
+            disabled:
+              lishAuthMethod === profile?.lish_auth_method &&
+              equals(authorizedKeys, profile?.authorized_keys),
+            label: 'Save',
+            loading: submitting,
+            onClick: onSubmit,
+          }}
           showPrimary
         />
       </Paper>

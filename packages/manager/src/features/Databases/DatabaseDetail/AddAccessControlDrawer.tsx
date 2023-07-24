@@ -189,15 +189,19 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
             title="Allowed IP Address(es) or Range(s)"
           />
           <ActionsPanel
-            primaryButtonDisabled={!formTouched}
-            primaryButtonLoading={isSubmitting}
-            primaryButtonSx={{ marginBottom: 8 }}
-            primaryButtonText="Update Access Controls"
-            primaryButtonType="submit"
-            secondaryButtonDisabled={isSubmitting}
-            secondaryButtonHandler={onClose}
-            secondaryButtonSx={{ marginBottom: 8 }}
-            secondaryButtonText="Cancel"
+            primaryButtonProps={{
+              disabled: !formTouched,
+              label: 'Update Access Controls',
+              loading: isSubmitting,
+              sx: { marginBottom: 8 },
+              type: 'submit',
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              loading: isSubmitting,
+              onClick: onClose,
+              sx: { marginBottom: 8 },
+            }}
             showPrimary
             showSecondary
           />

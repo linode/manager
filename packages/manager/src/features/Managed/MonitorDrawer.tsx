@@ -281,15 +281,17 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
                 placeholder="None Required"
               />
               <ActionsPanel
-                primaryButtonText={
-                  mode === 'create' ? 'Add Monitor' : 'Save Changes'
-                }
-                primaryButtonDataTestId="submit"
-                primaryButtonHandler={() => handleSubmit()}
-                primaryButtonLoading={isSubmitting}
-                secondaryButtonDataTestId="cancel"
-                secondaryButtonHandler={onClose}
-                secondaryButtonText="Cancel"
+                primaryButtonProps={{
+                  'data-testid': 'submit',
+                  label: mode === 'create' ? 'Add Monitor' : 'Save Changes',
+                  loading: isSubmitting,
+                  onClick: () => handleSubmit(),
+                }}
+                secondaryButtonProps={{
+                  'data-testid': 'cancel',
+                  label: 'Cancel',
+                  onClick: onClose,
+                }}
                 showPrimary
                 showSecondary
               />

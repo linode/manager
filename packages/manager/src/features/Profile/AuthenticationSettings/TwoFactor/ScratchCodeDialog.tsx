@@ -17,9 +17,11 @@ export const ScratchCodeDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          secondaryButtonDataTestId="submit"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Got it"
+          secondaryButtonProps={{
+            'data-testid': 'submit',
+            label: 'Got it',
+            onClick: onClose,
+          }}
           showSecondary
         />
       }

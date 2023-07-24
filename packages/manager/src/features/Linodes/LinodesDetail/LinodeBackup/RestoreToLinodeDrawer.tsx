@@ -146,13 +146,17 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           />
         )}
         <ActionsPanel
-          primaryButtonDataTestId="restore-submit"
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Restore"
-          primaryButtonType="submit"
-          secondaryButtonDataTestId="restore-cancel"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'restore-submit',
+            label: 'Restore',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'restore-cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
         />

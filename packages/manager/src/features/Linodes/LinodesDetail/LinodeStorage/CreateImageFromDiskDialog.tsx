@@ -50,11 +50,12 @@ export const CreateImageFromDiskDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonHandler={onCreate}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Create Image"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            label: 'Create Image',
+            loading: isLoading,
+            onClick: onCreate,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

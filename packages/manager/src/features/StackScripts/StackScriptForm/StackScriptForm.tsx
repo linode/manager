@@ -8,10 +8,10 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { Paper } from 'src/components/Paper';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
@@ -204,18 +204,20 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
         value={revision.value}
       />
       <ActionsPanel
-        primaryButtonText={
-          mode === 'edit' ? 'Save Changes' : 'Create StackScript'
-        }
+        primaryButtonProps={{
+          'data-testid': 'save',
+          disabled: disabled || disableSubmit,
+          label: mode === 'edit' ? 'Save Changes' : 'Create StackScript',
+          loading: isSubmitting,
+          onClick: onSubmit,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel',
+          disabled,
+          label: 'Reset',
+          onClick: onCancel,
+        }}
         className={classes.actions}
-        primaryButtonDataTestId="save"
-        primaryButtonDisabled={disabled || disableSubmit}
-        primaryButtonHandler={onSubmit}
-        primaryButtonLoading={isSubmitting}
-        secondaryButtonDataTestId="cancel"
-        secondaryButtonDisabled={disabled}
-        secondaryButtonHandler={onCancel}
-        secondaryButtonText="Reset"
         showPrimary
         showSecondary
       />

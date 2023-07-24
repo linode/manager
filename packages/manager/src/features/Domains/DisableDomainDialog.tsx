@@ -45,11 +45,12 @@ const DisableDomainDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionPanel
-          primaryButtonHandler={onSubmit}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Disable Domain"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            label: 'Disable Domain',
+            loading: isLoading,
+            onClick: onSubmit,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

@@ -22,13 +22,13 @@ const renderActions = (
 ) => {
   return (
     <ActionsPanel
-      primaryButtonDataTestId="confirm"
-      primaryButtonHandler={onConfirm}
-      primaryButtonLoading={loading}
-      primaryButtonText="Reset Root Password"
-      secondaryButtonDataTestId="cancel"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        label: 'Reset Root Password',
+        loading,
+        onClick: onConfirm,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
       showPrimary
       showSecondary
     />

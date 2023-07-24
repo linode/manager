@@ -41,9 +41,11 @@ export const Default: Story = {
               placeholder="This is a placeholder"
             />
             <ActionsPanel
-              primaryButtonText="Save"
-              secondaryButtonHandler={() => setOpen(false)}
-              secondaryButtonText="Cancel"
+              secondaryButtonProps={{
+                label: 'Cancel',
+                onClick: () => setOpen(false),
+              }}
+              primaryButtonProps={{ label: 'Save' }}
               showPrimary
               showSecondary
             />

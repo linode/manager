@@ -21,13 +21,17 @@ const renderActions = (
 ) => {
   return (
     <ActionsPanel
-      primaryButtonDataTestId="confirm"
-      primaryButtonHandler={onResize}
-      primaryButtonLoading={loading}
-      primaryButtonText="Resize"
-      secondaryButtonDataTestId="cancel"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        label: 'Resize',
+        loading,
+        onClick: onResize,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
       showPrimary
       showSecondary
       style={{ padding: 0 }}

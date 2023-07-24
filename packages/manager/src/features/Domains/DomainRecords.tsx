@@ -819,11 +819,15 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   renderDialogActions = () => {
     return (
       <ActionsPanel
-        primaryButtonHandler={this.deleteDomainRecord}
-        primaryButtonLoading={this.state.confirmDialog.submitting}
-        primaryButtonText="Delete"
-        secondaryButtonHandler={this.handleCloseDialog}
-        secondaryButtonText="Cancel"
+        primaryButtonProps={{
+          label: 'Delete',
+          loading: this.state.confirmDialog.submitting,
+          onClick: this.deleteDomainRecord,
+        }}
+        secondaryButtonProps={{
+          label: 'Cancel',
+          onClick: this.handleCloseDialog,
+        }}
         showPrimary
         showSecondary
       />

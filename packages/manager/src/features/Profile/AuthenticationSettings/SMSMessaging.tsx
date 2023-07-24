@@ -78,11 +78,12 @@ export const SMSMessaging = () => {
       <ConfirmationDialog
         actions={() => (
           <ActionsPanel
-            primaryButtonHandler={onOptOut}
-            primaryButtonLoading={isLoading}
-            primaryButtonText="Opt Out"
-            secondaryButtonHandler={onClose}
-            secondaryButtonText="Cancel"
+            primaryButtonProps={{
+              label: 'Opt Out',
+              loading: isLoading,
+              onClick: onOptOut,
+            }}
+            secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
             showPrimary
             showSecondary
           />

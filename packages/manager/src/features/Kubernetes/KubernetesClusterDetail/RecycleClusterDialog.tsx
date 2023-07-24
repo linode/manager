@@ -35,13 +35,17 @@ export const RecycleClusterDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonDataTestId="confirm"
-      primaryButtonHandler={onSubmit}
-      primaryButtonLoading={isLoading}
-      primaryButtonText="Recycle All Cluster Nodes"
-      secondaryButtonDataTestId="cancel"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        label: 'Recycle All Cluster Nodes',
+        loading: isLoading,
+        onClick: onSubmit,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
       showPrimary
       showSecondary
       style={{ padding: 0 }}

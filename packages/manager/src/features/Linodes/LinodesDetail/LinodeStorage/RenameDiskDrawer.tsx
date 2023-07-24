@@ -79,12 +79,13 @@ export const RenameDiskDrawer = (props: Props) => {
           value={formik.values.label}
         />
         <ActionsPanel
-          primaryButtonDataTestId="submit-disk-form"
-          primaryButtonLoading={formik.isSubmitting}
-          primaryButtonText="Rename"
-          primaryButtonType="submit"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'submit-disk-form',
+            label: 'Rename',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

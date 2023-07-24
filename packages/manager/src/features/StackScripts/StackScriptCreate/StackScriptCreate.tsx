@@ -507,12 +507,16 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   renderDialogActions = () => {
     return (
       <ActionsPanel
-        primaryButtonDataTestId="confirm-cancel"
-        primaryButtonHandler={() => this.resetAllFields(this.state.apiResponse)}
-        primaryButtonText="Reset"
-        secondaryButtonDataTestId="cancel-cancel"
-        secondaryButtonHandler={this.handleCloseDialog}
-        secondaryButtonText="Cancel"
+        primaryButtonProps={{
+          'data-testid': 'confirm-cancel',
+          label: 'Reset',
+          onClick: () => this.resetAllFields(this.state.apiResponse),
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel-cancel',
+          label: 'Cancel',
+          onClick: this.handleCloseDialog,
+        }}
         showPrimary
         showSecondary
       />

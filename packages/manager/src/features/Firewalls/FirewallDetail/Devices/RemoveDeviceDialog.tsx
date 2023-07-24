@@ -31,13 +31,17 @@ export const RemoveDeviceDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonDataTestId="confirm"
-          primaryButtonHandler={onDelete}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Remove"
-          secondaryButtonDataTestId="cancel"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'confirm',
+            label: 'Remove',
+            loading: isLoading,
+            onClick: onDelete,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
           style={{ padding: 0 }}

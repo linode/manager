@@ -71,13 +71,14 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
           value={formik.values.label}
         />
         <ActionsPanel
-          primaryButtonDataTestId="submit"
-          primaryButtonDisabled={!formik.dirty}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Save"
-          primaryButtonType="submit"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: !formik.dirty,
+            label: 'Save',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

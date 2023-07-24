@@ -29,9 +29,11 @@ export const HistoryDrawer: React.FC<Props> = (props) => {
     >
       {renderDrawerContent(issues, loading, error)}
       <ActionsPanel
-        primaryButtonDataTestId="close"
-        primaryButtonHandler={() => onClose()}
-        primaryButtonText="Close"
+        primaryButtonProps={{
+          'data-testid': 'close',
+          label: 'Close',
+          onClick: () => onClose(),
+        }}
         showPrimary
       />
     </Drawer>

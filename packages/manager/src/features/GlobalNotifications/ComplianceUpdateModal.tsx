@@ -45,16 +45,20 @@ const ComplianceUpdateModal = () => {
     <ConfirmationDialog
       actions={() => (
         <ActionsPanel
-          secondaryButtonHandler={() => {
-            setChecked(false);
-            complianceModelContext.close();
+          primaryButtonProps={{
+            disabled: !checked,
+            label: 'Agree',
+            loading: isLoading,
+            onClick: handleAgree,
           }}
-          primaryButtonDisabled={!checked}
-          primaryButtonHandler={handleAgree}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Agree"
-          secondaryButtonDataTestId="cancel"
-          secondaryButtonText="Close"
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Close',
+            onClick: () => {
+              setChecked(false);
+              complianceModelContext.close();
+            },
+          }}
           showPrimary
           showSecondary
         />

@@ -153,20 +153,22 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         {fields.map((field: any, idx: number) => field(idx))}
 
         <ActionsPanel
-          primaryButtonHandler={
-            isDomain
+          primaryButtonProps={{
+            'data-testid': 'save',
+            disabled: submitting,
+            label: 'Save',
+            loading: submitting,
+            onClick: isDomain
               ? this.onDomainEdit
               : isCreating
               ? this.onRecordCreate
-              : this.onRecordEdit
-          }
-          primaryButtonDataTestId="save"
-          primaryButtonDisabled={submitting}
-          primaryButtonLoading={submitting}
-          primaryButtonText="Save"
-          secondaryButtonDataTestId="cancel"
-          secondaryButtonHandler={this.onClose}
-          secondaryButtonText="Cancel"
+              : this.onRecordEdit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: this.onClose,
+          }}
           showPrimary
           showSecondary
         />

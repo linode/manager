@@ -17,6 +17,7 @@ import { Hidden } from 'src/components/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -25,7 +26,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { listToItemsByID } from 'src/queries/base';
@@ -357,17 +357,17 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   const getActions = () => {
     return (
       <ActionsPanel
-        primaryButtonText={
-          dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'
-        }
-        secondaryButtonText={
-          dialogAction === 'cancel' ? 'Keep Image' : 'Cancel'
-        }
-        primaryButtonDataTestId="submit"
-        primaryButtonHandler={handleRemoveImage}
-        primaryButtonLoading={dialog.submitting}
-        secondaryButtonDataTestId="cancel"
-        secondaryButtonHandler={closeDialog}
+        primaryButtonProps={{
+          'data-testid': 'submit',
+          label: dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image',
+          loading: dialog.submitting,
+          onClick: handleRemoveImage,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel',
+          label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
+          onClick: closeDialog,
+        }}
         showPrimary
         showSecondary
       />

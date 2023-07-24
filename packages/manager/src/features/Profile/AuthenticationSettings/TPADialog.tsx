@@ -57,17 +57,21 @@ const handleLoginChange = (provider: TPAProvider) => {
 const renderActions = (onClose: () => void, provider: TPAProvider) => {
   return (
     <ActionsPanel
-      primaryButtonHandler={() => {
-        onClose();
-        handleLoginChange(provider);
+      primaryButtonProps={{
+        'aria-describedby': 'external-site',
+        'data-testid': 'confirm-login-change',
+        label: 'Change login',
+        onClick: () => {
+          onClose();
+          handleLoginChange(provider);
+        },
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'confirm-cancel',
+        label: 'Cancel',
+        onClick: onClose,
       }}
       className="p0"
-      primaryButtonAriaDescribedBy="external-site"
-      primaryButtonDataTestId="confirm-login-change"
-      primaryButtonText="Change login"
-      secondaryButtonDataTestId="confirm-cancel"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
       showPrimary
       showSecondary
     />

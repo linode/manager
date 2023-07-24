@@ -62,11 +62,12 @@ const FirewallDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonHandler={onSubmit}
-          primaryButtonLoading={isLoadingMap[mode]}
-          primaryButtonText={`${capitalize(mode)} Firewall`}
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            label: `${capitalize(mode)} Firewall`,
+            loading: isLoadingMap[mode],
+            onClick: onSubmit,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

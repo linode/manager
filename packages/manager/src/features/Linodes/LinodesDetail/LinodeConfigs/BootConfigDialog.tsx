@@ -34,11 +34,12 @@ export const BootConfigDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonHandler={onBoot}
-      primaryButtonLoading={isLoading}
-      primaryButtonText="Boot"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        label: 'Boot',
+        loading: isLoading,
+        onClick: onBoot,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
       showPrimary
       showSecondary
       style={{ padding: 0 }}

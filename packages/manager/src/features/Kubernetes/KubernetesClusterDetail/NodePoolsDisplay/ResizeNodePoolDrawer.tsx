@@ -141,11 +141,13 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         {updatedCount < 3 && <Notice important text={nodeWarning} warning />}
 
         <ActionsPanel
-          primaryButtonDataTestId="submit"
-          primaryButtonDisabled={updatedCount === nodePool.count}
-          primaryButtonHandler={handleSubmit}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Save Changes"
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: updatedCount === nodePool.count,
+            label: 'Save Changes',
+            loading: isLoading,
+            onClick: handleSubmit,
+          }}
           showPrimary
         />
       </form>

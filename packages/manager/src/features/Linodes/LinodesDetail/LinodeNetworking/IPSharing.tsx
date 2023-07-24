@@ -409,15 +409,19 @@ const IPSharingPanel = (props: Props) => {
         </>
       </DialogContent>
       <ActionsPanel
-        primaryButtonDataTestId="submit"
-        primaryButtonDisabled={readOnly || noChoices}
-        primaryButtonHandler={onSubmit}
-        primaryButtonLoading={submitting}
-        primaryButtonText="Save"
-        secondaryButtonDataTestId="reset"
-        secondaryButtonDisabled={submitting || noChoices}
-        secondaryButtonHandler={onReset}
-        secondaryButtonText="Reset Form"
+        primaryButtonProps={{
+          'data-testid': 'submit',
+          disabled: readOnly || noChoices,
+          label: 'Save',
+          loading: submitting,
+          onClick: onSubmit,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'reset',
+          disabled: submitting || noChoices,
+          label: 'Reset Form',
+          onClick: onReset,
+        }}
         showPrimary
         showSecondary
       />

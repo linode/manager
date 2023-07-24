@@ -11,10 +11,10 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { useProfile } from 'src/queries/profile';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -129,11 +129,13 @@ const UserProfile: React.FC<Props> = (props) => {
             value={username}
           />
           <ActionsPanel
-            primaryButtonDataTestId="submit"
-            primaryButtonDisabled={username === originalUsername}
-            primaryButtonHandler={saveAccount}
-            primaryButtonLoading={accountSaving}
-            primaryButtonText="Save"
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled: username === originalUsername,
+              label: 'Save',
+              loading: accountSaving,
+              onClick: saveAccount,
+            }}
             showPrimary
           />
         </Paper>
@@ -162,13 +164,15 @@ const UserProfile: React.FC<Props> = (props) => {
           />
           <ActionsPanel
             // This should be disabled if this is NOT the current user.
-            primaryButtonDisabled={
-              profile?.username !== originalUsername || email === originalEmail
-            }
-            primaryButtonDataTestId="submit"
-            primaryButtonHandler={saveProfile}
-            primaryButtonLoading={profileSaving}
-            primaryButtonText="Save"
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled:
+                profile?.username !== originalUsername ||
+                email === originalEmail,
+              label: 'Save',
+              loading: profileSaving,
+              onClick: saveProfile,
+            }}
             showPrimary
           />
         </Paper>

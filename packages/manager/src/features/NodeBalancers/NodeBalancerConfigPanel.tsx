@@ -421,15 +421,19 @@ export const NodeBalancerConfigPanel = (
             spacing={2}
           >
             <StyledActionsPanel
-              primaryButtonDataTestId="save-config"
-              primaryButtonDisabled={disabled}
-              primaryButtonHandler={onSave}
-              primaryButtonLoading={submitting}
-              primaryButtonText="Save"
-              secondaryButtonDataTestId="delete-config"
-              secondaryButtonDisabled={disabled}
-              secondaryButtonHandler={props.onDelete}
-              secondaryButtonText="Delete"
+              primaryButtonProps={{
+                'data-testid': 'save-config',
+                disabled,
+                label: 'Save',
+                loading: submitting,
+                onClick: onSave,
+              }}
+              secondaryButtonProps={{
+                'data-testid': 'delete-config',
+                disabled,
+                label: 'Delete',
+                onClick: props.onDelete,
+              }}
               showPrimary={forEdit}
               showSecondary={forEdit || configIdx !== 0}
             />

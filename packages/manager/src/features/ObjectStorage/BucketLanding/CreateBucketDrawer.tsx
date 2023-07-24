@@ -138,12 +138,13 @@ export const CreateBucketDrawer = (props: Props) => {
           />
         ) : null}
         <ActionsPanel
-          primaryButtonDataTestId="create-bucket-button"
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Create Bucket"
-          primaryButtonType="submit"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'create-bucket-button',
+            label: 'Create Bucket',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

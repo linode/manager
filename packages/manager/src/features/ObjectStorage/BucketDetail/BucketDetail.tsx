@@ -398,13 +398,17 @@ export const BucketDetail = () => {
       <ConfirmationDialog
         actions={() => (
           <ActionsPanel
-            primaryButtonDataTestId="submit-rebuild"
-            primaryButtonHandler={deleteObject}
-            primaryButtonLoading={deleteObjectLoading}
-            primaryButtonText="Delete"
-            secondaryButtonDataTestId="cancel"
-            secondaryButtonHandler={closeDeleteObjectDialog}
-            secondaryButtonText="Cancel"
+            primaryButtonProps={{
+              'data-testid': 'submit-rebuild',
+              label: 'Delete',
+              loading: deleteObjectLoading,
+              onClick: deleteObject,
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: closeDeleteObjectDialog,
+            }}
             showPrimary
             showSecondary
           />

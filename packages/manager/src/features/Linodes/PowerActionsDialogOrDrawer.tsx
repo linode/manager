@@ -150,11 +150,12 @@ export const PowerActionsDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonHandler={onSubmit}
-          primaryButtonLoading={isLoading}
-          primaryButtonText={`${props.action} Lindoe`}
-          secondaryButtonHandler={props.onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            label: `${props.action} Lindoe`,
+            loading: isLoading,
+            onClick: onSubmit,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
           showPrimary
           showSecondary
         />

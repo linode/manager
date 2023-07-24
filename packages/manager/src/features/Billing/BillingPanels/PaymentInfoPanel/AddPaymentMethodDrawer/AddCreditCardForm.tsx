@@ -212,13 +212,17 @@ const AddCreditCardForm = (props: Props) => {
         </Grid>
       </Grid>
       <ActionsPanel
-        primaryButtonDisabled={disableAddButton}
-        primaryButtonLoading={isSubmitting}
-        primaryButtonText="Add Credit Card"
-        primaryButtonType="submit"
-        secondaryButtonDisabled={disableInput}
-        secondaryButtonHandler={onClose}
-        secondaryButtonText="Cancel"
+        primaryButtonProps={{
+          disabled: disableAddButton,
+          label: 'Add Credit Card',
+          loading: isSubmitting,
+          type: 'submit',
+        }}
+        secondaryButtonProps={{
+          disabled: disableInput,
+          label: 'Cancel',
+          onClick: onClose,
+        }}
         showPrimary
         showSecondary
         style={{ marginTop: 0 }}

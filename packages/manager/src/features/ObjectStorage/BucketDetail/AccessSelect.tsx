@@ -192,22 +192,22 @@ export const AccessSelect = React.memo((props: Props) => {
       ) : null}
 
       <ActionsPanel
-        primaryButtonDisabled={
-          aclData === selectedACL && corsData === selectedCORSOption
-        }
-        primaryButtonHandler={() => {
-          // This isn't really a sane option: open a dialog for confirmation.
-          if (selectedACL === 'public-read-write') {
-            openDialog();
-          } else {
-            handleSubmit();
-          }
+        primaryButtonProps={{
+          disabled: aclData === selectedACL && corsData === selectedCORSOption,
+          label: 'Save',
+          loading: updateAccessLoading,
+          onClick: () => {
+            // This isn't really a sane option: open a dialog for confirmation.
+            if (selectedACL === 'public-read-write') {
+              openDialog();
+            } else {
+              handleSubmit();
+            }
+          },
+          sx: (theme: Theme) => ({
+            marginTop: theme.spacing(3),
+          }),
         }}
-        primaryButtonSx={(theme: Theme) => ({
-          marginTop: theme.spacing(3),
-        })}
-        primaryButtonLoading={updateAccessLoading}
-        primaryButtonText="Save"
         showPrimary
         style={{ padding: 0 }}
       />
@@ -215,11 +215,12 @@ export const AccessSelect = React.memo((props: Props) => {
       <ConfirmationDialog
         actions={() => (
           <ActionsPanel
-            primaryButtonHandler={handleSubmit}
-            primaryButtonText="Confirm"
-            secondaryButtonDataTestId="cancel"
-            secondaryButtonHandler={closeDialog}
-            secondaryButtonText="Cancel"
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: closeDialog,
+            }}
+            primaryButtonProps={{ label: 'Confirm', onClick: handleSubmit }}
             showPrimary
             showSecondary
             style={{ padding: 0 }}

@@ -201,14 +201,18 @@ export const EditDomainDrawer = (props: Props) => {
           tagError={errorMap.tags}
         />
         <ActionsPanel
-          primaryButtonDataTestId="submit"
-          primaryButtonDisabled={disabled || !formik.dirty}
-          primaryButtonLoading={formik.isSubmitting}
-          primaryButtonText="Save Changes"
-          primaryButtonType="submit"
-          secondaryButtonDataTestId="cancel"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: disabled || !formik.dirty,
+            label: 'Save Changes',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
         />

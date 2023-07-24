@@ -36,11 +36,12 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonHandler={onDelete}
-      primaryButtonLoading={loading}
-      primaryButtonText="Delete"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        label: 'Delete',
+        loading,
+        onClick: onDelete,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
       showPrimary
       showSecondary
       style={{ padding: 0 }}

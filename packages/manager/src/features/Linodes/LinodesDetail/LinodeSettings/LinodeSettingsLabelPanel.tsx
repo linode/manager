@@ -50,11 +50,13 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
     <Accordion
       actions={() => (
         <ActionsPanel
-          primaryButtonDataTestId="label-save"
-          primaryButtonDisabled={isReadOnly || !formik.dirty}
-          primaryButtonHandler={formik.handleSubmit}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Save"
+          primaryButtonProps={{
+            'data-testid': 'label-save',
+            disabled: isReadOnly || !formik.dirty,
+            label: 'Save',
+            loading: isLoading,
+            onClick: () => formik.handleSubmit(),
+          }}
           showPrimary
         />
       )}

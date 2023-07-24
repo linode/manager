@@ -654,14 +654,18 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
             </React.Fragment>
           )}
           <ActionsPanel
-            primaryButtonDataTestId="submit"
-            primaryButtonDisabled={!requirementsMet}
-            primaryButtonHandler={onSubmit}
-            primaryButtonLoading={submitting}
-            primaryButtonText="Open Ticket"
-            secondaryButtonDataTestId="cancel"
-            secondaryButtonHandler={onCancel}
-            secondaryButtonText=" Cancel"
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled: !requirementsMet,
+              label: 'Open Ticket',
+              loading: submitting,
+              onClick: onSubmit,
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: onCancel,
+            }}
             showPrimary
             showSecondary
           />

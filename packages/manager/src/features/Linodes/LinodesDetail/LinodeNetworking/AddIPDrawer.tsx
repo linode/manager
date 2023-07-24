@@ -216,22 +216,26 @@ const AddIPDrawer = (props: Props) => {
           <Tooltip placement="bottom-end" title={_tooltipCopy}>
             <div style={{ display: 'inline' }}>
               <ActionsPanel
-                primaryButtonDisabled={disabledIPv4}
-                primaryButtonHandler={handleAllocateIPv4}
-                primaryButtonLoading={ipv4Loading}
-                primaryButtonSx={{ marginBottom: 8 }}
-                primaryButtonText="Allocate"
+                primaryButtonProps={{
+                  disabled: disabledIPv4,
+                  label: 'Allocate',
+                  loading: ipv4Loading,
+                  onClick: handleAllocateIPv4,
+                  sx: { marginBottom: 8 },
+                }}
                 showPrimary
               />
             </div>
           </Tooltip>
         ) : (
           <ActionsPanel
-            primaryButtonDisabled={disabledIPv4}
-            primaryButtonHandler={handleAllocateIPv4}
-            primaryButtonLoading={ipv4Loading}
-            primaryButtonSx={{ marginBottom: 8 }}
-            primaryButtonText="Allocate"
+            primaryButtonProps={{
+              disabled: disabledIPv4,
+              label: 'Allocate',
+              loading: ipv4Loading,
+              onClick: handleAllocateIPv4,
+              sx: { marginBottom: 8 },
+            }}
             showPrimary
           />
         )}
@@ -276,11 +280,13 @@ const AddIPDrawer = (props: Props) => {
           .
         </Typography>
         <ActionsPanel
-          primaryButtonDisabled={disabledIPv6}
-          primaryButtonHandler={handleCreateIPv6Range}
-          primaryButtonLoading={ipv6Loading}
-          primaryButtonSx={{ marginBottom: 8 }}
-          primaryButtonText="Allocate"
+          primaryButtonProps={{
+            disabled: disabledIPv6,
+            label: 'Allocate',
+            loading: ipv6Loading,
+            onClick: handleCreateIPv6Range,
+            sx: { marginBottom: 8 },
+          }}
           showPrimary
         />
       </React.Fragment>

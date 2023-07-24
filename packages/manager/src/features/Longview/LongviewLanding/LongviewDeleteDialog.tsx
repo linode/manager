@@ -83,12 +83,13 @@ interface ActionsProps {
 const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel
-      primaryButtonDataTestId="delete-button"
-      primaryButtonHandler={props.onSubmit}
-      primaryButtonLoading={props.isDeleting}
-      primaryButtonText="Delete"
-      secondaryButtonHandler={props.onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        'data-testid': 'delete-button',
+        label: 'Delete',
+        loading: props.isDeleting,
+        onClick: props.onSubmit,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
       showPrimary
       showSecondary
     />

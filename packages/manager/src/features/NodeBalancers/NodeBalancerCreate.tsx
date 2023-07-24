@@ -22,11 +22,11 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
@@ -571,11 +571,15 @@ const NodeBalancerCreate = () => {
       <ConfirmationDialog
         actions={
           <ActionsPanel
-            primaryButtonHandler={onRemoveConfig}
-            primaryButtonLoading={deleteConfigConfirmDialog.submitting}
-            primaryButtonText="Delete"
-            secondaryButtonHandler={onCloseConfirmation}
-            secondaryButtonText="Cancel"
+            primaryButtonProps={{
+              label: 'Delete',
+              loading: deleteConfigConfirmDialog.submitting,
+              onClick: onRemoveConfig,
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              onClick: onCloseConfirmation,
+            }}
             showPrimary
             showSecondary
             style={{ padding: 0 }}

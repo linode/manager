@@ -82,10 +82,12 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
               />
 
               <ActionsPanel
-                primaryButtonDataTestId="submit"
-                primaryButtonHandler={() => handleSubmit()}
-                primaryButtonLoading={isSubmitting}
-                primaryButtonText="Update label"
+                primaryButtonProps={{
+                  'data-testid': 'submit',
+                  label: 'Update label',
+                  loading: isSubmitting,
+                  onClick: () => handleSubmit(),
+                }}
                 showPrimary
               />
             </form>
@@ -161,10 +163,12 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                 />
               </React.Suspense>
               <ActionsPanel
-                primaryButtonDataTestId="submit"
-                primaryButtonHandler={() => handleSubmit()}
-                primaryButtonLoading={isSubmitting}
-                primaryButtonText="Update credentials"
+                primaryButtonProps={{
+                  'data-testid': 'submit',
+                  label: 'Update credentials',
+                  loading: isSubmitting,
+                  onClick: () => handleSubmit(),
+                }}
                 showPrimary
               />
             </form>

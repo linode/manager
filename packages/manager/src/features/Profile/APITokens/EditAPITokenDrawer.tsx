@@ -48,13 +48,14 @@ export const EditAPITokenDrawer = (props: Props) => {
         value={form.values.label}
       />
       <ActionsPanel
-        primaryButtonDataTestId="save-button"
-        primaryButtonDisabled={!form.dirty}
-        primaryButtonHandler={form.handleSubmit}
-        primaryButtonLoading={isLoading}
-        primaryButtonText="Save"
-        secondaryButtonHandler={onClose}
-        secondaryButtonText="Cancel"
+        primaryButtonProps={{
+          'data-testid': 'save-button',
+          disabled: !form.dirty,
+          label: 'Save',
+          loading: isLoading,
+          onClick: () => form.handleSubmit(),
+        }}
+        secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
         showPrimary
         showSecondary
       />

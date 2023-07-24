@@ -24,6 +24,7 @@ import {
 } from 'src/features/StackScripts/stackScriptUtils';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { listToItemsByID } from 'src/queries/base';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { filterImagesByType } from 'src/store/image/image.helpers';
@@ -34,7 +35,6 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actionPanel: {
@@ -355,11 +355,13 @@ export const RebuildFromStackScript = (props: Props) => {
                 visible={preferences?.type_to_confirm}
               />
               <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'rebuild',
+                  disabled: submitButtonDisabled,
+                  label: 'Rebuild Linode',
+                  onClick: handleRebuildButtonClick,
+                }}
                 className={classes.actionPanel}
-                primaryButtonDataTestId="rebuild"
-                primaryButtonDisabled={submitButtonDisabled}
-                primaryButtonHandler={handleRebuildButtonClick}
-                primaryButtonText="Rebuild Linode"
                 showPrimary
               />
             </form>

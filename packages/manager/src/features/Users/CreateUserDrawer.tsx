@@ -95,13 +95,17 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           />
         </div>
         <ActionsPanel
-          primaryButtonDataTestId="submit"
-          primaryButtonHandler={this.onSubmit}
-          primaryButtonLoading={submitting}
-          primaryButtonText="Add User"
-          secondaryButtonDataTestId="cancel"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            label: 'Add User',
+            loading: submitting,
+            onClick: this.onSubmit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
         />

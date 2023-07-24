@@ -86,12 +86,13 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
           value={formik.values.ssh_key}
         />
         <ActionsPanel
-          primaryButtonDataTestId="submit"
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Add Key"
-          primaryButtonType="submit"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            label: 'Add Key',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

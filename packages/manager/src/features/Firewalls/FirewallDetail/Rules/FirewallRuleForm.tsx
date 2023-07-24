@@ -340,9 +340,11 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         </div>
 
         <ActionsPanel
-          primaryButtonDataTestId="submit"
-          primaryButtonHandler={() => handleSubmit()}
-          primaryButtonText={mode === 'create' ? 'Add Rule' : 'Add Changes'}
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            label: mode === 'create' ? 'Add Rule' : 'Add Changes',
+            onClick: () => handleSubmit(),
+          }}
           showPrimary
         />
       </form>

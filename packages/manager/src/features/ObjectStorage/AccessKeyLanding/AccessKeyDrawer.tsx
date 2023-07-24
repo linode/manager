@@ -243,19 +243,21 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                   />
                 ) : null}
                 <ActionsPanel
-                  primaryButtonDisabled={
-                    isRestrictedUser ||
-                    (mode !== 'creating' && values.label === initialLabelValue)
-                  }
-                  primaryButtonText={
-                    createMode ? 'Create Access Key' : 'Save Changes'
-                  }
-                  primaryButtonDataTestId="submit"
-                  primaryButtonHandler={beforeSubmit}
-                  primaryButtonLoading={isSubmitting}
-                  secondaryButtonDataTestId="cancel"
-                  secondaryButtonHandler={onClose}
-                  secondaryButtonText="Cancel"
+                  primaryButtonProps={{
+                    'data-testid': 'submit',
+                    disabled:
+                      isRestrictedUser ||
+                      (mode !== 'creating' &&
+                        values.label === initialLabelValue),
+                    label: createMode ? 'Create Access Key' : 'Save Changes',
+                    loading: isSubmitting,
+                    onClick: beforeSubmit,
+                  }}
+                  secondaryButtonProps={{
+                    'data-testid': 'cancel',
+                    label: 'Cancel',
+                    onClick: onClose,
+                  }}
                   showPrimary
                   showSecondary
                 />

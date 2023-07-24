@@ -384,6 +384,19 @@ export const ImagesDrawer = (props: CombinedProps) => {
       )}
 
       <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'submit',
+          disabled: requirementsMet || !canCreateImage,
+          label: buttonTextMap[mode] ?? 'Submit',
+          loading: submitting,
+          onClick: onSubmit,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel',
+          disabled: !canCreateImage,
+          label: 'Cancel',
+          onClick: close,
+        }}
         updateFor={[
           requirementsMet,
           classes,
@@ -392,15 +405,6 @@ export const ImagesDrawer = (props: CombinedProps) => {
           label,
           description,
         ]}
-        primaryButtonDataTestId="submit"
-        primaryButtonDisabled={requirementsMet || !canCreateImage}
-        primaryButtonHandler={onSubmit}
-        primaryButtonLoading={submitting}
-        primaryButtonText={buttonTextMap[mode] ?? 'Submit'}
-        secondaryButtonDataTestId="cancel"
-        secondaryButtonDisabled={!canCreateImage}
-        secondaryButtonHandler={close}
-        secondaryButtonText="Cancel"
         showPrimary
         showSecondary
         style={{ marginTop: 16 }}

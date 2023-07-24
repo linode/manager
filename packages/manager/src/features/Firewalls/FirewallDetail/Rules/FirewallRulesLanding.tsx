@@ -277,10 +277,14 @@ const FirewallRulesLanding = (props: Props) => {
             <ConfirmationDialog
               actions={() => (
                 <ActionsPanel
-                  primaryButtonHandler={handleCancel}
-                  primaryButtonText="Go back and review changes"
-                  secondaryButtonHandler={handleConfirm}
-                  secondaryButtonText="Leave and discard changes"
+                  primaryButtonProps={{
+                    label: 'Go back and review changes',
+                    onClick: handleCancel,
+                  }}
+                  secondaryButtonProps={{
+                    label: 'Leave and discard changes',
+                    onClick: handleConfirm,
+                  }}
                   showPrimary
                   showSecondary
                 />
@@ -364,14 +368,18 @@ const FirewallRulesLanding = (props: Props) => {
         ruleToModify={ruleToModify}
       />
       <ActionsPanel
+        primaryButtonProps={{
+          disabled: !hasUnsavedChanges || disabled,
+          label: 'Save Changes',
+          loading: submitting,
+          onClick: applyChanges,
+        }}
+        secondaryButtonProps={{
+          disabled: !hasUnsavedChanges || disabled,
+          label: 'Discard Changes',
+          onClick: () => setDiscardChangesModalOpen(true),
+        }}
         className={classes.actions}
-        primaryButtonDisabled={!hasUnsavedChanges || disabled}
-        primaryButtonHandler={applyChanges}
-        primaryButtonLoading={submitting}
-        primaryButtonText="Save Changes"
-        secondaryButtonDisabled={!hasUnsavedChanges || disabled}
-        secondaryButtonHandler={() => setDiscardChangesModalOpen(true)}
-        secondaryButtonText="Discard Changes"
         showPrimary
         showSecondary
       />
@@ -409,10 +417,14 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
     const actions = React.useCallback(
       () => (
         <ActionsPanel
-          primaryButtonHandler={handleClose}
-          primaryButtonText="Go back and review changes"
-          secondaryButtonHandler={handleDiscard}
-          secondaryButtonText="Discard changes"
+          primaryButtonProps={{
+            label: 'Go back and review changes',
+            onClick: handleClose,
+          }}
+          secondaryButtonProps={{
+            label: 'Discard changes',
+            onClick: handleDiscard,
+          }}
           showPrimary
           showSecondary
         />

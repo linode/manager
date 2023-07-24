@@ -22,12 +22,12 @@ import { Divider } from 'src/components/Divider';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { Paper } from 'src/components/Paper';
 import { Tab } from 'src/components/core/ReachTab';
 import { TabList } from 'src/components/core/ReachTabList';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -333,17 +333,21 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const classes = withStyles.getClasses(this.props);
     return (
       <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'submit',
+          label: 'Save',
+          loading,
+          onClick: onConfirm,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel',
+          label: 'Reset',
+          onClick: onCancel,
+        }}
         alignItems="center"
         className={classes.section}
         display="flex"
         justifyContent="flex-end"
-        primaryButtonDataTestId="submit"
-        primaryButtonHandler={onConfirm}
-        primaryButtonLoading={loading}
-        primaryButtonText="Save"
-        secondaryButtonDataTestId="cancel"
-        secondaryButtonHandler={onCancel}
-        secondaryButtonText="Reset"
         showPrimary
         showSecondary
       />

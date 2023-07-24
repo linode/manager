@@ -177,14 +177,18 @@ const CreateFirewallDrawer = (props: Props) => {
           value={values.devices?.linodes ?? []}
         />
         <ActionsPanel
-          primaryButtonDataTestId="submit"
-          primaryButtonDisabled={userCannotAddFirewall}
-          primaryButtonLoading={isSubmitting}
-          primaryButtonText="Create Firewall"
-          primaryButtonType="submit"
-          secondaryButtonDataTestId="cancel"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: userCannotAddFirewall,
+            label: 'Create Firewall',
+            loading: isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
         />

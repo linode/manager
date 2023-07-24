@@ -28,11 +28,12 @@ export const RevokeTrustedDeviceDialog = (props: Props) => {
     <ConfirmationDialog
       actions={
         <ActionsPanel
-          primaryButtonHandler={onRevoke}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Revoke Device"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            label: 'Revoke Device',
+            loading: isLoading,
+            onClick: onRevoke,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           showPrimary
           showSecondary
         />

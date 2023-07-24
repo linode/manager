@@ -212,11 +212,13 @@ export const AddNodePoolDrawer = (props: Props) => {
             </Typography>
           )}
           <ActionsPanel
-            primaryButtonDisabled={!selectedTypeInfo}
-            primaryButtonHandler={handleAdd}
-            primaryButtonLoading={isLoading}
-            primaryButtonSx={{ marginTop: '0 !important', paddingTop: 0 }}
-            primaryButtonText="Add pool"
+            primaryButtonProps={{
+              disabled: !selectedTypeInfo,
+              label: 'Add pool',
+              loading: isLoading,
+              onClick: handleAdd,
+              sx: { marginTop: '0 !important', paddingTop: 0 },
+            }}
             showPrimary
           />
         </Box>

@@ -142,14 +142,18 @@ export const AddDeviceDrawer = (props: Props) => {
           value={selectedLinodeIds}
         />
         <ActionsPanel
-          primaryButtonDataTestId="submit"
-          primaryButtonDisabled={selectedLinodeIds.length === 0}
-          primaryButtonHandler={handleSubmit}
-          primaryButtonLoading={isLoading}
-          primaryButtonText="Add"
-          secondaryButtonDataTestId="cancel"
-          secondaryButtonHandler={onClose}
-          secondaryButtonText="Cancel"
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: selectedLinodeIds.length === 0,
+            label: 'Add',
+            loading: isLoading,
+            onClick: handleSubmit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
           showPrimary
           showSecondary
         />

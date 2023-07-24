@@ -74,14 +74,18 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
 
   const actions = (
     <ActionsPanel
-      primaryButtonDataTestId="confirm"
-      primaryButtonDisabled={disabled}
-      primaryButtonHandler={onClick}
-      primaryButtonLoading={loading}
-      primaryButtonText={entity.primaryBtnText}
-      secondaryButtonDataTestId="cancel"
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        disabled,
+        label: entity.primaryBtnText,
+        loading,
+        onClick,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
       showPrimary
       showSecondary
       style={{ padding: 0 }}
