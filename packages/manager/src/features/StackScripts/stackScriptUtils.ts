@@ -87,7 +87,7 @@ export const baseApps = {
   '869623': 'JetBackup',
   '912262': 'Harbor',
   '912264': 'Rocket.Chat',
-  '913276': 'Wazuh',
+  // '913276': 'Wazuh', temporarily hide until OCA-1177 is addressed
   '913277': 'BeEF',
   '923029': 'OpenLiteSpeed Django',
   '923030': 'OpenLiteSpeed Rails',
@@ -128,6 +128,10 @@ export const baseApps = {
   '1102906': 'Passky',
   '1102907': 'ONLYOFFICE Docs',
   '1132204': 'Redis Sentinel Cluster',
+  '1160816': 'ownCloud',
+  '1160820': 'Appwrite',
+  '1177225': 'Seatable',
+  '1177605': 'Illa Builder',
 };
 
 const oneClickFilter = [
