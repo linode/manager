@@ -4,6 +4,7 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Typography } from 'src/components/Typography';
+import { StyledRootGrid, StyledHeaderGrid } from './DashboardCard.styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   container: {

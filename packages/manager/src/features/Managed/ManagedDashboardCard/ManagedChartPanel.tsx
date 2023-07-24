@@ -17,63 +17,19 @@ import { useManagedStatsQuery } from 'src/queries/managed/managed';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getUserTimezone from 'src/utilities/getUserTimezone';
+import {
+  StyledCanvasContainerDiv,
+  StyledGraphControlsDiv,
+  StyledRootDiv,
+} from './ManagedChartPanel.styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  canvasContainer: {
-    marginTop: theme.spacing(3),
-  },
-  caption: {},
-  chartSelect: {
-    maxWidth: 150,
-    [theme.breakpoints.down('lg')]: {
-      marginBottom: theme.spacing(3),
-      marginLeft: theme.spacing(3),
-    },
-    [theme.breakpoints.up('lg')]: {
-      position: 'absolute !important' as 'absolute',
-      right: 24,
-      top: 0,
-      zIndex: 2,
-    },
-  },
-  chartSelectCompact: {
-    [theme.breakpoints.up('lg')]: {
-      right: 12,
-      top: -6,
-    },
-  },
-  graphControls: {
-    /**
-     * hacky solution to solve for a bug where
-     * the canvas element under the chart kept ending up with a 0px height
-     * so that it was not appearing
-     */
-    '& canvas': {
-      height: `300px !important`,
-    },
-    '&:before': {
-      backgroundColor: theme.palette.divider,
-      content: '""',
-      height: 'calc(100% - 102px);',
-      left: 0,
-      position: 'absolute',
-      [theme.breakpoints.down('sm')]: {
-        display: 'none',
-      },
-      top: 52,
-      width: 1,
-    },
-    position: 'relative',
-  },
+const useStyles = makeStyles({
   inner: {
     paddingTop: 0,
   },
-  root: {
-    position: 'relative',
-  },
-}));
+});
 
-type CombinedProps = WithTheme;
+type ManagedChartPanelProps = WithTheme;
 
 const chartHeight = 300;
 
@@ -90,7 +46,7 @@ const createTabs = (
   theme: Theme
 ) => {
   const summaryCopy = (
-    <Typography className={classes.caption} variant="body1">
+    <Typography variant="body1">
       This graph represents combined usage for all Linodes on this account.
     </Typography>
   );
@@ -116,9 +72,9 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <div className={classes.canvasContainer}>
+            <StyledCanvasContainerDiv>
               <LineGraph
                 data={[
                   {
@@ -134,8 +90,8 @@ const createTabs = (
                 showToday={true}
                 timezone={timezone}
               />
-            </div>
-          </div>
+            </StyledCanvasContainerDiv>
+          </StyledRootDiv>
         );
       },
       title: 'CPU Usage (%)',
@@ -143,9 +99,9 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <div className={classes.canvasContainer}>
+            <StyledCanvasContainerDiv>
               <LineGraph
                 data={[
                   {
@@ -171,8 +127,8 @@ const createTabs = (
                 timezone={timezone}
                 unit="/s"
               />
-            </div>
-          </div>
+            </StyledCanvasContainerDiv>
+          </StyledRootDiv>
         );
       },
       title: `Network Transfer (${unit}/s)`,
@@ -180,9 +136,9 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <div className={classes.canvasContainer}>
+            <StyledCanvasContainerDiv>
               <LineGraph
                 data={[
                   {
@@ -198,8 +154,8 @@ const createTabs = (
                 showToday={true}
                 timezone={timezone}
               />
-            </div>
-          </div>
+            </StyledCanvasContainerDiv>
+          </StyledRootDiv>
         );
       },
       title: 'Disk I/O (op/s)',
@@ -207,7 +163,7 @@ const createTabs = (
   ];
 };
 
-export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
+export const ManagedChartPanel = (props: ManagedChartPanelProps) => {
   const { theme } = props;
   const classes = useStyles();
   const { data: profile } = useProfile();
@@ -240,7 +196,7 @@ export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
   const initialTab = 0;
 
   return (
-    <div className={classes.graphControls}>
+    <StyledGraphControlsDiv>
       <TabbedPanel
         copy={''}
         error={undefined} // Use custom error handling (above)
@@ -250,7 +206,7 @@ export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
         rootClass={`tabbedPanel`}
         tabs={tabs}
       />
-    </div>
+    </StyledGraphControlsDiv>
   );
 };
 
