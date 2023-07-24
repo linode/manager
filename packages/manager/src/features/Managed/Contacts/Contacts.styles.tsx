@@ -11,6 +11,7 @@ export const StyledWrapperGrid = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     marginRight: theme.spacing(),
   },
+  paddingRight: 0,
 }));
 
 export const StyledTypography = styled(Typography)(({ theme }) => ({

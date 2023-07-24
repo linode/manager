@@ -98,7 +98,7 @@ const Contacts = () => {
         ref={contactsTableRef}
         spacing={2}
       >
-        <StyledWrapperGrid sx={{ paddingRight: 0 }}>
+        <StyledWrapperGrid>
           <AddNewLink
             onClick={() => {
               setContactDrawerMode('create');
