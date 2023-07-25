@@ -16,6 +16,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
+import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
@@ -36,6 +37,11 @@ type CombinedProps = Props &
   WithApplicationStoreProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
+  state = {
+    hasEnsuredAllTypes: false,
+    showChildren: false,
+  };
+
   componentDidMount() {
     const { initSession } = this.props;
     /**
@@ -133,6 +139,9 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.getLinodesPage(),
     ];
 
+    // Start events polling
+    startEventsInterval(this.props.store, this.props.queryClient);
+
     try {
       await Promise.all(dataFetchingPromises);
     } catch {
@@ -140,11 +149,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     } finally {
       this.props.markAppAsDoneLoading();
     }
-  };
-
-  state = {
-    hasEnsuredAllTypes: false,
-    showChildren: false,
   };
 }
 
