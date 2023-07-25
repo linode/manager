@@ -49,11 +49,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
       flexBasis: '100%',
       maxWidth: '100%',
     },
-    width: '100%',
-    maxWidth: 480,
+    width: 480,
     padding: theme.spacing(4),
     [theme.breakpoints.down('sm')]: {
       maxWidth: 445,
+      width: '100%',
       padding: theme.spacing(2),
     },
   },
@@ -62,7 +62,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   wide: {
     [theme.breakpoints.up('sm')]: {
-      width: 700,
+      maxWidth: 700,
+      width: '100%',
     },
   },
 }));
