@@ -7,15 +7,15 @@ import { H1Header } from 'src/components/H1Header/H1Header';
 
 import SupportSearchLanding, { CombinedProps } from './SupportSearchLanding';
 
-const classes = {
-  backButton: '',
-  searchBar: '',
-  searchBoxInner: '',
-  searchIcon: '',
-};
+// const classes = {
+//   backButton: '',
+//   searchBar: '',
+//   searchBoxInner: '',
+//   searchIcon: '',
+// };
 
 const props: CombinedProps = {
-  classes,
+  // classes,
   searchAlgolia: jest.fn(),
   searchEnabled: true,
   searchResults: [[], []],

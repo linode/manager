@@ -1,11 +1,12 @@
 import Search from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+// import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import { withStyles } from 'tss-react/mui';
+// import { compose } from 'recompose';
+// import { withStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Notice } from 'src/components/Notice/Notice';
@@ -18,37 +19,42 @@ import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import { DocumentationResults, SearchResult } from './DocumentationResults';
 import HelpResources from './HelpResources';
 
-type ClassNames = 'searchBar' | 'searchBoxInner' | 'searchIcon';
+// type ClassNames =
+//   'searchBar' |
+//   'searchBoxInner' |
+//   'searchIcon';
 
-const styles = (theme: Theme) => ({
-  searchBar: {
-    maxWidth: '100%',
-  },
-  searchBoxInner: {
-    '& > div': {
-      maxWidth: '100%',
-    },
-    backgroundColor: theme.color.grey2,
-    marginTop: 0,
-    padding: theme.spacing(3),
-  },
-  searchIcon: {
-    '& svg': {
-      color: theme.palette.text.primary,
-    },
-    marginRight: 0,
-  },
-});
+// const styles = (theme: Theme) => ({
+//   searchBar: {
+//     maxWidth: '100%',
+//   },
+//   searchBoxInner: {
+//     '& > div': {
+//       maxWidth: '100%',
+//     },
+//     backgroundColor: theme.color.grey2,
+//     marginTop: 0,
+//     padding: theme.spacing(3),
+//   },
+//   searchIcon: {
+//     '& svg': {
+//       color: theme.palette.text.primary,
+//     },
+//     marginRight: 0,
+//   },
+// });
 
 interface State {
   query: string;
 }
 
-interface Props {
-  classes?: Partial<Record<ClassNames, string>>;
-}
+// interface Props {
+//   classes?: Partial<Record<ClassNames, string>>;
+// }
 
-export type CombinedProps = AlgoliaProps & Props & RouteComponentProps<{}>;
+export type CombinedProps = AlgoliaProps &
+  // Props &
+  RouteComponentProps<{}>;
 
 class SupportSearchLanding extends React.Component<CombinedProps, State> {
   componentDidMount() {
@@ -62,7 +68,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { searchEnabled, searchError, searchResults } = this.props;
-    const classes = withStyles.getClasses(this.props);
+    // const classes = withStyles.getClasses(this.props);
     const { query } = this.state;
     const [docs, community] = searchResults;
 
@@ -82,16 +88,22 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
         </Box>
         <Box>
           {searchError && <Notice error>{searchError}</Notice>}
-          <TextField
+          <StyledTextFieldComponent
             InputProps={{
-              className: classes.searchBar,
+              // className: classes.searchBar,
               startAdornment: (
-                <InputAdornment className={classes.searchIcon} position="end">
+                <StyledInputAdornment
+                  // className={classes.searchIcon}
+                  position="end"
+                >
                   <Search />
-                </InputAdornment>
+                </StyledInputAdornment>
               ),
+              sx: {
+                maxWidth: '100%',
+              },
             }}
-            className={classes.searchBoxInner}
+            // className={classes.searchBoxInner}
             data-qa-search-landing-input
             disabled={!Boolean(searchEnabled)}
             hideLabel
@@ -143,9 +155,32 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
   };
 }
 
-const searchable = withSearch({ highlight: false, hitsPerPage: 5 });
+const StyledTextFieldComponent = styled(TextField, {
+  label: 'StyledTextFieldComponent',
+})(({ theme }) => ({
+  '&& > div': {
+    maxWidth: '100%',
+  },
+  backgroundColor: theme.color.grey2,
+  marginTop: 0,
+  padding: theme.spacing(3),
+}));
 
-export default compose<CombinedProps, Props>(
-  searchable,
-  withRouter
-)(withStyles(SupportSearchLanding, styles));
+const StyledInputAdornment = styled(InputAdornment, {
+  label: 'StyledInputAdornment',
+})(({ theme }) => ({
+  '&& svg': {
+    color: theme.palette.text.primary,
+  },
+  marginRight: 0,
+}));
+
+// const searchable = withSearch({ highlight: false, hitsPerPage: 5 });
+// export default compose<CombinedProps, Props>(
+//   searchable,
+//   withRouter
+// )(withStyles(SupportSearchLanding, styles));
+
+export default withSearch({ highlight: true, hitsPerPage: 10 })(
+  withRouter(SupportSearchLanding)
+);
