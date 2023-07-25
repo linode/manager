@@ -1,15 +1,25 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-export const PopularPosts = () => {
-  const theme = useTheme();
+const useStyles = makeStyles((theme: Theme) => ({
+  post: {
+    marginBottom: theme.spacing(0.5),
+    ...theme.typography.body1,
+  },
 
-  const withSeparator = {
+  postTitle: {
+    marginBottom: theme.spacing(2),
+  },
+  root: {
+    margin: `${theme.spacing(6)} 0`,
+  },
+  withSeparator: {
     borderLeft: `1px solid ${theme.palette.divider}`,
     paddingLeft: theme.spacing(4),
     [theme.breakpoints.down('sm')]: {
@@ -17,32 +27,30 @@ export const PopularPosts = () => {
       marginTop: theme.spacing(4),
       paddingLeft: 0,
     },
-  };
+  },
+}));
+
+export const PopularPosts: React.FC = () => {
+  const classes = useStyles();
 
   const renderPopularDocs = () => {
     return (
       <React.Fragment>
-        <StyledPostDiv>
-          <StyledExternalLink
-            absoluteIcon
-            link="https://www.linode.com/docs/getting-started/"
-            text="Getting Started with Linode"
-          />
-        </StyledPostDiv>
-        <StyledPostDiv>
-          <StyledExternalLink
-            absoluteIcon
-            link="https://www.linode.com/docs/security/securing-your-server/"
-            text="How to Secure Your Server"
-          />
-        </StyledPostDiv>
-        <StyledPostDiv>
-          <StyledExternalLink
-            absoluteIcon
-            link="https://www.linode.com/docs/troubleshooting/troubleshooting/"
-            text="Troubleshooting"
-          />
-        </StyledPostDiv>
+        <div className={classes.post}>
+          <Link to="https://www.linode.com/docs/getting-started/">
+            Getting Started with Linode
+          </Link>
+        </div>
+        <div className={classes.post}>
+          <Link to="https://www.linode.com/docs/security/securing-your-server/">
+            How to Secure Your Server
+          </Link>
+        </div>
+        <div className={classes.post}>
+          <Link to="https://www.linode.com/docs/troubleshooting/troubleshooting/">
+            Troubleshooting
+          </Link>
+        </div>
       </React.Fragment>
     );
   };
@@ -50,42 +58,41 @@ export const PopularPosts = () => {
   const renderPopularForumPosts = () => {
     return (
       <React.Fragment>
-        <StyledPostDiv>
-          <StyledExternalLink
-            absoluteIcon
-            link="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
-            text="My Linode is unreachable after maintenance"
-          />
-        </StyledPostDiv>
-        <StyledPostDiv>
-          <StyledExternalLink
-            absoluteIcon
-            link="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
-            text="Why is my website so slow?"
-          />
-        </StyledPostDiv>
-        <StyledPostDiv>
-          <StyledExternalLink
-            absoluteIcon
-            link="https://www.linode.com/community/questions/19082/i-just-created-my-first-linode-and-i-cant-send-emails-why"
-            text="Ports 25, 465, and 587 blocked?"
-          />
-        </StyledPostDiv>
+        <div className={classes.post}>
+          <Link to="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance">
+            My Linode is unreachable after maintenance
+          </Link>
+        </div>
+        <div className={classes.post}>
+          <Link to="https://www.linode.com/community/questions/232/why-is-my-website-so-slow">
+            Why is my website so slow?
+          </Link>
+        </div>
+        <div className={classes.post}>
+          <Link to="https://www.linode.com/community/questions/19082/i-just-created-my-first-linode-and-i-cant-send-emails-why">
+            Ports 25, 465, and 587 blocked?
+          </Link>
+        </div>
       </React.Fragment>
     );
   };
 
   return (
-    <Paper sx={{ margin: `${theme.spacing(6)} 0` }} variant="outlined">
+    <Paper className={classes.root} variant="outlined">
       <Grid container>
         <Grid data-qa-documentation-link sm={6} xs={12}>
-          <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h3">
+          <Typography className={classes.postTitle} variant="h3">
             Most Popular Documentation:
           </Typography>
           {renderPopularDocs()}
         </Grid>
-        <Grid data-qa-community-link sm={6} sx={withSeparator} xs={12}>
-          <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h3">
+        <Grid
+          className={classes.withSeparator}
+          data-qa-community-link
+          sm={6}
+          xs={12}
+        >
+          <Typography className={classes.postTitle} variant="h3">
             Most Popular Community Posts:
           </Typography>
           {renderPopularForumPosts()}
@@ -94,20 +101,3 @@ export const PopularPosts = () => {
     </Paper>
   );
 };
-
-const StyledPostDiv = styled('div', {
-  label: 'StyledPostItem',
-})(({ theme }) => ({
-  marginBottom: theme.spacing(0.5),
-  ...theme.typography.body1,
-}));
-
-const StyledExternalLink = styled(ExternalLink, {
-  label: 'StyledExternalLink',
-})(({ theme }) => ({
-  '&:hover': {
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-  },
-  color: theme.textColors.linkActiveLight,
-}));

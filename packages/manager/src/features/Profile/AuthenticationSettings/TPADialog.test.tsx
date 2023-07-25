@@ -92,7 +92,11 @@ describe('TPADialog', () => {
     userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
-    expect(mockWindow).toHaveBeenCalledWith(expectedUrl, '_blank', 'noopener');
+    expect(mockWindow).toHaveBeenCalledWith(
+      expectedUrl,
+      '_blank',
+      'noopener noreferrer'
+    );
   });
   it('Should redirect to TPA(Google) login', async () => {
     const newProps: TPADialogProps = {
@@ -113,7 +117,11 @@ describe('TPADialog', () => {
     userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
-    expect(mockWindow).toHaveBeenCalledWith(expectedUrl, '_blank', 'noopener');
+    expect(mockWindow).toHaveBeenCalledWith(
+      expectedUrl,
+      '_blank',
+      'noopener noreferrer'
+    );
   });
   it('Should redirect to TPA(Github) login', async () => {
     const newProps: TPADialogProps = {
@@ -134,6 +142,10 @@ describe('TPADialog', () => {
     userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
-    expect(mockWindow).toHaveBeenCalledWith(expectedUrl, '_blank', 'noopener');
+    expect(mockWindow).toHaveBeenCalledWith(
+      expectedUrl,
+      '_blank',
+      'noopener noreferrer'
+    );
   });
 });

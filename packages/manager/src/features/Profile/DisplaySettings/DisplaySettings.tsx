@@ -7,7 +7,6 @@ import { v4 } from 'uuid';
 
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
-import ExternalLink from 'src/components/ExternalLink';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Link } from 'src/components/Link';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
@@ -93,11 +92,9 @@ export const DisplaySettings = () => {
             Create, upload, and manage your globally recognized avatar from a
             single place with Gravatar.
           </StyledProfileCopy>
-          <StyledAddImageLink
-            fixedIcon
-            link="https://en.gravatar.com/"
-            text={'Manage photo'}
-          />
+          <StyledAddImageLink external to="https://en.gravatar.com/">
+            Manage photo
+          </StyledAddImageLink>
         </div>
       </Box>
       <Divider />
@@ -140,7 +137,7 @@ export const DisplaySettings = () => {
   );
 };
 
-const StyledAddImageLink = styled(ExternalLink, {
+const StyledAddImageLink = styled(Link, {
   label: 'StyledAddImageLink',
 })(({ theme }) => ({
   '& svg': {

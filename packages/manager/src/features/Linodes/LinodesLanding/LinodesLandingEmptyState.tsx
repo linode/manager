@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import LinodeSvg from 'src/assets/icons/entityIcons/linode.svg';
 import MarketplaceIcon from 'src/assets/icons/marketplace.svg';
 import PointerIcon from 'src/assets/icons/pointer.svg';
-import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
@@ -35,7 +34,9 @@ export const LinodesLandingEmptyState = () => {
               {...props}
             >
               {APPS_MORE_LINKS_TEXT}
-              <ResourcesLinkIcon icon={<PointerIcon />} iconType="pointer" />
+              <span style={{ left: 2, position: 'relative', top: 4 }}>
+                <PointerIcon />
+              </span>
             </ResourcesMoreLink>
           )}
           icon={<MarketplaceIcon />}

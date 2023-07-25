@@ -2,7 +2,7 @@ import { Theme } from '@mui/material/styles';
 import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
@@ -58,12 +58,12 @@ export const AutoEnroll: React.FC<CombinedProps> = (props) => {
             <Typography variant="body1">
               {`Enroll all future Linodes in backups. Your account will be billed
                     the additional hourly rate noted on the `}
-              <ExternalLink
+              <Link
                 data-qa-backups-price
-                fixedIcon
-                link="https://www.linode.com/products/backups/"
-                text="Backups pricing page"
-              />
+                to="https://www.linode.com/products/backups/"
+              >
+                Backups pricing page
+              </Link>
             </Typography>
           </div>
         }

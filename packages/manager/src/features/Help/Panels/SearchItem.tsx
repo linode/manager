@@ -38,7 +38,7 @@ export const SearchItem = (props: Props) => {
         [classes.algoliaRoot]: true,
         [classes.selectedMenuItem]: isFocused,
       })}
-      aria-describedby={!isFinal ? 'external-site' : undefined}
+      aria-label={!isFinal ? `${getLabel()} - opens in a new tab` : undefined}
       attrs={{ ['data-qa-search-result']: source }}
       value={data.label}
       {...props}

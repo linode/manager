@@ -1,9 +1,8 @@
-import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import ListItem from 'src/components/core/ListItem';
@@ -22,6 +21,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     color: '#3683DC',
   },
   link: {
+    display: 'inline-block',
     fontFamily: theme.font.bold,
     marginTop: theme.spacing(2),
   },
@@ -29,12 +29,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
     padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
   },
   searchItem: {
-    '&:hover': {
-      backgroundColor: theme.bg.offWhite,
+    '&:last-child': {
+      borderBottom: 0,
     },
     backgroundColor: theme.color.white,
     borderBottom: `1px solid ${theme.palette.divider}`,
-    position: 'initial',
+    fontSize: '0.9rem',
   },
 }));
 
@@ -62,18 +62,10 @@ export const DocumentationResults = (props: Props) => {
         className={classes.searchItem}
         component="a"
         key={idx}
-        onClick={() => window.open(result.data.href, '_newtab')}
         role="menuitem"
         tabIndex={0}
       >
-        <Typography
-          className={classes.label}
-          data-qa-search-result
-          variant="body1"
-        >
-          {result.label}
-          <OpenInNew className={classes.icon} />
-        </Typography>
+        <Link to={result.data.href}>{result.label}</Link>
       </ListItem>
     ));
   };
@@ -98,12 +90,11 @@ export const DocumentationResults = (props: Props) => {
       <Paper>
         <nav>{results.length > 0 ? renderResults() : renderEmptyState()}</nav>
       </Paper>
-      <ExternalLink
+      <Link
         className={classes.link}
         data-qa-view-more={sectionTitle}
-        link={target}
-        text={`View more ${sectionTitle}`}
-      />
+        to={target}
+      >{`View more ${sectionTitle}`}</Link>
     </>
   );
 };
