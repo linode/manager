@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -104,11 +104,9 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
             assigned to the eth1 interface, with eth0 being used for connections
             to the public internet. VLAN configurations can be further edited in
             the Linode&rsquo;s{' '}
-            <ExternalLink
-              hideIcon
-              link="https://www.linode.com/docs/guides/linode-configuration-profiles/"
-              text="Configuration Profile"
-            />
+            <Link to="https://www.linode.com/docs/guides/linode-configuration-profiles/">
+              Configuration Profile
+            </Link>
             .
           </Typography>
           <InterfaceSelect
