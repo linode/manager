@@ -7,8 +7,7 @@ import {
   BreadcrumbProps,
 } from 'src/components/Breadcrumb/Breadcrumb';
 import { Button } from 'src/components/Button/Button';
-
-import DocsLink from '../DocsLink';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 
 export interface Props {
   analyticsLabel?: string;
