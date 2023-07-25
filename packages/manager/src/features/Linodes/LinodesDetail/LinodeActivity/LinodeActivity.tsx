@@ -1,7 +1,9 @@
+import { Params } from '@linode/api-v4';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { EventsLanding } from 'src/features/Events/EventsLanding';
+import EventsLanding from 'src/features/Events/EventsLanding';
+import { getEventsForEntity } from 'src/utilities/getEventsForEntity';
 
 const LinodeActivity = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
@@ -9,10 +11,9 @@ const LinodeActivity = () => {
 
   return (
     <EventsLanding
-      filter={{
-        'entity.id': id,
-        'entity.type': 'linode',
-      }}
+      getEventsRequest={(params: Params = {}) =>
+        getEventsForEntity(params, 'linode', id)
+      }
       data-testid="linode-events-table"
       emptyMessage="No recent activity for this Linode."
       entityId={id}

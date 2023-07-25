@@ -20,10 +20,10 @@ import {
   transitionText,
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useTypeQuery } from 'src/queries/types';
+import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 

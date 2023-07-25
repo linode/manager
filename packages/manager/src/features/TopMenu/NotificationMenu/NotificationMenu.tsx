@@ -1,8 +1,10 @@
 import Popper from '@mui/material/Popper';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 
 import Bell from 'src/assets/icons/notification.svg';
+import { Button } from 'src/components/Button/Button';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
@@ -19,13 +21,20 @@ import Notifications from 'src/features/NotificationCenter/Notifications';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import usePrevious from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useMarkEventsAsSeen } from 'src/queries/events';
+import { markAllSeen } from 'src/store/events/event.request';
+import { ThunkDispatch } from 'src/store/types';
+import { isPropValid } from 'src/utilities/isPropValid';
 
-import { TopMenuIcon } from '../TopMenuIcon';
-import {
-  NotificationIconWrapper,
-  StyledButton,
-} from './NotificationMenu.styles';
+import { StyledTopMenuIconWrapper, TopMenuIcon } from '../TopMenuIcon';
+
+const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
+  label: 'NotificationIconWrapper',
+  shouldForwardProp: (prop) => isPropValid(['isMenuOpen'], prop),
+})<{
+  isMenuOpen: boolean;
+}>(({ ...props }) => ({
+  color: props.isMenuOpen ? '#606469' : '#c9c7c7',
+}));
 
 const NotificationIconBadge = styled('div')(({ theme }) => ({
   alignItems: 'center',
@@ -45,13 +54,11 @@ const NotificationIconBadge = styled('div')(({ theme }) => ({
 export const NotificationMenu = () => {
   const theme = useTheme();
 
-  const notificationContext = React.useContext(_notificationContext);
-
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
   const eventNotifications = useEventNotifications();
-  const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
+  const notificationContext = React.useContext(_notificationContext);
 
   const numNotifications =
     eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
@@ -59,6 +66,8 @@ export const NotificationMenu = () => {
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const prevOpen = usePrevious(notificationContext.menuOpen);
+
+  const dispatch = useDispatch<ThunkDispatch>();
 
   const handleNotificationMenuToggle = () => {
     if (!notificationContext.menuOpen) {
@@ -89,24 +98,29 @@ export const NotificationMenu = () => {
   React.useEffect(() => {
     if (prevOpen && !notificationContext.menuOpen) {
       // Dismiss seen notifications after the menu has closed.
-      if (eventNotifications.length > 0) {
-        markEventsAsSeen(eventNotifications[0].originalId);
-      }
+      dispatch(markAllSeen());
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
   }, [
-    dismissNotifications,
-    eventNotifications,
-    markEventsAsSeen,
     notificationContext.menuOpen,
+    dismissNotifications,
     notifications,
+    dispatch,
     prevOpen,
   ]);
 
   return (
     <>
       <TopMenuIcon title="Notifications">
-        <StyledButton
+        <Button
+          sx={{
+            '&:hover': {
+              backgroundColor: 'unset',
+            },
+            margin: 0,
+            minWidth: 'unset',
+            padding: 0,
+          }}
           aria-haspopup="true"
           aria-label="Notifications"
           disableRipple
@@ -120,7 +134,7 @@ export const NotificationMenu = () => {
               <NotificationIconBadge>{numNotifications}</NotificationIconBadge>
             ) : null}
           </NotificationIconWrapper>
-        </StyledButton>
+        </Button>
       </TopMenuIcon>
 
       <Popper

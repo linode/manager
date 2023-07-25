@@ -29,7 +29,7 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { EventWithStore } from 'src/events';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
@@ -161,7 +161,7 @@ export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
 
 export const useAllNodeBalancerConfigsQuery = (id: number) =>
   useQuery<NodeBalancerConfig[], APIError[]>(
-    [queryKey, 'nodebalancer', id, 'configs'],
+    [queryKey, 'nodebalanacer', id, 'configs'],
     () => getAllNodeBalancerConfigs(id),
     { refetchInterval: 20000 }
   );
@@ -197,10 +197,10 @@ export const useInfiniteNodebalancersQuery = (filter: Filter) =>
     }
   );
 
-export const nodebalancerEventHandler: AppEventHandler = (
+export const nodebalanacerEventHandler = ({
   event,
-  queryClient
-) => {
+  queryClient,
+}: EventWithStore) => {
   if (event.action.startsWith('nodebalancer_config')) {
     queryClient.invalidateQueries([
       queryKey,

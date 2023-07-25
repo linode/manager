@@ -26,7 +26,7 @@ import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useAllLinodeConfigsQuery,
@@ -93,8 +93,6 @@ const CloneLanding = () => {
 
   const configs = _configs ?? [];
   const disks = _disks ?? [];
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   /**
    * ROUTING
