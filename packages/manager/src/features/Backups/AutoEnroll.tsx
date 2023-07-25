@@ -45,23 +45,31 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
   );
 };
 
-const StyledPaper = styled(Paper)(({ theme }) => ({
+const StyledPaper = styled(Paper, {
+  label: 'StyledPaper',
+})(({ theme }) => ({
   backgroundColor: theme.bg.offWhite,
   padding: theme.spacing(1),
 }));
 
-const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+const StyledFormControlLabel = styled(FormControlLabel, {
+  label: 'StyledFormControlLabel',
+})(({ theme }) => ({
   alignItems: 'flex-start',
   display: 'flex',
   marginBottom: theme.spacing(1),
   marginLeft: 0,
 }));
 
-const StyledDiv = styled('div')(({ theme }) => ({
+const StyledDiv = styled('div', {
+  label: 'StyledDiv',
+})(({ theme }) => ({
   marginTop: theme.spacing(1) + theme.spacing(0.5),
 }));
 
-const StyledTypography = styled(Typography)(({ theme }) => ({
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
   fontSize: 17,
   marginBottom: theme.spacing(1),
 }));

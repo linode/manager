@@ -1,9 +1,11 @@
 import { styled } from '@mui/material/styles';
 import { Paper } from 'src/components/Paper';
 import { IconButton } from 'src/components/IconButton';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+// import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
-export const StyledPaper = styled(Paper)(({ theme }) => ({
+export const StyledPaper = styled(Paper, {
+  label: 'StyledPaper',
+})(({ theme }) => ({
   alignItems: 'center',
   display: 'flex',
   justifyContent: 'space-between',
@@ -12,8 +14,11 @@ export const StyledPaper = styled(Paper)(({ theme }) => ({
   paddingRight: theme.spacing(2),
 }));
 
-export const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  ...StyledLinkButton({ theme }),
+export const StyledIconButton = styled(IconButton, {
+  label: 'StyledIconButton',
+})(({ theme }) => ({
+  // ...StyledLinkButton({ theme }),
+  ...theme.applyLinkStyles,
   marginLeft: 12,
   lineHeight: '0.5rem',
 }));
