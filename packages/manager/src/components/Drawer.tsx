@@ -39,7 +39,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       marginBottom: theme.spacing(2),
     },
   },
-  paper: {
+  common: {
     '& .actionPanel': {
       display: 'flex',
       justifyContent: 'flex-end',
@@ -49,22 +49,24 @@ const useStyles = makeStyles()((theme: Theme) => ({
       flexBasis: '100%',
       maxWidth: '100%',
     },
-    width: 480,
     padding: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(2),
+    },
+  },
+  default: {
+    width: 480,
     [theme.breakpoints.down('sm')]: {
       maxWidth: 445,
       width: '100%',
-      padding: theme.spacing(2),
     },
   },
   title: {
     wordBreak: 'break-word',
   },
   wide: {
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: 700,
-      width: '100%',
-    },
+    maxWidth: 700,
+    width: '100%',
   },
 }));
 
@@ -94,7 +96,9 @@ export const Drawer = (props: Props) => {
         }
       }}
       anchor="right"
-      classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
+      classes={{
+        paper: `${classes.common} ${wide ? classes.wide : classes.default}`,
+      }}
       {...rest}
       aria-labelledby={titleID}
       data-qa-drawer
