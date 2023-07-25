@@ -367,7 +367,6 @@ const formatNotificationForDisplay = (
   body: <RenderNotification notification={notification} onClose={onClose} />,
   countInTotal: shouldIncludeInCount,
   id: `notification-${idx}`,
-  originalId: idx,
 });
 
 // For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.

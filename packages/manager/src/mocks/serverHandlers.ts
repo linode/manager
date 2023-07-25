@@ -986,7 +986,7 @@ export const handlers = [
       percent_complete: 100,
       status: 'notification',
     });
-    return res(
+    return res.once(
       ctx.json(
         makeResourcePage([...events, ...oldEvents, eventWithSpecialCharacters])
       )

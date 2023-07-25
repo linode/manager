@@ -1,12 +1,11 @@
-import { Event, EventAction } from '@linode/api-v4';
+import { Event, EventAction } from '@linode/api-v4/lib/account/types';
+import { partition } from 'ramda';
 import * as React from 'react';
 
-import { useEventsInfiniteQuery } from 'src/queries/events';
-import {
-  isInProgressEvent,
-  removeBlocklistedEvents,
-} from 'src/utilities/eventUtils';
-import { partition } from 'src/utilities/partition';
+import useEvents from 'src/hooks/useEvents';
+import { isInProgressEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
+import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
@@ -22,18 +21,15 @@ const unwantedEvents: EventAction[] = [
   'volume_update',
 ];
 
-export const useEventNotifications = () => {
-  const { events } = useEventsInfiniteQuery();
-  const filteredEvents = removeBlocklistedEvents(
-    events?.slice(0, 25),
-    unwantedEvents
-  );
+export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
+  const events = removeBlocklistedEvents(givenEvents ?? useEvents().events);
   const notificationContext = React.useContext(_notificationContext);
 
-  const [inProgress, completed] = partition<Event>(
-    isInProgressEvent,
-    filteredEvents
+  const _events = events.filter(
+    (thisEvent) => !unwantedEvents.includes(thisEvent.action)
   );
+
+  const [inProgress, completed] = partition<Event>(isInProgressEvent, _events);
 
   const allEvents = [
     ...inProgress.map((thisEvent) =>
@@ -50,21 +46,19 @@ export const useEventNotifications = () => {
 };
 
 const formatEventForDisplay = (
-  event: Event,
+  event: ExtendedEvent,
   onClose: () => void
 ): NotificationItem => ({
   body: <RenderEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
   id: `event-${event.id}`,
-  originalId: event.id,
 });
 
 const formatProgressEventForDisplay = (
-  event: Event,
+  event: ExtendedEvent,
   onClose: () => void
 ): NotificationItem => ({
   body: <RenderProgressEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
   id: `progress-event-${event.id}`,
-  originalId: event.id,
 });

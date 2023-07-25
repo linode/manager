@@ -15,7 +15,7 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { EventWithStore } from 'src/events';
 
 import { updateInPaginatedStore } from './base';
 import { queryKey } from './profile';
@@ -95,6 +95,6 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
   });
 };
 
-export const tokenEventHandler: AppEventHandler = (_, queryClient) => {
+export function tokenEventHandler({ queryClient }: EventWithStore) {
   queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
-};
+}

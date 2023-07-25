@@ -8,8 +8,7 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useEventsInfiniteQuery } from 'src/queries/events';
-import { isInProgressEvent } from 'src/utilities/eventUtils';
+import { useEvents } from 'src/hooks/useEvents';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
@@ -49,6 +48,8 @@ interface Props {
 }
 
 export const LinodeDiskRow = React.memo((props: Props) => {
+  const classes = useStyles();
+  const { inProgressEvents } = useEvents();
   const {
     disk,
     linodeId,
@@ -60,9 +61,6 @@ export const LinodeDiskRow = React.memo((props: Props) => {
     readOnly,
   } = props;
 
-  const classes = useStyles();
-  const { events } = useEventsInfiniteQuery();
-
   const diskEventLabelMap = {
     disk_create: 'Creating',
     disk_delete: 'Deleting',
@@ -71,15 +69,10 @@ export const LinodeDiskRow = React.memo((props: Props) => {
 
   const diskEventsToShowProgressFor = Object.keys(diskEventLabelMap);
 
-  const resizeEvent = React.useMemo(
-    () =>
-      events?.find(
-        (event) =>
-          isInProgressEvent(event) &&
-          event.secondary_entity?.id === disk.id &&
-          diskEventsToShowProgressFor.includes(event.action)
-      ),
-    [disk.id, diskEventsToShowProgressFor, events]
+  const event = inProgressEvents.find(
+    (event) =>
+      event.secondary_entity?.id === disk.id &&
+      diskEventsToShowProgressFor.includes(event.action)
   );
 
   return (
@@ -87,16 +80,15 @@ export const LinodeDiskRow = React.memo((props: Props) => {
       <TableCell className={classes.diskLabel}>{disk.label}</TableCell>
       <TableCell className={classes.diskType}>{disk.filesystem}</TableCell>
       <TableCell className={classes.diskSize}>
-        {resizeEvent ? (
+        {event ? (
           <div className={classes.progressBar}>
-            {diskEventLabelMap[resizeEvent.action]} (
-            {resizeEvent.percent_complete}%)
+            {diskEventLabelMap[event.action]} ({event.percent_complete}%)
             <BarPercent
               className={classes.bar}
               max={100}
               narrow
               rounded
-              value={resizeEvent?.percent_complete ?? 0}
+              value={event?.percent_complete ?? 0}
             />
           </div>
         ) : (

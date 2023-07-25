@@ -6,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { MBpsIntraDC } from 'src/constants';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { useStartLinodeMutationMutation } from 'src/queries/linodes/actions';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
@@ -46,8 +46,6 @@ export const MutationNotification = (props: Props) => {
     linodeId,
     successorTypeInfo !== undefined
   );
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const [isMutationDrawerOpen, setIsMutationDrawerOpen] = React.useState(false);
 
