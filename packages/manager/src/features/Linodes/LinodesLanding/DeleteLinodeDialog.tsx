@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useDeleteLinodeMutation,
   useLinodeQuery,
@@ -27,8 +27,6 @@ export const DeleteLinodeDialog = (props: Props) => {
   const { error, isLoading, mutateAsync, reset } = useDeleteLinodeMutation(
     linodeId ?? -1
   );
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   React.useEffect(() => {
     if (open) {
