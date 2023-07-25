@@ -37,7 +37,7 @@ export class IPAddress extends React.Component<IPAddressProps> {
       .sort(sortIPAddress);
 
     return (
-      <StyledRootDiv className={`${!showAll && 'dif'}`}>
+      <StyledRootDiv showAll={showAll}>
         {!showAll
           ? this.renderIP(formattedIPS[0])
           : formattedIPS.map((a, i) => {
@@ -76,9 +76,8 @@ export class IPAddress extends React.Component<IPAddressProps> {
     return (
       <StyledIPLinkDiv data-qa-copy-ip>
         <StyledCopyTooltip
-          sx={{ margin: 0 }}
-          showCopyOnHover={showCopyOnHover}
-          data-testid={`CopyTooltip`}
+          showcopyonhover={showCopyOnHover}
+          //data-testid={`CopyTooltip`}
           className={`copy`}
           text={ip}
         />
