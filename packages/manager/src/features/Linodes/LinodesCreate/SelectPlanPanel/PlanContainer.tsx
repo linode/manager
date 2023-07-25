@@ -1,28 +1,30 @@
-import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+
+import { Hidden } from 'src/components/Hidden';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Hidden } from 'src/components/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
+
+import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
-import { StyledTableCell, StyledTable } from './PlanContainer.styles';
 
 const tableCells = [
-  { cellName: '', testId: '', center: false, noWrap: false },
-  { cellName: 'Plan', testId: 'plan', center: false, noWrap: false },
-  { cellName: 'Monthly', testId: 'monthly', center: false, noWrap: false },
-  { cellName: 'Hourly', testId: 'hourly', center: false, noWrap: false },
-  { cellName: 'RAM', testId: 'ram', center: true, noWrap: false },
-  { cellName: 'CPUs', testId: 'cpu', center: true, noWrap: false },
-  { cellName: 'Storage', testId: 'storage', center: true, noWrap: false },
-  { cellName: 'Transfer', testId: 'transfer', center: true, noWrap: false },
+  { cellName: '', center: false, noWrap: false, testId: '' },
+  { cellName: 'Plan', center: false, noWrap: false, testId: 'plan' },
+  { cellName: 'Monthly', center: false, noWrap: false, testId: 'monthly' },
+  { cellName: 'Hourly', center: false, noWrap: false, testId: 'hourly' },
+  { cellName: 'RAM', center: true, noWrap: false, testId: 'ram' },
+  { cellName: 'CPUs', center: true, noWrap: false, testId: 'cpu' },
+  { cellName: 'Storage', center: true, noWrap: false, testId: 'storage' },
+  { cellName: 'Transfer', center: true, noWrap: false, testId: 'transfer' },
   {
     cellName: 'Network In / Out',
-    testId: 'network',
     center: true,
     noWrap: true,
+    testId: 'network',
   },
 ];
 
@@ -83,12 +85,12 @@ export const PlanContainer = ({
         <Grid xs={12}>
           <StyledTable
             aria-label="List of Linode Plans"
-            spacingBottom={16}
             isDisabled={disabled}
+            spacingBottom={16}
           >
             <TableHead>
               <TableRow>
-                {tableCells.map(({ cellName, testId, center, noWrap }) => {
+                {tableCells.map(({ cellName, center, noWrap, testId }) => {
                   const attributeValue = `${testId}-header`;
                   if (
                     (!shouldShowTransfer && testId === 'transfer') ||

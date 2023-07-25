@@ -1,9 +1,11 @@
-import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
-import { rest, server } from 'src/mocks/testServer';
-import { linodeFactory } from 'src/factories';
 import { waitFor } from '@testing-library/react';
+import * as React from 'react';
+
+import { linodeFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
 
 describe('LinodeSettingsLabelPanel', () => {
   it('should render and the linode label', async () => {
@@ -15,7 +17,7 @@ describe('LinodeSettingsLabelPanel', () => {
       })
     );
 
-    const { getByText, getByLabelText } = renderWithTheme(
+    const { getByLabelText, getByText } = renderWithTheme(
       <LinodeSettingsLabelPanel linodeId={1} />
     );
 
@@ -44,7 +46,7 @@ describe('LinodeSettingsLabelPanel', () => {
     );
 
     const { getByLabelText } = renderWithTheme(
-      <LinodeSettingsLabelPanel linodeId={1} isReadOnly />
+      <LinodeSettingsLabelPanel isReadOnly linodeId={1} />
     );
 
     const input = getByLabelText('Label');

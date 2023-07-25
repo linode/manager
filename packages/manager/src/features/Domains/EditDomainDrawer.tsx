@@ -1,48 +1,50 @@
+import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import { useFormik } from 'formik';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
-import { useFormik } from 'formik';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
 import { useUpdateDomainMutation } from 'src/queries/domains';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import { transferHelperText as helperText } from './domainUtils';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   ExtendedIP,
   extendedIPToString,
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 
-interface Props {
-  open: boolean;
-  onClose: () => void;
+import { transferHelperText as helperText } from './domainUtils';
+
+interface EditDomainDrawerProps {
   domain: Domain | undefined;
+  onClose: () => void;
+  open: boolean;
 }
 
-export const EditDomainDrawer = (props: Props) => {
-  const { open, onClose, domain } = props;
+export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
+  const { domain, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const { mutateAsync: updateDomain, error, reset } = useUpdateDomainMutation();
+  const { error, mutateAsync: updateDomain, reset } = useUpdateDomainMutation();
 
   const formik = useFormik<UpdateDomainPayload>({
     enableReinitialize: true,
     initialValues: {
+      axfr_ips: domain?.axfr_ips,
       domain: domain?.domain,
+      master_ips: domain?.master_ips,
       soa_email: domain?.soa_email,
       tags: domain?.tags,
-      master_ips: domain?.master_ips,
-      axfr_ips: domain?.axfr_ips,
     },
     onSubmit: async (values) => {
       if (!domain) {
@@ -57,16 +59,16 @@ export const EditDomainDrawer = (props: Props) => {
           ? // Not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
             {
               domain: values.domain,
-              tags: values.tags,
-              soa_email: values.soa_email,
               id: domain.id,
+              soa_email: values.soa_email,
+              tags: values.tags,
             }
           : {
-              domain: values.domain,
-              tags: values.tags,
-              master_ips: primaryIPs,
-              id: domain.id,
               axfr_ips: finalTransferIPs,
+              domain: values.domain,
+              id: domain.id,
+              master_ips: primaryIPs,
+              tags: values.tags,
             };
 
       await updateDomain(data);
@@ -119,97 +121,97 @@ export const EditDomainDrawer = (props: Props) => {
   const disabled = !canEdit;
 
   return (
-    <Drawer title="Edit Domain" open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title="Edit Domain">
       {!canEdit && (
         <Notice error>You do not have permission to modify this Domain.</Notice>
       )}
       {errorMap.none && <Notice error>{errorMap.none}</Notice>}
       <form onSubmit={formik.handleSubmit}>
-        <RadioGroup aria-label="type" name="type" value={domain?.type} row>
+        <RadioGroup aria-label="type" name="type" row value={domain?.type}>
           <FormControlLabel
-            value="master"
-            label="Primary"
             control={<Radio />}
             data-qa-domain-radio="Primary"
             disabled
+            label="Primary"
+            value="master"
           />
           <FormControlLabel
-            value="slave"
-            label="Secondary"
             control={<Radio />}
             data-qa-domain-radio="Secondary"
             disabled
+            label="Secondary"
+            value="slave"
           />
         </RadioGroup>
         <TextField
-          value={formik.values.domain}
-          disabled={disabled}
-          label="Domain"
-          id="domain"
-          name="domain"
-          onChange={formik.handleChange}
-          errorText={errorMap.domain}
           data-qa-domain-name
           data-testid="domain-name-input"
+          disabled={disabled}
+          errorText={errorMap.domain}
+          id="domain"
+          label="Domain"
+          name="domain"
+          onChange={formik.handleChange}
+          value={formik.values.domain}
         />
         {isEditingPrimaryDomain && (
           <TextField
-            errorText={errorMap.soa_email}
-            value={formik.values.soa_email}
-            id="soa_email"
-            name="soa_email"
-            label="SOA Email Address"
-            onChange={formik.handleChange}
             data-qa-soa-email
             data-testid="soa-email-input"
             disabled={disabled}
+            errorText={errorMap.soa_email}
+            id="soa_email"
+            label="SOA Email Address"
+            name="soa_email"
+            onChange={formik.handleChange}
+            value={formik.values.soa_email}
           />
         )}
         {isEditingSecondaryDomain && (
           <React.Fragment>
             <MultipleIPInput
-              title="Primary Nameserver IP Address"
+              error={errorMap.master_ips}
               ips={formik.values?.master_ips?.map(stringToExtendedIP) ?? []}
               onChange={updatePrimaryIPAddress}
-              error={errorMap.master_ips}
+              title="Primary Nameserver IP Address"
             />
             {isEditingSecondaryDomain && (
               // Only when editing
               <MultipleIPInput
-                title="Domain Transfer IPs"
+                error={errorMap.axfr_ips}
                 helperText={helperText}
                 ips={formik.values?.axfr_ips?.map(stringToExtendedIP) ?? []}
                 onChange={handleTransferInput}
-                error={errorMap.axfr_ips}
+                title="Domain Transfer IPs"
               />
             )}
           </React.Fragment>
         )}
         <TagsInput
-          value={
-            formik.values?.tags?.map((tag) => ({ label: tag, value: tag })) ??
-            []
-          }
           onChange={(tags) =>
             formik.setFieldValue(
               'tags',
               tags.map((tag) => tag.value)
             )
           }
-          tagError={errorMap.tags}
+          value={
+            formik.values?.tags?.map((tag) => ({ label: tag, value: tag })) ??
+            []
+          }
           disabled={disabled}
+          tagError={errorMap.tags}
         />
         <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
             Cancel
           </Button>
           <Button
             buttonType="primary"
+            data-qa-submit
+            data-testid="create-domain-submit"
             disabled={disabled || !formik.dirty}
             loading={formik.isSubmitting}
             type="submit"
-            data-qa-submit
-            data-testid="create-domain-submit"
           >
             Save Changes
           </Button>

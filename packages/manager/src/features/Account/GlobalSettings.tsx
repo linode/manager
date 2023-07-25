@@ -2,24 +2,26 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { ApplicationState } from 'src/store';
-import { handleOpen } from 'src/store/backupDrawer';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import AutoBackups from './AutoBackups';
-import { EnableManaged } from './EnableManaged';
-import EnableObjectStorage from './EnableObjectStorage';
-import NetworkHelper from './NetworkHelper';
-import CloseAccountSetting from './CloseAccountSetting';
 import {
   useAccountSettings,
   useMutateAccountSettings,
 } from 'src/queries/accountSettings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { ApplicationState } from 'src/store';
+import { handleOpen } from 'src/store/backupDrawer';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import AutoBackups from './AutoBackups';
+import CloseAccountSetting from './CloseAccountSetting';
+import { EnableManaged } from './EnableManaged';
+import EnableObjectStorage from './EnableObjectStorage';
+import NetworkHelper from './NetworkHelper';
 
 interface Props {
   actions: {
@@ -34,8 +36,8 @@ const GlobalSettings = (props: Props) => {
 
   const {
     data: accountSettings,
-    isLoading: accountSettingsLoading,
     error: accountSettingsError,
+    isLoading: accountSettingsLoading,
   } = useAccountSettings();
 
   const { data: linodes } = useAllLinodesQuery();
@@ -95,15 +97,15 @@ const GlobalSettings = (props: Props) => {
   return (
     <div>
       <AutoBackups
-        isManagedCustomer={managed}
         backups_enabled={backups_enabled}
+        hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
+        isManagedCustomer={managed}
         onChange={toggleAutomaticBackups}
         openBackupsDrawer={openBackupsDrawer}
-        hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
       />
       <NetworkHelper
-        onChange={toggleNetworkHelper}
         networkHelperEnabled={network_helper}
+        onChange={toggleNetworkHelper}
       />
       <EnableObjectStorage object_storage={object_storage} />
       <EnableManaged isManaged={managed} />

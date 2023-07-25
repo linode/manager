@@ -2,11 +2,13 @@ import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
+
 import { profileFactory, sshKeyFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
 describe('UserSSHKeyPanel', () => {
@@ -88,8 +90,8 @@ describe('UserSSHKeyPanel', () => {
         rest.get('*/account/users', (req, res, ctx) => {
           const users = [
             accountUserFactory.build({
-              username: 'test-user',
               ssh_keys: ['ssh-key'],
+              username: 'test-user',
             }),
           ];
           return res(ctx.json(makeResourcePage(users)));
@@ -101,7 +103,7 @@ describe('UserSSHKeyPanel', () => {
         setAuthorizedUsers: jest.fn(),
       };
 
-      const { getByText, getByRole } = renderWithTheme(
+      const { getByRole, getByText } = renderWithTheme(
         <UserSSHKeyPanel {...props} />,
         { queryClient: new QueryClient() }
       );

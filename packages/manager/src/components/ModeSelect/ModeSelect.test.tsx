@@ -18,8 +18,8 @@ const modes = [
 const props = {
   classes,
   modes,
-  selected: 'edit',
   onChange: jest.fn(),
+  selected: 'edit',
 };
 
 const component = shallow(<ModeSelect {...props} />);

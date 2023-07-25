@@ -1,9 +1,10 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
@@ -16,15 +17,16 @@ import {
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+
 import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
 
 interface Props {
-  open: boolean;
   onClose: () => void;
+  open: boolean;
 }
 
 export const AddDeviceDrawer = (props: Props) => {
-  const { open, onClose } = props;
+  const { onClose, open } = props;
 
   const { id } = useParams<{ id: string }>();
 
@@ -44,9 +46,9 @@ export const AddDeviceDrawer = (props: Props) => {
       .map((device) => device.entity.id) ?? [];
 
   const {
-    mutateAsync: addDevice,
     error,
     isLoading,
+    mutateAsync: addDevice,
   } = useAddFirewallDeviceMutation(Number(id));
   const theme = useTheme();
 
@@ -56,7 +58,7 @@ export const AddDeviceDrawer = (props: Props) => {
 
   const handleSubmit = async () => {
     await Promise.all(
-      selectedLinodeIds.map((id) => addDevice({ type: 'linode', id }))
+      selectedLinodeIds.map((id) => addDevice({ id, type: 'linode' }))
     );
     onClose();
     setSelectedLinodeIds([]);
@@ -81,12 +83,12 @@ export const AddDeviceDrawer = (props: Props) => {
       errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
       return (
         <Notice
-          error
           sx={{
             fontFamily: theme.font.bold,
             fontSize: '1rem',
             lineHeight: '20px',
           }}
+          error
         >
           {errorMsg.substring(0, labelIndex)}
           <Link to={`/linodes/${id}`}>{label}</Link>
@@ -113,9 +115,9 @@ export const AddDeviceDrawer = (props: Props) => {
 
   return (
     <Drawer
-      title={`Add Linode to Firewall: ${firewall?.label}`}
-      open={open}
       onClose={onClose}
+      open={open}
+      title={`Add Linode to Firewall: ${firewall?.label}`}
     >
       <form
         onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
@@ -125,31 +127,31 @@ export const AddDeviceDrawer = (props: Props) => {
       >
         {errorMessage ? errorNotice(errorMessage) : null}
         <LinodeSelectV2
-          multiple
-          onSelectionChange={(linodes) =>
-            setSelectedLinodeIds(linodes.map((linode) => linode.id))
-          }
-          value={selectedLinodeIds}
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
             linodeSelectGuidance ? linodeSelectGuidance : ''
           }`}
+          onSelectionChange={(linodes) =>
+            setSelectedLinodeIds(linodes.map((linode) => linode.id))
+          }
           optionsFilter={(linode) =>
             ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id)
           }
-          noOptionsMessage="No Linodes available to add"
           disabled={currentDevicesLoading}
           loading={currentDevicesLoading}
+          multiple
+          noOptionsMessage="No Linodes available to add"
+          value={selectedLinodeIds}
         />
         <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
             Cancel
           </Button>
           <Button
             buttonType="primary"
-            onClick={handleSubmit}
+            data-qa-submit
             disabled={selectedLinodeIds.length === 0}
             loading={isLoading}
-            data-qa-submit
+            onClick={handleSubmit}
           >
             Add
           </Button>

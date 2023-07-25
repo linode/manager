@@ -1,71 +1,73 @@
 import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import Close from '@mui/icons-material/Close';
-import * as React from 'react';
-import { Button } from 'src/components/Button/Button';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
 import { pluralize } from 'src/utilities/pluralize';
+
 import { TransferState } from './transferReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  header: {
-    color: theme.color.green,
-    fontSize: '1.25rem',
-    lineHeight: '1.5rem',
-    fontWeight: 'bold',
-  },
   button: {
-    visibility: 'hidden',
-    textDecoration: 'none',
-    border: 'none',
     backgroundColor: 'inherit',
+    border: 'none',
     color: '#979797',
+    textDecoration: 'none',
     [theme.breakpoints.down('md')]: {
       visibility: 'visible',
     },
+    visibility: 'hidden',
   },
   close: {
     '& svg': { height: 11, width: 11 },
   },
+  entitySummaryText: {
+    color: theme.color.green,
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    marginTop: theme.spacing(3),
+  },
+  header: {
+    color: theme.color.green,
+    fontSize: '1.25rem',
+    fontWeight: 'bold',
+    lineHeight: '1.5rem',
+  },
+  root: {},
   row: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: `5px 0px`,
-    borderBottom: `solid 1px ${theme.color.border2}`,
     '&:first-of-type': {
       borderTop: `solid 1px ${theme.color.border2}`,
     },
     '&:hover > button': {
       visibility: 'visible',
     },
+    alignItems: 'center',
+    borderBottom: `solid 1px ${theme.color.border2}`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: `5px 0px`,
   },
   rowBox: {
+    marginTop: theme.spacing(3),
     maxHeight: '75vh',
     overflowY: 'auto',
-    marginTop: theme.spacing(3),
   },
   submitButton: {
+    marginLeft: 0,
+    marginRight: 0,
     marginTop: theme.spacing(3),
     width: '100%',
-    marginRight: 0,
-    marginLeft: 0,
-  },
-  entitySummaryText: {
-    marginTop: theme.spacing(3),
-    color: theme.color.green,
-    fontSize: '1rem',
-    fontWeight: 'bold',
   },
 }));
 
 interface Props {
-  isCreating: boolean;
-  selectedEntities: TransferState;
-  removeEntities: (type: string, entitiesToRemove: string[]) => void;
   handleSubmit: (payload: CreateTransferPayload) => void;
+  isCreating: boolean;
+  removeEntities: (type: string, entitiesToRemove: string[]) => void;
+  selectedEntities: TransferState;
 }
 
 export const generatePayload = (
@@ -102,7 +104,7 @@ export const TransferRow: React.FC<{
 });
 
 export const TransferCheckoutBar: React.FC<Props> = (props) => {
-  const { handleSubmit, isCreating, selectedEntities, removeEntities } = props;
+  const { handleSubmit, isCreating, removeEntities, selectedEntities } = props;
   const classes = useStyles();
   const onSubmit = () => {
     const payload = generatePayload(selectedEntities);
@@ -134,10 +136,10 @@ export const TransferCheckoutBar: React.FC<Props> = (props) => {
       )}
       <Button
         buttonType="primary"
+        className={classes.submitButton}
         disabled={totalSelectedLinodes === 0}
         loading={isCreating}
         onClick={onSubmit}
-        className={classes.submitButton}
       >
         Generate Token
       </Button>

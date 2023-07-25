@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface ActionHandlers {
@@ -6,9 +7,9 @@ export interface ActionHandlers {
 }
 
 export interface Props extends ActionHandlers {
+  deviceEntityID: string;
   deviceID: number;
   deviceLabel: string;
-  deviceEntityID: string;
   disabled: boolean;
 }
 
@@ -19,9 +20,9 @@ const FirewallDeviceActionMenu: React.FC<CombinedProps> = (props) => {
 
   return (
     <InlineMenuAction
-      key="Remove"
       actionText="Remove"
       disabled={disabled}
+      key="Remove"
       onClick={() => triggerRemoveDevice(deviceID, deviceLabel)}
     />
   );

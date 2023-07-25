@@ -1,9 +1,11 @@
 import * as React from 'react';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { makeStyles } from 'tss-react/mui';
-import { Typography } from 'src/components/Typography';
+
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Currency } from 'src/components/Currency';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { Typography } from 'src/components/Typography';
+
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { EnableBackupsDialog } from './EnableBackupsDialog';
 
@@ -24,7 +26,7 @@ const useStyles = makeStyles()(() => ({
 export const BackupsPlaceholder = (props: Props) => {
   const { classes } = useStyles();
 
-  const { backupsMonthlyPrice, linodeId, disabled } = props;
+  const { backupsMonthlyPrice, disabled, linodeId } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -50,25 +52,25 @@ export const BackupsPlaceholder = (props: Props) => {
     <>
       {disabled && <LinodePermissionsError />}
       <Placeholder
-        icon={VolumeIcon}
-        className={classes.empty}
-        isEntity
-        title="Backups"
-        renderAsSecondary
         buttonProps={[
           {
-            onClick: () => setDialogOpen(true),
             children: 'Enable Backups',
             disabled,
+            onClick: () => setDialogOpen(true),
           },
         ]}
+        className={classes.empty}
+        icon={VolumeIcon}
+        isEntity
+        renderAsSecondary
+        title="Backups"
       >
         {backupPlaceholderText}
       </Placeholder>
       <EnableBackupsDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
         linodeId={linodeId}
+        onClose={() => setDialogOpen(false)}
+        open={dialogOpen}
       />
     </>
   );

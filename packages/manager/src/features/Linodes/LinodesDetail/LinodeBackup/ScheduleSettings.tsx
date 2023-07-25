@@ -1,47 +1,48 @@
+import { Theme } from '@mui/material/styles';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import Paper from 'src/components/core/Paper';
-import { Typography } from 'src/components/Typography';
-import getUserTimezone from 'src/utilities/getUserTimezone';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
-import { useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
-import { useProfile } from 'src/queries/profile';
-import { initWindows } from 'src/utilities/initWindows';
+import { Paper } from 'src/components/Paper';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
+import { useProfile } from 'src/queries/profile';
+import getUserTimezone from 'src/utilities/getUserTimezone';
+import { initWindows } from 'src/utilities/initWindows';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  chooseDay: {
+    '& .react-select__menu-list': {
+      maxHeight: 'none',
+    },
+    marginRight: theme.spacing(2),
+    minWidth: 150,
+  },
   scheduleAction: {
-    padding: 0,
     '& button': {
       marginLeft: 0,
       marginTop: theme.spacing(2),
     },
-  },
-  chooseDay: {
-    marginRight: theme.spacing(2),
-    minWidth: 150,
-    '& .react-select__menu-list': {
-      maxHeight: 'none',
-    },
+    padding: 0,
   },
 }));
 
 interface Props {
-  linodeId: number;
   isReadOnly: boolean;
+  linodeId: number;
 }
 
-export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
+export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -49,9 +50,9 @@ export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
-    mutateAsync: updateLinode,
     error: updateLinodeError,
     isLoading: isUpdating,
+    mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
   const settingsForm = useFormik({
@@ -96,10 +97,10 @@ export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
   return (
     <Paper>
       <form onSubmit={settingsForm.handleSubmit}>
-        <Typography variant="h2" data-qa-settings-heading>
+        <Typography data-qa-settings-heading variant="h2">
           Settings
         </Typography>
-        <Typography variant="body1" data-qa-settings-desc marginTop={1}>
+        <Typography data-qa-settings-desc marginTop={1} variant="body1">
           Configure when automatic backups are initiated. The Linode Backup
           Service will generate a backup between the selected hours every day,
           and will overwrite the previous daily backup. The selected day is when
@@ -107,7 +108,7 @@ export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
           are saved.
         </Typography>
         {Boolean(updateLinodeError) && (
-          <Notice error spacingTop={16} spacingBottom={0}>
+          <Notice error spacingBottom={0} spacingTop={16}>
             {updateLinodeError?.[0].reason}
           </Notice>
         )}
@@ -118,39 +119,39 @@ export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
                 'data-qa-weekday-select': true,
               },
             }}
-            options={dayOptions}
-            onChange={(item) => settingsForm.setFieldValue('day', item.value)}
             value={dayOptions.find(
               (item) => item.value === settingsForm.values.day
             )}
             disabled={isReadOnly}
-            label="Day of Week"
-            placeholder="Choose a day"
             isClearable={false}
+            label="Day of Week"
             name="Day of Week"
             noMarginTop
+            onChange={(item) => settingsForm.setFieldValue('day', item.value)}
+            options={dayOptions}
+            placeholder="Choose a day"
           />
         </FormControl>
         <FormControl>
           <Select
+            onChange={(item) =>
+              settingsForm.setFieldValue('window', item.value)
+            }
             textFieldProps={{
               dataAttrs: {
                 'data-qa-time-select': true,
               },
             }}
-            options={windowOptions}
-            onChange={(item) =>
-              settingsForm.setFieldValue('window', item.value)
-            }
             value={windowOptions.find(
               (item) => item.value === settingsForm.values.window
             )}
-            label="Time of Day"
             disabled={isReadOnly}
-            placeholder="Choose a time"
             isClearable={false}
+            label="Time of Day"
             name="Time of Day"
             noMarginTop
+            options={windowOptions}
+            placeholder="Choose a time"
           />
           <FormHelperText sx={{ marginLeft: 0 }}>
             Time displayed in{' '}
@@ -160,10 +161,10 @@ export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
         <ActionsPanel className={classes.scheduleAction}>
           <Button
             buttonType="primary"
-            type="submit"
+            data-qa-schedule
             disabled={isReadOnly || !settingsForm.dirty}
             loading={isUpdating}
-            data-qa-schedule
+            type="submit"
           >
             Save Schedule
           </Button>

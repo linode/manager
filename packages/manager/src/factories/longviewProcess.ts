@@ -1,4 +1,5 @@
 import * as Factory from 'factory.ts';
+
 import {
   LongviewProcesses,
   ProcessStats,
@@ -12,9 +13,9 @@ const mockStats = [
 
 const mockProcess = Factory.Sync.makeFactory<ProcessStats>({
   count: mockStats,
+  cpu: mockStats,
   ioreadkbytes: mockStats,
   iowritekbytes: mockStats,
-  cpu: mockStats,
   mem: mockStats,
 });
 

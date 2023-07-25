@@ -1,4 +1,5 @@
 import { grantsFactory } from 'src/factories/grants';
+
 import { getEntityIdsByPermission } from './grants';
 
 const grants = grantsFactory.build({

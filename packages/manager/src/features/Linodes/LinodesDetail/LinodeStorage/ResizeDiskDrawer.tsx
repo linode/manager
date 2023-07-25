@@ -1,29 +1,31 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
+import { ResizeLinodeDiskSchema } from '@linode/validation';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Code } from 'src/components/Code/Code';
-import FormHelperText from 'src/components/core/FormHelperText';
-import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { sendEvent } from 'src/utilities/analytics';
-import { useSnackbar } from 'notistack';
-import { calculateDiskFree } from './CreateDiskDrawer';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputAdornment from 'src/components/core/InputAdornment';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskResizeMutation,
 } from 'src/queries/linodes/disks';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { ResizeLinodeDiskSchema } from '@linode/validation';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { sendEvent } from 'src/utilities/analytics';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+
+import { calculateDiskFree } from './CreateDiskDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formHelperTextLink: {
@@ -34,21 +36,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   disk: Disk | undefined;
-  open: boolean;
-  onClose: () => void;
   linodeId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 const handleLinkClick = (label: string) => {
   sendEvent({
-    category: 'Disk Resize Flow',
     action: `Click:link`,
+    category: 'Disk Resize Flow',
     label,
   });
 };
 
 export const ResizeDiskDrawer = (props: Props) => {
-  const { disk, open, onClose, linodeId } = props;
+  const { disk, linodeId, onClose, open } = props;
 
   const classes = useStyles();
 
@@ -66,12 +68,10 @@ export const ResizeDiskDrawer = (props: Props) => {
   const maximumSize = calculateDiskFree(linode, disks, disk?.id ?? 0);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       size: disk?.size ?? maximumSize,
     },
-    validationSchema: ResizeLinodeDiskSchema,
-    validateOnChange: true,
-    enableReinitialize: true,
     async onSubmit(values, helpers) {
       try {
         await resizeDisk(values);
@@ -82,6 +82,8 @@ export const ResizeDiskDrawer = (props: Props) => {
         handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
       }
     },
+    validateOnChange: true,
+    validationSchema: ResizeLinodeDiskSchema,
   });
 
   React.useEffect(() => {
@@ -92,13 +94,13 @@ export const ResizeDiskDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer title={`Resize ${disk?.label}`} open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title={`Resize ${disk?.label}`}>
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
           <Notice
             error
-            spacingBottom={8}
             errorGroup="linode-disk-drawer"
+            spacingBottom={8}
             text={formik.status}
           />
         )}
@@ -106,31 +108,31 @@ export const ResizeDiskDrawer = (props: Props) => {
           The size of a Linode Compute Instance&rsquo;s disk can be increased or
           decreased as needed.
           <Link
-            to={
-              'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
-            }
             onClick={() => {
               handleLinkClick('Learn more about restrictions to keep in mind.');
             }}
+            to={
+              'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
+            }
             className={classes.formHelperTextLink}
           >
             Learn more about restrictions to keep in mind.
           </Link>
         </FormHelperText>
         <TextField
-          required
-          aria-required
-          label="Size"
-          type="number"
-          name="size"
-          value={formik.values.size}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          errorText={formik.errors.size}
           InputProps={{
             endAdornment: <InputAdornment position="end">MB</InputAdornment>,
           }}
+          aria-required
           data-qa-disk-size
+          errorText={formik.errors.size}
+          label="Size"
+          name="size"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          required
+          type="number"
+          value={formik.values.size}
         />
         <FormHelperText style={{ marginTop: 8 }}>
           Maximum size: {maximumSize} MB
@@ -144,14 +146,14 @@ export const ResizeDiskDrawer = (props: Props) => {
           />
         </FormHelperText>
         <ActionsPanel>
-          <Button onClick={onClose} buttonType="secondary" className="cancel">
+          <Button buttonType="secondary" className="cancel" onClick={onClose}>
             Cancel
           </Button>
           <Button
-            type="submit"
             buttonType="primary"
-            loading={formik.isSubmitting}
             data-testid="submit-disk-form"
+            loading={formik.isSubmitting}
+            type="submit"
           >
             Resize
           </Button>
@@ -166,19 +168,19 @@ const MaxSizeTooltipText = (
     Run the command <Code>df -h</Code> within the Linode&rsquo;s command line
     (through{' '}
     <Link
-      to="https://www.linode.com/docs/guides/connect-to-server-over-ssh/"
       onClick={() => {
         handleLinkClick('SSH');
       }}
+      to="https://www.linode.com/docs/guides/connect-to-server-over-ssh/"
     >
       SSH
     </Link>{' '}
     or{' '}
     <Link
-      to="https://www.linode.com/docs/products/compute/compute-instances/guides/lish/"
       onClick={() => {
         handleLinkClick('Lish');
       }}
+      to="https://www.linode.com/docs/products/compute/compute-instances/guides/lish/"
     >
       Lish
     </Link>

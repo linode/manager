@@ -1,4 +1,5 @@
 import { gdprComplianceNotification, notificationFactory } from 'src/factories';
+
 import {
   adjustSeverity,
   isEUModelContractNotification,
@@ -6,33 +7,33 @@ import {
 
 // Migration types are considered as types of maintenance notifications.
 const migrationScheduled = notificationFactory.build({
-  type: 'migration_scheduled',
-  entity: { id: 0, type: 'linode', label: 'linode-0' },
+  entity: { id: 0, label: 'linode-0', type: 'linode' },
   severity: 'major',
+  type: 'migration_scheduled',
 });
 
 const migrationPending = notificationFactory.build({
-  type: 'migration_pending',
-  entity: { id: 1, type: 'linode', label: 'linode-1' },
+  entity: { id: 1, label: 'linode-1', type: 'linode' },
   severity: 'major',
+  type: 'migration_pending',
 });
 
 const maintenanceNotice = notificationFactory.build();
 const maintenanceWithLowSeverity = notificationFactory.build({
-  type: 'maintenance',
-  entity: { id: 4, type: 'linode', label: 'linode-4' },
+  entity: { id: 4, label: 'linode-4', type: 'linode' },
   severity: 'minor',
+  type: 'maintenance',
 });
 
 const emailBounce = notificationFactory.build({
-  type: 'billing_email_bounce',
-  entity: null,
-  when: null,
-  message: 'We are unable to send emails to your billing email address!',
-  label: 'We are unable to send emails to your billing email address!',
-  severity: 'major',
-  until: null,
   body: null,
+  entity: null,
+  label: 'We are unable to send emails to your billing email address!',
+  message: 'We are unable to send emails to your billing email address!',
+  severity: 'major',
+  type: 'billing_email_bounce',
+  until: null,
+  when: null,
 });
 
 describe('Notification Severity', () => {

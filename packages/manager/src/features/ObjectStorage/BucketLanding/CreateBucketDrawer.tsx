@@ -1,28 +1,30 @@
+import { styled } from '@mui/material/styles';
+import { useFormik } from 'formik';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import ClusterSelect from './ClusterSelect';
-import Drawer from 'src/components/Drawer';
-import EnableObjectStorageModal from '../EnableObjectStorageModal';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { TextField } from 'src/components/TextField';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { useFormik } from 'formik';
-import { useProfile } from 'src/queries/profile';
+import { TextField } from 'src/components/TextField';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { useAccountSettings } from 'src/queries/accountSettings';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useProfile } from 'src/queries/profile';
 import { sendCreateBucketEvent } from 'src/utilities/analytics';
+import { getErrorMap } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
+
+import EnableObjectStorageModal from '../EnableObjectStorageModal';
+import ClusterSelect from './ClusterSelect';
 
 interface Props {
   isOpen: boolean;
@@ -36,9 +38,9 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: clusters } = useObjectStorageClusters();
   const { data: buckets } = useObjectStorageBuckets(clusters);
   const {
-    mutateAsync: createBucket,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createBucket,
     reset,
   } = useCreateBucketMutation();
   const { data: agreements } = useAccountAgreements();
@@ -50,8 +52,13 @@ export const CreateBucketDrawer = (props: Props) => {
 
   const formik = useFormik({
     initialValues: {
-      label: '',
       cluster: '',
+      label: '',
+    },
+    async onSubmit(values) {
+      await createBucket(values);
+      sendCreateBucketEvent(values.cluster);
+      onClose();
     },
     validate(values) {
       reset();
@@ -65,11 +72,6 @@ export const CreateBucketDrawer = (props: Props) => {
         };
       }
       return {};
-    },
-    async onSubmit(values) {
-      await createBucket(values);
-      sendCreateBucketEvent(values.cluster);
-      onClose();
     },
   });
 
@@ -102,38 +104,38 @@ export const CreateBucketDrawer = (props: Props) => {
       <form onSubmit={onSubmit}>
         {isRestrictedUser && (
           <Notice
+            data-qa-permissions-notice
             error
             important
             text="You don't have permissions to create a Bucket. Please contact an account administrator for details."
-            data-qa-permissions-notice
           />
         )}
         {Boolean(errorMap.none) && <Notice error text={errorMap.none} />}
         <TextField
           data-qa-cluster-label
+          data-testid="label"
+          disabled={isRestrictedUser}
+          errorText={errorMap.label ?? formik.errors.label}
           label="Label"
           name="label"
-          errorText={errorMap.label ?? formik.errors.label}
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           value={formik.values.label}
-          disabled={isRestrictedUser}
-          data-testid="label"
         />
         <ClusterSelect
           data-qa-cluster-select
+          disabled={isRestrictedUser}
           error={errorMap.cluster}
           onBlur={formik.handleBlur}
           onChange={(value) => formik.setFieldValue('cluster', value)}
           selectedCluster={formik.values.cluster}
-          disabled={isRestrictedUser}
         />
         {showAgreement ? (
           <StyledEUAgreementCheckbox
-            checked={Boolean(agreements?.eu_model)}
             onChange={(e) =>
               updateAccountAgreements({ eu_model: e.target.checked })
             }
+            checked={Boolean(agreements?.eu_model)}
           />
         ) : null}
         <ActionsPanel>
@@ -142,17 +144,17 @@ export const CreateBucketDrawer = (props: Props) => {
           </Button>
           <Button
             buttonType="primary"
-            type="submit"
-            loading={isLoading}
             data-testid="create-bucket-button"
+            loading={isLoading}
+            type="submit"
           >
             Create Bucket
           </Button>
         </ActionsPanel>
         <EnableObjectStorageModal
-          open={isEnableObjDialogOpen}
-          onClose={() => setIsEnableObjDialogOpen(false)}
           handleSubmit={formik.handleSubmit}
+          onClose={() => setIsEnableObjDialogOpen(false)}
+          open={isEnableObjDialogOpen}
         />
       </form>
     </Drawer>
@@ -162,6 +164,6 @@ export const CreateBucketDrawer = (props: Props) => {
 const StyledEUAgreementCheckbox = styled(EUAgreementCheckbox, {
   label: 'StyledEUAgreementCheckbox',
 })(({ theme }) => ({
-  marginTop: theme.spacing(3),
   marginButton: theme.spacing(3),
+  marginTop: theme.spacing(3),
 }));

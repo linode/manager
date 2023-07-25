@@ -17,7 +17,6 @@ const TabList = ({
 export { TabList };
 
 const StyledReachTabList = styled(ReachTabList)(({ theme }) => ({
-  color: theme.color.tableHeaderText,
   '&[data-reach-tab-list]': {
     background: 'none !important',
     boxShadow: `inset 0 -1px 0 ${
@@ -29,4 +28,5 @@ const StyledReachTabList = styled(ReachTabList)(({ theme }) => ({
       padding: 1,
     },
   },
+  color: theme.color.tableHeaderText,
 }));

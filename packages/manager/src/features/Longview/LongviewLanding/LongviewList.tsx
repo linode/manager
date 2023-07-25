@@ -1,27 +1,29 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { CircleProgress } from 'src/components/CircleProgress';
+
 import { Box } from 'src/components/Box';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Typography } from 'src/components/Typography';
+import { Paper } from 'src/components/Paper';
 import { Props as LVProps } from 'src/containers/longview.container';
+
 import LongviewRows from './LongviewListRows';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  empty: {
-    height: '20em',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   button: {
     ...theme.applyLinkStyles,
+  },
+  empty: {
+    alignItems: 'center',
+    display: 'flex',
+    height: '20em',
+    justifyContent: 'center',
   },
   emptyText: {
     fontSize: '1.1em',
@@ -30,17 +32,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type LongviewProps = Omit<
   LVProps,
-  | 'longviewClientsData'
-  | 'getLongviewClients'
   | 'createLongviewClient'
   | 'deleteLongviewClient'
+  | 'getLongviewClients'
+  | 'longviewClientsData'
   | 'updateLongviewClient'
 >;
 
 interface Props {
-  loading: boolean;
-  filteredData: LongviewClient[];
   createLongviewClient: () => void;
+  filteredData: LongviewClient[];
+  loading: boolean;
   openPackageDrawer: (id: number, label: string) => void;
   triggerDeleteLongviewClient: (
     longviewClientID: number,
@@ -54,8 +56,8 @@ type CombinedProps = Props & LongviewProps;
 const LongviewList: React.FC<CombinedProps> = (props) => {
   const {
     createLongviewClient,
-    loading,
     filteredData,
+    loading,
     longviewClientsError,
     longviewClientsLastUpdated,
     longviewClientsLoading,
@@ -96,8 +98,8 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
   /** Empty state */
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
     return (
-      <Paper data-testid="no-client-list" className={classes.empty}>
-        <Typography variant="body1" className={classes.emptyText}>
+      <Paper className={classes.empty} data-testid="no-client-list">
+        <Typography className={classes.emptyText} variant="body1">
           {userCanCreateLongviewClient ? (
             <React.Fragment>
               You have no Longview clients configured.{' '}
@@ -120,8 +122,8 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
     // since displaying a large number of client rows has performance impacts.
     <Paginate data={filteredData} pageSize={pageSize}>
       {({
-        data: paginatedAndOrderedData,
         count,
+        data: paginatedAndOrderedData,
         handlePageChange,
         handlePageSizeChange,
         page,
@@ -131,19 +133,19 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
           <Box flexDirection="column">
             <LongviewRows
               longviewClientsData={paginatedAndOrderedData}
-              triggerDeleteLongviewClient={triggerDeleteLongviewClient}
               openPackageDrawer={openPackageDrawer}
+              triggerDeleteLongviewClient={triggerDeleteLongviewClient}
             />
           </Box>
           {filteredData.length > pageSize ? (
             <PaginationFooter
               count={count}
+              eventCategory="Longview Table"
+              fixedSize
               handlePageChange={handlePageChange}
               handleSizeChange={handlePageSizeChange}
               page={page}
               pageSize={pageSize}
-              eventCategory="Longview Table"
-              fixedSize
             />
           ) : null}
         </>

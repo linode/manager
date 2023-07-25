@@ -1,84 +1,80 @@
-import * as React from 'react';
-import OpenInNew from '@mui/icons-material/OpenInNew';
-import Arrow from 'src/assets/icons/diagonalArrow.svg';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import { sanitizeUrl } from '@braintree/sanitize-url';
+import OpenInNew from '@mui/icons-material/OpenInNew';
+import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import Arrow from 'src/assets/icons/diagonalArrow.svg';
 
 const useStyles = makeStyles<void, 'icon'>()(
   (theme: Theme, _params, classes) => ({
-    root: {
-      color:
-        theme.name === 'dark' ? theme.textColors.linkActiveLight : undefined,
-      display: 'inline-flex',
-      alignItems: 'baseline',
-      '&:hover': {
-        [`& .${classes.icon}`]: {
-          opacity: 1,
-        },
-      },
-    },
-    icon: {
-      color: theme.palette.primary.main,
-      position: 'relative',
-      left: theme.spacing(1),
-      opacity: 0,
-      width: 14,
-      height: 14,
-    },
     absoluteIcon: {
-      display: 'inline',
-      position: 'relative',
-      paddingRight: 26,
       [`& .${classes.icon}`]: {
+        bottom: 2,
+        left: 'initial',
+        opacity: 0,
         position: 'absolute',
         right: 0,
-        bottom: 2,
-        opacity: 0,
-        left: 'initial',
       },
+      display: 'inline',
+      paddingRight: 26,
+      position: 'relative',
+    },
+    black: {
+      color: theme.palette.text.primary,
     },
     fixedIcon: {
       display: 'inline-block',
       fontSize: '0.8em',
     },
-    black: {
-      color: theme.palette.text.primary,
+    icon: {
+      color: theme.palette.primary.main,
+      height: 14,
+      left: theme.spacing(1),
+      opacity: 0,
+      position: 'relative',
+      width: 14,
+    },
+    root: {
+      '&:hover': {
+        [`& .${classes.icon}`]: {
+          opacity: 1,
+        },
+      },
+      alignItems: 'baseline',
+      color:
+        theme.name === 'dark' ? theme.textColors.linkActiveLight : undefined,
+      display: 'inline-flex',
     },
   })
 );
 
 interface Props {
-  link: string;
-  text: string;
-  className?: string;
   absoluteIcon?: boolean;
   black?: boolean;
+  className?: string;
   fixedIcon?: boolean;
   hideIcon?: boolean;
+  link: string;
   onClick?: () => void;
+  text: string;
 }
 
 const ExternalLink = (props: Props) => {
   const { classes, cx } = useStyles();
   const {
-    link,
-    text,
-    className,
     absoluteIcon,
     black,
+    className,
     fixedIcon,
     hideIcon,
+    link,
     onClick,
+    text,
   } = props;
 
   return (
     <a
-      onClick={onClick}
-      target="_blank"
-      aria-describedby="external-site"
-      rel="noopener noreferrer"
-      href={sanitizeUrl(link)}
       className={cx(
         classes.root,
         {
@@ -87,7 +83,12 @@ const ExternalLink = (props: Props) => {
         },
         className
       )}
+      aria-describedby="external-site"
       data-qa-external-link
+      href={sanitizeUrl(link)}
+      onClick={onClick}
+      rel="noopener noreferrer"
+      target="_blank"
     >
       {text}
       {!hideIcon &&

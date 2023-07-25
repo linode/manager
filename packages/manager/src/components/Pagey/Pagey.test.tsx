@@ -1,13 +1,14 @@
-import { shallow } from 'enzyme';
 import { ResourcePage } from '@linode/api-v4/lib/types';
+import { shallow } from 'enzyme';
 import * as React from 'react';
+
 import paginate from './Pagey';
 
 const mockData: ResourcePage<any> = {
+  data: [],
   page: 1,
   pages: 1,
   results: 0,
-  data: [],
 };
 
 const mockFn = jest.fn(() => Promise.resolve(mockData));
@@ -30,10 +31,10 @@ describe('Paginator 2: Pagement Day', () => {
       handlePageChange,
       handlePageSizeChange,
       loading,
+      onDelete,
       page,
       pageSize,
       request,
-      onDelete,
     } = wrapper.props();
 
     it('should provide a count prop', () => {
@@ -145,7 +146,7 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     it('should result in the request being called with updated params', () => {
-      const { wrapper, mockRequest } = setup(
+      const { mockRequest, wrapper } = setup(
         jest.fn(() => Promise.resolve(mockData))
       );
 
@@ -174,7 +175,7 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     it('should result in the request being called with updated params', () => {
-      const { wrapper, mockRequest } = setup(
+      const { mockRequest, wrapper } = setup(
         jest.fn(() => Promise.resolve(mockData))
       );
 
@@ -191,9 +192,9 @@ describe('Paginator 2: Pagement Day', () => {
   describe('when requesting data', () => {
     describe('and the promise resolves', () => {
       const mockDataWithData = {
+        data: [1, 2, 3, 4],
         page: 2,
         pages: 2,
-        data: [1, 2, 3, 4],
         results: 4,
       };
 
@@ -239,7 +240,7 @@ describe('Paginator 2: Pagement Day', () => {
   });
 
   describe('sorting', () => {
-    const { wrapper, mockRequest } = setup();
+    const { mockRequest, wrapper } = setup();
     const handleOrderChange = wrapper.prop('handleOrderChange');
 
     beforeEach(() => {
@@ -257,7 +258,7 @@ describe('Paginator 2: Pagement Day', () => {
       expect(mockRequest).toHaveBeenCalledWith(
         {},
         { page: 1, page_size: 25 },
-        { '+order_by': 'label', '+order': 'asc' }
+        { '+order': 'asc', '+order_by': 'label' }
       );
     });
     it('should send request with sort by descending', () => {
@@ -266,7 +267,7 @@ describe('Paginator 2: Pagement Day', () => {
       expect(mockRequest).toHaveBeenCalledWith(
         {},
         { page: 1, page_size: 25 },
-        { '+order_by': 'label', '+order': 'desc' }
+        { '+order': 'desc', '+order_by': 'label' }
       );
     });
   });

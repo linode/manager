@@ -1,41 +1,43 @@
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Hidden } from 'src/components/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
 import { useFirewallsQuery } from 'src/queries/firewalls';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import CreateFirewallDrawer from './CreateFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import FirewallDialog, { Mode } from './FirewallDialog';
 import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
 import FirewallRow from './FirewallRow';
-import { usePagination } from 'src/hooks/usePagination';
-import { useOrder } from 'src/hooks/useOrder';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { Table } from 'src/components/Table';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { TableCell } from 'src/components/TableCell';
-import { TableBody } from 'src/components/TableBody';
-import { Hidden } from 'src/components/Hidden';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 
 const preferenceKey = 'firewalls';
 
 const FirewallLanding = () => {
   const pagination = usePagination(1, preferenceKey);
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'asc',
+      orderBy: 'label',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
   const params = {
@@ -43,7 +45,7 @@ const FirewallLanding = () => {
     page_size: pagination.pageSize,
   };
 
-  const { data, isLoading, error } = useFirewallsQuery(params, filter);
+  const { data, error, isLoading } = useFirewallsQuery(params, filter);
 
   const [
     isCreateFirewallDrawerOpen,
@@ -101,9 +103,9 @@ const FirewallLanding = () => {
   }, [setIsCreateFirewallDrawerOpen, replace]);
 
   const handlers: FirewallHandlers = {
-    triggerEnableFirewall: handleOpenEnableFirewallModal,
-    triggerDisableFirewall: handleOpenDisableFirewallModal,
     triggerDeleteFirewall: handleOpenDeleteFirewallModal,
+    triggerDisableFirewall: handleOpenDisableFirewallModal,
+    triggerEnableFirewall: handleOpenEnableFirewallModal,
   };
 
   if (isLoading) {
@@ -115,8 +117,8 @@ const FirewallLanding = () => {
       <>
         <FirewallLandingEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
         <CreateFirewallDrawer
-          open={isCreateFirewallDrawerOpen}
           onClose={() => setIsCreateFirewallDrawerOpen(false)}
+          open={isCreateFirewallDrawerOpen}
         />
       </>
     );
@@ -135,11 +137,11 @@ const FirewallLanding = () => {
   return (
     <React.Fragment>
       <LandingHeader
-        title="Firewalls"
-        entity="Firewall"
         breadcrumbProps={{ pathname: '/firewalls' }}
-        onButtonClick={onOpenCreateDrawer}
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
+        entity="Firewall"
+        onButtonClick={onOpenCreateDrawer}
+        title="Firewalls"
       />
       <Table>
         <TableHead>
@@ -147,16 +149,16 @@ const FirewallLanding = () => {
             <TableSortCell
               active={orderBy === 'label'}
               direction={order}
-              label="label"
               handleClick={handleOrderChange}
+              label="label"
             >
               Label
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
-              label="status"
               handleClick={handleOrderChange}
+              label="status"
             >
               Status
             </TableSortCell>
@@ -175,22 +177,22 @@ const FirewallLanding = () => {
       </Table>
       <PaginationFooter
         count={data?.results ?? 0}
+        eventCategory="Firewalls Table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
-        eventCategory="Firewalls Table"
       />
       <CreateFirewallDrawer
-        open={isCreateFirewallDrawerOpen}
         onClose={closeDrawer}
+        open={isCreateFirewallDrawerOpen}
       />
       <FirewallDialog
-        open={isModalOpen}
         mode={dialogMode}
+        onClose={() => setIsModalOpen(false)}
+        open={isModalOpen}
         selectedFirewallID={selectedFirewallId}
         selectedFirewallLabel={selectedFirewall?.label ?? ''}
-        onClose={() => setIsModalOpen(false)}
       />
     </React.Fragment>
   );

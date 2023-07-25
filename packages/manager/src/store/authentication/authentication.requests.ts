@@ -1,7 +1,8 @@
 import { LOGIN_ROOT } from 'src/constants';
-import { revokeToken, RevokeTokenSuccess } from 'src/session';
+import { RevokeTokenSuccess, revokeToken } from 'src/session';
 import { ThunkActionCreator } from 'src/store/types';
 import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
+
 import { handleLogout as _handleLogout } from './authentication.actions';
 
 /**

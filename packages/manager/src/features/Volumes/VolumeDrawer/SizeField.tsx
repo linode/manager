@@ -1,9 +1,10 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+
+import { TextField } from 'src/components/TextField';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TextField } from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -15,15 +16,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  name: string;
-  value: number;
-  onBlur: (e: any) => void;
-  onChange: (e: React.ChangeEvent<any>) => void;
   disabled?: boolean;
   error?: string;
   isFromLinode?: boolean;
+  name: string;
+  onBlur: (e: any) => void;
+  onChange: (e: React.ChangeEvent<any>) => void;
   resize?: number;
   textFieldStyles?: string;
+  value: number;
 }
 
 type CombinedProps = Props;
@@ -32,14 +33,14 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
-    name,
-    value,
     error,
+    isFromLinode,
+    name,
     onBlur,
     onChange,
-    isFromLinode,
     resize,
     textFieldStyles,
+    value,
     ...rest
   } = props;
 
@@ -52,20 +53,20 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <TextField
-        className={textFieldStyles}
-        label="Size"
-        name={name}
-        value={value}
-        errorText={error}
-        helperText={helperText}
         InputProps={{
           endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
         }}
+        className={textFieldStyles}
+        data-qa-size
+        errorText={error}
+        helperText={helperText}
+        label="Size"
+        name={name}
         onBlur={onBlur}
         onChange={onChange}
         required
         type="number"
-        data-qa-size
+        value={value}
         {...rest}
       />
       <FormHelperText>

@@ -1,14 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { queryKey } from './linodes';
 import {
   APIError,
+  LinodeBackupsResponse,
   cancelBackups,
   enableBackups,
   getLinodeBackups,
-  LinodeBackupsResponse,
   restoreBackup,
   takeSnapshot,
 } from '@linode/api-v4';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+
+import { queryKey } from './linodes';
 
 export const useLinodeBackupsQuery = (id: number, enabled = true) => {
   return useQuery<LinodeBackupsResponse, APIError[]>(
@@ -47,12 +48,12 @@ export const useLinodeBackupRestoreMutation = () => {
     {},
     APIError[],
     {
-      linodeId: number;
       backupId: number;
-      targetLinodeId: number;
+      linodeId: number;
       overwrite: boolean;
+      targetLinodeId: number;
     }
-  >(({ linodeId, backupId, targetLinodeId, overwrite }) =>
+  >(({ backupId, linodeId, overwrite, targetLinodeId }) =>
     restoreBackup(linodeId, backupId, targetLinodeId, overwrite)
   );
 };

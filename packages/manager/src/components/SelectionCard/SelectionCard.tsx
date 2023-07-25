@@ -1,9 +1,11 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Tooltip } from 'src/components/Tooltip';
-import { CardBase } from './CardBase';
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
+import * as React from 'react';
+
+import { Tooltip } from 'src/components/Tooltip';
+
+import { CardBase } from './CardBase';
 
 export interface SelectionCardProps {
   /**
@@ -147,14 +149,14 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
       data-qa-selection-card
       disabled={disabled}
       id={id}
+      lg={4}
       onClick={handleClick}
       onKeyPress={handleKeyPress}
+      sm={6}
       sx={sxGrid}
       tabIndex={0}
-      xs={12}
-      sm={6}
-      lg={4}
       xl={3}
+      xs={12}
     >
       {content}
     </StyledGrid>
@@ -162,7 +164,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
 
   if (tooltip) {
     return (
-      <Tooltip title={tooltip} placement="top">
+      <Tooltip placement="top" title={tooltip}>
         {cardGrid}
       </Tooltip>
     );
@@ -174,20 +176,20 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
 const StyledGrid = styled(Grid, {
   label: 'SelectionCardGrid',
 })<Partial<SelectionCardProps>>(({ ...props }) => ({
-  '&:focus': {
-    outline: '1px dotted #999',
-  },
   '& [class^="fl-"]': {
     transition: 'color 225ms ease-in-out',
+  },
+  '&:focus': {
+    outline: '1px dotted #999',
   },
   ...(props.onClick &&
     !props.disabled && {
       cursor: 'pointer',
     }),
   ...(props.disabled && {
-    cursor: 'not-allowed',
     '& > div': {
       opacity: 0.4,
     },
+    cursor: 'not-allowed',
   }),
 }));

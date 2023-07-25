@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+
 import { ApplicationState } from 'src/store';
-import { deriveDefaultLabel, LabelArgTypes } from './deriveDefaultLabel';
+
+import { LabelArgTypes, deriveDefaultLabel } from './deriveDefaultLabel';
 
 export interface LabelProps {
   customLabel: string;
+  getLabel: (...args: any[]) => string;
   updateCustomLabel: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => void;
-  getLabel: (...args: any[]) => string;
 }
 
 export interface LabelState {
@@ -26,20 +28,17 @@ export interface LabelState {
 //
 export const withLabelGenerator = (Component: React.ComponentType<any>) => {
   class WrappedComponent extends React.PureComponent<any, LabelState> {
-    state: LabelState = {
-      customLabel: '',
-      hasUserTypedCustomLabel: false,
-    };
-
-    updateCustomLabel = (e: any) => {
-      this.setState({
-        customLabel: e.target.value,
-        hasUserTypedCustomLabel: true,
+    render() {
+      return React.createElement(Component, {
+        getLabel: this.getLabel,
+        updateCustomLabel: this.updateCustomLabel,
+        ...this.props,
+        ...this.state,
       });
-    };
+    }
 
     getLabel = (...args: LabelArgTypes[]) => {
-      const { hasUserTypedCustomLabel, customLabel } = this.state;
+      const { customLabel, hasUserTypedCustomLabel } = this.state;
 
       // If a user has typed in the 'label' input field, don't derive a default label name
       if (hasUserTypedCustomLabel || !args) {
@@ -58,14 +57,17 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
       return dedupedLabel;
     };
 
-    render() {
-      return React.createElement(Component, {
-        updateCustomLabel: this.updateCustomLabel,
-        getLabel: this.getLabel,
-        ...this.props,
-        ...this.state,
+    state: LabelState = {
+      customLabel: '',
+      hasUserTypedCustomLabel: false,
+    };
+
+    updateCustomLabel = (e: any) => {
+      this.setState({
+        customLabel: e.target.value,
+        hasUserTypedCustomLabel: true,
       });
-    }
+    };
   }
   return connected(WrappedComponent);
 };
@@ -101,8 +103,11 @@ export const dedupeLabel = (
   let i = 1;
 
   const matchingLabels = existingLabels.filter((l) => l.startsWith(label));
+  const findMatchingLabel = (l: string) => {
+    return l === dedupedLabel;
+  };
 
-  while (matchingLabels.find((l) => l === dedupedLabel)) {
+  while (matchingLabels.find(findMatchingLabel)) {
     dedupedLabel = label + '-' + i.toString().padStart(ZERO_PAD_WIDTH, '0');
     i++;
 

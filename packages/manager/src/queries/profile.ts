@@ -1,39 +1,41 @@
 import {
-  getProfile,
-  listGrants,
   Profile,
-  smsOptOut,
-  sendCodeToPhoneNumber,
-  SendPhoneVerificationCodePayload,
-  updateProfile,
-  verifyPhoneNumberCode,
-  VerifyVerificationCodePayload,
-  getSSHKeys,
-  createSSHKey,
   SSHKey,
-  deleteSSHKey,
-  updateSSHKey,
-  getTrustedDevices,
+  SendPhoneVerificationCodePayload,
   TrustedDevice,
+  VerifyVerificationCodePayload,
+  createSSHKey,
+  deleteSSHKey,
   deleteTrustedDevice,
   disableTwoFactor,
+  getProfile,
+  getSSHKeys,
+  getTrustedDevices,
+  listGrants,
+  sendCodeToPhoneNumber,
+  smsOptOut,
+  updateProfile,
+  updateSSHKey,
+  verifyPhoneNumberCode,
 } from '@linode/api-v4/lib/profile';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
 import {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { Grants } from '../../../api-v4/lib';
-import { queryPresets } from './base';
-import { queryKey as accountQueryKey } from './account';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
+
 import { EventWithStore } from 'src/events';
+
+import { Grants } from '../../../api-v4/lib';
+import { queryKey as accountQueryKey } from './account';
+import { queryPresets } from './base';
 
 export const queryKey = 'profile';
 
@@ -102,8 +104,8 @@ export const useSSHKeysQuery = (
     [queryKey, 'ssh-keys', 'paginated', params, filter],
     () => getSSHKeys(params, filter),
     {
-      keepPreviousData: true,
       enabled,
+      keepPreviousData: true,
     }
   );
 

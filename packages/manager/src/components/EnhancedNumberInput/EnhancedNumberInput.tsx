@@ -1,15 +1,13 @@
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import Minus from 'src/assets/icons/LKEminusSign.svg';
 import Plus from 'src/assets/icons/LKEplusSign.svg';
 import { Button } from 'src/components/Button/Button';
-import { styled } from '@mui/material/styles';
 import { TextField } from 'src/components/TextField';
-import Box from '@mui/material/Box';
 
 const sxTextFieldBase = {
-  padding: '0 8px',
-  textAlign: 'right',
-  '-moz-appearance': 'textfield',
   '&::-webkit-inner-spin-button': {
     '-webkit-appearance': 'none',
     margin: 0,
@@ -18,6 +16,9 @@ const sxTextFieldBase = {
     '-webkit-appearance': 'none',
     margin: 0,
   },
+  '-moz-appearance': 'textfield',
+  padding: '0 8px',
+  textAlign: 'right',
 };
 
 const sxTextField = {
@@ -30,23 +31,23 @@ const sxTextField = {
 };
 
 interface EnhancedNumberInputProps {
-  /** The label of the input. This prop does not cause any visual UI changes */
-  inputLabel?: string;
-  /** Allows you to control the numeric value of the input from outside the component */
-  value: number;
-  /** The function to update the numeric value */
-  setValue: (value: number) => void;
   /** Disables the input and the +/- buttons */
   disabled?: boolean;
+  /** The label of the input. This prop does not cause any visual UI changes */
+  inputLabel?: string;
   /** The max number allowed in the input. The +/- buttons will disable accordingly */
   max?: number;
   /** The min number allowed in the input. The +/- buttons will disable accordingly */
   min?: number;
+  /** The function to update the numeric value */
+  setValue: (value: number) => void;
+  /** Allows you to control the numeric value of the input from outside the component */
+  value: number;
 }
 
 export const EnhancedNumberInput = React.memo(
   (props: EnhancedNumberInputProps) => {
-    const { inputLabel, setValue, disabled } = props;
+    const { disabled, inputLabel, setValue } = props;
 
     const max = props.max ?? 100;
     const min = props.min ?? 0;
@@ -87,42 +88,42 @@ export const EnhancedNumberInput = React.memo(
         }}
       >
         <StyledButton
-          buttonType="outlined"
-          disabled={disabled || value === min}
-          onClick={decrementValue}
-          name="Subtract 1"
           aria-label="Subtract 1"
+          buttonType="outlined"
           data-testid={'decrement-button'}
           disableFocusRipple
+          disabled={disabled || value === min}
+          name="Subtract 1"
+          onClick={decrementValue}
         >
           <MinusIcon />
         </StyledButton>
         <TextField
-          type="number"
-          label={inputLabel ? inputLabel : 'Edit Quantity'}
-          aria-live="polite"
-          name="Quantity"
-          hideLabel
-          value={value}
-          onChange={onChange}
-          min={min}
-          max={max}
-          disabled={disabled}
-          data-testid={'quantity-input'}
           sx={{
             ...sxTextField,
-            '.MuiInputBase-root': sxTextField,
             '.MuiInputBase-input': sxTextFieldBase,
+            '.MuiInputBase-root': sxTextField,
           }}
+          aria-live="polite"
+          data-testid={'quantity-input'}
+          disabled={disabled}
+          hideLabel
+          label={inputLabel ? inputLabel : 'Edit Quantity'}
+          max={max}
+          min={min}
+          name="Quantity"
+          onChange={onChange}
+          type="number"
+          value={value}
         />
         <StyledButton
-          buttonType="outlined"
-          disabled={disabled || value === max}
-          onClick={incrementValue}
-          name="Add 1"
           aria-label="Add 1"
+          buttonType="outlined"
           data-testid={'increment-button'}
           disableFocusRipple
+          disabled={disabled || value === max}
+          name="Add 1"
+          onClick={incrementValue}
         >
           <PlusIcon />
         </StyledButton>
@@ -132,23 +133,23 @@ export const EnhancedNumberInput = React.memo(
 );
 
 const StyledButton = styled(Button)(({ theme }) => ({
+  '&.MuiButtonBase-root.Mui-disabled': {
+    '& svg g': {
+      stroke: theme.color.disabledText,
+    },
+
+    border: 'none',
+  },
+  '&:hover': {
+    backgroundColor: 'rgba(224, 224, 224, 0.69)',
+    border: 'none',
+  },
+  border: 'none',
   borderRadius: 0,
   height: 34,
   minHeight: 'fit-content',
   minWidth: 30,
   width: 35,
-  border: 'none',
-  '&:hover': {
-    backgroundColor: 'rgba(224, 224, 224, 0.69)',
-    border: 'none',
-  },
-  '&.MuiButtonBase-root.Mui-disabled': {
-    border: 'none',
-
-    '& svg g': {
-      stroke: theme.color.disabledText,
-    },
-  },
 }));
 
 const MinusIcon = styled(Minus)({

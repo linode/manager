@@ -1,9 +1,9 @@
 import ActionMenu, { Action as _Action, Props } from './ActionMenu';
 
 /* tslint:disable-next-line */
-export interface ActionMenuProps extends Props {}
+export type ActionMenuProps = Props;
 
 /* tslint:disable-next-line */
-export interface Action extends _Action {}
+export type Action = _Action;
 
 export default ActionMenu;

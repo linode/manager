@@ -1,31 +1,33 @@
+import {
+  AttachVolumePayload,
+  CloneVolumePayload,
+  ResizeVolumePayload,
+  UpdateVolumeRequest,
+  Volume,
+  VolumeRequestPayload,
+  attachVolume,
+  cloneVolume,
+  createVolume,
+  deleteVolume,
+  detachVolume,
+  getLinodeVolumes,
+  getVolumes,
+  resizeVolume,
+  updateVolume,
+} from '@linode/api-v4';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { Filter, Params } from '@linode/api-v4/src/types';
-import { EventWithStore } from 'src/events';
-import { getAll } from 'src/utilities/getAll';
-import { updateInPaginatedStore } from './base';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from 'react-query';
-import {
-  attachVolume,
-  AttachVolumePayload,
-  detachVolume,
-  getVolumes,
-  Volume,
-  UpdateVolumeRequest,
-  updateVolume,
-  ResizeVolumePayload,
-  resizeVolume,
-  cloneVolume,
-  CloneVolumePayload,
-  deleteVolume,
-  VolumeRequestPayload,
-  createVolume,
-  getLinodeVolumes,
-} from '@linode/api-v4';
+
+import { EventWithStore } from 'src/events';
+import { getAll } from 'src/utilities/getAll';
+
+import { updateInPaginatedStore } from './base';
 
 export const queryKey = 'volumes';
 
@@ -72,7 +74,7 @@ export const useLinodeVolumesQuery = (
   useQuery<ResourcePage<Volume>, APIError[]>(
     [queryKey, 'linode', linodeId, params, filters],
     () => getLinodeVolumes(linodeId, params, filters),
-    { keepPreviousData: true, enabled }
+    { enabled, keepPreviousData: true }
   );
 
 export const useResizeVolumeMutation = () => {
@@ -173,7 +175,7 @@ export const useDetachVolumeMutation = () =>
   useMutation<{}, APIError[], { id: number }>(({ id }) => detachVolume(id));
 
 export const volumeEventsHandler = ({ event, queryClient }: EventWithStore) => {
-  if (['finished', 'failed', 'notification'].includes(event.status)) {
+  if (['failed', 'finished', 'notification'].includes(event.status)) {
     queryClient.invalidateQueries([queryKey]);
   }
 

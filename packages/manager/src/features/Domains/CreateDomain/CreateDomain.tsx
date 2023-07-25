@@ -8,8 +8,7 @@ import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -25,7 +24,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { reportException } from 'src/exceptionReporting';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
@@ -46,39 +45,9 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { generateDefaultDomainRecords } from '../domainUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  main: {
-    width: '100%',
-  },
-  inner: {
-    '& > div': {
-      marginBottom: theme.spacing(2),
-    },
-    '& label': {
-      color: theme.color.headline,
-      lineHeight: '1.33rem',
-      letterSpacing: '0.25px',
-      margin: 0,
-    },
-  },
-  radio: {
-    '& label:first-of-type .MuiButtonBase-root': {
-      marginLeft: -10,
-    },
-  },
-  ip: {
-    maxWidth: 468,
-  },
-  helperText: {
-    maxWidth: 'none',
-  },
-}));
-
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
 
 export const CreateDomain = () => {
-  const classes = useStyles();
-
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { mutateAsync: createDomain } = useCreateDomainMutation();
@@ -302,7 +271,7 @@ export const CreateDomain = () => {
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/dns-manager/"
       />
-      <Grid className={classes.main}>
+      <StyledGrid>
         {generalError && !disabled && (
           <Notice error spacingTop={8}>
             {generalError}
@@ -319,10 +288,9 @@ export const CreateDomain = () => {
         )}
 
         <Paper data-qa-label-header>
-          <form onSubmit={formik.handleSubmit} className={classes.inner}>
-            <RadioGroup
+          <StyledForm onSubmit={formik.handleSubmit}>
+            <StyledRadioGroup
               aria-label="type"
-              className={classes.radio}
               name="type"
               onChange={updateType}
               row
@@ -342,7 +310,7 @@ export const CreateDomain = () => {
                 data-qa-domain-radio="Secondary"
                 disabled={disabled}
               />
-            </RadioGroup>
+            </StyledRadioGroup>
             <TextField
               required
               errorText={
@@ -373,9 +341,8 @@ export const CreateDomain = () => {
               />
             )}
             {isCreatingSecondaryDomain && (
-              <MultipleIPInput
+              <StyledMultipleIPInput
                 title="Primary Nameserver IP Address"
-                className={classes.ip}
                 error={
                   formik.touched.master_ips
                     ? (primaryIPsError as string | undefined)
@@ -412,11 +379,11 @@ export const CreateDomain = () => {
                   ]}
                   disabled={disabled}
                 />
-                <FormHelperText className={classes.helperText}>
+                <StyledFormHelperText>
                   If specified, we can automatically create some domain records
                   (A/AAAA and MX) to get you started, based on one of your
                   Linodes or NodeBalancers.
-                </FormHelperText>
+                </StyledFormHelperText>
               </React.Fragment>
             )}
             {isCreatingPrimaryDomain &&
@@ -433,10 +400,8 @@ export const CreateDomain = () => {
                   {!errorMap.defaultLinode && (
                     <FormHelperText>
                       {selectedDefaultLinode && !selectedDefaultLinode.ipv6
-                        ? `We'll automatically create domains for the first IPv4 address on this
-                  Linode.`
-                        : `We'll automatically create domain records for both the first
-                  IPv4 and IPv6 addresses on this Linode.`}
+                        ? `We'll automatically create domains for the first IPv4 address on this Linode.`
+                        : `We'll automatically create domain records for both the first IPv4 and IPv6 addresses on this Linode.`}
                     </FormHelperText>
                   )}
                 </React.Fragment>
@@ -456,10 +421,8 @@ export const CreateDomain = () => {
                     <FormHelperText>
                       {selectedDefaultNodeBalancer &&
                       !selectedDefaultNodeBalancer.ipv6
-                        ? `We'll automatically create domains for the first IPv4 address on this
-                NodeBalancer.`
-                        : `We'll automatically create domain records for both the first
-                IPv4 and IPv6 addresses on this NodeBalancer.`}
+                        ? `We'll automatically create domains for the first IPv4 address on this NodeBalancer.`
+                        : `We'll automatically create domain records for both the first IPv4 and IPv6 addresses on this NodeBalancer.`}
                     </FormHelperText>
                   )}
                 </React.Fragment>
@@ -476,11 +439,43 @@ export const CreateDomain = () => {
                 Create Domain
               </Button>
             </ActionsPanel>
-          </form>
+          </StyledForm>
         </Paper>
-      </Grid>
+      </StyledGrid>
     </Grid>
   );
 };
 
-export default CreateDomain;
+const StyledGrid = styled(Grid, { label: 'StyledGrid' })({
+  width: '100%',
+});
+
+const StyledForm = styled('form', { label: 'StyledForm' })(({ theme }) => ({
+  '& > div': {
+    marginBottom: theme.spacing(2),
+  },
+  '& label': {
+    color: theme.color.headline,
+    lineHeight: '1.33rem',
+    letterSpacing: '0.25px',
+    margin: 0,
+  },
+}));
+
+const StyledRadioGroup = styled(RadioGroup, { label: 'StyledRadioGroup' })({
+  '& label:first-of-type .MuiButtonBase-root': {
+    marginLeft: -10,
+  },
+});
+
+const StyledMultipleIPInput = styled(MultipleIPInput, {
+  label: 'StyledMultipeIPInput',
+})({
+  maxWidth: 468,
+});
+
+const StyledFormHelperText = styled(FormHelperText, {
+  label: 'StyledFormHelperText',
+})({
+  maxWidth: 'none',
+});

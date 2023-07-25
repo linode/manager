@@ -3,6 +3,8 @@ export * from './accountSettings';
 export * from './accountMaintenance';
 export * from './accountOAuth';
 export * from './accountPayment';
+export * from './aglb';
+export * from './betas';
 export * from './billing';
 export * from './config';
 export * from './databases';
