@@ -1,11 +1,13 @@
 import { styled } from '@mui/system';
 import * as React from 'react';
+
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { Typography } from 'src/components/Typography';
-import { Box } from 'src/components/Box';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+
 import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';
 
 const ComplianceBanner = () => {
@@ -22,19 +24,19 @@ const ComplianceBanner = () => {
 
   return (
     <DismissibleBanner
-      important
-      warning
-      preferenceKey="gdpr-compliance"
       actionButton={
         <StyledActionButton buttonType="primary" onClick={() => context.open()}>
           Review Update
         </StyledActionButton>
       }
+      important
+      preferenceKey="gdpr-compliance"
+      warning
     >
       <Box
+        alignItems="center"
         display="flex"
         flexDirection="row"
-        alignItems="center"
         justifyContent="space-between"
       >
         <Typography>

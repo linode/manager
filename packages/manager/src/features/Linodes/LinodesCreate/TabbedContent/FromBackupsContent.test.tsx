@@ -1,25 +1,26 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+
 import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
 
 import { CombinedProps, FromBackupsContent } from './FromBackupsContent';
 
 const mockProps: CombinedProps = {
+  accountBackupsEnabled: false,
   classes: {
     main: '',
   },
+  imagesData: {},
+  linodesData: [],
+  regionsData: [],
+  setBackupID: jest.fn(),
+  typesData: [],
   updateDiskSize: jest.fn(),
   updateImageID: jest.fn(),
   updateLinodeID: jest.fn(),
   updateRegionID: jest.fn(),
   updateTypeID: jest.fn(),
-  setBackupID: jest.fn(),
-  accountBackupsEnabled: false,
-  imagesData: {},
-  regionsData: [],
-  typesData: [],
   userCannotCreateLinode: false,
-  linodesData: [],
 };
 
 describe('FromBackupsContent', () => {

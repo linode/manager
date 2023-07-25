@@ -1,16 +1,17 @@
 import { InvoiceItem } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
+
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
@@ -19,26 +20,26 @@ import { renderUnitPrice } from 'src/features/Billing/billingUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   table: {
-    border: `1px solid ${theme.borderColors.borderTable}`,
     '& thead th': {
-      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
       '&:last-of-type': {
         paddingRight: 15,
       },
+      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     },
+    border: `1px solid ${theme.borderColors.borderTable}`,
   },
 }));
 
 interface Props {
-  loading: boolean;
   errors?: APIError[];
   items?: InvoiceItem[];
+  loading: boolean;
 }
 
 const InvoiceTable = (props: Props) => {
   const { classes } = useStyles();
 
-  const { loading, errors, items } = props;
+  const { errors, items, loading } = props;
 
   return (
     <Table aria-label="Invoice Details" className={classes.table} noBorder>
@@ -48,7 +49,7 @@ const InvoiceTable = (props: Props) => {
           <TableCell data-qa-column="From">From</TableCell>
           <TableCell data-qa-column="To">To</TableCell>
           <TableCell data-qa-column="Quantity">Quantity</TableCell>
-          <TableCell noWrap data-qa-column="Unit Price">
+          <TableCell data-qa-column="Unit Price" noWrap>
             Unit Price
           </TableCell>
           <TableCell data-qa-column="Amount">Amount (USD)</TableCell>
@@ -57,14 +58,14 @@ const InvoiceTable = (props: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        <MaybeRenderContent loading={loading} errors={errors} items={items} />
+        <MaybeRenderContent errors={errors} items={items} loading={loading} />
       </TableBody>
     </Table>
   );
 };
 
 const renderDate = (v: null | string) =>
-  v ? <DateTimeDisplay value={v} data-qa-invoice-date /> : null;
+  v ? <DateTimeDisplay data-qa-invoice-date value={v} /> : null;
 
 const renderQuantity = (v: null | number) => (v ? v : null);
 
@@ -76,8 +77,8 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
   return (
     <Paginate data={items} pageSize={25}>
       {({
-        data: paginatedData,
         count,
+        data: paginatedData,
         handlePageChange,
         handlePageSizeChange,
         page,
@@ -85,31 +86,31 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
       }) => (
         <React.Fragment>
           {paginatedData.map(
-            ({ label, from, to, quantity, unit_price, amount, tax, total }) => (
+            ({ amount, from, label, quantity, tax, to, total, unit_price }) => (
               <TableRow key={`${label}-${from}-${to}`}>
-                <TableCell parentColumn="Description" data-qa-description>
+                <TableCell data-qa-description parentColumn="Description">
                   {label}
                 </TableCell>
-                <TableCell parentColumn="From" data-qa-from>
+                <TableCell data-qa-from parentColumn="From">
                   {renderDate(from)}
                 </TableCell>
-                <TableCell parentColumn="To" data-qa-to>
+                <TableCell data-qa-to parentColumn="To">
                   {renderDate(to)}
                 </TableCell>
-                <TableCell parentColumn="Quantity" data-qa-quantity>
+                <TableCell data-qa-quantity parentColumn="Quantity">
                   {renderQuantity(quantity)}
                 </TableCell>
-                <TableCell parentColumn="Unit Price" data-qa-unit-price>
+                <TableCell data-qa-unit-price parentColumn="Unit Price">
                   {unit_price !== 'None' && renderUnitPrice(unit_price)}
                 </TableCell>
-                <TableCell parentColumn="Amount (USD)" data-qa-amount>
-                  <Currency wrapInParentheses={amount < 0} quantity={amount} />
+                <TableCell data-qa-amount parentColumn="Amount (USD)">
+                  <Currency quantity={amount} wrapInParentheses={amount < 0} />
                 </TableCell>
-                <TableCell parentColumn="Tax (USD)" data-qa-tax>
+                <TableCell data-qa-tax parentColumn="Tax (USD)">
                   <Currency quantity={tax} />
                 </TableCell>
-                <TableCell parentColumn="Total (USD)" data-qa-total>
-                  <Currency wrapInParentheses={total < 0} quantity={total} />
+                <TableCell data-qa-total parentColumn="Total (USD)">
+                  <Currency quantity={total} wrapInParentheses={total < 0} />
                 </TableCell>
               </TableRow>
             )
@@ -123,12 +124,12 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
                 colSpan={8}
               >
                 <PaginationFooter
-                  eventCategory="invoice_items"
                   count={count}
-                  page={page}
-                  pageSize={pageSize}
+                  eventCategory="invoice_items"
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
+                  page={page}
+                  pageSize={pageSize}
                 />
               </TableCell>
             </TableRow>
@@ -140,11 +141,11 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
 };
 
 const MaybeRenderContent = (props: {
-  loading: boolean;
   errors?: APIError[];
   items?: any[];
+  loading: boolean;
 }) => {
-  const { loading, errors, items } = props;
+  const { errors, items, loading } = props;
 
   if (loading) {
     return <TableRowLoading columns={8} />;

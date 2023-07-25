@@ -1,4 +1,5 @@
 import { CypressPlugin } from './plugin';
+
 import type { Region } from '@linode/api-v4';
 
 /**

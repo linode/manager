@@ -17,7 +17,7 @@ export type EntityType = 'linode' | 'nodebalancer';
  */
 export const getEntityByIDFromStore = (
   entityType: EntityType,
-  entityID: string | number,
+  entityID: number | string,
   store: ApplicationStore
 ) => {
   if (!entityType || !entityID) {

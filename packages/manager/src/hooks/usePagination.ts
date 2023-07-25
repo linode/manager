@@ -1,12 +1,13 @@
 import { useHistory, useLocation } from 'react-router-dom';
+
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 export interface PaginationProps {
-  page: number;
-  pageSize: number;
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (pageSize: number) => void;
+  page: number;
+  pageSize: number;
 }
 
 /**
@@ -59,19 +60,19 @@ export const usePagination = (
     setPage(1);
     if (preferenceKey) {
       updatePreferences({
-        [preferenceKey]: undefined, // This may seem weird, but this cleans up the old format so user's preferences don't get too big
         pageSizes: {
           ...(preferences?.pageSizes ?? {}),
           [preferenceKey]: newPageSize,
         },
+        [preferenceKey]: undefined, // This may seem weird, but this cleans up the old format so user's preferences don't get too big
       });
     }
   };
 
   return {
-    page,
-    pageSize,
     handlePageChange: setPage,
     handlePageSizeChange,
+    page,
+    pageSize,
   };
 };

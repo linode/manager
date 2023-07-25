@@ -1,17 +1,19 @@
+import { useTheme } from '@mui/material';
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
+
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { TextField } from 'src/components/TextField';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { TextField } from 'src/components/TextField';
-import { useTheme } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+
+import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
@@ -21,15 +23,15 @@ export const NodeBalancerSettings = () => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
 
   const {
-    mutateAsync: updateNodeBalancerLabel,
     error: labelError,
     isLoading: isUpdatingLabel,
+    mutateAsync: updateNodeBalancerLabel,
   } = useNodebalancerUpdateMutation(id);
 
   const {
-    mutateAsync: updateNodeBalancerThrottle,
     error: throttleError,
     isLoading: isUpdatingThrottle,
+    mutateAsync: updateNodeBalancerThrottle,
   } = useNodebalancerUpdateMutation(id);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
@@ -63,61 +65,61 @@ export const NodeBalancerSettings = () => {
   return (
     <div>
       <DocumentTitleSegment segment={`${nodebalancer.label} - Settings`} />
-      <Accordion heading="NodeBalancer Label" defaultExpanded>
+      <Accordion defaultExpanded heading="NodeBalancer Label">
         <TextField
-          label="Label"
-          placeholder="Enter a label between 3 and 32 characters"
-          errorText={labelError?.[0].reason}
-          onChange={(e) => setLabel(e.target.value)}
-          value={label}
           data-qa-label-panel
+          errorText={labelError?.[0].reason}
+          label="Label"
+          onChange={(e) => setLabel(e.target.value)}
+          placeholder="Enter a label between 3 and 32 characters"
+          value={label}
         />
         <Button
           buttonType="primary"
-          sx={sxButton}
-          loading={isUpdatingLabel}
-          disabled={label === nodebalancer.label}
-          onClick={() => updateNodeBalancerLabel({ label })}
           data-qa-label-save
+          disabled={label === nodebalancer.label}
+          loading={isUpdatingLabel}
+          onClick={() => updateNodeBalancerLabel({ label })}
+          sx={sxButton}
         >
           Save
         </Button>
       </Accordion>
-      <Accordion heading="Client Connection Throttle" defaultExpanded>
+      <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">/ second</InputAdornment>
             ),
           }}
-          type="number"
-          label="Connection Throttle"
+          data-qa-connection-throttle
           errorText={throttleError?.[0].reason}
+          label="Connection Throttle"
           onChange={(e) => setConnectionThrottle(Number(e.target.value))}
           placeholder="0"
+          type="number"
           value={connectionThrottle}
-          data-qa-connection-throttle
         />
         <FormHelperText>
           To help mitigate abuse, throttle connections from a single client IP
           to this number per second. 0 to disable.
         </FormHelperText>
         <Button
-          buttonType="primary"
-          sx={sxButton}
-          loading={isUpdatingThrottle}
-          disabled={connectionThrottle === nodebalancer.client_conn_throttle}
           onClick={() =>
             updateNodeBalancerThrottle({
               client_conn_throttle: connectionThrottle,
             })
           }
+          buttonType="primary"
           data-qa-label-save
+          disabled={connectionThrottle === nodebalancer.client_conn_throttle}
+          loading={isUpdatingThrottle}
+          sx={sxButton}
         >
           Save
         </Button>
       </Accordion>
-      <Accordion heading="Delete NodeBalancer" defaultExpanded>
+      <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
           buttonType="primary"
           onClick={() => setIsDeleteDialogOpen(true)}
@@ -128,8 +130,8 @@ export const NodeBalancerSettings = () => {
       <NodeBalancerDeleteDialog
         id={nodebalancer.id}
         label={nodebalancer?.label}
-        open={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
       />
     </div>
   );

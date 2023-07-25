@@ -1,59 +1,60 @@
-import * as Factory from 'factory.ts';
 import { Config } from '@linode/api-v4/lib/linodes/types';
+import * as Factory from 'factory.ts';
+
 import { LinodeConfigInterfaceFactory } from 'src/factories/linodeConfigInterfaceFactory';
 
 const generateRandomId = () => Math.floor(Math.random() * 10000);
 
 const publicInterface = LinodeConfigInterfaceFactory.build({
-  purpose: 'public',
   ipam_address: null,
+  purpose: 'public',
 });
 const [vlanInterface1, vlanInterface2] = LinodeConfigInterfaceFactory.buildList(
   2
 );
 
 export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
-  created: '2018-06-26T16:04:28',
-  memory_limit: 0,
-  updated: '2018-06-26T16:04:28',
   comments: '',
-  virt_mode: 'paravirt',
-  id: Factory.each((i) => i),
-  run_level: 'default',
-  helpers: {
-    distro: true,
-    network: true,
-    modules_dep: true,
-    devtmpfs_automount: true,
-    updatedb_disabled: true,
-  },
-  root_device: '/dev/sda',
-  label: 'My Arch Linux Disk Profile',
-  initrd: null,
+  created: '2018-06-26T16:04:28',
   devices: {
-    sdc: {
-      volume_id: 8702,
-      disk_id: null,
-    },
     sda: {
-      volume_id: null,
       disk_id: generateRandomId(),
+      volume_id: null,
+    },
+    sdb: {
+      disk_id: generateRandomId(),
+      volume_id: null,
+    },
+    sdc: {
+      disk_id: null,
+      volume_id: 8702,
     },
     sdd: null,
-    sdf: null,
-    sdb: {
-      volume_id: null,
-      disk_id: generateRandomId(),
-    },
-    sdh: null,
-    sdg: null,
     sde: null,
+    sdf: null,
+    sdg: null,
+    sdh: null,
   },
-  kernel: 'linode/grub2',
+  helpers: {
+    devtmpfs_automount: true,
+    distro: true,
+    modules_dep: true,
+    network: true,
+    updatedb_disabled: true,
+  },
+  id: Factory.each((i) => i),
+  initrd: null,
   interfaces: [
     // The order of this array is significant. Index 0 (eth0) should be public.
     publicInterface,
     vlanInterface1,
     vlanInterface2,
   ],
+  kernel: 'linode/grub2',
+  label: 'My Arch Linux Disk Profile',
+  memory_limit: 0,
+  root_device: '/dev/sda',
+  run_level: 'default',
+  updated: '2018-06-26T16:04:28',
+  virt_mode: 'paravirt',
 });

@@ -12,15 +12,6 @@ export const nav = {
   },
 
   /**
-   * Finds the main sidebar navigation toggle button.
-   *
-   * @returns Cypress chainable.
-   */
-  findToggleButton: (): Cypress.Chainable => {
-    return cy.findByTestId('open-nav-menu');
-  },
-
-  /**
    * Finds a sidebar navigation item by its title.
    *
    * @param title - Title of sidebar navigation item to find.
@@ -29,5 +20,14 @@ export const nav = {
    */
   findItemByTitle: (title: string): Cypress.Chainable => {
     return cy.get('#main-navigation').findByText(title).closest('a');
+  },
+
+  /**
+   * Finds the main sidebar navigation toggle button.
+   *
+   * @returns Cypress chainable.
+   */
+  findToggleButton: (): Cypress.Chainable => {
+    return cy.findByTestId('open-nav-menu');
   },
 };

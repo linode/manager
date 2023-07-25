@@ -1,22 +1,24 @@
+import { updateUser } from '@linode/api-v4/lib/account';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { v4 } from 'uuid';
+
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import ExternalLink from 'src/components/ExternalLink';
-import { Link } from 'src/components/Link';
-import Paper from 'src/components/core/Paper';
-import { Typography } from 'src/components/Typography';
-import { ApplicationState } from 'src/store';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { Link } from 'src/components/Link';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
-import { TimezoneForm } from './TimezoneForm';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { updateUser } from '@linode/api-v4/lib/account';
-import { useLocation } from 'react-router-dom';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { Typography } from 'src/components/Typography';
+import { Paper } from 'src/components/Paper';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useSelector } from 'react-redux';
-import { styled, useTheme } from '@mui/material/styles';
-import { v4 } from 'uuid';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { ApplicationState } from 'src/store';
+
+import { TimezoneForm } from './TimezoneForm';
 
 export const DisplaySettings = () => {
   const theme = useTheme();
@@ -65,26 +67,26 @@ export const DisplaySettings = () => {
   return (
     <Paper>
       <Box
-        display="flex"
         sx={{
           gap: 2,
-          marginTop: theme.spacing(),
           marginBottom: theme.spacing(4),
+          marginTop: theme.spacing(),
         }}
+        display="flex"
       >
         <GravatarByEmail email={profile?.email ?? ''} height={88} width={88} />
         <div>
-          <Typography variant="h2" sx={{ fontSize: '1rem' }}>
+          <Typography sx={{ fontSize: '1rem' }} variant="h2">
             Profile photo
             <StyledTooltipIcon
-              interactive
-              text={tooltipIconText}
-              status="help"
               sxTooltipIcon={{
-                marginTop: '-2px',
                 marginLeft: '6px',
+                marginTop: '-2px',
                 padding: 0,
               }}
+              interactive
+              status="help"
+              text={tooltipIconText}
             />
           </Typography>
           <StyledProfileCopy variant="body1">
@@ -92,32 +94,28 @@ export const DisplaySettings = () => {
             single place with Gravatar.
           </StyledProfileCopy>
           <StyledAddImageLink
+            fixedIcon
             link="https://en.gravatar.com/"
             text={'Manage photo'}
-            fixedIcon
           />
         </div>
       </Box>
       <Divider />
       <SingleTextFieldForm
-        key={usernameResetToken}
-        label="Username"
-        submitForm={updateUsername}
-        initialValue={profile?.username}
-        disabled={profile?.restricted}
         tooltipText={
           profile?.restricted
             ? 'Restricted users cannot update their username. Please contact an account administrator.'
             : undefined
         }
+        disabled={profile?.restricted}
+        initialValue={profile?.username}
+        key={usernameResetToken}
+        label="Username"
+        submitForm={updateUsername}
         successCallback={requestProfile}
       />
       <Divider spacingTop={24} />
       <SingleTextFieldForm
-        key={emailResetToken}
-        label="Email"
-        submitForm={updateEmail}
-        initialValue={profile?.email}
         successCallback={() => {
           // If there's a "user_email_bounce" notification for this user, and
           // the user has just updated their email, re-request notifications to
@@ -129,10 +127,14 @@ export const DisplaySettings = () => {
             refetch();
           }
         }}
+        initialValue={profile?.email}
         inputRef={emailRef}
+        key={emailResetToken}
+        label="Email"
+        submitForm={updateEmail}
         type="email"
       />
-      <Divider spacingTop={24} spacingBottom={8} />
+      <Divider spacingBottom={8} spacingTop={24} />
       <TimezoneForm loggedInAsCustomer={loggedInAsCustomer} />
     </Paper>
   );
@@ -141,22 +143,22 @@ export const DisplaySettings = () => {
 const StyledAddImageLink = styled(ExternalLink, {
   label: 'StyledAddImageLink',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
-  fontSize: '1rem',
   '& svg': {
     height: '1rem',
-    width: '1rem',
+    left: 6,
     position: 'relative',
     top: 3,
-    left: 6,
+    width: '1rem',
   },
+  fontFamily: theme.font.bold,
+  fontSize: '1rem',
 }));
 
 const StyledProfileCopy = styled(Typography, {
   label: 'StyledProfileCopy',
 })(({ theme }) => ({
-  marginTop: 4,
   marginBottom: theme.spacing(2),
+  marginTop: 4,
   maxWidth: 360,
 }));
 

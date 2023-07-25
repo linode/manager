@@ -1,9 +1,10 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
 import { useSupportTicketCloseMutation } from 'src/queries/support';
 
@@ -23,9 +24,9 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const {
-    mutateAsync: closeSupportTicket,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: closeSupportTicket,
   } = useSupportTicketCloseMutation(ticketId);
 
   const closeTicket = async () => {
@@ -37,16 +38,16 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
     <ActionsPanel>
       <Button
         buttonType="secondary"
-        onClick={() => setIsDialogOpen(false)}
         data-qa-dialog-cancel
+        onClick={() => setIsDialogOpen(false)}
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={closeTicket}
-        loading={isLoading}
         data-qa-dialog-submit
+        loading={isLoading}
+        onClick={closeTicket}
       >
         Confirm
       </Button>
@@ -58,22 +59,22 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
       <Typography>
         {`If everything is resolved, you can `}
         <button
-          onClick={() => setIsDialogOpen(true)}
-          type="button"
-          title="Close this ticket"
           className={classes.closeLink}
           data-qa-close-ticket-link
+          onClick={() => setIsDialogOpen(true)}
+          title="Close this ticket"
+          type="button"
         >
           close this ticket
         </button>
         .
       </Typography>
       <ConfirmationDialog
-        open={isDialogOpen}
-        title={`Confirm Ticket Close`}
-        onClose={() => setIsDialogOpen(false)}
         actions={actions}
         error={error?.[0].reason}
+        onClose={() => setIsDialogOpen(false)}
+        open={isDialogOpen}
+        title={`Confirm Ticket Close`}
       >
         <Typography>{`Are you sure you want to close this ticket?`}</Typography>
       </ConfirmationDialog>

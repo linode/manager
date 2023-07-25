@@ -1,25 +1,26 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { localStorageWarning } from 'src/features/Kubernetes/kubeUtils';
 import { useRecycleNodeMutation } from 'src/queries/kubernetes';
-import { useSnackbar } from 'notistack';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  nodeId: string;
   clusterId: number;
+  nodeId: string;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const RecycleNodeDialog = (props: Props) => {
-  const { open, onClose, nodeId, clusterId } = props;
+  const { clusterId, nodeId, onClose, open } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useRecycleNodeMutation(
+  const { error, isLoading, mutateAsync } = useRecycleNodeMutation(
     clusterId,
     nodeId
   );
@@ -35,18 +36,18 @@ export const RecycleNodeDialog = (props: Props) => {
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
-        onClick={onClose}
         data-qa-cancel
         data-testid={'dialog-cancel'}
+        onClick={onClose}
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onSubmit}
-        loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
+        loading={isLoading}
+        onClick={onSubmit}
       >
         Recycle
       </Button>
@@ -55,11 +56,11 @@ export const RecycleNodeDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      title={`Recycle ${nodeId}?`}
-      onClose={onClose}
       actions={actions}
       error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title={`Recycle ${nodeId}?`}
     >
       <Typography>
         This node will be deleted and a new node will be created to replace it.{' '}

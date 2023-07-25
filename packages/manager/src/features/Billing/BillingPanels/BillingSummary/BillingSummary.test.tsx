@@ -2,6 +2,7 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
+
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { promoFactory } from 'src/factories';
 import {
@@ -9,6 +10,7 @@ import {
   withMarkup,
   wrapWithTheme,
 } from 'src/utilities/testHelpers';
+
 import BillingSummary from './BillingSummary';
 
 const accountBalanceText = 'account-balance-text';
@@ -72,8 +74,8 @@ describe('BillingSummary', () => {
           <BillingSummary
             balance={0}
             balanceUninvoiced={5}
-            promotions={promoFactory.buildList(1)}
             paymentMethods={[]}
+            promotions={promoFactory.buildList(1)}
           />
         </PayPalScriptProvider>
       )
@@ -85,15 +87,15 @@ describe('BillingSummary', () => {
     renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <BillingSummary
+          promotions={promoFactory.buildList(1, {
+            credit_monthly_cap: '20.00',
+            credit_remaining: '15.50',
+            expire_dt: '2020-01-01T12:00:00',
+            summary: 'MY_PROMO_CODE',
+          })}
           balance={0}
           balanceUninvoiced={5}
           paymentMethods={[]}
-          promotions={promoFactory.buildList(1, {
-            summary: 'MY_PROMO_CODE',
-            credit_remaining: '15.50',
-            expire_dt: '2020-01-01T12:00:00',
-            credit_monthly_cap: '20.00',
-          })}
         />
       </PayPalScriptProvider>
     );
@@ -107,14 +109,14 @@ describe('BillingSummary', () => {
   it('displays promo service type unless the service type is all', () => {
     const promotions = [
       promoFactory.build(),
-      promoFactory.build({ summary: 'MY_PROMO_CODE', service_type: 'linode' }),
+      promoFactory.build({ service_type: 'linode', summary: 'MY_PROMO_CODE' }),
     ];
     renderWithTheme(
       <BillingSummary
         balance={0}
         balanceUninvoiced={5}
-        promotions={promotions}
         paymentMethods={[]}
+        promotions={promotions}
       />
     );
     expect(screen.queryByText('Applies to: All')).not.toBeInTheDocument();
@@ -131,7 +133,7 @@ describe('BillingSummary', () => {
   });
 
   it('opens "Make a Payment" drawer when "Make a payment." is clicked', () => {
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>

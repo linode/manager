@@ -1,14 +1,19 @@
+import { getDNSZoneFile } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
+
 import { Button } from 'src/components/Button/Button';
 import { downloadFile } from 'src/utilities/downloadFile';
-import { getDNSZoneFile } from '@linode/api-v4/lib/domains';
 
-type Props = {
+type DownloadDNSZoneFileButtonProps = {
   domainId: number;
   domainLabel: string;
 };
 
-export const DownloadDNSZoneFileButton = ({ domainId, domainLabel }: Props) => {
+export const DownloadDNSZoneFileButton = (
+  props: DownloadDNSZoneFileButtonProps
+) => {
+  const { domainId, domainLabel } = props;
+
   const handleClick = async () => {
     const data = await getDNSZoneFile(domainId);
     const zoneFileContent = data?.zone_file.join('\n');
@@ -18,7 +23,7 @@ export const DownloadDNSZoneFileButton = ({ domainId, domainLabel }: Props) => {
   };
 
   return (
-    <Button onClick={handleClick} buttonType="secondary">
+    <Button buttonType="secondary" onClick={handleClick}>
       Download DNS Zone File
     </Button>
   );

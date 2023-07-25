@@ -1,28 +1,29 @@
-import React from 'react';
 import { Disk } from '@linode/api-v4';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useCreateImageMutation } from 'src/queries/images';
+import { Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import { Typography } from '@mui/material';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { SupportLink } from 'src/components/SupportLink/SupportLink';
+import { useCreateImageMutation } from 'src/queries/images';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   disk: Disk | undefined;
   linodeId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const CreateImageFromDiskDialog = (props: Props) => {
-  const { open, onClose, disk, linodeId } = props;
+  const { disk, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: createImage,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createImage,
     reset,
   } = useCreateImageMutation();
 
@@ -48,29 +49,29 @@ export const CreateImageFromDiskDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      title={`Create Image from ${disk?.label}?`}
-      open={open}
-      onClose={onClose}
-      error={error?.[0].reason}
       actions={
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button buttonType="primary" onClick={onCreate} loading={isLoading}>
+          <Button buttonType="primary" loading={isLoading} onClick={onCreate}>
             Create Image
           </Button>
         </ActionsPanel>
       }
+      error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title={`Create Image from ${disk?.label}?`}
     >
       <Typography>
         Linode Images are limited to 6144 MB of data per disk by default. Please
         ensure that your disk content does not exceed this size limit, or{' '}
         <SupportLink
-          text="open a support ticket"
-          title="Increase Image Size Request"
           description={ticketDescription}
           entity={{ id: linodeId, type: 'linode_id' }}
+          text="open a support ticket"
+          title="Increase Image Size Request"
         />{' '}
         to request a higher limit. Additionally, Linode Images cannot be created
         if you are using raw disks or disks that have been formatted using

@@ -1,12 +1,13 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import { useFormik } from 'formik';
 import * as React from 'react';
+import { object, string } from 'yup';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { object, string } from 'yup';
 import { useLinodeDiskUpdateMutation } from 'src/queries/linodes/disks';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -19,13 +20,13 @@ const RenameDiskSchema = object({
 
 export interface Props {
   disk?: Disk;
-  open: boolean;
-  onClose: () => void;
   linodeId: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 export const RenameDiskDrawer = (props: Props) => {
-  const { disk, open, onClose, linodeId } = props;
+  const { disk, linodeId, onClose, open } = props;
 
   const { mutateAsync: updateDisk, reset } = useLinodeDiskUpdateMutation(
     linodeId,
@@ -33,12 +34,10 @@ export const RenameDiskDrawer = (props: Props) => {
   );
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       label: disk?.label ?? '',
     },
-    validationSchema: RenameDiskSchema,
-    validateOnChange: true,
-    enableReinitialize: true,
     async onSubmit(values, helpers) {
       try {
         await updateDisk(values);
@@ -47,6 +46,8 @@ export const RenameDiskDrawer = (props: Props) => {
         handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
       }
     },
+    validateOnChange: true,
+    validationSchema: RenameDiskSchema,
   });
 
   React.useEffect(() => {
@@ -57,36 +58,36 @@ export const RenameDiskDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer title="Rename Disk" open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title="Rename Disk">
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
           <Notice
             error
-            spacingBottom={8}
             errorGroup="linode-disk-drawer"
+            spacingBottom={8}
             text={formik.status}
           />
         )}
         <TextField
+          data-qa-label
+          errorGroup="linode-disk-drawer"
+          errorText={formik.errors.label}
           label="Label"
           name="label"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
           required
           value={formik.values.label}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          errorText={formik.errors.label}
-          errorGroup="linode-disk-drawer"
-          data-qa-label
         />
         <ActionsPanel>
-          <Button onClick={onClose} buttonType="secondary" className="cancel">
+          <Button buttonType="secondary" className="cancel" onClick={onClose}>
             Cancel
           </Button>
           <Button
             buttonType="primary"
-            type="submit"
-            loading={formik.isSubmitting}
             data-testid="submit-disk-form"
+            loading={formik.isSubmitting}
+            type="submit"
           >
             Rename
           </Button>

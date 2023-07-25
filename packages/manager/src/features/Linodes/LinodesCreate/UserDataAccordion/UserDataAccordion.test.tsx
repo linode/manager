@@ -1,14 +1,16 @@
-import * as React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
+import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { UserDataAccordion } from './UserDataAccordion';
 
 describe('UserDataAccordion', () => {
   const onChange = jest.fn();
   const props = {
-    userData: 'test data',
-    onChange,
     createType: 'fromImage',
+    onChange,
+    userData: 'test data',
   } as const;
 
   it('should render without errors', () => {
@@ -64,7 +66,7 @@ describe('UserDataAccordion', () => {
 
   it('should NOT have a notice when a renderNotice prop is not passed in', () => {
     const { queryByTestId } = renderWithTheme(
-      <UserDataAccordion userData={''} onChange={() => null} />
+      <UserDataAccordion onChange={() => null} userData={''} />
     );
 
     expect(queryByTestId('render-notice')).toBeNull();

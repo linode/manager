@@ -1,52 +1,54 @@
-import * as React from 'react';
-import { Notice } from 'src/components/Notice/Notice';
-import FormControl from 'src/components/core/FormControl';
-import Paper from 'src/components/core/Paper';
-import { Typography } from 'src/components/Typography';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
-import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
-import { useSnackbar } from 'notistack';
 import { useFormik } from 'formik';
-import { TextField } from 'src/components/TextField';
-import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
-import { Button } from 'src/components/Button/Button';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
+import { Notice } from 'src/components/Notice/Notice';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import FormControl from 'src/components/core/FormControl';
+import { Paper } from 'src/components/Paper';
+import { resetEventsPolling } from 'src/eventsPolling';
+import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
+import { getErrorMap } from 'src/utilities/errorUtils';
+
+import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
 
 interface Props {
-  linodeId: number;
   isReadOnly: boolean;
+  linodeId: number;
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
   snapshotFormControl: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap',
     '& > div': {
-      width: 'auto',
       marginRight: theme.spacing(2),
+      width: 'auto',
     },
     '& button': {
       marginTop: theme.spacing(4),
     },
+    alignItems: 'flex-end',
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   snapshotNameField: {
     minWidth: 275,
   },
 }));
 
-export const CaptureSnapshot = ({ linodeId, isReadOnly }: Props) => {
+export const CaptureSnapshot = ({ isReadOnly, linodeId }: Props) => {
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: takeSnapshot,
     error: snapshotError,
     isLoading: isSnapshotLoading,
+    mutateAsync: takeSnapshot,
   } = useLinodeBackupSnapshotMutation(linodeId);
 
   const [
@@ -71,10 +73,10 @@ export const CaptureSnapshot = ({ linodeId, isReadOnly }: Props) => {
 
   return (
     <Paper>
-      <Typography variant="h2" data-qa-manual-heading>
+      <Typography data-qa-manual-heading variant="h2">
         Manual Snapshot
       </Typography>
-      <Typography variant="body1" data-qa-manual-desc marginTop={1}>
+      <Typography data-qa-manual-desc marginTop={1} variant="body1">
         You can make a manual backup of your Linode by taking a snapshot.
         Creating the manual snapshot can take several minutes, depending on the
         size of your Linode and the amount of data you have stored on it. The
@@ -82,35 +84,35 @@ export const CaptureSnapshot = ({ linodeId, isReadOnly }: Props) => {
       </Typography>
       <FormControl>
         {hasErrorFor.none && (
-          <Notice spacingBottom={8} error>
+          <Notice error spacingBottom={8}>
             {hasErrorFor.none}
           </Notice>
         )}
         <Box className={classes.snapshotFormControl}>
           <TextField
+            className={classes.snapshotNameField}
+            data-qa-manual-name
             errorText={hasErrorFor.label}
             label="Name Snapshot"
             name="label"
-            value={snapshotForm.values.label}
             onChange={snapshotForm.handleChange}
-            data-qa-manual-name
-            className={classes.snapshotNameField}
+            value={snapshotForm.values.label}
           />
           <Button
             buttonType="primary"
-            onClick={() => setIsSnapshotConfirmationDialogOpen(true)}
             data-qa-snapshot-button
             disabled={snapshotForm.values.label === '' || isReadOnly}
+            onClick={() => setIsSnapshotConfirmationDialogOpen(true)}
           >
             Take Snapshot
           </Button>
         </Box>
       </FormControl>
       <CaptureSnapshotConfirmationDialog
-        open={isSnapshotConfirmationDialogOpen}
+        loading={isSnapshotLoading}
         onClose={() => setIsSnapshotConfirmationDialogOpen(false)}
         onSnapshot={() => snapshotForm.handleSubmit()}
-        loading={isSnapshotLoading}
+        open={isSnapshotConfirmationDialogOpen}
       />
     </Paper>
   );

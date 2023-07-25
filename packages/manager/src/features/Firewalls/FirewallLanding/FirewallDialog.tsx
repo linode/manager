@@ -1,56 +1,57 @@
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
-export type Mode = 'enable' | 'disable' | 'delete';
+export type Mode = 'delete' | 'disable' | 'enable';
 
 interface Props {
-  open: boolean;
   mode: Mode;
   onClose: () => void;
+  open: boolean;
   selectedFirewallID?: number;
   selectedFirewallLabel: string;
 }
 
 const FirewallDialog = (props: Props) => {
   const {
-    open,
-    onClose,
     mode,
+    onClose,
+    open,
     selectedFirewallID,
     selectedFirewallLabel: label,
   } = props;
 
   const {
-    mutateAsync: updateFirewall,
-    isLoading: isUpdating,
     error: updateError,
+    isLoading: isUpdating,
+    mutateAsync: updateFirewall,
   } = useMutateFirewall(selectedFirewallID ?? -1);
   const {
-    mutateAsync: deleteFirewall,
-    isLoading: isDeleting,
     error: deleteError,
+    isLoading: isDeleting,
+    mutateAsync: deleteFirewall,
   } = useDeleteFirewall(selectedFirewallID ?? -1);
 
   const requestMap = {
-    enable: () => updateFirewall({ status: 'enabled' }),
-    disable: () => updateFirewall({ status: 'disabled' }),
     delete: () => deleteFirewall(),
+    disable: () => updateFirewall({ status: 'disabled' }),
+    enable: () => updateFirewall({ status: 'enabled' }),
   };
 
   const isLoadingMap = {
-    enable: isUpdating,
-    disable: isUpdating,
     delete: isDeleting,
+    disable: isUpdating,
+    enable: isUpdating,
   };
 
   const errorMap = {
-    enable: updateError,
-    disable: updateError,
     delete: deleteError,
+    disable: updateError,
+    enable: updateError,
   };
 
   const onSubmit = async () => {
@@ -60,10 +61,6 @@ const FirewallDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      open={open}
-      title={`${capitalize(mode)} Firewall ${label}?`}
-      onClose={onClose}
-      error={errorMap[mode]?.[0].reason}
       actions={
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose}>
@@ -71,13 +68,17 @@ const FirewallDialog = (props: Props) => {
           </Button>
           <Button
             buttonType="primary"
-            onClick={onSubmit}
             loading={isLoadingMap[mode]}
+            onClick={onSubmit}
           >
             {capitalize(mode)} Firewall
           </Button>
         </ActionsPanel>
       }
+      error={errorMap[mode]?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title={`${capitalize(mode)} Firewall ${label}?`}
     >
       Are you sure you want to {mode} this Firewall?
     </ConfirmationDialog>

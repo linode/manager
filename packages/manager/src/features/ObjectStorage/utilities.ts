@@ -1,12 +1,13 @@
-import { FormikProps } from 'formik';
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
+  ACLType,
   ObjectStorageClusterID,
   ObjectStorageObject,
-  ACLType,
 } from '@linode/api-v4/lib/object-storage';
-import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
+import { FormikProps } from 'formik';
+
 import { Item } from 'src/components/EnhancedSelect/Select';
+import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
 
 export const generateObjectUrl = (
   clusterId: ObjectStorageClusterID,
@@ -15,8 +16,8 @@ export const generateObjectUrl = (
 ) => {
   const path = `${bucketName}.${clusterId}.${OBJECT_STORAGE_ROOT}/${objectName}`;
   return {
-    path,
     absolute: 'https://' + path,
+    path,
   };
 };
 
@@ -51,10 +52,10 @@ export const basename = (
 };
 
 export interface ExtendedObject extends ObjectStorageObject {
-  _isFolder: boolean;
   _displayName: string;
-  _shouldDisplayObject: boolean;
+  _isFolder: boolean;
   _manuallyCreated: boolean;
+  _shouldDisplayObject: boolean;
 }
 
 export const extendObject = (
@@ -73,13 +74,13 @@ export const extendObject = (
 
   return {
     ...object,
-    _isFolder,
     _displayName,
+    _isFolder,
     // If we're in a folder called "my-folder", we don't want to show the object
     // called "my-folder/". We can look at the prefix to make this decision,
+    _manuallyCreated: manuallyCreated,
     // since it will also be "my-folder/".
     _shouldDisplayObject: object.name !== prefix,
-    _manuallyCreated: manuallyCreated,
   };
 };
 
@@ -93,8 +94,7 @@ export const prefixArrayToString = (prefixArray: string[], cutoff: number) => {
   }
 
   const prefixSlice = prefixArray.slice(0, cutoff + 1).join('/');
-  const prefixString = prefixSlice + '/';
-  return prefixString;
+  return prefixSlice + '/';
 };
 
 export const displayName = (objectName: string) => {
@@ -108,7 +108,7 @@ export const displayName = (objectName: string) => {
 export const tableUpdateAction = (
   currentPrefix: string,
   objectName: string
-): null | { type: 'FILE' | 'FOLDER'; name: string } => {
+): { name: string; type: 'FILE' | 'FOLDER' } | null => {
   if (objectName.startsWith(currentPrefix) || currentPrefix === '') {
     // If the prefix matches the beginning of the objectName, we "subtract" it
     // from the objectName, and make decisions based on that.
@@ -118,9 +118,9 @@ export const tableUpdateAction = (
     const delta = objectName.slice(currentPrefix.length);
 
     if (isFile(delta)) {
-      return { type: 'FILE', name: delta };
+      return { name: delta, type: 'FILE' };
     } else {
-      return { type: 'FOLDER', name: firstSubfolder(delta) };
+      return { name: firstSubfolder(delta), type: 'FOLDER' };
     }
   }
   return null;
@@ -170,9 +170,9 @@ export const bucketACLOptions: Item<ACLType>[] = [
 ];
 
 export const objectACLHelperText: Record<ACLType, string> = {
+  'authenticated-read': 'Authenticated Read ACL',
+  custom: 'Custom ACL',
   private: 'Private ACL',
   'public-read': 'Public Read ACL',
-  'authenticated-read': 'Authenticated Read ACL',
   'public-read-write': 'Public Read/Write ACL',
-  custom: 'Custom ACL',
 };

@@ -1,4 +1,5 @@
-import { captureException, configureScope, withScope } from '@sentry/browser';
+import { captureException, configureScope, withScope } from '@sentry/react';
+
 import { SENTRY_URL } from 'src/constants';
 import { initSentry } from 'src/initSentry';
 
@@ -7,7 +8,7 @@ initSentry();
 // Wrapper around Sentry's `captureException` function. A local scope is created
 // so that we can add `extra` and `tags` to this specific Sentry event.
 export const reportException = (
-  error: string | Error,
+  error: Error | string,
   extra?: Record<string, any>,
   tags?: Record<string, string>
 ) => {

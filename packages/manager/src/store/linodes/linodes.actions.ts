@@ -7,8 +7,9 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import { QueryClient } from 'react-query';
-import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
+
+import { GetAllData } from 'src/utilities/getAll';
 
 export const actionCreator = actionCreatorFactory(`@@manager/linodes`);
 
@@ -34,8 +35,8 @@ export type GetLinodeResponse = Promise<Linode>;
 
 export const getLinodesActions = actionCreator.async<
   {
-    params?: Params;
     filter?: Filter;
+    params?: Params;
   },
   GetAllData<Linode>,
   APIError[]
@@ -76,8 +77,8 @@ export const rebootLinodeActions = actionCreator.async<
 >('reboot');
 
 export interface PageParams {
-  params?: Params;
   filters?: Filter;
+  params?: Params;
 }
 export const getLinodesPageActions = actionCreator.async<
   PageParams,

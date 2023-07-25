@@ -13,8 +13,8 @@ import {
 } from './kubeUtils';
 
 const mockNodePool = nodePoolFactory.build({
-  type: 'g1-fake-1',
   count: 2,
+  type: 'g1-fake-1',
 });
 
 const types = linodeTypeFactory
@@ -60,15 +60,15 @@ describe('helper functions', () => {
 
   describe('Get total cluster memory/CPUs', () => {
     const pools = nodePoolFactory.buildList(3, {
-      type: 'g6-fake-1',
       nodes: kubeLinodeFactory.buildList(3),
+      type: 'g6-fake-1',
     });
 
     const types = linodeTypeFactory
       .buildList(1, {
+        disk: 1048576,
         id: 'g6-fake-1',
         memory: 1024,
-        disk: 1048576,
         vcpus: 2,
       })
       .map(extendType);

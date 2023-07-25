@@ -1,14 +1,14 @@
 import {
-  ImageUploadPayload,
-  createImage,
   CreateImagePayload,
+  Image,
+  ImageUploadPayload,
+  UploadImageResponse,
+  createImage,
   deleteImage,
-  uploadImage,
   getImage,
   getImages,
-  Image,
   updateImage,
-  UploadImageResponse,
+  uploadImage,
 } from '@linode/api-v4';
 import {
   APIError,
@@ -22,9 +22,11 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
-import { getAll } from 'src/utilities/getAll';
+
 import { EventWithStore } from 'src/events';
+import { getAll } from 'src/utilities/getAll';
+
+import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
 
 export const queryKey = 'images';
 
@@ -45,7 +47,7 @@ export const useImageQuery = (imageID: string, enabled = true) =>
 export const useCreateImageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Image, APIError[], CreateImagePayload>(
-    ({ diskID, label, description, cloud_init }) => {
+    ({ cloud_init, description, diskID, label }) => {
       return createImage(diskID, label, description, cloud_init);
     },
     {
@@ -62,9 +64,9 @@ export const useUpdateImageMutation = () => {
   return useMutation<
     Image,
     APIError[],
-    { imageId: string; label?: string; description?: string }
+    { description?: string; imageId: string; label?: string }
   >(
-    ({ imageId, label, description }) =>
+    ({ description, imageId, label }) =>
       updateImage(imageId, label, description),
     {
       onSuccess(image) {
@@ -122,7 +124,7 @@ export const useUploadImageQuery = (payload: ImageUploadPayload) =>
   useMutation<UploadImageResponse, APIError[]>(() => uploadImage(payload));
 
 export const imageEventsHandler = ({ event, queryClient }: EventWithStore) => {
-  const { action, status, entity } = event;
+  const { action, entity, status } = event;
 
   // Keep the getAll query up to date so that when we have to use it, it contains accurate data
   queryClient.invalidateQueries(`${queryKey}-all`);

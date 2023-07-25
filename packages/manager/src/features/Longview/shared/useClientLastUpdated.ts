@@ -1,6 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
+
 import { getLastUpdated } from '../request';
 import { LongviewNotification } from '../request.types';
 
@@ -124,5 +125,5 @@ export const useClientLastUpdated = (
     // @todo: fix deps.
   }, [clientAPIKey]);
 
-  return { lastUpdated, lastUpdatedError, authed, notifications };
+  return { authed, lastUpdated, lastUpdatedError, notifications };
 };

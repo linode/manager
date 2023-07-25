@@ -1,8 +1,10 @@
 import React from 'react';
-import { Typography } from 'src/components/Typography';
+
 import { Link } from 'src/components/Link';
-import type { LinkProps } from 'react-router-dom';
+import { Typography } from 'src/components/Typography';
+
 import type { Meta, StoryObj } from '@storybook/react';
+import type { LinkProps } from 'react-router-dom';
 
 // TODO: remove the typography component from this story once M3-6772 is handled
 export const Default: StoryObj<LinkProps> = {
@@ -29,23 +31,7 @@ export const External: StoryObj<LinkProps> = {
 };
 
 const meta: Meta<LinkProps> = {
-  title: 'Components/Link',
-  component: Link,
-  args: {
-    to: 'https://www.akamai.com',
-    children: 'This is a link',
-  },
   argTypes: {
-    to: {
-      control: 'text',
-      description:
-        "The link's destination. If the value contains `http` or `mailto`, it will be considered an external link and open in a new window.",
-      table: {
-        type: {
-          summary: 'string',
-        },
-      },
-    },
     children: {
       control: {
         type: 'text',
@@ -79,19 +65,35 @@ const meta: Meta<LinkProps> = {
       },
     },
     replace: {
+      control: {
+        default: false,
+        type: 'boolean',
+      },
       description:
         'When `true`, clicking the link will replace the current entry in the history stack instead of adding a new one.',
-      control: {
-        type: 'boolean',
-        default: false,
-      },
       table: {
         type: {
           summary: 'boolean',
         },
       },
     },
+    to: {
+      control: 'text',
+      description:
+        "The link's destination. If the value contains `http` or `mailto`, it will be considered an external link and open in a new window.",
+      table: {
+        type: {
+          summary: 'string',
+        },
+      },
+    },
   },
+  args: {
+    children: 'This is a link',
+    to: 'https://www.akamai.com',
+  },
+  component: Link,
+  title: 'Components/Link',
 };
 
 export default meta;

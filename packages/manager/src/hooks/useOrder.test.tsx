@@ -1,9 +1,11 @@
 import { act, renderHook } from '@testing-library/react-hooks';
+
 import { rest, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { usePreferences } from 'src/queries/preferences';
 import { OrderSet } from 'src/types/ManagerPreferences';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+
 import { useOrder } from './useOrder';
 
 // Default for Sorting
@@ -78,12 +80,12 @@ describe('useOrder hook', () => {
     const { result } = renderHook(() => useOrder(defaultOrder), {
       wrapper: (ui) =>
         wrapWithTheme(ui, {
-          queryClient,
           MemoryRouter: {
             initialEntries: [
               'https://cloud.linode.com/account/maintenance?order=desc&orderBy=when',
             ],
           },
+          queryClient,
         }),
     });
 
@@ -92,7 +94,7 @@ describe('useOrder hook', () => {
   });
 
   it('use preferences are used when there are no query params', async () => {
-    const { waitFor, result } = renderHook(
+    const { result, waitFor } = renderHook(
       () => useOrder(defaultOrder, 'account-maintenance-order'),
       {
         wrapper: (ui) => wrapWithTheme(ui, { queryClient }),

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader, {
   LandingHeaderProps,
@@ -9,8 +8,11 @@ import LandingHeader, {
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import { useAccount } from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
+
 import AccountLogins from './AccountLogins';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
@@ -35,28 +37,28 @@ const AccountLanding = () => {
 
   const tabs = [
     {
-      title: 'Billing Info',
       routeName: '/account/billing',
+      title: 'Billing Info',
     },
     {
-      title: 'Users & Grants',
       routeName: '/account/users',
+      title: 'Users & Grants',
     },
     {
-      title: 'Login History',
       routeName: '/account/login-history',
+      title: 'Login History',
     },
     {
-      title: 'Service Transfers',
       routeName: '/account/service-transfers',
+      title: 'Service Transfers',
     },
     {
-      title: 'Maintenance',
       routeName: '/account/maintenance',
+      title: 'Maintenance',
     },
     {
-      title: 'Settings',
       routeName: '/account/settings',
+      title: 'Settings',
     },
   ];
 
@@ -94,10 +96,10 @@ const AccountLanding = () => {
   const isBillingTabSelected = location.pathname.match(/billing/);
 
   const landingHeaderProps: LandingHeaderProps = {
-    title: 'Account',
     breadcrumbProps: {
       pathname: '/account',
     },
+    title: 'Account',
   };
 
   if (isBillingTabSelected) {

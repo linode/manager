@@ -1,12 +1,24 @@
 import * as React from 'react';
+
 import { Hidden, HiddenProps } from '../Hidden';
-import Skeleton from '../core/Skeleton';
 import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';
+import Skeleton from '../core/Skeleton';
 
 export interface TableRowLoadingProps {
+  /**
+   * The number of columns the empty state should span
+   * @default 1
+   */
   columns?: number;
+  /**
+   * Optional responsive props to hide cells at certain breakpoints
+   */
   responsive?: Record<number, HiddenProps>;
+  /**
+   * The number of rows to display to customize the loading table's height)
+   * @default 1
+   */
   rows?: number;
 }
 
@@ -40,14 +52,14 @@ export const TableRowLoading = ({
   for (let i = 0; i < rows; i++) {
     tableRows.push(
       <TableRow
-        aria-label="Table content is loading"
-        data-testid="table-row-loading"
-        key={`table-loading-row-${i}`}
         sx={{
           '&& :last-child': {
             paddingRight: '15px',
           },
         }}
+        aria-label="Table content is loading"
+        data-testid="table-row-loading"
+        key={`table-loading-row-${i}`}
       >
         {cols}
       </TableRow>

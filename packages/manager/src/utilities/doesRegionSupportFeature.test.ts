@@ -1,4 +1,5 @@
 import { regions } from 'src/__data__/regionsData';
+
 import { doesRegionSupportFeature } from './doesRegionSupportFeature';
 
 const blockStorage = 'Block Storage';

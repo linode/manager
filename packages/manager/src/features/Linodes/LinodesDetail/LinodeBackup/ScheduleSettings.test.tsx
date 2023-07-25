@@ -1,22 +1,24 @@
 import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { ScheduleSettings } from './ScheduleSettings';
-import { rest, server } from 'src/mocks/testServer';
-import { linodeFactory } from 'src/factories/linodes';
+
 import { profileFactory } from 'src/factories';
+import { linodeFactory } from 'src/factories/linodes';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { ScheduleSettings } from './ScheduleSettings';
 
 describe('ScheduleSettings', () => {
   it('renders heading and copy', async () => {
     server.use(
       rest.get('*/linode/instances/1', (req, res, ctx) => {
         return res(
-          ctx.json(linodeFactory.build({ id: 1, backups: { enabled: true } }))
+          ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
         );
       })
     );
 
     const { getByText } = renderWithTheme(
-      <ScheduleSettings linodeId={1} isReadOnly={false} />
+      <ScheduleSettings isReadOnly={false} linodeId={1} />
     );
 
     getByText('Settings');
@@ -31,7 +33,6 @@ describe('ScheduleSettings', () => {
         return res(
           ctx.json(
             linodeFactory.build({
-              id: 1,
               backups: {
                 enabled: true,
                 schedule: {
@@ -39,6 +40,7 @@ describe('ScheduleSettings', () => {
                   window: 'W4',
                 },
               },
+              id: 1,
             })
           )
         );
@@ -51,7 +53,7 @@ describe('ScheduleSettings', () => {
     );
 
     const { findByText } = renderWithTheme(
-      <ScheduleSettings linodeId={1} isReadOnly={false} />
+      <ScheduleSettings isReadOnly={false} linodeId={1} />
     );
 
     await findByText('Monday');

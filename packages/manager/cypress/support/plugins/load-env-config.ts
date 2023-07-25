@@ -1,5 +1,6 @@
-import { resolve } from 'path';
 import * as dotenv from 'dotenv';
+import { resolve } from 'path';
+
 import { CypressPlugin } from './plugin';
 
 /**

@@ -1,13 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
-import SupportTicketDetail from './SupportTicketDetail';
+
 import {
   supportReplyFactory,
   supportTicketFactory,
 } from 'src/factories/support';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
+
+import SupportTicketDetail from './SupportTicketDetail';
 
 describe('Support Ticket Detail', () => {
   it('should display a loading spinner', () => {
@@ -19,9 +21,9 @@ describe('Support Ticket Detail', () => {
     server.use(
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
+          description: 'TEST Support Ticket body',
           id: req.params.ticketId,
           status: 'open',
-          description: 'TEST Support Ticket body',
           summary: '#0: TEST Support Ticket',
         });
         return res(ctx.json(ticket));
@@ -80,9 +82,9 @@ describe('Support Ticket Detail', () => {
       }),
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
+          description: 'this ticket should have a reply on it',
           id: req.params.ticketId,
           status: 'open',
-          description: 'this ticket should have a reply on it',
           summary: 'My Linode is broken :(',
         });
         return res(ctx.json(ticket));

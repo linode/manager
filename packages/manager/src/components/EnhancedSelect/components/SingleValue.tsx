@@ -1,29 +1,29 @@
-import * as React from 'react';
-import { components, SingleValueProps } from 'react-select';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { SingleValueProps, components } from 'react-select';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    paddingLeft: `45px !important`,
-    height: '100%',
-  },
   icon: {
     fontSize: '1.8em',
-    [theme.breakpoints.only('xs')]: {
-      fontSize: '1.52em',
-    },
     height: 24,
     marginLeft: 6,
     marginRight: theme.spacing(),
     position: 'absolute',
+    [theme.breakpoints.only('xs')]: {
+      fontSize: '1.52em',
+    },
+  },
+  root: {
+    alignItems: 'center',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    height: '100%',
+    paddingLeft: `45px !important`,
   },
 }));
 
-interface Props extends SingleValueProps<any> {}
+type Props = SingleValueProps<any>;
 
 export const _SingleValue: React.FC<Props> = (props) => {
   const { classes } = useStyles();

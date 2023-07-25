@@ -1,27 +1,28 @@
 import * as React from 'react';
+
 import { Link } from 'src/components/Link';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
 export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
   confirmationText?: JSX.Element | string;
-  textFieldStyle?: React.CSSProperties;
-  typographyStyle?: React.CSSProperties;
-  visible?: boolean | undefined;
-  title?: string;
   hideInstructions?: boolean;
   onChange: (value: string) => void;
+  textFieldStyle?: React.CSSProperties;
+  title?: string;
+  typographyStyle?: React.CSSProperties;
+  visible?: boolean | undefined;
 }
 
 export const TypeToConfirm = (props: TypeToConfirmProps) => {
   const {
     confirmationText,
-    textFieldStyle,
-    typographyStyle,
-    title,
-    visible,
     hideInstructions,
     onChange,
+    textFieldStyle,
+    title,
+    typographyStyle,
+    visible,
     ...rest
   } = props;
 
@@ -41,8 +42,8 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
           <Typography variant="h2">{title}</Typography>
           <Typography style={typographyStyle}>{confirmationText}</Typography>
           <TextField
-            style={textFieldStyle}
             onChange={(e) => onChange(e.target.value)}
+            style={textFieldStyle}
             {...rest}
           />
         </>

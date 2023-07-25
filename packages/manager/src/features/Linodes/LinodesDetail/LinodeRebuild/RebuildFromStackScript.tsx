@@ -2,31 +2,32 @@ import { rebuildLinode } from '@linode/api-v4/lib/linodes';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
+
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
+import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
-import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { usePreferences } from 'src/queries/preferences';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
+import { usePreferences } from 'src/queries/preferences';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -37,11 +38,11 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingTop: theme.spacing(3),
-  },
-  error: {
-    marginTop: theme.spacing(2),
+  actionPanel: {
+    '& button': {
+      alignSelf: 'flex-end',
+    },
+    flexDirection: 'column',
   },
   emptyImagePanel: {
     padding: theme.spacing(3),
@@ -50,43 +51,43 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
     padding: `${theme.spacing(1)} 0`,
   },
-  actionPanel: {
-    flexDirection: 'column',
-    '& button': {
-      alignSelf: 'flex-end',
-    },
+  error: {
+    marginTop: theme.spacing(2),
+  },
+  root: {
+    paddingTop: theme.spacing(3),
   },
 }));
 
 interface Props {
-  type: 'community' | 'account';
   disabled: boolean;
-  passwordHelperText: string;
+  handleRebuildError: (status: string) => void;
   linodeId: number;
   linodeLabel?: string;
-  handleRebuildError: (status: string) => void;
   onClose: () => void;
+  passwordHelperText: string;
+  type: 'account' | 'community';
 }
 
 interface RebuildFromStackScriptForm {
+  authorized_users: string[];
   image: string;
   root_pass: string;
   stackscript_id: string;
-  authorized_users: string[];
 }
 
 const initialValues: RebuildFromStackScriptForm = {
+  authorized_users: [],
   image: '',
   root_pass: '',
   stackscript_id: '',
-  authorized_users: [],
 };
 
 export const RebuildFromStackScript = (props: Props) => {
   const {
+    handleRebuildError,
     linodeId,
     linodeLabel,
-    handleRebuildError,
     onClose,
     passwordHelperText,
   } = props;
@@ -128,21 +129,21 @@ export const RebuildFromStackScript = (props: Props) => {
   );
 
   const handleFormSubmit = (
-    { image, root_pass, authorized_users }: RebuildFromStackScriptForm,
+    { authorized_users, image, root_pass }: RebuildFromStackScriptForm,
     {
-      setSubmitting,
-      setStatus,
       setErrors,
+      setStatus,
+      setSubmitting,
     }: FormikProps<RebuildFromStackScriptForm>
   ) => {
     setSubmitting(true);
 
     rebuildLinode(linodeId, {
-      stackscript_id: ss.id,
-      stackscript_data: ss.udf_data,
-      root_pass,
-      image,
       authorized_users,
+      image,
+      root_pass,
+      stackscript_data: ss.udf_data,
+      stackscript_id: ss.id,
     })
       .then((_) => {
         // Reset events polling since an in-progress event (rebuild) is happening.
@@ -216,17 +217,17 @@ export const RebuildFromStackScript = (props: Props) => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={RebuildSchema}
-      validateOnChange={false}
       onSubmit={handleFormSubmit}
+      validateOnChange={false}
+      validationSchema={RebuildSchema}
     >
       {({
         errors,
         handleSubmit,
         setFieldValue,
         status, // holds generalError messages
-        values,
         validateForm,
+        values,
       }) => {
         // We'd like to validate the form before submitting.
         const handleRebuildButtonClick = () => {
@@ -273,49 +274,49 @@ export const RebuildFromStackScript = (props: Props) => {
           <Grid className={classes.root}>
             <form>
               <SelectStackScriptPanel
-                error={errors.stackscript_id}
-                selectedId={ss.id}
-                selectedUsername={ss.username}
-                updateFor={[classes, ss.id, errors]}
-                onSelect={handleSelect}
-                publicImages={filterImagesByType(_imagesData, 'public')}
-                resetSelectedStackScript={resetStackScript}
-                data-qa-select-stackscript
-                category={props.type}
-                header="Select StackScript"
                 request={
                   props.type === 'account'
                     ? getMineAndAccountStackScripts
                     : getCommunityStackscripts
                 }
+                category={props.type}
+                data-qa-select-stackscript
+                error={errors.stackscript_id}
+                header="Select StackScript"
+                onSelect={handleSelect}
+                publicImages={filterImagesByType(_imagesData, 'public')}
+                resetSelectedStackScript={resetStackScript}
+                selectedId={ss.id}
+                selectedUsername={ss.username}
+                updateFor={[classes, ss.id, errors]}
               />
               {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
                 <UserDefinedFieldsPanel
-                  errors={udfErrors}
-                  selectedLabel={ss.label}
-                  selectedUsername={ss.username}
-                  handleChange={handleChangeUDF}
-                  userDefinedFields={ss.user_defined_fields}
                   updateFor={[
                     classes,
                     ss.user_defined_fields,
                     ss.udf_data,
                     udfErrors,
                   ]}
+                  errors={udfErrors}
+                  handleChange={handleChangeUDF}
+                  selectedLabel={ss.label}
+                  selectedUsername={ss.username}
                   udf_data={ss.udf_data}
+                  userDefinedFields={ss.user_defined_fields}
                 />
               )}
 
               {ss.images && ss.images.length > 0 ? (
                 <ImageSelect
-                  variant="public"
-                  title="Choose Image"
-                  images={ss.images}
                   handleSelectImage={(selected) =>
                     setFieldValue('image', selected)
                   }
-                  selectedImageID={values.image}
                   error={errors.image}
+                  images={ss.images}
+                  selectedImageID={values.image}
+                  title="Choose Image"
+                  variant="public"
                 />
               ) : (
                 <ImageEmptyState
@@ -324,14 +325,14 @@ export const RebuildFromStackScript = (props: Props) => {
                 />
               )}
               <AccessPanel
-                password={values.root_pass}
-                handleChange={(value) => setFieldValue('root_pass', value)}
                 setAuthorizedUsers={(usernames) =>
                   setFieldValue('authorized_users', usernames)
                 }
                 authorizedUsers={values.authorized_users}
-                error={errors.root_pass}
                 data-qa-access-panel
+                error={errors.root_pass}
+                handleChange={(value) => setFieldValue('root_pass', value)}
+                password={values.root_pass}
                 passwordHelperText={passwordHelperText}
               />
               <ActionsPanel className={classes.actionPanel}>
@@ -342,23 +343,23 @@ export const RebuildFromStackScript = (props: Props) => {
                       <strong>{linodeLabel}</strong>) in the field below:
                     </span>
                   }
-                  title="Confirm"
-                  typographyStyle={{ marginBottom: 8 }}
-                  label="Linode Label"
                   onChange={(input) => {
                     setConfirmationText(input);
                   }}
-                  value={confirmationText}
                   hideLabel
-                  visible={preferences?.type_to_confirm}
+                  label="Linode Label"
                   textFieldStyle={{ marginBottom: 16 }}
+                  title="Confirm"
+                  typographyStyle={{ marginBottom: 8 }}
+                  value={confirmationText}
+                  visible={preferences?.type_to_confirm}
                 />
                 <Button
                   buttonType="primary"
-                  disabled={submitButtonDisabled}
-                  onClick={handleRebuildButtonClick}
                   data-qa-rebuild
                   data-testid="rebuild-button"
+                  disabled={submitButtonDisabled}
+                  onClick={handleRebuildButtonClick}
                 >
                   Rebuild Linode
                 </Button>

@@ -1,9 +1,9 @@
 import sanitize from 'sanitize-html';
+
 import { allowedHTMLAttr, allowedHTMLTags } from 'src/constants';
 
 export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
   sanitize(text, {
-    allowedTags: allowedHTMLTags,
     allowedAttributes: {
       '*': allowedHTMLAttr,
       // "target" and "rel" are allowed because they are handled in the
@@ -13,6 +13,8 @@ export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
     allowedClasses: {
       span: ['version'],
     },
+    allowedTags: allowedHTMLTags,
+    disallowedTagsMode: 'escape',
     transformTags: {
       // This transformation function does the following to anchor tags:
       // 1. Turns the <a /> into a <span /> if the "href" is invalid
@@ -25,8 +27,8 @@ export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
         const href = attribs.href ?? '';
         if (href && !isURLValid(href)) {
           return {
-            tagName: 'span',
             attribs: {},
+            tagName: 'span',
           };
         }
 
@@ -34,11 +36,11 @@ export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
         const target = attribs.target ?? '';
         if (target && target === '_blank') {
           return {
-            tagName,
             attribs: {
               ...attribs,
               rel: 'noopener noreferrer',
             },
+            tagName,
           };
         }
 
@@ -47,12 +49,11 @@ export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
         delete attribs.target;
 
         return {
-          tagName,
           attribs,
+          tagName,
         };
       },
     },
-    disallowedTagsMode: 'escape',
     ...options,
   }).trim();
 

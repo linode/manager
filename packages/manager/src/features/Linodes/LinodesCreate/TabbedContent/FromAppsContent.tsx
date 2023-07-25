@@ -1,17 +1,30 @@
-import compact from 'lodash/compact';
-import curry from 'lodash/curry';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import compact from 'lodash/compact';
+import curry from 'lodash/curry';
 import { assocPath } from 'ramda';
 import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+
+import { Box } from 'src/components/Box';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import Select, { Item } from 'src/components/EnhancedSelect';
 import ImageSelect from 'src/components/ImageSelect';
+import { Typography } from 'src/components/Typography';
+import { Paper } from 'src/components/Paper';
+import { APP_ROOT } from 'src/constants';
 import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
+import {
+  AppCategory,
+  oneClickApps,
+} from 'src/features/OneClickApps/oneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+
 import SelectAppPanel from '../SelectAppPanel';
 import {
   AppsData,
@@ -20,19 +33,8 @@ import {
   WithTypesRegionsAndImages,
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
-import { APP_ROOT } from 'src/constants';
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import Select, { Item } from 'src/components/EnhancedSelect';
-import { Box } from 'src/components/Box';
-import Paper from 'src/components/core/Paper';
-import { Typography } from 'src/components/Typography';
-import {
-  oneClickApps,
-  AppCategory,
-} from 'src/features/OneClickApps/oneClickApps';
-import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
 
-type ClassNames = 'main' | 'sidebar' | 'searchAndFilter' | 'search' | 'filter';
+type ClassNames = 'filter' | 'main' | 'search' | 'searchAndFilter' | 'sidebar';
 
 const appCategories = [
   'Control Panels',
@@ -57,44 +59,44 @@ const appCategoryOptions = appCategories.map((categoryName) => ({
 
 const styles = (theme: Theme) =>
   createStyles({
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        marginTop: '-130px !important',
-      },
+    filter: {
+      flexGrow: 1.5,
     },
     main: {
       [theme.breakpoints.up('md')]: {
         maxWidth: '100%',
       },
     },
-    searchAndFilter: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      gap: theme.spacing(),
-      marginTop: theme.spacing(),
-      '& > h2': {
-        width: '100%',
-      },
-    },
     search: {
-      flexGrow: 10,
       '& .input': {
         maxWidth: 'none',
       },
+      flexGrow: 10,
     },
-    filter: {
-      flexGrow: 1.5,
+    searchAndFilter: {
+      '& > h2': {
+        width: '100%',
+      },
+      display: 'flex',
+      gap: theme.spacing(),
+      justifyContent: 'space-between',
+      marginTop: theme.spacing(),
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '-130px !important',
+      },
     },
   });
 
 const errorResources = {
-  type: 'A plan selection',
-  region: 'A region selection',
-  label: 'A label',
-  root_pass: 'A root password',
   image: 'Image',
-  tags: 'Tags',
+  label: 'A label',
+  region: 'A region selection',
+  root_pass: 'A root password',
   stackscript_id: 'The selected App',
+  tags: 'Tags',
+  type: 'A plan selection',
 };
 
 interface Props {
@@ -110,13 +112,13 @@ type InnerProps = Props &
 type CombinedProps = WithStyles<ClassNames> & InnerProps;
 
 interface State {
-  detailDrawerOpen: boolean;
-  selectedScriptForDrawer: string;
-  filteredApps: CombinedProps['appInstances'];
-  isSearching: boolean;
-  isFiltering: boolean;
-  query: string;
   categoryFilter: Item<AppCategory> | null;
+  detailDrawerOpen: boolean;
+  filteredApps: CombinedProps['appInstances'];
+  isFiltering: boolean;
+  isSearching: boolean;
+  query: string;
+  selectedScriptForDrawer: string;
 }
 
 export const getCompatibleImages = (
@@ -162,8 +164,8 @@ const renderLogo = (selectedStackScriptLabel?: string, logoUrl?: string) => {
     <span className="fl-tux" />
   ) : (
     <img
-      src={`${APP_ROOT}/${logoUrl.toLowerCase()}`}
       alt={`${selectedStackScriptLabel} logo`}
+      src={`${APP_ROOT}/${logoUrl.toLowerCase()}`}
     />
   );
 };
@@ -171,121 +173,22 @@ const renderLogo = (selectedStackScriptLabel?: string, logoUrl?: string) => {
 const curriedHandleSelectStackScript = curry(handleSelectStackScript);
 
 class FromAppsContent extends React.Component<CombinedProps, State> {
-  state: State = {
-    detailDrawerOpen: false,
-    selectedScriptForDrawer: '',
-    filteredApps: [],
-    isSearching: false,
-    query: '',
-    categoryFilter: null,
-    isFiltering: false,
-  };
-
-  handleChangeUDF = (key: string, value: string) => {
-    // either overwrite or create new selection
-    const newUDFData = assocPath([key], value, this.props.selectedUDFs);
-
-    this.props.handleSelectUDFs({ ...this.props.selectedUDFs, ...newUDFData });
-  };
-
-  openDrawer = (stackScriptLabel: string) => {
-    this.setState({
-      detailDrawerOpen: true,
-      selectedScriptForDrawer: stackScriptLabel,
-    });
-  };
-
-  closeDrawer = () => {
-    this.setState({
-      detailDrawerOpen: false,
-    });
-  };
-
-  onSearch = (query: string) => {
-    if (query === '' || query.trim().length === 0) {
-      this.setState({ isSearching: false });
-    } else {
-      /**
-       * Enable ability to search OCA's by category, name, alternative name and
-       * alternative description keywords.
-       * */
-      const queryWords = query
-        .replace(/[,.-]/g, '')
-        .trim()
-        .toLocaleLowerCase()
-        .split(' ');
-
-      const matchingOCALabels = oneClickApps.reduce(
-        (acc: string[], { categories, name, alt_name, alt_description }) => {
-          const ocaAppString = `${name} ${alt_name} ${categories.join(
-            ' '
-          )} ${alt_description}`.toLocaleLowerCase();
-
-          const hasMatchingOCA = queryWords.every((queryWord) =>
-            ocaAppString.includes(queryWord)
-          );
-
-          if (hasMatchingOCA) {
-            acc.push(name.trim());
-          }
-
-          return acc;
-        },
-        []
-      );
-
-      const appsMatchingQuery = this.props.appInstances?.filter((instance) => {
-        return matchingOCALabels.includes(instance.label.trim());
-      });
-
-      this.setState({
-        isFiltering: false,
-        filteredApps: appsMatchingQuery,
-        isSearching: true,
-        categoryFilter: null,
-        query,
-      });
-    }
-  };
-
-  handleSelectCategory = (categoryItem: Item<AppCategory>) => {
-    const didUserSelectCategory = categoryItem !== null;
-    let instancesInCategory: StackScript[] | undefined = [];
-    if (didUserSelectCategory) {
-      sendMarketplaceSearchEvent('Category Dropdown', categoryItem.label);
-      const appsInCategory = oneClickApps.filter((oca) =>
-        oca.categories?.includes(categoryItem.value)
-      );
-      const appLabels = appsInCategory.map((app) => app.name.trim());
-      instancesInCategory = this.props.appInstances?.filter((instance) => {
-        return appLabels.includes(instance.label.trim());
-      });
-    }
-    this.setState({
-      categoryFilter: categoryItem,
-      isSearching: false,
-      query: '',
-      filteredApps: didUserSelectCategory ? instancesInCategory : [],
-      isFiltering: didUserSelectCategory,
-    });
-  };
-
   render() {
     const {
+      appInstances,
+      appInstancesError,
+      appInstancesLoading,
+      availableStackScriptImages: compatibleImages,
+      availableUserDefinedFields: userDefinedFields,
       classes,
+      errors,
       selectedImageID,
       selectedStackScriptID,
       selectedStackScriptLabel,
       selectedUDFs: udf_data,
-      availableUserDefinedFields: userDefinedFields,
-      availableStackScriptImages: compatibleImages,
-      updateImageID,
-      errors,
-      appInstances,
-      appInstancesError,
-      appInstancesLoading,
-      userCannotCreateLinode,
       setNumberOfNodesForAppCluster,
+      updateImageID,
+      userCannotCreateLinode,
     } = this.props;
 
     // ramda's curry placeholder conflicts with lodash so the lodash curry and placeholder is used here
@@ -310,11 +213,11 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
     const appLogo = renderLogo(selectedStackScriptLabel, logoUrl);
 
     const {
+      categoryFilter,
       filteredApps,
+      isFiltering,
       isSearching,
       query,
-      categoryFilter,
-      isFiltering,
     } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -330,13 +233,6 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
                   placeholder={
                     appInstancesLoading ? 'Loading...' : 'Search for app name'
                   }
-                  fullWidth
-                  onSearch={this.onSearch}
-                  label="Search marketplace"
-                  onClick={handleSearchFieldClick}
-                  hideLabel
-                  value={query}
-                  disabled={appInstancesLoading}
                   sx={
                     appInstancesLoading
                       ? {
@@ -349,19 +245,26 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
                         }
                       : null
                   }
+                  disabled={appInstancesLoading}
+                  fullWidth
+                  hideLabel
+                  label="Search marketplace"
+                  onClick={handleSearchFieldClick}
+                  onSearch={this.onSearch}
+                  value={query}
                 />
               </Box>
               <Box className={classes.filter}>
                 <Select
-                  label="Select category"
                   placeholder={
                     appInstancesLoading ? 'Loading...' : 'Select category'
                   }
-                  options={appCategoryOptions}
-                  onChange={this.handleSelectCategory}
-                  value={categoryFilter}
                   disabled={appInstancesLoading}
                   hideLabel
+                  label="Select category"
+                  onChange={this.handleSelectCategory}
+                  options={appCategoryOptions}
+                  value={categoryFilter}
                 />
               </Box>
             </Box>
@@ -372,43 +275,43 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
             }
             appInstancesError={appInstancesError}
             appInstancesLoading={appInstancesLoading}
-            selectedStackScriptID={selectedStackScriptID}
             disabled={userCannotCreateLinode}
-            handleClick={handleSelectStackScript}
-            openDrawer={this.openDrawer}
             error={hasErrorFor('stackscript_id')}
-            isSearching={isSearching}
+            handleClick={handleSelectStackScript}
             isFiltering={isFiltering}
+            isSearching={isSearching}
+            openDrawer={this.openDrawer}
             searchValue={query}
+            selectedStackScriptID={selectedStackScriptID}
           />
           {!userCannotCreateLinode && selectedStackScriptLabel ? (
             <UserDefinedFieldsPanel
-              errors={filterUDFErrors(errorResources, errors)}
-              selectedLabel={selectedStackScriptLabel}
-              selectedUsername="Linode"
-              handleChange={this.handleChangeUDF}
-              userDefinedFields={userDefinedFields}
               updateFor={[
                 selectedStackScriptID,
                 userDefinedFields,
                 udf_data,
                 errors,
               ]}
-              udf_data={udf_data || {}}
               appLogo={appLogo}
+              errors={filterUDFErrors(errorResources, errors)}
+              handleChange={this.handleChangeUDF}
               openDrawer={this.openDrawer}
+              selectedLabel={selectedStackScriptLabel}
+              selectedUsername="Linode"
               setNumberOfNodesForAppCluster={setNumberOfNodesForAppCluster}
+              udf_data={udf_data || {}}
+              userDefinedFields={userDefinedFields}
             />
           ) : null}
           {!userCannotCreateLinode &&
           compatibleImages &&
           compatibleImages.length > 0 ? (
             <ImageSelect
-              title="Select an Image"
-              images={compatibleImages}
-              handleSelectImage={updateImageID}
-              selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
+              handleSelectImage={updateImageID}
+              images={compatibleImages}
+              selectedImageID={selectedImageID}
+              title="Select an Image"
               variant="public"
             />
           ) : (
@@ -417,13 +320,112 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
         </Grid>
 
         <AppDetailDrawer
+          onClose={this.closeDrawer}
           open={this.state.detailDrawerOpen}
           stackScriptLabel={this.state.selectedScriptForDrawer}
-          onClose={this.closeDrawer}
         />
       </React.Fragment>
     );
   }
+
+  closeDrawer = () => {
+    this.setState({
+      detailDrawerOpen: false,
+    });
+  };
+
+  handleChangeUDF = (key: string, value: string) => {
+    // either overwrite or create new selection
+    const newUDFData = assocPath([key], value, this.props.selectedUDFs);
+
+    this.props.handleSelectUDFs({ ...this.props.selectedUDFs, ...newUDFData });
+  };
+
+  handleSelectCategory = (categoryItem: Item<AppCategory>) => {
+    const didUserSelectCategory = categoryItem !== null;
+    let instancesInCategory: StackScript[] | undefined = [];
+    if (didUserSelectCategory) {
+      sendMarketplaceSearchEvent('Category Dropdown', categoryItem.label);
+      const appsInCategory = oneClickApps.filter((oca) =>
+        oca.categories?.includes(categoryItem.value)
+      );
+      const appLabels = appsInCategory.map((app) => app.name.trim());
+      instancesInCategory = this.props.appInstances?.filter((instance) => {
+        return appLabels.includes(instance.label.trim());
+      });
+    }
+    this.setState({
+      categoryFilter: categoryItem,
+      filteredApps: didUserSelectCategory ? instancesInCategory : [],
+      isFiltering: didUserSelectCategory,
+      isSearching: false,
+      query: '',
+    });
+  };
+
+  onSearch = (query: string) => {
+    if (query === '' || query.trim().length === 0) {
+      this.setState({ isSearching: false });
+    } else {
+      /**
+       * Enable ability to search OCA's by category, name, alternative name and
+       * alternative description keywords.
+       * */
+      const queryWords = query
+        .replace(/[,.-]/g, '')
+        .trim()
+        .toLocaleLowerCase()
+        .split(' ');
+
+      const matchingOCALabels = oneClickApps.reduce(
+        (acc: string[], { alt_description, alt_name, categories, name }) => {
+          const ocaAppString = `${name} ${alt_name} ${categories.join(
+            ' '
+          )} ${alt_description}`.toLocaleLowerCase();
+
+          const hasMatchingOCA = queryWords.every((queryWord) =>
+            ocaAppString.includes(queryWord)
+          );
+
+          if (hasMatchingOCA) {
+            acc.push(name.trim());
+          }
+
+          return acc;
+        },
+        []
+      );
+
+      const appsMatchingQuery = this.props.appInstances?.filter((instance) => {
+        return matchingOCALabels.includes(instance.label.trim());
+      });
+
+      this.setState({
+        categoryFilter: null,
+        filteredApps: appsMatchingQuery,
+        isFiltering: false,
+        isSearching: true,
+        query,
+      });
+    }
+  };
+
+  openDrawer = (stackScriptLabel: string) => {
+    this.setState({
+      detailDrawerOpen: true,
+      selectedScriptForDrawer: stackScriptLabel,
+    });
+  };
+
+  state: State = {
+    categoryFilter: null,
+    detailDrawerOpen: false,
+    filteredApps: [],
+    isFiltering: false,
+    isSearching: false,
+    query: '',
+    selectedScriptForDrawer: '',
+  };
 }
 
 const styled = withStyles(styles);

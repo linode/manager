@@ -1,19 +1,21 @@
-import * as React from 'react';
-import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 import { act, waitFor } from '@testing-library/react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { appTokenFactory } from 'src/factories';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+
+import { appTokenFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 
 const props = {
-  open: true,
   onClose: jest.fn(),
+  open: true,
   token: appTokenFactory.build({ label: 'my-token' }),
 };
 
 describe('Edit API Token Drawer', () => {
   it('Should render a title, input for token label, and action buttons', () => {
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <EditAPITokenDrawer {...props} />
     );
     const drawerTitle = getByText('Edit Personal Access Token');

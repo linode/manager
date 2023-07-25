@@ -1,48 +1,50 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
-import Drawer from 'src/components/Drawer';
-import { TextField } from 'src/components/TextField';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import ActionsPanel from 'src/components/ActionsPanel';
+import { Button } from 'src/components/Button/Button';
+import { Drawer } from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   useAllIPsQuery,
   useLinodeIPMutation,
 } from 'src/queries/linodes/networking';
-import { Notice } from 'src/components/Notice/Notice';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { getErrorMap } from 'src/utilities/errorUtils';
+
 import { listIPv6InRange } from './LinodeNetworking';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  section: {
-    marginTop: theme.spacing(2),
-    borderTop: `1px solid ${theme.palette.divider}`,
-  },
   header: {
-    marginTop: theme.spacing(2),
-  },
-  rdnsRecord: {
     marginTop: theme.spacing(2),
   },
   ipv6Input: {
     marginBottom: theme.spacing(2),
   },
+  rdnsRecord: {
+    marginTop: theme.spacing(2),
+  },
+  section: {
+    borderTop: `1px solid ${theme.palette.divider}`,
+    marginTop: theme.spacing(2),
+  },
 }));
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  range: IPRange | undefined;
   linodeId: number;
+  onClose: () => void;
+  open: boolean;
+  range: IPRange | undefined;
 }
 
 export const EditRangeRDNSDrawer = (props: Props) => {
-  const { open, onClose, range, linodeId } = props;
+  const { linodeId, onClose, open, range } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(linodeId, open);
@@ -61,9 +63,9 @@ export const EditRangeRDNSDrawer = (props: Props) => {
     : [];
 
   const {
-    mutateAsync: updateIP,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateIP,
     reset,
   } = useLinodeIPMutation();
 
@@ -97,29 +99,29 @@ export const EditRangeRDNSDrawer = (props: Props) => {
   const errorMap = getErrorMap(['rdns'], error);
 
   return (
-    <Drawer open={open} onClose={onClose} title="Edit Reverse DNS">
+    <Drawer onClose={onClose} open={open} title="Edit Reverse DNS">
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && (
-          <Notice error style={{ marginTop: 16 }} data-qa-error>
+          <Notice data-qa-error error style={{ marginTop: 16 }}>
             {errorMap.none}
           </Notice>
         )}
         <TextField
-          placeholder="Enter an IPv6 address"
-          label="Enter an IPv6 address"
-          value={formik.values.address}
-          onChange={formik.handleChange}
-          name="address"
           data-qa-address-name
+          label="Enter an IPv6 address"
+          name="address"
+          onChange={formik.handleChange}
+          placeholder="Enter an IPv6 address"
+          value={formik.values.address}
         />
         <TextField
-          placeholder="Enter a domain name"
-          label="Enter a domain name"
-          value={formik.values.rdns}
+          data-qa-domain-name
           errorText={errorMap.rdns}
+          label="Enter a domain name"
           name="rdns"
           onChange={formik.handleChange}
-          data-qa-domain-name
+          placeholder="Enter a domain name"
+          value={formik.values.rdns}
         />
         <Typography variant="body1">
           Leave this field blank to reset RDNS
@@ -128,16 +130,16 @@ export const EditRangeRDNSDrawer = (props: Props) => {
           <Button
             buttonType="secondary"
             className="cancel"
-            onClick={onClose}
             data-qa-cancel
+            onClick={onClose}
           >
             Close
           </Button>
           <Button
             buttonType="primary"
-            type="submit"
-            loading={isLoading}
             data-qa-submit
+            loading={isLoading}
+            type="submit"
           >
             Save
           </Button>
@@ -145,11 +147,11 @@ export const EditRangeRDNSDrawer = (props: Props) => {
       </form>
       {range && ips && ips.length > 0 && (
         <div className={classes.section}>
-          <Typography variant="h3" className={classes.header}>
+          <Typography className={classes.header} variant="h3">
             Existing Records
           </Typography>
           {ips.map((ip) => (
-            <div key={ip.address} className={classes.rdnsRecord}>
+            <div className={classes.rdnsRecord} key={ip.address}>
               <Typography>{ip.address}</Typography>
               <Typography>{ip.rdns || ''}</Typography>
             </div>

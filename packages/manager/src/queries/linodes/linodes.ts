@@ -1,11 +1,25 @@
 import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
-import { getAll } from 'src/utilities/getAll';
-import { queryPresets } from '../base';
+  Config,
+  CreateLinodeRequest,
+  Kernel,
+  Linode,
+  ResizeLinodePayload,
+  changeLinodePassword,
+  createLinode,
+  deleteLinode,
+  getLinode,
+  getLinodeConfigs,
+  getLinodeKernel,
+  getLinodeKernels,
+  getLinodeLishToken,
+  getLinodes,
+  linodeBoot,
+  linodeReboot,
+  linodeShutdown,
+  resizeLinode,
+  scheduleOrQueueMigration,
+  updateLinode,
+} from '@linode/api-v4/lib/linodes';
 import {
   APIError,
   DeepPartial,
@@ -14,28 +28,16 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import {
-  Linode,
-  getLinodes,
-  getLinode,
-  getLinodeLishToken,
-  getLinodeConfigs,
-  Config,
-  updateLinode,
-  deleteLinode,
-  linodeBoot,
-  linodeReboot,
-  linodeShutdown,
-  changeLinodePassword,
-  scheduleOrQueueMigration,
-  getLinodeKernels,
-  Kernel,
-  getLinodeKernel,
-  resizeLinode,
-  ResizeLinodePayload,
-  createLinode,
-  CreateLinodeRequest,
-} from '@linode/api-v4/lib/linodes';
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
+
+import { getAll } from 'src/utilities/getAll';
+
 import { queryKey as accountQueryKey } from '../account';
+import { queryPresets } from '../base';
 
 export const queryKey = 'linodes';
 

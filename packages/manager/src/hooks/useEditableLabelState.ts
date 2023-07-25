@@ -12,10 +12,10 @@ export const useEditableLabelState = () => {
 
   return {
     editableLabel,
-    setEditableLabel,
     editableLabelError,
-    setEditableLabelError,
     resetEditableLabel,
+    setEditableLabel,
+    setEditableLabelError,
   };
 };
 

@@ -1,10 +1,12 @@
 import { Kernel } from '@linode/api-v4/lib/linodes/types';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import KernelSelect, {
-  kernelsToGroupedItems,
   Props,
+  kernelsToGroupedItems,
   sortCurrentKernels,
 } from './KernelSelect';
 

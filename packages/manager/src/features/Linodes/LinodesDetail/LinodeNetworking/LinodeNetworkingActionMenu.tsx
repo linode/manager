@@ -5,18 +5,20 @@ import { useTheme } from '@mui/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
 import { IPTypes } from './types';
 
 interface Props {
+  ipAddress?: IPAddress | IPRange;
+  ipType: IPTypes;
+  isOnlyPublicIP: boolean;
   onEdit?: (ip: IPAddress | IPRange) => void;
   onRemove?: (ip: IPAddress | IPRange) => void;
-  ipType: IPTypes;
-  ipAddress?: IPAddress | IPRange;
   readOnly: boolean;
-  isOnlyPublicIP: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -26,12 +28,12 @@ export const LinodeNetworkingActionMenu = (props: CombinedProps) => {
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
   const {
+    ipAddress,
+    ipType,
+    isOnlyPublicIP,
     onEdit,
     onRemove,
-    ipType,
-    ipAddress,
     readOnly,
-    isOnlyPublicIP,
   } = props;
 
   const showEdit =
@@ -56,11 +58,11 @@ export const LinodeNetworkingActionMenu = (props: CombinedProps) => {
   const actions = [
     onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
       ? {
-          title: 'Delete',
+          disabled: readOnly || isOnlyPublicIP,
           onClick: () => {
             onRemove(ipAddress);
           },
-          disabled: readOnly || isOnlyPublicIP,
+          title: 'Delete',
           tooltip: readOnly
             ? readOnlyTooltip
             : isOnlyPublicIP
@@ -70,11 +72,11 @@ export const LinodeNetworkingActionMenu = (props: CombinedProps) => {
       : null,
     onEdit && ipAddress && showEdit
       ? {
-          title: 'Edit RDNS',
+          disabled: readOnly,
           onClick: () => {
             onEdit(ipAddress);
           },
-          disabled: readOnly,
+          title: 'Edit RDNS',
           tooltip: readOnly ? readOnlyTooltip : undefined,
         }
       : null,
@@ -86,9 +88,9 @@ export const LinodeNetworkingActionMenu = (props: CombinedProps) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
-              key={action.title}
               actionText={action.title}
               disabled={action.disabled}
+              key={action.title}
               onClick={action.onClick}
               tooltip={action.tooltip}
             />

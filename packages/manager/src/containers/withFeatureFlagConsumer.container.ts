@@ -1,12 +1,13 @@
 import { LDClient as _LDClient } from 'launchdarkly-js-client-sdk';
+import { withLDConsumer } from 'launchdarkly-react-client-sdk';
+import { LDProps } from 'launchdarkly-react-client-sdk/lib/withLDConsumer';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
+
 import { FlagSet } from 'src/featureFlags';
 import { MockFeatureFlagState } from 'src/store/mockFeatureFlags';
 import { MapState } from 'src/store/types';
-import { compose } from 'recompose';
-import { withLDConsumer } from 'launchdarkly-react-client-sdk';
-import { LDProps } from 'launchdarkly-react-client-sdk/lib/withLDConsumer';
 
 /* eslint-disable-next-line */
 export interface LDClient extends _LDClient {}

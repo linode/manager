@@ -1,21 +1,21 @@
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   prefixComponentWrapper: {
     '& svg, & img': {
-      position: 'relative',
-      marginRight: 8,
       marginLeft: 4,
+      marginRight: 8,
+      position: 'relative',
       top: -2,
     },
   },
 });
 
 interface Props {
-  prefixStyle?: React.CSSProperties;
   prefixComponent: JSX.Element | null;
+  prefixStyle?: React.CSSProperties;
 }
 
 type CombinedProps = Props;

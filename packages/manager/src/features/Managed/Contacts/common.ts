@@ -1,6 +1,6 @@
 export interface ManagedContactGroup {
-  groupName: string;
   contactNames: string[];
+  groupName: string;
 }
 
 export type Mode = 'create' | 'edit';

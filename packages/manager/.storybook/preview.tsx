@@ -76,6 +76,7 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/,
       },
+      sort: 'requiredFirst',
     },
     docs: {
       container: DocsContainer,

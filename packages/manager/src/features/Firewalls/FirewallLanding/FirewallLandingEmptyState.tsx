@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/analytics';
+
 import {
   gettingStartedGuides,
   headers,
@@ -20,15 +22,15 @@ export const FirewallLandingEmptyState = (props: Props) => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Firewall',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Firewall',
             });
             openAddFirewallDrawer();
           },
-          children: 'Create Firewall',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

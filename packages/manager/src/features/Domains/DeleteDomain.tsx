@@ -1,31 +1,19 @@
 import * as React from 'react';
 import { Button } from 'src/components/Button/Button';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useDeleteDomainMutation } from 'src/queries/domains';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useSnackbar } from 'notistack';
 
-export interface Props {
+export interface DeleteDomainProps {
   domainId: number;
   domainLabel: string;
   // Function that is invoked after Domain has been successfully deleted.
   onSuccess?: () => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    float: 'right',
-    [theme.breakpoints.down('lg')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-}));
-
-export const DeleteDomain = (props: Props) => {
-  const classes = useStyles();
-
+export const DeleteDomain = (props: DeleteDomainProps) => {
   const { domainId, domainLabel } = props;
   const { enqueueSnackbar } = useSnackbar();
 
@@ -50,13 +38,9 @@ export const DeleteDomain = (props: Props) => {
 
   return (
     <>
-      <Button
-        className={classes.button}
-        buttonType="outlined"
-        onClick={() => setOpen(true)}
-      >
+      <StyledButton buttonType="outlined" onClick={() => setOpen(true)}>
         Delete Domain
-      </Button>
+      </StyledButton>
       <DeletionDialog
         typeToConfirm
         entity="domain"
@@ -75,4 +59,8 @@ export const DeleteDomain = (props: Props) => {
   );
 };
 
-export default DeleteDomain;
+const StyledButton = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
+  [theme.breakpoints.down('lg')]: {
+    marginRight: theme.spacing(),
+  },
+}));

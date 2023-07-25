@@ -5,9 +5,9 @@ describe('isDataEmpty helper function', () => {
     expect(
       isDataEmpty([
         {
-          label: 'Series 1',
-          data: [],
           borderColor: 'blue',
+          data: [],
+          label: 'Series 1',
         },
       ])
     ).toBe(true);
@@ -17,14 +17,14 @@ describe('isDataEmpty helper function', () => {
     expect(
       isDataEmpty([
         {
-          label: 'Series 1',
-          data: [],
           borderColor: 'blue',
+          data: [],
+          label: 'Series 1',
         },
         {
-          label: 'Series 2',
-          data: [],
           borderColor: 'green',
+          data: [],
+          label: 'Series 2',
         },
       ])
     ).toBe(true);
@@ -34,17 +34,17 @@ describe('isDataEmpty helper function', () => {
     expect(
       isDataEmpty([
         {
-          label: 'Series 1',
+          borderColor: 'blue',
           data: [
             [1, 2],
             [2, 3],
           ],
-          borderColor: 'blue',
+          label: 'Series 1',
         },
         {
-          label: 'Series 2',
-          data: [],
           borderColor: 'green',
+          data: [],
+          label: 'Series 2',
         },
       ])
     ).toBe(false);

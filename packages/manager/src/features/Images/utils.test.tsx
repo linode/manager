@@ -1,4 +1,5 @@
 import { imageFactory, linodeFactory } from 'src/factories';
+
 import { getImageLabelForLinode } from './utils';
 
 describe('getImageLabelForLinode', () => {

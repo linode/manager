@@ -1,19 +1,21 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import { DateTime, Duration } from 'luxon';
 import * as React from 'react';
+
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { StatusIcon, Status } from 'src/components/StatusIcon/StatusIcon';
+import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDuration } from 'src/utilities/formatDuration';
+
 import { LinodeBackupActionMenu } from './LinodeBackupActionMenu';
 
 interface Props {
   backup: LinodeBackup;
   disabled: boolean;
-  handleRestore: () => void;
   handleDeploy: () => void;
+  handleRestore: () => void;
 }
 
 const typeMap = {
@@ -22,40 +24,40 @@ const typeMap = {
 };
 
 const statusTextMap: Record<LinodeBackup['status'], string> = {
+  failed: 'Failed',
+  needsPostProcessing: 'Processing',
+  paused: 'Paused',
   pending: 'Pending',
   running: 'Running',
-  needsPostProcessing: 'Processing',
   successful: 'Success',
-  paused: 'Paused',
-  failed: 'Failed',
   userAborted: 'Aborted',
 };
 
 const statusIconMap: Record<LinodeBackup['status'], Status> = {
+  failed: 'error',
+  needsPostProcessing: 'other',
+  paused: 'inactive',
   pending: 'other',
   running: 'other',
-  needsPostProcessing: 'other',
   successful: 'active',
-  paused: 'inactive',
-  failed: 'error',
   userAborted: 'error',
 };
 
 const BackupTableRow = (props: Props) => {
-  const { backup, disabled, handleRestore, handleDeploy } = props;
+  const { backup, disabled, handleDeploy, handleRestore } = props;
 
   return (
-    <TableRow key={backup.id} data-qa-backup>
+    <TableRow data-qa-backup key={backup.id}>
       <TableCell
-        parentColumn="Label"
         data-qa-backup-name={backup.label || typeMap[backup.type]}
+        parentColumn="Label"
       >
         {backup.label || typeMap[backup.type]}
       </TableCell>
       <TableCell
-        statusCell
-        parentColumn="Status"
         data-qa-backup-name={backup.status}
+        parentColumn="Status"
+        statusCell
       >
         <StatusIcon status={statusIconMap[backup.status] ?? 'other'} />
         {statusTextMap[backup.status]}
@@ -74,22 +76,22 @@ const BackupTableRow = (props: Props) => {
           )
         )}
       </TableCell>
-      <TableCell parentColumn="Disks" data-qa-backup-disks>
+      <TableCell data-qa-backup-disks parentColumn="Disks">
         {backup.disks.map((disk, idx) => (
           <div key={idx}>
             {disk.label} ({disk.filesystem}) - {disk.size} MB
           </div>
         ))}
       </TableCell>
-      <TableCell parentColumn="Space Required" data-qa-space-required>
+      <TableCell data-qa-space-required parentColumn="Space Required">
         {backup.disks.reduce((acc, disk) => acc + disk.size, 0)} MB
       </TableCell>
       <TableCell actionCell>
         <LinodeBackupActionMenu
           backup={backup}
           disabled={disabled}
-          onRestore={handleRestore}
           onDeploy={handleDeploy}
+          onRestore={handleRestore}
         />
       </TableCell>
     </TableRow>

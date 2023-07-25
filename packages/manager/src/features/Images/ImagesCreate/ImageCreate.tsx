@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter, useHistory } from 'react-router-dom';
+import { RouteComponentProps, useHistory, withRouter } from 'react-router-dom';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { NavTabs, NavTab } from 'src/components/NavTabs/NavTabs';
+import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 type CombinedProps = RouteComponentProps<{}>;
@@ -32,32 +33,32 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
 
   const tabs: NavTab[] = [
     {
-      title: 'Capture Image',
-      routeName: `${props.match.url}/disk`,
       render: (
         <CreateImageTab
-          label={label}
-          description={description}
-          isCloudInit={isCloudInit}
-          changeLabel={handleSetLabel}
           changeDescription={handleSetDescription}
           changeIsCloudInit={() => setIsCloudInit(!isCloudInit)}
+          changeLabel={handleSetLabel}
+          description={description}
+          isCloudInit={isCloudInit}
+          label={label}
         />
       ),
+      routeName: `${props.match.url}/disk`,
+      title: 'Capture Image',
     },
     {
-      title: 'Upload Image',
-      routeName: `${props.match.url}/upload`,
       render: (
         <ImageUpload
-          label={label}
-          description={description}
-          changeLabel={handleSetLabel}
           changeDescription={handleSetDescription}
           changeIsCloudInit={() => setIsCloudInit(!isCloudInit)}
+          changeLabel={handleSetLabel}
+          description={description}
           isCloudInit={isCloudInit}
+          label={label}
         />
       ),
+      routeName: `${props.match.url}/upload`,
+      title: 'Upload Image',
     },
   ];
 

@@ -1,23 +1,25 @@
-import * as React from 'react';
-import { pageyProps } from 'src/__data__/pageyProps';
-import { AccessKeyLanding } from './AccessKeyLanding';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { screen } from '@testing-library/react';
+import * as React from 'react';
+
+import { pageyProps } from 'src/__data__/pageyProps';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { AccessKeyLanding } from './AccessKeyLanding';
 
 const props = {
+  accessDrawerOpen: false,
   classes: {
+    confirmationDialog: '',
+    createdCell: '',
     headline: '',
-    paper: '',
     helperText: '',
     labelCell: '',
-    createdCell: '',
-    confirmationDialog: '',
+    paper: '',
   },
-  isRestrictedUser: false,
-  accessDrawerOpen: false,
-  openAccessDrawer: jest.fn(),
   closeAccessDrawer: jest.fn(),
+  isRestrictedUser: false,
   mode: 'creating' as any,
+  openAccessDrawer: jest.fn(),
   ...pageyProps,
 };
 

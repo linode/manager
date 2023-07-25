@@ -1,11 +1,11 @@
-import { isTestLabel } from 'support/api/common';
 import {
-  getOAuthClients,
   OAuthClient,
   deleteOAuthClient,
+  getOAuthClients,
 } from '@linode/api-v4';
-import { depaginate } from 'support/util/paginate';
+import { isTestLabel } from 'support/api/common';
 import { pageSize } from 'support/constants/api';
+import { depaginate } from 'support/util/paginate';
 
 /**
  * Deletes all oauth apps which are prefixed with the test entity prefix.
@@ -14,7 +14,7 @@ import { pageSize } from 'support/constants/api';
  */
 export const deleteAllTestOAuthApps = async (): Promise<void> => {
   const oauthApps = await depaginate<OAuthClient>((page: number) =>
-    getOAuthClients({ page_size: pageSize, page })
+    getOAuthClients({ page, page_size: pageSize })
   );
 
   const deletionPromises = oauthApps

@@ -3,25 +3,27 @@ import { updateProfile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { clone } from 'ramda';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import {
   matchPath,
   useHistory,
   useLocation,
   useParams,
 } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import { queryKey } from 'src/queries/account';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
-import LandingHeader from 'src/components/LandingHeader';
-import { useQueryClient } from 'react-query';
 
 const UserDetail: React.FC = () => {
   const { username: usernameParam } = useParams<{ username: string }>();
@@ -60,12 +62,12 @@ const UserDetail: React.FC = () => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
-      title: 'User Profile',
       routeName: `/account/users/${usernameParam}/profile`,
+      title: 'User Profile',
     },
     {
-      title: 'User Permissions',
       routeName: `/account/users/${usernameParam}/permissions`,
+      title: 'User Permissions',
     },
   ];
 
@@ -118,7 +120,7 @@ const UserDetail: React.FC = () => {
     setProfileSuccess(false);
     setProfileErrors([]);
 
-    updateUser(originalUsername, { username, restricted })
+    updateUser(originalUsername, { restricted, username })
       .then((user) => {
         /**
          * Update the state of the component with the updated information.
@@ -199,14 +201,14 @@ const UserDetail: React.FC = () => {
   return (
     <>
       <LandingHeader
-        title={username}
-        removeCrumbX={4}
         breadcrumbProps={{
-          pathname: location.pathname,
           labelOptions: {
             noCap: true,
           },
+          pathname: location.pathname,
         }}
+        removeCrumbX={4}
+        title={username}
       />
       <Tabs
         index={Math.max(
@@ -226,27 +228,27 @@ const UserDetail: React.FC = () => {
         <TabPanels>
           <SafeTabPanel index={0}>
             <UserProfile
-              username={username}
-              email={email}
-              changeUsername={onChangeUsername}
-              changeEmail={onChangeEmail}
-              saveAccount={onSaveAccount}
+              accountErrors={accountErrors}
               accountSaving={accountSaving}
               accountSuccess={accountSuccess || false}
-              accountErrors={accountErrors}
-              saveProfile={onSaveProfile}
+              changeEmail={onChangeEmail}
+              changeUsername={onChangeUsername}
+              email={email}
+              originalEmail={originalEmail}
+              originalUsername={originalUsername}
+              profileErrors={profileErrors}
               profileSaving={profileSaving}
               profileSuccess={profileSuccess || false}
-              profileErrors={profileErrors}
-              originalUsername={originalUsername}
-              originalEmail={originalEmail}
+              saveAccount={onSaveAccount}
+              saveProfile={onSaveProfile}
+              username={username}
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <UserPermissions
+              clearNewUser={clearNewUser}
               currentUser={profile?.username}
               username={username}
-              clearNewUser={clearNewUser}
             />
           </SafeTabPanel>
         </TabPanels>

@@ -48,16 +48,16 @@ export const mockGetDatabaseCredentials = (
   const responsePassword =
     password ||
     randomString(16, {
-      spaces: false,
-      uppercase: true,
       lowercase: true,
-      symbols: true,
       numbers: true,
+      spaces: false,
+      symbols: true,
+      uppercase: true,
     });
 
   const credentials: DatabaseCredentials = {
-    username,
     password: responsePassword,
+    username,
   };
 
   return cy.intercept(

@@ -1,18 +1,20 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { CircleProgress } from 'src/components/CircleProgress';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import {
-  canUserModifyAccountStackScript,
   StackScriptCategory,
+  canUserModifyAccountStackScript,
 } from 'src/features/StackScripts/stackScriptUtils';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
+
 import StackScriptRow from './StackScriptRow';
 
 const useStyles = makeStyles(() => ({
@@ -23,22 +25,22 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface Props {
+  // change until we're actually using it.
+  category: StackScriptCategory | string;
+  currentUser: string;
   data: StackScript[];
   isSorting: boolean;
   publicImages: Record<string, Image>;
   triggerDelete: (id: number, label: string) => void;
-  triggerMakePublic: (id: number, label: string) => void;
-  currentUser: string;
   // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
   // Leaving this in as an escape hatch now, since there's a bunch of code in
   // /LandingPanel that uses different values for categories that we shouldn't
-  // change until we're actually using it.
-  category: StackScriptCategory | string;
+  triggerMakePublic: (id: number, label: string) => void;
 }
 
 const StackScriptsSection: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { data, isSorting, triggerDelete, triggerMakePublic, category } = props;
+  const { category, data, isSorting, triggerDelete, triggerMakePublic } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -49,27 +51,27 @@ const StackScriptsSection: React.FC<Props> = (props) => {
 
   const listStackScript = (s: StackScript) => (
     <StackScriptRow
-      key={s.id}
-      label={s.label}
-      stackScriptUsername={s.username}
-      description={s.description}
-      isPublic={s.is_public}
-      images={stripImageName(s.images)}
-      deploymentsTotal={s.deployments_total}
-      updated={formatDate(s.updated, {
-        displayTime: false,
-        timezone: profile?.timezone,
-      })}
-      stackScriptID={s.id}
-      triggerDelete={triggerDelete}
-      triggerMakePublic={triggerMakePublic}
       canModify={canUserModifyAccountStackScript(
         isRestrictedUser,
         stackScriptGrants ?? [],
         s.id
       )}
+      updated={formatDate(s.updated, {
+        displayTime: false,
+        timezone: profile?.timezone,
+      })}
       canAddLinodes={!userCannotAddLinodes}
       category={category}
+      deploymentsTotal={s.deployments_total}
+      description={s.description}
+      images={stripImageName(s.images)}
+      isPublic={s.is_public}
+      key={s.id}
+      label={s.label}
+      stackScriptID={s.id}
+      stackScriptUsername={s.username}
+      triggerDelete={triggerDelete}
+      triggerMakePublic={triggerMakePublic}
     />
   );
 
@@ -79,7 +81,7 @@ const StackScriptsSection: React.FC<Props> = (props) => {
         data && data.map(listStackScript)
       ) : (
         <TableRow>
-          <TableCell colSpan={5} className={classes.loadingWrapper}>
+          <TableCell className={classes.loadingWrapper} colSpan={5}>
             <CircleProgress />
           </TableCell>
         </TableRow>

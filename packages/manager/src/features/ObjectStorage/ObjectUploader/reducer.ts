@@ -5,40 +5,40 @@ export const MAX_PARALLEL_UPLOADS = 6;
 export const MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024 * 1024;
 
 type FileStatus =
-  | 'QUEUED'
-  | 'OVERWRITE_NOTICE'
-  | 'IN_PROGRESS'
-  | 'FINISHED'
   | 'CANCELED'
-  | 'ERROR';
+  | 'ERROR'
+  | 'FINISHED'
+  | 'IN_PROGRESS'
+  | 'OVERWRITE_NOTICE'
+  | 'QUEUED';
 
 export interface ExtendedFile {
-  status: FileStatus;
-  percentComplete: number;
   file: File;
+  percentComplete: number;
   prefix: string;
+  status: FileStatus;
   url?: string;
 }
 
 export interface ObjectUploaderState {
   files: ExtendedFile[];
-  numQueued: number;
-  numInProgress: number;
-  numFinished: number;
   numCanceled: number;
   numErrors: number;
+  numFinished: number;
+  numInProgress: number;
+  numQueued: number;
 }
 
 export type ObjectUploaderAction =
-  | { type: 'ENQUEUE'; files: File[]; prefix: string }
   | {
-      type: 'UPDATE_FILES';
-      filesToUpdate: string[];
       data: Partial<ExtendedFile>;
+      filesToUpdate: string[];
+      type: 'UPDATE_FILES';
     }
-  | { type: 'NOTIFY_FILE_EXISTS'; fileName: string; url: string }
-  | { type: 'CANCEL_OVERWRITE'; fileName: string }
-  | { type: 'RESUME_UPLOAD'; fileName: string }
+  | { fileName: string; type: 'CANCEL_OVERWRITE' }
+  | { fileName: string; type: 'NOTIFY_FILE_EXISTS'; url: string }
+  | { fileName: string; type: 'RESUME_UPLOAD' }
+  | { files: File[]; prefix: string; type: 'ENQUEUE' }
   | { type: 'CLEAR_UPLOAD_HISTORY' };
 
 const cloneLandingReducer = (
@@ -70,20 +70,20 @@ const cloneLandingReducer = (
           ) {
             draft.files.splice(foundFileIdx, 1);
             draft.files.unshift({
-              status: 'QUEUED',
-              percentComplete: 0,
               file,
+              percentComplete: 0,
               prefix: action.prefix,
+              status: 'QUEUED',
             });
           }
         }
       });
 
       const extendedFiles: ExtendedFile[] = newFiles.map((file) => ({
-        status: 'QUEUED',
-        percentComplete: 0,
         file,
+        percentComplete: 0,
         prefix: action.prefix,
+        status: 'QUEUED',
       }));
 
       draft.files = [...extendedFiles, ...draft.files];
@@ -154,11 +154,11 @@ export const curriedObjectUploaderReducer = produce(cloneLandingReducer);
 
 export const defaultState: ObjectUploaderState = {
   files: [],
-  numQueued: 0,
-  numInProgress: 0,
-  numFinished: 0,
   numCanceled: 0,
   numErrors: 0,
+  numFinished: 0,
+  numInProgress: 0,
+  numQueued: 0,
 };
 
 const updateCount = (draft: ObjectUploaderState) => {

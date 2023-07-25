@@ -1,6 +1,7 @@
 import { eventFactory } from 'src/factories';
-import { getEventTimestamp } from './eventUtils';
+
 import { parseAPIDate } from './date';
+import { getEventTimestamp } from './eventUtils';
 
 const createdTimestamp = '2023-06-06T20:23:43.000Z';
 const finishedTimestamp = '2023-06-06T20:24:43.000Z';

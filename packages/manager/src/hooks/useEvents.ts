@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+
 import { ApplicationState } from 'src/store';
 import { ExtendedEvent } from 'src/store/events/event.types';
 

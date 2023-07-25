@@ -1,20 +1,20 @@
 export const mockAxiosError = {
   config: {},
-  name: 'hello world',
   message: 'error',
+  name: 'hello world',
 };
 
 export const mockAxiosErrorWithAPIErrorContent = {
   config: {},
-  name: 'hello world',
   message: 'error',
+  name: 'hello world',
   response: {
-    status: 0,
-    statusText: 'status',
-    headers: null,
     config: {},
     data: {
       errors: [{ field: 'Error', reason: 'A reason' }],
     },
+    headers: null,
+    status: 0,
+    statusText: 'status',
   },
 };

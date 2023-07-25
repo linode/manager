@@ -1,53 +1,55 @@
 import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { curry } from 'ramda';
 import * as React from 'react';
+import { QueryClient, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
+import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEntityTransferCreateEvent } from 'src/utilities/analytics';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import { countByEntity } from '../utilities';
 import LinodeTransferTable from './LinodeTransferTable';
 import TransferCheckoutBar from './TransferCheckoutBar';
 import TransferHeader from './TransferHeader';
-import LandingHeader from 'src/components/LandingHeader';
 import {
+  TransferableEntity,
   curriedTransferReducer,
   defaultTransferState,
-  TransferableEntity,
 } from './transferReducer';
-import { QueryClient, useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  error: {
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: theme.spacing(),
+    },
+  },
   root: {
     [theme.breakpoints.down('lg')]: {
-      margin: 0,
       justifyContent: 'center',
+      margin: 0,
     },
   },
   sidebar: {
     [theme.breakpoints.down('lg')]: {
-      padding: '0px 8px !important',
       '&.MuiGrid-item': {
         paddingLeft: 0,
         paddingRight: 0,
       },
-    },
-  },
-  error: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
+      padding: '0px 8px !important',
     },
   },
 }));
 
 export const EntityTransfersCreate: React.FC<{}> = (_) => {
   const { push } = useHistory();
-  const { mutateAsync: createTransfer, error, isLoading } = useCreateTransfer();
+  const { error, isLoading, mutateAsync: createTransfer } = useCreateTransfer();
   const classes = useStyles();
   const queryClient = useQueryClient();
 
@@ -62,18 +64,18 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
 
   const addEntitiesToTransfer = curry(
     (entityType: TransferableEntity, entitiesToAdd: any[]) => {
-      dispatch({ type: 'ADD', entityType, entitiesToAdd });
+      dispatch({ entitiesToAdd, entityType, type: 'ADD' });
     }
   );
 
   const removeEntitiesFromTransfer = curry(
     (entityType: TransferableEntity, entitiesToRemove: any[]) => {
-      dispatch({ type: 'REMOVE', entityType, entitiesToRemove });
+      dispatch({ entitiesToRemove, entityType, type: 'REMOVE' });
     }
   );
 
   const toggleEntity = curry((entityType: TransferableEntity, entity: any) => {
-    dispatch({ type: 'TOGGLE', entityType, entity });
+    dispatch({ entity, entityType, type: 'TOGGLE' });
   });
 
   /**
@@ -100,49 +102,49 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
     <>
       <DocumentTitleSegment segment="Make a Service Transfer" />
       <LandingHeader
-        title="Make a Service Transfer"
         breadcrumbProps={{
-          pathname: location.pathname,
-          labelOptions: { noCap: true },
           crumbOverrides: [
             {
-              position: 2,
               label: 'Service Transfers',
+              position: 2,
             },
           ],
+          labelOptions: { noCap: true },
+          pathname: location.pathname,
         }}
+        title="Make a Service Transfer"
       />
       {error ? (
         <Notice
+          className={classes.error}
           error
           text={getAPIErrorOrDefault(error)[0].reason}
-          className={classes.error}
         />
       ) : null}
       <Grid
+        className={classes.root}
         container
-        wrap="wrap"
         direction="row"
         spacing={3}
-        className={classes.root}
+        wrap="wrap"
       >
-        <Grid xs={12} md={8} lg={9}>
+        <Grid lg={9} md={8} xs={12}>
           <TransferHeader />
           <LinodeTransferTable
-            selectedLinodes={state.linodes}
-            handleSelect={addEntitiesToTransfer('linodes')}
             handleRemove={removeEntitiesFromTransfer('linodes')}
+            handleSelect={addEntitiesToTransfer('linodes')}
             handleToggle={toggleEntity('linodes')}
+            selectedLinodes={state.linodes}
           />
         </Grid>
-        <Grid xs={12} md={4} lg={3} className={classes.sidebar}>
+        <Grid className={classes.sidebar} lg={3} md={4} xs={12}>
           <TransferCheckoutBar
-            isCreating={isLoading}
-            selectedEntities={state}
-            removeEntities={removeEntitiesFromTransfer}
             handleSubmit={(payload) =>
               handleCreateTransfer(payload, queryClient)
             }
+            isCreating={isLoading}
+            removeEntities={removeEntitiesFromTransfer}
+            selectedEntities={state}
           />
         </Grid>
       </Grid>

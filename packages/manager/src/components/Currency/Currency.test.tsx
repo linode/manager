@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { Currency } from './Currency';
 
 describe('Currency Component', () => {
@@ -34,12 +36,12 @@ describe('Currency Component', () => {
 
   it('handles custom number of decimal places', () => {
     const { getByText, rerender } = renderWithTheme(
-      <Currency quantity={5} decimalPlaces={3} />
+      <Currency decimalPlaces={3} quantity={5} />
     );
     getByText('$5.000');
-    rerender(<Currency quantity={99.999} decimalPlaces={3} />);
+    rerender(<Currency decimalPlaces={3} quantity={99.999} />);
     getByText('$99.999');
-    rerender(<Currency quantity={-5} decimalPlaces={3} />);
+    rerender(<Currency decimalPlaces={3} quantity={-5} />);
     getByText('-$5.000');
   });
 

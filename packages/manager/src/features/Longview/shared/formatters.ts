@@ -1,4 +1,5 @@
 import { clone, lensPath, pathOr, set } from 'ramda';
+
 import { Stat, StatWithDummyPoint } from '../request.types';
 
 // This formatting is from Classic
@@ -75,7 +76,7 @@ export const formatCPU = (n: number) => {
 export const pathMaybeAddDataInThePast = <T extends {}>(
   data: T,
   selectedStartTimeInSeconds: number,
-  pathsToAddDataPointTo: (string | number)[][]
+  pathsToAddDataPointTo: (number | string)[][]
 ): T => {
   /*
     iterate over all the paths and maybe add a dummy data point to the
@@ -110,7 +111,7 @@ export const convertData = (
   d: StatWithDummyPoint[],
   startTime: number,
   endTime: number,
-  formatter?: (pt: number | null) => number | null
+  formatter?: (pt: null | number) => null | number
 ) => {
   /**
    * For any empty data series, instead of an empty array
@@ -124,14 +125,14 @@ export const convertData = (
     return [
       [startTime * 1000, null],
       [endTime * 1000, null],
-    ] as [number, number | null][];
+    ] as [number, null | number][];
   }
   return maybeAddPastData(d, startTime).map(
     (thisPoint) =>
       [
         thisPoint.x * 1000,
         formatter ? formatter(thisPoint.y) : thisPoint.y,
-      ] as [number, number | null]
+      ] as [number, null | number]
   );
 };
 
@@ -141,7 +142,7 @@ export const convertData = (
  * whether to show MB, KB, or GB.
  * @param value
  */
-export const formatMemory = (value: number | null) => {
+export const formatMemory = (value: null | number) => {
   if (value === null) {
     return value;
   }

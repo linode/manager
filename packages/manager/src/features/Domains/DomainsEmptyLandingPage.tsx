@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/analytics';
+
 import {
   gettingStartedGuides,
   headers,
@@ -9,38 +11,40 @@ import {
   youtubeLinkData,
 } from './DomainsEmptyResourcesData';
 
-interface Props {
+interface DomainsEmptyLandingStateProps {
   navigateToCreate: () => void;
   openImportZoneDrawer: () => void;
 }
 
-export const DomainsEmptyLandingState = (props: Props) => {
+export const DomainsEmptyLandingState = (
+  props: DomainsEmptyLandingStateProps
+) => {
   const { navigateToCreate, openImportZoneDrawer } = props;
 
   return (
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Domain',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Domain',
             });
             navigateToCreate();
           },
-          children: 'Create Domain',
         },
         {
+          children: 'Import a Zone',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Import a Zone',
             });
             openImportZoneDrawer();
           },
-          children: 'Import a Zone',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

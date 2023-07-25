@@ -1,34 +1,36 @@
-import * as React from 'react';
-import RenderGuard from 'src/components/RenderGuard';
-import { makeStyles } from 'tss-react/mui';
 import { Theme, styled } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import RenderGuard from 'src/components/RenderGuard';
+
 import { Box, BoxProps } from '../Box';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(1),
-    '& > button': {
-      marginBottom: theme.spacing(1),
-    },
     '& > :first-of-type': {
-      marginRight: theme.spacing(),
       marginLeft: 0,
+      marginRight: theme.spacing(),
     },
     '& > :only-child': {
       marginRight: 0,
     },
+    '& > button': {
+      marginBottom: theme.spacing(1),
+    },
+    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(2),
   },
 }));
 
 const ActionPanel = (props: BoxProps) => {
   const { classes, cx } = useStyles();
-  const { className, children, ...rest } = props;
+  const { children, className, ...rest } = props;
 
   return (
     <Box
-      data-qa-buttons
       className={cx(classes.root, className, 'actionPanel')}
+      data-qa-buttons
       {...rest}
     >
       {Array.isArray(children)

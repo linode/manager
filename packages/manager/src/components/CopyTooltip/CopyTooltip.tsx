@@ -1,9 +1,10 @@
-import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
+import * as React from 'react';
+
 import FileCopy from 'src/assets/icons/copy.svg';
 import { Tooltip } from 'src/components/Tooltip';
 import { isPropValid } from 'src/utilities/isPropValid';
-import { styled } from '@mui/material/styles';
 
 export interface CopyTooltipProps {
   /**
@@ -33,7 +34,7 @@ export interface CopyTooltipProps {
 
 export const CopyTooltip = (props: CopyTooltipProps) => {
   const [copied, setCopied] = React.useState<boolean>(false);
-  const { text, className, copyableText, onClickCallback } = props;
+  const { className, copyableText, onClickCallback, text } = props;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -45,14 +46,14 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   };
 
   return (
-    <Tooltip title={copied ? 'Copied!' : 'Copy'} placement="top" data-qa-copied>
+    <Tooltip data-qa-copied placement="top" title={copied ? 'Copied!' : 'Copy'}>
       <StyledCopyTooltipButton
         aria-label={`Copy ${text} to clipboard`}
-        name={text}
-        type="button"
-        onClick={handleIconClick}
         className={className}
         data-qa-copy-btn
+        name={text}
+        onClick={handleIconClick}
+        type="button"
         {...props}
       >
         {copyableText ? text : <FileCopy />}
@@ -65,31 +66,31 @@ const StyledCopyTooltipButton = styled('button', {
   label: 'StyledCopyTooltipButton',
   shouldForwardProp: (prop) => isPropValid(['copyableText', 'text'], prop),
 })<Omit<CopyTooltipProps, 'text'>>(({ theme, ...props }) => ({
-  position: 'relative',
-  padding: 4,
-  backgroundColor: 'transparent',
-  transition: theme.transitions.create(['background-color']),
-  borderRadius: 4,
-  border: 'none',
-  cursor: 'pointer',
-  color: theme.color.grey1,
   '& svg': {
-    transition: theme.transitions.create(['color']),
     color: theme.color.grey1,
+    height: 20,
     margin: 0,
     position: 'relative',
+    transition: theme.transitions.create(['color']),
     width: 20,
-    height: 20,
   },
   '& svg:hover': {
     color: theme.palette.primary.main,
   },
+  backgroundColor: 'transparent',
+  border: 'none',
+  borderRadius: 4,
+  color: theme.color.grey1,
+  cursor: 'pointer',
+  padding: 4,
+  position: 'relative',
+  transition: theme.transitions.create(['background-color']),
   ...(props.copyableText && {
-    padding: 0,
     backgroundColor: 'transparent',
     border: 'none',
+    color: theme.palette.text.primary,
     cursor: 'pointer',
     font: 'inherit',
-    color: theme.palette.text.primary,
+    padding: 0,
   }),
 }));

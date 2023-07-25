@@ -1,11 +1,11 @@
-import React from 'react';
 import { action } from '@storybook/addon-actions';
+import React from 'react';
+
 import { Dialog } from './Dialog';
+
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Dialog> = {
-  title: 'Components/Dialog',
-  component: Dialog,
   argTypes: {
     children: { description: 'The contents of the Modal.' },
     error: { description: 'Error that will be shown in the dialog.' },
@@ -17,11 +17,11 @@ const meta: Meta<typeof Dialog> = {
       description: 'Should the Modal take up the entire width of the viewport?',
     },
     maxWidth: {
-      options: ['xs', 'sm', 'md', 'lg', 'xl', false],
       control: {
         type: 'select',
       },
       if: { arg: 'fullWidth' },
+      options: ['xs', 'sm', 'md', 'lg', 'xl', false],
     },
     onClose: {
       description: 'Callback fired when the component requests to be closed.',
@@ -35,15 +35,17 @@ const meta: Meta<typeof Dialog> = {
     title: { description: 'Title that appears in the heading of the dialog.' },
   },
   args: {
-    title: 'This is a Dialog',
     fullHeight: false,
     fullWidth: false,
     maxWidth: 'md',
     onClose: action('onClose'),
     open: true,
     style: { position: 'unset' },
+    title: 'This is a Dialog',
     titleBottomBorder: false,
   },
+  component: Dialog,
+  title: 'Components/Dialog',
 };
 
 export default meta;

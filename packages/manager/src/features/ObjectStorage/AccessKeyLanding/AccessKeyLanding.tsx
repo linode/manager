@@ -1,31 +1,33 @@
-import * as React from 'react';
-import ViewPermissionsDrawer from './ViewPermissionsDrawer';
-import { AccessKeyDrawer } from './AccessKeyDrawer';
-import { AccessKeyTable } from './AccessKeyTable';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormikBag } from 'formik';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import { MODE, OpenAccessDrawer } from './types';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
-import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { useErrors } from 'src/hooks/useErrors';
-import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
-import { useOpenClose } from 'src/hooks/useOpenClose';
-import { usePagination } from 'src/hooks/usePagination';
 import {
-  createObjectStorageKeys,
   ObjectStorageKey,
   ObjectStorageKeyRequest,
+  createObjectStorageKeys,
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
+import { FormikBag } from 'formik';
+import * as React from 'react';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
+import { useErrors } from 'src/hooks/useErrors';
+import { useOpenClose } from 'src/hooks/useOpenClose';
+import { usePagination } from 'src/hooks/usePagination';
+import { useAccountSettings } from 'src/queries/accountSettings';
+import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
   sendRevokeAccessKeyEvent,
 } from 'src/utilities/analytics';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+
+import { AccessKeyDrawer } from './AccessKeyDrawer';
+import { AccessKeyTable } from './AccessKeyTable';
+import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
+import ViewPermissionsDrawer from './ViewPermissionsDrawer';
+import { MODE, OpenAccessDrawer } from './types';
 
 interface Props {
   accessDrawerOpen: boolean;
@@ -48,7 +50,7 @@ export const AccessKeyLanding = (props: Props) => {
 
   const pagination = usePagination(1);
 
-  const { data, isLoading, error, refetch } = useObjectStorageAccessKeys({
+  const { data, error, isLoading, refetch } = useObjectStorageAccessKeys({
     page: pagination.page,
     page_size: pagination.pageSize,
   });
@@ -82,7 +84,7 @@ export const AccessKeyLanding = (props: Props) => {
 
   const handleCreateKey = (
     values: ObjectStorageKeyRequest,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     // Clear out status (used for general errors)
     setStatus(null);
@@ -138,7 +140,7 @@ export const AccessKeyLanding = (props: Props) => {
 
   const handleEditKey = (
     values: ObjectStorageKeyRequest,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     // This shouldn't happen, but just in case.
     if (!keyToEdit) {
@@ -247,8 +249,8 @@ export const AccessKeyLanding = (props: Props) => {
     <div>
       <DocumentTitleSegment segment="Access Keys" />
       <AccessKeyTable
-        data-qa-access-key-table
         data={data?.data}
+        data-qa-access-key-table
         error={error}
         isLoading={isLoading}
         isRestrictedUser={isRestrictedUser}

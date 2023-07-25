@@ -11,9 +11,9 @@ const isOlderImage = (i: Image) => isByLinode(i) && isDeprecated(i);
 
 interface GroupedImages {
   deleted?: Image[];
-  recommended?: Image[];
-  older?: Image[];
   images?: Image[];
+  older?: Image[];
+  recommended?: Image[];
 }
 
 export let groupImages: (i: Image[]) => GroupedImages;
@@ -30,9 +30,9 @@ groupImages = groupBy(
 export const groupNameMap = {
   _default: 'Other',
   deleted: 'Recently Deleted Disks',
-  recommended: '64-bit Distributions - Recommended',
-  older: 'Older Distributions',
   images: 'Images',
+  older: 'Older Distributions',
+  recommended: '64-bit Distributions - Recommended',
 };
 
 export const getDisplayNameForGroup = (key: string) =>

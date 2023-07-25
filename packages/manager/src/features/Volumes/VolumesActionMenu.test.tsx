@@ -1,26 +1,28 @@
 import * as React from 'react';
+
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
+
 import { Props, VolumesActionMenu } from './VolumesActionMenu';
 
 const props: Props = {
-  label: '',
-  linodeLabel: '',
-  linodeId: 0,
   attached: false,
-  regionID: '',
-  size: 50,
   filesystemPath: '',
-  volumeId: 12345,
-  volumeTags: ['abc', 'def'],
-  volumeLabel: '',
+  handleAttach: jest.fn(),
+  handleDelete: jest.fn(),
+  handleDetach: jest.fn(),
   isVolumesLanding: false,
+  label: '',
+  linodeId: 0,
+  linodeLabel: '',
   openForClone: jest.fn(),
   openForConfig: jest.fn(),
   openForEdit: jest.fn(),
   openForResize: jest.fn(),
-  handleAttach: jest.fn(),
-  handleDelete: jest.fn(),
-  handleDetach: jest.fn(),
+  regionID: '',
+  size: 50,
+  volumeId: 12345,
+  volumeLabel: '',
+  volumeTags: ['abc', 'def'],
 };
 
 describe('Volume action menu', () => {

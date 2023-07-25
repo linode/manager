@@ -1,4 +1,5 @@
 import { APIWarning } from '../types';
+import { Beta } from '../betas/types';
 
 export interface User {
   username: string;
@@ -454,4 +455,12 @@ export interface AccountLogin {
   restricted: boolean;
   username: string;
   status: AccountLoginStatus;
+}
+
+export interface AccountBeta extends Beta {
+  enrolled: string;
+}
+
+export interface EnrollInBetaPayload {
+  id: string;
 }

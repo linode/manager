@@ -1,14 +1,15 @@
-import * as React from 'react';
+import { Theme, ThemeProvider } from '@mui/material/styles';
 import { StyledEngineProvider } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import * as React from 'react';
+
 import { isProductionBuild } from './constants';
+import { ThemeName } from './foundations/themes';
 import { useAuthentication } from './hooks/useAuthentication';
 import { usePreferences } from './queries/preferences';
-import { ThemeName } from './foundations/themes';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { ThemeProvider, Theme } from '@mui/material/styles';
 import {
-  getThemeFromPreferenceValue,
   ThemeChoice,
+  getThemeFromPreferenceValue,
   themes,
 } from './utilities/theme';
 

@@ -1,13 +1,5 @@
-import React, { useEffect } from 'react';
-import { useClientToken } from 'src/queries/accountPayment';
-import { makeStyles } from 'tss-react/mui';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
-import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { reportException } from 'src/exceptionReporting';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   BraintreePayPalButtons,
@@ -17,8 +9,17 @@ import {
   OnApproveBraintreeData,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
+import { useSnackbar } from 'notistack';
+import React, { useEffect } from 'react';
 import { QueryClient, useQueryClient } from 'react-query';
+import { makeStyles } from 'tss-react/mui';
+
+import { CircleProgress } from 'src/components/CircleProgress';
+import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
+import { useClientToken } from 'src/queries/accountPayment';
+import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles()(() => ({
   disabled: {
@@ -28,17 +29,17 @@ const useStyles = makeStyles()(() => ({
 }));
 
 interface Props {
-  setProcessing: (processing: boolean) => void;
+  disabled: boolean;
   onClose: () => void;
   renderError: (errorMsg: string) => JSX.Element;
   setMessage: (message: PaymentMessage) => void;
-  disabled: boolean;
+  setProcessing: (processing: boolean) => void;
 }
 
 export const PayPalChip = (props: Props) => {
-  const { onClose, disabled, setProcessing, renderError, setMessage } = props;
-  const { data, isLoading, error: clientTokenError } = useClientToken();
-  const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+  const { disabled, onClose, renderError, setMessage, setProcessing } = props;
+  const { data, error: clientTokenError, isLoading } = useClientToken();
+  const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -79,9 +80,9 @@ export const PayPalChip = (props: Props) => {
         type: 'resetOptions',
         value: {
           ...options,
-          vault: true,
           commit: false,
           intent: 'tokenize',
+          vault: true,
         },
       });
     }
@@ -109,9 +110,9 @@ export const PayPalChip = (props: Props) => {
 
   const onNonce = (nonce: string, queryClient: QueryClient) => {
     addPaymentMethod({
-      type: 'payment_method_nonce',
       data: { nonce },
       is_default: true,
+      type: 'payment_method_nonce',
     })
       .then(() => {
         queryClient.invalidateQueries(`${accountPaymentKey}-all`);
@@ -172,12 +173,12 @@ export const PayPalChip = (props: Props) => {
       })}
     >
       <BraintreePayPalButtons
-        disabled={disabled}
-        style={{ height: 25 }}
-        fundingSource={FUNDING.PAYPAL}
         createBillingAgreement={createBillingAgreement}
+        disabled={disabled}
+        fundingSource={FUNDING.PAYPAL}
         onApprove={onApprove}
         onError={onError}
+        style={{ height: 25 }}
       />
     </Grid>
   );

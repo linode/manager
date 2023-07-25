@@ -1,61 +1,28 @@
+import Drawer from '@mui/material/Drawer';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import Drawer from 'src/components/core/Drawer';
+
 import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
 import PrimaryNav from './PrimaryNav/PrimaryNav';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  menuPaper: {
-    backgroundColor: theme.bg.primaryNavPaper,
-    borderRight: 'none',
-    boxShadow: 'none',
-    height: '100%',
-    width: 190,
-    left: 'inherit',
-    overflowX: 'hidden',
-    transition: 'width linear .1s',
-  },
-  menuDocked: {
-    height: '100%',
-  },
-  desktopMenu: {
-    transform: 'none',
-  },
-  collapsedDesktopMenu: {
-    width: 52,
-    '&:hover': {
-      overflowY: 'auto',
-      width: 190,
-      '& .primaryNavLink': {
-        opacity: 1,
-      },
-    },
-    [theme.breakpoints.up('sm')]: {
-      overflowY: 'hidden',
-    },
-  },
-}));
+export const SIDEBAR_WIDTH = 190;
 
 export interface Props {
+  closeMenu: () => void;
   collapse: boolean;
   open: boolean;
-  closeMenu: () => void;
 }
 
 type CombinedProps = Props;
 
 export const SideMenu: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-  const { collapse, open, closeMenu } = props;
+  const { closeMenu, collapse, open } = props;
 
   return (
     <>
       <Hidden mdUp>
-        <Drawer
-          classes={{
-            paper: classes.menuPaper,
-          }}
+        <StyledDrawer
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
@@ -64,25 +31,50 @@ export const SideMenu: React.FC<CombinedProps> = (props) => {
           variant="temporary"
         >
           <PrimaryNav closeMenu={closeMenu} isCollapsed={false} />
-        </Drawer>
+        </StyledDrawer>
       </Hidden>
-      <Hidden mdDown implementation="css">
-        <Drawer
-          classes={{
-            paper: `${classes.menuPaper} ${
-              collapse && classes.collapsedDesktopMenu
-            }`,
-            docked: classes.menuDocked,
-          }}
-          className={classes.desktopMenu}
-          open
-          variant="permanent"
-        >
+      <Hidden implementation="css" mdDown>
+        <StyledDrawer collapse={collapse} open variant="permanent">
           <PrimaryNav closeMenu={closeMenu} isCollapsed={collapse} />
-        </Drawer>
+        </StyledDrawer>
       </Hidden>
     </>
   );
 };
 
-export default SideMenu;
+const StyledDrawer = styled(Drawer, {
+  label: 'StyledSideMenuDrawer',
+  shouldForwardProp: (prop) => prop !== 'collapse',
+})<{ collapse?: boolean }>(({ theme, ...props }) => ({
+  '& .MuiDrawer-paper': {
+    backgroundColor: theme.bg.primaryNavPaper,
+    borderRight: 'none',
+    boxShadow: 'none',
+    height: '100%',
+    left: 'inherit',
+    overflowX: 'hidden',
+    transform: 'none',
+    transition: 'width linear .1s',
+    width: SIDEBAR_WIDTH,
+  },
+  ...(props.collapse && {
+    [theme.breakpoints.up('md')]: {
+      '& .MuiDrawer-paper': {
+        '&:hover': {
+          '& .primaryNavLink': {
+            opacity: 1,
+          },
+          overflowY: 'auto',
+          width: SIDEBAR_WIDTH,
+        },
+        [theme.breakpoints.up('sm')]: {
+          overflowY: 'hidden',
+        },
+        width: '52px',
+      },
+      '&.MuiDrawer-docked': {
+        height: '100%',
+      },
+    },
+  }),
+}));

@@ -1,13 +1,15 @@
 import { Image } from '@linode/api-v4';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
+
 import StackScriptPanel from './StackScriptPanel';
 
 export const StackScriptsLanding = () => {
@@ -33,22 +35,22 @@ export const StackScriptsLanding = () => {
         <Notice success text={history.location.state.successMessage} />
       ) : null}
       <LandingHeader
-        title="StackScripts"
-        entity="StackScript"
-        removeCrumbX={1}
         docsLink="https://www.linode.com/docs/platform/stackscripts"
+        entity="StackScript"
         onButtonClick={goToCreateStackScript}
+        removeCrumbX={1}
+        title="StackScripts"
       />
-      <Grid container className="m0">
+      <Grid className="m0" container>
         {_loading ? (
           <CircleProgress />
         ) : (
           <Grid className="p0" xs={12}>
             <StackScriptPanel
-              publicImages={imagesData}
-              queryString={history.location.search}
               history={history}
               location={history.location}
+              publicImages={imagesData}
+              queryString={history.location.search}
             />
           </Grid>
         )}

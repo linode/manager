@@ -3,20 +3,22 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
 import ContactsRow from './ContactsRow';
 
 interface Props {
   contacts: ManagedContact[];
-  loading: boolean;
-  lastUpdated: number;
-  openDrawer: (linodeId: number) => void;
-  openDialog: (contactId: number) => void;
   error?: APIError[] | null;
+  lastUpdated: number;
+  loading: boolean;
+  openDialog: (contactId: number) => void;
+  openDrawer: (linodeId: number) => void;
 }
 
 export type CombinedProps = Props;
@@ -24,11 +26,11 @@ export type CombinedProps = Props;
 export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
   const {
     contacts,
-    loading,
-    lastUpdated,
-    openDrawer,
-    openDialog,
     error,
+    lastUpdated,
+    loading,
+    openDialog,
+    openDrawer,
   } = props;
 
   if (loading && lastUpdated === 0) {
@@ -54,10 +56,10 @@ export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
     <>
       {contacts.map((contact: ManagedContact, idx: number) => (
         <ContactsRow
-          key={`managed-contact-row-${idx}`}
           contact={contact}
-          openDrawer={openDrawer}
+          key={`managed-contact-row-${idx}`}
           openDialog={openDialog}
+          openDrawer={openDrawer}
         />
       ))}
     </>

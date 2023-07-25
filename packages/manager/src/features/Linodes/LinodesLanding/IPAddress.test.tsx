@@ -9,13 +9,13 @@ const privateIP = '192.168.220.103';
 const privateIP2 = '192.168.220.102';
 
 const classes = {
-  root: '',
-  right: '',
-  icon: '',
-  row: '',
-  multipleAddresses: '',
-  ipLink: '',
   hide: 'hide',
+  icon: '',
+  ipLink: '',
+  multipleAddresses: '',
+  right: '',
+  root: '',
+  row: '',
 };
 
 const component = shallow(
@@ -24,7 +24,7 @@ const component = shallow(
 
 describe('IPAddress', () => {
   it('should render without error and display one IP address if showAll is false', () => {
-    component.setProps({ showMore: true, showAll: false });
+    component.setProps({ showAll: false, showMore: true });
     const rendered = component.find('[data-qa-copy-ip-text]');
 
     expect(rendered).toHaveLength(1);
@@ -32,7 +32,7 @@ describe('IPAddress', () => {
   });
 
   it('should not display ShowMore button unless the showMore prop is true', () => {
-    component.setProps({ showMore: false, showAll: false });
+    component.setProps({ showAll: false, showMore: false });
     expect(component.find('[data-qa-ip-more]')).toHaveLength(0);
   });
 

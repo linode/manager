@@ -1,36 +1,37 @@
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { useUpdateSSHKeyMutation } from 'src/queries/profile';
+import { SSHKey } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { SSHKey } from '@linode/api-v4';
 import { useEffect } from 'react';
+import * as React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel';
+import { Button } from 'src/components/Button/Button';
+import { Drawer } from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
+import { TextField } from 'src/components/TextField';
+import { useUpdateSSHKeyMutation } from 'src/queries/profile';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 interface Props {
+  onClose: () => void;
   open: boolean;
   sshKey: SSHKey | undefined;
-  onClose: () => void;
 }
 
-const EditSSHKeyDrawer = ({ open, onClose, sshKey }: Props) => {
+const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
-    mutateAsync: updateSSHKey,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateSSHKey,
     reset,
   } = useUpdateSSHKeyMutation(sshKey?.id ?? -1);
 
   const formik = useFormik<{ label: string }>({
+    enableReinitialize: true,
     initialValues: {
       label: sshKey?.label ?? '',
     },
-    enableReinitialize: true,
     async onSubmit(values) {
       await updateSSHKey(values);
       enqueueSnackbar('Successfully updated SSH key.', { variant: 'success' });
@@ -57,8 +58,8 @@ const EditSSHKeyDrawer = ({ open, onClose, sshKey }: Props) => {
 
   return (
     <Drawer
-      open={open}
       onClose={onClose}
+      open={open}
       title={`Edit SSH Key ${sshKey?.label}`}
     >
       {generalError && <Notice error text={generalError} />}
@@ -76,10 +77,10 @@ const EditSSHKeyDrawer = ({ open, onClose, sshKey }: Props) => {
           </Button>
           <Button
             buttonType="primary"
-            type="submit"
-            loading={isLoading}
             data-testid="submit"
             disabled={!formik.dirty}
+            loading={isLoading}
+            type="submit"
           >
             Save
           </Button>

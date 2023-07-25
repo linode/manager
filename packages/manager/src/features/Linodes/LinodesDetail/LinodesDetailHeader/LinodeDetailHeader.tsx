@@ -1,6 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
@@ -16,10 +17,11 @@ import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
@@ -30,8 +32,8 @@ import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 
 interface TagDrawerProps {
-  tags: string[];
   open: boolean;
+  tags: string[];
 }
 
 const LinodeDetailHeader = () => {
@@ -49,7 +51,7 @@ const LinodeDetailHeader = () => {
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const { data: linode, isLoading, error } = useLinodeQuery(matchedLinodeId);
+  const { data: linode, error, isLoading } = useLinodeQuery(matchedLinodeId);
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     matchedLinodeId
@@ -124,8 +126,8 @@ const LinodeDetailHeader = () => {
 
   const {
     editableLabelError,
-    setEditableLabelError,
     resetEditableLabel,
+    setEditableLabelError,
   } = useEditableLabelState();
 
   const updateLinodeLabel = async (label: string) => {
@@ -181,12 +183,12 @@ const LinodeDetailHeader = () => {
   };
 
   const handlers = {
-    onOpenPowerDialog,
     onOpenDeleteDialog,
-    onOpenResizeDialog,
+    onOpenMigrateDialog,
+    onOpenPowerDialog,
     onOpenRebuildDialog,
     onOpenRescueDialog,
-    onOpenMigrateDialog,
+    onOpenResizeDialog,
   };
 
   if (isLoading) {
@@ -207,71 +209,71 @@ const LinodeDetailHeader = () => {
       <MutationNotification linodeId={matchedLinodeId} />
       <Notifications />
       <LandingHeader
-        title="Create"
-        docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         breadcrumbProps={{
-          pathname: `/linodes/${linode?.label}`,
           onEditHandlers: {
             editableTextTitle: linode?.label ?? '',
-            onEdit: handleLinodeLabelUpdate,
-            onCancel: resetEditableLabel,
             errorText: editableLabelError,
+            onCancel: resetEditableLabel,
+            onEdit: handleLinodeLabelUpdate,
           },
+          pathname: `/linodes/${linode?.label}`,
         }}
         onDocsClick={() => {
           sendLinodeCreateFlowDocsClickEvent('Getting Started');
         }}
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/guides/platform/get-started/"
+        title="Create"
       />
       <LinodeEntityDetail
+        handlers={handlers}
         id={matchedLinodeId}
         linode={linode}
         openTagDrawer={openTagDrawer}
-        handlers={handlers}
       />
       <PowerActionsDialog
-        isOpen={powerDialogOpen}
         action={powerAction ?? 'Reboot'}
+        isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
         onClose={closeDialogs}
       />
       <DeleteLinodeDialog
-        open={deleteDialogOpen}
-        onClose={closeDialogs}
         linodeId={matchedLinodeId}
+        onClose={closeDialogs}
+        open={deleteDialogOpen}
       />
       <LinodeResize
-        open={resizeDialogOpen}
-        onClose={closeDialogs}
         linodeId={matchedLinodeId}
+        onClose={closeDialogs}
+        open={resizeDialogOpen}
       />
       <LinodeRebuildDialog
-        open={rebuildDialogOpen}
-        onClose={closeDialogs}
         linodeId={matchedLinodeId}
+        onClose={closeDialogs}
+        open={rebuildDialogOpen}
       />
       <RescueDialog
-        open={rescueDialogOpen}
-        onClose={closeDialogs}
         linodeId={matchedLinodeId}
+        onClose={closeDialogs}
+        open={rescueDialogOpen}
       />
       <MigrateLinode
-        open={migrateDialogOpen}
-        onClose={closeDialogs}
         linodeId={matchedLinodeId}
+        onClose={closeDialogs}
+        open={migrateDialogOpen}
       />
       <TagDrawer
-        entityLabel={linode?.label ?? ''}
         entityID={linode?.id}
+        entityLabel={linode?.label ?? ''}
+        onClose={closeTagDrawer}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
         updateTags={updateTags}
-        onClose={closeTagDrawer}
       />
       <EnableBackupsDialog
         linodeId={matchedLinodeId}
-        open={enableBackupsDialogOpen}
         onClose={closeDialogs}
+        open={enableBackupsDialogOpen}
       />
     </>
   );

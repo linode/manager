@@ -6,19 +6,20 @@ import {
   ManagedContact,
   ManagedCredential,
   ManagedIssue,
+  ManagedLinodeSetting,
   ManagedServiceMonitor,
   ManagedServicePayload,
   ManagedStats,
-  ManagedLinodeSetting,
 } from '@linode/api-v4/types';
-import {
-  managedStatsFactory,
-  managedSSHPubKeyFactory,
-} from 'src/factories/managed';
-import { makeResponse } from 'support/util/response';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
+
+import {
+  managedSSHPubKeyFactory,
+  managedStatsFactory,
+} from 'src/factories/managed';
 
 /**
  * Intercepts all requests to Managed endpoints and mocks 403 HTTP errors.

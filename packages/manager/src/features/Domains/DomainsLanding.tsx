@@ -4,19 +4,18 @@ import { useSnackbar } from 'notistack';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import DisableDomainDialog from './DisableDomainDialog';
+import { DisableDomainDialog } from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
-import DomainBanner from './DomainBanner';
-import DomainRow from './DomainTableRow';
-import DomainZoneImportDrawer from './DomainZoneImportDrawer';
+import { DomainBanner } from './DomainBanner';
+import { DomainTableRow } from './DomainTableRow';
+import { DomainZoneImportDrawer } from './DomainZoneImportDrawer';
 import { useProfile } from 'src/queries/profile';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import {
@@ -40,45 +39,29 @@ import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    // Adds spacing when the docs button wraps to make it look a little less awkward
-    [theme.breakpoints.down(380)]: {
-      '& .docsButton': {
-        paddingBottom: theme.spacing(2),
-      },
-    },
-  },
-  importButton: {
-    marginLeft: `-${theme.spacing()}`,
-    whiteSpace: 'nowrap',
-  },
-}));
-
-interface Props {
+interface DomainsLandingProps {
   // Since secondary Domains do not have a Detail page, we allow the consumer to
   // render this component with the "Edit Domain" drawer already opened.
   domainForEditing?: Domain;
 }
 
-const preferenceKey = 'domains';
+const PREFERENCE_KEY = 'domains';
 
-export const DomainsLanding: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const DomainsLanding = (props: DomainsLandingProps) => {
   const history = useHistory();
   const location = useLocation<{ recordError?: string }>();
 
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, PREFERENCE_KEY);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
       orderBy: 'domain',
       order: 'asc',
     },
-    `${preferenceKey}-order`
+    `${PREFERENCE_KEY}-order`
   );
 
   const filter = {
@@ -243,13 +226,9 @@ export const DomainsLanding: React.FC<Props> = (props) => {
       <LandingHeader
         title="Domains"
         extraActions={
-          <Button
-            className={classes.importButton}
-            onClick={openImportZoneDrawer}
-            buttonType="secondary"
-          >
+          <StyledButon onClick={openImportZoneDrawer} buttonType="secondary">
             Import a Zone
-          </Button>
+          </StyledButon>
         }
         entity="Domain"
         onButtonClick={navigateToCreate}
@@ -297,7 +276,7 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         </TableHead>
         <TableBody>
           {domains?.data.map((domain: Domain) => (
-            <DomainRow key={domain.id} domain={domain} {...handlers} />
+            <DomainTableRow key={domain.id} domain={domain} {...handlers} />
           ))}
         </TableBody>
       </Table>
@@ -347,4 +326,7 @@ export const DomainsLanding: React.FC<Props> = (props) => {
   );
 };
 
-export default DomainsLanding;
+const StyledButon = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
+  marginLeft: `-${theme.spacing()}`,
+  whiteSpace: 'nowrap',
+}));

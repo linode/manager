@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -11,11 +11,11 @@ type CombinedProps = DispatchProps & RouteComponentProps;
 
 interface OAuthQueryParams {
   access_token: string; // token for auth
-  token_type: string; // token prefix AKA "Bearer"
-  scope: string;
   expires_in: string; // amount of time (in seconds) the token has before expiry
-  state: string; // nonce
   return: string;
+  scope: string;
+  state: string; // nonce
+  token_type: string; // token prefix AKA "Bearer"
 }
 
 export class OAuthCallbackPage extends Component<CombinedProps> {
@@ -39,7 +39,7 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
      *
      */
 
-    const { location, history } = this.props;
+    const { history, location } = this.props;
 
     /**
      * If the hash doesn't contain a string after the #, there's no point continuing as we dont have
@@ -56,8 +56,8 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
 
     const {
       access_token: accessToken,
-      scope: scopes,
       expires_in: expiresIn,
+      scope: scopes,
       state: nonce,
       token_type: tokenType,
     } = hashParams;
@@ -131,11 +131,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
     dispatchStartSession: (token, tokenType, scopes, expiry) =>
       dispatch(
         handleStartSession({
+          expires: expiry,
+          scopes,
           token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
             1
           )} ${token}`,
-          scopes,
-          expires: expiry,
         })
       ),
   };

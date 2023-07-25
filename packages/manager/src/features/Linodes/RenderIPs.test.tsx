@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import RenderIPs from './RenderIPs';
 
 const ipv4Addresses = [
@@ -17,7 +19,7 @@ const ipv6 = '2600:0x00::f00x:00xx:xx00:0x00/64';
 
 describe('Rendered Linode IPs', () => {
   it('renders every IP address without truncation if there are 4 or fewer', () => {
-    const { queryByText, queryAllByTestId } = renderWithTheme(
+    const { queryAllByTestId, queryByText } = renderWithTheme(
       <RenderIPs ipv4={ipv4Addresses.slice(0, 4)} ipv6={ipv6} linodeId={1} />
     );
 

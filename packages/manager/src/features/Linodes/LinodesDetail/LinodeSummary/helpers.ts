@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+
 import { parseAPIDate } from 'src/utilities/date';
 
 export const getDateOptions = (linodeCreated: string) => {
@@ -36,9 +37,9 @@ export const getDateOptions = (linodeCreated: string) => {
     // same comment as above. Month needs to be prepended with a "0"
     // if it's only one digit to appease moment.js
     testDate = DateTime.fromObject({
+      day: 1,
       month: testMonth,
       year: testYear,
-      day: 1,
     });
   } while (testDate >= creationFirstOfMonth);
   return options.map((option) => {

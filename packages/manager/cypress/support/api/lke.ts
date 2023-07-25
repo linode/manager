@@ -1,27 +1,28 @@
 import {
+  KubeNodePoolResponse,
+  KubernetesCluster,
+  PoolNodeResponse,
   deleteKubernetesCluster,
   getKubernetesClusters,
   getNodePools,
-  KubernetesCluster,
-  KubeNodePoolResponse,
-  PoolNodeResponse,
 } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
+
 import { isTestLabel } from './common';
 
 /**
  * Describes an LKE plan as shown in Cloud Manager.
  */
 export interface LkePlanDescription {
-  /// Type of plan.
-  type: string;
-
-  /// Plan size, GB.
+  // / Plan size, GB.
   size: number;
 
-  /// Label for tab containing the plan in creation screen.
+  // / Label for tab containing the plan in creation screen.
   tab: string;
+
+  // / Type of plan.
+  type: string;
 }
 
 /*
@@ -37,14 +38,14 @@ const isPoolReady = (pool: KubeNodePoolResponse): boolean =>
  */
 export const deleteAllTestLkeClusters = async (): Promise<any[]> => {
   const clusters = await depaginate<KubernetesCluster>((page: number) =>
-    getKubernetesClusters({ page_size: pageSize, page })
+    getKubernetesClusters({ page, page_size: pageSize })
   );
 
   const clusterDeletionPromises = clusters
     .filter((cluster) => isTestLabel(cluster.label))
     .map(async (cluster) => {
       const pools = await depaginate<KubeNodePoolResponse>((page: number) =>
-        getNodePools(cluster.id, { page_size: pageSize, page })
+        getNodePools(cluster.id, { page, page_size: pageSize })
       );
       // Only delete clusters that have finished provisioning.
       if (pools.every(isPoolReady)) {

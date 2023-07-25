@@ -1,7 +1,8 @@
-import * as React from 'react';
-import { Chip, ChipProps } from 'src/components/Chip';
 import Popover from '@mui/material/Popover';
 import { styled, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Chip, ChipProps } from 'src/components/Chip';
 
 interface ShowMoreProps<T> {
   ariaItemType: string;
@@ -11,7 +12,7 @@ interface ShowMoreProps<T> {
 }
 
 export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
-  const { render, items, chipProps, ariaItemType } = props;
+  const { ariaItemType, chipProps, items, render } = props;
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
@@ -29,12 +30,6 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
     <React.Fragment>
       <StyledChip
         {...chipProps}
-        aria-label={`+${items.length} ${ariaItemType}`}
-        clickable
-        component={'button'}
-        data-qa-show-more-chip
-        label={`+${items.length}`}
-        onClick={handleClick}
         sx={
           anchorEl
             ? {
@@ -43,16 +38,22 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
               }
             : null
         }
+        aria-label={`+${items.length} ${ariaItemType}`}
+        clickable
+        component={'button'}
+        data-qa-show-more-chip
+        label={`+${items.length}`}
+        onClick={handleClick}
       />
 
       <StyledPopover
         anchorEl={anchorEl}
-        anchorOrigin={{ vertical: 28, horizontal: 'left' }}
+        anchorOrigin={{ horizontal: 'left', vertical: 28 }}
         aria-label={`${items.length} additional ${ariaItemType}`}
         onClose={handleClose}
         open={Boolean(anchorEl)}
         role="dialog"
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ horizontal: 'left', vertical: 'top' }}
       >
         {render(items)}
       </StyledPopover>
@@ -61,6 +62,18 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
 };
 
 const StyledChip = styled(Chip)(({ theme }) => ({
+  '& .MuiChip-label': {
+    paddingLeft: 6,
+    paddingRight: 6,
+  },
+  '&:focus': {
+    backgroundColor: theme.bg.lightBlue1,
+    outline: '1px dotted #999',
+  },
+  '&:hover': {
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',
+  },
   backgroundColor: theme.bg.lightBlue1,
   fontWeight: 500,
   lineHeight: 1,
@@ -68,22 +81,19 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   paddingLeft: 2,
   paddingRight: 2,
   position: 'relative',
-  '&:hover': {
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
-  },
-  '&:focus': {
-    backgroundColor: theme.bg.lightBlue1,
-    outline: '1px dotted #999',
-  },
-  '& .MuiChip-label': {
-    paddingLeft: 6,
-    paddingRight: 6,
-  },
 }));
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
   '& .MuiPopover-paper': {
+    '&::-webkit-scrollbar': {
+      webkitAppearance: 'none',
+      width: 7,
+    },
+    '&::-webkit-scrollbar-thumb': {
+      WebkitBoxShadow: '0 0 1px rgba(255,255,255,.5)',
+      backgroundColor: theme.color.grey2,
+      borderRadius: 4,
+    },
     maxHeight: 200,
     maxWidth: 400,
     minWidth: 'auto',
@@ -91,15 +101,6 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
     padding: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
       maxWidth: 285,
-    },
-    '&::-webkit-scrollbar': {
-      webkitAppearance: 'none',
-      width: 7,
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: theme.color.grey2,
-      borderRadius: 4,
-      WebkitBoxShadow: '0 0 1px rgba(255,255,255,.5)',
     },
   },
 }));

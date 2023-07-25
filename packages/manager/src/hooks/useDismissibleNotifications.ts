@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import md5 from 'md5';
 import { useState } from 'react';
+
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { DismissedNotification } from 'src/types/ManagerPreferences';
 
@@ -28,20 +29,20 @@ import { DismissedNotification } from 'src/types/ManagerPreferences';
 export const STALE_DAYS = 45;
 
 export interface DismissibleNotificationOptions {
-  prefix?: string;
   expiry?: string;
   label?: string;
+  prefix?: string;
 }
 export interface DismissibleNotificationsHook {
+  dismissNotifications: (
+    notifications: unknown[],
+    options?: DismissibleNotificationOptions
+  ) => void;
   dismissedNotifications: Record<string, DismissedNotification>;
   hasDismissedNotifications: (
     notifications: unknown[],
     prefix?: string
   ) => boolean;
-  dismissNotifications: (
-    notifications: unknown[],
-    options?: DismissibleNotificationOptions
-  ) => void;
 }
 
 export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
@@ -85,8 +86,8 @@ export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
 
   return {
     dismissNotifications,
-    hasDismissedNotifications,
     dismissedNotifications,
+    hasDismissedNotifications,
   };
 };
 
@@ -111,9 +112,9 @@ export const updateDismissedNotifications = (
   notificationsToDismiss.forEach((thisNotification) => {
     const hashKey = getHashKey(thisNotification, options.prefix);
     newNotifications[hashKey] = {
-      id: hashKey,
       created: DateTime.utc().toISO(),
       expiry: options.expiry,
+      id: hashKey,
       label: options.label || options.prefix || undefined,
     };
   });

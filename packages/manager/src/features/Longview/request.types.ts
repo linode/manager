@@ -16,28 +16,28 @@ export interface Stat {
  */
 export interface StatWithDummyPoint {
   x: number;
-  y: number | null;
+  y: null | number;
 }
 
 interface FS<WithDummy extends '' | 'yAsNull' = ''> {
-  itotal: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
-  ifree: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
-  total: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   free: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  ifree: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  itotal: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   path: string;
+  total: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
 export interface Disk<WithDummy extends '' | 'yAsNull' = ''> {
-  dm: number;
-  children: number;
-  mounted: number;
   childof: number;
+  children: number;
+  dm: number;
+  fs?: FS<WithDummy>;
   isswap: number;
+  mounted: number;
+  read_bytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  reads?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   write_bytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   writes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
-  reads?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
-  read_bytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
-  fs?: FS<WithDummy>;
 }
 /*
   each key will be the name of the disk
@@ -55,10 +55,10 @@ export interface LongviewDisk<WithDummy extends '' | 'yAsNull' = ''> {
 }
 
 interface RealMemory<WithDummy extends '' | 'yAsNull' = ''> {
-  free: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   buffers: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
-  used: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   cache: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  free: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  used: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
 interface SwapMemory<WithDummy extends '' | 'yAsNull' = ''> {
@@ -74,9 +74,9 @@ export interface LongviewMemory<WithDummy extends '' | 'yAsNull' = ''> {
 }
 
 export interface CPU<WithDummy extends '' | 'yAsNull' = ''> {
+  system: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   user: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   wait: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
-  system: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
 /*
@@ -108,8 +108,8 @@ export type LongviewNetworkInterface<
 > = Record<string, InboundOutboundNetwork<WithDummy>>;
 export interface LongviewNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   Network: {
-    mac_addr: string;
     Interface: LongviewNetworkInterface<WithDummy>;
+    mac_addr: string;
   };
 }
 
@@ -122,10 +122,10 @@ export interface Uptime {
 }
 
 export interface LongviewPackage {
-  name: string;
   current: string;
-  new: string;
   held: number;
+  name: string;
+  new: string;
 }
 
 export interface LongviewPackages {
@@ -133,22 +133,22 @@ export interface LongviewPackages {
 }
 
 export interface LongviewService {
-  user: string;
   ip: string;
-  type: string;
-  port: number;
   name: string;
+  port: number;
+  type: string;
+  user: string;
 }
 
 export interface LongviewPort {
   count: number;
-  user: string;
   name: string;
+  user: string;
 }
 export interface LongviewPortsResponse {
   Ports?: {
-    listening: LongviewService[];
     active: LongviewPort[];
+    listening: LongviewService[];
   };
 }
 
@@ -156,17 +156,17 @@ export interface LongviewSystemInfo {
   SysInfo: {
     arch: string;
     client: string;
-    type: string;
-    os: {
-      distversion: string;
-      dist: string;
-    };
     cpu: {
       cores: number;
       type: string;
     };
     hostname: string;
     kernel: string;
+    os: {
+      dist: string;
+      distversion: string;
+    };
+    type: string;
   };
 }
 // Resulting shape of calling `/fetch` with an api_action of `getValues` or
@@ -197,8 +197,8 @@ export type TopProcess = Record<string, TopProcessStat>;
 export interface TopProcessStat {
   count: number;
   cpu: number;
-  mem: number;
   entries: number;
+  mem: number;
 }
 
 export type AllData = LongviewCPU &
@@ -215,14 +215,14 @@ export type AllData = LongviewCPU &
   LongviewApplications;
 
 export interface WithStartAndEnd {
-  start: number;
   end: number;
+  start: number;
 }
 
 export interface Get {
   (
     token: string,
-    action: 'lastUpdated' | 'getLatestValue' | 'getValues',
+    action: 'getLatestValue' | 'getValues' | 'lastUpdated',
     options?: Options
   ): Promise<LongviewResponse>;
   (token: string, action: 'getTopProcesses', options?: Options): Promise<
@@ -232,17 +232,17 @@ export interface Get {
 
 export type LongviewAction =
   | 'batch'
-  | 'getTopProcesses'
   | 'getLatestValue'
+  | 'getTopProcesses'
   | 'getValue'
   | 'getValues'
   | 'lastUpdated';
 
 export interface LongviewResponse<T = Partial<AllData>> {
-  VERSION: number;
   ACTION: LongviewAction;
   DATA: T;
   NOTIFICATIONS: LongviewNotification[];
+  VERSION: number;
 }
 
 export interface LongviewNotification {
@@ -256,77 +256,77 @@ export interface LongviewNotification {
  */
 
 export type LongviewFieldName =
-  | 'cpu'
-  | 'uptime'
-  | 'memory'
-  | 'load'
-  | 'sysinfo'
-  | 'network'
-  | 'disk'
-  | 'packages'
-  | 'processes'
-  | 'listeningServices'
   | 'activeConnections'
-  | 'nginx'
-  | 'nginxProcesses'
   | 'apache'
   | 'apacheProcesses'
+  | 'cpu'
+  | 'disk'
+  | 'listeningServices'
+  | 'load'
+  | 'memory'
   | 'mysql'
-  | 'mysqlProcesses';
+  | 'mysqlProcesses'
+  | 'network'
+  | 'nginx'
+  | 'nginxProcesses'
+  | 'packages'
+  | 'processes'
+  | 'sysinfo'
+  | 'uptime';
 
 export interface Options {
+  end?: number;
   fields: LongviewFieldName[];
   start?: number;
-  end?: number;
 }
 
 export interface LongviewApplications {
   Applications?: {
-    Nginx?: NginxResponse;
     Apache?: ApacheResponse;
     MySQL?: MySQLResponse;
+    Nginx?: NginxResponse;
   };
 }
 
 export interface NginxResponse {
-  version: string;
-  status: number;
-  status_message: string;
-  requests: Stat[];
-  writing: Stat[];
   accepted_cons: Stat[];
+  active: Stat[];
   handled_cons: Stat[];
   reading: Stat[];
+  requests: Stat[];
+  status: number;
+  status_message: string;
+  version: string;
   waiting: Stat[];
-  active: Stat[];
+  writing: Stat[];
 }
 
 export interface ApacheResponse {
+  'Total Accesses': Stat[];
+  'Total kBytes': Stat[];
   Workers: Record<string, Stat[]>;
+  status: number;
   status_message: string;
   version: string;
-  status: number;
-  'Total kBytes': Stat[];
-  'Total Accesses': Stat[];
 }
 
 export interface MySQLResponse {
-  status_message: string;
-  status: number;
-  version: string;
+  Aborted_clients: Stat[];
+  Aborted_connects: Stat[];
+  Bytes_received: Stat[];
+  Bytes_sent: Stat[];
+  Com_delete: Stat[];
+  Com_insert: Stat[];
+  Com_select: Stat[];
+  Com_update: Stat[];
+  Connections: Stat[];
   Qcache_hits: Stat[];
   Qcache_inserts: Stat[];
   Qcache_lowmem_prunes: Stat[];
   Qcache_not_cached: Stat[];
   Qcache_queries_in_cache: Stat[];
-  Com_insert: Stat[];
-  Com_delete: Stat[];
-  Com_select: Stat[];
-  Com_update: Stat[];
-  Connections: Stat[];
-  Bytes_received: Stat[];
-  Bytes_sent: Stat[];
   Slow_queries: Stat[];
-  Aborted_clients: Stat[];
-  Aborted_connects: Stat[];
+  status: number;
+  status_message: string;
+  version: string;
 }

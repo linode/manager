@@ -2,7 +2,7 @@ import { AccountMaintenance, Notification } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 
 // @todo: Delete this type and function after release and merge to develop.
-type Type = 'reboot-scheduled' | 'migration-pending';
+type Type = 'migration-pending' | 'reboot-scheduled';
 
 export const addNotificationsToLinodes = (
   notifications: Notification[],
@@ -24,13 +24,13 @@ export const addNotificationsToLinodes = (
       ? {
           ...eachLinode,
           maintenance: {
+            type: foundNotification.label as Type,
+            until: foundNotification.until,
             /**
              * "when" and "until" are not guaranteed to exist
              * if we have a maintenance notification
              */
             when: foundNotification.when,
-            until: foundNotification.until,
-            type: foundNotification.label as Type,
           },
         }
       : {
@@ -41,7 +41,7 @@ export const addNotificationsToLinodes = (
 };
 
 export interface Maintenance {
-  when: string | null;
+  when: null | string;
 }
 
 export interface LinodeWithMaintenance extends Linode {

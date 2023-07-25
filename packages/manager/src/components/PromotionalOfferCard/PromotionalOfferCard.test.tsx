@@ -1,9 +1,11 @@
 import * as React from 'react';
+
 import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import {
-  checkStringOrDefault,
   PromotionalOfferCard,
+  checkStringOrDefault,
 } from './PromotionalOfferCard';
 
 const promo = promotionalOfferFactory.build();
@@ -31,7 +33,7 @@ describe('PromotionalOfferCard', () => {
       <PromotionalOfferCard
         {...promo}
         buttons={[
-          { text: 'Button Text', href: 'javascript:alert(1)', type: 'primary' },
+          { href: 'javascript:alert(1)', text: 'Button Text', type: 'primary' },
         ]}
       />
     );

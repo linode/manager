@@ -1,14 +1,15 @@
 import { Image } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
 export interface DefaultProps {
   imagesData: Record<string, Image>;
   imagesError?: APIError[];
-  imagesLoading: boolean;
   imagesLastUpdated: number;
+  imagesLoading: boolean;
 }
 
 /**
@@ -31,14 +32,14 @@ type Wrapper = (
 const imagesContainer: Wrapper = (
   Component: React.ComponentType<DefaultProps>
 ) => (props) => {
-  const { data, error, isLoading, dataUpdatedAt } = useAllImagesQuery();
+  const { data, dataUpdatedAt, error, isLoading } = useAllImagesQuery();
 
   const _imagesData = listToItemsByID(data ?? []);
   return (
     <Component
       imagesData={_imagesData}
-      imagesLastUpdated={dataUpdatedAt}
       imagesError={error ?? undefined}
+      imagesLastUpdated={dataUpdatedAt}
       imagesLoading={isLoading}
       {...props}
     />

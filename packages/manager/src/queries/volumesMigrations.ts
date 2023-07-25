@@ -1,11 +1,12 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
-import { queryPresets } from './base';
-import { VolumesMigrationQueue } from '@linode/api-v4/lib/volumes/types';
 import {
   getVolumesMigrationQueue,
   migrateVolumes,
 } from '@linode/api-v4/lib/volumes/migrations';
+import { VolumesMigrationQueue } from '@linode/api-v4/lib/volumes/types';
+import { useMutation, useQuery } from 'react-query';
+
+import { queryPresets } from './base';
 
 const queryKey = 'volumes-migrations';
 

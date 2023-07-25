@@ -1,8 +1,9 @@
 import { pathOr } from 'ramda';
 import { Component } from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { MapDispatchToProps, MapStateToProps, connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+
 import { CLIENT_ID } from 'src/constants';
 import { ApplicationState } from 'src/store';
 import { clearUserInput } from 'src/store/authentication/authentication.helpers';

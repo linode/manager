@@ -1,22 +1,24 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { WithTheme, withTheme } from '@mui/styles';
+
+import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import { Typography } from 'src/components/Typography';
-import GaugePercent from 'src/components/GaugePercent';
 import withClientData, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { baseGaugeProps, BaseProps as Props } from './common';
+
+import { BaseProps as Props, baseGaugeProps } from './common';
 
 type CombinedProps = Props & WithTheme & LVDataProps;
 
 const SwapGauge: React.FC<CombinedProps> = (props) => {
   const {
+    lastUpdatedError,
+    longviewClientData,
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData,
-    lastUpdatedError,
   } = props;
 
   const freeMemory = pathOr<number>(
@@ -34,7 +36,7 @@ const SwapGauge: React.FC<CombinedProps> = (props) => {
 
   const generateText = (): {
     innerText: string;
-    subTitle: string | JSX.Element;
+    subTitle: JSX.Element | string;
   } => {
     if (error || lastUpdatedError) {
       return {
@@ -93,9 +95,9 @@ const SwapGauge: React.FC<CombinedProps> = (props) => {
   return (
     <GaugePercent
       {...baseGaugeProps}
+      filledInColor={props.theme.graphs.red}
       max={totalMemory}
       value={usedMemory}
-      filledInColor={props.theme.graphs.red}
       {...generateText()}
     />
   );
