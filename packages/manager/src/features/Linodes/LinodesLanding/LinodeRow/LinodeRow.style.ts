@@ -1,6 +1,8 @@
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
+// source of styling change for homepage of a linode row's ip link being slightly shifted upwards
+// and the only thing that happened was the codemod :(
 export const useStyles = makeStyles()((theme: Theme) => ({
   bodyRow: {
     '& [data-qa-copy-ip] button:focus > svg': {

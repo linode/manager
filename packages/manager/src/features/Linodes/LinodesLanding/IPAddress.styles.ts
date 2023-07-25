@@ -17,7 +17,6 @@ export const StyledIPLinkDiv = styled('div', { label: 'StyledIPLinkDiv' })(
   })
 );
 
-// strangely alignItems isn't seeming to do anything
 export const StyledRootDiv = styled('div', {
   label: 'StyledRootDiv',
 })<StyledIPAddressProps>(({ theme, showAll }) => ({
