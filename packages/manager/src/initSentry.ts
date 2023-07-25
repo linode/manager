@@ -12,6 +12,8 @@ import redactAccessToken from 'src/utilities/redactAccessToken';
 import packageJson from '../package.json';
 
 export const initSentry = () => {
+  const environment = getSentryEnvironment();
+
   if (SENTRY_URL) {
     init({
       allowUrls: [
@@ -29,7 +31,8 @@ export const initSentry = () => {
         /^chrome:\/\//i,
       ],
       dsn: SENTRY_URL,
-      environment: getSentryEnvironment(),
+      enableTracing: true,
+      environment,
       ignoreErrors: [
         // Random plugins/extensions
         'top.GLOBALS',
@@ -79,6 +82,7 @@ export const initSentry = () => {
       ],
       integrations: [new BrowserTracing()],
       release: packageJson.version,
+      tracesSampleRate: environment === 'production' ? 0.2 : 1,
     });
   }
 };

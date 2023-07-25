@@ -26,10 +26,6 @@ import {
   WithAccountSettingsProps,
   withAccountSettings,
 } from 'src/containers/accountSettings.container';
-import {
-  WithEventsInfiniteQueryProps,
-  withEventsInfiniteQuery,
-} from 'src/containers/events.container';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
@@ -50,6 +46,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
+import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
@@ -129,8 +126,7 @@ type CombinedProps = WithSnackbarProps &
   WithProfileProps &
   AgreementsProps &
   WithQueryClientProps &
-  WithAccountSettingsProps &
-  WithEventsInfiniteQueryProps;
+  WithAccountSettingsProps;
 
 const defaultState: State = {
   appInstancesLoading: false,
@@ -789,7 +785,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         );
 
         /** reset the Events polling */
-        this.props.resetEventsPolling();
+        resetEventsPolling();
 
         /** send the user to the Linode detail page */
         this.props.history.push(`/linodes/${response.id}`);
@@ -838,8 +834,7 @@ export default recompose<CombinedProps, {}>(
   withProfile,
   withAgreements,
   withQueryClient,
-  withAccountSettings,
-  withEventsInfiniteQuery({ enabled: false })
+  withAccountSettings
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {
