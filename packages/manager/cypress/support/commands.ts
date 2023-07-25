@@ -25,6 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 import '@testing-library/cypress/add-commands';
 import 'cypress-axe';
+
 import './login';
 
 /**
@@ -48,8 +49,8 @@ Cypress.Commands.add(
   <T>(
     promise: Promise<T>,
     labelOrOptions?:
-      | string
       | Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
+      | string
   ) => {
     // Gets the label that will used as the description for Cypress's log.
     const commandLabel = (() => {
@@ -78,10 +79,10 @@ Cypress.Commands.add(
     })();
 
     const commandLog = Cypress.log({
-      name: 'defer',
-      message: commandLabel,
       autoEnd: false,
       end: false,
+      message: commandLabel,
+      name: 'defer',
       timeout,
     });
 

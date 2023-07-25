@@ -1,24 +1,26 @@
-import React from 'react';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Typography } from 'src/components/Typography';
 import { Token } from '@linode/api-v4/lib/profile/types';
+import { useSnackbar } from 'notistack';
+import React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import { APITokenType } from './APITokenTable';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Typography } from 'src/components/Typography';
 import {
   useRevokeAppAccessTokenMutation,
   useRevokePersonalAccessTokenMutation,
 } from 'src/queries/tokens';
-import { useSnackbar } from 'notistack';
+
+import { APITokenType } from './APITokenTable';
 
 export interface Props {
-  open: boolean;
   onClose: () => void;
+  open: boolean;
   token: Token | undefined;
   type: APITokenType;
 }
 
-export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
+export const RevokeTokenDialog = ({ onClose, open, token, type }: Props) => {
   const queryMap = {
     'OAuth Client Token': useRevokeAppAccessTokenMutation,
     'Personal Access Token': useRevokePersonalAccessTokenMutation,
@@ -26,7 +28,7 @@ export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
 
   const useRevokeQuery = queryMap[type];
 
-  const { mutateAsync, isLoading, error } = useRevokeQuery(token?.id ?? -1);
+  const { error, isLoading, mutateAsync } = useRevokeQuery(token?.id ?? -1);
   const { enqueueSnackbar } = useSnackbar();
 
   const onRevoke = () => {
@@ -40,29 +42,29 @@ export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
 
   return (
     <ConfirmationDialog
-      title={`Revoke ${token?.label}?`}
-      open={open}
       actions={
         <ActionsPanel>
           <Button
             buttonType="secondary"
-            onClick={onClose}
             data-testid="cancel-button"
+            onClick={onClose}
           >
             Cancel
           </Button>
           <Button
             buttonType="primary"
-            onClick={onRevoke}
-            loading={isLoading}
             data-testid="revoke-button"
+            loading={isLoading}
+            onClick={onRevoke}
           >
             Revoke
           </Button>
         </ActionsPanel>
       }
-      onClose={onClose}
       error={error?.[0].reason}
+      onClose={onClose}
+      open={open}
+      title={`Revoke ${token?.label}?`}
     >
       <Typography>Are you sure you want to revoke this API Token?</Typography>
     </ConfirmationDialog>

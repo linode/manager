@@ -1,73 +1,41 @@
 import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Chip } from 'src/components/Chip';
-import Paper from 'src/components/core/Paper';
-import Grid from '@mui/material/Unstable_Grid2';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
+import { Paper } from 'src/components/Paper';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import useFlags from 'src/hooks/useFlags';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { KubeConfigDisplay } from './KubeConfigDisplay';
-import { KubeConfigDrawer } from './KubeConfigDrawer';
-import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
   useResetKubeConfigMutation,
 } from 'src/queries/kubernetes';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
+import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
+import { KubeConfigDisplay } from './KubeConfigDisplay';
+import { KubeConfigDrawer } from './KubeConfigDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2.5)} ${theme.spacing(1)} ${theme.spacing(
-      2.5
-    )} ${theme.spacing(3)}`,
-  },
-  mainGridContainer: {
-    position: 'relative',
-  },
-  tags: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignSelf: 'stretch',
+  actionRow: {
+    '& button': {
+      alignItems: 'flex-start',
+    },
     alignItems: 'flex-end',
+    alignSelf: 'stretch',
+    display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'flex-end',
-    '&.MuiGrid-item': {
-      paddingBottom: 0,
-    },
-    // Tags Panel wrapper
-    '& > div:last-child': {
-      marginTop: 2,
-      marginBottom: 0,
-      width: '100%',
-    },
-    [theme.breakpoints.up('lg')]: {
-      '& .MuiChip-root': {
-        marginRight: 0,
-        marginLeft: 4,
-      },
-      // Add a Tag button
-      '& > div:first-of-type': {
-        justifyContent: 'flex-end',
-        marginTop: theme.spacing(4),
-      },
-      // Tags Panel wrapper
-      '& > div:last-child': {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'flex-end',
-      },
-    },
-    [theme.breakpoints.down('lg')]: {
-      width: '100%',
-    },
+    padding: '8px 0px',
   },
   dashboard: {
     '& svg': {
@@ -81,15 +49,49 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: '8px',
     },
   },
-  actionRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignSelf: 'stretch',
+  mainGridContainer: {
+    position: 'relative',
+  },
+  root: {
+    marginBottom: theme.spacing(3),
+    padding: `${theme.spacing(2.5)} ${theme.spacing(1)} ${theme.spacing(
+      2.5
+    )} ${theme.spacing(3)}`,
+  },
+  tags: {
+    // Tags Panel wrapper
+    '& > div:last-child': {
+      marginBottom: 0,
+      marginTop: 2,
+      width: '100%',
+    },
+    '&.MuiGrid-item': {
+      paddingBottom: 0,
+    },
     alignItems: 'flex-end',
+    alignSelf: 'stretch',
+    display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'flex-end',
-    padding: '8px 0px',
-    '& button': {
-      alignItems: 'flex-start',
+    [theme.breakpoints.down('lg')]: {
+      width: '100%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      '& .MuiChip-root': {
+        marginLeft: 4,
+        marginRight: 0,
+      },
+      // Add a Tag button
+      '& > div:first-of-type': {
+        justifyContent: 'flex-end',
+        marginTop: theme.spacing(4),
+      },
+      // Tags Panel wrapper
+      '& > div:last-child': {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-end',
+      },
     },
   },
 }));
@@ -120,9 +122,9 @@ export const KubeSummaryPanel = (props: Props) => {
   } = useKubernetesDashboardQuery(cluster.id, isKubeDashboardFeatureEnabled);
 
   const {
-    mutateAsync: resetKubeConfig,
-    isLoading: isResettingKubeConfig,
     error: resetKubeConfigError,
+    isLoading: isResettingKubeConfig,
+    mutateAsync: resetKubeConfig,
   } = useResetKubeConfigMutation();
 
   const [
@@ -152,42 +154,42 @@ export const KubeSummaryPanel = (props: Props) => {
   return (
     <>
       <Paper className={classes.root}>
-        <Grid container className={classes.mainGridContainer} spacing={2}>
+        <Grid className={classes.mainGridContainer} container spacing={2}>
           <KubeClusterSpecs cluster={cluster} />
-          <Grid container direction="column" xs={12} lg={4}>
+          <Grid container direction="column" lg={4} xs={12}>
             <KubeConfigDisplay
               clusterId={cluster.id}
               clusterLabel={cluster.label}
-              isResettingKubeConfig={isResettingKubeConfig}
               handleOpenDrawer={handleOpenDrawer}
+              isResettingKubeConfig={isResettingKubeConfig}
               setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
             />
           </Grid>
           <Grid
             container
-            xs={12}
-            lg={5}
-            justifyContent="space-between"
             direction="column"
+            justifyContent="space-between"
+            lg={5}
+            xs={12}
           >
             <Grid className={classes.actionRow}>
               {cluster.control_plane.high_availability ? (
                 <Chip
                   label="HA CLUSTER"
-                  variant="outlined"
                   outlineColor="green"
                   size="small"
+                  variant="outlined"
                 />
               ) : null}
               {isKubeDashboardFeatureEnabled ? (
                 <Button
-                  className={classes.dashboard}
-                  buttonType="secondary"
-                  compactY
-                  disabled={Boolean(dashboardError) || !dashboard}
                   onClick={() => {
                     window.open(dashboard?.url, '_blank');
                   }}
+                  buttonType="secondary"
+                  className={classes.dashboard}
+                  compactY
+                  disabled={Boolean(dashboardError) || !dashboard}
                 >
                   Kubernetes Dashboard
                   <OpenInNewIcon />
@@ -210,21 +212,18 @@ export const KubeSummaryPanel = (props: Props) => {
       </Paper>
 
       <KubeConfigDrawer
+        closeDrawer={() => setDrawerOpen(false)}
         clusterId={cluster.id}
         clusterLabel={cluster.label}
         open={drawerOpen}
-        closeDrawer={() => setDrawerOpen(false)}
       />
       <DeleteKubernetesClusterDialog
-        open={isDeleteDialogOpen}
-        clusterLabel={cluster.label}
         clusterId={cluster.id}
+        clusterLabel={cluster.label}
         onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
       />
       <ConfirmationDialog
-        open={resetKubeConfigDialogOpen}
-        onClose={() => setResetKubeConfigDialogOpen(false)}
-        title="Reset Cluster Kubeconfig?"
         actions={
           <ActionsPanel>
             <Button
@@ -235,8 +234,8 @@ export const KubeSummaryPanel = (props: Props) => {
             </Button>
             <Button
               buttonType="primary"
-              onClick={() => handleResetKubeConfig()}
               loading={isResettingKubeConfig}
+              onClick={() => handleResetKubeConfig()}
             >
               Reset Kubeconfig
             </Button>
@@ -250,6 +249,9 @@ export const KubeSummaryPanel = (props: Props) => {
               )
             : undefined
         }
+        onClose={() => setResetKubeConfigDialogOpen(false)}
+        open={resetKubeConfigDialogOpen}
+        title="Reset Cluster Kubeconfig?"
       >
         This will delete and regenerate the cluster&rsquo;s Kubeconfig file. You
         will no longer be able to access this cluster via your previous

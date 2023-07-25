@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+
 import { ApplicationState } from 'src/store';
 import {
   clearErrors,
@@ -17,14 +18,14 @@ export interface StateProps {
 }
 
 /* tslint:disable-next-line */
-export interface ReduxState extends State {}
+export type ReduxState = State;
 
 export type Props = DispatchProps & StateProps;
 
 export default <TInner extends {}, TOuter extends {}>(
   mapAccountToProps?: (ownProps: TOuter, errors: State) => TInner
 ) =>
-  connect<StateProps | State, DispatchProps, TOuter, ApplicationState>(
+  connect<State | StateProps, DispatchProps, TOuter, ApplicationState>(
     (state, ownProps) => {
       if (mapAccountToProps) {
         return mapAccountToProps(ownProps, state.globalErrors);

@@ -1,31 +1,32 @@
-import React from 'react';
-import Drawer from 'src/components/Drawer/Drawer';
-import RadioGroup from 'src/components/core/RadioGroup';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { TextField } from 'src/components/TextField';
-import { Radio } from 'src/components/Radio/Radio';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import { useCloneDomainMutation } from 'src/queries/domains';
-import { useFormik } from 'formik';
 import { Domain } from '@linode/api-v4';
-import { useProfile, useGrants } from 'src/queries/profile';
-import { Notice } from 'src/components/Notice/Notice';
+import { useFormik } from 'formik';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-interface Props {
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { Button } from 'src/components/Button/Button';
+import { Drawer } from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
+import { Radio } from 'src/components/Radio/Radio';
+import { TextField } from 'src/components/TextField';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
+import { useCloneDomainMutation } from 'src/queries/domains';
+import { useGrants, useProfile } from 'src/queries/profile';
+
+interface CloneDomainDrawerProps {
+  domain: Domain | undefined;
   onClose: () => void;
   open: boolean;
-  domain: Domain | undefined;
 }
 
-export const CloneDomainDrawer = (props: Props) => {
-  const { onClose: _onClose, open, domain } = props;
+export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
+  const { domain, onClose: _onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const { mutateAsync: cloneDomain, error, reset } = useCloneDomainMutation(
+  const { error, mutateAsync: cloneDomain, reset } = useCloneDomainMutation(
     domain?.id ?? 0
   );
 
@@ -49,55 +50,55 @@ export const CloneDomainDrawer = (props: Props) => {
   const noPermission = profile?.restricted && !grants?.global.add_domains;
 
   return (
-    <Drawer title="Clone Domain" open={open} onClose={onClose}>
+    <Drawer onClose={onClose} open={open} title="Clone Domain">
       {noPermission && (
         <Notice error>You do not have permission to create new Domains.</Notice>
       )}
       <form onSubmit={formik.handleSubmit}>
-        <RadioGroup aria-label="type" name="type" value={domain?.type} row>
+        <RadioGroup aria-label="type" name="type" row value={domain?.type}>
           <FormControlLabel
-            value="master"
-            label="Primary"
             control={<Radio />}
             data-qa-domain-radio="Primary"
             disabled
+            label="Primary"
+            value="master"
           />
           <FormControlLabel
-            value="slave"
-            label="Secondary"
             control={<Radio />}
             data-qa-domain-radio="Secondary"
             disabled
+            label="Secondary"
+            value="slave"
           />
         </RadioGroup>
         <TextField
-          value={domain?.domain}
-          disabled
-          label="Domain"
           data-qa-domain-name
           data-testid="domain-name-input"
+          disabled
+          label="Domain"
+          value={domain?.domain}
         />
         <TextField
-          id="domain"
-          name="domain"
-          value={formik.values.domain}
-          label="New Domain"
-          onChange={formik.handleChange}
           data-qa-clone-name
-          errorText={error ? error[0]?.reason : undefined}
           disabled={noPermission}
+          errorText={error ? error[0]?.reason : undefined}
+          id="domain"
+          label="New Domain"
+          name="domain"
+          onChange={formik.handleChange}
+          value={formik.values.domain}
         />
         <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
             Cancel
           </Button>
           <Button
             buttonType="primary"
-            loading={formik.isSubmitting}
-            disabled={!formik.dirty}
-            type="submit"
             data-qa-submit
             data-testid="create-domain-submit"
+            disabled={!formik.dirty}
+            loading={formik.isSubmitting}
+            type="submit"
           >
             Create Domain
           </Button>

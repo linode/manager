@@ -1,9 +1,11 @@
-import { fireEvent } from '@testing-library/react';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
+
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+
 import PaymentInformation from './PaymentInformation';
 
 jest.mock('@linode/api-v4/lib/account', () => {
@@ -33,9 +35,9 @@ describe('Payment Info Panel', () => {
     const { getByLabelText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentInformation
+          isAkamaiCustomer={false}
           loading={true}
           paymentMethods={paymentMethods}
-          isAkamaiCustomer={false}
         />
       </PayPalScriptProvider>
     );
@@ -44,12 +46,12 @@ describe('Payment Info Panel', () => {
   });
 
   it('Shows Add Payment button for Linode customers and hides it for Akamai customers', () => {
-    const { queryByText, getByTestId, rerender } = renderWithTheme(
+    const { getByTestId, queryByText, rerender } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentInformation
+          isAkamaiCustomer={false}
           loading={false}
           paymentMethods={paymentMethods}
-          isAkamaiCustomer={false}
         />
       </PayPalScriptProvider>
     );
@@ -60,9 +62,9 @@ describe('Payment Info Panel', () => {
       wrapWithTheme(
         <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
           <PaymentInformation
+            isAkamaiCustomer={true}
             loading={false}
             paymentMethods={paymentMethods}
-            isAkamaiCustomer={true}
           />
         </PayPalScriptProvider>
       )
@@ -75,9 +77,9 @@ describe('Payment Info Panel', () => {
     const { getByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentInformation
+          isAkamaiCustomer={false}
           loading={false}
           paymentMethods={paymentMethods}
-          isAkamaiCustomer={false}
         />
       </PayPalScriptProvider>
     );
@@ -94,9 +96,9 @@ describe('Payment Info Panel', () => {
     const { getByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentInformation
+          isAkamaiCustomer={false}
           loading={false}
           paymentMethods={paymentMethods}
-          isAkamaiCustomer={false}
         />
       </PayPalScriptProvider>
     );
@@ -112,9 +114,9 @@ describe('Payment Info Panel', () => {
     const { getByTestId, queryByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentInformation
+          isAkamaiCustomer={true}
           loading={false}
           paymentMethods={paymentMethods}
-          isAkamaiCustomer={true}
         />
       </PayPalScriptProvider>
     );

@@ -1,99 +1,99 @@
-import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import {
   default as _TableCell,
   TableCellProps as _TableCellProps,
 } from '@mui/material/TableCell';
+import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  actionCell: {
+    // Prevents Safari from adding margins to the ActionMenu button
+    '& > button': {
+      margin: 0,
+    },
+    alignItems: 'center',
+    display: 'flex',
+    height: 40,
+    justifyContent: 'flex-end',
+    padding: 0,
+  },
+  center: {
+    '&:last-child': {
+      paddingRight: '15px',
+    },
+    textAlign: 'center',
+  },
+  compact: {
+    padding: 6,
+  },
+  noWrap: {
+    whiteSpace: 'nowrap',
+  },
   root: {
-    borderTop: 'none',
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    color: theme.textColors.tableStatic,
-    fontSize: '.875rem',
-    lineHeight: '1rem',
-    padding: '0px 15px',
     '&.emptyCell': {
       height: 40,
     },
     '&:last-child': {
       paddingRight: 0,
     },
-  },
-  noWrap: {
-    whiteSpace: 'nowrap',
-  },
-  center: {
-    textAlign: 'center',
-    '&:last-child': {
-      paddingRight: '15px',
-    },
+    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    borderTop: 'none',
+    color: theme.textColors.tableStatic,
+    fontSize: '.875rem',
+    lineHeight: '1rem',
+    padding: '0px 15px',
   },
   sortable: {
-    color: theme.color.headline,
-    fontWeight: 'normal',
-    cursor: 'pointer',
+    '& .sortIcon': {
+      color: theme.palette.primary.main,
+      left: 10,
+      position: 'relative',
+      top: 2,
+    },
     '& button, & button:focus': {
       color: theme.color.headline,
       fontWeight: 'normal',
     },
-    '& .sortIcon': {
-      position: 'relative',
-      top: 2,
-      left: 10,
-      color: theme.palette.primary.main,
-    },
-  },
-  compact: {
-    padding: 6,
-  },
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    height: 40,
-    padding: 0,
-    // Prevents Safari from adding margins to the ActionMenu button
-    '& > button': {
-      margin: 0,
-    },
+    color: theme.color.headline,
+    cursor: 'pointer',
+    fontWeight: 'normal',
   },
   status: {
-    textTransform: 'capitalize',
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
+    textTransform: 'capitalize',
     whiteSpace: 'nowrap',
   },
 }));
 
 export interface TableCellProps extends _TableCellProps {
-  noWrap?: boolean;
-  sortable?: boolean;
+  actionCell?: boolean;
+  center?: boolean;
   className?: string;
+  compact?: boolean;
+  noWrap?: boolean;
   /*
    * parent column will either be the name of the column this
    * TableCell is listed under
    */
   parentColumn?: string;
-  compact?: boolean;
-  actionCell?: boolean;
+  sortable?: boolean;
   statusCell?: boolean;
-  center?: boolean;
 }
 
 export const TableCell = (props: TableCellProps) => {
   const { classes, cx } = useStyles();
 
   const {
-    className,
-    parentColumn,
-    noWrap,
-    sortable,
-    compact,
     actionCell,
-    statusCell,
     center,
+    className,
+    compact,
+    noWrap,
+    parentColumn,
+    sortable,
+    statusCell,
     ...rest
   } = props;
 
@@ -101,12 +101,12 @@ export const TableCell = (props: TableCellProps) => {
     <_TableCell
       className={cx(
         {
-          [classes.root]: true,
-          [classes.noWrap]: noWrap,
-          [classes.sortable]: sortable,
-          [classes.compact]: compact,
           [classes.actionCell]: actionCell,
           [classes.center]: center,
+          [classes.compact]: compact,
+          [classes.noWrap]: noWrap,
+          [classes.root]: true,
+          [classes.sortable]: sortable,
           // hide the cell at small breakpoints if it's empty with no parent column
           emptyCell: !parentColumn && !props.children,
         },

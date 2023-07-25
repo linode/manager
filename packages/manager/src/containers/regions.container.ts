@@ -1,7 +1,8 @@
-import * as React from 'react';
-import { APIError } from '@linode/api-v4/lib/types';
-import { useRegionsQuery } from 'src/queries/regions';
 import { Region } from '@linode/api-v4/lib/regions';
+import { APIError } from '@linode/api-v4/lib/types';
+import * as React from 'react';
+
+import { useRegionsQuery } from 'src/queries/regions';
 
 export interface RegionsProps {
   regionsData: Region[];
@@ -24,11 +25,11 @@ export interface RegionsProps {
 export const withRegions = <Props>(
   Component: React.ComponentType<Props & RegionsProps>
 ) => (props: Props) => {
-  const { data, isLoading, error } = useRegionsQuery();
+  const { data, error, isLoading } = useRegionsQuery();
   return React.createElement(Component, {
     regionsData: data ?? [],
-    regionsLoading: isLoading,
     regionsError: error ?? undefined,
+    regionsLoading: isLoading,
     ...props,
   });
 };

@@ -7,10 +7,10 @@ import { throttle } from 'throttle-debounce';
  * const { height, width } = useWindowDimensions();
  */
 const getWindowDimensions = () => {
-  const { innerWidth: width, innerHeight: height } = window;
+  const { innerHeight: height, innerWidth: width } = window;
   return {
-    width,
     height,
+    width,
   };
 };
 

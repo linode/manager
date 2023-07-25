@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
-import { extDisk, swapDisk } from 'src/__data__/disks';
+
 import { extendedTypes } from 'src/__data__/ExtendedType';
+import { extDisk, swapDisk } from 'src/__data__/disks';
+import { linodeFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+
 import {
-  isSmallerThanCurrentPlan,
   LinodeResize,
+  isSmallerThanCurrentPlan,
   shouldEnableAutoResizeDiskOption,
 } from './LinodeResize';
-import { rest, server } from 'src/mocks/testServer';
-import { linodeFactory } from 'src/factories';
 
 beforeAll(() => {
   mockMatchMedia();
@@ -25,8 +27,8 @@ describe('LinodeResize', () => {
       <LinodeResize
         linodeId={12}
         linodeLabel=""
-        open={true}
         onClose={jest.fn()}
+        open={true}
       />
     );
     await findByText('Resize Linode test-resize');

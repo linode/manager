@@ -1,63 +1,24 @@
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
-import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import LandingHeader from 'src/components/LandingHeader';
 import Grid from '@mui/material/Unstable_Grid2';
-import Paper from 'src/components/core/Paper';
 import { Typography } from 'src/components/Typography';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import DomainRecords from '../DomainRecords';
-import DeleteDomain from '../DeleteDomain';
+import { DeleteDomain } from '../DeleteDomain';
 import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
+import { Paper } from 'src/components/Paper';
 import {
   useDomainQuery,
   useDomainRecordsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  ...summaryPanelStyles(theme),
-  error: {
-    marginTop: `${theme.spacing(3)} !important`,
-    marginBottom: `0 !important`,
-  },
-  root: {
-    marginLeft: 0,
-    marginRight: 0,
-    marginBottom: theme.spacing(3),
-  },
-  main: {
-    '&.MuiGrid-item': {
-      padding: 0,
-    },
-    [theme.breakpoints.up('md')]: {
-      order: 1,
-    },
-  },
-  tagsSection: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(2),
-      order: 2,
-    },
-    '&.MuiGrid-item': {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-  },
-  delete: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-}));
-
 export const DomainDetail = () => {
-  const classes = useStyles();
   const params = useParams<{ domainId: string }>();
   const domainId = Number(params.domainId);
 
@@ -144,39 +105,91 @@ export const DomainDetail = () => {
         }
       />
       {location.state && location.state.recordError && (
-        <Notice
-          className={classes.error}
-          error
-          text={location.state.recordError}
-        />
+        <StyledNotice error text={location.state.recordError} />
       )}
-      <Grid container className={classes.root}>
-        <Grid xs={12} className={classes.main}>
+      <StyledRootGrid container>
+        <StyledMainGrid xs={12}>
           <DomainRecords
             domain={domain}
             updateDomain={updateDomain}
             domainRecords={records}
             updateRecords={refetchRecords}
           />
-        </Grid>
-        <Grid xs={12} className={classes.tagsSection}>
-          <Paper className={classes.summarySection}>
-            <Typography variant="h3" className={classes.title} data-qa-title>
+        </StyledMainGrid>
+        <StyledTagSectionGrid xs={12}>
+          <StyledPaper>
+            <StyledTypography variant="h3" data-qa-title>
               Tags
-            </Typography>
+            </StyledTypography>
             <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
-          </Paper>
-          <div className={classes.delete}>
+          </StyledPaper>
+          <StyledDiv>
             <DeleteDomain
               domainId={domain.id}
               domainLabel={domain.domain}
               onSuccess={() => history.push('/domains')}
             />
-          </div>
-        </Grid>
-      </Grid>
+          </StyledDiv>
+        </StyledTagSectionGrid>
+      </StyledRootGrid>
     </>
   );
 };
 
-export default DomainDetail;
+const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    marginBottom: theme.spacing(2),
+  })
+);
+
+const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
+  padding: theme.spacing(2.5),
+  marginBottom: theme.spacing(2),
+  minHeight: '160px',
+  height: '93%',
+}));
+
+const StyledNotice = styled(Notice, { label: 'StyledNotice' })(({ theme }) => ({
+  marginTop: `${theme.spacing(3)} !important`,
+  marginBottom: `0 !important`,
+}));
+
+const StyledRootGrid = styled(Grid, { label: 'StyledRootGrid' })(
+  ({ theme }) => ({
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: theme.spacing(3),
+  })
+);
+
+const StyledMainGrid = styled(Grid, { label: 'StyledMainGrid' })(
+  ({ theme }) => ({
+    '&.MuiGrid-item': {
+      padding: 0,
+    },
+    [theme.breakpoints.up('md')]: {
+      order: 1,
+    },
+  })
+);
+
+const StyledTagSectionGrid = styled(Grid, { label: 'StyledTagGrid' })(
+  ({ theme }) => ({
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(2),
+      order: 2,
+    },
+    '&.MuiGrid-item': {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+  })
+);
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: theme.spacing(),
+  },
+  display: 'flex',
+  justifyContent: 'flex-end',
+}));

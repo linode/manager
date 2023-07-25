@@ -1,15 +1,16 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import { clamp, pathOr } from 'ramda';
 import * as React from 'react';
-import { WithTheme, withTheme } from '@mui/styles';
-import { Typography } from 'src/components/Typography';
-import GaugePercent from 'src/components/GaugePercent';
-import { pluralize } from 'src/utilities/pluralize';
-import { CPU } from '../../request.types';
-import { baseGaugeProps, BaseProps as Props } from './common';
 
+import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
+import { Typography } from 'src/components/Typography';
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
+import { pluralize } from 'src/utilities/pluralize';
+
+import { CPU } from '../../request.types';
+import { BaseProps as Props, baseGaugeProps } from './common';
 
 type CombinedProps = Props & WithTheme & LVDataProps;
 
@@ -21,10 +22,10 @@ export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
 
 const CPUGauge: React.FC<CombinedProps> = (props) => {
   const {
-    longviewClientDataLoading: loading,
-    longviewClientDataError: error,
-    longviewClientData,
     lastUpdatedError,
+    longviewClientData,
+    longviewClientDataError: error,
+    longviewClientDataLoading: loading,
   } = props;
 
   const numberOfCores = pathOr(
@@ -39,15 +40,11 @@ const CPUGauge: React.FC<CombinedProps> = (props) => {
     <GaugePercent
       {...baseGaugeProps}
       // The MAX depends on the number of CPU cores. Default to 1 if cores
-      // doesn't exist or is 0.
-      max={100 * numberOfCores}
-      value={usedCPU}
       innerText={innerText(
         finalUsedCPU || 0,
         loading,
         !!error || !!lastUpdatedError
       )}
-      filledInColor={props.theme.graphs.blue}
       subTitle={
         <>
           <Typography>
@@ -60,6 +57,10 @@ const CPUGauge: React.FC<CombinedProps> = (props) => {
           )}
         </>
       }
+      filledInColor={props.theme.graphs.blue}
+      // doesn't exist or is 0.
+      max={100 * numberOfCores}
+      value={usedCPU}
     />
   );
 };

@@ -1,8 +1,9 @@
-import classNames from 'classnames';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import classNames from 'classnames';
 import * as React from 'react';
+
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import { TextField } from 'src/components/TextField';
 
@@ -19,76 +20,20 @@ const styles = () =>
   });
 
 interface Props {
-  isPassword?: boolean;
-  field: UserDefinedField;
-  updateFormState: (key: string, value: any) => void;
-  isOptional: boolean;
-  placeholder?: string;
   error?: string;
-  value: string;
+  field: UserDefinedField;
+  isOptional: boolean;
+  isPassword?: boolean;
+  placeholder?: string;
   tooltip?: JSX.Element;
   tooltipInteractive?: boolean;
+  updateFormState: (key: string, value: any) => void;
+  value: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedText extends React.Component<CombinedProps, {}> {
-  renderTextField = () => {
-    const { error, field, placeholder, isOptional } = this.props;
-
-    return (
-      <TextField
-        required={!isOptional}
-        onChange={this.handleUpdateText}
-        label={field.label}
-        errorText={error}
-        helperText={placeholder}
-        value={this.props.value}
-      />
-    );
-  };
-
-  renderPasswordField = () => {
-    const {
-      error,
-      field,
-      placeholder,
-      isOptional,
-      tooltip,
-      tooltipInteractive,
-      classes,
-    } = this.props;
-
-    return (
-      <AccessPanel
-        required={!isOptional}
-        handleChange={this.handleUpdatePassword}
-        label={field.label}
-        placeholder={placeholder}
-        error={error}
-        hideStrengthLabel
-        className={classNames({
-          [classes.accessPanel]: true,
-          [classes.marginTop]: !isOptional,
-        })}
-        isOptional={isOptional}
-        password={this.props.value}
-        disabledReason={tooltip}
-        tooltipInteractive={tooltipInteractive}
-      />
-    );
-  };
-
-  handleUpdateText = (e: any) => {
-    const { updateFormState, field } = this.props;
-    updateFormState(field.name, e.target.value);
-  };
-
-  handleUpdatePassword = (value: string) => {
-    const { updateFormState, field } = this.props;
-    updateFormState(field.name, value);
-  };
-
   render() {
     return (
       <div>
@@ -98,6 +43,62 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
       </div>
     );
   }
+
+  handleUpdatePassword = (value: string) => {
+    const { field, updateFormState } = this.props;
+    updateFormState(field.name, value);
+  };
+
+  handleUpdateText = (e: any) => {
+    const { field, updateFormState } = this.props;
+    updateFormState(field.name, e.target.value);
+  };
+
+  renderPasswordField = () => {
+    const {
+      classes,
+      error,
+      field,
+      isOptional,
+      placeholder,
+      tooltip,
+      tooltipInteractive,
+    } = this.props;
+
+    return (
+      <AccessPanel
+        className={classNames({
+          [classes.accessPanel]: true,
+          [classes.marginTop]: !isOptional,
+        })}
+        disabledReason={tooltip}
+        error={error}
+        handleChange={this.handleUpdatePassword}
+        hideStrengthLabel
+        isOptional={isOptional}
+        label={field.label}
+        password={this.props.value}
+        placeholder={placeholder}
+        required={!isOptional}
+        tooltipInteractive={tooltipInteractive}
+      />
+    );
+  };
+
+  renderTextField = () => {
+    const { error, field, isOptional, placeholder } = this.props;
+
+    return (
+      <TextField
+        errorText={error}
+        helperText={placeholder}
+        label={field.label}
+        onChange={this.handleUpdateText}
+        required={!isOptional}
+        value={this.props.value}
+      />
+    );
+  };
 }
 
 const styled = withStyles(styles);

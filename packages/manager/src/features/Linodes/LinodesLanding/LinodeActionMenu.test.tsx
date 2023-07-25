@@ -1,28 +1,30 @@
 import { screen } from '@testing-library/react';
 import * as React from 'react';
+
+import { extendedTypes } from 'src/__data__/ExtendedType';
 import { linodeBackupsFactory } from 'src/factories/linodes';
 import { regionFactory } from 'src/factories/regions';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
-import { extendedTypes } from 'src/__data__/ExtendedType';
+
 import LinodeActionMenu, {
-  buildQueryStringForLinodeClone,
   Props,
+  buildQueryStringForLinodeClone,
 } from './LinodeActionMenu';
 
 const props: Props = {
   inListView: true,
-  linodeId: 1,
-  linodeRegion: 'us-east',
   linodeBackups: linodeBackupsFactory.build(),
+  linodeId: 1,
   linodeLabel: 'test-linode',
+  linodeRegion: 'us-east',
   linodeStatus: 'running',
   linodeType: extendedTypes[0],
-  onOpenPowerDialog: jest.fn(),
   onOpenDeleteDialog: jest.fn(),
-  onOpenResizeDialog: jest.fn(),
+  onOpenMigrateDialog: jest.fn(),
+  onOpenPowerDialog: jest.fn(),
   onOpenRebuildDialog: jest.fn(),
   onOpenRescueDialog: jest.fn(),
-  onOpenMigrateDialog: jest.fn(),
+  onOpenResizeDialog: jest.fn(),
 };
 
 describe('LinodeActionMenu', () => {
@@ -57,8 +59,8 @@ describe('LinodeActionMenu', () => {
       renderWithTheme(
         <LinodeActionMenu
           {...props}
-          linodeStatus="offline"
           inListView={false}
+          linodeStatus="offline"
         />
       );
       expect(

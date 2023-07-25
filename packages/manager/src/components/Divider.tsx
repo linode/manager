@@ -1,13 +1,14 @@
 import _Divider, { DividerProps as _DividerProps } from '@mui/material/Divider';
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
 import { isPropValid } from 'src/utilities/isPropValid';
 
 export interface DividerProps extends _DividerProps {
   dark?: boolean;
   light?: boolean;
-  spacingTop?: number;
   spacingBottom?: number;
+  spacingTop?: number;
 }
 
 export const Divider = (props: DividerProps) => {
@@ -26,6 +27,6 @@ const StyledDivider = styled(_Divider, {
       ? '#e3e5e8'
       : '#2e3238'
     : '',
-  marginTop: props.spacingTop,
   marginBottom: props.spacingBottom,
+  marginTop: props.spacingTop,
 }));

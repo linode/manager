@@ -1,10 +1,12 @@
 import { Event } from '@linode/api-v4/lib/account';
+
 import { entityFactory, eventFactory } from 'src/factories/events';
+
+import { applyLinking } from './eventMessageGenerator';
 import getEventMessage, {
   eventMessageCreators,
   safeSecondaryEntityLabel,
 } from './eventMessageGenerator';
-import { applyLinking } from './eventMessageGenerator';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -26,8 +28,8 @@ describe('Event message generation', () => {
     it('should filter mangled events', () => {
       const mockEvent = {
         action: 'linode_reboot',
-        status: 'scheduled',
         entity: null,
+        status: 'scheduled',
       };
       const result = getEventMessage(mockEvent as Event);
 
@@ -37,8 +39,8 @@ describe('Event message generation', () => {
     it('should call the message generator with the event', () => {
       const mockEvent = {
         action: 'linode_reboot',
-        status: 'scheduled',
         entity: { label: 'test-linode-123' },
+        status: 'scheduled',
       };
 
       /** Mock the message creator */

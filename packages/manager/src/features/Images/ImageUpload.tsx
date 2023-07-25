@@ -4,6 +4,7 @@ import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
@@ -15,8 +16,8 @@ import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { TextField } from 'src/components/TextField';
-import Paper from 'src/components/core/Paper';
 import { Typography } from 'src/components/Typography';
+import { Paper } from 'src/components/Paper';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
@@ -34,24 +35,10 @@ import { setPendingUpload } from 'src/store/pendingUpload';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { wrapInQuotes } from 'src/utilities/stringUtils';
+
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    minWidth: '100%',
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(),
-    '& .MuiFormHelperText-root': {
-      marginBottom: theme.spacing(2),
-    },
-  },
-  helperText: {
-    marginTop: theme.spacing(2),
-    width: '90%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
   browseFilesButton: {
     marginLeft: '1rem',
   },
@@ -60,8 +47,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 700,
   },
   cloudInitCheckboxWrapper: {
-    marginTop: theme.spacing(2),
     marginLeft: '3px',
+    marginTop: theme.spacing(2),
+  },
+  container: {
+    '& .MuiFormHelperText-root': {
+      marginBottom: theme.spacing(2),
+    },
+    minWidth: '100%',
+    paddingBottom: theme.spacing(),
+    paddingTop: theme.spacing(2),
+  },
+  helperText: {
+    marginTop: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    width: '90%',
   },
 }));
 
@@ -85,22 +87,22 @@ const imageSizeLimitsMessage = (
 );
 
 export interface Props {
-  label: string;
-  description: string;
-  isCloudInit: boolean;
-  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeIsCloudInit: () => void;
+  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  description: string;
+  isCloudInit: boolean;
+  label: string;
 }
 
 export const ImageUpload: React.FC<Props> = (props) => {
   const {
-    label,
-    description,
-    changeLabel,
     changeDescription,
     changeIsCloudInit,
+    changeLabel,
+    description,
     isCloudInit,
+    label,
   } = props;
 
   const { data: profile } = useProfile();
@@ -193,16 +195,13 @@ export const ImageUpload: React.FC<Props> = (props) => {
   return (
     <>
       <Prompt
-        when={pendingUpload}
         confirmWhenLeaving={true}
         onConfirm={onConfirm}
+        when={pendingUpload}
       >
-        {({ isModalOpen, handleCancel, handleConfirm }) => {
+        {({ handleCancel, handleConfirm, isModalOpen }) => {
           return (
             <ConfirmationDialog
-              open={isModalOpen}
-              onClose={handleCancel}
-              title="Leave this page?"
               actions={() => (
                 <ActionsPanel>
                   <Button buttonType="secondary" onClick={handleCancel}>
@@ -214,6 +213,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
                   </Button>
                 </ActionsPanel>
               )}
+              onClose={handleCancel}
+              open={isModalOpen}
+              title="Leave this page?"
             >
               <Typography variant="subtitle1">
                 An upload is in progress. If you navigate away from this page,
@@ -235,22 +237,22 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
         <div style={{ width: '100%' }}>
           <TextField
-            label="Label"
-            value={label}
-            onChange={changeLabel}
-            errorText={errorMap.label}
             disabled={!canCreateImage}
+            errorText={errorMap.label}
+            label="Label"
+            onChange={changeLabel}
             required
+            value={label}
           />
 
           <TextField
+            disabled={!canCreateImage}
+            errorText={errorMap.description}
             label="Description"
             multiline
+            onChange={changeDescription}
             rows={1}
             value={description}
-            onChange={changeDescription}
-            errorText={errorMap.description}
-            disabled={!canCreateImage}
           />
           {flags.metadata && hasMetadataCustomerTag ? (
             <div className={classes.cloudInitCheckboxWrapper}>
@@ -258,34 +260,34 @@ export const ImageUpload: React.FC<Props> = (props) => {
                 checked={isCloudInit}
                 onChange={changeIsCloudInit}
                 text="This image is cloud-init compatible"
-                toolTipText={cloudInitTooltipMessage}
                 toolTipInteractive
+                toolTipText={cloudInitTooltipMessage}
               />
             </div>
           ) : null}
           <RegionSelect
-            label="Region"
             helperText="For fastest initial upload, select the region that is geographically
             closest to you. Once uploaded you will be able to deploy the image
             to other regions."
+            disabled={!canCreateImage}
             errorText={errorMap.region}
             handleSelection={setRegion}
+            label="Region"
             regions={regions}
-            selectedID={region}
-            disabled={!canCreateImage}
             required
+            selectedID={region}
           />
 
           {showAgreement ? (
             <EUAgreementCheckbox
-              checked={hasSignedAgreement}
-              onChange={(e) => setHasSignedAgreement(e.target.checked)}
               centerCheckbox
+              checked={hasSignedAgreement}
               className={classes.helperText}
+              onChange={(e) => setHasSignedAgreement(e.target.checked)}
             />
           ) : null}
 
-          <Notice warning spacingTop={24} sx={{ fontSize: '0.875rem' }}>
+          <Notice spacingTop={24} sx={{ fontSize: '0.875rem' }} warning>
             {imageSizeLimitsMessage}
           </Notice>
 
@@ -295,15 +297,15 @@ export const ImageUpload: React.FC<Props> = (props) => {
           </Typography>
 
           <FileUploader
-            label={label}
-            description={description}
-            region={region}
-            isCloudInit={isCloudInit}
-            dropzoneDisabled={uploadingDisabled}
             apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
-            setErrors={setErrors}
-            setCancelFn={setCancelFn}
+            description={description}
+            dropzoneDisabled={uploadingDisabled}
+            isCloudInit={isCloudInit}
+            label={label}
             onSuccess={onSuccess}
+            region={region}
+            setCancelFn={setCancelFn}
+            setErrors={setErrors}
           />
           <ActionsPanel>
             <Typography>
@@ -324,10 +326,10 @@ export const ImageUpload: React.FC<Props> = (props) => {
         </div>
       </Paper>
       <LinodeCLIModal
+        analyticsKey="Image Upload"
+        command={linodeCLICommand}
         isOpen={linodeCLIModalOpen}
         onClose={() => setLinodeCLIModalOpen(false)}
-        command={linodeCLICommand}
-        analyticsKey="Image Upload"
       />
     </>
   );

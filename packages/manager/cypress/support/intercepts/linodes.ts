@@ -2,9 +2,11 @@
  * @file Cypress intercepts and mocks for Cloud Manager Linode operations.
  */
 
-import type { Disk, Linode, Volume } from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
+
+import type { Disk, Linode, Volume } from '@linode/api-v4/types';
 
 /**
  * Intercepts POST request to create a Linode.
@@ -16,7 +18,16 @@ export const interceptCreateLinode = (): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts GET request to mock linode data.
+ * Intercepts GET request to get all Linodes.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetLinodes = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('linode/instances/*'));
+};
+
+/**
+ * Intercepts GET request to get all Linodes and mocks the response.
  *
  * @param linodes - an array of mock linode objects
  *
@@ -113,5 +124,22 @@ export const mockGetLinodeDisks = (
     'GET',
     apiMatcher(`linode/instances/${linodeId}/disks*`),
     paginateResponse(disks)
+  );
+};
+
+/**
+ * Intercepts DELETE request to delete linode and mocks response.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLinodes = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`linode/instances/${linodeId}`),
+    makeResponse({})
   );
 };

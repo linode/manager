@@ -1,17 +1,19 @@
 /* eslint-disable no-unused-expressions */
-import * as React from 'react';
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { VncScreen, VncScreenHandle } from 'react-vnc';
-import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { VncScreen, VncScreenHandle } from 'react-vnc';
+
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+
+import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 
 const useStyles = makeStyles(() => ({
   container: {
     '& canvas': {
-      margin: 'auto',
       display: 'block',
+      margin: 'auto',
     },
   },
   errorState: {
@@ -23,15 +25,15 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   linode: Linode;
-  token: string;
   refreshToken: () => Promise<void>;
+  token: string;
 }
 
 let monitor: WebSocket;
 
 const Glish = (props: Props) => {
   const classes = useStyles();
-  const { linode, token, refreshToken } = props;
+  const { linode, refreshToken, token } = props;
   const ref = React.useRef<VncScreenHandle>(null);
   const region = linode.region;
   const [powered, setPowered] = React.useState(linode.status === 'running');
@@ -130,11 +132,11 @@ const Glish = (props: Props) => {
 
   return (
     <VncScreen
-      ref={ref}
-      url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
-      loadingUI={<CircleProgress />}
-      showDotCursor
       autoConnect={false}
+      loadingUI={<CircleProgress />}
+      ref={ref}
+      showDotCursor
+      url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
     />
   );
 };

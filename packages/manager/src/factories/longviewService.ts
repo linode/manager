@@ -1,4 +1,5 @@
 import * as Factory from 'factory.ts';
+
 import {
   LongviewPort,
   LongviewPortsResponse,
@@ -7,25 +8,25 @@ import {
 
 export const longviewPortFactory = Factory.Sync.makeFactory<LongviewPort>({
   count: Factory.each((i) => i),
-  user: Factory.each((i) => `test-user-${i}`),
   name: Factory.each((i) => `test-name-${i}`),
+  user: Factory.each((i) => `test-user-${i}`),
 });
 
 export const longviewServiceFactory = Factory.Sync.makeFactory<LongviewService>(
   {
-    user: Factory.each((i) => `test-user-${i}`),
     ip: '0.0.0.0',
+    name: 'sshd',
     port: 22,
     type: 'tcp',
-    name: 'sshd',
+    user: Factory.each((i) => `test-user-${i}`),
   }
 );
 
 export const longviewPortsResponseFactory = Factory.Sync.makeFactory<LongviewPortsResponse>(
   {
     Ports: {
-      listening: longviewServiceFactory.buildList(2),
       active: longviewPortFactory.buildList(2),
+      listening: longviewServiceFactory.buildList(2),
     },
   }
 );

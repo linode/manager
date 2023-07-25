@@ -1,10 +1,10 @@
 import { ManagedContact } from '@linode/api-v4/lib/managed';
 
 export const contact1: ManagedContact = {
+  email: 'user@host.com',
+  group: 'DBA',
   id: 1,
   name: 'Fred',
-  group: 'DBA',
-  email: 'user@host.com',
   phone: {
     primary: '555-555-5555',
     secondary: null,
@@ -13,10 +13,10 @@ export const contact1: ManagedContact = {
 };
 
 export const contact2: ManagedContact = {
+  email: 'user@host.com',
+  group: 'DBA',
   id: 2,
   name: 'Barney',
-  group: 'DBA',
-  email: 'user@host.com',
   phone: {
     primary: '555-555-5555',
     secondary: null,
@@ -25,10 +25,10 @@ export const contact2: ManagedContact = {
 };
 
 export const contact3: ManagedContact = {
+  email: 'user@host.com',
+  group: 'Web Server Admin',
   id: 3,
   name: 'Jane',
-  group: 'Web Server Admin',
-  email: 'user@host.com',
   phone: {
     primary: '555-555-5555',
     secondary: null,
@@ -37,10 +37,10 @@ export const contact3: ManagedContact = {
 };
 
 export const contactWithoutGroup: ManagedContact = {
+  email: 'user@host.com',
+  group: null,
   id: 3,
   name: 'Jane',
-  group: null,
-  email: 'user@host.com',
   phone: {
     primary: '555-555-5555',
     secondary: null,

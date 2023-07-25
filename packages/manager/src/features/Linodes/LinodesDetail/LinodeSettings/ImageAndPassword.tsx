@@ -1,13 +1,15 @@
-import * as React from 'react';
-import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { ImageSelect } from 'src/features/Images';
 import { useAllImagesQuery } from 'src/queries/images';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { LinodePermissionsError } from '../LinodePermissionsError';
 import { useGrants } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import { LinodePermissionsError } from '../LinodePermissionsError';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -17,26 +19,26 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  onImageChange: (selected: Item<string>) => void;
+  authorizedUsers: string[];
   imageFieldError?: string;
+  linodeId: number;
+  onImageChange: (selected: Item<string>) => void;
+  onPasswordChange: (password: string) => void;
   password: string;
   passwordError?: string;
-  onPasswordChange: (password: string) => void;
   setAuthorizedUsers: (usernames: string[]) => void;
-  authorizedUsers: string[];
-  linodeId: number;
 }
 
 export const ImageAndPassword = (props: Props) => {
   const {
+    authorizedUsers,
     imageFieldError,
+    linodeId,
     onImageChange,
     onPasswordChange,
     password,
     passwordError,
     setAuthorizedUsers,
-    authorizedUsers,
-    linodeId,
   } = props;
 
   const { data: grants } = useGrants();
@@ -56,25 +58,25 @@ export const ImageAndPassword = (props: Props) => {
     <React.Fragment>
       {disabled && <LinodePermissionsError />}
       <ImageSelect
-        images={imagesData ?? []}
+        disabled={disabled}
         imageError={_imagesError}
         imageFieldError={imageFieldError}
+        images={imagesData ?? []}
         onSelect={onImageChange}
-        disabled={disabled}
       />
       <AccessPanel
-        className={classes.root}
-        password={password || ''}
-        handleChange={onPasswordChange}
-        error={passwordError}
-        authorizedUsers={authorizedUsers}
-        setAuthorizedUsers={setAuthorizedUsers}
-        disabled={disabled}
         disabledReason={
           disabled
             ? "You don't have permissions to modify this Linode"
             : undefined
         }
+        authorizedUsers={authorizedUsers}
+        className={classes.root}
+        disabled={disabled}
+        error={passwordError}
+        handleChange={onPasswordChange}
+        password={password || ''}
+        setAuthorizedUsers={setAuthorizedUsers}
       />
     </React.Fragment>
   );

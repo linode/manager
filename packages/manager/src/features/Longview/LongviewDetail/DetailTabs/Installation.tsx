@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 
-import Paper from 'src/components/core/Paper';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Paper } from 'src/components/Paper';
 
 import Instructions from '../../shared/InstallationInstructions';
 
@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  clientInstallationKey: string;
   clientAPIKey: string;
+  clientInstallationKey: string;
 }
 
 type CombinedProps = Props;
@@ -26,10 +26,10 @@ const Installation: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment segment="Installation" />
-      <Paper data-testid="longview-clients" className={classes.root}>
+      <Paper className={classes.root} data-testid="longview-clients">
         <Instructions
-          data-qa-instructions
           APIKey={props.clientAPIKey}
+          data-qa-instructions
           installationKey={props.clientInstallationKey}
         />
       </Paper>

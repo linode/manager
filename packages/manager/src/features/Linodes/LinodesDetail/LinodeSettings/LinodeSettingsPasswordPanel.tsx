@@ -1,5 +1,6 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+
 import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
@@ -22,18 +23,18 @@ const PasswordInput = React.lazy(
 );
 
 interface Props {
-  linodeId: number;
   isReadOnly?: boolean;
+  linodeId: number;
 }
 
 export const LinodeSettingsPasswordPanel = (props: Props) => {
-  const { linodeId, isReadOnly } = props;
+  const { isReadOnly, linodeId } = props;
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
     data: disks,
-    isLoading: disksLoading,
     error: disksError,
+    isLoading: disksLoading,
   } = useAllLinodeDisksQuery(linodeId);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -43,20 +44,20 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
     Boolean(linode?.type)
   );
 
-  const [selectedDiskId, setSelectedDiskId] = React.useState<number | null>(
+  const [selectedDiskId, setSelectedDiskId] = React.useState<null | number>(
     null
   );
   const [password, setPassword] = React.useState<string>('');
 
   const {
-    mutateAsync: changeLinodePassword,
-    isLoading: isLinodePasswordLoading,
     error: linodePasswordError,
+    isLoading: isLinodePasswordLoading,
+    mutateAsync: changeLinodePassword,
   } = useLinodeChangePasswordMutation(linodeId);
   const {
-    mutateAsync: changeLinodeDiskPassword,
-    isLoading: isDiskPasswordLoading,
     error: diskPasswordError,
+    isLoading: isDiskPasswordLoading,
+    mutateAsync: changeLinodeDiskPassword,
   } = useLinodeDiskChangePasswordMutation(linodeId, selectedDiskId ?? -1);
 
   const isBareMetalInstance = type?.class === 'metal';
@@ -99,16 +100,16 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
   const actions = (
     <ActionsPanel>
       <Button
-        buttonType="primary"
-        onClick={onSubmit}
-        loading={isLoading}
-        disabled={isReadOnly || linode?.status !== 'offline'}
-        data-qa-password-save
         tooltipText={
           linode?.status !== 'offline'
             ? 'Your Linode must be fully powered down in order to change your root password'
             : ''
         }
+        buttonType="primary"
+        data-qa-password-save
+        disabled={isReadOnly || linode?.status !== 'offline'}
+        loading={isLoading}
+        onClick={onSubmit}
       >
         Save
       </Button>
@@ -117,42 +118,42 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
 
   return (
     <Accordion
-      heading="Reset Root Password"
       actions={() => actions}
       defaultExpanded
+      heading="Reset Root Password"
     >
       <form>
-        {generalError && <Notice text={generalError} error />}
+        {generalError && <Notice error text={generalError} />}
         {!isBareMetalInstance ? (
           <EnhancedSelect
-            label="Disk"
-            placeholder="Select a Disk"
-            isLoading={disksLoading}
-            errorText={disksError?.[0].reason}
-            options={diskOptions}
-            onChange={(item) => setSelectedDiskId(item.value)}
-            value={diskOptions?.find((item) => item.value === selectedDiskId)}
             data-qa-select-linode
             disabled={isReadOnly}
+            errorText={disksError?.[0].reason}
             isClearable={false}
+            isLoading={disksLoading}
+            label="Disk"
+            onChange={(item) => setSelectedDiskId(item.value)}
+            options={diskOptions}
+            placeholder="Select a Disk"
+            value={diskOptions?.find((item) => item.value === selectedDiskId)}
           />
         ) : null}
         <React.Suspense fallback={<SuspenseLoader />}>
           <PasswordInput
-            autoComplete="new-password"
-            label="New Root Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            errorText={passwordError}
-            errorGroup="linode-settings-password"
-            error={Boolean(passwordError)}
-            data-qa-password-input
-            disabled={isReadOnly}
             disabledReason={
               isReadOnly
                 ? "You don't have permissions to modify this Linode"
                 : undefined
             }
+            autoComplete="new-password"
+            data-qa-password-input
+            disabled={isReadOnly}
+            error={Boolean(passwordError)}
+            errorGroup="linode-settings-password"
+            errorText={passwordError}
+            label="New Root Password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
           />
         </React.Suspense>
       </form>

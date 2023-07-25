@@ -37,8 +37,7 @@ export const getFilters = (
     const filterValues = arrayify(req.headers['x-filter']);
     for (const filterValue of filterValues) {
       try {
-        const filter = JSON.parse(filterValue);
-        return filter;
+        return JSON.parse(filterValue);
       } catch (e) {
         console.log('Failed to parse header "x-filter" value.', e.message);
       }

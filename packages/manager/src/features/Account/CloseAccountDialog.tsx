@@ -1,18 +1,19 @@
 import { cancelAccount } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { makeStyles } from 'tss-react/mui';
-import { Theme, styled } from '@mui/material/styles';
+
 import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { TextField } from 'src/components/TextField';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 
 interface Props {
-  open: boolean;
   closeDialog: () => void;
+  open: boolean;
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -96,25 +97,25 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
 
   return (
     <TypeToConfirmDialog
-      title="Are you sure you want to close your Linode account?"
-      label={`Please enter your Username (${profile.username}) to confirm.`}
       entity={{
-        type: 'AccountSetting',
-        subType: 'CloseAccount',
-        primaryBtnText: 'Close Account',
         name: profile.username,
+        primaryBtnText: 'Close Account',
+        subType: 'CloseAccount',
+        type: 'AccountSetting',
       }}
-      open={open}
-      onClose={closeDialog}
-      onClick={handleCancelAccount}
-      loading={isClosingAccount}
-      inputRef={inputRef}
       disabled={!canSubmit}
+      inputRef={inputRef}
+      label={`Please enter your Username (${profile.username}) to confirm.`}
+      loading={isClosingAccount}
+      onClick={handleCancelAccount}
+      onClose={closeDialog}
+      open={open}
       textFieldStyle={{ maxWidth: '415px' }}
+      title="Are you sure you want to close your Linode account?"
     >
       {errors ? <Notice error text={errors ? errors[0].reason : ''} /> : null}
       <StyledNoticeWrapper>
-        <Notice warning spacingBottom={12}>
+        <Notice spacingBottom={12} warning>
           <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Please note this is an extremely
             destructive action. Closing your account means that all services
@@ -131,6 +132,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       </Typography>
       <StyledCommentSectionWrapper>
         <TextField
+          aria-label="Optional comments field"
           label="Comments"
           multiline
           onChange={(e) => setComments(e.target.value)}
@@ -138,7 +140,6 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
           placeholder="Provide Feedback"
           rows={1}
           value={comments}
-          aria-label="Optional comments field"
         />
       </StyledCommentSectionWrapper>
     </TypeToConfirmDialog>

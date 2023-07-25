@@ -2,6 +2,7 @@ import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
@@ -19,25 +20,25 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
+      text: 'Getting Started with Cloud Firewalls',
       to:
         'https://www.linode.com/docs/products/networking/cloud-firewall/get-started/',
-      text: 'Getting Started with Cloud Firewalls',
     },
     {
+      text: 'Manage Firewall Rules',
       to:
         'https://www.linode.com/docs/products/networking/cloud-firewall/guides/manage-firewall-rules/',
-      text: 'Manage Firewall Rules',
     },
     {
+      text: 'Comparing Cloud Firewalls to Linux Firewall Software',
       to:
         'https://www.linode.com/docs/products/networking/cloud-firewall/guides/comparing-firewalls/',
-      text: 'Comparing Cloud Firewalls to Linux Firewall Software',
     },
   ],
   moreInfo: {
+    text: 'View additional Firewalls guides',
     to:
       'https://www.linode.com/docs/products/networking/cloud-firewall/guides/',
-    text: 'View additional Firewalls guides',
   },
   title: 'Getting Started Guides',
 };
@@ -45,20 +46,20 @@ export const gettingStartedGuides: ResourcesLinkSection = {
 export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
-      to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
+      external: true,
       text:
         'Linode Cloud Firewall Explained | Clear and Intuitive Network Control to and from All your Servers',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
     },
     {
-      to: 'https://www.youtube.com/watch?v=H7wM5mDI1-k',
-      text: 'Simple Scalable Network Security | Linode Cloud Firewall',
       external: true,
+      text: 'Simple Scalable Network Security | Linode Cloud Firewall',
+      to: 'https://www.youtube.com/watch?v=H7wM5mDI1-k',
     },
   ],
   moreInfo: {
-    to: youtubeChannelLink,
     text: youtubeMoreLinkText,
+    to: youtubeChannelLink,
   },
   title: 'Video Playlist',
 };

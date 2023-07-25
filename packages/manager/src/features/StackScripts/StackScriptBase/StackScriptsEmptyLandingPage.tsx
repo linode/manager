@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/analytics';
+
 import {
   gettingStartedGuides,
   headers,
@@ -20,15 +22,15 @@ export const StackScriptsEmptyLandingState = (props: Props) => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create StackScript',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create StackScript',
             });
             goToCreateStackScript();
           },
-          children: 'Create StackScript',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

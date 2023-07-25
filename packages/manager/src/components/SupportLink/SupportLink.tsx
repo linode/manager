@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { Link, LinkProps } from 'react-router-dom';
+
 import {
   EntityType,
   TicketType,
-} from 'src/features/Support/SupportTickets/SupportTicketDrawer';
+} from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 interface SupportLinkProps {
-  title?: string;
   description?: string;
-  text: string;
   entity?: EntityForTicketDetails;
-  ticketType?: TicketType;
   onClick?: LinkProps['onClick'];
+  text: string;
+  ticketType?: TicketType;
+  title?: string;
 }
 
 export interface EntityForTicketDetails {
@@ -20,17 +21,17 @@ export interface EntityForTicketDetails {
 }
 
 const SupportLink = (props: SupportLinkProps) => {
-  const { description, text, title, entity, ticketType, onClick } = props;
+  const { description, entity, onClick, text, ticketType, title } = props;
   return (
     <Link
       to={{
         pathname: '/support/tickets',
         state: {
-          open: true,
-          title,
           description,
           entity,
+          open: true,
           ticketType,
+          title,
         },
       }}
       onClick={onClick}

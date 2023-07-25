@@ -1,8 +1,10 @@
-import { getVlans, VLAN } from '@linode/api-v4/lib/vlans';
 import { APIError } from '@linode/api-v4/lib/types';
+import { VLAN, getVlans } from '@linode/api-v4/lib/vlans';
 import { useQuery } from 'react-query';
-import { queryPresets } from './base';
+
 import { getAll } from 'src/utilities/getAll';
+
+import { queryPresets } from './base';
 
 export const queryKey = 'vlans';
 

@@ -1,5 +1,7 @@
 export * from './account';
 
+export * from './aglb';
+
 export * from './databases';
 
 export * from './domains';
@@ -41,6 +43,8 @@ export * from './vlans';
 export * from './volumes';
 
 export * from './vpcs';
+
+export * from './betas';
 
 export {
   baseRequest,

@@ -2,12 +2,14 @@ import { waitFor } from '@testing-library/react';
 import algoliasearch from 'algoliasearch';
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { COMMUNITY_BASE_URL, DOCS_BASE_URL } from 'src/constants';
+
 import {
   community_answer,
   community_question,
   docs_result,
 } from 'src/__data__/searchResults';
+import { COMMUNITY_BASE_URL, DOCS_BASE_URL } from 'src/constants';
+
 import withSearch, {
   cleanDescription,
   convertCommunityToItems,
@@ -40,24 +42,24 @@ const emptyResults = {
 const getSearchFromQuery = (query: string) => [
   {
     indexName: 'linode-docs',
-    query,
     params: {
-      hitsPerPage: HITS_PER_PAGE,
       attributesToRetrieve: ['title', '_highlightResult', 'href'],
+      hitsPerPage: HITS_PER_PAGE,
     },
+    query,
   },
   {
     indexName: 'linode-community',
-    query,
     params: {
-      hitsPerPage: HITS_PER_PAGE,
-      distinct: true,
       attributesToRetrieve: ['title', 'description', '_highlightResult'],
+      distinct: true,
+      hitsPerPage: HITS_PER_PAGE,
     },
+    query,
   },
 ];
 
-const searchable = withSearch({ hitsPerPage: HITS_PER_PAGE, highlight: false });
+const searchable = withSearch({ highlight: false, hitsPerPage: HITS_PER_PAGE });
 const RawComponent = searchable(React.Component);
 
 const component = shallow(<RawComponent />);
@@ -76,7 +78,7 @@ describe('Algolia Search HOC', () => {
     });
     it('should save an error to state if the request to Algolia fails', () => {
       mockFn.mockImplementationOnce((queries: any, callback: any) =>
-        callback({ message: 'I reject this request.', code: 500 }, undefined)
+        callback({ code: 500, message: 'I reject this request.' }, undefined)
       );
       component.props().searchAlgolia('existentialism');
       expect(component.props().searchError).toEqual(
@@ -173,12 +175,12 @@ describe('Algolia Search HOC', () => {
         const formattedResults = convertDocsToItems(false, [docs_result]);
         expect(formattedResults).toEqual([
           {
-            value: 0,
-            label: docs_result.title,
             data: {
               href: DOCS_BASE_URL + docs_result.href,
               source: 'Linode documentation',
             },
+            label: docs_result.title,
+            value: 0,
           },
         ]);
       });
@@ -194,12 +196,12 @@ describe('Algolia Search HOC', () => {
         ] as any);
         expect(formattedResults).toEqual([
           {
-            value: 0,
-            label: community_question.title,
             data: {
-              source: 'Linode Community Site',
               href: expect.any(String),
+              source: 'Linode Community Site',
             },
+            label: community_question.title,
+            value: 0,
           },
         ]);
       });
@@ -209,12 +211,12 @@ describe('Algolia Search HOC', () => {
         ] as any);
         expect(formattedResults).toEqual([
           {
-            value: 0,
-            label: community_question.description,
             data: {
-              source: 'Linode Community Site',
               href: expect.any(String),
+              source: 'Linode Community Site',
             },
+            label: community_question.description,
+            value: 0,
           },
         ]);
       });

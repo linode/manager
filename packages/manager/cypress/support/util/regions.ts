@@ -1,4 +1,5 @@
 import { randomItem } from 'support/util/random';
+
 import type { Region } from '@linode/api-v4';
 
 /**
@@ -13,21 +14,32 @@ export const getOverrideRegion = (): Region | undefined => {
   const overrideRegionId = Cypress.env('CY_TEST_REGION');
 
   try {
-    const reg = getRegionById(overrideRegionId);
-    console.log(`Found override region!`);
-    console.log(reg);
-    return reg;
+    return getRegionById(overrideRegionId);
   } catch (e) {
     return undefined;
   }
 };
 
 /**
- * Linode regions available to the current Cloud Manager user.
+ * All Linode regions available to the current Cloud Manager user.
  *
  * Retrieved via Linode APIv4 during Cypress start-up.
  */
 export const regions: Region[] = Cypress.env('cloudManagerRegions') as Region[];
+
+/**
+ * Linode region(s) exposed to Cypress for testing.
+ *
+ * This may be a subset of `regions` in order to test functionality for specific
+ * regions.
+ */
+export const getTestableRegions = (): Region[] => {
+  const overrideRegion = getOverrideRegion();
+  if (overrideRegion) {
+    return [overrideRegion];
+  }
+  return regions;
+};
 
 /**
  * Returns an object describing a Cloud Manager region with the given ID.
@@ -77,4 +89,28 @@ export const getRegionByLabel = (label: string) => {
 export const chooseRegion = (): Region => {
   const overrideRegion = getOverrideRegion();
   return overrideRegion ? overrideRegion : randomItem(regions);
+};
+
+/**
+ * Executes a test for each Linode region exposed to Cypress.
+ */
+export const testRegions = (
+  description: string,
+  testCallback: (region: Region) => void
+) => {
+  getTestableRegions().forEach((region: Region) => {
+    it(`${description} (${region.id})`, () => testCallback(region));
+  });
+};
+
+/**
+ * Describes a group of test runs for each Linode region exposed to Cypress.
+ */
+export const describeRegions = (
+  description: string,
+  describeCallback: (region: Region) => void
+) => {
+  getTestableRegions().forEach((region: Region) => {
+    describe(`${description} (${region.id})`, () => describeCallback(region));
+  });
 };

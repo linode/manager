@@ -1,27 +1,29 @@
-import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import { useTheme } from '@mui/material/styles';
-import Paper from 'src/components/core/Paper';
-import Box from '@mui/material/Box';
-import { Chip } from 'src/components/Chip';
-import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import ThirdPartyPayment from './ThirdPartyPayment';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
+import { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
-import { queryKey } from 'src/queries/accountPayment';
+import * as React from 'react';
 import { useQueryClient } from 'react-query';
+import { useHistory } from 'react-router-dom';
+
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { Chip } from 'src/components/Chip';
+import { Paper } from 'src/components/Paper';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import { queryKey } from 'src/queries/accountPayment';
+
+import ThirdPartyPayment from './ThirdPartyPayment';
 
 interface Props {
-  paymentMethod: PaymentMethod;
   onDelete: () => void;
+  paymentMethod: PaymentMethod;
 }
 
 const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
-  const { paymentMethod, onDelete } = props;
-  const { type, is_default } = paymentMethod;
+  const { onDelete, paymentMethod } = props;
+  const { is_default, type } = paymentMethod;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -39,29 +41,29 @@ const PaymentMethodRow = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Make a Payment',
       onClick: () => {
         history.push({
           pathname: '/account/billing/make-payment/',
           state: { paymentMethod },
         });
       },
+      title: 'Make a Payment',
     },
     {
-      title: 'Make Default',
       disabled: paymentMethod.is_default,
+      onClick: () => makeDefault(paymentMethod.id),
+      title: 'Make Default',
       tooltip: paymentMethod.is_default
         ? 'This is already your default payment method.'
         : undefined,
-      onClick: () => makeDefault(paymentMethod.id),
     },
     {
-      title: 'Delete',
       disabled: paymentMethod.is_default,
+      onClick: onDelete,
+      title: 'Delete',
       tooltip: paymentMethod.is_default
         ? 'You cannot remove this payment method without setting a new default first.'
         : undefined,
-      onClick: onDelete,
     },
   ];
 
@@ -76,24 +78,24 @@ const PaymentMethodRow = (props: Props) => {
   };
 
   const sxBoxFlex = {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
   };
 
   return (
     <Paper
-      variant="outlined"
-      data-testid={`payment-method-row-${paymentMethod.id}`}
-      data-qa-payment-row={type}
       sx={{
-        '&:not(:last-of-type)': {
-          marginBottom: theme.spacing(),
-        },
         '&&': {
           // TODO: Remove "&&" when Paper has been refactored
           padding: 0,
         },
+        '&:not(:last-of-type)': {
+          marginBottom: theme.spacing(),
+        },
       }}
+      data-qa-payment-row={type}
+      data-testid={`payment-method-row-${paymentMethod.id}`}
+      variant="outlined"
     >
       <Box sx={sxBoxFlex}>
         <Box sx={{ ...sxBoxFlex, paddingRight: theme.spacing(2) }}>
@@ -104,14 +106,14 @@ const PaymentMethodRow = (props: Props) => {
           )}
         </Box>
         <Box sx={sxBoxFlex}>
-          {is_default && <Chip label="DEFAULT" component="span" size="small" />}
+          {is_default && <Chip component="span" label="DEFAULT" size="small" />}
         </Box>
         <Box
           sx={{
-            marginLeft: 'auto',
             '& button': {
               margin: 0,
             },
+            marginLeft: 'auto',
           }}
         >
           <ActionMenu

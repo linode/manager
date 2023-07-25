@@ -5,6 +5,22 @@ import { getRegionById, getRegionByLabel } from 'support/util/regions';
  */
 export const select = {
   /**
+   * Finds a Select menu item by its `data-qa-option` ID.
+   *
+   * This assumes that the Enhanced Select menu is already open.
+   *
+   * @param id - ID of menu item to find.
+   *
+   * @returns Cypress chainable.
+   */
+  findItemById: (id: string) => {
+    return cy
+      .get(`[data-qa-option="${id}"]`)
+      .scrollIntoView()
+      .should('be.visible');
+  },
+
+  /**
    * Finds a Select menu item by its text contents.
    *
    * This assumes that the Enhanced Select menu is already open.
@@ -17,22 +33,6 @@ export const select = {
     return cy
       .get('[data-qa-option]')
       .contains(text)
-      .scrollIntoView()
-      .should('be.visible');
-  },
-
-  /**
-   * Finds a Select menu item by its `data-qa-option` ID.
-   *
-   * This assumes that the Enhanced Select menu is already open.
-   *
-   * @param id - ID of menu item to find.
-   *
-   * @returns Cypress chainable.
-   */
-  findItemById: (id: string) => {
-    return cy
-      .get(`[data-qa-option="${id}"]`)
       .scrollIntoView()
       .should('be.visible');
   },

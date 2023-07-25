@@ -1,58 +1,34 @@
-import classNames from 'classnames';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import ExternalLink from 'src/components/ExternalLink';
+
 import packageJson from '../../../package.json';
 
 interface Props {
   desktopMenuIsOpen: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   container: {
-    width: '100%',
     backgroundColor: theme.bg.main,
     margin: 0,
     padding: '4px 0px',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
       alignItems: 'flex-start',
+      flexDirection: 'column',
     },
     [theme.breakpoints.up('md')]: {
       paddingLeft: 200,
     },
+    width: '100%',
   },
   desktopMenuIsOpen: {
     paddingLeft: 0,
     [theme.breakpoints.up('md')]: {
       paddingLeft: 52,
-    },
-  },
-  version: {
-    '&.MuiGrid-item': {
-      paddingLeft: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-  linkContainer: {
-    [theme.breakpoints.down('sm')]: {
-      padding: '0 8px !important',
-    },
-  },
-  link: {
-    color: theme.palette.text.primary,
-    fontSize: '90%',
-    transition: theme.transitions.create('color'),
-    '&:hover, &:focus': {
-      color: theme.color.black,
-      textDecoration: 'underline',
-    },
-    [theme.breakpoints.down('lg')]: {
-      marginRight: theme.spacing(1),
     },
   },
   feedbackLink: {
@@ -65,59 +41,84 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  link: {
+    '&:hover, &:focus': {
+      color: theme.color.black,
+      textDecoration: 'underline',
+    },
+    color: theme.palette.text.primary,
+    fontSize: '90%',
+    [theme.breakpoints.down('lg')]: {
+      marginRight: theme.spacing(1),
+    },
+    transition: theme.transitions.create('color'),
+  },
+  linkContainer: {
+    [theme.breakpoints.down('sm')]: {
+      padding: '0 8px !important',
+    },
+  },
+  version: {
+    '&.MuiGrid-item': {
+      paddingLeft: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+    },
+  },
 }));
 
 const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 
-export const Footer: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const Footer = React.memo((props: Props) => {
+  const { classes, cx } = useStyles();
 
   const { desktopMenuIsOpen } = props;
 
   return (
     <footer role="contentinfo">
       <Grid
-        container
-        spacing={4}
-        alignItems="center"
-        className={classNames({
+        className={cx({
           [classes.container]: true,
           [classes.desktopMenuIsOpen]: desktopMenuIsOpen,
         })}
+        alignItems="center"
+        container
+        spacing={4}
       >
         <Grid className={classes.version}>{renderVersion(classes.link)}</Grid>
         <Grid
-          className={classNames({
+          className={cx({
             [classes.linkContainer]: true,
           })}
         >
           <a
+            aria-describedby="external-site"
             className={classes.link}
             href="https://developers.linode.com"
-            target="_blank"
-            aria-describedby="external-site"
             rel="noopener noreferrer"
+            target="_blank"
           >
             API Reference
           </a>
         </Grid>
         <Grid
-          className={classNames({
-            [classes.linkContainer]: true,
+          className={cx({
             [classes.feedbackLink]: true,
+            [classes.linkContainer]: true,
           })}
         >
           <ExternalLink
             className={classes.link}
-            text="Provide Feedback"
-            link={FEEDBACK_LINK}
             hideIcon
+            link={FEEDBACK_LINK}
+            text="Provide Feedback"
           />
         </Grid>
       </Grid>
     </footer>
   );
-};
+});
 
 const renderVersion = (className: string) => {
   const VERSION = packageJson.version;
@@ -127,15 +128,13 @@ const renderVersion = (className: string) => {
 
   return (
     <a
+      aria-describedby="external-site"
       className={className}
       href={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
-      target="_blank"
-      aria-describedby="external-site"
       rel="noopener noreferrer"
+      target="_blank"
     >
       v{VERSION}
     </a>
   );
 };
-
-export default React.memo(Footer);

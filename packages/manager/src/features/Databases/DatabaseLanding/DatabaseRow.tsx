@@ -5,6 +5,7 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -18,20 +19,20 @@ import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
 export const databaseStatusMap: Record<DatabaseStatus, Status> = {
-  provisioning: 'other',
   active: 'active',
-  suspending: 'other',
-  suspended: 'error',
-  resuming: 'other',
-  restoring: 'other',
-  failed: 'error',
   degraded: 'inactive',
+  failed: 'error',
+  provisioning: 'other',
+  restoring: 'other',
+  resuming: 'other',
+  suspended: 'error',
+  suspending: 'other',
 };
 
 export const databaseEngineMap: Record<Engine, string> = {
+  mongodb: 'MongoDB',
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
-  mongodb: 'MongoDB',
   redis: 'Redis',
 };
 
@@ -41,14 +42,14 @@ interface Props {
 
 export const DatabaseRow = ({ database }: Props) => {
   const {
+    cluster_size,
+    created,
+    engine,
     id,
     label,
-    engine,
-    created,
-    status,
     region,
+    status,
     version,
-    cluster_size,
   } = database;
 
   const { data: regions } = useRegionsQuery();
@@ -63,20 +64,20 @@ export const DatabaseRow = ({ database }: Props) => {
       <>
         {`Primary +${cluster_size - 1}`}
         <Chip
-          variant="outlined"
-          outlineColor="green"
-          label="HA"
-          size="small"
           inTable
+          label="HA"
+          outlineColor="green"
+          size="small"
+          variant="outlined"
         />
       </>
     );
 
   return (
     <TableRow
-      key={`database-row-${id}`}
       ariaLabel={`Database ${label}`}
       data-qa-database-cluster-id={id}
+      key={`database-row-${id}`}
     >
       <TableCell>
         <Link to={`/databases/${engine}/${id}`}>{label}</Link>

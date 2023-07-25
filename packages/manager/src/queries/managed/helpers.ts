@@ -1,8 +1,10 @@
+import { ManagedIssue, getTicket } from '@linode/api-v4';
 import Bluebird from 'bluebird';
 import { DateTime } from 'luxon';
+
 import { parseAPIDate } from 'src/utilities/date';
+
 import { ExtendedIssue } from './types';
-import { ManagedIssue, getTicket } from '@linode/api-v4';
 
 export const extendIssues = async (issues: ManagedIssue[]) => {
   /**
@@ -27,8 +29,8 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
         .then((ticket) => {
           return {
             ...thisIssue,
-            status: ticket.status,
             dateClosed: ticket.closed,
+            status: ticket.status,
           } as ExtendedIssue;
         })
         // If this fails, we'll just use a normal issue
