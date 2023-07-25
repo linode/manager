@@ -1,14 +1,16 @@
-import JSPDF from 'jspdf';
-import autoTable, { CellHookData } from 'jspdf-autotable';
 import {
   Invoice,
   InvoiceItem,
   Payment,
   TaxSummary,
 } from '@linode/api-v4/lib/account';
+import JSPDF from 'jspdf';
+import autoTable, { CellHookData } from 'jspdf-autotable';
 import { pathOr } from 'ramda';
-import formatDate from 'src/utilities/formatDate';
+
 import { ADDRESSES } from 'src/constants';
+import formatDate from 'src/utilities/formatDate';
+
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 
 /**
@@ -42,14 +44,6 @@ export const createPaymentsTable = (
   timezone?: string
 ) => {
   autoTable(doc, {
-    startY: 165,
-    styles: {
-      lineWidth: 1,
-    },
-    headStyles: {
-      fillColor: '#444444',
-    },
-    head: [['Description', 'Date', 'Amount']],
     body: [
       [
         { content: 'Payment: Thank You' },
@@ -62,6 +56,14 @@ export const createPaymentsTable = (
         { content: `$${Number(payment.usd).toFixed(2)}` },
       ],
     ],
+    head: [['Description', 'Date', 'Amount']],
+    headStyles: {
+      fillColor: '#444444',
+    },
+    startY: 165,
+    styles: {
+      lineWidth: 1,
+    },
   });
 };
 
@@ -70,15 +72,15 @@ export const createPaymentsTable = (
  */
 export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
   autoTable(doc, {
-    styles: {
-      halign: 'right',
-    },
-    headStyles: {
-      fillColor: '#444444',
-    },
     body: [
       ['Payment Total (USD)        ', `$${Number(payment.usd).toFixed(2)}`],
     ],
+    headStyles: {
+      fillColor: '#444444',
+    },
+    styles: {
+      halign: 'right',
+    },
   });
 };
 
@@ -91,13 +93,53 @@ export const createInvoiceItemsTable = (
   timezone?: string
 ) => {
   autoTable(doc, {
-    startY: 165,
-    styles: {
-      lineWidth: 1,
-    },
-    headStyles: {
-      fillColor: '#444444',
-    },
+    body: items.map((item) => {
+      const [toDate, toTime] = formatDateForTable(item.to || '', timezone);
+      const [fromDate, fromTime] = formatDateForTable(
+        item.from || '',
+        timezone
+      );
+      return [
+        {
+          content: formatDescription(item.label),
+          styles: { cellWidth: 85, fontSize: 8, overflow: 'linebreak' },
+        },
+        {
+          content: item.from ? `${fromDate}\n${fromTime}` : '',
+          styles: { cellWidth: 50, fontSize: 8, overflow: 'linebreak' },
+        },
+        {
+          content: item.to ? `${toDate}\n${toTime}` : '',
+          styles: { cellWidth: 50, fontSize: 8, overflow: 'linebreak' },
+        },
+        {
+          content: item.quantity || '',
+          styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
+        },
+        {
+          content: item.unit_price || '',
+          styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
+        },
+        /**
+         * We do number conversion here because some older invoice items
+         * (specifically Customer Packages) return these values as strings.
+         *
+         * The API team will fix this in ARB-1607.
+         */
+        {
+          content: `$${Number(item.amount).toFixed(2)}`,
+          styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
+        },
+        {
+          content: `$${Number(item.tax).toFixed(2)}`,
+          styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
+        },
+        {
+          content: `$${Number(item.total).toFixed(2)}`,
+          styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
+        },
+      ];
+    }),
     head: [
       [
         'Description',
@@ -110,53 +152,13 @@ export const createInvoiceItemsTable = (
         'Total',
       ],
     ],
-    body: items.map((item) => {
-      const [toDate, toTime] = formatDateForTable(item.to || '', timezone);
-      const [fromDate, fromTime] = formatDateForTable(
-        item.from || '',
-        timezone
-      );
-      return [
-        {
-          styles: { fontSize: 8, cellWidth: 85, overflow: 'linebreak' },
-          content: formatDescription(item.label),
-        },
-        {
-          styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
-          content: item.from ? `${fromDate}\n${fromTime}` : '',
-        },
-        {
-          styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
-          content: item.to ? `${toDate}\n${toTime}` : '',
-        },
-        {
-          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: item.quantity || '',
-        },
-        {
-          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: item.unit_price || '',
-        },
-        /**
-         * We do number conversion here because some older invoice items
-         * (specifically Customer Packages) return these values as strings.
-         *
-         * The API team will fix this in ARB-1607.
-         */
-        {
-          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${Number(item.amount).toFixed(2)}`,
-        },
-        {
-          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${Number(item.tax).toFixed(2)}`,
-        },
-        {
-          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${Number(item.total).toFixed(2)}`,
-        },
-      ];
-    }),
+    headStyles: {
+      fillColor: '#444444',
+    },
+    startY: 165,
+    styles: {
+      lineWidth: 1,
+    },
   });
 };
 
@@ -177,36 +179,36 @@ const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
  */
 export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
   autoTable(doc, {
-    styles: {
-      halign: 'right',
-    },
-    headStyles: {
-      fillColor: '#444444',
-    },
-    columnStyles: {
-      0: {
-        cellPadding: {
-          right: 12,
-          top: 5,
-          bottom: 5,
-        },
-      },
-      1: {
-        cellPadding: {
-          right: 6,
-          top: 5,
-          bottom: 5,
-        },
-      },
-    },
-    pageBreak: 'avoid',
-    rowPageBreak: 'avoid',
     body: [
       ['Subtotal (USD)', `$${Number(invoice.subtotal).toFixed(2)}`],
       ...getTaxSummaryBody(invoice.tax_summary),
       ['Tax Subtotal (USD)', `$${Number(invoice.tax).toFixed(2)}`],
       [`Total (USD)`, `$${Number(invoice.total).toFixed(2)}`],
     ],
+    columnStyles: {
+      0: {
+        cellPadding: {
+          bottom: 5,
+          right: 12,
+          top: 5,
+        },
+      },
+      1: {
+        cellPadding: {
+          bottom: 5,
+          right: 6,
+          top: 5,
+        },
+      },
+    },
+    headStyles: {
+      fillColor: '#444444',
+    },
+    pageBreak: 'avoid',
+    rowPageBreak: 'avoid',
+    styles: {
+      halign: 'right',
+    },
     willDrawCell: (data: CellHookData) => {
       const pageWidth = doc.internal.pageSize.width;
       const tableWidth = data.table.getWidth(pageWidth);
@@ -243,10 +245,10 @@ export const createFooter = (
   doc.setFont(font);
 
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
-  const isInternational = !['US', 'CA'].includes(country);
+  const isInternational = !['CA', 'US'].includes(country);
 
   const remitAddress = isAkamaiBilling
-    ? ['US', 'CA'].includes(country)
+    ? ['CA', 'US'].includes(country)
       ? ADDRESSES.akamai.us
       : ADDRESSES.akamai.international
     : ADDRESSES.linode;
@@ -268,8 +270,8 @@ export const createFooter = (
   );
 
   doc.text(footerText, left, top, {
-    charSpace: 0.75,
     align: 'center',
+    charSpace: 0.75,
   });
 };
 
@@ -337,8 +339,8 @@ const formatDescription = (desc?: string) => {
 };
 
 export interface PdfResult {
-  status: 'success' | 'error';
   error?: Error;
+  status: 'error' | 'success';
 }
 
 export const dateConversion = (str: string): number => Date.parse(str);

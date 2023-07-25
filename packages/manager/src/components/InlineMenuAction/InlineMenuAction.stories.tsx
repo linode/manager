@@ -1,11 +1,11 @@
-import React from 'react';
 import { action } from '@storybook/addon-actions';
+import React from 'react';
+
 import { InlineMenuAction } from './InlineMenuAction';
+
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof InlineMenuAction> = {
-  title: 'Components/InlineMenuAction',
-  component: InlineMenuAction,
   argTypes: {},
   args: {
     actionText: 'Action Text',
@@ -16,6 +16,8 @@ const meta: Meta<typeof InlineMenuAction> = {
     tooltip: 'Tooltip Text',
     tooltipAnalyticsEvent: action('tooltipAnalyticsEvent'),
   },
+  component: InlineMenuAction,
+  title: 'Components/InlineMenuAction',
 };
 
 export default meta;

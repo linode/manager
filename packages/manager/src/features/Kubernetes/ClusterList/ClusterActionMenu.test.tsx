@@ -1,18 +1,20 @@
 import * as kube from '@linode/api-v4/lib/kubernetes/kubernetes';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
+
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { ClusterActionMenu } from './ClusterActionMenu';
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
+
+import { ClusterActionMenu } from './ClusterActionMenu';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
 const mockGetKubeConfig = jest.spyOn<any, any>(kube, 'getKubeConfig');
 
 const props = {
+  closeSnackbar: jest.fn(),
   clusterId: 123456,
   clusterLabel: 'my-cluster',
   enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
   openDialog: jest.fn(),
   ...reactRouterProps,
 };

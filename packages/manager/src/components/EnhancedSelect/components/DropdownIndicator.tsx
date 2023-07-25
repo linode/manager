@@ -8,11 +8,11 @@ export const DropdownIndicator = () => {
 
 const StyledKeyboardArrowDown = styled(KeyboardArrowDown)(() => ({
   color: '#aaa !important',
-  width: 28,
   height: 28,
-  opacity: 0.5,
-  marginTop: 0,
-  transition: 'color 225ms ease-in-out',
   marginRight: '4px',
+  marginTop: 0,
+  opacity: 0.5,
   pointerEvents: 'none',
+  transition: 'color 225ms ease-in-out',
+  width: 28,
 }));

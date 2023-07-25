@@ -1,17 +1,37 @@
 import Close from '@mui/icons-material/Close';
-import * as React from 'react';
-import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+
+import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
+import { Divider } from 'src/components/Divider';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { IconButton } from 'src/components/IconButton';
+import { Typography } from 'src/components/Typography';
 import { ExtendedType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    '&:hover': {
+      color: '#6e6e6e',
+    },
+    alignItems: 'flex-start',
+    color: '#979797',
+    marginTop: -4,
+    padding: 0,
+  },
+  numberInput: {
+    marginBottom: theme.spacing(1.5),
+    marginTop: theme.spacing(2),
+  },
+  price: {
+    '& h3': {
+      color: `${theme.palette.text.primary} !important`,
+      fontFamily: '"LatoWebRegular", sans-serif',
+    },
+  },
   root: {
     '& $textField': {
       width: 53,
@@ -25,33 +45,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   typeSubheader: {
     fontSize: '14px',
   },
-  button: {
-    alignItems: 'flex-start',
-    color: '#979797',
-    marginTop: -4,
-    padding: 0,
-    '&:hover': {
-      color: '#6e6e6e',
-    },
-  },
-  numberInput: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1.5),
-  },
-  price: {
-    '& h3': {
-      color: `${theme.palette.text.primary} !important`,
-      fontFamily: '"LatoWebRegular", sans-serif',
-    },
-  },
 }));
 
 export interface Props {
   nodeCount: number;
+  onRemove: () => void;
   poolType: ExtendedType | null;
   price: number;
   updateNodeCount: (count: number) => void;
-  onRemove: () => void;
 }
 
 export const NodePoolSummary: React.FC<Props> = (props) => {
@@ -66,12 +67,12 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Divider dark spacingTop={24} spacingBottom={12} />
+      <Divider dark spacingBottom={12} spacingTop={24} />
       <Box
+        className={classes.root}
+        data-testid="node-pool-summary"
         display="flex"
         flexDirection="column"
-        data-testid="node-pool-summary"
-        className={classes.root}
       >
         <Box display="flex" justifyContent="space-between">
           <div>
@@ -85,23 +86,23 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
           </div>
           <IconButton
             className={classes.button}
-            onClick={onRemove}
             data-testid="remove-pool-button"
-            title={`Remove ${poolType.label} Node Pool`}
+            onClick={onRemove}
             size="large"
+            title={`Remove ${poolType.label} Node Pool`}
           >
             <Close />
           </IconButton>
         </Box>
         <div className={classes.numberInput}>
           <EnhancedNumberInput
-            value={nodeCount}
-            setValue={updateNodeCount}
             min={1}
+            setValue={updateNodeCount}
+            value={nodeCount}
           />
         </div>
         <div className={classes.price}>
-          <DisplayPrice price={price} fontSize="14px" interval="month" />
+          <DisplayPrice fontSize="14px" interval="month" price={price} />
         </div>
       </Box>
     </>

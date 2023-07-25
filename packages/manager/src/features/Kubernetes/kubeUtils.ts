@@ -4,9 +4,10 @@ import {
   KubernetesCluster,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
-import { ExtendedType } from 'src/utilities/extendType';
 import { Region } from '@linode/api-v4/lib/regions';
+
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import { ExtendedType } from 'src/utilities/extendType';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
@@ -47,7 +48,7 @@ export const getTotalClusterMemoryCPUAndStorage = (
   types: ExtendedType[]
 ) => {
   if (!types || !pools) {
-    return { RAM: 0, CPU: 0, Storage: 0 };
+    return { CPU: 0, RAM: 0, Storage: 0 };
   }
 
   return pools.reduce(
@@ -59,12 +60,12 @@ export const getTotalClusterMemoryCPUAndStorage = (
         return accumulator;
       }
       return {
-        RAM: accumulator.RAM + thisType.memory * thisPool.count,
         CPU: accumulator.CPU + thisType.vcpus * thisPool.count,
+        RAM: accumulator.RAM + thisType.memory * thisPool.count,
         Storage: accumulator.Storage + thisType.disk * thisPool.count,
       };
     },
-    { RAM: 0, CPU: 0, Storage: 0 }
+    { CPU: 0, RAM: 0, Storage: 0 }
   );
 };
 
@@ -131,7 +132,7 @@ export const getKubeHighAvailability = (
   );
 
   return {
-    showHighAvailability,
     isClusterHighlyAvailable,
+    showHighAvailability,
   };
 };

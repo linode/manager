@@ -11,7 +11,7 @@ import { Image } from '@linode/api-v4/lib/images';
  */
 export const safeGetImageLabel = (
   images: Record<string, Image>,
-  slug: string | null
+  slug: null | string
 ): string => {
   if (!slug) {
     return '';

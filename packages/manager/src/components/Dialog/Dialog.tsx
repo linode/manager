@@ -1,11 +1,12 @@
-import * as React from 'react';
-import _Dialog, { DialogProps as _DialogProps } from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
+import _Dialog, { DialogProps as _DialogProps } from '@mui/material/Dialog';
+import { styled, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import DialogContent from 'src/components/core/DialogContent';
-import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import { isPropValid } from 'src/utilities/isPropValid';
-import { styled, useTheme } from '@mui/material/styles';
 import { convertForAria } from 'src/utilities/stringUtils';
 
 export interface DialogProps extends _DialogProps {
@@ -24,10 +25,10 @@ const Dialog = (props: DialogProps) => {
     error,
     fullHeight,
     fullWidth,
-    title,
-    titleBottomBorder,
     maxWidth = 'md',
     onClose,
+    title,
+    titleBottomBorder,
     ...rest
   } = props;
 
@@ -53,18 +54,18 @@ const Dialog = (props: DialogProps) => {
         }}
       >
         <DialogTitle
-          title={title}
-          onClose={() => onClose && onClose({}, 'backdropClick')}
           id={titleID}
+          onClose={() => onClose && onClose({}, 'backdropClick')}
+          title={title}
         />
         {titleBottomBorder && <StyledHr />}
         <DialogContent
-          className={className}
           sx={{
             paddingBottom: theme.spacing(3),
           }}
+          className={className}
         >
-          {error && <Notice text={error} error />}
+          {error && <Notice error text={error} />}
           {children}
         </DialogContent>
       </Box>

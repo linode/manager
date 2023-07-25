@@ -1,21 +1,20 @@
 import { createTheme } from '@mui/material/styles';
 import _merge from 'lodash/merge';
 
-// Themes & Brands
-import { darkTheme } from 'src/foundations/themes/dark';
-import { lightTheme } from 'src/foundations/themes/light';
-
+import { latoWeb } from 'src/foundations/fonts';
 // Types & Interfaces
 import { customDarkModeOptions } from 'src/foundations/themes/dark';
-import { latoWeb } from 'src/foundations/fonts';
+// Themes & Brands
+import { darkTheme } from 'src/foundations/themes/dark';
 import {
-  color,
   bg,
-  textColors,
   borderColors,
+  color,
+  textColors,
 } from 'src/foundations/themes/light';
+import { lightTheme } from 'src/foundations/themes/light';
 
-export type ThemeName = 'light' | 'dark';
+export type ThemeName = 'dark' | 'light';
 
 type Fonts = typeof latoWeb;
 
@@ -49,35 +48,35 @@ type BorderColors = MergeTypes<LightModeBorderColors, DarkModeBorderColors>;
  */
 declare module '@mui/material/styles/createTheme' {
   interface Theme {
-    name: ThemeName;
-    bg: BgColors;
-    color: Colors;
-    textColors: TextColors;
-    borderColors: BorderColors;
-    font: Fonts;
-    graphs: any;
-    visually: any;
-    animateCircleIcon?: any;
     addCircleHoverEffect?: any;
+    animateCircleIcon?: any;
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
+    bg: BgColors;
+    borderColors: BorderColors;
+    color: Colors;
+    font: Fonts;
+    graphs: any;
+    name: ThemeName;
+    textColors: TextColors;
+    visually: any;
   }
 
   interface ThemeOptions {
-    name: ThemeName;
-    bg?: LightModeBgColors | DarkModeBgColors;
-    color?: LightModeColors | DarkModeColors;
-    textColors?: LightModeTextColors | DarkModeTextColors;
-    borderColors?: LightModeBorderColors | DarkModeBorderColors;
-    font?: Fonts;
-    graphs?: any;
-    visually?: any;
-    animateCircleIcon?: any;
     addCircleHoverEffect?: any;
+    animateCircleIcon?: any;
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
+    bg?: DarkModeBgColors | LightModeBgColors;
+    borderColors?: DarkModeBorderColors | LightModeBorderColors;
+    color?: DarkModeColors | LightModeColors;
+    font?: Fonts;
+    graphs?: any;
+    name: ThemeName;
+    textColors?: DarkModeTextColors | LightModeTextColors;
+    visually?: any;
   }
 }
 

@@ -1,64 +1,66 @@
 import { SupportReply, uploadAttachment } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
+import { debounce } from 'throttle-debounce';
+
 import { Accordion } from 'src/components/Accordion';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
+import { useSupportTicketReplyMutation } from 'src/queries/support';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
-import { debounce } from 'throttle-debounce';
+
 import AttachFileForm from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
 import Reference from './MarkdownReference';
 import { ReplyActions } from './ReplyActions';
 import TabbedReply from './TabbedReply';
-import { useSupportTicketReplyMutation } from 'src/queries/support';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  replyContainer: {
-    paddingLeft: theme.spacing(8),
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(6),
-    },
-  },
   expPanelSummary: {
     backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
     borderTop: `1px solid ${theme.bg.main}`,
     paddingTop: theme.spacing(),
+  },
+  reference: {
+    [theme.breakpoints.down('sm')]: {
+      padding: `${theme.spacing(2)} !important`,
+    },
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: 4,
+      marginRight: 4,
+      marginTop: theme.spacing(7),
+      padding: `0 !important`,
+    },
   },
   referenceRoot: {
     '& > p': {
       marginBottom: theme.spacing(),
     },
   },
-  reference: {
-    [theme.breakpoints.up('sm')]: {
-      marginTop: theme.spacing(7),
-      marginRight: 4,
-      marginLeft: 4,
-      padding: `0 !important`,
-    },
+  replyContainer: {
+    paddingLeft: theme.spacing(8),
     [theme.breakpoints.down('sm')]: {
-      padding: `${theme.spacing(2)} !important`,
+      paddingLeft: theme.spacing(6),
     },
   },
 }));
 
 interface Props {
   closable: boolean;
+  lastReply?: SupportReply;
   onSuccess?: (newReply: SupportReply) => void;
   reloadAttachments: () => void;
   ticketId: number;
-  lastReply?: SupportReply;
 }
 
 export const ReplyContainer = (props: Props) => {
   const classes = useStyles();
 
-  const { onSuccess, reloadAttachments, lastReply, ...rest } = props;
+  const { lastReply, onSuccess, reloadAttachments, ...rest } = props;
 
   const { mutateAsync: createReply } = useSupportTicketReplyMutation();
 
@@ -124,8 +126,8 @@ export const ReplyContainer = (props: Props) => {
             .then(() => {
               const nullFileState = {
                 file: null,
-                uploading: false,
                 uploaded: true,
+                uploading: false,
               };
 
               setFiles(set(lensPath([idx]), nullFileState));
@@ -175,24 +177,24 @@ export const ReplyContainer = (props: Props) => {
       </Grid>
       <Grid style={{ marginTop: 8 }}>
         <Accordion
-          heading="Formatting Tips"
           defaultExpanded={false}
           detailProps={{ className: classes.expPanelSummary }}
+          heading="Formatting Tips"
         >
           <Reference isReply rootClass={classes.referenceRoot} />
         </Accordion>
       </Grid>
       <Grid>
         <AttachFileForm
-          files={files}
           updateFiles={(filesToAttach: FileAttachment[]) =>
             setFiles(filesToAttach)
           }
+          files={files}
         />
         <ReplyActions
           isSubmitting={isSubmitting}
-          value={value}
           submitForm={submitForm}
+          value={value}
           {...rest}
         />
       </Grid>

@@ -1,7 +1,8 @@
 import { KubeNodePoolResponse, LinodeTypeClass, Region } from '@linode/api-v4';
-import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { KubernetesPlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
@@ -9,15 +10,15 @@ import { ExtendedType, extendType } from 'src/utilities/extendType';
 const DEFAULT_PLAN_COUNT = 3;
 
 export interface NodePoolPanelProps {
-  types: ExtendedType[];
-  typesLoading: boolean;
-  typesError?: string;
+  addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
   apiError?: string;
-  isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   hasSelectedRegion: boolean;
+  isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
-  addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
+  types: ExtendedType[];
+  typesError?: string;
+  typesLoading: boolean;
 }
 
 export const NodePoolPanel: React.FunctionComponent<NodePoolPanelProps> = (
@@ -46,11 +47,11 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
   const {
     addNodePool,
     apiError,
-    types,
     hasSelectedRegion,
-    isSelectedRegionEligibleForPlan,
     isPlanPanelDisabled,
+    isSelectedRegionEligibleForPlan,
     regionsData,
+    types,
   } = props;
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
@@ -65,9 +66,9 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
      * Add pool and reset form state.
      */
     addNodePool({
+      count: nodeCount,
       id: Math.random(),
       type: selectedPlanType,
-      count: nodeCount,
     });
     updatePlanCount(selectedPlanType, 0);
     setSelectedType(undefined);
@@ -82,24 +83,24 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
-          types={extendedTypes.filter(
-            (t) => t.class !== 'nanode' && t.class !== 'gpu'
-          )} // No Nanodes or GPUs in clusters
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
-          selectedID={selectedType}
-          hasSelectedRegion={hasSelectedRegion}
-          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          onSelect={(newType: string) => setSelectedType(newType)}
-          error={apiError}
-          isPlanPanelDisabled={isPlanPanelDisabled}
-          header="Add Node Pools"
+          types={extendedTypes.filter(
+            (t) => t.class !== 'nanode' && t.class !== 'gpu'
+          )} // No Nanodes or GPUs in clusters
           copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
-          regionsData={regionsData}
-          updatePlanCount={updatePlanCount}
+          error={apiError}
+          hasSelectedRegion={hasSelectedRegion}
+          header="Add Node Pools"
+          isPlanPanelDisabled={isPlanPanelDisabled}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           onAdd={submitForm}
+          onSelect={(newType: string) => setSelectedType(newType)}
+          regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
+          selectedID={selectedType}
+          updatePlanCount={updatePlanCount}
         />
       </Grid>
     </Grid>

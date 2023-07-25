@@ -1,23 +1,24 @@
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import NotFound from 'src/components/NotFound';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import { useProfile, useGrants } from 'src/queries/profile';
-import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import LandingHeader from 'src/components/LandingHeader';
 import {
   matchPath,
   useHistory,
   useLocation,
-  useRouteMatch,
   useParams,
+  useRouteMatch,
 } from 'react-router-dom';
+
+import { CircleProgress } from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
+import NotFound from 'src/components/NotFound';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
 const FirewallRulesLanding = React.lazy(
@@ -41,12 +42,12 @@ export const FirewallDetail = () => {
 
   const tabs = [
     {
-      title: 'Rules',
       routeName: `${url}/rules`,
+      title: 'Rules',
     },
     {
-      title: 'Linodes',
       routeName: `${url}/linodes`,
+      title: 'Linodes',
     },
   ];
 
@@ -58,11 +59,11 @@ export const FirewallDetail = () => {
     history.push(tabs[index].routeName);
   };
 
-  const { data: firewall, isLoading, error } = useFirewallQuery(firewallId);
+  const { data: firewall, error, isLoading } = useFirewallQuery(firewallId);
 
   const {
-    mutateAsync: updateFirewall,
     error: updateError,
+    mutateAsync: updateFirewall,
     reset,
   } = useMutateFirewall(firewallId);
 
@@ -97,18 +98,18 @@ export const FirewallDetail = () => {
     <React.Fragment>
       <DocumentTitleSegment segment={firewall.label} />
       <LandingHeader
-        title="Firewall Details"
-        docsLabel="Docs"
-        docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
         breadcrumbProps={{
-          pathname: location.pathname,
           onEditHandlers: {
             editableTextTitle: firewall.label,
-            onEdit: handleLabelChange,
-            onCancel: resetEditableLabel,
             errorText,
+            onCancel: resetEditableLabel,
+            onEdit: handleLabelChange,
           },
+          pathname: location.pathname,
         }}
+        docsLabel="Docs"
+        docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
+        title="Firewall Details"
       />
       <Tabs
         index={Math.max(
@@ -122,16 +123,16 @@ export const FirewallDetail = () => {
         <TabPanels>
           <SafeTabPanel index={0}>
             <FirewallRulesLanding
+              disabled={!userCanModifyFirewall}
               firewallID={firewallId}
               rules={firewall.rules}
-              disabled={!userCanModifyFirewall}
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <FirewallLinodesLanding
+              disabled={!userCanModifyFirewall}
               firewallID={firewallId}
               firewallLabel={firewall.label}
-              disabled={!userCanModifyFirewall}
             />
           </SafeTabPanel>
         </TabPanels>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { components as reactSelectComponents, InputProps } from 'react-select';
+import { InputProps, components as reactSelectComponents } from 'react-select';
 
 const Input: React.FC<InputProps> = (props) => {
   // React-Select uses the AutoSizeInput component, which dangerously injects

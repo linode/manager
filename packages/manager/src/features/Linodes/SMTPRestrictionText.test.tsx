@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { accountCreatedAfterRestrictions } from './SMTPRestrictionText';
-import SMTPRestrictionText, { Props } from './SMTPRestrictionText';
+
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { accountFactory } from 'src/factories/account';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import SMTPRestrictionText, { Props } from './SMTPRestrictionText';
+import { accountCreatedAfterRestrictions } from './SMTPRestrictionText';
 
 const defaultChildren = (props: { text: React.ReactNode }) => (
   <span>{props.text}</span>
@@ -50,7 +52,7 @@ describe('SMTPRestrictionText component', () => {
 
     const { getByText } = renderWithTheme(
       <SMTPRestrictionText
-        supportLink={{ label: 'Test Linode', id: 0 }}
+        supportLink={{ id: 0, label: 'Test Linode' }}
         {...props}
       />
     );
@@ -67,7 +69,7 @@ describe('SMTPRestrictionText component', () => {
 
     const { queryByText } = renderWithTheme(
       <SMTPRestrictionText
-        supportLink={{ label: 'Test Linode', id: 0 }}
+        supportLink={{ id: 0, label: 'Test Linode' }}
         {...props}
       />
     );
@@ -94,7 +96,7 @@ describe('SMTPRestrictionText component', () => {
 
     const { getByText } = renderWithTheme(
       <SMTPRestrictionText
-        supportLink={{ label: 'Test Linode', id: 0 }}
+        supportLink={{ id: 0, label: 'Test Linode' }}
         {...props}
       />
     );

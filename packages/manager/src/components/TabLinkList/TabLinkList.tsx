@@ -1,19 +1,20 @@
 import { Link } from '@reach/router';
 import * as React from 'react';
+
 import { Tab } from 'src/components/core/ReachTab';
 import { TabList } from 'src/components/core/ReachTabList';
 
 export interface Tab {
-  title: string;
   routeName: string;
+  title: string;
 }
 
 interface TabLinkListProps {
-  tabs: Tab[];
   noLink?: boolean; // @todo: remove this prop if we use NavTab widely.
+  tabs: Tab[];
 }
 
-export const TabLinkList = ({ tabs, noLink }: TabLinkListProps) => {
+export const TabLinkList = ({ noLink, tabs }: TabLinkListProps) => {
   return (
     <TabList>
       {tabs.map((tab, _index) => {

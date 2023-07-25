@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { Typography } from 'src/components/Typography';
 
 interface Props {

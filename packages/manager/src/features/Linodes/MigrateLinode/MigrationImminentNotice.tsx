@@ -6,9 +6,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 
 interface Props {
-  notifications: Notification[];
-  linodeID: number;
   className?: string;
+  linodeID: number;
+  notifications: Notification[];
 }
 type CombinedProps = Props;
 

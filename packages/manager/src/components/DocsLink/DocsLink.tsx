@@ -1,26 +1,13 @@
-import * as React from 'react';
-import DocsIcon from 'src/assets/icons/docs.svg';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import DocsIcon from 'src/assets/icons/docs.svg';
 import { sendHelpButtonClickEvent } from 'src/utilities/analytics';
+
 import { IconTextLink } from '../IconTextLink/IconTextLink';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    alignItems: 'center',
-    fontFamily: theme.font.normal,
-    fontSize: '.875rem',
-    lineHeight: 'normal',
-    margin: 0,
-    minWidth: 'auto',
-    '& svg': {
-      marginRight: theme.spacing(),
-    },
-    '&:hover': {
-      color: theme.textColors.linkActiveLight,
-      textDecoration: 'underline',
-    },
-  },
   '@supports (-moz-appearance: none)': {
     /* Fix text alignment for Firefox */
     root: {
@@ -29,26 +16,37 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
     },
   },
+  root: {
+    '& svg': {
+      marginRight: theme.spacing(),
+    },
+    '&:hover': {
+      color: theme.textColors.linkActiveLight,
+      textDecoration: 'underline',
+    },
+    alignItems: 'center',
+    fontFamily: theme.font.normal,
+    fontSize: '.875rem',
+    lineHeight: 'normal',
+    margin: 0,
+    minWidth: 'auto',
+  },
 }));
 
 interface Props {
+  analyticsLabel?: string;
   href: string;
   label?: string;
-  analyticsLabel?: string;
   onClick?: () => void;
 }
 
 export const DocsLink = (props: Props) => {
   const { classes } = useStyles();
 
-  const { href, label, analyticsLabel, onClick } = props;
+  const { analyticsLabel, href, label, onClick } = props;
 
   return (
     <IconTextLink
-      className={`${classes.root} docsButton`}
-      SideIcon={DocsIcon}
-      text={label ?? 'Docs'}
-      title={label ?? 'Docs'}
       onClick={() => {
         if (onClick === undefined) {
           sendHelpButtonClickEvent(href, analyticsLabel);
@@ -57,7 +55,11 @@ export const DocsLink = (props: Props) => {
         }
         window.open(href, '_blank', 'noopener');
       }}
+      SideIcon={DocsIcon}
       aria-describedby="external-site"
+      className={`${classes.root} docsButton`}
+      text={label ?? 'Docs'}
+      title={label ?? 'Docs'}
     />
   );
 };

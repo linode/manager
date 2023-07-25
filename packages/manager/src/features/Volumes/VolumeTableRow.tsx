@@ -1,26 +1,28 @@
-import * as React from 'react';
 import { Event } from '@linode/api-v4/lib/account';
-import { Status } from 'src/components/StatusIcon/StatusIcon';
-import { Link } from 'react-router-dom';
-import { Hidden } from 'src/components/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Typography } from 'src/components/Typography';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { Volume } from '@linode/api-v4/lib/volumes/types';
 import Box from '@mui/material/Box';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+
+import { Hidden } from 'src/components/Hidden';
+import { Status } from 'src/components/StatusIcon/StatusIcon';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
-import { Volume } from '@linode/api-v4/lib/volumes/types';
+import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
+
+import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 // import useEvents from 'src/hooks/useEvents';
 
 export const useStyles = makeStyles({
+  chipWrapper: {
+    alignSelf: 'center',
+  },
   volumePath: {
     width: '35%',
     wordBreak: 'break-all',
-  },
-  chipWrapper: {
-    alignSelf: 'center',
   },
 });
 
@@ -49,40 +51,40 @@ export const isVolumeUpdating = (e?: Event) => {
   }
   return (
     e &&
-    ['volume_attach', 'volume_detach', 'volume_create'].includes(e.action) &&
+    ['volume_attach', 'volume_create', 'volume_detach'].includes(e.action) &&
     ['scheduled', 'started'].includes(e.status)
   );
 };
 
 export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   active: 'active',
-  resizing: 'other',
-  migrating: 'other',
   creating: 'other',
+  migrating: 'other',
   offline: 'inactive',
+  resizing: 'other',
 };
 
 export const VolumeTableRow = React.memo((props: CombinedProps) => {
   const classes = useStyles();
   const { data: regions } = useRegionsQuery();
   const {
-    isDetailsPageRow,
-    openForClone,
-    openForConfig,
-    openForEdit,
-    openForResize,
+    filesystem_path: filesystemPath,
     handleAttach,
     handleDelete,
     handleDetach,
     id,
+    isDetailsPageRow,
     label,
+    linode_id: linodeId,
+    linode_label,
+    openForClone,
+    openForConfig,
+    openForEdit,
+    openForResize,
+    region,
+    size,
     status,
     tags,
-    size,
-    region,
-    filesystem_path: filesystemPath,
-    linode_label,
-    linode_id: linodeId,
   } = props;
 
   const isVolumesLanding = !isDetailsPageRow;
@@ -97,7 +99,7 @@ export const VolumeTableRow = React.memo((props: CombinedProps) => {
   // const progress = progressFromEvent(recentEvent);
 
   return (
-    <TableRow key={`volume-row-${id}`} data-qa-volume-cell={id}>
+    <TableRow data-qa-volume-cell={id} key={`volume-row-${id}`}>
       <TableCell data-qa-volume-cell-label={label}>
         <Box
           sx={{
@@ -131,8 +133,8 @@ export const VolumeTableRow = React.memo((props: CombinedProps) => {
         <TableCell data-qa-volume-cell-attachment={linode_label}>
           {linodeId !== null ? (
             <Link
-              to={`/linodes/${linodeId}/storage`}
               className="link secondaryLink"
+              to={`/linodes/${linodeId}/storage`}
             >
               {linode_label}
             </Link>
@@ -143,19 +145,6 @@ export const VolumeTableRow = React.memo((props: CombinedProps) => {
       )}
       <TableCell actionCell>
         <VolumesActionMenu
-          openForConfig={openForConfig}
-          filesystemPath={filesystemPath}
-          linodeLabel={linode_label || ''}
-          linodeId={linodeId ?? 0}
-          regionID={region}
-          volumeId={id}
-          volumeTags={tags}
-          size={size}
-          label={label}
-          openForEdit={openForEdit}
-          openForResize={openForResize}
-          openForClone={openForClone}
-          volumeLabel={label}
           /**
            * This is a safer check than linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
            * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.
@@ -163,10 +152,23 @@ export const VolumeTableRow = React.memo((props: CombinedProps) => {
            * could sometimes get tagged as "attached" here.
            */
           attached={Boolean(linode_label)}
-          isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
+          filesystemPath={filesystemPath}
           handleAttach={handleAttach}
-          handleDetach={handleDetach}
           handleDelete={handleDelete}
+          handleDetach={handleDetach}
+          isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
+          label={label}
+          linodeId={linodeId ?? 0}
+          linodeLabel={linode_label || ''}
+          openForClone={openForClone}
+          openForConfig={openForConfig}
+          openForEdit={openForEdit}
+          openForResize={openForResize}
+          regionID={region}
+          size={size}
+          volumeId={id}
+          volumeLabel={label}
+          volumeTags={tags}
         />
       </TableCell>
     </TableRow>

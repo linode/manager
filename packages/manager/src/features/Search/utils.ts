@@ -1,26 +1,26 @@
-import { SearchableItem, SearchResultsByEntity } from './search.interfaces';
+import { SearchResultsByEntity, SearchableItem } from './search.interfaces';
 
 export const emptyResults: SearchResultsByEntity = {
-  linodes: [],
-  volumes: [],
+  buckets: [],
   domains: [],
   images: [],
-  nodebalancers: [],
   kubernetesClusters: [],
-  buckets: [],
+  linodes: [],
+  nodebalancers: [],
+  volumes: [],
 };
 
 export const separateResultsByEntity = (
   searchResults: SearchableItem[]
 ): SearchResultsByEntity => {
   const separatedResults: SearchResultsByEntity = {
-    linodes: [],
-    volumes: [],
+    buckets: [],
     domains: [],
     images: [],
-    nodebalancers: [],
     kubernetesClusters: [],
-    buckets: [],
+    linodes: [],
+    nodebalancers: [],
+    volumes: [],
   };
 
   searchResults.forEach((result) => {

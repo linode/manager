@@ -1,4 +1,5 @@
 import { assocPath } from 'ramda';
+
 import resources from 'src/__data__/resources';
 
 import entitiesLoading from './entitiesLoading';
@@ -14,13 +15,13 @@ describe('Entities loading selector', () => {
   it('should return false on entity updates (after initial load)', () => {
     let _resources = assocPath(
       ['linodes'],
-      { loading: true, lastUpdated: 1 },
+      { lastUpdated: 1, loading: true },
       resources
     );
     expect(entitiesLoading(_resources as any)).toBeFalsy();
     _resources = assocPath(
       ['linodes'],
-      { loading: true, lastUpdated: new Date() },
+      { lastUpdated: new Date(), loading: true },
       resources
     );
     expect(entitiesLoading(_resources as any)).toBeFalsy();

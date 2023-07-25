@@ -2,6 +2,7 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
+
 import { databaseInstanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
@@ -12,6 +13,7 @@ import {
   renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
+
 import DatabaseLanding from './DatabaseLanding';
 import DatabaseRow from './DatabaseRow';
 
@@ -95,7 +97,7 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByText, getByTestId } = renderWithTheme(<DatabaseLanding />, {
+    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
       queryClient,
     });
 

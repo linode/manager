@@ -1,62 +1,63 @@
-import * as React from 'react';
-import AddNewLink from 'src/components/AddNewLink';
-import { Typography } from 'src/components/Typography';
-import { Hidden } from 'src/components/Hidden';
 import Grid from '@mui/material/Unstable_Grid2';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { Dispatch, bindActionCreators } from 'redux';
+
+import AddNewLink from 'src/components/AddNewLink';
+import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
 import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
 import { VolumeAttachmentDrawer } from 'src/features/Volumes/VolumeAttachmentDrawer';
-import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
 import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
+import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import { useParams } from 'react-router-dom';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   LinodeOptions,
+  Origin as VolumeDrawerOrigin,
   openForClone,
   openForConfig,
   openForCreating,
   openForEdit,
   openForResize,
-  Origin as VolumeDrawerOrigin,
 } from 'src/store/volumeForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    width: '100%',
-  },
-  headline: {
-    marginTop: 8,
-    marginBottom: 8,
-    marginLeft: 15,
-    lineHeight: '1.5rem',
-  },
   addNewWrapper: {
+    '&.MuiGrid-item': {
+      padding: 5,
+    },
     [theme.breakpoints.down('sm')]: {
       marginLeft: `-${theme.spacing(1.5)}`,
       marginTop: `-${theme.spacing(1)}`,
     },
-    '&.MuiGrid-item': {
-      padding: 5,
-    },
+  },
+  headline: {
+    lineHeight: '1.5rem',
+    marginBottom: 8,
+    marginLeft: 15,
+    marginTop: 8,
+  },
+  root: {
+    backgroundColor: theme.color.white,
+    margin: 0,
+    width: '100%',
   },
   volumesPanel: {
     marginTop: '20px',
@@ -64,6 +65,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface DispatchProps {
+  openForClone: (
+    volumeId: number,
+    volumeLabel: string,
+    volumeSize: number,
+    volumeRegion: string
+  ) => void;
+  openForConfig: (volumeLabel: string, volumePath: string) => void;
+  openForCreating: (
+    origin: VolumeDrawerOrigin,
+    linodeOptions?: LinodeOptions
+  ) => void;
   openForEdit: (
     volumeId: number,
     volumeLabel: string,
@@ -74,27 +86,16 @@ interface DispatchProps {
     volumeSize: number,
     volumeLabel: string
   ) => void;
-  openForClone: (
-    volumeId: number,
-    volumeLabel: string,
-    volumeSize: number,
-    volumeRegion: string
-  ) => void;
-  openForCreating: (
-    origin: VolumeDrawerOrigin,
-    linodeOptions?: LinodeOptions
-  ) => void;
-  openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
+      openForClone,
+      openForConfig,
+      openForCreating,
       openForEdit,
       openForResize,
-      openForClone,
-      openForCreating,
-      openForConfig,
     },
     dispatch
   );
@@ -107,11 +108,11 @@ export const preferenceKey = 'linode-volumes';
 
 export const LinodeVolumes = connected((props: Props) => {
   const {
-    openForConfig,
     openForClone,
+    openForConfig,
+    openForCreating,
     openForEdit,
     openForResize,
-    openForCreating,
   } = props;
 
   const { linodeId } = useParams<{ linodeId: string }>();
@@ -119,17 +120,17 @@ export const LinodeVolumes = connected((props: Props) => {
 
   const { data: linode } = useLinodeQuery(id);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'desc',
+      orderBy: 'label',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
   const pagination = usePagination(1, preferenceKey);
@@ -138,7 +139,7 @@ export const LinodeVolumes = connected((props: Props) => {
 
   const regions = useRegionsQuery().data ?? [];
 
-  const { data, isLoading, error } = useLinodeVolumesQuery(
+  const { data, error, isLoading } = useLinodeVolumesQuery(
     id,
     {
       page: pagination.page,
@@ -148,24 +149,24 @@ export const LinodeVolumes = connected((props: Props) => {
   );
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
+    linodeRegion: '',
     open: false,
     volumeId: 0,
     volumeLabel: '',
-    linodeRegion: '',
   });
 
   const [destructiveDialog, setDestructiveDialog] = React.useState<{
+    linodeLabel: string;
+    mode: 'delete' | 'detach';
     open: boolean;
-    mode: 'detach' | 'delete';
     volumeId?: number;
     volumeLabel: string;
-    linodeLabel: string;
   }>({
-    open: false,
+    linodeLabel: '',
     mode: 'detach',
+    open: false,
     volumeId: 0,
     volumeLabel: '',
-    linodeLabel: '',
   });
 
   const handleCloseAttachDrawer = () => {
@@ -178,10 +179,10 @@ export const LinodeVolumes = connected((props: Props) => {
   const handleAttach = (volumeId: number, label: string, regionID: string) => {
     setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
+      linodeRegion: regionID,
       open: true,
       volumeId,
       volumeLabel: label,
-      linodeRegion: regionID,
     }));
   };
 
@@ -193,25 +194,25 @@ export const LinodeVolumes = connected((props: Props) => {
   ) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
-      open: true,
+      error: '',
+      linodeId,
+      linodeLabel,
       mode: 'detach',
+      open: true,
       volumeId,
       volumeLabel,
-      linodeLabel,
-      linodeId,
-      error: '',
     }));
   };
 
   const handleDelete = (volumeId: number, volumeLabel: string) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
-      open: true,
+      error: '',
+      linodeLabel: '',
       mode: 'delete',
+      open: true,
       volumeId,
       volumeLabel,
-      linodeLabel: '',
-      error: '',
     }));
   };
 
@@ -241,24 +242,24 @@ export const LinodeVolumes = connected((props: Props) => {
   }
 
   const handlers: VolumeHandlers = {
+    handleAttach,
+    handleDelete,
+    handleDetach,
+    openForClone,
     openForConfig,
     openForEdit,
     openForResize,
-    openForClone,
-    handleAttach,
-    handleDetach,
-    handleDelete,
   };
 
   const renderTableContent = () => {
     if (isLoading) {
       return (
         <TableRowLoading
-          rows={1}
-          columns={5}
           responsive={{
             3: { xsDown: true },
           }}
+          columns={5}
+          rows={1}
         />
       );
     } else if (error) {
@@ -282,22 +283,22 @@ export const LinodeVolumes = connected((props: Props) => {
   return (
     <div className={classes.volumesPanel}>
       <Grid
-        container
-        justifyContent="space-between"
         alignItems="flex-end"
         className={classes.root}
+        container
+        justifyContent="space-between"
         spacing={1}
       >
         <Grid className="p0">
-          <Typography variant="h3" className={classes.headline}>
+          <Typography className={classes.headline} variant="h3">
             Volumes
           </Typography>
         </Grid>
         <Grid className={classes.addNewWrapper}>
           <AddNewLink
-            onClick={openCreateVolumeDrawer}
-            label="Create Volume"
             disabled={false}
+            label="Create Volume"
+            onClick={openCreateVolumeDrawer}
           />
         </Grid>
       </Grid>
@@ -307,24 +308,24 @@ export const LinodeVolumes = connected((props: Props) => {
             <TableSortCell
               active={orderBy === 'label'}
               direction={order}
-              label="label"
               handleClick={handleOrderChange}
+              label="label"
             >
               Label
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
-              label="status"
               handleClick={handleOrderChange}
+              label="status"
             >
               Status
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'size'}
               direction={order}
-              label="size"
               handleClick={handleOrderChange}
+              label="size"
             >
               Size
             </TableSortCell>
@@ -338,27 +339,27 @@ export const LinodeVolumes = connected((props: Props) => {
       </Table>
       <PaginationFooter
         count={data?.results ?? 0}
+        eventCategory="Volumes Table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
-        eventCategory="Volumes Table"
       />
       <VolumeAttachmentDrawer
+        linodeRegion={attachmentDrawer.linodeRegion || ''}
+        onClose={handleCloseAttachDrawer}
         open={attachmentDrawer.open}
         volumeId={attachmentDrawer.volumeId || 0}
         volumeLabel={attachmentDrawer.volumeLabel || ''}
-        linodeRegion={attachmentDrawer.linodeRegion || ''}
-        onClose={handleCloseAttachDrawer}
       />
       <DestructiveVolumeDialog
-        open={destructiveDialog.open}
-        volumeLabel={destructiveDialog.volumeLabel}
-        linodeLabel={destructiveDialog.linodeLabel}
         linodeId={id}
-        volumeId={destructiveDialog.volumeId ?? 0}
+        linodeLabel={destructiveDialog.linodeLabel}
         mode={destructiveDialog.mode}
         onClose={closeDestructiveDialog}
+        open={destructiveDialog.open}
+        volumeId={destructiveDialog.volumeId ?? 0}
+        volumeLabel={destructiveDialog.volumeLabel}
       />
     </div>
   );

@@ -1,9 +1,12 @@
-import type { LinodeTypeClass } from '@linode/api-v4';
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { Region } from '@linode/api-v4/lib/regions';
-import { ExtendedType } from 'src/utilities/extendType';
+import { Capabilities } from '@linode/api-v4/lib/regions/types';
+
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
+import { ExtendedType } from 'src/utilities/extendType';
+
 import { PlanSelectionType } from './PlansPanel';
+
+import type { LinodeTypeClass } from '@linode/api-v4';
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
@@ -13,8 +16,8 @@ type PlansByType<T> = Omit<PlansTypes<T>, 'nanode' | 'standard'> & {
 
 // We could update this to add or remove any new or existing plan tabs.
 export const planTypeOrder: (
-  | Exclude<LinodeTypeClass, 'nanode' | 'standard'>
   | 'shared'
+  | Exclude<LinodeTypeClass, 'nanode' | 'standard'>
 )[] = [
   'prodedicated',
   'dedicated',
@@ -61,14 +64,12 @@ export const getPlanSelectionsByPlanType = <
   }
 
   // filter empty plan group
-  const filteredPlansByType = Object.keys(plansByType).reduce((acc, key) => {
+  return Object.keys(plansByType).reduce((acc, key) => {
     if (plansByType[key].length > 0) {
       acc[key] = plansByType[key];
     }
     return acc;
   }, {} as PlansByType<T>);
-
-  return filteredPlansByType;
 };
 
 export const determineInitialPlanCategoryTab = <T>(
@@ -93,9 +94,7 @@ export const determineInitialPlanCategoryTab = <T>(
   const selectedTypeClass =
     _selectedTypeClass === 'nanode' ? 'standard' : _selectedTypeClass;
 
-  const initialTab = tabOrder.indexOf(selectedTypeClass);
-
-  return initialTab;
+  return tabOrder.indexOf(selectedTypeClass);
 };
 
 export const getRegionsWithCapability = (
@@ -111,53 +110,53 @@ export const getRegionsWithCapability = (
 };
 
 export const planTabInfoContent = {
-  prodedicated: {
-    typography:
-      'Pro Dedicated CPU instances are for very demanding workloads. They only have AMD 2nd generation processors or newer.',
-    title: 'Pro Dedicated CPU',
-    key: 'prodedicated',
-    dataId: 'data-qa-prodedi',
-  },
   dedicated: {
+    dataId: 'data-qa-dedicated',
+    key: 'dedicated',
+    title: 'Dedicated CPU',
     typography:
       'Dedicated CPU instances are good for full-duty workloads where consistent performance is important.',
-    title: 'Dedicated CPU',
-    key: 'dedicated',
-    dataId: 'data-qa-dedicated',
-  },
-  shared: {
-    typography:
-      ' Shared CPU instances are good for medium-duty workloads and are a good mix of performance, resources, and price.',
-    title: 'Shared CPU',
-    key: 'shared',
-    dataId: 'data-qa-standard',
-  },
-  highmem: {
-    typography:
-      'High Memory instances favor RAM over other resources, and can be good for memory hungry use cases like caching and in-memory databases. All High Memory plans use dedicated CPU cores.',
-    title: 'High Memory',
-    key: 'highmem',
-    dataId: 'data-qa-highmem',
   },
   gpu: {
+    dataId: 'data-qa-gpu',
+    key: 'gpu',
+    title: 'GPU',
     typography:
       'Linodes with dedicated GPUs accelerate highly specialized applications such as machine learning, AI, and video transcoding.',
-    title: 'GPU',
-    key: 'gpu',
-    dataId: 'data-qa-gpu',
+  },
+  highmem: {
+    dataId: 'data-qa-highmem',
+    key: 'highmem',
+    title: 'High Memory',
+    typography:
+      'High Memory instances favor RAM over other resources, and can be good for memory hungry use cases like caching and in-memory databases. All High Memory plans use dedicated CPU cores.',
   },
   metal: {
+    dataId: 'data-qa-metal',
+    key: 'metal',
+    title: 'Bare Metal',
     typography:
       'Bare Metal Linodes give you full, dedicated access to a single physical machine. Some services, including backups, VLANs, and disk management, are not available with these plans.',
-    title: 'Bare Metal',
-    key: 'metal',
-    dataId: 'data-qa-metal',
   },
   premium: {
+    dataId: 'data-qa-premium',
+    key: 'premium',
+    title: 'Premium',
     typography:
       'Premium CPU instances guarantee a minimum processor generation of AMD EPYC\u2122 Milan or newer to ensure consistent high performance for more demanding workloads.',
-    title: 'Premium',
-    key: 'premium',
-    dataId: 'data-qa-premium',
+  },
+  prodedicated: {
+    dataId: 'data-qa-prodedi',
+    key: 'prodedicated',
+    title: 'Pro Dedicated CPU',
+    typography:
+      'Pro Dedicated CPU instances are for very demanding workloads. They only have AMD 2nd generation processors or newer.',
+  },
+  shared: {
+    dataId: 'data-qa-standard',
+    key: 'shared',
+    title: 'Shared CPU',
+    typography:
+      ' Shared CPU instances are good for medium-duty workloads and are a good mix of performance, resources, and price.',
   },
 };

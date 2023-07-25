@@ -3,24 +3,21 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import { decode } from 'he';
 import * as React from 'react';
+
+import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
-import { Chip } from 'src/components/Chip';
 import SelectionCardWrapper from 'src/features/Linodes/LinodesCreate/SelectionCardWrapper';
 
 const AppPanelGrid = styled(Grid)(({ theme }) => ({
-  marginTop: theme.spacing(2),
   marginBottom: theme.spacing(),
+  marginTop: theme.spacing(2),
   padding: `${theme.spacing(1)} 0`,
 }));
 
 interface Props {
-  heading?: string;
   apps: StackScript[];
   disabled: boolean;
-  selectedStackScriptID: number | undefined;
-  searchValue?: string;
-  openDrawer: (stackScriptLabel: string) => void;
   handleClick: (
     id: number,
     label: string,
@@ -28,17 +25,21 @@ interface Props {
     stackScriptImages: string[],
     userDefinedFields: UserDefinedField[]
   ) => void;
+  heading?: string;
+  openDrawer: (stackScriptLabel: string) => void;
+  searchValue?: string;
+  selectedStackScriptID: number | undefined;
 }
 
 export const AppPanelSection: React.FC<Props> = (props) => {
   const {
-    heading,
     apps,
-    selectedStackScriptID,
     disabled,
-    openDrawer,
     handleClick,
+    heading,
+    openDrawer,
     searchValue,
+    selectedStackScriptID,
   } = props;
 
   if (heading === 'New apps' && !apps.length) {
@@ -49,7 +50,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
     <>
       <Typography variant="h2">{heading}</Typography>
       {heading && heading.length > 0 ? (
-        <Divider spacingTop={16} spacingBottom={16} />
+        <Divider spacingBottom={16} spacingTop={16} />
       ) : null}
       {apps.length > 0 ? (
         <AppPanelGrid container spacing={2}>
@@ -67,21 +68,21 @@ export const AppPanelSection: React.FC<Props> = (props) => {
 
             return (
               <SelectionCardWrapper
+                labelDecoration={
+                  isCluster ? <Chip label="CLUSTER" size="small" /> : undefined
+                }
+                availableImages={eachApp.images}
+                checked={eachApp.id === selectedStackScriptID}
+                clusterLabel={decodedLabel}
+                disabled={disabled}
+                handleClick={handleClick}
+                iconUrl={eachApp.logo_url.toLowerCase() || ''}
                 id={eachApp.id}
                 key={eachApp.id}
-                checked={eachApp.id === selectedStackScriptID}
                 // Decode App labels since they may contain HTML entities.
                 label={label}
-                clusterLabel={decodedLabel}
-                availableImages={eachApp.images}
-                userDefinedFields={eachApp.user_defined_fields}
-                handleClick={handleClick}
                 openDrawer={openDrawer}
-                disabled={disabled}
-                iconUrl={eachApp.logo_url.toLowerCase() || ''}
-                labelDecoration={
-                  isCluster ? <Chip size="small" label="CLUSTER" /> : undefined
-                }
+                userDefinedFields={eachApp.user_defined_fields}
               />
             );
           })}

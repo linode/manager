@@ -4,21 +4,24 @@ import {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Grid from '@mui/material/Unstable_Grid2';
-import Box from '@mui/material/Box';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
+import { Paper } from 'src/components/Paper';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
@@ -32,48 +35,13 @@ import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { NodePoolPanel } from './NodePoolPanel';
-import LandingHeader from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& .mlMain': {
-      maxWidth: '100%',
-      flexBasis: '100%',
-      [theme.breakpoints.up('lg')]: {
-        maxWidth: '78.8%',
-        flexBasis: '78.8%',
-      },
-    },
-    '& .mlSidebar': {
-      position: 'static',
-      width: '100%',
-      flexBasis: '100%',
-      maxWidth: '100%',
-      [theme.breakpoints.up('lg')]: {
-        position: 'sticky',
-        maxWidth: '21.2%',
-        flexBasis: '21.2%',
-      },
-    },
-  },
-  sidebar: {
-    marginTop: '0px !important',
-    paddingTop: '0px !important',
-    background: 'none',
-    [theme.breakpoints.down('lg')]: {
-      padding: `${theme.spacing(3)} !important`,
-      marginTop: `${theme.spacing(3)} !important`,
-      background: theme.color.white,
-    },
-    [theme.breakpoints.down('md')]: {
-      padding: `${theme.spacing()} !important`,
-    },
-  },
   inner: {
     '& > div': {
       marginBottom: theme.spacing(2),
@@ -81,29 +49,63 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& label': {
       color: theme.color.headline,
       fontWeight: 600,
-      lineHeight: '1.33rem',
       letterSpacing: '0.25px',
+      lineHeight: '1.33rem',
       margin: 0,
     },
   },
   inputWidth: {
-    maxWidth: 440,
     '& .react-select__menu': {
       maxWidth: 440,
     },
+    maxWidth: 440,
   },
   regionSubtitle: {
+    '& .MuiInput-root': {
+      maxWidth: 440,
+    },
+    '& .react-select__menu': {
+      maxWidth: 440,
+    },
     '& p': {
       fontWeight: 500,
       lineHeight: '1.43rem',
       margin: 0,
       maxWidth: '100%',
     },
-    '& .MuiInput-root': {
-      maxWidth: 440,
+  },
+  root: {
+    '& .mlMain': {
+      flexBasis: '100%',
+      maxWidth: '100%',
+      [theme.breakpoints.up('lg')]: {
+        flexBasis: '78.8%',
+        maxWidth: '78.8%',
+      },
     },
-    '& .react-select__menu': {
-      maxWidth: 440,
+    '& .mlSidebar': {
+      flexBasis: '100%',
+      maxWidth: '100%',
+      position: 'static',
+      [theme.breakpoints.up('lg')]: {
+        flexBasis: '21.2%',
+        maxWidth: '21.2%',
+        position: 'sticky',
+      },
+      width: '100%',
+    },
+  },
+  sidebar: {
+    background: 'none',
+    marginTop: '0px !important',
+    paddingTop: '0px !important',
+    [theme.breakpoints.down('lg')]: {
+      background: theme.color.white,
+      marginTop: `${theme.spacing(3)} !important`,
+      padding: `${theme.spacing(3)} !important`,
+    },
+    [theme.breakpoints.down('md')]: {
+      padding: `${theme.spacing()} !important`,
     },
   },
 }));
@@ -112,8 +114,8 @@ export const CreateCluster = () => {
   const classes = useStyles();
   const {
     data: allTypes,
-    isLoading: typesLoading,
     error: typesError,
+    isLoading: typesLoading,
   } = useAllTypes();
 
   const {
@@ -151,8 +153,8 @@ export const CreateCluster = () => {
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
   const versions = (versionData ?? []).map((thisVersion) => ({
-    value: thisVersion.id,
     label: thisVersion.id,
+    value: thisVersion.id,
   }));
   const history = useHistory();
 
@@ -179,10 +181,10 @@ export const CreateCluster = () => {
 
     const payload: CreateKubeClusterPayload = {
       control_plane: { high_availability: highAvailability },
-      region: selectedRegionID,
-      node_pools,
-      label,
       k8s_version,
+      label,
+      node_pools,
+      region: selectedRegionID,
     };
 
     createKubernetesCluster(payload)
@@ -240,8 +242,8 @@ export const CreateCluster = () => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
-    selectedRegionID,
     regionsData,
+    selectedRegionID,
   });
 
   if (typesError || regionsError || versionLoadError) {
@@ -254,13 +256,13 @@ export const CreateCluster = () => {
   }
 
   return (
-    <Grid container className={classes.root}>
+    <Grid className={classes.root} container>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
-      <ProductInformationBanner bannerLocation="Kubernetes" warning important />
+      <ProductInformationBanner bannerLocation="Kubernetes" important warning />
       <LandingHeader
-        title="Create Cluster"
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
+        title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
         {errorMap.none && <Notice error text={errorMap.none} />}
@@ -268,49 +270,46 @@ export const CreateCluster = () => {
           <div className={classes.inner}>
             <Box>
               <TextField
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  updateLabel(e.target.value)
+                }
                 className={classes.inputWidth}
                 data-qa-label-input
                 errorText={errorMap.label}
                 label="Cluster Label"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  updateLabel(e.target.value)
-                }
                 value={label || ''}
               />
             </Box>
             <Box>
               <RegionSelect
-                className={classes.regionSubtitle}
-                errorText={errorMap.region}
                 handleSelection={(regionID: string) =>
                   setSelectedRegionID(regionID)
                 }
-                regions={filteredRegions}
-                selectedID={selectedID}
                 textFieldProps={{
                   helperText: <RegionHelperText />,
                   helperTextPosition: 'top',
                 }}
+                className={classes.regionSubtitle}
+                errorText={errorMap.region}
+                regions={filteredRegions}
+                selectedID={selectedID}
               />
             </Box>
             <Box>
               <Select
                 className={classes.inputWidth}
-                label="Kubernetes Version"
-                value={version || null}
                 errorText={errorMap.k8s_version}
+                isClearable={false}
+                label="Kubernetes Version"
+                onChange={(selected: Item<string>) => setVersion(selected)}
                 options={versions}
                 placeholder={' '}
-                onChange={(selected: Item<string>) => setVersion(selected)}
-                isClearable={false}
+                value={version || null}
               />
             </Box>
           </div>
           <Box>
             <NodePoolPanel
-              types={typesData || []}
-              apiError={errorMap.node_pools}
-              typesLoading={typesLoading}
               typesError={
                 typesError
                   ? getAPIErrorOrDefault(
@@ -319,11 +318,14 @@ export const CreateCluster = () => {
                     )[0].reason
                   : undefined
               }
-              regionsData={regionsData}
-              isPlanPanelDisabled={isPlanPanelDisabled}
-              hasSelectedRegion={hasSelectedRegion}
-              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
+              apiError={errorMap.node_pools}
+              hasSelectedRegion={hasSelectedRegion}
+              isPlanPanelDisabled={isPlanPanelDisabled}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+              regionsData={regionsData}
+              types={typesData || []}
+              typesLoading={typesLoading}
             />
           </Box>
         </Paper>
@@ -333,16 +335,6 @@ export const CreateCluster = () => {
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
-          pools={nodePools}
-          createCluster={createCluster}
-          submitting={submitting}
-          updatePool={updatePool}
-          removePool={removePool}
-          highAvailability={highAvailability}
-          setHighAvailability={setHighAvailability}
-          region={selectedRegionID}
-          hasAgreed={hasAgreed}
-          toggleHasAgreed={toggleHasAgreed}
           updateFor={[
             hasAgreed,
             highAvailability,
@@ -355,6 +347,16 @@ export const CreateCluster = () => {
             createCluster,
             classes,
           ]}
+          createCluster={createCluster}
+          hasAgreed={hasAgreed}
+          highAvailability={highAvailability}
+          pools={nodePools}
+          region={selectedRegionID}
+          removePool={removePool}
+          setHighAvailability={setHighAvailability}
+          submitting={submitting}
+          toggleHasAgreed={toggleHasAgreed}
+          updatePool={updatePool}
         />
       </Grid>
     </Grid>

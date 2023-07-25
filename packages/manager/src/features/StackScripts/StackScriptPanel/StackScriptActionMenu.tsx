@@ -1,30 +1,32 @@
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useProfile } from 'src/queries/profile';
-import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
+
+import { StackScriptCategory, getStackScriptUrl } from '../stackScriptUtils';
 
 interface Props {
-  stackScriptID: number;
-  stackScriptUsername: string;
-  stackScriptLabel: string;
-  triggerDelete: (id: number, label: string) => void;
-  triggerMakePublic: (id: number, label: string) => void;
-  canModify: boolean;
   canAddLinodes: boolean;
-  isPublic: boolean;
-  // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
-  // Leaving this in as an escape hatch now, since there's a bunch of code in
-  // /LandingPanel that uses different values for categories that we shouldn't
+  canModify: boolean;
   // change until we're actually using it.
   category: StackScriptCategory | string;
   isHeader?: boolean;
+  isPublic: boolean;
+  stackScriptID: number;
+  stackScriptLabel: string;
+  stackScriptUsername: string;
+  // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
+  // Leaving this in as an escape hatch now, since there's a bunch of code in
+  // /LandingPanel that uses different values for categories that we shouldn't
+  triggerDelete: (id: number, label: string) => void;
+  triggerMakePublic: (id: number, label: string) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -35,16 +37,16 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
   const { data: profile } = useProfile();
 
   const {
-    stackScriptID,
-    stackScriptUsername,
+    canAddLinodes,
+    canModify,
+    category,
     history,
+    isPublic,
+    stackScriptID,
+    stackScriptLabel,
+    stackScriptUsername,
     triggerDelete,
     triggerMakePublic,
-    stackScriptLabel,
-    canModify,
-    isPublic,
-    category,
-    canAddLinodes,
   } = props;
 
   const readonlyProps = {
@@ -68,13 +70,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
         }
       : null,
     {
-      title: 'Deploy New Linode',
       disabled: !canAddLinodes,
-      tooltip: matchesSmDown
-        ? !canAddLinodes
-          ? "You don't have permissions to add Linodes"
-          : undefined
-        : undefined,
       onClick: () => {
         history.push(
           getStackScriptUrl(
@@ -84,6 +80,12 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
           )
         );
       },
+      title: 'Deploy New Linode',
+      tooltip: matchesSmDown
+        ? !canAddLinodes
+          ? "You don't have permissions to add Linodes"
+          : undefined
+        : undefined,
     },
     !isPublic
       ? {
@@ -118,9 +120,9 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
           {actions.map((action) => {
             return (
               <InlineMenuAction
-                key={action.title}
                 actionText={action.title}
                 disabled={action.disabled}
+                key={action.title}
                 onClick={action.onClick}
               />
             );

@@ -1,6 +1,8 @@
 import * as jaxe from 'jest-axe';
 import * as React from 'react';
+
 import { renderWithTheme, toPassAxeCheck } from 'src/utilities/testHelpers';
+
 import AutoBackups from './AutoBackups';
 
 jest.setTimeout(10000);
@@ -13,11 +15,11 @@ describe('AutoBackups simple sanity check', () => {
   it('not managed not auto backups with linodes nobackups', async () => {
     const openDrawer = jest.fn();
     const props = {
-      isManagedCustomer: false,
       backups_enabled: false,
+      hasLinodesWithoutBackups: true,
+      isManagedCustomer: false,
       onChange: jest.fn(),
       openBackupsDrawer: openDrawer,
-      hasLinodesWithoutBackups: true,
     };
     const res = renderWithTheme(<AutoBackups {...props} />);
     expect(res).toPassAxeCheck();

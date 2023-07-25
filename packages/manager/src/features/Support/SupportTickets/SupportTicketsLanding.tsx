@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import LandingHeader from 'src/components/LandingHeader';
 import { Tab } from 'src/components/core/ReachTab';
 import { TabList } from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import SupportTicketDrawer from './SupportTicketDrawer';
+import { SupportTicketDialog } from './SupportTicketDialog';
 import TicketList from './TicketList';
-import LandingHeader from 'src/components/LandingHeader';
 
 const tabs = ['open', 'closed'];
 
@@ -65,18 +67,18 @@ const SupportTicketsLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Support Tickets" />
       <LandingHeader
-        title="Tickets"
+        buttonDataAttrs={{ 'data-qa-open-ticket-link': true }}
         createButtonText="Open New Ticket"
+        data-qa-breadcrumb
         onButtonClick={() => setDrawerOpen(true)}
         onButtonKeyPress={handleButtonKeyPress}
-        data-qa-breadcrumb
-        buttonDataAttrs={{ 'data-qa-open-ticket-link': true }}
+        title="Tickets"
       />
       <Tabs
-        index={tabIndex === -1 ? 0 : tabIndex}
         onChange={(index) => {
           history.push(`/support/tickets?type=${tabs[index]}`);
         }}
+        index={tabIndex === -1 ? 0 : tabIndex}
       >
         <TabList>
           <Tab data-qa-tab="Open Tickets">Open Tickets</Tab>
@@ -91,14 +93,14 @@ const SupportTicketsLanding = () => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <SupportTicketDrawer
-        open={drawerOpen}
+      <SupportTicketDialog
         onClose={() => setDrawerOpen(false)}
         onSuccess={handleAddTicketSuccess}
+        open={drawerOpen}
         prefilledDescription={prefilledDescription}
-        prefilledTitle={prefilledTitle}
         prefilledEntity={prefilledEntity}
         prefilledTicketType={prefilledTicketType}
+        prefilledTitle={prefilledTitle}
       />
     </React.Fragment>
   );

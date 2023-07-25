@@ -1,20 +1,20 @@
 export const attachment1 = {
-  name: 'file1',
   file: new File(['name'], 'file1'),
-  uploading: false,
+  name: 'file1',
   uploaded: false,
+  uploading: false,
 };
 
 export const attachment2 = {
-  name: 'file2',
   file: new File(['name'], 'file2'),
-  uploading: true,
+  name: 'file2',
   uploaded: false,
+  uploading: true,
 };
 
 export const attachment3 = {
-  name: 'file2',
   file: new File(['name'], 'file2'),
-  uploading: false,
+  name: 'file2',
   uploaded: true,
+  uploading: false,
 };

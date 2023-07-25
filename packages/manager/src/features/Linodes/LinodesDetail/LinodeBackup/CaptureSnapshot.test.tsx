@@ -1,22 +1,24 @@
-import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { rest, server } from 'src/mocks/testServer';
-import { linodeFactory } from 'src/factories/linodes';
-import { CaptureSnapshot } from './CaptureSnapshot';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+
+import { linodeFactory } from 'src/factories/linodes';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { CaptureSnapshot } from './CaptureSnapshot';
 
 describe('CaptureSnapshot', () => {
   it('renders heading and copy', async () => {
     server.use(
       rest.get('*/linode/instances/1', (req, res, ctx) => {
         return res(
-          ctx.json(linodeFactory.build({ id: 1, backups: { enabled: true } }))
+          ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
         );
       })
     );
 
     const { getByText } = renderWithTheme(
-      <CaptureSnapshot linodeId={1} isReadOnly={false} />
+      <CaptureSnapshot isReadOnly={false} linodeId={1} />
     );
 
     getByText('Manual Snapshot');
@@ -28,13 +30,13 @@ describe('CaptureSnapshot', () => {
     server.use(
       rest.get('*/linode/instances/1', (req, res, ctx) => {
         return res(
-          ctx.json(linodeFactory.build({ id: 1, backups: { enabled: true } }))
+          ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
         );
       })
     );
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <CaptureSnapshot linodeId={1} isReadOnly={false} />
+      <CaptureSnapshot isReadOnly={false} linodeId={1} />
     );
 
     userEvent.type(getByLabelText('Name Snapshot'), 'my-linode-snapshot');

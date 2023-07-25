@@ -25,7 +25,7 @@ export const typeLabelDetails = (
 
 export const displayType = (
   linodeTypeId: null | string,
-  types: Pick<ExtendedType, 'id' | 'formattedLabel'>[]
+  types: Pick<ExtendedType, 'formattedLabel' | 'id'>[]
 ): string => {
   if (linodeTypeId === null) {
     return 'No Plan';

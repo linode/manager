@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon';
+
 import { managedIssues } from 'src/__data__/managedIssues';
+
 import { createdOnTargetDay, generateCalendar } from './IssueCalendar';
 
 const recentIssues = managedIssues.map((thisIssue, idx) => ({

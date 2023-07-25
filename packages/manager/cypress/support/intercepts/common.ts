@@ -2,8 +2,9 @@
  * @file Mocks and intercepts for common and/or frequent API requests.
  */
 
-import { accountFactory } from 'src/factories/account';
 import { apiMatcher } from 'support/util/intercepts';
+
+import { accountFactory } from 'src/factories/account';
 
 /**
  * Options for mocking common Linode APIv4 requests.

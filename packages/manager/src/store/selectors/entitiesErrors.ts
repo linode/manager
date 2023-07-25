@@ -1,5 +1,6 @@
 import { path } from 'ramda';
 import { createSelector } from 'reselect';
+
 import { ApplicationState } from 'src/store';
 
 type State = ApplicationState['__resources'];
@@ -20,8 +21,8 @@ export default createSelector(
   linodesErrorSelector,
   nodeBalsErrorSelector,
   (linodes, nodebalancers) => ({
+    hasErrors: linodes || nodebalancers,
     linodes,
     nodebalancers,
-    hasErrors: linodes || nodebalancers,
   })
 );

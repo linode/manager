@@ -2,6 +2,7 @@ import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
@@ -19,24 +20,24 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
+      text: 'Getting Started with StackScripts',
       to:
         'https://www.linode.com/docs/products/tools/stackscripts/get-started/',
-      text: 'Getting Started with StackScripts',
     },
     {
+      text: 'Create a StackScript',
       to:
         'https://www.linode.com/docs/products/tools/stackscripts/guides/create/',
-      text: 'Create a StackScript',
     },
     {
+      text: 'Write a Custom Script for Use with StackScripts',
       to:
         'https://www.linode.com/docs/products/tools/stackscripts/guides/write-a-custom-script/',
-      text: 'Write a Custom Script for Use with StackScripts',
     },
   ],
   moreInfo: {
-    to: 'https://www.linode.com/docs/products/tools/stackscripts/ ',
     text: 'View additional StackScripts documentation',
+    to: 'https://www.linode.com/docs/products/tools/stackscripts/ ',
   },
   title: 'Getting Started Guides',
 };
@@ -44,24 +45,24 @@ export const gettingStartedGuides: ResourcesLinkSection = {
 export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
-      to: 'https://www.youtube.com/watch?v=nygChMc1hX4',
+      external: true,
       text: 'Automate Server Deployments Using Stackscripts',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=nygChMc1hX4',
     },
     {
-      to: 'https://www.youtube.com/watch?v=EbyA5rZwyRw',
+      external: true,
       text: 'Shell Scripts Explained',
-      external: true,
+      to: 'https://www.youtube.com/watch?v=EbyA5rZwyRw',
     },
     {
-      to: 'https://www.youtube.com/watch?v=yM8v5i2Qjgg',
-      text: ' Linux for Programmers #7 | Environment Variables',
       external: true,
+      text: ' Linux for Programmers #7 | Environment Variables',
+      to: 'https://www.youtube.com/watch?v=yM8v5i2Qjgg',
     },
   ],
   moreInfo: {
-    to: youtubeChannelLink,
     text: youtubeMoreLinkText,
+    to: youtubeChannelLink,
   },
   title: 'Video Playlist',
 };

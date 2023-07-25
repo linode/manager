@@ -1,71 +1,72 @@
-import * as React from 'react';
-import { Divider } from 'src/components/Divider';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import InputAdornment from 'src/components/core/InputAdornment';
-import { Typography } from 'src/components/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Divider } from 'src/components/Divider';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
-import { useTheme } from '@mui/material/styles';
+import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import InputAdornment from 'src/components/core/InputAdornment';
 import { fadeIn } from 'src/styles/keyframes';
 
 interface Props {
-  title: string;
-  textTitle: string;
-  radioInputLabel: string;
-  textInputLabel: string;
   copy: string;
-  state: boolean;
-  value: number;
+  endAdornment: string;
+  error?: string;
   onStateChange: (e: React.ChangeEvent<{}>, checked: boolean) => void;
   onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error?: string;
-  endAdornment: string;
+  radioInputLabel: string;
   readOnly?: boolean;
+  state: boolean;
+  textInputLabel: string;
+  textTitle: string;
+  title: string;
+  value: number;
 }
 
 export const AlertSection = (props: Props) => {
   const theme = useTheme();
   const {
-    title,
-    textTitle,
     copy,
-    state,
-    value,
+    endAdornment,
+    error,
     onStateChange,
     onValueChange,
-    error,
-    endAdornment,
     readOnly,
+    state,
+    textTitle,
+    title,
+    value,
   } = props;
 
   return (
     <>
       <Grid
-        container
-        data-qa-alerts-panel
-        spacing={2}
         sx={{
-          alignItems: 'flex-start',
-          flex: 1,
-          marginBottom: theme.spacing(2),
           '&:last-of-type': {
             marginBottom: 0,
           },
           '&:last-of-type + hr': {
             display: 'none',
           },
+          alignItems: 'flex-start',
+          flex: 1,
+          marginBottom: theme.spacing(2),
         }}
+        container
+        data-qa-alerts-panel
+        spacing={2}
       >
         <Grid
-          xs={12}
-          md={9}
-          lg={7}
           sx={{
             display: 'flex',
             flexDirection: 'column',
           }}
+          lg={7}
+          md={9}
+          xs={12}
         >
           <Box>
             <FormControlLabel
@@ -76,16 +77,16 @@ export const AlertSection = (props: Props) => {
                   onChange={onStateChange}
                 />
               }
-              label={title}
-              data-qa-alert={title}
               sx={{
-                '.MuiFormControlLabel-label': {
-                  paddingLeft: '12px',
-                },
                 '& > span:last-child': {
                   ...theme.typography.h3,
                 },
+                '.MuiFormControlLabel-label': {
+                  paddingLeft: '12px',
+                },
               }}
+              data-qa-alert={title}
+              label={title}
             />
           </Box>
           <Box
@@ -100,27 +101,18 @@ export const AlertSection = (props: Props) => {
           </Box>
         </Grid>
         <Grid
-          xs={12}
-          md={3}
-          lg={5}
           sx={{
-            paddingTop: '0',
             paddingBottom: '0',
+            paddingTop: '0',
             [theme.breakpoints.down('md')]: {
               paddingLeft: '78px',
             },
           }}
+          lg={5}
+          md={3}
+          xs={12}
         >
           <TextField
-            disabled={!state || readOnly}
-            error={Boolean(error)}
-            errorText={error}
-            label={textTitle}
-            min={0}
-            max={Infinity}
-            onChange={onValueChange}
-            type="number"
-            value={value}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">{endAdornment}</InputAdornment>
@@ -133,6 +125,15 @@ export const AlertSection = (props: Props) => {
                 maxWidth: 150,
               },
             }}
+            disabled={!state || readOnly}
+            error={Boolean(error)}
+            errorText={error}
+            label={textTitle}
+            max={Infinity}
+            min={0}
+            onChange={onValueChange}
+            type="number"
+            value={value}
           />
         </Grid>
       </Grid>

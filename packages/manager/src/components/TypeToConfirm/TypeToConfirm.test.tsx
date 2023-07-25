@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { TypeToConfirm } from './TypeToConfirm';
 
 const props = { onClick: jest.fn() };
@@ -37,9 +38,9 @@ describe('TypeToConfirm Component', () => {
   it('Should not display instructions when toggled to hidden', () => {
     const { queryByTestId } = renderWithTheme(
       <TypeToConfirm
+        hideInstructions={true}
         label={labelText}
         onChange={jest.fn()}
-        hideInstructions={true}
         {...props}
       />
     );

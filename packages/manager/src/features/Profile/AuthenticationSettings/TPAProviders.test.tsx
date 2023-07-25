@@ -1,7 +1,9 @@
-import React from 'react';
-import userEvent from '@testing-library/user-event';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { TPAProviders } from './TPAProviders';
 
 jest.mock('src/hooks/useFlags', () => ({
@@ -10,15 +12,15 @@ jest.mock('src/hooks/useFlags', () => ({
     tpaProviders: [
       {
         displayName: 'Google',
-        name: 'google',
         href: 'https://google.com',
         icon: 'GoogleIcon',
+        name: 'google',
       },
       {
         displayName: 'GitHub',
-        name: 'github',
         href: 'https://github.com',
         icon: 'GitHubIcon',
+        name: 'github',
       },
     ],
   }),

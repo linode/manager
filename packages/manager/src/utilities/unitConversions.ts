@@ -39,15 +39,15 @@ export const convertMegabytesTo = (data: number, removeDecimals?: boolean) => {
  * { unitLabels: { bytes: 'B' } } // use "B" instead of the default "bytes" unit label
  */
 export interface ReadableBytesOptions {
-  round?: number | Partial<Record<StorageSymbol, number>>;
-  unit?: StorageSymbol;
-  maxUnit?: StorageSymbol;
-  handleNegatives?: boolean;
-  unitLabels?: Partial<Record<StorageSymbol, string>>;
   base10?: boolean;
+  handleNegatives?: boolean;
+  maxUnit?: StorageSymbol;
+  round?: Partial<Record<StorageSymbol, number>> | number;
+  unit?: StorageSymbol;
+  unitLabels?: Partial<Record<StorageSymbol, string>>;
 }
 
-export type StorageSymbol = 'byte' | 'bytes' | 'KB' | 'MB' | 'GB' | 'TB';
+export type StorageSymbol = 'GB' | 'KB' | 'MB' | 'TB' | 'byte' | 'bytes';
 
 // This code inspired by: https://ourcodeworld.com/articles/read/713/converting-bytes-to-human-readable-values-kb-mb-gb-tb-pb-eb-zb-yb-with-javascript
 export const readableBytes = (
@@ -77,9 +77,9 @@ export const readableBytes = (
     typeof num !== 'number'
   ) {
     return {
-      value: 0,
-      unit: storageUnits[0],
       formatted: `0 ${storageUnits[0]}`,
+      unit: storageUnits[0],
+      value: 0,
     };
   }
 
@@ -105,16 +105,16 @@ export const readableBytes = (
   // Special case to account for pluralization.
   if ((value === 1 || value === -1) && unit === 'bytes') {
     return {
-      value: isNegative ? -value : value,
-      unit: 'byte' as StorageSymbol,
       formatted: (isNegative ? '-' : '') + value + ' byte',
+      unit: 'byte' as StorageSymbol,
+      value: isNegative ? -value : value,
     };
   }
 
   return {
-    value: isNegative ? -value : value,
-    unit,
     formatted: (isNegative ? '-' : '') + value + ' ' + unit,
+    unit,
+    value: isNegative ? -value : value,
   };
 };
 
@@ -185,9 +185,9 @@ export const convertBytesToTarget = (
 
 export enum StorageUnitExponents {
   B = 0,
+  GB = 3,
   KB = 1,
   MB = 2,
-  GB = 3,
   TB = 4,
 }
 
@@ -217,6 +217,5 @@ export const convertStorageUnit = (
 
   const exponent =
     StorageUnitExponents[sourceUnit] - StorageUnitExponents[targetUnit];
-  const result = sourceQuantity * Math.pow(BASE, exponent);
-  return result;
+  return sourceQuantity * Math.pow(BASE, exponent);
 };

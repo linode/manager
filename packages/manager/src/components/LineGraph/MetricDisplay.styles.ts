@@ -1,45 +1,104 @@
-import { createStyles, withStyles, WithStyles, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { WithStyles, WithTheme, createStyles, withStyles } from '@mui/styles';
 
 export type ClassNames =
-  | 'root'
-  | 'legend'
-  | 'red'
-  | 'yellow'
   | 'blue'
-  | 'green'
-  | 'lightGreen'
   | 'darkGreen'
+  | 'green'
+  | 'legend'
+  | 'lightGreen'
+  | 'red'
+  | 'root'
+  | 'tableHeadInner'
   | 'text'
-  | 'tableHeadInner';
+  | 'yellow';
 
 export type StyleProps = WithStyles<ClassNames> & WithTheme;
 
 const styles = (theme: Theme) =>
   createStyles({
+    blue: {
+      '&:before': {
+        backgroundColor: theme.graphs.blue,
+      },
+    },
+    darkGreen: {
+      '&:before': {
+        backgroundColor: theme.graphs.network.inbound,
+      },
+    },
+    green: {
+      '&:before': {
+        backgroundColor: theme.graphs.green,
+      },
+    },
+    legend: {
+      '& > div': {
+        '&:before': {
+          content: '""',
+          display: 'inline-block',
+          height: 20,
+          marginRight: theme.spacing(1),
+          width: 20,
+        },
+        alignItems: 'center',
+        display: 'flex',
+      },
+      [theme.breakpoints.up('md')]: {
+        width: '38%',
+      },
+    },
+    lightGreen: {
+      '&:before': {
+        backgroundColor: theme.graphs.network.outbound,
+      },
+    },
+    purple: {
+      '&:before': {
+        backgroundColor: theme.graphs.purple,
+      },
+    },
+    red: {
+      '&:before': {
+        backgroundColor: theme.graphs.red,
+      },
+    },
     root: {
-      maxWidth: 600,
       '& *': {
-        height: 'auto',
-        border: 'none',
         backgroundColor: 'transparent',
+        border: 'none',
+        height: 'auto',
+      },
+      '& .data': {
+        minWidth: 100,
       },
       '& td:first-of-type': {
         backgroundColor: 'transparent !important',
       },
-      '& .data': {
-        minWidth: 100,
+      maxWidth: 600,
+      [theme.breakpoints.down('md')]: {
+        '& td': {
+          justifyContent: 'normal',
+          minHeight: 'auto',
+        },
+        maxWidth: '100%',
       },
       [theme.breakpoints.down('xl')]: {
         '& th, & td': {
           padding: '4px !important',
         },
       },
-      [theme.breakpoints.down('md')]: {
-        maxWidth: '100%',
-        '& td': {
-          justifyContent: 'normal',
-          minHeight: 'auto',
+      [theme.breakpoints.only('sm')]: {
+        '& tbody': {
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+        },
+        '& tr': {
+          flexBasis: '45%',
+        },
+        '& tr:not(:nth-last-child(n+3)) td:first-of-type': {
+          marginTop: theme.spacing(2),
         },
       },
       [theme.breakpoints.only('xs')]: {
@@ -49,76 +108,17 @@ const styles = (theme: Theme) =>
           },
         },
       },
-      [theme.breakpoints.only('sm')]: {
-        '& tr:not(:nth-last-child(n+3)) td:first-of-type': {
-          marginTop: theme.spacing(2),
-        },
-        '& tbody': {
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-        },
-        '& tr': {
-          flexBasis: '45%',
-        },
-      },
     },
     tableHeadInner: {
       paddingBottom: 4,
     },
-    red: {
-      '&:before': {
-        backgroundColor: theme.graphs.red,
-      },
-    },
-    purple: {
-      '&:before': {
-        backgroundColor: theme.graphs.purple,
-      },
+    text: {
+      color: theme.color.black,
     },
     yellow: {
       '&:before': {
         backgroundColor: theme.graphs.yellow,
       },
-    },
-    blue: {
-      '&:before': {
-        backgroundColor: theme.graphs.blue,
-      },
-    },
-    green: {
-      '&:before': {
-        backgroundColor: theme.graphs.green,
-      },
-    },
-    lightGreen: {
-      '&:before': {
-        backgroundColor: theme.graphs.network.outbound,
-      },
-    },
-    darkGreen: {
-      '&:before': {
-        backgroundColor: theme.graphs.network.inbound,
-      },
-    },
-    legend: {
-      [theme.breakpoints.up('md')]: {
-        width: '38%',
-      },
-      '& > div': {
-        display: 'flex',
-        alignItems: 'center',
-        '&:before': {
-          content: '""',
-          display: 'inline-block',
-          width: 20,
-          height: 20,
-          marginRight: theme.spacing(1),
-        },
-      },
-    },
-    text: {
-      color: theme.color.black,
     },
   });
 

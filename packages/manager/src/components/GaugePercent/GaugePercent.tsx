@@ -1,40 +1,13 @@
 import * as React from 'react';
-import { compose } from 'recompose';
-import { makeStyles, withTheme, WithTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { Chart } from 'chart.js';
+import {
+  StyledSubTitleDiv,
+  StyledInnerTextDiv,
+  StyledGaugeWrapperDiv,
+} from './GaugePercent.styles';
 
-interface Options {
-  width: number | string;
-  height: number;
-  fontSize?: number;
-}
-
-const useStyles = (options: Options) =>
-  makeStyles((theme: Theme) => ({
-    gaugeWrapper: {
-      position: 'relative',
-      width: `50%`,
-    },
-    innerText: {
-      position: 'absolute',
-      top: `calc(${options.height + 30}px / 2)`,
-      width: options.width,
-      textAlign: 'center',
-      fontSize: '1rem',
-      color: theme.palette.text.primary,
-    },
-    subTitle: {
-      position: 'absolute',
-      width: options.width,
-      textAlign: 'center',
-      top: `calc(${options.height}px + ${theme.spacing(1.25)})`,
-      fontSize: options.fontSize || theme.spacing(2.5),
-      color: theme.color.headline,
-    },
-  }));
-
-interface Props {
+export interface GaugePercentProps {
   width?: number | string;
   height?: number;
   filledInColor?: string;
@@ -46,16 +19,10 @@ interface Props {
   subTitle?: string | JSX.Element | null;
 }
 
-type CombinedProps = Props & WithTheme;
-
-const GaugePercent: React.FC<CombinedProps> = (props) => {
+export const GaugePercent = React.memo((props: GaugePercentProps) => {
+  const theme = useTheme();
   const width = props.width || 300;
   const height = props.height || 300;
-  const classes = useStyles({
-    width,
-    height,
-    fontSize: props.innerTextFontSize,
-  })();
 
   /**
    * if the value exceeds the maximum (e.g Longview Load), just make the max 0
@@ -72,14 +39,14 @@ const GaugePercent: React.FC<CombinedProps> = (props) => {
     {
       borderWidth: 0,
       hoverBackgroundColor: [
-        props.filledInColor || props.theme.palette.primary.main,
-        props.nonFilledInColor || props.theme.color.grey2,
+        props.filledInColor || theme.palette.primary.main,
+        props.nonFilledInColor || theme.color.grey2,
       ],
       /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
       data: [props.value, finalMax],
       backgroundColor: [
-        props.filledInColor || props.theme.palette.primary.main,
-        props.nonFilledInColor || props.theme.color.grey2,
+        props.filledInColor || theme.palette.primary.main,
+        props.nonFilledInColor || theme.color.grey2,
       ],
     },
   ];
@@ -117,29 +84,27 @@ const GaugePercent: React.FC<CombinedProps> = (props) => {
     }
   });
   return (
-    <div
-      className={classes.gaugeWrapper}
-      style={{
-        width,
-        height: `calc(${height}px + ${props.theme.spacing(3.75)})`,
-      }}
-    >
+    <StyledGaugeWrapperDiv width={width} height={height}>
       <canvas height={height} ref={graphRef} />
       {props.innerText && (
-        <div data-testid="gauge-innertext" className={classes.innerText}>
+        <StyledInnerTextDiv
+          data-testid="gauge-innertext"
+          width={width}
+          height={height}
+        >
           {props.innerText}
-        </div>
+        </StyledInnerTextDiv>
       )}
       {props.subTitle && (
-        <div data-testid="gauge-subtext" className={classes.subTitle}>
+        <StyledSubTitleDiv
+          data-testid="gauge-subtext"
+          width={width}
+          height={height}
+          innerTextFontSize={props.innerTextFontSize}
+        >
           {props.subTitle}
-        </div>
+        </StyledSubTitleDiv>
       )}
-    </div>
+    </StyledGaugeWrapperDiv>
   );
-};
-
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withTheme
-)(GaugePercent);
+});

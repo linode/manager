@@ -1,20 +1,21 @@
-import * as React from 'react';
-import { TextField, TextFieldProps } from 'src/components/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
 import { NodeBalancer } from '@linode/api-v4';
+import Autocomplete from '@mui/material/Autocomplete';
+import * as React from 'react';
+
+import { TextField, TextFieldProps } from 'src/components/TextField';
+import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
 
 interface Props {
-  error?: string;
-  value?: number;
   disabled?: boolean;
-  region?: string;
+  error?: string;
   onChange: (id: number, nodebalancer: NodeBalancer | undefined) => void;
+  region?: string;
   textFieldProps?: TextFieldProps;
+  value?: number;
 }
 
 export const NodeBalancerSelect = (props: Props) => {
-  const { disabled, error, onChange, value, region } = props;
+  const { disabled, error, onChange, region, value } = props;
   const [inputValue, setInputValue] = React.useState<string>('');
 
   const searchFilter = inputValue
@@ -28,14 +29,14 @@ export const NodeBalancerSelect = (props: Props) => {
 
   const {
     data,
-    isLoading,
     fetchNextPage,
     hasNextPage,
+    isLoading,
   } = useInfiniteNodebalancersQuery({
     ...searchFilter,
     ...(region ? { region } : {}),
-    '+order_by': 'label',
     '+order': 'asc',
+    '+order_by': 'label',
   });
   const nodebalancers = data?.pages.flatMap((page) => page.data);
 
@@ -46,20 +47,6 @@ export const NodeBalancerSelect = (props: Props) => {
 
   return (
     <Autocomplete
-      disabled={disabled}
-      options={options ?? []}
-      value={selectedNodebalancer}
-      onChange={(event, value) =>
-        onChange(
-          value?.id ?? -1,
-          nodebalancers?.find((n) => n.id === value?.id)
-        )
-      }
-      inputValue={inputValue}
-      onInputChange={(event, value) => {
-        setInputValue(value);
-      }}
-      isOptionEqualToValue={(option) => option.id === selectedNodebalancer?.id}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
@@ -72,16 +59,30 @@ export const NodeBalancerSelect = (props: Props) => {
           }
         },
       }}
-      loading={isLoading}
+      onChange={(event, value) =>
+        onChange(
+          value?.id ?? -1,
+          nodebalancers?.find((n) => n.id === value?.id)
+        )
+      }
+      onInputChange={(event, value) => {
+        setInputValue(value);
+      }}
       renderInput={(params) => (
         <TextField
-          label="NodeBalancer"
-          placeholder="Select a NodeBalancer"
-          loading={isLoading}
           errorText={error}
+          label="NodeBalancer"
+          loading={isLoading}
+          placeholder="Select a NodeBalancer"
           {...params}
         />
       )}
+      disabled={disabled}
+      inputValue={inputValue}
+      isOptionEqualToValue={(option) => option.id === selectedNodebalancer?.id}
+      loading={isLoading}
+      options={options ?? []}
+      value={selectedNodebalancer}
     />
   );
 };

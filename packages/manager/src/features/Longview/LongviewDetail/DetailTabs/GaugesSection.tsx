@@ -1,9 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 
 import CPUGauge from '../../LongviewLanding/Gauges/CPU';
@@ -36,38 +36,38 @@ const GaugesSection: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
-    <Grid container item xs={12} md={5} className={classes.gaugesOuter}>
-      <Grid item xs={4} className={classes.gaugeContainer}>
+    <Grid className={classes.gaugesOuter} container item md={5} xs={12}>
+      <Grid className={classes.gaugeContainer} item xs={4}>
         <CPUGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </Grid>
-      <Grid item xs={4} className={classes.gaugeContainer}>
+      <Grid className={classes.gaugeContainer} item xs={4}>
         <RAMGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </Grid>
-      <Grid item xs={4} className={classes.gaugeContainer}>
+      <Grid className={classes.gaugeContainer} item xs={4}>
         <SwapGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </Grid>
-      <Grid item xs={4} className={classes.gaugeContainer}>
+      <Grid className={classes.gaugeContainer} item xs={4}>
         <LoadGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </Grid>
-      <Grid item xs={4} className={classes.gaugeContainer}>
+      <Grid className={classes.gaugeContainer} item xs={4}>
         <NetworkGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </Grid>
-      <Grid item xs={4} className={classes.gaugeContainer}>
+      <Grid className={classes.gaugeContainer} item xs={4}>
         <StorageGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}

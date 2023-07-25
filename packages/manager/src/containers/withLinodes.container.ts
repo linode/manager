@@ -1,6 +1,7 @@
-import React from 'react';
 import { CreateLinodeRequest, Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import React from 'react';
+
 import {
   useAllLinodesQuery,
   useCreateLinodeMutation,
@@ -11,10 +12,10 @@ interface Actions {
 }
 
 export interface WithLinodesProps {
+  linodeActions: Actions;
+  linodesData: Linode[] | undefined;
   linodesError: APIError[] | null;
   linodesLoading: boolean;
-  linodesData: Linode[] | undefined;
-  linodeActions: Actions;
 }
 
 export const withLinodes = <Props>(
@@ -22,19 +23,19 @@ export const withLinodes = <Props>(
 ) => (props: Props) => {
   const {
     data: linodesData,
-    isLoading: linodesLoading,
     error: linodesError,
+    isLoading: linodesLoading,
   } = useAllLinodesQuery();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
 
   return React.createElement(Component, {
     ...props,
-    linodesData,
-    linodesLoading,
-    linodesError,
     linodeActions: {
       createLinode,
     },
+    linodesData,
+    linodesError,
+    linodesLoading,
   });
 };

@@ -1,17 +1,18 @@
 import { Engine } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import { useDatabaseCredentialsMutation } from 'src/queries/databases';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  databaseID: number;
   databaseEngine: Engine;
+  databaseID: number;
+  onClose: () => void;
+  open: boolean;
 }
 
 // I feel like this pattern should be its own component due to how common it is
@@ -24,18 +25,18 @@ const renderActions = (
     <ActionsPanel>
       <Button
         buttonType="secondary"
-        onClick={onClose}
         data-qa-cancel
         data-testid={'dialog-cancel'}
+        onClick={onClose}
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={onConfirm}
         data-qa-confirm
         data-testid="dialog-confrim"
         loading={loading}
+        onClick={onConfirm}
       >
         Reset Root Password
       </Button>
@@ -44,9 +45,9 @@ const renderActions = (
 };
 
 export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
-  const { open, onClose, databaseEngine, databaseID } = props;
+  const { databaseEngine, databaseID, onClose, open } = props;
 
-  const { mutateAsync, isLoading, error } = useDatabaseCredentialsMutation(
+  const { error, isLoading, mutateAsync } = useDatabaseCredentialsMutation(
     databaseEngine,
     databaseID
   );
@@ -58,10 +59,10 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
 
   return (
     <ConfirmationDialog
+      actions={renderActions(onClose, onResetRootPassword, isLoading)}
+      onClose={onClose}
       open={open}
       title="Reset Root Password"
-      onClose={onClose}
-      actions={renderActions(onClose, onResetRootPassword, isLoading)}
     >
       {error ? <Notice error>{error[0].reason}</Notice> : undefined}
       <Typography>

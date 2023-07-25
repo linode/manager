@@ -8,8 +8,10 @@ import { loadEnvironmentConfig } from './cypress/support/plugins/load-env-config
 import { nodeVersionCheck } from './cypress/support/plugins/node-version-check';
 import { regionOverrideCheck } from './cypress/support/plugins/region-override-check';
 import { vitePreprocess } from './cypress/support/plugins/vite-preprocessor';
-import { oauthTokenCheck } from './cypress/support/plugins/oauth-token-check';
+import { authenticateApi } from './cypress/support/plugins/authenticate-api';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
+import { splitCypressRun } from './cypress/support/plugins/split-run';
+import { enableJunitReport } from './cypress/support/plugins/junit-report';
 
 /**
  * Exports a Cypress configuration object.
@@ -41,7 +43,7 @@ export default defineConfig({
     // This can be overridden using `CYPRESS_BASE_URL`.
     baseUrl: 'http://localhost:3000',
 
-    // This is overridden when `CY_SUITE` is defined.
+    // This is overridden when `CY_TEST_SUITE` is defined.
     // See `cypress/support/plugins/configure-test-suite.ts`.
     specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
 
@@ -49,13 +51,15 @@ export default defineConfig({
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         nodeVersionCheck,
-        oauthTokenCheck,
+        authenticateApi,
         configureTestSuite,
         vitePreprocess,
         disableGoogleSafeBrowsing,
         discardPassedTestRecordings,
         fetchLinodeRegions,
         regionOverrideCheck,
+        splitCypressRun,
+        enableJunitReport,
       ]);
     },
   },

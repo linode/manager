@@ -1,8 +1,10 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
+
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+
 import ActionMenu from './SSHAccessActionMenu';
 
 interface Props {
@@ -17,10 +19,10 @@ export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
 
   return (
     <TableRow
-      key={linodeSetting.id}
+      ariaLabel={linodeSetting.label}
       data-qa-monitor-cell={linodeSetting.id}
       data-testid={'linode-row'}
-      ariaLabel={linodeSetting.label}
+      key={linodeSetting.id}
     >
       <TableCell data-qa-managed-linode>{linodeSetting.label}</TableCell>
       <TableCell data-qa-managed-ssh-access>
@@ -35,10 +37,10 @@ export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
       </Hidden>
       <TableCell actionCell>
         <ActionMenu
-          linodeId={linodeSetting.id}
           isEnabled={isAccessEnabled}
-          openDrawer={openDrawer}
+          linodeId={linodeSetting.id}
           linodeLabel={linodeSetting.label}
+          openDrawer={openDrawer}
         />
       </TableCell>
     </TableRow>

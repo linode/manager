@@ -1,31 +1,31 @@
-import * as Factory from 'factory.ts';
 import {
   Profile,
-  SecurityQuestionsData,
   SSHKey,
+  SecurityQuestionsData,
   UserPreferences,
 } from '@linode/api-v4/lib/profile';
+import * as Factory from 'factory.ts';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
-  uid: 9999,
-  username: 'mock-user',
+  authentication_type: 'password',
+  authorized_keys: [],
   email: 'mock-user@linode.com',
-  timezone: 'Asia/Shanghai',
-  referrals: {
-    code: 'XXX',
-    url: 'https://www.linode.com/XXX',
-    total: 0,
-    completed: 0,
-    pending: 0,
-    credit: 0,
-  },
   email_notifications: false,
   ip_whitelist_enabled: false,
   lish_auth_method: 'keys_only',
-  authorized_keys: [],
-  two_factor_auth: false,
+  referrals: {
+    code: 'XXX',
+    completed: 0,
+    credit: 0,
+    pending: 0,
+    total: 0,
+    url: 'https://www.linode.com/XXX',
+  },
   restricted: false,
-  authentication_type: 'password',
+  timezone: 'Asia/Shanghai',
+  two_factor_auth: false,
+  uid: 9999,
+  username: 'mock-user',
   verified_phone_number: '+15555555555',
 });
 
@@ -131,29 +131,29 @@ export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestio
 export const userPreferencesFactory = Factory.Sync.makeFactory<UserPreferences>(
   {
     desktop_sidebar_open: true,
-    type_to_confirm: true,
-    theme: 'light',
     sortKeys: {
-      'linodes-landing': {
-        order: 'desc',
-        orderBy: '_statusPriority',
-      },
       'database-order': {
         order: 'asc',
         orderBy: 'created',
+      },
+      'linodes-landing': {
+        order: 'desc',
+        orderBy: '_statusPriority',
       },
       volume: {
         order: 'asc',
         orderBy: 'label',
       },
     },
+    theme: 'light',
+    type_to_confirm: true,
   }
 );
 
 export const sshKeyFactory = Factory.Sync.makeFactory<SSHKey>({
+  created: '2021-05-21T18:44:02',
   id: Factory.each((id) => id),
   label: Factory.each((id) => `ssh-key-${id}`),
   ssh_key:
     'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6p4bIK6Cfhy6BLQE7CUcBw6VNxibMsq+v7Y09aLcwkJu7rE7RzgHFwnw09hb1TRI9mZmb/mQaYB44WoA9NK2UMXjK4OXP+vFTk//4M9TIxqKs1oKzoOtZk/Q99gW7bIuVkax3eH4HocZ09IeF1qzM3ff0mY64hy+hD2bd5eEF6oSZZnM8WZqDbTP6jYb/LO0geW18vsueD7+DgEVUODYh7FkQ/HCDyqcGlWvDoJho62u/heOiaZQp25puTCWbNxhSck4GTRIU25febH2xX2OxRp/NRzchS4HvK/iC/mNaLE23gDBN73j/JS+oWwcu7zZk/VN+QUHCPw4fMI6wJdnl',
-  created: '2021-05-21T18:44:02',
 });

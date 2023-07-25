@@ -1,16 +1,17 @@
-import * as React from 'react';
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import * as React from 'react';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 interface Props {
   backup: LinodeBackup;
   disabled: boolean;
-  onRestore: () => void;
   onDeploy: () => void;
+  onRestore: () => void;
 }
 
 export const LinodeBackupActionMenu = (props: Props) => {
-  const { disabled, onRestore, onDeploy } = props;
+  const { disabled, onDeploy, onRestore } = props;
   const disabledProps = {
     disabled,
     tooltip: disabled
@@ -20,17 +21,17 @@ export const LinodeBackupActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Restore to Existing Linode',
       onClick: () => {
         onRestore();
       },
+      title: 'Restore to Existing Linode',
       ...disabledProps,
     },
     {
-      title: 'Deploy New Linode',
       onClick: () => {
         onDeploy();
       },
+      title: 'Deploy New Linode',
       ...disabledProps,
     },
   ];

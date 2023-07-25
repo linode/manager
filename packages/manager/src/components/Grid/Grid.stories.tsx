@@ -1,18 +1,20 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { styled } from '@mui/material/styles';
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import Grid from 'src/components/Grid';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import { Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import React from 'react';
+
+import Grid from 'src/components/Grid';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   ...theme.typography.body2,
+  color: theme.palette.text.secondary,
   padding: theme.spacing(1),
   textAlign: 'center',
-  color: theme.palette.text.secondary,
 }));
 
 const ColorGrid2 = styled(Grid2)(() => ({
@@ -26,9 +28,9 @@ const ColorGrid = styled(Grid)(() => ({
 }));
 
 const meta: Meta<typeof Grid2> = {
-  title: 'Components/Grid2',
-  component: Grid2,
   argTypes: {},
+  component: Grid2,
+  title: 'Components/Grid2',
 };
 
 export default meta;
@@ -52,15 +54,15 @@ const gridSizes = [
 export const Default: Story = {
   args: {
     children: 'Grid2',
-    spacing: 2,
-    columns: 12,
     columnSpacing: undefined,
+    columns: 12,
     container: true,
     direction: 'row',
     lg: false,
     md: false,
     rowSpacing: undefined,
     sm: false,
+    spacing: 2,
     sx: {},
     wrap: 'wrap',
     xl: false,

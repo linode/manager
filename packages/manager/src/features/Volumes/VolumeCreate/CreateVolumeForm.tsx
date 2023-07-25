@@ -1,21 +1,22 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Region } from '@linode/api-v4/lib/regions/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
+import { Theme, useTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { Formik } from 'formik';
 import * as React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import Form from 'src/components/core/Form';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
+import Form from 'src/components/core/Form';
+import { Paper } from 'src/components/Paper';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
@@ -25,68 +26,29 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+
 import ConfigSelect, {
   initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
-import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  copy: {
-    marginBottom: theme.spacing(),
-    maxWidth: 680,
-  },
-  notice: {
-    borderColor: theme.color.green,
-    fontSize: 15,
-    lineHeight: '18px',
-  },
-  select: {
-    width: 320,
-  },
-  tooltip: {
-    '& .MuiTooltip-tooltip': {
-      minWidth: 320,
-    },
-  },
-  labelTooltip: {
-    '& .MuiTooltip-tooltip': {
-      minWidth: 220,
-    },
-  },
-  size: {
-    width: 160,
-  },
-  linodeConfigSelectWrapper: {
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-    },
-  },
-  linodeSelect: {
-    marginRight: theme.spacing(4),
-  },
-  buttonGroup: {
-    marginTop: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-end',
-    },
-  },
   agreement: {
     maxWidth: '70%',
     [theme.breakpoints.down('sm')]: {
@@ -99,16 +61,56 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(),
     },
   },
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-end',
+    },
+  },
+  copy: {
+    marginBottom: theme.spacing(),
+    maxWidth: 680,
+  },
+  labelTooltip: {
+    '& .MuiTooltip-tooltip': {
+      minWidth: 220,
+    },
+  },
+  linodeConfigSelectWrapper: {
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'flex-start',
+      flexDirection: 'column',
+    },
+  },
+  linodeSelect: {
+    marginRight: theme.spacing(4),
+  },
+  notice: {
+    borderColor: theme.color.green,
+    fontSize: 15,
+    lineHeight: '18px',
+  },
+  select: {
+    width: 320,
+  },
+  size: {
+    width: 160,
+  },
+  tooltip: {
+    '& .MuiTooltip-tooltip': {
+      minWidth: 320,
+    },
+  },
 }));
 
 interface Props {
-  regions: Region[];
   history: RouteComponentProps['history'];
   onSuccess: (
     volumeLabel: string,
     volumePath: string,
     message?: string
   ) => void;
+  regions: Region[];
 }
 
 type CombinedProps = Props & StateProps;
@@ -116,7 +118,7 @@ type CombinedProps = Props & StateProps;
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const theme = useTheme();
   const classes = useStyles();
-  const { onSuccess, origin, history } = props;
+  const { history, onSuccess, origin } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -153,28 +155,26 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const renderSelectTooltip = (tooltipText: string) => {
     return (
       <TooltipIcon
-        classes={{ popper: classes.tooltip }}
         sxTooltipIcon={{
           marginBottom: '6px',
           marginLeft: theme.spacing(),
           padding: 0,
         }}
+        classes={{ popper: classes.tooltip }}
+        status="help"
         text={tooltipText}
         tooltipPosition="right"
-        status="help"
       />
     );
   };
 
   return (
     <Formik
-      initialValues={initialValues}
-      validationSchema={CreateVolumeSchema}
       onSubmit={(
         values,
-        { resetForm, setSubmitting, setStatus, setErrors }
+        { resetForm, setErrors, setStatus, setSubmitting }
       ) => {
-        const { label, size, region, linode_id, config_id } = values;
+        const { config_id, label, linode_id, region, size } = values;
 
         setSubmitting(true);
 
@@ -182,18 +182,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         setStatus(undefined);
 
         createVolume({
-          label,
-          size: maybeCastToNumber(size),
-          region:
-            isNilOrEmpty(region) || region === 'none' ? undefined : region,
-          linode_id:
-            linode_id === initialValueDefaultId
-              ? undefined
-              : maybeCastToNumber(linode_id),
           config_id:
             config_id === initialValueDefaultId
               ? undefined
               : maybeCastToNumber(config_id),
+          label,
+          linode_id:
+            linode_id === initialValueDefaultId
+              ? undefined
+              : maybeCastToNumber(linode_id),
+          region:
+            isNilOrEmpty(region) || region === 'none' ? undefined : region,
+          size: maybeCastToNumber(size),
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
             if (hasSignedAgreement) {
@@ -229,6 +229,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             );
           });
       }}
+      initialValues={initialValues}
+      validationSchema={CreateVolumeSchema}
     >
       {({
         errors,
@@ -238,10 +240,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         isSubmitting,
         setFieldValue,
         status,
-        values,
         touched,
+        values,
       }) => {
-        const { linode_id, config_id } = values;
+        const { config_id, linode_id } = values;
 
         const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
@@ -289,49 +291,43 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               <Paper>
                 <Typography
                   className={classes.copy}
-                  variant="body1"
                   data-qa-volume-size-help
+                  variant="body1"
                 >
                   A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
                   size and costs $0.10/GB per month. <br />
                   Up to eight volumes can be attached to a single Linode.
                 </Typography>
                 <LabelField
-                  name="label"
+                  tooltipText="Use only ASCII letters, numbers,
+                  underscores, and dashes."
                   disabled={doesNotHavePermission}
                   error={touched.label ? errors.label : undefined}
+                  name="label"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   textFieldStyles={classes.select}
                   tooltipClasses={classes.labelTooltip}
                   tooltipPosition="right"
-                  tooltipText="Use only ASCII letters, numbers,
-                  underscores, and dashes."
                   value={values.label}
                 />
-                <Box display="flex" alignItems="flex-end">
+                <Box alignItems="flex-end" display="flex">
                   <SizeField
-                    name="size"
                     disabled={doesNotHavePermission}
                     error={touched.size ? errors.size : undefined}
+                    name="size"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.size}
                     textFieldStyles={classes.size}
+                    value={values.size}
                   />
                 </Box>
-                <Box display="flex" alignItems="flex-end">
+                <Box alignItems="flex-end" display="flex">
                   <RegionSelect
-                    label="Region"
-                    name="region"
-                    disabled={doesNotHavePermission}
-                    errorText={touched.region ? errors.region : undefined}
                     handleSelection={(value) => {
                       setFieldValue('region', value);
                       setFieldValue('linode_id', initialValueDefaultId);
                     }}
-                    isClearable
-                    onBlur={handleBlur}
                     regions={
                       regions?.filter((eachRegion) =>
                         eachRegion.capabilities.some((eachCape) =>
@@ -339,6 +335,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                         )
                       ) ?? []
                     }
+                    disabled={doesNotHavePermission}
+                    errorText={touched.region ? errors.region : undefined}
+                    isClearable
+                    label="Region"
+                    name="region"
+                    onBlur={handleBlur}
                     selectedID={values.region}
                     width={320}
                   />
@@ -347,28 +349,28 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   )}
                 </Box>
                 <Box
-                  display="flex"
                   alignItems="flex-end"
                   className={classes.linodeConfigSelectWrapper}
+                  display="flex"
                 >
                   <Box
-                    display="flex"
                     alignItems="flex-end"
                     className={classes.linodeSelect}
+                    display="flex"
                   >
                     <LinodeSelect
-                      label="Linode"
-                      name="linodeId"
-                      disabled={doesNotHavePermission}
                       filterCondition={(linode: Linode) =>
                         regionsWithBlockStorage.includes(linode.region)
                       }
+                      disabled={doesNotHavePermission}
                       handleChange={handleLinodeChange}
-                      linodeError={linodeError || configErrorMessage}
-                      onBlur={handleBlur}
-                      selectedLinode={values.linode_id}
-                      region={values.region}
                       isClearable
+                      label="Linode"
+                      linodeError={linodeError || configErrorMessage}
+                      name="linodeId"
+                      onBlur={handleBlur}
+                      region={values.region}
+                      selectedLinode={values.linode_id}
                       width={320}
                     />
                     {renderSelectTooltip(
@@ -376,10 +378,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     )}
                   </Box>
                   <ConfigSelect
-                    name="configId"
                     disabled={doesNotHavePermission}
                     error={touched.config_id ? errors.config_id : undefined}
                     linodeId={linode_id}
+                    name="configId"
                     onBlur={handleBlur}
                     onChange={(id: number) => setFieldValue('config_id', id)}
                     value={config_id}
@@ -387,18 +389,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   />
                 </Box>
                 <Box
-                  display="flex"
-                  justifyContent={showAgreement ? 'space-between' : 'flex-end'}
                   alignItems="center"
-                  flexWrap="wrap"
                   className={classes.buttonGroup}
+                  display="flex"
+                  flexWrap="wrap"
+                  justifyContent={showAgreement ? 'space-between' : 'flex-end'}
                 >
                   {showAgreement ? (
                     <EUAgreementCheckbox
-                      checked={hasSignedAgreement}
-                      onChange={(e) => setHasSignedAgreement(e.target.checked)}
-                      className={classes.agreement}
                       centerCheckbox
+                      checked={hasSignedAgreement}
+                      className={classes.agreement}
+                      onChange={(e) => setHasSignedAgreement(e.target.checked)}
                     />
                   ) : null}
                 </Box>
@@ -407,11 +409,11 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                 <Button
                   buttonType="primary"
                   className={classes.button}
+                  data-qa-deploy-linode
                   disabled={disabled}
                   loading={isSubmitting}
                   onClick={() => handleSubmit()}
                   style={{ marginLeft: 12 }}
-                  data-qa-deploy-linode
                 >
                   Create Volume
                 </Button>
@@ -425,19 +427,19 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 };
 
 interface FormState {
-  label: string;
-  size: number;
-  region: string;
-  linode_id: number;
   config_id: number;
+  label: string;
+  linode_id: number;
+  region: string;
+  size: number;
 }
 
 const initialValues: FormState = {
-  label: '',
-  size: 20,
-  region: '',
-  linode_id: initialValueDefaultId,
   config_id: initialValueDefaultId,
+  label: '',
+  linode_id: initialValueDefaultId,
+  region: '',
+  size: 20,
 };
 
 interface StateProps {

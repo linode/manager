@@ -1,6 +1,7 @@
-import type { Image, Linode } from '@linode/api-v4';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
+
+import type { Image, Linode } from '@linode/api-v4';
 
 export const useImageAndLinodeGrantCheck = () => {
   const { data: profile } = useProfile();

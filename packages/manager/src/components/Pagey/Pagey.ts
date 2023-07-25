@@ -1,6 +1,7 @@
 import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import { clone } from 'ramda';
 import * as React from 'react';
+
 import { storage } from 'src/utilities/storage';
 
 /**
@@ -29,59 +30,44 @@ export type HandleOrderChange = (key: string, order?: Order) => void;
 
 export type Order = 'asc' | 'desc';
 
-export type OrderBy = undefined | string;
+export type OrderBy = string | undefined;
 
 interface State<T = {}> {
   count: number;
-  error?: APIError[];
-  loading: boolean;
-  isSorting?: boolean;
-  page: number;
-  pages?: number;
-  pageSize: number;
   data?: T[];
-  orderBy?: OrderBy;
-  order: Order;
+  error?: APIError[];
   filter: Filter;
+  isSorting?: boolean;
+  loading: boolean;
+  order: Order;
+  orderBy?: OrderBy;
+  page: number;
+  pageSize: number;
+  pages?: number;
   searching: boolean;
 }
 
 interface Options {
-  orderBy?: OrderBy;
-  order?: Order;
-  // Callback to be executed after successful request, with the component's own
   // props and the result of the request.
   cb?: (ownProps: any, response: ResourcePage<any>) => any;
+  order?: Order;
+  // Callback to be executed after successful request, with the component's own
+  orderBy?: OrderBy;
 }
 
 export interface PaginationProps<T> extends State<T> {
+  handleOrderChange: HandleOrderChange;
   handlePageChange: (v: number, showSpinner?: boolean) => void;
   handlePageSizeChange: (v: number) => void;
-  request: <U = {}>(update?: (v: T[]) => U) => Promise<void>;
-  handleOrderChange: HandleOrderChange;
   handleSearch: (newFilter: Filter) => void;
   onDelete: () => void;
+  request: <U = {}>(update?: (v: T[]) => U) => Promise<void>;
 }
 
 export default (requestFn: PaginatedRequest, options: Options = {}) => (
   Component: React.ComponentType<any>
 ) => {
   return class WrappedComponent extends React.PureComponent<any, State> {
-    state: State = {
-      count: 0,
-      loading: true,
-      isSorting: false,
-      page: 1,
-      pageSize: storage.pageSize.get() || 25,
-      error: undefined,
-      orderBy: options.orderBy,
-      order: options.order ?? ('asc' as Order),
-      filter: {},
-      searching: false,
-    };
-
-    mounted: boolean = false;
-
     componentDidMount() {
       this.mounted = true;
     }
@@ -90,8 +76,53 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       this.mounted = false;
     }
 
+    public render() {
+      return React.createElement(Component, {
+        ...this.props,
+        ...this.state,
+        handleOrderChange: this.handleOrderChange,
+        handlePageChange: this.handlePageChange,
+        handlePageSizeChange: this.handlePageSizeChange,
+        handleSearch: this.handleSearch,
+        onDelete: this.onDelete,
+        request: this.request,
+      });
+    }
+
+    public handleOrderChange = (
+      orderBy: string,
+      order: Order = 'asc',
+      page: number = 1
+    ) => {
+      this.setState({ isSorting: true, order, orderBy, page }, () =>
+        this.request()
+      );
+    };
+
+    public handlePageChange = (page: number) => {
+      /**
+       * change the page, make the request
+       */
+      this.setState({ page }, () => {
+        this.request();
+      });
+    };
+
+    public handlePageSizeChange = (pageSize: number) => {
+      this.setState({ page: 1, pageSize }, () => {
+        this.request();
+      });
+      storage.pageSize.set(pageSize);
+    };
+
+    public handleSearch = (filter: Filter) => {
+      this.setState({ filter, page: 1, searching: true }, () => this.request());
+    };
+
+    mounted: boolean = false;
+
     private onDelete = () => {
-      const { page, data } = this.state;
+      const { data, page } = this.state;
 
       /*
        * Basically, if we're on page 2 and the user deletes the last entity
@@ -138,62 +169,32 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
           if (this.mounted) {
             this.setState({
               count: response.results,
-              page: response.page,
-              pages: response.pages,
               data: map ? map(response.data) : response.data,
-              loading: false,
               error: undefined,
               isSorting: false,
+              loading: false,
+              page: response.page,
+              pages: response.pages,
               searching: false,
             });
           }
         })
         .catch((response) => {
-          this.setState({ loading: false, error: response });
+          this.setState({ error: response, loading: false });
         });
     };
 
-    public handlePageSizeChange = (pageSize: number) => {
-      this.setState({ pageSize, page: 1 }, () => {
-        this.request();
-      });
-      storage.pageSize.set(pageSize);
+    state: State = {
+      count: 0,
+      error: undefined,
+      filter: {},
+      isSorting: false,
+      loading: true,
+      order: options.order ?? ('asc' as Order),
+      orderBy: options.orderBy,
+      page: 1,
+      pageSize: storage.pageSize.get() || 25,
+      searching: false,
     };
-
-    public handlePageChange = (page: number) => {
-      /**
-       * change the page, make the request
-       */
-      this.setState({ page }, () => {
-        this.request();
-      });
-    };
-
-    public handleOrderChange = (
-      orderBy: string,
-      order: Order = 'asc',
-      page: number = 1
-    ) => {
-      this.setState({ orderBy, order, page, isSorting: true }, () =>
-        this.request()
-      );
-    };
-
-    public handleSearch = (filter: Filter) => {
-      this.setState({ filter, page: 1, searching: true }, () => this.request());
-    };
-
-    public render() {
-      return React.createElement(Component, {
-        ...this.props,
-        ...this.state,
-        handlePageChange: this.handlePageChange,
-        handlePageSizeChange: this.handlePageSizeChange,
-        request: this.request,
-        handleOrderChange: this.handleOrderChange,
-        handleSearch: this.handleSearch,
-        onDelete: this.onDelete,
-      });
-    }
   };
 };

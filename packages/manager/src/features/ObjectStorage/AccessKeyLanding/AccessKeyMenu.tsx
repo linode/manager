@@ -1,10 +1,12 @@
+import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import ActionMenu from 'src/components/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
 import { OpenAccessDrawer } from './types';
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-import { styled } from '@mui/material/styles';
 
 interface Props {
   label: string;
@@ -14,26 +16,26 @@ interface Props {
 }
 
 export const AccessKeyMenu = (props: Props) => {
-  const { openRevokeDialog, objectStorageKey, openDrawer } = props;
+  const { objectStorageKey, openDrawer, openRevokeDialog } = props;
 
   const actions = [
     {
-      title: 'Edit Label',
       onClick: () => {
         openDrawer('editing', objectStorageKey);
       },
+      title: 'Edit Label',
     },
     {
-      title: 'Permissions',
       onClick: () => {
         openDrawer('viewing', objectStorageKey);
       },
+      title: 'Permissions',
     },
     {
-      title: 'Revoke',
       onClick: () => {
         openRevokeDialog(objectStorageKey);
       },
+      title: 'Revoke',
     },
   ];
 
@@ -42,8 +44,8 @@ export const AccessKeyMenu = (props: Props) => {
       <Hidden mdDown>
         {actions.map((thisAction) => (
           <InlineMenuAction
-            key={thisAction.title}
             actionText={thisAction.title}
+            key={thisAction.title}
             onClick={thisAction.onClick}
           />
         ))}
@@ -61,7 +63,7 @@ export const AccessKeyMenu = (props: Props) => {
 const StyledInlineActionsContainer = styled('div', {
   label: 'StyledInlineActionsContainer',
 })(() => ({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   justifyContent: 'flex-end',
 }));

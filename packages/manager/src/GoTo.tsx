@@ -1,58 +1,61 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import MUIDialog from 'src/components/core/Dialog';
-import { useHistory } from 'react-router-dom';
+
 import useAccountManagement from './hooks/useAccountManagement';
+import useFlags from './hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  input: {
+    width: '100%',
+  },
   paper: {
-    position: 'absolute',
-    top: '10%',
-    overflow: 'visible',
-    '& .react-select__menu-list': {
-      padding: 0,
-      overflowX: 'auto',
-      maxHeight: '100% !important',
+    '& .MuiInput-root': {
+      border: 0,
+      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
     },
     '& .react-select__control': {
       backgroundColor: 'transparent',
-    },
-    '& .react-select__value-container': {
-      overflow: 'auto',
-      '& p': {
-        fontSize: '1rem',
-        overflow: 'visible',
-      },
     },
     '& .react-select__indicators': {
       display: 'none',
     },
     '& .react-select__menu': {
-      marginTop: 12,
-      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-      maxWidth: '100% !important',
       border: 0,
       borderRadius: 4,
+      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
+      marginTop: 12,
+      maxWidth: '100% !important',
+    },
+    '& .react-select__menu-list': {
+      maxHeight: '100% !important',
+      overflowX: 'auto',
+      padding: 0,
     },
     '& .react-select__option--is-focused': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
     },
-    '& .MuiInput-root': {
-      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-      border: 0,
+    '& .react-select__value-container': {
+      '& p': {
+        fontSize: '1rem',
+        overflow: 'visible',
+      },
+      overflow: 'auto',
     },
-  },
-  input: {
-    width: '100%',
+    overflow: 'visible',
+    position: 'absolute',
+    top: '10%',
   },
 }));
 
 interface Props {
-  open: boolean;
   onClose: () => void;
+  open: boolean;
 }
 
 type CombinedProps = Props;
@@ -60,7 +63,8 @@ type CombinedProps = Props;
 const GoTo: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const routerHistory = useHistory();
-  const { _isManagedAccount, _hasAccountAccess } = useAccountManagement();
+  const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
+  const flags = useFlags();
 
   const onSelect = (item: Item<string>) => {
     routerHistory.push(item.value);
@@ -70,18 +74,23 @@ const GoTo: React.FC<CombinedProps> = (props) => {
   const links = React.useMemo(
     () => [
       {
-        hide: !_isManagedAccount,
         display: 'Managed',
+        hide: !_isManagedAccount,
         href: '/managed',
       },
       {
+        activeLinks: ['/linodes', '/linodes/create'],
         display: 'Linodes',
         href: '/linodes',
-        activeLinks: ['/linodes', '/linodes/create'],
       },
       {
         display: 'Volumes',
         href: '/volumes',
+      },
+      {
+        display: 'Load Balancers',
+        hide: !flags.aglb,
+        href: '/loadbalancers',
       },
       {
         display: 'NodeBalancers',
@@ -109,9 +118,9 @@ const GoTo: React.FC<CombinedProps> = (props) => {
         href: '/kubernetes/clusters',
       },
       {
+        activeLinks: ['/object-storage/buckets', '/object-storage/access-keys'],
         display: 'Object Storage',
         href: '/object-storage/buckets',
-        activeLinks: ['/object-storage/buckets', '/object-storage/access-keys'],
       },
       {
         display: 'Longview',
@@ -123,8 +132,8 @@ const GoTo: React.FC<CombinedProps> = (props) => {
         href: '/linodes/create?type=One-Click',
       },
       {
-        hide: !_hasAccountAccess,
         display: 'Account',
+        hide: !_hasAccountAccess,
         href: '/account/billing',
       },
       {
@@ -157,28 +166,28 @@ const GoTo: React.FC<CombinedProps> = (props) => {
   return (
     <MUIDialog
       classes={dialogClasses}
-      title="Go To..."
-      open={props.open}
       onClose={props.onClose}
+      open={props.open}
+      title="Go To..."
     >
       {/* I was about to put a "@todo" item for mobile display, but realized
       keyboard shortcuts are not realistic on mobile devices. So I think an
       absolute width here is fine. */}
-      <div style={{ width: 400, maxHeight: 600 }}>
+      <div style={{ maxHeight: 600, width: 400 }}>
         <EnhancedSelect
-          label="Go To"
-          hideLabel
           // eslint-disable-next-line
           autoFocus
           blurInputOnSelect
-          options={options}
-          onChange={onSelect}
-          placeholder="Go to..."
-          openMenuOnFocus={false}
-          openMenuOnClick={false}
+          hideLabel
           isClearable={false}
           isMulti={false}
+          label="Go To"
           menuIsOpen={true}
+          onChange={onSelect}
+          openMenuOnClick={false}
+          openMenuOnFocus={false}
+          options={options}
+          placeholder="Go to..."
         />
       </div>
     </MUIDialog>

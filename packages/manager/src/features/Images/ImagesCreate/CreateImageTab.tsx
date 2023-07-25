@@ -1,4 +1,4 @@
-import { Disk, getLinodeDisks, Linode } from '@linode/api-v4/lib/linodes';
+import { Disk, Linode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
@@ -6,14 +6,15 @@ import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
-import { Box } from 'src/components/Box';
-import Paper from 'src/components/core/Paper';
-import { Typography } from 'src/components/Typography';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import { Paper } from 'src/components/Paper';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
@@ -25,24 +26,24 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(),
-    '& .MuiFormHelperText-root': {
-      marginBottom: theme.spacing(2),
-    },
-  },
   buttonGroup: {
-    marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'flex-end',
     },
   },
-  rawDiskWarning: {
-    maxWidth: 600,
-    width: '100%',
+  cloudInitCheckboxWrapper: {
+    marginLeft: 3,
+    marginTop: theme.spacing(2),
+  },
+  container: {
+    '& .MuiFormHelperText-root': {
+      marginBottom: theme.spacing(2),
+    },
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(),
+    paddingTop: theme.spacing(2),
   },
   diskAndPrice: {
     '& > div': {
@@ -52,14 +53,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginBottom: theme.spacing(),
     marginTop: theme.spacing(2),
-    width: '80%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
+    width: '80%',
   },
-  cloudInitCheckboxWrapper: {
-    marginTop: theme.spacing(2),
-    marginLeft: 3,
+  rawDiskWarning: {
+    maxWidth: 600,
+    width: '100%',
   },
 }));
 
@@ -74,22 +75,22 @@ const cloudInitTooltipMessage = (
 );
 
 export interface Props {
-  label?: string;
-  description?: string;
-  isCloudInit?: boolean;
-  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeIsCloudInit: () => void;
+  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  description?: string;
+  isCloudInit?: boolean;
+  label?: string;
 }
 
 export const CreateImageTab: React.FC<Props> = (props) => {
   const {
-    label,
-    description,
-    isCloudInit,
-    changeLabel,
     changeDescription,
     changeIsCloudInit,
+    changeLabel,
+    description,
+    isCloudInit,
+    label,
   } = props;
 
   const classes = useStyles();
@@ -104,7 +105,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
-  const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
+  const [selectedDisk, setSelectedDisk] = React.useState<null | string>('');
   const [disks, setDisks] = React.useState<Disk[]>([]);
   const [notice, setNotice] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
@@ -153,7 +154,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
     setSelectedLinode(linode ?? undefined);
   };
 
-  const handleDiskChange = (diskID: string | null) => {
+  const handleDiskChange = (diskID: null | string) => {
     // Clear any errors
     setErrors(undefined);
     setSelectedDisk(diskID);
@@ -166,10 +167,10 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
     const safeDescription = description ?? '';
     createImage({
+      cloud_init: isCloudInit ? isCloudInit : undefined,
+      description: safeDescription,
       diskID: Number(selectedDisk),
       label,
-      description: safeDescription,
-      cloud_init: isCloudInit ? isCloudInit : undefined,
     })
       .then((_) => {
         resetEventsPolling();
@@ -211,20 +212,20 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const rawDiskWarning = (
     <Notice
       className={classes.rawDiskWarning}
-      spacingTop={16}
       spacingBottom={32}
-      warning
+      spacingTop={16}
       text={rawDiskWarningText}
+      warning
     />
   );
 
   const hasErrorFor = getAPIErrorFor(
     {
-      linode_id: 'Linode',
       disk_id: 'Disk',
+      label: 'Label',
+      linode_id: 'Linode',
       region: 'Region',
       size: 'Size',
-      label: 'Label',
     },
     errors
   );
@@ -244,35 +245,35 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         />
       ) : null}
       {generalError ? (
-        <Notice error text={generalError} data-qa-notice />
+        <Notice data-qa-notice error text={generalError} />
       ) : null}
-      {notice ? <Notice info text={notice} data-qa-notice /> : null}
+      {notice ? <Notice data-qa-notice info text={notice} /> : null}
 
       <LinodeSelectV2
-        value={selectedLinode?.id || null}
-        errorText={linodeError}
-        disabled={!canCreateImage}
-        onSelectionChange={(linode) => handleLinodeChange(linode)}
         optionsFilter={(linode) =>
           availableLinodesToImagize?.includes(linode.id) ?? true
         }
+        disabled={!canCreateImage}
+        errorText={linodeError}
+        onSelectionChange={(linode) => handleLinodeChange(linode)}
         required
+        value={selectedLinode?.id || null}
       />
 
       <Box
-        display="flex"
         alignItems="flex-end"
         className={classes.diskAndPrice}
+        display="flex"
       >
         <DiskSelect
-          selectedDisk={selectedDisk}
-          disks={disks}
-          diskError={diskError}
-          handleChange={handleDiskChange}
-          updateFor={[disks, selectedDisk, diskError, classes]}
-          disabled={!canCreateImage}
-          required
           data-qa-disk-select
+          disabled={!canCreateImage}
+          diskError={diskError}
+          disks={disks}
+          handleChange={handleDiskChange}
+          required
+          selectedDisk={selectedDisk}
+          updateFor={[disks, selectedDisk, diskError, classes]}
         />
       </Box>
       {isRawDisk ? rawDiskWarning : null}
@@ -282,34 +283,34 @@ export const CreateImageTab: React.FC<Props> = (props) => {
             checked={isCloudInit}
             onChange={changeIsCloudInit}
             text="This image is cloud-init compatible"
-            toolTipText={cloudInitTooltipMessage}
             toolTipInteractive
+            toolTipText={cloudInitTooltipMessage}
           />
         </Box>
       ) : null}
       <>
         <TextField
-          label="Label"
-          value={label}
-          onChange={changeLabel}
+          data-qa-image-label
+          disabled={!canCreateImage}
           error={Boolean(labelError)}
           errorText={labelError}
-          disabled={!canCreateImage}
-          data-qa-image-label
+          label="Label"
+          onChange={changeLabel}
+          value={label}
         />
         <TextField
-          label="Description"
-          multiline
-          rows={1}
-          value={description}
-          onChange={changeDescription}
+          data-qa-image-description
+          disabled={!canCreateImage}
           error={Boolean(descriptionError)}
           errorText={descriptionError}
-          disabled={!canCreateImage}
-          data-qa-image-description
+          label="Description"
+          multiline
+          onChange={changeDescription}
+          rows={1}
+          value={description}
         />
       </>
-      <Typography variant="body1" className={classes.helperText}>
+      <Typography className={classes.helperText} variant="body1">
         Custom Images are billed at $0.10/GB per month.{' '}
         <Link to="https://www.linode.com/docs/products/tools/images/guides/capture-an-image/">
           Learn more about requirements and considerations.{' '}
@@ -321,18 +322,18 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         </Link>
       </Typography>
       <Box
-        display="flex"
-        justifyContent="flex-end"
         alignItems="center"
-        flexWrap="wrap"
         className={classes.buttonGroup}
+        display="flex"
+        flexWrap="wrap"
+        justifyContent="flex-end"
       >
         <Button
-          onClick={onSubmit}
-          disabled={requirementsMet || !canCreateImage}
-          loading={submitting}
           buttonType="primary"
           data-qa-submit
+          disabled={requirementsMet || !canCreateImage}
+          loading={submitting}
+          onClick={onSubmit}
         >
           Create Image
         </Button>

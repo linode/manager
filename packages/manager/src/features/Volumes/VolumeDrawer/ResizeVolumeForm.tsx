@@ -1,14 +1,16 @@
 import { ResizeVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
-import Form from 'src/components/core/Form';
+
 import { Notice } from 'src/components/Notice/Notice';
+import Form from 'src/components/core/Form';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useResizeVolumeMutation } from 'src/queries/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
@@ -16,21 +18,21 @@ import VolumesActionsPanel from './VolumesActionsPanel';
 
 interface Props {
   onClose: () => void;
-  volumeSize: number;
+  onSuccess: (volumeLabel: string, message?: string) => void;
+  readOnly?: boolean;
   volumeId: number;
   volumeLabel: string;
-  readOnly?: boolean;
-  onSuccess: (volumeLabel: string, message?: string) => void;
+  volumeSize: number;
 }
 
 export const ResizeVolumeForm = (props: Props) => {
   const {
-    volumeId,
-    volumeSize,
     onClose,
-    volumeLabel,
     onSuccess,
     readOnly,
+    volumeId,
+    volumeLabel,
+    volumeSize,
   } = props;
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
@@ -40,15 +42,13 @@ export const ResizeVolumeForm = (props: Props) => {
 
   return (
     <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
       onSubmit={(
         values,
-        { resetForm, setSubmitting, setStatus, setErrors }
+        { resetForm, setErrors, setStatus, setSubmitting }
       ) => {
         setSubmitting(true);
 
-        resizeVolume({ volumeId, size: Number(values.size) })
+        resizeVolume({ size: Number(values.size), volumeId })
           .then((_) => {
             resetForm({ values: initialValues });
             setSubmitting(false);
@@ -69,6 +69,8 @@ export const ResizeVolumeForm = (props: Props) => {
             );
           });
       }}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
     >
       {({
         errors,
@@ -84,35 +86,35 @@ export const ResizeVolumeForm = (props: Props) => {
           <Form>
             {status && (
               <NoticePanel
-                success={status.success}
                 error={status.generalError}
+                success={status.success}
               />
             )}
             {readOnly && (
               <Notice
-                text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
                 error={true}
                 important
+                text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
               />
             )}
             <SizeField
+              disabled={readOnly}
               error={errors.size}
               name="size"
               onBlur={handleBlur}
               onChange={handleChange}
-              value={values.size}
               resize={volumeSize}
-              disabled={readOnly}
+              value={values.size}
             />
-            <PricePanel value={values.size} currentSize={volumeSize} />
+            <PricePanel currentSize={volumeSize} value={values.size} />
             <VolumesActionsPanel
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-              disabled={readOnly}
               onCancel={() => {
                 resetForm();
                 onClose();
               }}
+              disabled={readOnly}
+              isSubmitting={isSubmitting}
+              onSubmit={handleSubmit}
               submitText="Resize Volume"
             />
           </Form>

@@ -1,4 +1,5 @@
 import { linodeFactory } from 'src/factories';
+
 import { mapIdsToLinodes } from './mapIdsToLinodes';
 
 describe('mapIdsToLinodes', () => {

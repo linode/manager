@@ -4,19 +4,21 @@ import {
   within,
 } from '@testing-library/react';
 import * as React from 'react';
+
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import { accountSettingsFactory } from 'src/factories';
+import { grantsFactory } from 'src/factories/grants';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
+import { profileFactory } from 'src/factories/profile';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import {
   CombinedProps,
-  formatPrice,
   LONGVIEW_FREE_ID,
   LongviewPlans,
+  formatPrice,
 } from './LongviewPlans';
-import { rest, server } from 'src/mocks/testServer';
-import { profileFactory } from 'src/factories/profile';
-import { grantsFactory } from 'src/factories/grants';
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
 
@@ -24,9 +26,9 @@ const props: CombinedProps = {
   subscriptionRequestHook: {
     data: mockLongviewSubscriptions,
     lastUpdated: 0,
-    update: jest.fn(),
-    transformData: jest.fn(),
     loading: false,
+    transformData: jest.fn(),
+    update: jest.fn(),
   },
 };
 

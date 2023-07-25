@@ -1,12 +1,13 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
+
+import { isInProgressEvent } from 'src/store/events/event.helpers';
 import {
   isEventRelevantToLinode,
   isPrimaryEntity,
   isSecondaryEntity,
 } from 'src/store/events/event.selectors';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
+import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 export const transitionStatus = [
   'booting',
@@ -24,14 +25,14 @@ export const transitionStatus = [
 
 const transitionActionMap: Partial<Record<EventAction, string>> = {
   backups_restore: 'Backups Restore',
-  linode_snapshot: 'Snapshot',
-  linode_mutate: 'Upgrading',
+  disk_duplicate: 'Disk Duplicating',
+  disk_imagize: 'Capturing Image',
+  disk_resize: 'Disk Resizing',
   linode_clone: 'Cloning',
   linode_migrate_datacenter: 'Migrating',
-  disk_resize: 'Disk Resizing',
-  disk_imagize: 'Capturing Image',
-  disk_duplicate: 'Disk Duplicating',
+  linode_mutate: 'Upgrading',
   linode_rebuild: 'Rebuilding',
+  linode_snapshot: 'Snapshot',
 };
 
 export const linodeInTransition = (

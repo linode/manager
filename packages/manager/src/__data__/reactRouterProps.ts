@@ -4,31 +4,31 @@ type History = RouteComponentProps<{}>['history'];
 type Location = History['location'];
 
 export const mockLocation: Location = {
+  hash: '',
   pathname: '/',
   search: '?query=search',
   state: {},
-  hash: '',
 };
 
 export const match: RouteComponentProps<{}>['match'] = {
-  params: 'test',
   isExact: false,
+  params: 'test',
   path: 'localhost',
   url: 'localhost',
 };
 
 export const history: History = {
-  length: 1,
   action: 'POP',
-  location: mockLocation,
-  push: jest.fn(),
-  replace: jest.fn(),
+  block: jest.fn(),
+  createHref: jest.fn(),
   go: jest.fn(),
   goBack: jest.fn(),
   goForward: jest.fn(),
-  block: jest.fn(),
+  length: 1,
   listen: jest.fn(),
-  createHref: jest.fn(),
+  location: mockLocation,
+  push: jest.fn(),
+  replace: jest.fn(),
 };
 
 export const reactRouterProps: RouteComponentProps<any> = {

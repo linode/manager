@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import { sortBy } from 'ramda';
+
 import { evenizeNumber } from './evenizeNumber';
 
 export const initWindows = (timezone: string, unshift?: boolean) => {

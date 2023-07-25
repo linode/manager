@@ -1,23 +1,24 @@
 import { ManagedContact } from '@linode/api-v4/lib/managed';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import AddNewLink from 'src/components/AddNewLink';
-import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { Typography } from 'src/components/Typography';
+
+import AddNewLink from 'src/components/AddNewLink';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
 import { useDialog } from 'src/hooks/useDialog';
 import useOpenClose from 'src/hooks/useOpenClose';
 import {
@@ -25,11 +26,21 @@ import {
   useDeleteContactMutation,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ManagedContactGroup, Mode } from './common';
+
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
+import { ManagedContactGroup, Mode } from './common';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  addNewWrapper: {
+    '&.MuiGrid-item': {
+      paddingRight: 0,
+      paddingTop: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(),
+    },
+  },
   copy: {
     fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
@@ -42,15 +53,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     margin: 0,
     width: '100%',
   },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-      paddingRight: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
 }));
 
 const Contacts = () => {
@@ -59,15 +61,15 @@ const Contacts = () => {
 
   const {
     data,
-    isLoading,
-    error,
     dataUpdatedAt,
+    error,
+    isLoading,
   } = useAllManagedContactsQuery();
 
   const contacts = data || [];
 
   const [selectedContactId, setSelectedContactId] = React.useState<
-    number | null
+    null | number
   >(null);
 
   const [contactDrawerMode, setContactDrawerMode] = React.useState<Mode>(
@@ -77,11 +79,11 @@ const Contacts = () => {
   const { mutateAsync: deleteContact } = useDeleteContactMutation();
 
   const {
-    dialog,
-    openDialog,
     closeDialog,
-    submitDialog,
+    dialog,
     handleError,
+    openDialog,
+    submitDialog,
   } = useDialog<number>((id) => deleteContact({ id: id || -1 }));
 
   const handleDelete = () => {
@@ -114,11 +116,11 @@ const Contacts = () => {
         group, then assign the group to the appropriate monitor(s).
       </Typography>
       <Grid
-        ref={contactsTableRef}
+        alignItems="center"
         className={classes.header}
         container
-        alignItems="center"
         justifyContent="flex-end"
+        ref={contactsTableRef}
         spacing={2}
       >
         <Grid className={classes.addNewWrapper} sx={{ paddingRight: 0 }}>
@@ -131,7 +133,7 @@ const Contacts = () => {
           />
         </Grid>
       </Grid>
-      <OrderBy data={contacts} orderBy="name" order="asc">
+      <OrderBy data={contacts} order="asc" orderBy="name">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
             <Paginate data={orderedData} scrollToRef={contactsTableRef}>
@@ -150,44 +152,44 @@ const Contacts = () => {
                         <TableRow>
                           <TableSortCell
                             active={orderBy === 'name'}
-                            label={'name'}
                             direction={order}
                             handleClick={handleOrderChange}
+                            label={'name'}
                           >
                             Name
                           </TableSortCell>
                           <Hidden smDown>
                             <TableSortCell
                               active={orderBy === 'group'}
-                              label={'group'}
                               direction={order}
                               handleClick={handleOrderChange}
+                              label={'group'}
                             >
                               Group
                             </TableSortCell>
                           </Hidden>
                           <TableSortCell
                             active={orderBy === 'email'}
-                            label={'email'}
                             direction={order}
                             handleClick={handleOrderChange}
+                            label={'email'}
                           >
                             E-mail
                           </TableSortCell>
                           <Hidden xsDown>
                             <TableSortCell
                               active={orderBy === 'phone:primary'}
-                              label={'phone:primary'}
                               direction={order}
                               handleClick={handleOrderChange}
+                              label={'phone:primary'}
                             >
                               Primary Phone
                             </TableSortCell>
                             <TableSortCell
                               active={orderBy === 'phone:secondary'}
-                              label={'phone:secondary'}
                               direction={order}
                               handleClick={handleOrderChange}
+                              label={'phone:secondary'}
                             >
                               Secondary Phone
                             </TableSortCell>
@@ -197,14 +199,6 @@ const Contacts = () => {
                       </TableHead>
                       <TableBody>
                         <ContactTableContact
-                          contacts={paginatedData}
-                          loading={isLoading}
-                          lastUpdated={dataUpdatedAt}
-                          openDrawer={(contactId: number) => {
-                            setSelectedContactId(contactId);
-                            setContactDrawerMode('edit');
-                            contactDrawer.open();
-                          }}
                           openDialog={(contactId: number) => {
                             const selectedContact = contacts.find(
                               (thisContact) => thisContact.id === contactId
@@ -214,17 +208,25 @@ const Contacts = () => {
                               : '';
                             openDialog(contactId, label);
                           }}
+                          openDrawer={(contactId: number) => {
+                            setSelectedContactId(contactId);
+                            setContactDrawerMode('edit');
+                            contactDrawer.open();
+                          }}
+                          contacts={paginatedData}
                           error={error}
+                          lastUpdated={dataUpdatedAt}
+                          loading={isLoading}
                         />
                       </TableBody>
                     </Table>
                     <PaginationFooter
                       count={count}
+                      eventCategory="managed contacts"
                       handlePageChange={handlePageChange}
                       handleSizeChange={handlePageSizeChange}
                       page={page}
                       pageSize={pageSize}
-                      eventCategory="managed contacts"
                     />
                   </>
                 );
@@ -234,20 +236,20 @@ const Contacts = () => {
         }}
       </OrderBy>
       <DeletionDialog
-        open={dialog.isOpen}
-        label={dialog.entityLabel || ''}
         entity="contact"
-        loading={dialog.isLoading}
         error={dialog.error}
+        label={dialog.entityLabel || ''}
+        loading={dialog.isLoading}
         onClose={closeDialog}
         onDelete={handleDelete}
+        open={dialog.isOpen}
       />
       <ContactDrawer
-        mode={contactDrawerMode}
-        isOpen={contactDrawer.isOpen}
         closeDrawer={contactDrawer.close}
         contact={contacts.find((contact) => contact.id === selectedContactId)}
         groups={groups}
+        isOpen={contactDrawer.isOpen}
+        mode={contactDrawerMode}
       />
     </>
   );
@@ -278,8 +280,8 @@ export const generateGroupsFromContacts = (
     // If not, add a new group.
     if (idx === -1) {
       groups.push({
-        groupName: contact.group,
         contactNames: [contact.name],
+        groupName: contact.group,
       });
     } else {
       // If we've already tracked the group, just add this contact's name.

@@ -1,29 +1,31 @@
+import Popper from '@mui/material/Popper';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
+
 import Bell from 'src/assets/icons/notification.svg';
-import { useTheme, styled } from '@mui/material/styles';
-import TopMenuIcon, { StyledTopMenuIconWrapper } from '../TopMenuIcon';
-import Notifications from 'src/features/NotificationCenter/Notifications';
-import {
-  menuId,
-  menuButtonId,
-  notificationContext as _notificationContext,
-} from 'src/features/NotificationCenter/NotificationContext';
-import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
-import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
-import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import { Button } from 'src/components/Button/Button';
+import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
-import Paper from 'src/components/core/Paper';
-import Popper from '@mui/material/Popper';
+import { Paper } from 'src/components/Paper';
 import Events from 'src/features/NotificationCenter/Events';
+import {
+  notificationContext as _notificationContext,
+  menuButtonId,
+  menuId,
+} from 'src/features/NotificationCenter/NotificationContext';
+import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
+import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
+import Notifications from 'src/features/NotificationCenter/Notifications';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import usePrevious from 'src/hooks/usePrevious';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import usePrevious from 'src/hooks/usePrevious';
 import { isPropValid } from 'src/utilities/isPropValid';
+
+import { StyledTopMenuIconWrapper, TopMenuIcon } from '../TopMenuIcon';
 
 const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
   label: 'NotificationIconWrapper',
@@ -111,20 +113,20 @@ export const NotificationMenu = () => {
     <>
       <TopMenuIcon title="Notifications">
         <Button
-          id={menuButtonId}
-          ref={anchorRef}
-          aria-label="Notifications"
-          aria-haspopup="true"
-          onClick={handleNotificationMenuToggle}
           sx={{
-            margin: 0,
-            padding: 0,
-            minWidth: 'unset',
             '&:hover': {
               backgroundColor: 'unset',
             },
+            margin: 0,
+            minWidth: 'unset',
+            padding: 0,
           }}
+          aria-haspopup="true"
+          aria-label="Notifications"
           disableRipple
+          id={menuButtonId}
+          onClick={handleNotificationMenuToggle}
+          ref={anchorRef}
         >
           <NotificationIconWrapper isMenuOpen={notificationContext.menuOpen}>
             <Bell />
@@ -136,40 +138,40 @@ export const NotificationMenu = () => {
       </TopMenuIcon>
 
       <Popper
-        open={notificationContext.menuOpen}
-        anchorEl={anchorRef.current}
-        transition
-        disablePortal
         sx={{
           boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-          zIndex: 3000,
-          top: '50px !important',
           left: 'auto !important',
-          right: '15px',
-          width: '430px',
-          position: 'absolute !important',
           maxHeight: 'calc(100vh - 150px)',
           overflowY: 'auto',
+          position: 'absolute !important',
+          right: '15px',
           [theme.breakpoints.down('sm')]: {
             right: 0,
             width: '100%',
           },
+          top: '50px !important',
+          width: '430px',
+          zIndex: 3000,
         }}
+        anchorEl={anchorRef.current}
+        disablePortal
+        open={notificationContext.menuOpen}
+        transition
       >
         <ClickAwayListener onClickAway={handleClose}>
           <MenuList
-            id={menuId}
             autoFocusItem={notificationContext.menuOpen}
+            id={menuId}
             onKeyDown={handleMenuListKeyDown}
           >
             <WrapperMenuItem
               sx={{
-                boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-                whiteSpace: 'initial',
                 border: 'none',
-                padding: 0,
+                boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
                 cursor: 'default',
                 display: 'block',
+                padding: 0,
+                whiteSpace: 'initial',
               }}
               disableRipple
             >

@@ -1,7 +1,9 @@
 import { screen } from '@testing-library/react';
 import * as React from 'react';
+
 import { stackScriptFactory } from 'src/factories/stackscripts';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { StackScript } from './StackScript';
 
 describe('StackScript', () => {

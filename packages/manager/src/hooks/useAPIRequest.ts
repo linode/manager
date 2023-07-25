@@ -1,14 +1,14 @@
-import produce from 'immer';
 import { APIError } from '@linode/api-v4/lib/types';
+import produce from 'immer';
 import { useEffect, useState } from 'react';
 
 export interface UseAPIRequest<T> {
   data: T;
-  loading: boolean;
-  lastUpdated: number;
-  update: () => void;
-  transformData: (fn: (data: T) => void) => void;
   error?: APIError[];
+  lastUpdated: number;
+  loading: boolean;
+  transformData: (fn: (data: T) => void) => void;
+  update: () => void;
 }
 
 // @todo: write a README for this hook.
@@ -100,5 +100,5 @@ export const useAPIRequest = <T>(
     setData(produce<T, T>(data, fn));
   };
 
-  return { data, loading, lastUpdated, error, update: _request, transformData };
+  return { data, error, lastUpdated, loading, transformData, update: _request };
 };

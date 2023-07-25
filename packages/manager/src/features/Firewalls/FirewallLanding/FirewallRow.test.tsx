@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
+
 import { firewalls } from 'src/__data__/firewalls';
 import {
   firewallDeviceFactory,
@@ -7,10 +8,11 @@ import {
 } from 'src/factories/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 import {
-  renderWithTheme,
   mockMatchMedia,
+  renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
+
 import {
   FirewallRow,
   getCountOfRules,

@@ -1,7 +1,9 @@
 import { PaymentMethod, PaymentType } from '@linode/api-v4';
-import * as React from 'react';
-import { Chip } from 'src/components/Chip';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Chip } from 'src/components/Chip';
 import {
   getIcon as getTPPIcon,
   thirdPartyPaymentMap,
@@ -9,12 +11,11 @@ import {
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
-import { useTheme } from '@mui/material/styles';
 
 interface Props {
+  handlePaymentMethodChange: (id: number, cardExpired: boolean) => void;
   paymentMethod: PaymentMethod;
   paymentMethodId: number;
-  handlePaymentMethodChange: (id: number, cardExpired: boolean) => void;
 }
 
 const getIsCardExpired = (paymentMethod: PaymentMethod) => {
@@ -61,8 +62,8 @@ const getSubHeading = (paymentMethod: PaymentMethod, isExpired: boolean) => {
 
 export const PaymentMethodCard = (props: Props) => {
   const theme = useTheme();
-  const { paymentMethod, paymentMethodId, handlePaymentMethodChange } = props;
-  const { id, type, is_default } = paymentMethod;
+  const { handlePaymentMethodChange, paymentMethod, paymentMethodId } = props;
+  const { id, is_default, type } = paymentMethod;
 
   const heading = getHeading(paymentMethod, type);
   const cardIsExpired = getIsCardExpired(paymentMethod);
@@ -74,14 +75,14 @@ export const PaymentMethodCard = (props: Props) => {
   };
 
   const sxVariant = {
-    paddingLeft: { xs: 0, sm: 1 },
     flexShrink: 0,
+    paddingLeft: { sm: 1, xs: 0 },
   };
 
   const renderVariant = () => {
     return is_default ? (
-      <Grid xs={3} md={2} sx={sxVariant}>
-        <Chip label="DEFAULT" component="span" size="small" />
+      <Grid md={2} sx={sxVariant} xs={3}>
+        <Chip component="span" label="DEFAULT" size="small" />
       </Grid>
     ) : null;
   };
@@ -89,30 +90,30 @@ export const PaymentMethodCard = (props: Props) => {
   return (
     <Grid xs={12}>
       <SelectionCard
-        checked={id === paymentMethodId}
-        onClick={() => handlePaymentMethodChange(id, cardIsExpired)}
-        renderIcon={renderIcon}
-        renderVariant={renderVariant}
-        heading={heading}
-        subheadings={[subHeading]}
-        sxCardBaseIcon={{
-          justifyContent: 'center',
-          padding: 0,
-          width: 45,
-        }}
-        sxGrid={{
-          minWidth: '100%',
-          padding: 0,
-        }}
         sxCardBase={{
           flexWrap: 'nowrap',
         }}
         sxCardBaseHeading={{
           flex: 'inherit',
         }}
+        sxCardBaseIcon={{
+          justifyContent: 'center',
+          padding: 0,
+          width: 45,
+        }}
         sxCardBaseSubheading={{
           color: cardIsExpired ? theme.color.red : undefined,
         }}
+        sxGrid={{
+          minWidth: '100%',
+          padding: 0,
+        }}
+        checked={id === paymentMethodId}
+        heading={heading}
+        onClick={() => handlePaymentMethodChange(id, cardIsExpired)}
+        renderIcon={renderIcon}
+        renderVariant={renderVariant}
+        subheadings={[subHeading]}
       />
     </Grid>
   );

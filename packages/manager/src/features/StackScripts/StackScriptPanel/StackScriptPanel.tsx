@@ -3,9 +3,11 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 import RenderGuard from 'src/components/RenderGuard';
 import { useProfile } from 'src/queries/profile';
+
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -22,10 +24,10 @@ export interface ExtendedLinode extends Linode {
 
 interface Props {
   error?: string;
-  publicImages: Record<string, Image>;
-  queryString: string;
   history: RouteComponentProps<{}>['history'];
   location: RouteComponentProps<{}>['location'];
+  publicImages: Record<string, Image>;
+  queryString: string;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -37,30 +39,30 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = (props) => {
 
   const tabs: NavTab[] = [
     {
-      title: 'Account StackScripts',
-      routeName: `/stackscripts/account`,
       render: (
         <StackScriptPanelContent
           category="account"
+          currentUser={username}
           key="account-tab"
           publicImages={publicImages}
-          currentUser={username}
           request={getMineAndAccountStackScripts}
         />
       ),
+      routeName: `/stackscripts/account`,
+      title: 'Account StackScripts',
     },
     {
-      title: 'Community StackScripts',
-      routeName: `/stackscripts/community`,
       render: (
         <StackScriptPanelContent
           category="community"
+          currentUser={username}
           key="community-tab"
           publicImages={publicImages}
-          currentUser={username}
           request={getCommunityStackscripts}
         />
       ),
+      routeName: `/stackscripts/community`,
+      title: 'Community StackScripts',
     },
   ];
 

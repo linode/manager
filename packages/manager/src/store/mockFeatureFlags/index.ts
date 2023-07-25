@@ -1,6 +1,7 @@
-import actionCreatorFactory, { isType } from 'typescript-fsa';
-import { FlagSet } from 'src/featureFlags';
 import { Reducer } from 'redux';
+import actionCreatorFactory, { isType } from 'typescript-fsa';
+
+import { FlagSet } from 'src/featureFlags';
 
 export const actionCreator = actionCreatorFactory(
   '@@manager/mock-feature-flags'

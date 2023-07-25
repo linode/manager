@@ -1,15 +1,17 @@
 import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
+import { QueryClient } from 'react-query';
+
 import {
   abuseTicketNotificationFactory,
   notificationFactory,
 } from 'src/factories/notification';
-import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
-import { AbuseTicketBanner } from './AbuseTicketBanner';
-import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
-import { rest, server } from 'src/mocks/testServer';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { QueryClient } from 'react-query';
+import { rest, server } from 'src/mocks/testServer';
+import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+
+import { AbuseTicketBanner } from './AbuseTicketBanner';
 
 const TICKET_TESTID = 'abuse-ticket-link';
 

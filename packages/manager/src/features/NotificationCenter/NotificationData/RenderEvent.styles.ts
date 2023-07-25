@@ -1,20 +1,21 @@
+import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
+
 import { Box } from 'src/components/Box';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
-import { makeStyles } from 'tss-react/mui';
-import { styled } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 
 export const RenderEventStyledBox = styled(Box, {
   label: 'StyledBox',
 })(({ theme }) => ({
-  color: theme.textColors.tableHeader,
-  paddingLeft: '20px',
-  paddingRight: '20px',
   '&:hover': {
     backgroundColor: theme.bg.app,
   },
+  color: theme.textColors.tableHeader,
   gap: 16,
   paddingBottom: 12,
+  paddingLeft: '20px',
+  paddingRight: '20px',
   paddingTop: 12,
   width: '100%',
 }));

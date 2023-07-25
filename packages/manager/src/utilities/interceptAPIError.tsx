@@ -1,10 +1,10 @@
 import { APIError } from '@linode/api-v4/lib/types';
 
 interface Intercept {
-  condition: (e: APIError) => boolean;
-  replacementText: JSX.Element | string;
   /** optional callback to fire when error is matched correctly */
   callback?: () => void;
+  condition: (e: APIError) => boolean;
+  replacementText: JSX.Element | string;
 }
 
 export const interceptErrors = (

@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { LongviewService } from 'src/features/Longview/request.types';
@@ -12,19 +13,19 @@ export const LongviewServiceRow: React.FC<Props> = (props) => {
 
   return (
     <TableRow ariaLabel={service.name} data-testid="longview-service-row">
-      <TableCell parentColumn="Process" data-qa-service-process>
+      <TableCell data-qa-service-process parentColumn="Process">
         {service.name}
       </TableCell>
-      <TableCell parentColumn="User" data-qa-service-user>
+      <TableCell data-qa-service-user parentColumn="User">
         {service.user}
       </TableCell>
-      <TableCell parentColumn="Protocol" data-qa-service-protocol>
+      <TableCell data-qa-service-protocol parentColumn="Protocol">
         {service.type}
       </TableCell>
-      <TableCell parentColumn="Port" data-qa-service-port>
+      <TableCell data-qa-service-port parentColumn="Port">
         {service.port}
       </TableCell>
-      <TableCell parentColumn="IP" data-qa-service-ip>
+      <TableCell data-qa-service-ip parentColumn="IP">
         {service.ip}
       </TableCell>
     </TableRow>

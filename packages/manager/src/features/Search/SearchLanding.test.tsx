@@ -1,27 +1,28 @@
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
+import { QueryClient } from 'react-query';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { searchbarResult1 } from 'src/__data__/searchResults';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+
 import { CombinedProps as Props, SearchLanding } from './SearchLanding';
 import { emptyResults } from './utils';
-import { rest, server } from 'src/mocks/testServer';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { QueryClient } from 'react-query';
 
 const props: Props = {
+  combinedResults: [],
   entities: [],
   entitiesLoading: false,
-  searchResultsByEntity: emptyResults,
-  combinedResults: [],
-  search: jest.fn(),
   errors: {
     hasErrors: false,
     linodes: false,
     nodebalancers: false,
   },
+  search: jest.fn(),
+  searchResultsByEntity: emptyResults,
   ...reactRouterProps,
 };
 
@@ -51,7 +52,7 @@ describe('Component', () => {
       '?query=search',
       propsWithResults
     );
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <SearchLanding {...newProps} />,
       { queryClient }
     );

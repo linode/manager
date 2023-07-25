@@ -1,13 +1,15 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
 import { Button } from 'src/components/Button/Button';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
+
 import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 interface Props {
@@ -40,16 +42,16 @@ export const KubernetesPlanSelection = ({
     <Grid xs={12}>
       <StyledInputOuter>
         <EnhancedNumberInput
-          value={count}
-          setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
           disabled={disabled}
+          setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
+          value={count}
         />
         {onAdd && (
           <Button
             buttonType="primary"
-            onClick={() => onAdd(type.id, count)}
             disabled={count < 1 || disabled}
-            sx={{ minWidth: '85px', marginLeft: '10px' }}
+            onClick={() => onAdd(type.id, count)}
+            sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
             Add
           </Button>
@@ -63,8 +65,8 @@ export const KubernetesPlanSelection = ({
       <Hidden mdDown>
         <StyledDisabledTableRow
           data-qa-plan-row={type.formattedLabel}
-          key={type.id}
           disabled={disabled}
+          key={type.id}
         >
           <TableCell data-qa-plan-name>{type.heading}</TableCell>
           <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
@@ -81,24 +83,24 @@ export const KubernetesPlanSelection = ({
           <TableCell>
             <StyledInputOuter>
               <EnhancedNumberInput
-                inputLabel={`edit-quantity-${type.id}`}
-                value={count}
-                setValue={(newCount: number) =>
-                  updatePlanCount(type.id, newCount)
-                }
                 disabled={
                   // When on the add pool flow, we only want the current input to be active,
                   // unless we've just landed on the form or all the inputs are empty.
                   (!onAdd && Boolean(selectedID) && type.id !== selectedID) ||
                   disabled
                 }
+                setValue={(newCount: number) =>
+                  updatePlanCount(type.id, newCount)
+                }
+                inputLabel={`edit-quantity-${type.id}`}
+                value={count}
               />
               {onAdd && (
                 <Button
                   buttonType="primary"
-                  onClick={() => onAdd(type.id, count)}
                   disabled={count < 1 || disabled}
-                  sx={{ minWidth: '85px', marginLeft: '10px' }}
+                  onClick={() => onAdd(type.id, count)}
+                  sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
                   Add
                 </Button>
@@ -110,13 +112,13 @@ export const KubernetesPlanSelection = ({
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>
         <SelectionCard
-          key={type.id}
           checked={type.id === String(selectedID)}
-          onClick={() => onSelect(type.id)}
-          heading={type.heading}
-          subheadings={subHeadings}
           disabled={disabled}
+          heading={type.heading}
+          key={type.id}
+          onClick={() => onSelect(type.id)}
           renderVariant={renderVariant}
+          subheadings={subHeadings}
         />
       </Hidden>
     </React.Fragment>

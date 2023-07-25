@@ -1,22 +1,18 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { ImageStatus } from '@linode/api-v4/lib/images/types';
-import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface Handlers {
-  onRestore: (imageID: string) => void;
+  [index: string]: any;
+  onCancelFailed: (imageID: string) => void;
+  onDelete: (label: string, imageID: string, status?: ImageStatus) => void;
   onDeploy: (imageID: string) => void;
   onEdit: (label: string, description: string, imageID: string) => void;
-  onDelete: (label: string, imageID: string, status?: ImageStatus) => void;
+  onRestore: (imageID: string) => void;
   onRetry: (imageID: string, label: string, description: string) => void;
-  onCancelFailed: (imageID: string) => void;
-  [index: string]: any;
 }
 
 interface Props extends Handlers {
@@ -30,21 +26,18 @@ interface Props extends Handlers {
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-
   const {
     description,
+    event,
     id,
     label,
-    status,
-    event,
-    onRestore,
+    onCancelFailed,
+    onDelete,
     onDeploy,
     onEdit,
-    onDelete,
+    onRestore,
     onRetry,
-    onCancelFailed,
+    status,
   } = props;
 
   const actions: Action[] = React.useMemo(() => {
@@ -54,54 +47,54 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
     return isFailed
       ? [
           {
-            title: 'Retry',
             onClick: () => {
               onRetry(id, label, description);
             },
+            title: 'Retry',
           },
           {
-            title: 'Cancel',
             onClick: () => {
               onCancelFailed(id);
             },
+            title: 'Cancel',
           },
         ]
       : [
           {
-            title: 'Edit',
             disabled: isDisabled,
-            tooltip: isDisabled
-              ? 'Image is not yet available for use.'
-              : undefined,
             onClick: () => {
               onEdit(label, description ?? ' ', id);
             },
-          },
-          {
-            title: 'Deploy to New Linode',
-            disabled: isDisabled,
+            title: 'Edit',
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
               : undefined,
+          },
+          {
+            disabled: isDisabled,
             onClick: () => {
               onDeploy(id);
             },
-          },
-          {
-            title: 'Rebuild an Existing Linode',
-            disabled: isDisabled,
+            title: 'Deploy to New Linode',
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
               : undefined,
+          },
+          {
+            disabled: isDisabled,
             onClick: () => {
               onRestore(id);
             },
+            title: 'Rebuild an Existing Linode',
+            tooltip: isDisabled
+              ? 'Image is not yet available for use.'
+              : undefined,
           },
           {
-            title: isAvailable ? 'Delete' : 'Cancel Upload',
             onClick: () => {
               onDelete(label, id, status);
             },
+            title: isAvailable ? 'Delete' : 'Cancel Upload',
           },
         ];
   }, [
@@ -118,35 +111,11 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
     event,
   ]);
 
-  /**
-   * Moving all actions to the dropdown menu to prevent visual mismatches
-   * between different Image types/statuses.
-   *
-   * Leaving the logic in place in case until the decision has been officially OK'd.
-   */
-  const splitActionsArrayIndex =
-    !matchesSmDown && status === 'pending_upload' ? 1 : 0;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
-
   return (
-    <>
-      {!matchesSmDown &&
-        inlineActions.map((action) => {
-          return (
-            <InlineMenuAction
-              key={action.title}
-              actionText={action.title}
-              onClick={action.onClick}
-              disabled={action.disabled}
-              tooltip={action.tooltip}
-            />
-          );
-        })}
-      <ActionMenu
-        actionsList={menuActions}
-        ariaLabel={`Action menu for Image ${props.label}`}
-      />
-    </>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Image ${props.label}`}
+    />
   );
 };
 

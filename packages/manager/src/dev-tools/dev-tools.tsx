@@ -1,14 +1,15 @@
-import './dev-tools.css';
-
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FeatureFlagTool from './FeatureFlagTool';
-import EnvironmentToggleTool from './EnvironmentToggleTool';
 import { Provider } from 'react-redux';
-import MockDataTool from './MockDataTool';
+
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
-import Grid from '@mui/material/Unstable_Grid2';
 import { ApplicationStore } from 'src/store';
+
+import EnvironmentToggleTool from './EnvironmentToggleTool';
+import FeatureFlagTool from './FeatureFlagTool';
+import MockDataTool from './MockDataTool';
+import './dev-tools.css';
 
 function install(store: ApplicationStore) {
   (window as any).devToolsEnabled = true;
@@ -17,17 +18,17 @@ function install(store: ApplicationStore) {
     return (
       <div id="dev-tools">
         <div>🛠</div>
-        <Grid container spacing={2} className="tools">
-          <Grid xs={4} sm={2}>
+        <Grid className="tools" container spacing={2}>
+          <Grid sm={2} xs={4}>
             <FeatureFlagTool />
           </Grid>
           {import.meta.env.DEV && (
-            <Grid xs={4} sm={5} md={3}>
+            <Grid md={3} sm={5} xs={4}>
               <EnvironmentToggleTool />
             </Grid>
           )}
           {!isProductionBuild || ENABLE_DEV_TOOLS ? (
-            <Grid xs={4} sm={5} md={3}>
+            <Grid md={3} sm={5} xs={4}>
               <MockDataTool />
             </Grid>
           ) : null}

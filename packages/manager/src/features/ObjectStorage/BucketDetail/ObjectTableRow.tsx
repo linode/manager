@@ -1,16 +1,18 @@
-import * as React from 'react';
-import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Hidden } from 'src/components/Hidden';
-import ObjectActionMenu from './ObjectActionMenu';
-import { Typography } from 'src/components/Typography';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import { Box } from 'src/components/Box';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { readableBytes } from 'src/utilities/unitConversions';
-import { styled } from '@mui/material/styles';
+import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
+import { readableBytes } from 'src/utilities/unitConversions';
+
+import ObjectActionMenu from './ObjectActionMenu';
 
 interface Props {
   displayName: string;
@@ -36,12 +38,12 @@ export const ObjectTableRow = (props: Props) => {
   return (
     <TableRow ariaLabel={displayName}>
       <TableCell>
-        <Grid container wrap="nowrap" alignItems="center" spacing={2}>
+        <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <Grid className="py0">
-            <StyledEntityIcon variant="object" size={20} {...props} />
+            <StyledEntityIcon size={20} variant="object" {...props} />
           </Grid>
           <Grid>
-            <Box display="flex" alignItems="center">
+            <Box alignItems="center" display="flex">
               <Typography>
                 <StyledLinkButton onClick={handleClickDetails}>
                   {displayName}
@@ -59,8 +61,8 @@ export const ObjectTableRow = (props: Props) => {
       </Hidden>
       <TableCell actionCell>
         <ObjectActionMenu
-          handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}
+          handleClickDownload={handleClickDownload}
           objectName={fullName}
         />
       </TableCell>

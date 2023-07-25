@@ -6,7 +6,7 @@ import { v4 } from 'uuid';
 
 // Simple pub/sub class to keep track of mock data for the local dev tools. This allows subscription
 // from the mock service worker, so the handlers can be updated whenever the mock data changes.
-export type MockDataType = 'linode' | 'nodeBalancer' | 'domain' | 'volume';
+export type MockDataType = 'domain' | 'linode' | 'nodeBalancer' | 'volume';
 
 export interface MockDataEntity<T> {
   mocked: boolean;
@@ -15,21 +15,23 @@ export interface MockDataEntity<T> {
 }
 
 export interface MockData {
+  domain?: MockDataEntity<Domain>;
   linode?: MockDataEntity<Linode>;
   nodeBalancer?: MockDataEntity<NodeBalancer>;
-  domain?: MockDataEntity<Domain>;
   volume?: MockDataEntity<Volume>;
 }
 
 export type SubscribeFunction = (mockData: MockData) => void;
 
 export class MockDataController {
-  subscribers: Record<string, SubscribeFunction>;
-  mockData: MockData;
-
   constructor() {
     this.subscribers = {};
     this.mockData = {};
+  }
+  private notifySubscribers() {
+    Object.values(this.subscribers).forEach((thisSubscriber) => {
+      thisSubscriber(this.mockData);
+    });
   }
 
   subscribe(fn: SubscribeFunction) {
@@ -47,11 +49,9 @@ export class MockDataController {
     this.notifySubscribers();
   }
 
-  private notifySubscribers() {
-    Object.values(this.subscribers).forEach((thisSubscriber) => {
-      thisSubscriber(this.mockData);
-    });
-  }
+  mockData: MockData;
+
+  subscribers: Record<string, SubscribeFunction>;
 }
 
 export const mockDataController = new MockDataController();

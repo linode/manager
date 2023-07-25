@@ -1,7 +1,8 @@
 import { Region } from '@linode/api-v4';
+
 import {
-  COUNTRY_CODE_TO_CONTINENT_CODE,
   CONTINENT_CODE_TO_CONTINENT,
+  COUNTRY_CODE_TO_CONTINENT_CODE,
   Country,
 } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 
@@ -18,5 +19,5 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
     : 'Other';
 };
 
-export const isEURegion = (region: string | null | undefined) =>
+export const isEURegion = (region: null | string | undefined) =>
   region?.match('^eu');

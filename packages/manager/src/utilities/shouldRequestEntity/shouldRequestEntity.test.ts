@@ -4,10 +4,10 @@ import {
 } from './shouldRequestEntity';
 
 const baseEntity = {
-  itemsById: {},
   error: {},
-  loading: false,
+  itemsById: {},
   lastUpdated: 0,
+  loading: false,
   results: 0,
 };
 

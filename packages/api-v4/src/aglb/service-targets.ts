@@ -1,5 +1,11 @@
-import Request, { setData, setMethod, setURL } from '../request';
-import { ResourcePage } from 'src/types';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
+import { Filter, Params, ResourcePage } from 'src/types';
 import { BETA_API_ROOT } from 'src/constants';
 import type { ServiceTarget, ServiceTargetPayload } from './types';
 
@@ -8,10 +14,12 @@ import type { ServiceTarget, ServiceTargetPayload } from './types';
  *
  * Returns a paginated list of Akamai Global Load Balancer service targets
  */
-export const getServiceTargets = () =>
+export const getServiceTargets = (params: Params, filter?: Filter) =>
   Request<ResourcePage<ServiceTarget>>(
     setURL(`${BETA_API_ROOT}/aglb/service-targets`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   );
 
 /**

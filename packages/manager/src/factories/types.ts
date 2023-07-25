@@ -2,12 +2,6 @@ import { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import * as Factory from 'factory.ts';
 
 export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
-  id: 'g6-standard-1',
-  label: 'Linode Metal Alpha 1',
-  price: {
-    hourly: 0,
-    monthly: 0,
-  },
   addons: {
     backups: {
       price: {
@@ -16,12 +10,18 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
       },
     },
   },
-  memory: 16384,
+  class: 'standard',
   disk: 1048576,
+  gpus: 0,
+  id: 'g6-standard-1',
+  label: 'Linode Metal Alpha 1',
+  memory: 16384,
+  network_out: 10000,
+  price: {
+    hourly: 0,
+    monthly: 0,
+  },
+  successor: null,
   transfer: 1000,
   vcpus: 8,
-  gpus: 0,
-  network_out: 10000,
-  class: 'standard',
-  successor: null,
 });

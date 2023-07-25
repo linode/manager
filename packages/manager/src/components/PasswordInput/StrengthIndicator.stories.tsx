@@ -1,10 +1,11 @@
-import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+
 import { StrengthIndicator } from './StrengthIndicator';
 
 const meta: Meta<typeof StrengthIndicator> = {
-  title: 'Components/Strength Indicator',
   component: StrengthIndicator,
+  title: 'Components/Strength Indicator',
 };
 
 type Story = StoryObj<typeof StrengthIndicator>;

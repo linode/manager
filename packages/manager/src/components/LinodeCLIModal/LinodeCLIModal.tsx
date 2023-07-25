@@ -1,34 +1,35 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { sendCLIClickEvent } from 'src/utilities/analytics';
-import { styled } from '@mui/material/styles';
 
 export interface ImageUploadSuccessDialogProps {
+  analyticsKey?: string;
+  command: string;
   isOpen: boolean;
   onClose: () => void;
-  command: string;
-  analyticsKey?: string;
 }
 
 export const LinodeCLIModal = React.memo(
   (props: ImageUploadSuccessDialogProps) => {
-    const { isOpen, onClose, command, analyticsKey } = props;
+    const { analyticsKey, command, isOpen, onClose } = props;
 
     return (
       <StyledLinodeCLIModal
-        title="Upload Image with the Linode CLI"
-        open={isOpen}
-        onClose={onClose}
         fullWidth
+        onClose={onClose}
+        open={isOpen}
+        title="Upload Image with the Linode CLI"
       >
         <StyledCommandDisplay>
           <StyledCLIText>{command}</StyledCLIText>{' '}
           <StyledCopyTooltip
-            text={command}
             onClickCallback={
               analyticsKey ? () => sendCLIClickEvent(analyticsKey) : undefined
             }
+            text={command}
           />
         </StyledCommandDisplay>
       </StyledLinodeCLIModal>
@@ -39,46 +40,46 @@ export const LinodeCLIModal = React.memo(
 const StyledLinodeCLIModal = styled(Dialog, {
   label: 'StyledLinodeCLIModal',
 })(({ theme }) => ({
-  width: '100%',
-  padding: `${theme.spacing()} ${theme.spacing(2)}`,
   '& [data-qa-copied]': {
     zIndex: 2,
   },
+  padding: `${theme.spacing()} ${theme.spacing(2)}`,
+  width: '100%',
 }));
 
 const StyledCommandDisplay = styled('div', {
   label: 'StyledCommandDisplay',
 })(({ theme }) => ({
-  display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
   backgroundColor: theme.bg.main,
   border: `1px solid ${theme.color.border2}`,
+  display: 'flex',
+  fontFamily: '"UbuntuMono", monospace, sans-serif',
   fontSize: '0.875rem',
+  justifyContent: 'space-between',
   lineHeight: 1,
   padding: theme.spacing(),
-  whiteSpace: 'nowrap',
-  fontFamily: '"UbuntuMono", monospace, sans-serif',
-  wordBreak: 'break-all',
   position: 'relative',
+  whiteSpace: 'nowrap',
   width: '100%',
+  wordBreak: 'break-all',
 }));
 
 const StyledCLIText = styled('div', {
   label: 'StyledCLIText',
 })(() => ({
-  overflowY: 'hidden', // For Edge
-  overflowX: 'auto',
   height: '1rem',
+  overflowX: 'auto',
+  overflowY: 'hidden', // For Edge
   paddingRight: 15,
 }));
 
 const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip',
 })(() => ({
-  display: 'flex',
   '& svg': {
-    width: '1em',
     height: '1em',
+    width: '1em',
   },
+  display: 'flex',
 }));

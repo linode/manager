@@ -7,10 +7,12 @@ import {
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
+
 import { ADDRESSES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
+
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import AkamaiLogo from './akamai-logo.png';
 import {
@@ -57,7 +59,7 @@ const addLeftHeader = (
   doc.setFont(baseFont, 'normal');
 
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
-  const isInternational = !['US', 'CA'].includes(country);
+  const isInternational = !['CA', 'US'].includes(country);
 
   const getRemitAddress = (isAkamaiBilling: boolean) => {
     if (!isAkamaiBilling) {
@@ -148,8 +150,8 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
 };
 
 interface Title {
-  text: string;
   leftMargin?: number;
+  text: string;
 }
 // The `y` argument is the position (in pixels) in which the first text string should be added to the doc.
 const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
@@ -279,8 +281,8 @@ export const printInvoice = async (
   } catch (e) {
     reportException(Error('Error while generating Invoice PDF.'), e);
     return {
-      status: 'error',
       error: e,
+      status: 'error',
     };
   }
 };
@@ -330,8 +332,8 @@ export const printPayment = (
   } catch (e) {
     reportException(Error('Error while generating Payment PDF.'), e);
     return {
-      status: 'error',
       error: e,
+      status: 'error',
     };
   }
 };

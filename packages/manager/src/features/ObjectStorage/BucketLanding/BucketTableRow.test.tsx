@@ -1,7 +1,10 @@
 import * as React from 'react';
+
 import { buckets } from 'src/__data__/buckets';
-import { BucketTableRow } from './BucketTableRow';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+
+import { BucketTableRow } from './BucketTableRow';
+
 import type { BucketTableRowProps } from './BucketTableRow';
 
 const mockOnRemove = jest.fn();

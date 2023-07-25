@@ -1,18 +1,20 @@
+import { TPAProvider } from '@linode/api-v4/lib/profile';
+import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
-import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
+
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
-import ExternalLink from 'src/components/ExternalLink';
+import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
 import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
 import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Typography } from 'src/components/Typography';
+import { Box } from 'src/components/Box';
+import { Divider } from 'src/components/Divider';
+import ExternalLink from 'src/components/ExternalLink';
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 import useFlags from 'src/hooks/useFlags';
+
 import { TPADialog } from './TPADialog';
-import { TPAProvider } from '@linode/api-v4/lib/profile';
-import { useTheme } from '@mui/material/styles';
 import {
   StyledButton,
   StyledCopy,
@@ -73,20 +75,20 @@ export const TPAProviders = (props: Props) => {
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (2FA).
         </StyledCopy>
-        <StyledProvidersListGrid spacing={2} container>
+        <StyledProvidersListGrid container spacing={2}>
           {providersIncludingLinode.map((thisProvider) => {
             const ProviderIcon = icons[thisProvider.name];
             const isProviderEnabled = props.authType === thisProvider.name;
 
             return (
-              <Grid xs={12} sm={6} md={4} key={thisProvider.displayName}>
+              <Grid key={thisProvider.displayName} md={4} sm={6} xs={12}>
                 <StyledButton
-                  data-testid={`Button-${thisProvider.displayName}`}
-                  disabled={isProviderEnabled}
-                  isButtonEnabled={isProviderEnabled}
                   onClick={() => {
                     handleProviderChange(thisProvider.name);
                   }}
+                  data-testid={`Button-${thisProvider.displayName}`}
+                  disabled={isProviderEnabled}
+                  isButtonEnabled={isProviderEnabled}
                 >
                   <Box
                     alignItems="center"
@@ -127,7 +129,7 @@ export const TPAProviders = (props: Props) => {
         </StyledProvidersListGrid>
         {isThirdPartyAuthEnabled ? (
           <div data-testid={`Notice-${currentProvider.displayName}`}>
-            <Divider spacingTop={24} spacingBottom={16} />
+            <Divider spacingBottom={16} spacingTop={24} />
             <Typography variant="h3">
               {currentProvider.displayName} Authentication
             </Typography>
@@ -145,7 +147,7 @@ export const TPAProviders = (props: Props) => {
               />
               .
             </StyledCopy>
-            <StyledCopy variant="body1" style={{ marginBottom: 8 }}>
+            <StyledCopy style={{ marginBottom: 8 }} variant="body1">
               To disable {currentProvider.displayName} authentication and log in
               using your Cloud Manager credentials, click the Cloud Manager
               button above. We&rsquo;ll send you an e-mail with instructions on
@@ -157,8 +159,8 @@ export const TPAProviders = (props: Props) => {
       <TPADialog
         currentProvider={currentProvider}
         newProvider={newProvider}
-        open={isDialogOpen}
         onClose={() => setDialogOpen(false)}
+        open={isDialogOpen}
       />
     </>
   );

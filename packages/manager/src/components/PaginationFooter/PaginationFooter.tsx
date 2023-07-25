@@ -1,18 +1,19 @@
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+
 import { Box } from '../Box';
 import Select from '../EnhancedSelect/Select';
 import { PaginationControls } from '../PaginationControls/PaginationControls';
-import { styled, useTheme } from '@mui/material/styles';
 
 export const MIN_PAGE_SIZE = 25;
 
 export interface PaginationProps {
   count: number;
+  eventCategory: string;
+  fixedSize?: boolean;
   page: number;
   pageSize: number;
-  eventCategory: string;
   showAll?: boolean;
-  fixedSize?: boolean;
 }
 
 interface Props extends PaginationProps {
@@ -34,10 +35,10 @@ export const PaginationFooter = (props: Props) => {
   const {
     count,
     fixedSize,
-    page,
-    pageSize,
     handlePageChange,
     handleSizeChange,
+    page,
+    pageSize,
     showAll,
   } = props;
 
@@ -61,33 +62,33 @@ export const PaginationFooter = (props: Props) => {
 
   return (
     <Box
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
       sx={{
         background: theme.bg.bgPaper,
       }}
+      alignItems="center"
+      display="flex"
+      justifyContent="space-between"
     >
       {!isShowingAll && (
         <PaginationControls
+          count={count}
           onClickHandler={handlePageChange}
           page={page}
-          count={count}
           pageSize={pageSize}
         />
       )}
       {!fixedSize ? (
         <PageSizeSelectContainer>
           <Select
-            options={finalOptions}
             defaultValue={defaultPagination}
-            onChange={({ value }) => handleSizeChange(value)}
-            label="Number of items to show"
             hideLabel
             isClearable={false}
-            noMarginTop
-            menuPlacement="top"
+            label="Number of items to show"
             medium
+            menuPlacement="top"
+            noMarginTop
+            onChange={({ value }) => handleSizeChange(value)}
+            options={finalOptions}
           />
         </PageSizeSelectContainer>
       ) : null}
@@ -98,15 +99,15 @@ export const PaginationFooter = (props: Props) => {
 const PageSizeSelectContainer = styled(Box, {
   label: 'PageSizeSelectContainer',
 })(({ theme }) => ({
+  '& .MuiInput-input': {
+    paddingTop: 4,
+  },
   '& .MuiInput-root': {
-    backgroundColor: theme.bg.bgPaper,
-    border: 'none',
     '&.Mui-focused': {
       boxShadow: 'none',
     },
-  },
-  '& .MuiInput-input': {
-    paddingTop: 4,
+    backgroundColor: theme.bg.bgPaper,
+    border: 'none',
   },
   '& .react-select__value-container': {
     paddingLeft: 12,

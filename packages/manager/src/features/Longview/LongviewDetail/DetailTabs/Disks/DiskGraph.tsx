@@ -5,12 +5,12 @@ import Graphs from './Graphs';
 
 interface Props {
   diskLabel: string;
-  stats: Partial<Disk>;
-  timezone: string;
-  sysInfoType: string;
-  startTime: number;
   endTime: number;
   loading: boolean;
+  startTime: number;
+  stats: Partial<Disk>;
+  sysInfoType: string;
+  timezone: string;
 }
 
 type CombinedProps = Props;
@@ -18,12 +18,12 @@ type CombinedProps = Props;
 const DiskGraph: React.FC<CombinedProps> = (props) => {
   const {
     diskLabel,
-    loading,
-    stats,
-    timezone,
-    sysInfoType,
-    startTime,
     endTime,
+    loading,
+    startTime,
+    stats,
+    sysInfoType,
+    timezone,
   } = props;
 
   const isSwap = stats?.isswap ?? 0;
@@ -39,20 +39,20 @@ const DiskGraph: React.FC<CombinedProps> = (props) => {
 
   return (
     <Graphs
-      isSwap={isSwap === 0 ? false : true}
       childOf={childOf === 0 ? false : true}
-      sysInfoType={sysInfoType}
+      diskLabel={diskLabel}
+      endTime={endTime}
+      free={free}
       iFree={iFree}
       iTotal={iTotal}
       isMounted={mounted === 0 ? false : true}
-      free={free}
+      isSwap={isSwap === 0 ? false : true}
       loading={loading}
-      total={total}
-      timezone={timezone}
-      diskLabel={diskLabel}
-      startTime={startTime}
-      endTime={endTime}
       reads={reads}
+      startTime={startTime}
+      sysInfoType={sysInfoType}
+      timezone={timezone}
+      total={total}
       writes={writes}
     />
   );

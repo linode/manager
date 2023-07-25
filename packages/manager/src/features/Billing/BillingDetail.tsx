@@ -1,26 +1,28 @@
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
+
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
+import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { useAccount } from 'src/queries/account';
+import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import BillingSummary from './BillingPanels/BillingSummary';
 import ContactInfo from './BillingPanels/ContactInfoPanel';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
-import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { PAYPAL_CLIENT_ID } from 'src/constants';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
-import { Button } from 'src/components/Button/Button';
 
 export const BillingDetail = () => {
   const {
     data: paymentMethods,
-    isLoading: paymentMethodsLoading,
     error: paymentMethodsError,
+    isLoading: paymentMethodsLoading,
   } = useAllPaymentMethodsQuery();
 
   const {
@@ -49,13 +51,13 @@ export const BillingDetail = () => {
     <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
       <DocumentTitleSegment segment={`Account & Billing`} />
       <Grid
+        sx={{
+          paddingTop: 1,
+        }}
         columnSpacing={2}
         container
         data-testid="billing-detail"
         rowSpacing={2}
-        sx={{
-          paddingTop: 1,
-        }}
       >
         <BillingSummary
           balance={account?.balance ?? 0}
@@ -102,6 +104,11 @@ export const BillingBox = styled('div')(({ theme }) => ({
 }));
 
 export const BillingActionButton = styled(Button)(({ theme }) => ({
+  '&:hover, &:focus': {
+    backgroundColor: 'transparent',
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+  },
   color: theme.textColors.linkActiveLight,
   fontFamily: theme.font.normal,
   fontSize: '.875rem',
@@ -109,11 +116,6 @@ export const BillingActionButton = styled(Button)(({ theme }) => ({
   minHeight: 'unset',
   minWidth: 'auto',
   padding: 0,
-  '&:hover, &:focus': {
-    backgroundColor: 'transparent',
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-  },
 }));
 
 export default BillingDetail;

@@ -1,7 +1,8 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import backups, * as B from './index';
 
 import { linode1 } from 'src/__data__/linodes';
+
+import backups, * as B from './index';
 
 const error: B.BackupError = { linodeId: 123456, reason: 'Error' };
 const apiError: APIError[] = [];
@@ -12,9 +13,9 @@ describe('Redux backups', () => {
       const newState = backups(
         {
           ...B.defaultState,
-          error: apiError,
-          enableErrors: [error],
           autoEnrollError: 'Error',
+          enableErrors: [error],
+          error: apiError,
         },
         B.handleOpen()
       );

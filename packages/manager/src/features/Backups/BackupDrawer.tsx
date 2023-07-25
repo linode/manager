@@ -1,29 +1,30 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import Grid from '@mui/material/Unstable_Grid2';
+import { WithSnackbarProps, withSnackbar } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { MapDispatchToProps, MapStateToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
+
 import ActionsPanel from 'src/components/ActionsPanel';
-import { Typography } from 'src/components/Typography';
 import { Button } from 'src/components/Button/Button';
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import Drawer from 'src/components/Drawer';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 import {
-  withAccountSettings,
   WithAccountSettingsProps,
+  withAccountSettings,
 } from 'src/containers/accountSettings.container';
 import {
-  withSpecificTypes,
   WithSpecificTypesProps,
+  withSpecificTypes,
 } from 'src/containers/types.container';
 import {
-  withQueryClient,
   WithQueryClientProps,
+  withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { ApplicationState } from 'src/store';
 import {
@@ -40,33 +41,34 @@ import { ThunkDispatch } from 'src/store/types';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
+
 import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
 import { ExtendedLinode, LinodeWithTypeInfo } from './types';
 
 interface DispatchProps {
   actions: {
-    enable: () => void;
-    enroll: (backupsEnabled: boolean, queryClient: QueryClient) => void;
     close: () => void;
     dismissError: () => void;
     dismissSuccess: () => void;
+    enable: () => void;
+    enroll: (backupsEnabled: boolean, queryClient: QueryClient) => void;
     toggle: () => void;
   };
 }
 
 interface StateProps {
-  open: boolean;
-  loading: boolean;
-  enabling: boolean;
-  backupLoadError: string;
-  linodesWithoutBackups: Linode[];
-  backupsLoading: boolean;
-  enableSuccess: boolean;
-  enableErrors: BackupError[];
   autoEnroll: boolean;
   autoEnrollError?: string;
+  backupLoadError: string;
+  backupsLoading: boolean;
+  enableErrors: BackupError[];
+  enableSuccess: boolean;
+  enabling: boolean;
   enrolling: boolean;
+  linodesWithoutBackups: Linode[];
+  loading: boolean;
+  open: boolean;
   updatedCount: number;
 }
 
@@ -102,14 +104,6 @@ export const getTotalPrice = (linodes: ExtendedLinode[]) => {
   }, 0);
 };
 export class BackupDrawer extends React.Component<CombinedProps, {}> {
-  updateRequestedTypes = () => {
-    this.props.setRequestedTypes(
-      this.props.linodesWithoutBackups
-        .map((linode) => linode.type)
-        .filter(isNotNullOrUndefined)
-    );
-  };
-
   componentDidMount(): void {
     this.updateRequestedTypes();
   }
@@ -139,21 +133,9 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
     }
   }
 
-  handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const {
-      actions: { enable, enroll },
-      accountSettings,
-      queryClient,
-    } = this.props;
-    if (accountSettings.data?.backups_enabled) {
-      enable();
-    } else {
-      enroll(accountSettings.data?.backups_enabled ?? false, queryClient);
-    }
-  };
-
   render() {
     const {
+      accountSettings,
       actions: { close, toggle },
       autoEnroll,
       autoEnrollError,
@@ -162,9 +144,8 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       enrolling,
       loading,
       open,
-      updatedCount,
       requestedTypesData,
-      accountSettings,
+      updatedCount,
     } = this.props;
 
     const extendedTypeData = requestedTypesData.map(extendType);
@@ -175,7 +156,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
     );
     const linodeCount = extendedLinodes.length;
     return (
-      <Drawer title="Enable All Backups" open={open} onClose={close}>
+      <Drawer onClose={close} open={open} title="Enable All Backups">
         <Grid container direction={'column'} spacing={2}>
           <Grid>
             <Typography variant="body1">
@@ -214,27 +195,27 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
           )}
           <Grid>
             <DisplayPrice
-              price={getTotalPrice(extendedLinodes)}
               interval="mo"
+              price={getTotalPrice(extendedLinodes)}
             />
           </Grid>
           <Grid>
-            <ActionsPanel style={{ padding: 0, margin: 0 }}>
+            <ActionsPanel style={{ margin: 0, padding: 0 }}>
               <Button
-                onClick={close}
                 buttonType="secondary"
                 className="cancel"
                 data-qa-cancel
                 data-testid={'cancel'}
+                onClick={close}
               >
                 Cancel
               </Button>
               <Button
-                onClick={this.handleSubmit}
-                loading={loading || enabling || enrolling}
                 buttonType="primary"
                 data-qa-submit
                 data-testid={'submit'}
+                loading={loading || enabling || enrolling}
+                onClick={this.handleSubmit}
               >
                 Confirm
               </Button>
@@ -247,6 +228,27 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       </Drawer>
     );
   }
+
+  handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const {
+      accountSettings,
+      actions: { enable, enroll },
+      queryClient,
+    } = this.props;
+    if (accountSettings.data?.backups_enabled) {
+      enable();
+    } else {
+      enroll(accountSettings.data?.backups_enabled ?? false, queryClient);
+    }
+  };
+
+  updateRequestedTypes = () => {
+    this.props.setRequestedTypes(
+      this.props.linodesWithoutBackups
+        .map((linode) => linode.type)
+        .filter(isNotNullOrUndefined)
+    );
+  };
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -254,10 +256,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     actions: {
-      enable: () => dispatch(enableAllBackups()),
       close: () => dispatch(handleClose()),
       dismissError: () => dispatch(handleResetError()),
       dismissSuccess: () => dispatch(handleResetSuccess()),
+      enable: () => dispatch(enableAllBackups()),
       enroll: (backupsEnabled: boolean, queryClient: QueryClient) =>
         dispatch(enableAutoEnroll({ backupsEnabled, queryClient })),
       toggle: () => dispatch(handleAutoEnrollToggle()),
@@ -310,18 +312,18 @@ const mapStateToProps: MapStateToProps<
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
   const linodes = getLinodesWithoutBackups(state.__resources);
   return {
+    autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
+    autoEnrollError: path(['backups', 'autoEnrollError'], state),
     backupLoadError: pathOr('', ['backups', 'error'], state),
     backupsLoading: pathOr(false, ['backups', 'loading'], state),
     enableErrors,
     enableSuccess: pathOr(false, ['backups', 'enableSuccess'], state),
-    updatedCount: pathOr<number>(0, ['backups', 'updatedCount'], state),
-    open: pathOr(false, ['backups', 'open'], state),
-    loading: pathOr(false, ['backups', 'loading'], state),
     enabling: pathOr(false, ['backups', 'enabling'], state),
-    linodesWithoutBackups: linodes,
-    autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
-    autoEnrollError: path(['backups', 'autoEnrollError'], state),
+    linodesWithoutBackups: linodes,
+    loading: pathOr(false, ['backups', 'loading'], state),
+    open: pathOr(false, ['backups', 'open'], state),
+    updatedCount: pathOr<number>(0, ['backups', 'updatedCount'], state),
   };
 };
 

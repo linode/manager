@@ -1,19 +1,20 @@
 import * as React from 'react';
+
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 interface Props {
-  linodeId: number;
-  value: Item<string>;
-  handleChange: (ip: string) => void;
   customizeOptions?: (options: Item<string>[]) => Item<string>[];
   errorText?: string;
+  handleChange: (ip: string) => void;
+  linodeId: number;
+  value: Item<string>;
 }
 
 export const IPSelect = (props: Props) => {
-  const { linodeId, value, handleChange, customizeOptions } = props;
+  const { customizeOptions, handleChange, linodeId, value } = props;
 
-  const { data: linode, isLoading, error } = useLinodeQuery(linodeId);
+  const { data: linode, error, isLoading } = useLinodeQuery(linodeId);
 
   const ips: string[] = [];
 
@@ -28,7 +29,7 @@ export const IPSelect = (props: Props) => {
   }
 
   // Create React-Select-friendly options.
-  let options: Item<string>[] = ips.map((ip) => ({ value: ip, label: ip }));
+  let options: Item<string>[] = ips.map((ip) => ({ label: ip, value: ip }));
 
   // If a customizeOptions function was provided, apply it here.
   if (customizeOptions) {
@@ -46,14 +47,14 @@ export const IPSelect = (props: Props) => {
 
   return (
     <Select
-      value={options.find((option) => option.value === value.value)}
-      label="IP Address"
-      options={options}
-      isLoading={isLoading}
-      onChange={(selected) => handleChange(selected.value)}
       errorText={errorText}
       isClearable={false}
+      isLoading={isLoading}
+      label="IP Address"
+      onChange={(selected) => handleChange(selected.value)}
+      options={options}
       placeholder="Select an IP Address..."
+      value={options.find((option) => option.value === value.value)}
     />
   );
 };
