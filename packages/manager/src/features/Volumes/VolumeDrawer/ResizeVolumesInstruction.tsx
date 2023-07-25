@@ -2,7 +2,7 @@ import { Theme } from '@mui/material/styles';
 import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Typography } from 'src/components/Typography';
 

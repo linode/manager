@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import ActionsPanel from './ActionsPanel/ActionsPanel';
+import { ActionsPanel } from './ActionsPanel/ActionsPanel';
 import { Button } from './Button/Button';
 import { Drawer } from './Drawer';
 import { TextField } from './TextField';

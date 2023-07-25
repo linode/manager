@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { SupportLink } from 'src/components/SupportLink/SupportLink';
 import { useCreateImageMutation } from 'src/queries/images';

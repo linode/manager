@@ -2,7 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';

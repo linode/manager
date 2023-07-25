@@ -2,7 +2,7 @@ import { ACLType } from '@linode/api-v4/lib/object-storage';
 import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import EnhancedSelect from 'src/components/EnhancedSelect';

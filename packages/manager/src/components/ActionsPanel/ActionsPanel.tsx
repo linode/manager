@@ -24,7 +24,7 @@ interface ActionPanelProps extends BoxProps {
   secondaryButtonProps?: ActionButtonsProps;
 }
 
-const ActionsPanel = (props: ActionPanelProps) => {
+const ActionsPanelComponent = (props: ActionPanelProps) => {
   const {
     className,
     primaryButtonProps,
@@ -83,4 +83,6 @@ const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
   paddingTop: spacing(2),
 }));
 
-export default RenderGuard(ActionsPanel);
+const ActionsPanel = RenderGuard(ActionsPanelComponent);
+
+export { ActionsPanel };

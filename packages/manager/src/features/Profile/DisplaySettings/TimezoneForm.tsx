@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import timezones from 'src/assets/timezones/timezones';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';

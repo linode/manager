@@ -1,7 +1,7 @@
 import { Domain } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 
-import ActionPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { sendDomainStatusChangeEvent } from 'src/utilities/analytics';
@@ -45,7 +45,7 @@ export const DisableDomainDialog = React.memo(
     return (
       <ConfirmationDialog
         actions={
-          <ActionPanel
+          <ActionsPanel
             primaryButtonProps={{
               label: 'Disable Domain',
               loading: isLoading,

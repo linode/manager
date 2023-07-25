@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';

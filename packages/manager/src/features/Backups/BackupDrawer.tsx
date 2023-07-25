@@ -7,7 +7,7 @@ import { QueryClient } from 'react-query';
 import { MapDispatchToProps, MapStateToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
 
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';

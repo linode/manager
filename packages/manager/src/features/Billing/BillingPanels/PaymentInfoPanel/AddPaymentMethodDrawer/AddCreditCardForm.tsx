@@ -10,7 +10,7 @@ import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { useQueryClient } from 'react-query';
 import { makeStyles } from 'tss-react/mui';
 
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { parseExpiryYear } from 'src/utilities/creditCard';

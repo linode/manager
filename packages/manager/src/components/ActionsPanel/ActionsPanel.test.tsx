@@ -4,7 +4,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import ActionsPanel from './ActionsPanel';
+import { ActionsPanel } from './ActionsPanel';
 
 describe('ActionsPanel', () => {
   const primaryButtonTestId = 'primary-button';
