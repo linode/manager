@@ -140,12 +140,12 @@ export const linodeInterfaceSchema = array()
         otherwise: string().test({
           name: testnameDisallowedBasedOnPurpose('VLAN'),
           message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
-          test: (value) => typeof value === 'undefined',
+          test: (value) => typeof value === 'undefined' || value === '',
         }),
       }),
       ipam_address: string().when('purpose', {
         is: 'vlan',
-        then: string().required('IPAM Address is required').test({
+        then: string().notRequired().test({
           name: 'validateIPAM',
           message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
           test: validateIP,
@@ -153,7 +153,7 @@ export const linodeInterfaceSchema = array()
         otherwise: string().test({
           name: testnameDisallowedBasedOnPurpose('VLAN'),
           message: testmessageDisallowedBasedOnPurpose('vlan', 'ipam_address'),
-          test: (value) => typeof value === 'undefined',
+          test: (value) => typeof value === 'undefined' || value === '',
         }),
       }),
       primary: boolean().notRequired(),

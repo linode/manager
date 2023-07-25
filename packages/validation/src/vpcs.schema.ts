@@ -14,6 +14,13 @@ const labelTestDetails = {
 const IP_EITHER_BOTH_NOT_NEITHER =
   'A subnet must have either IPv4 or IPv6, or both, but not neither.';
 
+/**
+ * VPC-related IP validation that handles for single IPv4 and IPv6 addresses as well as
+ * IPv4 ranges in CIDR format and IPv6 ranges with prefix lengths.
+ * @param value - the IP address string to be validated
+ * @param shouldHaveIPMask - a boolean indicating whether the value should have a mask (e.g., /32) or not
+ * @param mustBeIPMask - a boolean indicating whether the value MUST be an IP mask/prefix length or not
+ */
 export const vpcsValidateIP = (
   value?: string | null,
   shouldHaveIPMask?: boolean,

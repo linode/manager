@@ -37,7 +37,7 @@ export const useLinodeConfigDeleteMutation = (
           queryKey,
           'linode',
           linodeId,
-          'configs',
+          configQueryKey,
         ]);
       },
     }
@@ -54,7 +54,7 @@ export const useLinodeConfigCreateMutation = (linodeId: number) => {
           queryKey,
           'linode',
           linodeId,
-          'configs',
+          configQueryKey,
         ]);
       },
     }
@@ -74,7 +74,7 @@ export const useLinodeConfigUpdateMutation = (
           queryKey,
           'linode',
           linodeId,
-          'configs',
+          configQueryKey,
         ]);
       },
     }
