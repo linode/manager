@@ -1,6 +1,5 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import compact from 'lodash/compact';
 import curry from 'lodash/curry';
@@ -32,6 +31,7 @@ import {
   WithTypesRegionsAndImages,
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
+import { StyledGrid } from './CommonStyles.styles';
 
 const appCategories = [
   'Control Panels',
@@ -186,7 +186,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <StyledGrid className={`mlMain py0`}>
+        <StyledGrid>
           <Paper>
             <Typography variant="h2">Select an App</Typography>
             <StyledSearchFilterBox>
@@ -389,15 +389,6 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
     selectedScriptForDrawer: '',
   };
 }
-
-const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    maxWidth: '100%',
-  },
-
-  // todo: may need to add the stylings from the other classes too (py0, mlMain)
-  // same as stackScript grid -- worth moving to common style file or nah if this is super small?
-}));
 
 const StyledSearchFilterBox = styled(Box, { label: 'StyledSearchFilterBox' })(
   ({ theme }) => ({

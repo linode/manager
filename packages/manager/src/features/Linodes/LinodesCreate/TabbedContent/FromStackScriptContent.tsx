@@ -1,7 +1,7 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import { StyledGrid } from './CommonStyles.styles';
 import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 // import { compose } from 'recompose';
@@ -69,7 +69,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <StyledGrid className={`mlMain py0`} data-qa-panel={header}>
+        <StyledGrid data-qa-panel={header}>
           <SelectStackScriptPanel
             category={this.props.category}
             data-qa-select-stackscript
@@ -180,14 +180,6 @@ const StyledImageEmptyState = styled(ImageEmptyState, {
   label: 'StyledImageEmptyState',
 })(({ theme }) => ({
   padding: theme.spacing(3),
-}));
-
-const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    maxWidth: '100%',
-  },
-
-  // todo: may need to add the stylings from the other classes too (py0, mlMain)
 }));
 
 // export default compose<CombinedProps, Props>(

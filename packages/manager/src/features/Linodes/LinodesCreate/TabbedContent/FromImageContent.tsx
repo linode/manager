@@ -1,6 +1,3 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,20 +7,13 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import { filterImagesByType } from 'src/store/image/image.helpers';
+import { StyledGrid } from './CommonStyles.styles';
 
 import {
   BasicFromContentProps,
   ReduxStateProps,
   WithTypesRegionsAndImages,
 } from '../types';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  main: {
-    [theme.breakpoints.up('md')]: {
-      maxWidth: '100%',
-    },
-  },
-}));
 
 interface Props extends BasicFromContentProps {
   error?: string;
@@ -37,8 +27,6 @@ export type CombinedProps = Props &
   WithTypesRegionsAndImages;
 
 export const FromImageContent: React.FC<CombinedProps> = (props) => {
-  const { classes } = useStyles();
-
   const {
     error,
     imagePanelTitle,
@@ -51,7 +39,7 @@ export const FromImageContent: React.FC<CombinedProps> = (props) => {
 
   if (variant === 'private' && Object.keys(privateImages).length === 0) {
     return (
-      <Grid className={`${classes.main} mlMain py0`}>
+      <StyledGrid>
         <Paper>
           <Placeholder icon={ImageIcon} isEntity title="My Images">
             <Typography variant="subtitle1">
@@ -61,12 +49,12 @@ export const FromImageContent: React.FC<CombinedProps> = (props) => {
             </Typography>
           </Placeholder>
         </Paper>
-      </Grid>
+      </StyledGrid>
     );
   }
 
   return (
-    <Grid className={`${classes.main} mlMain py0`}>
+    <StyledGrid>
       <ImageSelect
         data-qa-select-image-panel
         disabled={userCannotCreateLinode}
@@ -77,7 +65,7 @@ export const FromImageContent: React.FC<CombinedProps> = (props) => {
         title={imagePanelTitle || 'Choose an Image'}
         variant={variant}
       />
-    </Grid>
+    </StyledGrid>
   );
 };
 

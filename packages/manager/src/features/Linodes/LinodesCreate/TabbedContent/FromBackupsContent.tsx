@@ -3,8 +3,7 @@ import {
   LinodeBackupsResponse,
   getLinodeBackups,
 } from '@linode/api-v4/lib/linodes';
-import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
+import { StyledGrid } from './CommonStyles.styles';
 import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 
@@ -95,7 +94,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <StyledGrid className={`mlMain py0`}>
+      <StyledGrid>
         {!userHasBackups ? (
           <Paper>
             <Placeholder
@@ -235,14 +234,5 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     isGettingBackups: false,
   };
 }
-
-const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    maxWidth: '100%',
-  },
-
-  // todo: may need to add the stylings from the other classes too (py0, mlMain)
-  // same as stackScript grid -- worth moving to common style file or nah if this is super small?
-}));
 
 export default FromBackupsContent;
