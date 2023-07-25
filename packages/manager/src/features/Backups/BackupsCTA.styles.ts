@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { Paper } from 'src/components/Paper';
 import { IconButton } from 'src/components/IconButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 export const StyledPaper = styled(Paper)(({ theme }) => ({
   alignItems: 'center',
@@ -12,7 +13,7 @@ export const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 export const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  ...theme.applyLinkStyles,
+  ...StyledLinkButton({ theme }),
   marginLeft: 12,
   lineHeight: '0.5rem',
 }));
