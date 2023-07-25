@@ -6,7 +6,6 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import { StyledPaper } from './BackupsCTA.styles';
 import { Typography } from 'src/components/Typography';
-import { StyledIconButton } from './BackupsCTA.styles';
 import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
@@ -60,9 +59,12 @@ const BackupsCTA = (props: BackupsCTAProps) => {
               to protect your data and recover quickly in an emergency.
             </Typography>
             <Box component="span" sx={{ display: 'flex' }}>
-              <StyledIconButton onClick={dismissed}>
+              <StyledLinkButton
+                sx={{ marginLeft: 12, lineHeight: '0.5rem' }}
+                onClick={dismissed}
+              >
                 <Close />
-              </StyledIconButton>
+              </StyledLinkButton>
             </Box>
           </StyledPaper>
         );
