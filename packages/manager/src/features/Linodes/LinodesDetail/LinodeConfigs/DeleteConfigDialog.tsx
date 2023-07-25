@@ -37,8 +37,6 @@ export const DeleteConfigDialog = (props: Props) => {
         onClick: onDelete,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-      showPrimary
-      showSecondary
       style={{ padding: 0 }}
     />
   );

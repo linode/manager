@@ -102,7 +102,6 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
               },
             }),
           }}
-          showPrimary
         />
       </Box>
       {success ? (

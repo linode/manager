@@ -306,7 +306,6 @@ export const RebuildFromImage = (props: Props) => {
                     onClick: handleRebuildButtonClick,
                   }}
                   className={classes.actionPanel}
-                  showPrimary
                 />
               </Grid>
             </form>

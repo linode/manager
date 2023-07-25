@@ -222,7 +222,6 @@ const AddIPDrawer = (props: Props) => {
                   onClick: handleAllocateIPv4,
                   sx: { marginBottom: 8 },
                 }}
-                showPrimary
               />
             </div>
           </Tooltip>
@@ -235,7 +234,6 @@ const AddIPDrawer = (props: Props) => {
               onClick: handleAllocateIPv4,
               sx: { marginBottom: 8 },
             }}
-            showPrimary
           />
         )}
         <Typography className={classes.ipv6} variant="h2">
@@ -286,7 +284,6 @@ const AddIPDrawer = (props: Props) => {
             onClick: handleCreateIPv6Range,
             sx: { marginBottom: 8 },
           }}
-          showPrimary
         />
       </React.Fragment>
     </Drawer>

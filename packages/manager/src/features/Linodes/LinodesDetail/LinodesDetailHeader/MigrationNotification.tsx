@@ -88,8 +88,6 @@ const MigrationNotification: React.FC<Props> = (props) => {
         label: 'Cancel',
         onClick: closeDialog,
       }}
-      showPrimary
-      showSecondary
     />
   );
 

@@ -96,8 +96,6 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
             type: 'submit',
           }}
           secondaryButtonProps={{ 'data-testid': 'cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

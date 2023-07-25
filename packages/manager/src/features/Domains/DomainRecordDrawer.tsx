@@ -172,8 +172,6 @@ export class DomainRecordDrawer extends React.Component<
             label: 'Cancel',
             onClick: this.onClose,
           }}
-          showPrimary
-          showSecondary
         />
       </Drawer>
     );

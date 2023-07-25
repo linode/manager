@@ -218,7 +218,6 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           loading: isLoading,
           onClick: () => formik.handleSubmit(),
         }}
-        showPrimary
       />
     );
   };

@@ -362,7 +362,6 @@ export const RebuildFromStackScript = (props: Props) => {
                   onClick: handleRebuildButtonClick,
                 }}
                 className={classes.actionPanel}
-                showPrimary
               />
             </form>
             <StackScriptDialog />

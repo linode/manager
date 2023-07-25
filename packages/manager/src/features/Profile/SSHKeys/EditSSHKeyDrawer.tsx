@@ -79,8 +79,6 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

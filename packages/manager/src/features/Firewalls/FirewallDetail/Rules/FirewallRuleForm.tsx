@@ -345,7 +345,6 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             label: mode === 'create' ? 'Add Rule' : 'Add Changes',
             onClick: () => handleSubmit(),
           }}
-          showPrimary
         />
       </form>
     );

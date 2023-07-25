@@ -218,8 +218,6 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
           onClick: onCancel,
         }}
         className={classes.actions}
-        showPrimary
-        showSecondary
       />
     </Paper>
   );

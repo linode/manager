@@ -42,8 +42,6 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
         onClick: onDelete,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-      showPrimary
-      showSecondary
       style={{ padding: 0 }}
     />
   );

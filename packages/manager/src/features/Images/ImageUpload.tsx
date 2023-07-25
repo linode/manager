@@ -211,8 +211,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
                     label: 'Cancel',
                     onClick: handleCancel,
                   }}
-                  showPrimary
-                  showSecondary
                 />
               )}
               onClose={handleCancel}

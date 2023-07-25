@@ -156,8 +156,6 @@ export const PowerActionsDialog = (props: Props) => {
             onClick: onSubmit,
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
-          showPrimary
-          showSecondary
         />
       }
       className={classes.dialog}

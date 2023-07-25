@@ -111,7 +111,6 @@ export const TimezoneForm = (props: Props) => {
               minWidth: 180,
             },
           }}
-          showPrimary
         />
       </StyledRootContainer>
     </>

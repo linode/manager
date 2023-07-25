@@ -87,10 +87,7 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
           value={`mount /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel}`}
         />
       </div>
-      <ActionsPanel
-        primaryButtonProps={{ label: 'Close', onClick: onClose }}
-        showPrimary
-      />
+      <ActionsPanel primaryButtonProps={{ label: 'Close', onClick: onClose }} />
     </React.Fragment>
   );
 };

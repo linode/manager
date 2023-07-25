@@ -22,7 +22,6 @@ export const ScratchCodeDialog = (props: Props) => {
             label: 'Got it',
             onClick: onClose,
           }}
-          showSecondary
         />
       }
       onClose={onClose}

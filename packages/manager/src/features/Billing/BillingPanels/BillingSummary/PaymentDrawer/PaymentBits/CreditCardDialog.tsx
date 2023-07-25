@@ -53,8 +53,6 @@ class DialogActions extends React.PureComponent<Actions> {
           label: 'Cancel',
           onClick: this.props.cancel,
         }}
-        showPrimary
-        showSecondary
       />
     );
   }

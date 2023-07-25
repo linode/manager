@@ -27,7 +27,6 @@ const renderActions = (
       label: 'modalConfirmationButtonText',
       onClick: onClose,
     }}
-    showPrimary
   />
 );
 

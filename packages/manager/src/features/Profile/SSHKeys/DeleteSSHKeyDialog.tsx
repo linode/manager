@@ -34,8 +34,6 @@ const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
             label: 'Cancel',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
         />
       }
       error={error?.[0].reason}

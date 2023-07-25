@@ -285,8 +285,6 @@ const FirewallRulesLanding = (props: Props) => {
                     label: 'Leave and discard changes',
                     onClick: handleConfirm,
                   }}
-                  showPrimary
-                  showSecondary
                 />
               )}
               onClose={handleCancel}
@@ -380,8 +378,6 @@ const FirewallRulesLanding = (props: Props) => {
           onClick: () => setDiscardChangesModalOpen(true),
         }}
         className={classes.actions}
-        showPrimary
-        showSecondary
       />
 
       <DiscardChangesDialog
@@ -425,8 +421,6 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
             label: 'Discard changes',
             onClick: handleDiscard,
           }}
-          showPrimary
-          showSecondary
         />
       ),
       [handleDiscard, handleClose]

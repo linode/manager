@@ -57,7 +57,6 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
             loading: isLoading,
             onClick: () => formik.handleSubmit(),
           }}
-          showPrimary
         />
       )}
       defaultExpanded

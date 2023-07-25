@@ -83,8 +83,6 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

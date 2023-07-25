@@ -34,7 +34,6 @@ export const HistoryDrawer: React.FC<Props> = (props) => {
           label: 'Close',
           onClick: () => onClose(),
         }}
-        showPrimary
       />
     </Drawer>
   );

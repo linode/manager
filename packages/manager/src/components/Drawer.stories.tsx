@@ -46,8 +46,6 @@ export const Default: Story = {
                 onClick: () => setOpen(false),
               }}
               primaryButtonProps={{ label: 'Save' }}
-              showPrimary
-              showSecondary
             />
           </Drawer>
         </>

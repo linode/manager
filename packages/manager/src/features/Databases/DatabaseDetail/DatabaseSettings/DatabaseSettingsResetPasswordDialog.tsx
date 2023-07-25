@@ -29,8 +29,6 @@ const renderActions = (
         onClick: onConfirm,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-      showPrimary
-      showSecondary
     />
   );
 };

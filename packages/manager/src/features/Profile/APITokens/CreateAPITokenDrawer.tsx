@@ -300,8 +300,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
           onClick: () => form.handleSubmit(),
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-        showPrimary
-        showSecondary
       />
     </Drawer>
   );

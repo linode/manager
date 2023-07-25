@@ -256,8 +256,6 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                     label: 'Cancel',
                     onClick: onClose,
                   }}
-                  showPrimary
-                  showSecondary
                 />
                 <EnableObjectStorageModal
                   handleSubmit={handleSubmit}

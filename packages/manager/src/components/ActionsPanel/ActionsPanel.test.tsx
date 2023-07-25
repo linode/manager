@@ -13,43 +13,31 @@ describe('ActionsPanel', () => {
     renderWithTheme(<ActionsPanel />);
   });
 
-  it('should render primary button when showPrimary prop is true', () => {
+  it('should render render primary button when primaryButtonProps are passed', () => {
     renderWithTheme(
       <ActionsPanel
         primaryButtonProps={{ 'data-testid': primaryButtonTestId }}
-        showPrimary
       />
     );
     expect(screen.getByTestId(primaryButtonTestId)).toBeInTheDocument();
   });
 
-  it('should not render primary button when showPrimary prop is false', () => {
-    renderWithTheme(
-      <ActionsPanel
-        primaryButtonProps={{ 'data-testid': primaryButtonTestId }}
-        showPrimary={false}
-      />
-    );
+  it('should not render primary button when primaryButtonProps are not passed', () => {
+    renderWithTheme(<ActionsPanel primaryButtonProps={undefined} />);
     expect(screen.queryByTestId(primaryButtonTestId)).not.toBeInTheDocument();
   });
 
-  it('should render secondary button when showSecondary prop is true', () => {
+  it('should render secondary button when secondaryButtonProps are passed', () => {
     renderWithTheme(
       <ActionsPanel
         secondaryButtonProps={{ 'data-testid': secondaryButtonTestId }}
-        showSecondary
       />
     );
     expect(screen.getByTestId(secondaryButtonTestId)).toBeInTheDocument();
   });
 
-  it('should not render secondary button when showSecondary prop is false', () => {
-    renderWithTheme(
-      <ActionsPanel
-        secondaryButtonProps={{ 'data-testid': secondaryButtonTestId }}
-        showSecondary={false}
-      />
-    );
+  it('should not render secondary button when  secondaryButtonProps are not passed', () => {
+    renderWithTheme(<ActionsPanel secondaryButtonProps={undefined} />);
     expect(screen.queryByTestId(secondaryButtonTestId)).not.toBeInTheDocument();
   });
 
@@ -61,7 +49,6 @@ describe('ActionsPanel', () => {
           'data-testid': primaryButtonTestId,
           onClick: mockHandler,
         }}
-        showPrimary
       />
     );
     userEvent.click(screen.getByTestId(primaryButtonTestId));
@@ -76,7 +63,6 @@ describe('ActionsPanel', () => {
           'data-testid': secondaryButtonTestId,
           onClick: mockHandler,
         }}
-        showSecondary
       />
     );
     userEvent.click(screen.getByTestId(secondaryButtonTestId));

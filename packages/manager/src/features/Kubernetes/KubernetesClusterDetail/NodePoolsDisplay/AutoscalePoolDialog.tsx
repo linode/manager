@@ -135,8 +135,6 @@ export const AutoscalePoolDialog = (props: Props) => {
             label: 'Cancel',
             onClick: handleClose,
           }}
-          showPrimary
-          showSecondary
           style={{ padding: 0 }}
         />
       }

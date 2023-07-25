@@ -368,8 +368,6 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
           label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
           onClick: closeDialog,
         }}
-        showPrimary
-        showSecondary
       />
     );
   };

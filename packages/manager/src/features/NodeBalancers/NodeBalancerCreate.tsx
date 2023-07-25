@@ -580,8 +580,6 @@ const NodeBalancerCreate = () => {
               label: 'Cancel',
               onClick: onCloseConfirmation,
             }}
-            showPrimary
-            showSecondary
             style={{ padding: 0 }}
           />
         }

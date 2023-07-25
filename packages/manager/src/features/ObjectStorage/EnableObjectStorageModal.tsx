@@ -32,8 +32,6 @@ export const EnableObjectStorageModal = ({
             label: 'Cancel',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
         />
       )}
       onClose={close}

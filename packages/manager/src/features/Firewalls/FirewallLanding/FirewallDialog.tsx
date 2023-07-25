@@ -68,8 +68,6 @@ const FirewallDialog = (props: Props) => {
             onClick: onSubmit,
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
       }
       error={errorMap[mode]?.[0].reason}

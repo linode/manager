@@ -422,8 +422,6 @@ const IPSharingPanel = (props: Props) => {
           label: 'Reset Form',
           onClick: onReset,
         }}
-        showPrimary
-        showSecondary
       />
     </Dialog>
   );

@@ -157,8 +157,6 @@ export const RestoreToLinodeDrawer = (props: Props) => {
             label: 'Cancel',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

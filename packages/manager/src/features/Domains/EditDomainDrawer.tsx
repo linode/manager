@@ -213,8 +213,6 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
             label: 'Cancel',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

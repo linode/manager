@@ -202,8 +202,6 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
               onClick: onClose,
               sx: { marginBottom: 8 },
             }}
-            showPrimary
-            showSecondary
           />
         </form>
       </React.Fragment>

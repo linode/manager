@@ -36,8 +36,6 @@ const meta: Meta<typeof ConfirmationDialog> = {
       <ActionsPanel
         primaryButtonProps={{ label: 'Continue' }}
         secondaryButtonProps={{ label: 'Cancel' }}
-        showPrimary
-        showSecondary
       />
     ),
     children:

@@ -201,7 +201,6 @@ export const NodeBalancerConfigNode = React.memo(
                   onClick: removeNode,
                   sx: { minWidth: 'auto', padding: 0, top: 8 },
                 }}
-                showSecondary
               />
             )}
           </Grid>

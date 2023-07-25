@@ -199,7 +199,6 @@ export const LishSettings = () => {
             loading: submitting,
             onClick: onSubmit,
           }}
-          showPrimary
         />
       </Paper>
     </>

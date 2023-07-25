@@ -174,8 +174,6 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
             label: 'Cancel',
             onClick: handleClose,
           }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

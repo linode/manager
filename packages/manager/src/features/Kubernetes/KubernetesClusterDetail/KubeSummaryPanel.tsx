@@ -235,8 +235,6 @@ export const KubeSummaryPanel = (props: Props) => {
               label: 'Cancel',
               onClick: () => setResetKubeConfigDialogOpen(false),
             }}
-            showPrimary
-            showSecondary
           />
         }
         error={

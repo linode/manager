@@ -95,7 +95,6 @@ export const ViewIPDrawer = (props: Props) => {
               label: 'Close',
               onClick: props.onClose,
             }}
-            showSecondary
           />
         </React.Fragment>
       )}

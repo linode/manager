@@ -90,8 +90,6 @@ const Actions: React.FC<ActionsProps> = (props) => {
         onClick: props.onSubmit,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
-      showPrimary
-      showSecondary
     />
   );
 };

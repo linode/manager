@@ -136,7 +136,6 @@ const UserProfile: React.FC<Props> = (props) => {
               loading: accountSaving,
               onClick: saveAccount,
             }}
-            showPrimary
           />
         </Paper>
         <Paper className={classes.wrapper}>
@@ -173,7 +172,6 @@ const UserProfile: React.FC<Props> = (props) => {
               loading: profileSaving,
               onClick: saveProfile,
             }}
-            showPrimary
           />
         </Paper>
       </>

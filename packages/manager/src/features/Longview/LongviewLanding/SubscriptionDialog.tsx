@@ -25,8 +25,6 @@ export const SubscriptionDialog: React.FC<Props> = (props) => {
         role: 'link',
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-      showPrimary
-      showSecondary
     />
   );
 

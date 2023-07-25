@@ -738,8 +738,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         label: 'Cancel',
         onClick: onClose,
       }}
-      showPrimary
-      showSecondary
       style={{ padding: 0 }}
     />
   );

@@ -58,8 +58,6 @@ const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = (props) => {
           onClick: onSubmit,
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-        showPrimary
-        showSecondary
       />
     </Drawer>
   );

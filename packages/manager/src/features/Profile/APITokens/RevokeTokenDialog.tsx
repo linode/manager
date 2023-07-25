@@ -54,8 +54,6 @@ export const RevokeTokenDialog = ({ onClose, open, token, type }: Props) => {
             label: 'Cancel',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
         />
       }
       error={error?.[0].reason}

@@ -210,7 +210,6 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                     loading: isSubmitting,
                     onClick: () => handleSubmit(),
                   }}
-                  showPrimary
                 />
               </form>
             </>

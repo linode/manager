@@ -59,8 +59,6 @@ const ComplianceUpdateModal = () => {
               complianceModelContext.close();
             },
           }}
-          showPrimary
-          showSecondary
         />
       )}
       error={error}

@@ -86,8 +86,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         label: 'Cancel',
         onClick: onClose,
       }}
-      showPrimary
-      showSecondary
       style={{ padding: 0 }}
     />
   );

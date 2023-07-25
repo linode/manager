@@ -219,7 +219,6 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                         loading: isSubmitting,
                         onClick: () => handleSubmit(),
                       }}
-                      showPrimary
                     />
                   </form>
                 </>

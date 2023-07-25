@@ -56,8 +56,6 @@ export const EditAPITokenDrawer = (props: Props) => {
           onClick: () => form.handleSubmit(),
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-        showPrimary
-        showSecondary
       />
     </Drawer>
   );

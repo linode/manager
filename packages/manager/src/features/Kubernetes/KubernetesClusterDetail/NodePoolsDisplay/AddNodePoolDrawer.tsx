@@ -219,7 +219,6 @@ export const AddNodePoolDrawer = (props: Props) => {
               onClick: handleAdd,
               sx: { marginTop: '0 !important', paddingTop: 0 },
             }}
-            showPrimary
           />
         </Box>
       </form>

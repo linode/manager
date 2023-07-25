@@ -1015,8 +1015,6 @@ export const LinodeConfigDialog = (props: Props) => {
           onClick: formik.submitForm,
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-        showPrimary
-        showSecondary
       />
     </Dialog>
   );

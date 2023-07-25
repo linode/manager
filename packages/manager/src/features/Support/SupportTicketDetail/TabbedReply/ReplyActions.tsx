@@ -39,7 +39,6 @@ export const ReplyActions = (props: Props) => {
           onClick: handleSubmitForm,
         }}
         className={classes.actions}
-        showPrimary
       />
     </>
   );

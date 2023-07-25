@@ -174,7 +174,6 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             loading,
             onClick: this.props.initMutation,
           }}
-          showPrimary
           style={{ marginTop: 32 }}
         />
 

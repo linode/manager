@@ -46,8 +46,6 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
         label: 'Cancel',
         onClick: () => setIsDialogOpen(false),
       }}
-      showPrimary
-      showSecondary
     />
   );
 

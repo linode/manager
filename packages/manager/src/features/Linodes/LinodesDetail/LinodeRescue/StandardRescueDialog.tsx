@@ -250,7 +250,6 @@ export const StandardRescueDialog = (props: Props) => {
                 label: 'Reboot into Rescue Mode',
                 onClick: onSubmit,
               }}
-              showPrimary
             />
           </Paper>
         </div>

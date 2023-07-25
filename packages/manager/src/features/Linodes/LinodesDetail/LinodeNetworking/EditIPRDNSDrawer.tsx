@@ -79,8 +79,6 @@ export const EditIPRDNSDrawer = (props: Props) => {
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
           style={{ marginTop: 16 }}
         />
       </form>

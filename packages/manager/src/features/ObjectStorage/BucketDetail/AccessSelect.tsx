@@ -206,7 +206,6 @@ export const AccessSelect = React.memo((props: Props) => {
             marginTop: theme.spacing(3),
           }),
         }}
-        showPrimary
         style={{ padding: 0 }}
       />
 
@@ -219,8 +218,6 @@ export const AccessSelect = React.memo((props: Props) => {
               onClick: closeDialog,
             }}
             primaryButtonProps={{ label: 'Confirm', onClick: handleSubmit }}
-            showPrimary
-            showSecondary
             style={{ padding: 0 }}
           />
         )}

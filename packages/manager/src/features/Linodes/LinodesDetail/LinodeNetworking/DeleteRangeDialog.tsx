@@ -41,8 +41,6 @@ export const DeleteRangeDialog = (props: Props) => {
             onClick: handleDeleteIP,
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
       }
       error={error?.[0].reason}

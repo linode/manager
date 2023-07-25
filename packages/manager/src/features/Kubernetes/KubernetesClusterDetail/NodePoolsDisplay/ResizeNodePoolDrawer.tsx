@@ -148,7 +148,6 @@ export const ResizeNodePoolDrawer = (props: Props) => {
             loading: isLoading,
             onClick: handleSubmit,
           }}
-          showPrimary
         />
       </form>
     </Drawer>

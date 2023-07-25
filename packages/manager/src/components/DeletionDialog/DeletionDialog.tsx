@@ -54,8 +54,6 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
         label: 'Cancel',
         onClick: onClose,
       }}
-      showPrimary
-      showSecondary
       style={{ padding: 0 }}
     />
   );

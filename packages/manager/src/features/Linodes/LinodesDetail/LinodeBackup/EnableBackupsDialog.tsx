@@ -70,8 +70,6 @@ export const EnableBackupsDialog = (props: Props) => {
         label: 'Close',
         onClick: onClose,
       }}
-      showPrimary
-      showSecondary
       style={{ padding: 0 }}
     />
   );

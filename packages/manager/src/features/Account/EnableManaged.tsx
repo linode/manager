@@ -100,8 +100,6 @@ export const EnableManaged = (props: Props) => {
         label: 'Cancel',
         onClick: handleClose,
       }}
-      showPrimary
-      showSecondary
     />
   );
 

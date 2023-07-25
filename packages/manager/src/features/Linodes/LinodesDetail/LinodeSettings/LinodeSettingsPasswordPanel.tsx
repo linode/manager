@@ -109,7 +109,6 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
             ? 'Your Linode must be fully powered down in order to change your root password'
             : '',
       }}
-      showPrimary
     />
   );
 

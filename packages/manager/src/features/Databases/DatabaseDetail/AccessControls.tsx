@@ -181,8 +181,6 @@ export const AccessControls = (props: Props) => {
         onClick: handleRemoveIPAddress,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: handleDialogClose }}
-      showPrimary
-      showSecondary
     />
   );
 

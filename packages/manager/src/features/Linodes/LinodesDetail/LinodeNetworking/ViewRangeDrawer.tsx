@@ -63,7 +63,6 @@ export const ViewRangeDrawer = (props: Props) => {
               label: 'Close',
               onClick: props.onClose,
             }}
-            showSecondary
           />
         </React.Fragment>
       )}

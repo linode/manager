@@ -189,8 +189,6 @@ const CreateFirewallDrawer = (props: Props) => {
             label: 'Cancel',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

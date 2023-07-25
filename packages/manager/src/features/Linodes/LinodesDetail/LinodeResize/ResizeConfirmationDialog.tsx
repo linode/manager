@@ -32,8 +32,6 @@ const renderActions = (
         label: 'Cancel',
         onClick: onClose,
       }}
-      showPrimary
-      showSecondary
       style={{ padding: 0 }}
     />
   );

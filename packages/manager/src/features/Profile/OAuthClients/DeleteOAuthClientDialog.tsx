@@ -41,8 +41,6 @@ export const DeleteOAuthClientDialog = ({
             label: 'Cancel',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
         />
       }
       error={error?.[0].reason}

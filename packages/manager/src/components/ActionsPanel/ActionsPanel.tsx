@@ -22,16 +22,6 @@ interface ActionPanelProps extends BoxProps {
    * secondary type actionable button custom aria descripton.
    */
   secondaryButtonProps?: ActionButtonsProps;
-
-  /**
-   * Renders primary type actionable button.
-   */
-  showPrimary?: boolean;
-
-  /**
-   * Renders secondary type actionable button.
-   */
-  showSecondary?: boolean;
 }
 
 const ActionsPanel = (props: ActionPanelProps) => {
@@ -39,8 +29,7 @@ const ActionsPanel = (props: ActionPanelProps) => {
     className,
     primaryButtonProps,
     secondaryButtonProps,
-    showPrimary,
-    showSecondary,
+
     ...rest
   } = props;
 
@@ -53,7 +42,7 @@ const ActionsPanel = (props: ActionPanelProps) => {
       data-qa-buttons
       {...rest}
     >
-      {showSecondary ? (
+      {secondaryButtonProps ? (
         <Button
           {...{ [secondaryButtonDataQAProp]: true }}
           buttonType="secondary"
@@ -63,7 +52,7 @@ const ActionsPanel = (props: ActionPanelProps) => {
           {secondaryButtonProps?.label}
         </Button>
       ) : null}
-      {showPrimary ? (
+      {primaryButtonProps ? (
         <Button
           {...{ [primaryButtonDataQAProp]: true }}
           buttonType="primary"

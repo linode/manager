@@ -335,8 +335,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           onClick: onClose,
         }}
         className={classes.actions}
-        showPrimary
-        showSecondary
       />
     </form>
   );

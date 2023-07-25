@@ -436,7 +436,6 @@ export const CreateDomain = () => {
                 loading: formik.isSubmitting,
                 onClick: () => formik.handleSubmit(),
               }}
-              showPrimary
             />
           </StyledForm>
         </Paper>

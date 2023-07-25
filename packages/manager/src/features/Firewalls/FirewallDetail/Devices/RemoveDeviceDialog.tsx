@@ -42,8 +42,6 @@ export const RemoveDeviceDialog = (props: Props) => {
             label: 'Cancel',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
           style={{ padding: 0 }}
         />
       }

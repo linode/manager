@@ -175,8 +175,6 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
           onClick: handleDeleteStackScript,
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: handleCloseDialog }}
-        showPrimary
-        showSecondary
       />
     );
   };
@@ -189,8 +187,6 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
           onClick: handleMakePublic,
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: handleCloseDialog }}
-        showPrimary
-        showSecondary
       />
     );
   };

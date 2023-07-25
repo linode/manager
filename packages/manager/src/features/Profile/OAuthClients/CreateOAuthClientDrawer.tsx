@@ -82,8 +82,6 @@ export const CreateOAuthClientDrawer = ({
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

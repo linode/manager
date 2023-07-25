@@ -72,8 +72,6 @@ const renderActions = (onClose: () => void, provider: TPAProvider) => {
         onClick: onClose,
       }}
       className="p0"
-      showPrimary
-      showSecondary
     />
   );
 };

@@ -552,8 +552,6 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           label: 'Reset Form',
           onClick: onReset,
         }}
-        showPrimary
-        showSecondary
       />
     </Dialog>
   );

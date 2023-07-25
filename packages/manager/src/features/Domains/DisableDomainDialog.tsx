@@ -52,8 +52,6 @@ export const DisableDomainDialog = React.memo(
               onClick: onSubmit,
             }}
             secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-            showPrimary
-            showSecondary
           />
         }
         error={error?.[0]?.reason}

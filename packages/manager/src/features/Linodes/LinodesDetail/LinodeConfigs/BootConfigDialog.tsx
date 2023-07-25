@@ -40,8 +40,6 @@ export const BootConfigDialog = (props: Props) => {
         onClick: onBoot,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-      showPrimary
-      showSecondary
       style={{ padding: 0 }}
     />
   );

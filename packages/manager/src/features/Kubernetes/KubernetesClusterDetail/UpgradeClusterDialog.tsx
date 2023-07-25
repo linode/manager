@@ -82,8 +82,6 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
         label: 'Cancel',
         onClick: onClose,
       }}
-      showPrimary
-      showSecondary
     />
   );
 

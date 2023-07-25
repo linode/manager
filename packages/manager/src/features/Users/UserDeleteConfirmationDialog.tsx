@@ -27,8 +27,6 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
             label: 'Cancel',
             onClick: onCancel,
           }}
-          showPrimary
-          showSecondary
           style={{ padding: 0 }}
         />
       }

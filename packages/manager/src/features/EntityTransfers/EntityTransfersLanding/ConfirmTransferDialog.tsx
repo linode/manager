@@ -143,8 +143,6 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
       }}
       className={classes.actions}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-      showPrimary
-      showSecondary
     />
   );
 

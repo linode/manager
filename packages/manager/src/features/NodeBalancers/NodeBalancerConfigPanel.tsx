@@ -421,21 +421,27 @@ export const NodeBalancerConfigPanel = (
             spacing={2}
           >
             <StyledActionsPanel
-              primaryButtonProps={{
-                'data-testid': 'save-config',
-                disabled,
-                label: 'Save',
-                loading: submitting,
-                onClick: onSave,
-              }}
-              secondaryButtonProps={{
-                'data-testid': 'delete-config',
-                disabled,
-                label: 'Delete',
-                onClick: props.onDelete,
-              }}
-              showPrimary={forEdit}
-              showSecondary={forEdit || configIdx !== 0}
+              primaryButtonProps={
+                forEdit
+                  ? {
+                      'data-testid': 'save-config',
+                      disabled,
+                      label: 'Save',
+                      loading: submitting,
+                      onClick: onSave,
+                    }
+                  : undefined
+              }
+              secondaryButtonProps={
+                forEdit || configIdx !== 0
+                  ? {
+                      'data-testid': 'delete-config',
+                      disabled,
+                      label: 'Delete',
+                      onClick: props.onDelete,
+                    }
+                  : undefined
+              }
             />
           </Grid>
         </React.Fragment>

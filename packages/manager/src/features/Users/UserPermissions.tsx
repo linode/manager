@@ -348,8 +348,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         className={classes.section}
         display="flex"
         justifyContent="flex-end"
-        showPrimary
-        showSecondary
       />
     );
   };

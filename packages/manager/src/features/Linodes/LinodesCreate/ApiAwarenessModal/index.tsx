@@ -242,7 +242,6 @@ const ApiAwarenessModal = (props: Props) => {
           onClick: onClose,
         }}
         className={classes.actionPanelStyles}
-        showSecondary
       />
     </Dialog>
   );

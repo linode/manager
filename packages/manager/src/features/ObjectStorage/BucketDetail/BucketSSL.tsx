@@ -143,7 +143,6 @@ const AddCertForm = (props: Props) => {
             loading: isLoading,
             type: 'submit',
           }}
-          showPrimary
         />
       </Grid>
     </form>

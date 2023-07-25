@@ -145,8 +145,6 @@ export const CreateBucketDrawer = (props: Props) => {
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
 
         <EnableObjectStorageModal

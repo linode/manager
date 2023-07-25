@@ -83,8 +83,6 @@ export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

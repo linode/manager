@@ -88,7 +88,6 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                   loading: isSubmitting,
                   onClick: () => handleSubmit(),
                 }}
-                showPrimary
               />
             </form>
           </>
@@ -169,7 +168,6 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                   loading: isSubmitting,
                   onClick: () => handleSubmit(),
                 }}
-                showPrimary
               />
             </form>
           </div>

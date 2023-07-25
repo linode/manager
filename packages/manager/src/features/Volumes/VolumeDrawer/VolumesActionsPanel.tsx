@@ -34,8 +34,6 @@ const VolumesActionsPanel: React.FC<CombinedProps> = ({
         label: 'Cancel',
         onClick: onCancel,
       }}
-      showPrimary
-      showSecondary
     />
   );
 };

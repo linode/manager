@@ -137,8 +137,6 @@ export const EditRangeRDNSDrawer = (props: Props) => {
             label: 'Close',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
           style={{ marginTop: 16 }}
         />
       </form>

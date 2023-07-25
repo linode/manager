@@ -108,8 +108,6 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                   label: 'Cancel',
                   onClick: onClose,
                 }}
-                showPrimary
-                showSecondary
               />
             </form>
           </>

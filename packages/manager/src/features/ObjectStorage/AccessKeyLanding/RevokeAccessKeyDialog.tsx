@@ -41,8 +41,6 @@ export const RevokeAccessKeyDialog = (props: RevokeKeysDialogProps) => {
         label: 'Cancel',
         onClick: handleClose,
       }}
-      showPrimary
-      showSecondary
     />
   );
 

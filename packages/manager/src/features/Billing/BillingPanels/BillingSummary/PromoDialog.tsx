@@ -71,8 +71,6 @@ const PromoDialog = (props: Props) => {
         onClick: addPromo,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-      showPrimary
-      showSecondary
     />
   );
 

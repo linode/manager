@@ -212,8 +212,6 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
                 label: 'Cancel',
                 onClick: close,
               }}
-              showPrimary
-              showSecondary
               style={{ margin: 0, padding: 0 }}
             />
           </Grid>

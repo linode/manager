@@ -405,8 +405,6 @@ export const ImagesDrawer = (props: CombinedProps) => {
           label,
           description,
         ]}
-        showPrimary
-        showSecondary
         style={{ marginTop: 16 }}
       />
     </Drawer>

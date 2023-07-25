@@ -409,8 +409,6 @@ export const BucketDetail = () => {
               label: 'Cancel',
               onClick: closeDeleteObjectDialog,
             }}
-            showPrimary
-            showSecondary
           />
         )}
         title={

@@ -68,8 +68,6 @@ export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
         onClick: onSubmit,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-      showPrimary
-      showSecondary
     />
   );
 

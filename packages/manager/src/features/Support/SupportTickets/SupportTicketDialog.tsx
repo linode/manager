@@ -659,8 +659,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               label: 'Cancel',
               onClick: onCancel,
             }}
-            showPrimary
-            showSecondary
           />
         </React.Fragment>
       )}

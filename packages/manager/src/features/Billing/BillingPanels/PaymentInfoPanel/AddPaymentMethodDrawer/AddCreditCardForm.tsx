@@ -223,8 +223,6 @@ const AddCreditCardForm = (props: Props) => {
           label: 'Cancel',
           onClick: onClose,
         }}
-        showPrimary
-        showSecondary
         style={{ marginTop: 0 }}
       />
     </form>

@@ -85,8 +85,6 @@ export const SMSMessaging = () => {
               onClick: onOptOut,
             }}
             secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-            showPrimary
-            showSecondary
           />
         )}
         error={error?.[0].reason}

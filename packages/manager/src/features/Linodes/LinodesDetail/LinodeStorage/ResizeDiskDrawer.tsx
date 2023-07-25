@@ -154,8 +154,6 @@ export const ResizeDiskDrawer = (props: Props) => {
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

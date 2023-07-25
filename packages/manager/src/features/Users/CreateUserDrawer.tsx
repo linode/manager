@@ -106,8 +106,6 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
             label: 'Cancel',
             onClick: onClose,
           }}
-          showPrimary
-          showSecondary
         />
       </Drawer>
     );

@@ -93,8 +93,6 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-          showPrimary
-          showSecondary
         />
       </form>
     </Drawer>

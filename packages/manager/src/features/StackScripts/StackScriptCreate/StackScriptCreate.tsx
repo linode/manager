@@ -517,8 +517,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           label: 'Cancel',
           onClick: this.handleCloseDialog,
         }}
-        showPrimary
-        showSecondary
       />
     );
   };
