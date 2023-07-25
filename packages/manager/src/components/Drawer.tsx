@@ -82,7 +82,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
  * - Drawers can be closed by pressing the `esc` key, clicking the “X” icon, or clicking the “Cancel” button.
  */
 export const Drawer = (props: Props) => {
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
 
   const { children, onClose, title, wide, ...rest } = props;
 
@@ -97,7 +97,10 @@ export const Drawer = (props: Props) => {
       }}
       anchor="right"
       classes={{
-        paper: `${classes.common} ${wide ? classes.wide : classes.default}`,
+        paper: cx(classes.common, {
+          [classes.default]: !wide,
+          [classes.wide]: wide,
+        }),
       }}
       {...rest}
       aria-labelledby={titleID}
