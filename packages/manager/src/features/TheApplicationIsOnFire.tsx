@@ -2,10 +2,8 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import { Typography } from 'src/components/Typography';
-import Dialog from 'src/components/core/Dialog';
-import DialogContent from 'src/components/core/DialogContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
   restartButton: {
@@ -13,15 +11,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TheApplicationIsOnFire: React.FC<{}> = (props) => {
+const TheApplicationIsOnFire = () => {
   return (
-    <Dialog PaperProps={{ role: undefined }} open role="dialog">
-      <DialogTitle title="Oh snap!" />
-      <DialogContent>
-        <Typography style={{ marginBottom: 16 }} variant="subtitle1">
-          Something went terribly wrong. Please {<ReloadLink />} and try again.
-        </Typography>
-      </DialogContent>
+    <Dialog open title="Oh snap!">
+      <Typography style={{ marginBottom: 16 }} variant="subtitle1">
+        Something went terribly wrong. Please {<ReloadLink />} and try again.
+      </Typography>
     </Dialog>
   );
 };
