@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
@@ -14,13 +14,13 @@ import RadioGroup from 'src/components/core/RadioGroup';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 
-interface Props {
+interface CloneDomainDrawerProps {
   domain: Domain | undefined;
   onClose: () => void;
   open: boolean;
 }
 
-export const CloneDomainDrawer = (props: Props) => {
+export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
   const { domain, onClose: _onClose, open } = props;
 
   const { data: profile } = useProfile();

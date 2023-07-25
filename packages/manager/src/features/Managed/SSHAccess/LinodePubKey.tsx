@@ -9,8 +9,9 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { useManagedSSHKey } from 'src/queries/managed/managed';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -146,16 +147,8 @@ const LinodePubKey: React.FC<{}> = () => {
             <Typography variant="h3">Linode Public Key</Typography>
           </Box>
           <Typography>
-            You must{' '}
-            <a
-              aria-describedby="external-site"
-              href={DOC_URL}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              install our public SSH key
-            </a>{' '}
-            on all managed Linodes so we can access them and diagnose issues.
+            You must <Link to={DOC_URL}>install our public SSH key</Link> on all
+            managed Linodes so we can access them and diagnose issues.
           </Typography>
         </Grid>
         {/* Hide the SSH key on x-small viewports */}

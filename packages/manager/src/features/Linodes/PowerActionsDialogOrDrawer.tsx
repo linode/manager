@@ -7,10 +7,10 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Select from 'src/components/EnhancedSelect/Select';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
   useAllLinodeConfigsQuery,
   useBootLinodeMutation,
@@ -95,6 +95,8 @@ export const PowerActionsDialog = (props: Props) => {
     mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
 
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
+
   const [selectedConfigID, setSelectConfigID] = React.useState<null | number>(
     null
   );
@@ -166,11 +168,9 @@ export const PowerActionsDialog = (props: Props) => {
       {props.action === 'Power On' ? (
         <Typography className={classes.root}>
           See the&nbsp;
-          <ExternalLink
-            hideIcon
-            link="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/"
-            text="guide for setting up and securing a compute instance"
-          />
+          <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/">
+            guide for setting up and securing a compute instance
+          </Link>
           &nbsp;for more information.
         </Typography>
       ) : null}
@@ -192,11 +192,9 @@ export const PowerActionsDialog = (props: Props) => {
             Powered down Linodes will still accrue charges.
             <br />
             See the&nbsp;
-            <ExternalLink
-              hideIcon
-              link="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services"
-              text="Billing and Payments documentation"
-            />
+            <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services">
+              Billing and Payments documentation
+            </Link>
             &nbsp;for more information.
           </Notice>
         </span>

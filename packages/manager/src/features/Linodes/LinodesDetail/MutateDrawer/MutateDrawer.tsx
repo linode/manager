@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import ListItem from 'src/components/core/ListItem';
@@ -182,14 +183,9 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
          */}
         <Typography style={{ display: 'none' }}>
           {`Need help? Refer to the `}
-          <a
-            aria-describedby="external-site"
-            href="google.com"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
+          <Link external to="google.com">
             supporting documentation
-          </a>
+          </Link>
           .
         </Typography>
       </Drawer>

@@ -26,7 +26,7 @@ import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegion
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,

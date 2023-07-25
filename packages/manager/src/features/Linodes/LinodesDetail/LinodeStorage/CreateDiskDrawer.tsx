@@ -9,7 +9,7 @@ import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { Notice } from 'src/components/Notice/Notice';
@@ -17,7 +17,7 @@ import { TextField } from 'src/components/TextField';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskCreateMutation,
@@ -61,6 +61,8 @@ export const CreateDiskDrawer = (props: Props) => {
   const { mutateAsync: createDisk, reset } = useLinodeDiskCreateMutation(
     linodeId
   );
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const maximumSize = calculateDiskFree(linode, disks, 0);
 
