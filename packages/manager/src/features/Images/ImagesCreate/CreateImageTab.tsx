@@ -17,7 +17,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import useFlags from 'src/hooks/useFlags';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useCreateImageMutation } from 'src/queries/images';
@@ -251,7 +251,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       ) : null}
       {notice ? <Notice data-qa-notice info text={notice} /> : null}
 
-      <LinodeSelectV2
+      <LinodeSelect
         optionsFilter={(linode) =>
           availableLinodesToImagize?.includes(linode.id) ?? true
         }

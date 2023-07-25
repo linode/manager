@@ -322,18 +322,18 @@ export const ImagesDrawer = (props: CombinedProps) => {
 
       {['create', 'restore'].includes(mode) && (
         <LinodeSelect
-          filterCondition={(linode) =>
-            availableLinodes ? availableLinodes.includes(linode.id) : true
-          }
-          handleChange={(linode) => {
+          onSelectionChange={(linode) => {
             if (linode !== null) {
               handleLinodeChange(linode.id);
             }
           }}
+          optionsFilter={(linode) =>
+            availableLinodes ? availableLinodes.includes(linode.id) : true
+          }
+          clearable={false}
           disabled={!canCreateImage}
-          isClearable={false}
-          linodeError={linodeError}
-          selectedLinode={selectedLinode}
+          errorText={linodeError}
+          value={selectedLinode}
         />
       )}
 
