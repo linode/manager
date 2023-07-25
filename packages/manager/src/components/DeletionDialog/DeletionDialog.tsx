@@ -23,7 +23,13 @@ interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   typeToConfirm?: boolean;
 }
 
-const _DeletionDialog = (props: DeletionDialogProps) => {
+/**
+ * A Deletion Dialog is used for deleting entities such as Linodes, NodeBalancers, Volumes, or other entities.
+ *
+ * Require `typeToConfirm` when an action would have a significant negative impact if done in error, consider requiring the user to enter a unique identifier such as entity label before activating the action button.
+ * If a user has opted out of type-to-confirm this will be ignored
+ */
+export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   const theme = useTheme();
   const {
     entity,
@@ -103,8 +109,4 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
       />
     </ConfirmationDialog>
   );
-};
-
-const DeletionDialog = React.memo(_DeletionDialog);
-
-export { DeletionDialog };
+});

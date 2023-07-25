@@ -7,7 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { useGrants } from 'src/queries/profile';
@@ -161,7 +161,7 @@ const CreateFirewallDrawer = (props: Props) => {
           onChange={handleChange}
           value={values.label}
         />
-        <LinodeSelectV2
+        <LinodeSelect
           onSelectionChange={(selected) =>
             setFieldValue(
               'devices.linodes',

@@ -15,6 +15,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
+import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import LandingHeader from 'src/components/LandingHeader';
@@ -27,7 +28,7 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { reportException } from 'src/exceptionReporting';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -390,7 +391,7 @@ export const CreateDomain = () => {
             {isCreatingPrimaryDomain &&
               defaultRecordsSetting.value === 'linode' && (
                 <React.Fragment>
-                  <LinodeSelectV2
+                  <LinodeSelect
                     onSelectionChange={(value) =>
                       setSelectedDefaultLinode(value ?? undefined)
                     }

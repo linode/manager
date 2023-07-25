@@ -125,16 +125,16 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
         )}
         {generalError && <Notice error={true} text={generalError} />}
         <LinodeSelect
-          handleChange={(linode) => {
+          onSelectionChange={(linode) => {
             if (linode !== null) {
               formik.setFieldValue('linode_id', linode.id);
             }
           }}
+          clearable={false}
           disabled={disabled || readOnly}
-          isClearable={false}
-          linodeError={formik.errors.linode_id ?? linodeError}
-          region={linodeRegion}
-          selectedLinode={formik.values.linode_id}
+          errorText={formik.errors.linode_id ?? linodeError}
+          optionsFilter={(linode) => linode.region === linodeRegion}
+          value={formik.values.linode_id}
         />
         {!linodeError && (
           <FormHelperText>
