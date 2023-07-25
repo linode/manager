@@ -1,7 +1,9 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
+import { Box } from '@mui/material';
 import * as React from 'react';
 
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { SelectedIcon } from 'src/features/Linodes/LinodeSelect/LinodeSelect.styles';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
 import type { TextFieldProps } from 'src/components/TextField';
@@ -22,10 +24,20 @@ export const ConfigNodeIPSelect = React.memo(
     const [selectedLinode, setSelectedLinode] = React.useState<null | number>(
       null
     );
-    const { handleChange: _handleChange, inputId } = props;
+    const {
+      handleChange: _handleChange,
+      inputId,
+      nodeAddress,
+      nodeIndex,
+    } = props;
 
     const handleChange = (linode: Linode) => {
+      if (!linode?.id) {
+        return;
+      }
+
       setSelectedLinode(linode.id);
+
       const thisLinodesPrivateIP = linode.ipv4.find((ipv4) =>
         ipv4.match(privateIPRegex)
       );
@@ -33,12 +45,14 @@ export const ConfigNodeIPSelect = React.memo(
        * we can be sure the selection has a private IP because of the
        * filterCondition prop in the render method below
        */
-      _handleChange(props.nodeIndex, thisLinodesPrivateIP!);
+      _handleChange(nodeIndex, thisLinodesPrivateIP!);
     };
 
     return (
       <LinodeSelect
-        filterCondition={(linode) => {
+        noOptionsMessage={`No options - please ensure you have at least 1 Linode
+      with a private IP located in the selected region.`}
+        optionsFilter={(linode) => {
           /**
            * if the Linode doesn't have an private IP OR if the Linode
            * is in a different region that the NodeBalancer, don't show it
@@ -49,39 +63,34 @@ export const ConfigNodeIPSelect = React.memo(
             linode.region === props.selectedRegion
           );
         }}
-        labelOverride={(linode) => {
-          return (
-            <div>
+        renderOption={(linode, selected) => (
+          <>
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            >
               <strong>
                 {linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
               </strong>
-              <div>{` ${linode.label}`}</div>
-            </div>
-          );
-        }}
-        noOptionsMessage={`No options - please ensure you have at least 1 Linode
-      with a private IP located in the selected region.`}
-        value={
-          props.nodeAddress
-            ? {
-                label: props.nodeAddress,
-                value: props.nodeAddress,
-              }
-            : null
+              <div>{linode.label}</div>
+            </Box>
+            <SelectedIcon visible={selected} />
+          </>
+        )}
+        renderOptionLabel={(linode) =>
+          linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex)) ?? ''
         }
-        valueOverride={(linode) => {
-          return linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex));
-        }}
+        clearable
         disabled={props.disabled}
-        generalError={props.errorText}
-        handleChange={handleChange}
-        inputId={inputId}
+        errorText={props.errorText}
+        id={inputId}
         label="IP Address"
         noMarginTop
+        onSelectionChange={handleChange}
         placeholder="Enter IP Address"
-        selectedLinode={selectedLinode}
-        small
-        textFieldProps={props.textfieldProps}
+        showIPAddressLabel
+        value={nodeAddress === '' ? null : selectedLinode}
       />
     );
   }

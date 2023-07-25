@@ -8,7 +8,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
@@ -126,7 +126,7 @@ export const AddDeviceDrawer = (props: Props) => {
         }}
       >
         {errorMessage ? errorNotice(errorMessage) : null}
-        <LinodeSelectV2
+        <LinodeSelect
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
             linodeSelectGuidance ? linodeSelectGuidance : ''
           }`}
