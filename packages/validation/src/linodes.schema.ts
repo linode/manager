@@ -268,6 +268,7 @@ export const CreateLinodeSchema = object({
   }),
   interfaces: linodeInterfaceSchema,
   metadata: MetadataSchema,
+  firewall: number().notRequired(),
 });
 
 const alerts = object({

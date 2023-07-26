@@ -344,6 +344,7 @@ export interface CreateLinodeRequest {
   authorized_users?: string[];
   interfaces?: Interface[];
   metadata?: UserData;
+  firewall?: number;
 }
 
 export type RescueRequestObject = Pick<
