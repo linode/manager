@@ -14,8 +14,7 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import LandingHeader from 'src/components/LandingHeader';
@@ -429,18 +428,15 @@ export const CreateDomain = () => {
                   )}
                 </React.Fragment>
               )}
-            <ActionsPanel>
-              <Button
-                buttonType="primary"
-                data-qa-submit
-                data-testid="create-domain-submit"
-                disabled={disabled || !formik.isValid}
-                loading={formik.isSubmitting}
-                onClick={() => formik.handleSubmit()}
-              >
-                Create Domain
-              </Button>
-            </ActionsPanel>
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                disabled: disabled || !formik.isValid,
+                label: 'Create Domain',
+                loading: formik.isSubmitting,
+                onClick: () => formik.handleSubmit(),
+              }}
+            />
           </StyledForm>
         </Paper>
       </StyledGrid>

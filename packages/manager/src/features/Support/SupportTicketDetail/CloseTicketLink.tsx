@@ -2,8 +2,7 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useSupportTicketCloseMutation } from 'src/queries/support';
@@ -35,23 +34,19 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        data-qa-dialog-cancel
-        onClick={() => setIsDialogOpen(false)}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-dialog-submit
-        loading={isLoading}
-        onClick={closeTicket}
-      >
-        Confirm
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'dialog-submit',
+        label: 'Confrim',
+        loading: isLoading,
+        onClick: closeTicket,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'dialog-cancel',
+        label: 'Cancel',
+        onClick: () => setIsDialogOpen(false),
+      }}
+    />
   );
 
   return (

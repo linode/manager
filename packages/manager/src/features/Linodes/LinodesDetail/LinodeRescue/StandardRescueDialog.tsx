@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
 
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -241,16 +241,14 @@ export const StandardRescueDialog = (props: Props) => {
             >
               Add Disk
             </Button>
-            <StyledActionPanel>
-              <Button
-                buttonType="primary"
-                data-qa-submit
-                disabled={disabled}
-                onClick={onSubmit}
-              >
-                Reboot into Rescue Mode
-              </Button>
-            </StyledActionPanel>
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                disabled,
+                label: 'Reboot into Rescue Mode',
+                onClick: onSubmit,
+              }}
+            />
           </Paper>
         </div>
       )}

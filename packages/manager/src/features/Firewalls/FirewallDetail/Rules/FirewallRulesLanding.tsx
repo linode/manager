@@ -2,8 +2,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
@@ -277,15 +276,16 @@ const FirewallRulesLanding = (props: Props) => {
           return (
             <ConfirmationDialog
               actions={() => (
-                <ActionsPanel>
-                  <Button buttonType="secondary" onClick={handleConfirm}>
-                    Leave and discard changes
-                  </Button>
-
-                  <Button buttonType="primary" onClick={handleCancel}>
-                    Go back and review changes
-                  </Button>
-                </ActionsPanel>
+                <ActionsPanel
+                  primaryButtonProps={{
+                    label: 'Go back and review changes',
+                    onClick: handleCancel,
+                  }}
+                  secondaryButtonProps={{
+                    label: 'Leave and discard changes',
+                    onClick: handleConfirm,
+                  }}
+                />
               )}
               onClose={handleCancel}
               open={isModalOpen}
@@ -365,23 +365,21 @@ const FirewallRulesLanding = (props: Props) => {
         onSubmit={ruleDrawer.mode === 'create' ? handleAddRule : handleEditRule}
         ruleToModify={ruleToModify}
       />
-      <ActionsPanel className={classes.actions}>
-        <Button
-          buttonType="secondary"
-          disabled={!hasUnsavedChanges || disabled}
-          onClick={() => setDiscardChangesModalOpen(true)}
-        >
-          Discard Changes
-        </Button>
-        <Button
-          buttonType="primary"
-          disabled={!hasUnsavedChanges || disabled}
-          loading={submitting}
-          onClick={applyChanges}
-        >
-          Save Changes
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          disabled: !hasUnsavedChanges || disabled,
+          label: 'Save Changes',
+          loading: submitting,
+          onClick: applyChanges,
+        }}
+        secondaryButtonProps={{
+          disabled: !hasUnsavedChanges || disabled,
+          label: 'Discard Changes',
+          onClick: () => setDiscardChangesModalOpen(true),
+        }}
+        className={classes.actions}
+      />
+
       <DiscardChangesDialog
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);
@@ -414,15 +412,16 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
 
     const actions = React.useCallback(
       () => (
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={handleDiscard}>
-            Discard changes
-          </Button>
-
-          <Button buttonType="primary" onClick={handleClose}>
-            Go back and review changes
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Go back and review changes',
+            onClick: handleClose,
+          }}
+          secondaryButtonProps={{
+            label: 'Discard changes',
+            onClick: handleDiscard,
+          }}
+        />
       ),
       [handleDiscard, handleClose]
     );

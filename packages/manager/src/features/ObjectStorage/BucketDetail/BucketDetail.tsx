@@ -13,9 +13,8 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
@@ -398,23 +397,19 @@ export const BucketDetail = () => {
       )}
       <ConfirmationDialog
         actions={() => (
-          <ActionsPanel>
-            <Button
-              buttonType="secondary"
-              data-qa-cancel
-              onClick={closeDeleteObjectDialog}
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              data-qa-submit-rebuild
-              loading={deleteObjectLoading}
-              onClick={deleteObject}
-            >
-              Delete
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit-rebuild',
+              label: 'Delete',
+              loading: deleteObjectLoading,
+              onClick: deleteObject,
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: closeDeleteObjectDialog,
+            }}
+          />
         )}
         title={
           objectToDelete
