@@ -69,7 +69,7 @@ export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
     display: 'flex',
     fontSize: '0.875rem',
     justifyContent: 'center',
-    padding: '8px',
+    padding: theme.spacing(1),
     width: '100%',
   })
 );
@@ -89,9 +89,9 @@ export const StyledFirewallRuleButton = styled('button', {
 
 export const StyledFirewallTableButton = styled(Button, {
   label: 'StyledFirewallTableButton',
-})({
-  margin: '8px 0px',
-});
+})(({ theme }) => ({
+  margin: `${theme.spacing(1)} 0px`,
+}));
 
 export const MoreStyledLinkButton = styled(StyledLinkButton, {
   label: 'MoreStyledLinkButton',

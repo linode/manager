@@ -86,16 +86,12 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     (item: Item | null) => {
       const selectedType = item?.value;
 
-      // If the user re-selectes the same preset, don't do anything
-      if (selectedType === values.type) {
+      // If the user re-selects the same preset or selectedType is undefined, don't do anything
+      if (selectedType === values.type || !selectedType) {
         return;
       }
 
       setFieldValue('type', selectedType);
-
-      if (!selectedType) {
-        return;
-      }
 
       if (!touched.label) {
         setFieldValue(
