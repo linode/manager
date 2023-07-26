@@ -1,9 +1,6 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { Link } from 'react-router-dom';
-
-import { Typography } from 'src/components/Typography';
 
 import { LinodeSelect } from './LinodeSelect';
 
@@ -48,15 +45,8 @@ export const Default: Story = {
 export const noOptionsMessage: Story = {
   args: {
     label: 'Select a Linode',
-    noOptionsMessage: (
-      <Typography>
-        You have no VPCs. Go to{' '}
-        <Link data-testid="abuse-ticket-link" to={'/linodes'}>
-          VPC
-        </Link>{' '}
-        to create one. Any data you have entered will be lost leaving this page.
-      </Typography>
-    ),
+    noOptionsMessage:
+      'This is a custom message when there are no options to display.',
     options: [],
     placeholder: 'Select a Linode',
     value: null,

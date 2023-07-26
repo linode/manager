@@ -32,7 +32,7 @@ interface LinodeSelectProps {
   /** Optionally disable top margin for input label */
   noMarginTop?: boolean;
   /** Message displayed when no options match the user's search. */
-  noOptionsMessage?: JSX.Element | string;
+  noOptionsMessage?: string;
   /** Called when the input loses focus. */
   onBlur?: (e: React.FocusEvent) => void;
   /* The options to display in the select. */
