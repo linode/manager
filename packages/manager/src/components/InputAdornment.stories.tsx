@@ -16,7 +16,7 @@ export const Default: Story = {
     position: 'end',
   },
   render: (args) => <InputAdornment {...args} />,
-  // This crashes the browser...
+  // I want to show this component used in context but this crashes the browser...
   // render: (args) => (
   //   <TextField
   //     InputProps={{

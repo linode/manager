@@ -38,7 +38,7 @@ export const Number: Story = {
   render: (args) => <TextField {...args} />,
 };
 
-export const Adornment: Story = {
+export const WithAdornment: Story = {
   args: {
     InputProps: {
       startAdornment: <InputAdornment position="end">$</InputAdornment>,
