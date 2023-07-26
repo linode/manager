@@ -33,10 +33,15 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
   switch (event.action) {
     case 'linode_migrate':
     case 'linode_migrate_datacenter':
+    case 'linode_migrate_datacenter_create':
+    case 'linode_mutate':
+    case 'linode_mutate_create':
     case 'linode_resize':
+    case 'linode_resize_create':
     case 'linode_reboot':
     case 'linode_boot':
     case 'linode_shutdown':
+    case 'linode_update':
       queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'details']);
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
@@ -50,6 +55,7 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
       queryClient.invalidateQueries([queryKey, 'infinite']);
       return;
     case 'linode_addip':
+    case 'linode_deleteip':
       queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'ips']);
       queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'details']);
       queryClient.invalidateQueries([queryKey, 'paginated']);
@@ -86,6 +92,7 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
       return;
     case 'linode_config_create':
     case 'linode_config_delete':
+    case 'linode_config_update':
       queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'configs']);
       return;
   }
