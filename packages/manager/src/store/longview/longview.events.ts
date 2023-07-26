@@ -1,29 +1,32 @@
 import { EventStatus } from '@linode/api-v4/lib/account';
 import { Dispatch } from 'redux';
 
-import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
-import { isEntityEvent } from 'src/utilities/eventUtils';
+import { EventHandler } from 'src/store/types';
 
 import { getAllLongviewClients } from './longview.requests';
 
-export const longviewEventHandler: AppEventHandler = (event, _, store) => {
-  if (!isEntityEvent(event)) {
-    return;
-  }
-  const { action, status } = event;
+const longviewEventHandler: EventHandler = (event, dispatch, getState) => {
+  const { action, entity, status } = event;
+  const { id } = entity;
 
   switch (action) {
     case 'longviewclient_create':
     case 'longviewclient_delete':
     case 'longviewclient_update':
-      return handleClientChange(store.dispatch, status);
+      return handleClientChange(dispatch, status, id);
 
     default:
       return;
   }
 };
 
-const handleClientChange = (dispatch: Dispatch<any>, status: EventStatus) => {
+export default longviewEventHandler;
+
+const handleClientChange = (
+  dispatch: Dispatch<any>,
+  status: EventStatus,
+  linodeId: number
+) => {
   switch (status) {
     case 'finished':
     case 'notification':

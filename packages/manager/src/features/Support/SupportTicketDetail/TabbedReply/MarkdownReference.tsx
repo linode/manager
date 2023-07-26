@@ -2,6 +2,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,16 +31,10 @@ const MarkdownReference: React.FC<CombinedProps> = (props) => {
     <div className={props.rootClass}>
       <Typography>
         You can use Markdown to format your{' '}
-        {props.isReply ? 'reply' : 'question'}. For more examples see this
-        <a
-          aria-describedby="external-site"
-          href="http://demo.showdownjs.com/"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {' '}
-          Markdown cheatsheet.
-        </a>
+        {props.isReply ? 'reply' : 'question'}. For more examples see this{' '}
+        <Link external to="http://demo.showdownjs.com/">
+          Markdown cheatsheet
+        </Link>
       </Typography>
       <Typography className={classes.header}>
         <strong>Examples</strong>

@@ -1,3 +1,9 @@
+## [2023-07-24] - v0.27.0
+
+### Added:
+
+- Validation for VPC subnet creation and modifications ([#9390](https://github.com/linode/manager/pull/9390))
+
 ## [2023-07-11] - v0.26.0
 
 

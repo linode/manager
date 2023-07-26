@@ -10,14 +10,14 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
+import { resetEventsPolling } from 'src/eventsPolling';
 import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
-import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
@@ -74,8 +74,6 @@ export const LinodeResize = (props: Props) => {
 
   const { data: grants } = useGrants();
   const { data: preferences } = usePreferences(open);
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -192,11 +190,9 @@ export const LinodeResize = (props: Props) => {
           website, or if you&rsquo;re not using your Linode as much as you
           thought, you can temporarily or permanently resize your Linode to a
           different plan.{' '}
-          <ExternalLink
-            fixedIcon
-            link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
-            text="Learn more."
-          />
+          <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
+            Learn more.
+          </Link>
         </Typography>
 
         <div className={classes.selectPlanPanel}>
@@ -316,11 +312,9 @@ const getError = (error: APIError[] | null) => {
         The current disk size of your Linode is too large for the new service
         plan. Please resize your disk to accommodate the new plan. You can read
         our{' '}
-        <ExternalLink
-          hideIcon
-          link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
-          text="Resize Your Linode"
-        />{' '}
+        <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
+          Resize Your Linode
+        </Link>{' '}
         guide for more detailed instructions.
       </Typography>
     );

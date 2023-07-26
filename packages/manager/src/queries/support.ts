@@ -15,7 +15,7 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { EventWithStore } from 'src/events';
 
 import type {
   APIError,
@@ -70,6 +70,6 @@ export const useSupportTicketCloseMutation = (id: number) => {
   });
 };
 
-export const supportTicketEventHandler: AppEventHandler = (_, queryClient) => {
+export const supportTicketEventHandler = ({ queryClient }: EventWithStore) => {
   queryClient.invalidateQueries([queryKey]);
 };

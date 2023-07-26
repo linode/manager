@@ -6,7 +6,7 @@ import { queryClientFactory } from 'src/queries/base';
 import { storeFactory } from 'src/store';
 
 const queryClient = queryClientFactory();
-const store = storeFactory();
+const store = storeFactory(queryClient);
 
 const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
