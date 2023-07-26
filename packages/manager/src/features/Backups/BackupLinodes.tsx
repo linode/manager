@@ -1,18 +1,19 @@
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
+
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { ExtendedType } from 'src/utilities/extendType';
+
 import { ExtendedLinode } from './types';
-import { useTheme } from '@mui/material/styles';
 
 interface BackupLinodesProps {
   linodes: ExtendedLinode[];
 }
 
-export const displayPrice = (price: string | number) => {
+export const displayPrice = (price: number | string) => {
   if (typeof price === 'string') {
     return price;
   }
@@ -25,7 +26,7 @@ const getPrice = (type?: ExtendedType) =>
   type?.addons?.backups?.price?.monthly ?? 'Unavailable';
 
 export const BackupLinodes = (props: BackupLinodesProps) => {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const { linodes } = props;
   return (
     <React.Fragment>
@@ -34,16 +35,16 @@ export const BackupLinodes = (props: BackupLinodesProps) => {
           const error = linode.linodeError?.reason ?? '';
           return (
             <React.Fragment key={`backup-linode-${idx}`}>
-              <TableRow data-qa-linodes>
+              <TableRow data-qa-linodes data-testid="backup-linode-table-row">
                 <TableCell data-qa-linode-label parentColumn="Label">
                   <Typography variant="body1">{linode.label}</Typography>
                   {error && (
                     <Typography
-                      variant="body1"
                       sx={{
                         color: theme.color.red,
                         fontSize: 13,
                       }}
+                      variant="body1"
                     >
                       {error}
                     </Typography>
