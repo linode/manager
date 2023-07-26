@@ -1,6 +1,7 @@
 import {
   Config,
   CreateLinodeRequest,
+  Devices,
   Kernel,
   Linode,
   ResizeLinodePayload,
@@ -14,6 +15,7 @@ import {
   linodeBoot,
   linodeReboot,
   linodeShutdown,
+  rescueLinode,
   resizeLinode,
   scheduleOrQueueMigration,
   updateLinode,
@@ -240,6 +242,21 @@ export const useLinodeResizeMutation = (id: number) => {
         queryClient.invalidateQueries([queryKey, 'infinite']);
         queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
         queryClient.invalidateQueries(accountNotificationsQueryKey);
+      },
+    }
+  );
+};
+
+export const useLinodeRescueMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], Devices>(
+    (data) => rescueLinode(id, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
       },
     }
   );

@@ -58,6 +58,7 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
       return;
     case 'linode_create':
     case 'linode_clone':
+      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
