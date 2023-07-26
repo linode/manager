@@ -1,8 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import {
   ConfirmationDialog,
   ConfirmationDialogProps,
@@ -74,26 +73,21 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       : `type  the name of the ${entity.type} ${entity.subType || ''} `;
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        buttonType="secondary"
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-        onClick={onClose}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
-        disabled={disabled}
-        loading={loading}
-        onClick={onClick}
-      >
-        {entity.primaryBtnText}
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        disabled,
+        label: entity.primaryBtnText,
+        loading,
+        onClick,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
+      style={{ padding: 0 }}
+    />
   );
 
   return (

@@ -18,8 +18,7 @@ import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
@@ -539,25 +538,21 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           </>
         )}
       </Grid>
-      <StyledActionPanel>
-        <Button
-          buttonType="secondary"
-          data-qa-ip-transfer-reset
-          disabled={submitting || linodes.length === 0}
-          onClick={onReset}
-        >
-          Reset Form
-        </Button>
-        <Button
-          buttonType="primary"
-          data-qa-ip-transfer-save
-          disabled={readOnly || linodes.length === 0}
-          loading={submitting}
-          onClick={onSubmit}
-        >
-          Save
-        </Button>
-      </StyledActionPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'ip-transfer-save',
+          disabled: readOnly || linodes.length === 0,
+          label: 'Save',
+          loading: submitting,
+          onClick: onSubmit,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'ip-transfer-reset',
+          disabled: submitting || linodes.length === 0,
+          label: 'Reset Form',
+          onClick: onReset,
+        }}
+      />
     </Dialog>
   );
 };

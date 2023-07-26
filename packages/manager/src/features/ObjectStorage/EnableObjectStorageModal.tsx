@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
@@ -20,20 +19,20 @@ export const EnableObjectStorageModal = ({
   return (
     <ConfirmationDialog
       actions={() => (
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Enable Object Storage',
+            onClick: () => {
               onClose();
               handleSubmit();
-            }}
-            buttonType="primary"
-          >
-            Enable Object Storage
-          </Button>
-        </ActionsPanel>
+            },
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+        />
       )}
       onClose={close}
       open={open}

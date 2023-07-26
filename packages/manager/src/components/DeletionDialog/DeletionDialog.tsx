@@ -1,8 +1,7 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
@@ -48,21 +47,21 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   const typeToConfirmRequired =
     typeToConfirm && preferences?.type_to_confirm !== false;
   const renderActions = () => (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-confirm
-        data-testid="delete-btn"
-        disabled={typeToConfirmRequired && confirmationText !== label}
-        loading={loading}
-        onClick={onDelete}
-      >
-        Delete {titlecase(entity)}
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        disabled: typeToConfirmRequired && confirmationText !== label,
+        label: ` Delete ${titlecase(entity)}`,
+        loading,
+        onClick: onDelete,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
+      style={{ padding: 0 }}
+    />
   );
 
   React.useEffect(() => {

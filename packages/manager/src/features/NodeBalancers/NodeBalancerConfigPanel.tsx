@@ -2,7 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect/Select';
@@ -420,29 +420,29 @@ export const NodeBalancerConfigPanel = (
             justifyContent="flex-end"
             spacing={2}
           >
-            <StyledActionsPanel>
-              {(forEdit || configIdx !== 0) && (
-                <Button
-                  buttonType="secondary"
-                  data-qa-delete-config
-                  disabled={disabled}
-                  onClick={props.onDelete}
-                >
-                  Delete
-                </Button>
-              )}
-              {forEdit && (
-                <Button
-                  buttonType="primary"
-                  data-qa-save-config
-                  disabled={disabled}
-                  loading={submitting}
-                  onClick={onSave}
-                >
-                  Save
-                </Button>
-              )}
-            </StyledActionsPanel>
+            <StyledActionsPanel
+              primaryButtonProps={
+                forEdit
+                  ? {
+                      'data-testid': 'save-config',
+                      disabled,
+                      label: 'Save',
+                      loading: submitting,
+                      onClick: onSave,
+                    }
+                  : undefined
+              }
+              secondaryButtonProps={
+                forEdit || configIdx !== 0
+                  ? {
+                      'data-testid': 'delete-config',
+                      disabled,
+                      label: 'Delete',
+                      onClick: props.onDelete,
+                    }
+                  : undefined
+              }
+            />
           </Grid>
         </React.Fragment>
       )}

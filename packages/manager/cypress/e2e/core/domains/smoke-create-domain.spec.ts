@@ -28,7 +28,7 @@ describe('Create a Domain', () => {
     getVisible('[id="soa-email-address"][data-testid="textfield-input"]').type(
       'devs@linode.com'
     );
-    getClick('[data-testid="create-domain-submit"]');
+    getClick('[data-testid="submit"]');
     cy.wait('@createDomain');
     cy.get('[data-qa-header]').should('contain', label);
   });

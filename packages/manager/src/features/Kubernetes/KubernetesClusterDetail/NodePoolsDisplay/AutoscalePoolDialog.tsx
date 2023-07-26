@@ -8,7 +8,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
@@ -118,31 +118,25 @@ export const AutoscalePoolDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button
-            buttonType="secondary"
-            data-qa-cancel
-            data-testid="dialog-cancel"
-            onClick={handleClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            disabled={
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'confirm',
+            disabled:
               (values.enabled === autoscaler?.enabled &&
                 values.min === autoscaler?.min &&
                 values.max === autoscaler?.max) ||
-              Object.keys(errors).length !== 0
-            }
-            buttonType="primary"
-            data-qa-confirm
-            data-testid="dialog-confirm"
-            loading={isLoading || isSubmitting}
-            onClick={() => handleSubmit()}
-          >
-            Save Changes
-          </Button>
-        </ActionsPanel>
+              Object.keys(errors).length !== 0,
+            label: 'Save Changes',
+            loading: isLoading || isSubmitting,
+            onClick: () => handleSubmit(),
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: handleClose,
+          }}
+          style={{ padding: 0 }}
+        />
       }
       error={error?.[0].reason}
       onClose={handleClose}

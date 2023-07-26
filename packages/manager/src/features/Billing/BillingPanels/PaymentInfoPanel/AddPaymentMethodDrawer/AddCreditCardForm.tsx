@@ -10,8 +10,7 @@ import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { useQueryClient } from 'react-query';
 import { makeStyles } from 'tss-react/mui';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { parseExpiryYear } from 'src/utilities/creditCard';
@@ -212,23 +211,20 @@ const AddCreditCardForm = (props: Props) => {
           />
         </Grid>
       </Grid>
-      <ActionsPanel style={{ marginTop: 0 }}>
-        <Button
-          buttonType="secondary"
-          disabled={disableInput}
-          onClick={onClose}
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          disabled={disableAddButton}
-          loading={isSubmitting}
-          type="submit"
-        >
-          Add Credit Card
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          disabled: disableAddButton,
+          label: 'Add Credit Card',
+          loading: isSubmitting,
+          type: 'submit',
+        }}
+        secondaryButtonProps={{
+          disabled: disableInput,
+          label: 'Cancel',
+          onClick: onClose,
+        }}
+        style={{ marginTop: 0 }}
+      />
     </form>
   );
 };

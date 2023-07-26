@@ -9,8 +9,7 @@ import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStor
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
@@ -241,28 +240,23 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                     updateScopes={handleScopeUpdate}
                   />
                 ) : null}
-                <ActionsPanel>
-                  <Button
-                    buttonType="secondary"
-                    data-qa-cancel
-                    onClick={onClose}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    disabled={
+                <ActionsPanel
+                  primaryButtonProps={{
+                    'data-testid': 'submit',
+                    disabled:
                       isRestrictedUser ||
                       (mode !== 'creating' &&
-                        values.label === initialLabelValue)
-                    }
-                    buttonType="primary"
-                    data-qa-submit
-                    loading={isSubmitting}
-                    onClick={beforeSubmit}
-                  >
-                    {createMode ? 'Create Access Key' : 'Save Changes'}
-                  </Button>
-                </ActionsPanel>
+                        values.label === initialLabelValue),
+                    label: createMode ? 'Create Access Key' : 'Save Changes',
+                    loading: isSubmitting,
+                    onClick: beforeSubmit,
+                  }}
+                  secondaryButtonProps={{
+                    'data-testid': 'cancel',
+                    label: 'Cancel',
+                    onClick: onClose,
+                  }}
+                />
                 <EnableObjectStorageModal
                   handleSubmit={handleSubmit}
                   onClose={() => setDialogOpen(false)}

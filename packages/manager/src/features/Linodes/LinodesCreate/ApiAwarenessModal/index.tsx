@@ -4,8 +4,7 @@ import { makeStyles } from '@mui/styles';
 import React, { useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -237,16 +236,15 @@ const ApiAwarenessModal = (props: Props) => {
           with programmatic access to the Linode platform.
         </Typography>
       </Notice>
-      <StyledActionPanel className={classes.actionPanelStyles}>
-        <Button
-          buttonType="secondary"
-          compactX
-          data-testid="close-button"
-          onClick={onClose}
-        >
-          Close
-        </Button>
-      </StyledActionPanel>
+      <ActionsPanel
+        secondaryButtonProps={{
+          compactX: true,
+          'data-testid': 'close-button',
+          label: 'Close',
+          onClick: onClose,
+        }}
+        className={classes.actionPanelStyles}
+      />
     </Dialog>
   );
 };

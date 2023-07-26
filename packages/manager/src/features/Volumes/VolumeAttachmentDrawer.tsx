@@ -3,8 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { number, object } from 'yup';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import { Notice } from 'src/components/Notice/Notice';
@@ -160,20 +159,20 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
             placeholder="Select a Config"
           />
         </FormControl>
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-cancel onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            disabled={disabled || readOnly}
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Attach
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: disabled || readOnly,
+            label: 'Attach',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: handleClose,
+          }}
+        />
       </form>
     </Drawer>
   );
