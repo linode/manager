@@ -3,8 +3,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
@@ -148,14 +147,14 @@ export const PowerActionsDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={props.onClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" loading={isLoading} onClick={onSubmit}>
-            {props.action} Linode
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: `${props.action} Lindoe`,
+            loading: isLoading,
+            onClick: onSubmit,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
+        />
       }
       className={classes.dialog}
       error={error?.[0].reason}

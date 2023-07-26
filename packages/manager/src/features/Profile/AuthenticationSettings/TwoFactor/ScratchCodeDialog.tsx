@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 
@@ -17,11 +16,13 @@ export const ScratchCodeDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-submit onClick={onClose}>
-            Got it
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          secondaryButtonProps={{
+            'data-testid': 'submit',
+            label: 'Got it',
+            onClick: onClose,
+          }}
+        />
       }
       onClose={onClose}
       open={open}

@@ -4,9 +4,8 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Notice } from 'src/components/Notice/Notice';
@@ -175,19 +174,14 @@ export const AccessControls = (props: Props) => {
   };
 
   const actionsPanel = (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={handleDialogClose}>
-        Cancel
-      </Button>
-
-      <Button
-        buttonType="primary"
-        loading={databaseUpdating}
-        onClick={handleRemoveIPAddress}
-      >
-        Remove IP Address
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        label: 'Remove IP Address',
+        loading: databaseUpdating,
+        onClick: handleRemoveIPAddress,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: handleDialogClose }}
+    />
   );
 
   return (

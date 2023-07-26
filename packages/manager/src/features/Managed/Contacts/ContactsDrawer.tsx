@@ -5,8 +5,7 @@ import { Formik, FormikHelpers } from 'formik';
 import { pathOr, pick } from 'ramda';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
@@ -205,15 +204,13 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                   placeholder="Create or Select a Group"
                 />
 
-                <ActionsPanel>
-                  <Button
-                    buttonType="primary"
-                    loading={isSubmitting}
-                    onClick={() => handleSubmit()}
-                  >
-                    {isEditing ? 'Save Changes' : 'Add Contact'}
-                  </Button>
-                </ActionsPanel>
+                <ActionsPanel
+                  primaryButtonProps={{
+                    label: isEditing ? 'Save Changes' : 'Add Contact',
+                    loading: isSubmitting,
+                    onClick: () => handleSubmit(),
+                  }}
+                />
               </form>
             </>
           );
