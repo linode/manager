@@ -1,4 +1,4 @@
-import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { EventWithStore } from 'src/events';
 import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
 
 import { queryKey } from './linodes';
@@ -11,7 +11,7 @@ import type { Event } from '@linode/api-v4';
  * This event handler runs for any event prefixed with "linode".
  * For example, "linode_create", "linode_boot", "linode_resize", ...
  */
-export const linodeEventsHandler: AppEventHandler = (event, queryClient) => {
+export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
   const linodeId = event.entity?.id;
 
   // Early return to cut down the number of invalidations.
@@ -87,7 +87,7 @@ export const linodeEventsHandler: AppEventHandler = (event, queryClient) => {
  * Disks have their own handler beacuse the actions are not prefixed with "linode_".
  * They are prefixed with "disk_". For example "disk_create" or "disk_delete".
  */
-export const diskEventHandler: AppEventHandler = (event, queryClient, _) => {
+export const diskEventHandler = ({ event, queryClient }: EventWithStore) => {
   const linodeId = event.entity?.id;
 
   if (!linodeId || ['scheduled', 'started'].includes(event.status)) {

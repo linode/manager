@@ -37,7 +37,7 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { EventWithStore } from 'src/events';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets, updateInPaginatedStore } from './base';
@@ -207,8 +207,11 @@ export const useRestoreFromBackupMutation = (
   );
 };
 
-export const databaseEventsHandler: AppEventHandler = (event, queryClient) => {
-  const { action, entity, status } = event;
+export const databaseEventsHandler = (event: EventWithStore) => {
+  const {
+    event: { action, entity, status },
+    queryClient,
+  } = event;
 
   switch (action) {
     case 'database_create':
