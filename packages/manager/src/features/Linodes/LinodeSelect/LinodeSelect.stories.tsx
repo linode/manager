@@ -17,6 +17,7 @@ const linodes = [
   { id: 1, label: 'Linode 1' },
   { id: 2, label: 'Linode 2' },
   { id: 3, label: 'Linode 3' },
+  { id: 4, label: 'Linode 4' },
 ];
 
 const meta: Meta<LinodeMultiSelectProps | LinodeSingleSelectProps> = {
@@ -65,6 +66,12 @@ export const noOptionsMessage: Story = {
 
 /* Linode Multi-select */
 export const MultiSelect: Story = {
-  args: {},
+  args: {
+    multiple: true,
+    onSelectionChange: (selected) => {
+      action('onSelectionChange')(selected.map((linode) => linode.id));
+    },
+    value: [1, 2],
+  },
   render: (args) => <LinodeSelect {...args} />,
 };
