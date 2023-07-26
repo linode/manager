@@ -16,6 +16,7 @@ export const StyledPrefixWrapper = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   overflow: 'auto',
+  padding: `${theme.spacing(1)} ${theme.spacing(1)}`,
   whiteSpace: 'nowrap',
   [theme.breakpoints.down('lg')]: {
     marginLeft: theme.spacing(1),
@@ -43,9 +44,8 @@ export const StyledLink = styled(Typography, {
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip',
 })(({ theme }) => ({
-  paddingTop: theme.spacing(1),
-  paddingLeft: theme.spacing(1),
   borderRadius: theme.shape.borderRadius,
+  paddingTop: theme.spacing(1),
   svg: {
     height: 16,
     width: 16,
