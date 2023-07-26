@@ -10,7 +10,6 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
@@ -105,9 +104,23 @@ const DatabaseLanding = () => {
                 Configuration
               </TableSortCell>
             </Hidden>
-            <TableCell>Engine</TableCell>
+            <TableSortCell
+              active={orderBy === 'engine'}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="engine"
+            >
+              Engine
+            </TableSortCell>
             <Hidden mdDown>
-              <TableCell>Region</TableCell>
+              <TableSortCell
+                active={orderBy === 'region'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="region"
+              >
+                Region
+              </TableSortCell>
             </Hidden>
             <Hidden lgDown>
               <TableSortCell
