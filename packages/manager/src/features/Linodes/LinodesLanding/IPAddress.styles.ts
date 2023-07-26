@@ -1,11 +1,9 @@
 import { styled } from '@mui/material/styles';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { IPAddressProps } from './IPAddress';
+import { isPropValid } from 'src/utilities/isPropValid';
 
-type StyledIPAddressProps = Pick<IPAddressProps, 'showAll'>;
-type StyledIPAddressTooltipProps = StyledIPAddressProps & {
-  showcopyonhover: boolean | undefined;
-};
+type StyledIPAddressProps = Pick<IPAddressProps, 'showAll' | 'showCopyOnHover'>;
 
 export const StyledIPLinkDiv = styled('div', { label: 'StyledIPLinkDiv' })(
   ({ theme }) => ({
@@ -40,11 +38,10 @@ export const StyledRootDiv = styled('div', {
     : {}),
 }));
 
-// had to make showcopyonhover not camelcase, or it led to a console error
-// React does not recognize the X prop on a DOM element
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip ',
-})<StyledIPAddressTooltipProps>(({ theme, showcopyonhover }) => ({
+  shouldForwardProp: (prop) => isPropValid(['showCopyOnHover'], prop),
+})<StyledIPAddressProps>(({ theme, showCopyOnHover }) => ({
   '& svg': {
     height: 12,
     top: 1,
@@ -55,7 +52,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
   justifyContent: 'center',
   marginLeft: theme.spacing(0.5),
 
-  ...(showcopyonhover
+  ...(showCopyOnHover
     ? {
         '&:focus': {
           opacity: 1,
@@ -72,6 +69,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 
 export const StyledRenderIPDiv = styled('div', {
   label: 'StyledRenderIPDiv',
+  shouldForwardProp: (prop) => isPropValid(['showAll'], prop),
 })<StyledIPAddressProps>(({ theme, showAll }) => ({
   alignItems: 'flex-start',
   display: 'flex',

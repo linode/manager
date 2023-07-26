@@ -33,20 +33,11 @@ describe('IPAddress', () => {
 
   // TODO figure out this test
   it('should render the copy icon, but not show it if showCopyOnHover is true', () => {
-    //expect(component.find('.hide')).toHaveLength(0);
-    // const noHover = component.find('CopyTooltip');
-    // expect(noHover).toHaveLength(1);
-    // console.log(noHover.get(0));
-    // expect(noHover.props().style).not.toHaveProperty('opacity');
+    expect(component.find('.hide')).toHaveLength(0);
     component.setProps({ showCopyOnHover: true });
     const copy = component.find('[data-qa-copy-ip]');
     expect(copy).toHaveLength(1);
-    // console.log(copy.get(0));
-    // const hoverIcon = component.find('CopyTooltip');
-    // expect(hoverIcon).toHaveLength(1);
-    // expect(hoverIcon.props().style).toHaveProperty('opacity');
-
-    // this below test won't work anymore, due to moving away from previous styling format
+    // changed styling, so now this won't work anymore
     // expect(component.find('.hide')).toHaveLength(1);
   });
 

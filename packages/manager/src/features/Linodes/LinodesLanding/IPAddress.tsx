@@ -76,8 +76,7 @@ export class IPAddress extends React.Component<IPAddressProps> {
     return (
       <StyledIPLinkDiv data-qa-copy-ip>
         <StyledCopyTooltip
-          showcopyonhover={showCopyOnHover}
-          //data-testid={`CopyTooltip`}
+          showCopyOnHover={showCopyOnHover}
           className={`copy`}
           text={ip}
         />
