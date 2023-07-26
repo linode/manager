@@ -22,6 +22,7 @@ import {
 } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
@@ -328,6 +329,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       });
     this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
   };
+
+  eventsSubscription$: Subscription;
 
   generateTypes = (): IType[] => [
     /** SOA Record */
@@ -692,19 +695,15 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       ? this.openForEditPrimaryDomain(d)
       : this.openForEditSecondaryDomain(d);
   };
-
   openForCreateARecord = () => this.openForCreation('AAAA');
 
   openForCreateCAARecord = () => this.openForCreation('CAA');
-
   openForCreateCNAMERecord = () => this.openForCreation('CNAME');
 
   openForCreateMXRecord = () => this.openForCreation('MX');
-
   openForCreateNSRecord = () => this.openForCreation('NS');
 
   openForCreateSRVRecord = () => this.openForCreation('SRV');
-
   openForCreateTXTRecord = () => this.openForCreation('TXT');
 
   openForCreation = (type: RecordType) =>
@@ -714,7 +713,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       submitting: false,
       type,
     }));
-
   openForEditARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('AAAA', f);
@@ -722,7 +720,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   openForEditCAARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CAA', f);
-
   openForEditCNAMERecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CNAME', f);
@@ -730,7 +727,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   openForEditMXRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('MX', f);
-
   openForEditNSRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('NS', f);
