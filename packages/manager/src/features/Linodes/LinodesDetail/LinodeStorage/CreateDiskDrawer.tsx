@@ -7,8 +7,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
@@ -17,7 +16,7 @@ import { TextField } from 'src/components/TextField';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskCreateMutation,
@@ -61,8 +60,6 @@ export const CreateDiskDrawer = (props: Props) => {
   const { mutateAsync: createDisk, reset } = useLinodeDiskCreateMutation(
     linodeId
   );
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const maximumSize = calculateDiskFree(linode, disks, 0);
 
@@ -203,19 +200,15 @@ export const CreateDiskDrawer = (props: Props) => {
         <FormHelperText style={{ marginTop: 8 }}>
           Maximum size: {maximumSize} MB
         </FormHelperText>
-        <ActionsPanel>
-          <Button buttonType="secondary" className="cancel" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-testid="submit-disk-form"
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Create
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit-disk-form',
+            label: 'Create',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       </form>
     </Drawer>
   );

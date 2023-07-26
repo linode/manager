@@ -2,8 +2,7 @@ import { Theme } from '@mui/material/styles';
 import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Typography } from 'src/components/Typography';
 
@@ -88,11 +87,7 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
           value={`mount /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel}`}
         />
       </div>
-      <ActionsPanel>
-        <Button buttonType="primary" onClick={onClose}>
-          Close
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel primaryButtonProps={{ label: 'Close', onClick: onClose }} />
     </React.Fragment>
   );
 };

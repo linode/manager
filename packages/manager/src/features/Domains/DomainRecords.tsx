@@ -1,12 +1,13 @@
 import {
-  deleteDomainRecord,
   Domain,
   DomainRecord,
   DomainType,
   RecordType,
   UpdateDomainPayload,
+  deleteDomainRecord,
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import {
   compose,
   equals,
@@ -21,22 +22,22 @@ import {
 } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { Subscription } from 'rxjs/Subscription';
+
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { StyledGrid, StyledTableCell, StyledDiv } from './DomainRecords.styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { Typography } from 'src/components/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { Typography } from 'src/components/Typography';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -47,48 +48,50 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { truncateEnd } from 'src/utilities/truncate';
+
 import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { DomainRecordDrawer } from './DomainRecordDrawer';
+import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
 
 interface DomainRecordsProps {
   domain: Domain;
   domainRecords: DomainRecord[];
-  updateRecords: () => void;
   updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
+  updateRecords: () => void;
 }
 
 interface ConfirmationState {
-  open: boolean;
-  submitting: boolean;
   errors?: APIError[];
+  open: boolean;
   recordId?: number;
+  submitting: boolean;
 }
 
 interface DrawerState {
-  open: boolean;
+  fields?: Partial<Domain> | Partial<DomainRecord>;
   mode: 'create' | 'edit';
-  type: RecordType | DomainType;
-  fields?: Partial<DomainRecord> | Partial<Domain>;
+  open: boolean;
+  type: DomainType | RecordType;
 }
 
 interface State {
-  types: IType[];
-  drawer: DrawerState;
   confirmDialog: ConfirmationState;
+  drawer: DrawerState;
+  types: IType[];
 }
 
 type CombinedProps = DomainRecordsProps & FeatureFlagConsumerProps;
 
 interface IType {
-  title: string;
-  data: any[];
-  order: 'asc' | 'desc';
-  orderBy: 'name' | 'target' | 'domain';
   columns: {
+    render: (r: Domain | DomainRecord) => JSX.Element | null | string;
     title: string;
-    render: (r: DomainRecord | Domain) => null | string | JSX.Element;
   }[];
-  link?: () => null | JSX.Element;
+  data: any[];
+  link?: () => JSX.Element | null;
+  order: 'asc' | 'desc';
+  orderBy: 'domain' | 'name' | 'target';
+  title: string;
 }
 
 const createLink = (title: string, handler: () => void) => (
@@ -326,6 +329,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       });
     this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
   };
+
+  eventsSubscription$: Subscription;
 
   generateTypes = (): IType[] => [
     /** SOA Record */
@@ -690,19 +695,15 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       ? this.openForEditPrimaryDomain(d)
       : this.openForEditSecondaryDomain(d);
   };
-
   openForCreateARecord = () => this.openForCreation('AAAA');
 
   openForCreateCAARecord = () => this.openForCreation('CAA');
-
   openForCreateCNAMERecord = () => this.openForCreation('CNAME');
 
   openForCreateMXRecord = () => this.openForCreation('MX');
-
   openForCreateNSRecord = () => this.openForCreation('NS');
 
   openForCreateSRVRecord = () => this.openForCreation('SRV');
-
   openForCreateTXTRecord = () => this.openForCreation('TXT');
 
   openForCreation = (type: RecordType) =>
@@ -712,7 +713,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       submitting: false,
       type,
     }));
-
   openForEditARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('AAAA', f);
@@ -720,7 +720,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   openForEditCAARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CAA', f);
-
   openForEditCNAMERecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CNAME', f);
@@ -728,7 +727,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   openForEditMXRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('MX', f);
-
   openForEditNSRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('NS', f);
@@ -764,18 +762,17 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
   renderDialogActions = () => {
     return (
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={this.handleCloseDialog}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          loading={this.state.confirmDialog.submitting}
-          onClick={this.deleteDomainRecord}
-        >
-          Delete
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          label: 'Delete',
+          loading: this.state.confirmDialog.submitting,
+          onClick: this.deleteDomainRecord,
+        }}
+        secondaryButtonProps={{
+          label: 'Cancel',
+          onClick: this.handleCloseDialog,
+        }}
+      />
     );
   };
 
@@ -817,69 +814,69 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
   flatten,
   prepend([
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
+      priority: 0,
+      protocol: null,
+      service: null,
+      tag: null,
       target: 'ns1.linode.com',
-      service: null,
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
+      priority: 0,
+      protocol: null,
+      service: null,
+      tag: null,
       target: 'ns2.linode.com',
-      service: null,
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
+      priority: 0,
+      protocol: null,
+      service: null,
+      tag: null,
       target: 'ns3.linode.com',
-      service: null,
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
+      priority: 0,
+      protocol: null,
+      service: null,
+      tag: null,
       target: 'ns4.linode.com',
-      service: null,
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
-      target: 'ns5.linode.com',
+      priority: 0,
+      protocol: null,
       service: null,
+      tag: null,
+      target: 'ns5.linode.com',
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
   ])
 );

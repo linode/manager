@@ -1,8 +1,7 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Select from 'src/components/EnhancedSelect';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
@@ -322,15 +321,13 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         </RadioGroup>
       </StyledDiv>
 
-      <ActionsPanel>
-        <Button
-          buttonType="primary"
-          data-qa-submit
-          onClick={() => handleSubmit()}
-        >
-          {mode === 'create' ? 'Add Rule' : 'Add Changes'}
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'submit',
+          label: mode === 'create' ? 'Add Rule' : 'Add Changes',
+          onClick: () => handleSubmit(),
+        }}
+      />
     </form>
   );
 });
