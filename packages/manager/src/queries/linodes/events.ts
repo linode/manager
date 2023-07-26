@@ -1,5 +1,7 @@
 import { EventWithStore } from 'src/events';
 import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
+import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
+import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 
 import { queryKey } from './linodes';
 
@@ -73,6 +75,12 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
+      // A Linode made have been on a Firewall's device list, but now that it is deleted,
+      // it will no longer be listed as a device on that firewall. Here, we invalidate outdated firewall data.
+      queryClient.invalidateQueries([firewallsQueryKey]);
+      // A Linode may have been attached to a Volume, but deleted. We need to refetch volumes data so that
+      // the Volumes table does not show a Volume attached to a non-existant Linode.
+      queryClient.invalidateQueries([volumesQueryKey]);
       return;
     case 'linode_config_create':
     case 'linode_config_delete':
