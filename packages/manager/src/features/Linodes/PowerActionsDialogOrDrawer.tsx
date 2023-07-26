@@ -9,7 +9,7 @@ import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeConfigsQuery,
   useBootLinodeMutation,
@@ -93,8 +93,6 @@ export const PowerActionsDialog = (props: Props) => {
     isLoading: isShuttingDown,
     mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const [selectedConfigID, setSelectConfigID] = React.useState<null | number>(
     null
