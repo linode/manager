@@ -24,7 +24,7 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { EventWithStore } from 'src/events';
 import { getAll } from 'src/utilities/getAll';
 
 import { updateInPaginatedStore } from './base';
@@ -174,7 +174,7 @@ export const useAttachVolumeMutation = () => {
 export const useDetachVolumeMutation = () =>
   useMutation<{}, APIError[], { id: number }>(({ id }) => detachVolume(id));
 
-export const volumeEventsHandler: AppEventHandler = (event, queryClient) => {
+export const volumeEventsHandler = ({ event, queryClient }: EventWithStore) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
     queryClient.invalidateQueries([queryKey]);
   }

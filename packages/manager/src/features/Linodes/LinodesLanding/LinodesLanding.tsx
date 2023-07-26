@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -11,10 +12,6 @@ import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceB
 import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import {
-  WithEventsInfiniteQueryProps,
-  withEventsInfiniteQuery,
-} from 'src/containers/events.container';
 import {
   WithProfileProps,
   withProfile,
@@ -34,7 +31,7 @@ import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuil
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
 import { Action, PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
-import { linodesInTransition } from '../transitions';
+import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
@@ -48,6 +45,7 @@ import { ExtendedStatus, statusToPriority } from './utils';
 import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import type { MapState } from 'src/store/types';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -89,17 +87,17 @@ export interface LinodesLandingProps {
 }
 
 type CombinedProps = LinodesLandingProps &
+  StateProps &
   RouteProps &
   StyleProps &
-  WithProfileProps &
-  WithEventsInfiniteQueryProps;
+  WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
       classes,
-      events,
       linodesData,
+      linodesInTransition,
       linodesRequestError,
       linodesRequestLoading,
     } = this.props;
@@ -237,9 +235,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                           let _status: ExtendedStatus = linode.status;
                           if (linode.maintenance) {
                             _status = 'maintenance';
-                          } else if (
-                            linodesInTransition(events ?? []).has(linode.id)
-                          ) {
+                          } else if (linodesInTransition.has(linode.id)) {
                             _status = 'busy';
                           }
 
@@ -447,12 +443,24 @@ const sendGroupByAnalytic = (value: boolean) => {
   sendGroupByTagEnabledEvent(eventCategory, value);
 };
 
+interface StateProps {
+  linodesInTransition: Set<number>;
+}
+
+const mapStateToProps: MapState<StateProps, LinodesLandingProps> = (state) => {
+  return {
+    linodesInTransition: _linodesInTransition(state.events.events),
+  };
+};
+
+const connected = connect(mapStateToProps, undefined);
+
 export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
+  connected,
   styled,
   withFeatureFlagConsumer,
-  withProfile,
-  withEventsInfiniteQuery()
+  withProfile
 );
 
 export default enhanced(ListLinodes);
