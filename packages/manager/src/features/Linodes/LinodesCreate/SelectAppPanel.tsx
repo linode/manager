@@ -1,6 +1,5 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { Theme } from '@mui/material/styles';
-import { withStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -13,22 +12,6 @@ import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import Panel from './Panel';
 import { AppsData } from './types';
-
-type ClassNames = 'loading' | 'panel';
-
-const styles = (theme: Theme) => ({
-  loading: {
-    '& >div:first-of-type': {
-      height: 450,
-    },
-  },
-  panel: {
-    boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
-    height: 450,
-    marginBottom: theme.spacing(3),
-    overflowY: 'auto' as const,
-  },
-});
 
 interface Props extends AppsData {
   disabled: boolean;
@@ -45,7 +28,6 @@ interface Props extends AppsData {
   openDrawer: (stackScriptLabel: string) => void;
   searchValue?: string;
   selectedStackScriptID?: number;
-  classes?: Partial<Record<ClassNames, string>>;
 }
 
 class SelectAppPanel extends React.PureComponent<Props> {
@@ -77,23 +59,21 @@ class SelectAppPanel extends React.PureComponent<Props> {
       selectedStackScriptID,
     } = this.props;
 
-    const classes = withStyles.getClasses(this.props);
-
     if (appInstancesError) {
       return (
-        <Panel className={classes.panel} error={error} title="Select App">
+        <StyledPanel error={error} title="Select App">
           <ErrorState errorText={appInstancesError} />
-        </Panel>
+        </StyledPanel>
       );
     }
 
     if (appInstancesLoading || !appInstances) {
       return (
-        <Panel className={classes.panel} error={error} title="Select App">
-          <span className={classes.loading}>
+        <StyledPanel error={error} title="Select App">
+          <StyledLoadingSpan>
             <LandingLoading />
-          </span>
-        </Panel>
+          </StyledLoadingSpan>
+        </StyledPanel>
       );
     }
 
@@ -117,7 +97,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
     const isFilteringOrSearching = isFiltering || isSearching;
 
     return (
-      <Paper className={classes.panel} data-qa-tp="Select Image">
+      <StyledPaper data-qa-tp="Select Image">
         {error && <Notice error text={error} />}
         {!isFilteringOrSearching ? (
           <AppPanelSection
@@ -148,7 +128,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
           searchValue={searchValue}
           selectedStackScriptID={selectedStackScriptID}
         />
-      </Paper>
+      </StyledPaper>
     );
   }
 
@@ -195,6 +175,21 @@ class SelectAppPanel extends React.PureComponent<Props> {
   };
 }
 
-export default compose<Props, Props>(React.memo)(
-  withStyles(SelectAppPanel, styles)
-);
+const StyledPanel = styled(Panel, { label: 'StyledPanel' })(({ theme }) => ({
+  boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
+  height: 450,
+  marginBottom: theme.spacing(3),
+  overflowY: 'auto' as const,
+}));
+
+const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
+  ...StyledPanel({ theme }),
+}));
+
+const StyledLoadingSpan = styled('span', { label: 'StyledLoadingSpan' })({
+  '& >div:first-of-type': {
+    height: 450,
+  },
+});
+
+export default compose<Props, Props>(React.memo)(SelectAppPanel);
