@@ -10,7 +10,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
-import { getAllLinodeFirewalls } from 'src/queries/linodes/firewalls';
+import { getAllLinodeFirewalls } from 'src/queries/linodes/requests';
 import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 import { getAll } from 'src/utilities/getAll';
 
