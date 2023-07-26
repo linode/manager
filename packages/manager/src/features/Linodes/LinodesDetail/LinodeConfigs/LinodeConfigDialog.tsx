@@ -219,7 +219,7 @@ const finnixDiskID = 25669;
 export const LinodeConfigDialog = (props: Props) => {
   const { config, isReadOnly, linodeId, onClose, open } = props;
 
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(linodeId, open);
 
   const {
     data: kernels,
