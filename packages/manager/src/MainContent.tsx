@@ -172,6 +172,7 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
+const Betas = React.lazy(() => import('src/features/Betas'));
 
 const MainContent = (props: CombinedProps) => {
   const { classes, cx } = useStyles();
@@ -355,6 +356,7 @@ const MainContent = (props: CombinedProps) => {
                             {showDatabases ? (
                               <Route component={Databases} path="/databases" />
                             ) : null}
+                            <Route component={Betas} path="/betas" />
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />
