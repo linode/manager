@@ -15,11 +15,9 @@ interface Props {
   width?: number;
 }
 
-type CombinedProps = Props;
-
 export const initialValueDefaultId = -1;
 
-const ConfigSelect: React.FC<CombinedProps> = (props) => {
+export const ConfigSelect = React.memo((props: Props) => {
   const {
     error,
     linodeId,
@@ -86,6 +84,4 @@ const ConfigSelect: React.FC<CombinedProps> = (props) => {
       />
     </FormControl>
   );
-};
-
-export default React.memo(ConfigSelect);
+});

@@ -363,7 +363,8 @@ const enhanced = compose<CombinedProps, {}>(
   withSnackbar,
   withAccountSettings,
   withQueryClient,
-  withLinodes
+  (comp: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
+    withLinodes(comp, props.open)(props)
 );
 
 export default enhanced(BackupDrawer);
