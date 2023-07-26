@@ -81,7 +81,7 @@ export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
 
 export const useLinodeQuery = (id: number, enabled = true) => {
   return useQuery<Linode, APIError[]>(
-    [queryKey, 'linode', id],
+    [queryKey, 'linode', id, 'details'],
     () => getLinode(id),
     {
       enabled,
@@ -96,7 +96,7 @@ export const useLinodeUpdateMutation = (id: number) => {
     {
       onSuccess(linode) {
         queryClient.invalidateQueries([queryKey]);
-        queryClient.setQueryData([queryKey, 'linode', id], linode);
+        queryClient.setQueryData([queryKey, 'linode', id, 'details'], linode);
       },
     }
   );
