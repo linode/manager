@@ -24,7 +24,7 @@ const renderActions = (
   <ActionsPanel
     primaryButtonProps={{
       'data-testid': 'confirm',
-      label: 'modalConfirmationButtonText',
+      label: modalConfirmationButtonText,
       onClick: onClose,
     }}
   />

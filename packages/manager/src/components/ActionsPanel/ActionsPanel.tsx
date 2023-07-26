@@ -33,8 +33,8 @@ const ActionsPanelComponent = (props: ActionPanelProps) => {
     ...rest
   } = props;
 
-  const primaryButtonDataQAProp = `data-qa-${primaryButtonProps?.['data-testId']}`;
-  const secondaryButtonDataQAProp = `data-qa-${secondaryButtonProps?.['data-testId']}`;
+  const primaryButtonDataQAProp = `data-qa-${primaryButtonProps?.['data-testid']}`;
+  const secondaryButtonDataQAProp = `data-qa-${secondaryButtonProps?.['data-testid']}`;
 
   return (
     <StyledBox

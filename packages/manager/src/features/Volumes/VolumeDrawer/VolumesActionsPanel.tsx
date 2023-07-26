@@ -22,18 +22,26 @@ const VolumesActionsPanel: React.FC<CombinedProps> = ({
   return (
     // We could remove this with ActionsPanel component.
     <ActionsPanel
-      primaryButtonProps={{
-        'data-testid': 'submit',
-        disabled,
-        label: submitText ?? 'Submit',
-        loading: isSubmitting,
-        onClick: onSubmit,
-      }}
-      secondaryButtonProps={{
-        'data-testid': 'cancel',
-        label: 'Cancel',
-        onClick: onCancel,
-      }}
+      primaryButtonProps={
+        onSubmit
+          ? {
+              'data-testid': 'submit',
+              disabled,
+              label: submitText ?? 'Submit',
+              loading: isSubmitting,
+              onClick: onSubmit,
+            }
+          : undefined
+      }
+      secondaryButtonProps={
+        onCancel
+          ? {
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: onCancel,
+            }
+          : undefined
+      }
     />
   );
 };
