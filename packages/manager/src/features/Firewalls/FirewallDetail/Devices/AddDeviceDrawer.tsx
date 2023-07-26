@@ -159,5 +159,3 @@ export const AddDeviceDrawer = (props: Props) => {
     </Drawer>
   );
 };
-
-export default AddDeviceDrawer;

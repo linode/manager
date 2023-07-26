@@ -6,26 +6,24 @@ export interface ActionHandlers {
   triggerRemoveDevice: (deviceID: number, label: string) => void;
 }
 
-export interface Props extends ActionHandlers {
+export interface FirewallDeviceActionMenuProps extends ActionHandlers {
   deviceEntityID: string;
   deviceID: number;
   deviceLabel: string;
   disabled: boolean;
 }
 
-type CombinedProps = Props;
+export const FirewallDeviceActionMenu = React.memo(
+  (props: FirewallDeviceActionMenuProps) => {
+    const { deviceID, deviceLabel, disabled, triggerRemoveDevice } = props;
 
-const FirewallDeviceActionMenu: React.FC<CombinedProps> = (props) => {
-  const { deviceID, deviceLabel, disabled, triggerRemoveDevice } = props;
-
-  return (
-    <InlineMenuAction
-      actionText="Remove"
-      disabled={disabled}
-      key="Remove"
-      onClick={() => triggerRemoveDevice(deviceID, deviceLabel)}
-    />
-  );
-};
-
-export default React.memo(FirewallDeviceActionMenu);
+    return (
+      <InlineMenuAction
+        actionText="Remove"
+        disabled={disabled}
+        key="Remove"
+        onClick={() => triggerRemoveDevice(deviceID, deviceLabel)}
+      />
+    );
+  }
+);
