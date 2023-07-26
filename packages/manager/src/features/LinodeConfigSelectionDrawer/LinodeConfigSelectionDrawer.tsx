@@ -3,8 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
@@ -52,14 +51,14 @@ const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = (props) => {
           />
         ))}
       </Grid>
-      <ActionsPanel>
-        <Button buttonType="primary" loading={props.loading} onClick={onSubmit}>
-          Submit
-        </Button>
-        <Button buttonType="secondary" className="cancel" onClick={onClose}>
-          Cancel
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          label: 'Submit',
+          loading: props.loading,
+          onClick: onSubmit,
+        }}
+        secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+      />
     </Drawer>
   );
 };

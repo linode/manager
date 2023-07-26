@@ -2,8 +2,7 @@ import { TPAProvider } from '@linode/api-v4/lib/profile';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { LOGIN_ROOT } from 'src/constants';
@@ -57,27 +56,23 @@ const handleLoginChange = (provider: TPAProvider) => {
 
 const renderActions = (onClose: () => void, provider: TPAProvider) => {
   return (
-    <ActionsPanel className="p0">
-      <Button
-        buttonType="secondary"
-        data-testid="confirm-cancel"
-        onClick={onClose}
-      >
-        Cancel
-      </Button>
-      <Button
-        onClick={() => {
+    <ActionsPanel
+      primaryButtonProps={{
+        'aria-describedby': 'external-site',
+        'data-testid': 'confirm-login-change',
+        label: 'Change login',
+        onClick: () => {
           onClose();
           handleLoginChange(provider);
-        }}
-        aria-label="Change login - opens in new tab"
-        buttonType="primary"
-        data-testid="confirm-login-change"
-        role="link"
-      >
-        Change login
-      </Button>
-    </ActionsPanel>
+        },
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'confirm-cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
+      className="p0"
+    />
   );
 };
 

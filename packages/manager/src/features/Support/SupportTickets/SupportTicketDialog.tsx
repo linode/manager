@@ -11,8 +11,7 @@ import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
 import { Accordion } from 'src/components/Accordion';
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
@@ -606,12 +605,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                   {!['general', 'none'].includes(entityType) && (
                     <>
                       <Select
-                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
                         data-qa-ticket-entity-id
                         disabled={entityOptions.length === 0}
                         errorText={entityError || inputError}
                         isClearable={false}
                         isLoading={areEntitiesLoading}
+                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
                         onChange={handleEntityIDChange}
                         options={entityOptions}
                         placeholder={`Select a ${entityIdToNameMap[entityType]}`}
@@ -647,26 +646,20 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               <AttachFileForm files={files} updateFiles={updateFiles} />
             </React.Fragment>
           )}
-          <StyledActionPanel>
-            <Button
-              buttonType="secondary"
-              data-qa-cancel
-              data-testid="cancel"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              data-qa-submit
-              data-testid="submit"
-              disabled={!requirementsMet}
-              loading={submitting}
-              onClick={onSubmit}
-            >
-              Open Ticket
-            </Button>
-          </StyledActionPanel>
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              disabled: !requirementsMet,
+              label: 'Open Ticket',
+              loading: submitting,
+              onClick: onSubmit,
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: onCancel,
+            }}
+          />
         </React.Fragment>
       )}
     </Dialog>

@@ -1,11 +1,11 @@
-import Box from '@mui/material/Box';
 import _Dialog, { DialogProps as _DialogProps } from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import { Notice } from 'src/components/Notice/Notice';
-import DialogContent from 'src/components/core/DialogContent';
 import { isPropValid } from 'src/utilities/isPropValid';
 import { convertForAria } from 'src/utilities/stringUtils';
 
@@ -17,7 +17,27 @@ export interface DialogProps extends _DialogProps {
   titleBottomBorder?: boolean;
 }
 
-const Dialog = (props: DialogProps) => {
+/**
+ * ## Overview
+ * A modal dialog is a window that appears on top of a parent screen. It's called 'modal' because it creates a mode that disables the parent screen but keeps it visible. Users must interact with the modal to return to the main screen.
+ *
+ * > ⚠️ In Cloud Manager, dialogs will lock focus onto the dialog and prevent scrolling. For the sake of previewing dialogs, this does not occur in Storybook.
+ *
+ * ## Modal Types
+ * - **Standard**
+ *   - Has an "X" button in the top right
+ *  - Can contain anything in the body of the dialog
+ * - **Confirmation**
+ *  - Users must confirm a choice
+ * - **Deletion**
+ *  - The user must confirm the deleteion of an entity
+ *  - Can require user to type the entity name to confirm deletion
+ *
+ * > Clicking off of the modal will not close it.
+ * > A modal can only be closed by taking direct action, clicking on a button or the “X” button, or using the `esc` key.
+ *
+ */
+export const Dialog = (props: DialogProps) => {
   const theme = useTheme();
   const {
     children,
@@ -95,5 +115,3 @@ const StyledHr = styled('hr')({
   margin: '-2em 8px 0px 8px',
   width: '100%',
 });
-
-export { Dialog };

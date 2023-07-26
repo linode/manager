@@ -3,8 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { object, string } from 'yup';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -79,19 +78,15 @@ export const RenameDiskDrawer = (props: Props) => {
           required
           value={formik.values.label}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" className="cancel" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-testid="submit-disk-form"
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Rename
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit-disk-form',
+            label: 'Rename',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       </form>
     </Drawer>
   );

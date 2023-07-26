@@ -70,7 +70,7 @@ describe('create image', () => {
 
       cy.wait('@getImages');
       cy.findByText('Create Image').click();
-      cy.findByLabelText('Linodes').click();
+      cy.findByLabelText('Linode').click();
       cy.findByText(linode.label).click();
       cy.wait('@getDisks');
       cy.contains('Select a Disk').click().type(`${diskLabel}{enter}`);

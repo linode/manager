@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
 import { Accordion } from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
@@ -88,19 +88,19 @@ export const EnableManaged = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button buttonType="secondary" data-qa-cancel onClick={handleClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-submit-managed-enrollment
-        loading={isLoading}
-        onClick={handleSubmit}
-      >
-        Add Linode Managed
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'submit-managed-enrollment',
+        label: 'Add Linode Managed',
+        loading: isLoading,
+        onClick: handleSubmit,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: handleClose,
+      }}
+    />
   );
 
   return (

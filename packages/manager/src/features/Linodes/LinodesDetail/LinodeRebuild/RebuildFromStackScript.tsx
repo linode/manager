@@ -11,10 +11,10 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+import { resetEventsPolling } from 'src/eventsPolling';
 import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
@@ -35,7 +35,6 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actionPanel: {
@@ -99,8 +98,6 @@ export const RebuildFromStackScript = (props: Props) => {
 
   const { data: imagesData } = useAllImagesQuery();
   const _imagesData = listToItemsByID(imagesData ?? []);
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   /**
    * Dynamic validation schema, with password validation
@@ -337,35 +334,33 @@ export const RebuildFromStackScript = (props: Props) => {
                 password={values.root_pass}
                 passwordHelperText={passwordHelperText}
               />
-              <ActionsPanel className={classes.actionPanel}>
-                <TypeToConfirm
-                  confirmationText={
-                    <span>
-                      To confirm these changes, type the label of the Linode (
-                      <strong>{linodeLabel}</strong>) in the field below:
-                    </span>
-                  }
-                  onChange={(input) => {
-                    setConfirmationText(input);
-                  }}
-                  hideLabel
-                  label="Linode Label"
-                  textFieldStyle={{ marginBottom: 16 }}
-                  title="Confirm"
-                  typographyStyle={{ marginBottom: 8 }}
-                  value={confirmationText}
-                  visible={preferences?.type_to_confirm}
-                />
-                <Button
-                  buttonType="primary"
-                  data-qa-rebuild
-                  data-testid="rebuild-button"
-                  disabled={submitButtonDisabled}
-                  onClick={handleRebuildButtonClick}
-                >
-                  Rebuild Linode
-                </Button>
-              </ActionsPanel>
+              <TypeToConfirm
+                confirmationText={
+                  <span>
+                    To confirm these changes, type the label of the Linode (
+                    <strong>{linodeLabel}</strong>) in the field below:
+                  </span>
+                }
+                onChange={(input) => {
+                  setConfirmationText(input);
+                }}
+                hideLabel
+                label="Linode Label"
+                textFieldStyle={{ marginBottom: 16 }}
+                title="Confirm"
+                typographyStyle={{ marginBottom: 8 }}
+                value={confirmationText}
+                visible={preferences?.type_to_confirm}
+              />
+              <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'rebuild',
+                  disabled: submitButtonDisabled,
+                  label: 'Rebuild Linode',
+                  onClick: handleRebuildButtonClick,
+                }}
+                className={classes.actionPanel}
+              />
             </form>
             <StackScriptDialog />
           </Grid>

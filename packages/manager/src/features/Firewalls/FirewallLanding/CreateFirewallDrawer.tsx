@@ -3,12 +3,11 @@ import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { useGrants } from 'src/queries/profile';
@@ -162,7 +161,7 @@ const CreateFirewallDrawer = (props: Props) => {
           onChange={handleChange}
           value={values.label}
         />
-        <LinodeSelectV2
+        <LinodeSelect
           onSelectionChange={(selected) =>
             setFieldValue(
               'devices.linodes',
@@ -177,21 +176,20 @@ const CreateFirewallDrawer = (props: Props) => {
           optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
           value={values.devices?.linodes ?? []}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            data-testid="create-firewall-submit"
-            disabled={userCannotAddFirewall}
-            loading={isSubmitting}
-            type="submit"
-          >
-            Create Firewall
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: userCannotAddFirewall,
+            label: 'Create Firewall',
+            loading: isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+        />
       </form>
     </Drawer>
   );

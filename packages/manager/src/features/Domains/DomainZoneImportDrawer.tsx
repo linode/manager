@@ -3,8 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -76,19 +75,15 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
           onChange={formik.handleChange}
           value={formik.values.remote_nameserver}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            disabled={!formik.dirty}
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Import
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            disabled: !formik.dirty,
+            label: 'Import',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       </form>
     </Drawer>
   );
