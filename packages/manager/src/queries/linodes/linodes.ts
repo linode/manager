@@ -4,8 +4,10 @@ import {
   Devices,
   Kernel,
   Linode,
+  LinodeCloneData,
   ResizeLinodePayload,
   changeLinodePassword,
+  cloneLinode,
   createLinode,
   deleteLinode,
   getLinode,
@@ -157,6 +159,25 @@ export const useDeleteLinodeMutation = (id: number) => {
 export const useCreateLinodeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Linode, APIError[], CreateLinodeRequest>(createLinode, {
+    onSuccess(linode) {
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries([queryKey, 'infinite']);
+      queryClient.setQueryData(
+        [queryKey, 'linode', linode.id, 'details'],
+        linode
+      );
+    },
+  });
+};
+
+export const useCloneLinodeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Linode,
+    APIError[],
+    { sourceLinodeId: number & LinodeCloneData }
+  >(({ sourceLinodeId, ...data }) => cloneLinode(sourceLinodeId, data), {
     onSuccess(linode) {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
