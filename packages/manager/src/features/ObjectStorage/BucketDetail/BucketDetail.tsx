@@ -44,6 +44,7 @@ import {
 import { BucketBreadcrumb } from './BucketBreadcrumb';
 import {
   StyledCreateFolderButton,
+  StyledErrorFooter,
   StyledFooter,
   StyledNameColumn,
   StyledSizeColumn,
@@ -382,12 +383,12 @@ export const BucketDetail = () => {
         </Waypoint>
       )}
       {error && (
-        <StyledFooter variant="subtitle2">
+        <StyledErrorFooter variant="subtitle2">
           The next objects in the list failed to load.{' '}
           <StyledTryAgainButton onClick={() => fetchNextPage()}>
             Click here to try again.
           </StyledTryAgainButton>
-        </StyledFooter>
+        </StyledErrorFooter>
       )}
 
       {!hasNextPage && numOfDisplayedObjects >= 100 && (
