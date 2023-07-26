@@ -32,7 +32,7 @@ interface LinodeSelectProps {
   /** Optionally disable top margin for input label */
   noMarginTop?: boolean;
   /** Message displayed when no options match the user's search. */
-  noOptionsMessage?: string;
+  noOptionsMessage?: JSX.Element | string;
   /** Called when the input loses focus. */
   onBlur?: (e: React.FocusEvent) => void;
   /* The options to display in the select. */
@@ -144,14 +144,15 @@ export const LinodeSelect = (
         renderOptionLabel ? renderOptionLabel(linode) : linode.label
       }
       noOptionsText={
-        <i>
-          {noOptionsMessage ??
-            getDefaultNoOptionsMessage(
+        noOptionsMessage ?? (
+          <i>
+            {getDefaultNoOptionsMessage(
               error,
               linodesDataLoading,
               filteredLinodes
             )}
-        </i>
+          </i>
+        )
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)
