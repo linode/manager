@@ -5,8 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { Formik, FormikHelpers } from 'formik';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
 import { Notice } from 'src/components/Notice/Notice';
@@ -214,15 +213,13 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                         />
                       </Grid>
                     </Grid>
-                    <ActionsPanel>
-                      <Button
-                        buttonType="primary"
-                        loading={isSubmitting}
-                        onClick={() => handleSubmit()}
-                      >
-                        Save Changes
-                      </Button>
-                    </ActionsPanel>
+                    <ActionsPanel
+                      primaryButtonProps={{
+                        label: 'Save Changes',
+                        loading: isSubmitting,
+                        onClick: () => handleSubmit(),
+                      }}
+                    />
                   </form>
                 </>
               );

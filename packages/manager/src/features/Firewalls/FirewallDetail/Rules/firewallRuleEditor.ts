@@ -208,6 +208,8 @@ const ruleEditorReducer = (
   }
 };
 
+export const curriedFirewallRuleEditorReducer = produce(ruleEditorReducer);
+
 export const initRuleEditorState = (
   rules: FirewallRuleType[]
 ): RuleEditorState => {
@@ -282,5 +284,3 @@ export const hasModified = (editorState: RuleEditorState): boolean => {
       thisRule.status !== 'NOT_MODIFIED' || thisRule.originalIndex !== idx
   );
 };
-
-export default produce(ruleEditorReducer);

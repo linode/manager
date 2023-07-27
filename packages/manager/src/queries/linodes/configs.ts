@@ -6,9 +6,18 @@ import {
   deleteLinodeConfig,
   updateLinodeConfig,
 } from '@linode/api-v4';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { queryKey } from './linodes';
+import { getAllLinodeConfigs } from './requests';
+
+export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
+  return useQuery<Config[], APIError[]>(
+    [queryKey, 'linode', id, 'configs'],
+    () => getAllLinodeConfigs(id),
+    { enabled }
+  );
+};
 
 export const useLinodeConfigDeleteMutation = (
   linodeId: number,

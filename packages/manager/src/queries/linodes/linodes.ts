@@ -1,5 +1,4 @@
 import {
-  Config,
   CreateLinodeRequest,
   Devices,
   Kernel,
@@ -38,11 +37,7 @@ import {
 
 import { queryKey as accountNotificationsQueryKey } from '../accountNotifications';
 import { queryPresets } from '../base';
-import {
-  getAllLinodeConfigs,
-  getAllLinodeKernelsRequest,
-  getAllLinodesRequest,
-} from './requests';
+import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
 
 export const queryKey = 'linodes';
 
@@ -106,14 +101,6 @@ export const useLinodeUpdateMutation = (id: number) => {
         queryClient.setQueryData([queryKey, 'linode', id, 'details'], linode);
       },
     }
-  );
-};
-
-export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
-  return useQuery<Config[], APIError[]>(
-    [queryKey, 'linode', id, 'configs'],
-    () => getAllLinodeConfigs(id),
-    { enabled }
   );
 };
 

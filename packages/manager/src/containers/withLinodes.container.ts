@@ -27,13 +27,14 @@ export interface WithLinodesProps {
 }
 
 export const withLinodes = <Props>(
-  Component: React.ComponentType<Props & WithLinodesProps>
+  Component: React.ComponentType<Props & WithLinodesProps>,
+  enabled = true
 ) => (props: Props) => {
   const {
     data: linodesData,
     error: linodesError,
     isLoading: linodesLoading,
-  } = useAllLinodesQuery();
+  } = useAllLinodesQuery({}, {}, enabled);
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();

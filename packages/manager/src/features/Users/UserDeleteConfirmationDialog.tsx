@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 interface Props {
@@ -17,22 +16,19 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button
-            buttonType="secondary"
-            data-qa-cancel-delete
-            onClick={onCancel}
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-confirm-delete
-            onClick={onDelete}
-          >
-            Delete
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'confirm-delete',
+            label: 'Delete',
+            onClick: onDelete,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel-delete',
+            label: 'Cancel',
+            onClick: onCancel,
+          }}
+          style={{ padding: 0 }}
+        />
       }
       onClose={onCancel}
       open={open}

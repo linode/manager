@@ -4,14 +4,13 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { Paper } from 'src/components/Paper';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
@@ -158,17 +157,16 @@ export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
             {getUserTimezone(profile?.timezone).replace('_', ' ')}
           </FormHelperText>
         </FormControl>
-        <ActionsPanel className={classes.scheduleAction}>
-          <Button
-            buttonType="primary"
-            data-qa-schedule
-            disabled={isReadOnly || !settingsForm.dirty}
-            loading={isUpdating}
-            type="submit"
-          >
-            Save Schedule
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'schedule',
+            disabled: isReadOnly || !settingsForm.dirty,
+            label: 'Save Schedule',
+            loading: isUpdating,
+            type: 'submit',
+          }}
+          className={classes.scheduleAction}
+        />
       </form>
     </Paper>
   );

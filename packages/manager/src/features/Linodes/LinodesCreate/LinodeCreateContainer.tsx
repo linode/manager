@@ -49,9 +49,6 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
-import withLabelGenerator, {
-  LabelProps,
-} from 'src/features/Linodes/LinodesCreate/withLabelGenerator';
 import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import {
   queryKey as accountAgreementsQueryKey,
@@ -60,7 +57,6 @@ import {
 import { simpleMutationHandlers } from 'src/queries/base';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 import {
   sendCreateLinodeEvent,
@@ -74,6 +70,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 
 import LinodeCreate from './LinodeCreate';
+import { deriveDefaultLabel } from './deriveDefaultLabel';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 
@@ -88,10 +85,10 @@ interface State {
   availableStackScriptImages?: Image[];
   availableUserDefinedFields?: UserDefinedField[];
   backupsEnabled: boolean;
+  customLabel?: string;
   disabledClasses?: LinodeTypeClass[];
   errors?: APIError[];
   formIsSubmitting: boolean;
-  label: string;
   password: string;
   privateIPEnabled: boolean;
   selectedBackupID?: number;
@@ -118,8 +115,6 @@ type CombinedProps = WithSnackbarProps &
   WithTypesProps &
   WithLinodesProps &
   RegionsProps &
-  DispatchProps &
-  LabelProps &
   FeatureFlagConsumerProps &
   RouteComponentProps<{}, any, any> &
   WithProfileProps &
@@ -132,10 +127,10 @@ const defaultState: State = {
   attachedVLANLabel: '',
   authorized_users: [],
   backupsEnabled: false,
+  customLabel: undefined,
   disabledClasses: [],
   errors: undefined,
   formIsSubmitting: false,
-  label: '',
   password: '',
   privateIPEnabled: false,
   selectedBackupID: undefined,
@@ -253,7 +248,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       typesData,
       ...restOfProps
     } = this.props;
-    const { label, udfs: selectedUDFs, ...restOfState } = this.state;
+    const { udfs: selectedUDFs, ...restOfState } = this.state;
 
     const extendedTypeData = typesData?.map(extendType);
 
@@ -298,7 +293,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             typesData={extendedTypeData}
             updateDiskSize={this.setDiskSize}
             updateImageID={this.setImageID}
-            updateLabel={this.props.updateCustomLabel}
+            updateLabel={this.updateCustomLabel}
             updateLinodeID={this.setLinodeID}
             updatePassword={this.setPassword}
             updateRegionID={this.setRegionID}
@@ -338,13 +333,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   generateLabel = () => {
-    const { createType, getLabel, imagesData, regionsData } = this.props;
+    const { createType, imagesData, regionsData } = this.props;
     const {
+      customLabel,
       selectedImageID,
       selectedLinodeID,
       selectedRegionID,
       selectedStackScriptLabel,
     } = this.state;
+
+    if (customLabel?.length) {
+      return customLabel;
+    }
 
     /* tslint:disable-next-line  */
     let arg1,
@@ -406,7 +406,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       arg3 = 'backup';
     }
 
-    return getLabel(arg1, arg2, arg3);
+    return deriveDefaultLabel(
+      [arg1, arg2, arg3],
+      this.props.linodesData?.map((linode) => linode.label) ?? []
+    );
   };
 
   getBackupsMonthlyPrice = (): null | number | undefined => {
@@ -563,6 +566,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       ),
     });
   };
+
   setStackScript = (
     id: number,
     label: string,
@@ -613,6 +617,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       });
     }
   };
+
   setUDFs = (udfs: any) => this.setState({ udfs });
 
   setUserData = (userData: string) => this.setState({ userData });
@@ -767,11 +772,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           });
         }
 
-        /** if cloning a Linode, upsert Linode in redux */
-        if (createType === 'fromLinode') {
-          this.props.upsertLinode(response);
-        }
-
         /** Analytics creation event */
         handleAnalytics(
           createType,
@@ -809,6 +809,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   togglePrivateIPEnabled = () =>
     this.setState({ privateIPEnabled: !this.state.privateIPEnabled });
+
+  updateCustomLabel = (customLabel: string) => {
+    this.setState({ customLabel });
+  };
 }
 
 interface CreateType {
@@ -819,11 +823,7 @@ const mapStateToProps: MapState<CreateType, CombinedProps> = (state) => ({
   createType: state.createLinode.type,
 });
 
-interface DispatchProps {
-  upsertLinode: (l: Linode) => void;
-}
-
-const connected = connect(mapStateToProps, { upsertLinode });
+const connected = connect(mapStateToProps);
 
 export default recompose<CombinedProps, {}>(
   withImages,
@@ -832,7 +832,6 @@ export default recompose<CombinedProps, {}>(
   withTypes,
   connected,
   withSnackbar,
-  withLabelGenerator,
   withFlags,
   withProfile,
   withAgreements,

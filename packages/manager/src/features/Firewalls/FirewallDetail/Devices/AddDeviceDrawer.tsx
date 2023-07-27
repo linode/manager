@@ -2,8 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -142,23 +141,21 @@ export const AddDeviceDrawer = (props: Props) => {
           noOptionsMessage="No Linodes available to add"
           value={selectedLinodeIds}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            disabled={selectedLinodeIds.length === 0}
-            loading={isLoading}
-            onClick={handleSubmit}
-          >
-            Add
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: selectedLinodeIds.length === 0,
+            label: 'Add',
+            loading: isLoading,
+            onClick: handleSubmit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+        />
       </form>
     </Drawer>
   );
 };
-
-export default AddDeviceDrawer;

@@ -1,6 +1,6 @@
 import {
-  getIPv6Ranges,
   getIPs,
+  getIPv6Ranges,
   getLinodeConfigs,
   getLinodeFirewalls,
   getLinodeKernels,

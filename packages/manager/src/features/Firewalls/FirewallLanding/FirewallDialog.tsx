@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
@@ -16,7 +15,7 @@ interface Props {
   selectedFirewallLabel: string;
 }
 
-const FirewallDialog = (props: Props) => {
+export const FirewallDialog = React.memo((props: Props) => {
   const {
     mode,
     onClose,
@@ -62,18 +61,14 @@ const FirewallDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            loading={isLoadingMap[mode]}
-            onClick={onSubmit}
-          >
-            {capitalize(mode)} Firewall
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: `${capitalize(mode)} Firewall`,
+            loading: isLoadingMap[mode],
+            onClick: onSubmit,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       }
       error={errorMap[mode]?.[0].reason}
       onClose={onClose}
@@ -83,6 +78,4 @@ const FirewallDialog = (props: Props) => {
       Are you sure you want to {mode} this Firewall?
     </ConfirmationDialog>
   );
-};
-
-export default React.memo(FirewallDialog);
+});
