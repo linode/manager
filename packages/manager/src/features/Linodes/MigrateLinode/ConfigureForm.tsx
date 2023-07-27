@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -10,26 +9,6 @@ import { Paper } from 'src/components/Paper';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  currentRegion: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    gap: theme.spacing(),
-    marginBottom: theme.spacing(4),
-  },
-  root: {
-    '& > p:first-of-type': {
-      color: theme.color.label,
-      fontFamily: theme.font.bold,
-      marginBottom: theme.spacing(),
-      marginTop: theme.spacing(2),
-    },
-    marginTop: theme.spacing(4),
-    padding: 0,
-  },
-}));
-
 interface Props {
   currentRegion: string;
   errorText?: string;
@@ -39,7 +18,6 @@ interface Props {
 }
 
 const ConfigureForm = (props: Props) => {
-  const { classes } = useStyles();
   const { currentRegion } = props;
 
   const { data: regions } = useRegionsQuery();
@@ -51,15 +29,15 @@ const ConfigureForm = (props: Props) => {
     'us';
 
   return (
-    <Paper className={classes.root}>
+    <StyledPaper>
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region</Typography>
-      <div className={classes.currentRegion}>
+      <StyledDiv>
         <Flag country={country as Lowercase<Country>} />
         <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
           currentActualRegion?.label ?? currentRegion
         }`}</Typography>
-      </div>
+      </StyledDiv>
       <RegionSelect
         regions={
           regions?.filter(
@@ -77,8 +55,27 @@ const ConfigureForm = (props: Props) => {
         menuPlacement="top"
         selectedID={props.selectedRegion}
       />
-    </Paper>
+    </StyledPaper>
   );
 };
+
+const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
+  '& > p:first-of-type': {
+    color: theme.color.label,
+    fontFamily: theme.font.bold,
+    marginBottom: theme.spacing(),
+    marginTop: theme.spacing(2),
+  },
+  marginTop: theme.spacing(4),
+  padding: 0,
+}));
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'row',
+  gap: theme.spacing(),
+  marginBottom: theme.spacing(4),
+}));
 
 export default React.memo(ConfigureForm);

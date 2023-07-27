@@ -1,7 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { withStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -9,25 +8,12 @@ import { Typography } from 'src/components/Typography';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) => ({
-  root: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    margin: 0,
-    padding: theme.spacing(1),
-    width: '100%',
-  },
-});
-
 interface Props {
   event: Event;
-  classes?: Partial<Record<ClassNames, string>>;
 }
 
 export const ActivityRow = (props: Props) => {
   const { event } = props;
-  const classes = withStyles.getClasses(props);
 
   const message = eventMessageGenerator(event);
 
@@ -42,9 +28,8 @@ export const ActivityRow = (props: Props) => {
   }
 
   return (
-    <Grid
+    <StyledGrid
       alignItems={'center'}
-      className={classes.root}
       container
       data-qa-activity-row
       direction={'row'}
@@ -58,8 +43,15 @@ export const ActivityRow = (props: Props) => {
       <Grid>
         <DateTimeDisplay value={event.created} />
       </Grid>
-    </Grid>
+    </StyledGrid>
   );
 };
 
-export default withStyles(ActivityRow, styles);
+const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  margin: 0,
+  padding: theme.spacing(1),
+  width: '100%',
+}));
+
+export default ActivityRow;

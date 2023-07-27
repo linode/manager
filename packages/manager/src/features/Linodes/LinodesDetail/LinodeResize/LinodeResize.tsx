@@ -1,7 +1,6 @@
 import { Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -34,21 +33,6 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  resizeTitle: {
-    alignItems: 'center',
-    display: 'flex',
-    minHeight: '44px',
-  },
-  selectPlanPanel: {
-    '& > div': {
-      padding: 0,
-    },
-    marginBottom: theme.spacing(3),
-    marginTop: theme.spacing(5),
-  },
-}));
-
 interface Props {
   linodeId?: number;
   linodeLabel?: string;
@@ -57,7 +41,6 @@ interface Props {
 }
 
 export const LinodeResize = (props: Props) => {
-  const { classes } = useStyles();
   const { linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(
@@ -197,7 +180,7 @@ export const LinodeResize = (props: Props) => {
           </Link>
         </Typography>
 
-        <div className={classes.selectPlanPanel}>
+        <StyledDiv>
           <PlansPanel
             currentPlanHeading={type ? extendType(type).heading : undefined} // lol, why make us pass the heading and not the plan id?
             disabled={tableDisabled}
@@ -207,8 +190,11 @@ export const LinodeResize = (props: Props) => {
             selectedRegionID={linode?.region}
             types={currentTypes.map(extendType)}
           />
-        </div>
-        <Typography className={classes.resizeTitle} variant="h2">
+        </StyledDiv>
+        <Typography
+          sx={{ alignItems: 'center', display: 'flex', minHeight: '44px' }}
+          variant="h2"
+        >
           Auto Resize Disk
           {disksError ? (
             <TooltipIcon
@@ -301,6 +287,14 @@ export const LinodeResize = (props: Props) => {
     </Dialog>
   );
 };
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
+  '& > div': {
+    padding: 0,
+  },
+  marginBottom: theme.spacing(3),
+  marginTop: theme.spacing(5),
+}));
 
 const getError = (error: APIError[] | null) => {
   if (!error) {

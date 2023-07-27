@@ -1,6 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { keyframes, styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
@@ -11,27 +10,7 @@ import { useProfile } from 'src/queries/profile';
 
 import { RenderLinodesProps } from './DisplayLinodes';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  '@keyframes pulse': {
-    to: {
-      backgroundColor: `hsla(40, 100%, 55%, 0)`,
-    },
-  },
-  summaryOuter: {
-    '& .statusOther:before': {
-      animation: '$pulse 1.5s ease-in-out infinite',
-    },
-    '&.MuiGrid-item': {
-      padding: 0,
-    },
-    backgroundColor: theme.bg.bgPaper,
-    marginBottom: 20,
-  },
-}));
-
 const CardView = (props: RenderLinodesProps) => {
-  const { classes } = useStyles();
-
   const { data: profile } = useProfile();
 
   const [tagDrawer, setTagDrawer] = React.useState<
@@ -89,7 +68,7 @@ const CardView = (props: RenderLinodesProps) => {
       <Grid className="m0" container style={{ width: '100%' }}>
         {data.map((linode, idx: number) => (
           <React.Fragment key={`linode-card-${idx}`}>
-            <Grid className={`${classes.summaryOuter} py0`} xs={12}>
+            <StyledSummaryGrid xs={12}>
               <LinodeEntityDetail
                 handlers={{
                   onOpenDeleteDialog: () =>
@@ -112,7 +91,7 @@ const CardView = (props: RenderLinodesProps) => {
                 isSummaryView
                 linode={linode}
               />
-            </Grid>
+            </StyledSummaryGrid>
           </React.Fragment>
         ))}
       </Grid>
@@ -127,5 +106,26 @@ const CardView = (props: RenderLinodesProps) => {
     </React.Fragment>
   );
 };
+
+const pulseAnimation = keyframes({
+  to: {
+    backgroundColor: `hsla(40, 100%, 55%, 0)`,
+  },
+});
+
+const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
+  ({ theme }) => ({
+    [`& .statusOther:before`]: {
+      animation: `${pulseAnimation} 1.5s ease-in-out infinite`,
+    },
+    [`&.MuiGrid-item`]: {
+      padding: 0,
+    },
+    backgroundColor: theme.palette.background.paper,
+    marginBottom: 20,
+    paddingTop: 0, // from .py0 css class
+    paddingBottom: 0,
+  })
+);
 
 export default CardView;

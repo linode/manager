@@ -1,7 +1,6 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import { ResizeLinodeDiskSchema } from '@linode/validation';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -27,13 +26,6 @@ import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { calculateDiskFree } from './CreateDiskDrawer';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  formHelperTextLink: {
-    display: 'block',
-    marginTop: theme.spacing(1),
-  },
-}));
-
 export interface Props {
   disk: Disk | undefined;
   linodeId: number;
@@ -51,8 +43,6 @@ const handleLinkClick = (label: string) => {
 
 export const ResizeDiskDrawer = (props: Props) => {
   const { disk, linodeId, onClose, open } = props;
-
-  const { classes } = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -109,17 +99,16 @@ export const ResizeDiskDrawer = (props: Props) => {
         <FormHelperText>
           The size of a Linode Compute Instance&rsquo;s disk can be increased or
           decreased as needed.
-          <Link
+          <StyledLink
             onClick={() => {
               handleLinkClick('Learn more about restrictions to keep in mind.');
             }}
             to={
               'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
             }
-            className={classes.formHelperTextLink}
           >
             Learn more about restrictions to keep in mind.
-          </Link>
+          </StyledLink>
         </FormHelperText>
         <TextField
           InputProps={{
@@ -189,3 +178,8 @@ const MaxSizeTooltipText = (
     ).
   </>
 );
+
+const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
+  display: 'block',
+  marginTop: theme.spacing(1),
+}));

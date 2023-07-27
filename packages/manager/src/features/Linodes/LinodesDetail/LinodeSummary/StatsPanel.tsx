@@ -1,25 +1,7 @@
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Typography } from 'src/components/Typography';
-
-const useStyles = makeStyles()(() => ({
-  graphsUnavailable: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-    padding: 16,
-    paddingTop: 0,
-    width: '100%',
-  },
-  spinner: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-    width: '100%',
-  },
-}));
 
 interface Props {
   height: number;
@@ -29,8 +11,6 @@ interface Props {
 }
 
 export const StatsPanel: React.FC<Props> = (props) => {
-  const { classes } = useStyles();
-
   const { height, loading, renderBody, title } = props;
 
   return (
@@ -39,7 +19,15 @@ export const StatsPanel: React.FC<Props> = (props) => {
         {title}
       </Typography>
       {loading ? (
-        <div className={classes.spinner} style={{ minHeight: height }}>
+        <div
+          style={{
+            minHeight: height,
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+        >
           <CircleProgress mini />
         </div>
       ) : (

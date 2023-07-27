@@ -1,4 +1,4 @@
-import { useTheme, styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Dialog } from 'src/components/Dialog/Dialog';

@@ -1,7 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
-import { useTheme } from '@mui/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -35,57 +33,6 @@ import { getDateOptions } from './helpers';
 
 setUpCharts();
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  chartSelect: {
-    maxWidth: 150,
-  },
-
-  emptyText: {
-    marginTop: theme.spacing(),
-    textAlign: 'center',
-  },
-
-  graphControls: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginBottom: theme.spacing(),
-  },
-
-  graphGrids: {
-    flexWrap: 'nowrap',
-    margin: 0,
-    [theme.breakpoints.down(1100)]: {
-      flexWrap: 'wrap',
-    },
-  },
-
-  grid: {
-    '& h2': {
-      fontSize: '1rem',
-    },
-    '&.MuiGrid-item': {
-      padding: theme.spacing(2),
-    },
-    backgroundColor: theme.bg.offWhite,
-    border: `solid 1px ${theme.borderColors.divider}`,
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.up(1100)]: {
-      '&:first-of-type': {
-        marginRight: theme.spacing(2),
-      },
-    },
-  },
-
-  labelRangeSelect: {
-    fontSize: '1rem',
-    paddingRight: theme.spacing(2),
-  },
-
-  root: {
-    width: '100%',
-  },
-}));
-
 interface Props {
   isBareMetalInstance: boolean;
   linodeCreated: string;
@@ -97,8 +44,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const { isBareMetalInstance, linodeCreated } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
-  const theme = useTheme<Theme>();
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;
@@ -241,14 +187,14 @@ const LinodeSummary: React.FC<Props> = (props) => {
           errorText={
             <>
               <div>
-                <Typography className={classes.emptyText} variant="h2">
+                <StyledTypography variant="h2">
                   {STATS_NOT_READY_MESSAGE}
-                </Typography>
+                </StyledTypography>
               </div>
               <div>
-                <Typography className={classes.emptyText} variant="body1">
+                <StyledTypography variant="body1">
                   CPU, Network, and Disk stats will be available shortly
-                </Typography>
+                </StyledTypography>
               </div>
             </>
           }
@@ -279,10 +225,17 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
   return (
     <Paper>
-      <Grid className={`${classes.root} m0`} container>
-        <Grid className={`${classes.graphControls} p0`} xs={12}>
-          <Select
-            className={classes.chartSelect}
+      <Grid sx={{ width: '100%', margin: 0 }} container>
+        <Grid
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: theme.spacing(),
+            padding: 0,
+          }}
+          xs={12}
+        >
+          <StyledSelect
             defaultValue={options[0]}
             hideLabel
             id="chartRange"
@@ -296,25 +249,31 @@ const LinodeSummary: React.FC<Props> = (props) => {
         </Grid>
         {!isBareMetalInstance ? (
           <Grid
-            className={`${classes.graphGrids}`}
+            sx={{
+              flexWrap: 'nowrap',
+              margin: 0,
+              [theme.breakpoints.down(1100)]: {
+                flexWrap: 'wrap',
+              },
+            }}
             container
             spacing={4}
             xs={12}
           >
-            <Grid className={classes.grid} xs={12}>
+            <StyledGrid xs={12}>
               <StatsPanel
                 renderBody={renderCPUChart}
                 title="CPU (%)"
                 {...chartProps}
               />
-            </Grid>
-            <Grid className={classes.grid} xs={12}>
+            </StyledGrid>
+            <StyledGrid xs={12}>
               <StatsPanel
                 renderBody={renderDiskIOChart}
                 title="Disk I/O (blocks/s)"
                 {...chartProps}
               />
-            </Grid>
+            </StyledGrid>
           </Grid>
         ) : null}
         <NetworkGraph stats={stats} {...chartProps} />
@@ -322,5 +281,33 @@ const LinodeSummary: React.FC<Props> = (props) => {
     </Paper>
   );
 };
+
+const StyledSelect = styled(Select, { label: 'StyledSelect' })({
+  maxWidth: 150,
+});
+
+const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+  '& h2': {
+    fontSize: '1rem',
+  },
+  '&.MuiGrid-item': {
+    padding: theme.spacing(2),
+  },
+  backgroundColor: theme.bg.offWhite,
+  border: `solid 1px ${theme.borderColors.divider}`,
+  marginBottom: theme.spacing(2),
+  [theme.breakpoints.up(1100)]: {
+    '&:first-of-type': {
+      marginRight: theme.spacing(2),
+    },
+  },
+}));
+
+const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    marginTop: theme.spacing(),
+    textAlign: 'center',
+  })
+);
 
 export default LinodeSummary;

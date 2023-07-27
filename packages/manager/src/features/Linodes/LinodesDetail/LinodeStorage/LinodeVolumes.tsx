@@ -1,6 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -18,7 +17,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
 import { VolumeAttachmentDrawer } from 'src/features/Volumes/VolumeAttachmentDrawer';
 import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
@@ -37,32 +35,11 @@ import {
   openForEdit,
   openForResize,
 } from 'src/store/volumeForm';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      padding: 5,
-    },
-    [theme.breakpoints.down('sm')]: {
-      marginLeft: `-${theme.spacing(1.5)}`,
-      marginTop: `-${theme.spacing(1)}`,
-    },
-  },
-  headline: {
-    lineHeight: '1.5rem',
-    marginBottom: 8,
-    marginLeft: 15,
-    marginTop: 8,
-  },
-  root: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    width: '100%',
-  },
-  volumesPanel: {
-    marginTop: '20px',
-  },
-}));
+import {
+  StyledTypography,
+  StyledRootGrid,
+  StyledWrapperGrid,
+} from './CommonLinodeStorage.styles';
 
 interface DispatchProps {
   openForClone: (
@@ -134,8 +111,6 @@ export const LinodeVolumes = connected((props: Props) => {
   };
 
   const pagination = usePagination(1, preferenceKey);
-
-  const { classes } = useStyles();
 
   const regions = useRegionsQuery().data ?? [];
 
@@ -281,27 +256,24 @@ export const LinodeVolumes = connected((props: Props) => {
   };
 
   return (
-    <div className={classes.volumesPanel}>
-      <Grid
+    <StyledDiv>
+      <StyledRootGrid
         alignItems="flex-end"
-        className={classes.root}
         container
         justifyContent="space-between"
         spacing={1}
       >
         <Grid className="p0">
-          <Typography className={classes.headline} variant="h3">
-            Volumes
-          </Typography>
+          <StyledTypography variant="h3">Volumes</StyledTypography>
         </Grid>
-        <Grid className={classes.addNewWrapper}>
+        <StyledNewWrapperGrid>
           <AddNewLink
             disabled={false}
             label="Create Volume"
             onClick={openCreateVolumeDrawer}
           />
-        </Grid>
-      </Grid>
+        </StyledNewWrapperGrid>
+      </StyledRootGrid>
       <Table>
         <TableHead>
           <TableRow>
@@ -361,6 +333,20 @@ export const LinodeVolumes = connected((props: Props) => {
         volumeId={destructiveDialog.volumeId ?? 0}
         volumeLabel={destructiveDialog.volumeLabel}
       />
-    </div>
+    </StyledDiv>
   );
+});
+
+const StyledNewWrapperGrid = styled(Grid, { label: 'StyledNewWrapperGrid' })(
+  ({ theme }) => ({
+    ...StyledWrapperGrid({ theme }),
+
+    [theme.breakpoints.down('sm')]: {
+      marginTop: `-${theme.spacing(1)}`,
+    },
+  })
+);
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })({
+  marginTop: '20px',
 });

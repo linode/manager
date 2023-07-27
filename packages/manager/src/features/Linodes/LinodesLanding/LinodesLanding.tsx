@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 import { MapDispatchToProps, connect } from 'react-redux';
@@ -46,8 +45,10 @@ import CardView from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import { DisplayLinodes } from './DisplayLinodes';
-import { styles, StyleProps } from './LinodesLanding.styles';
-import { withStyles } from 'tss-react/mui';
+import {
+  StyledLinkContainerGrid,
+  StyledWrapperGrid,
+} from './LinodesLanding.styles';
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
@@ -94,7 +95,6 @@ export interface Props {
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   someLinodesHaveScheduledMaintenance: boolean;
-  classes?: StyleProps;
 }
 
 type CombinedProps = Props &
@@ -113,8 +113,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesRequestError,
       linodesRequestLoading,
     } = this.props;
-
-    const classes = withStyles.getClasses(this.props);
 
     const params = new URLSearchParams(this.props.location.search);
 
@@ -315,15 +313,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           );
                         }}
                       </OrderBy>
-                      <Grid
-                        className={classes.CSVwrapper}
-                        container
-                        justifyContent="flex-end"
-                      >
-                        <Grid className={classes.CSVlinkContainer}>
+                      <StyledWrapperGrid container justifyContent="flex-end">
+                        <StyledLinkContainerGrid>
                           <LinodesLandingCSVDownload />
-                        </Grid>
-                      </Grid>
+                        </StyledLinkContainerGrid>
+                      </StyledWrapperGrid>
                     </React.Fragment>
                   );
                 }}
@@ -495,4 +489,4 @@ export const enhanced = compose<CombinedProps, Props>(
   withEventsInfiniteQuery()
 );
 
-export default enhanced(withStyles(ListLinodes, styles));
+export default enhanced(ListLinodes);

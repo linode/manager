@@ -21,7 +21,7 @@ interface Props {
 }
 
 export const UserDataAccordion = (props: Props) => {
-  const { classes } = useExpandIconStyles();
+  const { classes, cx } = useExpandIconStyles();
   const {
     createType,
     disabled,
@@ -78,9 +78,9 @@ export const UserDataAccordion = (props: Props) => {
         },
       }}
       detailProps={{ sx: sxDetails }}
-      expandIconClassNames={
-        fromBackupOrFromLinode ? classes.expandIconStyles : ''
-      }
+      expandIconClassNames={cx({
+        [classes.expandIconStyles]: !!fromBackupOrFromLinode,
+      })}
       heading={<UserDataAccordionHeading createType={createType} />}
     >
       {renderNotice ? (

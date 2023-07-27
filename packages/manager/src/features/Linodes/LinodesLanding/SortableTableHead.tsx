@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';
@@ -14,53 +13,8 @@ import { Tooltip } from 'src/components/Tooltip';
 
 import { StyledToggleButton } from './DisplayLinodes.styles';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  controlHeader: {
-    backgroundColor: theme.bg.tableHeader,
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  // There's nothing very scientific about the widths across the breakpoints
-  // here, just a lot of trial and error based on maximum expected column sizes.
-  labelCell: {
-    ...theme.applyTableHeaderStyles,
-    [theme.breakpoints.down('lg')]: {
-      width: '20%',
-    },
-    width: '24%',
-  },
-  lastBackupCell: {
-    ...theme.applyTableHeaderStyles,
-    [theme.breakpoints.down('sm')]: {
-      width: '18%',
-    },
-    width: '14%',
-  },
-  planCell: {
-    ...theme.applyTableHeaderStyles,
-    [theme.breakpoints.only('sm')]: {
-      width: '15%',
-    },
-    width: '14%',
-  },
-  regionCell: {
-    ...theme.applyTableHeaderStyles,
-    [theme.breakpoints.down('sm')]: {
-      width: '18%',
-    },
-    width: '14%',
-  },
-  statusCell: {
-    ...theme.applyTableHeaderStyles,
-    [theme.breakpoints.down('md')]: {
-      width: '25%',
-    },
-    [theme.breakpoints.only('md')]: {
-      width: '27%',
-    },
-    width: '20%',
-  },
-}));
+// There's nothing very scientific about the widths across the breakpoints
+// here, just a lot of trial and error based on maximum expected column sizes.
 
 interface Props {
   isVLAN?: boolean;
@@ -73,7 +27,7 @@ interface Props {
 type CombinedProps<T> = Props & Omit<OrderByProps<T>, 'data'>;
 
 const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   const {
     handleOrderChange,
@@ -94,21 +48,36 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
       <TableRow>
         <TableSortCell
           active={isActive('label')}
-          className={classes.labelCell}
           data-qa-sort-label={order}
           direction={order}
           handleClick={handleOrderChange}
           label="label"
+          sx={{
+            ...theme.applyTableHeaderStyles,
+            [theme.breakpoints.down('lg')]: {
+              width: '20%',
+            },
+            width: '24%',
+          }}
         >
           Label
         </TableSortCell>
         <TableSortCell
           active={isActive('_statusPriority')}
-          className={classes.statusCell}
           direction={order}
           handleClick={handleOrderChange}
           label="_statusPriority"
           noWrap
+          sx={{
+            ...theme.applyTableHeaderStyles,
+            [theme.breakpoints.down('md')]: {
+              width: '25%',
+            },
+            [theme.breakpoints.only('md')]: {
+              width: '27%',
+            },
+            width: '20%',
+          }}
         >
           Status
         </TableSortCell>
@@ -127,10 +96,16 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
             <Hidden smDown>
               <TableSortCell
                 active={isActive('type')}
-                className={classes.planCell}
                 direction={order}
                 handleClick={handleOrderChange}
                 label="type"
+                sx={{
+                  ...theme.applyTableHeaderStyles,
+                  [theme.breakpoints.only('sm')]: {
+                    width: '15%',
+                  },
+                  width: '14%',
+                }}
               >
                 Plan
               </TableSortCell>
@@ -145,11 +120,17 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
               <Hidden lgDown>
                 <TableSortCell
                   active={isActive('region')}
-                  className={classes.regionCell}
                   data-qa-sort-region={order}
                   direction={order}
                   handleClick={handleOrderChange}
                   label="region"
+                  sx={{
+                    ...theme.applyTableHeaderStyles,
+                    [theme.breakpoints.down('sm')]: {
+                      width: '18%',
+                    },
+                    width: '14%',
+                  }}
                 >
                   Region
                 </TableSortCell>
@@ -158,11 +139,17 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
             <Hidden lgDown>
               <TableSortCell
                 active={isActive('backups:last_successful')}
-                className={classes.lastBackupCell}
                 direction={order}
                 handleClick={handleOrderChange}
                 label="backups:last_successful"
                 noWrap
+                sx={{
+                  ...theme.applyTableHeaderStyles,
+                  [theme.breakpoints.down('sm')]: {
+                    width: '18%',
+                  },
+                  width: '14%',
+                }}
               >
                 Last Backup
               </TableSortCell>
@@ -170,7 +157,13 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
           </>
         )}
         <TableCell sx={{ padding: '0 !important' }}>
-          <div className={classes.controlHeader}>
+          <div
+            style={{
+              backgroundColor: theme.bg.tableHeader,
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
+          >
             <div className="visually-hidden" id="displayViewDescription">
               Currently in {linodeViewPreference} view
             </div>

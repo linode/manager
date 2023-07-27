@@ -1,14 +1,6 @@
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { useRegionsQuery } from 'src/queries/regions';
-
-const useStyles = makeStyles()({
-  regionIndicator: {
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-  },
-});
 
 interface Props {
   region: string;
@@ -16,13 +8,12 @@ interface Props {
 
 const RegionIndicator = (props: Props) => {
   const { region } = props;
-  const { classes } = useStyles();
   const { data: regions } = useRegionsQuery();
 
   const actualRegion = regions?.find((r) => r.id === region);
 
   return (
-    <div className={classes.regionIndicator}>
+    <div style={{ alignItems: 'center', whiteSpace: 'nowrap' }}>
       {actualRegion?.label ?? region}
     </div>
   );

@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -7,6 +6,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useLinodeFirewalls } from 'src/queries/linodes/firewalls';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 const rescueDescription = {
   firewallWarning:
@@ -20,23 +20,9 @@ interface Props {
   linodeId: number;
 }
 
-// uh oh generated comment
-
-// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
-//Unexpected value type of MemberExpression.
-const useStyles = makeStyles()((theme: Theme) => ({
-  copy: {
-    marginTop: theme.spacing(1),
-  },
-  lishLink: theme.applyLinkStyles,
-  notice: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
 const RescueDescription: React.FC<Props> = (props) => {
   const { isBareMetal, linodeId } = props;
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   const { data: linodeFirewallsData } = useLinodeFirewalls(linodeId);
   const firewallsLinodeAssignedTo = linodeFirewallsData?.data ?? [];
@@ -57,14 +43,11 @@ const RescueDescription: React.FC<Props> = (props) => {
         <Link to={rescueDescription.link}>Learn more.</Link>
       </Typography>
       {linodeId && isBareMetal ? (
-        <Typography className={classes.copy}>
+        <Typography sx={{ marginTop: theme.spacing(1) }}>
           {`When your Linode has successfully rebooted into Rescue Mode, use the `}
-          <button
-            className={classes.lishLink}
-            onClick={() => lishLaunch(linodeId)}
-          >
+          <StyledLinkButton onClick={() => lishLaunch(linodeId)}>
             LISH Console
-          </button>
+          </StyledLinkButton>
           {` to access it.`}
         </Typography>
       ) : null}
