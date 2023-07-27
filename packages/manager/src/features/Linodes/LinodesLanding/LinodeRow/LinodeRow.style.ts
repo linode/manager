@@ -5,14 +5,6 @@ import { makeStyles } from 'tss-react/mui';
 // and the only thing that happened was the codemod :(
 export const useStyles = makeStyles()((theme: Theme) => ({
   bodyRow: {
-    '& [data-qa-copy-ip] button:focus > svg': {
-      opacity: 1,
-    },
-    '&:hover': {
-      '& [data-qa-copy-ip] button > svg': {
-        opacity: 1,
-      },
-    },
     height: 'auto',
   },
   ipCellWrapper: {
@@ -21,17 +13,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       paddingBottom: 0,
       paddingTop: 0,
     },
-    '& [data-qa-copy-ip] button > svg': {
-      opacity: 0,
-    },
     '& button:hover': {
       backgroundColor: 'transparent',
-    },
-    '& svg': {
-      '&:hover': {
-        color: theme.palette.primary.main,
-      },
-      marginTop: 2,
     },
   },
   maintenanceOuter: {

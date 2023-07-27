@@ -1,11 +1,15 @@
 import { styled } from '@mui/material/styles';
+
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { IPAddressProps } from './IPAddress';
 import { isPropValid } from 'src/utilities/isPropValid';
 
-type StyledIPAddressProps = Pick<IPAddressProps, 'showAll' | 'showCopyOnHover'>;
+import { IPAddressProps } from './IPAddress';
 
-export const StyledIPLinkDiv = styled('div', { label: 'StyledIPLinkDiv' })(
+interface StyledIpAddressProps extends Partial<IPAddressProps> {
+  isIpHovered?: boolean;
+}
+
+export const StyledIpLinkDiv = styled('div', { label: 'StyledIpLinkDiv' })(
   ({ theme }) => ({
     color: theme.palette.primary.main,
     display: 'inline-block',
@@ -17,12 +21,7 @@ export const StyledIPLinkDiv = styled('div', { label: 'StyledIPLinkDiv' })(
 
 export const StyledRootDiv = styled('div', {
   label: 'StyledRootDiv',
-})<StyledIPAddressProps>(({ theme, showAll }) => ({
-  '&:hover': {
-    '& $hide': {
-      opacity: 1,
-    },
-  },
+})<StyledIpAddressProps>(({ showAll, theme }) => ({
   '&:last-child': {
     marginBottom: 0,
   },
@@ -32,49 +31,43 @@ export const StyledRootDiv = styled('div', {
 
   ...(!showAll
     ? {
-        display: 'inline-flex',
         alignItems: 'center',
+        display: 'inline-flex',
       }
     : {}),
 }));
 
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip ',
-  shouldForwardProp: (prop) => isPropValid(['showCopyOnHover'], prop),
-})<StyledIPAddressProps>(({ theme, showCopyOnHover }) => ({
-  '& svg': {
-    height: 12,
-    top: 1,
-    width: 12,
-  },
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'center',
-  marginLeft: theme.spacing(0.5),
-
-  ...(showCopyOnHover
-    ? {
-        '&:focus': {
-          opacity: 1,
-        },
-        [theme.breakpoints.up('md')]: {
-          // Hide until the component is hovered,
-          // when props.showCopyOnHover is true (only on desktop)
-          opacity: 0,
-        },
-        transition: theme.transitions.create(['opacity']),
-      }
-    : {}),
-}));
+  shouldForwardProp: (prop) =>
+    isPropValid(['isHovered', 'isIpHovered', 'showTooltipOnIpHover'], prop),
+})<StyledIpAddressProps>(
+  ({ isHovered, isIpHovered, showTooltipOnIpHover, theme }) => ({
+    '& svg': {
+      height: 12,
+      top: 1,
+      width: 12,
+    },
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    marginLeft: theme.spacing(0.5),
+    opacity: isHovered ? 1 : 0,
+    transition: theme.transitions.create(['opacity']),
+    ...(showTooltipOnIpHover && {
+      opacity: isIpHovered ? 1 : 0,
+    }),
+  })
+);
 
 export const StyledRenderIPDiv = styled('div', {
   label: 'StyledRenderIPDiv',
-  shouldForwardProp: (prop) => isPropValid(['showAll'], prop),
-})<StyledIPAddressProps>(({ theme, showAll }) => ({
-  alignItems: 'flex-start',
+  shouldForwardProp: (prop) =>
+    isPropValid(['showAll', 'showTooltipOnIpHover'], prop),
+})<StyledIpAddressProps>(({ showAll, theme }) => ({
+  alignItems: 'center',
   display: 'flex',
   width: '100%',
-
   ...(showAll
     ? {
         '&:not(:last-child)': {

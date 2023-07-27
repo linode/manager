@@ -90,6 +90,16 @@ export const LinodeRow = (props: Props) => {
       ? 'inactive'
       : 'other';
 
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const handleMouseEnter = React.useCallback(() => {
+    setIsHovered(true);
+  }, []);
+
+  const handleMouseLeave = React.useCallback(() => {
+    setIsHovered(false);
+  }, []);
+
   return (
     <TableRow
       ariaLabel={label}
@@ -97,6 +107,8 @@ export const LinodeRow = (props: Props) => {
       data-qa-linode={label}
       data-qa-loading
       key={id}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <TableCell noWrap>
         <Link tabIndex={0} to={`/linodes/${id}`}>
@@ -149,7 +161,7 @@ export const LinodeRow = (props: Props) => {
           {linodeType ? formatStorageUnits(linodeType.label) : type}
         </TableCell>
         <TableCell className={classes.ipCellWrapper} data-qa-ips>
-          <IPAddress ips={ipv4} />
+          <IPAddress ips={ipv4} isHovered={isHovered} />
         </TableCell>
         <Hidden lgDown>
           <TableCell data-qa-region>
