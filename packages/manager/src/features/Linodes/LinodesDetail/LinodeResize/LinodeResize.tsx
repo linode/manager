@@ -27,8 +27,8 @@ import { usePreferences } from 'src/queries/preferences';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
-import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { extendType } from 'src/utilities/extendType';
+import { getPermissionsForLinode } from 'src/utilities/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
