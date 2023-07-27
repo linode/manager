@@ -4,14 +4,12 @@ import {
   LinodeConfigCreationData,
   createLinodeConfig,
   deleteLinodeConfig,
-  getLinodeConfigs,
   updateLinodeConfig,
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { getAll } from 'src/utilities/getAll';
-
 import { queryKey } from './linodes';
+import { getAllLinodeConfigs } from './requests';
 
 export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   return useQuery<Config[], APIError[]>(
@@ -77,8 +75,3 @@ export const useLinodeConfigUpdateMutation = (
     }
   );
 };
-
-const getAllLinodeConfigs = (id: number) =>
-  getAll<Config>((params, filter) =>
-    getLinodeConfigs(id, params, filter)
-  )().then((data) => data.data);

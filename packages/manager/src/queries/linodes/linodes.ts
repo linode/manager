@@ -1,19 +1,22 @@
 import {
   CreateLinodeRequest,
+  Devices,
   Kernel,
   Linode,
+  LinodeCloneData,
   ResizeLinodePayload,
   changeLinodePassword,
+  cloneLinode,
   createLinode,
   deleteLinode,
   getLinode,
   getLinodeKernel,
-  getLinodeKernels,
   getLinodeLishToken,
   getLinodes,
   linodeBoot,
   linodeReboot,
   linodeShutdown,
+  rescueLinode,
   resizeLinode,
   scheduleOrQueueMigration,
   updateLinode,
@@ -32,10 +35,9 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { getAll } from 'src/utilities/getAll';
-
-import { queryKey as accountQueryKey } from '../account';
+import { queryKey as accountNotificationsQueryKey } from '../accountNotifications';
 import { queryPresets } from '../base';
+import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
 
 export const queryKey = 'linodes';
 
@@ -79,7 +81,7 @@ export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
 
 export const useLinodeQuery = (id: number, enabled = true) => {
   return useQuery<Linode, APIError[]>(
-    [queryKey, 'linode', id],
+    [queryKey, 'linode', id, 'details'],
     () => getLinode(id),
     {
       enabled,
@@ -93,8 +95,10 @@ export const useLinodeUpdateMutation = (id: number) => {
     (data) => updateLinode(id, data),
     {
       onSuccess(linode) {
-        queryClient.invalidateQueries([queryKey]);
-        queryClient.setQueryData([queryKey, 'linode', id], linode);
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.setQueryData([queryKey, 'linode', id, 'details'], linode);
       },
     }
   );
@@ -127,31 +131,14 @@ export const useLinodeLishTokenQuery = (id: number) => {
   );
 };
 
-/** Use with care; originally added to request all Linodes in a given region for IP sharing and transfer */
-const getAllLinodesRequest = (
-  passedParams: Params = {},
-  passedFilter: Filter = {}
-) =>
-  getAll<Linode>((params, filter) =>
-    getLinodes({ ...params, ...passedParams }, { ...filter, ...passedFilter })
-  )().then((data) => data.data);
-
-const getAllLinodeKernelsRequest = (
-  passedParams: Params = {},
-  passedFilter: Filter = {}
-) =>
-  getAll<Kernel>((params, filter) =>
-    getLinodeKernels(
-      { ...params, ...passedParams },
-      { ...filter, ...passedFilter }
-    )
-  )().then((data) => data.data);
-
 export const useDeleteLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteLinode(id), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
+      queryClient.removeQueries([queryKey, 'linode', id]);
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries([queryKey, 'infinite']);
     },
   });
 };
@@ -159,8 +146,33 @@ export const useDeleteLinodeMutation = (id: number) => {
 export const useCreateLinodeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Linode, APIError[], CreateLinodeRequest>(createLinode, {
-    onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
+    onSuccess(linode) {
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries([queryKey, 'infinite']);
+      queryClient.setQueryData(
+        [queryKey, 'linode', linode.id, 'details'],
+        linode
+      );
+    },
+  });
+};
+
+export const useCloneLinodeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Linode,
+    APIError[],
+    { sourceLinodeId: number & LinodeCloneData }
+  >(({ sourceLinodeId, ...data }) => cloneLinode(sourceLinodeId, data), {
+    onSuccess(linode) {
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries([queryKey, 'infinite']);
+      queryClient.setQueryData(
+        [queryKey, 'linode', linode.id, 'details'],
+        linode
+      );
     },
   });
 };
@@ -171,7 +183,10 @@ export const useBootLinodeMutation = (id: number) => {
     ({ config_id }) => linodeBoot(id, config_id),
     {
       onSuccess() {
-        queryClient.invalidateQueries([queryKey]);
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
       },
     }
   );
@@ -183,7 +198,10 @@ export const useRebootLinodeMutation = (id: number) => {
     ({ config_id }) => linodeReboot(id, config_id),
     {
       onSuccess() {
-        queryClient.invalidateQueries([queryKey]);
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
       },
     }
   );
@@ -193,7 +211,10 @@ export const useShutdownLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => linodeShutdown(id), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries([queryKey, 'infinite']);
+      queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
     },
   });
 };
@@ -209,7 +230,10 @@ export const useLinodeMigrateMutation = (id: number) => {
     (data) => scheduleOrQueueMigration(id, data),
     {
       onSuccess() {
-        queryClient.invalidateQueries([queryKey]);
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
       },
     }
   );
@@ -221,8 +245,26 @@ export const useLinodeResizeMutation = (id: number) => {
     (data) => resizeLinode(id, data),
     {
       onSuccess() {
-        queryClient.invalidateQueries([queryKey]);
-        queryClient.invalidateQueries([accountQueryKey, 'notifications']);
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
+        queryClient.invalidateQueries(accountNotificationsQueryKey);
+      },
+    }
+  );
+};
+
+export const useLinodeRescueMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], Devices>(
+    (data) => rescueLinode(id, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
       },
     }
   );

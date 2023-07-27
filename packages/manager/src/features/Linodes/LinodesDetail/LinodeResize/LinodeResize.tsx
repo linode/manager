@@ -62,12 +62,12 @@ export const LinodeResize = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && open
   );
 
   const { data: disks, error: disksError } = useAllLinodeDisksQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && open
   );
 
   const { data: types } = useAllTypes(open);
