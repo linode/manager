@@ -36,11 +36,7 @@ const DayDisplay = (props: DayDisplayProps) => {
     <StyledGrid alignItems="center" container direction="row" spacing={2}>
       <Grid>{icon}</Grid>
       <Grid>
-        <ConditionalDateTimeDisplay
-          // className={`${ticketUrl ? classes.failureText : ''}`}
-          displayTime={false}
-          value={day}
-        />
+        <ConditionalDateTimeDisplay displayTime={false} value={day} />
       </Grid>
       {ticketUrl && (
         <Tooltip
