@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -9,17 +8,9 @@ import { SupportTicketDialog } from 'src/features/Support/SupportTickets/Support
 
 import { AttachmentError } from '../Support/SupportTicketDetail/SupportTicketDetail';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    color: theme.textColors.linkActiveLight,
-  },
-}));
+export type SupportWidgetProps = RouteComponentProps<{}>;
 
-export type CombinedProps = RouteComponentProps<{}>;
-
-export const SupportWidget: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+export const SupportWidget = (props: SupportWidgetProps) => {
   const { history } = props;
 
   const [open, setOpen] = React.useState<boolean>(false);
@@ -35,13 +26,9 @@ export const SupportWidget: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Button
-        buttonType="secondary"
-        className={classes.root}
-        onClick={() => setOpen(true)}
-      >
+      <StyledButton buttonType="secondary" onClick={() => setOpen(true)}>
         Open Support Ticket
-      </Button>
+      </StyledButton>
       <SupportTicketDialog
         onClose={() => setOpen(false)}
         onSuccess={onTicketCreated}
@@ -51,5 +38,11 @@ export const SupportWidget: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(React.memo, withRouter);
+const StyledButton = styled(Button, {
+  label: 'StyledButton',
+})(({ theme }) => ({
+  color: theme.textColors.linkActiveLight,
+}));
+
+const enhanced = compose<SupportWidgetProps, {}>(React.memo, withRouter);
 export default enhanced(SupportWidget);

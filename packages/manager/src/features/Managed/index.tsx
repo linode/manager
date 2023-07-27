@@ -10,22 +10,20 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const ManagedLanding = React.lazy(() => import('./ManagedLanding'));
 
-type Props = RouteComponentProps<{}>;
+type ManagedProps = RouteComponentProps<{}>;
 
-class Managed extends React.Component<Props> {
-  render() {
-    const {
-      match: { path },
-    } = this.props;
+const Managed = (props: ManagedProps) => {
+  const {
+    match: { path },
+  } = props;
 
-    return (
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route component={ManagedLanding} path={path} />
-        </Switch>
-      </React.Suspense>
-    );
-  }
-}
+  return (
+    <React.Suspense fallback={<SuspenseLoader />}>
+      <Switch>
+        <Route component={ManagedLanding} path={path} />
+      </Switch>
+    </React.Suspense>
+  );
+};
 
 export default withRouter(Managed);

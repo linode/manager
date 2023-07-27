@@ -10,14 +10,14 @@ import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuActi
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-export interface Props {
+export interface SSHAccessActionMenuProps {
   isEnabled: boolean;
   linodeId: number;
   linodeLabel: string;
   openDrawer: (linodeId: number) => void;
 }
 
-export const SSHAccessActionMenu: React.FC<Props> = (props) => {
+export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
   const { isEnabled, linodeId, openDrawer } = props;
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
