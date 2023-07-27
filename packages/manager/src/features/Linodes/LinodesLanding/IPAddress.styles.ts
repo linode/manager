@@ -48,6 +48,9 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
       top: 1,
       width: 12,
     },
+    '&:focus': {
+      opacity: 1,
+    },
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
