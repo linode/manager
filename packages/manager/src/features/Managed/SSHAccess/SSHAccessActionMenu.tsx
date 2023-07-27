@@ -1,7 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -19,7 +18,7 @@ export interface SSHAccessActionMenuProps {
 
 export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
   const { isEnabled, linodeId, openDrawer } = props;
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { enqueueSnackbar } = useSnackbar();

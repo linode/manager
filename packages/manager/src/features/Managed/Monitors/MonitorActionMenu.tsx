@@ -1,8 +1,7 @@
 import { MonitorStatus } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { splitAt } from 'ramda';
 import * as React from 'react';
@@ -25,7 +24,7 @@ export interface MonitorActionMenuProps {
 }
 
 export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { enqueueSnackbar } = useSnackbar();
 
