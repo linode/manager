@@ -7,17 +7,17 @@ import { TableSortCell } from 'src/components/TableSortCell';
 export const StyledGrid = styled(Grid, {
   label: 'SyledGrid',
 })(({ theme }) => ({
-  '& > th': {
-    fontFamily: theme.font.bold,
+  marginBottom: 5,
+  [theme.breakpoints.down('md')]: {
+    marginRight: theme.spacing(),
   },
 }));
 
 export const StyledTableRow = styled(TableRow, {
   label: 'SyledTableRow',
 })(({ theme }) => ({
-  marginBottom: 5,
-  [theme.breakpoints.down('md')]: {
-    marginRight: theme.spacing(),
+  '& > th': {
+    fontFamily: theme.font.bold,
   },
 }));
 
