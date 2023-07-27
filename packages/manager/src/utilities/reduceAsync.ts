@@ -1,7 +1,8 @@
 /**
  * reduceAsync
  *
- * This function is intended to be a replacement to Bluebird.reduce function.
+ * This function is a replacement for the Bluebird.reduce function and we added it
+ * when we removed bluebird as a dependency from Cloud Manager.
  *
  * @param arr An array of items to be reduced
  * @param fn The async function that will be run for each element in the array
