@@ -24,7 +24,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography, TypographyProps } from 'src/components/Typography';
-import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';

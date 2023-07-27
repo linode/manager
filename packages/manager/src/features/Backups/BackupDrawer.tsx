@@ -22,6 +22,10 @@ import {
   withSpecificTypes,
 } from 'src/containers/types.container';
 import {
+  WithLinodesProps,
+  withLinodes,
+} from 'src/containers/withLinodes.container';
+import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
@@ -35,7 +39,6 @@ import {
   handleResetError,
   handleResetSuccess,
 } from 'src/store/backupDrawer';
-import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { ThunkDispatch } from 'src/store/types';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
@@ -50,8 +53,12 @@ interface DispatchProps {
     close: () => void;
     dismissError: () => void;
     dismissSuccess: () => void;
-    enable: () => void;
-    enroll: (backupsEnabled: boolean, queryClient: QueryClient) => void;
+    enable: (linodesWithoutBackups: Linode[]) => void;
+    enroll: (
+      backupsEnabled: boolean,
+      queryClient: QueryClient,
+      linodesWithoutBackups: Linode[]
+    ) => void;
     toggle: () => void;
   };
 }
@@ -65,7 +72,6 @@ interface StateProps {
   enableSuccess: boolean;
   enabling: boolean;
   enrolling: boolean;
-  linodesWithoutBackups: Linode[];
   loading: boolean;
   open: boolean;
   updatedCount: number;
@@ -76,7 +82,8 @@ type CombinedProps = DispatchProps &
   WithSnackbarProps &
   WithSpecificTypesProps &
   WithQueryClientProps &
-  WithAccountSettingsProps;
+  WithAccountSettingsProps &
+  WithLinodesProps;
 
 const getFailureNotificationText = (
   success: number,
@@ -124,8 +131,11 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       close();
     }
     if (
-      prevProps.linodesWithoutBackups.some(
-        (linode, index) => linode != this.props.linodesWithoutBackups[index]
+      BackupDrawer.getLinodesWithoutBackups(this.props.linodesData).some(
+        (linode) =>
+          !BackupDrawer.getLinodesWithoutBackups(prevProps.linodesData).find(
+            (prevLinode) => prevLinode.type == linode.type
+          )
       )
     ) {
       this.updateRequestedTypes();
@@ -149,7 +159,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
 
     const extendedTypeData = requestedTypesData.map(extendType);
     const extendedLinodes = enhanceLinodes(
-      this.props.linodesWithoutBackups,
+      BackupDrawer.getLinodesWithoutBackups(this.props.linodesData),
       enableErrors,
       extendedTypeData
     );
@@ -223,6 +233,9 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
     );
   }
 
+  static getLinodesWithoutBackups = (linodes: Linode[] | undefined) =>
+    linodes?.filter((linode) => !linode.backups.enabled) ?? [];
+
   handleSubmit = () => {
     const {
       accountSettings,
@@ -230,15 +243,19 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       queryClient,
     } = this.props;
     if (accountSettings.data?.backups_enabled) {
-      enable();
+      enable(BackupDrawer.getLinodesWithoutBackups(this.props.linodesData));
     } else {
-      enroll(accountSettings.data?.backups_enabled ?? false, queryClient);
+      enroll(
+        accountSettings.data?.backups_enabled ?? false,
+        queryClient,
+        BackupDrawer.getLinodesWithoutBackups(this.props.linodesData)
+      );
     }
   };
 
   updateRequestedTypes = () => {
     this.props.setRequestedTypes(
-      this.props.linodesWithoutBackups
+      BackupDrawer.getLinodesWithoutBackups(this.props.linodesData)
         .map((linode) => linode.type)
         .filter(isNotNullOrUndefined)
     );
@@ -253,9 +270,20 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       close: () => dispatch(handleClose()),
       dismissError: () => dispatch(handleResetError()),
       dismissSuccess: () => dispatch(handleResetSuccess()),
-      enable: () => dispatch(enableAllBackups()),
-      enroll: (backupsEnabled: boolean, queryClient: QueryClient) =>
-        dispatch(enableAutoEnroll({ backupsEnabled, queryClient })),
+      enable: (linodesWithoutBackups: Linode[]) =>
+        dispatch(enableAllBackups(linodesWithoutBackups)),
+      enroll: (
+        backupsEnabled: boolean,
+        queryClient: QueryClient,
+        linodesWithoutBackups: Linode[]
+      ) =>
+        dispatch(
+          enableAutoEnroll({
+            backupsEnabled,
+            linodesWithoutBackups,
+            queryClient,
+          })
+        ),
       toggle: () => dispatch(handleAutoEnrollToggle()),
     },
   };
@@ -304,7 +332,6 @@ const mapStateToProps: MapStateToProps<
   ApplicationState
 > = (state: ApplicationState) => {
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
-  const linodes = getLinodesWithoutBackups(state.__resources);
   return {
     autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     autoEnrollError: path(['backups', 'autoEnrollError'], state),
@@ -314,7 +341,6 @@ const mapStateToProps: MapStateToProps<
     enableSuccess: pathOr(false, ['backups', 'enableSuccess'], state),
     enabling: pathOr(false, ['backups', 'enabling'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
-    linodesWithoutBackups: linodes,
     loading: pathOr(false, ['backups', 'loading'], state),
     open: pathOr(false, ['backups', 'open'], state),
     updatedCount: pathOr<number>(0, ['backups', 'updatedCount'], state),
@@ -330,7 +356,9 @@ const enhanced = compose<CombinedProps, {}>(
     withSpecificTypes(comp, props.open)(props),
   withSnackbar,
   withAccountSettings,
-  withQueryClient
+  withQueryClient,
+  (comp: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
+    withLinodes(comp, props.open)(props)
 );
 
 export default enhanced(BackupDrawer);
