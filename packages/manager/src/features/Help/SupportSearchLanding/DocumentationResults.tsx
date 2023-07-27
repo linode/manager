@@ -73,7 +73,12 @@ export const DocumentationResults = (props: Props) => {
   const renderEmptyState = (): JSX.Element => {
     return (
       <Paper className={classes.noResultsContainer}>
-        <Typography variant="body1">No results</Typography>
+        <Typography
+          data-testid="data-qa-documentation-no-results"
+          variant="body1"
+        >
+          No results
+        </Typography>
       </Paper>
     );
   };

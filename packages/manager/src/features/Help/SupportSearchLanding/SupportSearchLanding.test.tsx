@@ -1,21 +1,14 @@
-import { shallow } from 'enzyme';
+import { screen } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { H1Header } from 'src/components/H1Header/H1Header';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import SupportSearchLanding, { CombinedProps } from './SupportSearchLanding';
 
-// const classes = {
-//   backButton: '',
-//   searchBar: '',
-//   searchBoxInner: '',
-//   searchIcon: '',
-// };
-
 const props: CombinedProps = {
-  // classes,
   searchAlgolia: jest.fn(),
   searchEnabled: true,
   searchResults: [[], []],
@@ -24,57 +17,43 @@ const props: CombinedProps = {
 
 const propsWithMultiWordURLQuery = assocPath(
   ['location', 'search'],
-  '?query=search%20two%20words',
+  '?query=two%20words',
   props
 );
 
-const component = shallow<typeof SupportSearchLanding>(
-  <SupportSearchLanding {...props} />
-);
-
-// Query is read on mount so we have to mount twice.
-const component2 = shallow<typeof SupportSearchLanding>(
-  <SupportSearchLanding {...propsWithMultiWordURLQuery} />
-);
-
-describe('Component', () => {
+describe('SupportSearchLanding Component', () => {
   it('should render', () => {
-    expect(component).toBeDefined();
-  });
-
-  it('should set the query from the URL param to state', () => {
-    expect(component.state().query).toMatch('search');
-  });
-
-  it('should read multi-word queries correctly', () => {
-    expect(component2.state().query).toMatch('search two words');
-  });
-
-  it('should display the query text in the header', () => {
+    renderWithTheme(<SupportSearchLanding {...props} />);
     expect(
-      component.containsMatchingElement(
-        <H1Header
-          data-qa-support-search-landing-title={true}
-          title='Search results for "search"'
-        />
-      )
-    ).toBeTruthy();
+      screen.getByTestId('data-qa-support-search-landing-title')
+    ).toBeInTheDocument();
   });
 
-  it('should display generic text if no query is provided', () => {
-    component.setState({ query: '' });
+  it('should display generic text if no query string is provided', () => {
+    renderWithTheme(<H1Header {...props} title="Search" />);
+    expect(screen.getByText('Search')).toBeInTheDocument();
+  });
+
+  it('should display query string in the header', () => {
+    renderWithTheme(<H1Header {...props} title={props.location.search} />);
+    expect(screen.getByText(props.location.search)).toBeInTheDocument();
+  });
+
+  it('should display multi-word query string in the header', () => {
+    renderWithTheme(
+      <H1Header title={propsWithMultiWordURLQuery.location.search} />
+    );
     expect(
-      component.containsMatchingElement(
-        <H1Header data-qa-support-search-landing-title={true} title="Search" />
-      )
-    ).toBeTruthy();
+      screen.getByText(propsWithMultiWordURLQuery.location.search)
+    ).toBeInTheDocument();
+  });
+
+  it('should display empty DocumentationResults components with empty query string', () => {
+    const newProps = assocPath(['location', 'search'], '?query=', props);
+
+    renderWithTheme(<SupportSearchLanding {...newProps} />);
     expect(
-      component.containsMatchingElement(
-        <H1Header
-          data-qa-support-search-landing-title={true}
-          title="Search results for"
-        />
-      )
-    ).toBeFalsy();
+      screen.getAllByTestId('data-qa-documentation-no-results')
+    ).toHaveLength(2);
   });
 });

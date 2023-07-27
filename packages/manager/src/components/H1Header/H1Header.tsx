@@ -5,7 +5,6 @@ import { Typography } from 'src/components/Typography';
 
 interface H1HeaderProps {
   className?: string;
-  dataQaEl?: string;
   renderAsSecondary?: boolean;
   sx?: SxProps;
   title: string;
@@ -16,13 +15,7 @@ interface H1HeaderProps {
 // It should serve as the only source for all H1s
 export const H1Header = (props: H1HeaderProps) => {
   const h1Header = React.useRef<HTMLDivElement>(null);
-  const { className, dataQaEl, renderAsSecondary, sx, title } = props;
-
-  // React.useEffect(() => {
-  //   if (h1Header.current !== null) {
-  //     h1Header.current.focus();
-  //   }
-  // }, []);
+  const { className, renderAsSecondary, sx, title } = props;
 
   return (
     <Typography
@@ -34,7 +27,7 @@ export const H1Header = (props: H1HeaderProps) => {
       }}
       className={className}
       component={renderAsSecondary ? 'h2' : 'h1'}
-      data-qa-header={dataQaEl ? dataQaEl : ''}
+      data-testid="data-qa-support-search-landing-title"
       ref={renderAsSecondary ? null : h1Header} // If we're rendering as an h2, we want to remove the autofocus functionality
       tabIndex={0}
       variant="h1"
