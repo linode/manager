@@ -31,7 +31,7 @@ export const StyledGrid = styled(Grid, {
 }));
 
 export const StyledLink = styled(Link, {
-  label: 'StyledGrid',
+  label: 'StyledLink',
 })(({ theme }) => ({
   '&:hover': {
     color: theme.color.red,
@@ -41,7 +41,7 @@ export const StyledLink = styled(Link, {
 }));
 
 export const StyledTypography = styled(Typography, {
-  label: 'StyledGrid',
+  label: 'StyledTypography',
 })(({ theme }) => ({
   color: theme.color.red,
 }));
