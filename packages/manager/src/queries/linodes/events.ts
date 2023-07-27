@@ -18,13 +18,13 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
 
   // Early return to cut down the number of invalidations.
   // We early return if the event is "started" or "scheduled" beacuse we don't need to
-  // invaldate things when they are in progress and their percentage complete is activly updating.
+  // invalidate things when they are in progress and their percentage complete is actively updating.
   // If we didn't early return, the invalidations would happen every time an event's percentage updates.
   if (!linodeId || ['scheduled', 'started'].includes(event.status)) {
     return;
   }
 
-  // Some Linode event are in indication that the reponse from /v4/account/notifications
+  // Some Linode events are an indication that the reponse from /v4/account/notifications
   // has changed, so refetch notifications.
   if (shouldRequestNotifications(event)) {
     queryClient.invalidateQueries(accountNotificationsQueryKey);
