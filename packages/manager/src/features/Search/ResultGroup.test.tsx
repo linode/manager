@@ -11,9 +11,6 @@ jest.mock('@mui/styles', () => ({
   ...(jest.requireActual('@mui/styles') as any),
   makeStyles: jest.fn(() => () => ({})),
 }));
-jest.mock('src/hooks/useFlags', () => ({
-  useFlags: jest.fn().mockReturnValue({}),
-}));
 
 const props = {
   entity: 'linodes',
