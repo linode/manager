@@ -230,7 +230,7 @@ all new Linodes will automatically be backed up.`
           <DisplayPrice interval="mo" price={getTotalPrice(extendedLinodes)} />
         </Grid>
         <Grid>
-          <StyledActionsPanel
+          <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
               label: 'Confirm',
