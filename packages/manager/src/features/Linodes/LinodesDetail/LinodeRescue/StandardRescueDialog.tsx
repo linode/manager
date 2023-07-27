@@ -13,7 +13,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { resetEventsPolling } from 'src/eventsPolling';
-import usePrevious from 'src/hooks/usePrevious';
+import { usePrevious } from 'src/hooks/usePrevious';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';

@@ -5,7 +5,7 @@ import { QueryClient } from 'react-query';
 import { databaseBackupFactory, databaseFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseBackups from './DatabaseBackups';
