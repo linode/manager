@@ -4,16 +4,12 @@ import {
   rebuildLinode,
 } from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import ActionsPanel from 'src/components/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
@@ -33,22 +29,11 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 
-import { StyledNotice } from './RebuildFromImage.styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  actionPanel: {
-    '& button': {
-      alignSelf: 'flex-end',
-    },
-    flexDirection: 'column',
-  },
-  error: {
-    marginTop: theme.spacing(2),
-  },
-  root: {
-    paddingTop: theme.spacing(3),
-  },
-}));
+import {
+  StyledActionsPanel,
+  StyledGrid,
+  StyledNotice,
+} from './RebuildFromImage.styles';
 
 interface Props {
   disabled: boolean;
@@ -87,7 +72,6 @@ export const RebuildFromImage = (props: Props) => {
 
   const { data: preferences } = usePreferences();
 
-  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
 
@@ -226,7 +210,7 @@ export const RebuildFromImage = (props: Props) => {
           );
 
         return (
-          <Grid className={classes.root}>
+          <StyledGrid>
             <form>
               <ImageSelect
                 handleSelectImage={(selected) =>
@@ -278,7 +262,7 @@ export const RebuildFromImage = (props: Props) => {
                   />
                 </>
               ) : null}
-              <ActionsPanel className={classes.actionPanel}>
+              <StyledActionsPanel>
                 <TypeToConfirm
                   confirmationText={
                     <span>
@@ -305,9 +289,9 @@ export const RebuildFromImage = (props: Props) => {
                 >
                   Rebuild Linode
                 </Button>
-              </ActionsPanel>
+              </StyledActionsPanel>
             </form>
-          </Grid>
+          </StyledGrid>
         );
       }}
     </Formik>

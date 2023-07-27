@@ -2,16 +2,13 @@ import { rebuildLinode } from '@linode/api-v4/lib/linodes';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/material/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
@@ -36,28 +33,7 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { useEventsInfiniteQuery } from 'src/queries/events';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  actionPanel: {
-    '& button': {
-      alignSelf: 'flex-end',
-    },
-    flexDirection: 'column',
-  },
-  emptyImagePanel: {
-    padding: theme.spacing(3),
-  },
-  emptyImagePanelText: {
-    marginTop: theme.spacing(1),
-    padding: `${theme.spacing(1)} 0`,
-  },
-  error: {
-    marginTop: theme.spacing(2),
-  },
-  root: {
-    paddingTop: theme.spacing(3),
-  },
-}));
+import { StyledActionsPanel, StyledGrid } from './RebuildFromImage.styles';
 
 interface Props {
   disabled: boolean;
@@ -94,7 +70,7 @@ export const RebuildFromStackScript = (props: Props) => {
 
   const { data: preferences } = usePreferences();
 
-  const { classes } = useStyles();
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: imagesData } = useAllImagesQuery();
@@ -273,7 +249,7 @@ export const RebuildFromStackScript = (props: Props) => {
         }
 
         return (
-          <Grid className={classes.root}>
+          <StyledGrid>
             <form>
               <SelectStackScriptPanel
                 request={
@@ -290,16 +266,11 @@ export const RebuildFromStackScript = (props: Props) => {
                 resetSelectedStackScript={resetStackScript}
                 selectedId={ss.id}
                 selectedUsername={ss.username}
-                updateFor={[classes, ss.id, errors]}
+                updateFor={[ss.id, errors]}
               />
               {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
                 <UserDefinedFieldsPanel
-                  updateFor={[
-                    classes,
-                    ss.user_defined_fields,
-                    ss.udf_data,
-                    udfErrors,
-                  ]}
+                  updateFor={[ss.user_defined_fields, ss.udf_data, udfErrors]}
                   errors={udfErrors}
                   handleChange={handleChangeUDF}
                   selectedLabel={ss.label}
@@ -322,7 +293,7 @@ export const RebuildFromStackScript = (props: Props) => {
                 />
               ) : (
                 <ImageEmptyState
-                  className={classes.emptyImagePanel}
+                  sx={{ padding: theme.spacing(3) }}
                   errorText={errors.image}
                 />
               )}
@@ -337,7 +308,7 @@ export const RebuildFromStackScript = (props: Props) => {
                 password={values.root_pass}
                 passwordHelperText={passwordHelperText}
               />
-              <ActionsPanel className={classes.actionPanel}>
+              <StyledActionsPanel>
                 <TypeToConfirm
                   confirmationText={
                     <span>
@@ -365,10 +336,10 @@ export const RebuildFromStackScript = (props: Props) => {
                 >
                   Rebuild Linode
                 </Button>
-              </ActionsPanel>
+              </StyledActionsPanel>
             </form>
             <StackScriptDialog />
-          </Grid>
+          </StyledGrid>
         );
       }}
     </Formik>

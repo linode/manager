@@ -1,7 +1,6 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { withStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -18,19 +17,6 @@ export interface ExtendedLinode extends Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'panelBody' | 'root';
-
-const styles = (theme: Theme) => ({
-  panelBody: {
-    padding: `${theme.spacing(2)} 0 0`,
-  },
-  root: {
-    backgroundColor: theme.color.white,
-    flexGrow: 1,
-    width: '100%',
-  },
-});
-
 interface Notice {
   level: 'error' | 'warning'; // most likely only going to need these two 'warning'; 'warning';
   text: string;
@@ -44,13 +30,12 @@ interface Props {
   linodes: ExtendedLinode[];
   notice?: Notice;
   selectedLinodeID?: number;
-  classes?: Partial<Record<ClassNames, string>>;
 }
 
 class SelectLinodePanel extends React.Component<Props> {
   render() {
     const { disabled, error, header, linodes, notice } = this.props;
-    const classes = withStyles.getClasses(this.props);
+
     return (
       <Paginate data={linodes}>
         {({
@@ -63,7 +48,7 @@ class SelectLinodePanel extends React.Component<Props> {
         }) => {
           return (
             <>
-              <Paper className={classes.root} data-qa-select-linode-panel>
+              <StyledPaper data-qa-select-linode-panel>
                 {error && <Notice error text={error} />}
                 {notice && !disabled && (
                   <Notice
@@ -75,14 +60,14 @@ class SelectLinodePanel extends React.Component<Props> {
                 <Typography data-qa-select-linode-header variant="h2">
                   {!!header ? header : 'Select Linode'}
                 </Typography>
-                <Typography className={classes.panelBody} component="div">
+                <StyledTypography component="div">
                   <Grid container spacing={2}>
                     {linodesData.map((linode) => {
                       return this.renderCard(linode);
                     })}
                   </Grid>
-                </Typography>
-              </Paper>
+                </StyledTypography>
+              </StyledPaper>
               <PaginationFooter
                 count={count}
                 eventCategory={'Clone from existing panel'}
@@ -115,7 +100,22 @@ class SelectLinodePanel extends React.Component<Props> {
   }
 }
 
-// TODO Connie
+export type StyledTypographyProps = { component: string };
+
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})<StyledTypographyProps>(({ theme }) => ({
+  padding: `${theme.spacing(2)} 0 0`,
+}));
+
+export const StyledPaper = styled(Paper, { label: 'StyledPaper' })(
+  ({ theme }) => ({
+    backgroundColor: theme.color.white,
+    flexGrow: 1,
+    width: '100%',
+  })
+);
+
 export default compose<Props, Props & RenderGuardProps>(RenderGuard)(
-  withStyles(SelectLinodePanel, styles)
+  SelectLinodePanel
 );
