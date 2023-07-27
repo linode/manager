@@ -60,6 +60,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           label="Username"
           onChange={this.onChangeUsername}
           required
+          trimmed
           value={username}
         />
         <TextField
@@ -68,6 +69,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           label="Email"
           onChange={this.onChangeEmail}
           required
+          trimmed
           type="email"
           value={email}
         />

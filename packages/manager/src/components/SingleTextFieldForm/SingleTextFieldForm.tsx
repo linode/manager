@@ -24,6 +24,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
     fieldName,
     initialValue,
     label,
+    onBlur,
     submitForm,
     successCallback,
     successMessage,
@@ -85,6 +86,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
           disabled={disabled}
           errorText={fieldError}
           label={label}
+          onBlur={onBlur}
           onChange={(e) => setValue(e.target.value)}
           tooltipText={tooltipText ? tooltipText : undefined}
           value={value}

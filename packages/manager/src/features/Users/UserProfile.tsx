@@ -126,6 +126,7 @@ const UserProfile: React.FC<Props> = (props) => {
             errorText={hasAccountErrorFor('username')}
             label="Username"
             onChange={changeUsername}
+            trimmed
             value={username}
           />
           <ActionsPanel
@@ -159,6 +160,7 @@ const UserProfile: React.FC<Props> = (props) => {
             errorText={hasProfileErrorFor('email')}
             label="Email"
             onChange={changeEmail}
+            trimmed
             value={email}
           />
           <ActionsPanel
