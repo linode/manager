@@ -1,7 +1,7 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { styled } from '@mui/material/styles';
-import { StyledGrid } from './CommonStyles.styles';
+import { StyledGrid } from './CommonTabbedContent.styles';
 import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 // import { compose } from 'recompose';

@@ -21,6 +21,7 @@ export const StyledIpLinkDiv = styled('div', { label: 'StyledIpLinkDiv' })(
 
 export const StyledRootDiv = styled('div', {
   label: 'StyledRootDiv',
+  shouldForwardProp: (prop) => isPropValid(['showAll'], prop),
 })<StyledIpAddressProps>(({ showAll, theme }) => ({
   '&:last-child': {
     marginBottom: 0,

@@ -31,33 +31,18 @@ describe('IPAddress', () => {
     expect(showmore.prop('items')).toEqual(['8.8.4.4']);
   });
 
-  // TODO figure out this test
-  it('should render the copy icon, but not show it if showCopyOnHover is true', () => {
-    //expect(component.find('.hide')).toHaveLength(0);
-    // const noHover = component.find('CopyTooltip');
-    // expect(noHover).toHaveLength(1);
-    // console.log(noHover.get(0));
-    // expect(noHover.props().style).not.toHaveProperty('opacity');
+  // TODO figure out this test !!!!!
+  it('should render the copy icon, but not show it if showTooltipOnIpHover is false', () => {
+    const icon = component.find('[data-testid]');
+    expect(icon).toHaveLength(1);
+    expect(icon.get(0).props.isIpHovered).toBe(false);
+    expect(icon.get(0).props.showTooltipOnIpHover).toBe(false);
 
-    // console.log(copy.get(0));
-    // console.log(component.debug());
-    // const hoverTest = component.find('[data-isShown]');
-    // console.log("this is hoverTest\n\n\n\n", hoverTest.debug())
-    // const hoverIcon = component.find('[data-isShown]="false"');
-    // console.log(hoverIcon.debug());
-
-    //expect(hoverIcon).toHaveLength(1);
-    // expect(hoverIcon.props().style).toHaveProperty('opacity');
-
-    expect(component.find('.hide')).toHaveLength(0);
-    component.setProps({ showCopyOnHover: true });
+    component.setProps({ showTooltipOnIpHover: true });
     const copy = component.find('[data-qa-copy-ip]');
     expect(copy).toHaveLength(1);
-    //console.log(copy.get(0).props.children)
-    //const style = component.prop('style');
-    //expect(style.opacity).toBe(0);
-    // changed styling, so now this won't work anymore
-    // expect(component.find('.hide')).toHaveLength(1);
+    const icon2 = component.find('[data-testid]');
+    expect(icon2.get(0).props.showTooltipOnIpHover).toBe(true);
   });
 
   describe('IP address sorting', () => {

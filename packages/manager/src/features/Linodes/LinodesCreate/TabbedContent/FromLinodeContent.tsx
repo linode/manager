@@ -7,7 +7,7 @@ import { Paper } from 'src/components/Paper';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { StyledGrid } from './CommonStyles.styles';
+import { StyledGrid } from './CommonTabbedContent.styles';
 
 import SelectLinodePanel from '../SelectLinodePanel';
 import {

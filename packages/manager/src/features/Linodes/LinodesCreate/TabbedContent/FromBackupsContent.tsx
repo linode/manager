@@ -3,7 +3,7 @@ import {
   LinodeBackupsResponse,
   getLinodeBackups,
 } from '@linode/api-v4/lib/linodes';
-import { StyledGrid } from './CommonStyles.styles';
+import { StyledGrid } from './CommonTabbedContent.styles';
 import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 

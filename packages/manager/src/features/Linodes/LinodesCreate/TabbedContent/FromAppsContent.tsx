@@ -31,7 +31,7 @@ import {
   WithTypesRegionsAndImages,
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
-import { StyledGrid } from './CommonStyles.styles';
+import { StyledGrid } from './CommonTabbedContent.styles';
 
 const appCategories = [
   'Control Panels',
