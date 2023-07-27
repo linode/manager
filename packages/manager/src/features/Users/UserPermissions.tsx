@@ -16,8 +16,7 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import { withStyles } from 'tss-react/mui';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -334,23 +333,22 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const classes = withStyles.getClasses(this.props);
     return (
       <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'submit',
+          label: 'Save',
+          loading,
+          onClick: onConfirm,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel',
+          label: 'Reset',
+          onClick: onCancel,
+        }}
         alignItems="center"
         className={classes.section}
         display="flex"
         justifyContent="flex-end"
-      >
-        <Button buttonType="secondary" data-qa-cancel onClick={onCancel}>
-          Reset
-        </Button>
-        <Button
-          buttonType="primary"
-          data-qa-submit
-          loading={loading}
-          onClick={onConfirm}
-        >
-          Save
-        </Button>
-      </ActionsPanel>
+      />
     );
   };
 

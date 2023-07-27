@@ -1,12 +1,11 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Currency } from 'src/components/Currency';
 import { Typography } from 'src/components/Typography';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
@@ -39,8 +38,6 @@ export const EnableBackupsDialog = (props: Props) => {
 
   const price = type?.addons?.backups?.price?.monthly ?? 0;
 
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
-
   const { enqueueSnackbar } = useSnackbar();
 
   const handleEnableBackups = async () => {
@@ -59,19 +56,20 @@ export const EnableBackupsDialog = (props: Props) => {
   }, [open]);
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" data-qa-cancel-cancel onClick={onClose}>
-        Close
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-confirm-enable-backups
-        loading={isLoading}
-        onClick={handleEnableBackups}
-      >
-        Enable Backups
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'confirm-enable-backups',
+        label: 'Enable Backups',
+        loading: isLoading,
+        onClick: handleEnableBackups,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel-cance',
+        label: 'Close',
+        onClick: onClose,
+      }}
+      style={{ padding: 0 }}
+    />
   );
 
   return (

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
@@ -45,26 +44,22 @@ const ComplianceUpdateModal = () => {
   return (
     <ConfirmationDialog
       actions={() => (
-        <ActionsPanel>
-          <Button
-            onClick={() => {
+        <ActionsPanel
+          primaryButtonProps={{
+            disabled: !checked,
+            label: 'Agree',
+            loading: isLoading,
+            onClick: handleAgree,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Close',
+            onClick: () => {
               setChecked(false);
               complianceModelContext.close();
-            }}
-            buttonType="secondary"
-            data-qa-cancel
-          >
-            Close
-          </Button>
-          <Button
-            buttonType="primary"
-            disabled={!checked}
-            loading={isLoading}
-            onClick={handleAgree}
-          >
-            Agree
-          </Button>
-        </ActionsPanel>
+            },
+          }}
+        />
       )}
       error={error}
       onClose={complianceModelContext.close}

@@ -2,7 +2,8 @@ import { last } from 'ramda';
 
 import { firewallRuleFactory } from 'src/factories/firewalls';
 
-import reducer, {
+import {
+  curriedFirewallRuleEditorReducer,
   editorStateToRules,
   initRuleEditorState,
   prepareRules,
@@ -29,7 +30,7 @@ describe('Rule Editor', () => {
 
     describe('reducer', () => {
       it('adds a new rule', () => {
-        const newState = reducer(baseState, {
+        const newState = curriedFirewallRuleEditorReducer(baseState, {
           rule: firewallRuleFactory.build(),
           type: 'NEW_RULE',
         });
@@ -42,7 +43,7 @@ describe('Rule Editor', () => {
       it('deletes a rule', () => {
         const idxToDelete = 1;
 
-        const newState = reducer(baseState, {
+        const newState = curriedFirewallRuleEditorReducer(baseState, {
           idx: idxToDelete,
           type: 'DELETE_RULE',
         });
@@ -55,7 +56,7 @@ describe('Rule Editor', () => {
       it('modifies a rule', () => {
         const idxToModify = 1;
 
-        const newState = reducer(baseState, {
+        const newState = curriedFirewallRuleEditorReducer(baseState, {
           idx: idxToModify,
           modifiedRule: {
             ports: '999',
@@ -73,13 +74,13 @@ describe('Rule Editor', () => {
       it('allows undoing of an operation', () => {
         // First, delete a rule.
         const idx = 1;
-        let newState = reducer(baseState, {
+        let newState = curriedFirewallRuleEditorReducer(baseState, {
           idx,
           type: 'DELETE_RULE',
         });
 
         // Next, undo the deletion.
-        newState = reducer(newState, {
+        newState = curriedFirewallRuleEditorReducer(newState, {
           idx,
           type: 'UNDO',
         });
@@ -90,19 +91,19 @@ describe('Rule Editor', () => {
 
       it('discards all changes', () => {
         // First, add and modify rules.
-        let newState = reducer(baseState, {
+        let newState = curriedFirewallRuleEditorReducer(baseState, {
           idx: 0,
           modifiedRule: {
             ports: '999',
           },
           type: 'MODIFY_RULE',
         });
-        newState = reducer(newState, {
+        newState = curriedFirewallRuleEditorReducer(newState, {
           rule: firewallRuleFactory.build(),
           type: 'NEW_RULE',
         });
 
-        const finalState = reducer(newState, {
+        const finalState = curriedFirewallRuleEditorReducer(newState, {
           type: 'DISCARD_CHANGES',
         });
         expect(finalState).toHaveLength(baseState.length);
@@ -112,19 +113,19 @@ describe('Rule Editor', () => {
 
       it('resets the reducer state', () => {
         // First, add and modify rules.
-        let newState = reducer(baseState, {
+        let newState = curriedFirewallRuleEditorReducer(baseState, {
           idx: 0,
           modifiedRule: {
             ports: '999',
           },
           type: 'MODIFY_RULE',
         });
-        newState = reducer(newState, {
+        newState = curriedFirewallRuleEditorReducer(newState, {
           rule: firewallRuleFactory.build(),
           type: 'NEW_RULE',
         });
 
-        const finalState = reducer(newState, {
+        const finalState = curriedFirewallRuleEditorReducer(newState, {
           rules,
           type: 'RESET',
         });
@@ -134,7 +135,7 @@ describe('Rule Editor', () => {
       });
 
       it('reorders the revision lists', () => {
-        const newState = reducer(baseState, {
+        const newState = curriedFirewallRuleEditorReducer(baseState, {
           endIdx: 0,
           startIdx: 1,
           type: 'REORDER',
@@ -148,13 +149,13 @@ describe('Rule Editor', () => {
   describe('editorStateToRules', () => {
     it('does not include rules that have been added and then undone', () => {
       // First. add a rule.
-      let newState = reducer(baseState, {
+      let newState = curriedFirewallRuleEditorReducer(baseState, {
         rule: firewallRuleFactory.build(),
         type: 'NEW_RULE',
       });
 
       // Next, undo the addition.
-      newState = reducer(newState, {
+      newState = curriedFirewallRuleEditorReducer(newState, {
         idx: newState.length - 1,
         type: 'UNDO',
       });

@@ -3,7 +3,7 @@ import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
 import FileCopy from 'src/assets/icons/copy.svg';
-import { Tooltip } from 'src/components/Tooltip';
+import { Tooltip, TooltipProps } from 'src/components/Tooltip';
 import { isPropValid } from 'src/utilities/isPropValid';
 
 export interface CopyTooltipProps {
@@ -24,6 +24,10 @@ export interface CopyTooltipProps {
    * The text to be copied to the clipboard.
    */
   text: string;
+  /**
+   * The placement of the tooltip.
+   */
+  placement?: TooltipProps['placement'];
 }
 
 /**
@@ -34,7 +38,7 @@ export interface CopyTooltipProps {
 
 export const CopyTooltip = (props: CopyTooltipProps) => {
   const [copied, setCopied] = React.useState<boolean>(false);
-  const { className, copyableText, onClickCallback, text } = props;
+  const { className, copyableText, onClickCallback, text, placement } = props;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -46,7 +50,11 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   };
 
   return (
-    <Tooltip data-qa-copied placement="top" title={copied ? 'Copied!' : 'Copy'}>
+    <Tooltip
+      data-qa-copied
+      placement={placement ?? 'top'}
+      title={copied ? 'Copied!' : 'Copy'}
+    >
       <StyledCopyTooltipButton
         aria-label={`Copy ${text} to clipboard`}
         className={className}

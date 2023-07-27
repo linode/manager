@@ -264,11 +264,18 @@ export const lightTheme: ThemeOptions = {
               opacity: 0.5,
             },
           },
-          paddingRight: 8,
+          paddingRight: 4,
           svg: {
             color: '#aaa',
           },
           top: 'unset',
+        },
+        hasPopupIcon: {
+          '&.MuiAutocomplete-root': {
+            '& .MuiAutocomplete-inputRoot': {
+              paddingRight: '34px',
+            },
+          },
         },
         inputRoot: {
           paddingLeft: 8,
@@ -276,7 +283,6 @@ export const lightTheme: ThemeOptions = {
         listbox: {
           backgroundColor: bg.white,
           border: `1px solid ${primaryColors.main}`,
-          marginTop: '-1px',
           padding: '4px',
         },
         loading: {
@@ -291,11 +297,23 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.white,
             transition: 'background-color 0.2s',
           },
-          '&[aria-selected="true"]': {
-            color: primaryColors.main,
-          },
           fontSize: '0.9rem',
           padding: '10px !important',
+        },
+        popper: {
+          // To remove the double border of listbox and input
+          '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"]': {
+              '.MuiAutocomplete-listbox': {
+                borderTop: 0,
+              },
+            },
+            '&[data-popper-placement="top"]': {
+              '.MuiAutocomplete-listbox': {
+                borderBottom: 0,
+              },
+            },
+          },
         },
         tag: {
           '.MuiChip-deleteIcon': {
@@ -707,7 +725,7 @@ export const lightTheme: ThemeOptions = {
           },
           color: primaryColors.text,
           lineHeight: 1,
-          maxWidth: 415,
+          maxWidth: 416,
           minHeight: 34,
           transition: 'border-color 225ms ease-in-out',
         },

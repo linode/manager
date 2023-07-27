@@ -3,8 +3,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
@@ -12,7 +11,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
   useAllLinodesQuery,
@@ -31,7 +30,6 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   const { backup, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: linode } = useLinodeQuery(linodeId, open);
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const {
     data: linodes,
@@ -146,23 +144,19 @@ export const RestoreToLinodeDrawer = (props: Props) => {
             warning
           />
         )}
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            data-qa-restore-cancel
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-restore-submit
-            loading={isLoading}
-            type="submit"
-          >
-            Restore
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'restore-submit',
+            label: 'Restore',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'restore-cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+        />
       </form>
     </Drawer>
   );

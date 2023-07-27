@@ -21,9 +21,7 @@ interface Props extends ActionHandlers {
   firewallStatus: FirewallStatus;
 }
 
-type CombinedProps = Props;
-
-const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
+export const FirewallActionMenu = React.memo((props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { data: profile } = useProfile();
@@ -101,6 +99,4 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
       )}
     </>
   );
-};
-
-export default React.memo(FirewallActionMenu);
+});

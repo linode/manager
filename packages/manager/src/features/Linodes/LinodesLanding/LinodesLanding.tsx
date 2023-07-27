@@ -16,10 +16,6 @@ import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
-  WithEventsInfiniteQueryProps,
-  withEventsInfiniteQuery,
-} from 'src/containers/events.container';
-import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
@@ -30,7 +26,6 @@ import { DialogType } from 'src/features/Linodes/types';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
-import { MapState } from 'src/store/types';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
@@ -41,7 +36,7 @@ import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuil
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
 import { Action, PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
-import { linodesInTransition } from '../transitions';
+import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
@@ -55,6 +50,7 @@ import { ExtendedStatus, statusToPriority } from './utils';
 import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import type { MapState } from 'src/store/types';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -100,16 +96,15 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   StyleProps &
-  WithProfileProps &
-  WithEventsInfiniteQueryProps;
+  WithProfileProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
       classes,
-      events,
       linodesCount,
       linodesData,
+      linodesInTransition,
       linodesRequestError,
       linodesRequestLoading,
     } = this.props;
@@ -248,9 +243,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           let _status: ExtendedStatus = linode.status;
                           if (linode.maintenance) {
                             _status = 'maintenance';
-                          } else if (
-                            linodesInTransition(events ?? []).has(linode.id)
-                          ) {
+                          } else if (linodesInTransition.has(linode.id)) {
                             _status = 'busy';
                           }
 
@@ -460,11 +453,13 @@ const sendGroupByAnalytic = (value: boolean) => {
 
 interface StateProps {
   linodesCount: number;
+  linodesInTransition: Set<number>;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
     linodesCount: state.__resources.linodes.results,
+    linodesInTransition: _linodesInTransition(state.events.events),
   };
 };
 
@@ -489,8 +484,7 @@ export const enhanced = compose<CombinedProps, Props>(
   connected,
   styled,
   withFeatureFlagConsumer,
-  withProfile,
-  withEventsInfiniteQuery()
+  withProfile
 );
 
 export default enhanced(ListLinodes);

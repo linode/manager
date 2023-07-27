@@ -12,14 +12,14 @@ import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { Paper } from 'src/components/Paper';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import useFlags from 'src/hooks/useFlags';
-import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -103,8 +103,6 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
   const { mutateAsync: createImage } = useCreateImageMutation();
   const hasMetadataCustomerTag = useMetadataCustomerTag();
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<null | string>('');
@@ -251,7 +249,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       ) : null}
       {notice ? <Notice data-qa-notice info text={notice} /> : null}
 
-      <LinodeSelectV2
+      <LinodeSelect
         optionsFilter={(linode) =>
           availableLinodesToImagize?.includes(linode.id) ?? true
         }
