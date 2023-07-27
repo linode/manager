@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { Divider } from 'src/components/Divider';
-
 import LandingHeader from 'src/components/LandingHeader';
 
 const BetasLanding = () => {
