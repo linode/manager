@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 
 import Grid from 'src/components/Grid';
 import { TableCell } from 'src/components/TableCell';
@@ -19,6 +20,17 @@ export const StyledTableCell = styled(TableCell, {
 }));
 
 export const StyledGrid = styled(Grid, {
+  label: 'StyledGrid',
+})(({ theme }) => ({
+  '&:hover': {
+    color: theme.color.red,
+  },
+  alignItems: 'center',
+  display: 'flex',
+  transition: 'color 225ms ease-in-out',
+}));
+
+export const StyledLink = styled(Link, {
   label: 'StyledGrid',
 })(({ theme }) => ({
   '&:hover': {
