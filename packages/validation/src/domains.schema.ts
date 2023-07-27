@@ -35,6 +35,7 @@ export const createDomainSchema = domainSchemaBase.shape({
   tags: array().of(string()),
   type: mixed().required().oneOf(['master', 'slave']),
   soa_email: string()
+    .trim()
     .when('type', {
       is: 'master',
       then: string().required('SOA Email is required.'),

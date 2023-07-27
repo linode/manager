@@ -37,6 +37,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { handleTrimAndBlur } from 'src/utilities/formikTrimUtil';
 import {
   ExtendedIP,
   extendedIPToString,
@@ -47,6 +48,13 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { generateDefaultDomainRecords } from '../domainUtils';
 
 type DefaultRecordsType = 'linode' | 'nodebalancer' | 'none';
+
+interface FormState {
+  domain: string;
+  master_ips: string[];
+  soa_email: string;
+  type: DomainType;
+}
 
 export const CreateDomain = () => {
   const { data: profile } = useProfile();
@@ -77,13 +85,15 @@ export const CreateDomain = () => {
     setSelectedDefaultNodeBalancer,
   ] = React.useState<NodeBalancer | undefined>(undefined);
 
-  const { values, ...formik } = useFormik({
-    initialValues: {
-      domain: '',
-      master_ips: [''],
-      soa_email: '',
-      type: 'master' as DomainType,
-    },
+  const initialValues: FormState = {
+    domain: '',
+    master_ips: [''],
+    soa_email: '',
+    type: 'master' as DomainType,
+  };
+
+  const formik = useFormik({
+    initialValues,
     onSubmit: (values) => create(values),
     validateOnChange: true,
     validateOnMount: true,
@@ -106,8 +116,8 @@ export const CreateDomain = () => {
   const generalError = formik.status?.generalError || errorMap.none;
   const primaryIPsError = formik.errors.master_ips;
 
-  const isCreatingPrimaryDomain = values.type === 'master';
-  const isCreatingSecondaryDomain = values.type === 'slave';
+  const isCreatingPrimaryDomain = formik.values.type === 'master';
+  const isCreatingSecondaryDomain = formik.values.type === 'slave';
 
   const redirect = (id: '' | number, state?: Record<string, string>) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
@@ -174,7 +184,7 @@ export const CreateDomain = () => {
          *
          * This only applies to master domains.
          */
-        if (values.type === 'master') {
+        if (formik.values.type === 'master') {
           if (defaultRecordsSetting.value === 'linode') {
             return generateDefaultDomainRecords(
               domainData.domain,
@@ -295,7 +305,7 @@ export const CreateDomain = () => {
               name="type"
               onChange={updateType}
               row
-              value={values.type}
+              value={formik.values.type}
             >
               <FormControlLabel
                 control={<Radio />}
@@ -323,7 +333,7 @@ export const CreateDomain = () => {
               onBlur={() => formik.setFieldTouched('domain')}
               onChange={formik.handleChange}
               required
-              value={values.domain}
+              value={formik.values.domain}
             />
             {isCreatingPrimaryDomain && (
               <TextField
@@ -335,10 +345,10 @@ export const CreateDomain = () => {
                 disabled={disabled}
                 label="SOA Email Address"
                 name={'soa_email'}
-                onBlur={() => formik.setFieldTouched('soa_email')}
+                onBlur={(e) => handleTrimAndBlur<FormState>(e, formik)}
                 onChange={formik.handleChange}
                 required
-                value={values.soa_email}
+                value={formik.values.soa_email}
               />
             )}
             {isCreatingSecondaryDomain && (
@@ -348,7 +358,7 @@ export const CreateDomain = () => {
                     ? (primaryIPsError as string | undefined)
                     : undefined
                 }
-                ips={values.master_ips.map(stringToExtendedIP)}
+                ips={formik.values.master_ips.map(stringToExtendedIP)}
                 onChange={updatePrimaryIPAddress}
                 required
                 title="Primary Nameserver IP Address"
