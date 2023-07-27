@@ -1,15 +1,13 @@
 import Search from '@mui/icons-material/Search';
-import { Theme, useTheme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles } from 'tss-react/mui';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { selectStyles } from 'src/features/TopMenu/SearchBar';
-import windowIsNarrowerThan from 'src/utilities/breakpoints';
 
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import { SearchItem } from './SearchItem';
@@ -58,19 +56,15 @@ type CombinedProps = AlgoliaProps & RouteComponentProps<{}>;
 
 const AlgoliaSearchBar = (props: CombinedProps) => {
   const { classes } = useStyles();
-  const theme = useTheme();
   const [inputValue, setInputValue] = React.useState('');
-  const [mounted, setMounted] = React.useState(false);
-  const [isMobile, setIsMobile] = React.useState(false);
-  const { searchEnabled, searchError } = props;
+  const { history, searchAlgolia, searchEnabled, searchError } = props;
+
+  const [options, setOptions] = React.useState<Item[]>([]);
 
   React.useEffect(() => {
-    setMounted(true);
-    if (theme) {
-      setIsMobile(windowIsNarrowerThan(theme.breakpoints.values.sm));
-    }
-    return () => setMounted(false);
-  }, [isMobile, theme]);
+    const options = getOptionsFromResults();
+    setOptions(options);
+  }, []);
 
   const getOptionsFromResults = () => {
     const [docs, community] = props.searchResults;
@@ -83,11 +77,8 @@ const AlgoliaSearchBar = (props: CombinedProps) => {
   };
 
   const onInputValueChange = (inputValue: string) => {
-    if (!mounted) {
-      return;
-    }
     setInputValue(inputValue);
-    props.searchAlgolia(inputValue);
+    searchAlgolia(inputValue);
   };
 
   const getLinkTarget = (inputValue: string) => {
@@ -97,25 +88,18 @@ const AlgoliaSearchBar = (props: CombinedProps) => {
   };
 
   const handleSelect = (selected: Item<string>) => {
-    if (!selected) {
+    if (!selected || !inputValue) {
       return;
     }
-    const { history } = props;
-    if (!inputValue) {
-      return;
-    }
-
-    const href = pathOr('', ['data', 'href'], selected);
 
     if (selected.value === 'search') {
       const link = getLinkTarget(inputValue);
       history.push(link);
     } else {
+      const href = pathOr('', ['data', 'href'], selected);
       window.open(href, '_blank', 'noopener');
     }
   };
-
-  const options = getOptionsFromResults();
 
   return (
     <React.Fragment>
@@ -148,6 +132,6 @@ const AlgoliaSearchBar = (props: CombinedProps) => {
   );
 };
 
-const search = withSearch({ highlight: true, hitsPerPage: 10 });
-
-export default compose<CombinedProps, {}>(search, withRouter)(AlgoliaSearchBar);
+export default withSearch({ highlight: true, hitsPerPage: 10 })(
+  withRouter(AlgoliaSearchBar)
+);
