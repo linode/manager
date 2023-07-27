@@ -109,7 +109,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             disabled={!searchEnabled}
             hideLabel
             inputValue={inputValue}
-            isClearable={false}
+            isClearable={true}
             isMulti={false}
             label="Search for answers"
             onChange={this.handleSelect}
