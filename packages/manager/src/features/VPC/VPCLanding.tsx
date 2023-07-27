@@ -22,6 +22,8 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCsQuery } from 'src/queries/vpcs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { VPCEmptyState } from './VPCEmptyState';
+
 const preferenceKey = 'vpcs';
 
 const actions: Action[] = [
@@ -71,6 +73,10 @@ const VPCLanding = () => {
 
   if (isLoading) {
     return <CircleProgress />;
+  }
+
+  if (vpcs?.data.length === 0) {
+    return <VPCEmptyState />;
   }
 
   return (
