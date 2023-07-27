@@ -186,7 +186,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles, { withTheme: true });
-const search = withSearch({ highlight: true, hitsPerPage: 10 });
+const search = withSearch({ highlight: false, hitsPerPage: 10 });
 
 export default compose<CombinedProps, {}>(
   styled,
