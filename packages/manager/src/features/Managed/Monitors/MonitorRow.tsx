@@ -12,6 +12,8 @@ import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { ExtendedIssue } from 'src/queries/managed/types';
 
+// import { StyledTableRow, StyledTableCell, StyledGrid, StyledTypography } from './MonitorRow.styles';
+
 import ActionMenu from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+interface MonitorRowProps {
   issues: ExtendedIssue[];
   monitor: ManagedServiceMonitor;
   openDialog: (id: number, label: string) => void;
@@ -48,7 +50,7 @@ interface Props {
   openMonitorDrawer: (id: number, mode: string) => void;
 }
 
-export const MonitorRow: React.FC<Props> = (props) => {
+export const MonitorRow = (props: MonitorRowProps) => {
   const classes = useStyles();
 
   const {

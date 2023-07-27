@@ -15,7 +15,7 @@ import {
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-export interface Props {
+export interface MonitorActionMenuProps {
   label: string;
   monitorID: number;
   openDialog: (id: number, label: string) => void;
@@ -24,7 +24,7 @@ export interface Props {
   status: MonitorStatus;
 }
 
-export const MonitorActionMenu: React.FC<Props> = (props) => {
+export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { enqueueSnackbar } = useSnackbar();
