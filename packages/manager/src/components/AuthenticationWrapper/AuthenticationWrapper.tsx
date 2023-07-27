@@ -1,6 +1,4 @@
-import { ResourcePage } from '@linode/api-v4';
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
@@ -22,7 +20,6 @@ import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
-import { getLinodesPage } from 'src/store/linodes/linode.requests';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { MapState } from 'src/store/types';
 
@@ -134,9 +131,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
         queryFn: getAccountSettings,
         queryKey: 'account-settings',
       }),
-
-      // Fetch first page of Linodes (TODO: remove once the Linodes RQ migration is complete)
-      this.props.getLinodesPage(),
     ];
 
     // Start events polling
@@ -154,22 +148,15 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
 interface StateProps {
   isAuthenticated: boolean;
-  linodes: Linode[];
-  linodesLastUpdated: number;
-  linodesLoading: boolean;
   pendingUpload: PendingUploadState;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   isAuthenticated: Boolean(state.authentication.token),
-  linodes: Object.values(state.__resources.linodes.itemsById),
-  linodesLastUpdated: state.__resources.linodes.lastUpdated,
-  linodesLoading: state.__resources.linodes.loading,
   pendingUpload: state.pendingUpload,
 });
 
 interface DispatchProps {
-  getLinodesPage: () => Promise<ResourcePage<Linode>>;
   initSession: () => void;
   markAppAsDoneLoading: () => void;
 }
@@ -177,8 +164,6 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => ({
-  getLinodesPage: () =>
-    dispatch(getLinodesPage({ params: { page_size: 100 } })),
   initSession: () => dispatch(handleInitTokens()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
 });

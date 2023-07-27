@@ -1,6 +1,6 @@
 import { accountMaintenanceFactory, linodeFactory } from 'src/factories';
 
-import { addMaintenanceToLinodes } from './linodes.helpers';
+import { addMaintenanceToLinodes } from './linodes';
 
 describe('addMaintenanceToLinodes', () => {
   it('adds relevant maintenance items to Linodes', () => {

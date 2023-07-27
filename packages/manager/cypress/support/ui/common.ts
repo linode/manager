@@ -22,7 +22,6 @@ import { deleteAllTestTags } from '../api/tags';
 import { deleteAllTestVolumes } from '../api/volumes';
 
 export const waitForAppLoad = (path = '/', withLogin = true) => {
-  cy.intercept('GET', apiMatcher('linode/instances/*')).as('getLinodes');
   cy.intercept('GET', apiMatcher('account')).as('getAccount');
   cy.intercept('GET', apiMatcher('profile')).as('getProfile');
   cy.intercept('GET', apiMatcher('account/settings')).as('getAccountSettings');
@@ -35,7 +34,6 @@ export const waitForAppLoad = (path = '/', withLogin = true) => {
 
   withLogin ? cy.visitWithLogin(path) : cy.visit(path);
   cy.wait([
-    '@getLinodes',
     '@getAccount',
     '@getAccountSettings',
     '@getProfilePreferences',
