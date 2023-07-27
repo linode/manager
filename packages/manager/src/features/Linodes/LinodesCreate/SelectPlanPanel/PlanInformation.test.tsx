@@ -9,7 +9,7 @@ import type { PlanInformationProps } from './PlanInformation';
 
 jest.mock('src/hooks/useFlags', () => ({
   __esModule: true,
-  default: jest.fn(),
+  useFlags: jest.fn(),
 }));
 
 const mockProps: PlanInformationProps = {

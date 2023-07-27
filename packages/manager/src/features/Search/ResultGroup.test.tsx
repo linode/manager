@@ -12,7 +12,7 @@ jest.mock('@mui/styles', () => ({
   makeStyles: jest.fn(() => () => ({})),
 }));
 jest.mock('src/hooks/useFlags', () => ({
-  default: jest.fn().mockReturnValue({}),
+  useFlags: jest.fn().mockReturnValue({}),
 }));
 
 const props = {
