@@ -25,7 +25,7 @@ import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import usePrevious from 'src/hooks/usePrevious';
+import { usePrevious } from 'src/hooks/usePrevious';
 import {
   useAllLinodesQuery,
   useLinodeQuery,

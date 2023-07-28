@@ -1,4 +1,4 @@
-import deepStringTransform from './deepStringTransform';
+import { deepStringTransform } from './deepStringTransform';
 
 describe('deepStringTransform utility function', () => {
   const fn = (s: string) => s.toUpperCase();

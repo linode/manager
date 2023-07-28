@@ -8,7 +8,7 @@ import { TPAProviders } from './TPAProviders';
 
 jest.mock('src/hooks/useFlags', () => ({
   __esModule: true,
-  default: jest.fn().mockReturnValue({
+  useFlags: jest.fn().mockReturnValue({
     tpaProviders: [
       {
         displayName: 'Google',

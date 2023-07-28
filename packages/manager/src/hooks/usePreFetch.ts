@@ -55,5 +55,3 @@ export const usePrefetch = (
 
   return { cancelRequest, handlers, makeRequest };
 };
-
-export default usePrefetch;

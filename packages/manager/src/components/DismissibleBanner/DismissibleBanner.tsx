@@ -6,8 +6,9 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Notice } from 'src/components/Notice/Notice';
-import useDismissibleNotifications, {
+import {
   DismissibleNotificationOptions,
+  useDismissibleNotifications,
 } from 'src/hooks/useDismissibleNotifications';
 
 import type { NoticeProps } from 'src/components/Notice/Notice';

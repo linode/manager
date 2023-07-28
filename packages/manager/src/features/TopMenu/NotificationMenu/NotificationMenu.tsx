@@ -6,9 +6,9 @@ import { useDispatch } from 'react-redux';
 import Bell from 'src/assets/icons/notification.svg';
 import { Button } from 'src/components/Button/Button';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
+import { Paper } from 'src/components/Paper';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
-import { Paper } from 'src/components/Paper';
 import Events from 'src/features/NotificationCenter/Events';
 import {
   notificationContext as _notificationContext,
@@ -18,8 +18,8 @@ import {
 import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
 import Notifications from 'src/features/NotificationCenter/Notifications';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
-import usePrevious from 'src/hooks/usePrevious';
+import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
+import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
