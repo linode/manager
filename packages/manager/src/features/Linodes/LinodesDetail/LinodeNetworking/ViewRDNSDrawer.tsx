@@ -8,7 +8,7 @@ import { Typography } from 'src/components/Typography';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useAllIPsQuery } from 'src/queries/linodes/networking';
 
-import { listIPv6InRange } from './LinodeNetworking';
+import { listIPv6InRange } from './LinodeIPAddresses';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   rdnsListItem: {

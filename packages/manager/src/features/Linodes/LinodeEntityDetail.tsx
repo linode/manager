@@ -1,6 +1,6 @@
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
-// This component was built asuming an unmodified MUI <Table />
+// This component was built assuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 import { Theme, useTheme } from '@mui/material/styles';
@@ -41,7 +41,7 @@ import formatDate from 'src/utilities/formatDate';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { pluralize } from 'src/utilities/pluralize';
 
-import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
+import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import {

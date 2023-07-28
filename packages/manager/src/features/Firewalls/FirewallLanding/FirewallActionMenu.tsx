@@ -19,6 +19,7 @@ interface Props extends ActionHandlers {
   firewallID: number;
   firewallLabel: string;
   firewallStatus: FirewallStatus;
+  predefinedActions?: Action[];
 }
 
 export const FirewallActionMenu = React.memo((props: Props) => {
@@ -31,6 +32,7 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     firewallID,
     firewallLabel,
     firewallStatus,
+    predefinedActions,
     triggerDeleteFirewall,
     triggerDisableFirewall,
     triggerEnableFirewall,
@@ -51,23 +53,33 @@ export const FirewallActionMenu = React.memo((props: Props) => {
       }
     : {};
 
-  const actions: Action[] = [
-    {
-      onClick: () => {
-        handleEnableDisable();
-      },
-      title:
-        firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
-      ...disabledProps,
-    },
-    {
-      onClick: () => {
-        triggerDeleteFirewall(firewallID, firewallLabel);
-      },
-      title: 'Delete',
-      ...disabledProps,
-    },
-  ];
+  const actions: Action[] =
+    predefinedActions && predefinedActions.length > 0
+      ? predefinedActions.map((predefinedAction) => {
+          return {
+            ...predefinedAction,
+            ...disabledProps,
+          };
+        })
+      : [
+          {
+            onClick: () => {
+              handleEnableDisable();
+            },
+            title:
+              firewallStatus === ('enabled' as FirewallStatus)
+                ? 'Disable'
+                : 'Enable',
+            ...disabledProps,
+          },
+          {
+            onClick: () => {
+              triggerDeleteFirewall(firewallID, firewallLabel);
+            },
+            title: 'Delete',
+            ...disabledProps,
+          },
+        ];
 
   const handleEnableDisable = () => {
     const request = () =>

@@ -11,11 +11,19 @@ export interface Props {
   firewallId: number;
   firewallLabel: string;
   onClose: () => void;
+  onLinodeNetworkTab?: boolean;
   open: boolean;
 }
 
 export const RemoveDeviceDialog = React.memo((props: Props) => {
-  const { device, firewallId, firewallLabel, onClose, open } = props;
+  const {
+    device,
+    firewallId,
+    firewallLabel,
+    onClose,
+    onLinodeNetworkTab,
+    open,
+  } = props;
 
   const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
@@ -27,13 +35,27 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     onClose();
   };
 
+  const dialogTitle = onLinodeNetworkTab
+    ? `Unassign Firewall ${firewallLabel}?`
+    : `Remove ${device?.entity.label} from ${firewallLabel}?`;
+  const confirmationText = onLinodeNetworkTab ? (
+    <Typography>Are you sure you want to unassign this Firewall?</Typography>
+  ) : (
+    <Typography>
+      Are you sure you want to remove {device?.entity.label} from{' '}
+      {firewallLabel}?
+    </Typography>
+  );
+
+  const primaryButtonText = onLinodeNetworkTab ? 'Unassign Firewall' : 'Remove';
+
   return (
     <ConfirmationDialog
       actions={
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'confirm',
-            label: 'Remove',
+            label: primaryButtonText,
             loading: isLoading,
             onClick: onDelete,
           }}
@@ -48,12 +70,9 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
       error={error?.[0]?.reason}
       onClose={onClose}
       open={open}
-      title={`Remove ${device?.entity.label} from ${firewallLabel}?`}
+      title={dialogTitle}
     >
-      <Typography>
-        Are you sure you want to remove {device?.entity.label} from{' '}
-        {firewallLabel}?
-      </Typography>
+      {confirmationText}
     </ConfirmationDialog>
   );
 });

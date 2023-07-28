@@ -17,7 +17,7 @@ import {
 } from 'src/queries/linodes/networking';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import { listIPv6InRange } from './LinodeNetworking';
+import { listIPv6InRange } from './LinodeIPAddresses';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   header: {

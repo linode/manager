@@ -11,16 +11,39 @@ import { TableRow } from 'src/components/TableRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
-import { FirewallActionMenu, ActionHandlers } from './FirewallActionMenu';
+import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
 
-export type Props = Firewall & ActionHandlers;
+interface Props {
+  onLinodeNetworkTab?: boolean;
+}
 
-export const FirewallRow = React.memo((props: Props) => {
-  const { id, label, rules, status, ...actionHandlers } = props;
+type CombinedProps = Firewall & ActionHandlers & Props;
+
+export const FirewallRow = React.memo((props: CombinedProps) => {
+  const {
+    id,
+    label,
+    onLinodeNetworkTab,
+    rules,
+    status,
+    ...actionHandlers
+  } = props;
 
   const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
 
   const count = getCountOfRules(rules);
+
+  const predefinedActions = onLinodeNetworkTab
+    ? [
+        {
+          onClick: () => {
+            // eslint-disable-next-line no-unused-expressions
+            actionHandlers.triggerRemoveDevice();
+          },
+          title: 'Unassign',
+        },
+      ]
+    : undefined;
 
   return (
     <TableRow
@@ -36,18 +59,23 @@ export const FirewallRow = React.memo((props: Props) => {
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
         {capitalize(status)}
       </TableCell>
-      <Hidden smDown>
+      {onLinodeNetworkTab ? (
         <TableCell>{getRuleString(count)}</TableCell>
-        <TableCell>
-          {getLinodesCellString(devices ?? [], isLoading, error ?? undefined)}
-        </TableCell>
-      </Hidden>
+      ) : (
+        <Hidden smDown>
+          <TableCell>{getRuleString(count)}</TableCell>
+          <TableCell>
+            {getLinodesCellString(devices ?? [], isLoading, error ?? undefined)}
+          </TableCell>
+        </Hidden>
+      )}
       <TableCell actionCell>
         <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}
           firewallStatus={status}
           {...actionHandlers}
+          predefinedActions={predefinedActions}
         />
       </TableCell>
     </TableRow>
