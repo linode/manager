@@ -1,11 +1,12 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
+import * as React from 'react';
+
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { Toggle } from 'src/components/Toggle';
+import { Typography } from 'src/components/Typography';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 
 interface AutoEnrollProps {
   enabled: boolean;
@@ -64,7 +65,7 @@ const StyledFormControlLabel = styled(FormControlLabel, {
 const StyledDiv = styled('div', {
   label: 'StyledDiv',
 })(({ theme }) => ({
-  marginTop: theme.spacing(1) + theme.spacing(0.5),
+  marginTop: theme.spacing(1.5),
 }));
 
 const StyledTypography = styled(Typography, {
