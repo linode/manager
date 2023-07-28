@@ -9,6 +9,8 @@ import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 
+import { LoadBalancerLandingEmptyState } from './LoadBalancerLandingEmptyState';
+
 const RouteLanding = React.lazy(
   () => import('../Routes/RouteLanding/RouteLanding')
 );
@@ -66,6 +68,12 @@ const LoadBalancerLanding = () => {
       history.push(`/loadbalancers/create`);
     }
   };
+
+  const results = 0;
+
+  if (!results) {
+    return <LoadBalancerLandingEmptyState />;
+  }
 
   return (
     <>
