@@ -12,7 +12,7 @@ import * as React from 'react';
 import { useQueryClient } from 'react-query';
 import { makeStyles } from 'tss-react/mui';
 
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -20,7 +20,7 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
@@ -219,7 +219,7 @@ const finnixDiskID = 25669;
 export const LinodeConfigDialog = (props: Props) => {
   const { config, isReadOnly, linodeId, onClose, open } = props;
 
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(linodeId, open);
 
   const {
     data: kernels,
@@ -873,11 +873,9 @@ export const LinodeConfigDialog = (props: Props) => {
                         connect to (either &quot;Public Internet&quot; or a
                         VLAN). Each Linode can have up to three Network
                         Interfaces. For more information, see our{' '}
-                        <ExternalLink
-                          hideIcon
-                          link="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance"
-                          text="Network Interfaces guide"
-                        />
+                        <Link to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance">
+                          Network Interfaces guide
+                        </Link>
                         .
                       </Typography>
                     }
@@ -988,10 +986,9 @@ export const LinodeConfigDialog = (props: Props) => {
                         tooltipText={
                           <>
                             Automatically configure static networking
-                            <ExternalLink
-                              link="https://www.linode.com/docs/platform/network-helper/"
-                              text="(more info)"
-                            />
+                            <Link to="https://www.linode.com/docs/platform/network-helper/">
+                              (more info)
+                            </Link>
                           </>
                         }
                         checked={values.helpers.network}
@@ -1010,19 +1007,15 @@ export const LinodeConfigDialog = (props: Props) => {
           </React.Fragment>
         </DialogContent>
       </Grid>
-      <StyledActionPanel>
-        <Button buttonType="secondary" className="cancel" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          disabled={isReadOnly}
-          loading={formik.isSubmitting}
-          onClick={formik.submitForm}
-        >
-          {config ? 'Save Changes' : 'Add Configuration'}
-        </Button>
-      </StyledActionPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          disabled: isReadOnly,
+          label: config ? 'Save Changes' : 'Add Configuration',
+          loading: formik.isSubmitting,
+          onClick: formik.submitForm,
+        }}
+        secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+      />
     </Dialog>
   );
 };

@@ -1,14 +1,12 @@
 import { IPv6Prefix } from '@linode/api-v4/lib/networking';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { Link as ExternalLink } from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { Tooltip } from 'src/components/Tooltip';
@@ -179,26 +177,6 @@ const AddIPDrawer = (props: Props) => {
         : tooltipCopy[selectedIPv4]
       : null;
 
-  const buttonJSX = (type: 'IPv4' | 'IPv6') => {
-    const IPv4 = type === 'IPv4';
-
-    const onClick = IPv4 ? handleAllocateIPv4 : handleCreateIPv6Range;
-    const disabled = IPv4 ? disabledIPv4 : disabledIPv6;
-    const submitting = IPv4 ? ipv4Loading : ipv6Loading;
-
-    return (
-      <Button
-        buttonType="primary"
-        disabled={disabled}
-        loading={submitting}
-        onClick={onClick}
-        style={{ marginBottom: 8 }}
-      >
-        Allocate
-      </Button>
-    );
-  };
-
   return (
     <Drawer onClose={onClose} open={open} title="Add an IP Address">
       <React.Fragment>
@@ -232,15 +210,32 @@ const AddIPDrawer = (props: Props) => {
             {explainerCopy[selectedIPv4]}
           </Typography>
         )}
-        <ActionsPanel>
-          {_tooltipCopy ? (
-            <Tooltip title={_tooltipCopy}>
-              <div style={{ display: 'inline' }}>{buttonJSX('IPv4')}</div>
-            </Tooltip>
-          ) : (
-            buttonJSX('IPv4')
-          )}
-        </ActionsPanel>
+
+        {_tooltipCopy ? (
+          <Tooltip placement="bottom-end" title={_tooltipCopy}>
+            <div style={{ display: 'inline' }}>
+              <ActionsPanel
+                primaryButtonProps={{
+                  disabled: disabledIPv4,
+                  label: 'Allocate',
+                  loading: ipv4Loading,
+                  onClick: handleAllocateIPv4,
+                  sx: { marginBottom: 8 },
+                }}
+              />
+            </div>
+          </Tooltip>
+        ) : (
+          <ActionsPanel
+            primaryButtonProps={{
+              disabled: disabledIPv4,
+              label: 'Allocate',
+              loading: ipv4Loading,
+              onClick: handleAllocateIPv4,
+              sx: { marginBottom: 8 },
+            }}
+          />
+        )}
         <Typography className={classes.ipv6} variant="h2">
           IPv6
         </Typography>
@@ -276,12 +271,20 @@ const AddIPDrawer = (props: Props) => {
         <Typography>
           IPv6 addresses are allocated as ranges, which you can choose to
           distribute and further route yourself.{' '}
-          <ExternalLink to="https://www.linode.com/docs/guides/an-overview-of-ipv6-on-linode/">
+          <Link to="https://www.linode.com/docs/guides/an-overview-of-ipv6-on-linode/">
             Learn more
-          </ExternalLink>
+          </Link>
           .
         </Typography>
-        <ActionsPanel>{buttonJSX('IPv6')}</ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            disabled: disabledIPv6,
+            label: 'Allocate',
+            loading: ipv6Loading,
+            onClick: handleCreateIPv6Range,
+            sx: { marginBottom: 8 },
+          }}
+        />
       </React.Fragment>
     </Drawer>
   );

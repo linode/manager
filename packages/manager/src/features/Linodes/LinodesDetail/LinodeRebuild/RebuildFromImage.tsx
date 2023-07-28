@@ -13,16 +13,15 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -40,7 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& button': {
       alignSelf: 'flex-end',
     },
-    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    marginTop: 0,
+    paddingTop: 0,
   },
   error: {
     marginTop: theme.spacing(2),
@@ -276,7 +277,7 @@ export const RebuildFromImage = (props: Props) => {
                   />
                 </>
               ) : null}
-              <ActionsPanel className={classes.actionPanel}>
+              <Grid sx={{ marginTop: '16px' }}>
                 <TypeToConfirm
                   confirmationText={
                     <span>
@@ -295,15 +296,16 @@ export const RebuildFromImage = (props: Props) => {
                   value={confirmationText}
                   visible={preferences?.type_to_confirm}
                 />
-                <Button
-                  buttonType="primary"
-                  data-testid="rebuild-button"
-                  disabled={submitButtonDisabled || disabled}
-                  onClick={handleRebuildButtonClick}
-                >
-                  Rebuild Linode
-                </Button>
-              </ActionsPanel>
+                <ActionsPanel
+                  primaryButtonProps={{
+                    'data-testid': 'rebuild-button',
+                    disabled: submitButtonDisabled || disabled,
+                    label: 'Rebuild Linode',
+                    onClick: handleRebuildButtonClick,
+                  }}
+                  className={classes.actionPanel}
+                />
+              </Grid>
             </form>
           </Grid>
         );

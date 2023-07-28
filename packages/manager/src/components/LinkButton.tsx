@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { Box } from './Box';
+import { StyledLinkButton } from './Button/StyledLinkButton';
 import CircularProgress from './core/CircularProgress';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -11,9 +12,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.primary,
     cursor: 'default',
     pointerEvents: 'none',
-  },
-  link: {
-    ...theme.applyLinkStyles,
   },
   spinner: {
     marginLeft: theme.spacing(),
@@ -41,20 +39,19 @@ export const LinkButton = (props: Props) => {
   } = props;
 
   const Button = () => (
-    <button
+    <StyledLinkButton
       className={classNames(
         {
           [classes.disabled]: isDisabled,
         },
-        className,
-        classes.link
+        className
       )}
       disabled={isDisabled}
       onClick={onClick}
       style={style}
     >
       {children}
-    </button>
+    </StyledLinkButton>
   );
 
   if (isLoading) {

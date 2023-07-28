@@ -3,8 +3,7 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -58,15 +57,13 @@ export const ViewRangeDrawer = (props: Props) => {
             </Typography>
           </div>
 
-          <ActionsPanel>
-            <Button
-              buttonType="secondary"
-              data-qa-cancel
-              onClick={props.onClose}
-            >
-              Close
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Close',
+              onClick: props.onClose,
+            }}
+          />
         </React.Fragment>
       )}
     </Drawer>

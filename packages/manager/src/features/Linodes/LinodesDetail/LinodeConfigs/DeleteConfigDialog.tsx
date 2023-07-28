@@ -2,8 +2,7 @@ import { Config } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useLinodeConfigDeleteMutation } from 'src/queries/linodes/configs';
@@ -31,14 +30,15 @@ export const DeleteConfigDialog = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button buttonType="primary" loading={isLoading} onClick={onDelete}>
-        Delete
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        label: 'Delete',
+        loading: isLoading,
+        onClick: onDelete,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+      style={{ padding: 0 }}
+    />
   );
 
   return (

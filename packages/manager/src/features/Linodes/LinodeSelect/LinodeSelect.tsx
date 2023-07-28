@@ -1,226 +1,235 @@
-import { groupBy } from 'ramda';
-import * as React from 'react';
+import { APIError, Filter, Linode } from '@linode/api-v4';
+import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Autocomplete } from '@mui/material';
+import { SxProps } from '@mui/system';
+import React from 'react';
 
-import EnhancedSelect, {
-  GroupType,
-  Item,
-} from 'src/components/EnhancedSelect/Select';
-import { TextFieldProps } from 'src/components/TextField';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { Box } from 'src/components/Box';
+import { TextField } from 'src/components/TextField';
+import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
+import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
 
-import type { Linode } from '@linode/api-v4/lib/linodes';
-import type { Region } from '@linode/api-v4/lib/regions';
+import { CustomPopper, SelectedIcon } from './LinodeSelect.styles';
 
-type Override = ((linode: Linode) => any) | keyof Linode;
-
-interface Props {
-  className?: string;
+interface LinodeSelectProps {
+  /** Whether to display the clear icon. Defaults to `true`. */
+  clearable?: boolean;
+  /** Disable editing the input value. */
   disabled?: boolean;
-  filterCondition?: (linode: Linode) => boolean;
-  generalError?: string;
-  groupByRegion?: boolean;
-  handleChange: (linode: Linode | null) => void;
-  inputId?: string;
-  isClearable?: boolean;
+  /** Hint displayed with error styling. */
+  errorText?: string;
+  /** Filter sent to the API when retrieving account Linodes. */
+  filter?: Filter;
+  /** Hint displayed in normal styling. */
+  helperText?: string;
+  /** The ID of the input. */
+  id?: string;
+  /** Override the default "Linode" or "Linodes" label */
   label?: string;
-  labelOverride?: Override;
-  linodeError?: string;
-  name?: string;
+  /** Adds styling to indicate a loading state. */
+  loading?: boolean;
+  /** Optionally disable top margin for input label */
   noMarginTop?: boolean;
+  /** Message displayed when no options match the user's search. */
   noOptionsMessage?: string;
-  // Formik stuff to be passed down to the inner Select
-  onBlur?: (e: any) => void;
+  /** Called when the input loses focus. */
+  onBlur?: (e: React.FocusEvent) => void;
+  /* The options to display in the select. */
+  options?: Linode[];
+  /** Determine which Linodes should be available as options. */
+  optionsFilter?: (linode: Linode) => boolean;
+  /* Displayed when the input is blank. */
   placeholder?: string;
-  region?: string;
+  /* Render a custom option. */
+  renderOption?: (linode: Linode, selected: boolean) => JSX.Element;
+  /* Render a custom option label. */
+  renderOptionLabel?: (linode: Linode) => string;
+  /* Displays an indication that the input is required. */
   required?: boolean;
-  selectedLinode: null | number;
-  small?: boolean;
-  textFieldProps?: Omit<TextFieldProps, 'label'>;
-  value?: Item<any> | null;
-  valueOverride?: Override;
-  width?: number;
+  /** Overrides the default label. */
+  showIPAddressLabel?: boolean;
+  /* Adds custom styles to the component. */
+  sx?: SxProps;
 }
 
-export const LinodeSelect = (props: Props) => {
-  const {
-    className,
-    disabled,
-    filterCondition,
-    generalError,
-    groupByRegion,
-    handleChange,
-    inputId,
-    isClearable,
-    labelOverride,
-    linodeError,
-    noOptionsMessage,
-    placeholder,
-    region,
-    selectedLinode,
-    value,
-    valueOverride,
-    width,
-    ...rest
-  } = props;
+export interface LinodeMultiSelectProps extends LinodeSelectProps {
+  /* Enable multi-select. */
+  multiple: true;
+  /* Called when the value changes */
+  onSelectionChange: (selected: Linode[]) => void;
+  /* Current value of the input. */
+  value: number[];
+}
 
-  const { data: allLinodes, error, isLoading } = useAllLinodesQuery();
-
-  const { data: regions } = useRegionsQuery();
-
-  const onChange = React.useCallback(
-    (selected: Item<number> | null) => {
-      if (selected === null) {
-        handleChange(null);
-        return;
-      }
-      return handleChange(selected.data);
-    },
-    [handleChange]
-  );
-
-  const linodesData = allLinodes ?? [];
-
-  const linodes = region
-    ? linodesData.filter((thisLinode) => thisLinode.region === region)
-    : linodesData;
-
-  const options = groupByRegion
-    ? linodesToGroupedItems(
-        linodes,
-        regions ?? [],
-        valueOverride,
-        labelOverride,
-        filterCondition
-      )
-    : linodesToItems(linodes, valueOverride, labelOverride, filterCondition);
-
-  const defaultNoOptionsMessage =
-    !linodeError && !isLoading && options.length === 0
-      ? 'You have no Linodes to choose from'
-      : 'No Options';
-
-  return (
-    <div style={{ width: width ? width : '100%' }}>
-      <EnhancedSelect
-        errorText={getErrorStringOrDefault(
-          generalError || linodeError || error || ''
-        )}
-        value={
-          // Use the `value` prop if provided.
-          typeof value === 'undefined'
-            ? groupByRegion
-              ? linodeFromGroupedItems(
-                  options as GroupType<number>[],
-                  selectedLinode
-                )
-              : linodeFromItems(options as Item<number>[], selectedLinode)
-            : value
-        }
-        className={className}
-        disabled={disabled}
-        inputId={inputId}
-        isClearable={isClearable}
-        isLoading={isLoading}
-        label={props.label || 'Linode'}
-        noMarginTop={props.noMarginTop}
-        noOptionsMessage={() => noOptionsMessage || defaultNoOptionsMessage}
-        onChange={onChange}
-        options={options}
-        placeholder={placeholder || 'Select a Linode'}
-        small={props.small}
-        textFieldProps={props.textFieldProps}
-        {...rest}
-      />
-    </div>
-  );
-};
+export interface LinodeSingleSelectProps extends LinodeSelectProps {
+  /* Enable single-select. */
+  multiple?: false;
+  /* Called when the value changes */
+  onSelectionChange: (selected: Linode | null) => void;
+  /* Current value of the input. */
+  value: null | number;
+}
 
 /**
- * UTILITIES
+ * A select input allowing selection between account Linodes.
  */
+export const LinodeSelect = (
+  props: LinodeMultiSelectProps | LinodeSingleSelectProps
+) => {
+  const {
+    clearable = true,
+    disabled,
+    errorText,
+    filter,
+    helperText,
+    id,
+    label,
+    loading,
+    multiple,
+    noMarginTop,
+    noOptionsMessage,
+    onBlur,
+    onSelectionChange,
+    options,
+    optionsFilter,
+    placeholder,
+    renderOption,
+    renderOptionLabel,
+    sx,
+    value,
+  } = props;
 
-export const linodesToItems = (
-  linodes: Linode[],
-  valueOverride?: Override,
-  labelOverride?: Override,
-  filterCondition?: (linodes: Linode) => boolean
-): Item<any>[] => {
-  const maybeFilteredLinodes = filterCondition
-    ? linodes.filter(filterCondition)
+  const {
+    data: linodesData,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isLoading: linodesDataLoading,
+  } = useInfiniteLinodesQuery(filter);
+
+  const [inputValue, setInputValue] = React.useState('');
+
+  const linodes = linodesData?.pages.flatMap((page) => page.data);
+
+  const filteredLinodes = optionsFilter
+    ? linodes?.filter(optionsFilter)
     : linodes;
 
-  return maybeFilteredLinodes.map((thisLinode) => ({
-    data: thisLinode,
-    label:
-      typeof labelOverride === 'function'
-        ? labelOverride(thisLinode)
-        : !!labelOverride
-        ? labelOverride
-        : thisLinode.label,
-    value:
-      typeof valueOverride === 'function'
-        ? valueOverride(thisLinode)
-        : !!valueOverride
-        ? thisLinode[valueOverride]
-        : thisLinode.id,
-  }));
-};
-
-export const linodeFromItems = (
-  linodes: Item<number>[],
-  linodeId: null | number
-): Item<number> | null => {
-  if (!linodeId) {
-    return null;
-  }
+  React.useEffect(() => {
+    /** We want to clear the input value when the value prop changes to null.
+     * This is for use cases where a user changes their region and the Linode
+     * they had selected is no longer available.
+     */
+    if (value === null) {
+      setInputValue('');
+    }
+  }, [value]);
 
   return (
-    linodes.find((thisLinode) => {
-      return (thisLinode.data as Linode).id === linodeId;
-    }) || null
+    <Autocomplete
+      ListboxProps={{
+        onScroll: (event: React.SyntheticEvent) => {
+          const listboxNode = event.currentTarget;
+          if (
+            listboxNode.scrollTop + listboxNode.clientHeight >=
+              listboxNode.scrollHeight &&
+            hasNextPage
+          ) {
+            fetchNextPage();
+          }
+        },
+      }}
+      getOptionLabel={(linode: Linode) =>
+        renderOptionLabel ? renderOptionLabel(linode) : linode.label
+      }
+      noOptionsText={
+        noOptionsMessage ?? (
+          <i>
+            {getDefaultNoOptionsMessage(
+              error,
+              linodesDataLoading,
+              filteredLinodes
+            )}
+          </i>
+        )
+      }
+      onChange={(_, value) =>
+        multiple && Array.isArray(value)
+          ? onSelectionChange(value)
+          : !multiple && !Array.isArray(value) && onSelectionChange(value)
+      }
+      renderInput={(params) => (
+        <TextField
+          placeholder={
+            placeholder
+              ? placeholder
+              : multiple
+              ? 'Select Linodes'
+              : 'Select a Linode'
+          }
+          errorText={error?.[0].reason ?? errorText}
+          helperText={helperText}
+          inputId={params.id}
+          label={label ? label : multiple ? 'Linodes' : 'Linode'}
+          loading={linodesDataLoading}
+          noMarginTop={noMarginTop}
+          {...params}
+        />
+      )}
+      renderOption={(props, option, { selected }) => {
+        return (
+          <li {...props}>
+            {renderOption ? (
+              renderOption(option, selected)
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                  }}
+                >
+                  {option.label}
+                </Box>
+                <SelectedIcon visible={selected} />
+              </>
+            )}
+          </li>
+        );
+      }}
+      ChipProps={{ deleteIcon: <CloseIcon /> }}
+      PopperComponent={CustomPopper}
+      clearOnBlur={false}
+      disableClearable={!clearable}
+      disableCloseOnSelect={multiple}
+      disablePortal={true}
+      disabled={disabled}
+      id={id}
+      inputValue={inputValue}
+      loading={linodesDataLoading || loading}
+      multiple={multiple}
+      onBlur={onBlur}
+      onInputChange={(_, value) => setInputValue(value)}
+      options={options || (filteredLinodes ?? [])}
+      popupIcon={<KeyboardArrowDownIcon />}
+      sx={sx}
+      value={mapIdsToLinodes(value, linodes)}
+    />
   );
 };
 
-// Grouped by Region
-export const linodesToGroupedItems = (
-  linodes: Linode[],
-  regions: Region[],
-  valueOverride?: Override,
-  labelOverride?: Override,
-  filterCondition?: (linodes: Linode) => boolean
+const getDefaultNoOptionsMessage = (
+  error: APIError[] | null,
+  loading: boolean,
+  filteredLinodes: Linode[] | undefined
 ) => {
-  // We need to filter Linode BEFORE grouping by region, since some regions
-  // may become irrelevant when Linodes are filtered.
-  const maybeFilteredLinodes = filterCondition
-    ? linodes.filter(filterCondition)
-    : linodes;
-
-  const groupedByRegion = groupBy((linode: Linode) => linode.region)(
-    maybeFilteredLinodes
-  );
-
-  return Object.keys(groupedByRegion).map((region) => {
-    return {
-      label: regions.find((r) => r.id === region)?.label ?? region,
-      options: linodesToItems(
-        groupedByRegion[region],
-        valueOverride,
-        labelOverride
-      ),
-    };
-  });
-};
-
-export const linodeFromGroupedItems = (
-  groupedOptions: GroupType<number>[],
-  linodeId: null | number
-) => {
-  // I wanted to use Ramda's `flatten()` but the typing is not good.
-  const flattenedOptions: Item<number>[] = [];
-  groupedOptions.forEach((eachGroup) => {
-    flattenedOptions.push(...eachGroup.options);
-  });
-  return linodeFromItems(flattenedOptions, linodeId);
+  if (error) {
+    return 'An error occured while fetching your Linodes';
+  } else if (loading) {
+    return 'Loading your Linodes...';
+  } else if (!filteredLinodes?.length) {
+    return 'You have no Linodes to choose from';
+  } else {
+    return 'No options';
+  }
 };

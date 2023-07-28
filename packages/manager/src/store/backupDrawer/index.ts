@@ -10,7 +10,6 @@ import {
   queryKey,
   updateAccountSettingsData,
 } from 'src/queries/accountSettings';
-import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { sendBackupsEnabledEvent } from 'src/utilities/analytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -267,7 +266,6 @@ export const enableAllBackups: ThunkActionCreator<void, Linode[]> = (
       } else {
         dispatch(handleEnableSuccess(response.success));
       }
-      dispatch(updateMultipleLinodes(response.success));
       // Analytics Event
       sendBackupsEnabledEvent(
         `Enabled backups for ${response.success.length} Linodes`

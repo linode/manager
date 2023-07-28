@@ -29,5 +29,3 @@ export const useAccountManagement = () => {
     profile,
   };
 };
-
-export default useAccountManagement;

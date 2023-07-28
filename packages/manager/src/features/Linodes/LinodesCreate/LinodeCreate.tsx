@@ -16,7 +16,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
-import DocsLink from 'src/components/DocsLink';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
@@ -156,11 +156,7 @@ interface Props {
   togglePrivateIPEnabled: () => void;
   typeDisplayInfo: TypeInfo;
   updateDiskSize: (size: number) => void;
-  updateLabel: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => void;
+  updateLabel: (label: string) => void;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updatePassword: (password: string) => void;
   updateTags: (tags: Tag[]) => void;
@@ -573,7 +569,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled: userCannotCreateLinode,
               errorText: hasErrorFor.label,
               label: 'Linode Label',
-              onChange: updateLabel,
+              onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
             tagsInputProps={

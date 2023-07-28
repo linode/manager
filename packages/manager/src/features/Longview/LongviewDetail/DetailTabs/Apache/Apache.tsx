@@ -5,8 +5,8 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
@@ -83,11 +83,9 @@ export const Apache: React.FC<Props> = (props) => {
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
-          <ExternalLink
-            fixedIcon
-            link="https://www.linode.com/docs/platform/longview/longview-app-for-apache/#troubleshooting"
-            text="guide"
-          />{' '}
+          <Link to="https://www.linode.com/docs/platform/longview/longview-app-for-apache/#troubleshooting">
+            guide
+          </Link>{' '}
           for help troubleshooting the Apache Longview app.
         </Typography>
       </Notice>

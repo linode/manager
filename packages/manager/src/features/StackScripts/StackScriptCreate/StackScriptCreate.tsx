@@ -15,8 +15,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -507,22 +506,18 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   renderDialogActions = () => {
     return (
-      <ActionsPanel>
-        <Button
-          buttonType="secondary"
-          data-qa-cancel-cancel
-          onClick={this.handleCloseDialog}
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          data-qa-confirm-cancel
-          onClick={() => this.resetAllFields(this.state.apiResponse)}
-        >
-          Reset
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'confirm-cancel',
+          label: 'Reset',
+          onClick: () => this.resetAllFields(this.state.apiResponse),
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel-cancel',
+          label: 'Cancel',
+          onClick: this.handleCloseDialog,
+        }}
+      />
     );
   };
 

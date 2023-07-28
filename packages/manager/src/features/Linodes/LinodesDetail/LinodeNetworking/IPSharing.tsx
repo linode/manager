@@ -7,7 +7,7 @@ import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
@@ -18,7 +18,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useAllLinodesQuery,
   useLinodeQuery,
@@ -408,25 +408,21 @@ const IPSharingPanel = (props: Props) => {
           </Grid>
         </>
       </DialogContent>
-      <StyledActionPanel>
-        <Button
-          buttonType="secondary"
-          data-qa-reset
-          disabled={submitting || noChoices}
-          onClick={onReset}
-        >
-          Reset Form
-        </Button>
-        <Button
-          buttonType="primary"
-          data-qa-submit
-          disabled={readOnly || noChoices}
-          loading={submitting}
-          onClick={onSubmit}
-        >
-          Save
-        </Button>
-      </StyledActionPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'submit',
+          disabled: readOnly || noChoices,
+          label: 'Save',
+          loading: submitting,
+          onClick: onSubmit,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'reset',
+          disabled: submitting || noChoices,
+          label: 'Reset Form',
+          onClick: onReset,
+        }}
+      />
     </Dialog>
   );
 };

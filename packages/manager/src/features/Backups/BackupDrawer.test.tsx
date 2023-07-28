@@ -124,7 +124,7 @@ const props = {
   enableSuccess: false,
   enabling: false,
   enrolling: false,
-  linodeActions: { createLinode: jest.fn() },
+  linodeActions: { cloneLinode: jest.fn(), createLinode: jest.fn() },
   linodesData: [],
   linodesError: null,
   linodesLoading: false,

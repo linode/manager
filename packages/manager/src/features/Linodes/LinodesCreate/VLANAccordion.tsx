@@ -4,7 +4,7 @@ import { useQueryClient } from 'react-query';
 
 import { Accordion } from 'src/components/Accordion';
 import { Box } from 'src/components/Box';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -101,11 +101,9 @@ export const VLANAccordion = React.memo((props: Props) => {
         the eth1 interface, with eth0 being used for connections to the public
         internet. VLAN configurations can be further edited in the
         Linode&rsquo;s{' '}
-        <ExternalLink
-          hideIcon
-          link="https://www.linode.com/docs/guides/linode-configuration-profiles/"
-          text="Configuration Profile"
-        />
+        <Link to="https://www.linode.com/docs/guides/linode-configuration-profiles/">
+          Configuration Profile
+        </Link>
         .
       </Typography>
       <InterfaceSelect

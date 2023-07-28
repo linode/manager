@@ -10,7 +10,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
@@ -27,8 +27,8 @@ import { usePreferences } from 'src/queries/preferences';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
-import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { extendType } from 'src/utilities/extendType';
+import { getPermissionsForLinode } from 'src/utilities/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
@@ -62,12 +62,12 @@ export const LinodeResize = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && open
   );
 
   const { data: disks, error: disksError } = useAllLinodeDisksQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && open
   );
 
   const { data: types } = useAllTypes(open);
@@ -190,11 +190,9 @@ export const LinodeResize = (props: Props) => {
           website, or if you&rsquo;re not using your Linode as much as you
           thought, you can temporarily or permanently resize your Linode to a
           different plan.{' '}
-          <ExternalLink
-            fixedIcon
-            link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
-            text="Learn more."
-          />
+          <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
+            Learn more.
+          </Link>
         </Typography>
 
         <div className={classes.selectPlanPanel}>
@@ -314,11 +312,9 @@ const getError = (error: APIError[] | null) => {
         The current disk size of your Linode is too large for the new service
         plan. Please resize your disk to accommodate the new plan. You can read
         our{' '}
-        <ExternalLink
-          hideIcon
-          link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
-          text="Resize Your Linode"
-        />{' '}
+        <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
+          Resize Your Linode
+        </Link>{' '}
         guide for more detailed instructions.
       </Typography>
     );
