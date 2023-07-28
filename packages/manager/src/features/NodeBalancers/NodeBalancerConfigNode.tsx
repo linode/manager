@@ -192,9 +192,8 @@ export const NodeBalancerConfigNode = React.memo(
             )}
             {(forEdit || idx !== 0) && (
               <StyledActionsPanel
-                // data-node-idx={idx}
-                // What is purpose of this attribute?
                 secondaryButtonProps={{
+                  'data-node-idx': idx,
                   'data-testid': 'remove-node',
                   disabled,
                   label: 'Remove',

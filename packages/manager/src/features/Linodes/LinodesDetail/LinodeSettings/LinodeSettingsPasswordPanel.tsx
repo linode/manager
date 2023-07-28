@@ -1,3 +1,4 @@
+import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -97,7 +98,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
   }, [diskOptions]);
 
   const actions = (
-    <ActionsPanel
+    <StyledActionsPanel
       primaryButtonProps={{
         'data-testid': 'password - save',
         disabled: isReadOnly || linode?.status !== 'offline',
@@ -156,3 +157,10 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
     </Accordion>
   );
 };
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})({
+  justifyContent: 'flex-start',
+  margin: 0,
+});
