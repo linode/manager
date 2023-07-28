@@ -11,7 +11,6 @@ import {
   updateAccountSettingsData,
 } from 'src/queries/accountSettings';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
-import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { sendBackupsEnabledEvent } from 'src/utilities/analytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -254,15 +253,9 @@ export const gatherResponsesAndErrors = (
  *  When complete, it will dispatch appropriate actions to handle the result, depending
  *  on whether or not any errors occurred.
  */
-type EnableAllBackupsThunk = ThunkActionCreator<void>;
-export const enableAllBackups: EnableAllBackupsThunk = () => (
-  dispatch,
-  getState
-) => {
-  const linodesWithoutBackups = getLinodesWithoutBackups(
-    getState().__resources
-  );
-
+export const enableAllBackups: ThunkActionCreator<void, Linode[]> = (
+  linodesWithoutBackups: Linode[]
+) => (dispatch) => {
   dispatch(handleEnable());
   Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, {
     errors: [],
@@ -295,10 +288,15 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
  */
 type EnableAutoEnrollThunk = ThunkActionCreator<
   void,
-  { backupsEnabled: boolean; queryClient: QueryClient }
+  {
+    backupsEnabled: boolean;
+    linodesWithoutBackups: Linode[];
+    queryClient: QueryClient;
+  }
 >;
 export const enableAutoEnroll: EnableAutoEnrollThunk = ({
   backupsEnabled,
+  linodesWithoutBackups,
   queryClient,
 }) => (dispatch, getState) => {
   const state = getState();
@@ -309,7 +307,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = ({
    * don't bother the API.
    */
   if (backupsEnabled === shouldEnableBackups) {
-    dispatch(enableAllBackups());
+    dispatch(enableAllBackups(linodesWithoutBackups));
     return;
   }
 
@@ -328,7 +326,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = ({
     onSuccess: (data) => {
       updateAccountSettingsData(data, queryClient);
       dispatch(handleAutoEnrollSuccess());
-      dispatch(enableAllBackups());
+      dispatch(enableAllBackups(linodesWithoutBackups));
     },
     variables: { backups_enabled: shouldEnableBackups },
   });

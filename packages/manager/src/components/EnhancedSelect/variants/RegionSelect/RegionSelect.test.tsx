@@ -10,11 +10,11 @@ describe('Region Select helper functions', () => {
       const groupedRegions = getRegionOptions(regions);
       const [r1, r2, r3, r4, r5] = groupedRegions;
       expect(groupedRegions).toHaveLength(8);
-      expect(r1.options).toHaveLength(0);
-      expect(r2.options).toHaveLength(0);
+      expect(r1.options).toHaveLength(5);
+      expect(r2.options).toHaveLength(2);
       expect(r3.options).toHaveLength(3);
-      expect(r4.options).toHaveLength(2);
-      expect(r5.options).toHaveLength(5);
+      expect(r4.options).toHaveLength(0);
+      expect(r5.options).toHaveLength(1);
     });
 
     it('should group unrecognized regions as Other', () => {
