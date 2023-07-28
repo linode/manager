@@ -238,6 +238,9 @@ const LinodeDetailHeader = () => {
         onClose={closeDialogs}
       />
       <DeleteLinodeDialog
+        onSuccess={() => {
+          history.push('/linodes');
+        }}
         linodeId={matchedLinodeId}
         onClose={closeDialogs}
         open={deleteDialogOpen}
