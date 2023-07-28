@@ -10,15 +10,15 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import useFlags from 'src/hooks/useFlags';
-import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -76,8 +76,6 @@ export const RebuildFromImage = (props: Props) => {
   const flags = useFlags();
 
   const { data: _imagesData, error: imagesError } = useAllImagesQuery();
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
@@ -262,7 +260,7 @@ export const RebuildFromImage = (props: Props) => {
                   />
                 </>
               ) : null}
-              <StyledActionsPanel>
+              <Grid sx={{ marginTop: '16px' }}>
                 <TypeToConfirm
                   confirmationText={
                     <span>
@@ -281,15 +279,15 @@ export const RebuildFromImage = (props: Props) => {
                   value={confirmationText}
                   visible={preferences?.type_to_confirm}
                 />
-                <Button
-                  buttonType="primary"
-                  data-testid="rebuild-button"
-                  disabled={submitButtonDisabled || disabled}
-                  onClick={handleRebuildButtonClick}
-                >
-                  Rebuild Linode
-                </Button>
-              </StyledActionsPanel>
+                <StyledActionsPanel
+                  primaryButtonProps={{
+                    'data-testid': 'rebuild-button',
+                    disabled: submitButtonDisabled || disabled,
+                    label: 'Rebuild Linode',
+                    onClick: handleRebuildButtonClick,
+                  }}
+                />
+              </Grid>
             </form>
           </StyledGrid>
         );

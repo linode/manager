@@ -6,13 +6,13 @@ import * as React from 'react';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
-import { Paper } from 'src/components/Paper';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 
-import { LinodeSelect } from '../LinodeSelect/LinodeSelect';
 import {
   EstimatedCloneTimeMode,
   ExtendedConfig,
@@ -200,22 +200,20 @@ export const Configs: React.FC<Props> = (props) => {
       )}
 
       <LinodeSelect
-        filterCondition={
-          shouldExcludeCurrentLinode
-            ? (linode: Linode) => linode.id !== currentLinodeId
-            : undefined
-        }
-        handleChange={(linode) => {
+        onSelectionChange={(linode) => {
           if (linode !== null) {
             handleSelectLinode(linode.id);
           }
         }}
-        textFieldProps={{
-          error: !!linodeError,
-        }}
-        isClearable={false}
-        label="Destination"
-        selectedLinode={selectedLinodeId}
+        optionsFilter={
+          shouldExcludeCurrentLinode
+            ? (linode: Linode) => linode.id !== currentLinodeId
+            : undefined
+        }
+        clearable={false}
+        errorText={linodeError}
+        placeholder="Destination"
+        value={selectedLinodeId}
       />
 
       {linodeError && (

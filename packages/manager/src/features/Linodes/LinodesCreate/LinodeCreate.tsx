@@ -105,11 +105,7 @@ export interface LinodeCreateProps {
   togglePrivateIPEnabled: () => void;
   typeDisplayInfo: TypeInfo;
   updateDiskSize: (size: number) => void;
-  updateLabel: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => void;
+  updateLabel: (label: string) => void;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updatePassword: (password: string) => void;
   updateTags: (tags: Tag[]) => void;
@@ -519,7 +515,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled: userCannotCreateLinode,
               errorText: hasErrorFor.label,
               label: 'Linode Label',
-              onChange: updateLabel,
+              onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
             tagsInputProps={

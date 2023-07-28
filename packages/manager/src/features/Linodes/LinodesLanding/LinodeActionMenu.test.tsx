@@ -6,12 +6,13 @@ import { linodeBackupsFactory } from 'src/factories/linodes';
 import { regionFactory } from 'src/factories/regions';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 
-import LinodeActionMenu, {
-  Props,
+import {
+  LinodeActionMenu,
+  LinodeActionMenuProps,
   buildQueryStringForLinodeClone,
 } from './LinodeActionMenu';
 
-const props: Props = {
+const props: LinodeActionMenuProps = {
   inListView: true,
   linodeBackups: linodeBackupsFactory.build(),
   linodeId: 1,

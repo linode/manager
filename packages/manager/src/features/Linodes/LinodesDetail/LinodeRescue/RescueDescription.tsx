@@ -5,7 +5,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useLinodeFirewalls } from 'src/queries/linodes/firewalls';
+import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 const rescueDescription = {
@@ -24,7 +24,7 @@ const RescueDescription: React.FC<Props> = (props) => {
   const { isBareMetal, linodeId } = props;
   const theme = useTheme();
 
-  const { data: linodeFirewallsData } = useLinodeFirewalls(linodeId);
+  const { data: linodeFirewallsData } = useLinodeFirewallsQuery(linodeId);
   const firewallsLinodeAssignedTo = linodeFirewallsData?.data ?? [];
   const displayFirewallWarning = firewallsLinodeAssignedTo.length > 0;
 

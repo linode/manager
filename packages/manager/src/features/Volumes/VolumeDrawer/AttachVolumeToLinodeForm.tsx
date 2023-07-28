@@ -7,7 +7,7 @@ import { number, object } from 'yup';
 
 import { Notice } from 'src/components/Notice/Notice';
 import Form from 'src/components/core/Form';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import { openForCreating } from 'src/store/volumeForm';
@@ -17,12 +17,12 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import { modes } from '.';
-import ConfigSelect from './ConfigSelect';
+import { ConfigSelect } from './ConfigSelect';
 import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import VolumeSelect from './VolumeSelect';
 import VolumesActionsPanel from './VolumesActionsPanel';
+import { modes } from './modes';
 
 interface Props {
   linodeId: number;
@@ -64,8 +64,6 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
     readOnly || (linodeGrant && linodeGrant.permissions !== 'read_write');
 
   const { mutateAsync: attachVolume } = useAttachVolumeMutation();
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   return (
     <Formik

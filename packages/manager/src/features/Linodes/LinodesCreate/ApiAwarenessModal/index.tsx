@@ -3,8 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import React, { useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -13,7 +12,7 @@ import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import useEvents from 'src/hooks/useEvents';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
 import generateCurlCommand from 'src/utilities/generate-cURL';
 import generateCLICommand from 'src/utilities/generate-cli';
@@ -32,14 +31,16 @@ const ApiAwarenessModal = (props: Props) => {
 
   const theme = useTheme();
   const history = useHistory();
-  const { events } = useEventsInfiniteQuery();
+  const { events } = useEvents();
 
-  const createdLinode = events?.find(
+  const createdLinode = events.filter(
     (event) =>
       (event.action === 'linode_create' || event.action === 'linode_clone') &&
       event.entity?.label === payLoad.label &&
       (event.status === 'scheduled' || event.status === 'started')
   );
+
+  const isLinodeCreated = createdLinode.length === 1;
 
   const curlCommand = useMemo(
     () => generateCurlCommand(payLoad, '/linode/instances'),
@@ -66,11 +67,11 @@ const ApiAwarenessModal = (props: Props) => {
   };
 
   useEffect(() => {
-    if (createdLinode && isOpen) {
+    if (isLinodeCreated && isOpen) {
       onClose();
       history.replace(`/linodes/${createdLinode[0].entity?.id}`);
     }
-  }, [createdLinode, history, isOpen, onClose]);
+  }, [isLinodeCreated]);
 
   return (
     <Dialog
@@ -211,18 +212,15 @@ const ApiAwarenessModal = (props: Props) => {
           with programmatic access to the Linode platform.
         </Typography>
       </Notice>
-      <StyledActionPanel
+      <ActionsPanel
         sx={{ marginTop: '18px !important', paddingBottom: 0, paddingTop: 0 }}
-      >
-        <Button
-          buttonType="secondary"
-          compactX
-          data-testid="close-button"
-          onClick={onClose}
-        >
-          Close
-        </Button>
-      </StyledActionPanel>
+        secondaryButtonProps={{
+          compactX: true,
+          'data-testid': 'close-button',
+          label: 'Close',
+          onClick: onClose,
+        }}
+      />
     </Dialog>
   );
 };

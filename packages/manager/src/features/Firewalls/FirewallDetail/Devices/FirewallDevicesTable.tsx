@@ -13,7 +13,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import FirewallDeviceRow from './FirewallDeviceRow';
+import { FirewallDeviceRow } from './FirewallDeviceRow';
 
 interface Props {
   devices: FirewallDevice[];
@@ -23,7 +23,7 @@ interface Props {
   triggerRemoveDevice: (deviceID: number) => void;
 }
 
-const FirewallTable = (props: Props) => {
+export const FirewallDevicesTable = React.memo((props: Props) => {
   const { devices, disabled, error, loading, triggerRemoveDevice } = props;
 
   const _error = error
@@ -92,6 +92,4 @@ const FirewallTable = (props: Props) => {
       )}
     </OrderBy>
   );
-};
-
-export default React.memo(FirewallTable);
+});

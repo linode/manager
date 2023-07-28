@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 
 import { Notice } from 'src/components/Notice/Notice';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Grid from '@mui/material/Unstable_Grid2';
 
 export const StyledNotice = styled(Notice, { label: 'StyledNotice' })({
@@ -16,7 +16,9 @@ export const StyledActionsPanel = styled(ActionsPanel, {
   '& button': {
     alignSelf: 'flex-end',
   },
-  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  marginTop: 0,
+  paddingTop: 0,
 });
 
 export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(

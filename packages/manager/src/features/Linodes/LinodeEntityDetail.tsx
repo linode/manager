@@ -2,7 +2,6 @@ import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 // This component was built asuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';
-// This component was built asuming an unmodified MUI <Table />
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 import { Theme, useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
@@ -25,16 +24,17 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography, TypographyProps } from 'src/components/Typography';
-import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -43,7 +43,6 @@ import { pluralize } from 'src/utilities/pluralize';
 
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import { ProgressDisplay } from './LinodesLanding/LinodeRow/LinodeRow';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import {
   transitionText as _transitionText,

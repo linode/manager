@@ -12,7 +12,7 @@ import * as React from 'react';
 import { useQueryClient } from 'react-query';
 import { makeStyles } from 'tss-react/mui';
 
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -219,7 +219,7 @@ const finnixDiskID = 25669;
 export const LinodeConfigDialog = (props: Props) => {
   const { config, isReadOnly, linodeId, onClose, open } = props;
 
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(linodeId, open);
 
   const {
     data: kernels,
@@ -1007,19 +1007,15 @@ export const LinodeConfigDialog = (props: Props) => {
           </React.Fragment>
         </DialogContent>
       </Grid>
-      <StyledActionPanel>
-        <Button buttonType="secondary" className="cancel" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          disabled={isReadOnly}
-          loading={formik.isSubmitting}
-          onClick={formik.submitForm}
-        >
-          {config ? 'Save Changes' : 'Add Configuration'}
-        </Button>
-      </StyledActionPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          disabled: isReadOnly,
+          label: config ? 'Save Changes' : 'Add Configuration',
+          loading: formik.isSubmitting,
+          onClick: formik.submitForm,
+        }}
+        secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+      />
     </Dialog>
   );
 };

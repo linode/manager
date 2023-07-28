@@ -1,20 +1,22 @@
-import { rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
 
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { resetEventsPolling } from 'src/eventsPolling';
 import usePrevious from 'src/hooks/usePrevious';
-import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  useLinodeQuery,
+  useLinodeRescueMutation,
+} from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import createDevicesFromStrings, {
@@ -90,8 +92,6 @@ export const StandardRescueDialog = (props: Props) => {
     open
   );
 
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
-
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
@@ -130,6 +130,8 @@ export const StandardRescueDialog = (props: Props) => {
     linodeDisks ?? []
   );
 
+  const { mutateAsync: rescueLinode } = useLinodeRescueMutation(linodeId ?? -1);
+
   const prevDeviceMap = usePrevious(deviceMap);
 
   const [counter, setCounter] = React.useState<number>(initialCounter);
@@ -161,7 +163,7 @@ export const StandardRescueDialog = (props: Props) => {
   const disabled = isReadOnly;
 
   const onSubmit = () => {
-    rescueLinode(linodeId ?? -1, createDevicesFromStrings(rescueDevices))
+    rescueLinode(createDevicesFromStrings(rescueDevices))
       .then((_) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',
@@ -229,16 +231,14 @@ export const StandardRescueDialog = (props: Props) => {
             >
               Add Disk
             </Button>
-            <StyledActionPanel>
-              <Button
-                buttonType="primary"
-                data-qa-submit
-                disabled={disabled}
-                onClick={onSubmit}
-              >
-                Reboot into Rescue Mode
-              </Button>
-            </StyledActionPanel>
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                disabled,
+                label: 'Reboot into Rescue Mode',
+                onClick: onSubmit,
+              }}
+            />
           </StyledPaper>
         </div>
       )}

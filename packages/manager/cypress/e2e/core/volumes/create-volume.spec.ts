@@ -6,6 +6,7 @@ import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
 import { interceptCreateVolume } from 'support/intercepts/volumes';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+import { ui } from 'support/ui';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -89,7 +90,16 @@ describe('volume create flow', () => {
       containsClick('Label').type(volume.label);
       containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
       containsClick('Select a Region').type(`${volume.regionLabel}{enter}`);
-      containsClick('Select a Linode').type(`${linode.label}{enter}`);
+
+      cy.findByLabelText('Linode')
+        .should('be.visible')
+        .click()
+        .type(linode.label);
+
+      ui.autocompletePopper
+        .findByTitle(linode.label)
+        .should('be.visible')
+        .click();
 
       fbtClick('Create Volume');
       cy.wait('@createVolume');

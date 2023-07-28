@@ -65,7 +65,7 @@ describe('LKE Cluster Creation', () => {
   it('can create an LKE cluster', () => {
     const clusterLabel = randomLabel();
     const clusterRegion = chooseRegion();
-    const clusterVersion = '1.25';
+    const clusterVersion = '1.26';
     const clusterPlans = new Array(2)
       .fill(null)
       .map(() => randomItem(lkeClusterPlans));

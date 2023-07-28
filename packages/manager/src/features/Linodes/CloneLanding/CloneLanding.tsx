@@ -19,16 +19,16 @@ import {
 } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
-  useAllLinodeConfigsQuery,
   useAllLinodesQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
@@ -66,8 +66,6 @@ const CloneLanding = () => {
 
   const configs = _configs ?? [];
   const disks = _disks ?? [];
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   /**
    * ROUTING

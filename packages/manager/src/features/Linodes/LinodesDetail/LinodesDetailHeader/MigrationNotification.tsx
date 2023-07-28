@@ -4,8 +4,7 @@ import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -70,18 +69,18 @@ const MigrationNotification: React.FC<Props> = (props) => {
   };
 
   const actions = () => (
-    <ActionsPanel>
-      <Button buttonType="secondary" data-qa-cancel onClick={closeDialog}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        loading={dialog.isLoading}
-        onClick={onSubmit}
-      >
-        Enter Migration Queue
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        label: 'Enter Migration Queue',
+        loading: dialog.isLoading,
+        onClick: onSubmit,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: closeDialog,
+      }}
+    />
   );
 
   const migrationActionDescription =

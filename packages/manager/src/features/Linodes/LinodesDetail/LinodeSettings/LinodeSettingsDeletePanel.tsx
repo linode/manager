@@ -6,9 +6,9 @@ import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useEventsInfiniteQuery } from 'src/queries/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
-  useLinodeDeleteMutation,
+  useDeleteLinodeMutation,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 
@@ -23,9 +23,7 @@ export const LinodeSettingsDeletePanel = ({ isReadOnly, linodeId }: Props) => {
     error,
     isLoading,
     mutateAsync: deleteLinode,
-  } = useLinodeDeleteMutation(linodeId);
-
-  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
+  } = useDeleteLinodeMutation(linodeId);
 
   const history = useHistory();
 

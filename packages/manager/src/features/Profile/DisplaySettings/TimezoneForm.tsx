@@ -1,12 +1,11 @@
-import { styled } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import timezones from 'src/assets/timezones/timezones';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Typography } from 'src/components/Typography';
@@ -98,17 +97,21 @@ export const TimezoneForm = (props: Props) => {
           options={timezoneList}
           placeholder={'Choose a Timezone'}
         />
-        <ActionsPanel>
-          <StyledButton
-            buttonType="primary"
-            data-qa-tz-submit
-            disabled={disabled}
-            loading={isLoading}
-            onClick={onSubmit}
-          >
-            Update Timezone
-          </StyledButton>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'tz-submit',
+            disabled,
+            label: 'Update Timezone',
+            loading: isLoading,
+            onClick: onSubmit,
+            sx: {
+              backgroundColor: 'red',
+              color: 'white',
+              marginTop: (theme: Theme) => theme.breakpoints.up('md') && 16,
+              minWidth: 180,
+            },
+          }}
+        />
       </StyledRootContainer>
     </>
   );
@@ -119,15 +122,6 @@ const StyledRootContainer = styled(Box, {
 })(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
-  },
-}));
-
-const StyledButton = styled(Button, {
-  label: 'StyledButton',
-})(({ theme }) => ({
-  minWidth: 180,
-  [theme.breakpoints.up('md')]: {
-    marginTop: 16,
   },
 }));
 
