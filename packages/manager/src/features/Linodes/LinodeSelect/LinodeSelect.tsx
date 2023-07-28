@@ -56,7 +56,7 @@ export interface LinodeMultiSelectProps extends LinodeSelectProps {
   multiple: true;
   /* Called when the value changes */
   onSelectionChange: (selected: Linode[]) => void;
-  /* Current value of the input. */
+  /* An array of `id`s of Linodes that should be selected or a function that should return `true` if the Linode should be selected. */
   value: ((linode: Linode) => boolean) | null | number[];
 }
 
@@ -65,7 +65,7 @@ export interface LinodeSingleSelectProps extends LinodeSelectProps {
   multiple?: false;
   /* Called when the value changes */
   onSelectionChange: (selected: Linode | null) => void;
-  /* Current value of the input. */
+  /* The `id` of the selected Linode or a function that should return `true` if the Linode should be selected. */
   value: ((linode: Linode) => boolean) | null | number;
 }
 
