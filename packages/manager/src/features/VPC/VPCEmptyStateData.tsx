@@ -5,7 +5,7 @@ import type {
 
 export const headers: ResourcesHeaders = {
   description: '',
-  subtitle: 'Create a Private and isolated network.',
+  subtitle: 'Create a private and isolated network.',
   title: 'VPCs',
 };
 

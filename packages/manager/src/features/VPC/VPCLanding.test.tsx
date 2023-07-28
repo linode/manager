@@ -85,7 +85,7 @@ describe('VPC Table', () => {
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     expect(
-      getByText('Create a Private and isolated network.')
+      getByText('Create a private and isolated network.')
     ).toBeInTheDocument();
   });
 });
