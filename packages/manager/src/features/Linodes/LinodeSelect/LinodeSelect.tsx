@@ -153,7 +153,7 @@ export const LinodeSelect = (
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)
-          ? onSelectionChange(value as Linode[])
+          ? onSelectionChange(value)
           : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
       renderInput={(params) => (
@@ -178,7 +178,7 @@ export const LinodeSelect = (
         return (
           <li {...props}>
             {renderOption ? (
-              renderOption(option as Linode, selected)
+              renderOption(option, selected)
             ) : (
               <>
                 <Box
@@ -186,7 +186,7 @@ export const LinodeSelect = (
                     flexGrow: 1,
                   }}
                 >
-                  {(option as Linode).label}
+                  {option.label}
                 </Box>
                 <SelectedIcon visible={selected} />
               </>
