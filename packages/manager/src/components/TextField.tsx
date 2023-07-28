@@ -140,7 +140,7 @@ interface BaseProps {
    */
   required?: boolean;
   /**
-   * Trims the leading and trailing spacing from the textfield, intended to be used for username and emails only
+   * The leading and trailing spacing should be trimmed from the textfield on blur; intended to be used for username, emails, and SSH key input only
    */
   trimmed?: boolean;
   value?: Value;
@@ -396,7 +396,7 @@ export const TextField = (props: TextFieldProps) => {
            * have the ability to put the helper text under the label at the top.
            */
           label={''}
-          onBlur={(e) => handleBlur(e)}
+          onBlur={handleBlur}
           onChange={handleChange}
           type={type}
           /*

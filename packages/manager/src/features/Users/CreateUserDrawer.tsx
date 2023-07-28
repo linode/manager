@@ -61,7 +61,6 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           onBlur={this.handleTrimUsername}
           onChange={this.handleChangeUsername}
           required
-          trimmed
           value={username}
         />
         <TextField
@@ -71,7 +70,6 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           onBlur={this.handleTrimEmail}
           onChange={this.handleChangeEmail}
           required
-          trimmed
           type="email"
           value={email}
         />

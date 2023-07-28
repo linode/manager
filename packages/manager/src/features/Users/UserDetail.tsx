@@ -121,7 +121,7 @@ const UserDetail: React.FC = () => {
     setEmail(e.target.value.trim());
   };
 
-  const onSaveAccount = () => {
+  const handleSaveAccount = () => {
     if (!originalUsername) {
       return;
     }
@@ -165,7 +165,7 @@ const UserDetail: React.FC = () => {
       });
   };
 
-  const onSaveProfile = () => {
+  const handleSaveProfile = () => {
     setProfileSuccess(false);
     setProfileSaving(true);
     setProfileErrors([]);
@@ -251,8 +251,8 @@ const UserDetail: React.FC = () => {
               profileErrors={profileErrors}
               profileSaving={profileSaving}
               profileSuccess={profileSuccess || false}
-              saveAccount={onSaveAccount}
-              saveProfile={onSaveProfile}
+              saveAccount={handleSaveAccount}
+              saveProfile={handleSaveProfile}
               trimEmail={handleTrimEmail}
               trimUsername={handleTrimUsername}
               username={username}
