@@ -35,11 +35,7 @@ import {
   openForEdit,
   openForResize,
 } from 'src/store/volumeForm';
-import {
-  StyledTypography,
-  StyledRootGrid,
-  StyledWrapperGrid,
-} from './CommonLinodeStorage.styles';
+import { StyledTypography, StyledRootGrid } from './CommonLinodeStorage.styles';
 
 interface DispatchProps {
   openForClone: (
@@ -256,7 +252,7 @@ export const LinodeVolumes = connected((props: Props) => {
   };
 
   return (
-    <StyledDiv>
+    <div style={{ marginTop: '20px' }}>
       <StyledRootGrid
         alignItems="flex-end"
         container
@@ -333,20 +329,18 @@ export const LinodeVolumes = connected((props: Props) => {
         volumeId={destructiveDialog.volumeId ?? 0}
         volumeLabel={destructiveDialog.volumeLabel}
       />
-    </StyledDiv>
+    </div>
   );
 });
 
 const StyledNewWrapperGrid = styled(Grid, { label: 'StyledNewWrapperGrid' })(
   ({ theme }) => ({
-    ...StyledWrapperGrid({ theme }),
-
+    '&.MuiGrid-item': {
+      padding: 5,
+    },
     [theme.breakpoints.down('sm')]: {
+      marginLeft: `-${theme.spacing(1.5)}`,
       marginTop: `-${theme.spacing(1)}`,
     },
   })
 );
-
-const StyledDiv = styled('div', { label: 'StyledDiv' })({
-  marginTop: '20px',
-});

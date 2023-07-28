@@ -301,7 +301,7 @@ const CloneLanding = () => {
                       keep it powered off until the disk has finished being
                       cloned.
                     </Typography>
-                    <StyledDiskDiv>
+                    <div style={{ marginTop: theme.spacing(4) }}>
                       <Disks
                         // Cast the results of the Immer state to a mutable data structure.
                         diskSelection={castDraft(state.diskSelection)}
@@ -309,7 +309,7 @@ const CloneLanding = () => {
                         handleSelect={toggleDisk}
                         selectedConfigIds={selectedConfigIds}
                       />
-                    </StyledDiskDiv>
+                    </div>
                   </StyledOuterDiv>
                 </SafeTabPanel>
               </TabPanels>
@@ -357,12 +357,6 @@ const CloneLanding = () => {
     </React.Fragment>
   );
 };
-
-const StyledDiskDiv = styled('div', { label: 'StyledDiskDiv' })(
-  ({ theme }) => ({
-    marginTop: theme.spacing(4),
-  })
-);
 
 const StyledOuterDiv = styled('div', { label: 'StyledOuterDiv' })(
   ({ theme }) => ({

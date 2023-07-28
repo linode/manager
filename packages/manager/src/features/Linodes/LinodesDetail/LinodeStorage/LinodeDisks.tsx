@@ -1,6 +1,5 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -126,7 +125,7 @@ export const LinodeDisks = () => {
         <Grid className="p0" ref={disksHeaderRef}>
           <StyledTypography variant="h3">Disks</StyledTypography>
         </Grid>
-        <StyledSpan>
+        <span style={{ display: 'flex', flexDirection: 'row' }}>
           {!freeDiskSpace ? (
             <TooltipIcon
               tooltipAnalyticsEvent={() =>
@@ -147,7 +146,7 @@ export const LinodeDisks = () => {
               onClick={() => setIsCreateDrawerOpen(true)}
             />
           </StyledWrapperGrid>
-        </StyledSpan>
+        </span>
       </StyledRootGrid>
       <OrderBy
         data={disks ?? []}
@@ -257,11 +256,6 @@ export const LinodeDisks = () => {
     </React.Fragment>
   );
 };
-
-const StyledSpan = styled('span', { label: 'StyledSpan' })({
-  display: 'flex',
-  flexDirection: 'row',
-});
 
 export const addUsedDiskSpace = (disks: Disk[]) => {
   return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);

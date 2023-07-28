@@ -2,13 +2,15 @@ import { styled } from '@mui/material/styles';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
-export const StyledCommandDiv = styled('div', { label: 'StyledCommandDiv' })({
-  '& pre': {
-    marginBottom: 0,
-    marginTop: '24px',
-  },
-  position: 'relative',
-});
+export const StyledCommandDiv = styled('div', { label: 'StyledCommandDiv' })(
+  ({ theme }) => ({
+    '& pre': {
+      marginBottom: 0,
+      marginTop: `${theme.spacing(3)}`,
+    },
+    position: 'relative',
+  })
+);
 
 export const StyledHighlightedMarkdown = styled(HighlightedMarkdown, {
   label: 'StyledHighlightedMarkdown',
@@ -29,13 +31,13 @@ export const StyledHighlightedMarkdown = styled(HighlightedMarkdown, {
     },
     backgroundColor: '#32363b',
     color: '#f8f8f2',
-    padding: `${theme.spacing(4)}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(4)} ${theme.spacing(2)}`,
   },
 }));
 
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip',
-})({
+})(({ theme }) => ({
   '& svg': {
     color: '#17CF73',
   },
@@ -43,6 +45,6 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
     color: '#00B159',
   },
   position: 'absolute',
-  right: '12px',
-  top: '8px',
-});
+  right: `${theme.spacing(1.5)}`,
+  top: `${theme.spacing(1)}`,
+}));

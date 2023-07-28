@@ -301,7 +301,7 @@ const StyledGraphGrid = styled(Grid, { label: 'StyledGraphGrid' })(
   ({ theme }) => ({
     flexWrap: 'nowrap',
     margin: 0,
-    padding: theme.spacing(), // or 0 from the p0 class...?
+    padding: 0,
     [theme.breakpoints.down(1100)]: {
       flexWrap: 'wrap',
       marginTop: `-${theme.spacing(2)}`,

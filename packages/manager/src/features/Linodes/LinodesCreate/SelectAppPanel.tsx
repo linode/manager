@@ -1,5 +1,5 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -175,15 +175,19 @@ class SelectAppPanel extends React.PureComponent<Props> {
   };
 }
 
-const StyledPanel = styled(Panel, { label: 'StyledPanel' })(({ theme }) => ({
+const commonStyling = (theme: Theme) => ({
   boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
   height: 450,
   marginBottom: theme.spacing(3),
   overflowY: 'auto' as const,
+});
+
+const StyledPanel = styled(Panel, { label: 'StyledPanel' })(({ theme }) => ({
+  ...commonStyling(theme),
 }));
 
 const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
-  ...StyledPanel({ theme }),
+  ...commonStyling(theme),
 }));
 
 const StyledLoadingSpan = styled('span', { label: 'StyledLoadingSpan' })({

@@ -2,6 +2,7 @@ import { rebuildLinode } from '@linode/api-v4/lib/linodes';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -33,7 +34,6 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import { StyledGrid } from './RebuildFromImage.styles';
 
 interface Props {
   disabled: boolean;
@@ -247,7 +247,7 @@ export const RebuildFromStackScript = (props: Props) => {
         }
 
         return (
-          <StyledGrid>
+          <Grid sx={{ paddingTop: theme.spacing(3) }}>
             <form>
               <SelectStackScriptPanel
                 request={
@@ -338,7 +338,7 @@ export const RebuildFromStackScript = (props: Props) => {
               />
             </form>
             <StackScriptDialog />
-          </StyledGrid>
+          </Grid>
         );
       }}
     </Formik>

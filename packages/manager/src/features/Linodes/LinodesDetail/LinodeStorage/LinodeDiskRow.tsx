@@ -1,5 +1,5 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import BarPercent from 'src/components/BarPercent';
@@ -56,7 +56,13 @@ export const LinodeDiskRow = React.memo((props: Props) => {
       <TableCell sx={{ width: '10%' }}>{disk.filesystem}</TableCell>
       <TableCell sx={{ width: '15%' }}>
         {event ? (
-          <StyledDiv>
+          <div
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              flexFlow: 'row nowrap',
+            }}
+          >
             {diskEventLabelMap[event.action]} ({event.percent_complete}%)
             <BarPercent
               sx={{
@@ -68,7 +74,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
               rounded
               value={event?.percent_complete ?? 0}
             />
-          </StyledDiv>
+          </div>
         ) : (
           `${disk.size} MB`
         )}
@@ -93,10 +99,4 @@ export const LinodeDiskRow = React.memo((props: Props) => {
       </TableCell>
     </TableRow>
   );
-});
-
-const StyledDiv = styled('div', { label: 'StyledDiv' })({
-  alignItems: 'center',
-  display: 'flex',
-  flexFlow: 'row nowrap',
 });

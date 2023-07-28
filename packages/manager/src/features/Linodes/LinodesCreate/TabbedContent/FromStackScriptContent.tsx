@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import { StyledGrid } from './CommonTabbedContent.styles';
 import { assocPath, equals } from 'ramda';
 import * as React from 'react';
-// import { compose } from 'recompose';
 
 import ImageSelect from 'src/components/ImageSelect';
 import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
@@ -182,10 +181,4 @@ const StyledImageEmptyState = styled(ImageEmptyState, {
   padding: theme.spacing(3),
 }));
 
-// export default compose<CombinedProps, Props>(
-//   FromStackScriptContent
-// );
-
 export default FromStackScriptContent;
-
-// TODO Connie: check if we still need the compose, actually

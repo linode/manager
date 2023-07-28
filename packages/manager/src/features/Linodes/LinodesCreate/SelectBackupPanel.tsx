@@ -21,7 +21,7 @@ import {
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { StyledTypographyProps } from './SelectLinodePanel';
-import { StyledPaper } from './SelectLinodePanel';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 export const aggregateBackups = (
   backups: LinodeBackupsResponse
@@ -152,6 +152,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
 const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
+  shouldForwardProp: (prop) => isPropValid(['component'], prop),
 })<StyledTypographyProps>(({ theme }) => ({
   padding: `${theme.spacing(2)} 0 0`,
   width: '100%',
@@ -159,7 +160,9 @@ const StyledTypography = styled(Typography, {
 
 const StyledRootPaper = styled(Paper, { label: 'StyledRootPaper' })(
   ({ theme }) => ({
-    ...StyledPaper({ theme }),
+    backgroundColor: theme.color.white,
+    flexGrow: 1,
+    width: '100%',
     marginTop: theme.spacing(3),
   })
 );
