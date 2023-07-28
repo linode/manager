@@ -34,15 +34,16 @@ export const selectStyles = {
 type RegionGroup = 'Other' | ContinentNames;
 
 export const getRegionOptions = (regions: Region[]) => {
+  // Note: Do not re-order this list even though ESLint is complaining.
   const groups: Record<RegionGroup, RegionItem[]> = {
+    'North America': [],
+    Europe: [],
+    Asia: [],
+    'South America': [],
+    Oceania: [],
     Africa: [],
     Antartica: [],
-    Asia: [],
-    Europe: [],
-    'North America': [],
-    Oceania: [],
     Other: [],
-    'South America': [],
   };
 
   for (const region of regions) {
