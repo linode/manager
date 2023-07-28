@@ -162,4 +162,5 @@ const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',
 })({
   justifyContent: 'flex-start',
+  margin: 0,
 });
