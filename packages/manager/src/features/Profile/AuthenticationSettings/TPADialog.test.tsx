@@ -11,7 +11,7 @@ import type { TPADialogProps } from './TPADialog';
 
 jest.mock('src/hooks/useFlags', () => ({
   __esModule: true,
-  default: jest.fn().mockReturnValue({
+  useFlags: jest.fn().mockReturnValue({
     tpaProviders: [
       {
         displayName: 'Google',

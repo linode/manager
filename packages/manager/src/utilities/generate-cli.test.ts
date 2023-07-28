@@ -1,6 +1,6 @@
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 
-import generateCLICommand from './generate-cli';
+import { generateCLICommand } from './generate-cli';
 
 const linodeRequest = createLinodeRequestFactory.build();
 
