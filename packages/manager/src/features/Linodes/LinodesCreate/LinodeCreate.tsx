@@ -77,6 +77,7 @@ import {
   StyledForm,
   StyledMessageDiv,
   StyledPaper,
+  StyledTabPanel,
 } from './LinodeCreate.styles';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
@@ -402,7 +403,7 @@ export class LinodeCreate extends React.PureComponent<
                   <StyledPaper>
                     <Typography variant="h2">Create From:</Typography>
                     <TabLinkList tabs={this.stackScriptTabs} />
-                    <TabPanels sx={{ '& .MuiPaper-root': { padding: 0 } }}>
+                    <StyledTabPanel>
                       <SafeTabPanel index={0}>
                         <FromStackScriptContent
                           accountBackupsEnabled={accountBackupsEnabled}
@@ -431,7 +432,7 @@ export class LinodeCreate extends React.PureComponent<
                           {...rest}
                         />
                       </SafeTabPanel>
-                    </TabPanels>
+                    </StyledTabPanel>
                   </StyledPaper>
                 </Tabs>
               </SafeTabPanel>

@@ -1,8 +1,7 @@
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Select from 'src/components/EnhancedSelect/Select';
@@ -19,30 +18,12 @@ import { useProfile } from 'src/queries/profile';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 import { initWindows } from 'src/utilities/initWindows';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  chooseDay: {
-    '& .react-select__menu-list': {
-      maxHeight: 'none',
-    },
-    marginRight: theme.spacing(2),
-    minWidth: 150,
-  },
-  scheduleAction: {
-    '& button': {
-      marginLeft: 0,
-      marginTop: theme.spacing(2),
-    },
-    padding: 0,
-  },
-}));
-
 interface Props {
   isReadOnly: boolean;
   linodeId: number;
 }
 
 export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
-  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: profile } = useProfile();
@@ -111,7 +92,7 @@ export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
             {updateLinodeError?.[0].reason}
           </Notice>
         )}
-        <FormControl className={classes.chooseDay}>
+        <StyledFormControl>
           <Select
             textFieldProps={{
               dataAttrs: {
@@ -130,7 +111,7 @@ export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
             options={dayOptions}
             placeholder="Choose a day"
           />
-        </FormControl>
+        </StyledFormControl>
         <FormControl>
           <Select
             onChange={(item) =>
@@ -157,7 +138,7 @@ export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
             {getUserTimezone(profile?.timezone).replace('_', ' ')}
           </FormHelperText>
         </FormControl>
-        <ActionsPanel
+        <StyledActionsPanel
           primaryButtonProps={{
             'data-testid': 'schedule',
             disabled: isReadOnly || !settingsForm.dirty,
@@ -165,9 +146,28 @@ export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
             loading: isUpdating,
             type: 'submit',
           }}
-          className={classes.scheduleAction}
         />
       </form>
     </Paper>
   );
 };
+
+const StyledFormControl = styled(FormControl, { label: 'StyledFormControl' })(
+  ({ theme }) => ({
+    '& .react-select__menu-list': {
+      maxHeight: 'none',
+    },
+    marginRight: theme.spacing(2),
+    minWidth: 150,
+  })
+);
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})(({ theme }) => ({
+  '& button': {
+    marginLeft: 0,
+    marginTop: theme.spacing(2),
+  },
+  padding: 0,
+}));
