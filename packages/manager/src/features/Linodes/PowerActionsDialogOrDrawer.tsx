@@ -149,7 +149,7 @@ export const PowerActionsDialog = (props: Props) => {
       actions={
         <ActionsPanel
           primaryButtonProps={{
-            label: `${props.action} Lindoe`,
+            label: `${props.action} Linode`,
             loading: isLoading,
             onClick: onSubmit,
           }}
