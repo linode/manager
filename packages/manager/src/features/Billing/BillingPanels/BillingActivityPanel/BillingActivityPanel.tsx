@@ -32,7 +32,7 @@ import {
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import { useSet } from 'src/hooks/useSet';
 import { useAccount } from 'src/queries/account';
 import {
@@ -41,7 +41,7 @@ import {
 } from 'src/queries/accountBilling';
 import { useProfile } from 'src/queries/profile';
 import { parseAPIDate } from 'src/utilities/date';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';

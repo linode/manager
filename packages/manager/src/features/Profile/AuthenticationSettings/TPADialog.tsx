@@ -7,7 +7,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Typography } from 'src/components/Typography';
 import { LOGIN_ROOT } from 'src/constants';
 import { Provider } from 'src/featureFlags';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 export interface TPADialogProps {
   currentProvider: Provider;
   newProvider: TPAProvider;

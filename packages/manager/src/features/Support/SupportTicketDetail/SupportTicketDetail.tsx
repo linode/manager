@@ -22,7 +22,7 @@ import {
   useSupportTicketQuery,
 } from 'src/queries/support';
 import { capitalize } from 'src/utilities/capitalize';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 import { ExpandableTicketPanel } from '../ExpandableTicketPanel';

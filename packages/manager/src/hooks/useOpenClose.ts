@@ -31,5 +31,3 @@ export const useOpenClose = (
 
   return { close, isOpen, open };
 };
-
-export default useOpenClose;

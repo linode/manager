@@ -18,5 +18,3 @@ export const useEditableLabelState = () => {
     setEditableLabelError,
   };
 };
-
-export default useEditableLabelState;

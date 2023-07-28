@@ -7,7 +7,7 @@ import { databaseInstanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { capitalize } from 'src/utilities/capitalize';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
   renderWithTheme,

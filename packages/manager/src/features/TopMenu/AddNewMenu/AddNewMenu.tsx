@@ -23,7 +23,7 @@ import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 
 interface LinkProps {
   attr?: { [key: string]: boolean };

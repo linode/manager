@@ -15,7 +15,7 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';

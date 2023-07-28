@@ -6,8 +6,8 @@ import {
 } from '@sentry/react';
 
 import { APP_ROOT, SENTRY_URL } from 'src/constants';
-import deepStringTransform from 'src/utilities/deepStringTransform';
-import redactAccessToken from 'src/utilities/redactAccessToken';
+import { deepStringTransform } from 'src/utilities/deepStringTransform';
+import { redactAccessToken } from 'src/utilities/redactAccessToken';
 
 import packageJson from '../package.json';
 

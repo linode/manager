@@ -12,7 +12,7 @@ import {
   Action,
   PowerActionsDialog,
 } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import useEditableLabelState from 'src/hooks/useEditableLabelState';
+import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,

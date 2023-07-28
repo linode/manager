@@ -143,5 +143,3 @@ export const isExpired = (timestamp?: string) => {
   }
   return DateTime.fromISO(timestamp).diffNow().milliseconds < 0;
 };
-
-export default useDismissibleNotifications;

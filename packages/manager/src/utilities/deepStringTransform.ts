@@ -20,5 +20,3 @@ export const deepStringTransform = (
 
   return value;
 };
-
-export default deepStringTransform;

@@ -9,7 +9,7 @@ import autoTable, { CellHookData } from 'jspdf-autotable';
 import { pathOr } from 'ramda';
 
 import { ADDRESSES } from 'src/constants';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 

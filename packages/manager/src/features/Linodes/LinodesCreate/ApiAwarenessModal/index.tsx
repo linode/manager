@@ -15,8 +15,8 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import useEvents from 'src/hooks/useEvents';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
-import generateCurlCommand from 'src/utilities/generate-cURL';
-import generateCLICommand from 'src/utilities/generate-cli';
+import { generateCurlCommand } from 'src/utilities/generate-cURL';
+import { generateCLICommand } from 'src/utilities/generate-cli';
 
 import CodeBlock from '../CodeBlock';
 
