@@ -18,7 +18,7 @@ export const StyledOuterContainerGrid = styled(Grid)(({ theme }) => ({
 
 export const StyledDashboardCard = styled(DashboardCard)(({ theme }) => ({
   backgroundColor: theme.bg.bgPaper,
-  margin: 0,
+  margin: `0 !important`,
   [theme.breakpoints.up('sm')]: {
     marginBottom: 20,
   },
