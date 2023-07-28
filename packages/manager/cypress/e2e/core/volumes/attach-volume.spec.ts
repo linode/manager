@@ -11,6 +11,7 @@ import {
 import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
+import { interceptGetLinodeConfigs } from 'support/intercepts/linodes';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -69,6 +70,7 @@ describe('volume attach and detach flows', () => {
     cy.defer(entityPromise, 'creating Volume and Linode').then(
       ([volume, linode]: [Volume, Linode]) => {
         interceptAttachVolume(volume.id).as('attachVolume');
+        interceptGetLinodeConfigs(linode.id).as('getLinodeConfigs');
         cy.visitWithLogin('/volumes', {
           localStorageOverrides: pageSizeOverride,
         });
@@ -97,6 +99,8 @@ describe('volume attach and detach flows', () => {
             .findByTitle(linode.label)
             .should('be.visible')
             .click();
+
+          cy.wait('@getLinodeConfigs');
 
           ui.button.findByTitle('Attach').should('be.visible').click();
         });
