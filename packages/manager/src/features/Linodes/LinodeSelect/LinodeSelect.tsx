@@ -47,8 +47,6 @@ interface LinodeSelectProps {
   renderOptionLabel?: (linode: Linode) => string;
   /* Displays an indication that the input is required. */
   required?: boolean;
-  /** Overrides the default label. */
-  showIPAddressLabel?: boolean;
   /* Adds custom styles to the component. */
   sx?: SxProps;
 }
@@ -59,7 +57,7 @@ export interface LinodeMultiSelectProps extends LinodeSelectProps {
   /* Called when the value changes */
   onSelectionChange: (selected: Linode[]) => void;
   /* Current value of the input. */
-  value: number[];
+  value: ((linode: Linode) => boolean) | null | number[];
 }
 
 export interface LinodeSingleSelectProps extends LinodeSelectProps {
@@ -68,7 +66,7 @@ export interface LinodeSingleSelectProps extends LinodeSelectProps {
   /* Called when the value changes */
   onSelectionChange: (selected: Linode | null) => void;
   /* Current value of the input. */
-  value: null | number;
+  value: ((linode: Linode) => boolean) | null | number;
 }
 
 /**
@@ -155,7 +153,7 @@ export const LinodeSelect = (
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)
-          ? onSelectionChange(value)
+          ? onSelectionChange(value as Linode[])
           : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
       renderInput={(params) => (
@@ -180,7 +178,7 @@ export const LinodeSelect = (
         return (
           <li {...props}>
             {renderOption ? (
-              renderOption(option, selected)
+              renderOption(option as Linode, selected)
             ) : (
               <>
                 <Box
@@ -188,7 +186,7 @@ export const LinodeSelect = (
                     flexGrow: 1,
                   }}
                 >
-                  {option.label}
+                  {(option as Linode).label}
                 </Box>
                 <SelectedIcon visible={selected} />
               </>
@@ -196,6 +194,13 @@ export const LinodeSelect = (
           </li>
         );
       }}
+      value={
+        typeof value === 'function'
+          ? multiple && Array.isArray(value)
+            ? linodes?.filter(value) ?? null
+            : linodes?.find(value) ?? null
+          : mapIdsToLinodes(value, linodes)
+      }
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={false}
@@ -212,7 +217,6 @@ export const LinodeSelect = (
       options={options || (filteredLinodes ?? [])}
       popupIcon={<KeyboardArrowDownIcon />}
       sx={sx}
-      value={mapIdsToLinodes(value, linodes)}
     />
   );
 };
