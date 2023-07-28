@@ -1,3 +1,4 @@
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -49,7 +50,7 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
   return (
     <Accordion
       actions={() => (
-        <ActionsPanel
+        <StyledActionsPanel
           primaryButtonProps={{
             'data-testid': 'label-save',
             disabled: isReadOnly || !formik.dirty,
@@ -76,3 +77,9 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
     </Accordion>
   );
 };
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})({
+  justifyContent: 'flex-start',
+});
