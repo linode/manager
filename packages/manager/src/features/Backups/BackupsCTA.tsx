@@ -2,19 +2,18 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
-import { StyledPaper } from './BackupsCTA.styles';
-import { Typography } from 'src/components/Typography';
+
 import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { Typography } from 'src/components/Typography';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useProfile } from 'src/queries/profile';
 import { handleOpen } from 'src/store/backupDrawer';
 
-import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
-import { MapState } from 'src/store/types';
-import { useProfile } from 'src/queries/profile';
+import { StyledPaper } from './BackupsCTA.styles';
 
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
@@ -22,8 +21,8 @@ type BackupsCTAProps = StateProps & DispatchProps;
 
 const BackupsCTA = (props: BackupsCTAProps) => {
   const {
-    linodesWithoutBackups,
     actions: { openBackupsDrawer },
+    linodesWithoutBackups,
   } = props;
 
   const { data: accountSettings } = useAccountSettings();
@@ -39,9 +38,9 @@ const BackupsCTA = (props: BackupsCTAProps) => {
 
   return (
     <PreferenceToggle<boolean>
+      localStorageKey="BackupsCtaDismissed"
       preferenceKey="backups_cta_dismissed"
       preferenceOptions={[false, true]}
-      localStorageKey="BackupsCtaDismissed"
     >
       {({
         preference: isDismissed,
@@ -60,8 +59,8 @@ const BackupsCTA = (props: BackupsCTAProps) => {
             </Typography>
             <Box component="span" sx={{ display: 'flex' }}>
               <StyledLinkButton
-                sx={{ marginLeft: 12, lineHeight: '0.5rem' }}
                 onClick={dismissed}
+                sx={{ lineHeight: '0.5rem', marginLeft: 12 }}
               >
                 <Close />
               </StyledLinkButton>
