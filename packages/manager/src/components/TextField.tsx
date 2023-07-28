@@ -219,12 +219,11 @@ export const TextField = (props: TextFieldProps) => {
   }, [value]);
 
   const handleBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (trimmed) {
       setValue(e.target.value.trim());
     }
-
     if (onBlur) {
       onBlur(e);
     }
@@ -397,7 +396,7 @@ export const TextField = (props: TextFieldProps) => {
            * have the ability to put the helper text under the label at the top.
            */
           label={''}
-          onBlur={handleBlur}
+          onBlur={(e) => handleBlur(e)}
           onChange={handleChange}
           type={type}
           /*

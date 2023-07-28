@@ -24,11 +24,11 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
     fieldName,
     initialValue,
     label,
-    onBlur,
     submitForm,
     successCallback,
     successMessage,
     tooltipText,
+    trimmed,
     ...textFieldProps
   } = props;
 
@@ -40,6 +40,14 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
   const [submitting, setSubmitting] = React.useState(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [success, setSuccess] = React.useState(false);
+
+  const handleTrim = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (trimmed) {
+      setValue(e.target.value.trim());
+    }
+  };
 
   const handleSubmit = () => {
     setSubmitting(true);
@@ -86,7 +94,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
           disabled={disabled}
           errorText={fieldError}
           label={label}
-          onBlur={onBlur}
+          onBlur={(e) => handleTrim(e)}
           onChange={(e) => setValue(e.target.value)}
           tooltipText={tooltipText ? tooltipText : undefined}
           value={value}

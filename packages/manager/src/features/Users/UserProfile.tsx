@@ -55,6 +55,12 @@ interface Props {
   profileSuccess: boolean;
   saveAccount: () => void;
   saveProfile: () => void;
+  trimEmail: (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  trimUsername: (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   username: string;
 }
 
@@ -77,6 +83,8 @@ const UserProfile: React.FC<Props> = (props) => {
     profileSuccess,
     saveAccount,
     saveProfile,
+    trimEmail,
+    trimUsername,
     username,
   } = props;
 
@@ -125,8 +133,8 @@ const UserProfile: React.FC<Props> = (props) => {
             data-qa-username
             errorText={hasAccountErrorFor('username')}
             label="Username"
+            onBlur={trimUsername}
             onChange={changeUsername}
-            trimmed
             value={username}
           />
           <ActionsPanel
@@ -159,8 +167,8 @@ const UserProfile: React.FC<Props> = (props) => {
             disabled={profile?.username !== originalUsername}
             errorText={hasProfileErrorFor('email')}
             label="Email"
+            onBlur={trimEmail}
             onChange={changeEmail}
-            trimmed
             value={email}
           />
           <ActionsPanel

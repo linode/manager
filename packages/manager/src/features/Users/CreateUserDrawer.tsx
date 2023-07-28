@@ -58,7 +58,8 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           data-qa-create-username
           errorText={hasErrorFor('username')}
           label="Username"
-          onChange={this.onChangeUsername}
+          onBlur={this.handleTrimUsername}
+          onChange={this.handleChangeUsername}
           required
           trimmed
           value={username}
@@ -67,7 +68,8 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           data-qa-create-email
           errorText={hasErrorFor('email')}
           label="Email"
-          onChange={this.onChangeEmail}
+          onBlur={this.handleTrimEmail}
+          onChange={this.handleChangeEmail}
           required
           trimmed
           type="email"
@@ -78,7 +80,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
             <Toggle
               checked={!restricted}
               data-qa-create-restricted
-              onChange={this.onChangeRestricted}
+              onChange={this.handleChangeRestricted}
             />
           }
           label={
@@ -113,21 +115,37 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
-  onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       email: e.target.value,
     });
   };
 
-  onChangeRestricted = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleChangeRestricted = () => {
     this.setState({
       restricted: !this.state.restricted,
     });
   };
 
-  onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       username: e.target.value,
+    });
+  };
+
+  handleTrimEmail = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    this.setState({
+      email: e.target.value.trim(),
+    });
+  };
+
+  handleTrimUsername = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    this.setState({
+      username: e.target.value.trim(),
     });
   };
 

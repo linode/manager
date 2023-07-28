@@ -101,12 +101,24 @@ const UserDetail: React.FC = () => {
     setCreatedUsername(undefined);
   };
 
-  const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
 
-  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+  };
+
+  const handleTrimUsername = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setUsername(e.target.value.trim());
+  };
+
+  const handleTrimEmail = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setEmail(e.target.value.trim());
   };
 
   const onSaveAccount = () => {
@@ -231,8 +243,8 @@ const UserDetail: React.FC = () => {
               accountErrors={accountErrors}
               accountSaving={accountSaving}
               accountSuccess={accountSuccess || false}
-              changeEmail={onChangeEmail}
-              changeUsername={onChangeUsername}
+              changeEmail={handleChangeEmail}
+              changeUsername={handleChangeUsername}
               email={email}
               originalEmail={originalEmail}
               originalUsername={originalUsername}
@@ -241,6 +253,8 @@ const UserDetail: React.FC = () => {
               profileSuccess={profileSuccess || false}
               saveAccount={onSaveAccount}
               saveProfile={onSaveProfile}
+              trimEmail={handleTrimEmail}
+              trimUsername={handleTrimUsername}
               username={username}
             />
           </SafeTabPanel>
