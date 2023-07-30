@@ -70,7 +70,7 @@ const SupportSearchLanding = (props: CombinedProps) => {
   };
 
   return (
-    <Grid container direction="column">
+    <Grid container data-testid="support-search-landing" direction="column">
       <Box
         sx={{
           marginBottom: '16px',
@@ -83,6 +83,7 @@ const SupportSearchLanding = (props: CombinedProps) => {
               : 'Search'
           }
           data-qa-support-search-landing-title
+          dataQaEl={queryString}
         />
       </Box>
       <Box>
@@ -97,8 +98,7 @@ const SupportSearchLanding = (props: CombinedProps) => {
             ),
           }}
           className={classes.searchBoxInner}
-          // data-qa-search-landing-input
-          data-testid="search-landing-input"
+          data-qa-search-landing-input
           disabled={!Boolean(searchEnabled)}
           hideLabel
           label="Search Linode documentation and community questions"

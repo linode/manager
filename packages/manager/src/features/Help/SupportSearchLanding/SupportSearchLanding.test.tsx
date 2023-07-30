@@ -24,9 +24,7 @@ const propsWithMultiWordURLQuery = assocPath(
 describe('SupportSearchLanding Component', () => {
   it('should render', () => {
     renderWithTheme(<SupportSearchLanding {...props} />);
-    expect(
-      screen.getByTestId('data-qa-support-search-landing-title')
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('support-search-landing')).toBeInTheDocument();
   });
 
   it('should display generic text if no query string is provided', () => {

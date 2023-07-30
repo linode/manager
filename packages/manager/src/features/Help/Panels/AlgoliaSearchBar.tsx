@@ -62,19 +62,18 @@ const AlgoliaSearchBar = (props: CombinedProps) => {
   const [options, setOptions] = React.useState<Item[]>([]);
 
   React.useEffect(() => {
-    const options = getOptionsFromResults();
-    setOptions(options);
-  }, []);
+    const getOptionsFromResults = () => {
+      const [docs, community] = props.searchResults;
+      const options = [...docs, ...community];
 
-  const getOptionsFromResults = () => {
-    const [docs, community] = props.searchResults;
-    const options = [...docs, ...community];
+      return [
+        { data: { source: 'finalLink' }, label: inputValue, value: 'search' },
+        ...options,
+      ];
+    };
 
-    return [
-      { data: { source: 'finalLink' }, label: inputValue, value: 'search' },
-      ...options,
-    ];
-  };
+    setOptions(getOptionsFromResults());
+  }, [inputValue, props.searchResults]);
 
   const onInputValueChange = (inputValue: string) => {
     setInputValue(inputValue);
