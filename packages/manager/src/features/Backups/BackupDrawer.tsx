@@ -145,14 +145,15 @@ export const BackupDrawer = (props: CombinedProps) => {
     updatedCount,
   } = props;
 
-  const linodesWithoutBackups =
-    linodesData?.filter((linode) => !linode.backups.enabled) ?? [];
+  const linodesWithoutBackups = (linodes: Linode[] | undefined) => {
+    return linodes?.filter((linode) => !linode.backups.enabled) ?? [];
+  };
 
-  const prevLinodes = React.useRef(linodesWithoutBackups);
+  const prevProps = React.useRef(props);
 
   const updateRequestedTypes = () => {
     setRequestedTypes(
-      linodesWithoutBackups
+      linodesWithoutBackups(linodesData)
         .map((linode) => linode.type)
         .filter(isNotNullOrUndefined)
     );
@@ -161,7 +162,7 @@ export const BackupDrawer = (props: CombinedProps) => {
   const extendedTypeData = requestedTypesData.map(extendType);
   const extendedLinodes = enhanceLinodes({
     errors: enableErrors,
-    linodes: linodesWithoutBackups,
+    linodes: linodesWithoutBackups(linodesData),
     types: extendedTypeData,
   });
   const linodeCount = extendedLinodes.length;
@@ -185,22 +186,26 @@ all new Linodes will automatically be backed up.`
       close();
     }
     if (
-      prevLinodes.current.some(
-        (linode, index) => linode != linodesWithoutBackups[index]
+      linodesWithoutBackups(linodesData).some(
+        (linode) =>
+          !linodesWithoutBackups(prevProps.current.linodesData).find(
+            (prevLinode) => prevLinode.type == linode.type
+          )
       )
     ) {
       updateRequestedTypes();
+      prevProps.current = props;
     }
-  }, [enableSuccess, linodesWithoutBackups]);
+  }, [enableSuccess, linodesWithoutBackups(linodesData)]);
 
   const handleSubmit = () => {
     if (accountSettings.data?.backups_enabled) {
-      enable(linodesWithoutBackups);
+      enable(linodesWithoutBackups(linodesData));
     } else {
       enroll(
         accountSettings.data?.backups_enabled ?? false,
         queryClient,
-        linodesWithoutBackups
+        linodesWithoutBackups(linodesData)
       );
     }
   };
