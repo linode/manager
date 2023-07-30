@@ -6,7 +6,7 @@ const headers = [
   '-H "Authorization: Bearer $TOKEN" \\',
 ].join('\n');
 
-const generateCurlCommand = (data: {}, path: string) => {
+export const generateCurlCommand = (data: {}, path: string) => {
   const keys = Object.keys(data);
 
   const cleanData = {};
@@ -25,5 +25,3 @@ const generateCurlCommand = (data: {}, path: string) => {
   ).replace(/'/g, `'\\''`)}' https://api.linode.com/v4${path}`;
   return command.trim();
 };
-
-export default generateCurlCommand;

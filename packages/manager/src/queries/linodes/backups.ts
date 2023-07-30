@@ -23,7 +23,10 @@ export const useLinodeBackupsEnableMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => enableBackups(id), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries([queryKey, 'infinite']);
+      queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
     },
   });
 };
@@ -32,14 +35,27 @@ export const useLinodeBackupsCancelMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => cancelBackups(id), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries([queryKey, 'infinite']);
+      queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
     },
   });
 };
 
 export const useLinodeBackupSnapshotMutation = (id: number) => {
-  return useMutation<{}, APIError[], { label: string }>(({ label }) =>
-    takeSnapshot(id, label)
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { label: string }>(
+    ({ label }) => takeSnapshot(id, label),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey, 'linode', id, 'backups']);
+        queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+      },
+    }
   );
 };
 

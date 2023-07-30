@@ -20,9 +20,9 @@ import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Divider } from 'src/components/Divider';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-import useFlags from 'src/hooks/useFlags';
-import usePrefetch from 'src/hooks/usePreFetch';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { usePrefetch } from 'src/hooks/usePreFetch';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,

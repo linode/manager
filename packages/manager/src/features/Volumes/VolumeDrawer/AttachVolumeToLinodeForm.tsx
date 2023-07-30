@@ -17,7 +17,7 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import ConfigSelect from './ConfigSelect';
+import { ConfigSelect } from './ConfigSelect';
 import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import VolumeSelect from './VolumeSelect';

@@ -24,7 +24,7 @@ import MainContent from './MainContent';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAuthentication } from './hooks/useAuthentication';
-import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
+import { useFeatureFlagsLoad } from './hooks/useFeatureFlagLoad';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';

@@ -11,7 +11,7 @@ import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';

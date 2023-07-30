@@ -9,7 +9,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { getErrorMap } from 'src/utilities/errorUtils';

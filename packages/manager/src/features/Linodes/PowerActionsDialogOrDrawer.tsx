@@ -10,8 +10,8 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
-  useAllLinodeConfigsQuery,
   useBootLinodeMutation,
   useLinodeQuery,
   useRebootLinodeMutation,
@@ -149,7 +149,7 @@ export const PowerActionsDialog = (props: Props) => {
       actions={
         <ActionsPanel
           primaryButtonProps={{
-            label: `${props.action} Lindoe`,
+            label: `${props.action} Linode`,
             loading: isLoading,
             onClick: onSubmit,
           }}

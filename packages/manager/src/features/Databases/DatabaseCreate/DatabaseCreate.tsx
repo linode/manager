@@ -48,7 +48,7 @@ import PlansPanel, {
   PlanSelectionType,
 } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,

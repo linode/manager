@@ -31,7 +31,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
-import ConfigSelect from './ConfigSelect';
+import { ConfigSelect } from './ConfigSelect';
 import LabelField from './LabelField';
 import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
