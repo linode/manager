@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 
 export const StyledRootGrid = styled(Grid, { label: 'StyledRootGrid' })(
   ({ theme }) => ({
+    backgroundColor: theme.bg.white,
+    margin: 0,
     padding: theme.spacing(3),
     width: '100% !important',
   })
