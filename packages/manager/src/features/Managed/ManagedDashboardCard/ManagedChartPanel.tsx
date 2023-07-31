@@ -1,8 +1,7 @@
 import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
+import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles';
-import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -25,14 +24,6 @@ import {
   StyledRootDiv,
 } from './ManagedChartPanel.styles';
 
-const useStyles = makeStyles()({
-  inner: {
-    paddingTop: 0,
-  },
-});
-
-type ManagedChartPanelProps = WithTheme;
-
 const chartHeight = 300;
 
 const formatData = (value: DataSeries[]): [number, number][] =>
@@ -44,7 +35,6 @@ const _formatTooltip = (valueInBytes: number) =>
 const createTabs = (
   data: ManagedStatsData | undefined,
   timezone: string,
-  classes: Record<string, string>,
   theme: Theme
 ) => {
   const summaryCopy = (
@@ -165,9 +155,8 @@ const createTabs = (
   ];
 };
 
-export const ManagedChartPanel = (props: ManagedChartPanelProps) => {
-  const { theme } = props;
-  const { classes } = useStyles();
+export const ManagedChartPanel = () => {
+  const theme = useTheme();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
   const { data, error, isLoading } = useManagedStatsQuery();
@@ -193,7 +182,7 @@ export const ManagedChartPanel = (props: ManagedChartPanelProps) => {
     return null;
   }
 
-  const tabs = createTabs(data.data, timezone, classes, theme);
+  const tabs = createTabs(data.data, timezone, theme);
 
   const initialTab = 0;
 
@@ -204,7 +193,6 @@ export const ManagedChartPanel = (props: ManagedChartPanelProps) => {
         error={undefined} // Use custom error handling (above)
         header={''}
         initTab={initialTab}
-        innerClass={classes.inner}
         rootClass={`tabbedPanel`}
         tabs={tabs}
       />
@@ -212,4 +200,4 @@ export const ManagedChartPanel = (props: ManagedChartPanelProps) => {
   );
 };
 
-export default withTheme(ManagedChartPanel);
+export default ManagedChartPanel;
