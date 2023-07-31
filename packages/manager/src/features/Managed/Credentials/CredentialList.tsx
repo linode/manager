@@ -29,12 +29,12 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import {
-  StyledWrapperGrid,
-  StyledTypography,
-  StyledHeaderGrid,
-} from '../Contacts/Contacts.styles';
 
+import {
+  StyledHeaderGrid,
+  StyledTypography,
+  StyledWrapperGrid,
+} from '../Contacts/Contacts.styles';
 import AddCredentialDrawer from './AddCredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';

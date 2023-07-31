@@ -45,7 +45,7 @@ export const CredentialRow = (props: CredentialRowProps) => {
   );
 };
 
-const StyledTableCell = styled(TableCell)({
+const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
   '&.MuiTableCell-root': {
     paddingRight: 0,
   },
@@ -54,7 +54,7 @@ const StyledTableCell = styled(TableCell)({
   padding: 0,
 });
 
-const StyledTableRow = styled(TableRow)({
+const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })({
   '&:before': {
     display: 'none',
   },

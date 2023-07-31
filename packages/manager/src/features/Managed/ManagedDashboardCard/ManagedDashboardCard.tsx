@@ -10,14 +10,14 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import ManagedChartPanel from './ManagedChartPanel';
-import MonitorStatus from './MonitorStatus';
-import MonitorTickets from './MonitorTickets';
 import {
+  StyledDashboardCard,
   StyledMonitorStatusOuterGrid,
   StyledOuterContainerGrid,
-  StyledDashboardCard,
   StyledStatusGrid,
 } from './ManagedDashboardCard.styles';
+import MonitorStatus from './MonitorStatus';
+import MonitorTickets from './MonitorTickets';
 
 export const ManagedDashboardCard = () => {
   const {

@@ -1,7 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
-// import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-// import { makeStyles } from 'tss-react/mui';
 
 import { Typography } from 'src/components/Typography';
 
@@ -10,25 +8,6 @@ import {
   StyledRootGrid,
   StyledTypography,
 } from './DashboardCard.styles';
-
-// const useStyles = makeStyles()((theme: Theme) => ({
-//   container: {
-//     marginTop: theme.spacing(3),
-//   },
-//   header: {
-//     padding: theme.spacing(3),
-//     paddingBottom: 0,
-//   },
-//   headerAction: {
-//     left: `-${theme.spacing(2)}`,
-//     marginLeft: theme.spacing(0.5),
-//     position: 'relative',
-//     top: 6,
-//   },
-//   root: {
-//     width: '100% !important',
-//   },
-// }));
 
 interface DashboardCardProps {
   alignHeader?: 'flex-start' | 'space-between';

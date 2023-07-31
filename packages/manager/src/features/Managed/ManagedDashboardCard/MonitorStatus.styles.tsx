@@ -1,9 +1,11 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 
-import Grid from '@mui/material/Unstable_Grid2';
 import { Typography } from 'src/components/Typography';
 
-export const StyledTypography = styled(Typography)(({ theme }) => ({
+export const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
   '&:before': {
     backgroundColor: theme.color.red,
     content: '""',
@@ -22,18 +24,20 @@ export const StyledTypography = styled(Typography)(({ theme }) => ({
   textAlign: 'left',
 }));
 
-export const StyledIconGrid = styled(Grid)(({ theme }) => ({
+export const StyledIconGrid = styled(Grid, { label: 'StyledIconGrid' })({
   '& svg': {
     display: 'flex',
     height: 56,
     width: 56,
   },
-}));
+});
 
-export const StyledRootGrid = styled(Grid)(({ theme }) => ({
-  padding: `0`,
-  textAlign: 'center',
-  [theme.breakpoints.down('lg')]: {
-    padding: `${theme.spacing(2)} 0 0`,
-  },
-}));
+export const StyledRootGrid = styled(Grid, { label: 'StyledRootGrid' })(
+  ({ theme }) => ({
+    padding: `0`,
+    textAlign: 'center',
+    [theme.breakpoints.down('lg')]: {
+      padding: `${theme.spacing(2)} 0 0`,
+    },
+  })
+);

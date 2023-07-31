@@ -1,10 +1,14 @@
 import { styled } from '@mui/material/styles';
 
-export const StyledCanvasContainerDiv = styled('div')(({ theme }) => ({
+export const StyledCanvasContainerDiv = styled('div', {
+  label: 'StyledCanvasContainerDiv',
+})(({ theme }) => ({
   marginTop: theme.spacing(3),
 }));
 
-export const StyledGraphControlsDiv = styled('div')(({ theme }) => ({
+export const StyledGraphControlsDiv = styled('div', {
+  label: 'StyledGraphControlsDiv',
+})(({ theme }) => ({
   /**
    * hacky solution to solve for a bug where
    * the canvas element under the chart kept ending up with a 0px height
@@ -28,6 +32,6 @@ export const StyledGraphControlsDiv = styled('div')(({ theme }) => ({
   position: 'relative',
 }));
 
-export const StyledRootDiv = styled('div')({
+export const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })({
   position: 'relative',
 });

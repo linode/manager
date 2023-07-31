@@ -16,9 +16,9 @@ import { useOpenClose } from 'src/hooks/useOpenClose';
 import { useAllLinodeSettingsQuery } from 'src/queries/managed/managed';
 
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';
+import { StyledDiv } from './SSHAccessTable.styles';
 import SSHAccessTableContent from './SSHAccessTableContent';
 import { DEFAULTS } from './common';
-import { StyledDiv } from './SSHAccessTable.styles';
 
 const SSHAccessTable = () => {
   const { data: settings, error, isLoading } = useAllLinodeSettingsQuery();

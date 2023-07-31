@@ -1,8 +1,8 @@
 import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -18,6 +18,7 @@ import { useManagedStatsQuery } from 'src/queries/managed/managed';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getUserTimezone from 'src/utilities/getUserTimezone';
+
 import {
   StyledCanvasContainerDiv,
   StyledGraphControlsDiv,

@@ -5,6 +5,7 @@ import { Link, useHistory } from 'react-router-dom';
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { Typography } from 'src/components/Typography';
 import { ExtendedIssue } from 'src/queries/managed/types';
+
 import { StyledButton, StyledGrid } from './MonitorTickets.styles';
 
 interface MonitorTicketsProps {
@@ -30,6 +31,7 @@ export const MonitorTickets = (props: MonitorTicketsProps) => {
         // className={`${hasIssues ? classes.sadTicket : classes.happyTicket} py0`}
         sx={(theme) => ({
           color: hasIssues ? theme.color.red : theme.color.grey1,
+          padding: `0 ${theme.spacing(1)}`,
         })}
       >
         <TicketIcon height={39} width={50} />
