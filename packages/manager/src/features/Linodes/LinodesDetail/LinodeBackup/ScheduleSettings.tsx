@@ -169,5 +169,6 @@ const StyledActionsPanel = styled(ActionsPanel, {
     marginLeft: 0,
     marginTop: theme.spacing(2),
   },
+  justifyContent: 'flex-start',
   padding: 0,
 }));
