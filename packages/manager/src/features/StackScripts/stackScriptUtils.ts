@@ -124,6 +124,7 @@ export const baseApps = {
   '1096122': 'Mastodon',
   '1102900': 'Apache Airflow',
   '1102902': 'HaltDOS Community WAF',
+  '1102905': 'Gopaddle',
   '1102904': 'Superinsight',
   '1102906': 'Passky',
   '1102907': 'ONLYOFFICE Docs',
