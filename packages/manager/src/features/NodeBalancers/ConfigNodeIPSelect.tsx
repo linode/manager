@@ -11,7 +11,7 @@ import type { TextFieldProps } from 'src/components/TextField';
 interface ConfigNodeIPSelectProps {
   disabled?: boolean;
   errorText?: string;
-  handleChange: (nodeIndex: number, ipAddress: string) => void;
+  handleChange: (nodeIndex: number, ipAddress: null | string) => void;
   inputId?: string;
   nodeAddress?: string;
   nodeIndex: number;
@@ -21,9 +21,6 @@ interface ConfigNodeIPSelectProps {
 
 export const ConfigNodeIPSelect = React.memo(
   (props: ConfigNodeIPSelectProps) => {
-    const [selectedLinode, setSelectedLinode] = React.useState<null | number>(
-      null
-    );
     const {
       handleChange: _handleChange,
       inputId,
@@ -31,21 +28,24 @@ export const ConfigNodeIPSelect = React.memo(
       nodeIndex,
     } = props;
 
-    const handleChange = (linode: Linode) => {
-      if (!linode?.id) {
+    const handleChange = (linode: Linode | null) => {
+      if (!linode) {
+        _handleChange(nodeIndex, null);
+      }
+
+      const thisLinodesPrivateIP = linode?.ipv4.find((ipv4) =>
+        ipv4.match(privateIPRegex)
+      );
+
+      if (!thisLinodesPrivateIP) {
         return;
       }
 
-      setSelectedLinode(linode.id);
-
-      const thisLinodesPrivateIP = linode.ipv4.find((ipv4) =>
-        ipv4.match(privateIPRegex)
-      );
       /**
        * we can be sure the selection has a private IP because of the
        * filterCondition prop in the render method below
        */
-      _handleChange(nodeIndex, thisLinodesPrivateIP!);
+      _handleChange(nodeIndex, thisLinodesPrivateIP);
     };
 
     return (
@@ -89,8 +89,7 @@ export const ConfigNodeIPSelect = React.memo(
         noMarginTop
         onSelectionChange={handleChange}
         placeholder="Enter IP Address"
-        showIPAddressLabel
-        value={nodeAddress === '' ? null : selectedLinode}
+        value={(linode) => linode.ipv4.some((ip) => ip === nodeAddress)}
       />
     );
   }

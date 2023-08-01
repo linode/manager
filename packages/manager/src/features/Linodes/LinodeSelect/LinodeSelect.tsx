@@ -7,7 +7,7 @@ import React from 'react';
 
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
-import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
 
 import { CustomPopper, SelectedIcon } from './LinodeSelect.styles';
@@ -47,8 +47,6 @@ interface LinodeSelectProps {
   renderOptionLabel?: (linode: Linode) => string;
   /* Displays an indication that the input is required. */
   required?: boolean;
-  /** Overrides the default label. */
-  showIPAddressLabel?: boolean;
   /* Adds custom styles to the component. */
   sx?: SxProps;
 }
@@ -58,8 +56,8 @@ export interface LinodeMultiSelectProps extends LinodeSelectProps {
   multiple: true;
   /* Called when the value changes */
   onSelectionChange: (selected: Linode[]) => void;
-  /* Current value of the input. */
-  value: number[];
+  /* An array of `id`s of Linodes that should be selected or a function that should return `true` if the Linode should be selected. */
+  value: ((linode: Linode) => boolean) | null | number[];
 }
 
 export interface LinodeSingleSelectProps extends LinodeSelectProps {
@@ -67,8 +65,8 @@ export interface LinodeSingleSelectProps extends LinodeSelectProps {
   multiple?: false;
   /* Called when the value changes */
   onSelectionChange: (selected: Linode | null) => void;
-  /* Current value of the input. */
-  value: null | number;
+  /* The `id` of the selected Linode or a function that should return `true` if the Linode should be selected. */
+  value: ((linode: Linode) => boolean) | null | number;
 }
 
 /**
@@ -100,21 +98,11 @@ export const LinodeSelect = (
     value,
   } = props;
 
-  const {
-    data: linodesData,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isLoading: linodesDataLoading,
-  } = useInfiniteLinodesQuery(filter);
+  const { data, error, isLoading } = useAllLinodesQuery({}, filter);
 
   const [inputValue, setInputValue] = React.useState('');
 
-  const linodes = linodesData?.pages.flatMap((page) => page.data);
-
-  const filteredLinodes = optionsFilter
-    ? linodes?.filter(optionsFilter)
-    : linodes;
+  const linodes = optionsFilter ? data?.filter(optionsFilter) : data;
 
   React.useEffect(() => {
     /** We want to clear the input value when the value prop changes to null.
@@ -128,30 +116,12 @@ export const LinodeSelect = (
 
   return (
     <Autocomplete
-      ListboxProps={{
-        onScroll: (event: React.SyntheticEvent) => {
-          const listboxNode = event.currentTarget;
-          if (
-            listboxNode.scrollTop + listboxNode.clientHeight >=
-              listboxNode.scrollHeight &&
-            hasNextPage
-          ) {
-            fetchNextPage();
-          }
-        },
-      }}
       getOptionLabel={(linode: Linode) =>
         renderOptionLabel ? renderOptionLabel(linode) : linode.label
       }
       noOptionsText={
         noOptionsMessage ?? (
-          <i>
-            {getDefaultNoOptionsMessage(
-              error,
-              linodesDataLoading,
-              filteredLinodes
-            )}
-          </i>
+          <i>{getDefaultNoOptionsMessage(error, isLoading, linodes)}</i>
         )
       }
       onChange={(_, value) =>
@@ -172,7 +142,7 @@ export const LinodeSelect = (
           helperText={helperText}
           inputId={params.id}
           label={label ? label : multiple ? 'Linodes' : 'Linode'}
-          loading={linodesDataLoading}
+          loading={isLoading}
           noMarginTop={noMarginTop}
           {...params}
         />
@@ -197,6 +167,13 @@ export const LinodeSelect = (
           </li>
         );
       }}
+      value={
+        typeof value === 'function'
+          ? multiple && Array.isArray(value)
+            ? linodes?.filter(value) ?? null
+            : linodes?.find(value) ?? null
+          : mapIdsToLinodes(value, linodes)
+      }
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={false}
@@ -206,14 +183,13 @@ export const LinodeSelect = (
       disabled={disabled}
       id={id}
       inputValue={inputValue}
-      loading={linodesDataLoading || loading}
+      loading={isLoading || loading}
       multiple={multiple}
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
-      options={options || (filteredLinodes ?? [])}
+      options={options || (linodes ?? [])}
       popupIcon={<KeyboardArrowDownIcon />}
       sx={sx}
-      value={mapIdsToLinodes(value, linodes)}
     />
   );
 };
