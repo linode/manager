@@ -36,6 +36,7 @@ import { linkIsActive } from './utils';
 type NavEntity =
   | 'Account'
   | 'Account'
+  | 'Betas'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
@@ -240,6 +241,11 @@ export const PrimaryNav = (props: Props) => {
           display: 'Account',
           href: '/account',
           icon: <Account />,
+        },
+        {
+          display: 'Betas',
+          href: '/betas',
+          hide: !flags.betas,
         },
         {
           display: 'Help & Support',
