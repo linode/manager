@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
+import { InputAdornment } from './InputAdornment';
 import { TextField } from './TextField';
 
 const meta: Meta<typeof TextField> = {
@@ -31,6 +32,18 @@ export const Error: Story = {
 export const Number: Story = {
   args: {
     label: 'Label for Number',
+    noMarginTop: true,
+    type: 'number',
+  },
+  render: (args) => <TextField {...args} />,
+};
+
+export const WithAdornment: Story = {
+  args: {
+    InputProps: {
+      startAdornment: <InputAdornment position="end">$</InputAdornment>,
+    },
+    label: 'Label with an InputAdornment',
     noMarginTop: true,
     type: 'number',
   },

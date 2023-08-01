@@ -8,7 +8,7 @@ import { compose, withHandlers } from 'recompose';
 
 import { LinearProgress } from 'src/components/LinearProgress';
 import { TextField } from 'src/components/TextField';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 
 import { FileAttachment } from './index';
 

@@ -13,7 +13,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { TooltipProps as _TooltipProps } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import FormHelperText from 'src/components/core/FormHelperText';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 

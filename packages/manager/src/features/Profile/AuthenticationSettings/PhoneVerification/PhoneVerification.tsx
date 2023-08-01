@@ -10,7 +10,7 @@ import { Button } from 'src/components/Button/Button';
 import { LinkButton } from 'src/components/LinkButton';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 import {
   queryKey,
   updateProfileData,
