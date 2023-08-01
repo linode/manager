@@ -11,6 +11,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Tooltip } from 'src/components/Tooltip';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { StyledToggleButton } from './DisplayLinodes.styles';
 
@@ -74,6 +75,7 @@ type CombinedProps<T> = Props & Omit<OrderByProps<T>, 'data'>;
 
 const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const {
     handleOrderChange,
@@ -140,7 +142,7 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
                 handleClick={handleOrderChange}
                 label="ipv4[0]" // we want to sort by the first ipv4
               >
-                IP Address
+                Public IP Address
               </TableSortCell>
               <Hidden lgDown>
                 <TableSortCell
@@ -154,6 +156,17 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
                   Region
                 </TableSortCell>
               </Hidden>
+              {flags.vpc && 
+              (<Hidden lgDown>
+                <TableSortCell 
+                  active={isActive('vpc')}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="vpc"
+                >
+                  VPC
+                </TableSortCell>
+              </Hidden>)}
             </Hidden>
             <Hidden lgDown>
               <TableSortCell

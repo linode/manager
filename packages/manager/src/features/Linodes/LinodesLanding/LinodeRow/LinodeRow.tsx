@@ -23,6 +23,8 @@ import { notificationContext as _notificationContext } from 'src/features/Notifi
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useTypeQuery } from 'src/queries/types';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -38,6 +40,7 @@ type Props = Linode & { handlers: LinodeHandlers };
 
 export const LinodeRow = (props: Props) => {
   const classes = useStyles();
+  const flags = useFlags();
   const { backups, handlers, id, ipv4, label, region, status, type } = props;
 
   const notificationContext = React.useContext(_notificationContext);
@@ -48,6 +51,9 @@ export const LinodeRow = (props: Props) => {
     {},
     { status: { '+or': ['pending, started'] } }
   );
+
+  const { data: configsData } = useAllLinodeConfigsQuery(id);
+  console.log("linodeId: ", id, "configData: ", configsData);
 
   const maintenance = accountMaintenanceData?.find(
     (m) => m.entity.id === id && m.entity.type === 'linode'
@@ -156,6 +162,15 @@ export const LinodeRow = (props: Props) => {
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
+        {flags.vpc && 
+        (<Hidden lgDown>
+          <TableCell>
+            {/* TODO once we get the interfaces from the linodes configs data, what do we put here? */}
+            {/* <Link tabIndex={0} to={`/linodes/${id}`}>
+              {label}
+            </Link> */}
+          </TableCell>
+        </Hidden>)}
       </Hidden>
       <Hidden lgDown>
         <TableCell>
