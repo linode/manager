@@ -13,7 +13,7 @@ import {
 } from 'src/utilities/testHelpers';
 
 import VPCLanding from './VPCLanding';
-import VPCRow from './VPCRow';
+import { VPCRow } from './VPCRow';
 
 const queryClient = new QueryClient();
 

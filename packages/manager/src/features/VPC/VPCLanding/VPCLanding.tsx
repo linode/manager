@@ -112,31 +112,17 @@ const VPCLanding = () => {
                 VPC ID
               </TableSortCell>
             </Hidden>
-            <TableSortCell
-              active={orderBy === 'subnets'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="subnets"
-            >
-              Subnets
-            </TableSortCell>
+            <TableCell>Subnets</TableCell>
             <Hidden mdDown>
-              <TableSortCell
-                active={orderBy === 'linodes'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="linodes"
-              >
-                Linodes
-              </TableSortCell>
+              <TableCell>Linodes</TableCell>
             </Hidden>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {vpcs?.data.map((vpc: VPC) => {
-            return <VPCRow key={vpc.id} vpc={vpc} />;
-          })}
+          {vpcs?.data.map((vpc: VPC) => (
+            <VPCRow key={vpc.id} vpc={vpc} />
+          ))}
         </TableBody>
       </Table>
       <PaginationFooter

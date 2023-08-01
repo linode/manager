@@ -54,18 +54,14 @@ export const VPCRow = ({ vpc }: Props) => {
         <TableCell>{numLinodes}</TableCell>
       </Hidden>
       <TableCell actionCell>
-        {actions.map((action) => {
-          return (
-            <InlineMenuAction
-              actionText={action.title}
-              key={action.title}
-              onClick={action.onClick}
-            />
-          );
-        })}
+        {actions.map((action) => (
+          <InlineMenuAction
+            actionText={action.title}
+            key={action.title}
+            onClick={action.onClick}
+          />
+        ))}
       </TableCell>
     </TableRow>
   );
 };
-
-export default VPCRow;
