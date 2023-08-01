@@ -9,7 +9,7 @@ import { Drawer } from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';

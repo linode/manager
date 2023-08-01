@@ -8,7 +8,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useUpdateOAuthClientMutation } from 'src/queries/accountOAuth';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
