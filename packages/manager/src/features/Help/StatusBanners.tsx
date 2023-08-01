@@ -1,8 +1,9 @@
 import Box from '@mui/material/Box';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+// import { Theme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+// import { makeStyles } from 'tss-react/mui';
 
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { Link } from 'src/components/Link';
@@ -16,19 +17,19 @@ import { capitalize } from 'src/utilities/capitalize';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { truncateEnd } from 'src/utilities/truncate';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  header: {
-    fontSize: '1rem',
-    marginBottom: theme.spacing(),
-  },
-  root: {
-    marginBottom: theme.spacing(),
-  },
-  text: {
-    fontSize: '0.875rem',
-    lineHeight: '1.25rem',
-  },
-}));
+// const useStyles = makeStyles()((theme: Theme) => ({
+//   header: {
+//     fontSize: '1rem',
+//     marginBottom: theme.spacing(),
+//   },
+//   root: {
+//     marginBottom: theme.spacing(),
+//   },
+//   text: {
+//     fontSize: '0.875rem',
+//     lineHeight: '1.25rem',
+//   },
+// }));
 
 export const StatusBanners = () => {
   const { data: incidentsData } = useIncidentQuery();
@@ -72,7 +73,8 @@ export interface IncidentProps {
 export const IncidentBanner = React.memo((props: IncidentProps) => {
   const { href, impact, message, status: _status, title } = props;
   const status = _status ?? '';
-  const { classes } = useStyles();
+  // const { classes } = useStyles();
+  const theme = useTheme();
 
   const preferenceKey = `${href}-${status}`;
 
@@ -89,12 +91,20 @@ export const IncidentBanner = React.memo((props: IncidentProps) => {
         ['major', 'minor', 'none'].includes(impact) ||
         ['monitoring', 'resolved'].includes(status)
       }
-      className={classes.root}
       important
       preferenceKey={preferenceKey}
+      // className={classes.root}
+      sx={{ marginBottom: theme.spacing() }}
     >
       <Box display="flex" flexDirection="column">
-        <Typography className={classes.header} data-testid="status-banner">
+        <Typography
+          sx={{
+            fontSize: '1rem',
+            marginBottom: theme.spacing(),
+          }}
+          // className={classes.header}
+          data-testid="status-banner"
+        >
           <Link to={href}>
             <strong data-testid="incident-status">
               {title}
@@ -106,7 +116,11 @@ export const IncidentBanner = React.memo((props: IncidentProps) => {
           dangerouslySetInnerHTML={{
             __html: sanitizeHTML(truncateEnd(message, 500)),
           }}
-          className={classes.text}
+          // className={classes.text}
+          sx={{
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+          }}
         />
       </Box>
     </DismissibleBanner>
