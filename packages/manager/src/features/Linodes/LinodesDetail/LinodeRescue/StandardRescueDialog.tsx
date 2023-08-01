@@ -1,4 +1,3 @@
-import { rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
@@ -13,9 +12,12 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { resetEventsPolling } from 'src/eventsPolling';
-import usePrevious from 'src/hooks/usePrevious';
+import { usePrevious } from 'src/hooks/usePrevious';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  useLinodeQuery,
+  useLinodeRescueMutation,
+} from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import createDevicesFromStrings, {
@@ -142,6 +144,8 @@ export const StandardRescueDialog = (props: Props) => {
     linodeDisks ?? []
   );
 
+  const { mutateAsync: rescueLinode } = useLinodeRescueMutation(linodeId ?? -1);
+
   const prevDeviceMap = usePrevious(deviceMap);
 
   const [counter, setCounter] = React.useState<number>(initialCounter);
@@ -173,7 +177,7 @@ export const StandardRescueDialog = (props: Props) => {
   const disabled = isReadOnly;
 
   const onSubmit = () => {
-    rescueLinode(linodeId ?? -1, createDevicesFromStrings(rescueDevices))
+    rescueLinode(createDevicesFromStrings(rescueDevices))
       .then((_) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',

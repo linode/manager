@@ -81,5 +81,3 @@ export const formatDateISO = (date: string) => {
 
   return time.toISO();
 };
-
-export default formatDate;

@@ -1,7 +1,6 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,25 +11,11 @@ import { TableRow } from 'src/components/TableRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
-import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  link: {
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-    },
-    color: theme.textColors.linkActiveLight,
-    display: 'block',
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
-  },
-}));
+import { FirewallActionMenu, ActionHandlers } from './FirewallActionMenu';
 
 export type Props = Firewall & ActionHandlers;
 
-export const FirewallRow = (props: Props) => {
-  const classes = useStyles();
-
+export const FirewallRow = React.memo((props: Props) => {
   const { id, label, rules, status, ...actionHandlers } = props;
 
   const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
@@ -43,9 +28,9 @@ export const FirewallRow = (props: Props) => {
       data-testid={`firewall-row-${id}`}
     >
       <TableCell>
-        <Link className={classes.link} tabIndex={0} to={`/firewalls/${id}`}>
+        <StyledLink tabIndex={0} to={`/firewalls/${id}`}>
           {label}
-        </Link>
+        </StyledLink>
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
@@ -58,7 +43,7 @@ export const FirewallRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <ActionMenu
+        <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}
           firewallStatus={status}
@@ -67,7 +52,17 @@ export const FirewallRow = (props: Props) => {
       </TableCell>
     </TableRow>
   );
-};
+});
+
+const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
+  '&:hover, &:focus': {
+    textDecoration: 'underline',
+  },
+  color: theme.textColors.linkActiveLight,
+  display: 'block',
+  fontSize: '.875rem',
+  lineHeight: '1.125rem',
+}));
 
 /**
  *
@@ -141,5 +136,3 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
     </>
   );
 };
-
-export default React.memo(FirewallRow);

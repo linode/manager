@@ -144,14 +144,15 @@ export const LinodeSelect = (
         renderOptionLabel ? renderOptionLabel(linode) : linode.label
       }
       noOptionsText={
-        <i>
-          {noOptionsMessage ??
-            getDefaultNoOptionsMessage(
+        noOptionsMessage ?? (
+          <i>
+            {getDefaultNoOptionsMessage(
               error,
               linodesDataLoading,
               filteredLinodes
             )}
-        </i>
+          </i>
+        )
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)

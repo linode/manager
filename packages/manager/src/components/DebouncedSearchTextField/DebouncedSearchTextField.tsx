@@ -5,7 +5,7 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField, TextFieldProps } from 'src/components/TextField';
-import usePrevious from 'src/hooks/usePrevious';
+import { usePrevious } from 'src/hooks/usePrevious';
 
 interface DebouncedSearchProps extends TextFieldProps {
   className?: string;

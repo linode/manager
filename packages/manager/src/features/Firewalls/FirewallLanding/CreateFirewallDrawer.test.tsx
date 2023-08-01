@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import CreateFirewallDrawer from './CreateFirewallDrawer';
+import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 
 const props = {
   onClose: jest.fn(),

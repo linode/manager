@@ -15,7 +15,7 @@ interface Props {
   selectedFirewallLabel: string;
 }
 
-const FirewallDialog = (props: Props) => {
+export const FirewallDialog = React.memo((props: Props) => {
   const {
     mode,
     onClose,
@@ -78,6 +78,4 @@ const FirewallDialog = (props: Props) => {
       Are you sure you want to {mode} this Firewall?
     </ConfirmationDialog>
   );
-};
-
-export default React.memo(FirewallDialog);
+});
