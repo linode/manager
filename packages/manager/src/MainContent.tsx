@@ -20,7 +20,7 @@ import withGlobalErrors, {
 import { useDialogContext } from 'src/context';
 import BackupDrawer from 'src/features/Backups';
 import { Footer } from 'src/features/Footer/Footer';
-import GlobalNotifications from 'src/features/GlobalNotifications';
+import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
   notificationContext,
   useNotificationContext,
@@ -28,8 +28,8 @@ import {
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-import useFlags from 'src/hooks/useFlags';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { usePreferences } from 'src/queries/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
@@ -328,6 +328,7 @@ const MainContent = (props: CombinedProps) => {
                               component={NodeBalancers}
                               path="/nodebalancers"
                             />
+                            {flags.vpc && <Route component={VPC} path="/vpc" />}
                             <Route component={Domains} path="/domains" />
                             <Route component={Managed} path="/managed" />
                             <Route component={Longview} path="/longview" />

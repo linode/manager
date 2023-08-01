@@ -7,11 +7,6 @@ import { PlanInformation } from './PlanInformation';
 
 import type { PlanInformationProps } from './PlanInformation';
 
-jest.mock('src/hooks/useFlags', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
-
 const mockProps: PlanInformationProps = {
   hasSelectedRegion: true,
   isSelectedRegionEligibleForPlan: false,

@@ -8,6 +8,7 @@ import RenderGuard from 'src/components/RenderGuard';
 import { Box, BoxProps } from '../Box';
 
 interface ActionButtonsProps extends ButtonProps {
+  'data-node-idx'?: number;
   'data-testid'?: string;
   label?: string;
 }

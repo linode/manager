@@ -10,7 +10,7 @@ import {
 import {
   headers,
   linkAnalyticsEvent,
-} from 'src/features/VPC/VPCEmptyStateData';
+} from 'src/features/VPC/VPCLanding/VPCEmptyStateData';
 import { sendEvent } from 'src/utilities/analytics';
 
 export const VPCEmptyState = () => {

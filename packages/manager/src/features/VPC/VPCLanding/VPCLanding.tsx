@@ -1,5 +1,6 @@
 import { VPC } from '@linode/api-v4/lib/vpcs/types';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -22,6 +23,7 @@ import { VPCEmptyState } from './VPCEmptyState';
 import { VPCRow } from './VPCRow';
 
 const preferenceKey = 'vpcs';
+const VPC_CREATE_ROUTE = 'vpc/create';
 
 const VPCLanding = () => {
   const pagination = usePagination(1, preferenceKey);
@@ -46,6 +48,12 @@ const VPCLanding = () => {
     filter
   );
 
+  const history = useHistory();
+
+  const createVPC = () => {
+    history.push(VPC_CREATE_ROUTE);
+  };
+
   if (error) {
     return (
       <ErrorState
@@ -69,8 +77,8 @@ const VPCLanding = () => {
       <ProductInformationBanner bannerLocation="VPC" important warning />
       <LandingHeader
         createButtonText="Create VPC"
-        docsLink="#"
-        onButtonClick={() => null}
+        docsLink="#" // TODO: VPC -  Add docs link
+        onButtonClick={createVPC}
         title="Virtual Private Cloud (VPC)"
       />
       <Table>
@@ -127,9 +135,7 @@ const VPCLanding = () => {
         </TableHead>
         <TableBody>
           {vpcs?.data.map((vpc: VPC) => {
-              return (
-                <VPCRow vpc={vpc} key={vpc.id} />
-              )
+            return <VPCRow key={vpc.id} vpc={vpc} />;
           })}
         </TableBody>
       </Table>
