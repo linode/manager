@@ -8,7 +8,7 @@ import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { fadeIn } from 'src/styles/keyframes';
 
 interface Props {

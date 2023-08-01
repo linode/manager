@@ -152,6 +152,7 @@ const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
+const VPC = React.lazy(() => import('src/features/VPC'));
 const StackScripts = React.lazy(() => import('src/features/StackScripts'));
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
@@ -327,6 +328,7 @@ const MainContent = (props: CombinedProps) => {
                               component={NodeBalancers}
                               path="/nodebalancers"
                             />
+                            {flags.vpc && <Route component={VPC} path="/vpc" />}
                             <Route component={Domains} path="/domains" />
                             <Route component={Managed} path="/managed" />
                             <Route component={Longview} path="/longview" />

@@ -9,7 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
