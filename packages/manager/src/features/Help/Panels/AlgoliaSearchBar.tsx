@@ -77,15 +77,16 @@ const AlgoliaSearchBar = (props: CombinedProps) => {
   }, [inputValue, searchResults]);
 
   const onInputValueChange = (inputValue: string) => {
+    setInputValue(inputValue);
     debouncedSearchAlgolia(inputValue);
   };
 
-  const debouncedSearchAlgolia = React.useRef(
-    debounce(100, false, (inputValue) => {
-      setInputValue(inputValue);
+  const debouncedSearchAlgolia = React.useCallback(
+    debounce(200, false, (inputValue: string) => {
       searchAlgolia(inputValue);
-    })
-  ).current;
+    }),
+    [searchAlgolia]
+  );
 
   const getLinkTarget = (inputValue: string) => {
     return inputValue
