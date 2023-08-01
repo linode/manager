@@ -19,14 +19,14 @@ import { generateCLICommand } from 'src/utilities/generate-cli';
 
 import CodeBlock from '../CodeBlock';
 
-export interface Props {
+export interface ApiAwarenessModalProps {
   isOpen: boolean;
   onClose: () => void;
   payLoad: CreateLinodeRequest;
   route: string;
 }
 
-const ApiAwarenessModal = (props: Props) => {
+export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const { isOpen, onClose, payLoad, route } = props;
 
   const theme = useTheme();
@@ -224,5 +224,3 @@ const ApiAwarenessModal = (props: Props) => {
     </Dialog>
   );
 };
-
-export default ApiAwarenessModal;

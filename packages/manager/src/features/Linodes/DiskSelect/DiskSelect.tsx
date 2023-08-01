@@ -15,8 +15,6 @@ interface Props {
   selectedDisk: null | string;
 }
 
-type CombinedProps = Props;
-
 const disksToOptions = (disks: Disk[]): Item<string>[] => {
   return disks.map((disk) => ({ label: disk.label, value: String(disk.id) }));
 };
@@ -32,7 +30,7 @@ const diskFromValue = (
   return thisDisk ? thisDisk : null;
 };
 
-const DiskSelect: React.FC<CombinedProps> = (props) => {
+const DiskSelect = (props: Props) => {
   const {
     disabled,
     diskError,
@@ -59,6 +57,7 @@ const DiskSelect: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props & RenderGuardProps>(RenderGuard)(
+// TODO is this necessary? don't think we are providing the 'updateFor' prop for it to check for rendering anyway
+export default compose<Props, Props & RenderGuardProps>(RenderGuard)(
   DiskSelect
 );

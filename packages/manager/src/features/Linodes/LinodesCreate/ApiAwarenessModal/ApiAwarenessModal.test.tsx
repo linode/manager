@@ -4,16 +4,16 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import ApiAwarenessModal, { Props } from '.';
+import { ApiAwarenessModal, ApiAwarenessModalProps } from './ApiAwarenessModal';
 
-const defaultProps: Props = {
+const defaultProps: ApiAwarenessModalProps = {
   isOpen: false,
   onClose: jest.fn(),
   payLoad: {},
   route: '',
 };
 
-const renderComponent = (overrideProps?: Partial<Props>) => {
+const renderComponent = (overrideProps?: Partial<ApiAwarenessModalProps>) => {
   const props = {
     ...defaultProps,
     ...overrideProps,

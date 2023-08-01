@@ -51,7 +51,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
-import ApiAwarenessModal from './ApiAwarenessModal';
+import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';

@@ -4,13 +4,13 @@ import * as React from 'react';
 import { extDisk3, swapDisk } from 'src/__data__/disks';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { Disks, Props } from './Disks';
+import Disks, { DisksProps } from './Disks';
 
 const disks = [extDisk3, swapDisk];
 
 const mockHandleSelect = jest.fn();
 
-const props: Props = {
+const props: DisksProps = {
   diskSelection: {
     18795181: { associatedConfigIds: [], isSelected: false },
     19040624: { associatedConfigIds: [9859511], isSelected: false },

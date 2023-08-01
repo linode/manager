@@ -37,7 +37,7 @@ interface Props {
   thisLinodeRegion: string;
 }
 
-export const Configs: React.FC<Props> = (props) => {
+export const Details = (props: Props) => {
   const {
     clearAll,
     currentLinodeId,
@@ -275,11 +275,9 @@ const StyledHeader = styled('header', { label: 'StyledHeader' })(
   })
 );
 
-const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
+const StyledDiv = styled('div', { label: 'StyledDiv' })({
   alignItems: 'center',
   display: 'flex',
   justifyContent: 'space-between',
   width: '100%',
-}));
-
-export default Configs;
+});
