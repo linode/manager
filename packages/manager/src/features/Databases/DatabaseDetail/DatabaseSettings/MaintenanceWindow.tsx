@@ -15,7 +15,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { useDatabaseMutation } from 'src/queries/databases';
 
