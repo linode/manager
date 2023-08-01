@@ -49,13 +49,6 @@ import { generateDefaultDomainRecords } from '../domainUtils';
 
 type DefaultRecordsType = 'linode' | 'nodebalancer' | 'none';
 
-interface FormState {
-  domain: string;
-  master_ips: string[];
-  soa_email: string;
-  type: DomainType;
-}
-
 export const CreateDomain = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -85,15 +78,13 @@ export const CreateDomain = () => {
     setSelectedDefaultNodeBalancer,
   ] = React.useState<NodeBalancer | undefined>(undefined);
 
-  const initialValues: FormState = {
-    domain: '',
-    master_ips: [''],
-    soa_email: '',
-    type: 'master' as DomainType,
-  };
-
   const formik = useFormik({
-    initialValues,
+    initialValues: {
+      domain: '',
+      master_ips: [''],
+      soa_email: '',
+      type: 'master' as DomainType,
+    },
     onSubmit: (values) => create(values),
     validateOnChange: true,
     validateOnMount: true,
@@ -345,7 +336,7 @@ export const CreateDomain = () => {
                 disabled={disabled}
                 label="SOA Email Address"
                 name={'soa_email'}
-                onBlur={(e) => handleTrimAndBlur<FormState>(e, formik)}
+                onBlur={(e) => handleTrimAndBlur(e, formik)}
                 onChange={formik.handleChange}
                 required
                 value={formik.values.soa_email}

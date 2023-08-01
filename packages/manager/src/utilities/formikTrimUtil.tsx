@@ -1,7 +1,7 @@
 import { FormikProps } from 'formik';
 
 export const handleTrimAndBlur = <T extends {}>(
-  e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>,
+  e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
   formikProps: FormikProps<T>
 ) => {
   // Trim the leading and trailing whitespace from this field.
