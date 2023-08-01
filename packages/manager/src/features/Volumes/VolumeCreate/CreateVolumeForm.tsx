@@ -368,7 +368,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       errorText={linodeError}
                       onBlur={handleBlur}
                       onSelectionChange={handleLinodeChange}
-                      value={values.linode_id === -1 ? null : values.linode_id}
+                      value={values.linode_id}
                     />
                     {renderSelectTooltip(
                       'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
