@@ -1,7 +1,6 @@
 import { updateAccountSettings } from '@linode/api-v4/lib';
 import { Linode, enableBackups } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as Bluebird from 'bluebird';
 import { isEmpty } from 'ramda';
 import { QueryClient } from 'react-query';
 import { Reducer } from 'redux';
@@ -12,6 +11,7 @@ import {
 } from 'src/queries/accountSettings';
 import { sendBackupsEnabledEvent } from 'src/utilities/analytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { reduceAsync } from 'src/utilities/reduceAsync';
 
 import { ThunkActionCreator } from '../types';
 
@@ -214,7 +214,7 @@ export default reducer;
  *
  * This magic is needed to accumulate errors from any failed requests, since
  * we need to enable backups for each Linode individually. The final response
- * will be available in the .then() handler for Bluebird.reduce (below), and has
+ * will be available in the .then() handler for reduceAsync (below), and has
  * the form:
  *
  * {
@@ -256,7 +256,7 @@ export const enableAllBackups: ThunkActionCreator<void, Linode[]> = (
   linodesWithoutBackups: Linode[]
 ) => (dispatch) => {
   dispatch(handleEnable());
-  Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, {
+  reduceAsync(linodesWithoutBackups, gatherResponsesAndErrors, {
     errors: [],
     success: [],
   })
