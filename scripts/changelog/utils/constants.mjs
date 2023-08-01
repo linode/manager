@@ -13,6 +13,7 @@ export const CHANGESET_TYPES = [
   "Changed",
   "Removed",
   "Tech Stories",
+  "Upcoming Features",
 ];
 export const OWNER = "linode";
 export const REPO = "manager";
