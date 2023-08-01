@@ -3,6 +3,7 @@ import { Theme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
@@ -57,28 +58,34 @@ type CombinedProps = AlgoliaProps & RouteComponentProps<{}>;
 const AlgoliaSearchBar = (props: CombinedProps) => {
   const { classes } = useStyles();
   const [inputValue, setInputValue] = React.useState('');
-  const { history, searchAlgolia, searchEnabled, searchError } = props;
+  const {
+    history,
+    searchAlgolia,
+    searchEnabled,
+    searchError,
+    searchResults,
+  } = props;
 
-  const [options, setOptions] = React.useState<Item[]>([]);
+  const options = React.useMemo(() => {
+    const [docs, community] = searchResults;
+    const mergedOptions = [...docs, ...community];
 
-  React.useEffect(() => {
-    const getOptionsFromResults = () => {
-      const [docs, community] = props.searchResults;
-      const options = [...docs, ...community];
-
-      return [
-        { data: { source: 'finalLink' }, label: inputValue, value: 'search' },
-        ...options,
-      ];
-    };
-
-    setOptions(getOptionsFromResults());
-  }, [inputValue, props.searchResults]);
+    return [
+      { data: { source: 'finalLink' }, label: inputValue, value: 'search' },
+      ...mergedOptions,
+    ];
+  }, [inputValue, searchResults]);
 
   const onInputValueChange = (inputValue: string) => {
-    setInputValue(inputValue);
-    searchAlgolia(inputValue);
+    debouncedSearchAlgolia(inputValue);
   };
+
+  const debouncedSearchAlgolia = React.useRef(
+    debounce(100, false, (inputValue) => {
+      setInputValue(inputValue);
+      searchAlgolia(inputValue);
+    })
+  ).current;
 
   const getLinkTarget = (inputValue: string) => {
     return inputValue

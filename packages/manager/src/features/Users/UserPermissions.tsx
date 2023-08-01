@@ -178,7 +178,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       if (updateFns.length) {
         this.setState((compose as any)(...updateFns));
       }
-      // return;
     }
   };
 

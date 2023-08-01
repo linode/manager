@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const PopularPosts: React.FC = () => {
+export const PopularPosts = () => {
   const classes = useStyles();
 
   const renderPopularDocs = () => {
