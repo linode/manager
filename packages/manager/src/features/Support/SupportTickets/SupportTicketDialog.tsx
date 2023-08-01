@@ -5,7 +5,6 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import * as Bluebird from 'bluebird';
 import { update } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
@@ -46,6 +45,7 @@ import SupportTicketSMTPFields, {
   smtpHelperText,
 } from './SupportTicketSMTPFields';
 import { Link } from 'src/components/Link';
+import { reduceAsync } from 'src/utilities/reduceAsync';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -352,7 +352,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setFiles(newFiles);
   };
 
-  /* Reducer passed into Bluebird.reduce() below.
+  /* Reducer passed into reduceAsync (previously Bluebird.reduce) below.
    * Unfortunately, this reducer has side effects. Uploads each file and accumulates a list of
    * any upload errors. Also tracks loading state of each individual file. */
   const attachFileReducer = (
@@ -410,7 +410,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
     /* Upload each file as an attachment, and return a Promise that will resolve to
      *  an array of aggregated errors that may have occurred for individual uploads. */
-    return Bluebird.reduce(filesWithTarget, attachFileReducer, {
+    return reduceAsync(filesWithTarget, attachFileReducer, {
       errors: [],
       success: [],
     });
