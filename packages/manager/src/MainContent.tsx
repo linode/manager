@@ -356,7 +356,9 @@ const MainContent = (props: CombinedProps) => {
                             {showDatabases ? (
                               <Route component={Databases} path="/databases" />
                             ) : null}
-                            <Route component={Betas} path="/betas" />
+                            {flags.betas ? (
+                              <Route component={Betas} path="/betas" />
+                            ) : null}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />
