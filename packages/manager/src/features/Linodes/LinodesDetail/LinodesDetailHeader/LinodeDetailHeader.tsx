@@ -240,6 +240,7 @@ const LinodeDetailHeader = () => {
       <DeleteLinodeDialog
         linodeId={matchedLinodeId}
         onClose={closeDialogs}
+        onSuccess={() => history.replace('/linodes')}
         open={deleteDialogOpen}
       />
       <LinodeResize
