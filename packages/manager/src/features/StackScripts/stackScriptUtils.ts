@@ -87,7 +87,7 @@ export const baseApps = {
   '869623': 'JetBackup',
   '912262': 'Harbor',
   '912264': 'Rocket.Chat',
-  // '913276': 'Wazuh', temporarily hide until OCA-1177 is addressed
+  '913276': 'Wazuh',
   '913277': 'BeEF',
   '923029': 'OpenLiteSpeed Django',
   '923030': 'OpenLiteSpeed Rails',
