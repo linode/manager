@@ -4,6 +4,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader/LandingHeader';
 
 const VPC_CREATE_ROUTE = 'vpc/create';
+
 const VPCLanding = () => {
   const history = useHistory();
 
