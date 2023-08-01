@@ -1,20 +1,11 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  section: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    marginBottom: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-}));
 
 interface Props {
   onClose: () => void;
@@ -23,7 +14,6 @@ interface Props {
 }
 
 export const ViewRangeDrawer = (props: Props) => {
-  const { classes } = useStyles();
   const { range } = props;
   const region = (range && range.region) || '';
 
@@ -39,23 +29,20 @@ export const ViewRangeDrawer = (props: Props) => {
     >
       {props.range && (
         <React.Fragment>
-          <div className={classes.section}>
+          <StyledDiv>
             <Typography variant="h3">IP Range</Typography>
             <Typography variant="body1">
               {props.range.range} / {props.range.prefix} routed to{' '}
               {props.range.route_target}
             </Typography>
-          </div>
+          </StyledDiv>
 
-          <div
-            className={classes.section}
-            style={{ border: 0, paddingBottom: 0 }}
-          >
+          <StyledDiv style={{ border: 0, paddingBottom: 0 }}>
             <Typography variant="h3">Region</Typography>
             <Typography variant="body1">
               {actualRegion?.label ?? region}
             </Typography>
-          </div>
+          </StyledDiv>
 
           <ActionsPanel
             secondaryButtonProps={{
@@ -69,3 +56,9 @@ export const ViewRangeDrawer = (props: Props) => {
     </Drawer>
   );
 };
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  marginBottom: theme.spacing(2),
+  paddingBottom: theme.spacing(2),
+}));

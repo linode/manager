@@ -1,9 +1,8 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { Theme } from '@mui/material/styles';
+import { styled, useTheme, Theme } from '@mui/material/styles';
 import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { Box } from 'src/components/Box';
@@ -25,32 +24,7 @@ import {
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  arrowIconDisabled: {
-    cursor: 'not-allowed',
-    fill: theme.color.grey1,
-  },
-  arrowIconForward: {
-    transform: 'rotate(180deg)',
-  },
-  arrowIconInner: {
-    fontSize: '1rem',
-  },
-  arrowIconOuter: {
-    ...theme.applyLinkStyles,
-    display: 'flex',
-  },
-  graphHeaderContainer: {
-    borderBottom: `1px solid ${theme.color.grey6}`,
-  },
-  loading: {
-    alignItems: 'center',
-    display: 'flex',
-    height: 100,
-    justifyContent: 'center',
-  },
-}));
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 interface Props {
   linodeCreated: string;
@@ -60,7 +34,7 @@ interface Props {
 export const TransferHistory: React.FC<Props> = (props) => {
   const { linodeCreated, linodeID } = props;
 
-  const { classes, cx } = useStyles();
+  const theme = useTheme();
 
   // Needed to see the user's timezone.
   const { data: profile } = useProfile();
@@ -153,9 +127,9 @@ export const TransferHistory: React.FC<Props> = (props) => {
   const renderStatsGraph = () => {
     if (statsLoading) {
       return (
-        <div className={classes.loading}>
+        <StyledDiv>
           <CircleProgress mini />
-        </div>
+        </StyledDiv>
       );
     }
 
@@ -205,12 +179,12 @@ export const TransferHistory: React.FC<Props> = (props) => {
     <div aria-label={graphAriaLabel} role="graphics-document" tabIndex={0}>
       <Box
         alignItems="center"
-        className={classes.graphHeaderContainer}
         display="flex"
         flexDirection="row"
         justifyContent="space-between"
         marginBottom="8px"
         paddingBottom="6px"
+        borderBottom={`1px solid ${theme.color.grey6}`}
       >
         <Typography>
           <strong>Network Transfer History ({unit}/s)</strong>
@@ -226,44 +200,62 @@ export const TransferHistory: React.FC<Props> = (props) => {
           flexDirection="row"
           justifyContent="space-between"
         >
-          <button
+          <StyledButton
             aria-label={`Show Network Transfer History for ${decrementLabel}`}
-            className={classes.arrowIconOuter}
             disabled={monthOffset === maxMonthOffset}
             onClick={decrementOffset}
           >
             <ArrowBackIosIcon
-              className={cx({
-                [classes.arrowIconDisabled]: monthOffset === maxMonthOffset,
-                [classes.arrowIconInner]: true,
-              })}
+              sx={{
+                ...(monthOffset === minMonthOffset
+                  ? sxArrowIconDisabled(theme)
+                  : {}),
+                fontSize: '1rem',
+              }}
             />
-          </button>
+          </StyledButton>
           {/* Give this a min-width so it doesn't change widths between displaying
           the month and "Last 30 Days" */}
           <span style={{ minWidth: 80, textAlign: 'center' }}>
             <Typography>{humanizedDate}</Typography>
           </span>
-          <button
+          <StyledButton
             aria-label={`Show Network Transfer History for ${incrementLabel}`}
-            className={classes.arrowIconOuter}
             disabled={monthOffset === minMonthOffset}
             onClick={incrementOffset}
           >
             <ArrowBackIosIcon
-              className={cx({
-                [classes.arrowIconDisabled]: monthOffset === minMonthOffset,
-                [classes.arrowIconForward]: true,
-                [classes.arrowIconInner]: true,
-              })}
+              sx={{
+                ...(monthOffset === minMonthOffset
+                  ? sxArrowIconDisabled(theme)
+                  : {}),
+                transform: 'rotate(180deg)',
+                fontSize: '1rem',
+              }}
             />
-          </button>
+          </StyledButton>
         </Box>
       </Box>
       {renderStatsGraph()}
     </div>
   );
 };
+
+const sxArrowIconDisabled = (theme: Theme) => ({
+  cursor: 'not-allowed',
+  fill: theme.color.grey1,
+});
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })({
+  alignItems: 'center',
+  display: 'flex',
+  height: 100,
+  justifyContent: 'center',
+});
+
+const StyledButton = styled(StyledLinkButton, { label: 'StyledButton' })({
+  display: 'flex',
+});
 
 export default React.memo(TransferHistory);
 

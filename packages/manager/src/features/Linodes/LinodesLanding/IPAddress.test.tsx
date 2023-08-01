@@ -8,19 +8,7 @@ const publicIP2 = '45.45.45.45';
 const privateIP = '192.168.220.103';
 const privateIP2 = '192.168.220.102';
 
-const classes = {
-  hide: 'hide',
-  icon: '',
-  ipLink: '',
-  multipleAddresses: '',
-  right: '',
-  root: '',
-  row: '',
-};
-
-const component = shallow(
-  <IPAddress classes={classes} ips={['8.8.8.8', '8.8.4.4']} />
-);
+const component = shallow(<IPAddress ips={['8.8.8.8', '8.8.4.4']} />);
 
 describe('IPAddress', () => {
   it('should render without error and display one IP address if showAll is false', () => {
@@ -43,12 +31,18 @@ describe('IPAddress', () => {
     expect(showmore.prop('items')).toEqual(['8.8.4.4']);
   });
 
-  it('should render the copy icon, but not show it if showCopyOnHover is true', () => {
-    expect(component.find('.hide')).toHaveLength(0);
-    component.setProps({ showCopyOnHover: true });
+  // TODO figure out this test !!!!!!!
+  it('should render the copy icon, but not show it if showTooltipOnIpHover is false', () => {
+    const icon = component.find('[data-testid]');
+    expect(icon).toHaveLength(1);
+    expect(icon.get(0).props.isIpHovered).toBe(false);
+    expect(icon.get(0).props.showTooltipOnIpHover).toBe(false);
+
+    component.setProps({ showTooltipOnIpHover: true });
     const copy = component.find('[data-qa-copy-ip]');
     expect(copy).toHaveLength(1);
-    expect(component.find('.hide')).toHaveLength(1);
+    const icon2 = component.find('[data-testid]');
+    expect(icon2.get(0).props.showTooltipOnIpHover).toBe(true);
   });
 
   describe('IP address sorting', () => {

@@ -1,7 +1,6 @@
 import { Notification } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { SxProps } from '@mui/system';
-import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -32,12 +31,16 @@ import { LinodeActionMenu } from '../LinodeActionMenu';
 import { LinodeHandlers } from '../LinodesLanding';
 import RegionIndicator from '../RegionIndicator';
 import { parseMaintenanceStartTime } from '../utils';
-import { useStyles } from './LinodeRow.style';
+import {
+  StyledButton,
+  StyledLink,
+  StyledIpTableCell,
+  StyledMaintenanceTableCell,
+} from './LinodeRow.style';
 
 type Props = Linode & { handlers: LinodeHandlers };
 
 export const LinodeRow = (props: Props) => {
-  const classes = useStyles();
   const { backups, handlers, id, ipv4, label, region, status, type } = props;
 
   const notificationContext = React.useContext(_notificationContext);
@@ -76,9 +79,9 @@ export const LinodeRow = (props: Props) => {
       <>
         This Linode&rsquo;s maintenance window opens at{' '}
         {parsedMaintenanceStartTime}. For more information, see your{' '}
-        <Link className={classes.statusLink} to="/support/tickets?type=open">
+        <StyledLink to="/support/tickets?type=open">
           open support tickets.
-        </Link>
+        </StyledLink>
       </>
     );
   };
@@ -90,23 +93,33 @@ export const LinodeRow = (props: Props) => {
       ? 'inactive'
       : 'other';
 
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const handleMouseEnter = React.useCallback(() => {
+    setIsHovered(true);
+  }, []);
+
+  const handleMouseLeave = React.useCallback(() => {
+    setIsHovered(false);
+  }, []);
+
   return (
     <TableRow
       ariaLabel={label}
-      className={classes.bodyRow}
       data-qa-linode={label}
       data-qa-loading
       key={id}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      sx={{ height: 'auto' }}
     >
       <TableCell noWrap>
         <Link tabIndex={0} to={`/linodes/${id}`}>
           {label}
         </Link>
       </TableCell>
-      <TableCell
-        className={classNames({
-          [classes.statusCellMaintenance]: Boolean(maintenance),
-        })}
+      <StyledMaintenanceTableCell
+        maintenance={Boolean(maintenance)}
         data-qa-status
         statusCell
       >
@@ -114,16 +127,13 @@ export const LinodeRow = (props: Props) => {
           loading ? (
             <>
               <StatusIcon status={iconStatus} />
-              <button
-                className={classes.statusLink}
-                onClick={notificationContext.openMenu}
-              >
+              <StyledButton onClick={notificationContext.openMenu}>
                 <ProgressDisplay
-                  className={classes.progressDisplay}
                   progress={getProgressOrDefault(recentEvent)}
+                  sx={{ display: 'inline-block' }}
                   text={transitionText(status, id, recentEvent)}
                 />
-              </button>
+              </StyledButton>
             </>
           ) : (
             <>
@@ -132,10 +142,10 @@ export const LinodeRow = (props: Props) => {
             </>
           )
         ) : (
-          <div className={classes.maintenanceOuter}>
+          <div style={{ alignItems: 'center', display: 'flex' }}>
             <strong>Maintenance Scheduled</strong>
             <TooltipIcon
-              classes={{ tooltip: classes.maintenanceTooltip }}
+              sx={{ tooltip: { maxWidth: 300 } }}
               interactive
               status="help"
               text={<MaintenanceText />}
@@ -143,14 +153,14 @@ export const LinodeRow = (props: Props) => {
             />
           </div>
         )}
-      </TableCell>
+      </StyledMaintenanceTableCell>
       <Hidden smDown>
         <TableCell noWrap>
           {linodeType ? formatStorageUnits(linodeType.label) : type}
         </TableCell>
-        <TableCell className={classes.ipCellWrapper} data-qa-ips>
-          <IPAddress ips={ipv4} />
-        </TableCell>
+        <StyledIpTableCell data-qa-ips>
+          <IPAddress ips={ipv4} isHovered={isHovered} />
+        </StyledIpTableCell>
         <Hidden lgDown>
           <TableCell data-qa-region>
             <RegionIndicator region={region} />
@@ -172,7 +182,6 @@ export const LinodeRow = (props: Props) => {
           mutationAvailable={
             linodeType !== undefined && linodeType?.successor !== null
           }
-          classes={classes}
           linodeNotifications={linodeNotifications}
         />
         <LinodeActionMenu
@@ -191,7 +200,6 @@ export const LinodeRow = (props: Props) => {
 };
 
 export const RenderFlag: React.FC<{
-  classes: any;
   linodeNotifications: Notification[];
   mutationAvailable: boolean;
 }> = (props) => {
@@ -200,12 +208,12 @@ export const RenderFlag: React.FC<{
    * or if it has a pending mutation available. Mutations take
    * precedent over notifications
    */
-  const { classes, linodeNotifications, mutationAvailable } = props;
+  const { linodeNotifications, mutationAvailable } = props;
 
   if (mutationAvailable) {
     return (
       <Tooltip title="There is a free upgrade available for this Linode">
-        <Flag className={classes.flag} />
+        <Flag />
       </Tooltip>
     );
   }
@@ -215,7 +223,7 @@ export const RenderFlag: React.FC<{
       <>
         {linodeNotifications.map((notification, idx) => (
           <Tooltip key={idx} title={notification.message}>
-            <Flag className={classes.flag} />
+            <Flag />
           </Tooltip>
         ))}
       </>

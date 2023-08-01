@@ -1,7 +1,5 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -16,12 +14,7 @@ import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  migrationLink: {
-    ...theme.applyLinkStyles,
-  },
-}));
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 interface Props {
   linodeID: number;
@@ -32,7 +25,6 @@ interface Props {
 }
 
 const MigrationNotification: React.FC<Props> = (props) => {
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -124,12 +116,9 @@ const MigrationNotification: React.FC<Props> = (props) => {
             ? migrationScheduledText()
             : notificationMessage}
           {` `}
-          <button
-            className={classes.migrationLink}
-            onClick={() => openDialog(linodeID)}
-          >
+          <StyledLinkButton onClick={() => openDialog(linodeID)}>
             {capitalize(migrationActionDescription)}
-          </button>
+          </StyledLinkButton>
           .
         </Typography>
       </Notice>

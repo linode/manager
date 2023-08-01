@@ -1,5 +1,3 @@
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
 import copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
@@ -8,84 +6,53 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
-type CSSClasses =
-  | 'hide'
-  | 'icon'
-  | 'ipLink'
-  | 'multipleAddresses'
-  | 'right'
-  | 'root'
-  | 'row';
+import {
+  StyledCopyTooltip,
+  StyledIpLinkDiv,
+  StyledRenderIPDiv,
+  StyledRootDiv,
+} from './IPAddress.styles';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    hide: {
-      '&:focus': {
-        opacity: 1,
-      },
-      [theme.breakpoints.up('md')]: {
-        // Hide until the component is hovered,
-        // when props.showCopyOnHover is true (only on desktop)
-        opacity: 0,
-      },
-      transition: theme.transitions.create(['opacity']),
-    },
-    icon: {
-      '& svg': {
-        height: 12,
-        top: 1,
-        width: 12,
-      },
-    },
-    ipLink: {
-      color: theme.palette.primary.main,
-      display: 'inline-block',
-      position: 'relative',
-      top: -1,
-      transition: theme.transitions.create(['color']),
-    },
-    multipleAddresses: {
-      '&:not(:last-child)': {
-        marginBottom: theme.spacing(0.5),
-      },
-    },
-    right: {
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'center',
-      marginLeft: theme.spacing(0.5),
-    },
-    root: {
-      '&:hover': {
-        '& $hide': {
-          opacity: 1,
-        },
-      },
-      '&:last-child': {
-        marginBottom: 0,
-      },
-      marginBottom: theme.spacing(0.5),
-      maxWidth: '100%',
-      width: '100%',
-    },
-    row: {
-      alignItems: 'flex-start',
-      display: 'flex',
-      width: '100%',
-    },
-  });
-
-interface Props {
+export interface IPAddressProps {
+  /**
+   * Conditional handlers to be applied to the IP wrapper div when `showTooltipOnIpHover` is true.
+   * @default undefined
+   */
+  handlers?: {
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+  };
+  /**
+   * The IP addresses to be displayed.
+   * default []
+   */
   ips: string[];
+  /**
+   * If true, the IP address copy icon will be displayed when the row is hovered.
+   * @default false
+   */
+  isHovered?: boolean;
+  /**
+   * If true, all IP addresses will be displayed.
+   * @default false
+   */
   showAll?: boolean;
-  showCopyOnHover?: boolean;
+  /**
+   * If true, additional IP addresses will be displayed via a ShowMore component within a tooltip.
+   * @default false
+   */
   showMore?: boolean;
+  /**
+   * If true, the IP address copy icon will only be displayed when hovering over the IP address.
+   * @default false
+   */
+  showTooltipOnIpHover?: boolean;
 }
 
 export const sortIPAddress = (ip1: string, ip2: string) =>
   (privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1);
 
-export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
+export class IPAddress extends React.Component<IPAddressProps> {
   componentWillUnmount() {
     if (this.copiedTimeout !== null) {
       window.clearTimeout(this.copiedTimeout);
@@ -93,14 +60,14 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   }
 
   render() {
-    const { classes, ips, showAll, showMore } = this.props;
+    const { ips, showAll, showMore } = this.props;
 
     const formattedIPS = ips
       .map((ip) => ip.replace('/64', ''))
       .sort(sortIPAddress);
 
     return (
-      <div className={`${!showAll && 'dif'} ${classes.root}`}>
+      <StyledRootDiv showAll={showAll}>
         {!showAll
           ? this.renderIP(formattedIPS[0])
           : formattedIPS.map((a, i) => {
@@ -119,7 +86,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
             items={tail(formattedIPS)}
           />
         )}
-      </div>
+      </StyledRootDiv>
     );
   }
 
@@ -133,36 +100,61 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
 
   copiedTimeout: null | number = null;
 
+  handleMouseEnter = () => {
+    this.setState({
+      isIpTooltipHovered: true,
+    });
+  };
+
+  handleMouseLeave = () => {
+    this.setState({
+      isIpTooltipHovered: false,
+    });
+  };
+
   renderCopyIcon = (ip: string) => {
-    const { classes, showCopyOnHover } = this.props;
+    const { isHovered = false, showTooltipOnIpHover = false } = this.props;
+    const { isIpTooltipHovered } = this.state;
 
     return (
-      <div className={`${classes.ipLink}`} data-qa-copy-ip>
-        <CopyTooltip
-          className={`${classes.icon} ${showCopyOnHover ? classes.hide : ''}
-            ${classes.right} copy`}
+      <StyledIpLinkDiv data-qa-copy-ip>
+        <StyledCopyTooltip
+          data-testid={`styled-copytooltip`}
+          isHovered={isHovered}
+          isIpHovered={isIpTooltipHovered}
+          showTooltipOnIpHover={showTooltipOnIpHover}
           text={ip}
         />
-      </div>
+      </StyledIpLinkDiv>
     );
   };
 
   renderIP = (ip: string, key?: number) => {
-    const { classes, showAll } = this.props;
+    const { showTooltipOnIpHover = false } = this.props;
+
+    const handlers = showTooltipOnIpHover
+      ? {
+          onMouseEnter: this.handleMouseEnter,
+          onMouseLeave: this.handleMouseLeave,
+        }
+      : undefined;
+
     return (
-      <div
-        className={`${classes.row} ${showAll && classes.multipleAddresses}`}
-        key={key}
+      <StyledRenderIPDiv
+        {...handlers}
+        key={`${key}-${ip}`}
+        showTooltipOnIpHover={showTooltipOnIpHover}
       >
         <CopyTooltip copyableText data-qa-copy-ip-text text={ip} />
         {this.renderCopyIcon(ip)}
-      </div>
+      </StyledRenderIPDiv>
     );
   };
 
   state = {
     copied: false,
+    isIpTooltipHovered: false,
   };
 }
 
-export default withStyles(styles)(IPAddress);
+export default IPAddress;

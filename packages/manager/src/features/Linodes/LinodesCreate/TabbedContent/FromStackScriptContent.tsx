@@ -1,11 +1,9 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
+import { StyledGrid } from './CommonTabbedContent.styles';
 import { assocPath, equals } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import ImageSelect from 'src/components/ImageSelect';
 import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
@@ -23,24 +21,6 @@ import {
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 
-type ClassNames = 'emptyImagePanel' | 'emptyImagePanelText' | 'main';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    emptyImagePanel: {
-      padding: theme.spacing(3),
-    },
-    emptyImagePanelText: {
-      marginTop: theme.spacing(1),
-      padding: `${theme.spacing(1)} 0`,
-    },
-    main: {
-      [theme.breakpoints.up('md')]: {
-        maxWidth: '100%',
-      },
-    },
-  });
-
 interface Props {
   category: 'account' | 'community';
   header: string;
@@ -57,19 +37,16 @@ const errorResources = {
   type: 'A plan selection',
 };
 
-type InnerProps = Props &
+export type CombinedProps = Props &
   ReduxStateProps &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
-
-export type CombinedProps = InnerProps & WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
   render() {
     const {
       availableStackScriptImages: compatibleImages,
       availableUserDefinedFields: userDefinedFields,
-      classes,
       errors,
       header,
       imagesData,
@@ -91,7 +68,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Grid className={`${classes.main} mlMain py0`} data-qa-panel={header}>
+        <StyledGrid data-qa-panel={header}>
           <SelectStackScriptPanel
             category={this.props.category}
             data-qa-select-stackscript
@@ -134,12 +111,9 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               variant={showAllImages ? 'all' : 'public'}
             />
           ) : (
-            <ImageEmptyState
-              className={classes.emptyImagePanel}
-              errorText={hasErrorFor('image')}
-            />
+            <StyledImageEmptyState errorText={hasErrorFor('image')} />
           )}
-        </Grid>
+        </StyledGrid>
 
         <StackScriptDialog />
       </React.Fragment>
@@ -201,8 +175,10 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
   };
 }
 
-const styled = withStyles(styles);
+const StyledImageEmptyState = styled(ImageEmptyState, {
+  label: 'StyledImageEmptyState',
+})(({ theme }) => ({
+  padding: theme.spacing(3),
+}));
 
-export default compose<CombinedProps, InnerProps>(styled)(
-  FromStackScriptContent
-);
+export default FromStackScriptContent;
