@@ -56,6 +56,7 @@ export const CreateFirewallDrawer = React.memo(
       handleChange,
       handleSubmit,
       isSubmitting,
+      resetForm,
       setFieldValue,
       status,
       values,
@@ -110,6 +111,12 @@ export const CreateFirewallDrawer = React.memo(
       validateOnChange: false,
       validationSchema: CreateFirewallSchema,
     });
+
+    React.useEffect(() => {
+      if (open) {
+        resetForm();
+      }
+    }, [open]);
 
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');

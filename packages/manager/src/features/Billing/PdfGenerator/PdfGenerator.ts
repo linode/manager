@@ -11,7 +11,7 @@ import { splitEvery } from 'ramda';
 import { ADDRESSES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet, TaxDetail } from 'src/featureFlags';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import AkamaiLogo from './akamai-logo.png';

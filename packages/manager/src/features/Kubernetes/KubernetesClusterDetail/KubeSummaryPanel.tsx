@@ -13,7 +13,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Paper } from 'src/components/Paper';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
