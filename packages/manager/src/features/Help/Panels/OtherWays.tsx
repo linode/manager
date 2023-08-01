@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import Community from 'src/assets/icons/community.svg';
 import Documentation from 'src/assets/icons/document.svg';
@@ -10,25 +9,21 @@ import Support from 'src/assets/icons/support.svg';
 import { Tile } from 'src/components/Tile/Tile';
 import { Typography } from 'src/components/Typography';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  heading: {
-    marginBottom: theme.spacing(4),
-    textAlign: 'center',
-  },
-  wrapper: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
 export const OtherWays = () => {
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   return (
     <React.Fragment>
-      <Typography className={classes.heading} variant="h2">
+      <Typography
+        sx={{
+          marginBottom: theme.spacing(4),
+          textAlign: 'center',
+        }}
+        variant="h2"
+      >
         Other Ways to Get Help
       </Typography>
-      <Grid className={classes.wrapper} container spacing={2}>
+      <Grid container spacing={2} sx={{ marginTop: theme.spacing(2) }}>
         <Grid sm={6} xs={12}>
           <Tile
             description="View Linode and Linux guides and tutorials for all experience levels."
