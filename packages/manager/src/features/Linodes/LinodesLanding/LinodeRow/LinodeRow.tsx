@@ -3,6 +3,7 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { VPC } from '@linode/api-v4';
 
 import Flag from 'src/assets/icons/flag.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
@@ -22,8 +23,8 @@ import { notificationContext as _notificationContext } from 'src/features/Notifi
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useTypeQuery } from 'src/queries/types';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useFlags } from 'src/hooks/useFlags';
+import { useVPCsQuery } from 'src/queries/vpcs';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -55,8 +56,15 @@ export const LinodeRow = (props: Props) => {
     { status: { '+or': ['pending, started'] } }
   );
 
-  const { data: configsData } = useAllLinodeConfigsQuery(id);
-  console.log("linodeId: ", id, "configData: ", configsData);
+  // TODO: VPC - currently the only way to know what VPC a linode is associated with is to get all
+  // vpcs, and then loop through each vpc's subnets, and then through each of the subnets' linode IDs
+  // to see if that subnet contains this linode id. There is some discussion about an endpoint
+  // that will directly get vpcs associated with a linode ID, and if that happens, we can
+  // replace this query
+  // Can also put react query this in Linodes/index instead, so that getting all vpcs is only done once
+  // (but if react query caches the data from this call it should be ok either way?)
+  const { data: vpcs } = useVPCsQuery({}, {});
+  const vpc = findAssociatedVPC(vpcs?.data ?? [], id);
 
   const maintenance = accountMaintenanceData?.find(
     (m) => m.entity.id === id && m.entity.type === 'linode'
@@ -172,15 +180,17 @@ export const LinodeRow = (props: Props) => {
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
-        {flags.vpc && 
-        (<Hidden lgDown>
-          <TableCell>
-            {/* TODO once we get the interfaces from the linodes configs data, what do we put here? */}
-            {/* <Link tabIndex={0} to={`/linodes/${id}`}>
-              {label}
-            </Link> */}
-          </TableCell>
-        </Hidden>)}
+        {flags.vpc && (
+          <Hidden lgDown>
+            <TableCell>
+              {vpc && (
+                <Link tabIndex={0} to={`/vpc/${vpc.id}`}>
+                  {vpc.label}
+                </Link>
+              )}
+            </TableCell>
+          </Hidden>
+        )}
       </Hidden>
       <Hidden lgDown>
         <TableCell>
@@ -212,6 +222,18 @@ export const LinodeRow = (props: Props) => {
       </TableCell>
     </TableRow>
   );
+};
+
+const findAssociatedVPC = (vpcs: VPC[], linodeId: number) => {
+  for (const vpc of vpcs) {
+    for (const subnet of vpc.subnets) {
+      if (subnet.linodes.includes(linodeId)) {
+        return vpc;
+      }
+    }
+  }
+
+  return undefined;
 };
 
 export const RenderFlag: React.FC<{
