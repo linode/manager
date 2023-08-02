@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 
-import { PlansAvailabilityNotice } from '../PlansAvailabilityNotice';
+import { PlansAvailabilityNotice } from '../../Linodes/LinodesCreate/PlansAvailabilityNotice';
 import { MetalNotice } from './MetalNotice';
 import { planTabInfoContent } from './utils';
 
