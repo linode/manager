@@ -7,7 +7,7 @@ import { InputLabel } from './InputLabel';
 
 const meta: Meta<typeof InputLabel> = {
   component: InputLabel,
-  title: 'Components/Form/InputLabel',
+  title: 'Components/Input/InputLabel',
 };
 
 type Story = StoryObj<typeof InputLabel>;

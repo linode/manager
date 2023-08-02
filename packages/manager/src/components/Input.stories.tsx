@@ -5,7 +5,7 @@ import { Input } from './Input';
 
 const meta: Meta<typeof Input> = {
   component: Input,
-  title: 'Components/Form/Input',
+  title: 'Components/Input',
 };
 
 type Story = StoryObj<typeof Input>;

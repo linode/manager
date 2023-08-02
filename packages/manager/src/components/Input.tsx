@@ -6,7 +6,8 @@ export type InputProps = _InputProps;
 /**
  * An `<Input />` accepts user input.
  *
- * > ⚠️ Currently not widely used. We prefer `<TextField />` throughout the app.
+ * > ⚠️ Use with caution. We prefer `<TextField />` throughout the app. `<TextField />` uses
+ * > this same Input under the hood.
  */
 export const Input = (props: InputProps) => {
   return <_Input {...props} />;
