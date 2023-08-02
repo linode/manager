@@ -30,6 +30,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
+// import { usePrevious } from 'src/hooks/usePrevious';
 import { ApplicationState } from 'src/store';
 import {
   BackupError,
@@ -150,6 +151,7 @@ export const BackupDrawer = (props: CombinedProps) => {
   };
 
   const prevProps = React.useRef(props);
+  // const prevLinodesData = usePrevious(linodesData);
 
   const updateRequestedTypes = () => {
     setRequestedTypes(
@@ -197,6 +199,7 @@ all new Linodes will automatically be backed up.`
       prevProps.current = props;
     }
   }, [enableSuccess, linodesWithoutBackups(linodesData)]);
+  // }, [enableSuccess, linodesWithoutBackups(linodesData)]);
 
   const handleSubmit = () => {
     if (accountSettings.data?.backups_enabled) {
