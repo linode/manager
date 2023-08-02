@@ -11,6 +11,7 @@ import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
 import { array, object, string } from 'yup';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { Typography } from 'src/components/Typography';
 import Form from 'src/components/core/Form';
@@ -37,7 +38,6 @@ import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
-import VolumesActionsPanel from './VolumesActionsPanel';
 import { modes } from './modes';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -248,15 +248,30 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
             <PricePanel currentSize={10} value={values.size} />
 
-            <VolumesActionsPanel
-              onCancel={() => {
-                resetForm();
-                onClose();
-              }}
-              disabled={disabled}
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-              submitText="Create Volume"
+            <ActionsPanel
+              primaryButtonProps={
+                handleSubmit
+                  ? {
+                      'data-testid': 'submit',
+                      disabled,
+                      label: 'Create Volume',
+                      loading: isSubmitting,
+                      onClick: () => handleSubmit(),
+                    }
+                  : undefined
+              }
+              secondaryButtonProps={
+                onClose
+                  ? {
+                      'data-testid': 'cancel',
+                      label: 'Cancel',
+                      onClick: () => {
+                        resetForm();
+                        onClose();
+                      },
+                    }
+                  : undefined
+              }
             />
           </Form>
         );

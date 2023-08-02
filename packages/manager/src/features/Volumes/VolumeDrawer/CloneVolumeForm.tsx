@@ -2,6 +2,7 @@ import { CloneVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Typography } from 'src/components/Typography';
 import Form from 'src/components/core/Form';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -15,7 +16,6 @@ import {
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
-import VolumesActionsPanel from './VolumesActionsPanel';
 
 interface Props {
   onClose: () => void;
@@ -89,14 +89,29 @@ export const CloneVolumeForm = (props: Props) => {
               value={values.label}
             />
             <PricePanel currentSize={volumeSize} value={volumeSize} />
-            <VolumesActionsPanel
-              onCancel={() => {
-                resetForm();
-                onClose();
-              }}
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-              submitText="Clone Volume"
+            <ActionsPanel
+              primaryButtonProps={
+                handleSubmit
+                  ? {
+                      'data-testid': 'submit',
+                      label: 'Clone Volume',
+                      loading: isSubmitting,
+                      onClick: () => handleSubmit(),
+                    }
+                  : undefined
+              }
+              secondaryButtonProps={
+                onClose
+                  ? {
+                      'data-testid': 'cancel',
+                      label: 'Cancel',
+                      onClick: () => {
+                        resetForm();
+                        onClose();
+                      },
+                    }
+                  : undefined
+              }
             />
           </Form>
         );

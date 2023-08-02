@@ -5,6 +5,7 @@ import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
 import { number, object } from 'yup';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import Form from 'src/components/core/Form';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -21,7 +22,6 @@ import { ConfigSelect } from './ConfigSelect';
 import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import VolumeSelect from './VolumeSelect';
-import VolumesActionsPanel from './VolumesActionsPanel';
 import { modes } from './modes';
 
 interface Props {
@@ -147,16 +147,30 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
               onChange={(id) => setFieldValue('config_id', id)}
               value={values.config_id}
             />
-
-            <VolumesActionsPanel
-              onCancel={() => {
-                resetForm();
-                onClose();
-              }}
-              disabled={disabled}
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-              submitText="Attach Volume"
+            <ActionsPanel
+              primaryButtonProps={
+                handleSubmit
+                  ? {
+                      'data-testid': 'submit',
+                      disabled,
+                      label: 'Attach Volume',
+                      loading: isSubmitting,
+                      onClick: () => handleSubmit(),
+                    }
+                  : undefined
+              }
+              secondaryButtonProps={
+                onClose
+                  ? {
+                      'data-testid': 'cancel',
+                      label: 'Cancel',
+                      onClick: () => {
+                        resetForm();
+                        onClose();
+                      },
+                    }
+                  : undefined
+              }
             />
           </Form>
         );

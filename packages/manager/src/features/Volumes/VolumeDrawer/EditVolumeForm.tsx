@@ -2,6 +2,7 @@ import { UpdateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateVolumeMutation } from 'src/queries/volumes';
@@ -12,7 +13,6 @@ import {
 
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
-import VolumesActionsPanel from './VolumesActionsPanel';
 
 interface Props {
   onClose: () => void;
@@ -105,16 +105,30 @@ export const EditVolumeForm = (props: Props) => {
         onChange={(selected) => setFieldValue('tags', selected)}
         value={values.tags}
       />
-
-      <VolumesActionsPanel
-        onCancel={() => {
-          resetForm();
-          onClose();
-        }}
-        disabled={readOnly || !dirty}
-        isSubmitting={isSubmitting}
-        onSubmit={handleSubmit}
-        submitText="Save Changes"
+      <ActionsPanel
+        primaryButtonProps={
+          handleSubmit
+            ? {
+                'data-testid': 'submit',
+                disabled: readOnly || !dirty,
+                label: 'Save Changes',
+                loading: isSubmitting,
+                onClick: () => handleSubmit(),
+              }
+            : undefined
+        }
+        secondaryButtonProps={
+          onClose
+            ? {
+                'data-testid': 'cancel',
+                label: 'Cancel',
+                onClick: () => {
+                  resetForm();
+                  onClose();
+                },
+              }
+            : undefined
+        }
       />
     </form>
   );

@@ -2,6 +2,7 @@ import { ResizeVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import Form from 'src/components/core/Form';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -14,7 +15,6 @@ import {
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
-import VolumesActionsPanel from './VolumesActionsPanel';
 
 interface Props {
   onClose: () => void;
@@ -107,15 +107,30 @@ export const ResizeVolumeForm = (props: Props) => {
               value={values.size}
             />
             <PricePanel currentSize={volumeSize} value={values.size} />
-            <VolumesActionsPanel
-              onCancel={() => {
-                resetForm();
-                onClose();
-              }}
-              disabled={readOnly}
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-              submitText="Resize Volume"
+            <ActionsPanel
+              primaryButtonProps={
+                handleSubmit
+                  ? {
+                      'data-testid': 'submit',
+                      disabled: readOnly,
+                      label: 'Resize Volume',
+                      loading: isSubmitting,
+                      onClick: () => handleSubmit(),
+                    }
+                  : undefined
+              }
+              secondaryButtonProps={
+                onClose
+                  ? {
+                      'data-testid': 'cancel',
+                      label: 'Cancel',
+                      onClick: () => {
+                        resetForm();
+                        onClose();
+                      },
+                    }
+                  : undefined
+              }
             />
           </Form>
         );
