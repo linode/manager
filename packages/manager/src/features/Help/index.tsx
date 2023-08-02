@@ -19,7 +19,7 @@ const SupportTicketDetail = React.lazy(
   () => import('src/features/Support/SupportTicketDetail')
 );
 
-const HelpAndSupport = () => {
+export const HelpAndSupport = () => {
   return (
     <>
       <StatusBanners />
@@ -46,5 +46,3 @@ const HelpAndSupport = () => {
     </>
   );
 };
-
-export default HelpAndSupport;
