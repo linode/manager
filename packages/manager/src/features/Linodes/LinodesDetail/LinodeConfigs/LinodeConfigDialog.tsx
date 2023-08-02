@@ -27,7 +27,7 @@ import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import FormGroup from 'src/components/core/FormGroup';
 import FormHelperText from 'src/components/core/FormHelperText';
 import FormLabel from 'src/components/core/FormLabel';
