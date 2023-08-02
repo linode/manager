@@ -162,8 +162,11 @@ const SupportTicketDetail = React.lazy(
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed'));
-const Help = React.lazy(() => import('src/features/Help'));
-
+const Help = React.lazy(() =>
+  import('./features/Help/index').then((module) => ({
+    default: module.HelpAndSupport,
+  }))
+);
 const SearchLanding = React.lazy(() => import('src/features/Search'));
 const EventsLanding = React.lazy(
   () => import('src/features/Events/EventsLanding')
