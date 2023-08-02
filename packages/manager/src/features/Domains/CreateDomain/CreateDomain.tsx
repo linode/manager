@@ -78,7 +78,7 @@ export const CreateDomain = () => {
     setSelectedDefaultNodeBalancer,
   ] = React.useState<NodeBalancer | undefined>(undefined);
 
-  const formik = useFormik({
+  const { values, ...formik } = useFormik({
     initialValues: {
       domain: '',
       master_ips: [''],
@@ -107,8 +107,8 @@ export const CreateDomain = () => {
   const generalError = formik.status?.generalError || errorMap.none;
   const primaryIPsError = formik.errors.master_ips;
 
-  const isCreatingPrimaryDomain = formik.values.type === 'master';
-  const isCreatingSecondaryDomain = formik.values.type === 'slave';
+  const isCreatingPrimaryDomain = values.type === 'master';
+  const isCreatingSecondaryDomain = values.type === 'slave';
 
   const redirect = (id: '' | number, state?: Record<string, string>) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
@@ -175,7 +175,7 @@ export const CreateDomain = () => {
          *
          * This only applies to master domains.
          */
-        if (formik.values.type === 'master') {
+        if (values.type === 'master') {
           if (defaultRecordsSetting.value === 'linode') {
             return generateDefaultDomainRecords(
               domainData.domain,
@@ -296,7 +296,7 @@ export const CreateDomain = () => {
               name="type"
               onChange={updateType}
               row
-              value={formik.values.type}
+              value={values.type}
             >
               <FormControlLabel
                 control={<Radio />}
@@ -324,7 +324,7 @@ export const CreateDomain = () => {
               onBlur={() => formik.setFieldTouched('domain')}
               onChange={formik.handleChange}
               required
-              value={formik.values.domain}
+              value={values.domain}
             />
             {isCreatingPrimaryDomain && (
               <TextField
@@ -339,7 +339,7 @@ export const CreateDomain = () => {
                 onBlur={(e) => handleTrimAndBlur(e, formik)}
                 onChange={formik.handleChange}
                 required
-                value={formik.values.soa_email}
+                value={values.soa_email}
               />
             )}
             {isCreatingSecondaryDomain && (
@@ -349,7 +349,7 @@ export const CreateDomain = () => {
                     ? (primaryIPsError as string | undefined)
                     : undefined
                 }
-                ips={formik.values.master_ips.map(stringToExtendedIP)}
+                ips={values.master_ips.map(stringToExtendedIP)}
                 onChange={updatePrimaryIPAddress}
                 required
                 title="Primary Nameserver IP Address"
