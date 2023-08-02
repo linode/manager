@@ -1,7 +1,6 @@
 import { IPv6Prefix } from '@linode/api-v4/lib/networking';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -11,28 +10,13 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
-import FormControlLabel from 'src/components/core/FormControlLabel';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
   useAllocateIPMutation,
   useCreateIPv6RangeMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  copy: {
-    marginTop: theme.spacing(2),
-  },
-  ipSubheader: {
-    marginTop: '1rem',
-  },
-  ipv6: {
-    marginTop: theme.spacing(4),
-  },
-  radioButtons: {
-    marginTop: '0 !important',
-  },
-}));
 
 type IPType = 'v4Private' | 'v4Public';
 
@@ -96,7 +80,7 @@ interface Props {
 
 const AddIPDrawer = (props: Props) => {
   const { linodeId, onClose, open, readOnly } = props;
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   const {
     error: ipv4Error,
@@ -184,15 +168,15 @@ const AddIPDrawer = (props: Props) => {
         {Boolean(ipv4Error) && (
           <Notice error spacingTop={8} text={ipv4Error?.[0].reason} />
         )}
-        <Typography className={classes.ipSubheader} variant="h3">
+        <Typography sx={{ marginTop: '1rem' }} variant="h3">
           Select type
         </Typography>
         <RadioGroup
           aria-label="ip-option"
-          className={classes.radioButtons}
           data-qa-ip-options-radio-group
           name="Select IPv4 type"
           onChange={handleIPv4Change}
+          sx={{ marginTop: '0 !important' }}
           value={selectedIPv4}
         >
           {ipOptions.map((option, idx) => (
@@ -206,7 +190,7 @@ const AddIPDrawer = (props: Props) => {
           ))}
         </RadioGroup>
         {selectedIPv4 && (
-          <Typography className={classes.copy} variant="body1">
+          <Typography sx={{ marginTop: theme.spacing(2) }} variant="body1">
             {explainerCopy[selectedIPv4]}
           </Typography>
         )}
@@ -236,21 +220,21 @@ const AddIPDrawer = (props: Props) => {
             }}
           />
         )}
-        <Typography className={classes.ipv6} variant="h2">
+        <Typography sx={{ marginTop: theme.spacing(4) }} variant="h2">
           IPv6
         </Typography>
         {Boolean(ipv6Error) && (
           <Notice error spacingTop={8} text={ipv6Error?.[0].reason} />
         )}
-        <Typography className={classes.ipSubheader} variant="h3">
+        <Typography sx={{ marginTop: '1rem' }} variant="h3">
           Select prefix
         </Typography>
         <RadioGroup
           aria-label="prefix-option"
-          className={classes.radioButtons}
           data-qa-ip-options-radio-group
           name="Select prefix"
           onChange={handleIPv6Change}
+          sx={{ marginTop: '0 !important' }}
           value={selectedIPv6Prefix}
         >
           {prefixOptions.map((option, idx) => (

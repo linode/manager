@@ -4,16 +4,13 @@ import {
   rebuildLinode,
 } from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
@@ -32,24 +29,11 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 
-import { StyledNotice } from './RebuildFromImage.styles';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  actionPanel: {
-    '& button': {
-      alignSelf: 'flex-end',
-    },
-    justifyContent: 'flex-start',
-    marginTop: 0,
-    paddingTop: 0,
-  },
-  error: {
-    marginTop: theme.spacing(2),
-  },
-  root: {
-    paddingTop: theme.spacing(3),
-  },
-}));
+import {
+  StyledActionsPanel,
+  StyledGrid,
+  StyledNotice,
+} from './RebuildFromImage.styles';
 
 interface Props {
   disabled: boolean;
@@ -88,7 +72,6 @@ export const RebuildFromImage = (props: Props) => {
 
   const { data: preferences } = usePreferences();
 
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
 
@@ -225,7 +208,7 @@ export const RebuildFromImage = (props: Props) => {
           );
 
         return (
-          <Grid className={classes.root}>
+          <StyledGrid>
             <form>
               <ImageSelect
                 handleSelectImage={(selected) =>
@@ -296,18 +279,17 @@ export const RebuildFromImage = (props: Props) => {
                   value={confirmationText}
                   visible={preferences?.type_to_confirm}
                 />
-                <ActionsPanel
+                <StyledActionsPanel
                   primaryButtonProps={{
                     'data-testid': 'rebuild-button',
                     disabled: submitButtonDisabled || disabled,
                     label: 'Rebuild Linode',
                     onClick: handleRebuildButtonClick,
                   }}
-                  className={classes.actionPanel}
                 />
               </Grid>
             </form>
-          </Grid>
+          </StyledGrid>
         );
       }}
     </Formik>
