@@ -137,17 +137,19 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
                   Region
                 </TableSortCell>
               </Hidden>
-              {flags.vpc && 
-              (<Hidden lgDown>
-                <TableSortCell 
-                  active={isActive('vpc')}
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  label="vpc"
-                >
-                  VPC
-                </TableSortCell>
-              </Hidden>)}
+              {flags.vpc && ( // do we this to still show up even if isVlan is true?
+                <Hidden lgDown>
+                  <TableSortCell
+                    // TODO: VPC - figure out the orderBy (cannot use label, as that will order via linode label)
+                    active={isActive('vpc')}
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="vpc"
+                  >
+                    VPC
+                  </TableSortCell>
+                </Hidden>
+              )}
             </Hidden>
             <Hidden lgDown>
               <TableSortCell

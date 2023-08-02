@@ -64,6 +64,7 @@ export const LinodeRow = (props: Props) => {
   // Can also put react query this in Linodes/index instead, so that getting all vpcs is only done once
   // (but if react query caches the data from this call it should be ok either way?)
   const { data: vpcs } = useVPCsQuery({}, {});
+  // query is paginated -- does not passing in any params mean that it will get all vpcs?
   const vpc = findAssociatedVPC(vpcs?.data ?? [], id);
 
   const maintenance = accountMaintenanceData?.find(
@@ -228,6 +229,8 @@ const findAssociatedVPC = (vpcs: VPC[], linodeId: number) => {
   for (const vpc of vpcs) {
     for (const subnet of vpc.subnets) {
       if (subnet.linodes.includes(linodeId)) {
+        // a linode should have only one vpc associated with it (?) so we can
+        // short circuit once we find the associated vpc
         return vpc;
       }
     }
