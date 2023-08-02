@@ -15,7 +15,7 @@ type Story = StoryObj<typeof FormHelperText>;
 
 export const Default: Story = {
   args: {
-    children: 'You label must be unique',
+    children: 'Your label must be unique',
     sx: { marginX: 0 },
   },
   render: (args) => (
