@@ -172,7 +172,7 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
-const Betas = React.lazy(() => import('src/features/Betas'));
+const Betas = React.lazy(() => import('src/features/Betas/BetasLanding'));
 
 const MainContent = (props: CombinedProps) => {
   const { classes, cx } = useStyles();
