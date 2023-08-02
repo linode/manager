@@ -1,6 +1,7 @@
 import { FormLabel, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { isOSMac } from 'src/App';
 import { Code } from 'src/components/Code/Code';
@@ -21,14 +22,18 @@ import { PreferenceEditor } from './PreferenceEditor';
 
 export const ProfileSettings = () => {
   const theme = useTheme();
-  const [
-    preferenceEditorOpen,
-    setPreferenceEditorOpen,
-  ] = React.useState<boolean>(
-    Boolean(
-      getQueryParamFromQueryString(window.location.search, 'preferenceEditor')
-    )
+  const location = useLocation();
+  const history = useHistory();
+
+  const preferenceEditorOpen = Boolean(
+    getQueryParamFromQueryString(location.search, 'preferenceEditor')
   );
+
+  const handleClosePreferenceEditor = () => {
+    const queryParams = new URLSearchParams(location.search);
+    queryParams.delete('preferenceEditor');
+    history.replace({ search: queryParams.toString() });
+  };
 
   const { data: profile } = useProfile();
   const { isLoading, mutateAsync: updateProfile } = useMutateProfile();
@@ -67,12 +72,6 @@ export const ProfileSettings = () => {
           }`}
           disabled={isLoading}
         />
-        {preferenceEditorOpen && (
-          <PreferenceEditor
-            onClose={() => setPreferenceEditorOpen(false)}
-            open={preferenceEditorOpen}
-          />
-        )}
       </Paper>
       <Paper>
         <FormControl sx={{ marginTop: 0 }}>
@@ -123,6 +122,10 @@ export const ProfileSettings = () => {
           }`}
         />
       </Paper>
+      <PreferenceEditor
+        onClose={handleClosePreferenceEditor}
+        open={preferenceEditorOpen}
+      />
     </Stack>
   );
 };
