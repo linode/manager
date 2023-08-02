@@ -1,4 +1,4 @@
-import { FormLabel } from '@mui/material';
+import { FormLabel, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -45,9 +45,9 @@ export const ProfileSettings = () => {
   const areEmailNotificationsEnabled = profile?.email_notifications === true;
 
   return (
-    <>
+    <Stack spacing={2}>
       <DocumentTitleSegment segment="My Settings" />
-      <Paper sx={{ marginTop: theme.spacing(2) }}>
+      <Paper>
         <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
           Notifications
         </Typography>
@@ -74,8 +74,8 @@ export const ProfileSettings = () => {
           />
         )}
       </Paper>
-      <Paper sx={{ marginTop: theme.spacing(2) }}>
-        <FormControl>
+      <Paper>
+        <FormControl sx={{ marginTop: 0 }}>
           <FormLabel>
             <Typography variant="h2">Theme</Typography>
           </FormLabel>
@@ -101,7 +101,7 @@ export const ProfileSettings = () => {
           </RadioGroup>
         </FormControl>
       </Paper>
-      <Paper sx={{ marginTop: theme.spacing(2) }}>
+      <Paper>
         <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
           Type-to-Confirm
         </Typography>
@@ -123,7 +123,7 @@ export const ProfileSettings = () => {
           }`}
         />
       </Paper>
-    </>
+    </Stack>
   );
 };
 
