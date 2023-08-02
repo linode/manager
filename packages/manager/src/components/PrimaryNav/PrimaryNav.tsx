@@ -178,6 +178,7 @@ export const PrimaryNav = (props: Props) => {
           hide: !flags.vpc,
           href: '/vpc',
           icon: <VPC />,
+          isBeta: true,
         },
         {
           display: 'Firewalls',
