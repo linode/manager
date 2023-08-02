@@ -1,18 +1,16 @@
 import { Config } from '@linode/api-v4/lib/linodes';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
-  useAllLinodeConfigsQuery,
   useBootLinodeMutation,
   useLinodeQuery,
   useRebootLinodeMutation,
@@ -20,26 +18,6 @@ import {
 } from 'src/queries/linodes/linodes';
 
 export type Action = 'Power Off' | 'Power On' | 'Reboot';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  dialog: {
-    '& .dialog-content': {
-      paddingBottom: 0,
-      paddingTop: 0,
-    },
-  },
-  notice: {
-    '& .noticeText': {
-      fontSize: '0.875rem !important',
-    },
-  },
-  root: {
-    alignItems: 'center',
-    fontSize: '0.875rem',
-    lineHeight: '1.25rem',
-    marginBottom: theme.spacing(1.25),
-  },
-}));
 
 interface Props {
   action: Action;
@@ -61,7 +39,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
 
 export const PowerActionsDialog = (props: Props) => {
   const { action, isOpen, linodeId, onClose } = props;
-  const classes = useStyles();
+  const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -148,23 +126,35 @@ export const PowerActionsDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={props.onClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" loading={isLoading} onClick={onSubmit}>
-            {props.action} Linode
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: `${props.action} Linode`,
+            loading: isLoading,
+            onClick: onSubmit,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
+        />
       }
-      className={classes.dialog}
       error={error?.[0].reason}
       onClose={onClose}
       open={isOpen}
+      sx={{
+        '& .dialog-content': {
+          paddingBottom: 0,
+          paddingTop: 0,
+        },
+      }}
       title={`${action} Linode ${linode?.label ?? ''}?`}
     >
       {props.action === 'Power On' ? (
-        <Typography className={classes.root}>
+        <Typography
+          sx={{
+            alignItems: 'center',
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+            marginBottom: theme.spacing(1.25),
+          }}
+        >
           See the&nbsp;
           <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/">
             guide for setting up and securing a compute instance
@@ -185,7 +175,14 @@ export const PowerActionsDialog = (props: Props) => {
       )}
       {props.action === 'Power Off' && (
         <span>
-          <Notice className={classes.notice} warning>
+          <Notice
+            sx={{
+              '& .noticeText': {
+                fontSize: '0.875rem !important',
+              },
+            }}
+            warning
+          >
             <strong>Note: </strong>
             Powered down Linodes will still accrue charges.
             <br />

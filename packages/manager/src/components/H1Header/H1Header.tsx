@@ -18,12 +18,6 @@ export const H1Header = (props: H1HeaderProps) => {
   const h1Header = React.useRef<HTMLDivElement>(null);
   const { className, dataQaEl, renderAsSecondary, sx, title } = props;
 
-  // React.useEffect(() => {
-  //   if (h1Header.current !== null) {
-  //     h1Header.current.focus();
-  //   }
-  // }, []);
-
   return (
     <Typography
       sx={{

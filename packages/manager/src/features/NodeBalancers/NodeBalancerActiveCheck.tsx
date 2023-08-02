@@ -5,7 +5,7 @@ import Select from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import FormHelperText from 'src/components/core/FormHelperText';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 
 import { setErrorMap } from './utils';
 

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { reportException } from 'src/exceptionReporting';
 import { ProductInformationBannerLocation } from 'src/featureFlags';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import { isAfter } from 'src/utilities/date';
 
 import DismissibleBanner from '../DismissibleBanner';

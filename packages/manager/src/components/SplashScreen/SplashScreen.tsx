@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
+import { useFeatureFlagsLoad } from 'src/hooks/useFeatureFlagLoad';
 import { MapState } from 'src/store/types';
 import { srSpeak } from 'src/utilities/accessibility';
 

@@ -15,14 +15,15 @@ import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
+import VPC from 'src/assets/icons/entityIcons/vpc.svg';
 import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Divider } from 'src/components/Divider';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-import useFlags from 'src/hooks/useFlags';
-import usePrefetch from 'src/hooks/usePreFetch';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { usePrefetch } from 'src/hooks/usePreFetch';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -52,6 +53,7 @@ type NavEntity =
   | 'NodeBalancers'
   | 'Object Storage'
   | 'StackScripts'
+  | 'VPC'
   | 'Volumes';
 
 interface PrimaryLink {
@@ -173,6 +175,13 @@ export const PrimaryNav = (props: Props) => {
           icon: <NodeBalancer />,
         },
         {
+          display: 'VPC',
+          hide: !flags.vpc,
+          href: '/vpc',
+          icon: <VPC />,
+          isBeta: true,
+        },
+        {
           display: 'Firewalls',
           href: '/firewalls',
           icon: <Firewall />,
@@ -254,6 +263,7 @@ export const PrimaryNav = (props: Props) => {
         },
       ],
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       showDatabases,
       _isManagedAccount,
@@ -261,6 +271,7 @@ export const PrimaryNav = (props: Props) => {
       allowMarketplacePrefetch,
       flags.databaseBeta,
       flags.aglb,
+      flags.vpc,
     ]
   );
 

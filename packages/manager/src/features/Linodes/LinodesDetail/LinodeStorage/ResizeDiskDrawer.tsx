@@ -1,13 +1,11 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import { ResizeLinodeDiskSchema } from '@linode/validation';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Code } from 'src/components/Code/Code';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
@@ -15,7 +13,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
 import FormHelperText from 'src/components/core/FormHelperText';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeDisksQuery,
@@ -26,13 +24,6 @@ import { sendEvent } from 'src/utilities/analytics';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { calculateDiskFree } from './CreateDiskDrawer';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  formHelperTextLink: {
-    display: 'block',
-    marginTop: theme.spacing(1),
-  },
-}));
 
 export interface Props {
   disk: Disk | undefined;
@@ -51,8 +42,6 @@ const handleLinkClick = (label: string) => {
 
 export const ResizeDiskDrawer = (props: Props) => {
   const { disk, linodeId, onClose, open } = props;
-
-  const classes = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -107,17 +96,16 @@ export const ResizeDiskDrawer = (props: Props) => {
         <FormHelperText>
           The size of a Linode Compute Instance&rsquo;s disk can be increased or
           decreased as needed.
-          <Link
+          <StyledLink
             onClick={() => {
               handleLinkClick('Learn more about restrictions to keep in mind.');
             }}
             to={
               'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
             }
-            className={classes.formHelperTextLink}
           >
             Learn more about restrictions to keep in mind.
-          </Link>
+          </StyledLink>
         </FormHelperText>
         <TextField
           InputProps={{
@@ -145,19 +133,15 @@ export const ResizeDiskDrawer = (props: Props) => {
             tooltipText={MaxSizeTooltipText}
           />
         </FormHelperText>
-        <ActionsPanel>
-          <Button buttonType="secondary" className="cancel" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-testid="submit-disk-form"
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Resize
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit-disk-form',
+            label: 'Resize',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       </form>
     </Drawer>
   );
@@ -187,3 +171,8 @@ const MaxSizeTooltipText = (
     ).
   </>
 );
+
+const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
+  display: 'block',
+  marginTop: theme.spacing(1),
+}));

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useDisableTwoFactorMutation } from 'src/queries/profile';
@@ -35,19 +34,19 @@ export const DisableTwoFactorDialog = (props: Props) => {
   }, [open]);
 
   const actions = (
-    <ActionsPanel>
-      <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-submit
-        loading={isLoading}
-        onClick={handleDisableTFA}
-      >
-        Disable Two-factor Authentication
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'submit',
+        label: 'Disable Two-factor Authentication',
+        loading: isLoading,
+        onClick: handleDisableTFA,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
+    />
   );
 
   return (

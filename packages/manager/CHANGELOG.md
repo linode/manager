@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-07-28] - v1.98.1
+
+### Fixed:
+
+- Region Select order ([#9466](https://github.com/linode/manager/pull/9466))
+- Backups Drawer missing plans and prices ([#9466](https://github.com/linode/manager/pull/9466))
+
 ## [2023-07-24] - v1.98.0
 
 ### Added:

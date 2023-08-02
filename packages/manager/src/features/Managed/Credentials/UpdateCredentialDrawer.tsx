@@ -2,8 +2,7 @@ import { CredentialPayload } from '@linode/api-v4/lib/managed';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -82,16 +81,14 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                 value={values.label}
               />
 
-              <ActionsPanel>
-                <Button
-                  buttonType="primary"
-                  data-qa-submit
-                  loading={isSubmitting}
-                  onClick={() => handleSubmit()}
-                >
-                  Update label
-                </Button>
-              </ActionsPanel>
+              <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'submit',
+                  label: 'Update label',
+                  loading: isSubmitting,
+                  onClick: () => handleSubmit(),
+                }}
+              />
             </form>
           </>
         )}
@@ -164,16 +161,14 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                   value={values.password}
                 />
               </React.Suspense>
-              <ActionsPanel>
-                <Button
-                  buttonType="primary"
-                  data-qa-submit
-                  loading={isSubmitting}
-                  onClick={() => handleSubmit()}
-                >
-                  Update credentials
-                </Button>
-              </ActionsPanel>
+              <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'submit',
+                  label: 'Update credentials',
+                  loading: isSubmitting,
+                  onClick: () => handleSubmit(),
+                }}
+              />
             </form>
           </div>
         )}

@@ -129,6 +129,7 @@ export type ProductInformationBannerLocation =
   | 'NodeBalancers'
   | 'Object Storage'
   | 'StackScripts'
+  | 'VPC'
   | 'Volumes';
 
 export interface ProductInformationBannerFlag {
