@@ -2,7 +2,6 @@ import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { Checkbox } from './Checkbox';
-import { FormControl } from './FormControl';
 import { FormControlLabel } from './FormControlLabel';
 import { FormGroup } from './FormGroup';
 
@@ -11,7 +10,7 @@ const meta: Meta<typeof FormGroup> = {
   title: 'Components/Form/FormGroup',
 };
 
-type Story = StoryObj<typeof FormControl>;
+type Story = StoryObj<typeof FormGroup>;
 
 export const Default: Story = {
   args: {
@@ -21,7 +20,7 @@ export const Default: Story = {
       <FormControlLabel control={<Checkbox />} key="3" label="Image" />,
     ],
   },
-  render: (args) => <FormControl {...args} />,
+  render: (args) => <FormGroup {...args} />,
 };
 
 export default meta;
