@@ -56,8 +56,9 @@ describe('object storage failure paths', () => {
       );
     });
 
-    // Confirm that error appears upon mouse hover of affected file in upload drop zone.
+    // Confirm that error indicator appears, and that error tooltip is shown upon hover.
     cy.wait(['@uploadBucketObject']);
+    cy.get('[data-qa-file-upload-error]').should('be.visible');
     cy.findByText(bucketFilename).should('be.visible').trigger('mouseover');
     cy.findByText('Error uploading object. Click to retry.').should(
       'be.visible'
