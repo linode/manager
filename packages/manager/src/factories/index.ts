@@ -36,10 +36,12 @@ export * from './promotionalOffer';
 export * from './regions';
 export * from './stackscripts';
 export * from './statusPage';
+export * from './subnets';
 export * from './support';
 export * from './tags';
 export * from './volume';
 export * from './vlans';
+export * from './vpcs';
 
 // Convert factory output to our itemsById pattern
 export const normalizeEntities = (entities: any[]) => {
