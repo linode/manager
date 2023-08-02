@@ -15,7 +15,7 @@ interface Props extends OptionProps<any, any> {
   searchText: string;
 }
 
-const SearchItem: React.FC<Props> = (props) => {
+export const SearchItem = (props: Props) => {
   const getLabel = () => {
     if (isFinal) {
       return props.label ? `Search for "${props.label}"` : 'Search';
@@ -62,5 +62,3 @@ const SearchItem: React.FC<Props> = (props) => {
     </Option>
   );
 };
-
-export default SearchItem;
