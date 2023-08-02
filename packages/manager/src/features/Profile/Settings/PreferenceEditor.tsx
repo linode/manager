@@ -1,18 +1,16 @@
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import {
-  DialogProps as _DialogProps,
-  Dialog,
-} from 'src/components/Dialog/Dialog';
+import { Dialog, DialogProps } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
-type DialogProps = Pick<_DialogProps, 'onClose' | 'open'>;
+type Props = Pick<DialogProps, 'onClose' | 'open'>;
 
-const PreferenceEditor: React.FC<DialogProps> = (props) => {
+export const PreferenceEditor = (props: Props) => {
   const { refetch: refetchPreferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences(true);
 
@@ -80,22 +78,22 @@ const PreferenceEditor: React.FC<DialogProps> = (props) => {
             fontFamily: '"Ubuntu Mono", monospace"',
             height: 300,
             marginTop: 16,
-            width: 400,
+            width: '100%',
           }}
           onChange={(e) => setUserPrefs(e.target.value)}
           value={userPrefs}
         ></textarea>
       </div>
-      <Button
-        buttonType="primary"
-        loading={submitting}
-        onClick={handleSavePreferences}
-        style={{ marginTop: 8 }}
-      >
-        Submit
-      </Button>
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          buttonType="primary"
+          loading={submitting}
+          onClick={handleSavePreferences}
+          sx={{ marginTop: 1 }}
+        >
+          Save
+        </Button>
+      </Box>
     </Dialog>
   );
 };
-
-export default PreferenceEditor;
