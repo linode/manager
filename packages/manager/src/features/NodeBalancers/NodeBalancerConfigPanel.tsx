@@ -408,44 +408,37 @@ export const NodeBalancerConfigPanel = (
           </Grid>
         </Grid>
       </Grid>
-
-      {(forEdit || configIdx !== 0) && (
-        <React.Fragment>
-          <Grid xs={12}>
-            <Divider />
-          </Grid>
-          <Grid
-            alignItems="center"
-            container
-            justifyContent="flex-end"
-            spacing={2}
-          >
-            <StyledActionsPanel
-              primaryButtonProps={
-                forEdit
-                  ? {
-                      'data-testid': 'save-config',
-                      disabled,
-                      label: 'Save',
-                      loading: submitting,
-                      onClick: onSave,
-                    }
-                  : undefined
-              }
-              secondaryButtonProps={
-                forEdit || configIdx !== 0
-                  ? {
-                      'data-testid': 'delete-config',
-                      disabled,
-                      label: 'Delete',
-                      onClick: props.onDelete,
-                    }
-                  : undefined
-              }
-            />
-          </Grid>
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        <Grid xs={12}>
+          <Divider />
+        </Grid>
+        <Grid
+          alignItems="center"
+          container
+          justifyContent="flex-end"
+          spacing={2}
+        >
+          <StyledActionsPanel
+            primaryButtonProps={
+              forEdit
+                ? {
+                    'data-testid': 'save-config',
+                    disabled,
+                    label: 'Save',
+                    loading: submitting,
+                    onClick: onSave,
+                  }
+                : undefined
+            }
+            secondaryButtonProps={{
+              'data-testid': 'delete-config',
+              disabled,
+              label: 'Delete',
+              onClick: props.onDelete,
+            }}
+          />
+        </Grid>
+      </React.Fragment>
     </Grid>
   );
 };
