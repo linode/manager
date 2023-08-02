@@ -219,6 +219,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '& .react-select__single-value': {
       color: theme.palette.text.primary,
       overflow: 'hidden',
+      padding: '8px 0',
     },
     '& .react-select__value-container': {
       '& > div': {
