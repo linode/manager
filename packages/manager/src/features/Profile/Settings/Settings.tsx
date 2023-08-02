@@ -1,5 +1,4 @@
 import { FormLabel } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -37,6 +36,14 @@ export const ProfileSettings = () => {
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
+  // Type-to-confirm is enabled by default (no preference is set)
+  // or if the user explicitly enables it.
+  const isTypeToConfirmEnabled =
+    preferences?.type_to_confirm === undefined ||
+    preferences?.type_to_confirm === true;
+
+  const areEmailNotificationsEnabled = profile?.email_notifications === true;
+
   return (
     <>
       <DocumentTitleSegment segment="My Settings" />
@@ -44,28 +51,22 @@ export const ProfileSettings = () => {
         <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
           Notifications
         </Typography>
-        <Grid alignItems="center" container>
-          <Grid xs={12}>
-            <FormControlLabel
-              control={
-                <Toggle
-                  onChange={(_, checked) =>
-                    updateProfile({
-                      email_notifications: checked,
-                    })
-                  }
-                  checked={profile?.email_notifications ?? false}
-                />
+        <FormControlLabel
+          control={
+            <Toggle
+              onChange={(_, checked) =>
+                updateProfile({
+                  email_notifications: checked,
+                })
               }
-              label={`
-                Email alerts for account activity are ${
-                  profile?.email_notifications === true ? 'enabled' : 'disabled'
-                }
-              `}
-              disabled={isLoading}
+              checked={areEmailNotificationsEnabled}
             />
-          </Grid>
-        </Grid>
+          }
+          label={`Email alerts for account activity are ${
+            areEmailNotificationsEnabled ? 'enabled' : 'disabled'
+          }`}
+          disabled={isLoading}
+        />
         {preferenceEditorOpen && (
           <PreferenceEditor
             onClose={() => setPreferenceEditorOpen(false)}
@@ -74,43 +75,31 @@ export const ProfileSettings = () => {
         )}
       </Paper>
       <Paper sx={{ marginTop: theme.spacing(2) }}>
-        <Grid alignItems="center" container>
-          <Grid xs={12}>
-            <FormControl>
-              <FormLabel>
-                <Typography variant="h2">Theme</Typography>
-              </FormLabel>
-              <Typography variant="body1">
-                You may toggle your theme with the keyboard shortcut{' '}
-                {ThemeKeyboardShortcut}.
-              </Typography>
-              <RadioGroup
-                onChange={(e) =>
-                  updatePreferences({ theme: e.target.value as ThemeChoice })
-                }
-                row
-                style={{ marginBottom: 0 }}
-                value={preferences?.theme ?? 'system'}
-              >
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Light"
-                  value="light"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Dark"
-                  value="dark"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="System"
-                  value="system"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
+        <FormControl>
+          <FormLabel>
+            <Typography variant="h2">Theme</Typography>
+          </FormLabel>
+          <Typography variant="body1">
+            You may toggle your theme with the keyboard shortcut{' '}
+            {ThemeKeyboardShortcut}.
+          </Typography>
+          <RadioGroup
+            onChange={(e) =>
+              updatePreferences({ theme: e.target.value as ThemeChoice })
+            }
+            row
+            style={{ marginBottom: 0 }}
+            value={preferences?.theme ?? 'system'}
+          >
+            <FormControlLabel control={<Radio />} label="Light" value="light" />
+            <FormControlLabel control={<Radio />} label="Dark" value="dark" />
+            <FormControlLabel
+              control={<Radio />}
+              label="System"
+              value="system"
+            />
+          </RadioGroup>
+        </FormControl>
       </Paper>
       <Paper sx={{ marginTop: theme.spacing(2) }}>
         <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
@@ -120,23 +109,19 @@ export const ProfileSettings = () => {
           For some products and services, the type-to-confirm setting requires
           entering the label before deletion.
         </Typography>
-        <Grid alignItems="center" container>
-          <Grid xs={12}>
-            <FormControlLabel
-              control={
-                <Toggle
-                  onChange={(_, checked) =>
-                    updatePreferences({ type_to_confirm: checked })
-                  }
-                  checked={preferences?.type_to_confirm ?? false}
-                />
+        <FormControlLabel
+          control={
+            <Toggle
+              onChange={(_, checked) =>
+                updatePreferences({ type_to_confirm: checked })
               }
-              label={`Type-to-confirm is ${
-                preferences?.type_to_confirm ? 'enabled' : 'disabled'
-              }`}
+              checked={isTypeToConfirmEnabled}
             />
-          </Grid>
-        </Grid>
+          }
+          label={`Type-to-confirm is ${
+            isTypeToConfirmEnabled ? 'enabled' : 'disabled'
+          }`}
+        />
       </Paper>
     </>
   );
