@@ -4,7 +4,7 @@ import { Box } from 'src/components/Box';
 import Select from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { FormHelperText } from 'src/components/FormHelperText';
 
 export const StyledCodeSentMessageBox = styled(Box, {
   label: 'StyledCodeSentMessageBox',
