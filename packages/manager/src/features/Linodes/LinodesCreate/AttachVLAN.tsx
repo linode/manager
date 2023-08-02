@@ -31,9 +31,7 @@ interface Props {
   vlanLabel: string;
 }
 
-type CombinedProps = Props;
-
-const AttachVLAN: React.FC<CombinedProps> = (props) => {
+export const AttachVLAN = React.memo((props: Props) => {
   const {
     handleVLANChange,
     helperText,
@@ -120,6 +118,4 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
       </Grid>
     </Paper>
   );
-};
-
-export default React.memo(AttachVLAN);
+});

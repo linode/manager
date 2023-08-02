@@ -44,7 +44,8 @@ import { Paper } from 'src/components/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
-import PlansPanel, {
+import {
+  PlansPanel,
   PlanSelectionType,
 } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';

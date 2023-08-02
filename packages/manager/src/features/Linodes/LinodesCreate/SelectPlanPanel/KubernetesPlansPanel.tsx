@@ -35,24 +35,26 @@ interface Props {
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 
-export const KubernetesPlansPanel = ({
-  copy,
-  currentPlanHeading,
-  disabled,
-  error,
-  getTypeCount,
-  hasSelectedRegion,
-  header,
-  isPlanPanelDisabled,
-  isSelectedRegionEligibleForPlan,
-  onAdd,
-  onSelect,
-  regionsData,
-  resetValues,
-  selectedID,
-  types,
-  updatePlanCount,
-}: Props) => {
+export const KubernetesPlansPanel = (props: Props) => {
+  const {
+    copy,
+    currentPlanHeading,
+    disabled,
+    error,
+    getTypeCount,
+    hasSelectedRegion,
+    header,
+    isPlanPanelDisabled,
+    isSelectedRegionEligibleForPlan,
+    onAdd,
+    onSelect,
+    regionsData,
+    resetValues,
+    selectedID,
+    types,
+    updatePlanCount,
+  } = props;
+
   const plans = getPlanSelectionsByPlanType(types);
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
@@ -102,5 +104,3 @@ export const KubernetesPlansPanel = ({
     />
   );
 };
-
-export default KubernetesPlansPanel;

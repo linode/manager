@@ -15,7 +15,7 @@ import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 
-import AppInfo from '../../Linodes/LinodesCreate/AppInfo';
+import { AppInfo } from '../../Linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';

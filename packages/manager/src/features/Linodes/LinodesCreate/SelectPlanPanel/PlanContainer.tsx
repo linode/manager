@@ -41,18 +41,19 @@ export interface Props {
   showTransfer?: boolean;
 }
 
-export const PlanContainer = ({
-  currentPlanHeading,
-  disabled,
-  disabledClasses,
-  isCreate,
-  linodeID,
-  onSelect,
-  plans,
-  selectedDiskSize,
-  selectedID,
-  showTransfer,
-}: Props) => {
+export const PlanContainer = (props: Props) => {
+  const {
+    currentPlanHeading,
+    disabled,
+    disabledClasses,
+    isCreate,
+    linodeID,
+    onSelect,
+    plans,
+    selectedDiskSize,
+    selectedID,
+    showTransfer,
+  } = props;
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
     showTransfer && plans.some((plan: ExtendedType) => plan.transfer);

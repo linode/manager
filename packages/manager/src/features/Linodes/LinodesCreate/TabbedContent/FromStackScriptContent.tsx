@@ -6,7 +6,7 @@ import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 
 import ImageSelect from 'src/components/ImageSelect';
-import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
+import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
@@ -180,5 +180,3 @@ const StyledImageEmptyState = styled(ImageEmptyState, {
 })(({ theme }) => ({
   padding: theme.spacing(3),
 }));
-
-export default FromStackScriptContent;

@@ -48,19 +48,20 @@ const getDisabledClass = (
   return disabledClasses.includes(typeClass);
 };
 
-export const PlanSelection = ({
-  currentPlanHeading,
-  disabled,
-  disabledClasses,
-  idx,
-  isCreate,
-  linodeID,
-  onSelect,
-  selectedDiskSize,
-  selectedID,
-  showTransfer,
-  type,
-}: Props) => {
+export const PlanSelection = (props: Props) => {
+  const {
+    currentPlanHeading,
+    disabled,
+    disabledClasses,
+    idx,
+    isCreate,
+    linodeID,
+    onSelect,
+    selectedDiskSize,
+    selectedID,
+    showTransfer,
+    type,
+  } = props;
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
   const tooltip = planTooSmall

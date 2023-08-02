@@ -17,7 +17,7 @@ import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
 import { generateCurlCommand } from 'src/utilities/generate-cURL';
 import { generateCLICommand } from 'src/utilities/generate-cli';
 
-import CodeBlock from '../CodeBlock';
+import { CodeBlock } from '../CodeBlock/CodeBlock';
 
 export interface ApiAwarenessModalProps {
   isOpen: boolean;

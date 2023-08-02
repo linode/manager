@@ -3,7 +3,8 @@
 import { imageFactory } from 'src/factories/images';
 import { userDefinedFieldFactory } from 'src/factories/stackscripts';
 
-import FromAppsContent, {
+import {
+  FromAppsContent,
   getCompatibleImages,
   getDefaultUDFData,
 } from './FromAppsContent';

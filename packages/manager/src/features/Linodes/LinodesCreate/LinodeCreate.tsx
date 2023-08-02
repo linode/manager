@@ -28,7 +28,7 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
+import { PlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { getMonthlyAndHourlyNodePricing } from 'src/features/Linodes/LinodesCreate/utilities';
 import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
 import {
@@ -52,11 +52,11 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
 import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
-import FromAppsContent from './TabbedContent/FromAppsContent';
-import FromBackupsContent from './TabbedContent/FromBackupsContent';
-import FromImageContent from './TabbedContent/FromImageContent';
-import FromLinodeContent from './TabbedContent/FromLinodeContent';
-import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+import { FromAppsContent } from './TabbedContent/FromAppsContent';
+import { FromBackupsContent } from './TabbedContent/FromBackupsContent';
+import { FromImageContent } from './TabbedContent/FromImageContent';
+import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
+import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import {

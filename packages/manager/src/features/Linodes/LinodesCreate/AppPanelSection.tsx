@@ -25,7 +25,7 @@ interface Props {
   selectedStackScriptID: number | undefined;
 }
 
-export const AppPanelSection: React.FC<Props> = (props) => {
+export const AppPanelSection = (props: Props) => {
   const {
     apps,
     disabled,
@@ -95,5 +95,3 @@ const AppPanelGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(2),
   padding: `${theme.spacing(1)} 0`,
 }));
-
-export default AppPanelSection;
