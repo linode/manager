@@ -29,7 +29,7 @@ describe('VPC Table Row', () => {
     const vpc = vpcFactory.build();
 
     const { getAllByText, getByText } = renderWithTheme(
-      wrapWithTableBody(<VPCRow vpc={vpc} />),
+      wrapWithTableBody(<VPCRow handleDeleteVPC={jest.fn()} vpc={vpc} />),
       { queryClient }
     );
 

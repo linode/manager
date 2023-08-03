@@ -24,6 +24,7 @@ interface EntityInfo {
     | 'Kubernetes'
     | 'Linode'
     | 'NodeBalancer'
+    | 'VPC'
     | 'Volume';
 }
 
@@ -34,6 +35,7 @@ interface TypeToConfirmDialogProps {
   label: string;
   loading: boolean;
   onClick: () => void;
+  open: boolean;
 }
 
 type CombinedProps = TypeToConfirmDialogProps &
