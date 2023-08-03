@@ -12,8 +12,8 @@ import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceTogg
 import { Radio } from 'src/components/Radio/Radio';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
-import FormControl from 'src/components/core/FormControl';
-import RadioGroup from 'src/components/core/RadioGroup';
+import { FormControl } from 'src/components/FormControl';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';

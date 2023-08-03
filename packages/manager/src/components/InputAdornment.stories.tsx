@@ -1,30 +1,38 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
+import { Input } from './Input';
 import { InputAdornment } from './InputAdornment';
 
 const meta: Meta<typeof InputAdornment> = {
   component: InputAdornment,
-  title: 'Components/TextField/InputAdornment',
+  title: 'Components/Input/InputAdornment',
 };
 
 type Story = StoryObj<typeof InputAdornment>;
 
 export const Default: Story = {
   args: {
+    children: '$',
+    position: 'end',
+  },
+  render: (args) => <Input startAdornment={<InputAdornment {...args} />} />,
+};
+
+export const StartAdornment: Story = {
+  args: {
+    children: '$',
+    position: 'end',
+  },
+  render: (args) => <Input startAdornment={<InputAdornment {...args} />} />,
+};
+
+export const EndAdornment: Story = {
+  args: {
     children: '%',
     position: 'end',
   },
-  render: (args) => <InputAdornment {...args} />,
-  // I want to show this component used in context but this crashes the browser...
-  // render: (args) => (
-  //   <TextField
-  //     InputProps={{
-  //       startAdornment: <InputAdornment {...args} />,
-  //     }}
-  //     label={'tst'}
-  //   />
-  // ),
+  render: (args) => <Input endAdornment={<InputAdornment {...args} />} />,
 };
 
 export default meta;

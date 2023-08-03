@@ -14,9 +14,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import FormControl from 'src/components/core/FormControl';
+import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { useDatabaseMutation } from 'src/queries/databases';
 
 // import { updateDatabaseSchema } from '@linode/validation/src/databases.schema';

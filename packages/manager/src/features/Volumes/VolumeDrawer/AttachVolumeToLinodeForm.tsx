@@ -1,12 +1,11 @@
 import { Grant } from '@linode/api-v4/lib/account';
-import { Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
 import { number, object } from 'yup';
 
 import { Notice } from 'src/components/Notice/Notice';
-import Form from 'src/components/core/Form';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';

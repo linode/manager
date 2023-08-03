@@ -13,11 +13,12 @@ import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { FormHelperText } from 'src/components/FormHelperText';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import FormHelperText from 'src/components/core/FormHelperText';
 import { useAccount } from 'src/queries/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
@@ -31,6 +32,7 @@ import {
   getErrorMap,
   getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
+import { reduceAsync } from 'src/utilities/reduceAsync';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
@@ -44,8 +46,6 @@ import SupportTicketSMTPFields, {
   smtpDialogTitle,
   smtpHelperText,
 } from './SupportTicketSMTPFields';
-import { Link } from 'src/components/Link';
-import { reduceAsync } from 'src/utilities/reduceAsync';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {

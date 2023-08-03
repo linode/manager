@@ -2,9 +2,9 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import { TextField } from 'src/components/TextField';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
+import { TextField } from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({

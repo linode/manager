@@ -7,7 +7,7 @@ import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import FormControl from 'src/components/core/FormControl';
+import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useCreateOAuthClientMutation } from 'src/queries/accountOAuth';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';

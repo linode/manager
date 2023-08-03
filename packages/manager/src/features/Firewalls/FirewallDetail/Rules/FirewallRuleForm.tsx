@@ -9,7 +9,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
+import { RadioGroup } from 'src/components/RadioGroup';
 import {
   addressOptions,
   firewallOptionItemsShort,

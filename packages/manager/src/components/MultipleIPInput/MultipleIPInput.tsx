@@ -1,4 +1,3 @@
-// @todo: this import?
 import Close from '@mui/icons-material/Close';
 import { InputBaseProps } from '@mui/material/InputBase';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -7,11 +6,11 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
+import { InputLabel } from 'src/components/InputLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import InputLabel from 'src/components/core/InputLabel';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({

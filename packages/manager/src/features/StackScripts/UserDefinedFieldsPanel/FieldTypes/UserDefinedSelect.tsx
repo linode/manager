@@ -3,12 +3,12 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { InputLabel } from 'src/components/InputLabel';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import InputLabel from 'src/components/core/InputLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   radioGroupLabel: {
