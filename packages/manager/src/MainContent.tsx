@@ -360,7 +360,7 @@ const MainContent = (props: CombinedProps) => {
                             {showDatabases ? (
                               <Route component={Databases} path="/databases" />
                             ) : null}
-                            {flags.betas ? (
+                            {flags.selfServeBetas ? (
                               <Route component={Betas} path="/betas" />
                             ) : null}
                             {flags.vpc && <Route component={VPC} path="/vpc" />}

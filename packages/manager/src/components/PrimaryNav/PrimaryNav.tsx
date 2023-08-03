@@ -254,7 +254,7 @@ export const PrimaryNav = (props: Props) => {
         },
         {
           display: 'Betas',
-          hide: !flags.betas,
+          hide: !flags.selfServeBetas,
           href: '/betas',
           icon: <Beta />,
         },
