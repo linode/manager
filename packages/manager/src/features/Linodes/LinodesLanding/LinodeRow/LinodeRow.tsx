@@ -1,9 +1,7 @@
 import { Notification } from '@linode/api-v4/lib/account';
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { VPC } from '@linode/api-v4';
 
 import Flag from 'src/assets/icons/flag.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
@@ -20,14 +18,13 @@ import {
   transitionText,
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useTypeQuery } from 'src/queries/types';
 import { useFlags } from 'src/hooks/useFlags';
-import { useVPCsQuery } from 'src/queries/vpcs';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { LinodeWithVPC } from 'src/utilities/linodes';
 
 import IPAddress from '../IPAddress';
 import { LinodeActionMenu } from '../LinodeActionMenu';
@@ -41,35 +38,27 @@ import {
   StyledMaintenanceTableCell,
 } from './LinodeRow.style';
 
-type Props = Linode & { handlers: LinodeHandlers };
+type Props = LinodeWithVPC & { handlers: LinodeHandlers };
 
 export const LinodeRow = (props: Props) => {
   const flags = useFlags();
-  const { backups, handlers, id, ipv4, label, region, status, type } = props;
+  const {
+    backups,
+    handlers,
+    id,
+    ipv4,
+    label,
+    region,
+    status,
+    type,
+    maintenance,
+    vpcLabel,
+    vpcId,
+  } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
   const { data: notifications } = useNotificationsQuery();
-
-  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
-    {},
-    { status: { '+or': ['pending, started'] } }
-  );
-
-  // TODO: VPC - currently the only way to know what VPC a linode is associated with is to get all
-  // vpcs, and then loop through each vpc's subnets, and then through each of the subnets' linode IDs
-  // to see if that subnet contains this linode id. There is some discussion about an endpoint
-  // that will directly get vpcs associated with a linode ID, and if that happens, we can
-  // replace this query
-  // Can also put react query this in Linodes/index instead, so that getting all vpcs is only done once
-  // (but if react query caches the data from this call it should be ok either way?)
-  const { data: vpcs } = useVPCsQuery({}, {});
-  // query is paginated -- does not passing in any params mean that it will get all vpcs?
-  const vpc = findAssociatedVPC(vpcs?.data ?? [], id);
-
-  const maintenance = accountMaintenanceData?.find(
-    (m) => m.entity.id === id && m.entity.type === 'linode'
-  );
 
   const linodeNotifications =
     notifications?.filter(
@@ -184,9 +173,9 @@ export const LinodeRow = (props: Props) => {
         {flags.vpc && (
           <Hidden lgDown>
             <TableCell>
-              {vpc && (
-                <Link tabIndex={0} to={`/vpc/${vpc.id}`}>
-                  {vpc.label}
+              {vpcLabel && (vpcId === 0 || vpcId) && (
+                <Link tabIndex={0} to={`/vpc/${vpcId}`}>
+                  {vpcLabel}
                 </Link>
               )}
             </TableCell>
@@ -223,20 +212,6 @@ export const LinodeRow = (props: Props) => {
       </TableCell>
     </TableRow>
   );
-};
-
-const findAssociatedVPC = (vpcs: VPC[], linodeId: number) => {
-  for (const vpc of vpcs) {
-    for (const subnet of vpc.subnets) {
-      if (subnet.linodes.includes(linodeId)) {
-        // a linode should have only one vpc associated with it (?) so we can
-        // short circuit once we find the associated vpc
-        return vpc;
-      }
-    }
-  }
-
-  return undefined;
 };
 
 export const RenderFlag: React.FC<{

@@ -53,6 +53,9 @@ export const ListView: React.FC<RenderLinodesProps> = (props) => {
           type={linode.type}
           updated={linode.updated}
           watchdog_enabled={linode.watchdog_enabled}
+          vpcLabel={linode.vpcLabel}
+          vpcId={linode.vpcId}
+          maintenance={linode.maintenance}
         />
       ))}
     </>

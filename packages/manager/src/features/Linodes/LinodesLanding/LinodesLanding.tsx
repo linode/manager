@@ -23,7 +23,7 @@ import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
 } from 'src/utilities/analytics';
-import { LinodeWithMaintenance } from 'src/utilities/linodes';
+import { LinodeWithVPC } from 'src/utilities/linodes';
 
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
@@ -82,7 +82,7 @@ type RouteProps = RouteComponentProps<Params>;
 
 export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
-  linodesData: LinodeWithMaintenance[];
+  linodesData: LinodeWithVPC[];
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   someLinodesHaveScheduledMaintenance: boolean;

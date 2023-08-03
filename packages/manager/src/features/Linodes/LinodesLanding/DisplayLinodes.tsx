@@ -13,7 +13,7 @@ import { Tooltip } from 'src/components/Tooltip';
 import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { LinodeWithMaintenance } from 'src/utilities/linodes';
+import { LinodeWithVPC } from 'src/utilities/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import {
@@ -33,7 +33,7 @@ export interface RenderLinodesProps extends PaginationProps {
 
 interface Props {
   component: React.ComponentType<RenderLinodesProps>;
-  data: LinodeWithMaintenance[];
+  data: LinodeWithVPC[];
   display: 'grid' | 'list';
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
@@ -50,7 +50,7 @@ interface Props {
   updatePageUrl: (page: number) => void;
 }
 
-type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
+type CombinedProps = Props & OrderByProps<LinodeWithVPC>;
 
 export const DisplayLinodes = React.memo((props: CombinedProps) => {
   const {
