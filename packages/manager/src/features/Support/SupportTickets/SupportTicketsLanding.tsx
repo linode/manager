@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Tab } from 'src/components/ReachTab';
 import { TabList } from 'src/components/ReachTabList';
 import { TabPanel } from 'src/components/ReachTabPanel';
