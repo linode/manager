@@ -7,7 +7,7 @@ import {
   withRouter,
 } from 'react-router-dom';
 
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
 const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));

@@ -1,5 +1,4 @@
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import Skeleton from '@mui/material/Skeleton';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,6 +11,7 @@ import { useAllNodeBalancerConfigsQuery } from 'src/queries/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
+import { Skeleton } from 'src/components/Skeleton';
 
 interface Props extends NodeBalancer {
   onDelete: () => void;

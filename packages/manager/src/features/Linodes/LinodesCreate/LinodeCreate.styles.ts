@@ -4,7 +4,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Paper } from 'src/components/Paper';
 import type { LinodeCreateProps } from './LinodeCreate';
-import TabPanels from 'src/components/core/ReachTabPanels';
+import { TabPanels } from 'src/components/ReachTabPanels';
 
 type StyledLinodeCreateProps = Pick<LinodeCreateProps, 'showAgreement'>;
 

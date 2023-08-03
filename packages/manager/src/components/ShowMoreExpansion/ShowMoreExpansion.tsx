@@ -1,10 +1,10 @@
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import Collapse from '@mui/material/Collapse';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
-import Collapse from 'src/components/core/Collapse';
 
 const useStyles = makeStyles<void, 'caret'>()(
   (theme: Theme, _params, classes) => ({

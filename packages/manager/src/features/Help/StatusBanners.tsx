@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
