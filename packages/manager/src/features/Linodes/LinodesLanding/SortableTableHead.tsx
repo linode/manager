@@ -140,7 +140,6 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
               {flags.vpc && (
                 <Hidden lgDown>
                   <TableSortCell
-                    // TODO: VPC - figure out the orderBy (cannot use label, as that will order via linode label)
                     active={isActive('vpcLabel')}
                     direction={order}
                     handleClick={handleOrderChange}
