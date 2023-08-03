@@ -29,7 +29,7 @@ interface EntityInfo {
 }
 
 interface TypeToConfirmDialogProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   entity: EntityInfo;
   errors?: APIError[] | null | undefined;
   label: string;

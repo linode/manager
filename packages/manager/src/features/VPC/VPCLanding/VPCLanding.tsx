@@ -143,7 +143,11 @@ const VPCLanding = () => {
         </TableHead>
         <TableBody>
           {vpcs?.data.map((vpc: VPC) => (
-            <VPCRow handleDeleteVPC={handleDeleteVPC} key={vpc.id} vpc={vpc} />
+            <VPCRow
+              handleDeleteVPC={() => handleDeleteVPC(vpc.id, vpc.label)}
+              key={vpc.id}
+              vpc={vpc}
+            />
           ))}
         </TableBody>
       </Table>
