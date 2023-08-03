@@ -1,8 +1,8 @@
-import { Subnet } from '@linode/api-v4';
 import {
   accountMaintenanceFactory,
   linodeFactory,
   vpcFactory,
+  subnetFactory,
 } from 'src/factories';
 
 import { addMaintenanceToLinodes, addVPCToLinodes } from './linodes';
@@ -25,14 +25,7 @@ describe('addVPCtoLinodes', () => {
   it('adds relevant vpc items to Linodes', () => {
     const linodes = linodeFactory.buildList(2);
     const vpcs = vpcFactory.buildList(1);
-    const subnet: Subnet = {
-      created: '2023-07-12T16:08:53',
-      id: 1,
-      ipv4: '0.0.0.0/0',
-      label: `subnet-1`,
-      linodes: [],
-      updated: '2023-07-12T16:08:53',
-    };
+    const subnet = subnetFactory.build();
     subnet.linodes.push(linodes[0].id);
     vpcs[0].subnets.push(subnet);
 
