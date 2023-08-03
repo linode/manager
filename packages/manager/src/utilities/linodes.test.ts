@@ -20,7 +20,7 @@ describe('addMaintenanceToLinodes', () => {
   });
 });
 
-// TODO: VPC - change tests as necessary if query used in src/features/Linodes.intex changes
+// TODO: VPC - change tests as necessary if query used in src/features/Linodes/index.tsx changes
 describe('addVPCtoLinodes', () => {
   it('adds relevant vpc items to Linodes', () => {
     const linodes = linodeFactory.buildList(2);
