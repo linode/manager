@@ -18,7 +18,7 @@ describe('Betas landing page', () => {
    */
   it('can navigate to Betas landing page', () => {
     mockAppendFeatureFlags({
-      betas: makeFeatureFlagData(true),
+      selfServeBetas: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
@@ -41,7 +41,7 @@ describe('Betas landing page', () => {
   it('cannot access Betas landing page when feature is disabled', () => {
     // TODO Delete this test when betas feature flag is removed from codebase.
     mockAppendFeatureFlags({
-      betas: makeFeatureFlagData(false),
+      selfServeBetas: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
