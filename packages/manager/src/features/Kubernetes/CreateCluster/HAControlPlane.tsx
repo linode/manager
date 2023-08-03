@@ -1,15 +1,14 @@
-/* eslint-disable no-console */
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { displayPrice } from 'src/components/DisplayPrice';
+import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
-import FormControl from 'src/components/core/FormControl';
-import RadioGroup from 'src/components/core/RadioGroup';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 
 export const HACopy = () => (
@@ -41,7 +40,6 @@ export const HAControlPlane = (props: Props) => {
     return null;
   }
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const handleChange = () => {
     setHighAvailability(!highAvailability);
     setHAControlPlaneSelection(true);
@@ -57,7 +55,6 @@ export const HAControlPlane = (props: Props) => {
         <RadioGroup
           aria-labelledby="ha-radio-buttons-group-label"
           name="ha-radio-buttons-group"
-          // onChange={(e) => handleChange(e)}
           onChange={handleChange}
         >
           <FormControlLabel
