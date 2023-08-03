@@ -141,7 +141,7 @@ export const planTabInfoContent = {
   premium: {
     dataId: 'data-qa-premium',
     key: 'premium',
-    title: 'Premium',
+    title: 'Premium CPU',
     typography:
       'Premium CPU instances guarantee a minimum processor generation of AMD EPYC\u2122 Milan or newer to ensure consistent high performance for more demanding workloads.',
   },

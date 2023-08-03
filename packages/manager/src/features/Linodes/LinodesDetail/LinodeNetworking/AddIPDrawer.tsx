@@ -10,8 +10,8 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { RadioGroup } from 'src/components/RadioGroup';
 import {
   useAllocateIPMutation,
   useCreateIPv6RangeMutation,
