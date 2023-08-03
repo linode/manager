@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Toggle } from 'src/components/Toggle';
-import FormControl from 'src/components/core/FormControl';
+import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 
 interface ToggleProps {
