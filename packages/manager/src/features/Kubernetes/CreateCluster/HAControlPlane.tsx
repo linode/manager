@@ -1,4 +1,5 @@
 import { FormLabel } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -24,38 +25,45 @@ export const HACopy = () => (
 );
 
 export interface Props {
-  highAvailability: boolean;
   setHAControlPlaneSelection: (haControlPlane: boolean) => void;
   setHighAvailability: (ha: boolean) => void;
 }
 
 export const HAControlPlane = (props: Props) => {
-  const {
-    highAvailability,
-    setHAControlPlaneSelection,
-    setHighAvailability,
-  } = props;
+  const { setHAControlPlaneSelection, setHighAvailability } = props;
+  const theme = useTheme();
 
   if (HIGH_AVAILABILITY_PRICE === undefined) {
     return null;
   }
 
-  const handleChange = () => {
-    setHighAvailability(!highAvailability);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === 'yes') {
+      setHighAvailability(true);
+    } else {
+      setHighAvailability(false);
+    }
     setHAControlPlaneSelection(true);
   };
 
   return (
     <Box>
       <FormControl data-testid="ha-control-plane">
-        <FormLabel id="ha-radio-buttons-group-label">
+        <FormLabel
+          sx={{
+            '&&.MuiFormLabel-root.Mui-focused': {
+              color: theme.name === 'dark' ? 'white' : theme.color.black,
+            },
+          }}
+          id="ha-radio-buttons-group-label"
+        >
           <Typography variant="inherit">HA Control Plane</Typography>
         </FormLabel>
         <HACopy />
         <RadioGroup
           aria-labelledby="ha-radio-buttons-group-label"
           name="ha-radio-buttons-group"
-          onChange={handleChange}
+          onChange={(e) => handleChange(e)}
         >
           <FormControlLabel
             label={`Yes, enable HA control plane. (${displayPrice(

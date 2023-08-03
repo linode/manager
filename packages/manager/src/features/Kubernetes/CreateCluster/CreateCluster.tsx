@@ -320,7 +320,6 @@ export const CreateCluster = () => {
             </Box>
             {showHighAvailability ? (
               <HAControlPlane
-                highAvailability={highAvailability}
                 setHAControlPlaneSelection={setHAControlPlaneSelection}
                 setHighAvailability={setHighAvailability}
               />
