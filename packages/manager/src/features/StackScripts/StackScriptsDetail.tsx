@@ -9,7 +9,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { LandingHeader } from 'src/components/LandingHeader';
-import NotFound from 'src/components/NotFound';
+import { NotFound } from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';

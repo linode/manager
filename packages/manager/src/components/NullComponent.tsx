@@ -1,7 +1,3 @@
-import * as React from 'react';
-
-const NullComponent: React.FC = () => {
+export const NullComponent = () => {
   return null;
 };
-
-export default NullComponent;
