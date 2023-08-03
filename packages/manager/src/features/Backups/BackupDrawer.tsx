@@ -158,7 +158,7 @@ export const BackupDrawer = (props: CombinedProps) => {
         .map((linode) => linode.type)
         .filter(isNotNullOrUndefined)
     );
-  }, []);
+  }, [linodesData, setRequestedTypes]);
 
   const extendedTypeData = requestedTypesData.map(extendType);
   const extendedLinodes = enhanceLinodes({
