@@ -23,7 +23,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const LinodeNetworkingActionMenu = (props: CombinedProps) => {
+export const LinodeNetworkingActionMenu = withRouter((props: CombinedProps) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -106,6 +106,4 @@ export const LinodeNetworkingActionMenu = (props: CombinedProps) => {
   ) : (
     <Box sx={{ height: 40 }}></Box>
   );
-};
-
-export default withRouter(LinodeNetworkingActionMenu);
+});

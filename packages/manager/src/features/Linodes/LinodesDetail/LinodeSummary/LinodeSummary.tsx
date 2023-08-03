@@ -27,7 +27,7 @@ import {
   getMetrics,
 } from 'src/utilities/statMetrics';
 
-import NetworkGraph, { ChartProps } from './NetworkGraphs';
+import { NetworkGraphs, ChartProps } from './NetworkGraphs';
 import { StatsPanel } from './StatsPanel';
 import { getDateOptions } from './helpers';
 
@@ -276,7 +276,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
             </StyledGrid>
           </Grid>
         ) : null}
-        <NetworkGraph stats={stats} {...chartProps} />
+        <NetworkGraphs stats={stats} {...chartProps} />
       </Grid>
     </Paper>
   );

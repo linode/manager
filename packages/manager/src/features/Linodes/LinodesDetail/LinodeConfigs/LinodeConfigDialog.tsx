@@ -32,7 +32,7 @@ import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import DeviceSelection from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {
   useLinodeConfigCreateMutation,
@@ -57,10 +57,11 @@ import {
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import InterfaceSelect, {
+import {
+  InterfaceSelect,
   ExtendedInterface,
 } from '../LinodeSettings/InterfaceSelect';
-import KernelSelect from '../LinodeSettings/KernelSelect';
+import { KernelSelect } from '../LinodeSettings/KernelSelect';
 
 interface Helpers {
   devtmpfs_automount: boolean;

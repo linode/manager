@@ -30,9 +30,7 @@ interface Props {
   slots: string[];
 }
 
-type CombinedProps = Props;
-
-const DeviceSelection: React.FC<CombinedProps> = (props) => {
+export const DeviceSelection = (props: Props) => {
   const {
     devices,
     disabled,
@@ -111,8 +109,6 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
     </div>
   );
 };
-
-export default DeviceSelection as React.ComponentType<Props>;
 
 const blockDeviceRegex = /[0-9]+/g;
 

@@ -16,7 +16,7 @@ interface Props {
   linodeLabel: string;
 }
 
-export const NetworkTransfer: React.FC<Props> = (props) => {
+export const NetworkTransfer = React.memo((props: Props) => {
   const { linodeID, linodeLabel } = props;
 
   const linodeTransfer = useAPIRequest(
@@ -56,7 +56,7 @@ export const NetworkTransfer: React.FC<Props> = (props) => {
       />
     </div>
   );
-};
+});
 
 // =============================================================================
 // TransferContent (With loading and error states)
@@ -71,7 +71,7 @@ interface ContentProps {
   totalUsedInGB: number;
 }
 
-const TransferContent: React.FC<ContentProps> = (props) => {
+const TransferContent = (props: ContentProps) => {
   const {
     accountQuotaInGB,
     error,
@@ -179,8 +179,6 @@ const StyledGreenTypography = styled(Typography, {
     backgroundColor: '#5ad865',
   },
 });
-
-export default React.memo(NetworkTransfer);
 
 // =============================================================================
 // Utilities

@@ -345,8 +345,6 @@ export const RebuildFromStackScript = (props: Props) => {
   );
 };
 
-export default RebuildFromStackScript;
-
 // =============================================================================
 // Helpers
 // =============================================================================

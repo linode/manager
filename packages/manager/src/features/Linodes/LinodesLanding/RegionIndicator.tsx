@@ -6,7 +6,7 @@ interface Props {
   region: string;
 }
 
-const RegionIndicator = (props: Props) => {
+export const RegionIndicator = (props: Props) => {
   const { region } = props;
   const { data: regions } = useRegionsQuery();
 
@@ -18,5 +18,3 @@ const RegionIndicator = (props: Props) => {
     </div>
   );
 };
-
-export default RegionIndicator;

@@ -9,7 +9,6 @@ import { SxProps } from '@mui/system';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 
 import { Box } from 'src/components/Box';
@@ -49,6 +48,7 @@ import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
 } from './transitions';
+import { StyledLink } from './LinodeEntityDetail.style';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -62,7 +62,7 @@ export type Props = LinodeEntityDetailProps & {
   handlers: LinodeHandlers;
 };
 
-const LinodeEntityDetail = (props: Props) => {
+export const LinodeEntityDetail = (props: Props) => {
   const { handlers, isSummaryView, linode, openTagDrawer, variant } = props;
 
   const notificationContext = React.useContext(_notificationContext);
@@ -145,8 +145,6 @@ const LinodeEntityDetail = (props: Props) => {
   );
 };
 
-export default LinodeEntityDetail;
-
 // =============================================================================
 // Header
 // =============================================================================
@@ -167,41 +165,9 @@ export interface HeaderProps {
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
-  actionItemsOuter: {
-    '&.MuiGrid-item': {
-      paddingRight: 0,
-    },
-    alignItems: 'center',
-    display: 'flex',
-  },
-  body: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    padding: 0,
-    width: '100%',
-  },
-  chipWrapper: {
-    [theme.breakpoints.up('sm')]: {
-      '&.MuiGrid-item': {
-        marginTop: 2,
-      },
-    },
-  },
   divider: {
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     paddingRight: `16px !important`,
-  },
-  linodeLabel: {
-    '&:hover': {
-      color: theme.palette.primary.light,
-      textDecoration: 'underline',
-    },
-    color: theme.textColors.linkActiveLight,
-    marginLeft: theme.spacing(),
-  },
-  root: {
-    backgroundColor: theme.bg.bgPaper,
   },
   statusChip: {
     ...theme.applyStatusPillStyles,
@@ -290,11 +256,7 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
 
   return (
     <EntityHeader
-      title={
-        <Link className={classes.linodeLabel} to={`linodes/${linodeId}`}>
-          {linodeLabel}
-        </Link>
-      }
+      title={<StyledLink to={`linodes/${linodeId}`}>{linodeLabel}</StyledLink>}
       isSummaryView={isSummaryView}
       variant={variant}
     >
@@ -307,7 +269,6 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
             [classes.statusOffline]: isOffline,
             [classes.statusOther]: isOther,
             [classes.statusRunning]: isRunning,
-            statusOtherDetail: isOther,
           })}
           component="span"
           data-qa-linode-status
@@ -404,9 +365,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       flexDirection: 'column',
     },
   },
-  summaryContainer: {
-    flexBasis: '25%',
-  },
   summaryContent: {
     '& > div': {
       flexBasis: '50%',
@@ -451,10 +409,12 @@ export const Body = React.memo((props: BodyProps) => {
     <Grid className={classes.body} container direction="row" spacing={2}>
       {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
       <Grid
-        className={classes.summaryContainer}
         container
         direction="column"
         spacing={2}
+        sx={{
+          flexBasis: '25%',
+        }}
       >
         <Grid className={classes.columnLabel}>Summary</Grid>
         <Grid
@@ -594,25 +554,6 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       width: `12px`,
     },
   },
-  copyCell: {
-    '& svg': {
-      '& path': {
-        fill: theme.textColors.linkActiveLight,
-      },
-      height: 16,
-      width: 16,
-    },
-    '&:hover': {
-      '& svg path': {
-        fill: '#fff',
-      },
-      backgroundColor: '#3683dc',
-    },
-    backgroundColor: theme.bg.lightBlue2,
-    height: 33,
-    padding: 0,
-    width: 36,
-  },
   gradient: {
     '&:after': {
       backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.bg.bgAccessRow});`,
@@ -647,7 +588,7 @@ interface AccessTableProps {
   title: string;
 }
 
-export const AccessTable: React.FC<AccessTableProps> = React.memo((props) => {
+export const AccessTable = React.memo((props: AccessTableProps) => {
   const classes = useAccessTableStyles();
   return (
     <Grid

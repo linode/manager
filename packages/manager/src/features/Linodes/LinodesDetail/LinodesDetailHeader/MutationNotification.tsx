@@ -12,7 +12,7 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 
 import { addUsedDiskSpace } from '../LinodeStorage/LinodeDisks';
-import MutateDrawer from '../MutateDrawer';
+import { MutateDrawer } from '../MutateDrawer/MutateDrawer';
 
 interface Props {
   linodeId: number;

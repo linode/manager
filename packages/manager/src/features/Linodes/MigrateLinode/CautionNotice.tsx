@@ -18,7 +18,7 @@ interface Props {
   setConfirmed: (value: boolean) => void;
 }
 
-const CautionNotice = (props: Props) => {
+export const CautionNotice = React.memo((props: Props) => {
   const theme = useTheme();
 
   // This is not great, but lets us get all of the volumes for a Linode while keeping
@@ -107,7 +107,7 @@ const CautionNotice = (props: Props) => {
       />
     </StyledRootDiv>
   );
-};
+});
 
 const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
   ({ theme }) => ({
@@ -134,5 +134,3 @@ const StyledVolumeUl = styled('div', { label: 'StyledVolumeUl' })(
     marginTop: theme.spacing(),
   })
 );
-
-export default React.memo(CautionNotice);

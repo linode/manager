@@ -17,7 +17,8 @@ interface Props {
   linodeId: number;
 }
 
-export const LinodeSettingsDeletePanel = ({ isReadOnly, linodeId }: Props) => {
+export const LinodeSettingsDeletePanel = (props: Props) => {
+  const { isReadOnly, linodeId } = props;
   const { data: linode } = useLinodeQuery(linodeId);
   const {
     error,

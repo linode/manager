@@ -295,5 +295,3 @@ export const RebuildFromImage = (props: Props) => {
     </Formik>
   );
 };
-
-export default RebuildFromImage;

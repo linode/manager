@@ -53,5 +53,3 @@ const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
   padding: theme.spacing(1),
   width: '100%',
 }));
-
-export default ActivityRow;

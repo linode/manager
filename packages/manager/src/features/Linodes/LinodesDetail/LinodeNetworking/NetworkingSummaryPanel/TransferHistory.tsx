@@ -31,7 +31,7 @@ interface Props {
   linodeID: number;
 }
 
-export const TransferHistory: React.FC<Props> = (props) => {
+export const TransferHistory = React.memo((props: Props) => {
   const { linodeCreated, linodeID } = props;
 
   const theme = useTheme();
@@ -239,7 +239,7 @@ export const TransferHistory: React.FC<Props> = (props) => {
       {renderStatsGraph()}
     </div>
   );
-};
+});
 
 const sxArrowIconDisabled = (theme: Theme) => ({
   cursor: 'not-allowed',
@@ -256,8 +256,6 @@ const StyledDiv = styled('div', { label: 'StyledDiv' })({
 const StyledButton = styled(StyledLinkButton, { label: 'StyledButton' })({
   display: 'flex',
 });
-
-export default React.memo(TransferHistory);
 
 // =============================================================================
 // Utilities

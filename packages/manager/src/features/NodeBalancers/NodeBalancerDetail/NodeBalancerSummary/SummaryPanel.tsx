@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
-import IPAddress from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,

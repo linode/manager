@@ -16,7 +16,7 @@ import {
   regionsWithFeature,
 } from 'src/utilities/doesRegionSupportFeature';
 
-import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
+import { InterfaceSelect } from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 // @TODO Delete this file when VPC is released
 

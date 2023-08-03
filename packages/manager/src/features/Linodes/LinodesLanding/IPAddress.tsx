@@ -156,5 +156,3 @@ export class IPAddress extends React.Component<IPAddressProps> {
     isIpTooltipHovered: false,
   };
 }
-
-export default IPAddress;

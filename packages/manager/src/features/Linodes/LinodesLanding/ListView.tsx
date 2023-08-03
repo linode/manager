@@ -5,7 +5,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { RenderLinodesProps } from './DisplayLinodes';
 import { LinodeRow } from './LinodeRow/LinodeRow';
 
-export const ListView: React.FC<RenderLinodesProps> = (props) => {
+export const ListView = (props: RenderLinodesProps) => {
   const { data, openDialog, openPowerActionDialog } = props;
 
   // This won't happen in the normal Linodes Landing context (a custom empty
@@ -58,5 +58,3 @@ export const ListView: React.FC<RenderLinodesProps> = (props) => {
     </>
   );
 };
-
-export default ListView;

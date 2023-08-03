@@ -30,7 +30,7 @@ import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { PlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { getMonthlyAndHourlyNodePricing } from 'src/features/Linodes/LinodesCreate/utilities';
-import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
+import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,

@@ -37,8 +37,8 @@ import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
-import CautionNotice from './CautionNotice';
-import ConfigureForm from './ConfigureForm';
+import { CautionNotice } from './CautionNotice';
+import { ConfigureForm } from './ConfigureForm';
 
 interface Props {
   linodeId: number | undefined;

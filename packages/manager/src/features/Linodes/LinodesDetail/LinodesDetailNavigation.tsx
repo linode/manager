@@ -16,7 +16,7 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
+import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 

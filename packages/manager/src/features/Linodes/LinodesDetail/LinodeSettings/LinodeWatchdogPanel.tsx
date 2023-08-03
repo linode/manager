@@ -17,7 +17,8 @@ interface Props {
   linodeId: number;
 }
 
-export const LinodeWatchdogPanel = ({ isReadOnly, linodeId }: Props) => {
+export const LinodeWatchdogPanel = (props: Props) => {
+  const { isReadOnly, linodeId } = props;
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
