@@ -152,13 +152,13 @@ export const BackupDrawer = (props: CombinedProps) => {
 
   const prevLinodesData = usePrevious(linodesData);
 
-  const updateRequestedTypes = () => {
+  const updateRequestedTypes = React.useCallback(() => {
     setRequestedTypes(
       linodesWithoutBackups(linodesData)
         .map((linode) => linode.type)
         .filter(isNotNullOrUndefined)
     );
-  };
+  }, []);
 
   const extendedTypeData = requestedTypesData.map(extendType);
   const extendedLinodes = enhanceLinodes({
@@ -170,6 +170,8 @@ export const BackupDrawer = (props: CombinedProps) => {
 
   useEffect(() => {
     updateRequestedTypes();
+    // We only want to run this on mount one time
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -186,7 +188,14 @@ all new Linodes will automatically be backed up.`
       dismissSuccess();
       close();
     }
-  }, [enableSuccess]);
+  }, [
+    enableSuccess,
+    updatedCount,
+    autoEnroll,
+    close,
+    dismissSuccess,
+    enqueueSnackbar,
+  ]);
 
   useEffect(() => {
     if (
@@ -199,7 +208,7 @@ all new Linodes will automatically be backed up.`
     ) {
       updateRequestedTypes();
     }
-  }, [linodesData]);
+  }, [linodesData, updateRequestedTypes, prevLinodesData]);
 
   const handleSubmit = () => {
     if (accountSettings.data?.backups_enabled) {
