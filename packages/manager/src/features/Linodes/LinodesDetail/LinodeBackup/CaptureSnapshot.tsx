@@ -1,15 +1,14 @@
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import FormControl from 'src/components/core/FormControl';
+import { FormControl } from 'src/components/FormControl';
 import { Paper } from 'src/components/Paper';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
@@ -22,27 +21,7 @@ interface Props {
   linodeId: number;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  snapshotFormControl: {
-    '& > div': {
-      marginRight: theme.spacing(2),
-      width: 'auto',
-    },
-    '& button': {
-      marginTop: theme.spacing(4),
-    },
-    alignItems: 'flex-end',
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  snapshotNameField: {
-    minWidth: 275,
-  },
-}));
-
 export const CaptureSnapshot = ({ isReadOnly, linodeId }: Props) => {
-  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -88,9 +67,9 @@ export const CaptureSnapshot = ({ isReadOnly, linodeId }: Props) => {
             {hasErrorFor.none}
           </Notice>
         )}
-        <Box className={classes.snapshotFormControl}>
+        <StyledBox>
           <TextField
-            className={classes.snapshotNameField}
+            sx={{ minWidth: 275 }}
             data-qa-manual-name
             errorText={hasErrorFor.label}
             label="Name Snapshot"
@@ -106,7 +85,7 @@ export const CaptureSnapshot = ({ isReadOnly, linodeId }: Props) => {
           >
             Take Snapshot
           </Button>
-        </Box>
+        </StyledBox>
       </FormControl>
       <CaptureSnapshotConfirmationDialog
         loading={isSnapshotLoading}
@@ -117,3 +96,17 @@ export const CaptureSnapshot = ({ isReadOnly, linodeId }: Props) => {
     </Paper>
   );
 };
+
+const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
+  '& > div': {
+    marginRight: theme.spacing(2),
+    width: 'auto',
+  },
+  '& button': {
+    marginTop: theme.spacing(4),
+  },
+  alignItems: 'flex-end',
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+}));

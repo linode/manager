@@ -161,8 +161,11 @@ const SupportTicketDetail = React.lazy(
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed'));
-const Help = React.lazy(() => import('src/features/Help'));
-
+const Help = React.lazy(() =>
+  import('./features/Help/index').then((module) => ({
+    default: module.HelpAndSupport,
+  }))
+);
 const SearchLanding = React.lazy(() => import('src/features/Search'));
 const EventsLanding = React.lazy(
   () => import('src/features/Events/EventsLanding')
@@ -172,6 +175,7 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
+const VPC = React.lazy(() => import('src/features/VPC'));
 
 const MainContent = (props: CombinedProps) => {
   const { classes, cx } = useStyles();
@@ -327,6 +331,7 @@ const MainContent = (props: CombinedProps) => {
                               component={NodeBalancers}
                               path="/nodebalancers"
                             />
+                            {flags.vpc && <Route component={VPC} path="/vpc" />}
                             <Route component={Domains} path="/domains" />
                             <Route component={Managed} path="/managed" />
                             <Route component={Longview} path="/longview" />
@@ -355,6 +360,7 @@ const MainContent = (props: CombinedProps) => {
                             {showDatabases ? (
                               <Route component={Databases} path="/databases" />
                             ) : null}
+                            {flags.vpc && <Route component={VPC} path="/vpc" />}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />

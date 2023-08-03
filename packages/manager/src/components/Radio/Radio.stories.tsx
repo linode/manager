@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import FormControlLabel from '../core/FormControlLabel';
-import RadioGroup from '../core/RadioGroup';
+import { FormControlLabel } from '../FormControlLabel';
+import { RadioGroup } from '../RadioGroup';
 import { Radio } from './Radio';
 
 const meta: Meta<typeof Radio> = {

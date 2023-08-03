@@ -7,6 +7,7 @@ import { isPropValid } from 'src/utilities/isPropValid';
 type StyledTableCellPropsProps = TableCellProps & {
   isPlanCell?: boolean;
 };
+
 export const StyledTable = styled(Table, {
   label: 'StyledTable',
   shouldForwardProp: (prop) => isPropValid(['isDisabled'], prop),
