@@ -3,6 +3,10 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 
 interface Props {
+  /**
+   * Ammount of time before the CircleProgress shows
+   * @default 300
+   */
   delay?: number;
 }
 

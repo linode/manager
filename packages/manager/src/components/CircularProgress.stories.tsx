@@ -5,7 +5,7 @@ import { CircularProgress } from './CircularProgress';
 
 const meta: Meta<typeof CircularProgress> = {
   component: CircularProgress,
-  title: 'Components/Loading States/CircularProgress',
+  title: 'Components/Loading States/Circular Progress',
 };
 
 type Story = StoryObj<typeof CircularProgress>;
