@@ -55,6 +55,8 @@ interface AutocompleteProps {
   sx?: SxProps;
 }
 
+// TODO: Escape crashes the Autocomplete
+
 export interface AutocompleteMultiSelectProps extends AutocompleteProps {
   // value: any;
   defaultValue?: OptionsType[]; // TODO: This is not working =(
