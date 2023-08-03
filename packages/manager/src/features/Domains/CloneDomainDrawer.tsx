@@ -9,7 +9,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 
