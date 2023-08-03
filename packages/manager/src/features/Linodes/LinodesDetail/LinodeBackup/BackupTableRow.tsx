@@ -43,7 +43,7 @@ const statusIconMap: Record<LinodeBackup['status'], Status> = {
   userAborted: 'error',
 };
 
-const BackupTableRow = (props: Props) => {
+export const BackupTableRow = (props: Props) => {
   const { backup, disabled, handleDeploy, handleRestore } = props;
 
   return (
@@ -97,5 +97,3 @@ const BackupTableRow = (props: Props) => {
     </TableRow>
   );
 };
-
-export default BackupTableRow;

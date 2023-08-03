@@ -21,7 +21,8 @@ interface Props {
   linodeId: number;
 }
 
-export const CaptureSnapshot = ({ isReadOnly, linodeId }: Props) => {
+export const CaptureSnapshot = (props: Props) => {
+  const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {

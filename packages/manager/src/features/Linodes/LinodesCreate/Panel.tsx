@@ -10,9 +10,7 @@ interface Props {
   title?: string;
 }
 
-type CombinedProps = Props;
-
-const Panel: React.FC<CombinedProps> = (props) => {
+export const Panel = (props: React.PropsWithChildren<Props>) => {
   const { children, error, title } = props;
 
   return (
@@ -25,5 +23,3 @@ const Panel: React.FC<CombinedProps> = (props) => {
     </Paper>
   );
 };
-
-export default Panel;
