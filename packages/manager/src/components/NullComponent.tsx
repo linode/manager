@@ -1,3 +1,5 @@
-export const NullComponent = () => {
+const NullComponent = () => {
   return null;
 };
+
+export default NullComponent;
