@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
 
 import CPUGauge from '../../LongviewLanding/Gauges/CPU';
 import LoadGauge from '../../LongviewLanding/Gauges/Load';

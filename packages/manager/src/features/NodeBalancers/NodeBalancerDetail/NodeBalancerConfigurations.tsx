@@ -11,7 +11,7 @@ import {
   updateNodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { styled } from '@mui/material/styles';
 import {
   Lens,

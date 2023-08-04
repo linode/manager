@@ -1,5 +1,5 @@
 import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';

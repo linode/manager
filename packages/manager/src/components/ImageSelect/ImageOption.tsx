@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';

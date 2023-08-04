@@ -3,7 +3,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
 
-import ActionMenu, { Action, ActionMenuProps } from 'src/components/ActionMenu';
+import {
+  Action,
+  ActionMenu,
+  Props as ActionMenuProps,
+} from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface FirewallRuleActionMenuProps extends Partial<ActionMenuProps> {

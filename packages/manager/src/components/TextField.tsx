@@ -1,5 +1,5 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import {
   default as _TextField,
   StandardTextFieldProps,

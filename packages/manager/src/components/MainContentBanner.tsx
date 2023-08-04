@@ -51,7 +51,7 @@ interface Props {
   url: string;
 }
 
-const MainContentBanner: React.FC<Props> = (props) => {
+const MainContentBanner = (props: Props) => {
   const { bannerKey, bannerText, linkText, onClose, url } = props;
 
   const { refetch: refetchPrefrences } = usePreferences();

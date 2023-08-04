@@ -9,7 +9,7 @@ import {
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const LinodesDetailHeader = React.lazy(

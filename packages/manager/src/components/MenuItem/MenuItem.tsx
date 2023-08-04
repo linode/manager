@@ -3,9 +3,9 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { CircularProgress } from 'src/components/CircularProgress';
 import { IconButton } from 'src/components/IconButton';
-import CircularProgress from 'src/components/core/CircularProgress';
-import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
+import { MenuItem, MenuItemProps } from 'src/components/MenuItem';
 
 interface WrapperMenuItemProps {
   isLoading?: boolean;

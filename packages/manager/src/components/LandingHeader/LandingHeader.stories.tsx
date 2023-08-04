@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import React from 'react';
 
 import { Button } from '../Button/Button';
-import LandingHeader from './LandingHeader';
+import { LandingHeader } from './LandingHeader';
 
 import type { Meta, StoryObj } from '@storybook/react';
 

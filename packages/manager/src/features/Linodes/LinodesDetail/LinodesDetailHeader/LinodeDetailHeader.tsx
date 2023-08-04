@@ -4,7 +4,7 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { TagDrawer } from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';

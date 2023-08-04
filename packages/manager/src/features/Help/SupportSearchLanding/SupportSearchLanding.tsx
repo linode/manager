@@ -1,5 +1,5 @@
 import Search from '@mui/icons-material/Search';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';

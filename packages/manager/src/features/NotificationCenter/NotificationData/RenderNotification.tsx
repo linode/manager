@@ -1,7 +1,7 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

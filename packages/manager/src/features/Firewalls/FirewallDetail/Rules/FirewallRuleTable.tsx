@@ -1,5 +1,5 @@
 import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
