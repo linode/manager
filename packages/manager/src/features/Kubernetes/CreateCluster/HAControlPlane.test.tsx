@@ -7,7 +7,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { HAControlPlane, Props } from './HAControlPlane';
 
 const props: Props = {
-  highAvailability: false,
   setHAControlPlaneSelection: jest.fn(),
   setHighAvailability: jest.fn(),
 };

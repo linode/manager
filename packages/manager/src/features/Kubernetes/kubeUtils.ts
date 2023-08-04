@@ -140,12 +140,12 @@ export const getKubeHighAvailability = (
 export const getLatestVersion = (
   versions: { label: string; value: string }[]
 ) => {
-  const newArr: number[] = [];
+  const versionsNumbersArray: number[] = [];
 
   for (const element of versions) {
-    newArr.push(parseFloat(element.value));
+    versionsNumbersArray.push(parseFloat(element.value));
   }
-  const latestVersionValue = Math.max.apply(null, newArr);
+  const latestVersionValue = Math.max.apply(null, versionsNumbersArray);
 
   return { label: `${latestVersionValue}`, value: `${latestVersionValue}` };
 };
