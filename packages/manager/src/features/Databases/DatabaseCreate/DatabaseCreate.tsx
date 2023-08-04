@@ -29,7 +29,7 @@ import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleVal
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { RegionOption } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';

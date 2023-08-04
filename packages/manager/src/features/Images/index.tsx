@@ -7,7 +7,7 @@ import {
   withRouter,
 } from 'react-router-dom';
 
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const ImagesLanding = React.lazy(() => import('./ImagesLanding'));
 const ImageCreate = React.lazy(

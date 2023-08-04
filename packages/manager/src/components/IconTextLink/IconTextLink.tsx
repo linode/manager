@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
-import SvgIcon from 'src/components/core/SvgIcon';
+import { SvgIcon } from 'src/components/SvgIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   active: {

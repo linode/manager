@@ -1,5 +1,6 @@
 import DoneIcon from '@mui/icons-material/Done';
-import { Popper, PopperProps, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import Popper, { PopperProps } from '@mui/material/Popper';
 import React from 'react';
 
 export const SelectedIcon = styled(DoneIcon, {
