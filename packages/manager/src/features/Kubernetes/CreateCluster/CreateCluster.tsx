@@ -126,13 +126,9 @@ export const CreateCluster = () => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-  const [highAvailability, setHighAvailability] = React.useState<boolean>(
-    false
-  );
-  const [
-    hasHAControlPlaneSelection,
-    setHAControlPlaneSelection,
-  ] = React.useState<boolean>(false);
+  const [highAvailability, setHighAvailability] = React.useState<
+    boolean | undefined
+  >(undefined);
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
@@ -320,7 +316,7 @@ export const CreateCluster = () => {
             </Box>
             {showHighAvailability ? (
               <HAControlPlane
-                setHAControlPlaneSelection={setHAControlPlaneSelection}
+                highAvailability={highAvailability}
                 setHighAvailability={setHighAvailability}
               />
             ) : null}
@@ -366,7 +362,6 @@ export const CreateCluster = () => {
           ]}
           createCluster={createCluster}
           hasAgreed={hasAgreed}
-          hasHAControlPlaneSelection={hasHAControlPlaneSelection}
           highAvailability={highAvailability}
           pools={nodePools}
           region={selectedRegionID}

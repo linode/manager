@@ -25,17 +25,13 @@ export const HACopy = () => (
 );
 
 export interface Props {
-  setHAControlPlaneSelection: (haControlPlane: boolean) => void;
-  setHighAvailability: (ha: boolean) => void;
+  highAvailability: boolean | undefined;
+  setHighAvailability: (ha: boolean | undefined) => void;
 }
 
 export const HAControlPlane = (props: Props) => {
-  const { setHAControlPlaneSelection, setHighAvailability } = props;
+  const { setHighAvailability } = props;
   const theme = useTheme();
-
-  if (HIGH_AVAILABILITY_PRICE === undefined) {
-    return null;
-  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === 'yes') {
@@ -43,8 +39,11 @@ export const HAControlPlane = (props: Props) => {
     } else {
       setHighAvailability(false);
     }
-    setHAControlPlaneSelection(true);
   };
+
+  if (HIGH_AVAILABILITY_PRICE === undefined) {
+    return null;
+  }
 
   return (
     <Box>
@@ -70,9 +69,15 @@ export const HAControlPlane = (props: Props) => {
               HIGH_AVAILABILITY_PRICE
             )}/month)`}
             control={<Radio data-testid="ha-radio-button-yes" />}
+            name="yes"
             value="yes"
           />
-          <FormControlLabel control={<Radio />} label="No" value="no" />
+          <FormControlLabel
+            control={<Radio />}
+            label="No"
+            name="no"
+            value="no"
+          />
         </RadioGroup>
       </FormControl>
     </Box>

@@ -11,7 +11,6 @@ const pools = nodePoolFactory.buildList(5, { count: 3, type: 'g6-standard-1' });
 const props: Props = {
   createCluster: jest.fn(),
   hasAgreed: false,
-  hasHAControlPlaneSelection: true,
   highAvailability: false,
   pools,
   region: undefined,

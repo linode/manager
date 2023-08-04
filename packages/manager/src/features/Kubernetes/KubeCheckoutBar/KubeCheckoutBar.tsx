@@ -20,8 +20,7 @@ import NodePoolSummary from './NodePoolSummary';
 export interface Props {
   createCluster: () => void;
   hasAgreed: boolean;
-  hasHAControlPlaneSelection: boolean;
-  highAvailability: boolean;
+  highAvailability: boolean | undefined;
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   removePool: (poolIdx: number) => void;
@@ -34,7 +33,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const {
     createCluster,
     hasAgreed,
-    hasHAControlPlaneSelection,
     highAvailability,
     pools,
     region,
@@ -62,7 +60,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const disableCheckout = Boolean(
     needsAPool ||
       (!hasAgreed && showGDPRCheckbox) ||
-      !hasHAControlPlaneSelection
+      highAvailability === undefined
   );
 
   if (isLoading) {
