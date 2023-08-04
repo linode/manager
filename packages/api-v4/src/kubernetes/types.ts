@@ -57,7 +57,7 @@ export interface KubernetesDashboardResponse {
 }
 
 export interface ControlPlaneOptions {
-  high_availability: boolean | undefined;
+  high_availability?: boolean;
 }
 
 export interface CreateKubeClusterPayload {

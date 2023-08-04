@@ -1,5 +1,4 @@
 import { FormLabel } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -25,20 +24,15 @@ export const HACopy = () => (
 );
 
 export interface Props {
-  highAvailability: boolean | undefined;
+  highAvailability?: boolean;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
 
 export const HAControlPlane = (props: Props) => {
   const { setHighAvailability } = props;
-  const theme = useTheme();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === 'yes') {
-      setHighAvailability(true);
-    } else {
-      setHighAvailability(false);
-    }
+    setHighAvailability(e.target.value === 'yes');
   };
 
   if (HIGH_AVAILABILITY_PRICE === undefined) {
@@ -49,11 +43,11 @@ export const HAControlPlane = (props: Props) => {
     <Box>
       <FormControl data-testid="ha-control-plane">
         <FormLabel
-          sx={{
+          sx={(theme) => ({
             '&&.MuiFormLabel-root.Mui-focused': {
               color: theme.name === 'dark' ? 'white' : theme.color.black,
             },
-          }}
+          })}
           id="ha-radio-buttons-group-label"
         >
           <Typography variant="inherit">HA Control Plane</Typography>

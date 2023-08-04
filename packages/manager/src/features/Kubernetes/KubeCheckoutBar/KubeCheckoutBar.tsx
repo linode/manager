@@ -20,7 +20,7 @@ import NodePoolSummary from './NodePoolSummary';
 export interface Props {
   createCluster: () => void;
   hasAgreed: boolean;
-  highAvailability: boolean | undefined;
+  highAvailability?: boolean;
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   removePool: (poolIdx: number) => void;

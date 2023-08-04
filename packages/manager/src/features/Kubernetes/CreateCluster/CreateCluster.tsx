@@ -126,9 +126,7 @@ export const CreateCluster = () => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-  const [highAvailability, setHighAvailability] = React.useState<
-    boolean | undefined
-  >(undefined);
+  const [highAvailability, setHighAvailability] = React.useState<boolean>();
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
