@@ -1,10 +1,9 @@
 import {
-  CreateEntrypointPayload,
+  Configuration,
   CreateLoadbalancerPayload,
-  Entrypoint,
+  CreateRoutePayload,
   Loadbalancer,
-  Route2,
-  RoutePayload2,
+  Route,
   ServiceTarget,
   ServiceTargetPayload,
   UpdateLoadbalancerPayload,
@@ -14,7 +13,7 @@ import * as Factory from 'factory.ts';
 // ********************
 // Entrypoint endpoints
 // ********************
-export const getEntrypointFactory = Factory.Sync.makeFactory<Entrypoint>({
+export const configurationFactory = Factory.Sync.makeFactory<Configuration>({
   certificate_table: [
     {
       certificate_id: 'cert-12345',
@@ -28,43 +27,21 @@ export const getEntrypointFactory = Factory.Sync.makeFactory<Entrypoint>({
   routes: ['images-route'],
 });
 
-export const createEntrypointFactory = Factory.Sync.makeFactory<CreateEntrypointPayload>(
-  {
-    certificate_table: [
-      {
-        certificate_id: 'cert-12345',
-        sni_hostname: 'example.com',
-      },
-    ],
-    label: Factory.each((i) => `entrypoint${i}`),
-    port: 80,
-    protocol: 'HTTP',
-  }
-);
-
 // ***********************
 // Loadbalancers endpoints
 // ***********************
-
-export const getLoadbalancerFactory = Factory.Sync.makeFactory<Loadbalancer>({
-  entrypoints: ['entrypoint1'],
+export const loadbalancerFactory = Factory.Sync.makeFactory<Loadbalancer>({
+  configurations: [{ id: 1, label: 'my-config-1' }],
+  hostname: 'loadbalancer1.aglb.akamai.com',
   id: Factory.each((i) => i),
   label: 'loadbalancer1',
   regions: ['us-west'],
   tags: ['tag1', 'tag2'],
 });
 
-export const createLoadbalancerFactory = Factory.Sync.makeFactory<CreateLoadbalancerPayload>(
-  {
-    label: Factory.each((i) => `loadbalancer${i}`),
-    regions: ['us-west'],
-    tags: ['tag1', 'tag2'],
-  }
-);
-
 export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory<CreateLoadbalancerPayload>(
   {
-    entrypoints: [
+    configurations: [
       {
         certificate_table: [
           {
@@ -77,51 +54,36 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
         protocol: 'HTTP',
         routes: [
           {
-            default_target: {
-              ca_certificate: 'my-cms-certificate',
-              endpoints: [
-                {
-                  capacity: 100,
-                  hard_rate_limit: 1000,
-                  ip: '192.168.0.101',
-                  port: 8080,
-                },
-              ],
-              health_check_healthy_thresh: 2,
-              health_check_host: 'example.com',
-              health_check_interval: 10,
-              health_check_path: '/health',
-              health_check_timeout: 5,
-              health_check_unhealthy_thresh: 3,
-              label: 'my-default-service-target',
-              load_balancing_policy: 'ROUND_ROBIN',
-            },
             label: 'my-route',
             rules: [
               {
                 match_condition: {
-                  host: 'example.com',
-                  path: '/images',
+                  affinity_cookie: 'my-cool-cookie',
+                  affinity_ttl: '60000',
+                  hostname: 'example.com',
+                  match_field: 'path_prefix',
+                  match_value: '/images',
                 },
                 service_targets: [
                   {
                     ca_certificate: 'my-cms-certificate',
                     endpoints: [
                       {
-                        capacity: 100,
-                        hard_rate_limit: 1000,
                         ip: '192.168.0.100',
                         port: 8080,
+                        rate_capacity: 100,
                       },
                     ],
-                    health_check_healthy_thresh: 2,
-                    health_check_host: 'example.com',
-                    health_check_interval: 10,
-                    health_check_path: '/health',
-                    health_check_timeout: 5,
-                    health_check_unhealthy_thresh: 3,
+                    healthcheck: {
+                      healthy_threshold: 5,
+                      host: 'linode.com',
+                      interval: 10000,
+                      path: '/images',
+                      timeout: 5000,
+                      unhealthy_threshold: 5,
+                    },
                     label: 'my-service-target',
-                    load_balancing_policy: 'ROUND_ROBIN',
+                    load_balancing_policy: 'round_robin',
                   },
                 ],
               },
@@ -137,7 +99,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
 
 export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbalancerPayload>(
   {
-    entrypoints: [1],
+    configuration_ids: [1],
     label: Factory.each((i) => `loadbalancer${i}`),
     regions: ['us-west'],
   }
@@ -147,45 +109,45 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
 // Routes endpoints
 // ****************
 
-export const getRouteFactory = Factory.Sync.makeFactory<Route2>({
+export const routeFactory = Factory.Sync.makeFactory<Route>({
   id: Factory.each((i) => i),
   label: 'images-route',
   rules: [
     {
       match_condition: {
-        host: 'www.acme.com',
-        path: '/images/*',
+        affinity_cookie: null,
+        affinity_ttl: null,
+        hostname: 'www.acme.com',
+        match_field: 'path_prefix',
+        match_value: '/images/*',
       },
       service_targets: [
         {
-          service_target_name: 'images-backend-aws',
-          service_target_percentage: 70,
-        },
-        {
-          service_target_name: 'images-backend-linode',
-          service_target_percentage: 30,
+          id: 1,
+          label: 'my-service-target',
+          percentage: 10,
         },
       ],
     },
   ],
 });
 
-export const createRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
+export const createRouteFactory = Factory.Sync.makeFactory<CreateRoutePayload>({
   label: 'images-route',
   rules: [
     {
       match_condition: {
-        host: 'www.acme.com',
-        path: '/images/*',
+        affinity_cookie: null,
+        affinity_ttl: null,
+        hostname: 'www.acme.com',
+        match_field: 'path_prefix',
+        match_value: '/images/*',
       },
       service_targets: [
         {
-          service_target_name: 'images-backend-aws',
-          service_target_percentage: 70,
-        },
-        {
-          service_target_name: 'images-backend-linode',
-          service_target_percentage: 30,
+          id: 1,
+          label: 'my-service-target',
+          percentage: 10,
         },
       ],
     },
@@ -196,25 +158,26 @@ export const createRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
 // Service Targets endpoints
 // *************************
 
-export const getServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
+export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
   ca_certificate: 'my-cms-certificate',
   endpoints: [
     {
-      capacity: 100,
-      hard_rate_limit: 1000,
       ip: '192.168.0.100',
       port: 8080,
+      rate_capacity: 100,
     },
   ],
-  health_check_healthy_thresh: 2,
-  health_check_host: 'example1.com',
-  health_check_interval: 10,
-  health_check_path: '/health',
-  health_check_timeout: 5,
-  health_check_unhealthy_thresh: 3,
+  healthcheck: {
+    healthy_threshold: 5,
+    host: 'linode.com',
+    interval: 10000,
+    path: '/images',
+    timeout: 5000,
+    unhealthy_threshold: 5,
+  },
   id: Factory.each((i) => i),
   label: Factory.each((i) => `images-backend-aws-${i}`),
-  load_balancing_policy: 'ROUND_ROBIN',
+  load_balancing_policy: 'round_robin',
 });
 
 export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTargetPayload>(
@@ -222,19 +185,20 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
     ca_certificate: 'my-cms-certificate',
     endpoints: [
       {
-        capacity: 100,
-        hard_rate_limit: 1000,
         ip: '192.168.0.100',
         port: 8080,
+        rate_capacity: 10,
       },
     ],
-    health_check_healthy_thresh: 2,
-    health_check_host: 'example1.com',
-    health_check_interval: 10,
-    health_check_path: '/health',
-    health_check_timeout: 5,
-    health_check_unhealthy_thresh: 3,
-    label: 'images-backend-aws',
-    load_balancing_policy: 'ROUND_ROBIN',
+    healthcheck: {
+      healthy_threshold: 5,
+      host: 'linode.com',
+      interval: 10000,
+      path: '/images',
+      timeout: 5000,
+      unhealthy_threshold: 5,
+    },
+    label: 'my-service-target',
+    load_balancing_policy: 'least_request',
   }
 );
