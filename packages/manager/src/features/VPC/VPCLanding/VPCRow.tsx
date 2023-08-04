@@ -10,21 +10,11 @@ import { TableRow } from 'src/components/TableRow';
 import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
+  handleDeleteVPC: () => void;
   vpc: VPC;
 }
 
-const actions: Action[] = [
-  {
-    onClick: () => null,
-    title: 'Edit',
-  },
-  {
-    onClick: () => null,
-    title: 'Delete',
-  },
-];
-
-export const VPCRow = ({ vpc }: Props) => {
+export const VPCRow = ({ handleDeleteVPC, vpc }: Props) => {
   const { id, label, subnets } = vpc;
   const { data: regions } = useRegionsQuery();
 
@@ -33,6 +23,17 @@ export const VPCRow = ({ vpc }: Props) => {
     (acc, subnet) => acc + subnet.linodes.length,
     0
   );
+
+  const actions: Action[] = [
+    {
+      onClick: () => null,
+      title: 'Edit',
+    },
+    {
+      onClick: handleDeleteVPC,
+      title: 'Delete',
+    },
+  ];
 
   return (
     <TableRow
