@@ -10,7 +10,7 @@ import { TableRow } from 'src/components/TableRow';
 import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
-  handleDeleteVPC: (id: number, label: string) => void;
+  handleDeleteVPC: () => void;
   vpc: VPC;
 }
 
@@ -30,7 +30,7 @@ export const VPCRow = ({ handleDeleteVPC, vpc }: Props) => {
       title: 'Edit',
     },
     {
-      onClick: () => handleDeleteVPC(id, label),
+      onClick: handleDeleteVPC,
       title: 'Delete',
     },
   ];

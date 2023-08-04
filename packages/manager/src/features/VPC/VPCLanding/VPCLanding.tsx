@@ -159,12 +159,7 @@ const VPCLanding = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <VPCDeleteDialog
-        id={deleteDialog.id}
-        label={deleteDialog.label}
-        onClose={closeDeleteDialog}
-        open={deleteDialog.open}
-      />
+      <VPCDeleteDialog {...deleteDialog} onClose={closeDeleteDialog} />
     </>
   );
 };

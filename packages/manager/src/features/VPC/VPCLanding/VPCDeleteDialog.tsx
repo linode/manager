@@ -17,14 +17,12 @@ export const VPCDeleteDialog = (props: Props) => {
   const { error, isLoading, mutateAsync: deleteVPC } = useDeleteVPCMutation(id);
 
   const onDeleteVPC = () => {
-    deleteVPC()
-      .then(() => {
-        enqueueSnackbar('VPC deleted successfully.', {
-          variant: 'success',
-        });
-        onClose();
-      })
-      .catch();
+    deleteVPC().then(() => {
+      enqueueSnackbar('VPC deleted successfully.', {
+        variant: 'success',
+      });
+      onClose();
+    });
   };
 
   return (
@@ -42,6 +40,6 @@ export const VPCDeleteDialog = (props: Props) => {
       onClose={onClose}
       open={open}
       title={`Delete VPC ${label}`}
-    ></TypeToConfirmDialog>
+    />
   );
 };
