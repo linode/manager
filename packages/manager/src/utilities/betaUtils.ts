@@ -3,8 +3,11 @@ import { DateTime } from 'luxon';
 import { Beta } from '@linode/api-v4/lib/betas';
 import { AccountBeta } from '@linode/api-v4/lib/account';
 
-type BetaStatus = 'active' | 'historical' | 'available' | 'null';
+type BetaStatus = 'active' | 'historical' | 'available' | 'no_status';
 type GenericBeta = AccountBeta | Beta;
+type GenericBetaByStatus = {
+  [status in BetaStatus]: GenericBeta[];
+};
 
 export const hasStarted = (beta: GenericBeta) =>
   DateTime.fromISO(beta.started) <= DateTime.now();
@@ -44,17 +47,17 @@ export function getBetaStatus(beta: AccountBeta): BetaStatus {
   if (!isCustomerEnrolled(beta) && hasStarted(beta) && !hasEnded(beta)) {
     return 'available';
   }
-  return 'null';
+  return 'no_status';
 }
 
-export const sortBetasByStatus = (betas: GenericBeta[]) => {
-  const sortedBetas = {
+export const categorizeBetasByStatus = (betas: GenericBeta[]) => {
+  const sortedBetas: GenericBetaByStatus = {
     active: [],
     historical: [],
     available: [],
-    null: [],
+    no_status: [],
   };
-  return betas.reduce((acc: {}, beta: Beta & AccountBeta) => {
+  return betas.reduce((acc: GenericBetaByStatus, beta: GenericBeta) => {
     const category = getBetaStatus(beta);
     acc[category].push(beta);
     return acc;

@@ -178,6 +178,6 @@ describe('getBetaStatus', () => {
 
   it('should return null if the beta does not fall in one of the other statuses', () => {
     const { futureBeta } = betas;
-    expect(getBetaStatus(futureBeta)).toBe('null');
+    expect(getBetaStatus(futureBeta)).toBe('no_status');
   });
 });
