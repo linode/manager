@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       flexBasis: '100%',
       marginBottom: theme.spacing(1),
-      marginLeft: 0,
     },
     whiteSpace: 'nowrap',
   },
@@ -58,36 +57,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 'calc(600px - 32px)',
     },
     [theme.breakpoints.down('sm')]: {
-      '&.MuiGrid-item': {
-        padding: 0,
-      },
-      margin: 0,
       padding: 0,
       width: '100%',
-    },
-    [theme.breakpoints.down(xs_sm)]: {
-      paddingTop: 0,
-    },
-    [theme.breakpoints.up('md')]: {
-      '&.MuiGrid-item': {
-        paddingRight: 0,
-      },
     },
   },
   makeTransferButton: {
     marginBottom: theme.spacing(),
     minWidth: 152,
     [theme.breakpoints.down('md')]: {
-      marginBottom: 0,
-      marginRight: theme.spacing(),
       width: '100%',
     },
     [theme.breakpoints.down('sm')]: {
       margin: `${theme.spacing()} 0`,
-      width: '100%',
     },
     [theme.breakpoints.down(xs_sm)]: {
       marginTop: 0,
+      minWidth: 'auto',
     },
     whiteSpace: 'nowrap',
   },
@@ -101,21 +86,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     margin: `${theme.spacing(2)} 0`,
-    [theme.breakpoints.down('lg')]: {
-      alignItems: 'flex-end',
-    },
     [theme.breakpoints.down('md')]: {
       alignItems: 'flex-start',
       flexDirection: 'column',
       marginLeft: theme.spacing(2),
     },
     [theme.breakpoints.down('sm')]: {
-      marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
-      marginTop: theme.spacing(),
-    },
-    [theme.breakpoints.down(xs_sm)]: {
-      alignItems: 'flex-start',
     },
   },
   transferInput: {
@@ -123,9 +100,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 240,
     },
     [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
     width: 360,
@@ -136,12 +110,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexGrow: 1,
       },
       flexBasis: '100%',
-      // width: 'calc(100% - 16px)',
       width: 'calc(600px-32px)',
     },
     [theme.breakpoints.down('sm')]: {
-      margin: 0,
-      padding: 0,
       width: '100%',
     },
   },
