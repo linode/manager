@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 
 const VPCDetails = () => {
   const { vpcId } = useParams<{ vpcId: string }>();

@@ -7,7 +7,7 @@ import { Provider as ReduxStoreProvider } from 'react-redux';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
-import CookieWarning from 'src/components/CookieWarning';
+import { CookieWarning } from 'src/components/CookieWarning';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import SplashScreen from 'src/components/SplashScreen';
 import 'src/exceptionReporting';

@@ -8,7 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
 import { H1Header } from 'src/components/H1Header/H1Header';
-import ClickAwayListener from 'src/components/core/ClickAwayListener';
+import { ClickAwayListener } from 'src/components/ClickAwayListener';
 import { fadeIn } from 'src/styles/keyframes';
 
 import { TextField, TextFieldProps } from '../TextField';

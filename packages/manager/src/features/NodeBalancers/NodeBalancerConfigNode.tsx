@@ -5,10 +5,10 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
+import { MenuItem } from 'src/components/MenuItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import MenuItem from 'src/components/core/MenuItem';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';

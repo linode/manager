@@ -1,10 +1,11 @@
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import { SvgIconProps } from '@mui/material/SvgIcon';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
+
+import { SvgIconProps } from '../SvgIcon';
 
 interface ErrorStateProps {
   CustomIcon?: React.ComponentType<SvgIconProps>;
