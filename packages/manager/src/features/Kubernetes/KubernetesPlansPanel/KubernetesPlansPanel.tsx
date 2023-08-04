@@ -1,15 +1,15 @@
 import * as React from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
-import { ExtendedType } from 'src/utilities/extendType';
-
-import { KubernetesPlanContainer } from './KubernetesPlanContainer';
-import { PlanInformation } from './PlanInformation';
+import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';
 import {
   determineInitialPlanCategoryTab,
   getPlanSelectionsByPlanType,
   planTabInfoContent,
-} from './utils';
+} from 'src/features/components/PlansPanel/utils';
+import { ExtendedType } from 'src/utilities/extendType';
+
+import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
 import type { CreateNodePoolData, Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
