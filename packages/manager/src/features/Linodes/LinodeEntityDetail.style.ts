@@ -1,9 +1,27 @@
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import Grid from '@mui/material/Unstable_Grid2';
+// This component was built asuming an unmodified MUI <Table />
+import Table from '@mui/material/Table';
+
+import { Chip } from 'src/components/Chip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+
+import { isPropValid } from 'src/utilities/isPropValid';
+import type { HeaderProps } from './LinodeEntityDetail';
 
 // ---------------------------------------------------------------------
 // Header Styles
 // ---------------------------------------------------------------------
+
+type StyledChipProps = Pick<HeaderProps, 'isSummaryView'> & {
+  hasSecondaryStatus: boolean;
+  isOffline: boolean;
+  isOther: boolean;
+  isRunning: boolean;
+};
 
 export const StyledLink = styled(Link, { label: 'StyledLink' })(
   ({ theme }) => ({
@@ -16,10 +34,205 @@ export const StyledLink = styled(Link, { label: 'StyledLink' })(
   })
 );
 
+export const StyledChip = styled(Chip, {
+  label: 'StyledChip',
+  shouldForwardProp: (prop) =>
+    isPropValid(
+      [
+        'isSummaryView',
+        'hasSecondaryStatus',
+        'isOffline',
+        'isOther',
+        'isRunning',
+      ],
+      prop
+    ),
+})<StyledChipProps>(
+  ({
+    theme,
+    isSummaryView,
+    hasSecondaryStatus,
+    isOffline,
+    isOther,
+    isRunning,
+  }) => ({
+    ...theme.applyStatusPillStyles,
+    borderRadius: 0,
+    fontSize: '0.875rem',
+    height: `24px !important`,
+    letterSpacing: '.5px',
+    marginLeft: theme.spacing(2),
+
+    ...(hasSecondaryStatus
+      ? {
+          borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+          paddingRight: `16px !important`,
+        }
+      : {}),
+    ...(isSummaryView
+      ? {
+          [theme.breakpoints.down('lg')]: {
+            marginLeft: theme.spacing(),
+          },
+        }
+      : {}),
+    ...(isOffline
+      ? {
+          '&:before': {
+            backgroundColor: theme.color.grey8,
+          },
+        }
+      : {}),
+    ...(isOther
+      ? {
+          '&:before': {
+            backgroundColor: theme.color.orange,
+          },
+        }
+      : {}),
+    ...(isRunning
+      ? {
+          '&:before': {
+            backgroundColor: theme.color.teal,
+          },
+        }
+      : {}),
+  })
+);
+
 // ---------------------------------------------------------------------
 // Body Styles
 // ---------------------------------------------------------------------
 
+export const StyledBodyGrid = styled(Grid, { label: 'StyledBodyGrid' })(
+  ({ theme }) => ({
+    flexWrap: 'nowrap',
+    justifyContent: 'space-between',
+    padding: theme.spacing(2),
+  })
+);
+
+export const StyledColumnLabelGrid = styled(Grid, {
+  label: 'StyledColumnLabelGrid',
+})(({ theme }) => ({
+  color: theme.textColors.headlineStatic,
+  fontFamily: theme.font.bold,
+}));
+
+export const StyledRightColumnGrid = styled(Grid, {
+  label: 'StyledRightColumnGrid',
+})(({ theme }) => ({
+  flexBasis: '75%',
+  flexWrap: 'nowrap',
+  paddingBottom: 0,
+  paddingRight: 0,
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+  },
+}));
+
+export const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
+  ({ theme }) => ({
+    '& > div': {
+      flexBasis: '50%',
+      [theme.breakpoints.down('md')]: {
+        flexBasis: '100%',
+      },
+    },
+    '& p': {
+      color: theme.textColors.tableStatic,
+    },
+  })
+);
+
 // ---------------------------------------------------------------------
 // AccessTable Styles
 // ---------------------------------------------------------------------
+
+export const StyledTable = styled(Table, { label: 'StyledTable' })(
+  ({ theme }) => ({
+    '& td': {
+      border: 'none',
+      borderBottom: `1px solid ${theme.bg.bgPaper}`,
+      fontSize: '0.875rem',
+      lineHeight: 1,
+      whiteSpace: 'nowrap',
+    },
+    '& th': {
+      backgroundColor: theme.bg.app,
+      borderBottom: `1px solid ${theme.bg.bgPaper}`,
+      color: theme.textColors.textAccessTable,
+      fontSize: '0.875rem',
+      fontWeight: 'bold',
+      lineHeight: 1,
+      padding: theme.spacing(),
+      textAlign: 'left',
+      whiteSpace: 'nowrap',
+      width: 170,
+    },
+    '& tr': {
+      height: 32,
+    },
+    tableLayout: 'fixed',
+  })
+);
+
+export const StyledTableGrid = styled(Grid, { label: 'StyledTableGrid' })(
+  ({ theme }) => ({
+    '&.MuiGrid-item': {
+      padding: 0,
+      paddingLeft: theme.spacing(),
+    },
+  })
+);
+
+export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
+  ({ theme }) => ({
+    '& div': {
+      fontSize: 15,
+    },
+    alignItems: 'center',
+    backgroundColor: theme.bg.bgAccessRow,
+    color: theme.textColors.tableStatic,
+    display: 'flex',
+    fontFamily: '"UbuntuMono", monospace, sans-serif',
+    justifyContent: 'space-between',
+    padding: '4px 8px',
+    position: 'relative',
+  })
+);
+
+export const StyledCopyTooltip = styled(CopyTooltip, {
+  label: 'StyledCopyTooltip',
+})(({ theme }) => ({
+  '& svg': {
+    height: `12px`,
+    opacity: 0,
+    width: `12px`,
+  },
+}));
+
+export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
+  ({ theme }) => ({
+    '&:after': {
+      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.bg.bgAccessRow});`,
+      bottom: 0,
+      content: '""',
+      height: '100%',
+      position: 'absolute',
+      right: 0,
+      width: 30,
+    },
+    overflowX: 'auto',
+    overflowY: 'hidden', // For Edge
+    paddingRight: 15,
+  })
+);
+
+export const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })(
+  ({ theme }) => ({
+    '&:hover $copy > svg, & $copy:focus > svg': {
+      opacity: 1,
+    },
+  })
+);

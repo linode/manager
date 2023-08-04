@@ -1,26 +1,19 @@
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
-// This component was built asuming an unmodified MUI <Table />
-import Table from '@mui/material/Table';
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
-import { Theme, useTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import EntityDetail from 'src/components/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography, TypographyProps } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
@@ -48,7 +41,20 @@ import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
 } from './transitions';
-import { StyledLink } from './LinodeEntityDetail.style';
+import {
+  StyledChip,
+  StyledLink,
+  StyledBodyGrid,
+  StyledColumnLabelGrid,
+  StyledRightColumnGrid,
+  StyledSummaryGrid,
+  StyledTable,
+  StyledTableGrid,
+  StyledTableCell,
+  StyledCopyTooltip,
+  StyledGradientDiv,
+  StyledTableRow,
+} from './LinodeEntityDetail.style';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -164,43 +170,7 @@ export interface HeaderProps {
   variant?: TypographyProps['variant'];
 }
 
-const useHeaderStyles = makeStyles((theme: Theme) => ({
-  divider: {
-    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-    paddingRight: `16px !important`,
-  },
-  statusChip: {
-    ...theme.applyStatusPillStyles,
-    borderRadius: 0,
-    fontSize: '0.875rem',
-    height: `24px !important`,
-    letterSpacing: '.5px',
-    marginLeft: theme.spacing(2),
-  },
-  statusChipLandingDetailView: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-  statusOffline: {
-    '&:before': {
-      backgroundColor: theme.color.grey8,
-    },
-  },
-  statusOther: {
-    '&:before': {
-      backgroundColor: theme.color.orange,
-    },
-  },
-  statusRunning: {
-    '&:before': {
-      backgroundColor: theme.color.teal,
-    },
-  },
-}));
-
 const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
-  const classes = useHeaderStyles();
   const theme = useTheme();
 
   const {
@@ -261,15 +231,12 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
       variant={variant}
     >
       <Box sx={sxBoxFlex}>
-        <Chip
-          className={classNames({
-            [classes.divider]: hasSecondaryStatus,
-            [classes.statusChip]: true,
-            [classes.statusChipLandingDetailView]: isSummaryView,
-            [classes.statusOffline]: isOffline,
-            [classes.statusOther]: isOther,
-            [classes.statusRunning]: isRunning,
-          })}
+        <StyledChip
+          isSummaryView={isSummaryView}
+          hasSecondaryStatus={hasSecondaryStatus}
+          isOffline={isOffline}
+          isOther={isOther}
+          isRunning={isRunning}
           component="span"
           data-qa-linode-status
           label={formattedStatus}
@@ -348,38 +315,7 @@ export interface BodyProps {
   region: string;
 }
 
-const useBodyStyles = makeStyles((theme: Theme) => ({
-  body: {
-    flexWrap: 'nowrap',
-    justifyContent: 'space-between',
-    padding: theme.spacing(2),
-  },
-  columnLabel: {
-    color: theme.textColors.headlineStatic,
-    fontFamily: theme.font.bold,
-  },
-  rightColumn: {
-    flexBasis: '75%',
-    flexWrap: 'nowrap',
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-  summaryContent: {
-    '& > div': {
-      flexBasis: '50%',
-      [theme.breakpoints.down('md')]: {
-        flexBasis: '100%',
-      },
-    },
-    '& p': {
-      color: theme.textColors.tableStatic,
-    },
-  },
-}));
-
 export const Body = React.memo((props: BodyProps) => {
-  const classes = useBodyStyles();
   const {
     gbRAM,
     gbStorage,
@@ -406,7 +342,7 @@ export const Body = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
 
   return (
-    <Grid className={classes.body} container direction="row" spacing={2}>
+    <StyledBodyGrid container direction="row" spacing={2}>
       {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
       <Grid
         container
@@ -416,13 +352,8 @@ export const Body = React.memo((props: BodyProps) => {
           flexBasis: '25%',
         }}
       >
-        <Grid className={classes.columnLabel}>Summary</Grid>
-        <Grid
-          className={classes.summaryContent}
-          container
-          direction="row"
-          spacing={2}
-        >
+        <StyledColumnLabelGrid>Summary</StyledColumnLabelGrid>
+        <StyledSummaryGrid container direction="row" spacing={2}>
           <Grid>
             <Typography>
               {pluralize('CPU Core', 'CPU Cores', numCPUs)}
@@ -439,14 +370,9 @@ export const Body = React.memo((props: BodyProps) => {
               {pluralize('Volume', 'Volumes', numVolumes)}
             </Typography>
           </Grid>
-        </Grid>
+        </StyledSummaryGrid>
       </Grid>
-      <Grid
-        sx={{
-          paddingBottom: 0,
-          paddingRight: 0,
-        }}
-        className={classes.rightColumn}
+      <StyledRightColumnGrid
         container
         direction="row"
         justifyContent="space-between"
@@ -488,8 +414,8 @@ export const Body = React.memo((props: BodyProps) => {
           gridProps={{ md: 7 }}
           title="Access"
         />
-      </Grid>
-    </Grid>
+      </StyledRightColumnGrid>
+    </StyledBodyGrid>
   );
 });
 
@@ -497,83 +423,7 @@ export const Body = React.memo((props: BodyProps) => {
 // AccessTable
 // =============================================================================
 // @todo: Maybe move this component somewhere to its own file? Could potentially
-// be used elsewhere.
-const useAccessTableStyles = makeStyles((theme: Theme) => ({
-  accessTable: {
-    '& td': {
-      border: 'none',
-      borderBottom: `1px solid ${theme.bg.bgPaper}`,
-      fontSize: '0.875rem',
-      lineHeight: 1,
-      whiteSpace: 'nowrap',
-    },
-    '& th': {
-      backgroundColor: theme.bg.app,
-      borderBottom: `1px solid ${theme.bg.bgPaper}`,
-      color: theme.textColors.textAccessTable,
-      fontSize: '0.875rem',
-      fontWeight: 'bold',
-      lineHeight: 1,
-      padding: theme.spacing(),
-      textAlign: 'left',
-      whiteSpace: 'nowrap',
-      width: 170,
-    },
-    '& tr': {
-      height: 32,
-    },
-    tableLayout: 'fixed',
-  },
-  accessTableContent: {
-    '&.MuiGrid-item': {
-      padding: 0,
-      paddingLeft: theme.spacing(),
-    },
-  },
-  code: {
-    '& div': {
-      fontSize: 15,
-    },
-    alignItems: 'center',
-    backgroundColor: theme.bg.bgAccessRow,
-    color: theme.textColors.tableStatic,
-    display: 'flex',
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
-    justifyContent: 'space-between',
-    padding: '4px 8px',
-    position: 'relative',
-  },
-  columnLabel: {
-    color: theme.textColors.headlineStatic,
-    fontFamily: theme.font.bold,
-  },
-  copy: {
-    '& svg': {
-      height: `12px`,
-      opacity: 0,
-      width: `12px`,
-    },
-  },
-  gradient: {
-    '&:after': {
-      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.bg.bgAccessRow});`,
-      bottom: 0,
-      content: '""',
-      height: '100%',
-      position: 'absolute',
-      right: 0,
-      width: 30,
-    },
-    overflowX: 'auto',
-    overflowY: 'hidden', // For Edge
-    paddingRight: 15,
-  },
-  row: {
-    '&:hover $copy > svg, & $copy:focus > svg': {
-      opacity: 1,
-    },
-  },
-}));
+// be used elsewhere. maybe
 
 interface AccessTableRow {
   heading?: string;
@@ -589,7 +439,6 @@ interface AccessTableProps {
 }
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
-  const classes = useAccessTableStyles();
   return (
     <Grid
       container
@@ -599,29 +448,29 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
       sx={props.sx}
       {...props.gridProps}
     >
-      <Grid className={classes.columnLabel}>{props.title}</Grid>
-      <Grid className={classes.accessTableContent}>
-        <Table className={classes.accessTable}>
+      <StyledColumnLabelGrid>{props.title}</StyledColumnLabelGrid>
+      <StyledTableGrid>
+        <StyledTable>
           <TableBody>
             {props.rows.map((thisRow) => {
               return thisRow.text ? (
-                <TableRow className={classes.row} key={thisRow.text}>
+                <StyledTableRow key={thisRow.text}>
                   {thisRow.heading ? (
                     <th scope="row">{thisRow.heading}</th>
                   ) : null}
-                  <TableCell className={classes.code}>
-                    <div className={classes.gradient}>
+                  <StyledTableCell>
+                    <StyledGradientDiv>
                       <CopyTooltip copyableText text={thisRow.text} />
-                    </div>
-                    <CopyTooltip className={classes.copy} text={thisRow.text} />
-                  </TableCell>
-                </TableRow>
+                    </StyledGradientDiv>
+                    <StyledCopyTooltip text={thisRow.text} />
+                  </StyledTableCell>
+                </StyledTableRow>
               ) : null;
             })}
           </TableBody>
-        </Table>
+        </StyledTable>
         {props.footer ? <Grid sx={{ padding: 0 }}>{props.footer}</Grid> : null}
-      </Grid>
+      </StyledTableGrid>
     </Grid>
   );
 });
