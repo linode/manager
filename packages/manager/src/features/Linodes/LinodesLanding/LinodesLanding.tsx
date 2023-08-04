@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -36,7 +35,10 @@ import CardView from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import { DisplayLinodes } from './DisplayLinodes';
-import styled, { StyleProps } from './LinodesLanding.styles';
+import {
+  StyledLinkContainerGrid,
+  StyledWrapperGrid,
+} from './LinodesLanding.styles';
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
@@ -89,13 +91,11 @@ export interface LinodesLandingProps {
 type CombinedProps = LinodesLandingProps &
   StateProps &
   RouteProps &
-  StyleProps &
   WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
-      classes,
       linodesData,
       linodesInTransition,
       linodesRequestError,
@@ -298,15 +298,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                           );
                         }}
                       </OrderBy>
-                      <Grid
-                        className={classes.CSVwrapper}
-                        container
-                        justifyContent="flex-end"
-                      >
-                        <Grid className={classes.CSVlinkContainer}>
+                      <StyledWrapperGrid container justifyContent="flex-end">
+                        <StyledLinkContainerGrid>
                           <LinodesLandingCSVDownload />
-                        </Grid>
-                      </Grid>
+                        </StyledLinkContainerGrid>
+                      </StyledWrapperGrid>
                     </React.Fragment>
                   );
                 }}
@@ -458,7 +454,6 @@ const connected = connect(mapStateToProps, undefined);
 export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
   connected,
-  styled,
   withFeatureFlagConsumer,
   withProfile
 );

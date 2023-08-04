@@ -91,6 +91,11 @@ const GoTo = (props: Props) => {
         href: '/loadbalancers',
       },
       {
+        display: 'VPC',
+        hide: !flags.vpc,
+        href: '/vpc',
+      },
+      {
         display: 'NodeBalancers',
         href: '/nodebalancers',
       },

@@ -1,9 +1,8 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -18,22 +17,6 @@ import {
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { listIPv6InRange } from './LinodeNetworking';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  header: {
-    marginTop: theme.spacing(2),
-  },
-  ipv6Input: {
-    marginBottom: theme.spacing(2),
-  },
-  rdnsRecord: {
-    marginTop: theme.spacing(2),
-  },
-  section: {
-    borderTop: `1px solid ${theme.palette.divider}`,
-    marginTop: theme.spacing(2),
-  },
-}));
 
 interface Props {
   linodeId: number;
@@ -86,7 +69,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
     },
   });
 
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   React.useEffect(() => {
     if (open) {
@@ -141,12 +124,17 @@ export const EditRangeRDNSDrawer = (props: Props) => {
         />
       </form>
       {range && ips && ips.length > 0 && (
-        <div className={classes.section}>
-          <Typography className={classes.header} variant="h3">
+        <div
+          style={{
+            borderTop: `1px solid ${theme.palette.divider}`,
+            marginTop: theme.spacing(2),
+          }}
+        >
+          <Typography sx={{ marginTop: theme.spacing(2) }} variant="h3">
             Existing Records
           </Typography>
           {ips.map((ip) => (
-            <div className={classes.rdnsRecord} key={ip.address}>
+            <div style={{ marginTop: theme.spacing(2) }} key={ip.address}>
               <Typography>{ip.address}</Typography>
               <Typography>{ip.rdns || ''}</Typography>
             </div>

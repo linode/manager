@@ -6,7 +6,7 @@ import * as React from 'react';
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import FormControlLabel from 'src/components/core/FormControlLabel';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 
 interface Props extends CheckboxProps {
   /**

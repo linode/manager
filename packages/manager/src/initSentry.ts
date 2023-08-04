@@ -82,7 +82,7 @@ export const initSentry = () => {
       ],
       integrations: [new BrowserTracing()],
       release: packageJson.version,
-      tracesSampleRate: environment === 'production' ? 0.2 : 1,
+      tracesSampleRate: environment === 'production' ? 0.025 : 1,
     });
   }
 };
