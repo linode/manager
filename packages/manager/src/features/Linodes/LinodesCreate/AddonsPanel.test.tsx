@@ -137,12 +137,23 @@ const props: AddonsPanelProps = {
   selectedRegionID: '1234',
   selectedTypeID: '12345',
   togglePrivateIP: jest.fn(),
+  userData: {
+    createType: 'fromLinode',
+    onChange: jest.fn(),
+    showUserData: false,
+    userData: '1234',
+  },
   vlanLabel: 'abc',
 };
 
 describe('AddonsPanel', () => {
   it('should render AddonsPanel', () => {
     renderWithTheme(<AddonsPanel {...props} />);
+  });
+
+  it('should render UserDataAccordion', () => {
+    const { getByText } = renderWithTheme(<AddonsPanel {...props} />);
+    getByText('Add User Data');
   });
 
   it('Should trigger changePrivateIP if source linode has been allocated a private IP', () => {
