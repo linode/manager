@@ -667,6 +667,9 @@ export const lightTheme: ThemeOptions = {
       },
     },
     MuiInput: {
+      defaultProps: {
+        disableUnderline: true,
+      },
       styleOverrides: {
         disabled: {},
         error: {},

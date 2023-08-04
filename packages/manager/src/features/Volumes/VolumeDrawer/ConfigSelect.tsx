@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import FormControl from 'src/components/core/FormControl';
+import { FormControl } from 'src/components/FormControl';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 
 interface Props {
