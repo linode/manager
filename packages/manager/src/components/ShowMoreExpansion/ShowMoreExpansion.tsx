@@ -44,7 +44,7 @@ interface ShowMoreExpansionProps {
   name: string;
 }
 
-const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
+export const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
   const { children, defaultExpanded, name } = props;
 
   const { classes } = useStyles();
@@ -79,5 +79,3 @@ const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
     </React.Fragment>
   );
 };
-
-export default ShowMoreExpansion;
