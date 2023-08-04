@@ -28,7 +28,6 @@ export const MonitorTickets = (props: MonitorTicketsProps) => {
       justifyContent="center"
     >
       <Grid
-        // className={`${hasIssues ? classes.sadTicket : classes.happyTicket} py0`}
         sx={(theme) => ({
           color: hasIssues ? theme.color.red : theme.color.grey1,
           padding: `0 ${theme.spacing(1)}`,
