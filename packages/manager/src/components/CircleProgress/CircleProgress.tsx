@@ -1,10 +1,11 @@
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import CircularProgress, {
+import {
+  CircularProgress,
   CircularProgressProps,
-} from 'src/components/core/CircularProgress';
+} from 'src/components/CircularProgress';
 import { isPropValid } from 'src/utilities/isPropValid';
 
 interface CircleProgressProps extends CircularProgressProps {

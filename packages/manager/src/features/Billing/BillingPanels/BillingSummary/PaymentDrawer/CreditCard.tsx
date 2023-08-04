@@ -1,5 +1,5 @@
 import { CardType, CreditCardData } from '@linode/api-v4/lib/account/types';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';

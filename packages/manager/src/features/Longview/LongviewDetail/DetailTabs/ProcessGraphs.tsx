@@ -3,7 +3,7 @@ import { WithTheme, makeStyles, withTheme } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import {
   convertBytesToTarget,

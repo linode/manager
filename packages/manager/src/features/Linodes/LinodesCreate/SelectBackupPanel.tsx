@@ -10,18 +10,18 @@ import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { Paper } from 'src/components/Paper';
+import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 import type { StyledTypographyProps } from './SelectLinodePanel';
-import { isPropValid } from 'src/utilities/isPropValid';
 
 export const aggregateBackups = (
   backups: LinodeBackupsResponse

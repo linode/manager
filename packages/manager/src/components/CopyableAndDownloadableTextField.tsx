@@ -25,15 +25,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = TextFieldProps & {
+type Props = TextFieldProps & {
   className?: string;
   fileName?: string;
   hideIcon?: boolean;
 };
 
-export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
-  props
-) => {
+export const CopyableAndDownloadableTextField = (props: Props) => {
   const classes = useStyles();
   const { className, hideIcon, value, ...restProps } = props;
 
@@ -61,5 +59,3 @@ export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
     />
   );
 };
-
-export default CopyableAndDownloadableTextField;
