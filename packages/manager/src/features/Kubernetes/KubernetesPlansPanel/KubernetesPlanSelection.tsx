@@ -7,10 +7,9 @@ import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/Enhanced
 import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
+import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { ExtendedType } from 'src/utilities/extendType';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-
-import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 interface Props {
   disabled?: boolean;
