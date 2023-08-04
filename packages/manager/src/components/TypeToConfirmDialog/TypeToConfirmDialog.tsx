@@ -24,16 +24,18 @@ interface EntityInfo {
     | 'Kubernetes'
     | 'Linode'
     | 'NodeBalancer'
+    | 'VPC'
     | 'Volume';
 }
 
 interface TypeToConfirmDialogProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   entity: EntityInfo;
   errors?: APIError[] | null | undefined;
   label: string;
   loading: boolean;
   onClick: () => void;
+  open: boolean;
 }
 
 type CombinedProps = TypeToConfirmDialogProps &
