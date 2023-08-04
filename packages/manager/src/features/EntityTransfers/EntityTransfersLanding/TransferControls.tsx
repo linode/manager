@@ -14,13 +14,12 @@ import ConfirmTransferDialog from './ConfirmTransferDialog';
 
 // sm = 600, md = 960, lg = 1280
 
-const xs_sm = 450,
-  sm_md = 800;
+const xs_sm = 450;
 
 const useStyles = makeStyles((theme: Theme) => ({
   label: {
     color: theme.textColors.headlineStatic,
-    // fontSize: '1rem',
+    fontSize: '1rem',
     marginRight: theme.spacing(),
     [theme.breakpoints.down('md')]: {
       flexBasis: '100%',
@@ -114,12 +113,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
       marginTop: theme.spacing(),
-    },
-    [theme.breakpoints.down(sm_md)]: {
-      alignItems: 'flex-start',
-      flexDirection: 'column',
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2),
     },
     [theme.breakpoints.down(xs_sm)]: {
       alignItems: 'flex-start',
