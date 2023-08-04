@@ -9,19 +9,9 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import { isPropValid } from 'src/utilities/isPropValid';
-import type { HeaderProps } from './LinodeEntityDetail';
-
 // ---------------------------------------------------------------------
 // Header Styles
 // ---------------------------------------------------------------------
-
-type StyledChipProps = Pick<HeaderProps, 'isSummaryView'> & {
-  hasSecondaryStatus: boolean;
-  isOffline: boolean;
-  isOther: boolean;
-  isRunning: boolean;
-};
 
 export const StyledLink = styled(Link, { label: 'StyledLink' })(
   ({ theme }) => ({
@@ -34,69 +24,14 @@ export const StyledLink = styled(Link, { label: 'StyledLink' })(
   })
 );
 
-export const StyledChip = styled(Chip, {
-  label: 'StyledChip',
-  shouldForwardProp: (prop) =>
-    isPropValid(
-      [
-        'isSummaryView',
-        'hasSecondaryStatus',
-        'isOffline',
-        'isOther',
-        'isRunning',
-      ],
-      prop
-    ),
-})<StyledChipProps>(
-  ({
-    theme,
-    isSummaryView,
-    hasSecondaryStatus,
-    isOffline,
-    isOther,
-    isRunning,
-  }) => ({
+export const StyledChip = styled(Chip, { label: 'StyledChip' })(
+  ({ theme }) => ({
     ...theme.applyStatusPillStyles,
     borderRadius: 0,
     fontSize: '0.875rem',
     height: `24px !important`,
     letterSpacing: '.5px',
     marginLeft: theme.spacing(2),
-
-    ...(hasSecondaryStatus
-      ? {
-          borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-          paddingRight: `16px !important`,
-        }
-      : {}),
-    ...(isSummaryView
-      ? {
-          [theme.breakpoints.down('lg')]: {
-            marginLeft: theme.spacing(),
-          },
-        }
-      : {}),
-    ...(isOffline
-      ? {
-          '&:before': {
-            backgroundColor: theme.color.grey8,
-          },
-        }
-      : {}),
-    ...(isOther
-      ? {
-          '&:before': {
-            backgroundColor: theme.color.orange,
-          },
-        }
-      : {}),
-    ...(isRunning
-      ? {
-          '&:before': {
-            backgroundColor: theme.color.teal,
-          },
-        }
-      : {}),
   })
 );
 

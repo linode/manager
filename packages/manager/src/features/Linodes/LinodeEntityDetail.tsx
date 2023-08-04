@@ -1,8 +1,9 @@
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
+import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
@@ -170,7 +171,35 @@ export interface HeaderProps {
   variant?: TypographyProps['variant'];
 }
 
+const useHeaderStyles = makeStyles()((theme: Theme) => ({
+  divider: {
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    paddingRight: `16px !important`,
+  },
+  statusChipLandingDetailView: {
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: theme.spacing(),
+    },
+  },
+  statusOffline: {
+    '&:before': {
+      backgroundColor: theme.color.grey8,
+    },
+  },
+  statusOther: {
+    '&:before': {
+      backgroundColor: theme.color.orange,
+    },
+  },
+  statusRunning: {
+    '&:before': {
+      backgroundColor: theme.color.teal,
+    },
+  },
+}));
+
 const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
+  const { classes, cx } = useHeaderStyles();
   const theme = useTheme();
 
   const {
@@ -232,11 +261,13 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
     >
       <Box sx={sxBoxFlex}>
         <StyledChip
-          isSummaryView={isSummaryView}
-          hasSecondaryStatus={hasSecondaryStatus}
-          isOffline={isOffline}
-          isOther={isOther}
-          isRunning={isRunning}
+          className={cx({
+            [classes.divider]: hasSecondaryStatus,
+            [classes.statusChipLandingDetailView]: isSummaryView,
+            [classes.statusOffline]: isOffline,
+            [classes.statusOther]: isOther,
+            [classes.statusRunning]: isRunning,
+          })}
           component="span"
           data-qa-linode-status
           label={formattedStatus}
