@@ -3,10 +3,11 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { mockGetVPCs } from 'support/intercepts/vpc';
+import { mockGetVPCs, mockDeleteVPC } from 'support/intercepts/vpc';
 import { vpcFactory } from '@src/factories';
 import { ui } from 'support/ui';
-import { getRegionById } from 'support/util/regions';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
 // TODO Remove feature flag mocks when feature flag is removed from codebase.
 describe('VPC landing page', () => {
@@ -75,6 +76,111 @@ describe('VPC landing page', () => {
       .click();
 
     cy.url().should('endWith', '/vpc/create');
+  });
+
+  /*
+   * - Confirms VPC deletion flow from landing page using mocked data and API responses.
+   * - Confirms landing page automatically updates to reflect deleted VPCs.
+   * - Confirms landing page reverts to its empty state when last VPC is deleted.
+   */
+  it('can delete VPCs from VPC landing page', () => {
+    const mockVPCs = [
+      vpcFactory.build({
+        label: randomLabel(),
+        region: chooseRegion().id,
+      }),
+      vpcFactory.build({
+        label: randomLabel(),
+        region: chooseRegion().id,
+      }),
+    ];
+
+    const mockVPCsAfterDeletion = [mockVPCs[1]];
+
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetVPCs(mockVPCs).as('getVPCs');
+    mockDeleteVPC(mockVPCs[0].id).as('deleteVPC');
+
+    cy.visitWithLogin('/vpc');
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+
+    // Delete first VPC.
+    cy.findByText(mockVPCs[0].label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    mockGetVPCs(mockVPCsAfterDeletion).as('getVPCs');
+    // Complete type-to-confirm dialog.
+    ui.dialog
+      .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('VPC Label')
+          .should('be.visible')
+          .click()
+          .type(mockVPCs[0].label);
+
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that toast appears and VPC is removed from landing page.
+    cy.wait(['@deleteVPC', '@getVPCs']);
+    ui.toast.assertMessage('VPC deleted successfully.');
+    cy.findByText(mockVPCs[0].label).should('not.exist');
+
+    // Delete second VPC.
+    cy.findByText(mockVPCs[1].label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    mockDeleteVPC(mockVPCs[1].id).as('deleteVPC');
+    mockGetVPCs([]).as('getVPCs');
+    // Complete type-to-confirm dialog.
+    ui.dialog
+      .findByTitle(`Delete VPC ${mockVPCs[1].label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('VPC Label')
+          .should('be.visible')
+          .click()
+          .type(mockVPCs[1].label);
+
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that toast appears, VPC is removed from landing page, and landing
+    // page reverts to its empty state.
+    cy.wait(['@deleteVPC', '@getVPCs']);
+    ui.toast.assertMessage('VPC deleted successfully.');
+    cy.findByText(mockVPCs[1].label).should('not.exist');
+    cy.findByText('Create a private and isolated network.').should(
+      'be.visible'
+    );
   });
 
   /*
