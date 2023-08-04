@@ -57,6 +57,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - VPC landing page ([#9467](https://github.com/linode/manager/pull/9467))
 - Add basic routing and files for VPC ([#9474](https://github.com/linode/manager/pull/9474))
+- Fix User data input crash ([#9494](https://github.com/linode/manager/pull/9494))
 
 ## [2023-07-28] - v1.98.1
 
