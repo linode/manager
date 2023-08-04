@@ -19,11 +19,11 @@ export const getLoadbalancerRoutes = (id: number) =>
  *
  * Returns an Akamai Global Load Balancer route
  */
-export const getLoadbalancerRoute = (loadbalancId: number, routeId: number) =>
+export const getLoadbalancerRoute = (loadbalancerId: number, routeId: number) =>
   Request<Route>(
     setURL(
       `${BETA_API_ROOT}/aglb/${encodeURIComponent(
-        loadbalancId
+        loadbalancerId
       )}/routes/${encodeURIComponent(routeId)}`
     ),
     setMethod('GET')
@@ -45,11 +45,11 @@ export const createLoadbalancerRoute = (
   );
 
 /**
- * updateLoadbalanacerRoute
+ * updateLoadbalancerRoute
  *
  * Updates an Akamai Global Load Balancer route
  */
-export const updateLoadbalanacerRoute = (
+export const updateLoadbalancerRoute = (
   loadbalancerId: number,
   routeId: number,
   data: Partial<RoutePayload>

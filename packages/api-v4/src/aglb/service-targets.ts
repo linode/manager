@@ -15,14 +15,14 @@ import type { ServiceTarget, ServiceTargetPayload } from './types';
  * Returns a paginated list of Akamai Global Load Balancer service targets
  */
 export const getLoadbalancerServiceTargets = (
-  loadbalancrId: number,
+  loadbalancerId: number,
   params?: Params,
   filter?: Filter
 ) =>
   Request<ResourcePage<ServiceTarget>>(
     setURL(
       `${BETA_API_ROOT}/aglb/${encodeURIComponent(
-        loadbalancrId
+        loadbalancerId
       )}/service-targets`
     ),
     setMethod('GET'),
