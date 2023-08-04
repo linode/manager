@@ -360,12 +360,9 @@ describe('linode landing checks', () => {
     getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
 
     mockLinodes.forEach((linode) => {
-      // Get the upper 3 parent layers to check each table item.
       cy.findByText(linode.label)
         .should('be.visible')
-        .parent()
-        .parent()
-        .parent()
+        .closest('[data-qa-linode-card]')
         .within(() => {
           cy.findByText('Summary').should('be.visible');
           cy.findByText('IP Addresses').should('be.visible');
