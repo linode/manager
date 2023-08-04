@@ -13,7 +13,7 @@ export const StyledIPGrid = styled(Grid, {
   label: 'StyledIPGrid',
 })(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
-    paddingBottom: '0px !important',
+    paddingBottom: '0px',
   },
 }));
 
@@ -21,6 +21,6 @@ export const StyledPortGrid = styled(Grid, {
   label: 'StyledPortGrid',
 })(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
-    paddingTop: '0px !important',
+    paddingTop: '0px',
   },
 }));
