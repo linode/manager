@@ -57,7 +57,6 @@ const DiskSelect = (props: Props) => {
   );
 };
 
-// TODO is this necessary? don't think we are providing the 'updateFor' prop for it to check for rendering anyway
 export default compose<Props, Props & RenderGuardProps>(RenderGuard)(
   DiskSelect
 );
