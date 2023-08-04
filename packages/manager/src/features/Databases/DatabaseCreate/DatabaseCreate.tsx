@@ -38,15 +38,15 @@ import { Radio } from 'src/components/Radio/Radio';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import FormControl from 'src/components/core/FormControl';
+import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Paper } from 'src/components/Paper';
-import RadioGroup from 'src/components/core/RadioGroup';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import PlansPanel, {
   PlanSelectionType,
-} from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
+} from 'src/features/components/PlansPanel/PlansPanel';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
 import {
