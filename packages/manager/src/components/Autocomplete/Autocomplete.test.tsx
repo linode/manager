@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Autocomplete } from './Autocomplete';
 
