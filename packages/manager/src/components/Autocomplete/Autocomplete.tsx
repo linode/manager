@@ -7,10 +7,8 @@ import React from 'react';
 
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
-import {
-  CustomPopper,
-  SelectedIcon,
-} from 'src/features/Linodes/LinodeSelect/LinodeSelect.styles';
+
+import { CustomPopper, SelectedIcon } from './Autocomplete.styles';
 
 export interface OptionsType {
   data?: any;
