@@ -1,9 +1,10 @@
-import Stack from '@mui/material/Stack';
+import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
 import { Autocomplete } from './Autocomplete';
+import { SelectedIcon } from './Autocomplete.styles';
 
 import type {
   AutocompleteMultiSelectProps,
@@ -108,11 +109,14 @@ export const customRenderOptions: Story = {
       },
     ],
     placeholder: 'Select a Linode',
-    renderOption: (option) => (
-      <Stack>
-        <CustomValue>{option.value}</CustomValue>
-        <CustomDescription>{option.label}</CustomDescription>
-      </Stack>
+    renderOption: (option, selected) => (
+      <Box alignItems={'center'} display={'flex'} width={'100%'}>
+        <Stack flexGrow={1}>
+          <CustomValue>{option.value}</CustomValue>
+          <CustomDescription>{option.label}</CustomDescription>
+        </Stack>
+        <SelectedIcon visible={selected} />
+      </Box>
     ),
   },
   render: (args) => <Autocomplete {...args} />,
