@@ -9,7 +9,7 @@ import type {
   AutocompleteMultiSelectProps,
   AutocompleteSingleSelectProps,
 } from './Autocomplete';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 const fruits = [
   {
@@ -48,6 +48,13 @@ const meta: Meta<
     options: fruits,
   },
   component: Autocomplete,
+  decorators: [
+    (Story: StoryFn) => (
+      <div style={{ margin: '2em' }}>
+        <Story />
+      </div>
+    ),
+  ],
   title: 'Components/Autocomplete',
 };
 
