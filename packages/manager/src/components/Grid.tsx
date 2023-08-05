@@ -203,7 +203,7 @@ export const styles = (theme: Theme) => ({
   }, {}),
 });
 
-const Grid = React.forwardRef<any, GridProps>(function Grid(
+const _Grid = React.forwardRef<any, GridProps>(function Grid(
   props: GridProps & { classes: any },
   ref
 ) {
@@ -258,7 +258,6 @@ const Grid = React.forwardRef<any, GridProps>(function Grid(
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore 😣
-const StyledGrid = withStyles(styles, { name: 'MuiGrid' })(Grid);
+export const Grid = withStyles(styles, { name: 'MuiGrid' })(_Grid);
 
-export { GridProps };
-export default StyledGrid;
+export type { GridProps };

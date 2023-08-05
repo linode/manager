@@ -7,7 +7,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
 import { ActionsPanel } from '../ActionsPanel/ActionsPanel';
-import Grid from '../Grid';
+import { Grid } from '../Grid';
 import ThirdPartyPayment from './ThirdPartyPayment';
 
 export const useStyles = makeStyles((theme: Theme) => ({

@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
 import { TextField } from 'src/components/TextField';
 import {
   LongviewProcesses,

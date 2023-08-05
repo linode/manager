@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
-import DismissibleBanner from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';

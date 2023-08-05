@@ -3,7 +3,7 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 
-export interface Props {
+export interface DrawerContentProps {
   children: React.ReactNode;
   error: boolean;
   errorMessage?: string;
@@ -11,7 +11,7 @@ export interface Props {
   title: string;
 }
 
-export const DrawerContent = (props: Props) => {
+export const DrawerContent = (props: DrawerContentProps) => {
   const { children, error, errorMessage, loading, title } = props;
   if (loading) {
     return <CircleProgress />;
@@ -27,5 +27,3 @@ export const DrawerContent = (props: Props) => {
   // eslint-disable-next-line
   return <>{children}</>;
 };
-
-export default DrawerContent;

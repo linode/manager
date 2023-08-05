@@ -1,53 +1,29 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
 
+import { Box } from 'src/components/Box';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { useProfile } from 'src/queries/profile';
 import { handleOpen } from 'src/store/backupDrawer';
 
+import { StyledPaper } from './BackupsCTA.styles';
+
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  closeIcon: {
-    ...theme.applyLinkStyles,
-    lineHeight: '0.5rem',
-    marginLeft: 12,
-  },
-  enableButton: {
-    height: 40,
-    padding: 0,
-    width: 152,
-  },
-  enableText: {
-    ...theme.applyLinkStyles,
-  },
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: `${theme.spacing(1)} 0 ${theme.spacing(3)} 0`,
-    padding: theme.spacing(1),
-    paddingRight: theme.spacing(2),
-  },
-}));
+type BackupsCTAProps = StateProps & DispatchProps;
 
-type CombinedProps = StateProps & DispatchProps;
-
-const BackupsCTA: React.FC<CombinedProps> = (props) => {
+const BackupsCTA = (props: BackupsCTAProps) => {
   const {
     actions: { openBackupsDrawer },
     linodesWithoutBackups,
   } = props;
-  const classes = useStyles();
 
   const { data: accountSettings } = useAccountSettings();
   const { data: profile } = useProfile();
@@ -74,22 +50,22 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
           // eslint-disable-next-line react/jsx-no-useless-fragment
           <React.Fragment />
         ) : (
-          <Paper className={classes.root}>
-            <Typography style={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
-              <button
-                className={classes.enableText}
-                onClick={openBackupsDrawer}
-              >
+          <StyledPaper>
+            <Typography sx={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
+              <StyledLinkButton onClick={openBackupsDrawer}>
                 Enable Linode Backups
-              </button>{' '}
+              </StyledLinkButton>{' '}
               to protect your data and recover quickly in an emergency.
             </Typography>
-            <span style={{ display: 'flex' }}>
-              <button className={classes.closeIcon} onClick={dismissed}>
+            <Box component="span" sx={{ display: 'flex' }}>
+              <StyledLinkButton
+                onClick={dismissed}
+                sx={{ lineHeight: '0.5rem', marginLeft: 12 }}
+              >
                 <Close />
-              </button>
-            </span>
-          </Paper>
+              </StyledLinkButton>
+            </Box>
+          </StyledPaper>
         );
       }}
     </PreferenceToggle>
@@ -118,6 +94,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(connected)(BackupsCTA);
+const enhanced = compose<BackupsCTAProps, {}>(connected)(BackupsCTA);
 
-export default enhanced;
+export { enhanced as BackupsCTA };

@@ -6,7 +6,7 @@ import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { ActionMenu, Action } from 'src/components/ActionMenu';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
