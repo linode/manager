@@ -177,12 +177,22 @@ describe('BackupDrawer component', () => {
       expect(withErrors[1].linodeError).toBeUndefined();
     });
     it('enhanceLinodes should attach typeInfo and linodeError', () => {
-      const enhanced = enhanceLinodes(linodes, [error], cachedTypesData);
+      const enhanced = enhanceLinodes({
+        linodes: linodes,
+        errors: [error],
+        types: cachedTypesData,
+      });
       expect(enhanced[0]).toHaveProperty('typeInfo');
       expect(enhanced[0]).toHaveProperty('linodeError');
     });
     it('should set typeInfo and linodeError to undefined if nothing matches', () => {
-      expect(enhanceLinodes(linodes, [], [])).toEqual([
+      expect(
+        enhanceLinodes({
+          linodes: linodes,
+          errors: [],
+          types: [],
+        })
+      ).toEqual([
         { ...linode1, linodeError: undefined, typeInfo: undefined },
         { ...linode3, linodeError: undefined, typeInfo: undefined },
       ]);
