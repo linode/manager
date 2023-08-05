@@ -1,3 +1,5 @@
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
@@ -43,6 +45,7 @@ const meta: Meta<
   args: {
     label: 'Select a Fruit',
     onSelectionChange: action('onSelectionChange'),
+    options: fruits,
   },
   component: Autocomplete,
   title: 'Components/Autocomplete',
@@ -50,12 +53,21 @@ const meta: Meta<
 
 export default meta;
 
+const CustomValue = styled('span')(({ theme }) => ({
+  fontFamily: theme.font.bold,
+  fontSize: '1rem',
+  wordBreak: 'break-word',
+}));
+
+const CustomDescription = styled('span')(() => ({
+  fontSize: '0.875rem',
+}));
+
 type Story = StoryObj<typeof Autocomplete>;
 
-/** Default Autocomplete */
 export const Default: Story = {
   args: {
-    options: fruits,
+    defaultValue: fruits[0],
   },
   render: (args) => <Autocomplete {...args} />,
 };
@@ -71,7 +83,34 @@ export const noOptionsMessage: Story = {
   render: (args) => <Autocomplete {...args} />,
 };
 
-/* Autocomplete Multi-select */
+export const customRenderOptions: Story = {
+  args: {
+    label: 'Select a Linode',
+    options: [
+      {
+        label: 'Nanode 1 GB, Debian 11, Newark, NJ',
+        value: 'debian-us-east',
+      },
+      {
+        label: 'Nanode 2 GB, Debian 11, Newark, NJ',
+        value: 'debian-us-east-001',
+      },
+      {
+        label: 'Nanode 3 GB, Debian 11, Newark, NJ',
+        value: 'debian-us-east-002',
+      },
+    ],
+    placeholder: 'Select a Linode',
+    renderOption: (option) => (
+      <Stack>
+        <CustomValue>{option.value}</CustomValue>
+        <CustomDescription>{option.label}</CustomDescription>
+      </Stack>
+    ),
+  },
+  render: (args) => <Autocomplete {...args} />,
+};
+
 export const MultiSelect: Story = {
   args: {
     defaultValue: [fruits[0]],

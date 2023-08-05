@@ -12,15 +12,28 @@ import {
   SelectedIcon,
 } from 'src/features/Linodes/LinodeSelect/LinodeSelect.styles';
 
-export interface OptionsType<T = string, L = string> {
+export interface OptionsType {
   data?: any;
-  label: L;
-  value: T;
+  label: string;
+  value: string;
 }
 
-interface AutocompleteProps {
-  /** Whether to display the clear icon. Defaults to `true`. */
-  clearable?: boolean;
+export interface AutocompleteProps {
+  /**
+   * Whether to clear the autocomplete input on blur.
+   * @default false
+   * */
+  clearOnBlur?: boolean;
+  /**
+   * Whether to disable the clear icon.
+   * @default false
+   * */
+  disableClearable?: boolean;
+  /**
+   * Disable the portal behavior.
+   * @default true
+   * */
+  disablePortal?: boolean;
   /** Disable editing the input value. */
   disabled?: boolean;
   /** Hint displayed with error styling. */
@@ -29,63 +42,80 @@ interface AutocompleteProps {
   helperText?: string;
   /** The ID of the input. */
   id?: string;
-  /** Label is required for accessibility */
+  /** Label for the Autocomplete, required for accessibility. */
   label: string;
   /** Adds styling to indicate a loading state. */
   loading?: boolean;
-  /** Optionally disable top margin for input label */
+  /** Optionally disable top margin for input label. */
   noMarginTop?: boolean;
   /** Message displayed when no options match the user's search. */
   noOptionsMessage?: string;
   /** Called when the input loses focus. */
   onBlur?: (e: React.FocusEvent) => void;
-  /* The options to display in the select. */
+  /** The options to display in the select. */
   options: OptionsType[];
-  /** Determine which Linodes should be available as options. */
-  optionsFilter?: (option: any) => boolean;
-  /* Displayed when the input is blank. */
+  /** Function to filter which options should be available. */
+  optionsFilter?: (option: OptionsType) => boolean;
+  /** Text displayed when the input is blank. */
   placeholder?: string;
-  /* Render a custom option. */
-  renderOption?: (option: any, selected: boolean) => JSX.Element;
-  /* Render a custom option label. */
-  renderOptionLabel?: (option: any) => string;
-  /* Displays an indication that the input is required. */
+  /** Function to render a custom option. */
+  renderOption?: (option: OptionsType, selected: boolean) => JSX.Element;
+  /** Function to render a custom option label. */
+  renderOptionLabel?: (option: OptionsType) => string;
+  /** Displays an indication that the input is required. */
   required?: boolean;
-  /* Adds custom styles to the component. */
+  /** Custom styles to apply to the component. */
   sx?: SxProps;
 }
 
-// TODO: Escape crashes the Autocomplete
-
+/**
+ * Props for the Autocomplete component in multi-select mode.
+ */
 export interface AutocompleteMultiSelectProps extends AutocompleteProps {
-  // value: any;
-  defaultValue?: OptionsType[]; // TODO: This is not working =(
-  /* Enable multi-select. */
+  /** Default value for the Autocomplete. */
+  defaultValue?: OptionsType[];
+  /** Enable multi-select mode. */
   multiple: true;
-  /* An array of `id`s of Linodes that should be selected or a function that should return `true` if the Linode should be selected. */
-  /* Called when the value changes */
+  /** Callback function called when the value changes in multi-select mode. */
   onSelectionChange: (selected: OptionsType[]) => void;
 }
 
+/**
+ * Props for the Autocomplete component in single-select mode.
+ */
 export interface AutocompleteSingleSelectProps extends AutocompleteProps {
-  // value: any;
+  /** Default value for the Autocomplete. */
   defaultValue?: OptionsType | null;
-  /* Enable single-select. */
+  /** Enable single-select mode. */
   multiple?: false;
-  /* The `id` of the selected Linode or a function that should return `true` if the Linode should be selected. */
-  /* Called when the value changes */
+  /** Callback function called when the value changes in single-select mode. */
   onSelectionChange: (selected: OptionsType | null) => void;
 }
 
 /**
- * A select input allowing selection between account Linodes.
+ * An Autocomplete component that provides a user-friendly select input
+ * allowing selection between options.
+ *
+ * @example
+ * <Autocomplete
+ *  label="Select a Fruit"
+ *  onSelectionChange={(selected) => console.log(selected)}
+ *  options={[
+ *    {
+ *      label: 'Apple',
+ *      value: 'apple',
+ *    }
+ *  ]}
+ * />
  */
 export const Autocomplete = (
   props: AutocompleteMultiSelectProps | AutocompleteSingleSelectProps
 ) => {
   const {
-    clearable = true,
+    clearOnBlur = false,
     defaultValue,
+    disableClearable,
+    disablePortal = true,
     disabled,
     errorText,
     helperText,
@@ -103,7 +133,6 @@ export const Autocomplete = (
     renderOption,
     renderOptionLabel,
     sx,
-    // value,
   } = props;
 
   const [inputValue, setInputValue] = React.useState('');
@@ -113,7 +142,8 @@ export const Autocomplete = (
     : options || [];
 
   React.useEffect(() => {
-    /** We want to clear the input value when the value prop changes to null.
+    /**
+     * We want to clear the input value when the value prop changes to null.
      * This is for use cases where a user changes their region and the Linode
      * they had selected is no longer available.
      */
@@ -122,9 +152,25 @@ export const Autocomplete = (
     }
   }, [defaultValue]);
 
+  const handleChange = (value: OptionsType | OptionsType[]) => {
+    if (Array.isArray(value)) {
+      // It's an array, so it's the multiple selection case
+      if (!multiple) {
+        return;
+      }
+      onSelectionChange(value);
+    } else {
+      // It's not an array, so it's the single selection case
+      if (multiple) {
+        return;
+      }
+      onSelectionChange(value);
+    }
+  };
+
   return (
     <MuiAutocomplete
-      getOptionLabel={(option: any) =>
+      getOptionLabel={(option: OptionsType) =>
         renderOptionLabel ? renderOptionLabel(option) : option.label
       }
       noOptionsText={
@@ -138,30 +184,19 @@ export const Autocomplete = (
           </i>
         )
       }
-      onChange={(_, value) =>
-        multiple && Array.isArray(value)
-          ? onSelectionChange(value)
-          : !multiple && !Array.isArray(value) && onSelectionChange(value)
-      }
       renderInput={(params) => (
         <TextField
-          placeholder={
-            placeholder
-              ? placeholder
-              : multiple
-              ? 'Select Linodes'
-              : 'Select a Linode'
-          }
           errorText={errorText}
           helperText={helperText}
           inputId={params.id}
           label={label}
           loading={loading}
           noMarginTop={noMarginTop}
+          placeholder={placeholder ?? 'Select an option'}
           {...params}
         />
       )}
-      renderOption={(props, option, { selected }) => {
+      renderOption={(props, option: OptionsType, { selected }) => {
         return (
           <li {...props}>
             {renderOption ? (
@@ -183,18 +218,18 @@ export const Autocomplete = (
       }}
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
-      clearOnBlur={false}
-      // value={value}
+      clearOnBlur={clearOnBlur}
       defaultValue={defaultValue}
-      disableClearable={!clearable}
+      disableClearable={disableClearable}
       disableCloseOnSelect={multiple}
-      disablePortal={true}
+      disablePortal={disablePortal}
       disabled={disabled}
       id={id}
       inputValue={inputValue}
       loading={loading}
       multiple={multiple}
       onBlur={onBlur}
+      onChange={(_, value: OptionsType) => handleChange(value)}
       onInputChange={(_, value) => setInputValue(value)}
       options={filteredOptions}
       popupIcon={<KeyboardArrowDownIcon />}
@@ -209,9 +244,7 @@ interface DefaultNoOptionsMessageParams {
   loading: boolean | undefined;
 }
 
-interface DefaultNoOptionsMessageResult {
-  message: string;
-}
+type DefaultNoOptionsMessageResult = JSX.Element | string;
 
 const getDefaultNoOptionsMessage = ({
   errorText,
@@ -219,12 +252,12 @@ const getDefaultNoOptionsMessage = ({
   loading,
 }: DefaultNoOptionsMessageParams): DefaultNoOptionsMessageResult => {
   if (errorText) {
-    return { message: 'An error occurred while fetching your options' };
+    return 'An error occurred while fetching your options';
   } else if (loading) {
-    return { message: 'Loading...' };
+    return 'Loading...';
   } else if (!filteredOptions?.length) {
-    return { message: 'You have no options to choose from' };
+    return 'You have no options to choose from';
   } else {
-    return { message: 'No results' };
+    return 'No results';
   }
 };
