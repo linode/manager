@@ -73,8 +73,6 @@ export const DismissibleBanner = (props: CombinedProps) => {
   );
 };
 
-export default DismissibleBanner;
-
 // Hook that contains the nuts-and-bolts of the DismissibleBanner component.
 // Extracted out as its own hook so other components can use it.
 export const useDismissibleBanner = (

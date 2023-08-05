@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { Typography } from 'src/components/Typography';
 
 import { FinalCrumb } from './FinalCrumb';
-import FinalCrumbPrefix from './FinalCrumbPrefix';
+import { FinalCrumbPrefix } from './FinalCrumbPrefix';
 import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({

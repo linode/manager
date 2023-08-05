@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 

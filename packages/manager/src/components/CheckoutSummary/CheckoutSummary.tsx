@@ -3,9 +3,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
 
-import Grid from '../Grid';
-import { Typography } from '../Typography';
+import { Grid } from '../Grid';
 import { Paper } from '../Paper';
+import { Typography } from '../Typography';
 import { SummaryItem } from './SummaryItem';
 
 interface Props {

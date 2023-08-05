@@ -1,9 +1,9 @@
-import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import DismissibleBanner from 'src/components/DismissibleBanner';
+import { Box } from 'src/components/Box';
+import { DismissibleBanner } from 'src/components/DismissibleBanner';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import {

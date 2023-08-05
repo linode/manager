@@ -10,10 +10,10 @@ import Logo from 'src/assets/logo/akamai-logo.svg';
 import { Box } from 'src/components/Box';
 import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
-import NotFound from 'src/components/NotFound';
+import { NotFound } from 'src/components/NotFound';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { SideMenu } from 'src/components/SideMenu';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
