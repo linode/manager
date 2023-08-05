@@ -60,14 +60,22 @@ describe('LKE Create Cluster', () => {
     mockCreateCluster(mockCluster).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
     cy.findByText('Add Node Pools').should('be.visible');
-    cy.findByLabelText('Cluster Label').click().type(mockCluster.label);
-    cy.findByLabelText('Region')
-      .should('be.visible')
-      .focus()
-      .type(`${chooseRegion().label}{enter}`);
-    cy.get('[id="kubernetes-version"]').type('{enter}');
-    cy.findByText('Shared CPU').should('be.visible').click();
 
+    cy.findByLabelText('Cluster Label').click().type(mockCluster.label);
+
+    cy.findByText('Region')
+      .should('be.visible')
+      .click()
+      .type(`${chooseRegion().label}{enter}`);
+
+    cy.findByText('Kubernetes Version')
+      .should('be.visible')
+      .click()
+      .type('{enter}');
+
+    cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
+
+    cy.findByText('Shared CPU').should('be.visible').click();
     addNodes('Linode 2 GB');
 
     // Confirm change is reflected in checkout bar.
