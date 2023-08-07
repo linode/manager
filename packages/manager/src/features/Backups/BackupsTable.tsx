@@ -36,4 +36,3 @@ export const BackupsTable = (props: BackupsTableProps) => {
     </Table>
   );
 };
-

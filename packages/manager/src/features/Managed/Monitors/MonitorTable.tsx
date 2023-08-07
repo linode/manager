@@ -1,8 +1,6 @@
 import { ManagedServicePayload } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -17,7 +15,6 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useDialog } from 'src/hooks/useDialog';
 import {
@@ -36,32 +33,18 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import MonitorDrawer from '../MonitorDrawer';
-import HistoryDrawer from './HistoryDrawer';
+import { HistoryDrawer } from './HistoryDrawer';
+import {
+  StyledGrid,
+  StyledTableRow,
+  StyledTableSortCell,
+} from './MonitorTable.styles';
 import MonitorTableContent from './MonitorTableContent';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  addNewWrapper: {
-    marginBottom: 5,
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-  headers: {
-    '& > th': {
-      fontFamily: theme.font.bold,
-    },
-  },
-  labelHeader: {
-    ...theme.applyTableHeaderStyles,
-    paddingLeft: `62px !important`,
-  },
-}));
 
 export type Modes = 'create' | 'edit';
 export type FormikProps = FormikBag<{}, ManagedServicePayload>;
 
 export const MonitorTable = () => {
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data, error, isLoading } = useAllManagedMonitorsQuery();
@@ -196,12 +179,12 @@ export const MonitorTable = () => {
       <Grid alignItems="flex-end" container justifyContent="flex-end">
         <Grid>
           <Grid alignItems="flex-end" container>
-            <Grid className={classes.addNewWrapper}>
+            <StyledGrid>
               <AddNewLink
                 label="Add Monitor"
                 onClick={() => setMonitorDrawerOpen(true)}
               />
-            </Grid>
+            </StyledGrid>
           </Grid>
         </Grid>
       </Grid>
@@ -219,17 +202,16 @@ export const MonitorTable = () => {
               <>
                 <Table aria-label="List of Your Managed Service Monitors">
                   <TableHead>
-                    <TableRow className={classes.headers}>
-                      <TableSortCell
+                    <StyledTableRow>
+                      <StyledTableSortCell
                         active={orderBy === 'label'}
-                        className={classes.labelHeader}
                         data-qa-monitor-label-header
                         direction={order}
                         handleClick={handleOrderChange}
                         label={'label'}
                       >
                         Monitor
-                      </TableSortCell>
+                      </StyledTableSortCell>
                       <TableSortCell
                         active={orderBy === 'status'}
                         data-qa-monitor-status-header
@@ -249,7 +231,7 @@ export const MonitorTable = () => {
                         Resource
                       </TableSortCell>
                       <TableCell />
-                    </TableRow>
+                    </StyledTableRow>
                   </TableHead>
                   <TableBody>
                     <MonitorTableContent

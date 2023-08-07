@@ -8,9 +8,9 @@ import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import IssueCalendar from './IssueCalendar';
+import { IssueCalendar } from './IssueCalendar';
 
-interface Props {
+interface HistoryDrawerProps {
   error?: APIError[] | null;
   issues: ManagedIssue[] | undefined;
   loading: boolean;
@@ -19,7 +19,7 @@ interface Props {
   open: boolean;
 }
 
-export const HistoryDrawer: React.FC<Props> = (props) => {
+export const HistoryDrawer = (props: HistoryDrawerProps) => {
   const { error, issues, loading, monitorLabel, onClose, open } = props;
   return (
     <Drawer
@@ -59,5 +59,3 @@ const renderDrawerContent = (
   }
   return <IssueCalendar issues={issues} />;
 };
-
-export default HistoryDrawer;

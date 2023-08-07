@@ -160,7 +160,7 @@ const SupportTicketDetail = React.lazy(
   () => import('src/features/Support/SupportTicketDetail')
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
-const Managed = React.lazy(() => import('src/features/Managed'));
+const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
   import('./features/Help/index').then((module) => ({
     default: module.HelpAndSupport,
