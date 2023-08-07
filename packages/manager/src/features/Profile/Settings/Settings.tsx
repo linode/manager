@@ -1,5 +1,4 @@
 import Stack from '@mui/material/Stack';
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -20,7 +19,6 @@ import { ThemeChoice } from 'src/utilities/theme';
 import { PreferenceEditor } from './PreferenceEditor';
 
 export const ProfileSettings = () => {
-  const theme = useTheme();
   const location = useLocation();
   const history = useHistory();
 
@@ -52,7 +50,7 @@ export const ProfileSettings = () => {
     <Stack spacing={2}>
       <DocumentTitleSegment segment="My Settings" />
       <Paper>
-        <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
+        <Typography marginBottom={1} variant="h2">
           Notifications
         </Typography>
         <FormControlLabel
@@ -73,7 +71,7 @@ export const ProfileSettings = () => {
         />
       </Paper>
       <Paper>
-        <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
+        <Typography marginBottom={1} variant="h2">
           Theme
         </Typography>
         <Typography variant="body1">
@@ -94,10 +92,10 @@ export const ProfileSettings = () => {
         </RadioGroup>
       </Paper>
       <Paper>
-        <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
+        <Typography marginBottom={1} variant="h2">
           Type-to-Confirm
         </Typography>
-        <Typography variant="body1">
+        <Typography marginBottom={1} variant="body1">
           For some products and services, the type-to-confirm setting requires
           entering the label before deletion.
         </Typography>
