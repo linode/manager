@@ -161,6 +161,7 @@ const UserProfile: React.FC<Props> = (props) => {
             label="Email"
             onChange={changeEmail}
             trimmed
+            type="email"
             value={email}
           />
           <ActionsPanel

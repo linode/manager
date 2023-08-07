@@ -153,6 +153,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                   onBlur={(e) => handleFormikBlur(e, formikProps)}
                   onChange={handleChange}
                   required
+                  type="email"
                   value={values.email}
                 />
 

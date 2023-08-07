@@ -339,6 +339,7 @@ export const CreateDomain = () => {
                 onBlur={(e) => handleFormikBlur(e, formik)}
                 onChange={formik.handleChange}
                 required
+                type="email"
                 value={values.soa_email}
               />
             )}

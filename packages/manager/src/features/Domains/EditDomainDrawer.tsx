@@ -165,6 +165,7 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
             name="soa_email"
             onBlur={(e) => handleFormikBlur(e, formik)}
             onChange={formik.handleChange}
+            type="email"
             value={formik.values.soa_email}
           />
         )}
