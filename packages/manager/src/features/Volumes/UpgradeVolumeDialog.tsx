@@ -1,8 +1,7 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
@@ -62,14 +61,14 @@ export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button buttonType="primary" loading={isLoading} onClick={onSubmit}>
-        Enter Upgrade Queue
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        label: 'Enter Upgrade Queue',
+        loading: isLoading,
+        onClick: onSubmit,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+    />
   );
 
   return (

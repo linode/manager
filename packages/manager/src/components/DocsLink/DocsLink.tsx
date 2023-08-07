@@ -1,67 +1,65 @@
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import DocsIcon from 'src/assets/icons/docs.svg';
+import { Link } from 'src/components/Link';
 import { sendHelpButtonClickEvent } from 'src/utilities/analytics';
 
-import { IconTextLink } from '../IconTextLink/IconTextLink';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  '@supports (-moz-appearance: none)': {
-    /* Fix text alignment for Firefox */
-    root: {
-      '& span': {
-        top: 1,
-      },
-    },
-  },
-  root: {
-    '& svg': {
-      marginRight: theme.spacing(),
-    },
-    '&:hover': {
-      color: theme.textColors.linkActiveLight,
-      textDecoration: 'underline',
-    },
-    alignItems: 'center',
-    fontFamily: theme.font.normal,
-    fontSize: '.875rem',
-    lineHeight: 'normal',
-    margin: 0,
-    minWidth: 'auto',
-  },
-}));
-
-interface Props {
+export interface DocsLinkProps {
+  /** The label to use for analytics purposes */
   analyticsLabel?: string;
+  /** The URL to link to */
   href: string;
+  /**
+   * The clickable text of the link
+   * @default Docs
+   * */
   label?: string;
+  /** A callback function when the link is clicked */
   onClick?: () => void;
 }
 
-export const DocsLink = (props: Props) => {
-  const { classes } = useStyles();
-
+/**
+ * - The Docs link breaks the pattern of an external link with the position and size of the icon.
+ * - The Docs link is usually featured on create flows in the top right corner of the page, next to the create button.
+ * - Consider displaying the title of a key guide or product document as the link instead of the generic “Docs”.
+ */
+export const DocsLink = (props: DocsLinkProps) => {
   const { analyticsLabel, href, label, onClick } = props;
 
   return (
-    <IconTextLink
+    <StyledDocsLink
       onClick={() => {
         if (onClick === undefined) {
           sendHelpButtonClickEvent(href, analyticsLabel);
         } else {
           onClick();
         }
-        window.open(href, '_blank', 'noopener');
       }}
-      SideIcon={DocsIcon}
-      aria-describedby="external-site"
-      className={`${classes.root} docsButton`}
-      text={label ?? 'Docs'}
-      title={label ?? 'Docs'}
-    />
+      className="docsButton"
+      to={href}
+    >
+      <DocsIcon />
+      {label ?? 'Docs'}
+    </StyledDocsLink>
   );
 };
 
-export default DocsLink;
+const StyledDocsLink = styled(Link, {
+  label: 'StyledDocsLink',
+})(({ theme }) => ({
+  '& svg': {
+    marginRight: theme.spacing(),
+  },
+  '&:hover': {
+    color: theme.textColors.linkActiveLight,
+    textDecoration: 'underline',
+  },
+  alignItems: 'center',
+  display: 'flex',
+  fontFamily: theme.font.normal,
+  fontSize: '.875rem',
+  lineHeight: 'normal',
+  margin: 0,
+  minWidth: 'auto',
+}));

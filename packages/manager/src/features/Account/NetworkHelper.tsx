@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Accordion } from 'src/components/Accordion';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
-import FormControlLabel from 'src/components/core/FormControlLabel';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 
 interface Props {
   networkHelperEnabled: boolean;

@@ -22,7 +22,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';

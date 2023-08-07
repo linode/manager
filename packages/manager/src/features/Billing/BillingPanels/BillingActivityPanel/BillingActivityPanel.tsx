@@ -10,7 +10,6 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -33,7 +32,7 @@ import {
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import { useSet } from 'src/hooks/useSet';
 import { useAccount } from 'src/queries/account';
 import {
@@ -42,7 +41,7 @@ import {
 } from 'src/queries/accountBilling';
 import { useProfile } from 'src/queries/profile';
 import { parseAPIDate } from 'src/utilities/date';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
@@ -169,7 +168,7 @@ const AkamaiBillingInvoiceText = (
     any negotiated terms and conditions. Condensed and finalized invoice is
     available within{' '}
     <Link to="https://control.akamai.com/apps/billing">
-      Akamai Control Center &gt; Billing <ExternalLinkIcon />
+      Akamai Control Center &gt; Billing
     </Link>
     .
   </Typography>

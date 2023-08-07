@@ -11,6 +11,7 @@ import {
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
+import { ui } from 'support/ui';
 
 const deployNodeBalancer = () => {
   // This is not an error, the tag is deploy-linode
@@ -26,7 +27,17 @@ const createNodeBalancerWithUI = (nodeBal) => {
 
   // node backend config
   fbtClick('Label').type(randomLabel());
-  containsClick('Enter IP Address').type(`${nodeBal.linodePrivateIp}{enter}`);
+
+  cy.findByLabelText('IP Address')
+    .should('be.visible')
+    .click()
+    .type(nodeBal.linodePrivateIp);
+
+  ui.autocompletePopper
+    .findByTitle(nodeBal.linodePrivateIp)
+    .should('be.visible')
+    .click();
+
   deployNodeBalancer();
 };
 

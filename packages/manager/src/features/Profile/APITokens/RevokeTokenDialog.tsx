@@ -2,8 +2,7 @@ import { Token } from '@linode/api-v4/lib/profile/types';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import {
@@ -43,23 +42,19 @@ export const RevokeTokenDialog = ({ onClose, open, token, type }: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            data-testid="cancel-button"
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-testid="revoke-button"
-            loading={isLoading}
-            onClick={onRevoke}
-          >
-            Revoke
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'revoke-button',
+            label: 'Revoke',
+            loading: isLoading,
+            onClick: onRevoke,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel-button',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+        />
       }
       error={error?.[0].reason}
       onClose={onClose}

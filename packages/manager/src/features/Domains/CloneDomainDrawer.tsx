@@ -3,14 +3,13 @@ import { useFormik } from 'formik';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 
@@ -88,21 +87,16 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
           onChange={formik.handleChange}
           value={formik.values.domain}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            data-testid="create-domain-submit"
-            disabled={!formik.dirty}
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Create Domain
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'create-domain-submit',
+            disabled: !formik.dirty,
+            label: 'Create Domain',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ 'data-testid': 'cancel', onClick: onClose }}
+        />
       </form>
     </Drawer>
   );

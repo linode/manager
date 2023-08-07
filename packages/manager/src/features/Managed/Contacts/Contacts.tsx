@@ -20,7 +20,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { useDialog } from 'src/hooks/useDialog';
-import useOpenClose from 'src/hooks/useOpenClose';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useAllManagedContactsQuery,
   useDeleteContactMutation,

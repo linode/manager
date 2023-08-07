@@ -13,5 +13,5 @@ const StyledMoreLink = styled(Link)<ResourcesMoreLinkProps>(({ ...props }) => ({
 }));
 
 export const ResourcesMoreLink = (props: ResourcesMoreLinkProps) => {
-  return <StyledMoreLink {...props} />;
+  return <StyledMoreLink {...props}>{props.children}</StyledMoreLink>;
 };
