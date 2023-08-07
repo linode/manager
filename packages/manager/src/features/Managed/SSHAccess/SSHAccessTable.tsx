@@ -14,7 +14,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import useOpenClose from 'src/hooks/useOpenClose';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import { useAllLinodeSettingsQuery } from 'src/queries/managed/managed';
 
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';

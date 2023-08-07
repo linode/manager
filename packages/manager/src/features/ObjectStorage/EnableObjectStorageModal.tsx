@@ -1,9 +1,7 @@
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import ExternalLink from 'src/components/ExternalLink';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
@@ -21,20 +19,20 @@ export const EnableObjectStorageModal = ({
   return (
     <ConfirmationDialog
       actions={() => (
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Enable Object Storage',
+            onClick: () => {
               onClose();
               handleSubmit();
-            }}
-            buttonType="primary"
-          >
-            Enable Object Storage
-          </Button>
-        </ActionsPanel>
+            },
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+        />
       )}
       onClose={close}
       open={open}
@@ -44,11 +42,9 @@ export const EnableObjectStorageModal = ({
         Linode Object Storage costs a flat rate of <strong>$5/month</strong>,
         and includes 250 GB of storage and 1 TB of outbound data transfer.
         Beyond that, it's <strong>$0.02 per GB per month.</strong>{' '}
-        <ExternalLink
-          fixedIcon
-          link="https://www.linode.com/docs/platform/object-storage/pricing-and-limitations/"
-          text="Learn more."
-        />
+        <Link to="https://www.linode.com/docs/platform/object-storage/pricing-and-limitations/">
+          Learn more.
+        </Link>
       </Typography>
       <Typography style={{ marginTop: 8 }} variant="subtitle1">
         To discontinue billing, you'll need to cancel Object Storage in your{' '}

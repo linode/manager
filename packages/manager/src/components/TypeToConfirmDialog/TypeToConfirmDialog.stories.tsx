@@ -38,7 +38,7 @@ const meta: Meta<typeof TypeToConfirmDialog> = {
     title: 'Delete Linode?',
   },
   component: TypeToConfirmDialog,
-  title: 'Components/TypeToConfirmDialog',
+  title: 'Components/Dialog/TypeToConfirmDialog',
 };
 
 export default meta;
@@ -46,7 +46,5 @@ export default meta;
 type Story = StoryObj<typeof TypeToConfirmDialog>;
 
 export const Default: Story = {
-  render: (args) => (
-    <TypeToConfirmDialog {...args}>{args.children}</TypeToConfirmDialog>
-  ),
+  render: (args) => <TypeToConfirmDialog {...args} />,
 };

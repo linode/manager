@@ -9,12 +9,6 @@ import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import SelectionCardWrapper from 'src/features/Linodes/LinodesCreate/SelectionCardWrapper';
 
-const AppPanelGrid = styled(Grid)(({ theme }) => ({
-  marginBottom: theme.spacing(),
-  marginTop: theme.spacing(2),
-  padding: `${theme.spacing(1)} 0`,
-}));
-
 interface Props {
   apps: StackScript[];
   disabled: boolean;
@@ -95,5 +89,11 @@ export const AppPanelSection: React.FC<Props> = (props) => {
     </>
   );
 };
+
+const AppPanelGrid = styled(Grid)(({ theme }) => ({
+  marginBottom: theme.spacing(),
+  marginTop: theme.spacing(2),
+  padding: `${theme.spacing(1)} 0`,
+}));
 
 export default AppPanelSection;

@@ -1,11 +1,11 @@
 import { Linode } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import {
   useLinodeQuery,
@@ -211,17 +211,15 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const renderExpansionActions = () => {
     return (
-      <ActionsPanel>
-        <Button
-          buttonType="primary"
-          data-qa-alerts-save
-          disabled={isReadOnly || !formik.dirty}
-          loading={isLoading}
-          onClick={() => formik.handleSubmit()}
-        >
-          Save
-        </Button>
-      </ActionsPanel>
+      <StyledActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'alerts-save',
+          disabled: isReadOnly || !formik.dirty,
+          label: 'Save',
+          loading: isLoading,
+          onClick: () => formik.handleSubmit(),
+        }}
+      />
     );
   };
 
@@ -240,3 +238,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
     </Accordion>
   );
 };
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})({
+  justifyContent: 'flex-start',
+  margin: 0,
+});

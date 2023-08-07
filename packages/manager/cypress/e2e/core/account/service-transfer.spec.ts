@@ -446,12 +446,13 @@ describe('Account service transfers', () => {
 
     // Navigate to Service Transfer landing page, initiate transfer.
     visitUrlWithManagedEnabled(serviceTransferLandingUrl);
-    cy.wait('@getLinodes');
     ui.button
       .findByTitle('Make a Service Transfer')
       .should('be.visible')
       .should('be.enabled')
       .click();
+
+    cy.wait('@getLinodes');
 
     cy.findByText('Make a Service Transfer').should('be.visible');
     cy.url().should('endWith', serviceTransferCreateUrl);

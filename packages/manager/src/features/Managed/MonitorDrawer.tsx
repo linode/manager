@@ -10,13 +10,12 @@ import { Formik } from 'formik';
 import { pickBy } from 'ramda';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 
 export interface Props {
   credentials: ManagedCredential[];
@@ -281,24 +280,19 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
                 options={credentialOptions}
                 placeholder="None Required"
               />
-              <ActionsPanel>
-                <Button
-                  buttonType="secondary"
-                  className="cancel"
-                  data-qa-cancel
-                  onClick={onClose}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  buttonType="primary"
-                  data-qa-submit
-                  loading={isSubmitting}
-                  onClick={() => handleSubmit()}
-                >
-                  {mode === 'create' ? 'Add Monitor' : 'Save Changes'}
-                </Button>
-              </ActionsPanel>
+              <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'submit',
+                  label: mode === 'create' ? 'Add Monitor' : 'Save Changes',
+                  loading: isSubmitting,
+                  onClick: () => handleSubmit(),
+                }}
+                secondaryButtonProps={{
+                  'data-testid': 'cancel',
+                  label: 'Cancel',
+                  onClick: onClose,
+                }}
+              />
             </form>
           </>
         )}

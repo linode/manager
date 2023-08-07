@@ -20,7 +20,7 @@ export const StyledSizeColumn = styled(TableCell, {
 export const StyledTryAgainButton = styled(StyledLinkButton, {
   label: 'StyledTryAgain',
 })(() => ({
-  width: '10%',
+  textDecoration: 'underline',
 }));
 
 export const StyledCreateFolderButton = styled(Button, {
@@ -29,6 +29,12 @@ export const StyledCreateFolderButton = styled(Button, {
   [theme.breakpoints.down('md')]: {
     marginRight: theme.spacing(),
   },
+}));
+
+export const StyledErrorFooter = styled(Typography, {
+  label: 'StyledErrorFooter',
+})(({ theme }) => ({
+  color: theme.color.red,
 }));
 
 export const StyledFooter = styled(Typography, {

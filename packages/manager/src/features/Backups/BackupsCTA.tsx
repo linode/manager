@@ -13,8 +13,6 @@ import { Paper } from 'src/components/Paper';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { useProfile } from 'src/queries/profile';
 import { handleOpen } from 'src/store/backupDrawer';
-import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
-import { MapState } from 'src/store/types';
 
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
@@ -108,10 +106,6 @@ interface DispatchProps {
   };
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
-});
-
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch
 ) => {
@@ -122,7 +116,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(connected)(BackupsCTA);
 

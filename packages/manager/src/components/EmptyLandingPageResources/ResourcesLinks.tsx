@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
 import { Link } from 'src/components/Link';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
@@ -17,16 +15,11 @@ export const ResourceLinks = (props: ResourcesLinks) => {
       {links.map((linkData) => (
         <ListItem key={linkData.to}>
           <Link
+            external={linkData.external}
             onClick={getLinkOnClick(linkAnalyticsEvent, linkData.text)}
             to={linkData.to}
           >
             {linkData.text}
-            {linkData.external && (
-              <ResourcesLinkIcon
-                icon={<ExternalLinkIcon />}
-                iconType="external"
-              />
-            )}
           </Link>
         </ListItem>
       ))}

@@ -53,7 +53,7 @@ describe('AddNewMenu', () => {
     const mockedUseFlags = jest.fn().mockReturnValue({ aglb: false });
     jest.mock('src/hooks/useFlags', () => ({
       __esModule: true,
-      default: mockedUseFlags,
+      useFlags: mockedUseFlags,
     }));
 
     const { getByText, queryByText } = renderWithTheme(<AddNewMenu />);

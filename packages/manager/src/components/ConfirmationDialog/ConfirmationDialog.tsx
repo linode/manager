@@ -1,12 +1,12 @@
+import Dialog, { DialogProps } from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
-import Dialog, { DialogProps } from 'src/components/core/Dialog';
-import DialogActions from 'src/components/core/DialogActions';
-import DialogContent from 'src/components/core/DialogContent';
-import DialogContentText from 'src/components/core/DialogContentText';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actions: {
@@ -37,6 +37,15 @@ export interface ConfirmationDialogProps extends DialogProps {
   title: string;
 }
 
+/**
+ * A Confirmation Dialog is used for confirming a simple task.
+ *
+ * > If you are confirming a delete action, use a `Deletion Dialog`
+ *
+ * ### Language
+ * - Avoid “Are you sure?” language. Assume the user knows what they want to do while helping them avoid unintended consequences.
+ *
+ */
 export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   const { classes } = useStyles();
 

@@ -45,8 +45,6 @@ describe('delete linode', () => {
 
       // confirm delete
       cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
-      // TODO Remove cy.visitWithLogin call when redirect is restored
-      cy.visitWithLogin('/linodes');
       cy.url().should('endWith', '/linodes');
       cy.findByText(linode.label).should('not.exist');
     });

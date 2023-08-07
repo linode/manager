@@ -2,8 +2,7 @@ import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -48,20 +47,16 @@ export const EditAPITokenDrawer = (props: Props) => {
         onChange={form.handleChange}
         value={form.values.label}
       />
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          data-testid="save-button"
-          disabled={!form.dirty}
-          loading={isLoading}
-          onClick={() => form.handleSubmit()}
-        >
-          Save
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'save-button',
+          disabled: !form.dirty,
+          label: 'Save',
+          loading: isLoading,
+          onClick: () => form.handleSubmit(),
+        }}
+        secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+      />
     </Drawer>
   );
 };

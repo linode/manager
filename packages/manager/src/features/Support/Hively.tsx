@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { parseAPIDate } from 'src/utilities/date';
 
@@ -73,62 +74,53 @@ export const Hively: React.FC<Props> = (props) => {
     <div className={classes.hivelyContainer}>
       <Divider />
       <Typography component="span">
-        <a
-          aria-describedby="external-site"
-          className={classes.hivelyLink}
-          href={href + '3'}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
+        <Link className={classes.hivelyLink} external to={href + '3'}>
           How did I do?
-        </a>
+        </Link>
       </Typography>
       <span>
-        <a
-          aria-describedby="external-site"
+        <Link
+          accessibleAriaLabel="Happy feedback"
           className={classes.hivelyLinkIcon}
-          href={href + '3'}
-          rel="noopener noreferrer"
-          target="_blank"
+          external
+          to={href + '3'}
         >
           <img
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png'
             }
-            alt="Face symbol outlined in green with a happy expression."
+            alt="Happy face emoji"
             className={classes.hivelyImage}
           />
-        </a>
-        <a
-          aria-describedby="external-site"
+        </Link>
+        <Link
+          accessibleAriaLabel="Mediocre feedback"
           className={classes.hivelyLinkIcon}
-          href={href + '2'}
-          rel="noopener noreferrer"
-          target="_blank"
+          external
+          to={href + '2'}
         >
           <img
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png'
             }
-            alt="Face symbol outlined in yellow with an indifferent expression."
+            alt="Indifferent face emoji"
             className={classes.hivelyImage}
           />
-        </a>
-        <a
-          aria-describedby="external-site"
+        </Link>
+        <Link
+          accessibleAriaLabel="Unhappy feedback"
           className={classes.hivelyLinkIcon}
-          href={href + '1'}
-          rel="noopener noreferrer"
-          target="_blank"
+          external
+          to={href + '1'}
         >
           <img
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png'
             }
-            alt="Face symbol outlined in red with an unhappy expression."
+            alt="Sad Face emoji"
             className={classes.hivelyImage}
           />
-        </a>
+        </Link>
       </span>
     </div>
   );

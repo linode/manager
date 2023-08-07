@@ -27,21 +27,6 @@ interface Props {
   userDefinedFields: UserDefinedField[];
 }
 
-const InfoGrid = styled(Grid, {
-  label: 'InfoGrid',
-})(({ theme }) => ({
-  '& svg': {
-    height: '19px',
-    width: '19px',
-  },
-  color: theme.palette.primary.main,
-  display: 'flex',
-  justifyContent: 'flex-end',
-  maxWidth: 40,
-  padding: theme.spacing(1),
-  paddingLeft: 0,
-}));
-
 export const SelectionCardWrapper: React.FC<Props> = (props) => {
   const theme = useTheme();
   const {
@@ -124,5 +109,20 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
     />
   );
 };
+
+const InfoGrid = styled(Grid, {
+  label: 'InfoGrid',
+})(({ theme }) => ({
+  '& svg': {
+    height: '19px',
+    width: '19px',
+  },
+  color: theme.palette.primary.main,
+  display: 'flex',
+  justifyContent: 'flex-end',
+  maxWidth: 40,
+  padding: theme.spacing(1),
+  paddingLeft: 0,
+}));
 
 export default SelectionCardWrapper;

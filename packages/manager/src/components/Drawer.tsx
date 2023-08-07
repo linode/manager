@@ -39,7 +39,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       marginBottom: theme.spacing(2),
     },
   },
-  paper: {
+  common: {
     '& .actionPanel': {
       display: 'flex',
       justifyContent: 'flex-end',
@@ -49,20 +49,24 @@ const useStyles = makeStyles()((theme: Theme) => ({
       flexBasis: '100%',
       maxWidth: '100%',
     },
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing(4),
-      width: 480,
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(2),
     },
-    width: 300,
+  },
+  default: {
+    width: 480,
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 445,
+      width: '100%',
+    },
   },
   title: {
     wordBreak: 'break-word',
   },
   wide: {
-    [theme.breakpoints.up('sm')]: {
-      width: 700,
-    },
+    maxWidth: 700,
+    width: '100%',
   },
 }));
 
@@ -78,7 +82,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
  * - Drawers can be closed by pressing the `esc` key, clicking the “X” icon, or clicking the “Cancel” button.
  */
 export const Drawer = (props: Props) => {
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
 
   const { children, onClose, title, wide, ...rest } = props;
 
@@ -92,7 +96,12 @@ export const Drawer = (props: Props) => {
         }
       }}
       anchor="right"
-      classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
+      classes={{
+        paper: cx(classes.common, {
+          [classes.default]: !wide,
+          [classes.wide]: wide,
+        }),
+      }}
       {...rest}
       aria-labelledby={titleID}
       data-qa-drawer

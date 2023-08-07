@@ -11,6 +11,7 @@ import {
 import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
+import { interceptGetLinodeConfigs } from 'support/intercepts/linodes';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -69,6 +70,7 @@ describe('volume attach and detach flows', () => {
     cy.defer(entityPromise, 'creating Volume and Linode').then(
       ([volume, linode]: [Volume, Linode]) => {
         interceptAttachVolume(volume.id).as('attachVolume');
+        interceptGetLinodeConfigs(linode.id).as('getLinodeConfigs');
         cy.visitWithLogin('/volumes', {
           localStorageOverrides: pageSizeOverride,
         });
@@ -87,19 +89,21 @@ describe('volume attach and detach flows', () => {
           .should('be.visible')
           .click();
 
-        // Input Linode label and submit.
-        cy.get(`[data-qa-drawer-title="Attach Volume ${volume.label}"]`)
-          .closest('[data-qa-drawer="true"]')
-          .should('be.visible')
-          .within(() => {
-            cy.findByText('Select a Linode')
-              .click()
-              .type(`${linode.label}{enter}`);
-            cy.findByTestId('input-loading').should('not.exist');
-            cy.get('[data-qa-buttons="true"]').within(() => {
-              cy.findByText('Attach').should('be.visible').click();
-            });
-          });
+        ui.drawer.findByTitle(`Attach Volume ${volume.label}`).within(() => {
+          cy.findByLabelText('Linode')
+            .should('be.visible')
+            .click()
+            .type(linode.label);
+
+          ui.autocompletePopper
+            .findByTitle(linode.label)
+            .should('be.visible')
+            .click();
+
+          cy.wait('@getLinodeConfigs');
+
+          ui.button.findByTitle('Attach').should('be.visible').click();
+        });
 
         // Confirm that volume has been attached to Linode.
         cy.wait('@attachVolume').its('response.statusCode').should('eq', 200);

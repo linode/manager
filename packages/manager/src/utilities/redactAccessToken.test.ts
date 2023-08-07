@@ -1,4 +1,4 @@
-import redactAccessToken from './redactAccessToken';
+import { redactAccessToken } from './redactAccessToken';
 
 describe('redactAccessToken', () => {
   it('should not mangle URLs without fragments', () => {

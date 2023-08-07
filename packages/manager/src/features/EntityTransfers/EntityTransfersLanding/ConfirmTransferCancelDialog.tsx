@@ -8,8 +8,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -82,19 +81,19 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
   };
 
   const actions = (
-    <ActionsPanel className={classes.actions}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Keep Service Transfer
-      </Button>
-      <Button
-        buttonType="primary"
-        disabled={submitting}
-        loading={submitting}
-        onClick={handleCancelTransfer}
-      >
-        Cancel Service Transfer
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        disabled: submitting,
+        label: 'Cancel Service Transfer',
+        loading: submitting,
+        onClick: handleCancelTransfer,
+      }}
+      secondaryButtonProps={{
+        label: 'Keep Service Transfer',
+        onClick: onClose,
+      }}
+      className={classes.actions}
+    />
   );
 
   // TS safety hatch (not possible in practice).
