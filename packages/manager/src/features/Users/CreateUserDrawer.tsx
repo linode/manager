@@ -58,18 +58,18 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           data-qa-create-username
           errorText={hasErrorFor('username')}
           label="Username"
-          onBlur={this.handleTrimUsername}
           onChange={this.handleChangeUsername}
           required
+          trimmed
           value={username}
         />
         <TextField
           data-qa-create-email
           errorText={hasErrorFor('email')}
           label="Email"
-          onBlur={this.handleTrimEmail}
           onChange={this.handleChangeEmail}
           required
+          trimmed
           type="email"
           value={email}
         />

@@ -109,18 +109,6 @@ const UserDetail: React.FC = () => {
     setEmail(e.target.value);
   };
 
-  const handleTrimUsername = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setUsername(e.target.value.trim());
-  };
-
-  const handleTrimEmail = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setEmail(e.target.value.trim());
-  };
-
   const handleSaveAccount = () => {
     if (!originalUsername) {
       return;
@@ -253,8 +241,6 @@ const UserDetail: React.FC = () => {
               profileSuccess={profileSuccess || false}
               saveAccount={handleSaveAccount}
               saveProfile={handleSaveProfile}
-              trimEmail={handleTrimEmail}
-              trimUsername={handleTrimUsername}
               username={username}
             />
           </SafeTabPanel>
