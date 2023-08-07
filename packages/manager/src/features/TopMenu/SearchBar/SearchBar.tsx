@@ -1,10 +1,10 @@
 import Close from '@mui/icons-material/Close';
 import Search from '@mui/icons-material/Search';
+import { styled } from '@mui/material/styles';
 import { take } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { components } from 'react-select';
-import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -33,10 +33,9 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
-import styled, { StyleProps } from './SearchBar.styles';
-import SearchSuggestion from './SearchSuggestion';
+import { SearchSuggestion } from './SearchSuggestion';
 
-type CombinedProps = SearchProps & StyleProps;
+type CombinedProps = SearchProps;
 
 const Control = (props: any) => <components.Control {...props} />;
 
@@ -76,25 +75,27 @@ export const selectStyles = {
   }),
 };
 
-export const SearchBar = (props: CombinedProps) => {
-  const { classes, combinedResults, entitiesLoading, search } = props;
-
+const SearchBar = (props: CombinedProps) => {
+  const { combinedResults, entitiesLoading, search } = props;
   const [searchText, setSearchText] = React.useState<string>('');
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
   const [apiError, setAPIError] = React.useState<null | string>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
-
   const history = useHistory();
-
   const isLargeAccount = useIsLargeAccount(searchActive);
+  const { data: regions } = useRegionsQuery();
 
   // Only request things if the search bar is open/active and we
   // know if the account is large or not
   const shouldMakeRequests =
     searchActive && isLargeAccount !== undefined && !isLargeAccount;
+
+  const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
+  const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
+  const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
+  const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
 
   const { data: objectStorageClusters } = useObjectStorageClusters(
     shouldMakeRequests
@@ -105,13 +106,18 @@ export const SearchBar = (props: CombinedProps) => {
     shouldMakeRequests
   );
 
-  const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
+  const { data: linodes, isLoading: linodesLoading } = useAllLinodesQuery(
+    {},
+    {},
+    shouldMakeRequests
+  );
 
-  const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
+  const typesQuery = useSpecificTypes(
+    (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined),
+    shouldMakeRequests
+  );
 
-  const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
-
-  const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
+  const types = extendTypesQueryResult(typesQuery);
 
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
@@ -124,21 +130,6 @@ export const SearchBar = (props: CombinedProps) => {
     { is_public: true },
     searchActive
   );
-
-  const { data: linodes, isLoading: linodesLoading } = useAllLinodesQuery(
-    {},
-    {},
-    shouldMakeRequests
-  );
-
-  const { data: regions } = useRegionsQuery();
-
-  const typesQuery = useSpecificTypes(
-    (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined),
-    shouldMakeRequests
-  );
-
-  const types = extendTypesQueryResult(typesQuery);
 
   const searchableLinodes = (linodes ?? []).map((linode) => {
     const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
@@ -289,22 +280,19 @@ export const SearchBar = (props: CombinedProps) => {
 
   return (
     <React.Fragment>
-      <IconButton
+      <StyledIconButton
         aria-label="open menu"
-        className={classes.navIconHide}
         color="inherit"
         onClick={toggleSearch}
         size="large"
       >
         <Search />
-      </IconButton>
-      <div
-        className={`
-          ${classes.root}
-          ${searchActive ? 'active' : ''}
-        `}
-      >
-        <Search className={classes.icon} data-qa-search-icon />
+      </StyledIconButton>
+      <StyledSearchBarWrapperDiv className={searchActive ? 'active' : ''}>
+        <Search
+          data-qa-search-icon
+          sx={{ color: '#c9cacb', fontSize: '2rem' }}
+        />
         <label className="visually-hidden" htmlFor="main-search">
           Main search
         </label>
@@ -334,24 +322,29 @@ export const SearchBar = (props: CombinedProps) => {
           options={finalOptions}
           styles={selectStyles}
         />
-        <IconButton
+        <StyledIconButton
           aria-label="close menu"
-          className={classes.navIconHide}
           color="inherit"
           onClick={toggleSearch}
           size="large"
         >
-          <Close className={classes.close} />
-        </IconButton>
-      </div>
+          <Close
+            sx={(theme) => ({
+              '& > span': {
+                padding: 2,
+              },
+              '&:hover, &:focus': {
+                color: theme.palette.primary.main,
+              },
+            })}
+          />
+        </StyledIconButton>
+      </StyledSearchBarWrapperDiv>
     </React.Fragment>
   );
 };
 
-export default compose<CombinedProps, {}>(
-  withStoreSearch(),
-  styled
-)(SearchBar) as React.ComponentType<{}>;
+export default withStoreSearch()(SearchBar);
 
 export const createFinalOptions = (
   results: Item[],
@@ -409,3 +402,86 @@ export const createFinalOptions = (
   const first20Results = take(20, results);
   return [redirectOption, ...first20Results, lastOption];
 };
+
+const StyledIconButton = styled(IconButton, {
+  label: 'StyledIconButton',
+})(({ theme }) => ({
+  '& > span': {
+    justifyContent: 'flex-end',
+  },
+  '& svg': {
+    height: 25,
+    width: 25,
+  },
+  '&:hover, &:focus': {
+    color: '#c1c1c0',
+  },
+  backgroundColor: 'inherit',
+  border: 'none',
+  color: '#c9c7c7',
+  cursor: 'pointer',
+  padding: theme.spacing(),
+  position: 'relative',
+  [theme.breakpoints.up('md')]: {
+    display: 'none',
+  },
+  top: 1,
+}));
+
+const StyledSearchBarWrapperDiv = styled('div', {
+  label: 'StyledSearchBarWrapperDiv',
+})(({ theme }) => ({
+  '& > div .react-select__control': {
+    backgroundColor: 'transparent',
+  },
+  '& > div .react-select__indicators': {
+    display: 'none',
+  },
+  '& > div .react-select__menu': {
+    border: 0,
+    borderRadius: 4,
+    boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
+    marginTop: 12,
+    maxHeight: 350,
+    overflowY: 'auto',
+  },
+  '& > div .react-select__menu-list': {
+    overflowX: 'hidden',
+    padding: 0,
+  },
+  '& > div .react-select__value-container': {
+    '& p': {
+      fontSize: '0.875rem',
+      overflow: 'visible',
+    },
+    overflow: 'hidden',
+  },
+  alignItems: 'center',
+  backgroundColor: theme.bg.app,
+  borderRadius: 3,
+  display: 'flex',
+  flex: 1,
+  height: 34,
+  marginLeft: theme.spacing(1),
+  padding: theme.spacing(1),
+  position: 'relative', // for search results
+  [theme.breakpoints.down('md')]: {
+    '&.active': {
+      opacity: 1,
+      visibility: 'visible',
+      zIndex: 3,
+    },
+    backgroundColor: theme.bg.white,
+    left: 0,
+    margin: 0,
+    opacity: 0,
+    position: 'absolute',
+    visibility: 'hidden',
+    width: 'calc(100% - 100px)',
+    zIndex: -1,
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
+  transition: theme.transitions.create(['opacity']),
+}));

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import UserMenu from './UserMenu';
+import { UserMenu } from './UserMenu';
 
 it('renders without crashing', () => {
   renderWithTheme(<UserMenu />);

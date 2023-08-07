@@ -1,7 +1,6 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import {
   MenuButton,
   MenuItems,
@@ -11,7 +10,6 @@ import {
 } from '@reach/menu-button';
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
@@ -47,182 +45,6 @@ export const menuLinkStyle = (linkColor: string) => ({
   lineHeight: 1,
 });
 
-const useStyles = makeStyles((theme: Theme) => ({
-  accountColumn: {
-    whiteSpace: 'normal',
-    width: '100%',
-  },
-  button: {
-    '&:focus': {
-      '& $username': {
-        color: theme.palette.primary.main,
-      },
-    },
-    '&:hover, &.active': {
-      '& $userWrapper': {
-        boxShadow: '0 0 10px #bbb',
-      },
-      '& $username': {
-        color: theme.palette.primary.main,
-      },
-    },
-    borderRadius: 30,
-    order: 4,
-    padding: theme.spacing(1),
-  },
-  caret: {
-    color: '#9ea4ae',
-    fontSize: 26,
-    marginLeft: 2,
-    marginTop: 2,
-    [theme.breakpoints.down('md')]: {
-      display: 'none',
-    },
-  },
-  gravatar: {
-    borderRadius: '50%',
-    height: 30,
-    width: 30,
-  },
-  hidden: {
-    ...theme.visually.hidden,
-  },
-  inlineUserName: {
-    fontSize: '0.875rem',
-    paddingLeft: theme.spacing(),
-  },
-  leftIcon: {
-    borderRadius: '50%',
-    height: 30,
-    width: 30,
-  },
-  menu: {
-    transform: `translateY(${theme.spacing(1)})`,
-  },
-  menuButton: {
-    '&[data-reach-menu-button]': {
-      '&[aria-expanded="true"]': {
-        '& $caret': {
-          color: '#0683E3',
-          marginTop: 4,
-          transform: 'rotate(180deg)',
-        },
-        background: theme.bg.app,
-      },
-      backgroundColor: 'transparent',
-      border: 'none',
-      borderRadius: 0,
-      color: '#c9c7c7',
-      cursor: 'pointer',
-      fontSize: '1rem',
-      height: 50,
-      textTransform: 'inherit',
-      [theme.breakpoints.down('md')]: {
-        paddingLeft: 12,
-        paddingRight: 12,
-      },
-      [theme.breakpoints.down(360)]: {
-        paddingLeft: theme.spacing(),
-        paddingRight: theme.spacing(),
-      },
-    },
-    alignItems: 'center',
-    display: 'flex',
-    lineHeight: 1,
-    paddingRight: 10,
-    [theme.breakpoints.down(360)]: {
-      paddingLeft: 3,
-    },
-    [theme.breakpoints.up('sm')]: {
-      paddingLeft: 12,
-    },
-  },
-  menuHeader: {
-    borderBottom: '1px solid #9ea4ae',
-    color: theme.textColors.headlineStatic,
-    fontSize: '.75rem',
-    letterSpacing: 1.875,
-    marginBottom: theme.spacing(),
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
-    padding: '16px 0 8px',
-    textTransform: 'uppercase',
-  },
-  menuItem: {
-    '&:hover, &:focus': {
-      backgroundColor: theme.name === 'light' ? '#3a3f46' : '#23262a',
-      color: 'white',
-    },
-    fontFamily: 'LatoWeb',
-    fontSize: '.9rem',
-  },
-  menuItemLink: menuLinkStyle(theme.textColors.linkActiveLight),
-  menuItemList: {
-    '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.bgPaper,
-      border: 'none',
-      padding: 0,
-      paddingBottom: theme.spacing(1.5),
-      width: 300,
-    },
-    boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-  },
-  menuPopover: {
-    '&[data-reach-menu], &[data-reach-menu-popover]': {
-      position: 'absolute',
-      [theme.breakpoints.down('lg')]: {
-        left: 0,
-      },
-      top: 50,
-      zIndex: 3000,
-    },
-  },
-  profileWrapper: {
-    '& > div': {
-      whiteSpace: 'normal',
-    },
-    marginBottom: theme.spacing(2),
-  },
-  userName: {
-    color: theme.textColors.headlineStatic,
-    fontSize: '1.1rem',
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
-    marginTop: -1,
-    paddingTop: theme.spacing(2),
-  },
-  userWrapper: {
-    '& svg': {
-      color: '#c9c7c7',
-      height: 30,
-      width: 30,
-    },
-    alignItems: 'center',
-    borderRadius: '50%',
-    display: 'flex',
-    height: 30,
-    justifyContent: 'center',
-    [theme.breakpoints.down('lg')]: {
-      height: '28px',
-      width: '28px',
-    },
-    transition: theme.transitions.create(['box-shadow']),
-    width: 30,
-  },
-  username: {
-    maxWidth: '135px',
-    overflow: 'hidden',
-    paddingRight: 15,
-    textOverflow: 'ellipsis',
-    // Hides username as soon as things start to scroll
-    [theme.breakpoints.down(1345)]: {
-      ...theme.visually.hidden,
-    },
-    transition: theme.transitions.create(['color']),
-    whiteSpace: 'nowrap',
-  },
-}));
-
 const profileLinks: MenuLink[] = [
   {
     display: 'Display',
@@ -241,9 +63,7 @@ const profileLinks: MenuLink[] = [
   { display: 'Log Out', href: '/logout' },
 ];
 
-export const UserMenu: React.FC<{}> = () => {
-  const classes = useStyles();
-
+export const UserMenu = React.memo(() => {
   const {
     _hasAccountAccess,
     _isRestrictedUser,
@@ -251,7 +71,7 @@ export const UserMenu: React.FC<{}> = () => {
   } = useAccountManagement();
 
   const { data: grants } = useGrants();
-
+  const userName = profile?.username ?? '';
   const hasFullAccountAccess =
     grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
 
@@ -287,19 +107,15 @@ export const UserMenu: React.FC<{}> = () => {
     [hasFullAccountAccess, _isRestrictedUser]
   );
 
-  const userName = profile?.username ?? '';
-
   const renderLink = (menuLink: MenuLink) =>
     menuLink.hide ? null : (
       <Grid key={menuLink.display} xs={12}>
-        <MenuLink
-          as={Link}
-          className={classes.menuItemLink}
+        <StyledMenuLink
           data-testid={`menu-item-${menuLink.display}`}
-          to={menuLink.href}
+          href={menuLink.href}
         >
           {menuLink.display}
-        </MenuLink>
+        </StyledMenuLink>
       </Grid>
     );
 
@@ -312,35 +128,35 @@ export const UserMenu: React.FC<{}> = () => {
           leaveDelay={0}
           title="Profile & Account"
         >
-          <MenuButton
-            className={classes.menuButton}
-            data-testid="nav-group-profile"
-          >
-            <GravatarByEmail
-              className={classes.userWrapper}
-              email={profile?.email ?? ''}
-            />
+          <StyledMenuButton data-testid="nav-group-profile">
+            <StyledGravatarByEmail email={profile?.email ?? ''} />
             <Hidden mdDown>
-              <Typography className={classes.inlineUserName}>
+              <Typography sx={(theme) => ({ paddingLeft: theme.spacing() })}>
                 {userName}
               </Typography>
             </Hidden>
-            <KeyboardArrowDown className={classes.caret} />
-          </MenuButton>
+            <KeyboardArrowDown
+              sx={(theme) => ({
+                color: '#9ea4ae',
+                fontSize: 26,
+                margin: '2px 0px 0px 2px',
+                [theme.breakpoints.down('md')]: { display: 'none' },
+              })}
+            />
+          </StyledMenuButton>
         </Tooltip>
-        <MenuPopover
-          className={classes.menuPopover}
-          data-qa-user-menu
-          position={positionRight}
-        >
-          <MenuItems className={classes.menuItemList}>
-            <div className={classes.userName}>
+        <StyledMenuPopover data-qa-user-menu position={positionRight}>
+          <StyledMenuItems>
+            <StyledUserNameDiv>
               <strong>{userName}</strong>
-            </div>
-            <div className={classes.menuHeader}>My Profile</div>
+            </StyledUserNameDiv>
+            <StyledMenuHeaderDiv>My Profile</StyledMenuHeaderDiv>
             <Grid container>
               <Grid
-                className={classes.profileWrapper}
+                sx={(theme) => ({
+                  '& > div': { whiteSpace: 'normal' },
+                  marginBottom: theme.spacing(2),
+                })}
                 direction="column"
                 wrap="nowrap"
                 xs={6}
@@ -348,7 +164,10 @@ export const UserMenu: React.FC<{}> = () => {
                 {profileLinks.slice(0, 4).map(renderLink)}
               </Grid>
               <Grid
-                className={classes.profileWrapper}
+                sx={(theme) => ({
+                  '& > div': { whiteSpace: 'normal' },
+                  marginBottom: theme.spacing(2),
+                })}
                 direction="column"
                 wrap="nowrap"
                 xs={6}
@@ -358,31 +177,154 @@ export const UserMenu: React.FC<{}> = () => {
             </Grid>
             {_hasAccountAccess ? (
               <>
-                <div className={classes.menuHeader}>Account</div>
+                <StyledMenuHeaderDiv>Account</StyledMenuHeaderDiv>
                 <Grid container>
-                  <Grid className={classes.accountColumn}>
+                  <Grid>
                     {accountLinks.map((menuLink) =>
                       menuLink.hide ? null : (
-                        <MenuLink
-                          as={Link}
-                          className={classes.menuItemLink}
+                        <StyledMenuLink
                           data-testid={`menu-item-${menuLink.display}`}
+                          href={menuLink.href}
                           key={menuLink.display}
-                          to={menuLink.href}
                         >
                           {menuLink.display}
-                        </MenuLink>
+                        </StyledMenuLink>
                       )
                     )}
                   </Grid>
                 </Grid>
               </>
             ) : null}
-          </MenuItems>
-        </MenuPopover>
+          </StyledMenuItems>
+        </StyledMenuPopover>
       </ReachMenu>
     </div>
   );
-};
+});
 
-export default React.memo(UserMenu);
+const StyledMenuButton = styled(MenuButton, {
+  label: 'StyledMenuButton',
+})(({ theme }) => ({
+  '&[data-reach-menu-button]': {
+    '&[aria-expanded="true"]': {
+      '& > svg': {
+        color: '#0683E3',
+        marginTop: 4,
+        transform: 'rotate(180deg)',
+      },
+      background: theme.bg.app,
+    },
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    height: 50,
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: 12,
+      paddingRight: 12,
+    },
+    [theme.breakpoints.down(360)]: {
+      paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing(),
+    },
+  },
+  alignItems: 'center',
+  display: 'flex',
+  paddingRight: 10,
+  [theme.breakpoints.down(360)]: {
+    paddingLeft: 3,
+  },
+  [theme.breakpoints.up('sm')]: {
+    paddingLeft: 12,
+  },
+}));
+
+const StyledMenuHeaderDiv = styled('div', {
+  label: 'StyledMenuHeaderDiv',
+})(({ theme }) => ({
+  borderBottom: '1px solid #9ea4ae',
+  color: theme.textColors.headlineStatic,
+  fontSize: '.75rem',
+  letterSpacing: 1.875,
+  margin: `${theme.spacing(0)} ${theme.spacing(3)} ${theme.spacing()}`,
+  padding: '16px 0 8px',
+  textTransform: 'uppercase',
+}));
+
+const StyledMenuLink = styled(MenuLink, {
+  label: 'StyledMenuLink',
+})(({ theme }) => ({
+  '&[data-reach-menu-item]': {
+    '&:focus, &:hover': {
+      backgroundColor: 'transparent',
+      color: theme.textColors.linkActiveLight,
+    },
+    '&[data-reach-menu-item][data-selected]:not(:hover)': {
+      backgroundColor: 'transparent',
+      color: theme.textColors.linkActiveLight,
+      outline: 'dotted 1px #c1c1c0',
+    },
+    alignItems: 'center',
+    color: theme.textColors.linkActiveLight,
+    cursor: 'pointer',
+    display: 'flex',
+    fontSize: '0.875rem',
+    lineHeight: 1,
+    padding: '8px 24px',
+  },
+}));
+
+const StyledMenuItems = styled(MenuItems, {
+  label: 'StyledMenuItems',
+})(({ theme }) => ({
+  '&[data-reach-menu-items]': {
+    backgroundColor: theme.bg.bgPaper,
+    border: 'none',
+    padding: 0,
+    paddingBottom: theme.spacing(1.5),
+    width: 300,
+  },
+  boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
+}));
+
+const StyledMenuPopover = styled(MenuPopover, {
+  label: 'StyledMenuPopover',
+})(({ theme }) => ({
+  '&[data-reach-menu], &[data-reach-menu-popover]': {
+    position: 'absolute',
+    [theme.breakpoints.down('lg')]: {
+      left: 0,
+    },
+    top: 50,
+    zIndex: 3000,
+  },
+}));
+
+const StyledUserNameDiv = styled('div', {
+  label: 'StyledUserNameDiv',
+})(({ theme }) => ({
+  color: theme.textColors.headlineStatic,
+  fontSize: '1.1rem',
+  margin: `-1px ${theme.spacing(3)} ${theme.spacing(0)}`,
+  paddingTop: theme.spacing(2),
+}));
+
+const StyledGravatarByEmail = styled(GravatarByEmail, {
+  label: 'StyledGravatarByEmail',
+})(({ theme }) => ({
+  '& svg': {
+    color: '#c9c7c7',
+    height: 30,
+    width: 30,
+  },
+  alignItems: 'center',
+  borderRadius: '50%',
+  display: 'flex',
+  height: 30,
+  justifyContent: 'center',
+  [theme.breakpoints.down('lg')]: {
+    height: '28px',
+    width: '28px',
+  },
+  transition: theme.transitions.create(['box-shadow']),
+  width: 30,
+}));

@@ -1,6 +1,4 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { AppBar } from 'src/components/AppBar';
@@ -12,28 +10,10 @@ import { Typography } from 'src/components/Typography';
 import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import { Community } from './Community';
 import { Help } from './Help';
-import NotificationMenu from './NotificationMenu';
-import SearchBar from './SearchBar';
+import { NotificationMenu } from './NotificationMenu/NotificationMenu';
+import SearchBar from './SearchBar/SearchBar';
 import { TopMenuIcon } from './TopMenuIcon';
-import UserMenu from './UserMenu';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  appBar: {
-    backgroundColor: theme.bg.bgPaper,
-    color: theme.palette.text.primary,
-    display: 'flex',
-    flexDirection: 'row',
-    height: 50,
-    justifyContent: 'center',
-    paddingRight: '0 !important',
-    position: 'relative',
-  },
-  toolbar: {
-    height: `50px !important`,
-    padding: 0,
-    width: '100%',
-  },
-}));
+import { UserMenu } from './UserMenu/UserMenu';
 
 interface Props {
   desktopMenuToggle: () => void;
@@ -43,7 +23,7 @@ interface Props {
   username: string;
 }
 
-const TopMenu = (props: Props) => {
+export const TopMenu = React.memo((props: Props) => {
   const {
     desktopMenuToggle,
     isLoggedInAsCustomer,
@@ -51,8 +31,6 @@ const TopMenu = (props: Props) => {
     openSideMenu,
     username,
   } = props;
-
-  const classes = useStyles();
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'
@@ -73,8 +51,23 @@ const TopMenu = (props: Props) => {
           </Typography>
         </div>
       )}
-      <AppBar className={classes.appBar}>
-        <Toolbar className={classes.toolbar} variant="dense">
+      <AppBar
+        sx={(theme) => ({
+          backgroundColor: theme.bg.bgPaper,
+          color: theme.palette.text.primary,
+          position: 'relative',
+        })}
+      >
+        <Toolbar
+          sx={(theme) => ({
+            '&.MuiToolbar-root': {
+              height: `50px !important`,
+              padding: theme.spacing(0),
+              width: '100%',
+            },
+          })}
+          variant="dense"
+        >
           <Hidden mdDown>
             <TopMenuIcon key={navHoverText} title={navHoverText}>
               <IconButton
@@ -110,6 +103,4 @@ const TopMenu = (props: Props) => {
       </AppBar>
     </React.Fragment>
   );
-};
-
-export default React.memo(TopMenu);
+});

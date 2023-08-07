@@ -1,4 +1,5 @@
 import { LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { styled } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
@@ -6,6 +7,7 @@ import { OptionProps } from 'react-select';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Tag } from 'src/components/Tag/Tag';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 export interface SearchSuggestionT {
   description: string;
@@ -26,84 +28,19 @@ interface Props extends OptionProps<any, any> {
   searchText: string;
 }
 
-type CombinedProps = Props;
+export const SearchSuggestion = (props: Props) => {
+  const { data, innerProps, innerRef, label, selectProps } = props;
+  const { description, icon, searchText, status, tags } = data.data;
+  const searchResultIcon = pathOr<string>('default', [], icon);
 
-class SearchSuggestion extends React.Component<CombinedProps> {
-  render() {
-    const suggestion = this.props.data.data;
-    const { classes } = this.props.selectProps;
-    const { icon } = pathOr<string>('default', [], suggestion);
-    const { searchText } = suggestion;
-    const { innerProps, innerRef } = this.props;
-    const { status } = suggestion;
-    return (
-      <div
-        className={`
-          ${classes.suggestionRoot}
-          ${Boolean(this.props.isFocused) && classes.selectedMenuItem}
-        `}
-        data-qa-selected={Boolean(this.props.isFocused)}
-        data-qa-suggestion
-        onKeyPress={this.handleClick}
-        ref={innerRef}
-        {...innerProps}
-        // overrides onClick from InnerProps
-        onClick={this.handleClick}
-        role="button"
-        tabIndex={0}
-      >
-        <div className={classes.resultContainer}>
-          <div
-            className={`
-            ${classes.suggestionItem}
-            ${classes.suggestionIcon}
-          `}
-          >
-            <EntityIcon
-              loading={status && linodeInTransition(status)}
-              size={20}
-              status={status}
-              variant={icon}
-            />
-          </div>
-          <div
-            className={`
-            ${classes.suggestionItem}
-            ${classes.suggestionContent}
-          `}
-          >
-            <div className={classes.suggestionTitle} data-qa-suggestion-title>
-              {this.maybeStyleSegment(
-                this.props.data.label,
-                searchText,
-                classes.highlight
-              )}
-            </div>
-            <div
-              className={classes.suggestionDescription}
-              data-qa-suggestion-desc
-            >
-              {suggestion.description}
-            </div>
-          </div>
-        </div>
-        <div className={classes.tagContainer}>
-          {suggestion.tags &&
-            this.renderTags(suggestion.tags, Boolean(this.props.isFocused))}
-        </div>
-      </div>
-    );
-  }
-
-  handleClick = () => {
-    const suggestion = this.props.data;
-    this.props.selectOption(suggestion);
+  const handleClick = () => {
+    const suggestion = data;
+    props.selectOption(suggestion);
   };
 
-  maybeStyleSegment = (
+  const maybeStyleSegment = (
     text: string,
-    searchText: string,
-    hlClass: string
+    searchText: string
   ): React.ReactNode => {
     const idx = text
       .toLocaleLowerCase()
@@ -113,17 +50,16 @@ class SearchSuggestion extends React.Component<CombinedProps> {
     }
     return (
       <React.Fragment>
-        {`${text.substr(0, idx)}`}
-        <span className={hlClass}>{`${text.substr(
-          idx,
-          searchText.length
-        )}`}</span>
+        {`${text.substring(0, idx)}`}
+        <StyledSegment>
+          {`${text.substring(idx, searchText.length)}`}
+        </StyledSegment>
         {`${text.slice(idx + searchText.length)}`}
       </React.Fragment>
     );
   };
 
-  renderTags = (tags: string[], selected: boolean) => {
+  const renderTags = (tags: string[], selected: boolean) => {
     if (tags.length === 0) {
       return;
     }
@@ -131,7 +67,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
       <Tag
         asSuggestion={true}
         className="tag"
-        closeMenu={this.props.selectProps.onMenuClose}
+        closeMenu={selectProps.onMenuClose}
         colorVariant={selected ? 'blue' : 'lightBlue'}
         component={'button' as 'div'}
         key={`tag-${tag}`}
@@ -139,6 +75,116 @@ class SearchSuggestion extends React.Component<CombinedProps> {
       />
     ));
   };
-}
 
-export default SearchSuggestion;
+  return (
+    <StyledWrapperDiv
+      data-qa-selected={Boolean(props.isFocused)}
+      data-qa-suggestion
+      isFocused={Boolean(props.isFocused)}
+      onKeyDown={handleClick}
+      ref={innerRef}
+      {...innerProps}
+      // overrides onClick from InnerProps
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+    >
+      <div style={{ display: 'flex', flexFlow: 'row nowrap' }}>
+        <StyledSuggestionIcon>
+          <EntityIcon
+            loading={status && linodeInTransition(status)}
+            size={20}
+            status={status}
+            variant={searchResultIcon}
+          />
+        </StyledSuggestionIcon>
+        <div style={{ padding: '8px' }}>
+          <StyledSuggestionTitle data-qa-suggestion-title>
+            {maybeStyleSegment(label, searchText)}
+          </StyledSuggestionTitle>
+          <StyledSuggestionDescription data-qa-suggestion-desc>
+            {description}
+          </StyledSuggestionDescription>
+        </div>
+      </div>
+      <StyledTagContainer>
+        {tags && renderTags(tags, Boolean(props.isFocused))}
+      </StyledTagContainer>
+    </StyledWrapperDiv>
+  );
+};
+
+const StyledWrapperDiv = styled('div', {
+  label: 'StyledWrapperDiv',
+  shouldForwardProp: (prop) => isPropValid(['isFocused'], prop),
+})<Partial<Props>>(({ isFocused, theme }) => ({
+  '&:last-child': {
+    borderBottom: 0,
+  },
+  alignItems: 'space-between',
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  cursor: 'pointer',
+  justifyContent: 'space-between',
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+  },
+  width: 'calc(100% + 2px)',
+
+  ...(isFocused && {
+    '& .tag': {
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white',
+      },
+      backgroundColor: theme.bg.lightBlue1,
+      color: theme.palette.text.primary,
+    },
+    backgroundColor: `${theme.bg.main} !important`,
+  }),
+}));
+
+const StyledSuggestionIcon = styled('div', {
+  label: 'StyledSuggestionIcon',
+})(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'center',
+  marginLeft: theme.spacing(1.5),
+  padding: theme.spacing(),
+}));
+
+const StyledSuggestionTitle = styled('div', {
+  label: 'StyledSuggestionTitle',
+})(({ theme }) => ({
+  color: theme.palette.text.primary,
+  fontSize: '1rem',
+  fontWeight: 600,
+  wordBreak: 'break-all',
+}));
+
+const StyledSegment = styled('span', {
+  label: 'StyledSegment',
+})(({ theme }) => ({
+  color: theme.palette.primary.main,
+}));
+
+const StyledSuggestionDescription = styled('div', {
+  label: 'StyledSuggestionDescription',
+})(({ theme }) => ({
+  color: theme.color.headline,
+  fontSize: '.75rem',
+  marginTop: 2,
+}));
+
+const StyledTagContainer = styled('div', {
+  label: 'StyledTagContainer',
+})(() => ({
+  '& > div': {
+    margin: '2px',
+  },
+  alignItems: 'center',
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'flex-end',
+  paddingRight: 8,
+}));
