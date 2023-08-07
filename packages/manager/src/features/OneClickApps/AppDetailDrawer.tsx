@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: 480,
     },
-    width: 300,
   },
   wrapAppName: {
     maxWidth: 'fit-content',
