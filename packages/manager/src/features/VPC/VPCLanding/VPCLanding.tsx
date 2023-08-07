@@ -20,6 +20,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { VPCEditDrawer } from './VPCEditDrawer';
 import { VPCEmptyState } from './VPCEmptyState';
 import { VPCRow } from './VPCRow';
 
@@ -51,11 +52,19 @@ const VPCLanding = () => {
 
   const history = useHistory();
 
+  const [selectedVPC, setSelectedVPC] = React.useState<VPC | undefined>();
+
   const [deleteDialog, setDeleteDialog] = React.useState({
     id: -1,
     label: '',
     open: false,
   });
+  const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
+
+  const handleEditVPC = (vpc: VPC) => {
+    setSelectedVPC(vpc);
+    setEditVPCDrawerOpen(true);
+  };
 
   const handleDeleteVPC = (id: number, label: string) => {
     setDeleteDialog({
@@ -145,6 +154,7 @@ const VPCLanding = () => {
           {vpcs?.data.map((vpc: VPC) => (
             <VPCRow
               handleDeleteVPC={() => handleDeleteVPC(vpc.id, vpc.label)}
+              handleEditVPC={() => handleEditVPC(vpc)}
               key={vpc.id}
               vpc={vpc}
             />
@@ -160,6 +170,11 @@ const VPCLanding = () => {
         pageSize={pagination.pageSize}
       />
       <VPCDeleteDialog {...deleteDialog} onClose={closeDeleteDialog} />
+      <VPCEditDrawer
+        onClose={() => setEditVPCDrawerOpen(false)}
+        open={editVPCDrawerOpen}
+        vpc={selectedVPC}
+      />
     </>
   );
 };

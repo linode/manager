@@ -11,7 +11,13 @@ describe('VPC Table Row', () => {
     const vpc = vpcFactory.build();
 
     const { getAllByText, getByText } = renderWithTheme(
-      wrapWithTableBody(<VPCRow handleDeleteVPC={jest.fn()} vpc={vpc} />)
+      wrapWithTableBody(
+        <VPCRow
+          handleDeleteVPC={jest.fn()}
+          handleEditVPC={jest.fn()}
+          vpc={vpc}
+        />
+      )
     );
 
     // Check to see if the row rendered some data
@@ -27,7 +33,13 @@ describe('VPC Table Row', () => {
     const vpc = vpcFactory.build();
     const handleDelete = jest.fn();
     const { getAllByRole } = renderWithTheme(
-      wrapWithTableBody(<VPCRow handleDeleteVPC={handleDelete} vpc={vpc} />)
+      wrapWithTableBody(
+        <VPCRow
+          handleDeleteVPC={handleDelete}
+          handleEditVPC={jest.fn()}
+          vpc={vpc}
+        />
+      )
     );
     const deleteBtn = getAllByRole('button')[1];
     fireEvent.click(deleteBtn);
