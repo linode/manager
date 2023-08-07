@@ -171,6 +171,7 @@ export interface HeaderProps {
   variant?: TypographyProps['variant'];
 }
 
+// TODO: wasn't able to completely convert to styled components here due to chip styles not showing up
 const useHeaderStyles = makeStyles()((theme: Theme) => ({
   divider: {
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
@@ -454,7 +455,7 @@ export const Body = React.memo((props: BodyProps) => {
 // AccessTable
 // =============================================================================
 // @todo: Maybe move this component somewhere to its own file? Could potentially
-// be used elsewhere. maybe
+// be used elsewhere.
 
 interface AccessTableRow {
   heading?: string;
