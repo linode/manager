@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
