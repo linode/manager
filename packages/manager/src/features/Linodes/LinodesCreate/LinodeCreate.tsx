@@ -66,7 +66,6 @@ import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
-import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -543,14 +542,13 @@ export class LinodeCreate extends React.PureComponent<
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
-          {showUserData ? (
-            <UserDataAccordion
-              createType={this.props.createType}
-              onChange={updateUserData}
-              userData={this.props.userData}
-            />
-          ) : null}
           <AddonsPanel
+            userData={{
+              createType: this.props.createType,
+              onChange: updateUserData,
+              showUserData: Boolean(showUserData),
+              userData: this.props.userData,
+            }}
             accountBackups={accountBackupsEnabled}
             backups={this.props.backupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
