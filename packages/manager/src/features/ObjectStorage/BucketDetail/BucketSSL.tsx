@@ -5,16 +5,16 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import {
   useBucketSSLDeleteMutation,
   useBucketSSLMutation,
@@ -47,11 +47,9 @@ export const BucketSSL = (props: Props) => {
         upload a custom certificate that will be used for the TLS portion of the
         HTTPS request instead. For more information, please see our guide on
         using{' '}
-        <ExternalLink
-          hideIcon
-          link="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/"
-          text="custom certificates for Object Storage buckets"
-        />
+        <Link to="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/">
+          custom certificates for Object Storage buckets
+        </Link>
         .
       </StyledHelperText>
       <SSLBody bucketName={bucketName} clusterId={clusterId} />
@@ -139,11 +137,13 @@ const AddCertForm = (props: Props) => {
         </StyledKeyWrapper>
       </StyledFieldsWrapper>
       <Grid>
-        <ActionsPanel>
-          <Button buttonType="primary" loading={isLoading} type="submit">
-            Upload Certificate
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Upload Certificate',
+            loading: isLoading,
+            type: 'submit',
+          }}
+        />
       </Grid>
     </form>
   );
@@ -169,22 +169,18 @@ const RemoveCertForm = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        disabled={isLoading}
-        onClick={() => setOpen(false)}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        loading={isLoading}
-        onClick={removeCertificate}
-      >
-        Remove certificate
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        label: 'Remove certificate',
+        loading: isLoading,
+        onClick: removeCertificate,
+      }}
+      secondaryButtonProps={{
+        disabled: isLoading,
+        label: 'Cancel',
+        onClick: () => setOpen(false),
+      }}
+    />
   );
 
   return (

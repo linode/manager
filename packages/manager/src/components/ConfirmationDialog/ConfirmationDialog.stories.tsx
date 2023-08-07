@@ -1,8 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -34,10 +33,10 @@ const meta: Meta<typeof ConfirmationDialog> = {
   },
   args: {
     actions: (
-      <ActionsPanel>
-        <Button>Cancel</Button>
-        <Button buttonType="primary">Continue</Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{ label: 'Continue' }}
+        secondaryButtonProps={{ label: 'Cancel' }}
+      />
     ),
     children:
       'This confirmation modal is making sure you really want to do this.',

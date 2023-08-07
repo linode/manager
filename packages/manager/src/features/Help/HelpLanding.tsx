@@ -3,8 +3,8 @@ import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
-import OtherWays from './Panels/OtherWays';
-import PopularPosts from './Panels/PopularPosts';
+import { OtherWays } from './Panels/OtherWays';
+import { PopularPosts } from './Panels/PopularPosts';
 import { SearchPanel } from './Panels/SearchPanel';
 
 export const HelpLanding = () => {

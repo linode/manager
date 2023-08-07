@@ -21,8 +21,7 @@ import {
 } from 'ramda';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button, ButtonProps } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
@@ -136,18 +135,6 @@ export class DomainRecordDrawer extends React.Component<
     const noARecordsNoticeText =
       'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
-    const buttonProps: ButtonProps = {
-      buttonType: 'primary',
-      children: 'Save',
-      disabled: submitting,
-      loading: submitting,
-      onClick: isDomain
-        ? this.onDomainEdit
-        : isCreating
-        ? this.onRecordCreate
-        : this.onRecordEdit,
-    };
-
     const otherErrors = [
       getAPIErrorsFor({}, this.state.errors)('_unknown'),
       getAPIErrorsFor({}, this.state.errors)('none'),
@@ -168,16 +155,24 @@ export class DomainRecordDrawer extends React.Component<
         )}
         {fields.map((field: any, idx: number) => field(idx))}
 
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            data-qa-record-cancel
-            onClick={this.onClose}
-          >
-            Cancel
-          </Button>
-          <Button {...buttonProps} data-qa-record-save />
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'save',
+            disabled: submitting,
+            label: 'Save',
+            loading: submitting,
+            onClick: isDomain
+              ? this.onDomainEdit
+              : isCreating
+              ? this.onRecordCreate
+              : this.onRecordEdit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: this.onClose,
+          }}
+        />
       </Drawer>
     );
   }

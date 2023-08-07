@@ -2,8 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 
@@ -31,14 +30,18 @@ export const RevokeAccessKeyDialog = (props: RevokeKeysDialogProps) => {
   } = props;
 
   const actions = () => (
-    <ActionsPanel>
-      <Button buttonType="secondary" data-qa-cancel onClick={handleClose}>
-        Cancel
-      </Button>
-      <Button buttonType="primary" loading={isLoading} onClick={handleSubmit}>
-        Revoke
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        label: 'Revoke',
+        loading: isLoading,
+        onClick: handleSubmit,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: handleClose,
+      }}
+    />
   );
 
   return (

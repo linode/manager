@@ -1,8 +1,7 @@
 import { Domain } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 
-import ActionPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { sendDomainStatusChangeEvent } from 'src/utilities/analytics';
@@ -46,14 +45,14 @@ export const DisableDomainDialog = React.memo(
     return (
       <ConfirmationDialog
         actions={
-          <ActionPanel>
-            <Button buttonType="secondary" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button buttonType="primary" loading={isLoading} onClick={onSubmit}>
-              Disable Domain
-            </Button>
-          </ActionPanel>
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Disable Domain',
+              loading: isLoading,
+              onClick: onSubmit,
+            }}
+            secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          />
         }
         error={error?.[0]?.reason}
         onClose={onClose}

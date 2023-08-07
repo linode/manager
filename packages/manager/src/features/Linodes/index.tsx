@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
+import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 
 const LinodesLanding = React.lazy(
   () => import('./LinodesLanding/LinodesLanding')

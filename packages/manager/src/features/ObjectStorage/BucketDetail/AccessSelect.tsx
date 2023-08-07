@@ -1,17 +1,17 @@
 import { ACLType } from '@linode/api-v4/lib/object-storage';
-import { styled } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import EnhancedSelect from 'src/components/EnhancedSelect';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import useOpenClose from 'src/hooks/useOpenClose';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import { capitalize } from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -182,44 +182,44 @@ export const AccessSelect = React.memo((props: Props) => {
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
-          <ExternalLink
-            hideIcon
-            link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
-            text="S3-compatible tool"
-          />
+          <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
+            S3-compatible tool
+          </Link>
           .
         </Typography>
       ) : null}
 
-      <ActionsPanel style={{ padding: 0 }}>
-        <StyledSubmitButton
-          onClick={() => {
+      <ActionsPanel
+        primaryButtonProps={{
+          disabled: aclData === selectedACL && corsData === selectedCORSOption,
+          label: 'Save',
+          loading: updateAccessLoading,
+          onClick: () => {
             // This isn't really a sane option: open a dialog for confirmation.
             if (selectedACL === 'public-read-write') {
               openDialog();
             } else {
               handleSubmit();
             }
-          }}
-          buttonType="primary"
-          //  Disabled if nothing has changed.
-          disabled={aclData === selectedACL && corsData === selectedCORSOption}
-          loading={updateAccessLoading}
-        >
-          Save
-        </StyledSubmitButton>
-      </ActionsPanel>
+          },
+          sx: (theme: Theme) => ({
+            marginTop: theme.spacing(3),
+          }),
+        }}
+        style={{ padding: 0 }}
+      />
 
       <ConfirmationDialog
         actions={() => (
-          <ActionsPanel style={{ padding: 0 }}>
-            <Button buttonType="secondary" data-qa-cancel onClick={closeDialog}>
-              Cancel
-            </Button>
-            <Button buttonType="primary" onClick={handleSubmit}>
-              Confirm
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: closeDialog,
+            }}
+            primaryButtonProps={{ label: 'Confirm', onClick: handleSubmit }}
+            style={{ padding: 0 }}
+          />
         )}
         onClose={closeDialog}
         open={isOpen}

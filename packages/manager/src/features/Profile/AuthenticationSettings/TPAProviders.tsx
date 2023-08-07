@@ -9,10 +9,9 @@ import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
 import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
-import ExternalLink from 'src/components/ExternalLink';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { TPADialog } from './TPADialog';
 import {
@@ -140,11 +139,9 @@ export const TPAProviders = (props: Props) => {
             <StyledCopy variant="body1">
               If you need to reset your password or set up Two-Factor
               Authentication (2FA), please visit the{' '}
-              <ExternalLink
-                hideIcon
-                link={currentProvider.href}
-                text={`${currentProvider.displayName}` + ` website`}
-              />
+              <Link external to={currentProvider.href}>
+                {`${currentProvider.displayName}` + ` website`}
+              </Link>
               .
             </StyledCopy>
             <StyledCopy style={{ marginBottom: 8 }} variant="body1">

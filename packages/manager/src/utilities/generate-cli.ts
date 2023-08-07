@@ -72,5 +72,3 @@ export const generateCLICommand = (data: {}) => {
   const dataForCLI = Object.entries(data).reduce(dataEntriesReduce, []);
   return `linode-cli linodes create \\\n${dataForCLI.join(' \\\n')}`;
 };
-
-export default generateCLICommand;
