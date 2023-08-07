@@ -6,9 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { isOSMac } from 'src/App';
 import { Code } from 'src/components/Code/Code';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormLabel } from 'src/components/FormLabel';
 import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
@@ -75,31 +73,25 @@ export const ProfileSettings = () => {
         />
       </Paper>
       <Paper>
-        <FormControl sx={{ marginTop: 0 }}>
-          <FormLabel>
-            <Typography variant="h2">Theme</Typography>
-          </FormLabel>
-          <Typography variant="body1">
-            You may toggle your theme with the keyboard shortcut{' '}
-            {ThemeKeyboardShortcut}.
-          </Typography>
-          <RadioGroup
-            onChange={(e) =>
-              updatePreferences({ theme: e.target.value as ThemeChoice })
-            }
-            row
-            style={{ marginBottom: 0 }}
-            value={preferences?.theme ?? 'system'}
-          >
-            <FormControlLabel control={<Radio />} label="Light" value="light" />
-            <FormControlLabel control={<Radio />} label="Dark" value="dark" />
-            <FormControlLabel
-              control={<Radio />}
-              label="System"
-              value="system"
-            />
-          </RadioGroup>
-        </FormControl>
+        <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
+          Theme
+        </Typography>
+        <Typography variant="body1">
+          You may toggle your theme with the keyboard shortcut{' '}
+          {ThemeKeyboardShortcut}.
+        </Typography>
+        <RadioGroup
+          onChange={(e) =>
+            updatePreferences({ theme: e.target.value as ThemeChoice })
+          }
+          row
+          style={{ marginBottom: 0 }}
+          value={preferences?.theme ?? 'system'}
+        >
+          <FormControlLabel control={<Radio />} label="Light" value="light" />
+          <FormControlLabel control={<Radio />} label="Dark" value="dark" />
+          <FormControlLabel control={<Radio />} label="System" value="system" />
+        </RadioGroup>
       </Paper>
       <Paper>
         <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
