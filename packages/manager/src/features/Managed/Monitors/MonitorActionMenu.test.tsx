@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { MonitorActionMenu, Props } from './MonitorActionMenu';
+import { MonitorActionMenu, MonitorActionMenuProps } from './MonitorActionMenu';
 
-const props: Props = {
+const props: MonitorActionMenuProps = {
   label: 'this-monitor',
   monitorID: 1,
   openDialog: jest.fn(),

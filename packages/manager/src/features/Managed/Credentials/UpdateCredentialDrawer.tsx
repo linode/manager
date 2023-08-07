@@ -14,7 +14,7 @@ const PasswordInput = React.lazy(
   () => import('src/components/PasswordInput/PasswordInput')
 );
 
-export interface Props {
+export interface CredentialDrawerProps {
   label: string;
   onClose: () => void;
   onSubmitLabel: (values: Partial<CredentialPayload>, formikProps: any) => void;
@@ -25,9 +25,7 @@ export interface Props {
   open: boolean;
 }
 
-type CombinedProps = Props;
-
-const CredentialDrawer: React.FC<CombinedProps> = (props) => {
+const CredentialDrawer = (props: CredentialDrawerProps) => {
   const { label, onClose, onSubmitLabel, onSubmitPassword, open } = props;
 
   return (
