@@ -7,18 +7,24 @@ import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Currency } from 'src/components/Currency';
 import { Divider } from 'src/components/Divider';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { FormControlLabel } from 'src/components/FormControlLabel';
+import { UserDataAccordionProps } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import { useFlags } from 'src/hooks/useFlags';
 import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
 import AttachVLAN from './AttachVLAN';
+import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import { VLANAccordion } from './VLANAccordion';
+
+interface UserDataProps extends UserDataAccordionProps {
+  showUserData: boolean;
+}
 
 export interface AddonsPanelProps {
   accountBackups: boolean;
@@ -38,6 +44,7 @@ export interface AddonsPanelProps {
   selectedRegionID?: string; // Used for filtering VLANs
   selectedTypeID?: string;
   togglePrivateIP: () => void;
+  userData: UserDataProps;
   vlanLabel: string;
 }
 
@@ -58,6 +65,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     selectedRegionID,
     selectedTypeID,
     togglePrivateIP,
+    userData,
     vlanLabel,
   } = props;
 
@@ -163,7 +171,14 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           vlanLabel={vlanLabel}
         />
       )}
-      <Paper sx={{ marginTop: theme.spacing(3) }} data-qa-add-ons>
+      {userData.showUserData && (
+        <UserDataAccordion
+          createType={userData.createType}
+          onChange={userData.onChange}
+          userData={userData.userData}
+        />
+      )}
+      <Paper data-qa-add-ons sx={{ marginTop: theme.spacing(3) }}>
         <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
           Add-ons{' '}
           {backupsDisabledReason && (
