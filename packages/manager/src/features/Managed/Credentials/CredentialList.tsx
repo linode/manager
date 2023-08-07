@@ -1,11 +1,8 @@
 import { CredentialPayload } from '@linode/api-v4/lib/managed/types';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import AddNewLink from 'src/components/AddNewLink';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
@@ -19,7 +16,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { useDialog } from 'src/hooks/useDialog';
 import {
   useAllManagedCredentialsQuery,
@@ -34,38 +30,18 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
+import {
+  StyledHeaderGrid,
+  StyledTypography,
+  StyledWrapperGrid,
+} from '../Contacts/Contacts.styles';
 import AddCredentialDrawer from './AddCredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingRight: 0,
-      paddingTop: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-  copy: {
-    fontSize: '0.875rem',
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-  header: {
-    margin: 0,
-    width: '100%',
-  },
-}));
-
 export type FormikProps = FormikBag<{}, CredentialPayload>;
 
 export const CredentialList = () => {
-  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const { data, error, isLoading } = useAllManagedCredentialsQuery();
 
@@ -215,29 +191,25 @@ export const CredentialList = () => {
   return (
     <>
       <DocumentTitleSegment segment="Credentials" />
-      <Typography className={classes.copy}>
+      <StyledTypography>
         Please share any credentials our support team may need when responding
         to a service issue.
         <br /> Credentials are stored encrypted and all decryption attempts are
         logged. You can revoke credentials at any time by deleting them.
-      </Typography>
-      <Grid
-        sx={{
-          paddingRight: 0,
-        }}
+      </StyledTypography>
+      <StyledHeaderGrid
         alignItems="center"
-        className={classes.header}
         container
         justifyContent="flex-end"
         spacing={2}
       >
-        <Grid className={classes.addNewWrapper}>
+        <StyledWrapperGrid>
           <AddNewLink
             label="Add Credential"
             onClick={() => setDrawerOpen(true)}
           />
-        </Grid>
-      </Grid>
+        </StyledWrapperGrid>
+      </StyledHeaderGrid>
       <OrderBy data={credentials} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
