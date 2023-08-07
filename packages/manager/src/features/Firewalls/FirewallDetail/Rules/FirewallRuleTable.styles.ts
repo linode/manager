@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { isPropValid } from 'src/utilities/isPropValid';
 import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
 

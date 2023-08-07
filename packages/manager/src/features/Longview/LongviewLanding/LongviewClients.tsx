@@ -14,7 +14,7 @@ import { compose } from 'recompose';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
 import { Typography } from 'src/components/Typography';
 import withLongviewClients, {
   Props as LongviewProps,

@@ -1,25 +1,24 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { ActionMenu, Action } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-export interface Props {
+export interface SSHAccessActionMenuProps {
   isEnabled: boolean;
   linodeId: number;
   linodeLabel: string;
   openDrawer: (linodeId: number) => void;
 }
 
-export const SSHAccessActionMenu: React.FC<Props> = (props) => {
+export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
   const { isEnabled, linodeId, openDrawer } = props;
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { enqueueSnackbar } = useSnackbar();

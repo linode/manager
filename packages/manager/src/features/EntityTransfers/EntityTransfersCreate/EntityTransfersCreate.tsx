@@ -8,7 +8,7 @@ import { QueryClient, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
 import { sendEntityTransferCreateEvent } from 'src/utilities/analytics';

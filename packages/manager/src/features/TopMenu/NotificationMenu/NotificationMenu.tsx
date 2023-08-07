@@ -5,10 +5,10 @@ import { useDispatch } from 'react-redux';
 
 import Bell from 'src/assets/icons/notification.svg';
 import { Button } from 'src/components/Button/Button';
+import { ClickAwayListener } from 'src/components/ClickAwayListener';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
+import { MenuList } from 'src/components/MenuList';
 import { Paper } from 'src/components/Paper';
-import ClickAwayListener from 'src/components/core/ClickAwayListener';
-import MenuList from 'src/components/core/MenuList';
 import Events from 'src/features/NotificationCenter/Events';
 import {
   notificationContext as _notificationContext,

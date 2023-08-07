@@ -1,9 +1,8 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { RenderGuard } from 'src/components/RenderGuard';
 
 interface Props {
   disabled?: boolean;
@@ -57,6 +56,4 @@ const DiskSelect = (props: Props) => {
   );
 };
 
-export default compose<Props, Props & RenderGuardProps>(RenderGuard)(
-  DiskSelect
-);
+export default RenderGuard(DiskSelect);

@@ -6,10 +6,10 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import RenderGuard from 'src/components/RenderGuard';
+import { Paper } from 'src/components/Paper';
+import { RenderGuard } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { isPropValid } from 'src/utilities/isPropValid';
 
 export interface ExtendedLinode extends Linode {
