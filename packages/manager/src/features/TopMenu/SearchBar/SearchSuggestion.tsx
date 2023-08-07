@@ -1,5 +1,4 @@
 import { LinodeStatus } from '@linode/api-v4/lib/linodes';
-import { styled } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
@@ -7,7 +6,15 @@ import { OptionProps } from 'react-select';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Tag } from 'src/components/Tag/Tag';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
-import { isPropValid } from 'src/utilities/isPropValid';
+
+import {
+  StyledSegment,
+  StyledSuggestionDescription,
+  StyledSuggestionIcon,
+  StyledSuggestionTitle,
+  StyledTagContainer,
+  StyledWrapperDiv,
+} from './SearchSuggestion.styles';
 
 export interface SearchSuggestionT {
   description: string;
@@ -20,7 +27,7 @@ export interface SearchSuggestionT {
   tags?: string[];
 }
 
-interface Props extends OptionProps<any, any> {
+export interface SearchSuggestionProps extends OptionProps<any, any> {
   data: {
     data: SearchSuggestionT;
     label: string;
@@ -28,7 +35,7 @@ interface Props extends OptionProps<any, any> {
   searchText: string;
 }
 
-export const SearchSuggestion = (props: Props) => {
+export const SearchSuggestion = (props: SearchSuggestionProps) => {
   const { data, innerProps, innerRef, label, selectProps } = props;
   const { description, icon, searchText, status, tags } = data.data;
   const searchResultIcon = pathOr<string>('default', [], icon);
@@ -113,78 +120,3 @@ export const SearchSuggestion = (props: Props) => {
     </StyledWrapperDiv>
   );
 };
-
-const StyledWrapperDiv = styled('div', {
-  label: 'StyledWrapperDiv',
-  shouldForwardProp: (prop) => isPropValid(['isFocused'], prop),
-})<Partial<Props>>(({ isFocused, theme }) => ({
-  '&:last-child': {
-    borderBottom: 0,
-  },
-  alignItems: 'space-between',
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  cursor: 'pointer',
-  justifyContent: 'space-between',
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
-  },
-  width: 'calc(100% + 2px)',
-
-  ...(isFocused && {
-    '& .tag': {
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
-      },
-      backgroundColor: theme.bg.lightBlue1,
-      color: theme.palette.text.primary,
-    },
-    backgroundColor: `${theme.bg.main} !important`,
-  }),
-}));
-
-const StyledSuggestionIcon = styled('div', {
-  label: 'StyledSuggestionIcon',
-})(({ theme }) => ({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'center',
-  marginLeft: theme.spacing(1.5),
-  padding: theme.spacing(),
-}));
-
-const StyledSuggestionTitle = styled('div', {
-  label: 'StyledSuggestionTitle',
-})(({ theme }) => ({
-  color: theme.palette.text.primary,
-  fontSize: '1rem',
-  fontWeight: 600,
-  wordBreak: 'break-all',
-}));
-
-const StyledSegment = styled('span', {
-  label: 'StyledSegment',
-})(({ theme }) => ({
-  color: theme.palette.primary.main,
-}));
-
-const StyledSuggestionDescription = styled('div', {
-  label: 'StyledSuggestionDescription',
-})(({ theme }) => ({
-  color: theme.color.headline,
-  fontSize: '.75rem',
-  marginTop: 2,
-}));
-
-const StyledTagContainer = styled('div', {
-  label: 'StyledTagContainer',
-})(() => ({
-  '& > div': {
-    margin: '2px',
-  },
-  alignItems: 'center',
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'flex-end',
-  paddingRight: 8,
-}));

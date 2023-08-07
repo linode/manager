@@ -1,6 +1,5 @@
 import Close from '@mui/icons-material/Close';
 import Search from '@mui/icons-material/Search';
-import { styled } from '@mui/material/styles';
 import { take } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -8,7 +7,6 @@ import { components } from 'react-select';
 import { debounce } from 'throttle-debounce';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import { IconButton } from 'src/components/IconButton';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
@@ -33,9 +31,11 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
+import {
+  StyledIconButton,
+  StyledSearchBarWrapperDiv,
+} from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
-
-type CombinedProps = SearchProps;
 
 const Control = (props: any) => <components.Control {...props} />;
 
@@ -75,7 +75,7 @@ export const selectStyles = {
   }),
 };
 
-const SearchBar = (props: CombinedProps) => {
+const SearchBar = (props: SearchProps) => {
   const { combinedResults, entitiesLoading, search } = props;
   const [searchText, setSearchText] = React.useState<string>('');
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
@@ -117,7 +117,7 @@ const SearchBar = (props: CombinedProps) => {
     shouldMakeRequests
   );
 
-  const types = extendTypesQueryResult(typesQuery);
+  const extendedTypes = extendTypesQueryResult(typesQuery);
 
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
@@ -133,7 +133,7 @@ const SearchBar = (props: CombinedProps) => {
 
   const searchableLinodes = (linodes ?? []).map((linode) => {
     const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
-    return formatLinode(linode, types, imageLabel);
+    return formatLinode(linode, extendedTypes, imageLabel);
   });
 
   const { searchAPI } = useAPISearch(!isNilOrEmpty(searchText));
@@ -344,8 +344,6 @@ const SearchBar = (props: CombinedProps) => {
   );
 };
 
-export default withStoreSearch()(SearchBar);
-
 export const createFinalOptions = (
   results: Item[],
   searchText: string = '',
@@ -403,85 +401,4 @@ export const createFinalOptions = (
   return [redirectOption, ...first20Results, lastOption];
 };
 
-const StyledIconButton = styled(IconButton, {
-  label: 'StyledIconButton',
-})(({ theme }) => ({
-  '& > span': {
-    justifyContent: 'flex-end',
-  },
-  '& svg': {
-    height: 25,
-    width: 25,
-  },
-  '&:hover, &:focus': {
-    color: '#c1c1c0',
-  },
-  backgroundColor: 'inherit',
-  border: 'none',
-  color: '#c9c7c7',
-  cursor: 'pointer',
-  padding: theme.spacing(),
-  position: 'relative',
-  [theme.breakpoints.up('md')]: {
-    display: 'none',
-  },
-  top: 1,
-}));
-
-const StyledSearchBarWrapperDiv = styled('div', {
-  label: 'StyledSearchBarWrapperDiv',
-})(({ theme }) => ({
-  '& > div .react-select__control': {
-    backgroundColor: 'transparent',
-  },
-  '& > div .react-select__indicators': {
-    display: 'none',
-  },
-  '& > div .react-select__menu': {
-    border: 0,
-    borderRadius: 4,
-    boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-    marginTop: 12,
-    maxHeight: 350,
-    overflowY: 'auto',
-  },
-  '& > div .react-select__menu-list': {
-    overflowX: 'hidden',
-    padding: 0,
-  },
-  '& > div .react-select__value-container': {
-    '& p': {
-      fontSize: '0.875rem',
-      overflow: 'visible',
-    },
-    overflow: 'hidden',
-  },
-  alignItems: 'center',
-  backgroundColor: theme.bg.app,
-  borderRadius: 3,
-  display: 'flex',
-  flex: 1,
-  height: 34,
-  marginLeft: theme.spacing(1),
-  padding: theme.spacing(1),
-  position: 'relative', // for search results
-  [theme.breakpoints.down('md')]: {
-    '&.active': {
-      opacity: 1,
-      visibility: 'visible',
-      zIndex: 3,
-    },
-    backgroundColor: theme.bg.white,
-    left: 0,
-    margin: 0,
-    opacity: 0,
-    position: 'absolute',
-    visibility: 'hidden',
-    width: 'calc(100% - 100px)',
-    zIndex: -1,
-  },
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-  },
-  transition: theme.transitions.create(['opacity']),
-}));
+export default withStoreSearch()(SearchBar);

@@ -15,7 +15,7 @@ import SearchBar from './SearchBar/SearchBar';
 import { TopMenuIcon } from './TopMenuIcon';
 import { UserMenu } from './UserMenu/UserMenu';
 
-interface Props {
+interface TopMenuProps {
   desktopMenuToggle: () => void;
   isLoggedInAsCustomer: boolean;
   isSideMenuOpen: boolean;
@@ -23,7 +23,7 @@ interface Props {
   username: string;
 }
 
-export const TopMenu = React.memo((props: Props) => {
+export const TopMenu = React.memo((props: TopMenuProps) => {
   const {
     desktopMenuToggle,
     isLoggedInAsCustomer,
@@ -61,7 +61,7 @@ export const TopMenu = React.memo((props: Props) => {
         <Toolbar
           sx={(theme) => ({
             '&.MuiToolbar-root': {
-              height: `50px !important`,
+              height: `50px`,
               padding: theme.spacing(0),
               width: '100%',
             },
