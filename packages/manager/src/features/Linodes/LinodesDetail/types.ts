@@ -1,8 +1,8 @@
 import { Event, GrantLevel } from '@linode/api-v4/lib/account';
 import { Config, Disk } from '@linode/api-v4/lib/linodes';
 
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { ExtendedType } from 'src/utilities/extendType';
+import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 export interface ExtendedLinode extends LinodeWithMaintenance {
   _configs: Config[];

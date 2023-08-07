@@ -20,7 +20,9 @@ import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
+const FirewallLinodesLanding = React.lazy(
+  () => import('./Devices/FirewallLinodesLanding')
+);
 const FirewallRulesLanding = React.lazy(
   () => import('./Rules/FirewallRulesLanding')
 );

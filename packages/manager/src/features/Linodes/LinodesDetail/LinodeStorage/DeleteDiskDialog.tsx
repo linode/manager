@@ -1,7 +1,6 @@
 import React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useLinodeDeleteDiskMutation } from 'src/queries/linodes/disks';
 
@@ -38,23 +37,20 @@ export const DeleteDiskDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button
-            buttonType="secondary"
-            data-qa-cancel-delete
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-confirm-delete
-            loading={isLoading}
-            onClick={onDelete}
-          >
-            Delete
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'confirm-delete',
+            label: 'Delete',
+            loading: isLoading,
+            onClick: onDelete,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel-delete',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+          style={{ padding: 0 }}
+        />
       }
       error={error?.[0].reason}
       onClose={onClose}

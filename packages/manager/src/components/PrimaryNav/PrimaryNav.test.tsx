@@ -14,6 +14,7 @@ const props = {
 };
 
 const queryClient = queryClientFactory();
+const queryString = 'menu-item-Managed';
 
 describe('PrimaryNav', () => {
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
@@ -29,7 +30,7 @@ describe('PrimaryNav', () => {
       queryByTestId,
       rerender,
     } = renderWithTheme(<PrimaryNav {...props} />, { queryClient });
-    expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
+    expect(queryByTestId(queryString)).not.toBeInTheDocument();
 
     server.use(
       rest.get('*/account/maintenance', (req, res, ctx) => {
@@ -39,9 +40,9 @@ describe('PrimaryNav', () => {
 
     rerender(wrapWithTheme(<PrimaryNav {...props} />, { queryClient }));
 
-    await findByTestId('menu-item-Managed');
+    await findByTestId(queryString);
 
-    getByTestId('menu-item-Managed');
+    getByTestId(queryString);
   });
 
   it('should have aria-current attribute for accessible links', () => {
@@ -49,8 +50,6 @@ describe('PrimaryNav', () => {
       queryClient,
     });
 
-    expect(getByTestId('menu-item-Managed').getAttribute('aria-current')).toBe(
-      'false'
-    );
+    expect(getByTestId(queryString).getAttribute('aria-current')).toBe('false');
   });
 });

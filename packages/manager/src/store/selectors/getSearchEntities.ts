@@ -10,12 +10,9 @@ import { Volume } from '@linode/api-v4/lib/volumes';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { displayType } from 'src/features/Linodes/presentation';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
-import { ApplicationState } from 'src/store';
 import { ExtendedType } from 'src/utilities/extendType';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { readableBytes } from 'src/utilities/unitConversions';
-
-export type State = ApplicationState['__resources'];
 
 export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;

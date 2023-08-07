@@ -16,11 +16,6 @@ const props: Props = {
   combinedResults: [],
   entities: [],
   entitiesLoading: false,
-  errors: {
-    hasErrors: false,
-    linodes: false,
-    nodebalancers: false,
-  },
   search: jest.fn(),
   searchResultsByEntity: emptyResults,
   ...reactRouterProps,

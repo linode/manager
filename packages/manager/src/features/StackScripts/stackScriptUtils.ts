@@ -87,7 +87,7 @@ export const baseApps = {
   '869623': 'JetBackup',
   '912262': 'Harbor',
   '912264': 'Rocket.Chat',
-  // '913276': 'Wazuh', temporarily hide until OCA-1177 is addressed
+  '913276': 'Wazuh',
   '913277': 'BeEF',
   '923029': 'OpenLiteSpeed Django',
   '923030': 'OpenLiteSpeed Rails',
@@ -124,6 +124,7 @@ export const baseApps = {
   '1096122': 'Mastodon',
   '1102900': 'Apache Airflow',
   '1102902': 'HaltDOS Community WAF',
+  '1102905': 'Gopaddle',
   '1102904': 'Superinsight',
   '1102906': 'Passky',
   '1102907': 'ONLYOFFICE Docs',

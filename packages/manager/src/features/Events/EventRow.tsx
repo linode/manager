@@ -13,9 +13,7 @@ import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import { useApplicationStore } from 'src/store';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
-import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
 import { GravatarByUsername } from '../../components/GravatarByUsername';
@@ -46,11 +44,8 @@ type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
   const { entityId, event } = props;
-  const store = useApplicationStore();
   const link = getLinkForEvent(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
-  const id = pathOr<number | string>(-1, ['entity', 'id'], event);
-  const entity = getEntityByIDFromStore(type, id, store);
   const timestamp = getEventTimestamp(event);
 
   const rowProps = {
@@ -58,7 +53,6 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     entityId,
     link,
     message: eventMessageGenerator(event),
-    status: pathOr(undefined, ['status'], entity),
     timestamp,
     type,
     username: event.username,

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 
@@ -17,19 +16,20 @@ export const CaptureSnapshotConfirmationDialog = (props: Props) => {
   const { error, loading, onClose, onSnapshot, open } = props;
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-confirm
-        loading={loading}
-        onClick={onSnapshot}
-      >
-        Take Snapshot
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        label: 'Take Snapshot',
+        loading,
+        onClick: onSnapshot,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
+      style={{ padding: 0 }}
+    />
   );
 
   return (

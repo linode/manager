@@ -1,7 +1,6 @@
 import { Config, Interface } from '@linode/api-v4/lib/linodes';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -11,25 +10,6 @@ import { useLinodeKernelQuery } from 'src/queries/linodes/linodes';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
 import { ConfigActionMenu } from './LinodeConfigActionMenu';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  actionInner: {
-    '&.MuiTableCell-root': {
-      paddingRight: 0,
-    },
-    padding: '0 !important',
-  },
-  interfaceList: {
-    listStyleType: 'none',
-    margin: 0,
-    paddingBottom: theme.spacing(),
-    paddingLeft: 0,
-    paddingTop: theme.spacing(),
-  },
-  interfaceListItem: {
-    paddingBottom: 4,
-  },
-}));
 
 interface Props {
   config: Config;
@@ -53,7 +33,6 @@ export const ConfigRow = React.memo((props: Props) => {
     page_size: API_MAX_PAGE_SIZE,
   });
 
-  const { classes } = useStyles();
   const interfaces = config?.interfaces ?? [];
 
   const validDevices = React.useMemo(
@@ -80,22 +59,22 @@ export const ConfigRow = React.memo((props: Props) => {
             return undefined;
           }
           return (
-            <li className={classes.interfaceListItem} key={thisDevice}>
+            <li style={{ paddingBottom: 4 }} key={thisDevice}>
               /dev/{thisDevice} - {label}
             </li>
           );
         })
         .filter(Boolean),
-    [volumes, disks, classes.interfaceListItem, config.devices]
+    [volumes, disks, config.devices]
   );
 
   const deviceLabels = React.useMemo(
-    () => <ul className={classes.interfaceList}>{validDevices}</ul>,
-    [classes.interfaceList, validDevices]
+    () => <StyledUl>{validDevices}</StyledUl>,
+    [validDevices]
   );
 
   const InterfaceList = (
-    <ul className={classes.interfaceList}>
+    <StyledUl>
       {interfaces.map((interfaceEntry, idx) => {
         // The order of the config.interfaces array as returned by the API is significant.
         // Index 0 is eth0, index 1 is eth1, index 2 is eth2.
@@ -103,14 +82,14 @@ export const ConfigRow = React.memo((props: Props) => {
 
         return (
           <li
-            className={classes.interfaceListItem}
+            style={{ paddingBottom: 4 }}
             key={interfaceEntry.label ?? 'public' + idx}
           >
             {interfaceName} – {getInterfaceLabel(interfaceEntry)}
           </li>
         );
       })}
-    </ul>
+    </StyledUl>
   );
 
   const defaultInterfaceLabel = 'eth0 – Public Internet';
@@ -124,7 +103,7 @@ export const ConfigRow = React.memo((props: Props) => {
       <TableCell>
         {interfaces.length > 0 ? InterfaceList : defaultInterfaceLabel}
       </TableCell>
-      <TableCell className={classes.actionInner}>
+      <StyledTableCell>
         <ConfigActionMenu
           config={config}
           label={config.label}
@@ -134,9 +113,24 @@ export const ConfigRow = React.memo((props: Props) => {
           onEdit={onEdit}
           readOnly={readOnly}
         />
-      </TableCell>
+      </StyledTableCell>
     </TableRow>
   );
+});
+
+const StyledUl = styled('ul', { label: 'StyledUl' })(({ theme }) => ({
+  listStyleType: 'none',
+  margin: 0,
+  paddingBottom: theme.spacing(),
+  paddingLeft: 0,
+  paddingTop: theme.spacing(),
+}));
+
+const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
+  '&.MuiTableCell-root': {
+    paddingRight: 0,
+  },
+  padding: '0 !important',
 });
 
 export const getInterfaceLabel = (configInterface: Interface): string => {

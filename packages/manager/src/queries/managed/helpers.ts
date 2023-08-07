@@ -1,5 +1,4 @@
 import { ManagedIssue, getTicket } from '@linode/api-v4';
-import Bluebird from 'bluebird';
 import { DateTime } from 'luxon';
 
 import { parseAPIDate } from 'src/utilities/date';
@@ -19,22 +18,19 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
     (thisIssue) =>
       parseAPIDate(thisIssue.created).diff(DateTime.local()).days < 30
   );
-  return await Bluebird.map(recentIssues, (thisIssue) => {
-    /**
-     * Get the associated ticket for each issue, since the API response
-     * does not include the status or date closed.
-     */
-    return (
-      getTicket(thisIssue.entity.id)
+
+  return Promise.all(
+    recentIssues.map((issue) =>
+      getTicket(issue.entity.id)
         .then((ticket) => {
           return {
-            ...thisIssue,
+            ...issue,
             dateClosed: ticket.closed,
             status: ticket.status,
           } as ExtendedIssue;
         })
         // If this fails, we'll just use a normal issue
-        .catch((_) => thisIssue as ExtendedIssue)
-    );
-  });
+        .catch((_) => issue as ExtendedIssue)
+    )
+  );
 };

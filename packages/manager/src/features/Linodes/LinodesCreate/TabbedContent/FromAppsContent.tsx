@@ -1,8 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import compact from 'lodash/compact';
 import curry from 'lodash/curry';
 import { assocPath } from 'ramda';
@@ -33,8 +31,7 @@ import {
   WithTypesRegionsAndImages,
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
-
-type ClassNames = 'filter' | 'main' | 'search' | 'searchAndFilter' | 'sidebar';
+import { StyledGrid } from './CommonTabbedContent.styles';
 
 const appCategories = [
   'Control Panels',
@@ -57,38 +54,6 @@ const appCategoryOptions = appCategories.map((categoryName) => ({
 
 // type AppCategory = typeof appCategories;
 
-const styles = (theme: Theme) =>
-  createStyles({
-    filter: {
-      flexGrow: 1.5,
-    },
-    main: {
-      [theme.breakpoints.up('md')]: {
-        maxWidth: '100%',
-      },
-    },
-    search: {
-      '& .input': {
-        maxWidth: 'none',
-      },
-      flexGrow: 10,
-    },
-    searchAndFilter: {
-      '& > h2': {
-        width: '100%',
-      },
-      display: 'flex',
-      gap: theme.spacing(),
-      justifyContent: 'space-between',
-      marginTop: theme.spacing(),
-    },
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        marginTop: '-130px !important',
-      },
-    },
-  });
-
 const errorResources = {
   image: 'Image',
   label: 'A label',
@@ -103,13 +68,11 @@ interface Props {
   setNumberOfNodesForAppCluster: (num: number) => void;
 }
 
-type InnerProps = Props &
+type CombinedProps = Props &
   AppsData &
   ReduxStateProps &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
-
-type CombinedProps = WithStyles<ClassNames> & InnerProps;
 
 interface State {
   categoryFilter: Item<AppCategory> | null;
@@ -180,7 +143,6 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       appInstancesLoading,
       availableStackScriptImages: compatibleImages,
       availableUserDefinedFields: userDefinedFields,
-      classes,
       errors,
       selectedImageID,
       selectedStackScriptID,
@@ -224,11 +186,11 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid className={`${classes.main} mlMain py0`}>
+        <StyledGrid>
           <Paper>
             <Typography variant="h2">Select an App</Typography>
-            <Box className={classes.searchAndFilter}>
-              <Box className={classes.search}>
+            <StyledSearchFilterBox>
+              <StyledSearchBox>
                 <DebouncedSearchTextField
                   placeholder={
                     appInstancesLoading ? 'Loading...' : 'Search for app name'
@@ -253,8 +215,8 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
                   onSearch={this.onSearch}
                   value={query}
                 />
-              </Box>
-              <Box className={classes.filter}>
+              </StyledSearchBox>
+              <StyledFilterBox>
                 <Select
                   placeholder={
                     appInstancesLoading ? 'Loading...' : 'Select category'
@@ -266,8 +228,8 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
                   options={appCategoryOptions}
                   value={categoryFilter}
                 />
-              </Box>
-            </Box>
+              </StyledFilterBox>
+            </StyledSearchFilterBox>
           </Paper>
           <SelectAppPanel
             appInstances={
@@ -317,7 +279,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
           ) : (
             <ImageEmptyState errorText={hasErrorFor('image')} />
           )}
-        </Grid>
+        </StyledGrid>
 
         <AppDetailDrawer
           onClose={this.closeDrawer}
@@ -428,6 +390,27 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
+const StyledSearchFilterBox = styled(Box, { label: 'StyledSearchFilterBox' })(
+  ({ theme }) => ({
+    '& > h2': {
+      width: '100%',
+    },
+    display: 'flex',
+    gap: theme.spacing(),
+    justifyContent: 'space-between',
+    marginTop: theme.spacing(),
+  })
+);
 
-export default styled(FromAppsContent);
+const StyledFilterBox = styled(Box, { label: 'StyledFilterBox' })({
+  flexGrow: 1.5,
+});
+
+const StyledSearchBox = styled(Box, { label: 'StyledSearchBox' })({
+  '& .input': {
+    maxWidth: 'none',
+  },
+  flexGrow: 10,
+});
+
+export default FromAppsContent;

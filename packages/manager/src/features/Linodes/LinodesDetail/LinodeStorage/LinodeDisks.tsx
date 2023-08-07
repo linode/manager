@@ -1,7 +1,5 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -20,7 +18,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile';
@@ -32,35 +29,13 @@ import { DeleteDiskDialog } from './DeleteDiskDialog';
 import { LinodeDiskRow } from './LinodeDiskRow';
 import { RenameDiskDrawer } from './RenameDiskDrawer';
 import { ResizeDiskDrawer } from './ResizeDiskDrawer';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      padding: 5,
-    },
-    [theme.breakpoints.down('sm')]: {
-      marginLeft: `-${theme.spacing(1.5)}`,
-    },
-  },
-  addNewWrapperContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  headline: {
-    lineHeight: '1.5rem',
-    marginBottom: 8,
-    marginLeft: 15,
-    marginTop: 8,
-  },
-  root: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    width: '100%',
-  },
-}));
+import {
+  StyledTypography,
+  StyledRootGrid,
+  StyledWrapperGrid,
+} from './CommonLinodeStorage.styles';
 
 export const LinodeDisks = () => {
-  const classes = useStyles();
   const disksHeaderRef = React.useRef(null);
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
@@ -141,19 +116,16 @@ export const LinodeDisks = () => {
 
   return (
     <React.Fragment>
-      <Grid
+      <StyledRootGrid
         alignItems="flex-end"
-        className={classes.root}
         container
         justifyContent="space-between"
         spacing={1}
       >
         <Grid className="p0" ref={disksHeaderRef}>
-          <Typography className={classes.headline} variant="h3">
-            Disks
-          </Typography>
+          <StyledTypography variant="h3">Disks</StyledTypography>
         </Grid>
-        <span className={classes.addNewWrapperContainer}>
+        <span style={{ display: 'flex', flexDirection: 'row' }}>
           {!freeDiskSpace ? (
             <TooltipIcon
               tooltipAnalyticsEvent={() =>
@@ -167,15 +139,15 @@ export const LinodeDisks = () => {
               text={noFreeDiskSpaceWarning}
             />
           ) : undefined}
-          <Grid className={classes.addNewWrapper}>
+          <StyledWrapperGrid>
             <AddNewLink
               disabled={readOnly || !freeDiskSpace}
               label="Add a Disk"
               onClick={() => setIsCreateDrawerOpen(true)}
             />
-          </Grid>
+          </StyledWrapperGrid>
         </span>
-      </Grid>
+      </StyledRootGrid>
       <OrderBy
         data={disks ?? []}
         order={'asc'}

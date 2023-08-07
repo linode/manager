@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Currency } from 'src/components/Currency';
@@ -15,17 +15,7 @@ interface Props {
   linodeId: number;
 }
 
-const useStyles = makeStyles()(() => ({
-  empty: {
-    '& svg': {
-      transform: 'scale(0.75)',
-    },
-  },
-}));
-
 export const BackupsPlaceholder = (props: Props) => {
-  const { classes } = useStyles();
-
   const { backupsMonthlyPrice, disabled, linodeId } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -51,7 +41,7 @@ export const BackupsPlaceholder = (props: Props) => {
   return (
     <>
       {disabled && <LinodePermissionsError />}
-      <Placeholder
+      <StyledPlaceholder
         buttonProps={[
           {
             children: 'Enable Backups',
@@ -59,14 +49,13 @@ export const BackupsPlaceholder = (props: Props) => {
             onClick: () => setDialogOpen(true),
           },
         ]}
-        className={classes.empty}
         icon={VolumeIcon}
         isEntity
         renderAsSecondary
         title="Backups"
       >
         {backupPlaceholderText}
-      </Placeholder>
+      </StyledPlaceholder>
       <EnableBackupsDialog
         linodeId={linodeId}
         onClose={() => setDialogOpen(false)}
@@ -75,5 +64,11 @@ export const BackupsPlaceholder = (props: Props) => {
     </>
   );
 };
+
+const StyledPlaceholder = styled(Placeholder, { label: 'StyledPlaceholder' })({
+  '& svg': {
+    transform: 'scale(0.75)',
+  },
+});
 
 export default React.memo(BackupsPlaceholder);

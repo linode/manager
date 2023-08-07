@@ -11,7 +11,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile';
 import { capitalize } from 'src/utilities/capitalize';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 
 const accessIconMap: Record<AccountLoginStatus, Status> = {
   failed: 'other',

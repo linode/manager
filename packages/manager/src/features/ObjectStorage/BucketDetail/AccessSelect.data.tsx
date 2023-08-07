@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 
 import type { ACLType } from '@linode/api-v4';
 
@@ -19,11 +19,9 @@ export const copy: Record<
     custom: (
       <>
         This Bucket has a custom ACL. Use{' '}
-        <ExternalLink
-          hideIcon
-          link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
-          text="another S3-compatible tool"
-        />{' '}
+        <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
+          another S3-compatible tool
+        </Link>{' '}
         to edit the ACL, or select a pre-defined ACL here.
       </>
     ),
@@ -56,11 +54,9 @@ export const copy: Record<
     custom: (
       <>
         This Object has a custom ACL. Use another{' '}
-        <ExternalLink
-          hideIcon
-          link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
-          text="S3-compatible tool"
-        />{' '}
+        <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
+          S3-compatible tool
+        </Link>{' '}
         to edit the ACL, or select a predefined ACL.
       </>
     ),
