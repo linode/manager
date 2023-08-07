@@ -18,7 +18,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { handleTrimAndBlur } from 'src/utilities/formikTrimUtil';
+import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
 import { ManagedContactGroup, Mode } from './common';
 
@@ -150,7 +150,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                   errorText={errors.email}
                   label="E-mail"
                   name="email"
-                  onBlur={(e) => handleTrimAndBlur(e, formikProps)}
+                  onBlur={(e) => handleFormikBlur(e, formikProps)}
                   onChange={handleChange}
                   required
                   value={values.email}

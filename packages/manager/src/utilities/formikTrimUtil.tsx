@@ -1,6 +1,6 @@
 import { FormikProps } from 'formik';
 
-export const handleTrimAndBlur = <T extends {}>(
+export const handleFormikBlur = <T extends {}>(
   e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
   formikProps: Partial<FormikProps<T>>
 ) => {
