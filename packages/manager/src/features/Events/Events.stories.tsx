@@ -2,23 +2,26 @@ import { Event } from '@linode/api-v4/lib/account';
 import React from 'react';
 
 import { Chip } from 'src/components/Chip';
-import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 
 import { eventMessageCreators } from './eventMessageGenerator';
 
 import type { CreatorsForStatus } from './eventMessageGenerator';
 import type { Meta, StoryObj } from '@storybook/react';
 
-type Status = keyof CreatorsForStatus;
+// type Status = keyof CreatorsForStatus;
 
-const eventStatuses: Status[] = [
-  'failed',
-  'finished',
-  'notification',
-  'scheduled',
-  'started',
-];
+// const eventStatuses: Status[] = [
+//   'failed',
+//   'finished',
+//   'notification',
+//   'scheduled',
+//   'started',
+// ];
 
 const renderEventMessages = (eventMessageCreators: {
   [index: string]: CreatorsForStatus;
@@ -27,29 +30,39 @@ const renderEventMessages = (eventMessageCreators: {
     <div>
       {Object.entries(eventMessageCreators).map(([eventKey, statuses]) => (
         <div key={eventKey ?? ''}>
-          <h3>
-            <Chip label={eventKey} />
-          </h3>
-          <List>
-            {Object.keys(statuses).map((status, key) => {
-              const messageCreator = statuses[status];
-              const message = messageCreator({
-                entity: { label: '{Entity Label}' },
-              } as Event);
+          <h3>{eventKey}</h3>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ width: '15%' }}>Status</TableCell>
+                <TableCell>Message</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Object.keys(statuses).map((status, key) => {
+                const messageCreator = statuses[status];
+                const message = messageCreator({
+                  entity: { label: '{Entity Label}' },
+                } as Event);
 
-              return (
-                <ListItem key={`status-${key}`}>
-                  {status}:{' '}
-                  <span
-                    dangerouslySetInnerHTML={{
-                      // eslint-disable-next-line xss/no-mixed-html
-                      __html: message,
-                    }}
-                  />
-                </ListItem>
-              );
-            })}
-          </List>
+                return (
+                  <TableRow key={`status-${key}`}>
+                    <TableCell>
+                      <Chip label={status} />{' '}
+                    </TableCell>
+                    <TableCell>
+                      <span
+                        dangerouslySetInnerHTML={{
+                          // eslint-disable-next-line xss/no-mixed-html
+                          __html: message,
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         </div>
       ))}
     </div>
