@@ -248,8 +248,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             setFieldValue('linode_id', linode.id);
             setFieldValue('region', linode.region);
           } else {
-            // If the LinodeSelect is cleared, reset the values for Region and Config
             setFieldValue('linode_id', null);
+            setFieldValue('config_id', null);
           }
         };
 
