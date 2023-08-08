@@ -68,7 +68,7 @@ const CardView = (props: RenderLinodesProps) => {
       <Grid className="m0" container style={{ width: '100%' }}>
         {data.map((linode, idx: number) => (
           <React.Fragment key={`linode-card-${idx}`}>
-            <StyledSummaryGrid xs={12}>
+            <StyledSummaryGrid xs={12} data-qa-linode-card={linode.id}>
               <LinodeEntityDetail
                 handlers={{
                   onOpenDeleteDialog: () =>
