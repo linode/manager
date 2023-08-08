@@ -13,7 +13,7 @@ const statusLinkStyles = (theme: Theme) => ({
   },
   backgroundColor: 'transparent',
   border: 'none',
-  color: theme.textColors.linkActiveLight,
+  // color: theme.textColors.linkActiveLight,
   cursor: 'pointer',
   padding: 0,
 });

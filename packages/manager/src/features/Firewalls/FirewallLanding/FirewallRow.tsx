@@ -58,7 +58,7 @@ const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
   '&:hover, &:focus': {
     textDecoration: 'underline',
   },
-  color: theme.textColors.linkActiveLight,
+  // color: theme.textColors.linkActiveLight,
   display: 'block',
   fontSize: '.875rem',
   lineHeight: '1.125rem',
