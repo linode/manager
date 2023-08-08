@@ -3,6 +3,7 @@ import { matchPath, useHistory, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -70,6 +71,11 @@ const LoadBalancerLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Akamai Global Load Balancers" />
+      <ProductInformationBanner
+        bannerLocation="LoadBalancers"
+        important
+        warning
+      />
       <LandingHeader
         breadcrumbProps={{ pathname: '/loadbalancers' }}
         createButtonText={createButtonText}

@@ -118,12 +118,14 @@ interface ReferralBannerText {
 
 export type ProductInformationBannerLocation =
   | 'Account'
+  | 'Betas'
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
   | 'Images'
   | 'Kubernetes'
   | 'Linodes'
+  | 'LoadBalancers'
   | 'Managed'
   | 'Marketplace'
   | 'NodeBalancers'

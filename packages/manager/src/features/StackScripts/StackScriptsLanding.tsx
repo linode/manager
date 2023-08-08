@@ -11,6 +11,7 @@ import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import StackScriptPanel from './StackScriptPanel';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 export const StackScriptsLanding = () => {
   const history = useHistory<{
@@ -31,6 +32,11 @@ export const StackScriptsLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="StackScripts" />
+      <ProductInformationBanner
+        bannerLocation="StackScripts"
+        important
+        warning
+      />
       {!!history.location.state && !!history.location.state.successMessage ? (
         <Notice success text={history.location.state.successMessage} />
       ) : null}

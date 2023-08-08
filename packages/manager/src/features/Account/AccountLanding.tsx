@@ -15,6 +15,7 @@ import { useAccount } from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
 
 import AccountLogins from './AccountLogins';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
 const EntityTransfersLanding = React.lazy(
@@ -118,6 +119,7 @@ const AccountLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
+      <ProductInformationBanner bannerLocation="Account" important warning />
       <LandingHeader {...landingHeaderProps} data-qa-profile-header />
 
       <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>

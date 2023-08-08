@@ -22,6 +22,7 @@ import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import { FirewallDialog, Mode } from './FirewallDialog';
 import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
 import { FirewallRow } from './FirewallRow';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const preferenceKey = 'firewalls';
 
@@ -136,6 +137,7 @@ const FirewallLanding = () => {
 
   return (
     <React.Fragment>
+      <ProductInformationBanner bannerLocation="Firewalls" important warning />
       <LandingHeader
         breadcrumbProps={{ pathname: '/firewalls' }}
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"

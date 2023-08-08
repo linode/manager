@@ -21,6 +21,7 @@ import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const preferenceKey = 'nodebalancers';
 
@@ -85,6 +86,11 @@ export const NodeBalancersLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
+      <ProductInformationBanner
+        bannerLocation="NodeBalancers"
+        important
+        warning
+      />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
         entity="NodeBalancer"

@@ -44,6 +44,7 @@ import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import { DrawerMode, ImagesDrawer } from './ImagesDrawer';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: {
@@ -450,6 +451,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
+      <ProductInformationBanner bannerLocation="Images" important warning />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
         entity="Image"

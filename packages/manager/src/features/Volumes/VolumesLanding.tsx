@@ -37,6 +37,7 @@ import { VolumeAttachmentDrawer } from './VolumeAttachmentDrawer';
 import { VolumeTableRow } from './VolumeTableRow';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 interface Props {
   fromLinodes?: boolean;
@@ -232,6 +233,7 @@ export const VolumesLanding = (props: CombinedProps) => {
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
+      <ProductInformationBanner bannerLocation="Volumes" important warning />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
         entity="Volume"

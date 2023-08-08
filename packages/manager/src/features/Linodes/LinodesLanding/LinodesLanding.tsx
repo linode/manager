@@ -48,6 +48,7 @@ import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import type { MapState } from 'src/store/types';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -179,6 +180,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner />
         )}
+        <ProductInformationBanner bannerLocation="Linodes" important warning />
         <DocumentTitleSegment segment="Linodes" />
         <PreferenceToggle<boolean>
           localStorageKey="GROUP_LINODES"

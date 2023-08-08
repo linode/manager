@@ -6,6 +6,7 @@ import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 
 import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const Contacts = React.lazy(() => import('./Contacts/Contacts'));
 const Monitors = React.lazy(() => import('./Monitors'));
@@ -44,6 +45,7 @@ export const ManagedLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />
+      <ProductInformationBanner bannerLocation="Managed" important warning />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/linode-managed/"
         entity="Managed"
