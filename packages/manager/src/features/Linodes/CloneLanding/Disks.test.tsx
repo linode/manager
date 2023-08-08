@@ -4,7 +4,8 @@ import * as React from 'react';
 import { extDisk3, swapDisk } from 'src/__data__/disks';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import Disks, { DisksProps } from './Disks';
+import { Disks } from './Disks';
+import type { DisksProps } from './Disks';
 
 const disks = [extDisk3, swapDisk];
 

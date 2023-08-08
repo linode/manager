@@ -18,7 +18,7 @@ export interface ConfigsProps {
   handleSelect: (id: number) => void;
 }
 
-const Configs = (props: ConfigsProps) => {
+export const Configs = (props: ConfigsProps) => {
   const { configSelection, configs, handleSelect } = props;
 
   return (

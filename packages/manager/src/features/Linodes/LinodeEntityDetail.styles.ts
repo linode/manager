@@ -29,7 +29,7 @@ export const StyledChip = styled(Chip, { label: 'StyledChip' })(
     ...theme.applyStatusPillStyles,
     borderRadius: 0,
     fontSize: '0.875rem',
-    height: `24px !important`,
+    height: theme.spacing(3),
     letterSpacing: '.5px',
     marginLeft: theme.spacing(2),
   })
@@ -41,7 +41,6 @@ export const StyledChip = styled(Chip, { label: 'StyledChip' })(
 
 export const StyledBodyGrid = styled(Grid, { label: 'StyledBodyGrid' })(
   ({ theme }) => ({
-    flexWrap: 'nowrap',
     justifyContent: 'space-between',
     padding: theme.spacing(2),
   })
@@ -132,20 +131,20 @@ export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
     display: 'flex',
     fontFamily: '"UbuntuMono", monospace, sans-serif',
     justifyContent: 'space-between',
-    padding: '4px 8px',
+    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
     position: 'relative',
   })
 );
 
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip',
-})(({ theme }) => ({
+})({
   '& svg': {
     height: `12px`,
     opacity: 0,
     width: `12px`,
   },
-}));
+});
 
 export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
   ({ theme }) => ({
@@ -164,10 +163,8 @@ export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
   })
 );
 
-export const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })(
-  ({ theme }) => ({
-    '&:hover $copy > svg, & $copy:focus > svg': {
-      opacity: 1,
-    },
-  })
-);
+export const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })({
+  '&:hover $copy > svg, & $copy:focus > svg': {
+    opacity: 1,
+  },
+});

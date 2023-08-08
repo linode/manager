@@ -5,7 +5,7 @@ import {
   StyledCommandDiv,
   StyledCopyTooltip,
   StyledHighlightedMarkdown,
-} from './CodeBlock.style';
+} from './CodeBlock.styles';
 
 export interface CodeBlockProps {
   command: string;

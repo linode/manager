@@ -55,7 +55,7 @@ import {
   StyledCopyTooltip,
   StyledGradientDiv,
   StyledTableRow,
-} from './LinodeEntityDetail.style';
+} from './LinodeEntityDetail.styles';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -175,7 +175,7 @@ export interface HeaderProps {
 const useHeaderStyles = makeStyles()((theme: Theme) => ({
   divider: {
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-    paddingRight: `16px !important`,
+    paddingRight: `${theme.spacing(2)}`,
   },
   statusChipLandingDetailView: {
     [theme.breakpoints.down('lg')]: {

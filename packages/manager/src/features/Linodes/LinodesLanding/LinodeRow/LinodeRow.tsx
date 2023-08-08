@@ -36,7 +36,7 @@ import {
   StyledLink,
   StyledIpTableCell,
   StyledMaintenanceTableCell,
-} from './LinodeRow.style';
+} from './LinodeRow.styles';
 
 type Props = Linode & { handlers: LinodeHandlers };
 

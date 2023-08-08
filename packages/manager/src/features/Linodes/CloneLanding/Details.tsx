@@ -1,6 +1,6 @@
 import { Disk, Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -20,6 +20,12 @@ import {
   getAllDisks,
   getEstimatedCloneTime,
 } from './utilities';
+import {
+  StyledButton,
+  StyledDiv,
+  StyledHeader,
+  StyledTypography,
+} from './Details.styles';
 
 interface Props {
   clearAll: () => void;
@@ -239,45 +245,3 @@ export const Details = (props: Props) => {
     </Paper>
   );
 };
-
-const StyledButton = styled('button', { label: 'StyledButton' })(
-  ({ theme }) => ({
-    '& path': {
-      fill: theme.palette.primary.main,
-    },
-    alignItems: 'center',
-    backgroundColor: theme.color.white,
-    border: 'none',
-    cursor: 'pointer',
-    display: 'flex',
-    paddingBottom: 0,
-    paddingTop: 0,
-  })
-);
-
-const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
-  ({ theme }) => ({
-    '& a': {
-      color: theme.color.red,
-      textDecoration: 'underline',
-    },
-    color: theme.color.red,
-    marginTop: theme.spacing(1),
-  })
-);
-
-const StyledHeader = styled('header', { label: 'StyledHeader' })(
-  ({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing(2),
-  })
-);
-
-const StyledDiv = styled('div', { label: 'StyledDiv' })({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'space-between',
-  width: '100%',
-});

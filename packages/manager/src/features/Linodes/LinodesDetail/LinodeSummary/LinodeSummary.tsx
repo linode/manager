@@ -27,7 +27,8 @@ import {
   getMetrics,
 } from 'src/utilities/statMetrics';
 
-import { NetworkGraphs, ChartProps } from './NetworkGraphs';
+import { NetworkGraphs } from './NetworkGraphs';
+import type { ChartProps } from './NetworkGraphs';
 import { StatsPanel } from './StatsPanel';
 import { getDateOptions } from './helpers';
 

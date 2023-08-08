@@ -4,7 +4,8 @@ import * as React from 'react';
 import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import Configs, { ConfigsProps } from './Configs';
+import { Configs } from './Configs';
+import type { ConfigsProps } from './Configs';
 
 const mockHandleSelect = jest.fn();
 

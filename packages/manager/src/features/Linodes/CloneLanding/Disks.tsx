@@ -22,7 +22,7 @@ export interface DisksProps {
   selectedConfigIds: number[];
 }
 
-const Disks = (props: DisksProps) => {
+export const Disks = (props: DisksProps) => {
   const { diskSelection, disks, handleSelect, selectedConfigIds } = props;
 
   return (
