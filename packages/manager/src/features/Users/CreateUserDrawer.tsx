@@ -131,22 +131,6 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
     });
   };
 
-  handleTrimEmail = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    this.setState({
-      email: e.target.value.trim(),
-    });
-  };
-
-  handleTrimUsername = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    this.setState({
-      username: e.target.value.trim(),
-    });
-  };
-
   onSubmit = () => {
     const {
       history: { push },
