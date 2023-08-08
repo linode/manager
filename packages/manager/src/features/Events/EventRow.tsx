@@ -11,7 +11,7 @@ import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/Highligh
 import { RenderGuard } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import eventMessageGenerator from 'src/features/Events/eventMessageGenerator';
+import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
@@ -51,7 +51,7 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     action: event.action,
     entityId,
     link,
-    message: eventMessageGenerator(event),
+    message: generateEventMessage(event),
     timestamp,
     type,
     username: event.username,

@@ -1,6 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account/types';
 
-import eventMessageGenerator from 'src/features/Events/eventMessageGenerator';
+import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
 import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
@@ -17,7 +17,7 @@ export interface EventInfo {
 }
 
 export const useEventInfo = (event: Event): EventInfo => {
-  const message = eventMessageGenerator(event);
+  const message = generateEventMessage(event);
   const type = (event.entity?.type ?? 'linode') as EntityVariants;
 
   const duration = formatEventSeconds(event.duration);
