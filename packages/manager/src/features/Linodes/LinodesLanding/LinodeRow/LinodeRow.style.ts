@@ -1,7 +1,7 @@
 import { styled, Theme } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 
 import { TableCell } from 'src/components/TableCell';
-import { Link } from 'react-router-dom';
 import { isPropValid } from 'src/utilities/isPropValid';
 
 type StyledMaintenanceCellProps = { maintenance: boolean };
@@ -13,7 +13,6 @@ const statusLinkStyles = (theme: Theme) => ({
   },
   backgroundColor: 'transparent',
   border: 'none',
-  // color: theme.textColors.linkActiveLight,
   cursor: 'pointer',
   padding: 0,
 });

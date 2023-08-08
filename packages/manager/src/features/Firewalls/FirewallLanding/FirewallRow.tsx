@@ -54,11 +54,10 @@ export const FirewallRow = React.memo((props: Props) => {
   );
 });
 
-const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
+const StyledLink = styled(Link, { label: 'StyledLink' })(() => ({
   '&:hover, &:focus': {
     textDecoration: 'underline',
   },
-  // color: theme.textColors.linkActiveLight,
   display: 'block',
   fontSize: '.875rem',
   lineHeight: '1.125rem',

@@ -197,7 +197,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.light,
       textDecoration: 'underline',
     },
-    // color: theme.textColors.linkActiveLight,
     marginLeft: theme.spacing(),
   },
   root: {

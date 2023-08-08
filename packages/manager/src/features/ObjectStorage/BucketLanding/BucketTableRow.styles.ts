@@ -25,7 +25,6 @@ export const StyledBucketLabelLink = styled(Link, {
   '&:hover, &:focus': {
     textDecoration: 'underline',
   },
-  // color: theme.textColors.linkActiveLight,
 }));
 
 export const StyledBucketRegionCell = styled(TableCell, {

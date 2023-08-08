@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '60%',
   },
   link: {
-    // color: theme.textColors.linkActiveLight,
     display: 'block',
     fontFamily: theme.font.bold,
     fontSize: '.875rem',

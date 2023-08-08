@@ -53,7 +53,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'flex-start',
     borderRadius: 0,
-    // color: theme.textColors.linkActiveLight,
     cursor: 'pointer',
     display: 'flex',
     margin: `0 ${theme.spacing(1)} 2px 0`,
