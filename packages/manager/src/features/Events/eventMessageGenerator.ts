@@ -782,7 +782,7 @@ export const formatEventWithAPIMessage = (e: Event) => {
   return `${e.action}: ${e.message}`;
 };
 
-export default (e: Event): string => {
+export const generateEventMessage = (e: Event): string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators
@@ -829,7 +829,7 @@ export default (e: Event): string => {
    * */
   try {
     const formattedMessage = applyLinking(e, messageWithUsername);
-    return applyBolding({ message: formattedMessage });
+    return applyBolding(formattedMessage);
   } catch (error) {
     console.warn('Error with formatting the event message', {
       error,
@@ -845,12 +845,7 @@ export default (e: Event): string => {
   }
 };
 
-interface Bolding {
-  message: string;
-  useHTML?: boolean;
-}
-
-export function applyBolding({ message, useHTML = false }: Bolding) {
+export function applyBolding(message: string) {
   if (!message) {
     return '';
   }
@@ -886,10 +881,7 @@ export function applyBolding({ message, useHTML = false }: Bolding) {
   let newMessage = message;
 
   for (const word of wordsToBold) {
-    newMessage = newMessage.replace(
-      word,
-      useHTML ? `<strong>${word}</strong>` : `**${word}**`
-    );
+    newMessage = newMessage.replace(word, `**${word}**`);
   }
 
   return newMessage;

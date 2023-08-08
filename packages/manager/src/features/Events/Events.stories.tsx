@@ -9,11 +9,13 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { eventFactory } from 'src/factories/events';
 import { formatEventWithUsername } from 'src/features/Events/Event.helpers';
+import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 
 import {
   applyBolding,
   applyLinking,
   eventMessageCreators,
+  generateEventMessage,
 } from './eventMessageGenerator';
 
 import type { CreatorsForStatus } from './eventMessageGenerator';
@@ -56,17 +58,14 @@ const renderEventMessages = (eventMessageCreators: {
                 const messageCreator = statuses[status];
 
                 let message = messageCreator(event);
-                message = applyBolding({ message, useHTML: true });
+                message = applyBolding(message);
                 message = formatEventWithUsername(
                   event.action,
                   event.username,
                   message
                 );
                 // eslint-disable-next-line xss/no-mixed-html
-                message = message.replace(
-                  '**{Username}**',
-                  '<strong>{Username}</strong>'
-                );
+                message = unsafe_MarkdownIt.render(message);
                 message = applyLinking(event, message);
 
                 return (
@@ -93,19 +92,40 @@ const renderEventMessages = (eventMessageCreators: {
   );
 };
 
+export const HardCodedMessages: StoryObj = {
+  render: () => renderEventMessages(eventMessageCreators),
+};
+
+const customizableEvent: Event = eventFactory.build();
+
+export const EventPlayground: StoryObj = {
+  args: {
+    ...customizableEvent,
+  },
+  render: (args) => (
+    <span
+      dangerouslySetInnerHTML={{
+        // eslint-disable-next-line xss/no-mixed-html
+        __html: unsafe_MarkdownIt.render(
+          generateEventMessage(customizableEvent)
+        ),
+      }}
+      {...args}
+    />
+  ),
+};
+
 /**
- * This renderer only loops through custom messages defined in `eventMessageCreators`.
+ * This renderer only loops through hard coded messages defined in `eventMessageCreators`.
  * This means that it will not render messages coming straight from the API and therefore
  * isn't an exhaustive list of all possible events.
  *
  * However a playground is available to generate message from a custom Event for testing purposes
  */
-export const Default: StoryObj<any> = {
-  render: () => renderEventMessages(eventMessageCreators),
-};
 
 const meta: Meta<any> = {
   args: {},
   title: 'Features/Events',
 };
+
 export default meta;
