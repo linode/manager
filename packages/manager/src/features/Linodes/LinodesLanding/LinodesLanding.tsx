@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -7,7 +6,7 @@ import { compose } from 'recompose';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
@@ -17,7 +16,7 @@ import {
   withProfile,
 } from 'src/containers/profile.container';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
-import { BackupsCTA } from 'src/features/Backups';
+import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
 import {
@@ -36,7 +35,10 @@ import CardView from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import { DisplayLinodes } from './DisplayLinodes';
-import styled, { StyleProps } from './LinodesLanding.styles';
+import {
+  StyledLinkContainerGrid,
+  StyledWrapperGrid,
+} from './LinodesLanding.styles';
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
@@ -89,13 +91,11 @@ export interface LinodesLandingProps {
 type CombinedProps = LinodesLandingProps &
   StateProps &
   RouteProps &
-  StyleProps &
   WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
-      classes,
       linodesData,
       linodesInTransition,
       linodesRequestError,
@@ -298,15 +298,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                           );
                         }}
                       </OrderBy>
-                      <Grid
-                        className={classes.CSVwrapper}
-                        container
-                        justifyContent="flex-end"
-                      >
-                        <Grid className={classes.CSVlinkContainer}>
+                      <StyledWrapperGrid container justifyContent="flex-end">
+                        <StyledLinkContainerGrid>
                           <LinodesLandingCSVDownload />
-                        </Grid>
-                      </Grid>
+                        </StyledLinkContainerGrid>
+                      </StyledWrapperGrid>
                     </React.Fragment>
                   );
                 }}
@@ -458,7 +454,6 @@ const connected = connect(mapStateToProps, undefined);
 export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
   connected,
-  styled,
   withFeatureFlagConsumer,
   withProfile
 );

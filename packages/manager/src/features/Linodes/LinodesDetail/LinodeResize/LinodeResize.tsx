@@ -1,7 +1,6 @@
 import { Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -16,7 +15,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
-import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
+import PlansPanel from 'src/features/components/PlansPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
@@ -34,21 +33,6 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  resizeTitle: {
-    alignItems: 'center',
-    display: 'flex',
-    minHeight: '44px',
-  },
-  selectPlanPanel: {
-    '& > div': {
-      padding: 0,
-    },
-    marginBottom: theme.spacing(3),
-    marginTop: theme.spacing(5),
-  },
-}));
-
 interface Props {
   linodeId?: number;
   linodeLabel?: string;
@@ -57,17 +41,16 @@ interface Props {
 }
 
 export const LinodeResize = (props: Props) => {
-  const classes = useStyles();
   const { linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && open
   );
 
   const { data: disks, error: disksError } = useAllLinodeDisksQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && open
   );
 
   const { data: types } = useAllTypes(open);
@@ -195,7 +178,7 @@ export const LinodeResize = (props: Props) => {
           </Link>
         </Typography>
 
-        <div className={classes.selectPlanPanel}>
+        <StyledDiv>
           <PlansPanel
             currentPlanHeading={type ? extendType(type).heading : undefined} // lol, why make us pass the heading and not the plan id?
             disabled={tableDisabled}
@@ -205,8 +188,11 @@ export const LinodeResize = (props: Props) => {
             selectedRegionID={linode?.region}
             types={currentTypes.map(extendType)}
           />
-        </div>
-        <Typography className={classes.resizeTitle} variant="h2">
+        </StyledDiv>
+        <Typography
+          sx={{ alignItems: 'center', display: 'flex', minHeight: '44px' }}
+          variant="h2"
+        >
           Auto Resize Disk
           {disksError ? (
             <TooltipIcon
@@ -299,6 +285,14 @@ export const LinodeResize = (props: Props) => {
     </Dialog>
   );
 };
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
+  '& > div': {
+    padding: 0,
+  },
+  marginBottom: theme.spacing(3),
+  marginTop: theme.spacing(5),
+}));
 
 const getError = (error: APIError[] | null) => {
   if (!error) {

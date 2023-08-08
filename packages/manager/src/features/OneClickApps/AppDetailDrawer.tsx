@@ -9,7 +9,7 @@ import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { OCA } from 'src/features/OneClickApps/oneClickApps';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 import { oneClickApps } from './oneClickApps';
@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: 480,
     },
-    width: 300,
   },
   wrapAppName: {
     maxWidth: 'fit-content',

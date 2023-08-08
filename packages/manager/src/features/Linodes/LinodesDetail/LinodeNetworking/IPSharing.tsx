@@ -2,10 +2,9 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import { IPRangeInformation } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
@@ -18,7 +17,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useAllLinodesQuery,
   useLinodeQuery,
@@ -31,40 +30,6 @@ import {
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  addNewButton: {
-    marginBottom: `-${theme.spacing(2)}`,
-    marginTop: theme.spacing(3),
-  },
-  ipField: {
-    marginTop: 0,
-    width: '100%',
-  },
-  ipFieldLabel: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing(2)})`,
-    },
-    width: '100%',
-  },
-  networkActionText: {
-    marginBottom: theme.spacing(2),
-  },
-  noIPsMessage: {
-    color: theme.color.grey1,
-    marginTop: theme.spacing(2),
-  },
-  remove: {
-    [theme.breakpoints.down('sm')]: {
-      margin: '-16px 0 0 -26px',
-    },
-  },
-  removeCont: {
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-}));
-
 interface Props {
   linodeId: number;
   onClose: () => void;
@@ -75,7 +40,7 @@ interface Props {
 type AvailableRangesMap = { [linode_id: number]: string[] };
 
 const IPSharingPanel = (props: Props) => {
-  const { classes } = useStyles();
+  const theme = useTheme();
   const flags = useFlags();
   const { linodeId, onClose, open, readOnly } = props;
   const { data: linode } = useLinodeQuery(linodeId);
@@ -353,7 +318,7 @@ const IPSharingPanel = (props: Props) => {
                   </Typography>
                 </Notice>
               ) : null}
-              <Typography className={classes.networkActionText}>
+              <Typography sx={{ marginBottom: theme.spacing(2) }}>
                 IP Sharing allows a Linode to share an IP address assignment
                 (one or more additional IP addresses). This can be used to allow
                 one Linode to begin serving requests should another become
@@ -363,14 +328,26 @@ const IPSharingPanel = (props: Props) => {
             </Grid>
             <Grid xs={12}>
               <Grid container>
-                <Grid className={classes.ipFieldLabel}>
+                <Grid
+                  sx={{
+                    [theme.breakpoints.up('sm')]: {
+                      width: `calc(175px + ${theme.spacing(2)})`,
+                    },
+                    width: '100%',
+                  }}
+                >
                   <Typography style={{ fontWeight: 'bold' }}>
                     IP Addresses
                   </Typography>
                 </Grid>
               </Grid>
               {noChoices ? (
-                <Typography className={classes.noIPsMessage}>
+                <Typography
+                  sx={{
+                    color: theme.color.grey1,
+                    marginTop: theme.spacing(2),
+                  }}
+                >
                   You have no other Linodes in this Linode&rsquo;s datacenter
                   with which to share IPs.
                 </Typography>
@@ -461,7 +438,6 @@ interface RowProps {
 
 export const IPRow: React.FC<RowProps> = React.memo((props) => {
   const { ip } = props;
-  const { classes } = useStyles();
   return (
     <Grid container key={ip} spacing={2}>
       <Grid xs={12}>
@@ -469,7 +445,7 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
       </Grid>
       <Grid xs={12}>
         <TextField
-          className={classes.ipField}
+          sx={{ marginTop: 0, width: '100%' }}
           disabled
           hideLabel
           label="IP Address"
@@ -500,7 +476,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
     labels,
     readOnly,
   } = props;
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   const ipList = getRemainingChoices(ip).map((ipChoice: string) => {
     const label = `${ipChoice} ${
@@ -519,13 +495,12 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
         <Divider spacingBottom={0} />
       </Grid>
       <Grid sm={10} xs={12}>
-        <Select
+        <StyledSelect
           textFieldProps={{
             dataAttrs: {
               'data-qa-share-ip': true,
             },
           }}
-          className={classes.ipField}
           disabled={readOnly}
           hideLabel
           inputId={`ip-select-${idx}`}
@@ -539,13 +514,24 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
         />
       </Grid>
       {handleDelete ? (
-        <Grid className={classes.removeCont} sm={2}>
+        <Grid
+          sm={2}
+          sx={{
+            [theme.breakpoints.down('sm')]: {
+              width: '100%',
+            },
+          }}
+        >
           <Button
             buttonType="outlined"
-            className={classes.remove}
             data-qa-remove-shared-ip
             disabled={readOnly}
             onClick={() => handleDelete(idx)}
+            sx={{
+              [theme.breakpoints.down('sm')]: {
+                margin: '-16px 0 0 -26px',
+              },
+            }}
           >
             Remove
           </Button>
@@ -553,6 +539,11 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       ) : null}
     </Grid>
   );
+});
+
+const StyledSelect = styled(Select, { label: 'StyledSelect' })({
+  marginTop: 0,
+  width: '100%',
 });
 
 export default IPSharingPanel;

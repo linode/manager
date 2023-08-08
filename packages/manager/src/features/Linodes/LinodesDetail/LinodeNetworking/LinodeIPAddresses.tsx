@@ -1,7 +1,7 @@
 import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme, Theme } from '@mui/material/styles';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -40,28 +40,15 @@ import { ViewIPDrawer } from './ViewIPDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
 import { ViewRangeDrawer } from './ViewRangeDrawer';
 import { IPTypes } from './types';
+import {
+  StyledActionTableCell,
+  StyledWrapperGrid,
+  StyledTypography,
+  StyledRootGrid,
+} from './LinodeNetworking.styles';
 
 const useStyles = makeStyles<void, 'copy'>()(
   (theme: Theme, _params, classes) => ({
-    action: {
-      '& a': {
-        marginRight: theme.spacing(1),
-      },
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'flex-end',
-      padding: 0,
-      paddingRight: `0px !important`,
-    },
-    addNewWrapper: {
-      '&.MuiGrid-item': {
-        padding: 5,
-      },
-      [theme.breakpoints.down('sm')]: {
-        marginLeft: `-${theme.spacing(1.5)}`,
-        marginTop: `-${theme.spacing(1)}`,
-      },
-    },
     copy: {
       '& svg': {
         height: `12px`,
@@ -70,24 +57,6 @@ const useStyles = makeStyles<void, 'copy'>()(
       },
       marginLeft: 4,
       top: 1,
-    },
-    headline: {
-      lineHeight: '1.5rem',
-      marginBottom: 8,
-      marginLeft: 15,
-      marginTop: 8,
-    },
-    ipAddress: {
-      whiteSpace: 'nowrap',
-    },
-    multipleRDNSButton: {
-      ...theme.applyLinkStyles,
-    },
-    multipleRDNSText: {},
-    root: {
-      backgroundColor: theme.color.white,
-      margin: 0,
-      width: '100%',
     },
     row: {
       [`&:hover .${classes.copy} > svg, & .${classes.copy}:focus > svg`]: {
@@ -162,6 +131,8 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   };
 
   const renderIPRow = (ipDisplay: IPDisplay) => {
+    // TODO: in order to fully get rid of makeStyles for this file, may need to convert this to a functional component
+    // rather than function inside this component >> will look into during part 2 of this ticket
     const { _ip, _range, address, gateway, rdns, subnetMask, type } = ipDisplay;
     const isOnlyPublicIP =
       ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
@@ -173,7 +144,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         key={`${address}-${type}`}
       >
         <TableCell
-          className={classes.ipAddress}
+          sx={{ whiteSpace: 'nowrap' }}
           data-qa-ip-address
           parentColumn="Address"
         >
@@ -197,7 +168,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             rdns
           )}
         </TableCell>
-        <TableCell className={classes.action} data-qa-action>
+        <StyledActionTableCell data-qa-action>
           {_ip ? (
             <LinodeNetworkingActionMenu
               ipAddress={_ip}
@@ -217,7 +188,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
               readOnly={readOnly}
             />
           ) : null}
-        </TableCell>
+        </StyledActionTableCell>
       </TableRow>
     );
   };
@@ -239,19 +210,16 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
     return (
       <div style={{ marginTop: 20 }}>
-        <Grid
+        <StyledRootGrid
           alignItems="flex-end"
-          className={classes.root}
           container
           justifyContent="space-between"
           spacing={1}
         >
           <Grid className="p0">
-            <Typography className={classes.headline} variant="h3">
-              IP Addresses
-            </Typography>
+            <StyledTypography variant="h3">IP Addresses</StyledTypography>
           </Grid>
-          <Grid className={classes.addNewWrapper}>
+          <StyledWrapperGrid>
             <Hidden smDown>
               <Button
                 buttonType="secondary"
@@ -271,8 +239,8 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
               label="Add an IP Address"
               onClick={() => setIsAddDrawerOpen(true)}
             />
-          </Grid>
-        </Grid>
+          </StyledWrapperGrid>
+        </StyledRootGrid>
         <Paper style={{ padding: 0 }}>
           {/* @todo: It'd be nice if we could always sort by public -> private. */}
           <OrderBy data={ipDisplay} order="asc" orderBy="type">

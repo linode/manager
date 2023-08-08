@@ -5,12 +5,11 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
-import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -20,19 +19,19 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { FormControl } from 'src/components/FormControl';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { FormGroup } from 'src/components/FormGroup';
+import { FormHelperText } from 'src/components/FormHelperText';
+import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormGroup from 'src/components/core/FormGroup';
-import FormHelperText from 'src/components/core/FormHelperText';
-import FormLabel from 'src/components/core/FormLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
 import DeviceSelection from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {
@@ -62,32 +61,6 @@ import InterfaceSelect, {
   ExtendedInterface,
 } from '../LinodeSettings/InterfaceSelect';
 import KernelSelect from '../LinodeSettings/KernelSelect';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  button: {
-    marginLeft: 1,
-    marginTop: theme.spacing(),
-  },
-  divider: {
-    margin: '36px 8px 12px',
-    width: `calc(100% - ${theme.spacing(2)})`,
-  },
-  formControlToggle: {
-    '& button': {
-      color: theme.textColors.tableHeader,
-      order: 3,
-    },
-  },
-  formGroup: {
-    '&.MuiFormGroup-root[role="radiogroup"]': {
-      marginBottom: 0,
-    },
-    alignItems: 'flex-start',
-  },
-  tooltip: {
-    maxWidth: 350,
-  },
-}));
 
 interface Helpers {
   devtmpfs_automount: boolean;
@@ -219,7 +192,7 @@ const finnixDiskID = 25669;
 export const LinodeConfigDialog = (props: Props) => {
   const { config, isReadOnly, linodeId, onClose, open } = props;
 
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(linodeId, open);
 
   const {
     data: kernels,
@@ -241,7 +214,7 @@ export const LinodeConfigDialog = (props: Props) => {
     config?.id ?? -1
   );
 
-  const { classes } = useStyles();
+  const theme = useTheme();
   const regions = useRegionsQuery().data ?? [];
 
   const queryClient = useQueryClient();
@@ -624,22 +597,20 @@ export const LinodeConfigDialog = (props: Props) => {
               />
             </Grid>
 
-            <Divider className={classes.divider} />
+            <StyledDivider />
 
             <Grid xs={12}>
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
                   aria-describedby="virtModeCaption"
-                  component="label"
                   disabled={isReadOnly}
                   htmlFor="virt_mode"
                 >
                   VM Mode
                 </FormLabel>
-                <RadioGroup
+                <StyledRadioGroup
                   aria-label="virt_mode"
-                  className={classes.formGroup}
                   name="virt_mode"
                   onChange={formik.handleChange}
                   value={values.virt_mode}
@@ -661,11 +632,11 @@ export const LinodeConfigDialog = (props: Props) => {
                     paravirtualized or fully virtualized. Paravirt is what you
                     want, unless you&rsquo;re doing weird things.
                   </FormHelperText>
-                </RadioGroup>
+                </StyledRadioGroup>
               </FormControl>
             </Grid>
 
-            <Divider className={classes.divider} />
+            <StyledDivider />
 
             <Grid xs={12}>
               <Typography variant="h3">Boot Settings</Typography>
@@ -679,17 +650,10 @@ export const LinodeConfigDialog = (props: Props) => {
                 />
               )}
 
-              <FormControl
-                disabled={isReadOnly}
-                fullWidth
-                updateFor={[values.run_level, classes]}
-              >
-                <FormLabel component="label" htmlFor="run_level">
-                  Run Level
-                </FormLabel>
-                <RadioGroup
+              <FormControl disabled={isReadOnly} fullWidth>
+                <FormLabel htmlFor="run_level">Run Level</FormLabel>
+                <StyledRadioGroup
                   aria-label="run_level"
-                  className={classes.formGroup}
                   name="run_level"
                   onChange={formik.handleChange}
                   value={values.run_level}
@@ -712,7 +676,7 @@ export const LinodeConfigDialog = (props: Props) => {
                     label="init=/bin/bash"
                     value="binbash"
                   />
-                </RadioGroup>
+                </StyledRadioGroup>
               </FormControl>
 
               {/*
@@ -726,17 +690,12 @@ export const LinodeConfigDialog = (props: Props) => {
                 user explicity selects the option to change the
                 memory limit.
               */}
-              <FormControl updateFor={[values.setMemoryLimit, classes]}>
-                <FormLabel
-                  component="label"
-                  disabled={isReadOnly}
-                  htmlFor="memory_limit"
-                >
+              <FormControl>
+                <FormLabel disabled={isReadOnly} htmlFor="memory_limit">
                   Memory Limit
                 </FormLabel>
-                <RadioGroup
+                <StyledRadioGroup
                   aria-label="memory_limit"
-                  className={classes.formGroup}
                   name="setMemoryLimit"
                   onChange={formik.handleChange}
                   value={values.setMemoryLimit}
@@ -753,7 +712,7 @@ export const LinodeConfigDialog = (props: Props) => {
                     label="Limit the amount of RAM this config uses"
                     value="set_limit"
                   />
-                </RadioGroup>
+                </StyledRadioGroup>
               </FormControl>
 
               {values.setMemoryLimit === 'set_limit' && (
@@ -772,7 +731,7 @@ export const LinodeConfigDialog = (props: Props) => {
               )}
             </Grid>
 
-            <Divider className={classes.divider} />
+            <StyledDivider />
 
             <Grid xs={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
@@ -805,15 +764,18 @@ export const LinodeConfigDialog = (props: Props) => {
               </FormControl>
               <Button
                 buttonType="secondary"
-                className={classes.button}
                 compactX
                 disabled={isReadOnly || deviceCounter >= deviceSlots.length - 1}
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
+                sx={{
+                  marginLeft: `1px`,
+                  marginTop: theme.spacing(),
+                }}
               >
                 Add a Device
               </Button>
 
-              <FormControl className={classes.formGroup} fullWidth>
+              <StyledFormControl fullWidth>
                 <FormControlLabel
                   control={
                     <Toggle
@@ -853,10 +815,10 @@ export const LinodeConfigDialog = (props: Props) => {
                     value={values.root_device}
                   />
                 )}
-              </FormControl>
+              </StyledFormControl>
             </Grid>
 
-            <Divider className={classes.divider} />
+            <StyledDivider />
 
             {showVlans ? (
               <Grid xs={12}>
@@ -879,7 +841,7 @@ export const LinodeConfigDialog = (props: Props) => {
                         .
                       </Typography>
                     }
-                    classes={{ tooltip: classes.tooltip }}
+                    sx={{ tooltip: { maxWidth: 350 } }}
                     interactive
                     status="help"
                   />
@@ -912,19 +874,9 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <Grid xs={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
-              <FormControl
-                updateFor={[
-                  values.helpers.distro,
-                  values.helpers.updatedb_disabled,
-                  values.helpers.modules_dep,
-                  values.helpers.devtmpfs_automount,
-                  values.helpers.network,
-                  classes,
-                ]}
-                fullWidth
-              >
-                <FormGroup className={classes.formGroup}>
-                  <FormControlLabel
+              <FormControl fullWidth>
+                <StyledFormGroup>
+                  <StyledFormControlLabel
                     control={
                       <Toggle
                         checked={values.helpers.distro}
@@ -933,12 +885,11 @@ export const LinodeConfigDialog = (props: Props) => {
                         tooltipText="Helps maintain correct inittab/upstart console device"
                       />
                     }
-                    className={classes.formControlToggle}
                     label="Enable distro helper"
                     name="helpers.distro"
                   />
 
-                  <FormControlLabel
+                  <StyledFormControlLabel
                     control={
                       <Toggle
                         checked={values.helpers.updatedb_disabled}
@@ -947,12 +898,11 @@ export const LinodeConfigDialog = (props: Props) => {
                         tooltipText="Disables updatedb cron job to avoid disk thrashing"
                       />
                     }
-                    className={classes.formControlToggle}
                     label="Disable updatedb"
                     name="helpers.updatedb_disabled"
                   />
 
-                  <FormControlLabel
+                  <StyledFormControlLabel
                     control={
                       <Toggle
                         checked={values.helpers.modules_dep}
@@ -961,12 +911,11 @@ export const LinodeConfigDialog = (props: Props) => {
                         tooltipText="Creates a modules dependency file for the kernel you run"
                       />
                     }
-                    className={classes.formControlToggle}
                     label="Enable modules.dep helper"
                     name="helpers.modules_dep"
                   />
 
-                  <FormControlLabel
+                  <StyledFormControlLabel
                     control={
                       <Toggle
                         checked={values.helpers.devtmpfs_automount}
@@ -975,12 +924,11 @@ export const LinodeConfigDialog = (props: Props) => {
                         tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
                       />
                     }
-                    className={classes.formControlToggle}
                     label="Auto-mount devtmpfs"
                     name="helpers.devtmpfs_automount"
                   />
 
-                  <FormControlLabel
+                  <StyledFormControlLabel
                     control={
                       <Toggle
                         tooltipText={
@@ -997,11 +945,10 @@ export const LinodeConfigDialog = (props: Props) => {
                         onChange={formik.handleChange}
                       />
                     }
-                    className={classes.formControlToggle}
                     label="Auto-configure networking"
                     name="helpers.network"
                   />
-                </FormGroup>
+                </StyledFormGroup>
               </FormControl>
             </Grid>
           </React.Fragment>
@@ -1019,6 +966,41 @@ export const LinodeConfigDialog = (props: Props) => {
     </Dialog>
   );
 };
+
+const formGroupStyling = () => ({
+  '&.MuiFormGroup-root[role="radiogroup"]': {
+    marginBottom: 0,
+  },
+  alignItems: 'flex-start',
+});
+
+const StyledRadioGroup = styled(RadioGroup, { label: 'StyledRadioGroup' })({
+  ...formGroupStyling(),
+});
+
+const StyledFormControl = styled(FormControl, { label: 'StyledFormControl' })({
+  ...formGroupStyling(),
+});
+
+const StyledFormGroup = styled(FormGroup, { label: 'StyledFormGroup' })({
+  ...formGroupStyling(),
+});
+
+const StyledDivider = styled(Divider, { label: 'StyledDivider' })(
+  ({ theme }) => ({
+    margin: '36px 8px 12px',
+    width: `calc(100% - ${theme.spacing(2)})`,
+  })
+);
+
+const StyledFormControlLabel = styled(FormControlLabel, {
+  label: 'StyledFormControlLabel',
+})(({ theme }) => ({
+  '& button': {
+    color: theme.textColors.tableHeader,
+    order: 3,
+  },
+}));
 
 interface ConfigFormProps {
   children: JSX.Element;

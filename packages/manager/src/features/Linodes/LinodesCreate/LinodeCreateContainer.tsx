@@ -5,7 +5,6 @@ import {
   Interface,
   Linode,
   LinodeTypeClass,
-  cloneLinode,
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
@@ -20,7 +19,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Tag } from 'src/components/TagsInput/TagsInput';
 import {
   WithAccountSettingsProps,
@@ -343,7 +342,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       selectedStackScriptLabel,
     } = this.state;
 
-    if (customLabel?.length) {
+    if (customLabel !== undefined) {
       return customLabel;
     }
 
@@ -743,7 +742,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     const request =
       createType === 'fromLinode'
-        ? () => cloneLinode(linodeID!, payload)
+        ? () =>
+            this.props.linodeActions.cloneLinode({
+              sourceLinodeId: linodeID!,
+              ...payload,
+            })
         : () => this.props.linodeActions.createLinode(payload);
 
     this.setState({ formIsSubmitting: true });

@@ -1,9 +1,9 @@
 import * as React from 'react';
 
+import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
-import ListItem from 'src/components/core/ListItem';
-import { formatPlanTypes } from 'src/utilities/planNotices';
 import { getCapabilityFromPlanType } from 'src/utilities/planNotices';
+import { formatPlanTypes } from 'src/utilities/planNotices';
 
 import {
   StyledFormattedRegionList,

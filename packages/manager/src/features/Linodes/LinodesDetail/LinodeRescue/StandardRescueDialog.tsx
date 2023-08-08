@@ -1,7 +1,5 @@
-import { rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
@@ -13,9 +11,12 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { resetEventsPolling } from 'src/eventsPolling';
-import usePrevious from 'src/hooks/usePrevious';
+import { usePrevious } from 'src/hooks/usePrevious';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  useLinodeQuery,
+  useLinodeRescueMutation,
+} from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import createDevicesFromStrings, {
@@ -25,19 +26,6 @@ import createDevicesFromStrings, {
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import DeviceSelection, { ExtendedDisk } from './DeviceSelection';
 import RescueDescription from './RescueDescription';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    marginTop: theme.spacing(),
-  },
-  root: {
-    '& .iconTextLink': {
-      display: 'inline-flex',
-      margin: `${theme.spacing(3)} 0 0 0`,
-    },
-    padding: `${theme.spacing(3)} 0 ${theme.spacing(1)}`,
-  },
-}));
 
 interface Props {
   linodeId: number | undefined;
@@ -88,7 +76,7 @@ export const getDefaultDeviceMapAndCounter = (
 export const StandardRescueDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
 
-  const classes = useStyles();
+  const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -142,6 +130,8 @@ export const StandardRescueDialog = (props: Props) => {
     linodeDisks ?? []
   );
 
+  const { mutateAsync: rescueLinode } = useLinodeRescueMutation(linodeId ?? -1);
+
   const prevDeviceMap = usePrevious(deviceMap);
 
   const [counter, setCounter] = React.useState<number>(initialCounter);
@@ -173,7 +163,7 @@ export const StandardRescueDialog = (props: Props) => {
   const disabled = isReadOnly;
 
   const onSubmit = () => {
-    rescueLinode(linodeId ?? -1, createDevicesFromStrings(rescueDevices))
+    rescueLinode(createDevicesFromStrings(rescueDevices))
       .then((_) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',
@@ -220,7 +210,7 @@ export const StandardRescueDialog = (props: Props) => {
         </div>
       ) : (
         <div>
-          <Paper className={classes.root}>
+          <StyledPaper>
             {isReadOnly && <LinodePermissionsError />}
             {linodeId ? <RescueDescription linodeId={linodeId} /> : null}
             <DeviceSelection
@@ -233,8 +223,8 @@ export const StandardRescueDialog = (props: Props) => {
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
             />
             <Button
+              sx={{ marginTop: theme.spacing() }}
               buttonType="secondary"
-              className={classes.button}
               compactX
               disabled={disabled || counter >= 6}
               onClick={incrementCounter}
@@ -249,9 +239,17 @@ export const StandardRescueDialog = (props: Props) => {
                 onClick: onSubmit,
               }}
             />
-          </Paper>
+          </StyledPaper>
         </div>
       )}
     </Dialog>
   );
 };
+
+const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
+  '& .iconTextLink': {
+    display: 'inline-flex',
+    margin: `${theme.spacing(3)} 0 0 0`,
+  },
+  padding: `${theme.spacing(3)} 0 ${theme.spacing(1)}`,
+}));

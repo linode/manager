@@ -1,4 +1,5 @@
 import { Linode } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -210,7 +211,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const renderExpansionActions = () => {
     return (
-      <ActionsPanel
+      <StyledActionsPanel
         primaryButtonProps={{
           'data-testid': 'alerts-save',
           disabled: isReadOnly || !formik.dirty,
@@ -237,3 +238,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
     </Accordion>
   );
 };
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})({
+  justifyContent: 'flex-start',
+  margin: 0,
+});
