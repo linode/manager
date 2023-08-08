@@ -29,7 +29,6 @@ export const safeSecondaryEntityLabel = (
   return label ? `${text} ${label}` : fallback;
 };
 
-/** @see https://leo.stcloudstate.edu/grammar/tenses.html */
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   account_agreement_eu_model: {
     notification: () => 'The EU Model Contract has been signed.',
@@ -830,7 +829,7 @@ export default (e: Event): string => {
    * */
   try {
     const formattedMessage = applyLinking(e, messageWithUsername);
-    return applyBolding(e, formattedMessage);
+    return applyBolding({ message: formattedMessage });
   } catch (error) {
     console.warn('Error with formatting the event message', {
       error,
@@ -846,7 +845,12 @@ export default (e: Event): string => {
   }
 };
 
-function applyBolding(event: Event, message: string) {
+interface Bolding {
+  message: string;
+  useHTML?: boolean;
+}
+
+export function applyBolding({ message, useHTML = false }: Bolding) {
   if (!message) {
     return '';
   }
@@ -882,7 +886,10 @@ function applyBolding(event: Event, message: string) {
   let newMessage = message;
 
   for (const word of wordsToBold) {
-    newMessage = newMessage.replace(word, `**${word}**`);
+    newMessage = newMessage.replace(
+      word,
+      useHTML ? `<strong>${word}</strong>` : `**${word}**`
+    );
   }
 
   return newMessage;
