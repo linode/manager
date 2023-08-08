@@ -22,9 +22,12 @@ const REGION_HELPER_TEXT = 'The Region field will not be editable during beta.';
 export const VPCEditDrawer = (props: Props) => {
   const { onClose, open, vpc } = props;
 
-  const { error, isLoading, mutateAsync: updateVPC } = useUpdateVPCMutation(
-    vpc?.id ?? -1
-  );
+  const {
+    error,
+    isLoading,
+    mutateAsync: updateVPC,
+    reset,
+  } = useUpdateVPCMutation(vpc?.id ?? -1);
 
   const form = useFormik<UpdateVPCPayload>({
     enableReinitialize: true,
@@ -38,6 +41,13 @@ export const VPCEditDrawer = (props: Props) => {
       onClose();
     },
   });
+
+  React.useEffect(() => {
+    if (open) {
+      form.resetForm();
+      reset();
+    }
+  }, [open]);
 
   const { data: regionsData, error: regionsError } = useRegionsQuery();
 
