@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   price: {
     '& h3': {
       color: `${theme.palette.text.primary} !important`,
-      fontFamily: '"LatoWebRegular", sans-serif',
+      fontFamily: theme.font.normal,
     },
   },
   root: {
