@@ -1,6 +1,9 @@
 import {
   CreateLinodeConfigSchema,
+  UpdateConfigInterfaceOrderSchema,
+  UpdateConfigInterfaceSchema,
   UpdateLinodeConfigSchema,
+  linodeInterfaceSchema,
 } from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from '../constants';
 import Request, {
@@ -10,8 +13,15 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { Config, LinodeConfigCreationData } from './types';
+import { Filter, ResourcePage as Page, Params } from '../types';
+import {
+  Config,
+  ConfigInterfaceOrderPayload,
+  Interface,
+  InterfacePayload,
+  LinodeConfigCreationData,
+  UpdateConfigInterfacePayload,
+} from './types';
 
 /**
  * getLinodeConfigs
@@ -105,4 +115,145 @@ export const updateLinodeConfig = (
     ),
     setMethod('PUT'),
     setData(data, UpdateLinodeConfigSchema)
+  );
+
+/**
+ * getConfigInterfaces
+ *
+ * Return non-paginated list in devnum order of all interfaces on the given config.
+ *
+ * @param linodeId { number } The id of a Linode.
+ * @param configId { number } The id of a config belonging to the specified Linode.
+ */
+export const getConfigInterfaces = (linodeId: number, configId: number) =>
+  Request<Interface[]>(
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/configs/${encodeURIComponent(configId)}/interfaces`
+    ),
+    setMethod('GET')
+  );
+
+/**
+ * getConfigInterface
+ *
+ * Get a single Linode config interface object using the interface's unique ID.
+ *
+ * @param linodeId { number } The id of a Linode.
+ * @param configId { number } The id of a config belonging to the specified Linode.
+ * @param interfaceId { number } The id of an interface belonging to the specified config.
+ */
+export const getConfigInterface = (
+  linodeId: number,
+  configId: number,
+  interfaceId: number
+) =>
+  Request<Interface>(
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/configs/${encodeURIComponent(
+        configId
+      )}/interfaces/${encodeURIComponent(interfaceId)}`
+    ),
+    setMethod('GET')
+  );
+
+/**
+ * appendConfigInterface
+ *
+ * Append a single new Linode config interface object to an existing config.
+ *
+ * @param linodeId { number } The id of a Linode to receive the new config interface.
+ * @param configId { number } The id of a config to receive the new interface.
+ */
+export const appendConfigInterface = (
+  linodeId: number,
+  configId: number,
+  data: InterfacePayload
+) =>
+  Request<Interface>(
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/configs/${encodeURIComponent(configId)}/interfaces`
+    ),
+    setMethod('POST'),
+    setData(data, linodeInterfaceSchema)
+  );
+
+/**
+ * updateConfigInterface
+ *
+ * Change an existing interface.
+ *
+ * @param linodeId { number } The id of a Linode.
+ * @param configId { number } The id of a config belonging to that Linode.
+ * @param interfaceId { number } The id of an interface belonging to the specified config.
+ */
+export const updateConfigInterface = (
+  linodeId: number,
+  configId: number,
+  interfaceId: number,
+  data: UpdateConfigInterfacePayload
+) =>
+  Request<Interface>(
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/configs/${encodeURIComponent(
+        configId
+      )}/interfaces/${encodeURIComponent(interfaceId)}`
+    ),
+    setMethod('PUT'),
+    setData(data, UpdateConfigInterfaceSchema)
+  );
+
+/**
+ * updateLinodeConfigOrder
+ *
+ * Change the order of interfaces.
+ *
+ * @param linodeId { number } The id of a Linode.
+ * @param configId { number } The id of a config belonging to the specified Linode.
+ */
+export const updateLinodeConfigOrder = (
+  linodeId: number,
+  configId: number,
+  data: ConfigInterfaceOrderPayload
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/configs/${encodeURIComponent(configId)}/interfaces/order`
+    ),
+    setMethod('POST'),
+    setData(data, UpdateConfigInterfaceOrderSchema)
+  );
+
+/**
+ * deleteLinodeConfigInterface
+ *
+ * Delete a Linode config interface.
+ *
+ * @param linodeId { number } The id of a Linode the specified config is attached to.
+ * @param configId { number } The id of a config belonging to the specified Linode.
+ * @param interfaceId { number } The id of the interface to be deleted.
+ */
+export const deleteLinodeConfigInterface = (
+  linodeId: number,
+  configId: number,
+  interfaceId: number
+) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/configs/${encodeURIComponent(
+        configId
+      )}/interfaces/${encodeURIComponent(interfaceId)}`
+    )
   );

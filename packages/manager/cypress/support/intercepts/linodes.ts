@@ -4,6 +4,7 @@
 
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
 
 import type { Disk, Linode, Volume } from '@linode/api-v4/types';
 
@@ -51,6 +52,22 @@ export const interceptGetLinodeDetails = (
   linodeId: number
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}*`));
+};
+
+/**
+ * Intercepts GET request to retrieve Linode configs.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetLinodeConfigs = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/configs*`)
+  );
 };
 
 /**
@@ -123,5 +140,22 @@ export const mockGetLinodeDisks = (
     'GET',
     apiMatcher(`linode/instances/${linodeId}/disks*`),
     paginateResponse(disks)
+  );
+};
+
+/**
+ * Intercepts DELETE request to delete linode and mocks response.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteLinodes = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`linode/instances/${linodeId}`),
+    makeResponse({})
   );
 };

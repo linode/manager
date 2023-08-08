@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
@@ -10,13 +9,6 @@ import { useGrants } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    margin: `${theme.spacing(3)} 0 ${theme.spacing(3)} 0`,
-    padding: 0,
-  },
-}));
 
 interface Props {
   authorizedUsers: string[];
@@ -43,8 +35,6 @@ export const ImageAndPassword = (props: Props) => {
 
   const { data: grants } = useGrants();
 
-  const classes = useStyles();
-
   const { data: imagesData, error: imagesError } = useAllImagesQuery();
   const _imagesError = imagesError
     ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].reason
@@ -64,14 +54,13 @@ export const ImageAndPassword = (props: Props) => {
         images={imagesData ?? []}
         onSelect={onImageChange}
       />
-      <AccessPanel
+      <StyledAccessPanel
         disabledReason={
           disabled
             ? "You don't have permissions to modify this Linode"
             : undefined
         }
         authorizedUsers={authorizedUsers}
-        className={classes.root}
         disabled={disabled}
         error={passwordError}
         handleChange={onPasswordChange}
@@ -81,3 +70,10 @@ export const ImageAndPassword = (props: Props) => {
     </React.Fragment>
   );
 };
+
+const StyledAccessPanel = styled(AccessPanel, { label: 'StyledAccessPanel' })(
+  ({ theme }) => ({
+    margin: `${theme.spacing(3)} 0 ${theme.spacing(3)} 0`,
+    padding: 0,
+  })
+);

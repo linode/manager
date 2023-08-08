@@ -1,32 +1,12 @@
 import { Theme } from '@mui/material/styles';
-import { keyframes } from 'tss-react';
 import { makeStyles } from 'tss-react/mui';
 
-const SLIDE_IN_TRANSFORM = 'matrix(0.01471, 0, 0, 1, 123.982745, 0.000015)';
-const SLIDE_OUT_TRANSFORM = 'translate(0)';
-
-const slideIn = keyframes`
-  from {
-    transform: ${SLIDE_IN_TRANSFORM};
-  }
-  to {
-    transform: ${SLIDE_OUT_TRANSFORM};
-  }
-`;
-
-const slideOut = keyframes`
-  from {
-    transform: ${SLIDE_OUT_TRANSFORM};
-  },
-  to {
-    transform: ${SLIDE_IN_TRANSFORM};
-  },
-`;
+import { SIDEBAR_WIDTH } from 'src/components/SideMenu';
 
 const useStyles = makeStyles<void, 'linkItem'>()(
   (theme: Theme, _params, classes) => ({
     active: {
-      '& .icon': {
+      '& div.icon': {
         opacity: 1,
       },
       '& svg': {
@@ -80,6 +60,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
         color: '#CFD0D2',
         marginRight: theme.spacing(2),
         opacity: 0.5,
+        transition: 'max-height 1s linear, width .1s linear',
       },
       '& p': {
         marginBottom: 0,
@@ -106,55 +87,46 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       alignItems: 'center',
       cursor: 'pointer',
       display: 'flex',
+      minWidth: SIDEBAR_WIDTH,
       padding: '8px 16px',
       position: 'relative',
       transition: theme.transitions.create(['background-color']),
     },
     logo: {
+      '& .akamai-logo-name': {
+        transition: 'opacity 100ms linear',
+      },
       // give the svg a transition so it smoothly resizes
       transition: 'width .1s linear',
     },
     logoAkamaiCollapsed: {
-      '& path.akamai-clip-path': {
-        animation: `${slideOut} 0s ease-in-out 0s forwards`,
-      },
       background: theme.bg.primaryNavPaper,
       width: 96,
     },
     logoContainer: {
       // when the nav is collapsed, but hovered by the user, make the logo full sized
       'nav:hover & > svg ': {
+        '& .akamai-logo-name': {
+          opacity: 1,
+        },
         width: 128,
       },
     },
     logoItemAkamai: {
-      '& path.akamai-clip-path': {
-        animation: `${slideIn} .33s ease-in-out`,
-      },
+      alignItems: 'center',
+      display: 'flex',
+      height: 68,
       paddingLeft: 12,
       paddingTop: 12,
       transition: 'padding-left .03s linear',
     },
     logoItemAkamaiCollapsed: {
+      '& .akamai-logo-name': {
+        opacity: 0,
+      },
       paddingLeft: 8,
     },
-    logoSvgCollapsed: {
-      // Hide 'Akamai' text when the navigation is collapsed and the nav is not hovered
-      '& > g ': {
-        display: 'none',
-      },
-      'nav:hover & > g ': {
-        display: 'unset',
-      },
-      // Make the logo 115px so that the Akamai logo is centered when the navigation is collapsed
-      width: 115,
-    },
     menuGrid: {
-      '&:hover': {
-        '& path.akamai-clip-path': {
-          animation: `${slideIn} .33s ease-in-out`,
-        },
-      },
       height: '100%',
       margin: 0,
       minHeight: 64,

@@ -10,7 +10,6 @@ describe('LinodeRow', () => {
     it('should render a Flag', () => {
       const wrapper = shallow(
         <RenderFlag
-          classes={{ flag: '' }}
           linodeNotifications={[mockNotification]}
           mutationAvailable={false}
         />

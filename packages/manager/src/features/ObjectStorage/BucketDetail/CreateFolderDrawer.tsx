@@ -1,9 +1,8 @@
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer/Drawer';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { TextField } from 'src/components/TextField';
 import { useCreateObjectUrlMutation } from 'src/queries/objectStorage';
 
@@ -86,14 +85,14 @@ export const CreateFolderDrawer = (props: Props) => {
           name="name"
           onChange={formik.handleChange}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" loading={isLoading} type="submit">
-            Create
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Create',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       </form>
     </Drawer>
   );

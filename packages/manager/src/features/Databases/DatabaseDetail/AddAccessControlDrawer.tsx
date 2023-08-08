@@ -4,9 +4,8 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -189,26 +188,21 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
             placeholder={ipFieldPlaceholder}
             title="Allowed IP Address(es) or Range(s)"
           />
-          <ActionsPanel>
-            <Button
-              buttonType="secondary"
-              disabled={isSubmitting}
-              loading={false}
-              onClick={onClose}
-              style={{ marginBottom: 8 }}
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              disabled={!formTouched}
-              loading={isSubmitting}
-              style={{ marginBottom: 8 }}
-              type="submit"
-            >
-              Update Access Controls
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primaryButtonProps={{
+              disabled: !formTouched,
+              label: 'Update Access Controls',
+              loading: isSubmitting,
+              sx: { marginBottom: 8 },
+              type: 'submit',
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              loading: isSubmitting,
+              onClick: onClose,
+              sx: { marginBottom: 8 },
+            }}
+          />
         </form>
       </React.Fragment>
     </Drawer>

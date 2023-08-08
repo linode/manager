@@ -1,78 +1,76 @@
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Paper from 'src/components/core/Paper';
 
-type ClassNames = 'header' | 'root' | 'toggleLabel' | 'toggleLabelText';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    header: {
-      fontSize: 17,
-      marginBottom: theme.spacing(1),
-    },
-    root: {
-      backgroundColor: theme.bg.offWhite,
-      padding: theme.spacing(1),
-    },
-    toggleLabel: {
-      alignItems: 'flex-start',
-      display: 'flex',
-      marginBottom: theme.spacing(1),
-      marginLeft: 0,
-    },
-    toggleLabelText: {
-      marginTop: theme.spacing(1) + theme.spacing(0.5),
-    },
-  });
-
-interface Props {
+interface AutoEnrollProps {
   enabled: boolean;
   error?: string;
   toggle: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export const AutoEnroll: React.FC<CombinedProps> = (props) => {
-  const { classes, enabled, error, toggle } = props;
+export const AutoEnroll = (props: AutoEnrollProps) => {
+  const { enabled, error, toggle } = props;
 
   return (
-    <Paper className={classes.root}>
+    <StyledPaper>
       {error && <Notice error text={error} />}
-      <FormControlLabel
+      <StyledFormControlLabel
         control={
           <Toggle checked={enabled} data-qa-enable-toggle onChange={toggle} />
         }
         label={
-          <div className={classes.toggleLabelText}>
-            <Typography className={classes.header}>
+          <StyledDiv>
+            <StyledTypography>
               Auto Enroll All New Linodes in Backups
-            </Typography>
+            </StyledTypography>
             <Typography variant="body1">
               {`Enroll all future Linodes in backups. Your account will be billed
                     the additional hourly rate noted on the `}
-              <ExternalLink
+              <Link
                 data-qa-backups-price
-                fixedIcon
-                link="https://www.linode.com/products/backups/"
-                text="Backups pricing page"
-              />
+                to="https://www.linode.com/products/backups/"
+              >
+                Backups pricing page
+              </Link>
             </Typography>
-          </div>
+          </StyledDiv>
         }
-        className={classes.toggleLabel}
       />
-    </Paper>
+    </StyledPaper>
   );
 };
 
-const styled = withStyles(styles);
+const StyledPaper = styled(Paper, {
+  label: 'StyledPaper',
+})(({ theme }) => ({
+  backgroundColor: theme.bg.offWhite,
+  padding: theme.spacing(1),
+}));
 
-export default styled(AutoEnroll);
+const StyledFormControlLabel = styled(FormControlLabel, {
+  label: 'StyledFormControlLabel',
+})(({ theme }) => ({
+  alignItems: 'flex-start',
+  display: 'flex',
+  marginBottom: theme.spacing(1),
+  marginLeft: 0,
+}));
+
+const StyledDiv = styled('div', {
+  label: 'StyledDiv',
+})(({ theme }) => ({
+  marginTop: theme.spacing(1.5),
+}));
+
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  fontSize: 17,
+  marginBottom: theme.spacing(1),
+}));

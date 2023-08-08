@@ -11,7 +11,7 @@ import {
   updateNodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { styled } from '@mui/material/styles';
 import {
   Lens,
@@ -30,7 +30,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose as composeC } from 'recompose';
 
 import { Accordion } from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -726,24 +726,20 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   };
 
   renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        buttonType="secondary"
-        className="cancel"
-        data-qa-cancel-cancel
-        onClick={onClose}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-confirm-cancel
-        loading={this.state.deleteConfigConfirmDialog.submitting}
-        onClick={this.deleteConfig}
-      >
-        Delete
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'confirm-cancel',
+        label: 'Delete',
+        loading: this.state.deleteConfigConfirmDialog.submitting,
+        onClick: this.deleteConfig,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel-cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
+      style={{ padding: 0 }}
+    />
   );
 
   resetSubmitting = (configIdx: number) => {

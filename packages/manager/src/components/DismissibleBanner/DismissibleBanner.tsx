@@ -6,8 +6,9 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Notice } from 'src/components/Notice/Notice';
-import useDismissibleNotifications, {
+import {
   DismissibleNotificationOptions,
+  useDismissibleNotifications,
 } from 'src/hooks/useDismissibleNotifications';
 
 import type { NoticeProps } from 'src/components/Notice/Notice';
@@ -71,8 +72,6 @@ export const DismissibleBanner = (props: CombinedProps) => {
     </StyledNotice>
   );
 };
-
-export default DismissibleBanner;
 
 // Hook that contains the nuts-and-bolts of the DismissibleBanner component.
 // Extracted out as its own hook so other components can use it.

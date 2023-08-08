@@ -8,14 +8,8 @@ import {
 import { Domain } from '@linode/api-v4/lib/domains';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
 
-import { ApplicationState } from 'src/store';
-import entitiesErrors, {
-  ErrorObject,
-} from 'src/store/selectors/entitiesErrors';
-import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import {
   bucketToSearchableItem,
   domainToSearchableItem,
@@ -50,7 +44,6 @@ export interface SearchProps extends HandlerProps {
   combinedResults: SearchableItem[];
   entities: SearchableItem[];
   entitiesLoading: boolean;
-  errors: ErrorObject;
   searchResultsByEntity: SearchResultsByEntity;
 }
 
@@ -77,16 +70,7 @@ export default () => (Component: React.ComponentType<any>) => {
     });
   };
 
-  const connected = connect((state: ApplicationState) => {
-    return {
-      entities: [],
-      entitiesLoading: entitiesLoading(state.__resources),
-      errors: entitiesErrors(state.__resources),
-    };
-  });
-
   return compose<SearchProps, {}>(
-    connected,
     withStateHandlers<any, any, any>(
       { searchResultsByEntity: emptyResults },
       {

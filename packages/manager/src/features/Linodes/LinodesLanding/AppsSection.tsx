@@ -1,61 +1,9 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import PointerIcon from 'src/assets/icons/pointer.svg';
 import { Link } from 'src/components/Link';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
-
-const useStyles = makeStyles((theme: Theme) => {
-  const isDarkTheme = theme.name === 'dark';
-  const backgroundColor = isDarkTheme
-    ? theme.bg.primaryNavPaper
-    : theme.bg.offWhite;
-  const borderColor = isDarkTheme ? '#3a3f46' : theme.color.border3;
-  const iconColor = isDarkTheme
-    ? theme.textColors.linkActiveLight
-    : theme.palette.primary.main;
-  return {
-    appLink: {
-      '&:focus': {
-        textDecoration: 'none',
-      },
-      '&:hover': {
-        textDecoration: 'none',
-      },
-      alignItems: 'center',
-      backgroundColor,
-      border: `1px solid ${borderColor}`,
-      color: theme.palette.text.primary,
-      display: 'flex',
-      fontSize: '0.875rem',
-      fontWeight: 700,
-      gridColumn: 'span 1',
-      height: theme.spacing(4.75),
-      justifyContent: 'space-between',
-      maxWidth: theme.spacing(20),
-      paddingLeft: theme.spacing(),
-    },
-    appLinkIcon: {
-      alignItems: 'center',
-      aspectRatio: '1 / 1',
-      borderLeft: `1px solid ${borderColor}`,
-      color: iconColor,
-      display: 'flex',
-      height: '100%',
-      justifyContent: 'center',
-    },
-    appSection: {
-      columnGap: theme.spacing(3),
-      display: 'grid',
-      gridAutoFlow: 'row',
-      gridTemplateColumns: `repeat(2, ${theme.spacing(20)})`,
-      marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(2),
-      rowGap: theme.spacing(),
-    },
-  };
-});
 
 const gaCategory = 'Linodes landing page empty';
 const linkGAEventTemplate = {
@@ -103,18 +51,13 @@ interface AppLinkProps {
 
 const AppLink = (props: AppLinkProps) => {
   const { text, to } = props;
-  const classes = useStyles();
   return (
-    <Link
-      className={classes.appLink}
-      onClick={getLinkOnClick(linkGAEventTemplate, text)}
-      to={to}
-    >
+    <StyledLink onClick={getLinkOnClick(linkGAEventTemplate, text)} to={to}>
       {text}
-      <div className={classes.appLinkIcon}>
+      <StyledAppLinkDiv>
         <PointerIcon />
-      </div>
-    </Link>
+      </StyledAppLinkDiv>
+    </StyledLink>
   );
 };
 
@@ -123,9 +66,60 @@ const appLinks = appsLinkData.map((linkData) => (
 ));
 
 const AppsSection = () => {
-  const classes = useStyles();
-
-  return <div className={classes.appSection}>{appLinks}</div>;
+  return <StyledAppSectionDiv>{appLinks}</StyledAppSectionDiv>;
 };
+
+const StyledAppLinkDiv = styled('div', { label: 'StyledAppLinkDiv' })(
+  ({ theme }) => ({
+    alignItems: 'center',
+    aspectRatio: '1 / 1',
+    borderLeft: `1px solid ${
+      theme.name === 'dark' ? '#3a3f46' : theme.color.border3
+    }`,
+    color:
+      theme.name === 'dark'
+        ? theme.textColors.linkActiveLight
+        : theme.palette.primary.main,
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'center',
+  })
+);
+
+const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
+  '&:focus': {
+    textDecoration: 'none',
+  },
+  '&:hover': {
+    textDecoration: 'none',
+  },
+  alignItems: 'center',
+  backgroundColor:
+    theme.name === 'dark' ? theme.bg.primaryNavPaper : theme.bg.offWhite,
+  border: `1px solid ${
+    theme.name === 'dark' ? '#3a3f46' : theme.color.border3
+  }`,
+  color: theme.palette.text.primary,
+  display: 'flex',
+  fontSize: '0.875rem',
+  fontWeight: 700,
+  gridColumn: 'span 1',
+  height: theme.spacing(4.75),
+  justifyContent: 'space-between',
+  maxWidth: theme.spacing(20),
+  paddingLeft: theme.spacing(),
+}));
+
+const StyledAppSectionDiv = styled('div', { label: 'StyledAppSectionDiv' })(
+  ({ theme }) => ({
+    columnGap: theme.spacing(3),
+    display: 'grid',
+    gridAutoFlow: 'row',
+    gridTemplateColumns: `repeat(2, ${theme.spacing(20)})`,
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    rowGap: theme.spacing(),
+  })
+);
 
 export default AppsSection;

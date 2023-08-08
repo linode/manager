@@ -1,10 +1,9 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 
 import packageJson from '../../../package.json';
 
@@ -12,7 +11,7 @@ interface Props {
   desktopMenuIsOpen: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     backgroundColor: theme.bg.main,
     margin: 0,
@@ -43,16 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   link: {
-    '&:hover, &:focus': {
-      color: theme.color.black,
-      textDecoration: 'underline',
-    },
-    color: theme.palette.text.primary,
     fontSize: '90%',
     [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(1),
     },
-    transition: theme.transitions.create('color'),
   },
   linkContainer: {
     [theme.breakpoints.down('sm')]: {
@@ -71,15 +64,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 
-export const Footer: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const Footer = React.memo((props: Props) => {
+  const { classes, cx } = useStyles();
 
   const { desktopMenuIsOpen } = props;
 
   return (
     <footer role="contentinfo">
       <Grid
-        className={classNames({
+        className={cx({
           [classes.container]: true,
           [classes.desktopMenuIsOpen]: desktopMenuIsOpen,
         })}
@@ -89,37 +82,32 @@ export const Footer: React.FC<Props> = (props) => {
       >
         <Grid className={classes.version}>{renderVersion(classes.link)}</Grid>
         <Grid
-          className={classNames({
+          className={cx({
             [classes.linkContainer]: true,
           })}
         >
-          <a
-            aria-describedby="external-site"
+          <Link
             className={classes.link}
-            href="https://developers.linode.com"
-            rel="noopener noreferrer"
-            target="_blank"
+            forceCopyColor
+            to="https://developers.linode.com"
           >
             API Reference
-          </a>
+          </Link>
         </Grid>
         <Grid
-          className={classNames({
+          className={cx({
             [classes.feedbackLink]: true,
             [classes.linkContainer]: true,
           })}
         >
-          <ExternalLink
-            className={classes.link}
-            hideIcon
-            link={FEEDBACK_LINK}
-            text="Provide Feedback"
-          />
+          <Link className={classes.link} forceCopyColor to={FEEDBACK_LINK}>
+            Provide Feedback
+          </Link>
         </Grid>
       </Grid>
     </footer>
   );
-};
+});
 
 const renderVersion = (className: string) => {
   const VERSION = packageJson.version;
@@ -128,16 +116,12 @@ const renderVersion = (className: string) => {
   }
 
   return (
-    <a
-      aria-describedby="external-site"
+    <Link
       className={className}
-      href={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
-      rel="noopener noreferrer"
-      target="_blank"
+      forceCopyColor
+      to={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
     >
       v{VERSION}
-    </a>
+    </Link>
   );
 };
-
-export default React.memo(Footer);

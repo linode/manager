@@ -1,7 +1,6 @@
 import { updateAccountSettings } from '@linode/api-v4/lib';
 import { Linode, enableBackups } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as Bluebird from 'bluebird';
 import { isEmpty } from 'ramda';
 import { QueryClient } from 'react-query';
 import { Reducer } from 'redux';
@@ -10,10 +9,9 @@ import {
   queryKey,
   updateAccountSettingsData,
 } from 'src/queries/accountSettings';
-import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
-import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { sendBackupsEnabledEvent } from 'src/utilities/analytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { reduceAsync } from 'src/utilities/reduceAsync';
 
 import { ThunkActionCreator } from '../types';
 
@@ -216,7 +214,7 @@ export default reducer;
  *
  * This magic is needed to accumulate errors from any failed requests, since
  * we need to enable backups for each Linode individually. The final response
- * will be available in the .then() handler for Bluebird.reduce (below), and has
+ * will be available in the .then() handler for reduceAsync (below), and has
  * the form:
  *
  * {
@@ -254,17 +252,11 @@ export const gatherResponsesAndErrors = (
  *  When complete, it will dispatch appropriate actions to handle the result, depending
  *  on whether or not any errors occurred.
  */
-type EnableAllBackupsThunk = ThunkActionCreator<void>;
-export const enableAllBackups: EnableAllBackupsThunk = () => (
-  dispatch,
-  getState
-) => {
-  const linodesWithoutBackups = getLinodesWithoutBackups(
-    getState().__resources
-  );
-
+export const enableAllBackups: ThunkActionCreator<void, Linode[]> = (
+  linodesWithoutBackups: Linode[]
+) => (dispatch) => {
   dispatch(handleEnable());
-  Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, {
+  reduceAsync(linodesWithoutBackups, gatherResponsesAndErrors, {
     errors: [],
     success: [],
   })
@@ -274,7 +266,6 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
       } else {
         dispatch(handleEnableSuccess(response.success));
       }
-      dispatch(updateMultipleLinodes(response.success));
       // Analytics Event
       sendBackupsEnabledEvent(
         `Enabled backups for ${response.success.length} Linodes`
@@ -295,10 +286,15 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
  */
 type EnableAutoEnrollThunk = ThunkActionCreator<
   void,
-  { backupsEnabled: boolean; queryClient: QueryClient }
+  {
+    backupsEnabled: boolean;
+    linodesWithoutBackups: Linode[];
+    queryClient: QueryClient;
+  }
 >;
 export const enableAutoEnroll: EnableAutoEnrollThunk = ({
   backupsEnabled,
+  linodesWithoutBackups,
   queryClient,
 }) => (dispatch, getState) => {
   const state = getState();
@@ -309,7 +305,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = ({
    * don't bother the API.
    */
   if (backupsEnabled === shouldEnableBackups) {
-    dispatch(enableAllBackups());
+    dispatch(enableAllBackups(linodesWithoutBackups));
     return;
   }
 
@@ -328,7 +324,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = ({
     onSuccess: (data) => {
       updateAccountSettingsData(data, queryClient);
       dispatch(handleAutoEnrollSuccess());
-      dispatch(enableAllBackups());
+      dispatch(enableAllBackups(linodesWithoutBackups));
     },
     variables: { backups_enabled: shouldEnableBackups },
   });

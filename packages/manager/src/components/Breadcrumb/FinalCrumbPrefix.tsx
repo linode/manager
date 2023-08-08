@@ -1,6 +1,5 @@
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 const useStyles = makeStyles({
   prefixComponentWrapper: {
@@ -18,9 +17,7 @@ interface Props {
   prefixStyle?: React.CSSProperties;
 }
 
-type CombinedProps = Props;
-
-const FinalCrumbPrefix: React.FC<CombinedProps> = (props) => {
+export const FinalCrumbPrefix = (props: Props) => {
   const classes = useStyles();
 
   const { prefixComponent, prefixStyle } = props;
@@ -35,5 +32,3 @@ const FinalCrumbPrefix: React.FC<CombinedProps> = (props) => {
     </div>
   );
 };
-
-export default compose<CombinedProps, Props>(React.memo)(FinalCrumbPrefix);

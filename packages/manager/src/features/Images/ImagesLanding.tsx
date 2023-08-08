@@ -9,16 +9,16 @@ import { useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -27,7 +27,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { listToItemsByID } from 'src/queries/base';
@@ -351,19 +350,19 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
 
   const getActions = () => {
     return (
-      <ActionsPanel>
-        <Button buttonType="secondary" data-qa-cancel onClick={closeDialog}>
-          {dialogAction === 'cancel' ? 'Keep Image' : 'Cancel'}
-        </Button>
-        <Button
-          buttonType="primary"
-          data-qa-submit
-          loading={dialog.submitting}
-          onClick={handleRemoveImage}
-        >
-          {dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'}
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'submit',
+          label: dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image',
+          loading: dialog.submitting,
+          onClick: handleRemoveImage,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel',
+          label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
+          onClick: closeDialog,
+        }}
+      />
     );
   };
 

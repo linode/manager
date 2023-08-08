@@ -1,3 +1,20 @@
+## [2023-08-07] - v0.98.0
+
+### Added:
+
+- New methods for Linode Configs and new/updated Linode Config and interface types ([#9418](https://github.com/linode/manager/pull/9418))
+
+## [2023-07-24] - v0.97.0
+
+### Added:
+
+- Support for self serve beta endpoints ([#9386](https://github.com/linode/manager/pull/9386))
+- Endpoints for VPC Subnets ([#9390](https://github.com/linode/manager/pull/9390))
+
+### Removed:
+
+- Unused `_initial` field in `Event` ([#9416](https://github.com/linode/manager/pull/9416))
+
 ## [2023-07-11] - v0.96.0
 
 

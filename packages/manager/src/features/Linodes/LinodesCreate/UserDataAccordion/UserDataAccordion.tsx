@@ -11,7 +11,7 @@ import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { useExpandIconStyles } from './UserDataAccordion.styles';
 import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 
-interface Props {
+export interface UserDataAccordionProps {
   createType?: CreateTypes;
   disabled?: boolean;
   onChange: (userData: string) => void;
@@ -20,8 +20,8 @@ interface Props {
   userData: string | undefined;
 }
 
-export const UserDataAccordion = (props: Props) => {
-  const { expandIconStyles } = useExpandIconStyles();
+export const UserDataAccordion = (props: UserDataAccordionProps) => {
+  const { classes, cx } = useExpandIconStyles();
   const {
     createType,
     disabled,
@@ -78,7 +78,9 @@ export const UserDataAccordion = (props: Props) => {
         },
       }}
       detailProps={{ sx: sxDetails }}
-      expandIconClassNames={fromBackupOrFromLinode ? expandIconStyles : ''}
+      expandIconClassNames={cx({
+        [classes.expandIconStyles]: !!fromBackupOrFromLinode,
+      })}
       heading={<UserDataAccordionHeading createType={createType} />}
     >
       {renderNotice ? (

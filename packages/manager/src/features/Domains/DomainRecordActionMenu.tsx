@@ -1,9 +1,8 @@
 import { Domain } from '@linode/api-v4/lib/domains';
 import { has } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { ActionMenu, Action } from 'src/components/ActionMenu';
 
 interface EditPayload {
   id?: number;
@@ -23,16 +22,14 @@ interface DeleteData {
   recordID: number;
 }
 
-interface Props {
+interface DomainRecordActionMenuProps {
   deleteData?: DeleteData;
   editPayload: Domain | EditPayload;
   label: string;
   onEdit: (data: Domain | EditPayload) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
+export const DomainRecordActionMenu = (props: DomainRecordActionMenuProps) => {
   const { deleteData, editPayload, onEdit } = props;
 
   const handleEdit = () => {
@@ -67,5 +64,3 @@ export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
     />
   );
 };
-
-export default withRouter(DomainRecordActionMenu);

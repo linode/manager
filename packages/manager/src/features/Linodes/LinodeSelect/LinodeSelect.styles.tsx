@@ -1,6 +1,6 @@
-import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
-import { Popper, PopperProps, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import Popper, { PopperProps } from '@mui/material/Popper';
 import React from 'react';
 
 export const SelectedIcon = styled(DoneIcon, {
@@ -11,14 +11,6 @@ export const SelectedIcon = styled(DoneIcon, {
   marginRight: '5px',
   visibility: visible ? 'visible' : 'hidden',
   width: 17,
-}));
-
-export const RemoveIcon = styled(CloseIcon, {
-  shouldForwardProp: (prop) => prop != 'visible',
-})<{ visible: boolean }>(({ visible }) => ({
-  height: 18,
-  visibility: visible ? 'visible' : 'hidden',
-  width: 18,
 }));
 
 export const CustomPopper = (props: PopperProps) => {
@@ -32,6 +24,7 @@ export const CustomPopper = (props: PopperProps) => {
             ? { width: `calc(${props.style.width} + 2px)` }
             : { width: props.style.width + 2 }
           : {}),
+        zIndex: 1,
       }}
       data-qa-autocomplete-popper
       modifiers={[{ enabled: false, name: 'preventOverflow' }]}

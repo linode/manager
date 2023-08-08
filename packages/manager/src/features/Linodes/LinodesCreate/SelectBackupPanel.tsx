@@ -4,22 +4,24 @@ import {
   LinodeBackupsResponse,
 } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { Paper } from 'src/components/Paper';
+import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
 import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
+import { isPropValid } from 'src/utilities/isPropValid';
+
+import type { StyledTypographyProps } from './SelectLinodePanel';
 
 export const aggregateBackups = (
   backups: LinodeBackupsResponse
@@ -37,26 +39,6 @@ export const aggregateBackups = (
 export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
 }
-
-type ClassNames = 'panelBody' | 'root' | 'wrapper';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    panelBody: {
-      padding: `${theme.spacing(2)} 0 0`,
-      width: '100%',
-    },
-    root: {
-      backgroundColor: theme.color.white,
-      flexGrow: 1,
-      marginTop: theme.spacing(3),
-      width: '100%',
-    },
-    wrapper: {
-      minHeight: 120,
-      padding: theme.spacing(1),
-    },
-  });
 
 interface BackupInfo {
   details: string;
@@ -77,9 +59,7 @@ interface State {
   backups?: LinodeBackup[];
 }
 
-type StyledProps = Props & WithStyles<ClassNames>;
-
-type CombinedProps = StyledProps & WithProfileProps;
+type CombinedProps = Props & WithProfileProps;
 
 class SelectBackupPanel extends React.Component<CombinedProps, State> {
   getBackupInfo(backup: LinodeBackup) {
@@ -104,7 +84,6 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      classes,
       error,
       loading,
       selectedLinodeID,
@@ -116,28 +95,23 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       : [];
 
     return (
-      <Paper className={classes.root}>
+      <StyledRootPaper>
         {error && <Notice error text={error} />}
         <Typography variant="h2">Select Backup</Typography>
-        <Grid
-          alignItems="center"
-          className={classes.wrapper}
-          container
-          spacing={2}
-        >
+        <StyledWrapperGrid alignItems="center" container spacing={2}>
           {loading ? (
             <CircleProgress />
           ) : selectedLinodeID ? (
             // eslint-disable-next-line react/jsx-no-useless-fragment
             <React.Fragment>
               {aggregatedBackups.length !== 0 ? (
-                <Typography className={classes.panelBody} component="div">
+                <StyledTypography component="div">
                   <Grid container>
                     {aggregatedBackups.map((backup) => {
                       return this.renderCard(backup);
                     })}
                   </Grid>
-                </Typography>
+                </StyledTypography>
               ) : (
                 <Typography variant="body1">No backup available</Typography>
               )}
@@ -145,8 +119,8 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
           ) : (
             <Typography variant="body1">First, select a Linode</Typography>
           )}
-        </Grid>
-      </Paper>
+        </StyledWrapperGrid>
+      </StyledRootPaper>
     );
   }
 
@@ -176,10 +150,31 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+  shouldForwardProp: (prop) => isPropValid(['component'], prop),
+})<StyledTypographyProps>(({ theme }) => ({
+  padding: `${theme.spacing(2)} 0 0`,
+  width: '100%',
+}));
+
+const StyledRootPaper = styled(Paper, { label: 'StyledRootPaper' })(
+  ({ theme }) => ({
+    backgroundColor: theme.color.white,
+    flexGrow: 1,
+    width: '100%',
+    marginTop: theme.spacing(3),
+  })
+);
+
+const StyledWrapperGrid = styled(Grid, { label: 'StyledWrapperGrid' })(
+  ({ theme }) => ({
+    minHeight: 120,
+    padding: theme.spacing(1),
+  })
+);
 
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
-  styled,
   withProfile
 )(SelectBackupPanel);

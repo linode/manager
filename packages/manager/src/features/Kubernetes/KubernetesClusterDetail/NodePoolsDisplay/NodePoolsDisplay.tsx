@@ -9,7 +9,7 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -195,7 +195,7 @@ export const NodePoolsDisplay = (props: Props) => {
                 );
               })}
               {pools?.length > numPoolsToDisplay && (
-                <Waypoint onEnter={handleShowMore} scrollableAncestor="window">
+                <Waypoint onEnter={handleShowMore}>
                   <div style={{ minHeight: 50 }} />
                 </Waypoint>
               )}

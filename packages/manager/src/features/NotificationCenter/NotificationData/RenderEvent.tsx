@@ -6,7 +6,6 @@ import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Typography } from 'src/components/Typography';
-import { useApplicationStore } from 'src/store';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 import {
@@ -22,10 +21,9 @@ interface RenderEventProps {
 }
 
 export const RenderEvent = React.memo((props: RenderEventProps) => {
-  const store = useApplicationStore();
   const { classes } = useRenderEventStyles();
   const { event } = props;
-  const { message } = useEventInfo(event, store);
+  const { message } = useEventInfo(event);
 
   const unseenEventClass = classNames({ [classes.unseenEvent]: !event.seen });
 

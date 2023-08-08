@@ -8,8 +8,8 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Tab } from 'src/components/TabLinkList/TabLinkList';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import {
   useLinodeLishTokenQuery,
   useLinodeQuery,

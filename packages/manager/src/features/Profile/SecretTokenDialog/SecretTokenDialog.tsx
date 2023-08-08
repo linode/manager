@@ -1,11 +1,10 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
+import { CopyableAndDownloadableTextField } from 'src/components/CopyableAndDownloadableTextField';
 import { Notice } from 'src/components/Notice/Notice';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
@@ -22,16 +21,13 @@ const renderActions = (
   onClose: () => void,
   modalConfirmationButtonText: string
 ) => (
-  <ActionsPanel>
-    <Button
-      buttonType="primary"
-      data-qa-confirm
-      data-testid="dialog-confirm"
-      onClick={onClose}
-    >
-      {modalConfirmationButtonText}
-    </Button>
-  </ActionsPanel>
+  <ActionsPanel
+    primaryButtonProps={{
+      'data-testid': 'confirm',
+      label: modalConfirmationButtonText,
+      onClick: onClose,
+    }}
+  />
 );
 
 export const SecretTokenDialog = (props: Props) => {

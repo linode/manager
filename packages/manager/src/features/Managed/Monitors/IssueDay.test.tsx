@@ -3,12 +3,12 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { IssueDay, Props } from './IssueDay';
+import { IssueDay, IssueDayProps } from './IssueDay';
 
 describe('IssueDay', () => {
   it('should include basic Monitor actions', () => {
     const date = DateTime.fromISO('2020-10-01');
-    const props: Props = {
+    const props: IssueDayProps = {
       day: date.toISO(),
       issues: [],
     };

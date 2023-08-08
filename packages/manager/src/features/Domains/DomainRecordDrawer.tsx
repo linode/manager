@@ -21,9 +21,8 @@ import {
 } from 'ramda';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button, ButtonProps } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
@@ -45,7 +44,7 @@ import {
   isValidDomainRecord,
 } from './domainUtils';
 
-interface Props
+interface DomainRecordDrawerProps
   extends Partial<Omit<DomainRecord, 'type'>>,
     Partial<Omit<Domain, 'type'>> {
   domain: string;
@@ -109,8 +108,11 @@ interface NumberFieldProps extends AdjustedTextFieldProps {
   defaultValue?: number;
 }
 
-class DomainRecordDrawer extends React.Component<Props, State> {
-  componentDidUpdate(prevProps: Props) {
+export class DomainRecordDrawer extends React.Component<
+  DomainRecordDrawerProps,
+  State
+> {
+  componentDidUpdate(prevProps: DomainRecordDrawerProps) {
     if (this.props.open && !prevProps.open) {
       // Drawer is opening, set the fields according to props
       this.setState({
@@ -133,18 +135,6 @@ class DomainRecordDrawer extends React.Component<Props, State> {
     const noARecordsNoticeText =
       'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
-    const buttonProps: ButtonProps = {
-      buttonType: 'primary',
-      children: 'Save',
-      disabled: submitting,
-      loading: submitting,
-      onClick: isDomain
-        ? this.onDomainEdit
-        : isCreating
-        ? this.onRecordCreate
-        : this.onRecordEdit,
-    };
-
     const otherErrors = [
       getAPIErrorsFor({}, this.state.errors)('_unknown'),
       getAPIErrorsFor({}, this.state.errors)('none'),
@@ -165,16 +155,24 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         )}
         {fields.map((field: any, idx: number) => field(idx))}
 
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            data-qa-record-cancel
-            onClick={this.onClose}
-          >
-            Cancel
-          </Button>
-          <Button {...buttonProps} data-qa-record-save />
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'save',
+            disabled: submitting,
+            label: 'Save',
+            loading: submitting,
+            onClick: isDomain
+              ? this.onDomainEdit
+              : isCreating
+              ? this.onRecordCreate
+              : this.onRecordEdit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: this.onClose,
+          }}
+        />
       </Drawer>
     );
   }
@@ -452,7 +450,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
    * the defaultFieldState is used to pre-populate the drawer with either
    * editable data or defaults.
    */
-  static defaultFieldsState = (props: Partial<Props>) => ({
+  static defaultFieldsState = (props: Partial<DomainRecordDrawerProps>) => ({
     axfr_ips: getInitialIPs(props.axfr_ips),
     domain: props.domain,
     expire_sec: props.expire_sec ?? 0,
@@ -886,5 +884,3 @@ export const castFormValuesToNumeric = (
     });
   });
 };
-
-export default DomainRecordDrawer;

@@ -5,14 +5,13 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import InputAdornment from 'src/components/core/InputAdornment';
-import Paper from 'src/components/core/Paper';
+import { InputAdornment } from 'src/components/InputAdornment';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
@@ -204,26 +203,22 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
         placeholder="Enter a revision note"
         value={revision.value}
       />
-      <ActionsPanel className={classes.actions}>
-        <Button
-          buttonType="secondary"
-          className="cancel"
-          data-qa-cancel
-          disabled={disabled}
-          onClick={onCancel}
-        >
-          Reset
-        </Button>
-        <Button
-          buttonType="primary"
-          data-qa-save
-          disabled={disabled || disableSubmit}
-          loading={isSubmitting}
-          onClick={onSubmit}
-        >
-          {mode === 'edit' ? 'Save Changes' : 'Create StackScript'}
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'save',
+          disabled: disabled || disableSubmit,
+          label: mode === 'edit' ? 'Save Changes' : 'Create StackScript',
+          loading: isSubmitting,
+          onClick: onSubmit,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel',
+          disabled,
+          label: 'Reset',
+          onClick: onCancel,
+        }}
+        className={classes.actions}
+      />
     </Paper>
   );
 };

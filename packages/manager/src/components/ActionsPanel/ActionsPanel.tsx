@@ -1,51 +1,89 @@
-import { Theme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import cx from 'classnames';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
-import RenderGuard from 'src/components/RenderGuard';
+import { Button, ButtonProps } from 'src/components/Button/Button';
+import { RenderGuard } from 'src/components/RenderGuard';
 
 import { Box, BoxProps } from '../Box';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    '& > :first-of-type': {
-      marginLeft: 0,
-      marginRight: theme.spacing(),
-    },
-    '& > :only-child': {
-      marginRight: 0,
-    },
-    '& > button': {
-      marginBottom: theme.spacing(1),
-    },
-    paddingBottom: theme.spacing(1),
-    paddingTop: theme.spacing(2),
-  },
-}));
+interface ActionButtonsProps extends ButtonProps {
+  'data-node-idx'?: number;
+  'data-testid'?: string;
+  label?: string;
+}
 
-const ActionPanel = (props: BoxProps) => {
-  const { classes, cx } = useStyles();
-  const { children, className, ...rest } = props;
+interface ActionPanelProps extends BoxProps {
+  /**
+   * primary type actionable button custom aria descripton.
+   */
+  primaryButtonProps?: ActionButtonsProps;
+
+  /**
+   * secondary type actionable button custom aria descripton.
+   */
+  secondaryButtonProps?: ActionButtonsProps;
+}
+
+const ActionsPanelComponent = (props: ActionPanelProps) => {
+  const {
+    className,
+    primaryButtonProps,
+    secondaryButtonProps,
+
+    ...rest
+  } = props;
+
+  const primaryButtonDataQAProp = `data-qa-${primaryButtonProps?.['data-testid']}`;
+  const secondaryButtonDataQAProp = `data-qa-${secondaryButtonProps?.['data-testid']}`;
 
   return (
-    <Box
-      className={cx(classes.root, className, 'actionPanel')}
+    <StyledBox
+      className={cx(className, 'actionPanel')}
       data-qa-buttons
       {...rest}
     >
-      {Array.isArray(children)
-        ? [...children].sort((child) =>
-            child?.props?.buttonType === 'primary' ? 1 : -1
-          ) // enforce that the primary button will always be to the right
-        : children}
-    </Box>
+      {secondaryButtonProps ? (
+        <Button
+          {...{ [secondaryButtonDataQAProp]: true }}
+          buttonType="secondary"
+          data-qa-cancel
+          {...secondaryButtonProps}
+        >
+          {secondaryButtonProps?.label}
+        </Button>
+      ) : null}
+      {primaryButtonProps ? (
+        <Button
+          {...{ [primaryButtonDataQAProp]: true }}
+          buttonType="primary"
+          {...primaryButtonProps}
+        >
+          {primaryButtonProps?.label}
+        </Button>
+      ) : null}
+    </StyledBox>
   );
 };
 
-export const StyledActionPanel = styled(ActionPanel)(({ theme }) => ({
+const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
+  '& > :first-of-type': {
+    marginLeft: 0,
+    marginRight: spacing(),
+  },
+  '& > :only-child': {
+    marginRight: 0,
+  },
+  '& > button': {
+    marginBottom: spacing(1),
+  },
   display: 'flex',
   justifyContent: 'flex-end',
-  marginTop: theme.spacing(2),
+  marginTop: spacing(2),
+  paddingBottom: spacing(1),
+  paddingTop: spacing(2),
 }));
 
-export default RenderGuard(ActionPanel);
+const ActionsPanel = RenderGuard(ActionsPanelComponent);
+
+export { ActionsPanel };

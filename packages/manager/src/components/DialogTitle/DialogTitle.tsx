@@ -1,5 +1,5 @@
 import Close from '@mui/icons-material/Close';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import _DialogTitle from '@mui/material/DialogTitle';
 import { SxProps } from '@mui/system';
 import * as React from 'react';

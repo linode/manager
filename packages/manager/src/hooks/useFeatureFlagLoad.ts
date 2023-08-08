@@ -14,5 +14,3 @@ export const useFeatureFlagsLoad = () => {
 
   return { featureFlagsLoading, setFeatureFlagsLoaded };
 };
-
-export default useFeatureFlagsLoad;

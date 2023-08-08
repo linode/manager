@@ -2,7 +2,7 @@ import { WithTheme, withTheme } from '@mui/styles';
 import { clamp, pathOr } from 'ramda';
 import * as React from 'react';
 
-import GaugePercent from 'src/components/GaugePercent';
+import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import { Typography } from 'src/components/Typography';
 import withClientStats, {
   Props as LVDataProps,

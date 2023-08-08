@@ -1,8 +1,7 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
@@ -24,7 +23,13 @@ interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   typeToConfirm?: boolean;
 }
 
-const _DeletionDialog = (props: DeletionDialogProps) => {
+/**
+ * A Deletion Dialog is used for deleting entities such as Linodes, NodeBalancers, Volumes, or other entities.
+ *
+ * Require `typeToConfirm` when an action would have a significant negative impact if done in error, consider requiring the user to enter a unique identifier such as entity label before activating the action button.
+ * If a user has opted out of type-to-confirm this will be ignored
+ */
+export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   const theme = useTheme();
   const {
     entity,
@@ -42,21 +47,21 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
   const typeToConfirmRequired =
     typeToConfirm && preferences?.type_to_confirm !== false;
   const renderActions = () => (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        data-qa-confirm
-        data-testid="delete-btn"
-        disabled={typeToConfirmRequired && confirmationText !== label}
-        loading={loading}
-        onClick={onDelete}
-      >
-        Delete {titlecase(entity)}
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        'data-testid': 'confirm',
+        disabled: typeToConfirmRequired && confirmationText !== label,
+        label: ` Delete ${titlecase(entity)}`,
+        loading,
+        onClick: onDelete,
+      }}
+      secondaryButtonProps={{
+        'data-testid': 'cancel',
+        label: 'Cancel',
+        onClick: onClose,
+      }}
+      style={{ padding: 0 }}
+    />
   );
 
   React.useEffect(() => {
@@ -104,8 +109,4 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
       />
     </ConfirmationDialog>
   );
-};
-
-const DeletionDialog = React.memo(_DeletionDialog);
-
-export { DeletionDialog };
+});

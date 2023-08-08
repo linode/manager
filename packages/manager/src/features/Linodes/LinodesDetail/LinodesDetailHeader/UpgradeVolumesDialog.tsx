@@ -4,11 +4,11 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import Paper from 'src/components/core/Paper';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
 import { queryKey } from 'src/queries/accountNotifications';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';

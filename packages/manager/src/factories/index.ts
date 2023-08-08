@@ -4,6 +4,7 @@ export * from './accountMaintenance';
 export * from './accountOAuth';
 export * from './accountPayment';
 export * from './aglb';
+export * from './betas';
 export * from './billing';
 export * from './config';
 export * from './databases';
@@ -35,10 +36,12 @@ export * from './promotionalOffer';
 export * from './regions';
 export * from './stackscripts';
 export * from './statusPage';
+export * from './subnets';
 export * from './support';
 export * from './tags';
 export * from './volume';
 export * from './vlans';
+export * from './vpcs';
 
 // Convert factory output to our itemsById pattern
 export const normalizeEntities = (entities: any[]) => {

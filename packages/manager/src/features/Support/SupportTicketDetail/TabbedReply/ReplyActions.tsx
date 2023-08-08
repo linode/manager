@@ -1,8 +1,7 @@
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import { CloseTicketLink } from '../CloseTicketLink';
 
@@ -33,15 +32,14 @@ export const ReplyActions = (props: Props) => {
   return (
     <>
       {closable && <CloseTicketLink ticketId={ticketId} />}
-      <ActionsPanel className={classes.actions}>
-        <Button
-          buttonType="primary"
-          loading={isSubmitting}
-          onClick={handleSubmitForm}
-        >
-          Add Update
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          label: 'Add Update',
+          loading: isSubmitting,
+          onClick: handleSubmitForm,
+        }}
+        className={classes.actions}
+      />
     </>
   );
 };

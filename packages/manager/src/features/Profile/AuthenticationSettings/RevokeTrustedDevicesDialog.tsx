@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useRevokeTrustedDeviceMutation } from 'src/queries/profile';
@@ -28,14 +27,14 @@ export const RevokeTrustedDeviceDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" loading={isLoading} onClick={onRevoke}>
-            Revoke Device
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Revoke Device',
+            loading: isLoading,
+            onClick: onRevoke,
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       }
       error={error?.[0].reason}
       onClose={onClose}

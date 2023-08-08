@@ -1,9 +1,9 @@
 import { WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
 
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import {
   formatNetworkTooltip,
   getMaxUnitAndFormatNetwork,

@@ -2,9 +2,11 @@ import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-const FirewallLanding = React.lazy(() => import('./FirewallLanding'));
+const FirewallLanding = React.lazy(
+  () => import('./FirewallLanding/FirewallLanding')
+);
 
 const FirewallDetail = React.lazy(() => import('./FirewallDetail'));
 

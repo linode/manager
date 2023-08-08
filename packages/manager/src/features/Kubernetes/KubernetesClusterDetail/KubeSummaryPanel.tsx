@@ -6,14 +6,14 @@ import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Paper } from 'src/components/Paper';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
-import Paper from 'src/components/core/Paper';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
@@ -225,21 +225,17 @@ export const KubeSummaryPanel = (props: Props) => {
       />
       <ConfirmationDialog
         actions={
-          <ActionsPanel>
-            <Button
-              buttonType="secondary"
-              onClick={() => setResetKubeConfigDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              loading={isResettingKubeConfig}
-              onClick={() => handleResetKubeConfig()}
-            >
-              Reset Kubeconfig
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Reset Kubeconfig',
+              loading: isResettingKubeConfig,
+              onClick: () => handleResetKubeConfig(),
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              onClick: () => setResetKubeConfigDialogOpen(false),
+            }}
+          />
         }
         error={
           resetKubeConfigError && resetKubeConfigError.length > 0

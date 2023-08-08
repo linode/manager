@@ -8,11 +8,11 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Divider } from 'src/components/Divider';
-import Drawer from 'src/components/Drawer';
-import ExternalLink from 'src/components/ExternalLink';
+import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -73,8 +73,10 @@ export const ObjectDetailsDrawer = React.memo(
 
         {url ? (
           <StyledLinkContainer>
-            <ExternalLink hideIcon link={url} text={truncateMiddle(url, 50)} />
-            <StyledCopyTooltip text={url} />
+            <Link external to={url}>
+              {truncateMiddle(url, 50)}
+            </Link>
+            <StyledCopyTooltip sx={{ marginLeft: 4 }} text={url} />
           </StyledLinkContainer>
         ) : null}
 

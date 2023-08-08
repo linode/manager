@@ -1,5 +1,4 @@
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
@@ -19,13 +18,10 @@ import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
-import { checkAccountSize } from 'src/store/accountManagement/accountManagement.requests';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
-import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { MapState } from 'src/store/types';
-import { GetAllData } from 'src/utilities/getAll';
 
 interface Props {
   children: React.ReactNode;
@@ -135,9 +131,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
         queryFn: getAccountSettings,
         queryKey: 'account-settings',
       }),
-
-      // Is this a large account? (should we use API or Redux-based search/pagination)
-      this.props.checkAccountSize(),
     ];
 
     // Start events polling
@@ -155,34 +148,24 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
 interface StateProps {
   isAuthenticated: boolean;
-  linodes: Linode[];
-  linodesLastUpdated: number;
-  linodesLoading: boolean;
   pendingUpload: PendingUploadState;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   isAuthenticated: Boolean(state.authentication.token),
-  linodes: Object.values(state.__resources.linodes.itemsById),
-  linodesLastUpdated: state.__resources.linodes.lastUpdated,
-  linodesLoading: state.__resources.linodes.loading,
   pendingUpload: state.pendingUpload,
 });
 
 interface DispatchProps {
-  checkAccountSize: () => Promise<null>;
   initSession: () => void;
   markAppAsDoneLoading: () => void;
-  requestLinodes: () => Promise<GetAllData<Linode>>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => ({
-  checkAccountSize: () => dispatch(checkAccountSize()),
   initSession: () => dispatch(handleInitTokens()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
-  requestLinodes: () => dispatch(requestLinodes({})),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

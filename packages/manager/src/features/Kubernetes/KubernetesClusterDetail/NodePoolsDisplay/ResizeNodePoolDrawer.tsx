@@ -3,10 +3,9 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -141,17 +140,15 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         {updatedCount < 3 && <Notice important text={nodeWarning} warning />}
 
-        <ActionsPanel>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            disabled={updatedCount === nodePool.count}
-            loading={isLoading}
-            onClick={handleSubmit}
-          >
-            Save Changes
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: updatedCount === nodePool.count,
+            label: 'Save Changes',
+            loading: isLoading,
+            onClick: handleSubmit,
+          }}
+        />
       </form>
     </Drawer>
   );

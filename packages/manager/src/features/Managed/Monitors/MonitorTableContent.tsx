@@ -11,7 +11,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 
 import MonitorRow from './MonitorRow';
 
-interface Props {
+interface MonitorTableContentProps {
   error?: APIError[] | null;
   issues: ManagedIssue[];
   loading: boolean;
@@ -21,9 +21,7 @@ interface Props {
   openMonitorDrawer: (id: number, mode: string) => void;
 }
 
-export type CombinedProps = Props;
-
-export const MonitorTableContent: React.FC<CombinedProps> = (props) => {
+export const MonitorTableContent = (props: MonitorTableContentProps) => {
   const {
     error,
     issues,

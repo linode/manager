@@ -2,14 +2,13 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
+import { MenuItem } from 'src/components/MenuItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import MenuItem from 'src/components/core/MenuItem';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
@@ -191,20 +190,18 @@ export const NodeBalancerConfigNode = React.memo(
                 </TextField>
               </Grid>
             )}
-            <StyledActionsPanel>
-              {(forEdit || idx !== 0) && (
-                <Button
-                  buttonType="secondary"
-                  data-node-idx={idx}
-                  data-qa-remove-node
-                  disabled={disabled}
-                  onClick={removeNode}
-                  sx={{ minWidth: 'auto', padding: 0, top: 8 }}
-                >
-                  Remove
-                </Button>
-              )}
-            </StyledActionsPanel>
+            {(forEdit || idx !== 0) && (
+              <StyledActionsPanel
+                secondaryButtonProps={{
+                  'data-node-idx': idx,
+                  'data-testid': 'remove-node',
+                  disabled,
+                  label: 'Remove',
+                  onClick: removeNode,
+                  sx: { minWidth: 'auto', padding: 0, top: 8 },
+                }}
+              />
+            )}
           </Grid>
         </Grid>
       </React.Fragment>

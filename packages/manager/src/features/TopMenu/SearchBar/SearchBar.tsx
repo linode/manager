@@ -14,7 +14,7 @@ import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
-import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
@@ -89,10 +89,12 @@ export const SearchBar = (props: CombinedProps) => {
 
   const history = useHistory();
 
-  const { _isLargeAccount } = useAccountManagement();
+  const isLargeAccount = useIsLargeAccount(searchActive);
 
-  // Only request things if the search bar is open/active.
-  const shouldMakeRequests = searchActive && !_isLargeAccount;
+  // Only request things if the search bar is open/active and we
+  // know if the account is large or not
+  const shouldMakeRequests =
+    searchActive && isLargeAccount !== undefined && !isLargeAccount;
 
   const { data: objectStorageClusters } = useObjectStorageClusters(
     shouldMakeRequests
@@ -169,7 +171,7 @@ export const SearchBar = (props: CombinedProps) => {
   React.useEffect(() => {
     // We can't store all data for large accounts for client side search,
     // so use the API's filtering instead.
-    if (_isLargeAccount) {
+    if (isLargeAccount) {
       _searchAPI(searchText);
     } else {
       search(
@@ -189,7 +191,7 @@ export const SearchBar = (props: CombinedProps) => {
     search,
     searchText,
     _searchAPI,
-    _isLargeAccount,
+    isLargeAccount,
     objectStorageBuckets,
     domains,
     volumes,
@@ -255,7 +257,7 @@ export const SearchBar = (props: CombinedProps) => {
   };
 
   const guidanceText = () => {
-    if (_isLargeAccount) {
+    if (isLargeAccount) {
       // This fancy stuff won't work if we're using API
       // based search; don't confuse users by displaying this.
       return undefined;
@@ -276,7 +278,7 @@ export const SearchBar = (props: CombinedProps) => {
   };
 
   const finalOptions = createFinalOptions(
-    _isLargeAccount ? apiResults : combinedResults,
+    isLargeAccount ? apiResults : combinedResults,
     searchText,
     apiSearchLoading || linodesLoading || imagesLoading,
     // Ignore "Unauthorized" errors, since these will always happen on LKE

@@ -7,16 +7,15 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
+import { FormHelperText } from 'src/components/FormHelperText';
+import { InputAdornment } from 'src/components/InputAdornment';
+import { MenuItem } from 'src/components/MenuItem';
 import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import FormHelperText from 'src/components/core/FormHelperText';
-import InputAdornment from 'src/components/core/InputAdornment';
-import MenuItem from 'src/components/core/MenuItem';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeDisksQuery,
@@ -201,19 +200,15 @@ export const CreateDiskDrawer = (props: Props) => {
         <FormHelperText style={{ marginTop: 8 }}>
           Maximum size: {maximumSize} MB
         </FormHelperText>
-        <ActionsPanel>
-          <Button buttonType="secondary" className="cancel" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-testid="submit-disk-form"
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Create
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit-disk-form',
+            label: 'Create',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       </form>
     </Drawer>
   );
