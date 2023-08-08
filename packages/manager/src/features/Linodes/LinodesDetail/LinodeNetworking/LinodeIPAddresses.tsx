@@ -1,7 +1,7 @@
 import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme, Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -35,17 +35,17 @@ import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
 import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
 import IPSharing from './IPSharing';
 import IPTransfer from './IPTransfer';
+import {
+  StyledActionTableCell,
+  StyledRootGrid,
+  StyledTypography,
+  StyledWrapperGrid,
+} from './LinodeIPAddresses.styles';
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import { ViewIPDrawer } from './ViewIPDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
 import { ViewRangeDrawer } from './ViewRangeDrawer';
 import { IPTypes } from './types';
-import {
-  StyledActionTableCell,
-  StyledWrapperGrid,
-  StyledTypography,
-  StyledRootGrid,
-} from './LinodeNetworking.styles';
 
 const useStyles = makeStyles<void, 'copy'>()(
   (theme: Theme, _params, classes) => ({

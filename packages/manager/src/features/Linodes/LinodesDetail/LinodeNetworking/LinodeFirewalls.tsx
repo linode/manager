@@ -1,5 +1,4 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -10,12 +9,17 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { Typography } from 'src/components/Typography';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
+import { ActionHandlers as FirewallHandlers } from 'src/features/Firewalls/FirewallLanding/FirewallActionMenu';
 import { FirewallRow } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
-import { useLinodeFirewalls } from 'src/queries/linodes/firewalls';
-import { ActionHandlers as FirewallHandlers } from 'src/features/Firewalls/FirewallLanding/FirewallActionMenu';
+import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
+
+import {
+  StyledDiv,
+  StyledGrid,
+  StyledHeadline,
+} from './LinodeFirewalls.styles';
 
 interface LinodeFirewallsProps {
   linodeID: number;
@@ -24,9 +28,12 @@ interface LinodeFirewallsProps {
 export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const { linodeID } = props;
 
-  const { data: attachedFirewallData, error, isLoading } = useLinodeFirewalls(
-    linodeID
-  );
+  const {
+    data: attachedFirewallData,
+    error,
+    isLoading,
+  } = useLinodeFirewallsQuery(linodeID);
+
   const attachedFirewall = attachedFirewallData?.data[0];
 
   const { data: devices } = useAllFirewallDevicesQuery(
@@ -38,20 +45,12 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
     setIsRemoveDeviceDialogOpen,
   ] = React.useState<boolean>(false);
 
-  const handleOpenRemoveDeviceDialog = (firewallDeviceID: number) => {
-    // setSelectedFirewallDeviceID(firewallDeviceID);
-    setIsRemoveDeviceDialogOpen(true);
-  };
-
   const firewallDevice = devices?.find(
     (device) => device.entity.type === 'linode' && device.entity.id === linodeID
   );
 
   const handlers = ({
-    triggerRemoveDevice: handleOpenRemoveDeviceDialog,
-    // triggerDeleteFirewall: () => null,
-    // triggerDisableFirewall: () => null,
-    // triggerEnableFirewall: () => null,
+    triggerRemoveDevice: () => setIsRemoveDeviceDialogOpen(true),
   } as unknown) as FirewallHandlers;
 
   const renderTableContent = () => {
@@ -106,6 +105,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         device={firewallDevice}
         firewallId={attachedFirewall?.id ?? -1}
         firewallLabel={attachedFirewall?.label ?? ''}
+        linodeId={linodeID}
         onClose={() => setIsRemoveDeviceDialogOpen(false)}
         onLinodeNetworkTab
         open={isRemoveDeviceDialogOpen}
@@ -113,20 +113,3 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
     </>
   );
 };
-
-const StyledDiv = styled('div')(() => ({
-  marginTop: '20px',
-}));
-
-const StyledGrid = styled(Grid)(({ theme }) => ({
-  backgroundColor: theme.color.white,
-  margin: 0,
-  width: '100%',
-}));
-
-const StyledHeadline = styled(Typography)(() => ({
-  lineHeight: '1.5rem',
-  marginBottom: 8,
-  marginLeft: 15,
-  marginTop: 8,
-}));

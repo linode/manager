@@ -1,15 +1,18 @@
 import { FirewallDevice } from '@linode/api-v4';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 
 export interface Props {
   device: FirewallDevice | undefined;
   firewallId: number;
   firewallLabel: string;
+  linodeId?: number;
   onClose: () => void;
   onLinodeNetworkTab?: boolean;
   open: boolean;
@@ -20,6 +23,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     device,
     firewallId,
     firewallLabel,
+    linodeId,
     onClose,
     onLinodeNetworkTab,
     open,
@@ -30,20 +34,34 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     device?.id ?? -1
   );
 
+  const queryClient = useQueryClient();
+
   const onDelete = async () => {
     await mutateAsync();
+
+    // If on the Linode Network tab, ensure the Firewalls table on the Linode Network tab gets updated
+    if (onLinodeNetworkTab) {
+      queryClient.invalidateQueries([
+        linodesQueryKey,
+        'linode',
+        linodeId,
+        'firewalls',
+      ]);
+    }
+
     onClose();
   };
 
   const dialogTitle = onLinodeNetworkTab
     ? `Unassign Firewall ${firewallLabel}?`
     : `Remove ${device?.entity.label} from ${firewallLabel}?`;
-  const confirmationText = onLinodeNetworkTab ? (
-    <Typography>Are you sure you want to unassign this Firewall?</Typography>
-  ) : (
+
+  const confirmationText = (
     <Typography>
-      Are you sure you want to remove {device?.entity.label} from{' '}
-      {firewallLabel}?
+      Are you sure you want to{' '}
+      {onLinodeNetworkTab
+        ? 'unassign this Firewall?'
+        : `remove ${device?.entity.label} from ${firewallLabel}?`}
     </Typography>
   );
 
