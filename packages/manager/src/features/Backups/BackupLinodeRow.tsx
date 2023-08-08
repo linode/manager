@@ -30,10 +30,12 @@ export const BackupLinodeRow = (props: Props) => {
           </Typography>
         )}
       </TableCell>
-      <TableCell parentColumn="Plan">{type?.label}</TableCell>
-      <TableCell parentColumn="Price">{`$${type?.addons.backups.price.monthly?.toFixed(
-        2
-      )}/mo`}</TableCell>
+      <TableCell parentColumn="Plan">
+        {type?.label ?? linode.type ?? 'Unknown'}
+      </TableCell>
+      <TableCell parentColumn="Price">
+        {`$${type?.addons.backups.price.monthly?.toFixed(2) ?? 'Unknown'}/mo`}
+      </TableCell>
     </TableRow>
   );
 };
