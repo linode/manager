@@ -58,7 +58,7 @@ describeRegions('Capture Machine Images', (region: Region) => {
       cy.visitWithLogin('/images/create/disk');
 
       // Select Linode that we just created via the API.
-      cy.findByLabelText('Linodes').should('be.visible').click();
+      cy.findByLabelText('Linode').should('be.visible').click();
       ui.autocompletePopper.findByTitle(linode.label).click();
 
       // Select the Linode's disk.
