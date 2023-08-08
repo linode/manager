@@ -130,11 +130,6 @@ describe('wasCustomerEnrolled', () => {
     const { activeBeta } = betas;
     expect(wasCustomerEnrolled(activeBeta)).toBe(false);
   });
-
-  it('should return false if the beta does not have an enrolled field defined', () => {
-    const { activeBeta } = betas;
-    expect(wasCustomerEnrolled(activeBeta)).toBe(false);
-  });
 });
 
 describe('hasEnded', () => {
