@@ -2,9 +2,9 @@ import { enableBackups } from '@linode/api-v4';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { queryKey } from 'src/queries/linodes/linodes';
+import { pluralize } from 'src/utilities/pluralize';
 
 import type { APIError, Linode, LinodeType } from '@linode/api-v4';
-import { pluralize } from 'src/utilities/pluralize';
 
 export const getTotalBackupsPrice = (
   linodes: Linode[],
@@ -18,13 +18,11 @@ export const getTotalBackupsPrice = (
 
 interface EnableBackupsFufilledResult extends PromiseFulfilledResult<{}> {
   linode: Linode;
-  status: 'fulfilled';
 }
 
 export interface EnableBackupsRejectedResult extends PromiseRejectedResult {
   linode: Linode;
   reason: APIError[];
-  status: 'rejected';
 }
 
 export const useEnableBackupsOnLinodesMutation = () => {
@@ -78,8 +76,7 @@ export const getFailureNotificationText = ({
       'Linode',
       'Linodes',
       successCount
-    )}
-, but ${pluralize('Linode', 'Linodes', failedCount)} failed.`;
+    )}, but ${pluralize('Linode', 'Linodes', failedCount)} failed.`;
   }
   // This function will only be called if at least one backup failed.
   return `There was an error enabling backups for your Linodes.`;
