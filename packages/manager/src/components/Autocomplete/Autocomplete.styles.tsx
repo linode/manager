@@ -1,7 +1,31 @@
 import DoneIcon from '@mui/icons-material/Done';
-import { styled } from '@mui/material';
 import Popper, { PopperProps } from '@mui/material/Popper';
+import { styled } from '@mui/material/styles';
 import React from 'react';
+
+import { isPropValid } from 'src/utilities/isPropValid';
+
+export const StyledListItem = styled('li', {
+  label: 'StyledListItem',
+  shouldForwardProp: (prop) => isPropValid(['selectAllOption'], prop),
+})(({ theme }) => ({
+  '&.MuiAutocomplete-option': {
+    overflow: 'unset',
+  },
+
+  '&:after': {
+    background: theme.color.border3,
+    bottom: '-5px',
+    content: '""',
+    height: '1px',
+    left: '-4px',
+    position: 'absolute',
+    width: '102%',
+  },
+
+  marginBottom: '9px',
+  position: 'relative',
+}));
 
 export const SelectedIcon = styled(DoneIcon, {
   shouldForwardProp: (prop) => prop != 'visible',

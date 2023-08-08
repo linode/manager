@@ -316,6 +316,10 @@ export const lightTheme: ThemeOptions = {
           },
         },
         tag: {
+          '&:not(.MuiChip-root)': {
+            borderRadius: '4px',
+            padding: '4px',
+          },
           '.MuiChip-deleteIcon': {
             ':hover': {
               backgroundColor: primaryColors.main,
@@ -326,6 +330,7 @@ export const lightTheme: ThemeOptions = {
             fontSize: '16px',
             margin: '0 4px',
           },
+
           backgroundColor: bg.lightBlue1,
           padding: '12px 2px',
         },
