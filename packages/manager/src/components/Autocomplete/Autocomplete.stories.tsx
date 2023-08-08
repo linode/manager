@@ -51,7 +51,7 @@ const meta: Meta<
   component: Autocomplete,
   decorators: [
     (Story: StoryFn) => (
-      <div style={{ margin: '2em' }}>
+      <div style={{ marginLeft: '2em', minHeight: 270 }}>
         <Story />
       </div>
     ),

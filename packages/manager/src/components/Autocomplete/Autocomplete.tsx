@@ -44,6 +44,8 @@ export interface AutocompleteProps {
   label: string;
   /** Adds styling to indicate a loading state. */
   loading?: boolean;
+  /** Text displayed when loading. */
+  loadingText?: string;
   /** Optionally disable top margin for input label. */
   noMarginTop?: boolean;
   /** Message displayed when no options match the user's search. */
@@ -119,7 +121,8 @@ export const Autocomplete = (
     helperText,
     id,
     label,
-    loading,
+    loading = false,
+    loadingText,
     multiple,
     noMarginTop,
     noOptionsMessage,
@@ -131,6 +134,7 @@ export const Autocomplete = (
     renderOption,
     renderOptionLabel,
     sx,
+    ...rest
   } = props;
 
   const [inputValue, setInputValue] = React.useState('');
@@ -168,6 +172,7 @@ export const Autocomplete = (
 
   return (
     <MuiAutocomplete
+      {...rest}
       getOptionLabel={(option: OptionsType) =>
         renderOptionLabel ? renderOptionLabel(option) : option.label
       }
@@ -177,7 +182,6 @@ export const Autocomplete = (
             {getDefaultNoOptionsMessage({
               errorText,
               filteredOptions,
-              loading,
             })}
           </i>
         )
@@ -225,6 +229,7 @@ export const Autocomplete = (
       id={id}
       inputValue={inputValue}
       loading={loading}
+      loadingText={loadingText || 'Loading...'}
       multiple={multiple}
       onBlur={onBlur}
       onChange={(_, value: OptionsType) => handleChange(value)}
@@ -239,7 +244,6 @@ export const Autocomplete = (
 interface DefaultNoOptionsMessageParams {
   errorText: APIError[] | null | string | undefined;
   filteredOptions: OptionsType[] | undefined;
-  loading: boolean | undefined;
 }
 
 type DefaultNoOptionsMessageResult = JSX.Element | string;
@@ -247,12 +251,9 @@ type DefaultNoOptionsMessageResult = JSX.Element | string;
 const getDefaultNoOptionsMessage = ({
   errorText,
   filteredOptions,
-  loading,
 }: DefaultNoOptionsMessageParams): DefaultNoOptionsMessageResult => {
   if (errorText) {
     return 'An error occurred while fetching your options';
-  } else if (loading) {
-    return 'Loading...';
   } else if (!filteredOptions?.length) {
     return 'You have no options to choose from';
   } else {
