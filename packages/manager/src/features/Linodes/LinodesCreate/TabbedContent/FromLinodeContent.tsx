@@ -1,15 +1,13 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { StyledGrid } from './CommonTabbedContent.styles';
 
 import SelectLinodePanel from '../SelectLinodePanel';
 import {
@@ -18,14 +16,6 @@ import {
   WithLinodesTypesRegionsAndImages,
 } from '../types';
 import { extendLinodes } from '../utilities';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  main: {
-    [theme.breakpoints.up('md')]: {
-      maxWidth: '100%',
-    },
-  },
-}));
 
 const errorResources = {
   label: 'A label',
@@ -39,8 +29,6 @@ export type CombinedProps = CloneFormStateHandlers &
   WithLinodesTypesRegionsAndImages;
 
 export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
   const {
     errors,
     imagesData,
@@ -88,7 +76,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     // eslint-disable-next-line
     <React.Fragment>
       {linodesData && linodesData.length === 0 ? (
-        <Grid className={`${classes.main} mlMain py0`}>
+        <StyledGrid>
           <Paper>
             <Placeholder
               data-qa-placeholder
@@ -101,9 +89,9 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
               create a Linode from either an Image or StackScript.
             </Placeholder>
           </Paper>
-        </Grid>
+        </StyledGrid>
       ) : (
-        <Grid className={`${classes.main} mlMain py0`}>
+        <StyledGrid>
           <SelectLinodePanel
             linodes={extendLinodes(
               linodesData,
@@ -123,7 +111,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
             selectedLinodeID={selectedLinodeID}
             updateFor={[selectedLinodeID, errors]}
           />
-        </Grid>
+        </StyledGrid>
       )}
     </React.Fragment>
   );

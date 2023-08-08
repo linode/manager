@@ -1,15 +1,15 @@
 import Close from '@mui/icons-material/Close';
+import Drawer from '@mui/material/Drawer';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import Drawer from 'src/components/core/Drawer';
 import { OCA } from 'src/features/OneClickApps/oneClickApps';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 import { oneClickApps } from './oneClickApps';
@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: 480,
     },
-    width: 300,
   },
   wrapAppName: {
     maxWidth: 'fit-content',
@@ -171,12 +170,13 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
             {selectedApp.website ? (
               <Box>
                 <Typography variant="h3">Website</Typography>
-                <ExternalLink
+                <Link
                   className={classes.link}
-                  hideIcon
-                  link={selectedApp.website}
-                  text={selectedApp.website}
-                />
+                  external
+                  to={selectedApp.website}
+                >
+                  {selectedApp.website}
+                </Link>
               </Box>
             ) : null}
             {selectedApp.related_guides ? (
@@ -187,13 +187,13 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                     oneClickAppsDocsOverride?.[selectedApp.name] ??
                     selectedApp.related_guides
                   ).map((link, idx) => (
-                    <ExternalLink
+                    <Link
                       className={classes.link}
-                      hideIcon
                       key={`${selectedApp.name}-guide-${idx}`}
-                      link={link.href}
-                      text={link.title}
-                    />
+                      to={link.href}
+                    >
+                      {link.title}
+                    </Link>
                   ))}
                 </Box>
               </Box>

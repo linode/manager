@@ -3,9 +3,8 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -72,24 +71,16 @@ export const EditIPRDNSDrawer = (props: Props) => {
         <Typography variant="body1">
           Leave this field blank to reset RDNS
         </Typography>
-        <ActionsPanel style={{ marginTop: 16 }}>
-          <Button
-            buttonType="secondary"
-            className="cancel"
-            data-qa-cancel
-            onClick={onClose}
-          >
-            Close
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            loading={isLoading}
-            type="submit"
-          >
-            Save
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            label: 'Save',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'cancel', onClick: onClose }}
+          style={{ marginTop: 16 }}
+        />
       </form>
     </Drawer>
   );

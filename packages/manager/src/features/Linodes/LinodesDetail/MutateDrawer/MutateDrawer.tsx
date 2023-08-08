@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
+import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import ListItem from 'src/components/core/ListItem';
 
 interface MutateInfo {
   disk: null | number;
@@ -168,28 +168,23 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           </strong>
           , but that may vary based on host and network load.
         </Typography>
-        <ActionsPanel style={{ marginTop: 32 }}>
-          <Button
-            buttonType="primary"
-            loading={loading}
-            onClick={this.props.initMutation}
-          >
-            Enter the Upgrade Queue
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Enter the Upgrade Queue',
+            loading,
+            onClick: this.props.initMutation,
+          }}
+          style={{ marginTop: 32 }}
+        />
+
         {/*
          * Show when the relevant docs exist
          */}
         <Typography style={{ display: 'none' }}>
           {`Need help? Refer to the `}
-          <a
-            aria-describedby="external-site"
-            href="google.com"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
+          <Link external to="google.com">
             supporting documentation
-          </a>
+          </Link>
           .
         </Typography>
       </Drawer>

@@ -4,7 +4,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -17,11 +17,11 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import CreateFirewallDrawer from './CreateFirewallDrawer';
+import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
-import FirewallDialog, { Mode } from './FirewallDialog';
+import { FirewallDialog, Mode } from './FirewallDialog';
 import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
-import FirewallRow from './FirewallRow';
+import { FirewallRow } from './FirewallRow';
 
 const preferenceKey = 'firewalls';
 

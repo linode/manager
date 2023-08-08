@@ -3,8 +3,8 @@ import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
-import Grid from 'src/components/Grid';
-import Paper from 'src/components/core/Paper';
+import { Grid } from 'src/components/Grid';
+import { Paper } from 'src/components/Paper';
 import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

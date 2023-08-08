@@ -1,7 +1,6 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme, useTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled, useTheme, Theme } from '@mui/material/styles';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -18,7 +17,6 @@ import {
   getTotalTraffic,
 } from 'src/utilities/statMetrics';
 import { readableBytes } from 'src/utilities/unitConversions';
-
 import { StatsPanel } from './StatsPanel';
 
 export interface TotalTrafficProps {
@@ -29,39 +27,6 @@ export interface TotalTrafficProps {
 
 const formatTotalTraffic = (value: number) =>
   readableBytes(value, { base10: true }).formatted;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  graphGrids: {
-    flexWrap: 'nowrap',
-    margin: 0,
-    padding: theme.spacing(),
-    [theme.breakpoints.down(1100)]: {
-      flexWrap: 'wrap',
-      marginTop: `-${theme.spacing(2)}`,
-    },
-  },
-  grid: {
-    '& h2': {
-      fontSize: '1rem',
-    },
-    '&.MuiGrid-item': {
-      padding: theme.spacing(2),
-    },
-    backgroundColor: theme.bg.offWhite,
-    border: `solid 1px ${theme.borderColors.divider}`,
-    [theme.breakpoints.down(1100)]: {
-      '&:first-of-type': {
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(2),
-      },
-    },
-    [theme.breakpoints.up(1100)]: {
-      '&:first-of-type': {
-        marginRight: theme.spacing(2),
-      },
-    },
-  },
-}));
 
 export interface ChartProps {
   height: number;
@@ -102,8 +67,7 @@ const _getMetrics = (data: NetworkStats) => {
 export const NetworkGraphs: React.FC<Props> = (props) => {
   const { rangeSelection, stats, ...rest } = props;
 
-  const theme = useTheme<Theme>();
-  const classes = useStyles();
+  const theme = useTheme();
 
   const v4Data: NetworkStats = {
     privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
@@ -170,8 +134,8 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
   };
 
   return (
-    <Grid className={`${classes.graphGrids} p0`} container spacing={4} xs={12}>
-      <Grid className={classes.grid} xs={12}>
+    <StyledGraphGrid container spacing={4} xs={12}>
+      <StyledGrid xs={12}>
         <StatsPanel
           renderBody={() => (
             <Graph
@@ -186,8 +150,8 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
           title={`Network — IPv4 (${v4Unit}/s)`}
           {...rest}
         />
-      </Grid>
-      <Grid className={classes.grid} xs={12}>
+      </StyledGrid>
+      <StyledGrid xs={12}>
         <StatsPanel
           renderBody={() => (
             <Graph
@@ -202,8 +166,8 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
           title={`Network — IPv6 (${v6Unit}/s)`}
           {...rest}
         />
-      </Grid>
-    </Grid>
+      </StyledGrid>
+    </StyledGraphGrid>
   );
 };
 
@@ -310,5 +274,39 @@ const Graph: React.FC<GraphProps> = (props) => {
     />
   );
 };
+
+const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+  '& h2': {
+    fontSize: '1rem',
+  },
+  '&.MuiGrid-item': {
+    padding: theme.spacing(2),
+  },
+  backgroundColor: theme.bg.offWhite,
+  border: `solid 1px ${theme.borderColors.divider}`,
+  [theme.breakpoints.down(1100)]: {
+    '&:first-of-type': {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(2),
+    },
+  },
+  [theme.breakpoints.up(1100)]: {
+    '&:first-of-type': {
+      marginRight: theme.spacing(2),
+    },
+  },
+}));
+
+const StyledGraphGrid = styled(Grid, { label: 'StyledGraphGrid' })(
+  ({ theme }) => ({
+    flexWrap: 'nowrap',
+    margin: 0,
+    padding: 0,
+    [theme.breakpoints.down(1100)]: {
+      flexWrap: 'wrap',
+      marginTop: `-${theme.spacing(2)}`,
+    },
+  })
+);
 
 export default NetworkGraphs;

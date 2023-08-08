@@ -1,5 +1,3 @@
-const redactAccessToken = (s: string) => {
+export const redactAccessToken = (s: string) => {
   return s.replace(/access_token=[^&]+/g, 'access_token=REDACTED');
 };
-
-export default redactAccessToken;

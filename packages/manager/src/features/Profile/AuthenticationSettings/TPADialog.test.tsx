@@ -11,7 +11,7 @@ import type { TPADialogProps } from './TPADialog';
 
 jest.mock('src/hooks/useFlags', () => ({
   __esModule: true,
-  default: jest.fn().mockReturnValue({
+  useFlags: jest.fn().mockReturnValue({
     tpaProviders: [
       {
         displayName: 'Google',
@@ -92,7 +92,11 @@ describe('TPADialog', () => {
     userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
-    expect(mockWindow).toHaveBeenCalledWith(expectedUrl, '_blank', 'noopener');
+    expect(mockWindow).toHaveBeenCalledWith(
+      expectedUrl,
+      '_blank',
+      'noopener noreferrer'
+    );
   });
   it('Should redirect to TPA(Google) login', async () => {
     const newProps: TPADialogProps = {
@@ -113,7 +117,11 @@ describe('TPADialog', () => {
     userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
-    expect(mockWindow).toHaveBeenCalledWith(expectedUrl, '_blank', 'noopener');
+    expect(mockWindow).toHaveBeenCalledWith(
+      expectedUrl,
+      '_blank',
+      'noopener noreferrer'
+    );
   });
   it('Should redirect to TPA(Github) login', async () => {
     const newProps: TPADialogProps = {
@@ -134,6 +142,10 @@ describe('TPADialog', () => {
     userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
-    expect(mockWindow).toHaveBeenCalledWith(expectedUrl, '_blank', 'noopener');
+    expect(mockWindow).toHaveBeenCalledWith(
+      expectedUrl,
+      '_blank',
+      'noopener noreferrer'
+    );
   });
 });

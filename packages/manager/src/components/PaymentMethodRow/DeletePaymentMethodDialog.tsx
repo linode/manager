@@ -6,9 +6,8 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
-import ActionsPanel from '../ActionsPanel';
-import { Button } from '../Button/Button';
-import Grid from '../Grid';
+import { ActionsPanel } from '../ActionsPanel/ActionsPanel';
+import { Grid } from '../Grid';
 import ThirdPartyPayment from './ThirdPartyPayment';
 
 export const useStyles = makeStyles((theme: Theme) => ({
@@ -36,14 +35,15 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button buttonType="primary" loading={loading} onClick={onDelete}>
-        Delete
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        label: 'Delete',
+        loading,
+        onClick: onDelete,
+      }}
+      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+      style={{ padding: 0 }}
+    />
   );
 
   return (

@@ -5,14 +5,14 @@ import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   SSHAccessActionMenu as ActionMenu,
-  Props,
+  SSHAccessActionMenuProps,
 } from './SSHAccessActionMenu';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
 
 const mockOpenDrawer = jest.fn();
 
-const props: Props = {
+const props: SSHAccessActionMenuProps = {
   isEnabled: true,
   linodeId: 1,
   linodeLabel: 'label',

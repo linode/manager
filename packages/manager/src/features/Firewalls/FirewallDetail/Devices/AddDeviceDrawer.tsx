@@ -2,13 +2,12 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import Drawer from 'src/components/Drawer';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
-import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
@@ -126,7 +125,7 @@ export const AddDeviceDrawer = (props: Props) => {
         }}
       >
         {errorMessage ? errorNotice(errorMessage) : null}
-        <LinodeSelectV2
+        <LinodeSelect
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
             linodeSelectGuidance ? linodeSelectGuidance : ''
           }`}
@@ -142,23 +141,21 @@ export const AddDeviceDrawer = (props: Props) => {
           noOptionsMessage="No Linodes available to add"
           value={selectedLinodeIds}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-cancel onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            disabled={selectedLinodeIds.length === 0}
-            loading={isLoading}
-            onClick={handleSubmit}
-          >
-            Add
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: selectedLinodeIds.length === 0,
+            label: 'Add',
+            loading: isLoading,
+            onClick: handleSubmit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+        />
       </form>
     </Drawer>
   );
 };
-
-export default AddDeviceDrawer;

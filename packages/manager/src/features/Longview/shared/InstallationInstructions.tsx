@@ -3,7 +3,8 @@ import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -88,26 +89,16 @@ const InstallationInstructions: React.FC<CombinedProps> = (props) => {
         <Grid container>
           <Grid className={classes.instruction} item>
             <Typography>
-              <a
-                aria-describedby="external-site"
-                href="https://www.linode.com/docs/platform/longview/troubleshooting-linode-longview/"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+              <Link to="https://www.linode.com/docs/platform/longview/troubleshooting-linode-longview/">
                 Troubleshooting guide
-              </a>
+              </Link>
             </Typography>
           </Grid>
           <Grid className={classes.instruction} item>
             <Typography>
-              <a
-                aria-describedby="external-site"
-                href="https://www.linode.com/docs/platform/longview/what-is-longview/#install-the-longview-agent"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+              <Link to="https://www.linode.com/docs/platform/longview/what-is-longview/#install-the-longview-agent">
                 Manual installation instructions
-              </a>
+              </Link>
             </Typography>
           </Grid>
           <Grid className={classes.instruction} item>

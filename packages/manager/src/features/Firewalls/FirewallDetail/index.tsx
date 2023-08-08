@@ -10,17 +10,19 @@ import {
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
-import NotFound from 'src/components/NotFound';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { NotFound } from 'src/components/NotFound';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
+const FirewallLinodesLanding = React.lazy(
+  () => import('./Devices/FirewallLinodesLanding')
+);
 const FirewallRulesLanding = React.lazy(
   () => import('./Rules/FirewallRulesLanding')
 );

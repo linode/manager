@@ -3,8 +3,8 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
-import Paper from 'src/components/core/Paper';
+import { Grid } from 'src/components/Grid';
+import { Paper } from 'src/components/Paper';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import {
   LongviewPortsResponse,

@@ -3,7 +3,7 @@ import { RouteComponentProps, useHistory, withRouter } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 type CombinedProps = RouteComponentProps<{}>;
 

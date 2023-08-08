@@ -1,8 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
 import AddNewLink from 'src/components/AddNewLink';
 import OrderBy from 'src/components/OrderBy';
@@ -15,7 +14,7 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useGrants } from 'src/queries/profile';
 
 import { BootConfigDialog } from './BootConfigDialog';
@@ -23,28 +22,8 @@ import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  actionsColumn: {
-    width: '10%',
-  },
-  deviceColumn: {
-    width: '25%',
-  },
-  interfacesColumn: {
-    width: '30%',
-  },
-  labelColumn: {
-    ...theme.applyTableHeaderStyles,
-    width: '35%',
-  },
-  tableCell: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-    fontWeight: 'bold',
-  },
-}));
-
 const LinodeConfigs = () => {
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   const { linodeId } = useParams<{ linodeId: string }>();
 
@@ -135,24 +114,35 @@ const LinodeConfigs = () => {
                       <TableRow>
                         <TableSortCell
                           active={orderBy === 'label'}
-                          className={classes.labelColumn}
                           direction={order}
                           handleClick={handleOrderChange}
                           label={'label'}
+                          sx={{
+                            ...theme.applyTableHeaderStyles,
+                            width: '35%',
+                          }}
                         >
                           <strong>Config</strong>
                         </TableSortCell>
                         <TableCell
-                          className={`${classes.tableCell} ${classes.deviceColumn}`}
+                          sx={{
+                            width: '25%',
+                            borderRight: `1px solid ${theme.palette.divider}`,
+                            fontWeight: 'bold',
+                          }}
                         >
                           Disks
                         </TableCell>
                         <TableCell
-                          className={`${classes.tableCell} ${classes.interfacesColumn}`}
+                          sx={{
+                            width: '30%',
+                            borderRight: `1px solid ${theme.palette.divider}`,
+                            fontWeight: 'bold',
+                          }}
                         >
                           Network Interfaces
                         </TableCell>
-                        <TableCell className={classes.actionsColumn} />
+                        <TableCell sx={{ width: '10%' }} />
                       </TableRow>
                     </TableHead>
                     <TableBody>

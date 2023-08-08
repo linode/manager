@@ -1,13 +1,25 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-const DomainCreate = React.lazy(() => import('./CreateDomain'));
-const DomainsLanding = React.lazy(() => import('./DomainsLanding'));
-const DomainDetail = React.lazy(() => import('./DomainDetail'));
+const DomainCreate = React.lazy(() =>
+  import('./CreateDomain/CreateDomain').then((module) => ({
+    default: module.CreateDomain,
+  }))
+);
+const DomainsLanding = React.lazy(() =>
+  import('./DomainsLanding').then((module) => ({
+    default: module.DomainsLanding,
+  }))
+);
+const DomainDetail = React.lazy(() =>
+  import('./DomainDetail').then((module) => ({
+    default: module.DomainDetailRouting,
+  }))
+);
 
-const DomainsRoutes = () => {
+export const DomainsRoutes = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
@@ -30,5 +42,3 @@ const DomainsRoutes = () => {
     </React.Suspense>
   );
 };
-
-export default DomainsRoutes;

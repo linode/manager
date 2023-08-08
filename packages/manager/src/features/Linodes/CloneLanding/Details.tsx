@@ -1,77 +1,25 @@
 import { Disk, Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
+import { Link } from 'src/components/Link';
+import { List } from 'src/components/List';
+import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
-import Paper from 'src/components/core/Paper';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 
-import { LinodeSelect } from '../LinodeSelect/LinodeSelect';
 import {
   EstimatedCloneTimeMode,
   ExtendedConfig,
   getAllDisks,
   getEstimatedCloneTime,
 } from './utilities';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  clearButton: {
-    top: `-${theme.spacing(0.5)}`,
-  },
-  closeIcon: {
-    '& path': {
-      fill: theme.palette.primary.main,
-    },
-    alignItems: 'center',
-    backgroundColor: theme.color.white,
-    border: 'none',
-    cursor: 'pointer',
-    display: 'flex',
-    paddingBottom: 0,
-    paddingTop: 0,
-  },
-  errorText: {
-    '& a': {
-      color: theme.color.red,
-      textDecoration: 'underline',
-    },
-    color: theme.color.red,
-    marginTop: theme.spacing(1),
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing(2),
-  },
-  labelOuter: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  list: {
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  nestedList: {
-    flexBasis: '100%',
-    marginLeft: theme.spacing(2),
-  },
-  root: {
-    padding: theme.spacing(2),
-  },
-  submitButton: {
-    marginTop: theme.spacing(3),
-  },
-}));
 
 interface Props {
   clearAll: () => void;
@@ -110,7 +58,7 @@ export const Configs: React.FC<Props> = (props) => {
 
   const region = regions?.find((r) => r.id === thisLinodeRegion);
 
-  const classes = useStyles();
+  const theme = useTheme();
 
   const noneError = errorMap.none;
   // When duplicating a disk on the SAME Linode, if there's not a enough space,
@@ -169,18 +117,18 @@ export const Configs: React.FC<Props> = (props) => {
   const estimatedCloneTime = getEstimatedCloneTime(totalSize, mode);
 
   return (
-    <Paper className={classes.root}>
-      <header className={classes.header}>
+    <Paper sx={{ padding: theme.spacing(2) }}>
+      <StyledHeader>
         <Typography variant="h2">Selected</Typography>
         <Button
           buttonType="secondary"
-          className={classes.clearButton}
           compactX
           onClick={clearAll}
+          sx={{ top: `-${theme.spacing(0.5)}` }}
         >
           Clear
         </Button>
-      </header>
+      </StyledHeader>
 
       {noneError && !isNoneErrorActuallyALinodeError && (
         <Notice error text={noneError} />
@@ -190,22 +138,21 @@ export const Configs: React.FC<Props> = (props) => {
         {selectedConfigs.map((eachConfig) => {
           return (
             <ListItem
-              className={classes.list}
+              sx={{ flexWrap: 'wrap', justifyContent: 'space-between' }}
               dense
               disableGutters
               key={eachConfig.id}
             >
-              <div className={classes.labelOuter}>
+              <StyledDiv>
                 <Typography variant="h3">{eachConfig.label}</Typography>
-                <button
-                  className={classes.closeIcon}
+                <StyledButton
                   data-qa-inline-delete
                   onClick={() => handleToggleConfig(eachConfig.id)}
                 >
                   <Close />
-                </button>
-              </div>
-              <List className={classes.nestedList}>
+                </StyledButton>
+              </StyledDiv>
+              <List sx={{ flexBasis: '100%', marginLeft: theme.spacing(2) }}>
                 {eachConfig.associatedDisks.map((eachDisk) => {
                   return (
                     <ListItem dense disableGutters key={eachDisk.label}>
@@ -222,19 +169,18 @@ export const Configs: React.FC<Props> = (props) => {
         {selectedDisks.map((eachDisk) => {
           return (
             <ListItem
-              className={classes.list}
+              sx={{ flexWrap: 'wrap', justifyContent: 'space-between' }}
               dense
               disableGutters
               key={eachDisk.id}
             >
               <Typography variant="h3">{eachDisk.label}</Typography>
-              <button
-                className={classes.closeIcon}
+              <StyledButton
                 data-qa-inline-delete
                 onClick={() => handleToggleDisk(eachDisk.id)}
               >
                 <Close />
-              </button>
+              </StyledButton>
             </ListItem>
           );
         })}
@@ -254,50 +200,36 @@ export const Configs: React.FC<Props> = (props) => {
       )}
 
       <LinodeSelect
-        filterCondition={
-          shouldExcludeCurrentLinode
-            ? (linode: Linode) => linode.id !== currentLinodeId
-            : undefined
-        }
-        handleChange={(linode) => {
+        onSelectionChange={(linode) => {
           if (linode !== null) {
             handleSelectLinode(linode.id);
           }
         }}
-        textFieldProps={{
-          error: !!linodeError,
-        }}
-        isClearable={false}
-        label="Destination"
-        selectedLinode={selectedLinodeId}
+        optionsFilter={
+          shouldExcludeCurrentLinode
+            ? (linode: Linode) => linode.id !== currentLinodeId
+            : undefined
+        }
+        clearable={false}
+        errorText={linodeError}
+        placeholder="Destination"
+        value={selectedLinodeId}
       />
 
       {linodeError && (
-        <Typography className={classes.errorText} variant="body1">
+        <StyledTypography variant="body1">
           {linodeError}{' '}
-          <a
-            aria-describedby="external-site"
-            href={errorMessageLinks.shrink}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Shrink your existing disks
-          </a>{' '}
+          <Link to={errorMessageLinks.shrink}>Shrink your existing disks</Link>{' '}
           or{' '}
-          <a
-            aria-describedby="external-site"
-            href={errorMessageLinks.resize}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
+          <Link to={errorMessageLinks.resize}>
             resize your Linode to a larger plan.
-          </a>
-        </Typography>
+          </Link>
+        </StyledTypography>
       )}
 
       <Button
         buttonType="primary"
-        className={classes.submitButton}
+        sx={{ marginTop: theme.spacing(3) }}
         disabled={isCloneButtonDisabled}
         loading={isSubmitting}
         onClick={handleClone}
@@ -307,5 +239,47 @@ export const Configs: React.FC<Props> = (props) => {
     </Paper>
   );
 };
+
+const StyledButton = styled('button', { label: 'StyledButton' })(
+  ({ theme }) => ({
+    '& path': {
+      fill: theme.palette.primary.main,
+    },
+    alignItems: 'center',
+    backgroundColor: theme.color.white,
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    paddingBottom: 0,
+    paddingTop: 0,
+  })
+);
+
+const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    '& a': {
+      color: theme.color.red,
+      textDecoration: 'underline',
+    },
+    color: theme.color.red,
+    marginTop: theme.spacing(1),
+  })
+);
+
+const StyledHeader = styled('header', { label: 'StyledHeader' })(
+  ({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(2),
+  })
+);
+
+const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'space-between',
+  width: '100%',
+}));
 
 export default Configs;

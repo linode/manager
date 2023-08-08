@@ -1,35 +1,17 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { styled, Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Notice } from 'src/components/Notice/Notice';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 import AppPanelSection from 'src/features/Linodes/LinodesCreate/AppPanelSection';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import Panel from './Panel';
 import { AppsData } from './types';
-
-type ClassNames = 'loading' | 'panel';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    loading: {
-      '& >div:first-of-type': {
-        height: 450,
-      },
-    },
-    panel: {
-      boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
-      height: 450,
-      marginBottom: theme.spacing(3),
-      overflowY: 'auto',
-    },
-  });
 
 interface Props extends AppsData {
   disabled: boolean;
@@ -48,14 +30,12 @@ interface Props extends AppsData {
   selectedStackScriptID?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class SelectAppPanel extends React.PureComponent<CombinedProps> {
+class SelectAppPanel extends React.PureComponent<Props> {
   componentDidMount() {
     this.clickAppIfQueryParamExists();
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: Props) {
     if (
       typeof prevProps.appInstances === 'undefined' &&
       typeof this.props.appInstances !== 'undefined'
@@ -69,7 +49,6 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       appInstances,
       appInstancesError,
       appInstancesLoading,
-      classes,
       disabled,
       error,
       handleClick,
@@ -82,19 +61,19 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
 
     if (appInstancesError) {
       return (
-        <Panel className={classes.panel} error={error} title="Select App">
+        <StyledPanel error={error} title="Select App">
           <ErrorState errorText={appInstancesError} />
-        </Panel>
+        </StyledPanel>
       );
     }
 
     if (appInstancesLoading || !appInstances) {
       return (
-        <Panel className={classes.panel} error={error} title="Select App">
-          <span className={classes.loading}>
+        <StyledPanel error={error} title="Select App">
+          <StyledLoadingSpan>
             <LandingLoading />
-          </span>
-        </Panel>
+          </StyledLoadingSpan>
+        </StyledPanel>
       );
     }
 
@@ -118,7 +97,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
     const isFilteringOrSearching = isFiltering || isSearching;
 
     return (
-      <Paper className={classes.panel} data-qa-tp="Select Image">
+      <StyledPaper data-qa-tp="Select Image">
         {error && <Notice error text={error} />}
         {!isFilteringOrSearching ? (
           <AppPanelSection
@@ -149,7 +128,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
           searchValue={searchValue}
           selectedStackScriptID={selectedStackScriptID}
         />
-      </Paper>
+      </StyledPaper>
     );
   }
 
@@ -196,9 +175,25 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
   };
 }
 
-const styled = withStyles(styles);
+const commonStyling = (theme: Theme) => ({
+  boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
+  height: 450,
+  marginBottom: theme.spacing(3),
+  overflowY: 'auto' as const,
+});
 
-export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
-)(SelectAppPanel);
+const StyledPanel = styled(Panel, { label: 'StyledPanel' })(({ theme }) => ({
+  ...commonStyling(theme),
+}));
+
+const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
+  ...commonStyling(theme),
+}));
+
+const StyledLoadingSpan = styled('span', { label: 'StyledLoadingSpan' })({
+  '& >div:first-of-type': {
+    height: 450,
+  },
+});
+
+export default compose<Props, Props>(React.memo)(SelectAppPanel);

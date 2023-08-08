@@ -2,14 +2,13 @@ import { OAuthClientRequest } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
-import Drawer from 'src/components/Drawer';
+import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
+import { FormControl } from 'src/components/FormControl';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useCreateOAuthClientMutation } from 'src/queries/accountOAuth';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -76,14 +75,14 @@ export const CreateOAuthClientDrawer = ({
             label="Public"
           />
         </FormControl>
-        <ActionsPanel>
-          <Button buttonType="secondary" className="cancel" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" loading={isLoading} type="submit">
-            Create
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Create',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
       </form>
     </Drawer>
   );

@@ -12,10 +12,12 @@ import { MockData } from 'src/dev-tools/mockDataController';
 import {
   VLANFactory,
   abuseTicketNotificationFactory,
+  accountBetaFactory,
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
   appTokenFactory,
+  betaFactory,
   contactFactory,
   createEntrypointFactory,
   createLoadbalancerFactory,
@@ -82,11 +84,13 @@ import {
   securityQuestionsFactory,
   stackScriptFactory,
   staticObjects,
+  subnetFactory,
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
   updateLoadbalancerFactory,
   volumeFactory,
+  vpcFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountUserFactory } from 'src/factories/accountUsers';
@@ -367,6 +371,31 @@ const aglb = [
     );
   }),
   rest.delete('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+];
+
+const vpc = [
+  rest.get('*/vpcs', (req, res, ctx) => {
+    const vpcsWithSubnet1 = vpcFactory.buildList(5, {
+      subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
+    });
+    const vpcsWithSubnet2 = vpcFactory.buildList(5, {
+      region: 'eu-west',
+      subnets: subnetFactory.buildList(Math.floor(Math.random() * 20) + 1),
+    });
+    const vpcsWithoutSubnet = vpcFactory.buildList(20);
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...vpcsWithSubnet1,
+          ...vpcsWithSubnet2,
+          ...vpcsWithoutSubnet,
+        ])
+      )
+    );
+  }),
+  rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
 ];
@@ -1353,10 +1382,26 @@ export const handlers = [
   rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
+  rest.get('*/betas', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
+  }),
+  rest.get('*/betas/:id', (req, res, ctx) => {
+    return res(ctx.json(betaFactory.build({ id: req.params.id })));
+  }),
+  rest.get('*/account/betas', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(accountBetaFactory.buildList(5))));
+  }),
+  rest.get('*/account/betas/:id', (req, res, ctx) => {
+    return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+  }),
+  rest.post('*/account/betas', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   ...entityTransfers,
   ...statusPage,
   ...databases,
   ...aglb,
+  ...vpc,
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.

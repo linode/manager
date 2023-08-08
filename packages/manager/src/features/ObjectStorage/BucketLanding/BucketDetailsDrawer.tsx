@@ -5,17 +5,16 @@ import {
 } from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Divider } from 'src/components/Divider';
-import Drawer from 'src/components/Drawer';
-import ExternalLink from 'src/components/ExternalLink';
+import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -80,12 +79,10 @@ export const BucketDetailsDrawer = React.memo(
 
         {hostname ? (
           <StyledLinkContainer>
-            <ExternalLink
-              hideIcon
-              link={`https://${hostname}`}
-              text={truncateMiddle(hostname, 50)}
-            />
-            <StyledCopyTooltip text={hostname} />
+            <Link external to={`https://${hostname}`}>
+              {truncateMiddle(hostname, 50)}
+            </Link>
+            <StyledCopyTooltip sx={{ marginLeft: 4 }} text={hostname} />
           </StyledLinkContainer>
         ) : null}
 

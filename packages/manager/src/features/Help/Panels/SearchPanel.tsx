@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { H1Header } from 'src/components/H1Header/H1Header';
-import Paper from 'src/components/core/Paper';
+import { Paper } from 'src/components/Paper';
 
 import AlgoliaSearchBar from './AlgoliaSearchBar';
 
@@ -36,7 +36,7 @@ const StyledRootContainer = styled(Paper, {
 const StyledH1Header = styled(H1Header, {
   label: 'StyledH1Header',
 })(({ theme }) => ({
-  color: theme.color.white,
+  color: theme.name === 'dark' ? theme.color.black : theme.color.white,
   marginBottom: theme.spacing(),
   position: 'relative',
   textAlign: 'center',

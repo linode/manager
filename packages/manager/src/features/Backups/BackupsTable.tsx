@@ -1,43 +1,24 @@
-import { makeStyles } from '@mui/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-
-import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-
-import BackupLinodes from './BackupLinodes';
+import { BackupLinodes } from './BackupLinodes';
 import { ExtendedLinode } from './types';
 
-const useStyles = makeStyles(() => ({
-  container: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  root: {
-    width: '100%',
-  },
-}));
-
-interface Props {
+interface BackupsTableProps {
   linodes: ExtendedLinode[];
   loading: boolean;
 }
 
-type CombinedProps = Props;
-
-export const BackupsTable: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+export const BackupsTable = (props: BackupsTableProps) => {
   const { linodes, loading } = props;
 
   return (
-    <Table tableClass={classes.root}>
+    <Table sx={{ width: '100%' }}>
       <TableHead>
         <TableRow>
           <TableCell data-qa-table-header="Label">Label</TableCell>
@@ -55,5 +36,3 @@ export const BackupsTable: React.FC<CombinedProps> = (props) => {
     </Table>
   );
 };
-
-export default BackupsTable;

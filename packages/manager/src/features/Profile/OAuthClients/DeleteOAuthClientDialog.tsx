@@ -1,7 +1,6 @@
 import React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useDeleteOAuthClientMutation } from 'src/queries/accountOAuth';
@@ -30,23 +29,19 @@ export const DeleteOAuthClientDialog = ({
   return (
     <ConfirmationDialog
       actions={
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            data-qa-button-cancel
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-button-confirm
-            loading={isLoading}
-            onClick={onDelete}
-          >
-            Delete
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'button-confirm',
+            label: 'Delete',
+            loading: isLoading,
+            onClick: onDelete,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'button-cancel',
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+        />
       }
       error={error?.[0].reason}
       onClose={onClose}
