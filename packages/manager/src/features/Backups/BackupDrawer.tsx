@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -27,30 +28,10 @@ import { AutoEnroll } from './AutoEnroll';
 import { BackupLinodeRow } from './BackupLinodeRow';
 import {
   EnableBackupsRejectedResult,
+  getFailureNotificationText,
   getTotalBackupsPrice,
   useEnableBackupsOnLinodesMutation,
 } from './utils';
-
-interface FailureNotificationProps {
-  failedCount: number;
-  successCount: number;
-}
-
-const getFailureNotificationText = ({
-  failedCount,
-  successCount,
-}: FailureNotificationProps): string => {
-  if (successCount > 0) {
-    return `Enabled backups successfully for ${pluralize(
-      'Linode',
-      'Linodes',
-      successCount
-    )}
-, but ${pluralize('Linode', 'Linodes', failedCount)} failed.`;
-  }
-  // This function will only be called if at least one backup failed.
-  return `There was an error enabling backups for your Linodes.`;
-};
 
 interface Props {
   onClose: () => void;
@@ -59,6 +40,7 @@ interface Props {
 
 export const BackupDrawer = (props: Props) => {
   const { onClose, open } = props;
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     data: linodes,
@@ -123,12 +105,35 @@ export const BackupDrawer = (props: Props) => {
     ));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (shouldEnableAutoEnroll) {
       updateAccountSettings({ backups_enabled: true });
     }
 
-    enableBackups(linodesWithoutBackups);
+    const result = await enableBackups(linodesWithoutBackups);
+
+    const hasFailures = result.some((r) => r.status === 'rejected');
+    const successfulEnables = result.filter((r) => r.status === 'fulfilled')
+      .length;
+
+    if (hasFailures) {
+      // Just stop because the React Query error state will update and
+      // display errors in the table.
+      return;
+    }
+
+    const pluralizedLinodes =
+      successfulEnables > 1 ? 'Linodes have' : 'Linode has';
+
+    const text = shouldEnableAutoEnroll
+      ? `${successfulEnables} ${pluralizedLinodes} been enrolled in automatic backups, and
+all new Linodes will automatically be backed up.`
+      : `${successfulEnables} ${pluralizedLinodes} been enrolled in automatic backups.`;
+
+    enqueueSnackbar(text, {
+      variant: 'success',
+    });
+    onClose();
   };
 
   return (
