@@ -12,7 +12,12 @@ import type {
 } from './Autocomplete';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
-const fruits = [
+interface FruitProps {
+  label: string;
+  value: string;
+}
+
+const fruits: FruitProps[] = [
   {
     label: 'Apple',
     value: 'apple',
@@ -124,11 +129,42 @@ export const customRenderOptions: Story = {
 
 export const MultiSelect: Story = {
   args: {
-    defaultValue: [fruits[0]],
+    // defaultValue: [fruits[0]],
     multiple: true,
-    onSelectionChange: (selected) => {
-      action('onSelectionChange')(selected.map((options) => options.value));
-    },
+    // onSelectionChange: (selected) => {
+    //   action('onSelectionChange')(selected.map((options) => options.value));
+    // },
   },
-  render: (args) => <Autocomplete {...args} />,
+  render: (args) => <MultiSelectExample {...args} />,
+};
+
+const MultiSelectExample = (props: any) => {
+  const { ...args } = props;
+  const [selectedOptions, setSelectedOptions] = React.useState<FruitProps[]>(
+    []
+  );
+
+  const handleToggleOption = (selectedOptions: any) =>
+    setSelectedOptions(selectedOptions);
+
+  const handleClearOptions = () => setSelectedOptions([]);
+
+  const handleSelectAll = (isSelected: any) => {
+    if (isSelected) {
+      setSelectedOptions(fruits);
+    } else {
+      handleClearOptions();
+    }
+  };
+
+  return (
+    <Autocomplete
+      {...args}
+      onClearOptions={handleClearOptions}
+      onSelectAll={handleSelectAll}
+      onToggleOption={handleToggleOption}
+      options={fruits}
+      selectedValues={selectedOptions}
+    />
+  );
 };
