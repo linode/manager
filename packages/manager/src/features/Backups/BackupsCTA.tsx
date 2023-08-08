@@ -48,7 +48,7 @@ export const BackupsCTA = () => {
         </StyledLinkButton>{' '}
         to protect your data and recover quickly in an emergency.
       </Typography>
-      <Box component="span" sx={{ display: 'flex' }}>
+      <Box component="span" display="flex">
         <StyledLinkButton
           onClick={handleDismiss}
           sx={{ lineHeight: '0.5rem', marginLeft: 12 }}

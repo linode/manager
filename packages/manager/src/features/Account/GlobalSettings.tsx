@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -30,8 +29,8 @@ const GlobalSettings = () => {
 
   const { data: linodes } = useAllLinodesQuery();
 
-  const linodesWithoutBackups =
-    linodes?.filter((linode) => !linode.backups.enabled) ?? [];
+  const hasLinodesWithoutBackups =
+    linodes?.some((linode) => !linode.backups.enabled) ?? false;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -86,7 +85,7 @@ const GlobalSettings = () => {
     <div>
       <AutoBackups
         backups_enabled={backups_enabled}
-        hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
+        hasLinodesWithoutBackups={hasLinodesWithoutBackups}
         isManagedCustomer={managed}
         onChange={toggleAutomaticBackups}
         openBackupsDrawer={() => setIsBackupsDrawerOpen(true)}

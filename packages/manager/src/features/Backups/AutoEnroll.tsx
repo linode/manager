@@ -21,9 +21,6 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
     <StyledPaper>
       {error && <Notice error text={error} />}
       <StyledFormControlLabel
-        control={
-          <Toggle checked={enabled} data-qa-enable-toggle onChange={toggle} />
-        }
         label={
           <StyledDiv>
             <StyledTypography>
@@ -41,6 +38,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
             </Typography>
           </StyledDiv>
         }
+        control={<Toggle checked={enabled} onChange={toggle} />}
       />
     </StyledPaper>
   );
