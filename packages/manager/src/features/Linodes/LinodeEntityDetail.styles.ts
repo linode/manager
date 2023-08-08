@@ -4,6 +4,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 // This component was built asuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';
 
+import { isPropValid } from 'src/utilities/isPropValid';
+import type { HeaderProps } from './LinodeEntityDetail';
 import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
@@ -12,6 +14,13 @@ import { TableRow } from 'src/components/TableRow';
 // ---------------------------------------------------------------------
 // Header Styles
 // ---------------------------------------------------------------------
+
+type StyledChipProps = Pick<HeaderProps, 'isSummaryView'> & {
+  hasSecondaryStatus: boolean;
+  isOffline: boolean;
+  isOther: boolean;
+  isRunning: boolean;
+};
 
 export const StyledLink = styled(Link, { label: 'StyledLink' })(
   ({ theme }) => ({
@@ -24,14 +33,53 @@ export const StyledLink = styled(Link, { label: 'StyledLink' })(
   })
 );
 
-export const StyledChip = styled(Chip, { label: 'StyledChip' })(
-  ({ theme }) => ({
-    ...theme.applyStatusPillStyles,
+export const StyledChip = styled(Chip, {
+  label: 'StyledChip',
+  shouldForwardProp: (prop) =>
+    isPropValid(
+      [
+        'isSummaryView',
+        'hasSecondaryStatus',
+        'isOffline',
+        'isOther',
+        'isRunning',
+      ],
+      prop
+    ),
+})<StyledChipProps>(
+  ({
+    theme,
+    isSummaryView,
+    hasSecondaryStatus,
+    isOffline,
+    isOther,
+    isRunning,
+  }) => ({
     borderRadius: 0,
     fontSize: '0.875rem',
     height: theme.spacing(3),
     letterSpacing: '.5px',
     marginLeft: theme.spacing(2),
+    '&:before': {
+      ...(isOffline && {
+        backgroundColor: theme.color.grey8,
+      }),
+      ...(isOther && {
+        backgroundColor: theme.color.orange,
+      }),
+      ...(isRunning && {
+        backgroundColor: theme.color.teal,
+      }),
+    },
+    ...(hasSecondaryStatus && {
+      borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+      paddingRight: `${theme.spacing(2)}`,
+    }),
+    ...(isSummaryView && {
+      [theme.breakpoints.down('lg')]: {
+        marginLeft: theme.spacing(),
+      },
+    }),
   })
 );
 
