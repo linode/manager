@@ -1,10 +1,17 @@
 import { FormikProps } from 'formik';
 
+/**
+ * handleFormikBlur
+ *
+ * Blur event handler for Formik fields. Default behavior is to trim leading and trailing whitespace.
+ *
+ * @param e {event} The focus event
+ * @param formikProps {partial FormikProps} Formik functions to set field value and handle blur event
+ */
 export const handleFormikBlur = <T extends {}>(
   e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
   formikProps: Partial<FormikProps<T>>
 ) => {
-  // Trim the leading and trailing whitespace from this field.
   const trimmedValue = e.target.value.trim();
 
   if (formikProps.setFieldValue && formikProps.handleBlur) {
