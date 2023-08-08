@@ -45,4 +45,21 @@ describe('VPC Table Row', () => {
     fireEvent.click(deleteBtn);
     expect(handleDelete).toHaveBeenCalled();
   });
+
+  it('should have an edit button that calls the provided callback when clicked', () => {
+    const vpc = vpcFactory.build();
+    const handleEdit = jest.fn();
+    const { getAllByRole } = renderWithTheme(
+      wrapWithTableBody(
+        <VPCRow
+          handleDeleteVPC={jest.fn()}
+          handleEditVPC={handleEdit}
+          vpc={vpc}
+        />
+      )
+    );
+    const editButton = getAllByRole('button')[0];
+    fireEvent.click(editButton);
+    expect(handleEdit).toHaveBeenCalled();
+  });
 });
