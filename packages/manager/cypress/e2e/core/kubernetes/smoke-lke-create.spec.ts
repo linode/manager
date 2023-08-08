@@ -73,7 +73,8 @@ describe('LKE Create Cluster', () => {
       .click()
       .type('{enter}');
 
-    cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
+    // Temporary removal until the Jenkins pipeline is updated
+    // cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
 
     cy.findByText('Shared CPU').should('be.visible').click();
     addNodes('Linode 2 GB');

@@ -15,6 +15,7 @@ const props: Props = {
   pools,
   region: undefined,
   removePool: jest.fn(),
+  showHighAvailability: true,
   submitting: false,
   toggleHasAgreed: jest.fn(),
   updatePool: jest.fn(),

@@ -4,7 +4,6 @@ import {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
@@ -12,6 +11,7 @@ import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -364,6 +364,7 @@ export const CreateCluster = () => {
           pools={nodePools}
           region={selectedRegionID}
           removePool={removePool}
+          showHighAvailability={showHighAvailability}
           submitting={submitting}
           toggleHasAgreed={toggleHasAgreed}
           updatePool={updatePool}

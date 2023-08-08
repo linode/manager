@@ -24,6 +24,7 @@ export interface Props {
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   removePool: (poolIdx: number) => void;
+  showHighAvailability: boolean | undefined;
   submitting: boolean;
   toggleHasAgreed: () => void;
   updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
@@ -37,6 +38,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     pools,
     region,
     removePool,
+    showHighAvailability,
     submitting,
     toggleHasAgreed,
     updatePool,
@@ -57,10 +59,11 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     agreements?.eu_model === false;
 
   const needsAPool = pools.length < 1;
+
   const disableCheckout = Boolean(
     needsAPool ||
       (!hasAgreed && showGDPRCheckbox) ||
-      highAvailability === undefined
+      (highAvailability === undefined && showHighAvailability)
   );
 
   if (isLoading) {

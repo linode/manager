@@ -98,7 +98,8 @@ describe('LKE Cluster Creation', () => {
       .click()
       .type(`${clusterVersion}{enter}`);
 
-    cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
+    // Temporary removal until the Jenkins pipeline is updated
+    // cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
 
     // Add a node pool for each randomly selected plan, and confirm that the
     // selected node pool plan is added to the checkout bar.
