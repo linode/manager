@@ -17,7 +17,7 @@ import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import useOpenClose from 'src/hooks/useOpenClose';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   BucketError,
   useDeleteBucketMutation,

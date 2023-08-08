@@ -9,8 +9,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -135,19 +134,16 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   };
 
   const actions = (
-    <ActionsPanel className={classes.actions}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        disabled={!hasConfirmed || isLoading || isError}
-        loading={submitting}
-        onClick={handleAcceptTransfer}
-      >
-        Accept Transfer
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primaryButtonProps={{
+        disabled: !hasConfirmed || isLoading || isError,
+        label: 'Accept Transfer',
+        loading: submitting,
+        onClick: handleAcceptTransfer,
+      }}
+      className={classes.actions}
+      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+    />
   );
 
   return (

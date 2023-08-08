@@ -11,7 +11,7 @@ import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import useFlags from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { TPADialog } from './TPADialog';
 import {

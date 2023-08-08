@@ -2,8 +2,7 @@ import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
@@ -13,8 +12,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TextField } from 'src/components/TextField';
-import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { FormControl } from 'src/components/FormControl';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
@@ -293,19 +292,15 @@ export const CreateAPITokenDrawer = (props: Props) => {
       {errorMap.scopes && (
         <FormHelperText error>{errorMap.scopes}</FormHelperText>
       )}
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          data-testid="create-button"
-          loading={isLoading}
-          onClick={() => form.handleSubmit()}
-        >
-          Create Token
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'create-button',
+          label: 'Create Token',
+          loading: isLoading,
+          onClick: () => form.handleSubmit(),
+        }}
+        secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+      />
     </Drawer>
   );
 };

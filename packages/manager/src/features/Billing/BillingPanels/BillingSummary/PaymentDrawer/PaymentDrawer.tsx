@@ -19,7 +19,7 @@ import { SupportLink } from 'src/components/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
 import isCreditCardExpired from 'src/utilities/creditCard';

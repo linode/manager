@@ -3,16 +3,15 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { number, object } from 'yup';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect';
+import { FormControl } from 'src/components/FormControl';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
-import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -160,20 +159,20 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
             placeholder="Select a Config"
           />
         </FormControl>
-        <ActionsPanel>
-          <Button buttonType="secondary" data-qa-cancel onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-qa-submit
-            disabled={disabled || readOnly}
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Attach
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: disabled || readOnly,
+            label: 'Attach',
+            loading: formik.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: handleClose,
+          }}
+        />
       </form>
     </Drawer>
   );

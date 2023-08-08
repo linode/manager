@@ -3,16 +3,14 @@ import * as React from 'react';
 import { Action } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
-interface Props {
+interface ContactsActionMenuProps {
   contactId: number;
   contactName: string;
   openDialog: (id: number) => void;
   openDrawer: (contactId: number) => void;
 }
 
-export type CombinedProps = Props;
-
-export const ContactsActionMenu: React.FC<CombinedProps> = (props) => {
+export const ContactsActionMenu = (props: ContactsActionMenuProps) => {
   const { contactId, openDialog, openDrawer } = props;
 
   const actions: Action[] = [

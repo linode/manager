@@ -2,13 +2,11 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { KubernetesPlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -17,6 +15,7 @@ import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { nodeWarning } from '../../kubeUtils';
 
 import type { Region } from '@linode/api-v4';
@@ -28,10 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexDirection: 'column',
     },
     width: '100%',
-  },
-  button: {
-    marginTop: '0 !important',
-    paddingTop: 0,
   },
   drawer: {
     '& .MuiDrawer-paper': {
@@ -196,36 +191,36 @@ export const AddNodePoolDrawer = (props: Props) => {
               warning
             />
           )}
-        <ActionsPanel className={classes.button}>
-          <Box
-            alignItems="center"
-            className={classes.boxOuter}
-            display="flex"
-            flexDirection="row"
-            justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
-          >
-            {selectedTypeInfo && (
-              <Typography className={classes.priceDisplay}>
-                This pool will add{' '}
-                <strong>
-                  ${selectedTypeInfo.count * pricePerNode}/month (
-                  {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
-                  {pricePerNode}
-                  /month)
-                </strong>{' '}
-                to this cluster.
-              </Typography>
-            )}
-            <Button
-              buttonType="primary"
-              disabled={!selectedTypeInfo}
-              loading={isLoading}
-              onClick={handleAdd}
-            >
-              Add pool
-            </Button>
-          </Box>
-        </ActionsPanel>
+
+        <Box
+          alignItems="center"
+          className={classes.boxOuter}
+          display="flex"
+          flexDirection="row"
+          justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
+        >
+          {selectedTypeInfo && (
+            <Typography className={classes.priceDisplay}>
+              This pool will add{' '}
+              <strong>
+                ${selectedTypeInfo.count * pricePerNode}/month (
+                {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
+                {pricePerNode}
+                /month)
+              </strong>{' '}
+              to this cluster.
+            </Typography>
+          )}
+          <ActionsPanel
+            primaryButtonProps={{
+              disabled: !selectedTypeInfo,
+              label: 'Add pool',
+              loading: isLoading,
+              onClick: handleAdd,
+              sx: { marginTop: '0 !important', paddingTop: 0 },
+            }}
+          />
+        </Box>
       </form>
     </Drawer>
   );

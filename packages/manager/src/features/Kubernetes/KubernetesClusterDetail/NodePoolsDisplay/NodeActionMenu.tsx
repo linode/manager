@@ -3,7 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { makeStyles, useTheme } from '@mui/styles';
 import * as React from 'react';
 
-import ActionMenu from 'src/components/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {

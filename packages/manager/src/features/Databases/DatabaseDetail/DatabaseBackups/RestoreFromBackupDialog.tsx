@@ -10,7 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 
 interface Props extends Omit<DialogProps, 'title'> {
   backup: DatabaseBackup;

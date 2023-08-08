@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
@@ -9,36 +8,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  checkbox: {
-    marginLeft: theme.spacing(2),
-  },
-  header: {
-    marginLeft: theme.spacing(2),
-    marginTop: theme.spacing(2),
-  },
-  root: {
-    '& ul:first-of-type': {
-      '& li': {
-        fontSize: '0.875rem',
-        marginBottom: theme.spacing(),
-      },
-      fontFamily: theme.font.normal,
-    },
-    backgroundColor: theme.bg.bgPaper,
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
-    marginBottom: theme.spacing(2),
-    marginTop: 24,
-    padding: '4px 16px',
-  },
-  volumes: {
-    '& li': {
-      fontFamily: theme.font.bold,
-    },
-    marginTop: theme.spacing(),
-  },
-}));
 
 interface Props {
   error?: string;
@@ -50,7 +19,7 @@ interface Props {
 }
 
 const CautionNotice = (props: Props) => {
-  const classes = useStyles();
+  const theme = useTheme();
 
   // This is not great, but lets us get all of the volumes for a Linode while keeping
   // the React Query store in a paginated shape. We want to keep data in a paginated shape
@@ -68,8 +37,13 @@ const CautionNotice = (props: Props) => {
   const amountOfAttachedVolumes = volumesData?.results ?? 0;
 
   return (
-    <div className={classes.root}>
-      <Typography className={classes.header}>
+    <StyledRootDiv>
+      <Typography
+        sx={{
+          marginLeft: theme.spacing(2),
+          marginTop: theme.spacing(2),
+        }}
+      >
         <strong>Caution:</strong>
       </Typography>
       <ul>
@@ -104,11 +78,11 @@ const CautionNotice = (props: Props) => {
               The following
               {amountOfAttachedVolumes > 1 ? ' volumes' : ' volume'} will be
               detached from this Linode:
-              <ul className={classes.volumes}>
+              <StyledVolumeUl>
                 {volumesData?.data.map((eachVolume) => {
                   return <li key={eachVolume.id}>{eachVolume.label}</li>;
                 })}
-              </ul>
+              </StyledVolumeUl>
             </React.Fragment>
           )}
         </li>
@@ -125,12 +99,40 @@ const CautionNotice = (props: Props) => {
       {props.error && <Notice error text={props.error} />}
       <Checkbox
         checked={props.hasConfirmed}
-        className={classes.checkbox}
         onChange={() => props.setConfirmed(!props.hasConfirmed)}
         text="Accept"
+        sx={{
+          marginLeft: theme.spacing(2),
+        }}
       />
-    </div>
+    </StyledRootDiv>
   );
 };
+
+const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
+  ({ theme }) => ({
+    '& ul:first-of-type': {
+      '& li': {
+        fontSize: '0.875rem',
+        marginBottom: theme.spacing(),
+      },
+      fontFamily: theme.font.normal,
+    },
+    backgroundColor: theme.bg.bgPaper,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
+    marginBottom: theme.spacing(2),
+    marginTop: 24,
+    padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+  })
+);
+
+const StyledVolumeUl = styled('div', { label: 'StyledVolumeUl' })(
+  ({ theme }) => ({
+    '& li': {
+      fontFamily: theme.font.bold,
+    },
+    marginTop: theme.spacing(),
+  })
+);
 
 export default React.memo(CautionNotice);

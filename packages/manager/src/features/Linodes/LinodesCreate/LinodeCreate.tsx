@@ -1,9 +1,6 @@
 import { InterfacePayload, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
-import classNames from 'classnames';
 import cloneDeep from 'lodash/cloneDeep';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
@@ -13,7 +10,6 @@ import { v4 } from 'uuid';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -24,22 +20,21 @@ import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { getMonthlyAndHourlyNodePricing } from 'src/features/Linodes/LinodesCreate/utilities';
 import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
+import PlansPanel from 'src/features/components/PlansPanel/PlansPanel';
 import {
   CreateTypes,
   handleChangeCreateType,
@@ -57,13 +52,20 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
+import {
+  StyledButtonGroupBox,
+  StyledCreateButton,
+  StyledForm,
+  StyledMessageDiv,
+  StyledPaper,
+  StyledTabPanel,
+} from './LinodeCreate.styles';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
-import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -79,60 +81,7 @@ import {
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
 
-type ClassNames =
-  | 'buttonGroup'
-  | 'createButton'
-  | 'form'
-  | 'imageSelect'
-  | 'messageGroup'
-  | 'messageGroupMaxWidth'
-  | 'stackScriptWrapper';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    buttonGroup: {
-      marginTop: theme.spacing(3),
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'flex-end',
-      },
-    },
-    createButton: {
-      marginLeft: theme.spacing(1),
-      [theme.breakpoints.down('md')]: {
-        marginRight: theme.spacing(1),
-      },
-    },
-    form: {
-      width: '100%',
-    },
-    imageSelect: {
-      '& .MuiPaper-root': {
-        padding: 0,
-      },
-    },
-    messageGroup: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      gap: theme.spacing(2),
-      [(theme.breakpoints.down('sm'), theme.breakpoints.down('md'))]: {
-        margin: theme.spacing(1),
-      },
-    },
-    messageGroupMaxWidth: {
-      maxWidth: '70%',
-      [theme.breakpoints.down('sm')]: {
-        maxWidth: 'unset',
-      },
-    },
-    stackScriptWrapper: {
-      '& [role="tablist"]': {
-        marginBottom: theme.spacing(),
-        marginTop: theme.spacing(2),
-      },
-    },
-  });
-interface Props {
+export interface LinodeCreateProps {
   backupsMonthlyPrice?: null | number;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
@@ -156,11 +105,7 @@ interface Props {
   togglePrivateIPEnabled: () => void;
   typeDisplayInfo: TypeInfo;
   updateDiskSize: (size: number) => void;
-  updateLabel: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => void;
+  updateLabel: (label: string) => void;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updatePassword: (password: string) => void;
   updateTags: (tags: Tag[]) => void;
@@ -185,10 +130,9 @@ const errorMap = [
 type InnerProps = WithTypesRegionsAndImages &
   ReduxStateProps &
   StackScriptFormStateHandlers &
-  Props;
+  LinodeCreateProps;
 
-type CombinedProps = Props &
-  InnerProps &
+type CombinedProps = InnerProps &
   AllFormStateAndHandlers &
   AppsData &
   ReduxStateProps &
@@ -196,7 +140,6 @@ type CombinedProps = Props &
   ImagesProps &
   WithLinodesProps &
   RegionsProps &
-  WithStyles<ClassNames> &
   WithTypesProps &
   RouteComponentProps<{}> &
   FeatureFlagConsumerProps;
@@ -269,7 +212,6 @@ export class LinodeCreate extends React.PureComponent<
     const {
       accountBackupsEnabled,
       backupsMonthlyPrice,
-      classes,
       errors,
       formIsSubmitting,
       handleAgreementChange,
@@ -409,7 +351,7 @@ export class LinodeCreate extends React.PureComponent<
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     return (
-      <form className={classes.form}>
+      <StyledForm>
         <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
             <Notice error spacingTop={8} text={hasErrorFor.none} />
@@ -457,10 +399,10 @@ export class LinodeCreate extends React.PureComponent<
               </SafeTabPanel>
               <SafeTabPanel index={2}>
                 <Tabs defaultIndex={stackScriptSelectedTab}>
-                  <Paper className={classes.stackScriptWrapper}>
+                  <StyledPaper>
                     <Typography variant="h2">Create From:</Typography>
                     <TabLinkList tabs={this.stackScriptTabs} />
-                    <TabPanels className={classes.imageSelect}>
+                    <StyledTabPanel>
                       <SafeTabPanel index={0}>
                         <FromStackScriptContent
                           accountBackupsEnabled={accountBackupsEnabled}
@@ -489,8 +431,8 @@ export class LinodeCreate extends React.PureComponent<
                           {...rest}
                         />
                       </SafeTabPanel>
-                    </TabPanels>
-                  </Paper>
+                    </StyledTabPanel>
+                  </StyledPaper>
                 </Tabs>
               </SafeTabPanel>
               <SafeTabPanel index={3}>
@@ -573,7 +515,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled: userCannotCreateLinode,
               errorText: hasErrorFor.label,
               label: 'Linode Label',
-              onChange: updateLabel,
+              onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
             tagsInputProps={
@@ -600,14 +542,13 @@ export class LinodeCreate extends React.PureComponent<
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
-          {showUserData ? (
-            <UserDataAccordion
-              createType={this.props.createType}
-              onChange={updateUserData}
-              userData={this.props.userData}
-            />
-          ) : null}
           <AddonsPanel
+            userData={{
+              createType: this.props.createType,
+              onChange: updateUserData,
+              showUserData: Boolean(showUserData),
+              userData: this.props.userData,
+            }}
             accountBackups={accountBackupsEnabled}
             backups={this.props.backupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
@@ -639,12 +580,7 @@ export class LinodeCreate extends React.PureComponent<
             flexWrap="wrap"
             justifyContent={showAgreement ? 'space-between' : 'flex-end'}
           >
-            <div
-              className={classNames({
-                [classes.messageGroup]: true,
-                [classes.messageGroupMaxWidth]: !!showAgreement,
-              })}
-            >
+            <StyledMessageDiv showAgreement={!!showAgreement}>
               <SMTPRestrictionText>
                 {({ text }) => <Grid xs={12}>{text}</Grid>}
               </SMTPRestrictionText>
@@ -655,50 +591,47 @@ export class LinodeCreate extends React.PureComponent<
                   onChange={handleAgreementChange}
                 />
               ) : null}
-            </div>
+            </StyledMessageDiv>
           </Box>
-          <Box
+          <StyledButtonGroupBox
             alignItems="center"
-            className={classes.buttonGroup}
             display="flex"
             justifyContent="flex-end"
           >
-            <Button
+            <StyledCreateButton
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
                 (showAgreement && !signedAgreement)
               }
               buttonType="outlined"
-              className={classes.createButton}
               data-qa-api-cli-linode
               onClick={this.handleClickCreateUsingCommandLine}
             >
               Create using command line
-            </Button>
-            <Button
+            </StyledCreateButton>
+            <StyledCreateButton
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
                 (showAgreement && !signedAgreement)
               }
               buttonType="primary"
-              className={classes.createButton}
               data-qa-deploy-linode
               loading={formIsSubmitting}
               onClick={this.createLinode}
             >
               Create Linode
-            </Button>
+            </StyledCreateButton>
             <ApiAwarenessModal
               isOpen={showApiAwarenessModal}
               onClose={handleShowApiAwarenessModal}
               payLoad={this.getPayload()}
               route={this.props.match.url}
             />
-          </Box>
+          </StyledButtonGroupBox>
         </Grid>
-      </form>
+      </StyledForm>
     );
   }
 
@@ -764,7 +697,7 @@ export class LinodeCreate extends React.PureComponent<
 
     if (this.props.userData) {
       payload['metadata'] = {
-        user_data: window.btoa(this.props.userData),
+        user_data: window.btoa(encodeURIComponent(this.props.userData)),
       };
     }
 
@@ -880,10 +813,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
   setTab: (value) => dispatch(handleChangeCreateType(value)),
 });
 
-const styled = withStyles(styles);
-
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, InnerProps>(connected, styled);
+const enhanced = recompose<CombinedProps, InnerProps>(connected);
 
 export default enhanced(LinodeCreate);

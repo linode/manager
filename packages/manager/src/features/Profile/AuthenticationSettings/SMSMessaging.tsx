@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -78,14 +78,14 @@ export const SMSMessaging = () => {
       ) : null}
       <ConfirmationDialog
         actions={() => (
-          <ActionsPanel>
-            <Button buttonType="secondary" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button buttonType="primary" loading={isLoading} onClick={onOptOut}>
-              Opt Out
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Opt Out',
+              loading: isLoading,
+              onClick: onOptOut,
+            }}
+            secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          />
         )}
         error={error?.[0].reason}
         onClose={onClose}

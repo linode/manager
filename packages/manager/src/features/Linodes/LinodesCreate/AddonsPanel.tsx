@@ -1,6 +1,5 @@
 import { Interface, Linode } from '@linode/api-v4/lib/linodes';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -8,45 +7,24 @@ import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Currency } from 'src/components/Currency';
 import { Divider } from 'src/components/Divider';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import useFlags from 'src/hooks/useFlags';
+import { UserDataAccordionProps } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
+import { useFlags } from 'src/hooks/useFlags';
 import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
 import AttachVLAN from './AttachVLAN';
+import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import { VLANAccordion } from './VLANAccordion';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  addons: {
-    marginTop: theme.spacing(3),
-  },
-  caption: {
-    marginTop: -8,
-    paddingLeft: `calc(${theme.spacing(2)} + 18px)`, // 34,
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: `calc(${theme.spacing(4)} + 18px)`, // 50
-    },
-  },
-  label: {
-    '& > span:last-child': {
-      color: theme.color.headline,
-      fontFamily: theme.font.bold,
-      fontSize: '1rem',
-      lineHeight: '1.2em',
-      [theme.breakpoints.up('md')]: {
-        marginLeft: theme.spacing(2),
-      },
-    },
-  },
-  title: {
-    marginBottom: theme.spacing(2),
-  },
-}));
+interface UserDataProps extends UserDataAccordionProps {
+  showUserData: boolean;
+}
 
 export interface AddonsPanelProps {
   accountBackups: boolean;
@@ -66,6 +44,7 @@ export interface AddonsPanelProps {
   selectedRegionID?: string; // Used for filtering VLANs
   selectedTypeID?: string;
   togglePrivateIP: () => void;
+  userData: UserDataProps;
   vlanLabel: string;
 }
 
@@ -86,10 +65,11 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     selectedRegionID,
     selectedTypeID,
     togglePrivateIP,
+    userData,
     vlanLabel,
   } = props;
 
-  const classes = useStyles();
+  const theme = useTheme();
   const flags = useFlags();
 
   const { data: image } = useImageQuery(
@@ -191,8 +171,15 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           vlanLabel={vlanLabel}
         />
       )}
-      <Paper className={classes.addons} data-qa-add-ons>
-        <Typography className={classes.title} variant="h2">
+      {userData.showUserData && (
+        <UserDataAccordion
+          createType={userData.createType}
+          onChange={userData.onChange}
+          userData={userData.userData}
+        />
+      )}
+      <Paper data-qa-add-ons sx={{ marginTop: theme.spacing(3) }}>
+        <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
           Add-ons{' '}
           {backupsDisabledReason && (
             <TooltipIcon status="help" text={backupsDisabledReason} />
@@ -204,7 +191,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             to use the backup service.
           </Notice>
         )}
-        <FormControlLabel
+        <StyledFormControlLabel
           control={
             <Checkbox
               data-qa-check-backups={
@@ -221,9 +208,8 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
               {renderBackupsPrice()}
             </Box>
           }
-          className={classes.label}
         />
-        <Typography className={classes.caption} variant="body1">
+        <StyledTypography variant="body1">
           {accountBackups ? (
             <React.Fragment>
               You have enabled automatic backups for your account. This Linode
@@ -237,9 +223,9 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
               are priced according to the Linode plan selected above.
             </React.Fragment>
           )}
-        </Typography>
+        </StyledTypography>
         <Divider />
-        <FormControlLabel
+        <StyledFormControlLabel
           control={
             <Checkbox
               checked={isPrivateIPChecked}
@@ -249,13 +235,36 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
               onChange={togglePrivateIP}
             />
           }
-          className={classes.label}
           label="Private IP"
         />
       </Paper>
     </>
   );
 });
+
+const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    marginTop: -8,
+    paddingLeft: `calc(${theme.spacing(2)} + 18px)`, // 34,
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: `calc(${theme.spacing(4)} + 18px)`, // 50
+    },
+  })
+);
+
+const StyledFormControlLabel = styled(FormControlLabel, {
+  label: 'StyledFormControlLabel',
+})(({ theme }) => ({
+  '& > span:last-child': {
+    color: theme.color.headline,
+    fontFamily: theme.font.bold,
+    fontSize: '1rem',
+    lineHeight: '1.2em',
+    [theme.breakpoints.up('md')]: {
+      marginLeft: theme.spacing(2),
+    },
+  },
+}));
 
 const getVlanDisabledReason = (
   isBareMetal: boolean,

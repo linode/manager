@@ -29,7 +29,7 @@ describe('create firewall', () => {
       .should('be.visible')
       .within(() => {
         // An error message appears when attempting to create a Firewall without a label
-        getClick('[data-testid="create-firewall-submit"]');
+        getClick('[data-testid="submit"]');
         cy.findByText('Label is required.');
         // Fill out and submit firewall create form.
         containsClick('Label').type(firewall.label);

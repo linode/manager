@@ -14,19 +14,19 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Accordion } from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
@@ -570,22 +570,18 @@ const NodeBalancerCreate = () => {
       </Box>
       <ConfirmationDialog
         actions={
-          <ActionsPanel style={{ padding: 0 }}>
-            <Button
-              buttonType="secondary"
-              className="cancel"
-              onClick={onCloseConfirmation}
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              loading={deleteConfigConfirmDialog.submitting}
-              onClick={onRemoveConfig}
-            >
-              Delete
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Delete',
+              loading: deleteConfigConfirmDialog.submitting,
+              onClick: onRemoveConfig,
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              onClick: onCloseConfirmation,
+            }}
+            style={{ padding: 0 }}
+          />
         }
         error={confirmationConfigError()}
         onClose={onCloseConfirmation}

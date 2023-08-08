@@ -4,7 +4,7 @@ import * as React from 'react';
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 
 import { configureErrorReportingUser } from './exceptionReporting';
-import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
+import { useFeatureFlagsLoad } from './hooks/useFeatureFlagLoad';
 import { useAccount } from './queries/account';
 import { useProfile } from './queries/profile';
 
