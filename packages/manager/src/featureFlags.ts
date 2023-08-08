@@ -41,6 +41,7 @@ type OneClickApp = Record<string, string>;
 export interface Flags {
   aglb: boolean;
   apiMaintenance: APIMaintenance;
+  selfServeBetas: boolean;
   databaseBeta: boolean;
   databases: boolean;
   ipv6Sharing: boolean;
