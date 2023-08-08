@@ -18,6 +18,7 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import VPC from 'src/assets/icons/entityIcons/vpc.svg';
 import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
+import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Divider } from 'src/components/Divider';
@@ -37,6 +38,7 @@ import { linkIsActive } from './utils';
 type NavEntity =
   | 'Account'
   | 'Account'
+  | 'Betas'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
@@ -249,6 +251,12 @@ export const PrimaryNav = (props: Props) => {
           display: 'Account',
           href: '/account',
           icon: <Account />,
+        },
+        {
+          display: 'Betas',
+          hide: !flags.selfServeBetas,
+          href: '/betas',
+          icon: <Beta />,
         },
         {
           display: 'Help & Support',
