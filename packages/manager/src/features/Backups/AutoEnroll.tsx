@@ -30,8 +30,8 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
               Auto Enroll All New Linodes in Backups
             </StyledTypography>
             <Typography variant="body1">
-              {`Enroll all future Linodes in backups. Your account will be billed
-                    the additional hourly rate noted on the `}
+              Enroll all future Linodes in backups. Your account will be billed
+              the additional hourly rate noted on the{' '}
               <Link
                 data-qa-backups-price
                 to="https://www.linode.com/products/backups/"
