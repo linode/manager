@@ -697,7 +697,7 @@ export class LinodeCreate extends React.PureComponent<
 
     if (this.props.userData) {
       payload['metadata'] = {
-        user_data: window.btoa(this.props.userData),
+        user_data: window.btoa(encodeURIComponent(this.props.userData)),
       };
     }
 
