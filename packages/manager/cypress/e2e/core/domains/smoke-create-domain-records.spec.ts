@@ -1,9 +1,14 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { createDomain, deleteAllTestDomains } from 'support/api/domains';
-import { randomIp, randomLabel, randomDomainName } from 'support/util/random';
-import { fbtClick, getClick } from 'support/helpers';
 import { authenticate } from 'support/api/authentication';
+import { createDomain, deleteAllTestDomains } from 'support/api/domains';
+import { fbtClick, getClick } from 'support/helpers';
 import { interceptCreateDomainRecord } from 'support/intercepts/domains';
+import {
+  randomDomainName,
+  randomIp,
+  randomLabel,
+  randomString,
+} from 'support/util/random';
 
 const createRecords = () => [
   {
@@ -49,7 +54,7 @@ const createRecords = () => [
       },
       {
         name: '[data-qa-target="Value"]',
-        value: randomLabel(),
+        value: `${randomLabel()}=${randomString()}`,
         skipCheck: false,
       },
     ],
