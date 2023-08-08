@@ -5,7 +5,7 @@ import React from 'react';
 
 jest.mock('formik');
 
-import { TextField } from 'src/components/TextField/TextField';
+import { TextField } from 'src/components/TextField';
 
 // import { handleFormikBlur } from './formikTrimUtil';
 import { renderWithTheme } from './testHelpers';
