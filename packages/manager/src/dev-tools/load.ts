@@ -3,7 +3,7 @@
 import { ENABLE_DEV_TOOLS } from 'src/constants';
 import { ApplicationStore } from 'src/store';
 
-function loadDevTools(store: ApplicationStore) {
+export function loadDevTools(store: ApplicationStore) {
   // we want it enabled by default everywhere but production and we also want
   // to support the dev tools in production (to make us more productive triaging production issues).
   // you can enable the DevTools via localStorage or the query string.
@@ -11,14 +11,13 @@ function loadDevTools(store: ApplicationStore) {
   // app code so we don't worry about bundle size.
   import('./dev-tools').then((devTools) => devTools.install(store));
 }
-export default loadDevTools;
 
 // Defaults to FALSE in production builds, but can be explicity enabled with
 // query param or local storage.
 //
 // Defaults to TRUE in development mode, but can be explicity disabled with
 // query param or local storage.
-export const devToolsEnabled = () => {
+export const getShouldEnableDevTools = () => {
   const explicitlyDisabled =
     window.location.search.includes('dev-tools=false') ||
     window.localStorage.getItem('dev-tools') === 'false';

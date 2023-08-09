@@ -17,7 +17,7 @@ import { storeFactory } from 'src/store';
 
 import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
-import loadDevTools, { devToolsEnabled } from './dev-tools/load';
+import { getShouldEnableDevTools, loadDevTools } from './dev-tools/load';
 import './index.css';
 import { queryClientFactory } from './queries/base';
 
@@ -103,7 +103,7 @@ const Main = () => {
   );
 };
 
-if (devToolsEnabled()) {
+if (getShouldEnableDevTools()) {
   loadDevTools(store);
 }
 
