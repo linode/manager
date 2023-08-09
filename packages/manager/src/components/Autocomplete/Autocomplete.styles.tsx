@@ -20,8 +20,7 @@ export const StyledListItem = styled('li', {
     height: '1px',
     left: '-4px',
     position: 'absolute',
-    // width: '102%',
-    width: `calc('102' + 2px)`,
+    width: '102%',
   },
 
   marginBottom: '9px',
