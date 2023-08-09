@@ -1,5 +1,3 @@
-import { docsLink } from 'src/utilities/emptyStateLandingUtils';
-
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
@@ -16,17 +14,30 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      text: 'Overview of Global Load Balancer',
-      to: '',
+      text: 'Overview',
+      to:
+        'https://www.linode.com/docs/products/networking/global-loadbalancer/',
     },
     {
-      text: 'Getting started with Global Load Balancer',
-      to: '',
+      text: 'Get Started',
+      to:
+        'https://www.linode.com/docs/products/networking/global-loadbalancer/get-started/',
+    },
+    {
+      text: 'Resources',
+      to:
+        'https://www.linode.com/docs/products/networking/global-loadbalancer/resources/',
+    },
+    {
+      text: 'Developers',
+      to:
+        'https://www.linode.com/docs/products/networking/global-loadbalancer/developers/',
     },
   ],
   moreInfo: {
-    text: 'View additional Global Load Balancer Guides',
-    to: docsLink,
+    text: 'Guides',
+    to:
+      'https://www.linode.com/docs/products/networking/global-loadbalancer/guides/',
   },
   title: 'Getting Started Guides',
 };
