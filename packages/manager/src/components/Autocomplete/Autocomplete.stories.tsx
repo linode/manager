@@ -6,20 +6,12 @@ import React from 'react';
 import { Autocomplete } from './Autocomplete';
 import { SelectedIcon } from './Autocomplete.styles';
 
-import type { AutocompleteAllProps, OptionsType } from './Autocomplete';
+import type { CombinedAutocompleteProps, OptionType } from './Autocomplete';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 interface FruitProps {
   label: string;
   value: string;
-}
-
-interface MultiSelectExample {
-  onClearOptions: () => void;
-  onSelectAll: (isSelected: boolean) => void;
-  onToggleOption: (selectedOptions: OptionsType[]) => void;
-  options: OptionsType[];
-  selectedValues: OptionsType[];
 }
 
 const fruits: FruitProps[] = [
@@ -45,7 +37,7 @@ const fruits: FruitProps[] = [
   },
 ];
 
-const meta: Meta<AutocompleteAllProps> = {
+const meta: Meta<CombinedAutocompleteProps> = {
   argTypes: {
     onSelectionChange: {
       action: 'onSelectionChange',
@@ -133,40 +125,9 @@ export const MultiSelect: Story = {
   args: {
     defaultValue: [fruits[0]],
     multiple: true,
-    onSelectionChange: (selected: OptionsType[]) => {
+    onSelectionChange: (selected: OptionType[]) => {
       action('onSelectionChange')(selected.map((options) => options.value));
     },
   },
-  render: (args) => <MultiSelectExample {...args} />,
-};
-
-const MultiSelectExample = (props: AutocompleteAllProps) => {
-  const { ...args } = props;
-  const [selectedOptions, setSelectedOptions] = React.useState<FruitProps[]>(
-    []
-  );
-
-  const handleToggleOption = (selectedOptions: OptionsType[]) =>
-    setSelectedOptions(selectedOptions);
-
-  const handleClearOptions = () => setSelectedOptions([]);
-
-  const handleSelectAll = (isSelected: boolean) => {
-    if (isSelected) {
-      setSelectedOptions(fruits);
-    } else {
-      handleClearOptions();
-    }
-  };
-
-  return (
-    <Autocomplete
-      {...args}
-      onClearOptions={handleClearOptions}
-      onSelectAll={handleSelectAll}
-      onToggleOption={handleToggleOption}
-      options={fruits}
-      selectedValues={selectedOptions}
-    />
-  );
+  render: (args) => <Autocomplete {...args} />,
 };

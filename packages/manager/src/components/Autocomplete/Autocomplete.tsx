@@ -9,6 +9,7 @@ import React, { useCallback } from 'react';
 
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
+import { useSelectAllOptions } from 'src/hooks/useSelectAllOptions';
 
 import {
   CustomPopper,
@@ -16,26 +17,36 @@ import {
   StyledListItem,
 } from './Autocomplete.styles';
 
-export interface OptionsType {
-  data?: any;
+export interface OptionType<T = any> {
+  data?: T;
   label: string;
   value: string;
 }
 
+interface DefaultNoOptionsMessageParams {
+  errorText: APIError[] | null | string | undefined;
+  filteredOptions: OptionType[] | undefined;
+}
+
 interface AutocompleteOnChange {
   reason: AutocompleteChangeReason;
-  value: OptionsType | OptionsType[];
+  value: OptionType | OptionType[];
 }
 
 interface HandleChangeParams extends AutocompleteOnChange {
   handleMultiSelectionChange: (
-    selections: OptionsType[],
+    selections: OptionType[],
     reason: AutocompleteChangeReason
   ) => void;
-  onSelectionChange: (selection: OptionsType | OptionsType[]) => void;
+  onSelectionChange: (selection: OptionType | OptionType[]) => void;
 }
 
-export interface AutocompleteProps<T extends OptionsType | OptionsType[]> {
+type SingleSelectProps = AutocompleteProps<OptionType>;
+type MultiSelectProps = AutocompleteProps<OptionType[]>;
+
+export type CombinedAutocompleteProps = MultiSelectProps | SingleSelectProps;
+
+export interface AutocompleteProps<T extends OptionType | OptionType[]> {
   /**
    * Determines whether the input field is cleared when it loses focus.
    * @default false
@@ -88,24 +99,18 @@ export interface AutocompleteProps<T extends OptionsType | OptionsType[]> {
   noOptionsMessage?: string;
   /** Callback function triggered when the input field loses focus. */
   onBlur?: (e: React.FocusEvent) => void;
-  /** Callback function to clear all selected options. */
-  onClearOptions?: () => void;
-  /** Callback function triggered when the select all option is toggled. */
-  onSelectAll?: (isSelected: boolean) => void;
   /** Callback function triggered when the selection of options changes. */
   onSelectionChange: (selected: T) => void;
-  /** Callback function triggered when specific option selections are toggled. */
-  onToggleOption?: (selectedOptions: OptionsType[]) => void;
   /** An array of available options for selection in the Autocomplete. */
-  options: OptionsType[];
+  options: OptionType[];
   /** Custom filter function to control which options are available for selection. */
-  optionsFilter?: (option: OptionsType) => boolean;
+  optionsFilter?: (option: OptionType) => boolean;
   /** Placeholder text displayed in the input field. */
   placeholder?: string;
   /** Custom rendering function for individual option items. */
-  renderOption?: (option: OptionsType, selected: boolean) => JSX.Element;
+  renderOption?: (option: OptionType, selected: boolean) => JSX.Element;
   /** Custom rendering function for the label of an option. */
-  renderOptionLabel?: (option: OptionsType) => string;
+  renderOptionLabel?: (option: OptionType) => string;
   /** Indicates whether the input is required, displaying an appropriate indicator. */
   required?: boolean;
   /**
@@ -113,16 +118,9 @@ export interface AutocompleteProps<T extends OptionsType | OptionsType[]> {
    * @default 'Select all'
    */
   selectAllLabel?: string;
-  /** Pre-selected values for the Autocomplete. */
-  selectedValues?: OptionsType[];
   /** Custom styles to be applied to the Autocomplete component. */
   sx?: SxProps;
 }
-
-type SingleSelectProps = AutocompleteProps<OptionsType>;
-type MultiSelectProps = AutocompleteProps<OptionsType[]>;
-
-export type AutocompleteAllProps = MultiSelectProps | SingleSelectProps;
 
 /**
  * An Autocomplete component that provides a user-friendly select input
@@ -140,7 +138,7 @@ export type AutocompleteAllProps = MultiSelectProps | SingleSelectProps;
  *  ]}
  * />
  */
-export const Autocomplete = (props: AutocompleteAllProps) => {
+export const Autocomplete = (props: CombinedAutocompleteProps) => {
   const {
     clearOnBlur = false,
     defaultValue,
@@ -158,20 +156,23 @@ export const Autocomplete = (props: AutocompleteAllProps) => {
     noMarginTop,
     noOptionsMessage,
     onBlur,
-    onClearOptions,
-    onSelectAll,
     onSelectionChange,
-    onToggleOption,
     options,
     optionsFilter,
     placeholder,
     renderOption,
     renderOptionLabel,
     selectAllLabel = 'Select all',
-    selectedValues,
     sx,
     ...rest
   } = props;
+
+  const {
+    handleClearOptions,
+    handleSelectAll,
+    handleToggleOption,
+    selectedOptions,
+  } = useSelectAllOptions([]);
 
   const [inputValue, setInputValue] = React.useState('');
   const filteredOptions = optionsFilter
@@ -200,28 +201,28 @@ export const Autocomplete = (props: AutocompleteAllProps) => {
   };
 
   const handleMultiSelectionChange = (
-    value: OptionsType[],
+    value: OptionType[],
     reason: AutocompleteChangeReason
   ) => {
-    if (reason === 'clear' && onClearOptions) {
-      onClearOptions(); // Clear options requested; call callback if available
+    if (reason === 'clear' && handleClearOptions) {
+      handleClearOptions(); // Clear options requested; call callback if available
     } else if (value.some((option) => option.value === 'all')) {
       handleToggleSelectAll(); // Handle 'Select all' option selection
-    } else if (onToggleOption) {
-      onToggleOption(value); // Handle individual options selection
+    } else if (handleToggleOption) {
+      handleToggleOption(value); // Handle individual options selection
     }
   };
 
   const handleToggleSelectAll = () => {
-    const allSelected = options.length === selectedValues?.length;
+    const allSelected = options.length === selectedOptions?.length;
 
-    if (onSelectAll) {
-      onSelectAll(!allSelected); // If 'onSelectAll' callback exists, toggle the selection of all options
+    if (handleSelectAll) {
+      handleSelectAll(!allSelected, options); // If 'onSelectAll' callback exists, toggle the selection of all options
     }
   };
 
   const handleRenderOption = useCallback(
-    (props, option: OptionsType, { selected }) => {
+    (props, option: OptionType, { selected }) => {
       const selectAllOption = option.value === 'all';
 
       const ListItem = selectAllOption ? StyledListItem : 'li';
@@ -271,13 +272,13 @@ export const Autocomplete = (props: AutocompleteAllProps) => {
   return (
     <MuiAutocomplete
       {...rest}
-      getOptionLabel={(option: OptionsType) =>
+      getOptionLabel={(option: OptionType) =>
         renderOptionLabel ? renderOptionLabel(option) : option.label
       }
-      isOptionEqualToValue={(option: OptionsType, value: OptionsType) => {
+      isOptionEqualToValue={(option: OptionType, value: OptionType) => {
         return option.value === value.value;
       }}
-      onChange={(_, value: OptionsType | OptionsType[], reason) => {
+      onChange={(_, value: OptionType | OptionType[], reason) => {
         handleChange({
           handleMultiSelectionChange,
           onSelectionChange,
@@ -318,15 +319,10 @@ export const Autocomplete = (props: AutocompleteAllProps) => {
       popupIcon={<KeyboardArrowDownIcon />}
       renderOption={handleRenderOption}
       sx={sx}
-      value={selectedValues}
+      value={multiple ? selectedOptions : undefined} // Only pass value prop for multi-select mode
     />
   );
 };
-
-interface DefaultNoOptionsMessageParams {
-  errorText: APIError[] | null | string | undefined;
-  filteredOptions: OptionsType[] | undefined;
-}
 
 const enum NoOptionsMessage {
   Error = 'An error occurred while fetching your options',
