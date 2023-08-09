@@ -293,7 +293,7 @@ const databases = [
 ];
 
 const aglb = [
-  // Entrypoints
+  // Configurations
   rest.get('*/aglb/:id/configurations', (req, res, ctx) => {
     const entrypoints = configurationFactory.buildList(3);
     return res(ctx.json(makeResourcePage(entrypoints)));
@@ -309,7 +309,7 @@ const aglb = [
     const body = req.body as any;
     return res(ctx.json(configurationFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/:id/entrypoints/:configId', (req, res, ctx) => {
+  rest.delete('*/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Load Balancers
@@ -353,7 +353,7 @@ const aglb = [
     const service_targets = serviceTargetFactory.buildList(3);
     return res(ctx.json(makeResourcePage(service_targets)));
   }),
-  rest.post('*/aglb/service-targets', (req, res, ctx) => {
+  rest.post('*/aglb/:id/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));
   }),
   rest.put('*/aglb/:id/service-targets/:serviceTargetId', (req, res, ctx) => {
