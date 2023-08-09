@@ -6,7 +6,7 @@ import type {
 
 export const headers: ResourcesHeaders = {
   description:
-    'Scalable Layer 4 . and Layer 7 load balancer to manage and accelerate enterprise traffic between clients and your distributed applications and networks globally.',
+    'Scalable Layer 4 and Layer 7 load balancer to route and manage enterprise traffic between clients and your distributed applications and networks globally.',
   subtitle: 'BETA',
   title: 'Global Load Balancers',
 };
@@ -16,28 +16,18 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      text: 'Overview',
+      text: 'Overview of Global Load Balancer',
       to:
         'https://www.linode.com/docs/products/networking/global-loadbalancer/',
     },
     {
-      text: 'Get Started',
+      text: 'Getting Started with Global Load Balancer',
       to:
         'https://www.linode.com/docs/products/networking/global-loadbalancer/get-started/',
     },
-    {
-      text: 'Resources',
-      to:
-        'https://www.linode.com/docs/products/networking/global-loadbalancer/resources/',
-    },
-    {
-      text: 'Developers',
-      to:
-        'https://www.linode.com/docs/products/networking/global-loadbalancer/developers/',
-    },
   ],
   moreInfo: {
-    text: 'Guides',
+    text: 'View additional Global Load Balancer Guides',
     to:
       'https://www.linode.com/docs/products/networking/global-loadbalancer/guides/',
   },

@@ -46,14 +46,14 @@ export const LoadBalancerLandingEmptyState = () => {
     <ResourcesSection
       buttonProps={[
         {
-          children: 'Create Global Load Balancers',
+          children: 'Create Global Load Balancer',
           onClick: () => {
             sendEvent({
               action: 'Click:button',
               category: linkAnalyticsEvent.category,
               label: 'Global Load Balancers',
             });
-            push('/volumes/create');
+            push('/loadbalancers/create');
           },
         },
       ]}
