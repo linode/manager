@@ -1,10 +1,10 @@
-import { useLocation } from '@reach/router';
 import * as React from 'react';
 import {
   Redirect,
   Route,
   Switch,
   useHistory,
+  useLocation,
   useRouteMatch,
 } from 'react-router-dom';
 
