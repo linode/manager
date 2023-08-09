@@ -2,21 +2,29 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import { useFormik } from 'formik';
+import { createVPCSchema } from '@linode/validation';
 
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useCreateVPCMutation } from 'src/queries/vpcs';
 
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import { Box } from 'src/components/Box';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { SubnetNode } from './SubnetNode';
+
+export interface SubnetFieldState {
+  label: string;
+  ip: string;
+}
 
 const VPCCreate = () => {
   // TODO CONNIE: all the logic ;-; 
@@ -25,9 +33,33 @@ const VPCCreate = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: regions } = useRegionsQuery();
+  const { error, isLoading, mutateAsync: createVPC } = useCreateVPCMutation();
 
-  const doesNotHavePermission =
+  const disabled =
     profile?.restricted && !grants?.global.add_volumes; // TODO: VPC - add vpc grant
+
+  
+  const onCreateVPC = () => {
+    console.log("the vpc data", values);
+  };
+
+  const { values, ...formik } = useFormik({
+    initialValues: {
+      subnets: [ // TODO somehow figure out if it's an ipv4 or ipv6 and transform accordingly
+        {
+          label: '',
+          ip: '',
+        },
+      ] as SubnetFieldState[],
+      label: '',
+      description: '',
+      region: '',
+    },
+    onSubmit: onCreateVPC,
+    //validate: handleIPValidation,
+    validateOnChange: false,
+    validationSchema: createVPCSchema,
+  });
   
   return (
     <>
@@ -46,39 +78,56 @@ const VPCCreate = () => {
         docsLink="#" // TODO: VPC - add correct docs link
         title="Create"
       />
+      {disabled && (
+        <Notice
+          text={
+            "You don't have permissions to create a new VPC. Please contact an account administrator for details."
+          }
+          error={true}
+          important
+          spacingTop={16}
+        />
+      )}
       <Grid>
-        <Paper>
-          <Typography sx={{ marginTop: theme.spacing(1) }} variant="h2">VPC</Typography>
-          <Typography 
-            sx={{ 
-              marginTop: theme.spacing(2), 
-              marginBottom: theme.spacing(1),
-              maxWidth: '80%',
-            }} 
-            variant="body1"
-          >
-            A virtual private cloud (VPC) is an isolated network which allows for 
-            control over how resources are networked and can communicate. 
-            <Link to="#"> Learn more</Link>. 
-            {/* TODO: VPC - learn more link here */}
-          </Typography>
-          <RegionSelect
-            handleSelection={() => { return; }} 
-            regions={regions ?? []}
-            isClearable
-            selectedID={"TODO"}
-          />
-          <TextField 
-            label="VPC label"
-          />
-          <TextField 
-            label="Description"
-            optional
-            multiline
-          />
-        </Paper>
-        <Box marginTop={2.5}>
+        <form>
           <Paper>
+            <Typography sx={{ marginTop: theme.spacing(1) }} variant="h2">VPC</Typography>
+            <Typography 
+              sx={{ 
+                marginTop: theme.spacing(2), 
+                marginBottom: theme.spacing(1),
+                maxWidth: '80%',
+              }} 
+              variant="body1"
+            >
+              A virtual private cloud (VPC) is an isolated network which allows for 
+              control over how resources are networked and can communicate. 
+              <Link to="#"> Learn more</Link>. 
+              {/* TODO: VPC - learn more link here */}
+            </Typography>
+            <RegionSelect
+              disabled={disabled}
+              handleSelection={(region: string) => formik.setFieldValue('region', region)} 
+              regions={regions ?? []}
+              isClearable
+              selectedID={values.region}
+            />
+            <TextField 
+              disabled={disabled}
+              label="VPC label"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => formik.setFieldValue('label', e.target.value)}
+              value={values.label}
+            />
+            <TextField 
+              disabled={disabled}
+              label="Description"
+              onChange={formik.handleChange}
+              value={values.description}
+              optional
+              multiline
+            />
+          </Paper>
+          <Paper sx={{ marginTop: theme.spacing(2.5) }}>
             {/* TODO CONNIE  can turn typography into styled component since repeated */}
             <Typography sx={{ marginTop: theme.spacing(1) }} variant="h2">Subnet</Typography> 
             <Typography 
@@ -95,28 +144,40 @@ const VPCCreate = () => {
               <Link to="#"> Learn more</Link>. 
               {/* TODO: VPC - subnet learn more link here */}
             </Typography>
-            {/* TODO CONNIE: subnet node  */}
-            <SubnetNode /> 
+            {values.subnets.map((subnet, subnetIdx) => (
+              <SubnetNode 
+                disabled={!!disabled}
+                idx={subnetIdx}
+                key={`subnet-${subnetIdx}`}
+                subnet={subnet} 
+                onChange={(subnet) => {
+                  const newSubnets = [...values.subnets]
+                  newSubnets[subnetIdx] = subnet;
+                  formik.setFieldValue('subnets', [...newSubnets])
+                }}
+              /> 
+            ))}
             <Button
-                // todo
+                // todo...something
                 buttonType="outlined"
-                disabled={false}
-                onClick={() => {}}
+                disabled={disabled}
+                onClick={() => formik.setFieldValue('subnets', [...values.subnets, { label: '', ip: ''}])}
                 sx={{ marginTop: theme.spacing(3) }}
               >
                 Add a Subnet
             </Button>
           </Paper>
-        </Box>
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'submit',
-            label: 'Create VPC',
-            //loading: formik.isSubmitting,
-            //onClick: () => formik.handleSubmit(),
-          }}
-          style={{ marginTop: theme.spacing(1) }}
-        />
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              label: 'Create VPC',
+              disabled: disabled,
+              loading: isLoading,
+              onClick: onCreateVPC,
+            }}
+            style={{ marginTop: theme.spacing(1) }}
+          />
+        </form>
       </Grid>
     </>
   );
