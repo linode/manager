@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { createVPCSchema } from '@linode/validation';
 
@@ -58,7 +58,7 @@ const VPCCreate = () => {
     onSubmit: onCreateVPC,
     //validate: handleIPValidation,
     validateOnChange: false,
-    validationSchema: createVPCSchema,
+    validationSchema: createVPCSchema, // todo ip subnet validation??
   });
   
   return (
@@ -92,19 +92,12 @@ const VPCCreate = () => {
         <form>
           <Paper>
             <Typography sx={{ marginTop: theme.spacing(1) }} variant="h2">VPC</Typography>
-            <Typography 
-              sx={{ 
-                marginTop: theme.spacing(2), 
-                marginBottom: theme.spacing(1),
-                maxWidth: '80%',
-              }} 
-              variant="body1"
-            >
+            <StyledBodyTypography variant="body1">
               A virtual private cloud (VPC) is an isolated network which allows for 
               control over how resources are networked and can communicate. 
               <Link to="#"> Learn more</Link>. 
               {/* TODO: VPC - learn more link here */}
-            </Typography>
+            </StyledBodyTypography>
             <RegionSelect
               disabled={disabled}
               handleSelection={(region: string) => formik.setFieldValue('region', region)} 
@@ -130,20 +123,13 @@ const VPCCreate = () => {
           <Paper sx={{ marginTop: theme.spacing(2.5) }}>
             {/* TODO CONNIE  can turn typography into styled component since repeated */}
             <Typography sx={{ marginTop: theme.spacing(1) }} variant="h2">Subnet</Typography> 
-            <Typography 
-              sx={{ 
-                marginTop: theme.spacing(2), 
-                marginBottom: theme.spacing(1),
-                maxWidth: '80%',
-              }} 
-              variant="body1"
-            >
+            <StyledBodyTypography variant="body1">
               A subnet divides a VPC into multiple logically defined networks to allow for 
               controlled access to VPC resources. Subnets within a VPC are routable regardless 
               of the address spaces they are in.
               <Link to="#"> Learn more</Link>. 
               {/* TODO: VPC - subnet learn more link here */}
-            </Typography>
+            </StyledBodyTypography>
             {values.subnets.map((subnet, subnetIdx) => (
               <SubnetNode 
                 disabled={!!disabled}
@@ -182,5 +168,13 @@ const VPCCreate = () => {
     </>
   );
 };
+
+const StyledBodyTypography = styled(Typography, { label: 'StyledBodyTypography' })(({ theme }) => ({
+  marginTop: theme.spacing(2), 
+  marginBottom: theme.spacing(1),
+  [theme.breakpoints.up('sm')]: {
+    maxWidth: '80%',
+  }
+}));
 
 export default VPCCreate;
