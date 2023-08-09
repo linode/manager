@@ -10,8 +10,8 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import useOpenClose from 'src/hooks/useOpenClose';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import { capitalize } from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 

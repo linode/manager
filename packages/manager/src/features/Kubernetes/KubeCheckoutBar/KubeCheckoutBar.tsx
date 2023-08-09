@@ -5,7 +5,7 @@ import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
-import renderGuard from 'src/components/RenderGuard';
+import { RenderGuard } from 'src/components/RenderGuard';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   getKubeHighAvailability,
@@ -126,4 +126,4 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   );
 };
 
-export default renderGuard(KubeCheckoutBar);
+export default RenderGuard(KubeCheckoutBar);

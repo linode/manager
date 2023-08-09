@@ -3,11 +3,12 @@ import cx from 'classnames';
 import * as React from 'react';
 
 import { Button, ButtonProps } from 'src/components/Button/Button';
-import RenderGuard from 'src/components/RenderGuard';
+import { RenderGuard } from 'src/components/RenderGuard';
 
 import { Box, BoxProps } from '../Box';
 
 interface ActionButtonsProps extends ButtonProps {
+  'data-node-idx'?: number;
   'data-testid'?: string;
   label?: string;
 }

@@ -1,5 +1,4 @@
 import { Config } from '@linode/api-v4/lib/linodes';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Checkbox } from 'src/components/Checkbox';
@@ -13,15 +12,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
 import { ConfigSelection } from './utilities';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    '& td': {
-      borderBottom: 'none',
-      paddingBottom: 0,
-      paddingTop: 0,
-    },
-  },
-}));
 export interface Props {
   configSelection: ConfigSelection;
   configs: Config[];
@@ -30,8 +20,6 @@ export interface Props {
 
 export const Configs: React.FC<Props> = (props) => {
   const { configSelection, configs, handleSelect } = props;
-
-  const classes = useStyles();
 
   return (
     <Paginate data={configs}>
@@ -45,7 +33,16 @@ export const Configs: React.FC<Props> = (props) => {
       }) => {
         return (
           <div>
-            <Table aria-label="List of Configurations" className={classes.root}>
+            <Table
+              aria-label="List of Configurations"
+              sx={{
+                '& td': {
+                  borderBottom: 'none',
+                  paddingBottom: 0,
+                  paddingTop: 0,
+                },
+              }}
+            >
               <TableBody>
                 {paginatedData.length === 0 ? (
                   <TableRowEmpty colSpan={1} />

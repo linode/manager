@@ -6,8 +6,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { castDraft } from 'immer';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
@@ -24,8 +23,8 @@ import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
@@ -51,36 +50,12 @@ const LinodesDetailHeader = React.lazy(
   () => import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader')
 );
 
-const useStyles = makeStyles((theme: Theme) => ({
-  appBar: {
-    '& > div': {
-      marginTop: 0,
-    },
-  },
-  diskContainer: {
-    marginTop: theme.spacing(4),
-  },
-  outerContainer: {
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-  },
-  paper: {
-    padding: `${theme.spacing(3)} ${theme.spacing(3)} 0`,
-  },
-  root: {
-    marginTop: theme.spacing(1),
-  },
-  title: {
-    marginBottom: theme.spacing(2),
-  },
-}));
-
 const CloneLanding = () => {
   const { linodeId: _linodeId } = useParams<{ linodeId: string }>();
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
+  const theme = useTheme();
 
   const linodeId = Number(_linodeId);
 
@@ -88,8 +63,6 @@ const CloneLanding = () => {
   const { data: _disks } = useAllLinodeDisksQuery(linodeId);
   const { data: linodes } = useAllLinodesQuery();
   const { data: linode } = useLinodeQuery(linodeId);
-
-  const classes = useStyles();
 
   const configs = _configs ?? [];
   const disks = _disks ?? [];
@@ -287,12 +260,12 @@ const CloneLanding = () => {
       <MutationNotification linodeId={linodeId} />
       <Notifications />
       <LinodesDetailHeader />
-      <Grid className={classes.root} container>
+      <Grid sx={{ marginTop: theme.spacing(1) }} container>
         <Grid lg={9} md={8} xs={12}>
-          <Paper className={classes.paper}>
+          <Paper sx={{ padding: `${theme.spacing(3)} ${theme.spacing(3)} 0` }}>
             <Typography
               aria-level={2}
-              className={classes.title}
+              sx={{ marginBottom: theme.spacing(2) }}
               data-qa-title
               role="heading"
               variant="h2"
@@ -310,25 +283,25 @@ const CloneLanding = () => {
               <TabLinkList tabs={tabs} />
               <TabPanels>
                 <SafeTabPanel index={0}>
-                  <div className={classes.outerContainer}>
+                  <StyledOuterDiv>
                     <Configs
                       // Cast the results of the Immer state to a mutable data structure.
                       configSelection={castDraft(state.configSelection)}
                       configs={configsInState}
                       handleSelect={toggleConfig}
                     />
-                  </div>
+                  </StyledOuterDiv>
                 </SafeTabPanel>
 
                 <SafeTabPanel index={1}>
-                  <div className={classes.outerContainer}>
+                  <StyledOuterDiv>
                     <Typography>
                       You can make a copy of a disk to the same or different
                       Linode. We recommend you power off your Linode first, and
                       keep it powered off until the disk has finished being
                       cloned.
                     </Typography>
-                    <div className={classes.diskContainer}>
+                    <div style={{ marginTop: theme.spacing(4) }}>
                       <Disks
                         // Cast the results of the Immer state to a mutable data structure.
                         diskSelection={castDraft(state.diskSelection)}
@@ -337,7 +310,7 @@ const CloneLanding = () => {
                         selectedConfigIds={selectedConfigIds}
                       />
                     </div>
-                  </div>
+                  </StyledOuterDiv>
                 </SafeTabPanel>
               </TabPanels>
             </Tabs>
@@ -384,5 +357,13 @@ const CloneLanding = () => {
     </React.Fragment>
   );
 };
+
+const StyledOuterDiv = styled('div', { label: 'StyledOuterDiv' })(
+  ({ theme }) => ({
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+  })
+);
 
 export default CloneLanding;

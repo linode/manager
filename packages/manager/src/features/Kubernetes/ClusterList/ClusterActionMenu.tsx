@@ -5,7 +5,7 @@ import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { ActionMenu, Action } from 'src/components/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';

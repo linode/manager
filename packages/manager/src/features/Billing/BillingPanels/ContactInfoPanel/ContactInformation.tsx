@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import countryData from 'country-region-data';

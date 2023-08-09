@@ -15,9 +15,9 @@ import { Drawer } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import InputAdornment from 'src/components/core/InputAdornment';
+import { InputAdornment } from 'src/components/InputAdornment';
 
-export interface Props {
+export interface MonitorDrawerProps {
   credentials: ManagedCredential[];
   groups: string[];
   label?: string;
@@ -28,8 +28,6 @@ export interface Props {
   open: boolean;
   successMsg?: string;
 }
-
-type CombinedProps = Props;
 
 export const modes = {
   CREATING: 'create',
@@ -98,7 +96,7 @@ const emptyInitialValues = {
   timeout: 10,
 } as ManagedServicePayload;
 
-const MonitorDrawer: React.FC<CombinedProps> = (props) => {
+const MonitorDrawer = (props: MonitorDrawerProps) => {
   const { credentials, groups, mode, monitor, onClose, onSubmit, open } = props;
 
   const credentialOptions = getCredentialOptions(credentials);

@@ -9,16 +9,14 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import SSHAccessRow from './SSHAccessRow';
 
-interface Props {
+interface SSHAccessTableContentProps {
   error?: APIError[] | null;
   linodeSettings: ManagedLinodeSetting[];
   loading: boolean;
   openDrawer: (linodeId: number) => void;
 }
 
-export type CombinedProps = Props;
-
-export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
+export const SSHAccessTableContent = (props: SSHAccessTableContentProps) => {
   const { error, linodeSettings, loading, openDrawer } = props;
 
   if (loading) {

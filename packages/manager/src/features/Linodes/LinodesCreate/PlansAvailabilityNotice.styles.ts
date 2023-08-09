@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 
+import { List } from 'src/components/List';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
-import List from 'src/components/core/List';
 
 import type { Theme } from '@mui/material/styles';
 

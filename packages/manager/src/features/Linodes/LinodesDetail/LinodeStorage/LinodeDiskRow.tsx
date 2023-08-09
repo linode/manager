@@ -1,6 +1,5 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import BarPercent from 'src/components/BarPercent';
@@ -11,30 +10,6 @@ import { TableRow } from 'src/components/TableRow';
 import { useEvents } from 'src/hooks/useEvents';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  bar: {
-    paddingLeft: theme.spacing(),
-    width: 250,
-  },
-  diskCreated: {
-    width: '20%',
-  },
-  diskLabel: {
-    width: '20%',
-  },
-  diskSize: {
-    width: '15%',
-  },
-  diskType: {
-    width: '10%',
-  },
-  progressBar: {
-    alignItems: 'center',
-    display: 'flex',
-    flexFlow: 'row nowrap',
-  },
-}));
 
 interface Props {
   disk: Disk;
@@ -48,8 +23,8 @@ interface Props {
 }
 
 export const LinodeDiskRow = React.memo((props: Props) => {
-  const classes = useStyles();
   const { inProgressEvents } = useEvents();
+  const theme = useTheme();
   const {
     disk,
     linodeId,
@@ -77,14 +52,23 @@ export const LinodeDiskRow = React.memo((props: Props) => {
 
   return (
     <TableRow data-qa-disk={disk.label}>
-      <TableCell className={classes.diskLabel}>{disk.label}</TableCell>
-      <TableCell className={classes.diskType}>{disk.filesystem}</TableCell>
-      <TableCell className={classes.diskSize}>
+      <TableCell sx={{ width: '20%' }}>{disk.label}</TableCell>
+      <TableCell sx={{ width: '10%' }}>{disk.filesystem}</TableCell>
+      <TableCell sx={{ width: '15%' }}>
         {event ? (
-          <div className={classes.progressBar}>
+          <div
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              flexFlow: 'row nowrap',
+            }}
+          >
             {diskEventLabelMap[event.action]} ({event.percent_complete}%)
             <BarPercent
-              className={classes.bar}
+              sx={{
+                paddingLeft: theme.spacing(),
+                width: 250,
+              }}
               max={100}
               narrow
               rounded
@@ -96,7 +80,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
         )}
       </TableCell>
       <Hidden mdDown>
-        <TableCell className={classes.diskCreated}>
+        <TableCell sx={{ width: '20%' }}>
           <DateTimeDisplay value={disk.created} />
         </TableCell>
       </Hidden>

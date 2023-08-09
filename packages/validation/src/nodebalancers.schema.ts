@@ -14,11 +14,12 @@ export const nodeBalancerConfigNodeSchema = object({
     .required('Label is required.'),
 
   address: string()
+    .typeError('IP address is required.')
+    .required('IP address is required.')
     .matches(
       /^192\.168\.\d{1,3}\.\d{1,3}$/,
       'Must be a valid private IPv4 address.'
-    )
-    .required('IP address is required.'),
+    ),
 
   port: number()
     .typeError('Port must be a number.')

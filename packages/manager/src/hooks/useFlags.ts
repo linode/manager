@@ -31,5 +31,3 @@ export const useFlags = () => {
     ...mockFlags,
   };
 };
-
-export default useFlags;

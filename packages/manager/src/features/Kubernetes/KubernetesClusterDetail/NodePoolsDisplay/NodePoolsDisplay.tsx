@@ -195,7 +195,7 @@ export const NodePoolsDisplay = (props: Props) => {
                 );
               })}
               {pools?.length > numPoolsToDisplay && (
-                <Waypoint onEnter={handleShowMore} scrollableAncestor="window">
+                <Waypoint onEnter={handleShowMore}>
                   <div style={{ minHeight: 50 }} />
                 </Waypoint>
               )}

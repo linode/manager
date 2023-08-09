@@ -6,8 +6,8 @@ import { useHistory } from 'react-router-dom';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
-import useAccountManagement from './hooks/useAccountManagement';
-import useFlags from './hooks/useFlags';
+import { useAccountManagement } from './hooks/useAccountManagement';
+import { useFlags } from './hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   input: {
@@ -89,6 +89,11 @@ const GoTo = (props: Props) => {
         display: 'Load Balancers',
         hide: !flags.aglb,
         href: '/loadbalancers',
+      },
+      {
+        display: 'VPC',
+        hide: !flags.vpc,
+        href: '/vpc',
       },
       {
         display: 'NodeBalancers',

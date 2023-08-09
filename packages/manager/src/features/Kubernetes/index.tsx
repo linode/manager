@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const KubernetesLanding = React.lazy(
   () => import('./KubernetesLanding/KubernetesLanding')

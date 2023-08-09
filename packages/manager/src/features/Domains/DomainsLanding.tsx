@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { DisableDomainDialog } from './DisableDomainDialog';

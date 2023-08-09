@@ -3,7 +3,7 @@ import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import CloseSnackbar from './CloseSnackbar';
+import { CloseSnackbar } from './CloseSnackbar';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   error: {
