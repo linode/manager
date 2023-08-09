@@ -22,6 +22,7 @@ import { randomItem, randomString, randomLabel } from 'support/util/random';
 import { fbtVisible, fbtClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
+import { cleanUp } from 'support/util/cleanup';
 
 const portPresetMap = {
   '22': 'SSH',
@@ -164,6 +165,10 @@ const createLinodeAndFirewall = async (
 
 authenticate();
 describe('update firewall', () => {
+  before(() => {
+    cleanUp('firewalls');
+  });
+
   /*
    * - Confirms that a linode can be added and removed from a firewall.
    * - Confirms that inbound rules can be added and removed from a firewall.
