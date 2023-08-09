@@ -114,7 +114,7 @@ const assertProcessing = (label: string, id: string) => {
  */
 const uploadImage = (label: string) => {
   const region = chooseRegion();
-  const upload = 'testImage.gz';
+  const upload = 'machine-images/test-image.gz';
   cy.visitWithLogin('/images/create/upload');
   getClick('[id="label"][data-testid="textfield-input"]').type(label);
   getClick('[id="description"]').type('This is a machine image upload test');
@@ -126,7 +126,7 @@ const uploadImage = (label: string) => {
   cy.fixture(upload, null).then((fileContent) => {
     cy.get('input[type="file"]').attachFile({
       fileContent,
-      fileName: 'testImage',
+      fileName: 'test-image',
       mimeType: 'application/x-gzip',
     });
   });
