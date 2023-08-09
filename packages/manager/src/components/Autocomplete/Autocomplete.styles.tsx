@@ -20,7 +20,8 @@ export const StyledListItem = styled('li', {
     height: '1px',
     left: '-4px',
     position: 'absolute',
-    width: '102%',
+    // width: '102%',
+    width: `calc('102' + 2px)`,
   },
 
   marginBottom: '9px',
@@ -38,20 +39,24 @@ export const SelectedIcon = styled(DoneIcon, {
 }));
 
 export const CustomPopper = (props: PopperProps) => {
+  const { style, ...rest } = props;
+
+  const updatedStyle = {
+    ...style,
+    width: style?.width
+      ? typeof style.width === 'string'
+        ? `calc(${style.width} + 2px)`
+        : style.width + 2
+      : undefined,
+    zIndex: 1,
+  };
+
   return (
     <Popper
-      {...props}
-      style={{
-        ...(props.style ?? {}),
-        ...(props.style?.width
-          ? typeof props.style.width == 'string'
-            ? { width: `calc(${props.style.width} + 2px)` }
-            : { width: props.style.width + 2 }
-          : {}),
-        zIndex: 1,
-      }}
+      {...rest}
       data-qa-autocomplete-popper
       modifiers={[{ enabled: false, name: 'preventOverflow' }]}
+      style={updatedStyle}
     />
   );
 };
