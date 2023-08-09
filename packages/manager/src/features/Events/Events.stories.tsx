@@ -11,6 +11,7 @@ import { eventFactory } from 'src/factories/events';
 import { formatEventWithUsername } from 'src/features/Events/Event.helpers';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 
+import { EVENT_ACTIONS, EVENT_STATUSES } from './constants';
 import {
   applyBolding,
   applyLinking,
@@ -99,6 +100,16 @@ export const HardCodedMessages: StoryObj = {
 const customizableEvent: Event = eventFactory.build();
 
 export const EventPlayground: StoryObj = {
+  argTypes: {
+    action: {
+      control: 'select',
+      options: EVENT_ACTIONS,
+    },
+    status: {
+      control: 'select',
+      options: EVENT_STATUSES,
+    },
+  },
   args: {
     ...customizableEvent,
   },
@@ -107,10 +118,9 @@ export const EventPlayground: StoryObj = {
       dangerouslySetInnerHTML={{
         // eslint-disable-next-line xss/no-mixed-html
         __html: unsafe_MarkdownIt.render(
-          generateEventMessage(customizableEvent)
+          generateEventMessage({ ...customizableEvent, ...args })
         ),
       }}
-      {...args}
     />
   ),
 };
