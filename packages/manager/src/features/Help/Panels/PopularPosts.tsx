@@ -4,8 +4,8 @@ import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
   post: {
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const PopularPosts: React.FC = () => {
+export const PopularPosts = () => {
   const classes = useStyles();
 
   const renderPopularDocs = () => {
@@ -101,5 +101,3 @@ const PopularPosts: React.FC = () => {
     </Paper>
   );
 };
-
-export default PopularPosts;

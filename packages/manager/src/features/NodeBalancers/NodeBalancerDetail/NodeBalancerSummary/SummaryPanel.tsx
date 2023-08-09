@@ -97,9 +97,11 @@ export const SummaryPanel = () => {
         <StyledSection>
           <StyledIPGrouping data-qa-ip>
             {nodebalancer?.ipv4 && (
-              <IPAddress ips={[nodebalancer?.ipv4]} showMore />
+              <IPAddress ips={[nodebalancer?.ipv4]} isHovered={true} showMore />
             )}
-            {nodebalancer?.ipv6 && <IPAddress ips={[nodebalancer?.ipv6]} />}
+            {nodebalancer?.ipv6 && (
+              <IPAddress ips={[nodebalancer?.ipv6]} isHovered={true} />
+            )}
           </StyledIPGrouping>
         </StyledSection>
       </StyledSummarySection>

@@ -37,7 +37,6 @@ interface AlgoliaContent {
 }
 
 // Functional helper methods
-
 export const convertDocsToItems = (
   highlight: boolean,
   hits: SearchHit[] = []
@@ -221,5 +220,6 @@ export default (options: SearchOptions) => (
       searchResults: [[], []],
     };
   }
+
   return WrappedComponent;
 };

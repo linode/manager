@@ -1,6 +1,5 @@
 import { ManagedCredential } from '@linode/api-v4/lib/managed';
-import { Theme } from '@mui/material/styles';
-import { createStyles, makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -9,45 +8,18 @@ import { TableRow } from 'src/components/TableRow';
 
 import ActionMenu from './CredentialActionMenu';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actionInner: {
-      '&.MuiTableCell-root': {
-        paddingRight: 0,
-      },
-      display: 'flex',
-      justifyContent: 'flex-end',
-      padding: 0,
-    },
-    credentialDescription: {
-      paddingTop: theme.spacing(0.5),
-    },
-    credentialRow: {
-      '&:before': {
-        display: 'none',
-      },
-    },
-  })
-);
-
-interface Props {
+interface CredentialRowProps {
   credential: ManagedCredential;
   openDialog: (id: number, label: string) => void;
   openForEdit: (id: number) => void;
 }
 
-type CombinedProps = Props;
-
-export const CredentialRow: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+export const CredentialRow = (props: CredentialRowProps) => {
   const { credential, openDialog, openForEdit } = props;
-  const classes = useStyles();
 
   return (
-    <TableRow
+    <StyledTableRow
       ariaLabel={`Credential ${credential.label}`}
-      className={classes.credentialRow}
       data-qa-credential-cell={credential.id}
       data-testid={'credential-row'}
       key={credential.id}
@@ -61,16 +33,31 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = (
           'Never'
         )}
       </TableCell>
-      <TableCell className={classes.actionInner}>
+      <StyledTableCell>
         <ActionMenu
           credentialID={credential.id}
           label={credential.label}
           openDialog={openDialog}
           openForEdit={openForEdit}
         />
-      </TableCell>
-    </TableRow>
+      </StyledTableCell>
+    </StyledTableRow>
   );
 };
+
+const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
+  '&.MuiTableCell-root': {
+    paddingRight: 0,
+  },
+  display: 'flex',
+  justifyContent: 'flex-end',
+  padding: 0,
+});
+
+const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })({
+  '&:before': {
+    display: 'none',
+  },
+});
 
 export default CredentialRow;

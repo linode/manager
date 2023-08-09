@@ -12,7 +12,7 @@ const meta: Meta<typeof LandingLoading> = {
     shouldDelay: false,
   },
   component: LandingLoading,
-  title: 'Components/LandingLoading',
+  title: 'Components/Loading States/LandingLoading',
 };
 
 export default meta;

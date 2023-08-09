@@ -107,7 +107,7 @@ export interface Props {
   toggleOpenCallback?: () => void;
 }
 
-const ActionMenu = (props: Props) => {
+export const ActionMenu = React.memo((props: Props) => {
   const { classes, cx } = useStyles();
   const { actionsList, toggleOpenCallback } = props;
 
@@ -188,6 +188,4 @@ const ActionMenu = (props: Props) => {
       </MenuPopover>
     </Menu>
   );
-};
-
-export default React.memo(ActionMenu);
+});

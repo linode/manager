@@ -2,9 +2,9 @@ import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 
 import Select, { Item } from 'src/components/EnhancedSelect';
+import { InputLabel } from 'src/components/InputLabel';
 import { LinkButton } from 'src/components/LinkButton';
 import { Typography } from 'src/components/Typography';
-import InputLabel from 'src/components/core/InputLabel';
 
 interface Props {
   index: number;

@@ -9,7 +9,7 @@ export interface RenderGuardProps {
 }
 
 /* tslint:disable-next-line */
-const renderGuard = <P extends {}>(
+export const RenderGuard = <P extends {}>(
   Component: React.ComponentType<P & RenderGuardProps>
 ) => {
   class ComponentWithRenderGuard extends React.Component<
@@ -42,11 +42,7 @@ const renderGuard = <P extends {}>(
     static displayName = `WithRenderGuard(${getDisplayName(Component)})`;
   }
 
-  return themed(ComponentWithRenderGuard) as React.ComponentType<
+  return withTheme(ComponentWithRenderGuard) as React.ComponentType<
     P & RenderGuardProps
   >;
 };
-
-const themed = withTheme;
-
-export default renderGuard;

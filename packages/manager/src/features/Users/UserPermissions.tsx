@@ -28,10 +28,10 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Tab } from 'src/components/core/ReachTab';
-import { TabList } from 'src/components/core/ReachTabList';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import { Tab } from 'src/components/ReachTab';
+import { TabList } from 'src/components/ReachTabList';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import {
   WithQueryClientProps,
   withQueryClient,
@@ -178,7 +178,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       if (updateFns.length) {
         this.setState((compose as any)(...updateFns));
       }
-      return;
     }
   };
 

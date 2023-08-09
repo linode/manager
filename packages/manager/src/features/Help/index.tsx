@@ -1,24 +1,25 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import StatusBanners from './StatusBanners';
+import { StatusBanners } from './StatusBanners';
 
 const HelpLanding = React.lazy(() =>
-  import('./HelpLanding').then((module) => ({
-    default: module.HelpLanding,
-  }))
+  import('./HelpLanding').then((module) => ({ default: module.HelpLanding }))
 );
+
 const SupportSearchLanding = React.lazy(
-  () => import('src/features/Help/SupportSearchLanding')
+  () => import('src/features/Help/SupportSearchLanding/SupportSearchLanding')
 );
+
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );
+
 const SupportTicketDetail = React.lazy(
   () => import('src/features/Support/SupportTicketDetail')
 );
 
-const HelpAndSupport = () => {
+export const HelpAndSupport = () => {
   return (
     <>
       <StatusBanners />
@@ -45,5 +46,3 @@ const HelpAndSupport = () => {
     </>
   );
 };
-
-export default HelpAndSupport;

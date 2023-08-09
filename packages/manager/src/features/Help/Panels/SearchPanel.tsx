@@ -36,7 +36,7 @@ const StyledRootContainer = styled(Paper, {
 const StyledH1Header = styled(H1Header, {
   label: 'StyledH1Header',
 })(({ theme }) => ({
-  color: theme.color.white,
+  color: theme.name === 'dark' ? theme.color.black : theme.color.white,
   marginBottom: theme.spacing(),
   position: 'relative',
   textAlign: 'center',

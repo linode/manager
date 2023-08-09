@@ -1,3 +1,9 @@
+## [2023-08-07] - v0.98.0
+
+### Added:
+
+- New methods for Linode Configs and new/updated Linode Config and interface types ([#9418](https://github.com/linode/manager/pull/9418))
+
 ## [2023-07-24] - v0.97.0
 
 ### Added:

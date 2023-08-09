@@ -1,13 +1,13 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
+import { ListItem } from 'src/components/ListItem';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import ListItem from 'src/components/core/ListItem';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(3),
@@ -52,10 +52,8 @@ interface Props {
   target: string;
 }
 
-type CombinedProps = Props;
-
-const DocumentationResults: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const DocumentationResults = (props: Props) => {
+  const { classes } = useStyles();
   const { results, sectionTitle, target } = props;
 
   const renderResults = () => {
@@ -72,10 +70,15 @@ const DocumentationResults: React.FC<CombinedProps> = (props) => {
     ));
   };
 
-  const renderEmptyState = () => {
+  const renderEmptyState = (): JSX.Element => {
     return (
       <Paper className={classes.noResultsContainer}>
-        <Typography variant="body1">No results</Typography>
+        <Typography
+          data-testid="data-qa-documentation-no-results"
+          variant="body1"
+        >
+          No results
+        </Typography>
       </Paper>
     );
   };
@@ -100,5 +103,3 @@ const DocumentationResults: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default DocumentationResults;

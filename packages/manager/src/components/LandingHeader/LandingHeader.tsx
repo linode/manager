@@ -9,7 +9,7 @@ import {
 import { Button } from 'src/components/Button/Button';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 
-export interface Props {
+export interface LandingHeaderProps {
   analyticsLabel?: string;
   breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: BreadcrumbProps;
@@ -51,7 +51,7 @@ export const LandingHeader = ({
   removeCrumbX,
   shouldHideDocsAndCreateButtons,
   title,
-}: Props) => {
+}: LandingHeaderProps) => {
   const theme = useTheme();
   const renderActions = Boolean(onButtonClick || extraActions);
   const labelTitle = title?.toString();
@@ -118,8 +118,6 @@ export const LandingHeader = ({
     </Grid>
   );
 };
-
-export default LandingHeader;
 
 const Actions = styled('div')(({ theme }) => ({
   marginLeft: `${theme.spacing(2)}`,

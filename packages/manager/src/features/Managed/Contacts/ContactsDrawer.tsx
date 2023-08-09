@@ -21,15 +21,13 @@ import {
 
 import { ManagedContactGroup, Mode } from './common';
 
-interface Props {
+interface ContactsDrawerProps {
   closeDrawer: () => void;
   contact?: ManagedContact;
   groups: ManagedContactGroup[];
   isOpen: boolean;
   mode: Mode;
 }
-
-type CombinedProps = Props;
 
 const emptyContactPayload: ContactPayload = {
   email: '',
@@ -41,7 +39,7 @@ const emptyContactPayload: ContactPayload = {
   },
 };
 
-const ContactsDrawer: React.FC<CombinedProps> = (props) => {
+const ContactsDrawer = (props: ContactsDrawerProps) => {
   const { closeDrawer, contact, groups, isOpen, mode } = props;
 
   const isEditing = mode === 'edit' && contact;

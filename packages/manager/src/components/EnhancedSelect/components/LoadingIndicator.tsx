@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import CircularProgress from 'src/components/core/CircularProgress';
+import { CircularProgress } from 'src/components/CircularProgress';
 
 export const LoadingIndicator = () => {
   return <StyledCircularProgress data-testid="input-loading" size={20} />;

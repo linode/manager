@@ -1,5 +1,5 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import {
   default as _TextField,
   StandardTextFieldProps,
@@ -10,11 +10,11 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { TooltipProps as _TooltipProps } from 'src/components/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
-import InputLabel from 'src/components/core/InputLabel';
+import { InputLabel } from 'src/components/InputLabel';
+import { TooltipProps } from 'src/components/Tooltip';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -152,7 +152,7 @@ interface InputToolTipProps {
   tooltipClasses?: string;
   tooltipInteractive?: boolean;
   tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
-  tooltipPosition?: _TooltipProps['placement'];
+  tooltipPosition?: TooltipProps['placement'];
   tooltipText?: JSX.Element | string;
 }
 

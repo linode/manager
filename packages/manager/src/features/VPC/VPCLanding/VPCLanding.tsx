@@ -1,28 +1,165 @@
+import { VPC } from '@linode/api-v4/lib/vpcs/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader/LandingHeader';
 
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Hidden } from 'src/components/Hidden';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { VPCDeleteDialog } from 'src/features/VPC/VPCLanding/VPCDeleteDialog';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
+import { useVPCsQuery } from 'src/queries/vpcs';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import { VPCEmptyState } from './VPCEmptyState';
+import { VPCRow } from './VPCRow';
+
+const preferenceKey = 'vpcs';
 const VPC_CREATE_ROUTE = 'vpc/create';
 
 const VPCLanding = () => {
+  const pagination = usePagination(1, preferenceKey);
+  const { handleOrderChange, order, orderBy } = useOrder(
+    {
+      order: 'desc',
+      orderBy: 'label',
+    },
+    `${preferenceKey}-order`
+  );
+
+  const filter = {
+    ['+order']: order,
+    ['+order_by']: orderBy,
+  };
+
+  const { data: vpcs, error, isLoading } = useVPCsQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
+
   const history = useHistory();
+
+  const [deleteDialog, setDeleteDialog] = React.useState({
+    id: -1,
+    label: '',
+    open: false,
+  });
+
+  const handleDeleteVPC = (id: number, label: string) => {
+    setDeleteDialog({
+      id,
+      label,
+      open: true,
+    });
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialog((deleteDialog) => ({
+      ...deleteDialog,
+      open: false,
+    }));
+  };
 
   const createVPC = () => {
     history.push(VPC_CREATE_ROUTE);
   };
 
+  if (error) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Error loading your VPCs.')[0].reason
+        }
+      />
+    );
+  }
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (vpcs?.data.length === 0) {
+    return <VPCEmptyState />;
+  }
+
   return (
     <>
-      <DocumentTitleSegment segment="VPC" />
+      <ProductInformationBanner bannerLocation="VPC" important warning />
       <LandingHeader
-        createButtonText={'Create VPC'}
-        docsLabel="Docs"
-        docsLink="" // TODO: VPC -  Add docs link
+        createButtonText="Create VPC"
+        docsLink="#" // TODO: VPC -  Add docs link
         onButtonClick={createVPC}
         title="Virtual Private Cloud (VPC)"
       />
-      TODO: VPC M3-6733 Add VPC Landing page (PR #9467)
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              active={orderBy === 'label'}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="label"
+            >
+              Label
+            </TableSortCell>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'region'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="region"
+              >
+                Region
+              </TableSortCell>
+            </Hidden>
+            <Hidden mdDown>
+              <TableSortCell
+                active={orderBy === 'id'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="id"
+              >
+                VPC ID
+              </TableSortCell>
+            </Hidden>
+            <TableCell>Subnets</TableCell>
+            <Hidden mdDown>
+              <TableCell>Linodes</TableCell>
+            </Hidden>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {vpcs?.data.map((vpc: VPC) => (
+            <VPCRow
+              handleDeleteVPC={() => handleDeleteVPC(vpc.id, vpc.label)}
+              key={vpc.id}
+              vpc={vpc}
+            />
+          ))}
+        </TableBody>
+      </Table>
+      <PaginationFooter
+        count={vpcs?.results || 0}
+        eventCategory="VPCs Table"
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+      />
+      <VPCDeleteDialog {...deleteDialog} onClose={closeDeleteDialog} />
     </>
   );
 };

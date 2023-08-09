@@ -10,10 +10,10 @@ import Logo from 'src/assets/logo/akamai-logo.svg';
 import { Box } from 'src/components/Box';
 import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
-import NotFound from 'src/components/NotFound';
+import { NotFound } from 'src/components/NotFound';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { SideMenu } from 'src/components/SideMenu';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
@@ -152,7 +152,6 @@ const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
-const VPC = React.lazy(() => import('src/features/VPC'));
 const StackScripts = React.lazy(() => import('src/features/StackScripts'));
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
@@ -161,9 +160,12 @@ const SupportTicketDetail = React.lazy(
   () => import('src/features/Support/SupportTicketDetail')
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
-const Managed = React.lazy(() => import('src/features/Managed'));
-const Help = React.lazy(() => import('src/features/Help'));
-
+const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
+const Help = React.lazy(() =>
+  import('./features/Help/index').then((module) => ({
+    default: module.HelpAndSupport,
+  }))
+);
 const SearchLanding = React.lazy(() => import('src/features/Search'));
 const EventsLanding = React.lazy(
   () => import('src/features/Events/EventsLanding')
@@ -173,6 +175,8 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
+const Betas = React.lazy(() => import('src/features/Betas/BetasLanding'));
+const VPC = React.lazy(() => import('src/features/VPC'));
 
 const MainContent = (props: CombinedProps) => {
   const { classes, cx } = useStyles();
@@ -328,7 +332,6 @@ const MainContent = (props: CombinedProps) => {
                               component={NodeBalancers}
                               path="/nodebalancers"
                             />
-                            {flags.vpc && <Route component={VPC} path="/vpc" />}
                             <Route component={Domains} path="/domains" />
                             <Route component={Managed} path="/managed" />
                             <Route component={Longview} path="/longview" />
@@ -357,6 +360,10 @@ const MainContent = (props: CombinedProps) => {
                             {showDatabases ? (
                               <Route component={Databases} path="/databases" />
                             ) : null}
+                            {flags.selfServeBetas ? (
+                              <Route component={Betas} path="/betas" />
+                            ) : null}
+                            {flags.vpc && <Route component={VPC} path="/vpc" />}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />

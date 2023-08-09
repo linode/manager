@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.98.1",
+  "version": "1.99.0",
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -165,11 +165,11 @@
     "@vitejs/plugin-react-swc": "^3.3.2",
     "chai-string": "^1.5.0",
     "chalk": "^5.2.0",
-    "cypress": "^12.11.0",
+    "cypress": "^12.17.3",
     "cypress-axe": "^1.0.0",
     "cypress-file-upload": "^5.0.7",
     "cypress-real-events": "^1.7.0",
-    "cypress-vite": "^1.4.0",
+    "cypress-vite": "^1.4.2",
     "dotenv": "^16.0.3",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",

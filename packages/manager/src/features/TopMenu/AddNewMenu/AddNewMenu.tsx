@@ -21,6 +21,7 @@ import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { useFlags } from 'src/hooks/useFlags';
@@ -75,6 +76,13 @@ export const AddNewMenu = () => {
       entity: 'NodeBalancer',
       icon: NodebalancerIcon,
       link: '/nodebalancers/create',
+    },
+    {
+      description: 'Create a private and isolated network',
+      entity: 'VPC',
+      hide: !flags.vpc,
+      icon: VPCIcon,
+      link: '/vpc/create',
     },
     {
       description: 'Control network access to your Linodes',
