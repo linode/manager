@@ -26,6 +26,7 @@ import { useAccountSettings } from 'src/queries/accountSettings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import SubscriptionDialog from './SubscriptionDialog';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
@@ -126,6 +127,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
 
   return (
     <>
+      <ProductInformationBanner bannerLocation="Longview" important warning />
       <LandingHeader
         createButtonText="Add Client"
         docsLink="https://www.linode.com/docs/platform/longview/longview/"

@@ -124,10 +124,11 @@ export type ProductInformationBannerLocation =
   | 'Firewalls'
   | 'Images'
   | 'Kubernetes'
+  | 'LinodeCreate' // Use for Marketplace banners
   | 'Linodes'
   | 'LoadBalancers'
+  | 'Longview'
   | 'Managed'
-  | 'Marketplace'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'StackScripts'

@@ -73,6 +73,7 @@ import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -258,6 +259,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
+        <ProductInformationBanner
+          bannerLocation="LinodeCreate"
+          important
+          warning
+        />
         <Grid className="m0" container spacing={0}>
           <LandingHeader
             onDocsClick={() =>
