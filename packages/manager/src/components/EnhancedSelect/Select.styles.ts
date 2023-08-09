@@ -235,6 +235,11 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '& [class*="MuiFormHelperText-error"]': {
       paddingBottom: theme.spacing(1),
     },
+    '& button': {
+      '& svg': {
+        pointerEvents: 'auto',
+      },
+    },
     position: 'relative',
     width: '100%',
   },
