@@ -5,8 +5,8 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage } from 'src/types';
-import { BETA_API_ROOT } from 'src/constants';
+import { Filter, Params, ResourcePage } from '../types';
+import { BETA_API_ROOT } from '../constants';
 import type { ServiceTarget, ServiceTargetPayload } from './types';
 
 /**
@@ -33,18 +33,25 @@ export const getLoadbalancerServiceTargets = (
 /**
  * getServiceTarget
  *
- * Returns an Akamai Global Load Balancer route
+ * Returns an Akamai Global Load Balancer service target
  */
-export const getServiceTarget = (id: number) =>
+export const getServiceTarget = (
+  loadbalancerId: number,
+  serviceTargetId: number
+) =>
   Request<ServiceTarget>(
-    setURL(`${BETA_API_ROOT}/aglb/service-targets/${encodeURIComponent(id)}`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/service-targets/${encodeURIComponent(serviceTargetId)}`
+    ),
     setMethod('GET')
   );
 
 /**
  * createLoadbalancerServiceTarget
  *
- * Creates an Akamai Global Load Balancer route
+ * Creates an Akamai Global Load Balancer service target
  */
 export const createLoadbalancerServiceTarget = (
   loadbalancerId: number,
@@ -63,7 +70,7 @@ export const createLoadbalancerServiceTarget = (
 /**
  * updateLoadbalancerServiceTarget
  *
- * Updates an Akamai Global Load Balancer route
+ * Updates an Akamai Global Load Balancer service target
  */
 export const updateLoadbalancerServiceTarget = (
   loadbalancerId: number,

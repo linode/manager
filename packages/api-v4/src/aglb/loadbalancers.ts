@@ -1,6 +1,12 @@
-import Request, { setData, setMethod, setURL } from '../request';
-import { BETA_API_ROOT } from 'src/constants';
-import { ResourcePage } from 'src/types';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
+import { BETA_API_ROOT } from '../constants';
+import { Filter, Params, ResourcePage } from '../types';
 import type {
   CreateLoadbalancerPayload,
   Loadbalancer,
@@ -12,10 +18,12 @@ import type {
  *
  * Returns a paginated list of Akamai Global Load Balancers
  */
-export const getLoadbalancers = () =>
+export const getLoadbalancers = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<Loadbalancer>>(
     setURL(`${BETA_API_ROOT}/aglb`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   );
 
 /**

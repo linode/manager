@@ -1,23 +1,35 @@
-import Request, { setData, setMethod, setURL } from '../request';
-import { ResourcePage } from 'src/types';
-import { BETA_API_ROOT } from 'src/constants';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
+import { Filter, Params, ResourcePage } from '../types';
+import { BETA_API_ROOT } from '../constants';
 import type { Configuration, ConfigurationPayload } from './types';
 
 /**
  * getLoadbalancerConfigurations
  *
- * Returns a paginated list of Akamai Global Load Balancer entry points
+ * Returns a paginated list of Akamai Global Load Balancer configurations
  */
-export const getLoadbalancerConfigurations = (loadbalancerId: number) =>
+export const getLoadbalancerConfigurations = (
+  loadbalancerId: number,
+  params?: Params,
+  filter?: Filter
+) =>
   Request<ResourcePage<Configuration>>(
     setURL(`${BETA_API_ROOT}/aglb/${loadbalancerId}/configurations`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   );
 
 /**
  * getLoadbalancerConfiguration
  *
- * Returns an Akamai Global Load Balancer entry point
+ * Returns an Akamai Global Load Balancer configuration
  */
 export const getLoadbalancerConfiguration = (
   loadbalancerId: number,
@@ -35,7 +47,7 @@ export const getLoadbalancerConfiguration = (
 /**
  * createLoadbalancerConfiguration
  *
- * Creates an Akamai Global Load Balancer entry point
+ * Creates an Akamai Global Load Balancer configuration
  */
 export const createLoadbalancerConfiguration = (
   loadbalancerId: number,
@@ -54,7 +66,7 @@ export const createLoadbalancerConfiguration = (
 /**
  * updateLoadbalancerConfiguration
  *
- * Updates an Akamai Global Load Balancer entry point
+ * Updates an Akamai Global Load Balancer configuration
  */
 export const updateLoadbalancerConfiguration = (
   loadbalancerId: number,
@@ -72,11 +84,11 @@ export const updateLoadbalancerConfiguration = (
   );
 
 /**
- * deleteEntrypoint
+ * deleteLoadbalancerConfiguration
  *
- * Deletes an Akamai Global Load Balancer entry point
+ * Deletes an Akamai Global Load Balancer configuration
  */
-export const deleteLoadbalancerEntrypoint = (
+export const deleteLoadbalancerConfiguration = (
   loadbalancerId: number,
   configurationId: number
 ) =>
