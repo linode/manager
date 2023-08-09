@@ -2,6 +2,7 @@ import type { Linode } from '@linode/api-v4/types';
 import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
+import { cleanUp } from 'support/util/cleanup';
 import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
 import { interceptCreateVolume } from 'support/intercepts/volumes';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
@@ -17,10 +18,13 @@ const pageSizeOverride = {
 
 authenticate();
 describe('volume create flow', () => {
+  before(() => {
+    cleanUp('volumes');
+  });
+
   /*
    * - Creates a volume that is not attached to a Linode.
    * - Confirms that volume is listed correctly on volumes landing page.
-   * - Confirms that tags exist on volume.
    */
   it('creates an unattached volume', () => {
     const region = chooseRegion();

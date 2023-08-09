@@ -5,10 +5,11 @@ import { authenticate } from 'support/api/authentication';
 import { imageCaptureProcessingTimeout } from 'support/constants/images';
 import { ui } from 'support/ui';
 import { SimpleBackoffMethod } from 'support/util/backoff';
+import { cleanUp } from 'support/util/cleanup';
 import { depaginate } from 'support/util/paginate';
 import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomPhrase, randomString } from 'support/util/random';
-import { describeRegions } from 'support/util/regions';
+import { testRegions } from 'support/util/regions';
 
 /**
  * Creates a Linode, waits for it to boot, and returns the Linode and its disk.
@@ -34,14 +35,18 @@ const createAndBootLinode = async (
 };
 
 authenticate();
-describeRegions('Capture Machine Images', (region: Region) => {
+describe('Capture Machine Images', () => {
+  before(() => {
+    cleanUp('images');
+  });
+
   /*
    * - Captures a machine image from a Linode in the targeted region.
    * - Confirms that user is redirected to landing page upon image capture.
    * - Confirms that user is shown toast notifications related to the image's status.
    * - Confirms that the image finishes processing successfully.
    */
-  it('can capture a Machine Image from a Linode', () => {
+  testRegions('can capture a Machine Image from a Linode', (region) => {
     const imageLabel = randomLabel();
     const imageDescription = randomPhrase();
 

@@ -3,6 +3,7 @@ import { Volume } from '@linode/api-v4/types';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { interceptResizeVolume } from 'support/intercepts/volumes';
+import { cleanUp } from 'support/util/cleanup';
 import { randomNumber, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -15,6 +16,10 @@ const pageSizeOverride = {
 
 authenticate();
 describe('volume resize flow', () => {
+  before(() => {
+    cleanUp('volumes');
+  });
+
   /*
    * - Clicks "Resize" action menu item for volume, enters new size, and submits form.
    * - Confirms that volume resize drawer appears after submitting form.

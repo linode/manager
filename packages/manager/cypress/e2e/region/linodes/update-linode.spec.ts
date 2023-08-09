@@ -4,6 +4,7 @@ import { createLinodeRequestFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { interceptGetLinodeDetails } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { depaginate } from 'support/util/paginate';
 import { randomLabel, randomString } from 'support/util/random';
 import { describeRegions } from 'support/util/regions';
@@ -22,6 +23,10 @@ const makeLinodePayload = (region: string, booted: boolean) => {
 
 authenticate();
 describeRegions('Can update Linodes', (region) => {
+  before(() => {
+    cleanUp('linodes');
+  });
+
   /*
    * - Navigates to a Linode details page's "Settings" tab.
    * - Enters a new label and clicks "Save".
