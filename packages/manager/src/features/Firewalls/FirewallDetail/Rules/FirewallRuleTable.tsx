@@ -1,8 +1,7 @@
 import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
-import { Box } from 'src/components/Box';
 import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import {
@@ -13,6 +12,7 @@ import {
 } from 'react-beautiful-dnd';
 
 import Undo from 'src/assets/icons/undo.svg';
+import { Box } from 'src/components/Box';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Hidden } from 'src/components/Hidden';
 import { Typography } from 'src/components/Typography';
@@ -24,11 +24,7 @@ import {
 import { capitalize } from 'src/utilities/capitalize';
 
 import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
-import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
-import { Category, FirewallRuleError, sortPortString } from './shared';
 import {
-  sxBox,
-  sxItemSpacing,
   MoreStyledLinkButton,
   StyledButtonDiv,
   StyledDragIndicator,
@@ -40,7 +36,11 @@ import {
   StyledInnerBox,
   StyledUl,
   StyledUlBox,
+  sxBox,
+  sxItemSpacing,
 } from './FirewallRuleTable.styles';
+import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
+import { Category, FirewallRuleError, sortPortString } from './shared';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 
@@ -277,12 +277,12 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
 
   return (
     <StyledFirewallRuleBox
-      status={status}
+      aria-label={label ?? `firewall rule ${id}`}
       disabled={disabled}
+      key={id}
       originalIndex={originalIndex}
       ruleId={id}
-      aria-label={label ?? `firewall rule ${id}`}
-      key={id}
+      status={status}
     >
       <Box
         sx={{
@@ -322,7 +322,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
         </Box>
         <Box
           aria-label={`Addresses: ${addresses}`}
-          sx={{ ...sxItemSpacing, width: '15%' }}
+          sx={{ ...sxItemSpacing, overflowWrap: 'break-word', width: '15%' }}
         >
           {addresses} <ConditionalError errors={errors} formField="addresses" />
         </Box>
@@ -337,10 +337,10 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
         {status !== 'NOT_MODIFIED' ? (
           <StyledButtonDiv>
             <StyledFirewallRuleButton
-              status={status}
               aria-label="Undo change to Firewall Rule"
               disabled={disabled}
               onClick={() => triggerUndo(id)}
+              status={status}
             >
               <Undo />
             </StyledFirewallRuleButton>
