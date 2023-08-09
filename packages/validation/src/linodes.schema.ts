@@ -26,7 +26,11 @@ const test_vpcsValidateIP = (value?: string | null) => {
     return true;
   }
 
-  return vpcsValidateIP(value, false);
+  return vpcsValidateIP({
+    value,
+    shouldHaveIPMask: false,
+    mustBeIPMask: false,
+  });
 };
 
 // Utils
