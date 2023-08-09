@@ -300,13 +300,13 @@ export const TextField = (props: TextFieldProps) => {
             <span className={classes.label}> (optional)</span>
           ) : null}
         </InputLabel>
-        {true && (
+        {labelTooltipText && (
           <TooltipIcon
             sxTooltipIcon={{
               padding: '8px 0px 0px 8px',
             }}
             status="help"
-            text={'testing123'}
+            text={labelTooltipText}
           />
         )}
       </Box>
