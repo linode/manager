@@ -10,7 +10,7 @@ import { useProfile } from 'src/queries/profile';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 
-import ActionMenu, { Handlers } from './ImagesActionMenu';
+import { Handlers, ImagesActionMenu } from './ImagesActionMenu';
 
 export interface ImageWithEvent extends Image {
   event?: Event;
@@ -94,15 +94,16 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
       </Hidden>
       <TableCell actionCell>
         {event?.status !== 'failed' ? (
-          <ActionMenu
+          <ImagesActionMenu
             description={description}
+            event={undefined}
             id={id}
             label={label}
             status={status}
             {...rest}
           />
         ) : (
-          <ActionMenu
+          <ImagesActionMenu
             description={description}
             event={event}
             id={id}

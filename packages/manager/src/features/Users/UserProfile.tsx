@@ -105,11 +105,7 @@ const UserProfile: React.FC<Props> = (props) => {
 
     return (
       <>
-        <Typography
-          className={classes.title}
-          data-qa-profile-header
-          variant="h2"
-        >
+        <Typography className={classes.title} variant="h2">
           User Profile
         </Typography>
         <Paper className={classes.wrapper}>
