@@ -219,7 +219,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '& .react-select__single-value': {
       color: theme.palette.text.primary,
       overflow: 'hidden',
-      padding: `$theme.spacing(1) 0`,
+      padding: `${theme.spacing(1)} 0`,
     },
     '& .react-select__value-container': {
       '& > div': {
@@ -234,6 +234,11 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
     '& [class*="MuiFormHelperText-error"]': {
       paddingBottom: theme.spacing(1),
+    },
+    '& button': {
+      '& svg': {
+        pointerEvents: 'auto',
+      },
     },
     position: 'relative',
     width: '100%',
