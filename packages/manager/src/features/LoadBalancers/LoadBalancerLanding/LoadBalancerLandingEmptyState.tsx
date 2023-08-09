@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+// TODO: AGLB - This is just a placeholder icon for now.
+// will be updated with relevant icon once we get from UX
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { Link } from 'src/components/Link';

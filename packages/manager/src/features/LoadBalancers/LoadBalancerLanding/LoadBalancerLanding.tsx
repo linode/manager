@@ -69,9 +69,11 @@ const LoadBalancerLanding = () => {
     }
   };
 
-  const results = 0;
+  // TODO: This is testing purposes and can be replaced with mock API integration once,
+  // Update AGLB endpoint, factories, and mocks #9496 is merged.
+  const loadbalancersList = 0;
 
-  if (!results) {
+  if (!loadbalancersList) {
     return <LoadBalancerLandingEmptyState />;
   }
 

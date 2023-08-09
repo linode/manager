@@ -11,6 +11,8 @@ export const headers: ResourcesHeaders = {
   title: 'Global Load Balancers',
 };
 
+// TODO: AGLB - These are not finalized yet; changes may be expected.
+// Links may currently show 404 as work is in progress from the docs team side.
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
@@ -41,7 +43,8 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   },
   title: 'Getting Started Guides',
 };
-
+// TODO: AGLB - This is placeholder for video resources.
+// Will be updated with links and text once we get them from docs team.
 export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
