@@ -16,6 +16,7 @@ import NotificationMenu from './NotificationMenu';
 import SearchBar from './SearchBar';
 import { TopMenuIcon } from './TopMenuIcon';
 import { UserMenu } from './UserMenu';
+import { Box } from 'src/components/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -61,17 +62,11 @@ const TopMenu = (props: Props) => {
   return (
     <React.Fragment>
       {isLoggedInAsCustomer && (
-        <div
-          style={{
-            backgroundColor: 'pink',
-            padding: '1em',
-            textAlign: 'center',
-          }}
-        >
-          <Typography style={{ color: 'black', fontSize: '1.2em' }}>
+        <Box bgcolor="pink" padding="1em" textAlign="center">
+          <Typography color="black" fontSize="1.2em">
             You are logged in as customer: <strong>{username}</strong>
           </Typography>
-        </div>
+        </Box>
       )}
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar} variant="dense">
