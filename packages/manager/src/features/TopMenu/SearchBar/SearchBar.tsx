@@ -244,7 +244,7 @@ export const SearchBar = (props: CombinedProps) => {
 
   const onKeyDown = (e: any) => {
     if (
-      e.keyCode === 13 &&
+      e.key === 'Enter' &&
       searchText !== '' &&
       (!combinedResults || combinedResults.length < 1)
     ) {

@@ -218,7 +218,7 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
     return (
       <TableRow
         onKeyUp={(e: any) =>
-          e.keyCode === 13 && setSelectedProcess({ name, user })
+          e.key === 'Enter' && setSelectedProcess({ name, user })
         }
         ariaLabel={`${name} for ${user}`}
         data-testid="longview-service-row"

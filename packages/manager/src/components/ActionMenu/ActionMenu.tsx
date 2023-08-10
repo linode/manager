@@ -120,7 +120,7 @@ export const ActionMenu = React.memo((props: Props) => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (toggleOpenCallback && e.keyCode === 13) {
+    if (toggleOpenCallback && e.key === 'Enter') {
       toggleOpenCallback();
     }
   };
