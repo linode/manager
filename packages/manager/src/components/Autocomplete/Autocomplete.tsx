@@ -3,6 +3,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MuiAutocomplete, {
   AutocompleteChangeReason,
+  AutocompleteProps,
+  AutocompleteRenderOptionState,
 } from '@mui/material/Autocomplete';
 import { SxProps } from '@mui/system';
 import React, { useCallback } from 'react';
@@ -41,74 +43,32 @@ interface HandleChangeParams extends AutocompleteOnChange {
   onSelectionChange: (selection: OptionType | OptionType[]) => void;
 }
 
-type SingleSelectProps = AutocompleteProps<OptionType>;
-type MultiSelectProps = AutocompleteProps<OptionType[]>;
+type SingleSelectProps = EnhancedAutocompleteProps<OptionType>;
+type MultiSelectProps = EnhancedAutocompleteProps<OptionType[]>;
 
 export type CombinedAutocompleteProps = MultiSelectProps | SingleSelectProps;
 
-export interface AutocompleteProps<T extends OptionType | OptionType[]> {
-  /**
-   * Determines whether the input field is cleared when it loses focus.
-   * @default false
-   */
-  clearOnBlur?: boolean;
-  /**
-   * The initial value for the Autocomplete.
-   */
-  defaultValue?: T;
-  /**
-   * Disables the display of the clear icon in the input field.
-   * @default false
-   */
-  disableClearable?: boolean;
-  /**
-   * Disables the rendering of the Autocomplete options within a portal.
-   * @default true
-   */
-  disablePortal?: boolean;
-  /** Disables user interaction with the input field. */
-  disabled?: boolean;
+export interface EnhancedAutocompleteProps<T extends OptionType | OptionType[]>
+  extends AutocompleteProps<
+    T,
+    boolean | undefined,
+    boolean | undefined,
+    boolean | undefined
+  > {
   /** Provides a hint with error styling to assist users. */
   errorText?: string;
   /** Provides a hint with normal styling to assist users. */
   helperText?: string;
-  /** The unique ID associated with the input field. */
-  id?: string;
   /** A required label for the Autocomplete to ensure accessibility. */
   label: string;
-  /**
-   * Sets the maximum number of visible tags when the 'multiple' option is enabled.
-   * @default 2
-   */
-  limitTags?: number;
-  /**
-   * Displays styling indicating a loading state.
-   * @default false
-   * */
-  loading?: boolean;
-  /** Custom text displayed during a loading state. */
-  loadingText?: string;
-  /**
-   * Enables the selection of multiple options.
-   * @default false
-   * */
-  multiple?: boolean;
   /** Removes the top margin from the input label, if desired. */
   noMarginTop?: boolean;
-  /** Message to display when no options match the user's search. */
-  noOptionsMessage?: string;
   /** Callback function triggered when the input field loses focus. */
   onBlur?: (e: React.FocusEvent) => void;
   /** Callback function triggered when the selection of options changes. */
   onSelectionChange: (selected: T) => void;
-  /** An array of available options for selection in the Autocomplete. */
-  options: OptionType[];
-  /** Custom filter function to control which options are available for selection. */
-  optionsFilter?: (option: OptionType) => boolean;
   /** Placeholder text displayed in the input field. */
   placeholder?: string;
-  /** Custom rendering function for individual option items. */
-  renderOption?: (option: OptionType, selected: boolean) => JSX.Element;
   /** Custom rendering function for the label of an option. */
   renderOptionLabel?: (option: OptionType) => string;
   /** Indicates whether the input is required, displaying an appropriate indicator. */
@@ -142,23 +102,20 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
   const {
     clearOnBlur = false,
     defaultValue,
-    disableClearable,
     disablePortal = true,
-    disabled,
     errorText,
+    filterOptions,
     helperText,
-    id,
     label,
     limitTags = 2,
     loading = false,
     loadingText,
     multiple = false,
     noMarginTop,
-    noOptionsMessage,
+    noOptionsText,
     onBlur,
     onSelectionChange,
     options,
-    optionsFilter,
     placeholder,
     renderOption,
     renderOptionLabel,
@@ -175,8 +132,8 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
   } = useSelectAllOptions([]);
 
   const [inputValue, setInputValue] = React.useState('');
-  const filteredOptions = optionsFilter
-    ? options?.filter(optionsFilter)
+  const filteredOptions: OptionType[] = filterOptions
+    ? options?.filter(filterOptions)
     : options || [];
   const selectAllFilteredOptions = [
     { label: selectAllLabel, value: 'all' },
@@ -222,7 +179,11 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
   };
 
   const handleRenderOption = useCallback(
-    (props, option: OptionType, { selected }) => {
+    (
+      props: React.HTMLAttributes<HTMLLIElement>,
+      option: OptionType,
+      { selected }: AutocompleteRenderOptionState
+    ) => {
       const selectAllOption = option.value === 'all';
 
       const ListItem = selectAllOption ? StyledListItem : 'li';
@@ -230,7 +191,7 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
       return (
         <ListItem {...props}>
           {renderOption ? (
-            renderOption(option, selected)
+            renderOption(props, option, selected)
           ) : (
             <>
               <Box
@@ -302,17 +263,14 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
       PopperComponent={CustomPopper}
       clearOnBlur={clearOnBlur}
       defaultValue={defaultValue}
-      disableClearable={disableClearable}
       disableCloseOnSelect={multiple}
       disablePortal={disablePortal}
-      disabled={disabled}
-      id={id}
       inputValue={inputValue}
       limitTags={limitTags}
       loading={loading}
       loadingText={loadingText || 'Loading...'}
       multiple={multiple}
-      noOptionsText={noOptionsMessage || renderNoOptions}
+      noOptionsText={noOptionsText || renderNoOptions}
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
       options={multiple ? selectAllFilteredOptions : filteredOptions}
