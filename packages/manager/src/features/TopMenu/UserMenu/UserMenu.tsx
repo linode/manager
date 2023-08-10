@@ -60,7 +60,7 @@ export const UserMenu = React.memo(() => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? 'user-menu-popover' : undefined;
 
   const { data: grants } = useGrants();
 
