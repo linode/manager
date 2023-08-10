@@ -1,6 +1,6 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { styled } from '@mui/material';
+import { Theme, styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -46,6 +46,10 @@ export const UserMenu = React.memo(() => {
     _isRestrictedUser,
     profile,
   } = useAccountManagement();
+
+  const matchesSmDown = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -120,17 +124,28 @@ export const UserMenu = React.memo(() => {
     );
   };
 
+  const getEndIcon = () => {
+    if (matchesSmDown) {
+      return undefined;
+    }
+    if (open) {
+      return <KeyboardArrowUp />;
+    }
+    return <KeyboardArrowDown />;
+  };
+
   return (
     <>
       <Button
         sx={(theme) => ({
           backgroundColor: open ? theme.bg.app : undefined,
           height: '50px',
+          minWidth: 'unset',
           textTransform: 'none',
         })}
         aria-describedby={id}
         disableRipple
-        endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+        endIcon={getEndIcon()}
         onClick={handleClick}
         startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
       >
