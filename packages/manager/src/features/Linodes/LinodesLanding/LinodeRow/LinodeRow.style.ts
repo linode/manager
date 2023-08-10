@@ -1,5 +1,4 @@
 import { styled, Theme } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 
 import { TableCell } from 'src/components/TableCell';
 import { isPropValid } from 'src/utilities/isPropValid';
@@ -16,12 +15,6 @@ const statusLinkStyles = (theme: Theme) => ({
   cursor: 'pointer',
   padding: 0,
 });
-
-export const StyledLink = styled(Link, { label: 'StyledLink' })(
-  ({ theme }) => ({
-    ...statusLinkStyles(theme),
-  })
-);
 
 export const StyledButton = styled('button', { label: 'StyledButton' })(
   ({ theme }) => ({
