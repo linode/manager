@@ -15,7 +15,7 @@ import { Help } from './Help';
 import NotificationMenu from './NotificationMenu';
 import SearchBar from './SearchBar';
 import { TopMenuIcon } from './TopMenuIcon';
-import UserMenu from './UserMenu';
+import { UserMenu } from './UserMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {

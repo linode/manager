@@ -11,16 +11,12 @@ import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Hidden } from 'src/components/Hidden';
 import { Typography } from 'src/components/Typography';
-import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
 
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   inverted: {
     transform: 'rotate(180deg)',
-  },
-  menuItemLink: {
-    ...menuLinkStyle(theme.textColors.linkActiveLight),
   },
   notificationSpacing: {
     '& > div:not(:first-child)': {
@@ -91,11 +87,7 @@ export const NotificationSection = (props: NotificationSectionProps) => {
                   <Typography variant="h3">{header}</Typography>
                   {showMoreTarget && (
                     <strong>
-                      <Link
-                        className={classes.menuItemLink}
-                        style={{ padding: 0 }}
-                        to={showMoreTarget}
-                      >
+                      <Link style={{ padding: 0 }} to={showMoreTarget}>
                         {showMoreText ?? 'View history'}
                       </Link>
                     </strong>
