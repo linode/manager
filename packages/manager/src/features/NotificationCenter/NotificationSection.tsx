@@ -2,7 +2,6 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material/styles';
 import classNames from 'classnames';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Accordion } from 'src/components/Accordion';
@@ -10,6 +9,7 @@ import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
 import type { Theme } from '@mui/material/styles';
