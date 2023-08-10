@@ -18,7 +18,6 @@ export interface CreateVPCPayload {
 export interface UpdateVPCPayload {
   label?: string;
   description?: string;
-  region?: string;
 }
 
 export interface CreateSubnetPayload {

@@ -17,7 +17,7 @@ interface Props {
   vpc?: VPC;
 }
 
-const REGION_HELPER_TEXT = 'The Region field will not be editable during beta.';
+const REGION_HELPER_TEXT = 'Region cannot be changed during beta.';
 
 export const VPCEditDrawer = (props: Props) => {
   const { onClose, open, vpc } = props;
@@ -34,7 +34,6 @@ export const VPCEditDrawer = (props: Props) => {
     initialValues: {
       description: vpc?.description,
       label: vpc?.label,
-      region: vpc?.region,
     },
     async onSubmit(values) {
       await updateVPC(values);
@@ -79,7 +78,7 @@ export const VPCEditDrawer = (props: Props) => {
             handleSelection={() => null}
             helperText={REGION_HELPER_TEXT}
             regions={regionsData}
-            selectedID={form.values.region}
+            selectedID={vpc?.region ?? null}
           />
         )}
         <ActionsPanel

@@ -23,7 +23,7 @@ interface Props<IsClearable extends boolean>
   label?: string;
   regions: Region[];
   required?: boolean;
-  selectedID?: null | string;
+  selectedID: null | string;
   width?: number;
 }
 
