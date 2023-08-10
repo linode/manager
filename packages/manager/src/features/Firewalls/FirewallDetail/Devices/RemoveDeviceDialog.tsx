@@ -1,12 +1,10 @@
 import { FirewallDevice } from '@linode/api-v4';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 
 export interface Props {
   device: FirewallDevice | undefined;
@@ -23,7 +21,6 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     device,
     firewallId,
     firewallLabel,
-    linodeId,
     onClose,
     onLinodeNetworkTab,
     open,
@@ -34,20 +31,8 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     device?.id ?? -1
   );
 
-  const queryClient = useQueryClient();
-
   const onDelete = async () => {
     await mutateAsync();
-
-    // If on the Linode Network tab, ensure the Firewalls table on the Linode Network tab gets updated
-    if (onLinodeNetworkTab) {
-      queryClient.invalidateQueries([
-        linodesQueryKey,
-        'linode',
-        linodeId,
-        'firewalls',
-      ]);
-    }
 
     onClose();
   };

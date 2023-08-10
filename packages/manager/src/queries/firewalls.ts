@@ -23,9 +23,10 @@ import {
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { EventWithStore } from 'src/events';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
-import { itemInListCreationHandler, updateInPaginatedStore } from './base';
+import { updateInPaginatedStore } from './base';
 
 export const queryKey = 'firewall';
 
@@ -39,10 +40,20 @@ export const useAddFirewallDeviceMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<FirewallDevice, APIError[], FirewallDevicePayload>(
     (data) => addFirewallDevice(id, data),
-    itemInListCreationHandler(
-      [queryKey, 'firewall', id, 'devices'],
-      queryClient
-    )
+    {
+      onSuccess(data) {
+        // Refresh the cached device list
+        queryClient.invalidateQueries([queryKey, 'firewall', id, 'devices']);
+
+        // Refresh the cached result of the linode-specific firewalls query
+        queryClient.refetchQueries([
+          linodesQueryKey,
+          'linode',
+          data.id,
+          'firewalls',
+        ]);
+      },
+    }
   );
 };
 
@@ -51,6 +62,17 @@ export const useRemoveFirewallDeviceMutation = (
   deviceId: number
 ) => {
   const queryClient = useQueryClient();
+
+  // Find the ID of the Linode so we can invalidate its firewalls data as well.
+  const devicesData = queryClient.getQueryData<FirewallDevice[]>([
+    queryKey,
+    'firewall',
+    firewallId,
+    'devices',
+  ]);
+  const thisDevice = devicesData?.find((device) => device.id === deviceId);
+  const thisDeviceEntityID = thisDevice?.entity.id;
+
   return useMutation<{}, APIError[]>(
     () => deleteFirewallDevice(firewallId, deviceId),
     {
@@ -61,10 +83,18 @@ export const useRemoveFirewallDeviceMutation = (
             return oldData?.filter((device) => device.id !== deviceId) ?? [];
           }
         );
+
+        queryClient.invalidateQueries([
+          linodesQueryKey,
+          'linode',
+          thisDeviceEntityID,
+          'firewalls',
+        ]);
       },
     }
   );
 };
+
 export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Firewall>, APIError[]>(
     [queryKey, 'paginated', params, filter],
