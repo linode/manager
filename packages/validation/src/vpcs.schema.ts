@@ -14,6 +14,22 @@ const labelTestDetails = {
 const IP_EITHER_BOTH_NOT_NEITHER =
   'A subnet must have either IPv4 or IPv6, or both, but not neither.';
 
+export const determineIPType = (ip: string) => {
+  try {
+    let addr;
+    const [, mask] = ip.split('/');
+    if (mask) {
+      const parsed = ipaddr.parseCIDR(ip);
+      addr = parsed[0];
+    } else {
+      addr = ipaddr.parse(ip);
+    }
+    return addr.kind();
+  } catch (e) {
+    return undefined;
+  }
+};
+
 /**
  * VPC-related IP validation that handles for single IPv4 and IPv6 addresses as well as
  * IPv4 ranges in CIDR format and IPv6 ranges with prefix lengths.
@@ -52,16 +68,7 @@ export const vpcsValidateIP = (
   }
 
   try {
-    let addr;
-
-    if (mask) {
-      const parsedValue = ipaddr.parseCIDR(value);
-      addr = parsedValue[0];
-    } else {
-      addr = ipaddr.parse(value);
-    }
-
-    const type = addr.kind();
+    const type = determineIPType(value);
     const isIPv4 = type === 'ipv4';
     const isIPv6 = type === 'ipv6';
 
