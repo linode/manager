@@ -7,11 +7,11 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import StackScriptPanel from './StackScriptPanel';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 export const StackScriptsLanding = () => {
   const history = useHistory<{

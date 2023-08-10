@@ -20,6 +20,7 @@ import { compose as recompose } from 'recompose';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Tag } from 'src/components/TagsInput/TagsInput';
 import {
   WithAccountSettingsProps,
@@ -73,7 +74,6 @@ import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 

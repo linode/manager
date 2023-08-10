@@ -6,6 +6,7 @@ import {
   LandingHeader,
   LandingHeaderProps,
 } from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -15,7 +16,6 @@ import { useAccount } from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
 
 import AccountLogins from './AccountLogins';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
 const EntityTransfersLanding = React.lazy(

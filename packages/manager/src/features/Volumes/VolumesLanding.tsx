@@ -11,6 +11,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -37,7 +38,6 @@ import { VolumeAttachmentDrawer } from './VolumeAttachmentDrawer';
 import { VolumeTableRow } from './VolumeTableRow';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 interface Props {
   fromLinodes?: boolean;

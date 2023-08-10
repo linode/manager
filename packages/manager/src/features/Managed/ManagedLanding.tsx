@@ -3,10 +3,10 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const Contacts = React.lazy(() => import('./Contacts/Contacts'));
 const Monitors = React.lazy(() => import('./Monitors'));
