@@ -4,11 +4,12 @@ import * as React from 'react';
 import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { Configs, Props } from './Configs';
+import { Configs } from './Configs';
+import type { ConfigsProps } from './Configs';
 
 const mockHandleSelect = jest.fn();
 
-const props: Props = {
+const props: ConfigsProps = {
   configSelection: { 9859511: { associatedDiskIds: [], isSelected: false } },
   configs: linodeConfigs,
   handleSelect: (id: number) => mockHandleSelect(id),

@@ -1,4 +1,3 @@
-import copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
 
@@ -12,6 +11,11 @@ import {
   StyledRenderIPDiv,
   StyledRootDiv,
 } from './IPAddress.styles';
+
+type RenderIPData = {
+  ip: string;
+  key?: number;
+};
 
 export interface IPAddressProps {
   /**
@@ -52,70 +56,37 @@ export interface IPAddressProps {
 export const sortIPAddress = (ip1: string, ip2: string) =>
   (privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1);
 
-export class IPAddress extends React.Component<IPAddressProps> {
-  componentWillUnmount() {
-    if (this.copiedTimeout !== null) {
-      window.clearTimeout(this.copiedTimeout);
-    }
-  }
+export const IPAddress = (props: IPAddressProps) => {
+  const {
+    ips,
+    showAll,
+    showMore,
+    isHovered = false,
+    showTooltipOnIpHover = false,
+  } = props;
 
-  render() {
-    const { ips, showAll, showMore } = this.props;
+  const formattedIPS = ips
+    .map((ip) => ip.replace('/64', ''))
+    .sort(sortIPAddress);
 
-    const formattedIPS = ips
-      .map((ip) => ip.replace('/64', ''))
-      .sort(sortIPAddress);
+  const copiedTimeout: null | number = null;
 
-    return (
-      <StyledRootDiv showAll={showAll}>
-        {!showAll
-          ? this.renderIP(formattedIPS[0])
-          : formattedIPS.map((a, i) => {
-              return this.renderIP(a, i);
-            })}
+  const [isIpTooltipHovered, setIsIpTooltipHovered] = React.useState<boolean>(
+    false
+  );
 
-        {formattedIPS.length > 1 && showMore && !showAll && (
-          <ShowMore
-            render={(ipsAsArray: string[]) => {
-              return ipsAsArray.map((ip, idx) =>
-                this.renderIP(ip.replace('/64', ''), idx)
-              );
-            }}
-            ariaItemType="IP addresses"
-            data-qa-ip-more
-            items={tail(formattedIPS)}
-          />
-        )}
-      </StyledRootDiv>
-    );
-  }
+  React.useEffect(() => {
+    return () => {
+      if (copiedTimeout !== null) {
+        window.clearTimeout(copiedTimeout);
+      }
+    };
+  }, [copiedTimeout]);
 
-  clickIcon = (ip: string) => {
-    this.setState({
-      copied: true,
-    });
-    window.setTimeout(() => this.setState({ copied: false }), 1500);
-    copy(ip);
-  };
+  const handleMouseEnter = () => setIsIpTooltipHovered(true);
+  const handleMouseLeave = () => setIsIpTooltipHovered(false);
 
-  copiedTimeout: null | number = null;
-
-  handleMouseEnter = () => {
-    this.setState({
-      isIpTooltipHovered: true,
-    });
-  };
-
-  handleMouseLeave = () => {
-    this.setState({
-      isIpTooltipHovered: false,
-    });
-  };
-
-  renderCopyIcon = (ip: string) => {
-    const { isHovered = false, showTooltipOnIpHover = false } = this.props;
-    const { isIpTooltipHovered } = this.state;
-
+  const renderCopyIcon = (ip: string) => {
     return (
       <StyledIpLinkDiv data-qa-copy-ip>
         <StyledCopyTooltip
@@ -129,13 +100,11 @@ export class IPAddress extends React.Component<IPAddressProps> {
     );
   };
 
-  renderIP = (ip: string, key?: number) => {
-    const { showTooltipOnIpHover = false } = this.props;
-
+  const renderIP = ({ ip, key }: RenderIPData) => {
     const handlers = showTooltipOnIpHover
       ? {
-          onMouseEnter: this.handleMouseEnter,
-          onMouseLeave: this.handleMouseLeave,
+          onMouseEnter: handleMouseEnter,
+          onMouseLeave: handleMouseLeave,
         }
       : undefined;
 
@@ -146,15 +115,31 @@ export class IPAddress extends React.Component<IPAddressProps> {
         showTooltipOnIpHover={showTooltipOnIpHover}
       >
         <CopyTooltip copyableText data-qa-copy-ip-text text={ip} />
-        {this.renderCopyIcon(ip)}
+        {renderCopyIcon(ip)}
       </StyledRenderIPDiv>
     );
   };
 
-  state = {
-    copied: false,
-    isIpTooltipHovered: false,
-  };
-}
+  return (
+    <StyledRootDiv showAll={showAll}>
+      {!showAll
+        ? renderIP({ ip: formattedIPS[0] })
+        : formattedIPS.map((a, i) => {
+            return renderIP({ ip: a, key: i });
+          })}
 
-export default IPAddress;
+      {formattedIPS.length > 1 && showMore && !showAll && (
+        <ShowMore
+          render={(ipsAsArray: string[]) => {
+            return ipsAsArray.map((ip, idx) =>
+              renderIP({ ip: ip.replace('/64', ''), key: idx })
+            );
+          }}
+          ariaItemType="IP addresses"
+          data-qa-ip-more
+          items={tail(formattedIPS)}
+        />
+      )}
+    </StyledRootDiv>
+  );
+};

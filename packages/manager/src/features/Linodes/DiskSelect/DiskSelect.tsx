@@ -29,7 +29,7 @@ const diskFromValue = (
   return thisDisk ? thisDisk : null;
 };
 
-const DiskSelect = (props: Props) => {
+export const DiskSelect = RenderGuard((props: Props) => {
   const {
     disabled,
     diskError,
@@ -54,6 +54,4 @@ const DiskSelect = (props: Props) => {
       value={diskFromValue(options, selectedDisk)}
     />
   );
-};
-
-export default RenderGuard(DiskSelect);
+});

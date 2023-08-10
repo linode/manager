@@ -5,15 +5,15 @@ import {
   StyledCommandDiv,
   StyledCopyTooltip,
   StyledHighlightedMarkdown,
-} from './styles';
+} from './CodeBlock.styles';
 
-export interface Props {
+export interface CodeBlockProps {
   command: string;
   commandType: string;
   language: 'bash';
 }
 
-const CodeBlock = (props: Props) => {
+export const CodeBlock = (props: CodeBlockProps) => {
   const { command, commandType, language } = props;
 
   const handleCopyIconClick = () => {
@@ -30,5 +30,3 @@ const CodeBlock = (props: Props) => {
     </StyledCommandDiv>
   );
 };
-
-export default CodeBlock;

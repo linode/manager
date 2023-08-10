@@ -21,8 +21,8 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { useTypeQuery } from 'src/queries/types';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
-import BackupTableRow from './BackupTableRow';
-import BackupsPlaceholder from './BackupsPlaceholder';
+import { BackupTableRow } from './BackupTableRow';
+import { BackupsPlaceholder } from './BackupsPlaceholder';
 import { CancelBackupsDialog } from './CancelBackupsDialog';
 import { CaptureSnapshot } from './CaptureSnapshot';
 import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';

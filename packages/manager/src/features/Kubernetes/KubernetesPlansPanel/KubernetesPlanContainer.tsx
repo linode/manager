@@ -31,15 +31,17 @@ interface Props {
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 
-export const KubernetesPlanContainer = ({
-  disabled,
-  getTypeCount,
-  onAdd,
-  onSelect,
-  plans,
-  selectedID,
-  updatePlanCount,
-}: Props) => {
+export const KubernetesPlanContainer = (props: Props) => {
+  const {
+    disabled,
+    getTypeCount,
+    onAdd,
+    onSelect,
+    plans,
+    selectedID,
+    updatePlanCount,
+  } = props;
+
   return (
     <Grid container spacing={2}>
       <Hidden mdUp>

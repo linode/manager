@@ -10,8 +10,8 @@ import { useGrants, useProfile } from 'src/queries/profile';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
-import RebuildFromImage from './RebuildFromImage';
-import RebuildFromStackScript from './RebuildFromStackScript';
+import { RebuildFromImage } from './RebuildFromImage';
+import { RebuildFromStackScript } from './RebuildFromStackScript';
 
 interface Props {
   linodeId: number | undefined;

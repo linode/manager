@@ -37,7 +37,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
-import Details from './Details';
+import { Details } from './Details';
 import {
   attachAssociatedDisksToConfigs,
   curriedCloneLandingReducer,

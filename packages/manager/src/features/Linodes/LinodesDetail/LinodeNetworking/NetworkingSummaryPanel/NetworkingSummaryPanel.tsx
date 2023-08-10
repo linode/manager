@@ -5,15 +5,15 @@ import * as React from 'react';
 import { Paper } from 'src/components/Paper';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
-import DNSResolvers from './DNSResolvers';
-import NetworkTransfer from './NetworkTransfer';
-import TransferHistory from './TransferHistory';
+import { DNSResolvers } from './DNSResolvers';
+import { NetworkTransfer } from './NetworkTransfer';
+import { TransferHistory } from './TransferHistory';
 
 interface Props {
   linodeID: number;
 }
 
-const LinodeNetworkingSummaryPanel = (props: Props) => {
+export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
   // @todo maybe move this query closer to the consuming component
   const { data: linode } = useLinodeQuery(props.linodeID);
   const theme = useTheme();
@@ -56,7 +56,7 @@ const LinodeNetworkingSummaryPanel = (props: Props) => {
       </Grid>
     </StyledPaper>
   );
-};
+});
 
 const StyledDnsResolverGrid = styled(Grid, { label: 'StyledDnsResolverGrid' })(
   ({ theme }) => ({
@@ -80,5 +80,3 @@ const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
     flexDirection: 'column',
   },
 }));
-
-export default React.memo(LinodeNetworkingSummaryPanel);

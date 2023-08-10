@@ -15,7 +15,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
-import PlansPanel from 'src/features/components/PlansPanel/PlansPanel';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {

@@ -13,7 +13,7 @@ import ImageSelect from 'src/components/ImageSelect';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import { APP_ROOT } from 'src/constants';
-import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
+import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import {
   AppCategory,
@@ -135,7 +135,7 @@ const renderLogo = (selectedStackScriptLabel?: string, logoUrl?: string) => {
 
 const curriedHandleSelectStackScript = curry(handleSelectStackScript);
 
-class FromAppsContent extends React.Component<CombinedProps, State> {
+export class FromAppsContent extends React.Component<CombinedProps, State> {
   render() {
     const {
       appInstances,
@@ -412,5 +412,3 @@ const StyledSearchBox = styled(Box, { label: 'StyledSearchBox' })({
   },
   flexGrow: 10,
 });
-
-export default FromAppsContent;

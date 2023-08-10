@@ -22,16 +22,18 @@ interface Props {
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 
-export const KubernetesPlanSelection = ({
-  disabled,
-  getTypeCount,
-  idx,
-  onAdd,
-  onSelect,
-  selectedID,
-  type,
-  updatePlanCount,
-}: Props) => {
+export const KubernetesPlanSelection = (props: Props) => {
+  const {
+    disabled,
+    getTypeCount,
+    idx,
+    onAdd,
+    onSelect,
+    selectedID,
+    type,
+    updatePlanCount,
+  } = props;
+
   const count = getTypeCount(type.id);
 
   // We don't want network information for LKE so we remove the last two elements.

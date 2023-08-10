@@ -25,6 +25,7 @@ export interface PlanSelectionType extends BaseType {
   subHeadings: ExtendedType['subHeadings'];
   transfer?: ExtendedType['transfer'];
 }
+
 interface Props {
   className?: string;
   copy?: string;
@@ -131,5 +132,3 @@ export const PlansPanel = (props: Props) => {
     />
   );
 };
-
-export default PlansPanel;

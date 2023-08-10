@@ -29,12 +29,12 @@ import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getMonthlyAndHourlyNodePricing } from 'src/features/Linodes/LinodesCreate/utilities';
-import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
+import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
-import PlansPanel from 'src/features/components/PlansPanel/PlansPanel';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import {
   CreateTypes,
   handleChangeCreateType,
@@ -51,7 +51,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
-import ApiAwarenessModal from './ApiAwarenessModal';
+import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
   StyledButtonGroupBox,
   StyledCreateButton,
@@ -60,11 +60,11 @@ import {
   StyledPaper,
   StyledTabPanel,
 } from './LinodeCreate.styles';
-import FromAppsContent from './TabbedContent/FromAppsContent';
-import FromBackupsContent from './TabbedContent/FromBackupsContent';
-import FromImageContent from './TabbedContent/FromImageContent';
-import FromLinodeContent from './TabbedContent/FromLinodeContent';
-import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+import { FromAppsContent } from './TabbedContent/FromAppsContent';
+import { FromBackupsContent } from './TabbedContent/FromBackupsContent';
+import { FromImageContent } from './TabbedContent/FromImageContent';
+import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
+import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import {
   AllFormStateAndHandlers,

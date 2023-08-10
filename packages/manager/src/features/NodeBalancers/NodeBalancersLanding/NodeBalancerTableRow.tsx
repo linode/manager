@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import IPAddress from 'src/features/Linodes/LinodesLanding/IPAddress';
-import RegionIndicator from 'src/features/Linodes/LinodesLanding/RegionIndicator';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 import { useAllNodeBalancerConfigsQuery } from 'src/queries/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
