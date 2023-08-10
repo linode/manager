@@ -283,5 +283,3 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
 
   return null;
 };
-
-export default DisplayGroupedLinodes;

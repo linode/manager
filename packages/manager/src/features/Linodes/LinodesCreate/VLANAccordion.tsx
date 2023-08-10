@@ -15,7 +15,7 @@ import {
   regionsWithFeature,
 } from 'src/utilities/doesRegionSupportFeature';
 
-import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
+import { InterfaceSelect } from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 interface Props {
   handleVLANChange: (updatedInterface: Interface) => void;

@@ -7,10 +7,10 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import AppPanelSection from 'src/features/Linodes/LinodesCreate/AppPanelSection';
+import { AppPanelSection } from 'src/features/Linodes/LinodesCreate/AppPanelSection';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
-import Panel from './Panel';
+import { Panel } from './Panel';
 import { AppsData } from './types';
 
 interface Props extends AppsData {
