@@ -44,3 +44,12 @@ export const StyledH1Header = styled(H1Header, {
     marginLeft: theme.spacing(),
   },
 }));
+
+export const StyledRootGrid = styled(Grid, {
+  label: 'StyledRootGrid',
+})({
+  '&.MuiGrid-container': {
+    width: 'calc(100% + 16px)',
+  },
+  padding: 0,
+});

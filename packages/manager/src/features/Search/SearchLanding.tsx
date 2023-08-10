@@ -1,6 +1,4 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -38,19 +36,11 @@ import {
   StyledError,
   StyledGrid,
   StyledH1Header,
+  StyledRootGrid,
 } from './SearchLanding.styles';
 import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '&.MuiGrid-container': {
-      width: 'calc(100% + 16px)',
-    },
-    padding: 0,
-  },
-}));
 
 const displayMap = {
   buckets: 'Buckets',
@@ -75,7 +65,6 @@ const splitWord = (word: any) => {
 export const SearchLanding = (props: CombinedProps) => {
   const { entities, search, searchResultsByEntity } = props;
 
-  const classes = useStyles();
   const isLargeAccount = useIsLargeAccount();
 
   const {
@@ -259,7 +248,7 @@ export const SearchLanding = (props: CombinedProps) => {
   const errorMessage = getErrorMessage();
 
   return (
-    <Grid className={classes.root} container direction="column" spacing={2}>
+    <StyledRootGrid container direction="column" spacing={2}>
       <Grid>
         {!resultsEmpty && !loading && (
           <StyledH1Header
@@ -315,7 +304,7 @@ export const SearchLanding = (props: CombinedProps) => {
           ))}
         </Grid>
       )}
-    </Grid>
+    </StyledRootGrid>
   );
 };
 
