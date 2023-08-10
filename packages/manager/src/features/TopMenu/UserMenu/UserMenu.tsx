@@ -1,21 +1,23 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Popover from '@mui/material/Popover';
+import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import {
-  MenuButton,
-  MenuItems,
-  MenuLink,
-  MenuPopover,
-  Menu as ReachMenu,
-} from '@reach/menu-button';
-import { positionRight } from '@reach/popover';
+// import {
+//   MenuButton,
+//   MenuItems,
+//   MenuLink,
+//   MenuPopover,
+//   Menu as ReachMenu,
+// } from '@reach/menu-button';
+// import { positionRight } from '@reach/popover';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Button } from 'src/components/Button/Button';
 
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
-import { Tooltip } from 'src/components/Tooltip';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
@@ -241,7 +243,7 @@ const profileLinks: MenuLink[] = [
   { display: 'Log Out', href: '/logout' },
 ];
 
-export const UserMenu: React.FC<{}> = () => {
+export const UserMenu = () => {
   const classes = useStyles();
 
   const {
@@ -249,6 +251,21 @@ export const UserMenu: React.FC<{}> = () => {
     _isRestrictedUser,
     profile,
   } = useAccountManagement();
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   const { data: grants } = useGrants();
 
@@ -292,96 +309,89 @@ export const UserMenu: React.FC<{}> = () => {
   const renderLink = (menuLink: MenuLink) =>
     menuLink.hide ? null : (
       <Grid key={menuLink.display} xs={12}>
-        <MenuLink
-          as={Link}
+        <Link
           className={classes.menuItemLink}
           data-testid={`menu-item-${menuLink.display}`}
+          style={{ fontSize: '0.875rem' }}
           to={menuLink.href}
         >
           {menuLink.display}
-        </MenuLink>
+        </Link>
       </Grid>
     );
 
   return (
-    <div>
-      <ReachMenu>
-        <Tooltip
-          disableTouchListener
-          enterDelay={500}
-          leaveDelay={0}
-          title="Profile & Account"
-        >
-          <MenuButton
-            className={classes.menuButton}
-            data-testid="nav-group-profile"
-          >
-            <GravatarByEmail
-              className={classes.userWrapper}
-              email={profile?.email ?? ''}
-            />
-            <Hidden mdDown>
-              <Typography className={classes.inlineUserName}>
-                {userName}
-              </Typography>
-            </Hidden>
-            <KeyboardArrowDown className={classes.caret} />
-          </MenuButton>
-        </Tooltip>
-        <MenuPopover
-          className={classes.menuPopover}
-          data-qa-user-menu
-          position={positionRight}
-        >
-          <MenuItems className={classes.menuItemList}>
-            <div className={classes.userName}>
-              <strong>{userName}</strong>
-            </div>
-            <div className={classes.menuHeader}>My Profile</div>
-            <Grid container>
-              <Grid
-                className={classes.profileWrapper}
-                direction="column"
-                wrap="nowrap"
-                xs={6}
-              >
-                {profileLinks.slice(0, 4).map(renderLink)}
-              </Grid>
-              <Grid
-                className={classes.profileWrapper}
-                direction="column"
-                wrap="nowrap"
-                xs={6}
-              >
-                {profileLinks.slice(4).map(renderLink)}
-              </Grid>
+    <>
+      <Button aria-describedby={id} onClick={handleClick}>
+        <GravatarByEmail
+          className={classes.userWrapper}
+          email={profile?.email ?? ''}
+        />
+        <Hidden mdDown>
+          <Typography className={classes.inlineUserName}>{userName}</Typography>
+        </Hidden>
+        <KeyboardArrowDown className={classes.caret} />
+      </Button>
+      <Popover
+        PaperProps={{
+          sx: {
+            minWidth: 300,
+          },
+        }}
+        anchorOrigin={{
+          horizontal: 'left',
+          vertical: 'bottom',
+        }}
+        anchorEl={anchorEl}
+        id={id}
+        onClose={handleClose}
+        open={open}
+      >
+        <div className={classes.menuItemList}>
+          <div className={classes.userName}>
+            <strong>{userName}</strong>
+          </div>
+          <div className={classes.menuHeader}>My Profile</div>
+          <Grid container marginX={3} rowSpacing={1}>
+            <Grid
+              className={classes.profileWrapper}
+              direction="column"
+              wrap="nowrap"
+              xs={6}
+            >
+              {profileLinks.slice(0, 4).map(renderLink)}
             </Grid>
-            {_hasAccountAccess ? (
-              <>
-                <div className={classes.menuHeader}>Account</div>
-                <Grid container>
-                  <Grid className={classes.accountColumn}>
-                    {accountLinks.map((menuLink) =>
-                      menuLink.hide ? null : (
-                        <MenuLink
-                          as={Link}
-                          className={classes.menuItemLink}
-                          data-testid={`menu-item-${menuLink.display}`}
-                          key={menuLink.display}
-                          to={menuLink.href}
-                        >
-                          {menuLink.display}
-                        </MenuLink>
-                      )
-                    )}
-                  </Grid>
-                </Grid>
-              </>
-            ) : null}
-          </MenuItems>
-        </MenuPopover>
-      </ReachMenu>
-    </div>
+            <Grid
+              className={classes.profileWrapper}
+              direction="column"
+              wrap="nowrap"
+              xs={6}
+            >
+              {profileLinks.slice(4).map(renderLink)}
+            </Grid>
+          </Grid>
+          {_hasAccountAccess ? (
+            <>
+              <div className={classes.menuHeader}>Account</div>
+              <Stack marginX={3} spacing={2}>
+                {accountLinks.map((menuLink) =>
+                  menuLink.hide ? null : (
+                    <Link
+                      data-testid={`menu-item-${menuLink.display}`}
+                      key={menuLink.display}
+                      style={{ fontSize: '0.875rem' }}
+                      to={menuLink.href}
+                    >
+                      {menuLink.display}
+                    </Link>
+                  )
+                )}
+              </Stack>
+            </>
+          ) : null}
+        </div>
+      </Popover>
+    </>
   );
 };
 
