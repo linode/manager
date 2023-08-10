@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { QueryClient } from 'react-query';
 import { MapDispatchToProps, MapStateToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -29,6 +30,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
+import { usePrevious } from 'src/hooks/usePrevious';
 import { ApplicationState } from 'src/store';
 import {
   BackupError,
@@ -42,10 +44,11 @@ import {
 import { ThunkDispatch } from 'src/store/types';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { pluralize } from 'src/utilities/pluralize';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 
-import AutoEnroll from './AutoEnroll';
-import BackupsTable from './BackupsTable';
+import { AutoEnroll } from './AutoEnroll';
+import { BackupsTable } from './BackupsTable';
 import { ExtendedLinode, LinodeWithTypeInfo } from './types';
 
 interface DispatchProps {
@@ -85,15 +88,28 @@ type CombinedProps = DispatchProps &
   WithAccountSettingsProps &
   WithLinodesProps;
 
-const getFailureNotificationText = (
-  success: number,
-  failed: number
-): string => {
-  if (success > 0) {
-    const pluralizedSuccess = success > 1 ? 'Linodes' : 'Linode';
-    const pluralizedFailure = failed > 1 ? 'Linodes' : 'Linode';
-    return `Enabled backups successfully for ${success} ${pluralizedSuccess}
-    , but ${failed} ${pluralizedFailure} failed.`;
+interface FailureNotificationProps {
+  failedCount: number;
+  successCount: number;
+}
+
+interface EnhanceLinodesProps {
+  errors: BackupError[];
+  linodes: Linode[];
+  types: ExtendedType[];
+}
+
+const getFailureNotificationText = ({
+  failedCount,
+  successCount,
+}: FailureNotificationProps): string => {
+  if (successCount > 0) {
+    return `Enabled backups successfully for ${pluralize(
+      'Linode',
+      'Linodes',
+      successCount
+    )}
+, but ${pluralize('Linode', 'Linodes', failedCount)} failed.`;
   }
   // This function will only be called if at least one backup failed.
   else {
@@ -109,158 +125,174 @@ export const getTotalPrice = (linodes: ExtendedLinode[]) => {
     );
   }, 0);
 };
-export class BackupDrawer extends React.Component<CombinedProps, {}> {
-  componentDidMount(): void {
-    this.updateRequestedTypes();
-  }
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    const { close, dismissSuccess } = this.props.actions;
-    const { autoEnroll, enableSuccess, updatedCount } = this.props;
+export const BackupDrawer = (props: CombinedProps) => {
+  const {
+    accountSettings,
+    actions: { close, dismissSuccess, enable, enroll, toggle },
+    autoEnroll,
+    autoEnrollError,
+    enableErrors,
+    enableSuccess,
+    enabling,
+    enqueueSnackbar,
+    enrolling,
+    linodesData,
+    loading,
+    open,
+    queryClient,
+    requestedTypesData,
+    setRequestedTypes,
+    updatedCount,
+  } = props;
+
+  const linodesWithoutBackups = (linodes: Linode[] | undefined) => {
+    return linodes?.filter((linode) => !linode.backups.enabled) ?? [];
+  };
+
+  const prevLinodesData = usePrevious(linodesData);
+
+  const updateRequestedTypes = React.useCallback(() => {
+    setRequestedTypes(
+      linodesWithoutBackups(linodesData)
+        .map((linode) => linode.type)
+        .filter(isNotNullOrUndefined)
+    );
+  }, [linodesData, setRequestedTypes]);
+
+  const extendedTypeData = requestedTypesData.map(extendType);
+  const extendedLinodes = enhanceLinodes({
+    errors: enableErrors,
+    linodes: linodesWithoutBackups(linodesData),
+    types: extendedTypeData,
+  });
+  const linodeCount = extendedLinodes.length;
+
+  useEffect(() => {
+    updateRequestedTypes();
+    // We only want to run this on mount one time
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (enableSuccess) {
       const pluralizedLinodes =
         updatedCount > 1 ? 'Linodes have' : 'Linode has';
       const text = autoEnroll
         ? `${updatedCount} ${pluralizedLinodes} been enrolled in automatic backups, and
-        all new Linodes will automatically be backed up.`
+all new Linodes will automatically be backed up.`
         : `${updatedCount} ${pluralizedLinodes} been enrolled in automatic backups.`;
-      this.props.enqueueSnackbar(text, {
+      enqueueSnackbar(text, {
         variant: 'success',
       });
       dismissSuccess();
       close();
     }
+  }, [
+    enableSuccess,
+    updatedCount,
+    autoEnroll,
+    close,
+    dismissSuccess,
+    enqueueSnackbar,
+  ]);
+
+  useEffect(() => {
     if (
-      BackupDrawer.getLinodesWithoutBackups(this.props.linodesData).some(
+      linodesWithoutBackups(linodesData).some(
         (linode) =>
-          !BackupDrawer.getLinodesWithoutBackups(prevProps.linodesData).find(
+          !linodesWithoutBackups(prevLinodesData).find(
             (prevLinode) => prevLinode.type == linode.type
           )
       )
     ) {
-      this.updateRequestedTypes();
+      updateRequestedTypes();
     }
-  }
+  }, [linodesData, updateRequestedTypes, prevLinodesData]);
 
-  render() {
-    const {
-      accountSettings,
-      actions: { close, toggle },
-      autoEnroll,
-      autoEnrollError,
-      enableErrors,
-      enabling,
-      enrolling,
-      loading,
-      open,
-      requestedTypesData,
-      updatedCount,
-    } = this.props;
-
-    const extendedTypeData = requestedTypesData.map(extendType);
-    const extendedLinodes = enhanceLinodes(
-      BackupDrawer.getLinodesWithoutBackups(this.props.linodesData),
-      enableErrors,
-      extendedTypeData
-    );
-    const linodeCount = extendedLinodes.length;
-    return (
-      <Drawer onClose={close} open={open} title="Enable All Backups">
-        <Grid container direction={'column'} spacing={2}>
-          <Grid>
-            <Typography variant="body1">
-              Three backup slots are executed and rotated automatically: a daily
-              backup, a 2-7 day old backup, and an 8-14 day old backup. See our
-              {` `}
-              <Link
-                to={
-                  'https://www.linode.com/docs/platform' +
-                  '/disk-images/linode-backup-service/'
-                }
-              >
-                guide on Backups
-              </Link>{' '}
-              for more information on features and limitations. Confirm to add
-              backups to <strong data-qa-backup-count>{linodeCount}</strong>{' '}
-              {linodeCount > 1 ? 'Linodes' : 'Linode'}.
-            </Typography>
-          </Grid>
-          {enableErrors && !isEmpty(enableErrors) && (
-            <Grid data-testid={'result-notice'}>
-              <Notice error spacingBottom={0}>
-                {getFailureNotificationText(updatedCount, enableErrors.length)}
-              </Notice>
-            </Grid>
-          )}
-          {/* Don't show this if the setting is already active. */}
-          {!accountSettings.data?.backups_enabled && (
-            <Grid>
-              <AutoEnroll
-                enabled={autoEnroll}
-                error={autoEnrollError}
-                toggle={toggle}
-              />
-            </Grid>
-          )}
-          <Grid>
-            <DisplayPrice
-              interval="mo"
-              price={getTotalPrice(extendedLinodes)}
-            />
-          </Grid>
-          <Grid>
-            <ActionsPanel
-              primaryButtonProps={{
-                'data-testid': 'submit',
-                label: 'Confirm',
-                loading: loading || enabling || enrolling,
-                onClick: this.handleSubmit,
-              }}
-              secondaryButtonProps={{
-                className: 'cancel',
-                'data-testid': 'cancel',
-                label: 'Cancel',
-                onClick: close,
-              }}
-              style={{ margin: 0, padding: 0 }}
-            />
-          </Grid>
-          <Grid>
-            <BackupsTable linodes={extendedLinodes} loading={loading} />
-          </Grid>
-        </Grid>
-      </Drawer>
-    );
-  }
-
-  static getLinodesWithoutBackups = (linodes: Linode[] | undefined) =>
-    linodes?.filter((linode) => !linode.backups.enabled) ?? [];
-
-  handleSubmit = () => {
-    const {
-      accountSettings,
-      actions: { enable, enroll },
-      queryClient,
-    } = this.props;
+  const handleSubmit = () => {
     if (accountSettings.data?.backups_enabled) {
-      enable(BackupDrawer.getLinodesWithoutBackups(this.props.linodesData));
+      enable(linodesWithoutBackups(linodesData));
     } else {
       enroll(
         accountSettings.data?.backups_enabled ?? false,
         queryClient,
-        BackupDrawer.getLinodesWithoutBackups(this.props.linodesData)
+        linodesWithoutBackups(linodesData)
       );
     }
   };
 
-  updateRequestedTypes = () => {
-    this.props.setRequestedTypes(
-      BackupDrawer.getLinodesWithoutBackups(this.props.linodesData)
-        .map((linode) => linode.type)
-        .filter(isNotNullOrUndefined)
-    );
-  };
-}
+  return (
+    <Drawer onClose={close} open={open} title="Enable All Backups">
+      <Grid container direction={'column'} spacing={2}>
+        <Grid>
+          <Typography variant="body1">
+            Three backup slots are executed and rotated automatically: a daily
+            backup, a 2-7 day old backup, and an 8-14 day old backup. See our
+            {` `}
+            <Link
+              to={
+                'https://www.linode.com/docs/platform' +
+                '/disk-images/linode-backup-service/'
+              }
+            >
+              guide on Backups
+            </Link>{' '}
+            for more information on features and limitations. Confirm to add
+            backups to{' '}
+            <strong data-qa-backup-count>
+              {pluralize('Linode', 'Linodes', linodeCount)}
+            </strong>
+            .
+          </Typography>
+        </Grid>
+        {enableErrors && !isEmpty(enableErrors) && (
+          <Grid data-testid={'result-notice'}>
+            <Notice error spacingBottom={0}>
+              {getFailureNotificationText({
+                failedCount: enableErrors.length,
+                successCount: updatedCount,
+              })}
+            </Notice>
+          </Grid>
+        )}
+        {/* Don't show this if the setting is already active. */}
+        {!accountSettings.data?.backups_enabled && (
+          <Grid>
+            <AutoEnroll
+              enabled={autoEnroll}
+              error={autoEnrollError}
+              toggle={toggle}
+            />
+          </Grid>
+        )}
+        <Grid>
+          <DisplayPrice interval="mo" price={getTotalPrice(extendedLinodes)} />
+        </Grid>
+        <Grid>
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              label: 'Confirm',
+              loading: loading || enabling || enrolling,
+              onClick: handleSubmit,
+            }}
+            secondaryButtonProps={{
+              className: 'cancel',
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: close,
+            }}
+            style={{ margin: 0, padding: 0 }}
+          />
+        </Grid>
+        <Grid>
+          <BackupsTable linodes={extendedLinodes} loading={loading} />
+        </Grid>
+      </Grid>
+    </Drawer>
+  );
+};
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch
@@ -317,11 +349,11 @@ export const addErrors = (
   });
 
 /* Add type and error info to each Linode, so that it's available when rendering each Linode later */
-export const enhanceLinodes = (
-  linodes: Linode[],
-  errors: BackupError[],
-  types: ExtendedType[]
-) => {
+export const enhanceLinodes = ({
+  errors,
+  linodes,
+  types,
+}: EnhanceLinodesProps) => {
   const linodesWithTypes = addTypeInfo(types, linodes);
   return addErrors(errors, linodesWithTypes);
 };
@@ -332,6 +364,7 @@ const mapStateToProps: MapStateToProps<
   ApplicationState
 > = (state: ApplicationState) => {
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
+  // const linodes = getLinodesWithoutBackups(state.__resources);
   return {
     autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     autoEnrollError: path(['backups', 'autoEnrollError'], state),
@@ -341,6 +374,7 @@ const mapStateToProps: MapStateToProps<
     enableSuccess: pathOr(false, ['backups', 'enableSuccess'], state),
     enabling: pathOr(false, ['backups', 'enabling'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
+    // linodesWithoutBackups: linodes,
     loading: pathOr(false, ['backups', 'loading'], state),
     open: pathOr(false, ['backups', 'open'], state),
     updatedCount: pathOr<number>(0, ['backups', 'updatedCount'], state),

@@ -389,6 +389,9 @@ const vpc = [
       )
     );
   }),
+  rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });

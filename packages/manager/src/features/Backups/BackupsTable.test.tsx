@@ -33,8 +33,8 @@ describe('BackupsTable component', () => {
     ).toBeTruthy();
   });
   it('should display linodes', () => {
-    expect(component.find('WithStyles(BackupLinodes)')).toHaveLength(0);
+    expect(component.find('BackupLinodes')).toHaveLength(0);
     component.setProps({ linodes: [linode1, linode2], loading: false });
-    expect(component.find('WithStyles(BackupLinodes)')).toHaveLength(1);
+    expect(component.find('BackupLinodes')).toHaveLength(1);
   });
 });

@@ -4,6 +4,61 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-08-07] - v1.99.0
+
+
+### Added:
+
+- Ability to sort Databases by Region and Engine ([#9433](https://github.com/linode/manager/pull/9433))
+
+### Changed:
+
+- NodeBalancers can be created without a configuration ([#9472](https://github.com/linode/manager/pull/9472))
+- Renamed `Premium` to `Premium CPU` in plans tables ([#9484](https://github.com/linode/manager/pull/9484))
+
+### Fixed:
+
+- Make drawers full width on mobile viewports ([#9427](https://github.com/linode/manager/pull/9427))
+- Inconsistent styling and clipped copy tooltip on OBJ bucket details page ([#9430](https://github.com/linode/manager/pull/9430))
+- Remove markup from Help & Support landing search results  ([#9456](https://github.com/linode/manager/pull/9456))
+- Create Firewall drawer input persisting after firewall creation or cancellation ([#9459](https://github.com/linode/manager/pull/9459))
+- Redirect the user back to `/linodes` when Linode is deleted from Linode Details ([#9469](https://github.com/linode/manager/pull/9469))
+- Add Gopaddle & re-add Wazuh Marketplace apps ([#9473](https://github.com/linode/manager/pull/9473))
+- Enhanced Select fields text cut off at bottom ([#9479](https://github.com/linode/manager/pull/9479))
+
+### Removed:
+
+- Linodes Redux store ([#9421](https://github.com/linode/manager/pull/9421))
+
+### Tech Stories:
+
+- Improve reusability for ActionPanel component ([#9341](https://github.com/linode/manager/pull/9341))
+- Migrate LinodeSelect to LinodeSelect ([#9396](https://github.com/linode/manager/pull/9396))
+- Refactor Link and deprecate ExternalLink ([#9411](https://github.com/linode/manager/pull/9411))
+- Optimize Linode event handlers and query invalidation ([#9451](https://github.com/linode/manager/pull/9451))
+- LinodeSelect - Allow fully custom noOptionsText ([#9452](https://github.com/linode/manager/pull/9452))
+- React Query queries for Linode Configs ([#9418](https://github.com/linode/manager/pull/9418))
+- Resolve open dependabot alerts and clean up packages ([#9425](https://github.com/linode/manager/pull/9425))
+- Remove Bluebird.js as a dependency ([#9455](https://github.com/linode/manager/pull/9455))
+- Clean up exports of src/hooks/ ([#9457](https://github.com/linode/manager/pull/9457))
+- Update Storybook Categories ([#9458](https://github.com/linode/manager/pull/9458))
+- Fix <LinodeSelect /> bugs ([#9464](https://github.com/linode/manager/pull/9464))
+- Decrease Sentry capture rate ([#9487](https://github.com/linode/manager/pull/9487))
+- MUI v5 Migration - `SRC > Components > TableFooter` ([#9412](https://github.com/linode/manager/pull/9412))
+- MUI v5 Migration - `SRC > Components > Dialog` ([#9419](https://github.com/linode/manager/pull/9419))
+- MUI v5 Migration - `SRC > Features > Firewalls` ([#9434](https://github.com/linode/manager/pull/9434))
+- MUI v5 Migration > `SRC > Features > Linodes Pt 1` ([#9445](https://github.com/linode/manager/pull/9445))
+- MUI v5 Migration - `SRC > Components > InputAdornment` ([#9454](https://github.com/linode/manager/pull/9454))
+- MUI v5 Migration - `SRC > Components > FormControlLabel` ([#9476](https://github.com/linode/manager/pull/9476))
+- MUI v5 Migration - `SRC > Components > Form` ([#9480](https://github.com/linode/manager/pull/9480))
+- MUI v5 migration `SRC > Features > Help` ([#9408](https://github.com/linode/manager/pull/9408))
+
+### Upcoming Features:
+
+- VPC landing page ([#9467](https://github.com/linode/manager/pull/9467))
+- Add basic routing and files for VPC ([#9474](https://github.com/linode/manager/pull/9474))
+- Fix User data input crash ([#9494](https://github.com/linode/manager/pull/9494))
+
 ## [2023-07-28] - v1.98.1
 
 ### Fixed:

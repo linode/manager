@@ -8,7 +8,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 
 import CredentialRow from './CredentialRow';
 
-interface Props {
+interface CredentialTableContentProps {
   credentials: ManagedCredential[];
   error?: APIError[] | null;
   loading: boolean;
@@ -16,9 +16,7 @@ interface Props {
   openForEdit: (id: number) => void;
 }
 
-export type CombinedProps = Props;
-
-export const CredentialTableContent: React.FC<CombinedProps> = (props) => {
+export const CredentialTableContent = (props: CredentialTableContentProps) => {
   const { credentials, error, loading, openDialog, openForEdit } = props;
   if (loading) {
     return <TableRowLoading columns={3} />;

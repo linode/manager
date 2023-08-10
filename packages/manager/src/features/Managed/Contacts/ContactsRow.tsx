@@ -7,13 +7,13 @@ import { TableRow } from 'src/components/TableRow';
 
 import ActionMenu from './ContactsActionMenu';
 
-interface Props {
+interface ContactsRowProps {
   contact: ManagedContact;
   openDialog: (contactId: number) => void;
   openDrawer: (linodeId: number) => void;
 }
 
-export const ContactsRow: React.FunctionComponent<Props> = (props) => {
+export const ContactsRow = (props: ContactsRowProps) => {
   const { contact, openDialog, openDrawer } = props;
 
   return (

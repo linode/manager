@@ -17,3 +17,14 @@ import type { VPC } from '@linode/api-v4';
 export const mockGetVPCs = (vpcs: VPC[]): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('vpcs*'), paginateResponse(vpcs));
 };
+
+/**
+ * Intercepts DELETE request to delete a VPC and mocks response.
+ *
+ * @param vpcId - ID of deleted VPC for which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteVPC = (vpcId: number): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`vpcs/${vpcId}`), {});
+};

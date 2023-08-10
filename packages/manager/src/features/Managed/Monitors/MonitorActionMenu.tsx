@@ -1,8 +1,7 @@
 import { MonitorStatus } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { splitAt } from 'ramda';
 import * as React from 'react';
@@ -15,7 +14,7 @@ import {
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-export interface Props {
+export interface MonitorActionMenuProps {
   label: string;
   monitorID: number;
   openDialog: (id: number, label: string) => void;
@@ -24,8 +23,8 @@ export interface Props {
   status: MonitorStatus;
 }
 
-export const MonitorActionMenu: React.FC<Props> = (props) => {
-  const theme = useTheme<Theme>();
+export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
+  const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { enqueueSnackbar } = useSnackbar();
 

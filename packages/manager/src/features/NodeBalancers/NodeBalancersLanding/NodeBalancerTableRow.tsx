@@ -57,7 +57,7 @@ export const NodeBalancerTableRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell>
-        <IPAddress ips={[ipv4]} showMore />
+        <IPAddress ips={[ipv4]} isHovered={true} showMore />
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-region>

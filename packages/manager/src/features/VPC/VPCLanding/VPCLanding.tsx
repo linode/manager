@@ -14,6 +14,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { VPCDeleteDialog } from 'src/features/VPC/VPCLanding/VPCDeleteDialog';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
@@ -49,6 +50,27 @@ const VPCLanding = () => {
   );
 
   const history = useHistory();
+
+  const [deleteDialog, setDeleteDialog] = React.useState({
+    id: -1,
+    label: '',
+    open: false,
+  });
+
+  const handleDeleteVPC = (id: number, label: string) => {
+    setDeleteDialog({
+      id,
+      label,
+      open: true,
+    });
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialog((deleteDialog) => ({
+      ...deleteDialog,
+      open: false,
+    }));
+  };
 
   const createVPC = () => {
     history.push(VPC_CREATE_ROUTE);
@@ -121,7 +143,11 @@ const VPCLanding = () => {
         </TableHead>
         <TableBody>
           {vpcs?.data.map((vpc: VPC) => (
-            <VPCRow key={vpc.id} vpc={vpc} />
+            <VPCRow
+              handleDeleteVPC={() => handleDeleteVPC(vpc.id, vpc.label)}
+              key={vpc.id}
+              vpc={vpc}
+            />
           ))}
         </TableBody>
       </Table>
@@ -133,6 +159,7 @@ const VPCLanding = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
+      <VPCDeleteDialog {...deleteDialog} onClose={closeDeleteDialog} />
     </>
   );
 };

@@ -342,7 +342,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       selectedStackScriptLabel,
     } = this.state;
 
-    if (customLabel?.length) {
+    if (customLabel !== undefined) {
       return customLabel;
     }
 
