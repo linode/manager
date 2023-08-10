@@ -10,7 +10,7 @@ import { ResourcesSection } from 'src/components/EmptyLandingPageResources/Resou
 import { sendEvent } from 'src/utilities/analytics';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
-import AppsSection from './AppsSection';
+import { AppsSection } from './AppsSection';
 import {
   gettingStartedGuides,
   headers,

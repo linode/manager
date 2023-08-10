@@ -26,16 +26,16 @@ import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinod
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
-import IPAddress from '../IPAddress';
+import { IPAddress } from '../IPAddress';
 import { LinodeActionMenu } from '../LinodeActionMenu';
 import { LinodeHandlers } from '../LinodesLanding';
-import RegionIndicator from '../RegionIndicator';
+import { RegionIndicator } from '../RegionIndicator';
 import { parseMaintenanceStartTime } from '../utils';
 import {
   StyledButton,
   StyledIpTableCell,
   StyledMaintenanceTableCell,
-} from './LinodeRow.style';
+} from './LinodeRow.styles';
 
 type Props = Linode & { handlers: LinodeHandlers };
 

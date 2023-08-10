@@ -395,8 +395,8 @@ export const sendMarketplaceSearchEvent = (
 };
 
 // LinodeCreate.tsx
-// LinodesCreate/CodeBlock/index.tsx
-// LinodesCreate/ApiAwareness/index.tsx
+// LinodesCreate/CodeBlock/CodeBlock.tsx
+// LinodesCreate/ApiAwareness/ApiAwareness.tsx
 export const sendApiAwarenessClickEvent = (
   clickType: string,
   label: string
