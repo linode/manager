@@ -73,8 +73,20 @@ describe('LKE Create Cluster', () => {
       .click()
       .type('{enter}');
 
-    // Temporary removal until the Jenkins pipeline is updated
-    // cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
+    // We can assume that the element assigned to haControlPlane should always be in the DOM
+    // for the purpose of this test.
+    // Then, we use it to find the radio button for the HA opt-in and click it to enable the
+    // Create Cluster button.
+    const haControlPlane = '[data-testid="ha-control-plane"]';
+    cy.get(haControlPlane).then((haControlPlane) => {
+      if (
+        haControlPlane.find('[data-testid="ha-radio-button-yes"]').length > 0
+      ) {
+        cy.get('[data-testid="ha-radio-button-yes"]')
+          .should('be.visible')
+          .click();
+      }
+    });
 
     cy.findByText('Shared CPU').should('be.visible').click();
     addNodes('Linode 2 GB');

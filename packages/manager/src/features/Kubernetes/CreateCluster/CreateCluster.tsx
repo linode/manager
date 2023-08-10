@@ -22,6 +22,7 @@ import { Paper } from 'src/components/Paper';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import {
   getKubeHighAvailability,
   getLatestVersion,
@@ -313,10 +314,13 @@ export const CreateCluster = () => {
               />
             </Box>
             {showHighAvailability ? (
-              <HAControlPlane
-                highAvailability={highAvailability}
-                setHighAvailability={setHighAvailability}
-              />
+              <Box data-testid="ha-control-plane">
+                <HAControlPlane
+                  HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
+                  highAvailability={highAvailability}
+                  setHighAvailability={setHighAvailability}
+                />
+              </Box>
             ) : null}
           </div>
           <Box>
@@ -358,6 +362,7 @@ export const CreateCluster = () => {
             createCluster,
             classes,
           ]}
+          HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}

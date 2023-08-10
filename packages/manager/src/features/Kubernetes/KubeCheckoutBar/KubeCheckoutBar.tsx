@@ -18,6 +18,7 @@ import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
 
 export interface Props {
+  HIGH_AVAILABILITY_PRICE: number | undefined;
   createCluster: () => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
@@ -32,6 +33,7 @@ export interface Props {
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const {
+    HIGH_AVAILABILITY_PRICE,
     createCluster,
     hasAgreed,
     highAvailability,
@@ -60,11 +62,14 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
 
   const needsAPool = pools.length < 1;
 
-  const disableCheckout = Boolean(
-    needsAPool ||
-      (!hasAgreed && showGDPRCheckbox) ||
-      (highAvailability === undefined && showHighAvailability)
-  );
+  const gdprConditions = !hasAgreed && showGDPRCheckbox;
+
+  const haConditions =
+    highAvailability === undefined &&
+    showHighAvailability &&
+    HIGH_AVAILABILITY_PRICE !== undefined;
+
+  const disableCheckout = Boolean(needsAPool || gdprConditions || haConditions);
 
   if (isLoading) {
     return <CircleProgress />;
