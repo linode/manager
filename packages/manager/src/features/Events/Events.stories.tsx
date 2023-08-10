@@ -75,7 +75,7 @@ const renderEventMessages = (eventMessageCreators: {
                       <Chip label={status} />{' '}
                     </TableCell>
                     <TableCell>
-                      <span
+                      <Typography
                         dangerouslySetInnerHTML={{
                           // eslint-disable-next-line xss/no-mixed-html
                           __html: message,
@@ -114,7 +114,7 @@ export const EventPlayground: StoryObj = {
     ...customizableEvent,
   },
   render: (args) => (
-    <span
+    <Typography
       dangerouslySetInnerHTML={{
         // eslint-disable-next-line xss/no-mixed-html
         __html: unsafe_MarkdownIt.render(
