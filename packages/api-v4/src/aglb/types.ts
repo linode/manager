@@ -134,3 +134,18 @@ export interface Endpoint {
   port: number;
   rate_capacity: number;
 }
+
+type CertificateType = 'ca' | 'downstream';
+
+export interface Certificate {
+  id: number;
+  label: string;
+  type: CertificateType;
+}
+
+export interface CreateCertificatePayload {
+  key?: string;
+  certificate: string;
+  label: string;
+  type: CertificateType;
+}
