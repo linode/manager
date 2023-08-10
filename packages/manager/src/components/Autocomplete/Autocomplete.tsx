@@ -27,7 +27,7 @@ export interface OptionType<T = any> {
 
 interface DefaultNoOptionsMessageParams {
   errorText: APIError[] | null | string | undefined;
-  options: OptionType[];
+  options: readonly OptionType[];
 }
 
 interface AutocompleteOnChange {
@@ -43,12 +43,7 @@ interface HandleChangeParams extends AutocompleteOnChange {
   onSelectionChange: (selection: OptionType | OptionType[]) => void;
 }
 
-type SingleSelectProps = EnhancedAutocompleteProps<OptionType>;
-type MultiSelectProps = EnhancedAutocompleteProps<OptionType[]>;
-
-export type CombinedAutocompleteProps = MultiSelectProps | SingleSelectProps;
-
-export interface EnhancedAutocompleteProps<T extends OptionType | OptionType[]>
+export interface EnhancedAutocompleteProps<T extends OptionType>
   extends AutocompleteProps<
     T,
     boolean | undefined,
@@ -98,7 +93,7 @@ export interface EnhancedAutocompleteProps<T extends OptionType | OptionType[]>
  *  ]}
  * />
  */
-export const Autocomplete = (props: CombinedAutocompleteProps) => {
+export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
   const {
     clearOnBlur = false,
     defaultValue,
@@ -181,7 +176,7 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
     (
       props: React.HTMLAttributes<HTMLLIElement>,
       option: OptionType,
-      { selected }: AutocompleteRenderOptionState
+      selected: AutocompleteRenderOptionState
     ) => {
       const selectAllOption = option.value === 'all';
 
@@ -200,7 +195,7 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
               >
                 {option.label}
               </Box>
-              <SelectedIcon visible={selected} />
+              <SelectedIcon visible={selected.selected} />
             </>
           )}
         </ListItem>
@@ -299,17 +294,3 @@ const getDefaultNoOptionsMessage = ({
     return NoOptionsMessage.NoResults;
   }
 };
-
-function flattenOptions<T>(
-  options: readonly OptionType<T>[] | readonly OptionType<T>[][]
-): readonly OptionType<T>[] {
-  if (options.length && Array.isArray(options[0])) {
-    // It's a nested array, so flatten it
-    return (options as readonly OptionType<T>[][]).reduce(
-      (acc, curr) => [...acc, ...curr],
-      []
-    );
-  }
-
-  return options as readonly OptionType<T>[];
-}

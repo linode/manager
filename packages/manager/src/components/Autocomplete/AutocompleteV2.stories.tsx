@@ -6,7 +6,7 @@ import { AutocompleteV2 } from './AutocompleteV2';
 // import type { CombinedAutocompleteProps, OptionType } from './Autocomplete';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
-interface FruitProps {
+export interface FruitProps {
   label: string;
   value: string;
 }
@@ -36,7 +36,7 @@ const fruits: FruitProps[] = [
 
 type Story = StoryObj<typeof AutocompleteV2>;
 
-const meta: Meta<AutocompleteProps<[], false, false, false>> = {
+const meta: Meta<AutocompleteProps<FruitProps[], false, false, false>> = {
   argTypes: {},
   args: {},
   component: AutocompleteV2,
