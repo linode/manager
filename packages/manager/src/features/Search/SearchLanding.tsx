@@ -7,9 +7,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
-import Error from 'src/assets/icons/error.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { H1Header } from 'src/components/H1Header/H1Header';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import useAPISearch from 'src/features/Search/useAPISearch';
@@ -35,40 +33,17 @@ import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { getImageLabelForLinode } from '../Images/utils';
 import ResultGroup from './ResultGroup';
+import {
+  StyledDiv,
+  StyledError,
+  StyledGrid,
+  StyledH1Header,
+} from './SearchLanding.styles';
 import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  emptyResult: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
-    [theme.breakpoints.down('md')]: {
-      padding: theme.spacing(4),
-    },
-  },
-  emptyResultWrapper: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
-  },
-  errorIcon: {
-    color: theme.palette.text.primary,
-    height: 60,
-    marginBottom: theme.spacing(4),
-    width: 60,
-  },
-  headline: {
-    marginBottom: theme.spacing(),
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
   root: {
     '&.MuiGrid-container': {
       width: 'calc(100% + 16px)',
@@ -97,7 +72,7 @@ const splitWord = (word: any) => {
   return word;
 };
 
-export const SearchLanding: React.FC<CombinedProps> = (props) => {
+export const SearchLanding = (props: CombinedProps) => {
   const { entities, search, searchResultsByEntity } = props;
 
   const classes = useStyles();
@@ -287,8 +262,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     <Grid className={classes.root} container direction="column" spacing={2}>
       <Grid>
         {!resultsEmpty && !loading && (
-          <H1Header
-            className={classes.headline}
+          <StyledH1Header
             title={`Search Results ${query && `for "${query}"`}`}
           />
         )}
@@ -314,9 +288,9 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         </Grid>
       )}
       {resultsEmpty && !loading && (
-        <Grid className={classes.emptyResultWrapper} data-qa-empty-state>
-          <div className={classes.emptyResult}>
-            <Error className={classes.errorIcon} />
+        <StyledGrid data-qa-empty-state>
+          <StyledDiv>
+            <StyledError />
             <Typography style={{ marginBottom: 16 }}>
               You searched for ...
             </Typography>
@@ -326,8 +300,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
             <Typography className="nothing" style={{ marginTop: 56 }}>
               Sorry, no results for this one
             </Typography>
-          </div>
-        </Grid>
+          </StyledDiv>
+        </StyledGrid>
       )}
       {!loading && (
         <Grid sx={{ padding: 0 }}>

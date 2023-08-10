@@ -1,11 +1,8 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { isEmpty, splitAt } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
 
-import { Button } from 'src/components/Button/Button';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
@@ -13,23 +10,10 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
 
+import { StyledButton, StyledTypography } from './ResultGroup.styles';
 import ResultRow from './ResultRow';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    marginTop: theme.spacing(),
-    width: '10%',
-  },
-  entityHeading: {
-    marginBottom: theme.spacing(),
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-}));
 
 interface Props {
   entity: string;
@@ -43,9 +27,7 @@ interface HandlerProps {
 
 type CombinedProps = Props & HandlerProps;
 
-export const ResultGroup: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+export const ResultGroup = (props: CombinedProps) => {
   const { entity, groupSize, results, showMore, toggle } = props;
 
   if (isEmpty(results)) {
@@ -57,13 +39,9 @@ export const ResultGroup: React.FC<CombinedProps> = (props) => {
 
   return (
     <Grid>
-      <Typography
-        className={classes.entityHeading}
-        data-qa-entity-header={entity}
-        variant="h2"
-      >
+      <StyledTypography data-qa-entity-header={entity} variant="h2">
         {capitalize(entity)}
-      </Typography>
+      </StyledTypography>
       <Table aria-label="Search Results">
         <TableHead>
           <TableRow>
@@ -90,14 +68,13 @@ export const ResultGroup: React.FC<CombinedProps> = (props) => {
         </TableBody>
       </Table>
       {!isEmpty(hidden) && (
-        <Button
+        <StyledButton
           buttonType="primary"
-          className={classes.button}
           data-qa-show-more-toggle
           onClick={toggle}
         >
           {showMore ? 'Show Less' : 'Show All'}
-        </Button>
+        </StyledButton>
       )}
     </Grid>
   );
