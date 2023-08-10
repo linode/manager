@@ -14,7 +14,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 interface Props {
   onClose: () => void;
   open: boolean;
-  vpc: VPC | undefined;
+  vpc?: VPC;
 }
 
 const REGION_HELPER_TEXT = 'The Region field will not be editable during beta.';
@@ -56,41 +56,43 @@ export const VPCEditDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Edit VPC">
       {errorMap.none && <Notice error text={errorMap.none} />}
-      <TextField
-        errorText={errorMap.label}
-        label="Label"
-        name="label"
-        onChange={form.handleChange}
-        value={form.values.label}
-      />
-      <TextField
-        errorText={errorMap.description}
-        label="Description"
-        multiline
-        onChange={form.handleChange}
-        rows={1}
-        value={form.values.description}
-      />
-      {regionsData && (
-        <RegionSelect
-          disabled // the Region field will not be editable during beta
-          errorText={(regionsError && regionsError[0].reason) || undefined}
-          handleSelection={() => null}
-          helperText={REGION_HELPER_TEXT}
-          regions={regionsData}
-          selectedID={form.values.region}
+      <form onSubmit={form.handleSubmit}>
+        <TextField
+          errorText={errorMap.label}
+          label="Label"
+          name="label"
+          onChange={form.handleChange}
+          value={form.values.label}
         />
-      )}
-      <ActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'save-button',
-          disabled: !form.dirty,
-          label: 'Save',
-          loading: isLoading,
-          onClick: () => form.handleSubmit(),
-        }}
-        secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-      />
+        <TextField
+          errorText={errorMap.description}
+          label="Description"
+          multiline
+          onChange={form.handleChange}
+          rows={1}
+          value={form.values.description}
+        />
+        {regionsData && (
+          <RegionSelect
+            disabled // the Region field will not be editable during beta
+            errorText={(regionsError && regionsError[0].reason) || undefined}
+            handleSelection={() => null}
+            helperText={REGION_HELPER_TEXT}
+            regions={regionsData}
+            selectedID={form.values.region}
+          />
+        )}
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'save-button',
+            disabled: !form.dirty,
+            label: 'Save',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+        />
+      </form>
     </Drawer>
   );
 };
