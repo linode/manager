@@ -44,10 +44,10 @@ export const StyledTableRow = styled(TableRow, {
   label: 'StyledTableRow',
 })(({ theme }) => ({
   cursor: 'pointer',
-  paddingBottom: '0 !important',
-  paddingTop: '0 !important',
+  paddingBottom: 0,
+  paddingTop: 0,
   transition: theme.transitions.create(['background-color']),
-  width: '100%',
+  width: '50%',
 }));
 
 export const StyledLink = styled(Link, {
