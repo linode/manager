@@ -27,7 +27,7 @@ export interface OptionType<T = any> {
 
 interface DefaultNoOptionsMessageParams {
   errorText: APIError[] | null | string | undefined;
-  filteredOptions: OptionType[] | undefined;
+  options: OptionType[];
 }
 
 interface AutocompleteOnChange {
@@ -104,7 +104,6 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
     defaultValue,
     disablePortal = true,
     errorText,
-    filterOptions,
     helperText,
     label,
     limitTags = 2,
@@ -132,12 +131,12 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
   } = useSelectAllOptions([]);
 
   const [inputValue, setInputValue] = React.useState('');
-  const filteredOptions: OptionType[] = filterOptions
-    ? options?.filter(filterOptions)
-    : options || [];
-  const selectAllFilteredOptions = [
+
+  // const flattenedOptions = flattenOptions(options);
+
+  const optionsWithSelectAll = [
     { label: selectAllLabel, value: 'all' },
-    ...filteredOptions,
+    ...options,
   ];
 
   /**
@@ -164,13 +163,13 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
     if (reason === 'clear' && handleClearOptions) {
       handleClearOptions(); // Clear options requested; call callback if available
     } else if (value.some((option) => option.value === 'all')) {
-      handleToggleSelectAll(); // Handle 'Select all' option selection
+      handleToggleSelectAll(value); // Handle 'Select all' option selection
     } else if (handleToggleOption) {
       handleToggleOption(value); // Handle individual options selection
     }
   };
 
-  const handleToggleSelectAll = () => {
+  const handleToggleSelectAll = (options: OptionType[]) => {
     const allSelected = options.length === selectedOptions?.length;
 
     if (handleSelectAll) {
@@ -210,15 +209,6 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
     [renderOption]
   );
 
-  const renderNoOptions = (
-    <i>
-      {getDefaultNoOptionsMessage({
-        errorText,
-        filteredOptions,
-      })}
-    </i>
-  );
-
   React.useEffect(() => {
     /**
      * We want to clear the input value when the value prop changes to null.
@@ -239,6 +229,16 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
       isOptionEqualToValue={(option: OptionType, value: OptionType) => {
         return option.value === value.value;
       }}
+      noOptionsText={
+        noOptionsText || (
+          <i>
+            {getDefaultNoOptionsMessage({
+              errorText,
+              options,
+            })}
+          </i>
+        )
+      }
       onChange={(_, value: OptionType | OptionType[], reason) => {
         handleChange({
           handleMultiSelectionChange,
@@ -270,10 +270,9 @@ export const Autocomplete = (props: CombinedAutocompleteProps) => {
       loading={loading}
       loadingText={loadingText || 'Loading...'}
       multiple={multiple}
-      noOptionsText={noOptionsText || renderNoOptions}
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
-      options={multiple ? selectAllFilteredOptions : filteredOptions}
+      options={multiple ? optionsWithSelectAll : options}
       popupIcon={<KeyboardArrowDownIcon />}
       renderOption={handleRenderOption}
       sx={sx}
@@ -290,13 +289,27 @@ const enum NoOptionsMessage {
 
 const getDefaultNoOptionsMessage = ({
   errorText,
-  filteredOptions,
+  options,
 }: DefaultNoOptionsMessageParams): NoOptionsMessage => {
   if (errorText) {
     return NoOptionsMessage.Error;
-  } else if (!filteredOptions?.length) {
+  } else if (!options?.length) {
     return NoOptionsMessage.NoOptions;
   } else {
     return NoOptionsMessage.NoResults;
   }
 };
+
+function flattenOptions<T>(
+  options: readonly OptionType<T>[] | readonly OptionType<T>[][]
+): readonly OptionType<T>[] {
+  if (options.length && Array.isArray(options[0])) {
+    // It's a nested array, so flatten it
+    return (options as readonly OptionType<T>[][]).reduce(
+      (acc, curr) => [...acc, ...curr],
+      []
+    );
+  }
+
+  return options as readonly OptionType<T>[];
+}
