@@ -3,6 +3,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
 
+import { Box } from 'src/components/Box';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Tag } from 'src/components/Tag/Tag';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
@@ -55,11 +56,12 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
     if (idx === -1) {
       return text;
     }
+
     return (
       <React.Fragment>
         {`${text.substring(0, idx)}`}
         <StyledSegment>
-          {`${text.substring(idx, searchText.length)}`}
+          {`${text.slice(idx, idx + searchText.length)}`}
         </StyledSegment>
         {`${text.slice(idx + searchText.length)}`}
       </React.Fragment>
@@ -96,7 +98,7 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
       role="button"
       tabIndex={0}
     >
-      <div style={{ display: 'flex', flexFlow: 'row nowrap' }}>
+      <Box sx={{ display: 'flex', flexFlow: 'row nowrap' }}>
         <StyledSuggestionIcon>
           <EntityIcon
             loading={status && linodeInTransition(status)}
@@ -105,15 +107,15 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
             variant={searchResultIcon}
           />
         </StyledSuggestionIcon>
-        <div style={{ padding: '8px' }}>
+        <Box sx={(theme) => ({ padding: theme.spacing(1) })}>
           <StyledSuggestionTitle data-qa-suggestion-title>
             {maybeStyleSegment(label, searchText)}
           </StyledSuggestionTitle>
           <StyledSuggestionDescription data-qa-suggestion-desc>
             {description}
           </StyledSuggestionDescription>
-        </div>
-      </div>
+        </Box>
+      </Box>
       <StyledTagContainer>
         {tags && renderTags(tags, Boolean(props.isFocused))}
       </StyledTagContainer>
