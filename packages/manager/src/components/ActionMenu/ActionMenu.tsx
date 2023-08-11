@@ -77,7 +77,7 @@ export const ActionMenu = React.memo((props: Props) => {
     <>
       <IconButton
         sx={(theme) => ({
-          ':hover': {
+          ':focus': {
             backgroundColor: theme.palette.primary.main,
             color: '#fff',
           },
@@ -105,9 +105,10 @@ export const ActionMenu = React.memo((props: Props) => {
           'aria-labelledby': buttonId,
         }}
         PaperProps={{
-          sx: {
+          sx: (theme) => ({
+            backgroundColor: theme.palette.primary.main,
             boxShadow: 'none',
-          },
+          }),
         }}
         anchorOrigin={{
           horizontal: 'right',
@@ -130,16 +131,15 @@ export const ActionMenu = React.memo((props: Props) => {
                 a.onClick();
               }
             }}
-            sx={(theme) => ({
+            sx={{
               '&:hover': {
                 background: '#226dc3',
               },
               background: '#3683dc',
-              backgroundColor: theme.palette.primary.main,
               borderBottom: '1px solid #5294e0',
               color: '#fff',
               padding: '10px 10px 10px 16px',
-            })}
+            }}
             data-qa-action-menu-item={a.title}
             disabled={a.disabled}
             key={idx}
