@@ -16,9 +16,9 @@ export interface ImageWithEvent extends Image {
   event?: Event;
 }
 
-type CombinedProps = Handlers & ImageWithEvent;
+type Props = Handlers & ImageWithEvent;
 
-const ImageRow: React.FC<CombinedProps> = (props) => {
+const ImageRow = (props: Props) => {
   const {
     created,
     description,
@@ -93,26 +93,16 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
         ) : null}
       </Hidden>
       <TableCell actionCell>
-        {event?.status !== 'failed' ? (
-          <ImagesActionMenu
-            description={description}
-            event={undefined}
-            id={id}
-            label={label}
-            status={status}
-            {...rest}
-          />
-        ) : (
-          <ImagesActionMenu
-            description={description}
-            event={event}
-            id={id}
-            label={label}
-            onCancelFailed={onCancelFailed}
-            onRetry={onRetry}
-            status={status}
-          />
-        )}
+        <ImagesActionMenu
+          description={description}
+          event={event?.status === 'failed' ? event : undefined}
+          id={id}
+          label={label}
+          onCancelFailed={onCancelFailed}
+          onRetry={onRetry}
+          status={status}
+          {...rest}
+        />
       </TableCell>
     </TableRow>
   );
