@@ -46,10 +46,10 @@ export const useAddFirewallDeviceMutation = (id: number) => {
         queryClient.invalidateQueries([queryKey, 'firewall', id, 'devices']);
 
         // Refresh the cached result of the linode-specific firewalls query
-        queryClient.refetchQueries([
+        queryClient.invalidateQueries([
           linodesQueryKey,
           'linode',
-          data.id,
+          data.entity.id,
           'firewalls',
         ]);
       },
@@ -63,16 +63,6 @@ export const useRemoveFirewallDeviceMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  // Find the ID of the Linode so we can invalidate its firewalls data as well.
-  const devicesData = queryClient.getQueryData<FirewallDevice[]>([
-    queryKey,
-    'firewall',
-    firewallId,
-    'devices',
-  ]);
-  const thisDevice = devicesData?.find((device) => device.id === deviceId);
-  const thisDeviceEntityID = thisDevice?.entity.id;
-
   return useMutation<{}, APIError[]>(
     () => deleteFirewallDevice(firewallId, deviceId),
     {
@@ -83,13 +73,6 @@ export const useRemoveFirewallDeviceMutation = (
             return oldData?.filter((device) => device.id !== deviceId) ?? [];
           }
         );
-
-        queryClient.invalidateQueries([
-          linodesQueryKey,
-          'linode',
-          thisDeviceEntityID,
-          'firewalls',
-        ]);
       },
     }
   );

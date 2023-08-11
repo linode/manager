@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { LinodeFirewalls } from './LinodeFirewalls';
+import { LinodeFirewalls } from './LinodeFirewalls/LinodeFirewalls';
 import { LinodeIPAddresses } from './LinodeIPAddresses';
 import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/NetworkingSummaryPanel';
 
