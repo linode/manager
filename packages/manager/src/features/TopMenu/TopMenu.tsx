@@ -2,6 +2,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import * as React from 'react';
 
 import { AppBar } from 'src/components/AppBar';
+import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
 import { Toolbar } from 'src/components/Toolbar';
@@ -13,7 +14,7 @@ import { Help } from './Help';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
 import SearchBar from './SearchBar/SearchBar';
 import { TopMenuIcon } from './TopMenuIcon';
-import { UserMenu } from './UserMenu/UserMenu';
+import { UserMenu } from './UserMenu';
 
 interface TopMenuProps {
   desktopMenuToggle: () => void;
@@ -39,17 +40,11 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
   return (
     <React.Fragment>
       {isLoggedInAsCustomer && (
-        <div
-          style={{
-            backgroundColor: 'pink',
-            padding: '1em',
-            textAlign: 'center',
-          }}
-        >
-          <Typography style={{ color: 'black', fontSize: '1.2em' }}>
+        <Box bgcolor="pink" padding="1em" textAlign="center">
+          <Typography color="black" fontSize="1.2em">
             You are logged in as customer: <strong>{username}</strong>
           </Typography>
-        </div>
+        </Box>
       )}
       <AppBar
         sx={(theme) => ({

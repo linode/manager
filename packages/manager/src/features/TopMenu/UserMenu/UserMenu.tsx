@@ -1,18 +1,17 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import { Theme, styled, useMediaQuery } from '@mui/material';
+import Popover from '@mui/material/Popover';
+import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
-import {
-  MenuButton,
-  MenuItems,
-  MenuLink,
-  MenuPopover,
-  Menu as ReachMenu,
-} from '@reach/menu-button';
-import { positionRight } from '@reach/popover';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
+import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -23,27 +22,6 @@ interface MenuLink {
   hide?: boolean;
   href: string;
 }
-
-export const menuLinkStyle = (linkColor: string) => ({
-  '&[data-reach-menu-item]': {
-    '&:focus, &:hover': {
-      backgroundColor: 'transparent',
-      color: linkColor,
-    },
-    '&[data-reach-menu-item][data-selected]:not(:hover)': {
-      backgroundColor: 'transparent',
-      color: linkColor,
-      outline: 'dotted 1px #c1c1c0',
-    },
-    alignItems: 'center',
-    color: linkColor,
-    cursor: 'pointer',
-    display: 'flex',
-    fontSize: '0.875rem',
-    padding: '8px 24px',
-  },
-  lineHeight: 1,
-});
 
 const profileLinks: MenuLink[] = [
   {
@@ -69,6 +47,25 @@ export const UserMenu = React.memo(() => {
     _isRestrictedUser,
     profile,
   } = useAccountManagement();
+
+  const matchesSmDown = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'user-menu-popover' : undefined;
 
   const { data: grants } = useGrants();
   const userName = profile?.username ?? '';
@@ -107,224 +104,132 @@ export const UserMenu = React.memo(() => {
     [hasFullAccountAccess, _isRestrictedUser]
   );
 
-  const renderLink = (menuLink: MenuLink) =>
-    menuLink.hide ? null : (
-      <Grid key={menuLink.display} xs={12}>
-        <StyledMenuLink
-          data-testid={`menu-item-${menuLink.display}`}
-          href={menuLink.href}
+  const renderLink = (link: MenuLink) => {
+    if (link.hide) {
+      return null;
+    }
+
+    return (
+      <Grid key={link.display} xs={12}>
+        <Link
+          data-testid={`menu-item-${link.display}`}
+          onClick={handleClose}
+          style={{ fontSize: '0.875rem' }}
+          to={link.href}
         >
-          {menuLink.display}
-        </StyledMenuLink>
+          {link.display}
+        </Link>
       </Grid>
     );
+  };
+
+  const getEndIcon = () => {
+    if (matchesSmDown) {
+      return undefined;
+    }
+    if (open) {
+      return <KeyboardArrowUp sx={{ height: 26, width: 26 }} />;
+    }
+    return (
+      <KeyboardArrowDown sx={{ color: '#9ea4ae', height: 26, width: 26 }} />
+    );
+  };
 
   return (
-    <div>
-      <ReachMenu>
-        <Tooltip
-          disableTouchListener
-          enterDelay={500}
-          leaveDelay={0}
-          title="Profile & Account"
+    <>
+      <Tooltip
+        disableTouchListener
+        enterDelay={500}
+        leaveDelay={0}
+        title="Profile & Account"
+      >
+        <Button
+          sx={(theme) => ({
+            '& .MuiButton-endIcon': {
+              marginLeft: '4px',
+            },
+            backgroundColor: open ? theme.bg.app : undefined,
+            height: '50px',
+            minWidth: 'unset',
+            textTransform: 'none',
+          })}
+          aria-describedby={id}
+          data-testid="nav-group-profile"
+          disableRipple
+          endIcon={getEndIcon()}
+          onClick={handleClick}
+          startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
         >
-          <StyledMenuButton data-testid="nav-group-profile">
-            <StyledGravatarByEmail email={profile?.email ?? ''} />
-            <Hidden mdDown>
-              <Typography sx={(theme) => ({ paddingLeft: theme.spacing() })}>
-                {userName}
-              </Typography>
-            </Hidden>
-            <KeyboardArrowDown
-              sx={(theme) => ({
-                color: '#9ea4ae',
-                fontSize: 26,
-                margin: '2px 0px 0px 2px',
-                [theme.breakpoints.down('md')]: { display: 'none' },
-              })}
-            />
-          </StyledMenuButton>
-        </Tooltip>
-        <StyledMenuPopover data-qa-user-menu position={positionRight}>
-          <StyledMenuItems>
-            <StyledUserNameDiv>
-              <strong>{userName}</strong>
-            </StyledUserNameDiv>
-            <StyledMenuHeaderDiv>My Profile</StyledMenuHeaderDiv>
-            <Grid container>
-              <Grid
-                sx={(theme) => ({
-                  '& > div': { whiteSpace: 'normal' },
-                  marginBottom: theme.spacing(2),
-                })}
-                direction="column"
-                wrap="nowrap"
-                xs={6}
-              >
+          <Hidden mdDown>
+            <Typography sx={{ fontSize: '0.875rem' }}>{userName}</Typography>
+          </Hidden>
+        </Button>
+      </Tooltip>
+      <Popover
+        PaperProps={{
+          sx: {
+            paddingX: 2.5,
+            paddingY: 2,
+          },
+        }}
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        anchorEl={anchorEl}
+        id={id}
+        onClose={handleClose}
+        open={open}
+      >
+        <Stack data-qa-user-menu minWidth={250} spacing={2}>
+          <Typography
+            color={(theme) => theme.textColors.headlineStatic}
+            fontSize="1.1rem"
+          >
+            <strong>{userName}</strong>
+          </Typography>
+          <Box>
+            <Heading>My Profile</Heading>
+            <Divider color="#9ea4ae" />
+            <Grid container rowSpacing={1.5}>
+              <Grid direction="column" wrap="nowrap" xs={6}>
                 {profileLinks.slice(0, 4).map(renderLink)}
               </Grid>
-              <Grid
-                sx={(theme) => ({
-                  '& > div': { whiteSpace: 'normal' },
-                  marginBottom: theme.spacing(2),
-                })}
-                direction="column"
-                wrap="nowrap"
-                xs={6}
-              >
+              <Grid direction="column" wrap="nowrap" xs={6}>
                 {profileLinks.slice(4).map(renderLink)}
               </Grid>
             </Grid>
-            {_hasAccountAccess ? (
-              <>
-                <StyledMenuHeaderDiv>Account</StyledMenuHeaderDiv>
-                <Grid container>
-                  <Grid>
-                    {accountLinks.map((menuLink) =>
-                      menuLink.hide ? null : (
-                        <StyledMenuLink
-                          data-testid={`menu-item-${menuLink.display}`}
-                          href={menuLink.href}
-                          key={menuLink.display}
-                        >
-                          {menuLink.display}
-                        </StyledMenuLink>
-                      )
-                    )}
-                  </Grid>
-                </Grid>
-              </>
-            ) : null}
-          </StyledMenuItems>
-        </StyledMenuPopover>
-      </ReachMenu>
-    </div>
+          </Box>
+          {_hasAccountAccess && (
+            <Box>
+              <Heading>Account</Heading>
+              <Divider color="#9ea4ae" />
+              <Stack mt={1} spacing={1.5}>
+                {accountLinks.map((menuLink) =>
+                  menuLink.hide ? null : (
+                    <Link
+                      data-testid={`menu-item-${menuLink.display}`}
+                      key={menuLink.display}
+                      onClick={handleClose}
+                      style={{ fontSize: '0.875rem' }}
+                      to={menuLink.href}
+                    >
+                      {menuLink.display}
+                    </Link>
+                  )
+                )}
+              </Stack>
+            </Box>
+          )}
+        </Stack>
+      </Popover>
+    </>
   );
 });
 
-const StyledMenuButton = styled(MenuButton, {
-  label: 'StyledMenuButton',
-})(({ theme }) => ({
-  '&[data-reach-menu-button]': {
-    '&[aria-expanded="true"]': {
-      '& > svg': {
-        color: '#0683E3',
-        marginTop: 4,
-        transform: 'rotate(180deg)',
-      },
-      background: theme.bg.app,
-    },
-    backgroundColor: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    height: 50,
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: 12,
-      paddingRight: 12,
-    },
-    [theme.breakpoints.down(360)]: {
-      paddingLeft: theme.spacing(),
-      paddingRight: theme.spacing(),
-    },
-  },
-  alignItems: 'center',
-  display: 'flex',
-  paddingRight: 10,
-  [theme.breakpoints.down(360)]: {
-    paddingLeft: 3,
-  },
-  [theme.breakpoints.up('sm')]: {
-    paddingLeft: 12,
-  },
-}));
-
-const StyledMenuHeaderDiv = styled('div', {
-  label: 'StyledMenuHeaderDiv',
-})(({ theme }) => ({
-  borderBottom: '1px solid #9ea4ae',
+const Heading = styled(Typography)(({ theme }) => ({
   color: theme.textColors.headlineStatic,
   fontSize: '.75rem',
   letterSpacing: 1.875,
-  margin: `${theme.spacing(0)} ${theme.spacing(3)} ${theme.spacing()}`,
-  padding: '16px 0 8px',
   textTransform: 'uppercase',
-}));
-
-const StyledMenuLink = styled(MenuLink, {
-  label: 'StyledMenuLink',
-})(({ theme }) => ({
-  '&[data-reach-menu-item]': {
-    '&:focus, &:hover': {
-      backgroundColor: 'transparent',
-      color: theme.textColors.linkActiveLight,
-    },
-    '&[data-reach-menu-item][data-selected]:not(:hover)': {
-      backgroundColor: 'transparent',
-      color: theme.textColors.linkActiveLight,
-      outline: 'dotted 1px #c1c1c0',
-    },
-    alignItems: 'center',
-    color: theme.textColors.linkActiveLight,
-    cursor: 'pointer',
-    display: 'flex',
-    fontSize: '0.875rem',
-    lineHeight: 1,
-    padding: '8px 24px',
-  },
-}));
-
-const StyledMenuItems = styled(MenuItems, {
-  label: 'StyledMenuItems',
-})(({ theme }) => ({
-  '&[data-reach-menu-items]': {
-    backgroundColor: theme.bg.bgPaper,
-    border: 'none',
-    padding: 0,
-    paddingBottom: theme.spacing(1.5),
-    width: 300,
-  },
-  boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-}));
-
-const StyledMenuPopover = styled(MenuPopover, {
-  label: 'StyledMenuPopover',
-})(({ theme }) => ({
-  '&[data-reach-menu], &[data-reach-menu-popover]': {
-    position: 'absolute',
-    [theme.breakpoints.down('lg')]: {
-      left: 0,
-    },
-    top: 50,
-    zIndex: 3000,
-  },
-}));
-
-const StyledUserNameDiv = styled('div', {
-  label: 'StyledUserNameDiv',
-})(({ theme }) => ({
-  color: theme.textColors.headlineStatic,
-  fontSize: '1.1rem',
-  margin: `-1px ${theme.spacing(3)} ${theme.spacing(0)}`,
-  paddingTop: theme.spacing(2),
-}));
-
-const StyledGravatarByEmail = styled(GravatarByEmail, {
-  label: 'StyledGravatarByEmail',
-})(({ theme }) => ({
-  '& svg': {
-    color: '#c9c7c7',
-    height: 30,
-    width: 30,
-  },
-  alignItems: 'center',
-  borderRadius: '50%',
-  display: 'flex',
-  height: 30,
-  justifyContent: 'center',
-  [theme.breakpoints.down('lg')]: {
-    height: '28px',
-    width: '28px',
-  },
-  transition: theme.transitions.create(['box-shadow']),
-  width: 30,
 }));
