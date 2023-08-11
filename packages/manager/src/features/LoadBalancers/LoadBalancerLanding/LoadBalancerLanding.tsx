@@ -9,8 +9,6 @@ import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 
-import { LoadBalancerLandingEmptyState } from './LoadBalancerLandingEmptyState';
-
 const RouteLanding = React.lazy(
   () => import('../Routes/RouteLanding/RouteLanding')
 );
@@ -68,14 +66,6 @@ const LoadBalancerLanding = () => {
       history.push(`/loadbalancers/create`);
     }
   };
-
-  // TODO: This is testing purposes and can be replaced with mock API integration once,
-  // Update AGLB endpoint, factories, and mocks #9496 is merged.
-  const loadbalancersList = 0;
-
-  if (!loadbalancersList) {
-    return <LoadBalancerLandingEmptyState />;
-  }
 
   return (
     <>
