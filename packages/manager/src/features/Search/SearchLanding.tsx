@@ -32,11 +32,11 @@ import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { getImageLabelForLinode } from '../Images/utils';
 import ResultGroup from './ResultGroup';
 import {
-  StyledDiv,
   StyledError,
   StyledGrid,
   StyledH1Header,
   StyledRootGrid,
+  StyledStack,
 } from './SearchLanding.styles';
 import './searchLanding.css';
 import { emptyResults } from './utils';
@@ -278,7 +278,7 @@ export const SearchLanding = (props: CombinedProps) => {
       )}
       {resultsEmpty && !loading && (
         <StyledGrid data-qa-empty-state>
-          <StyledDiv>
+          <StyledStack>
             <StyledError />
             <Typography style={{ marginBottom: 16 }}>
               You searched for ...
@@ -289,7 +289,7 @@ export const SearchLanding = (props: CombinedProps) => {
             <Typography className="nothing" style={{ marginTop: 56 }}>
               Sorry, no results for this one
             </Typography>
-          </StyledDiv>
+          </StyledStack>
         </StyledGrid>
       )}
       {!loading && (
