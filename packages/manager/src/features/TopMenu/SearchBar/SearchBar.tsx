@@ -32,6 +32,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
@@ -80,15 +81,14 @@ export const SearchBar = (props: CombinedProps) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
   const [searchText, setSearchText] = React.useState<string>('');
+  const [value, setValue] = React.useState<Item | null>(null);
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
   const [apiError, setAPIError] = React.useState<null | string>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
 
   const history = useHistory();
-
   const isLargeAccount = useIsLargeAccount(searchActive);
 
   // Only request things if the search bar is open/active and we
@@ -96,29 +96,23 @@ export const SearchBar = (props: CombinedProps) => {
   const shouldMakeRequests =
     searchActive && isLargeAccount !== undefined && !isLargeAccount;
 
+  // Data fetching
   const { data: objectStorageClusters } = useObjectStorageClusters(
     shouldMakeRequests
   );
-
   const { data: objectStorageBuckets } = useObjectStorageBuckets(
     objectStorageClusters,
     shouldMakeRequests
   );
-
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
-
   const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
-
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
-
   const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
-
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
     { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
     shouldMakeRequests
   );
-
   const { data: publicImages } = useAllImagesQuery(
     {},
     { is_public: true },
@@ -130,7 +124,6 @@ export const SearchBar = (props: CombinedProps) => {
     {},
     shouldMakeRequests
   );
-
   const { data: regions } = useRegionsQuery();
 
   const typesQuery = useSpecificTypes(
@@ -167,6 +160,22 @@ export const SearchBar = (props: CombinedProps) => {
   ).current;
 
   const buckets = objectStorageBuckets?.buckets || [];
+
+  React.useEffect(() => {
+    const { pathname, search } = history.location;
+    const query = getQueryParamsFromQueryString(search);
+
+    if (pathname !== '/search') {
+      setValue(null);
+    } else if (pathname === '/search' && Object.keys(query).length > 0) {
+      const q = query.query;
+      if (!q) {
+        return;
+      }
+
+      setValue({ label: q, value: q });
+    }
+  }, [history.location]);
 
   React.useEffect(() => {
     // We can't store all data for large accounts for client side search,
@@ -219,6 +228,11 @@ export const SearchBar = (props: CombinedProps) => {
     document.body.classList.add('searchOverlay');
     setSearchActive(true);
     setMenuOpen(true);
+  };
+
+  const onFocus = () => {
+    setSearchActive(true);
+    setValue(null);
   };
 
   const onSelect = (item: Item) => {
@@ -310,9 +324,7 @@ export const SearchBar = (props: CombinedProps) => {
         </label>
         <EnhancedSelect
           placeholder={
-            searchActive
-              ? 'Search'
-              : 'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
+            'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
           }
           blurInputOnSelect
           components={{ Control, Option }}
@@ -325,6 +337,7 @@ export const SearchBar = (props: CombinedProps) => {
           label="Main search"
           menuIsOpen={menuOpen}
           onChange={onSelect}
+          onFocus={onFocus}
           onInputChange={handleSearchChange}
           onKeyDown={onKeyDown}
           onMenuClose={onClose}
@@ -332,7 +345,7 @@ export const SearchBar = (props: CombinedProps) => {
           openMenuOnClick={false}
           openMenuOnFocus={false}
           options={finalOptions}
-          styles={selectStyles}
+          value={value}
         />
         <IconButton
           aria-label="close menu"
@@ -378,7 +391,6 @@ export const createFinalOptions = (
   };
 
   // Results aren't final as we're loading data
-
   if (loading) {
     return [redirectOption, loadingResults];
   }
