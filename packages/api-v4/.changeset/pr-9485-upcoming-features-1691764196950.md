@@ -2,4 +2,4 @@
 "@linode/api-v4": Upcoming Features
 ---
 
-Update linode config interface return object as per new API spec ([#9485](https://github.com/linode/manager/pull/9485))
+Include `vpc_id` and rename `subnet` to `subnet_id` in Linode config interface return object ([#9485](https://github.com/linode/manager/pull/9485))
