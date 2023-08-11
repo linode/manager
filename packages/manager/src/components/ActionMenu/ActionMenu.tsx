@@ -1,4 +1,4 @@
-import { IconButton } from '@mui/material';
+import { IconButton, ListItemText } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
@@ -74,6 +74,7 @@ export const ActionMenu = React.memo((props: Props) => {
     },
     color: '#fff',
     padding: '0 0 0 8px',
+    pointerEvents: 'all', // Allows the tooltip to be hovered on a disabled MenuItem
   };
 
   return (
@@ -104,7 +105,6 @@ export const ActionMenu = React.memo((props: Props) => {
         <KebabIcon />
       </IconButton>
       <Menu
-        data-qa-action-menu
         MenuListProps={{
           'aria-labelledby': buttonId,
         }}
@@ -123,6 +123,7 @@ export const ActionMenu = React.memo((props: Props) => {
           vertical: 'top',
         }}
         anchorEl={anchorEl}
+        data-qa-action-menu
         id={menuId}
         onClose={handleClose}
         open={open}
@@ -148,7 +149,9 @@ export const ActionMenu = React.memo((props: Props) => {
             disabled={a.disabled}
             key={idx}
           >
-            {a.title}
+            <ListItemText primaryTypographyProps={{ color: 'inherit' }}>
+              {a.title}
+            </ListItemText>
             {a.tooltip && (
               <TooltipIcon
                 data-qa-tooltip-icon
