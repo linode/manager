@@ -113,9 +113,11 @@ const VPCCreate = () => {
 
     setSubmitting(true);
 
+    const subnetsPayload = createSubnetsPayload();
+
     const createVPCPayload: CreateVPCPayload = {
       ...values,
-      subnets: createSubnetsPayload(),
+      subnets: subnetsPayload,
     };
 
     try {
