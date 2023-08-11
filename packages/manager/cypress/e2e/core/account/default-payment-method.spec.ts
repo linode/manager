@@ -61,7 +61,7 @@ describe('Default Payment Method', () => {
     });
   });
 
-  it.only('makes cc default', () => {
+  it('makes cc default', () => {
     mockGetPaymentMethods(gpayDefault).as('getPaymentMethods');
     mockSetDefaultPaymentMethod(ccIdGpayDefault).as('changeDefault');
     cy.visitWithLogin('/account/billing');
