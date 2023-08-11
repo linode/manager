@@ -14,6 +14,7 @@ export interface ExtendedButtonProps extends ButtonProps {
 }
 
 export interface PlaceholderProps {
+  additionalCopy?: React.ReactNode | string;
   buttonProps?: ExtendedButtonProps[];
   children?: React.ReactNode | string;
   className?: string;
@@ -30,6 +31,7 @@ export interface PlaceholderProps {
 
 export const Placeholder = (props: PlaceholderProps) => {
   const {
+    additionalCopy,
     buttonProps,
     dataQAPlaceholder,
     descriptionMaxWidth,
@@ -120,6 +122,18 @@ export const Placeholder = (props: PlaceholderProps) => {
               />
             ))}
         </StyledButtonWrapper>
+        {additionalCopy ? (
+          <StyledCopy
+            descriptionMaxWidth={descriptionMaxWidth}
+            sx={{ gridArea: 'additionalCopy' }}
+          >
+            {typeof additionalCopy === 'string' ? (
+              <Typography variant="subtitle1">{additionalCopy}</Typography>
+            ) : (
+              additionalCopy
+            )}
+          </StyledCopy>
+        ) : null}
         {linksSection !== undefined ? (
           <StyledLinksSection showTransferDisplay={showTransferDisplay}>
             {linksSection}
@@ -207,6 +221,8 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
         ". . . . . copy copy . . . . ."
         ". . . . . . . . . . . ."
         ". . . . . button button . . . . ."
+        ". . . . . . . . . . . ."
+        ". . . . . additionalCopy additionalCopy . . . . ."
       `
         : `
         ". . . . . icon icon . . . . ."
@@ -219,13 +235,15 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
         ". . . . . . . . . . . ."
         ". . . . . button button . . . . ."
         ". . . . . . . . . . . ."
+        ". . . . . additionalCopy additionalCopy . . . . ."
+        ". . . . . . . . . . . ."
         ". . . links links links links links links . . ."
       `,
     gridTemplateColumns: 'repeat(5, 1fr) 35% 35% repeat(5, 1fr)',
     gridTemplateRows:
       props.showTransferDisplay && props.linksSection === undefined
-        ? 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 40px'
-        : 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 64px min-content',
+        ? 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 15px max-content 40px'
+        : 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 24px max-content 15px max-content 64px min-content',
     justifyItems: 'center',
 
     padding: props.showTransferDisplay

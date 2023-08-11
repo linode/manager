@@ -350,6 +350,43 @@ describe('linode landing checks', () => {
       cy.findByText(linode.label).should('be.visible');
     });
   });
+
+  it('checks summary view for linode table', () => {
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    cy.visitWithLogin('/linodes');
+    cy.wait('@getLinodes');
+
+    // Check 'Summary View' button works as expected that can be visiable, enabled and clickable
+    getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
+
+    mockLinodes.forEach((linode) => {
+      cy.findByText(linode.label)
+        .should('be.visible')
+        .closest('[data-qa-linode-card]')
+        .within(() => {
+          cy.findByText('Summary').should('be.visible');
+          cy.findByText('IP Addresses').should('be.visible');
+          cy.findByText('Access').should('be.visible');
+
+          cy.findByText('Plan:').should('be.visible');
+          cy.findByText('Region:').should('be.visible');
+          cy.findByText('Linode ID:').should('be.visible');
+          cy.findByText('Created:').should('be.visible');
+        });
+    });
+
+    // Toggle the 'List View' button to check the display of table items are back to the original view.
+    getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
+
+    cy.findByText('Summary').should('not.exist');
+    cy.findByText('IP Addresses').should('not.exist');
+    cy.findByText('Access').should('not.exist');
+
+    cy.findByText('Plan:').should('not.exist');
+    cy.findByText('Region:').should('not.exist');
+    cy.findByText('Linode ID:').should('not.exist');
+    cy.findByText('Created:').should('not.exist');
+  });
 });
 
 describe('linode landing actions', () => {

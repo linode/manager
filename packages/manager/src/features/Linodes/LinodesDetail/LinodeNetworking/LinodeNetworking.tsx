@@ -30,7 +30,7 @@ import {
 import { useGrants } from 'src/queries/profile';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
-import AddIPDrawer from './AddIPDrawer';
+import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
 import { DeleteRangeDialog } from './DeleteRangeDialog';
 import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
@@ -44,9 +44,9 @@ import {
   StyledWrapperGrid,
 } from './LinodeNetworking.styles';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
-import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
+import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/NetworkingSummaryPanel';
 import { ViewIPDrawer } from './ViewIPDrawer';
-import ViewRDNSDrawer from './ViewRDNSDrawer';
+import { ViewRDNSDrawer } from './ViewRDNSDrawer';
 import { ViewRangeDrawer } from './ViewRangeDrawer';
 import { IPTypes } from './types';
 

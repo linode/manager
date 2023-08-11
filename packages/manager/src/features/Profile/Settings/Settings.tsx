@@ -1,173 +1,123 @@
-import { FormLabel } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
+import Stack from '@mui/material/Stack';
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { isOSMac } from 'src/App';
 import { Code } from 'src/components/Code/Code';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Paper } from 'src/components/Paper';
-import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
-import { FormControl } from 'src/components/FormControl';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { ThemeChoice } from 'src/utilities/theme';
 
-import PreferenceEditor from './PreferenceEditor';
-
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { PreferenceEditor } from './PreferenceEditor';
 
 export const ProfileSettings = () => {
-  const theme = useTheme();
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [
-    preferenceEditorOpen,
-    setPreferenceEditorOpen,
-  ] = React.useState<boolean>(false);
+  const location = useLocation();
+  const history = useHistory();
+
+  const preferenceEditorOpen = Boolean(
+    getQueryParamFromQueryString(location.search, 'preferenceEditor')
+  );
+
+  const handleClosePreferenceEditor = () => {
+    const queryParams = new URLSearchParams(location.search);
+    queryParams.delete('preferenceEditor');
+    history.replace({ search: queryParams.toString() });
+  };
 
   const { data: profile } = useProfile();
-  const { mutateAsync: updateProfile } = useMutateProfile();
+  const { isLoading, mutateAsync: updateProfile } = useMutateProfile();
 
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  React.useEffect(() => {
-    if (
-      getQueryParamFromQueryString(
-        window.location.search,
-        'preferenceEditor'
-      ) === 'true'
-    ) {
-      setPreferenceEditorOpen(true);
-    }
-  }, []);
+  // Type-to-confirm is enabled by default (no preference is set)
+  // or if the user explicitly enables it.
+  const isTypeToConfirmEnabled =
+    preferences?.type_to_confirm === undefined ||
+    preferences?.type_to_confirm === true;
 
-  const preferenceEditorMode =
-    getQueryParamFromQueryString(window.location.search, 'preferenceEditor') ===
-    'true';
-
-  const toggle = () => {
-    setSubmitting(true);
-    updateProfile({
-      email_notifications: !profile?.email_notifications,
-    }).finally(() => setSubmitting(false));
-  };
+  const areEmailNotificationsEnabled = profile?.email_notifications === true;
 
   return (
-    <>
+    <Stack spacing={2}>
       <DocumentTitleSegment segment="My Settings" />
-      <Paper sx={{ marginTop: theme.spacing(2) }}>
-        <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
+      <Paper>
+        <Typography marginBottom={1} variant="h2">
           Notifications
         </Typography>
-        <Grid alignItems="center" container>
-          <Grid xs={12}>
-            <FormControlLabel
-              control={
-                <Toggle
-                  checked={profile?.email_notifications}
-                  onChange={toggle}
-                />
+        <FormControlLabel
+          control={
+            <Toggle
+              onChange={(_, checked) =>
+                updateProfile({
+                  email_notifications: checked,
+                })
               }
-              label={`
-                Email alerts for account activity are ${
-                  profile?.email_notifications === true ? 'enabled' : 'disabled'
-                }
-              `}
-              disabled={submitting}
+              checked={areEmailNotificationsEnabled}
             />
-          </Grid>
-        </Grid>
-        {preferenceEditorMode && (
-          <PreferenceEditor
-            onClose={() => setPreferenceEditorOpen(false)}
-            open={preferenceEditorOpen}
-          />
-        )}
+          }
+          label={`Email alerts for account activity are ${
+            areEmailNotificationsEnabled ? 'enabled' : 'disabled'
+          }`}
+          disabled={isLoading}
+        />
       </Paper>
-      <Paper sx={{ marginTop: theme.spacing(2) }}>
-        <Grid alignItems="center" container>
-          <Grid xs={12}>
-            <FormControl>
-              <FormLabel>
-                <Typography variant="h2">Theme</Typography>
-              </FormLabel>
-              <Typography variant="body1">
-                You may toggle your theme with the keyboard shortcut{' '}
-                {ThemeKeyboardShortcut}.
-              </Typography>
-              <RadioGroup
-                onChange={(e) =>
-                  updatePreferences({ theme: e.target.value as ThemeChoice })
-                }
-                row
-                style={{ marginBottom: 0 }}
-                value={preferences?.theme ?? 'system'}
-              >
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Light"
-                  value="light"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Dark"
-                  value="dark"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="System"
-                  value="system"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-      </Paper>
-      <Paper sx={{ marginTop: theme.spacing(2) }}>
-        <Typography sx={{ marginBottom: theme.spacing(2) }} variant="h2">
-          Type-to-Confirm
+      <Paper>
+        <Typography marginBottom={1} variant="h2">
+          Theme
         </Typography>
         <Typography variant="body1">
+          You may toggle your theme with the keyboard shortcut{' '}
+          {ThemeKeyboardShortcut}.
+        </Typography>
+        <RadioGroup
+          onChange={(e) =>
+            updatePreferences({ theme: e.target.value as ThemeChoice })
+          }
+          row
+          style={{ marginBottom: 0 }}
+          value={preferences?.theme ?? 'system'}
+        >
+          <FormControlLabel control={<Radio />} label="Light" value="light" />
+          <FormControlLabel control={<Radio />} label="Dark" value="dark" />
+          <FormControlLabel control={<Radio />} label="System" value="system" />
+        </RadioGroup>
+      </Paper>
+      <Paper>
+        <Typography marginBottom={1} variant="h2">
+          Type-to-Confirm
+        </Typography>
+        <Typography marginBottom={1} variant="body1">
           For some products and services, the type-to-confirm setting requires
           entering the label before deletion.
         </Typography>
-        <PreferenceToggle<boolean>
-          localStorageKey="typeToConfirm"
-          preferenceKey="type_to_confirm"
-          preferenceOptions={[true, false]}
-        >
-          {({
-            preference: istypeToConfirm,
-            togglePreference: toggleTypeToConfirm,
-          }: PreferenceToggleProps<boolean>) => {
-            return (
-              <Grid alignItems="center" container>
-                <Grid xs={12}>
-                  <FormControlLabel
-                    control={
-                      <Toggle
-                        checked={istypeToConfirm}
-                        onChange={toggleTypeToConfirm}
-                      />
-                    }
-                    label={`Type-to-confirm is${
-                      istypeToConfirm ? ' enabled' : ' disabled'
-                    }`}
-                  />
-                </Grid>
-              </Grid>
-            );
-          }}
-        </PreferenceToggle>
+        <FormControlLabel
+          control={
+            <Toggle
+              onChange={(_, checked) =>
+                updatePreferences({ type_to_confirm: checked })
+              }
+              checked={isTypeToConfirmEnabled}
+            />
+          }
+          label={`Type-to-confirm is ${
+            isTypeToConfirmEnabled ? 'enabled' : 'disabled'
+          }`}
+        />
       </Paper>
-    </>
+      <PreferenceEditor
+        onClose={handleClosePreferenceEditor}
+        open={preferenceEditorOpen}
+      />
+    </Stack>
   );
 };
 
