@@ -28,7 +28,6 @@ export const StyledLink = styled(Link, { label: 'StyledLink' })(
       color: theme.palette.primary.light,
       textDecoration: 'underline',
     },
-    color: theme.textColors.linkActiveLight,
     marginLeft: theme.spacing(),
   })
 );

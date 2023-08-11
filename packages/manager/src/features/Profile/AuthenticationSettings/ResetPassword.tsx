@@ -39,7 +39,6 @@ const StyledCopy = styled(Typography, {
 const StyledLink = styled(Link, {
   label: 'StyledLink',
 })(({ theme }) => ({
-  color: theme.palette.primary.main,
   fontSize: '0.875rem',
   marginTop: theme.spacing(),
 }));
