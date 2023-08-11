@@ -23,6 +23,7 @@ export const entityNameMap: Record<GrantType, string> = {
   longview: 'Longview Clients',
   firewall: 'Firewalls',
   database: 'Databases',
+  vpc: 'VPCs', // TODO: VPC - check if this will be needed
 };
 
 interface Props {

@@ -48,7 +48,7 @@ const VPCCreate = () => {
     APIError[]
   >();
 
-  const disabled = profile?.restricted && !grants?.global.add_volumes; // TODO: VPC - add vpc grant
+  const disabled = profile?.restricted && !grants?.global.add_vpcs; 
 
   const determineIfValidIps = () => {
     const validatedIps = validateIPs(
@@ -279,6 +279,7 @@ const VPCCreate = () => {
               disabled: disabled,
               loading: isLoading,
               onClick: onCreateVPC,
+              // TODO: VPC - generate event on creation?
             }}
             style={{ marginTop: theme.spacing(1) }}
           />
