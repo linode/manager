@@ -1,31 +1,31 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { ImageStatus } from '@linode/api-v4/lib/images/types';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { ActionMenu, Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu';
 
 export interface Handlers {
-  [index: string]: any;
-  onCancelFailed: (imageID: string) => void;
-  onDelete: (label: string, imageID: string, status?: ImageStatus) => void;
-  onDeploy: (imageID: string) => void;
-  onEdit: (label: string, description: string, imageID: string) => void;
-  onRestore: (imageID: string) => void;
-  onRetry: (imageID: string, label: string, description: string) => void;
+  onCancelFailed?: (imageID: string) => void;
+  onDelete?: (label: string, imageID: string, status?: ImageStatus) => void;
+  onDeploy?: (imageID: string) => void;
+  onEdit?: (label: string, description: string, imageID: string) => void;
+  onRestore?: (imageID: string) => void;
+  onRetry?: (
+    imageID: string,
+    label: string,
+    description: null | string
+  ) => void;
 }
 
 interface Props extends Handlers {
-  description: string;
-  event: Event;
+  description: null | string;
+  event: Event | undefined;
   id: string;
   label: string;
   status?: ImageStatus;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
+export const ImagesActionMenu = (props: Props) => {
   const {
     description,
     event,
@@ -48,13 +48,13 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
       ? [
           {
             onClick: () => {
-              onRetry(id, label, description);
+              onRetry?.(id, label, description);
             },
             title: 'Retry',
           },
           {
             onClick: () => {
-              onCancelFailed(id);
+              onCancelFailed?.(id);
             },
             title: 'Cancel',
           },
@@ -63,7 +63,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
           {
             disabled: isDisabled,
             onClick: () => {
-              onEdit(label, description ?? ' ', id);
+              onEdit?.(label, description ?? ' ', id);
             },
             title: 'Edit',
             tooltip: isDisabled
@@ -73,7 +73,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
           {
             disabled: isDisabled,
             onClick: () => {
-              onDeploy(id);
+              onDeploy?.(id);
             },
             title: 'Deploy to New Linode',
             tooltip: isDisabled
@@ -83,7 +83,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
           {
             disabled: isDisabled,
             onClick: () => {
-              onRestore(id);
+              onRestore?.(id);
             },
             title: 'Rebuild an Existing Linode',
             tooltip: isDisabled
@@ -92,7 +92,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
           },
           {
             onClick: () => {
-              onDelete(label, id, status);
+              onDelete?.(label, id, status);
             },
             title: isAvailable ? 'Delete' : 'Cancel Upload',
           },
@@ -118,5 +118,3 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
     />
   );
 };
-
-export default withRouter(ImagesActionMenu);

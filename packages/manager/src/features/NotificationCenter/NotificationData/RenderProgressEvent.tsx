@@ -9,7 +9,7 @@ import { Typography } from 'src/components/Typography';
 import {
   eventLabelGenerator,
   eventMessageGenerator,
-} from 'src/eventMessageGenerator_CMR';
+} from 'src/features/Events/eventMessageGenerator_CMR';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';

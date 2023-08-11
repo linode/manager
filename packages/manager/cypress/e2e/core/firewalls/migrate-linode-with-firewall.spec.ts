@@ -1,5 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { linodeFactory } from '@src/factories';
+import { authenticate } from 'support/api/authentication';
 import { createLinode } from 'support/api/linodes';
 import {
   getClick,
@@ -12,6 +13,7 @@ import {
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { selectRegionString } from 'support/ui/constants';
+import { cleanUp } from 'support/util/cleanup';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomString } from 'support/util/random';
 
@@ -46,7 +48,12 @@ const fakeRegionsData = {
   ],
 };
 
+authenticate();
 describe('Migrate Linode With Firewall', () => {
+  before(() => {
+    cleanUp('firewalls');
+  });
+
   it('test migrate flow - mocking all data', () => {
     const fakeLinodeId = 9999;
     const fakeFirewallId = 6666;

@@ -13,6 +13,7 @@ export const SelectPlaceholder = (props: Props) => {
       data-qa-multi-select={
         props.isMulti ? props.selectProps.placeholder : false
       }
+      className="select-placeholder"
       data-qa-select-placeholder
     >
       {props.children}
