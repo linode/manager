@@ -7,7 +7,6 @@ import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { Tooltip } from 'src/components/Tooltip';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useUpdateVPCMutation } from 'src/queries/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -73,19 +72,14 @@ export const VPCEditDrawer = (props: Props) => {
           value={form.values.description}
         />
         {regionsData && (
-          <Tooltip title={REGION_HELPER_TEXT}>
-            <div>
-              <RegionSelect
-                errorText={
-                  (regionsError && regionsError[0].reason) || undefined
-                }
-                disabled // the Region field will not be editable during beta
-                handleSelection={() => null}
-                regions={regionsData}
-                selectedID={vpc?.region ?? null}
-              />
-            </div>
-          </Tooltip>
+          <RegionSelect
+            disabled // the Region field will not be editable during beta
+            errorText={(regionsError && regionsError[0].reason) || undefined}
+            handleSelection={() => null}
+            helperText={REGION_HELPER_TEXT}
+            regions={regionsData}
+            selectedID={vpc?.region ?? null}
+          />
         )}
         <ActionsPanel
           primaryButtonProps={{
