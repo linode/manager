@@ -77,7 +77,7 @@ export const ActionMenu = React.memo((props: Props) => {
     <>
       <IconButton
         sx={(theme) => ({
-          ':focus': {
+          ':hover': {
             backgroundColor: theme.palette.primary.main,
             color: '#fff',
           },
