@@ -11,10 +11,11 @@ import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
   handleDeleteVPC: () => void;
+  handleEditVPC: () => void;
   vpc: VPC;
 }
 
-export const VPCRow = ({ handleDeleteVPC, vpc }: Props) => {
+export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
   const { id, label, subnets } = vpc;
   const { data: regions } = useRegionsQuery();
 
@@ -26,7 +27,7 @@ export const VPCRow = ({ handleDeleteVPC, vpc }: Props) => {
 
   const actions: Action[] = [
     {
-      onClick: () => null,
+      onClick: handleEditVPC,
       title: 'Edit',
     },
     {

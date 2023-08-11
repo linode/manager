@@ -28,7 +28,7 @@ import {
 } from 'src/queries/linodes/networking';
 import { useGrants } from 'src/queries/profile';
 
-import AddIPDrawer from './AddIPDrawer';
+import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
 import { DeleteRangeDialog } from './DeleteRangeDialog';
 import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
@@ -41,9 +41,9 @@ import {
   StyledTypography,
   StyledWrapperGrid,
 } from './LinodeIPAddresses.styles';
-import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
+import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 import { ViewIPDrawer } from './ViewIPDrawer';
-import ViewRDNSDrawer from './ViewRDNSDrawer';
+import { ViewRDNSDrawer } from './ViewRDNSDrawer';
 import { ViewRangeDrawer } from './ViewRangeDrawer';
 import { IPTypes } from './types';
 

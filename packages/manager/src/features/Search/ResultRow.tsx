@@ -10,7 +10,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Tags } from 'src/components/Tags/Tags';
 import { Typography } from 'src/components/Typography';
-import RegionIndicator from 'src/features/Linodes/LinodesLanding/RegionIndicator';
+import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
 const useStyles = makeStyles((theme: Theme) => ({
   createdCell: {
@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '60%',
   },
   link: {
-    color: theme.textColors.linkActiveLight,
     display: 'block',
     fontFamily: theme.font.bold,
     fontSize: '.875rem',

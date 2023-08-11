@@ -18,7 +18,7 @@ import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
-import AttachVLAN from './AttachVLAN';
+import { AttachVLAN } from './AttachVLAN';
 import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import { VLANAccordion } from './VLANAccordion';
 

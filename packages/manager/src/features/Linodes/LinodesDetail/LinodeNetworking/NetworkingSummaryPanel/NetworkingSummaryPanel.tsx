@@ -7,9 +7,9 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile';
 
 import { LinodePermissionsError } from '../../LinodePermissionsError';
-import DNSResolvers from './DNSResolvers';
-import NetworkTransfer from './NetworkTransfer';
-import TransferHistory from './TransferHistory';
+import { DNSResolvers } from './DNSResolvers';
+import { NetworkTransfer } from './NetworkTransfer';
+import { TransferHistory } from './TransferHistory';
 
 interface Props {
   linodeID: number;
