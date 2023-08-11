@@ -15,17 +15,23 @@ export interface Action {
 }
 
 export interface Props {
+  /**
+   * A list of actions to show in the Menu
+   */
   actionsList: Action[];
-  // as they don't have text (just an icon)
+  /**
+   * Gives the Menu Button an accessable name
+   */
   ariaLabel: string;
-  // We want to require using aria label for these buttons
-  className?: string;
-  /* A function that is called when the Menu is opened or closed */
-  toggleOpenCallback?: () => void;
+  /*
+   * A function that is called when the Menu is opened.
+   * Useful for analytics.
+   */
+  onOpen?: () => void;
 }
 
 export const ActionMenu = React.memo((props: Props) => {
-  const { actionsList, ariaLabel, toggleOpenCallback } = props;
+  const { actionsList, ariaLabel, onOpen } = props;
 
   const menuId = convertToKebabCase(ariaLabel);
   const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
@@ -35,23 +41,20 @@ export const ActionMenu = React.memo((props: Props) => {
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    if (toggleOpenCallback) {
-      toggleOpenCallback();
+    if (onOpen) {
+      onOpen();
     }
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    if (toggleOpenCallback) {
-      toggleOpenCallback();
-    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter') {
       setAnchorEl(e.currentTarget);
-      if (toggleOpenCallback) {
-        toggleOpenCallback();
+      if (onOpen) {
+        onOpen();
       }
     }
   };
