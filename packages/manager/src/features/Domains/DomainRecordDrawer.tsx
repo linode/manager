@@ -102,6 +102,7 @@ interface AdjustedTextFieldProps {
   min?: number;
   multiline?: boolean;
   placeholder?: string;
+  trimmed?: boolean;
 }
 
 interface NumberFieldProps extends AdjustedTextFieldProps {
@@ -315,6 +316,9 @@ export class DomainRecordDrawer extends React.Component<
           DomainRecordDrawer.errorFields,
           this.state.errors
         )(field)}
+        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+          this.updateField(field)(e.target.value)
+        }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           this.updateField(field)(e.target.value)
         }
@@ -423,12 +427,16 @@ export class DomainRecordDrawer extends React.Component<
     label,
     multiline,
     placeholder,
+    trimmed,
   }: AdjustedTextFieldProps) => (
     <TextField
       errorText={getAPIErrorsFor(
         DomainRecordDrawer.errorFields,
         this.state.errors
       )(field)}
+      onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+        this.updateField(field)(e.target.value)
+      }
       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
         this.updateField(field)(e.target.value)
       }
@@ -441,6 +449,7 @@ export class DomainRecordDrawer extends React.Component<
       label={label}
       multiline={multiline}
       placeholder={placeholder}
+      trimmed={trimmed}
     />
   );
 
