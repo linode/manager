@@ -32,7 +32,7 @@ const AdditionalCopy = () => (
       NodeBalancer, see
     </Typography>
     <Typography>
-      <Link to="https://www.linode.com/docs//products/networking/global-loadbalancer/#selecting-a-load-balanceradbalancer#selecting-a-load-balancer#selecting-a-load-balancer ">
+      <Link to="https://www.linode.com/docs/products/networking/global-loadbalancer/#selecting-a-load-balanceradbalancer#selecting-a-load-balancer#selecting-a-load-balancer ">
         Selecting a Load Balancer.
       </Link>
     </Typography>
