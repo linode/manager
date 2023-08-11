@@ -63,7 +63,7 @@ export const LinodeRow = (props: Props) => {
   // TODO: VPC - later if there is a way to directly get a linode's vpc, replace this
   const { data: configs } = useAllLinodeConfigsQuery(id);
   const vpcId = getVPCId(configs ?? []);
-  const { data: vpc } = useVPCQuery(vpcId ?? -1);
+  const { data: vpc } = useVPCQuery(vpcId ?? -1, vpcId !== undefined);
   const vpcLabel = vpc?.label;
 
   const linodeNotifications =
