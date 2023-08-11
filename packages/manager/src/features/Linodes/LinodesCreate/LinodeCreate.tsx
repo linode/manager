@@ -29,7 +29,10 @@ import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
-import { getMonthlyAndHourlyNodePricing } from 'src/features/Linodes/LinodesCreate/utilities';
+import {
+  getMonthlyAndHourlyNodePricing,
+  utoa,
+} from 'src/features/Linodes/LinodesCreate/utilities';
 import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -52,6 +55,14 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
+import {
+  StyledButtonGroupBox,
+  StyledCreateButton,
+  StyledForm,
+  StyledMessageDiv,
+  StyledPaper,
+  StyledTabPanel,
+} from './LinodeCreate.styles';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
@@ -71,14 +82,6 @@ import {
   WithDisplayData,
   WithTypesRegionsAndImages,
 } from './types';
-import {
-  StyledButtonGroupBox,
-  StyledCreateButton,
-  StyledForm,
-  StyledMessageDiv,
-  StyledPaper,
-  StyledTabPanel,
-} from './LinodeCreate.styles';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
 
@@ -699,7 +702,7 @@ export class LinodeCreate extends React.PureComponent<
 
     if (this.props.userData) {
       payload['metadata'] = {
-        user_data: window.btoa(encodeURIComponent(this.props.userData)),
+        user_data: utoa(this.props.userData),
       };
     }
 
