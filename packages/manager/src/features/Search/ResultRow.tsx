@@ -5,7 +5,7 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import { Hidden } from 'src/components/Hidden';
 import { Tags } from 'src/components/Tags/Tags';
 import { Typography } from 'src/components/Typography';
-import RegionIndicator from 'src/features/Linodes/LinodesLanding/RegionIndicator';
+import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
 import {
   StyledCreatedTableCell,
