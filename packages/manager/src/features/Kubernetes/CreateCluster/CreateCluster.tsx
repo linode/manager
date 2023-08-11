@@ -4,7 +4,6 @@ import {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
@@ -12,16 +11,23 @@ import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
-import { Paper } from 'src/components/Paper';
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import {
+  getKubeHighAvailability,
+  getLatestVersion,
+} from 'src/features/Kubernetes/kubeUtils';
+import { useAccount } from 'src/queries/account';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
@@ -39,6 +45,7 @@ import { plansNoticesUtils } from 'src/utilities/planNotices';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
+import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -112,21 +119,34 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const CreateCluster = () => {
   const classes = useStyles();
+  const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
+  const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
+  const [label, setLabel] = React.useState<string | undefined>();
+  const [version, setVersion] = React.useState<Item<string> | undefined>();
+  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [hasAgreed, setAgreed] = React.useState<boolean>(false);
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
+  const [highAvailability, setHighAvailability] = React.useState<boolean>();
+
+  const { data, error: regionsError } = useRegionsQuery();
+  const regionsData = data ?? [];
+  const history = useHistory();
+  const { data: account } = useAccount();
+  const { showHighAvailability } = getKubeHighAvailability(account);
+
   const {
     data: allTypes,
     error: typesError,
     isLoading: typesLoading,
   } = useAllTypes();
 
+  // Only want to use current types here.
+  const typesData = filterCurrentTypes(allTypes?.map(extendType));
+
   const {
     mutateAsync: createKubernetesCluster,
   } = useCreateKubernetesClusterMutation();
-
-  const { data, error: regionsError } = useRegionsQuery();
-  const regionsData = data ?? [];
-
-  // Only want to use current types here.
-  const typesData = filterCurrentTypes(allTypes?.map(extendType));
 
   // Only include regions that have LKE capability
   const filteredRegions = React.useMemo(() => {
@@ -137,26 +157,15 @@ export const CreateCluster = () => {
       : [];
   }, [regionsData]);
 
-  const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
-  const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
-  const [label, setLabel] = React.useState<string | undefined>();
-  const [highAvailability, setHighAvailability] = React.useState<boolean>(
-    false
-  );
-  const [version, setVersion] = React.useState<Item<string> | undefined>();
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [hasAgreed, setAgreed] = React.useState<boolean>(false);
-  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const {
     data: versionData,
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
+
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
     value: thisVersion.id,
   }));
-  const history = useHistory();
 
   React.useEffect(() => {
     if (filteredRegions.length === 1 && !selectedRegionID) {
@@ -164,17 +173,19 @@ export const CreateCluster = () => {
     }
   }, [filteredRegions, selectedRegionID]);
 
+  React.useEffect(() => {
+    if (versions.length > 0) {
+      setVersion(getLatestVersion(versions));
+    }
+  }, [versionData]);
+
   const createCluster = () => {
     const { push } = history;
-
     setErrors(undefined);
     setSubmitting(true);
-
     const k8s_version = version ? version.value : undefined;
 
-    /**
-     * Only type and count to the API.
-     */
+    // Only type and count to the API.
     const node_pools = nodePools.map(
       pick(['type', 'count'])
     ) as CreateNodePoolData[];
@@ -223,10 +234,7 @@ export const CreateCluster = () => {
   };
 
   const updateLabel = (newLabel: string) => {
-    /**
-     * If the new label is an empty string, use undefined.
-     * This allows it to pass Yup validation.
-     */
+    // If the new label is an empty string, use undefined. This allows it to pass Yup validation.
     setLabel(newLabel ? newLabel : undefined);
   };
 
@@ -247,11 +255,7 @@ export const CreateCluster = () => {
   });
 
   if (typesError || regionsError || versionLoadError) {
-    /**
-     * This information is necessary to create a Cluster.
-     * Otherwise, show an error state.
-     */
-
+    // This information is necessary to create a Cluster. Otherwise, show an error state.
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
@@ -297,16 +301,26 @@ export const CreateCluster = () => {
             </Box>
             <Box>
               <Select
+                onChange={(selected: Item<string>) => {
+                  setVersion(selected);
+                }}
                 className={classes.inputWidth}
                 errorText={errorMap.k8s_version}
                 isClearable={false}
                 label="Kubernetes Version"
-                onChange={(selected: Item<string>) => setVersion(selected)}
                 options={versions}
                 placeholder={' '}
                 value={version || null}
               />
             </Box>
+            {showHighAvailability ? (
+              <Box data-testid="ha-control-plane">
+                <HAControlPlane
+                  HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
+                  setHighAvailability={setHighAvailability}
+                />
+              </Box>
+            ) : null}
           </div>
           <Box>
             <NodePoolPanel
@@ -347,13 +361,14 @@ export const CreateCluster = () => {
             createCluster,
             classes,
           ]}
+          HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
           pools={nodePools}
           region={selectedRegionID}
           removePool={removePool}
-          setHighAvailability={setHighAvailability}
+          showHighAvailability={showHighAvailability}
           submitting={submitting}
           toggleHasAgreed={toggleHasAgreed}
           updatePool={updatePool}
