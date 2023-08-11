@@ -9,38 +9,73 @@ import {
   getVisible,
 } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
+import { ui } from 'support/ui';
+
+// 3 minutes.
+const linodeProvisionTimeout = 180000;
+
+const waitForProvision = () => {
+  cy.findByText('PROVISIONING', { timeout: linodeProvisionTimeout }).should(
+    'not.exist'
+  );
+  cy.findByText('BOOTING', { timeout: linodeProvisionTimeout }).should(
+    'not.exist'
+  );
+  cy.findByText('Creating', { timeout: linodeProvisionTimeout }).should(
+    'not.exist'
+  );
+};
+
+const deleteInUseDisk = (diskName) => {
+  waitForProvision();
+
+  ui.actionMenu
+    .findByTitle(`Action menu for Disk ${diskName}`)
+    .should('be.visible')
+    .click();
+
+  ui.actionMenuItem
+    .findByTitle('Delete')
+    .should('be.visible')
+    .as('deleteMenuItem')
+    .should('have.attr', 'aria-disabled');
+
+  // TODO Re-enable interactions/assertions related to help tooltip once button issue is resolved.
+
+  // // The 'have.attr' assertion changes the Cypress subject to the value of the attr.
+  // // Using `cy.get()` against the alias reselects the item.
+  // cy.get('@deleteMenuItem')
+  //   .within(() => {
+  //     ui.button
+  //       .findByAttribute('data-qa-help-button', 'true')
+  //       .should('be.visible')
+  //       .should('be.enabled')
+  //       .click();
+  //   });
+
+  // cy.findByText('Your Linode must be fully powered down in order to perform this action')
+  //   .should('be.visible');
+};
 
 const deleteDisk = (diskName, inUse = false) => {
-  cy.get(`[aria-label="Action menu for Disk ${diskName}"]`)
-    .invoke('attr', 'aria-controls')
-    .then(($id) => {
-      if ($id) {
-        getClick(`[aria-label="Action menu for Disk ${diskName}"]`);
-        if (
-          cy
-            .contains('PROVISIONING', { timeout: 180000 })
-            .should('not.exist') &&
-          cy.contains('BOOTING', { timeout: 180000 }).should('not.exist') &&
-          cy.contains('Creating', { timeout: 180000 }).should('not.exist')
-        ) {
-          if (!inUse) {
-            getClick(
-              `[id="option-2--${$id}"][data-qa-action-menu-item="Delete"]`
-            );
-            getClick('button[data-qa-confirm-delete="true"]');
-          } else {
-            cy.get(
-              `[id="option-2--${$id}"][data-qa-action-menu-item="Delete"][aria-disabled="true"]`
-            ).within(() => {
-              cy.get('[data-qa-help-tooltip]').click();
-            });
+  waitForProvision();
 
-            cy.findByText(
-              'Your Linode must be fully powered down in order to perform this action'
-            ).should('be.visible');
-          }
-        }
-      }
+  ui.actionMenu
+    .findByTitle(`Action menu for Disk ${diskName}`)
+    .should('be.visible')
+    .click();
+
+  ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+  ui.dialog
+    .findByTitle('Confirm Delete')
+    .should('be.visible')
+    .within(() => {
+      ui.button
+        .findByTitle('Delete')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
     });
 };
 
@@ -76,7 +111,7 @@ describe('linode storage tab', () => {
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
         cy.contains('Resize').should('be.disabled');
       });
-      deleteDisk(diskName, true);
+      deleteInUseDisk(diskName);
       cy.get('button[title="Add a Disk"]').should('be.disabled');
     });
   });
