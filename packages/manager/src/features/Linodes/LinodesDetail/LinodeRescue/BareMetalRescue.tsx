@@ -8,7 +8,7 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import RescueDescription from './RescueDescription';
+import { RescueDescription } from './RescueDescription';
 
 interface Props {
   isOpen: boolean;

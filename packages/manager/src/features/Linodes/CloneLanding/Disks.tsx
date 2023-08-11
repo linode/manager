@@ -15,14 +15,14 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
 import { DiskSelection } from './utilities';
 
-export interface Props {
+export interface DisksProps {
   diskSelection: DiskSelection;
   disks: Disk[];
   handleSelect: (id: number) => void;
   selectedConfigIds: number[];
 }
 
-export const Disks: React.FC<Props> = (props) => {
+export const Disks = (props: DisksProps) => {
   const { diskSelection, disks, handleSelect, selectedConfigIds } = props;
 
   return (

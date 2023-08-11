@@ -8,7 +8,7 @@ import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
-import MigrationNotification from './MigrationNotification';
+import { MigrationNotification } from './MigrationNotification';
 
 const Notifications = () => {
   const { linodeId } = useParams<{ linodeId: string }>();

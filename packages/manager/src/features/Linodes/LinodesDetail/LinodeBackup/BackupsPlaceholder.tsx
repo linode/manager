@@ -15,7 +15,7 @@ interface Props {
   linodeId: number;
 }
 
-export const BackupsPlaceholder = (props: Props) => {
+export const BackupsPlaceholder = React.memo((props: Props) => {
   const { backupsMonthlyPrice, disabled, linodeId } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -63,12 +63,10 @@ export const BackupsPlaceholder = (props: Props) => {
       />
     </>
   );
-};
+});
 
 const StyledPlaceholder = styled(Placeholder, { label: 'StyledPlaceholder' })({
   '& svg': {
     transform: 'scale(0.75)',
   },
 });
-
-export default React.memo(BackupsPlaceholder);
