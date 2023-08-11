@@ -144,6 +144,7 @@ export const UserMenu = React.memo(() => {
           textTransform: 'none',
         })}
         aria-describedby={id}
+        data-testid="nav-group-profile"
         disableRipple
         endIcon={getEndIcon()}
         onClick={handleClick}
