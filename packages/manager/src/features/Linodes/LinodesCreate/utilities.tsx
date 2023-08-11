@@ -100,3 +100,15 @@ export const getMonthlyAndHourlyNodePricing = (
 
 export const CROSS_DATA_CENTER_CLONE_WARNING =
   'Cloning a Powered Off instance across Data Centers may cause long periods of down time.';
+
+/**
+ * Unicode to ASCII (encode data to Base64)
+ * https://base64.guru/developers/javascript/examples/unicode-strings
+ */
+export const utoa = (data: string) => {
+  try {
+    return btoa(unescape(encodeURIComponent(data)));
+  } catch (error) {
+    return data;
+  }
+};
