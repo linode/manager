@@ -195,7 +195,7 @@ export const SearchLanding = (props: CombinedProps) => {
     _privateImages,
     regions,
     nodebalancers,
-    searchableLinodes,
+    //searchableLinodes,
   ]);
 
   const getErrorMessage = () => {
