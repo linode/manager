@@ -162,7 +162,8 @@ export const UserMenu = React.memo(() => {
       <Popover
         PaperProps={{
           sx: {
-            padding: 2.5,
+            paddingX: 2.5,
+            paddingY: 2,
           },
         }}
         anchorOrigin={{
@@ -175,14 +176,12 @@ export const UserMenu = React.memo(() => {
         open={open}
       >
         <Stack minWidth={250} spacing={2}>
-          <Box
-            sx={(theme) => ({
-              color: theme.textColors.headlineStatic,
-              fontSize: '1.1rem',
-            })}
+          <Typography
+            color={(theme) => theme.textColors.headlineStatic}
+            fontSize="1.1rem"
           >
             <strong>{userName}</strong>
-          </Box>
+          </Typography>
           <Box>
             <Heading>My Profile</Heading>
             <Divider color="#9ea4ae" />
