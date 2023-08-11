@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     '& td': {
-      paddingBottom: 2,
-      paddingTop: 2,
+      paddingBottom: 4,
+      paddingTop: 4,
     },
     paddingBottom: '2px !important',
     paddingTop: '0 !important',

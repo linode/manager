@@ -56,7 +56,7 @@ const Option = (props: any) => {
 export const selectStyles = {
   control: (base: any) => ({
     ...base,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: 'pink',
     border: 0,
     margin: 0,
     width: '100%',
@@ -344,6 +344,7 @@ export const SearchBar = (props: CombinedProps) => {
           openMenuOnClick={false}
           openMenuOnFocus={false}
           options={finalOptions}
+          styles={selectStyles}
           value={value}
         />
         <IconButton
