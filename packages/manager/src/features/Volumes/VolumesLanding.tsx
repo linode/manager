@@ -216,7 +216,12 @@ export const VolumesLanding = (props: CombinedProps) => {
   }
 
   if (volumes?.results === 0) {
-    return <VolumesLandingEmptyState />;
+    return (
+      <>
+        <ProductInformationBanner bannerLocation="Volumes" important warning />
+        <VolumesLandingEmptyState />
+      </>
+    );
   }
 
   const handlers: VolumeHandlers = {

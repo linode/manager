@@ -91,7 +91,12 @@ const VPCLanding = () => {
   }
 
   if (vpcs?.data.length === 0) {
-    return <VPCEmptyState />;
+    return (
+      <>
+        <ProductInformationBanner bannerLocation="VPC" important warning />
+        <VPCEmptyState />
+      </>
+    );
   }
 
   return (

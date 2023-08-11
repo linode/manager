@@ -80,7 +80,16 @@ export const NodeBalancersLanding = () => {
   }
 
   if (data?.results === 0) {
-    return <NodeBalancerLandingEmptyState />;
+    return (
+      <>
+        <ProductInformationBanner
+          bannerLocation="NodeBalancers"
+          important
+          warning
+        />
+        <NodeBalancerLandingEmptyState />
+      </>
+    );
   }
 
   return (

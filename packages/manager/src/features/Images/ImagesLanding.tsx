@@ -416,7 +416,12 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   };
 
   const renderEmpty = () => {
-    return <ImagesLandingEmptyState />;
+    return (
+      <>
+        <ProductInformationBanner bannerLocation="Images" important warning />
+        <ImagesLandingEmptyState />
+      </>
+    );
   };
 
   if (manualImagesLoading || automaticImagesLoading) {

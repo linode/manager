@@ -147,7 +147,16 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     }
 
     if (this.props.linodesData.length === 0) {
-      return <LinodesLandingEmptyState />;
+      return (
+        <>
+          <ProductInformationBanner
+            bannerLocation="Linodes"
+            important
+            warning
+          />
+          <LinodesLandingEmptyState />
+        </>
+      );
     }
 
     return (

@@ -116,6 +116,11 @@ const FirewallLanding = () => {
   if (data?.results === 0) {
     return (
       <>
+        <ProductInformationBanner
+          bannerLocation="Firewalls"
+          important
+          warning
+        />
         <FirewallLandingEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
         <CreateFirewallDrawer
           onClose={() => setIsCreateFirewallDrawerOpen(false)}

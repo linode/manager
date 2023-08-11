@@ -63,7 +63,16 @@ const DatabaseLanding = () => {
   }
 
   if (data?.results === 0) {
-    return <DatabaseEmptyState />;
+    return (
+      <>
+        <ProductInformationBanner
+          bannerLocation="Databases"
+          important
+          warning
+        />
+        <DatabaseEmptyState />
+      </>
+    );
   }
 
   return (

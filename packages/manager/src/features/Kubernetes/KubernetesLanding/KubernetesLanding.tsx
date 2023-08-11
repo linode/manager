@@ -144,7 +144,16 @@ export const KubernetesLanding = () => {
   }
 
   if (data?.results === 0) {
-    return <KubernetesEmptyState />;
+    return (
+      <>
+        <ProductInformationBanner
+          bannerLocation="Kubernetes"
+          important
+          warning
+        />
+        <KubernetesEmptyState />
+      </>
+    );
   }
 
   return (

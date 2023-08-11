@@ -190,6 +190,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   if (domains?.results === 0) {
     return (
       <>
+        <ProductInformationBanner bannerLocation="Domains" important warning />
         <DomainsEmptyLandingState
           navigateToCreate={navigateToCreate}
           openImportZoneDrawer={openImportZoneDrawer}
