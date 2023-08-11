@@ -129,15 +129,20 @@ export const UserMenu = React.memo(() => {
       return undefined;
     }
     if (open) {
-      return <KeyboardArrowUp />;
+      return <KeyboardArrowUp sx={{ height: 26, width: 26 }} />;
     }
-    return <KeyboardArrowDown />;
+    return (
+      <KeyboardArrowDown sx={{ color: '#9ea4ae', height: 26, width: 26 }} />
+    );
   };
 
   return (
     <>
       <Button
         sx={(theme) => ({
+          '& .MuiButton-endIcon': {
+            marginLeft: '4px',
+          },
           backgroundColor: open ? theme.bg.app : undefined,
           height: '50px',
           minWidth: 'unset',
@@ -170,7 +175,12 @@ export const UserMenu = React.memo(() => {
         open={open}
       >
         <Stack minWidth={250} spacing={2}>
-          <Box sx={{ fontSize: '1.1rem' }}>
+          <Box
+            sx={(theme) => ({
+              color: theme.textColors.headlineStatic,
+              fontSize: '1.1rem',
+            })}
+          >
             <strong>{userName}</strong>
           </Box>
           <Box>
@@ -212,8 +222,9 @@ export const UserMenu = React.memo(() => {
   );
 });
 
-const Heading = styled(Typography)({
+const Heading = styled(Typography)(({ theme }) => ({
+  color: theme.textColors.headlineStatic,
   fontSize: '.75rem',
   letterSpacing: 1.875,
   textTransform: 'uppercase',
-});
+}));
