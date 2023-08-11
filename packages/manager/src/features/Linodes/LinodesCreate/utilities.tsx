@@ -105,4 +105,10 @@ export const CROSS_DATA_CENTER_CLONE_WARNING =
  * Unicode to ASCII (encode data to Base64)
  * https://base64.guru/developers/javascript/examples/unicode-strings
  */
-export const utoa = (data: string) => btoa(unescape(encodeURIComponent(data)));
+export const utoa = (data: string) => {
+  try {
+    return btoa(unescape(encodeURIComponent(data)));
+  } catch (error) {
+    return data;
+  }
+};
