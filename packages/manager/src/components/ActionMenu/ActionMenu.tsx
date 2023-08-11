@@ -101,6 +101,7 @@ export const ActionMenu = React.memo((props: Props) => {
         <KebabIcon />
       </IconButton>
       <Menu
+        data-qa-action-menu
         MenuListProps={{
           'aria-labelledby': buttonId,
         }}
