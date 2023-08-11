@@ -25,21 +25,23 @@ export interface OptionType<T = any> {
   value: string;
 }
 
-interface DefaultNoOptionsMessageParams {
+interface DefaultNoOptionsMessage {
   errorText: APIError[] | null | string | undefined;
   options: readonly OptionType[];
 }
 
 interface AutocompleteOnChange {
+  initialOptions: OptionType[];
   reason: AutocompleteChangeReason;
-  value: OptionType | OptionType[];
+  selectedOptions: OptionType | OptionType[];
+}
+
+interface HandleMultiSelectionChange extends AutocompleteOnChange {
+  selectedOptions: OptionType[];
 }
 
 interface HandleChangeParams extends AutocompleteOnChange {
-  handleMultiSelectionChange: (
-    selections: OptionType[],
-    reason: AutocompleteChangeReason
-  ) => void;
+  handleMultiSelectionChange: (params: HandleMultiSelectionChange) => void;
   onSelectionChange: (selection: OptionType | OptionType[]) => void;
 }
 
@@ -61,17 +63,14 @@ export interface EnhancedAutocompleteProps<T extends OptionType>
   /** Callback function triggered when the input field loses focus. */
   onBlur?: (e: React.FocusEvent) => void;
   /** Callback function triggered when the selection of options changes. */
-  onSelectionChange: (selected: T) => void;
+  onSelectionChange: (selected: T[]) => void;
   /** Placeholder text displayed in the input field. */
   placeholder?: string;
   /** Custom rendering function for the label of an option. */
-  renderOptionLabel?: (option: OptionType) => string;
+  renderOptionLabel?: (option: T) => string;
   /** Indicates whether the input is required, displaying an appropriate indicator. */
   required?: boolean;
-  /**
-   * Label for the "select all" option.
-   * @default 'Select all'
-   */
+  /** Label for the "select all" option. */
   selectAllLabel?: string;
   /** Custom styles to be applied to the Autocomplete component. */
   sx?: SxProps;
@@ -113,7 +112,7 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
     placeholder,
     renderOption,
     renderOptionLabel,
-    selectAllLabel = 'Select all',
+    selectAllLabel = '',
     sx,
     ...rest
   } = props;
@@ -126,11 +125,11 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
   } = useSelectAllOptions([]);
 
   const [inputValue, setInputValue] = React.useState('');
-
-  // const flattenedOptions = flattenOptions(options);
+  const [selectAllActive, setSelectAllActive] = React.useState(false);
+  const selectAllText = selectAllActive ? 'Deselect All' : 'Select All';
 
   const optionsWithSelectAll = [
-    { label: selectAllLabel, value: 'all' },
+    { label: `${selectAllText} ${selectAllLabel}`, value: 'all' },
     ...options,
   ];
 
@@ -140,35 +139,38 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
    */
   const handleChange = ({
     handleMultiSelectionChange,
+    initialOptions,
     onSelectionChange,
     reason,
-    value,
+    selectedOptions,
   }: HandleChangeParams) => {
-    if (Array.isArray(value)) {
-      handleMultiSelectionChange(value, reason); // Handle changes for multi-select mode
+    if (Array.isArray(selectedOptions)) {
+      handleMultiSelectionChange({ initialOptions, reason, selectedOptions }); // Handle changes for multi-select mode
     } else {
-      onSelectionChange(value); // Handle changes for single-select mode
+      onSelectionChange(selectedOptions); // Handle changes for single-select mode
     }
   };
 
-  const handleMultiSelectionChange = (
-    value: OptionType[],
-    reason: AutocompleteChangeReason
-  ) => {
+  const handleMultiSelectionChange = ({
+    initialOptions,
+    reason,
+    selectedOptions,
+  }: HandleMultiSelectionChange) => {
     if (reason === 'clear' && handleClearOptions) {
       handleClearOptions(); // Clear options requested; call callback if available
-    } else if (value.some((option) => option.value === 'all')) {
-      handleToggleSelectAll(value); // Handle 'Select all' option selection
+    } else if (selectedOptions.some((option) => option.value === 'all')) {
+      handleToggleSelectAll(initialOptions); // Handle 'Select all' option selection
     } else if (handleToggleOption) {
-      handleToggleOption(value); // Handle individual options selection
+      handleToggleOption(selectedOptions); // Handle individual options selection
     }
   };
 
-  const handleToggleSelectAll = (options: OptionType[]) => {
-    const allSelected = options.length === selectedOptions?.length;
+  const handleToggleSelectAll = (initialOptions: OptionType[]) => {
+    const allSelected = initialOptions.length === selectedOptions?.length;
 
     if (handleSelectAll) {
-      handleSelectAll(!allSelected, options); // If 'onSelectAll' callback exists, toggle the selection of all options
+      setSelectAllActive(!allSelected); // Toggle the 'Select all' option
+      handleSelectAll(!allSelected, initialOptions); // If 'onSelectAll' callback exists, toggle the selection of all options
     }
   };
 
@@ -176,28 +178,25 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
     (
       props: React.HTMLAttributes<HTMLLIElement>,
       option: OptionType,
-      selected: AutocompleteRenderOptionState
+      state: AutocompleteRenderOptionState
     ) => {
       const selectAllOption = option.value === 'all';
-
       const ListItem = selectAllOption ? StyledListItem : 'li';
 
-      return (
+      return renderOption ? (
+        renderOption(props, option, state)
+      ) : (
         <ListItem {...props}>
-          {renderOption ? (
-            renderOption(props, option, selected)
-          ) : (
-            <>
-              <Box
-                sx={{
-                  flexGrow: 1,
-                }}
-              >
-                {option.label}
-              </Box>
-              <SelectedIcon visible={selected.selected} />
-            </>
-          )}
+          <>
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              {option.label}
+            </Box>
+            <SelectedIcon visible={state.selected} />
+          </>
         </ListItem>
       );
     },
@@ -234,12 +233,14 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
           </i>
         )
       }
-      onChange={(_, value: OptionType | OptionType[], reason) => {
+      onChange={(_, selectedOptions: OptionType | OptionType[], reason) => {
+        const initialOptions = [...options];
         handleChange({
           handleMultiSelectionChange,
+          initialOptions,
           onSelectionChange,
           reason,
-          value,
+          selectedOptions,
         });
       }}
       renderInput={(params) => (
@@ -285,7 +286,7 @@ const enum NoOptionsMessage {
 const getDefaultNoOptionsMessage = ({
   errorText,
   options,
-}: DefaultNoOptionsMessageParams): NoOptionsMessage => {
+}: DefaultNoOptionsMessage): NoOptionsMessage => {
   if (errorText) {
     return NoOptionsMessage.Error;
   } else if (!options?.length) {

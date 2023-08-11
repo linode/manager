@@ -1,12 +1,17 @@
+import { Region } from '@linode/api-v4/lib/regions';
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
+import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
+import { Flag } from 'src/components/Flag';
+import { getRegionCountryGroup } from 'src/utilities/formatRegion';
+
 import { Autocomplete } from './Autocomplete';
 import { SelectedIcon } from './Autocomplete.styles';
 
-import type { CombinedAutocompleteProps, OptionType } from './Autocomplete';
+import type { EnhancedAutocompleteProps, OptionType } from './Autocomplete';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 interface FruitProps {
@@ -37,7 +42,52 @@ const fruits: FruitProps[] = [
   },
 ];
 
-const meta: Meta<CombinedAutocompleteProps> = {
+const fakeRegionsData = [
+  {
+    country: 'us',
+    id: 'us-east',
+    label: 'Newark, NJ',
+  },
+  {
+    country: 'us',
+    id: 'us-central',
+    label: 'Texas, TX',
+  },
+  {
+    country: 'fr',
+    id: 'fr-par',
+    label: 'Paris, FR',
+  },
+  {
+    country: 'br',
+    id: 'br-sao',
+    label: 'Sao Paulo, BR',
+  },
+  {
+    country: 'jp',
+    id: 'jp-tyo',
+    label: 'Tokyo, JP',
+  },
+];
+
+const getRegionsOptions = (
+  fakeRegionsData: Pick<Region, 'country' | 'id' | 'label'>[]
+) => {
+  return fakeRegionsData.map((region: Region) => {
+    const group = getRegionCountryGroup(region);
+    return {
+      data: {
+        country: region.country,
+        flag: <Flag country={region.country as Lowercase<Country>} />,
+        region: group,
+      },
+      label: `${region.label} (${region.id})`,
+      value: region.id,
+    };
+  });
+};
+
+const meta: Meta<EnhancedAutocompleteProps<OptionType>> = {
   argTypes: {
     onSelectionChange: {
       action: 'onSelectionChange',
@@ -71,6 +121,28 @@ const CustomDescription = styled('span')(() => ({
   fontSize: '0.875rem',
 }));
 
+const StyledListItem = styled('li')(() => ({
+  alignItems: 'center',
+  display: 'flex',
+  width: '100%',
+}));
+
+const StyledFlag = styled('span')(({ theme }) => ({
+  marginRight: theme.spacing(1),
+}));
+
+const GroupHeader = styled('div')(({ theme }) => ({
+  color: theme.color.headline,
+  fontFamily: theme.font.bold,
+  fontSize: '1rem',
+  padding: '15px 4px 4px 10px',
+  textTransform: 'initial',
+}));
+
+const GroupItems = styled('ul')({
+  padding: 0,
+});
+
 type Story = StoryObj<typeof Autocomplete>;
 
 export const Default: Story = {
@@ -80,19 +152,45 @@ export const Default: Story = {
   render: (args) => <Autocomplete {...args} />,
 };
 
-export const noOptionsMessage: Story = {
+export const NoOptionsMessage: Story = {
   args: {
-    noOptionsMessage:
+    noOptionsText:
       'This is a custom message when there are no options to display.',
     options: [],
-    placeholder: 'Select a Fruit',
   },
   render: (args) => <Autocomplete {...args} />,
 };
 
-export const customRenderOptions: Story = {
+export const Regions: Story = {
   args: {
-    label: 'Select a Linode',
+    groupBy: (option) => option.data.region,
+    label: 'Select a Region',
+    options: getRegionsOptions(fakeRegionsData),
+    placeholder: 'Select a Region',
+    renderGroup: (params) => (
+      <li key={params.key}>
+        <GroupHeader>{params.group}</GroupHeader>
+        <GroupItems>{params.children}</GroupItems>
+      </li>
+    ),
+    renderOption: (props, option, { selected }) => {
+      return (
+        <StyledListItem {...props} key={option.value}>
+          <Box alignItems={'center'} flexGrow={1}>
+            <StyledFlag>{option.data.flag}</StyledFlag>
+            {option.label}
+          </Box>
+          <SelectedIcon visible={selected} />
+        </StyledListItem>
+      );
+    },
+  },
+  render: (args) => <Autocomplete {...args} />,
+};
+
+export const CustomRenderOptions: Story = {
+  args: {
+    label: 'Select a Linode to Clone',
     options: [
       {
         label: 'Nanode 1 GB, Debian 11, Newark, NJ',
@@ -107,15 +205,15 @@ export const customRenderOptions: Story = {
         value: 'debian-us-east-002',
       },
     ],
-    placeholder: 'Select a Linode',
-    renderOption: (option, selected) => (
-      <Box alignItems={'center'} display={'flex'} width={'100%'}>
+    placeholder: 'Select a Linode to Clone',
+    renderOption: (props, option, { selected }) => (
+      <StyledListItem {...props}>
         <Stack flexGrow={1}>
           <CustomValue>{option.value}</CustomValue>
           <CustomDescription>{option.label}</CustomDescription>
         </Stack>
         <SelectedIcon visible={selected} />
-      </Box>
+      </StyledListItem>
     ),
   },
   render: (args) => <Autocomplete {...args} />,
@@ -128,6 +226,8 @@ export const MultiSelect: Story = {
     onSelectionChange: (selected: OptionType[]) => {
       action('onSelectionChange')(selected.map((options) => options.value));
     },
+    placeholder: 'Select a Fruit',
+    selectAllLabel: 'Fruits',
   },
   render: (args) => <Autocomplete {...args} />,
 };
