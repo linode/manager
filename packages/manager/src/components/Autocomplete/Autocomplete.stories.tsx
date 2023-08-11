@@ -87,6 +87,8 @@ const getRegionsOptions = (
   });
 };
 
+// Story Config ========================================================
+
 const meta: Meta<EnhancedAutocompleteProps<OptionType>> = {
   argTypes: {
     onSelectionChange: {
@@ -110,6 +112,10 @@ const meta: Meta<EnhancedAutocompleteProps<OptionType>> = {
 };
 
 export default meta;
+
+type Story = StoryObj<typeof Autocomplete>;
+
+// Styled Components =================================================
 
 const CustomValue = styled('span')(({ theme }) => ({
   fontFamily: theme.font.bold,
@@ -143,7 +149,7 @@ const GroupItems = styled('ul')({
   padding: 0,
 });
 
-type Story = StoryObj<typeof Autocomplete>;
+// Story Definitions ==========================================================
 
 export const Default: Story = {
   args: {
@@ -175,7 +181,7 @@ export const Regions: Story = {
     ),
     renderOption: (props, option, { selected }) => {
       return (
-        <StyledListItem {...props} key={option.value}>
+        <StyledListItem {...props}>
           <Box alignItems={'center'} flexGrow={1}>
             <StyledFlag>{option.data.flag}</StyledFlag>
             {option.label}
