@@ -118,7 +118,6 @@ export const SearchBar = (props: CombinedProps) => {
     { is_public: true },
     searchActive
   );
-
   const { data: linodes, isLoading: linodesLoading } = useAllLinodesQuery(
     {},
     {},

@@ -163,6 +163,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined)
   );
   const types = extendTypesQueryResult(typesQuery);
+
+  const searchableLinodes = (linodes ?? []).map((linode) => {
+    const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
+    return formatLinode(linode, types, imageLabel);
+  });
+
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<null | string>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
@@ -200,11 +206,6 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (isLargeAccount) {
       _searchAPI(query);
     } else {
-      const searchableLinodes = (linodes ?? []).map((linode) => {
-        const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
-        return formatLinode(linode, types, imageLabel);
-      });
-
       search(
         query,
         objectStorageBuckets?.buckets ?? [],
