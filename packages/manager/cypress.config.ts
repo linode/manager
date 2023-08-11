@@ -51,7 +51,7 @@ export default defineConfig({
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         nodeVersionCheck,
-        authenticateApi,
+        // authenticateApi,
         configureTestSuite,
         vitePreprocess,
         disableGoogleSafeBrowsing,

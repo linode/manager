@@ -5,6 +5,13 @@
 import { baseRequest } from '@linode/api-v4/lib/request';
 import { oauthToken } from 'support/constants/api';
 
+const getApiRequestUrl = (baseUrl, originalRequestUrl) => {
+  const defaultApiRoot = 'https://api.linode.com/v4';
+  const apiRoot = Cypress.env('REACT_APP_API_ROOT') || defaultApiRoot;
+
+  return originalRequestUrl.replace(baseUrl, apiRoot);
+};
+
 /**
  * Intercepts all Linode API v4 requests and applies an authorization header.
  *
@@ -25,6 +32,7 @@ export const authenticate = function () {
           authorization: `Bearer ${oauthToken}`,
         },
       },
+      url: getApiRequestUrl(config.baseURL, config.url),
     };
   });
 };
