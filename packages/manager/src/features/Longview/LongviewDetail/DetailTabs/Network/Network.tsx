@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import {

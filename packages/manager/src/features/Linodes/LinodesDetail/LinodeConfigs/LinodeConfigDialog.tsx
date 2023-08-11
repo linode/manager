@@ -19,20 +19,20 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { FormControl } from 'src/components/FormControl';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { FormGroup } from 'src/components/FormGroup';
+import { FormHelperText } from 'src/components/FormHelperText';
+import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import FormControl from 'src/components/core/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import FormGroup from 'src/components/core/FormGroup';
-import FormHelperText from 'src/components/core/FormHelperText';
-import FormLabel from 'src/components/core/FormLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
-import DeviceSelection from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {
   useLinodeConfigCreateMutation,
@@ -57,10 +57,11 @@ import {
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import InterfaceSelect, {
+import {
+  InterfaceSelect,
   ExtendedInterface,
 } from '../LinodeSettings/InterfaceSelect';
-import KernelSelect from '../LinodeSettings/KernelSelect';
+import { KernelSelect } from '../LinodeSettings/KernelSelect';
 
 interface Helpers {
   devtmpfs_automount: boolean;
@@ -604,7 +605,6 @@ export const LinodeConfigDialog = (props: Props) => {
               <FormControl>
                 <FormLabel
                   aria-describedby="virtModeCaption"
-                  component="label"
                   disabled={isReadOnly}
                   htmlFor="virt_mode"
                 >
@@ -651,14 +651,8 @@ export const LinodeConfigDialog = (props: Props) => {
                 />
               )}
 
-              <FormControl
-                disabled={isReadOnly}
-                fullWidth
-                updateFor={[values.run_level]}
-              >
-                <FormLabel component="label" htmlFor="run_level">
-                  Run Level
-                </FormLabel>
+              <FormControl disabled={isReadOnly} fullWidth>
+                <FormLabel htmlFor="run_level">Run Level</FormLabel>
                 <StyledRadioGroup
                   aria-label="run_level"
                   name="run_level"
@@ -697,12 +691,8 @@ export const LinodeConfigDialog = (props: Props) => {
                 user explicity selects the option to change the
                 memory limit.
               */}
-              <FormControl updateFor={[values.setMemoryLimit]}>
-                <FormLabel
-                  component="label"
-                  disabled={isReadOnly}
-                  htmlFor="memory_limit"
-                >
+              <FormControl>
+                <FormLabel disabled={isReadOnly} htmlFor="memory_limit">
                   Memory Limit
                 </FormLabel>
                 <StyledRadioGroup
@@ -885,16 +875,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <Grid xs={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
-              <FormControl
-                updateFor={[
-                  values.helpers.distro,
-                  values.helpers.updatedb_disabled,
-                  values.helpers.modules_dep,
-                  values.helpers.devtmpfs_automount,
-                  values.helpers.network,
-                ]}
-                fullWidth
-              >
+              <FormControl fullWidth>
                 <StyledFormGroup>
                   <StyledFormControlLabel
                     control={

@@ -5,10 +5,10 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
+import { FormControl } from 'src/components/FormControl';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import FormControl from 'src/components/core/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useCreateOAuthClientMutation } from 'src/queries/accountOAuth';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -37,6 +37,12 @@ export const CreateOAuthClientDrawer = ({
       showSecret(data.secret);
     },
   });
+
+  React.useEffect(() => {
+    if (open) {
+      formik.resetForm();
+    }
+  }, [open]);
 
   const errorResources = {
     label: 'A label',

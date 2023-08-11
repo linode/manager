@@ -107,7 +107,7 @@ export interface Props {
   toggleOpenCallback?: () => void;
 }
 
-const ActionMenu = (props: Props) => {
+export const ActionMenu = React.memo((props: Props) => {
   const { classes, cx } = useStyles();
   const { actionsList, toggleOpenCallback } = props;
 
@@ -120,7 +120,7 @@ const ActionMenu = (props: Props) => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (toggleOpenCallback && e.keyCode === 13) {
+    if (toggleOpenCallback && e.key === 'Enter') {
       toggleOpenCallback();
     }
   };
@@ -188,6 +188,4 @@ const ActionMenu = (props: Props) => {
       </MenuPopover>
     </Menu>
   );
-};
-
-export default React.memo(ActionMenu);
+});

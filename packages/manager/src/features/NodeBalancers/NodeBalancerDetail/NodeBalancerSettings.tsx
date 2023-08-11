@@ -6,7 +6,7 @@ import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { TextField } from 'src/components/TextField';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import {
   useNodeBalancerQuery,

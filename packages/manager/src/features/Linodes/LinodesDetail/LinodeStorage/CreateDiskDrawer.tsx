@@ -10,12 +10,12 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
+import { FormHelperText } from 'src/components/FormHelperText';
+import { InputAdornment } from 'src/components/InputAdornment';
+import { MenuItem } from 'src/components/MenuItem';
 import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import FormHelperText from 'src/components/core/FormHelperText';
-import { InputAdornment } from 'src/components/InputAdornment';
-import MenuItem from 'src/components/core/MenuItem';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeDisksQuery,

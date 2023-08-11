@@ -1,3 +1,14 @@
+## [2023-08-07] - v0.28.0
+
+
+### Added:
+
+- Linode Config and interface validation ([#9418](https://github.com/linode/manager/pull/9418))
+
+### Changed:
+
+- Adjustments to linodeInterfaceSchema and createSubnetSchema ([#9418](https://github.com/linode/manager/pull/9418))
+
 ## [2023-07-24] - v0.27.0
 
 ### Added:

@@ -1,15 +1,16 @@
 import { Disk, Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
+import { Link } from 'src/components/Link';
+import { List } from 'src/components/List';
+import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 
@@ -19,7 +20,12 @@ import {
   getAllDisks,
   getEstimatedCloneTime,
 } from './utilities';
-import { Link } from 'src/components/Link';
+import {
+  StyledButton,
+  StyledDiv,
+  StyledHeader,
+  StyledTypography,
+} from './Details.styles';
 
 interface Props {
   clearAll: () => void;
@@ -37,7 +43,7 @@ interface Props {
   thisLinodeRegion: string;
 }
 
-export const Configs: React.FC<Props> = (props) => {
+export const Details = (props: Props) => {
   const {
     clearAll,
     currentLinodeId,
@@ -239,47 +245,3 @@ export const Configs: React.FC<Props> = (props) => {
     </Paper>
   );
 };
-
-const StyledButton = styled('button', { label: 'StyledButton' })(
-  ({ theme }) => ({
-    '& path': {
-      fill: theme.palette.primary.main,
-    },
-    alignItems: 'center',
-    backgroundColor: theme.color.white,
-    border: 'none',
-    cursor: 'pointer',
-    display: 'flex',
-    paddingBottom: 0,
-    paddingTop: 0,
-  })
-);
-
-const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
-  ({ theme }) => ({
-    '& a': {
-      color: theme.color.red,
-      textDecoration: 'underline',
-    },
-    color: theme.color.red,
-    marginTop: theme.spacing(1),
-  })
-);
-
-const StyledHeader = styled('header', { label: 'StyledHeader' })(
-  ({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing(2),
-  })
-);
-
-const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'space-between',
-  width: '100%',
-}));
-
-export default Configs;

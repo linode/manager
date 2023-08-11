@@ -11,7 +11,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
+import { RadioGroup } from 'src/components/RadioGroup';
 import {
   useAllocateIPMutation,
   useCreateIPv6RangeMutation,
@@ -78,7 +78,7 @@ interface Props {
   readOnly: boolean;
 }
 
-const AddIPDrawer = (props: Props) => {
+export const AddIPDrawer = (props: Props) => {
   const { linodeId, onClose, open, readOnly } = props;
   const theme = useTheme();
 
@@ -273,5 +273,3 @@ const AddIPDrawer = (props: Props) => {
     </Drawer>
   );
 };
-
-export default AddIPDrawer;

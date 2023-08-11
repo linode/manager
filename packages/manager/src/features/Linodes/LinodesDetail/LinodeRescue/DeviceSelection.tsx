@@ -4,7 +4,7 @@ import { defaultTo } from 'ramda';
 import * as React from 'react';
 
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import FormControl from 'src/components/core/FormControl';
+import { FormControl } from 'src/components/FormControl';
 import { titlecase } from 'src/features/Linodes/presentation';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
@@ -30,9 +30,7 @@ interface Props {
   slots: string[];
 }
 
-type CombinedProps = Props;
-
-const DeviceSelection: React.FC<CombinedProps> = (props) => {
+export const DeviceSelection = (props: Props) => {
   const {
     devices,
     disabled,
@@ -75,11 +73,7 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
         );
 
         return counter < idx ? null : (
-          <FormControl
-            fullWidth
-            key={slot}
-            updateFor={[selectedDevice, deviceList, errorText]}
-          >
+          <FormControl fullWidth key={slot}>
             <Select
               errorText={
                 selectedDevice?.value === diskOrVolumeInErrReason && errorText
@@ -115,8 +109,6 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
     </div>
   );
 };
-
-export default DeviceSelection as React.ComponentType<Props>;
 
 const blockDeviceRegex = /[0-9]+/g;
 

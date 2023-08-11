@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { FormHelperText } from 'src/components/FormHelperText';
 
 import type { NodeBalancerConfigPanelProps } from './types';
 

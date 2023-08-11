@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { isPropValid } from 'src/utilities/isPropValid';
 
-import FormHelperText from './core/FormHelperText';
+import { FormHelperText } from './FormHelperText';
 
 interface Props extends PaperProps {
   /**

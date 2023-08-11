@@ -3,9 +3,9 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Divider } from 'src/components/Divider';
+import { ListItem } from 'src/components/ListItem';
+import { ListItemText } from 'src/components/ListItemText';
 import { Tooltip } from 'src/components/Tooltip';
-import ListItem from 'src/components/core/ListItem';
-import ListItemText from 'src/components/core/ListItemText';
 
 interface Props extends PrimaryLink {
   closeMenu: () => void;

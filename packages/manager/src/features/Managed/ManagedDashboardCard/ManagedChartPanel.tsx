@@ -1,6 +1,6 @@
 import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
+import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles';
-import { WithTheme, makeStyles, withTheme } from '@mui/styles';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -18,62 +18,11 @@ import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  canvasContainer: {
-    marginTop: theme.spacing(3),
-  },
-  caption: {},
-  chartSelect: {
-    maxWidth: 150,
-    [theme.breakpoints.down('lg')]: {
-      marginBottom: theme.spacing(3),
-      marginLeft: theme.spacing(3),
-    },
-    [theme.breakpoints.up('lg')]: {
-      position: 'absolute !important' as 'absolute',
-      right: 24,
-      top: 0,
-      zIndex: 2,
-    },
-  },
-  chartSelectCompact: {
-    [theme.breakpoints.up('lg')]: {
-      right: 12,
-      top: -6,
-    },
-  },
-  graphControls: {
-    /**
-     * hacky solution to solve for a bug where
-     * the canvas element under the chart kept ending up with a 0px height
-     * so that it was not appearing
-     */
-    '& canvas': {
-      height: `300px !important`,
-    },
-    '&:before': {
-      backgroundColor: theme.palette.divider,
-      content: '""',
-      height: 'calc(100% - 102px);',
-      left: 0,
-      position: 'absolute',
-      [theme.breakpoints.down('sm')]: {
-        display: 'none',
-      },
-      top: 52,
-      width: 1,
-    },
-    position: 'relative',
-  },
-  inner: {
-    paddingTop: 0,
-  },
-  root: {
-    position: 'relative',
-  },
-}));
-
-type CombinedProps = WithTheme;
+import {
+  StyledCanvasContainerDiv,
+  StyledGraphControlsDiv,
+  StyledRootDiv,
+} from './ManagedChartPanel.styles';
 
 const chartHeight = 300;
 
@@ -86,11 +35,10 @@ const _formatTooltip = (valueInBytes: number) =>
 const createTabs = (
   data: ManagedStatsData | undefined,
   timezone: string,
-  classes: Record<string, string>,
   theme: Theme
 ) => {
   const summaryCopy = (
-    <Typography className={classes.caption} variant="body1">
+    <Typography variant="body1">
       This graph represents combined usage for all Linodes on this account.
     </Typography>
   );
@@ -116,9 +64,9 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <div className={classes.canvasContainer}>
+            <StyledCanvasContainerDiv>
               <LineGraph
                 data={[
                   {
@@ -134,8 +82,8 @@ const createTabs = (
                 showToday={true}
                 timezone={timezone}
               />
-            </div>
-          </div>
+            </StyledCanvasContainerDiv>
+          </StyledRootDiv>
         );
       },
       title: 'CPU Usage (%)',
@@ -143,9 +91,9 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <div className={classes.canvasContainer}>
+            <StyledCanvasContainerDiv>
               <LineGraph
                 data={[
                   {
@@ -171,8 +119,8 @@ const createTabs = (
                 timezone={timezone}
                 unit="/s"
               />
-            </div>
-          </div>
+            </StyledCanvasContainerDiv>
+          </StyledRootDiv>
         );
       },
       title: `Network Transfer (${unit}/s)`,
@@ -180,9 +128,9 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <div className={classes.canvasContainer}>
+            <StyledCanvasContainerDiv>
               <LineGraph
                 data={[
                   {
@@ -198,8 +146,8 @@ const createTabs = (
                 showToday={true}
                 timezone={timezone}
               />
-            </div>
-          </div>
+            </StyledCanvasContainerDiv>
+          </StyledRootDiv>
         );
       },
       title: 'Disk I/O (op/s)',
@@ -207,9 +155,8 @@ const createTabs = (
   ];
 };
 
-export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
-  const { theme } = props;
-  const classes = useStyles();
+export const ManagedChartPanel = () => {
+  const theme = useTheme();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
   const { data, error, isLoading } = useManagedStatsQuery();
@@ -235,23 +182,22 @@ export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
     return null;
   }
 
-  const tabs = createTabs(data.data, timezone, classes, theme);
+  const tabs = createTabs(data.data, timezone, theme);
 
   const initialTab = 0;
 
   return (
-    <div className={classes.graphControls}>
+    <StyledGraphControlsDiv>
       <TabbedPanel
         copy={''}
         error={undefined} // Use custom error handling (above)
         header={''}
         initTab={initialTab}
-        innerClass={classes.inner}
         rootClass={`tabbedPanel`}
         tabs={tabs}
       />
-    </div>
+    </StyledGraphControlsDiv>
   );
 };
 
-export default withTheme(ManagedChartPanel);
+export default ManagedChartPanel;

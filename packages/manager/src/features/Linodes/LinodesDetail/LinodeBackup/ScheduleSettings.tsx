@@ -8,8 +8,8 @@ import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { FormControl } from 'src/components/FormControl';
+import { FormHelperText } from 'src/components/FormHelperText';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
@@ -23,7 +23,8 @@ interface Props {
   linodeId: number;
 }
 
-export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
+export const ScheduleSettings = (props: Props) => {
+  const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: profile } = useProfile();
