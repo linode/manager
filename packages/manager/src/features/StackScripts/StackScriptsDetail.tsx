@@ -10,6 +10,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import _StackScript from 'src/components/StackScript';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
@@ -113,6 +114,11 @@ export const StackScriptsDetail = () => {
 
   return (
     <>
+      <ProductInformationBanner
+        bannerLocation="StackScripts"
+        important
+        warning
+      />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

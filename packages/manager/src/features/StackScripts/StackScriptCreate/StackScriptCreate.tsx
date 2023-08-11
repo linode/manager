@@ -41,6 +41,7 @@ import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 type ClassNames = 'backButton' | 'createTitle';
 
@@ -223,6 +224,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={pageTitle} />
+        <ProductInformationBanner
+          bannerLocation="StackScripts"
+          important
+          warning
+        />
         {generalError && <Notice error text={generalError} />}
         <LandingHeader
           breadcrumbProps={{

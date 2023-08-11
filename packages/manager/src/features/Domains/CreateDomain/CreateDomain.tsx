@@ -17,15 +17,16 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Radio } from 'src/components/Radio/Radio';
-import { TextField } from 'src/components/TextField';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormHelperText } from 'src/components/FormHelperText';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { TextField } from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
@@ -267,6 +268,12 @@ export const CreateDomain = () => {
   return (
     <Grid container>
       <DocumentTitleSegment segment="Create Domain" />
+      <ProductInformationBanner
+        bannerLocation="Domains"
+        important
+        sx={{ width: '100%' }}
+        warning
+      />
       <LandingHeader
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/dns-manager/"

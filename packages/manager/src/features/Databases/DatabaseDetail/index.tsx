@@ -7,10 +7,11 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import {
   useDatabaseMutation,
@@ -118,6 +119,7 @@ export const DatabaseDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment={database.label} />
+      <ProductInformationBanner bannerLocation="Databases" important warning />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

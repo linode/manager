@@ -3,12 +3,14 @@ import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const VPCDetails = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
   return (
     <>
       <DocumentTitleSegment segment="VPC" />
+      <ProductInformationBanner bannerLocation="VPC" important warning />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

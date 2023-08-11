@@ -4,11 +4,12 @@ import { matchPath, useHistory, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 
 interface Props {
   location: Location;
@@ -60,6 +61,11 @@ const LoadBalancerDetailLanding = (props: Props) => {
     <>
       {/* TODO: AGLB - Use Load Balancer label */}
       <DocumentTitleSegment segment={loadbalancerId} />
+      <ProductInformationBanner
+        bannerLocation="LoadBalancers"
+        important
+        warning
+      />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

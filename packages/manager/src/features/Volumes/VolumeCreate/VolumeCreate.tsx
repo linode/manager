@@ -4,6 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { useRegionsQuery } from 'src/queries/regions';
 import { MapState } from 'src/store/types';
 import { openForConfig, viewResizeInstructions } from 'src/store/volumeForm';
@@ -59,6 +60,7 @@ const VolumeCreate: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment segment="Create Volume" />
+      <ProductInformationBanner bannerLocation="Volumes" important warning />
       <LandingHeader title="Create" />
       <CreateVolumeForm
         history={history}

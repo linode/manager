@@ -258,7 +258,12 @@ export const CreateCluster = () => {
   return (
     <Grid className={classes.root} container>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
-      <ProductInformationBanner bannerLocation="Kubernetes" important warning />
+      <ProductInformationBanner
+        bannerLocation="Kubernetes"
+        important
+        sx={{ width: '100%' }}
+        warning
+      />
       <LandingHeader
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"

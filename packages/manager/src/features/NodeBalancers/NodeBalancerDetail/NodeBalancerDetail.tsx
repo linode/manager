@@ -10,10 +10,11 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
@@ -91,6 +92,11 @@ export const NodeBalancerDetail = () => {
 
   return (
     <React.Fragment>
+      <ProductInformationBanner
+        bannerLocation="NodeBalancers"
+        important
+        warning
+      />
       <LandingHeader
         breadcrumbProps={{
           firstAndLastOnly: true,

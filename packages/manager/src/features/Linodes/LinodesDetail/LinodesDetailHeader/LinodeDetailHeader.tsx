@@ -5,6 +5,7 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TagDrawer } from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
@@ -208,6 +209,7 @@ const LinodeDetailHeader = () => {
       <HostMaintenance linodeStatus={linode?.status ?? 'running'} />
       <MutationNotification linodeId={matchedLinodeId} />
       <Notifications />
+      <ProductInformationBanner bannerLocation="Linodes" important warning />
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {
