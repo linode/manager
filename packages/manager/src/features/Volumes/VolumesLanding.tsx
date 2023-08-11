@@ -218,7 +218,7 @@ export const VolumesLanding = (props: CombinedProps) => {
   if (volumes?.results === 0) {
     return (
       <>
-        <ProductInformationBanner bannerLocation="Volumes" important warning />
+        <ProductInformationBanner bannerLocation="Volumes" />
         <VolumesLandingEmptyState />
       </>
     );
@@ -238,7 +238,7 @@ export const VolumesLanding = (props: CombinedProps) => {
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
-      <ProductInformationBanner bannerLocation="Volumes" important warning />
+      <ProductInformationBanner bannerLocation="Volumes" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
         entity="Volume"

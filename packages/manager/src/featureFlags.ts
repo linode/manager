@@ -135,6 +135,16 @@ export type ProductInformationBannerLocation =
   | 'VPC'
   | 'Volumes';
 
+export type ProductInformationBannerStatusKey =
+  | 'error'
+  | 'important'
+  | 'info'
+  | 'marketing'
+  | 'success'
+  | 'warning';
+export type ProductInformationBannerStatus = {
+  [status in ProductInformationBannerStatusKey]?: 'false' | 'true';
+};
 export interface ProductInformationBannerFlag {
   // `bannerLocation` is the location where the banner will be rendered
   bannerLocation: ProductInformationBannerLocation;
@@ -144,6 +154,8 @@ export interface ProductInformationBannerFlag {
   key: string;
   // `message` is rendered as Markdown (to support links)
   message: string;
+  // `status` is applies optional styling with the status of the banner
+  status?: ProductInformationBannerStatus;
 }
 
 export interface SuppliedMaintenanceData {

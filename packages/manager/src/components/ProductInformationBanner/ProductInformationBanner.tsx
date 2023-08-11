@@ -29,6 +29,20 @@ export const ProductInformationBanner = React.memo(
       return null;
     }
 
+    let bannerStatuses = {};
+    if (thisBanner.status) {
+      bannerStatuses = thisBanner.status;
+      bannerStatuses = Object.keys(bannerStatuses).reduce(
+        (accumulator, key) => {
+          return {
+            ...accumulator,
+            [key]: bannerStatuses[key] === 'true' ? true : false,
+          };
+        },
+        {}
+      );
+    }
+
     let hasBannerExpired = true;
     try {
       hasBannerExpired = isAfter(
@@ -44,8 +58,15 @@ export const ProductInformationBanner = React.memo(
     }
 
     return (
+      // ProductInformationBanners have warning and important statuses by default.
       <DismissibleBanner
+        error={bannerStatuses['error'] ?? false}
+        important={bannerStatuses['important'] ?? true}
+        info={bannerStatuses['info'] ?? false}
+        marketing={bannerStatuses['marketing'] ?? false}
         preferenceKey={`${bannerLocation}-${thisBanner.expirationDate}`}
+        success={bannerStatuses['success'] ?? false}
+        warning={bannerStatuses['warning'] ?? true}
         {...rest}
       >
         <HighlightedMarkdown textOrMarkdown={thisBanner.message} />
