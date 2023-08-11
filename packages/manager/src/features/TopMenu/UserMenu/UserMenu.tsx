@@ -12,6 +12,7 @@ import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
@@ -138,27 +139,34 @@ export const UserMenu = React.memo(() => {
 
   return (
     <>
-      <Button
-        sx={(theme) => ({
-          '& .MuiButton-endIcon': {
-            marginLeft: '4px',
-          },
-          backgroundColor: open ? theme.bg.app : undefined,
-          height: '50px',
-          minWidth: 'unset',
-          textTransform: 'none',
-        })}
-        aria-describedby={id}
-        data-testid="nav-group-profile"
-        disableRipple
-        endIcon={getEndIcon()}
-        onClick={handleClick}
-        startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
+      <Tooltip
+        disableTouchListener
+        enterDelay={500}
+        leaveDelay={0}
+        title="Profile & Account"
       >
-        <Hidden mdDown>
-          <Typography sx={{ fontSize: '0.875rem' }}>{userName}</Typography>
-        </Hidden>
-      </Button>
+        <Button
+          sx={(theme) => ({
+            '& .MuiButton-endIcon': {
+              marginLeft: '4px',
+            },
+            backgroundColor: open ? theme.bg.app : undefined,
+            height: '50px',
+            minWidth: 'unset',
+            textTransform: 'none',
+          })}
+          aria-describedby={id}
+          data-testid="nav-group-profile"
+          disableRipple
+          endIcon={getEndIcon()}
+          onClick={handleClick}
+          startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
+        >
+          <Hidden mdDown>
+            <Typography sx={{ fontSize: '0.875rem' }}>{userName}</Typography>
+          </Hidden>
+        </Button>
+      </Tooltip>
       <Popover
         PaperProps={{
           sx: {
@@ -175,7 +183,7 @@ export const UserMenu = React.memo(() => {
         onClose={handleClose}
         open={open}
       >
-        <Stack minWidth={250} spacing={2}>
+        <Stack data-qa-user-menu minWidth={250} spacing={2}>
           <Typography
             color={(theme) => theme.textColors.headlineStatic}
             fontSize="1.1rem"
