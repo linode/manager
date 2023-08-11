@@ -125,6 +125,7 @@ export const ActionMenu = React.memo((props: Props) => {
         anchorEl={anchorEl}
         data-qa-action-menu
         id={menuId}
+        marginThreshold={0}
         onClose={handleClose}
         open={open}
       >
