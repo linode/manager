@@ -234,7 +234,7 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
         )
       }
       onChange={(_, selectedOptions: OptionType | OptionType[], reason) => {
-        const initialOptions = [...options];
+        const initialOptions = [...options]; // This is to bypass readonly options
         handleChange({
           handleMultiSelectionChange,
           initialOptions,
