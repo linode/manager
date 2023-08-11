@@ -45,8 +45,9 @@ import { Typography } from 'src/components/Typography';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import PlansPanel, {
+import {
   PlanSelectionType,
+  PlansPanel,
 } from 'src/features/components/PlansPanel/PlansPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import {
