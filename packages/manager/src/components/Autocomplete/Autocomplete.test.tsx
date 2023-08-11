@@ -1,6 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
+import { TextField } from 'src/components/TextField';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Autocomplete } from './Autocomplete';
@@ -22,6 +23,7 @@ describe('Autocomplete Component', () => {
         label="Test Label"
         onSelectionChange={handleSelectionChange}
         options={options}
+        renderInput={(params) => <TextField label="test" {...params} />}
       />
     );
 
@@ -35,6 +37,7 @@ describe('Autocomplete Component', () => {
         label="Test Label"
         onSelectionChange={handleSelectionChange}
         options={options}
+        renderInput={(params) => <TextField label="test" {...params} />}
       />
     );
 
@@ -60,6 +63,7 @@ describe('Autocomplete Component', () => {
         label="Test Label"
         onSelectionChange={handleSelectionChange}
         options={options}
+        renderInput={(params) => <TextField label="test" {...params} />}
       />
     );
 
@@ -73,6 +77,7 @@ describe('Autocomplete Component', () => {
         label="Test Label"
         onSelectionChange={handleSelectionChange}
         options={options}
+        renderInput={(params) => <TextField label="test" {...params} />}
       />
     );
 
@@ -88,6 +93,7 @@ describe('Autocomplete Component', () => {
           loading
           onSelectionChange={handleSelectionChange}
           options={[]}
+          renderInput={(params) => <TextField label="test" {...params} />}
         />
       );
 
@@ -95,7 +101,7 @@ describe('Autocomplete Component', () => {
       fireEvent.focus(inputElement);
       fireEvent.keyDown(inputElement, { key: 'ArrowDown' });
 
-      const loadingMessage = screen.getByText('Loading…');
+      const loadingMessage = screen.getByText('Loading...');
       expect(loadingMessage).toBeInTheDocument();
     });
 
@@ -105,6 +111,7 @@ describe('Autocomplete Component', () => {
           label="Test Label"
           onSelectionChange={handleSelectionChange}
           options={[]}
+          renderInput={(params) => <TextField label="test" {...params} />}
         />
       );
 
@@ -124,6 +131,7 @@ describe('Autocomplete Component', () => {
           label="Test Label"
           onSelectionChange={handleSelectionChange}
           options={options}
+          renderInput={(params) => <TextField label="test" {...params} />}
         />
       );
 
@@ -143,6 +151,7 @@ describe('Autocomplete Component', () => {
           label="Test Label"
           onSelectionChange={handleSelectionChange}
           options={[]}
+          renderInput={(params) => <TextField label="test" {...params} />}
         />
       );
 
