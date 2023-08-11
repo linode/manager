@@ -84,7 +84,8 @@ export const ActionMenu = React.memo((props: Props) => {
           backgroundColor: open ? theme.palette.primary.main : undefined,
           borderRadius: 'unset',
           color: open ? '#fff' : theme.textColors.linkActiveLight,
-          cursor: 'pointer',
+          height: '100%',
+          minWidth: '40px',
           padding: '10px',
         })}
         aria-controls={open ? menuId : undefined}
