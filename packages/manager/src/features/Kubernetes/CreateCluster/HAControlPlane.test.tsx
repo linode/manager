@@ -5,19 +5,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HAControlPlane, Props } from './HAControlPlane';
 
-/*
-  This mock might not be required anymore since we are passing the value of
-  HIGH_AVAILABILITY_PRICE as a prop.
-*/
-// jest.mock('src/constants', () => ({
-//   __esModule: true,
-//   ...(jest.requireActual('src/constants') as any),
-//   HIGH_AVAILABILITY_PRICE: 60,
-// }));
-
 const props: Props = {
   HIGH_AVAILABILITY_PRICE: 60,
-  highAvailability: undefined,
   setHighAvailability: jest.fn(),
 };
 
@@ -26,6 +15,18 @@ describe('HAControlPlane', () => {
     const { getByTestId } = renderWithTheme(<HAControlPlane {...props} />);
 
     expect(getByTestId('ha-control-plane-form')).toBeVisible();
+  });
+
+  it('the component should not render when HIGH_AVAILABILITY_PRICE is undefined ', () => {
+    const testProps: Props = {
+      HIGH_AVAILABILITY_PRICE: undefined,
+      setHighAvailability: jest.fn(),
+    };
+    const { queryByTestId } = renderWithTheme(
+      <HAControlPlane {...testProps} />
+    );
+
+    expect(queryByTestId('ha-control-plane-form')).not.toBeInTheDocument();
   });
 
   it('should call the handleChange function on change', () => {

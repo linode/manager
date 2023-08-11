@@ -11,7 +11,7 @@ import { Typography } from 'src/components/Typography';
 
 export const HACopy = () => (
   <Typography>
-    Recommended for prodcution workloads, a high availability (HA) control plane
+    Recommended for production workloads, a high availability (HA) control plane
     is replicated on multiple master nodes to 99.99% uptime.
     <br />
     <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
@@ -23,7 +23,6 @@ export const HACopy = () => (
 
 export interface Props {
   HIGH_AVAILABILITY_PRICE: number | undefined;
-  highAvailability?: boolean;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
 

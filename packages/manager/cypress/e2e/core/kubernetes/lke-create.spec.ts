@@ -98,20 +98,9 @@ describe('LKE Cluster Creation', () => {
       .click()
       .type(`${clusterVersion}{enter}`);
 
-    // We can assume that the element assigned to haControlPlane should always be in the DOM
-    // for the purpose of this test.
-    // Then, we use it to find the radio button for the HA opt-in and click it to enable the
-    // Create Cluster button.
-    const haControlPlane = '[data-testid="ha-control-plane"]';
-    cy.get(haControlPlane).then((haControlPlane) => {
-      if (
-        haControlPlane.find('[data-testid="ha-radio-button-yes"]').length > 0
-      ) {
-        cy.get('[data-testid="ha-radio-button-yes"]')
-          .should('be.visible')
-          .click();
-      }
-    });
+    // TODO: Circle back to add e2e tests for HA Control Plane
+    // once the investigation into LKE HA pricing constant has been completed.
+    // cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
 
     // Add a node pool for each randomly selected plan, and confirm that the
     // selected node pool plan is added to the checkout bar.

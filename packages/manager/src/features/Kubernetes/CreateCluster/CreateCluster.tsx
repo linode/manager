@@ -317,7 +317,6 @@ export const CreateCluster = () => {
               <Box data-testid="ha-control-plane">
                 <HAControlPlane
                   HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
-                  highAvailability={highAvailability}
                   setHighAvailability={setHighAvailability}
                 />
               </Box>
