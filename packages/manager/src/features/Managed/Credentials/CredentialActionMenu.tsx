@@ -3,17 +3,17 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { ActionMenu, Action } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
-interface Props {
+interface CredentialActionMenuProps {
   credentialID: number;
   label: string;
   openDialog: (id: number, label: string) => void;
   openForEdit: (id: number) => void;
 }
 
-const CredentialActionMenu: React.FC<Props> = (props) => {
+const CredentialActionMenu = (props: CredentialActionMenuProps) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 

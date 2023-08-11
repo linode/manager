@@ -65,50 +65,50 @@ const appLinks = appsLinkData.map((linkData) => (
   <AppLink {...linkData} key={linkData.to} />
 ));
 
-const AppsSection = () => {
+export const AppsSection = () => {
   return <StyledAppSectionDiv>{appLinks}</StyledAppSectionDiv>;
 };
 
-const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
-  alignItems: 'center',
-  aspectRatio: '1 / 1',
-  borderLeft: `1px solid ${
-    theme.name === 'dark' ? '#3a3f46' : theme.color.border3
-  }`,
-  color:
-    theme.name === 'dark'
-      ? theme.textColors.linkActiveLight
-      : theme.palette.primary.main,
-  display: 'flex',
-  height: '100%',
-  justifyContent: 'center',
-}));
-
 const StyledAppLinkDiv = styled('div', { label: 'StyledAppLinkDiv' })(
   ({ theme }) => ({
-    '&:focus': {
-      textDecoration: 'none',
-    },
-    '&:hover': {
-      textDecoration: 'none',
-    },
     alignItems: 'center',
-    backgroundColor:
-      theme.name === 'dark' ? theme.bg.primaryNavPaper : theme.bg.offWhite,
-    border: `1px solid ${
+    aspectRatio: '1 / 1',
+    borderLeft: `1px solid ${
       theme.name === 'dark' ? '#3a3f46' : theme.color.border3
     }`,
-    color: theme.palette.text.primary,
+    color:
+      theme.name === 'dark'
+        ? theme.textColors.linkActiveLight
+        : theme.palette.primary.main,
     display: 'flex',
-    fontSize: '0.875rem',
-    fontWeight: 700,
-    gridColumn: 'span 1',
-    height: theme.spacing(4.75),
-    justifyContent: 'space-between',
-    maxWidth: theme.spacing(20),
-    paddingLeft: theme.spacing(),
+    height: '100%',
+    justifyContent: 'center',
   })
 );
+
+const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
+  '&:focus': {
+    textDecoration: 'none',
+  },
+  '&:hover': {
+    textDecoration: 'none',
+  },
+  alignItems: 'center',
+  backgroundColor:
+    theme.name === 'dark' ? theme.bg.primaryNavPaper : theme.bg.offWhite,
+  border: `1px solid ${
+    theme.name === 'dark' ? '#3a3f46' : theme.color.border3
+  }`,
+  color: theme.palette.text.primary,
+  display: 'flex',
+  fontSize: '0.875rem',
+  fontWeight: 700,
+  gridColumn: 'span 1',
+  height: theme.spacing(4.75),
+  justifyContent: 'space-between',
+  maxWidth: theme.spacing(20),
+  paddingLeft: theme.spacing(),
+}));
 
 const StyledAppSectionDiv = styled('div', { label: 'StyledAppSectionDiv' })(
   ({ theme }) => ({
@@ -121,5 +121,3 @@ const StyledAppSectionDiv = styled('div', { label: 'StyledAppSectionDiv' })(
     rowGap: theme.spacing(),
   })
 );
-
-export default AppsSection;

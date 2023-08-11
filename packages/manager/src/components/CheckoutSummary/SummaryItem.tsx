@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import Grid from '../Grid';
+import { Grid } from '../Grid';
 import { Typography } from '../Typography';
 import { SummaryItem as Props } from './CheckoutSummary';
 

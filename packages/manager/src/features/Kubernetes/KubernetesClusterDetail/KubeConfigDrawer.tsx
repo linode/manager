@@ -6,7 +6,7 @@ import * as React from 'react';
 import Download from 'src/assets/icons/download.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Drawer } from 'src/components/Drawer';
-import DrawerContent from 'src/components/DrawerContent';
+import { DrawerContent } from 'src/components/DrawerContent';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Typography } from 'src/components/Typography';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';

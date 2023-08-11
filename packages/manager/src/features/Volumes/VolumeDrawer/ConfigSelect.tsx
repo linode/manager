@@ -7,15 +7,13 @@ import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 interface Props {
   disabled?: boolean;
   error?: string;
-  linodeId: number;
+  linodeId: null | number;
   name: string;
   onBlur: (e: any) => void;
   onChange: (value: number) => void;
-  value: number;
+  value: null | number;
   width?: number;
 }
-
-export const initialValueDefaultId = -1;
 
 export const ConfigSelect = React.memo((props: Props) => {
   const {
@@ -30,8 +28,8 @@ export const ConfigSelect = React.memo((props: Props) => {
   } = props;
 
   const { data: configs, error: configsError } = useAllLinodeConfigsQuery(
-    linodeId,
-    linodeId !== initialValueDefaultId
+    linodeId ?? -1,
+    linodeId !== null
   );
 
   const configList = configs?.map((config) => {
@@ -47,7 +45,7 @@ export const ConfigSelect = React.memo((props: Props) => {
     }
   }, [configList, onChange, value]);
 
-  if (linodeId === initialValueDefaultId) {
+  if (linodeId === null) {
     return null;
   }
 

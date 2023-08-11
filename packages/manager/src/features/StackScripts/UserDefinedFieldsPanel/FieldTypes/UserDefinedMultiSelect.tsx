@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
-import RenderGuard from 'src/components/RenderGuard';
+import { RenderGuard } from 'src/components/RenderGuard';
 
 interface Props {
   error?: string;

@@ -5,7 +5,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TextField } from 'src/components/TextField';
 
 import { creationSchema } from './credential.schema';
@@ -14,15 +14,13 @@ const PasswordInput = React.lazy(
   () => import('src/components/PasswordInput/PasswordInput')
 );
 
-export interface Props {
+export interface CredentialDrawerProps {
   onClose: () => void;
   onSubmit: (values: CredentialPayload, formikProps: any) => void;
   open: boolean;
 }
 
-type CombinedProps = Props;
-
-const CredentialDrawer: React.FC<CombinedProps> = (props) => {
+const CredentialDrawer = (props: CredentialDrawerProps) => {
   const { onClose, onSubmit, open } = props;
 
   return (

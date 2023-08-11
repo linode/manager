@@ -19,7 +19,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Tag } from 'src/components/TagsInput/TagsInput';
 import {
   WithAccountSettingsProps,
@@ -342,7 +342,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       selectedStackScriptLabel,
     } = this.state;
 
-    if (customLabel?.length) {
+    if (customLabel !== undefined) {
       return customLabel;
     }
 

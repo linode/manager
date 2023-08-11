@@ -1,5 +1,5 @@
 import { Image } from '@linode/api-v4/lib/images';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { clone, propOr } from 'ramda';
 import * as React from 'react';
 
