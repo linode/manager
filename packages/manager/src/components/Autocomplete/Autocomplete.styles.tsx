@@ -23,6 +23,9 @@ export const StyledListItem = styled('li', {
     width: '102%',
   },
 
+  color: theme.color.headline,
+  fontFamily: theme.font.bold,
+  fontSize: '1rem',
   marginBottom: '9px',
   position: 'relative',
 }));
