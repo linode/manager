@@ -2,11 +2,11 @@ import { Notification } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import Flag from 'src/assets/icons/flag.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -33,7 +33,6 @@ import { RegionIndicator } from '../RegionIndicator';
 import { parseMaintenanceStartTime } from '../utils';
 import {
   StyledButton,
-  StyledLink,
   StyledIpTableCell,
   StyledMaintenanceTableCell,
 } from './LinodeRow.styles';
@@ -79,9 +78,7 @@ export const LinodeRow = (props: Props) => {
       <>
         This Linode&rsquo;s maintenance window opens at{' '}
         {parsedMaintenanceStartTime}. For more information, see your{' '}
-        <StyledLink to="/support/tickets?type=open">
-          open support tickets.
-        </StyledLink>
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };
