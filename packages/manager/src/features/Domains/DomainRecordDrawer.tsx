@@ -820,7 +820,12 @@ export class DomainRecordDrawer extends React.Component<
           <this.TextField field="domain" key={idx} label="Domain" />
         ),
         (idx: number) => (
-          <this.TextField field="soa_email" key={idx} label="SOA Email" />
+          <this.TextField
+            field="soa_email"
+            key={idx}
+            label="SOA Email"
+            trimmed
+          />
         ),
         (idx: number) => <this.DomainTransferField key={idx} />,
         (idx: number) => <this.DefaultTTLField key={idx} />,

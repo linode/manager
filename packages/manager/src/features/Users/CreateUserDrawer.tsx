@@ -58,6 +58,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           data-qa-create-username
           errorText={hasErrorFor('username')}
           label="Username"
+          onBlur={this.handleChangeUsername}
           onChange={this.handleChangeUsername}
           required
           trimmed
@@ -125,7 +126,11 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
     });
   };
 
-  handleChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleChangeUsername = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     this.setState({
       username: e.target.value,
     });

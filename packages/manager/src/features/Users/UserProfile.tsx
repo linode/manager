@@ -46,7 +46,11 @@ interface Props {
   accountSaving: boolean;
   accountSuccess: boolean;
   changeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeUsername: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeUsername: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   email?: string;
   originalEmail?: string;
   originalUsername?: string;
@@ -125,6 +129,7 @@ const UserProfile: React.FC<Props> = (props) => {
             data-qa-username
             errorText={hasAccountErrorFor('username')}
             label="Username"
+            onBlur={changeUsername}
             onChange={changeUsername}
             trimmed
             value={username}
