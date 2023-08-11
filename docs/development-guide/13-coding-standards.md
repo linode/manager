@@ -109,7 +109,7 @@ function myFunction(type: LinodeCreateFrom) {
   // Function implementation
 }
 
-myFunction(CREATE_TYPES.BACKUP); // Works
+myFunction(CreateTypes.Backup); // Works
 myFunction('fromBackup'); // Works
 ```
 
