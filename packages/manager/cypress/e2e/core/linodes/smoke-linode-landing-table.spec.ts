@@ -46,8 +46,13 @@ const linodeLabel = (number) => {
 };
 
 const deleteLinodeFromActionMenu = (linodeLabel) => {
-  getClick(`[aria-label="Action menu for Linode ${linodeLabel}"]`);
-  cy.get(`[data-qa-action-menu-item="Delete"]`).filter(`:visible`).click();
+  ui.actionMenu
+    .findByTitle(`Action menu for Linode ${linodeLabel}`)
+    .should('be.visible')
+    .click();
+
+  ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
   ui.dialog
     .findByTitle(`Delete ${linodeLabel}?`)
     .should('be.visible')
@@ -287,18 +292,26 @@ describe('linode landing checks', () => {
 
   it('checks the action menu items', () => {
     const label = linodeLabel(1);
-    getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
-      cy.findByLabelText(`Action menu for Linode ${label}`).click();
+    const menuItems = [
+      'Power Off',
+      'Reboot',
+      'Launch LISH Console',
+      'Clone',
+      'Resize',
+      'Rebuild',
+      'Rescue',
+      'Migrate',
+      'Delete',
+    ];
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Linode ${label}`)
+      .should('be.visible')
+      .click();
+
+    menuItems.forEach((menuItem) => {
+      ui.actionMenuItem.findByTitle(menuItem).should('be.visible');
     });
-    getVisible('[data-qa-action-menu-item="Power Off"]');
-    getVisible('[data-qa-action-menu-item="Reboot"]');
-    getVisible('[data-qa-action-menu-item="Launch LISH Console"]');
-    getVisible('[data-qa-action-menu-item="Clone"]');
-    getVisible('[data-qa-action-menu-item="Resize"]');
-    getVisible('[data-qa-action-menu-item="Rebuild"]');
-    getVisible('[data-qa-action-menu-item="Rescue"]');
-    getVisible('[data-qa-action-menu-item="Migrate"]');
-    getVisible('[data-qa-action-menu-item="Delete"]');
   });
 
   it('checks group by tag for linde table', () => {
