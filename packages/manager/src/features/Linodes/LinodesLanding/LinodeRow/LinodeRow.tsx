@@ -63,7 +63,10 @@ export const LinodeRow = (props: Props) => {
   // TODO: VPC - later if there is a way to directly get a linode's vpc, replace this
   const { data: configs } = useAllLinodeConfigsQuery(id);
   const vpcId = getVPCId(configs ?? []);
-  const { data: vpc } = useVPCQuery(vpcId ?? -1, vpcId !== undefined);
+  const { data: vpc } = useVPCQuery(
+    vpcId ?? -1,
+    vpcId !== undefined && vpcId !== null
+  );
   const vpcLabel = vpc?.label;
 
   const linodeNotifications =
@@ -251,13 +254,10 @@ export const RenderFlag: React.FC<{
   return null;
 };
 
-const getVPCId = (configs: Config[]): number | undefined => {
+const getVPCId = (configs: Config[]) => {
   for (const config of configs) {
     for (const linodeInterface of config.interfaces) {
-      if (
-        linodeInterface.purpose === 'vpc' &&
-        (linodeInterface.vpc_id || linodeInterface.vpc_id === 0)
-      ) {
+      if (linodeInterface.purpose === 'vpc') {
         return linodeInterface.vpc_id;
       }
     }
