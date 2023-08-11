@@ -1,70 +1,43 @@
-import { fireEvent, getDefaultNormalizer } from '@testing-library/react';
-//import * as Formik from 'formik';
-//import { FormikProps } from 'formik';
-import React from 'react';
+import { handleFormikBlur } from './formikTrimUtil';
 
-jest.mock('formik');
+const setFieldValueMock = jest.fn();
+const handleBlurMock = jest.fn();
 
-import { TextField } from 'src/components/TextField';
-
-// import { handleFormikBlur } from './formikTrimUtil';
-import { renderWithTheme } from './testHelpers';
-
-// const setFieldValue = jest.fn();
-// const handleBlur = jest.fn();
-// const formik = {
-//   handleBlur,
-//   setFieldValue,
-// } as Partial<FormikProps<T>>;
-
-//const useFormikMock = jest.spyOn(Formik, 'useFormik');
-//const formik = useFormikMock as Partial<FormikProps<T>>;
-
-const emailFieldProps = {
-  label: 'Email',
-  // onBlur: (e: React.FocusEvent<HTMLInputElement, HTMLTextAreaElement>) =>
-  //   handleFormikBlur(e, formik),
-  type: 'email',
-  value: 'test@email.com',
-};
-
-const usernameFieldProps = {
-  label: 'Username',
-  // onBlur: (e: React.FocusEvent<HTMLInputElement, HTMLTextAreaElement>) =>
-  //   handleFormikBlur(e, formik),
-  value: 'test-user',
-};
+const textfieldMock = {
+  target: { name: 'usernameField', type: 'text', value: '  test-user  ' },
+} as React.FocusEvent<HTMLInputElement>;
+const emailFieldMock = {
+  target: {
+    name: 'emailField',
+    type: 'email',
+    value: '  test-user@example.com  ',
+  },
+} as React.FocusEvent<HTMLInputElement>;
 
 describe('handleFormikBlur', () => {
-  it('should trim leading and trailing space from an email TextField', async () => {
-    const { getByDisplayValue, getByLabelText } = renderWithTheme(
-      <TextField {...emailFieldProps} />
+  it('should trim leading and trailing space from a username TextField', () => {
+    handleFormikBlur(textfieldMock, {
+      handleBlur: handleBlurMock,
+      setFieldValue: setFieldValueMock,
+    });
+
+    expect(setFieldValueMock).toHaveBeenCalledWith(
+      'usernameField',
+      'test-user'
     );
-    const input = getByLabelText('Email');
-
-    fireEvent.change(input, { target: { value: ' test@email.com ' } });
-    fireEvent.blur(input);
-
-    expect(
-      getByDisplayValue('test@email.com', {
-        normalizer: getDefaultNormalizer({ trim: false }), // Prevent default trim by DOM Testing Library
-      })
-    ).toBeInTheDocument();
+    expect(handleBlurMock).toHaveBeenCalledWith(textfieldMock);
   });
 
-  it.skip('should trim leading and trailing space from a username TextField', async () => {
-    const { getByDisplayValue, getByLabelText } = renderWithTheme(
-      <TextField {...usernameFieldProps} />
+  it('should trim leading and trailing space from an email TextField', () => {
+    handleFormikBlur(emailFieldMock, {
+      handleBlur: handleBlurMock,
+      setFieldValue: setFieldValueMock,
+    });
+
+    expect(setFieldValueMock).toHaveBeenCalledWith(
+      'emailField',
+      'test-user@example.com'
     );
-    const input = getByLabelText('Username');
-
-    fireEvent.change(input, { target: { value: ' test-user ' } });
-    fireEvent.blur(input);
-
-    expect(
-      getByDisplayValue('test-user', {
-        normalizer: getDefaultNormalizer({ trim: false }), // Prevent default trim by DOM Testing Library
-      })
-    ).toBeInTheDocument();
+    expect(handleBlurMock).toHaveBeenCalledWith(emailFieldMock);
   });
 });
