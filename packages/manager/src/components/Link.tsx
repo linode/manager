@@ -116,6 +116,7 @@ export const Link = (props: LinkProps) => {
     </a>
   ) : (
     <RouterLink
+      data-testid="internal-link"
       {...routerLinkProps}
       className={cx(
         classes.root,
@@ -124,7 +125,6 @@ export const Link = (props: LinkProps) => {
         },
         className
       )}
-      data-testid="internal-link"
     />
   );
 };

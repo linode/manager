@@ -1,2 +1,1 @@
-import UserMenu from './UserMenu';
-export default UserMenu;
+export { UserMenu } from './UserMenu';
