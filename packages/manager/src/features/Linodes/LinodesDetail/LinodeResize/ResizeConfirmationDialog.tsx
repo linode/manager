@@ -37,7 +37,7 @@ const renderActions = (
   );
 };
 
-export const ResizeDialog: React.FC<Props> = (props) => {
+export const ResizeDialog = (props: Props) => {
   const {
     currentPlan,
     error,
@@ -64,5 +64,3 @@ export const ResizeDialog: React.FC<Props> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default ResizeDialog;

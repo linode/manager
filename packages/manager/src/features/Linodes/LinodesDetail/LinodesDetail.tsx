@@ -18,7 +18,7 @@ const LinodesDetailHeader = React.lazy(
 const LinodesDetailNavigation = React.lazy(
   () => import('./LinodesDetailNavigation')
 );
-const CloneLanding = React.lazy(() => import('../CloneLanding'));
+const CloneLanding = React.lazy(() => import('../CloneLanding/CloneLanding'));
 
 const LinodeDetail = () => {
   const { path, url } = useRouteMatch();

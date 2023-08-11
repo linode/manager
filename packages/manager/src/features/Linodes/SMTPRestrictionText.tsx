@@ -6,7 +6,8 @@ import { Typography } from 'src/components/Typography';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { useAccount } from 'src/queries/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
-export interface Props {
+
+export interface SMTPRestrictionTextProps {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
   supportLink?: {
     id: number;
@@ -14,7 +15,7 @@ export interface Props {
   };
 }
 
-const SMTPRestrictionText: React.FC<Props> = (props) => {
+export const SMTPRestrictionText = (props: SMTPRestrictionTextProps) => {
   const { supportLink } = props;
   const { data: account } = useAccount();
 
@@ -50,8 +51,6 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
   // eslint-disable-next-line
   return <>{props.children({ text })}</>;
 };
-
-export default SMTPRestrictionText;
 
 export const accountCreatedAfterRestrictions = (_accountCreated?: string) => {
   // Default to `true` for bad input.
