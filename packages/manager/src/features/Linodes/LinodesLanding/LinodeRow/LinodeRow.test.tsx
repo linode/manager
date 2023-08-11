@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { QueryClient } from 'react-query';
 
-import { linodeFactory } from 'src/factories';
+import { linodeFactory, linodeConfigFactory, vpcFactory } from 'src/factories';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -26,6 +26,22 @@ jest.mock('src/hooks/useFlags', () => ({
   useFlags: jest.fn().mockReturnValue({ vpc: true }),
 }));
 
+jest.mock('src/queries/linodes/configs.ts', () => ({
+  useAllLinodeConfigsQuery: jest.fn().mockReturnValue({
+    data: linodeConfigFactory.buildList(1),
+    isLoading: false,
+    error: {},
+  }),
+}));
+
+jest.mock('src/queries/vpcs.ts', () => ({
+  useVPCQuery: jest.fn().mockReturnValue({
+    data: vpcFactory.build({ label: 'vpc-1' }),
+    isLoading: false,
+    error: {},
+  }),
+}));
+
 describe('LinodeRow', () => {
   describe('when Linode has notification', () => {
     it('should render a Flag', () => {
@@ -45,8 +61,7 @@ describe('LinodeRow', () => {
 
   // TODO: VPC - when a feature flag is no longer needed for vpc, this should be changed
   it('should render a linode row with associated vpc information if the feature flag is on', () => {
-    const lin = linodeFactory.build();
-    const linode = { ...lin, vpcLabel: 'someVpc', vpcId: 1 };
+    const linode = linodeFactory.build();
     const renderedLinode = (
       <LinodeRow
         handlers={{
@@ -75,8 +90,6 @@ describe('LinodeRow', () => {
         type={linode.type}
         updated={linode.updated}
         watchdog_enabled={linode.watchdog_enabled}
-        vpcLabel={linode.vpcLabel}
-        vpcId={linode.vpcId}
       />
     );
 
@@ -84,7 +97,7 @@ describe('LinodeRow', () => {
       wrapWithTableBody(renderedLinode, { queryClient })
     );
 
-    getByText('someVpc');
+    getByText('vpc-1');
     getByText(linode.label);
     getByText('Power Off');
     getByText('Reboot');

@@ -23,7 +23,7 @@ import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
-import { LinodeWithVPC } from 'src/utilities/linodes';
+import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { RenderLinodesProps } from './DisplayLinodes';
 import {
@@ -36,7 +36,7 @@ import TableWrapper from './TableWrapper';
 
 interface Props {
   component: React.ComponentType<RenderLinodesProps>;
-  data: LinodeWithVPC[];
+  data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
   isVLAN?: boolean;
   linodeViewPreference: 'grid' | 'list';
@@ -53,7 +53,7 @@ interface Props {
   toggleLinodeView: () => 'grid' | 'list';
 }
 
-type CombinedProps = Props & OrderByProps<LinodeWithVPC>;
+type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
 
 export const DisplayGroupedLinodes = (props: CombinedProps) => {
   const {

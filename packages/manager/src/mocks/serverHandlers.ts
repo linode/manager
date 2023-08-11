@@ -395,6 +395,10 @@ const vpc = [
       )
     );
   }),
+  rest.get('*/vpcs/:vpcID', (req, res, ctx) => {
+    const id = Number(req.params.id);
+    return res(ctx.json(vpcFactory.build({ id })));
+  }),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });

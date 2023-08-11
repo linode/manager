@@ -116,6 +116,7 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
                 direction={order}
                 handleClick={handleOrderChange}
                 label="ipv4[0]" // we want to sort by the first ipv4
+                noWrap
               >
                 Public IP Address
               </TableSortCell>
@@ -137,19 +138,12 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
                   Region
                 </TableSortCell>
               </Hidden>
-              {flags.vpc && (
-                <Hidden lgDown>
-                  <TableSortCell
-                    active={isActive('vpcLabel')}
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    label="vpcLabel"
-                  >
-                    VPC
-                  </TableSortCell>
-                </Hidden>
-              )}
             </Hidden>
+            {flags.vpc && (
+              <Hidden smDown>
+                <TableCell>VPC</TableCell>
+              </Hidden>
+            )}
             <Hidden lgDown>
               <TableSortCell
                 active={isActive('backups:last_successful')}

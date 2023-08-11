@@ -1,3 +1,4 @@
+import type { Config } from '@linode/api-v4';
 import { Notification } from '@linode/api-v4/lib/account';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
@@ -19,12 +20,14 @@ import {
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
+import { useVPCQuery } from 'src/queries/vpcs';
 import { useTypeQuery } from 'src/queries/types';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import { LinodeWithVPC } from 'src/utilities/linodes';
+import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import IPAddress from '../IPAddress';
 import { LinodeActionMenu } from '../LinodeActionMenu';
@@ -38,7 +41,7 @@ import {
   StyledMaintenanceTableCell,
 } from './LinodeRow.style';
 
-type Props = LinodeWithVPC & { handlers: LinodeHandlers };
+type Props = LinodeWithMaintenance & { handlers: LinodeHandlers };
 
 export const LinodeRow = (props: Props) => {
   const flags = useFlags();
@@ -52,13 +55,17 @@ export const LinodeRow = (props: Props) => {
     status,
     type,
     maintenance,
-    vpcLabel,
-    vpcId,
   } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
   const { data: notifications } = useNotificationsQuery();
+
+  // TODO: VPC - later if there is a way to directly get a linode's vpc, replace this
+  const { data: configs } = useAllLinodeConfigsQuery(id);
+  const vpcId = getVPCId(configs ?? []);
+  const { data: vpc } = useVPCQuery(vpcId ?? -1);
+  const vpcLabel = vpc?.label;
 
   const linodeNotifications =
     notifications?.filter(
@@ -171,8 +178,8 @@ export const LinodeRow = (props: Props) => {
           </TableCell>
         </Hidden>
         {flags.vpc && (
-          <Hidden lgDown>
-            <TableCell>
+          <Hidden smDown>
+            <TableCell noWrap>
               {vpcLabel && (vpcId === 0 || vpcId) && (
                 <Link tabIndex={0} to={`/vpc/${vpcId}`}>
                   {vpcLabel}
@@ -245,6 +252,21 @@ export const RenderFlag: React.FC<{
     );
   }
   return null;
+};
+
+const getVPCId = (configs: Config[]): number | undefined => {
+  for (const config of configs) {
+    for (const linodeInterface of config.interfaces) {
+      if (
+        linodeInterface.purpose === 'vpc' &&
+        (linodeInterface.vpc_id || linodeInterface.vpc_id === 0)
+      ) {
+        return linodeInterface.vpc_id;
+      }
+    }
+  }
+
+  return undefined;
 };
 
 RenderFlag.displayName = `RenderFlag`;
