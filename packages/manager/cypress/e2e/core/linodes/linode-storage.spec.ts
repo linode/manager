@@ -1,32 +1,26 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Linode } from '@linode/api-v4/types';
 import { createLinode } from 'support/api/linodes';
-import {
-  containsVisible,
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
+import { containsVisible, fbtClick, fbtVisible } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { ui } from 'support/ui';
 
 // 3 minutes.
-const linodeProvisionTimeout = 180_000;
+const LINODE_PROVISION_TIMEOUT = 180_000;
 
 const waitForProvision = () => {
-  cy.findByText('PROVISIONING', { timeout: linodeProvisionTimeout }).should(
+  cy.findByText('PROVISIONING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
     'not.exist'
   );
-  cy.findByText('BOOTING', { timeout: linodeProvisionTimeout }).should(
+  cy.findByText('BOOTING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
     'not.exist'
   );
-  cy.findByText('Creating', { timeout: linodeProvisionTimeout }).should(
+  cy.findByText('Creating', { timeout: LINODE_PROVISION_TIMEOUT }).should(
     'not.exist'
   );
 };
 
-const deleteInUseDisk = (diskName) => {
+const deleteInUseDisk = (diskName: string) => {
   waitForProvision();
 
   ui.actionMenu
@@ -55,7 +49,7 @@ const deleteInUseDisk = (diskName) => {
   ).should('be.visible');
 };
 
-const deleteDisk = (diskName, inUse = false) => {
+const deleteDisk = (diskName: string) => {
   waitForProvision();
 
   ui.actionMenu
@@ -77,17 +71,27 @@ const deleteDisk = (diskName, inUse = false) => {
     });
 };
 
-const addDisk = (linodeId, diskName) => {
-  if (
-    cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
-    cy.contains('BOOTING', { timeout: 180000 }).should('not.exist')
-  ) {
-    containsVisible('OFFLINE');
-    getClick('button[title="Add a Disk"]');
-    getVisible('[data-testid="textfield-input"][id="label"]').type(diskName);
-    getClick('[value="81920"]').clear().type('1');
-    getClick('[data-testid="submit-disk-form"]');
-  }
+const addDisk = (diskName: string) => {
+  cy.contains('PROVISIONING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+    'not.exist'
+  );
+  cy.contains('BOOTING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+    'not.exist'
+  );
+  containsVisible('OFFLINE');
+
+  ui.button.findByTitle('Add a Disk').click();
+
+  ui.drawer
+    .findByTitle('Create Disk')
+    .should('be.visible')
+    .within(() => {
+      cy.findByLabelText('Label (required)').type(diskName);
+      cy.findByLabelText('Size (required)').clear().type('1');
+      ui.button.findByTitle('Create').click();
+    });
+
+  ui.toast.assertMessage(`Started creation of disk ${diskName}`);
 };
 
 describe('linode storage tab', () => {
@@ -98,23 +102,22 @@ describe('linode storage tab', () => {
         'DELETE',
         apiMatcher(`linode/instances/${linode.id}/disks/*`)
       ).as('deleteDisk');
-      // Wait for Linode to boot before navigating to `Storage` details tab.
-      // Navigate via `cy.visitWithLogin` to invoke a page refresh.
-      // @TODO Remove this step upon resolution of M3-5762.
-      cy.visitWithLogin(`/linodes/${linode.id}`);
-      containsVisible('RUNNING');
       cy.visitWithLogin(`linodes/${linode.id}/storage`);
+      containsVisible('RUNNING');
       fbtVisible(diskName);
-      cy.get('button[title="Add a Disk"]').should('be.disabled');
+
+      ui.button.findByTitle('Add a Disk').should('be.disabled');
+
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
         cy.contains('Resize').should('be.disabled');
       });
+
       deleteInUseDisk(diskName);
-      cy.get('button[title="Add a Disk"]').should('be.disabled');
+
+      ui.button.findByTitle('Add a Disk').should('be.disabled');
     });
   });
 
-  // create with empty disk then delete disk
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
     createLinode({ image: null }).then((linode: Linode) => {
@@ -127,20 +130,24 @@ describe('linode storage tab', () => {
         apiMatcher(`linode/instances/${linode.id}/disks`)
       ).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
-      addDisk(linode.id, diskName);
+      addDisk(diskName);
       fbtVisible(diskName);
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
-      containsVisible('Creating');
+      // Disk should show "Creating". We must wait for it to finish "Creating" before we try to delete the disk
+      cy.findByText('Creating', { exact: false }).should('be.visible');
+      // "Creating" should go away when the Disk is able to be deleted
+      cy.findByText('Creating', { exact: false }).should('not.exist');
       deleteDisk(diskName);
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
-      cy.get('button[title="Add a Disk"]').should('be.enabled');
+      cy.findByText('Deleting', { exact: false }).should('be.visible');
+      ui.button.findByTitle('Add a Disk').should('be.enabled');
+      ui.toast.assertMessage(`Disk ${diskName} deleted successfully.`);
       cy.findByLabelText('List of Disks').within(() => {
         cy.contains(diskName).should('not.exist');
       });
     });
   });
 
-  // create with empty disk then add disk
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
     createLinode({ image: null }).then((linode: Linode) => {
@@ -149,13 +156,12 @@ describe('linode storage tab', () => {
         apiMatcher(`/linode/instances/${linode.id}/disks`)
       ).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
-      addDisk(linode.id, diskName);
+      addDisk(diskName);
       fbtVisible(diskName);
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
     });
   });
 
-  // resize disk
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
     createLinode({ image: null }).then((linode: Linode) => {
@@ -168,22 +174,35 @@ describe('linode storage tab', () => {
         apiMatcher(`linode/instances/${linode.id}/disks/*/resize`)
       ).as('resizeDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
-      addDisk(linode.id, diskName);
+      addDisk(diskName);
       fbtVisible(diskName);
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
       containsVisible('Creating');
-      if (
-        cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
-        cy.contains('BOOTING', { timeout: 180000 }).should('not.exist') &&
-        cy.contains('Creating', { timeout: 180000 }).should('not.exist')
-      ) {
-        cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
-          fbtClick('Resize');
+      cy.contains('PROVISIONING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+        'not.exist'
+      );
+      cy.contains('BOOTING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+        'not.exist'
+      );
+      cy.contains('Creating', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+        'not.exist'
+      );
+      cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
+        fbtClick('Resize');
+      });
+
+      ui.drawer
+        .findByTitle(`Resize ${diskName}`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByLabelText('Size (required)').clear().type('2');
+          ui.button.findByTitle('Resize').click();
         });
-        getClick('[value="1"]').clear().type('2');
-        getClick('[data-testid="submit-disk-form"]');
-        cy.wait('@resizeDisk').its('response.statusCode').should('eq', 200);
-      }
+
+      cy.wait('@resizeDisk').its('response.statusCode').should('eq', 200);
+      ui.toast.assertMessage('Disk queued for resizing.');
+      // cy.findByText('Resizing', { exact: false }).should('be.visible');
+      ui.toast.assertMessage(`Disk ${diskName} resized successfully.`);
     });
   });
 });
