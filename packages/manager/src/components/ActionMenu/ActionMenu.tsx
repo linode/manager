@@ -100,7 +100,6 @@ export const ActionMenu = React.memo((props: Props) => {
         id={buttonId}
         onClick={handleClick}
         onKeyDown={handleKeyPress}
-        onMouseDown={handleClick}
       >
         <KebabIcon />
       </IconButton>

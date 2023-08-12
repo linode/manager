@@ -12,7 +12,7 @@ import { apiMatcher } from 'support/util/intercepts';
 import { ui } from 'support/ui';
 
 // 3 minutes.
-const linodeProvisionTimeout = 180000;
+const linodeProvisionTimeout = 180_000;
 
 const waitForProvision = () => {
   cy.findByText('PROVISIONING', { timeout: linodeProvisionTimeout }).should(
@@ -40,21 +40,19 @@ const deleteInUseDisk = (diskName) => {
     .as('deleteMenuItem')
     .should('have.attr', 'aria-disabled');
 
-  // TODO Re-enable interactions/assertions related to help tooltip once button issue is resolved.
+  // The 'have.attr' assertion changes the Cypress subject to the value of the attr.
+  // Using `cy.get()` against the alias reselects the item.
+  cy.get('@deleteMenuItem').within(() => {
+    ui.button
+      .findByAttribute('data-qa-help-button', 'true')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+  });
 
-  // // The 'have.attr' assertion changes the Cypress subject to the value of the attr.
-  // // Using `cy.get()` against the alias reselects the item.
-  // cy.get('@deleteMenuItem')
-  //   .within(() => {
-  //     ui.button
-  //       .findByAttribute('data-qa-help-button', 'true')
-  //       .should('be.visible')
-  //       .should('be.enabled')
-  //       .click();
-  //   });
-
-  // cy.findByText('Your Linode must be fully powered down in order to perform this action')
-  //   .should('be.visible');
+  cy.findByText(
+    'Your Linode must be fully powered down in order to perform this action'
+  ).should('be.visible');
 };
 
 const deleteDisk = (diskName, inUse = false) => {
