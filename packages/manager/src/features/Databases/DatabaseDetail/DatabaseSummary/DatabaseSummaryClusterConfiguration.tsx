@@ -5,6 +5,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -27,7 +28,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   label: {
     fontFamily: theme.font.bold,
     lineHeight: '22px',
-    width: theme.spacing(7),
+    width: theme.spacing(13),
   },
   status: {
     alignItems: 'center',
@@ -64,6 +65,14 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
     database.cluster_size === 1
       ? 'Primary'
       : `Primary +${database.cluster_size - 1} replicas`;
+
+  const sxTooltipIcon = {
+    padding: '0px',
+    marginLeft: '4px',
+  };
+
+  const storageCopy =
+    'The total disk size is smaller than the selected plan capacity due to the OS overhead.';
 
   return (
     <>
@@ -102,10 +111,28 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
           <Typography className={classes.label}>CPUs</Typography>
           {type.vcpus}
         </Box>
-        <Box display="flex">
-          <Typography className={classes.label}>Storage</Typography>
-          {convertMegabytesTo(type.disk, true)}
-        </Box>
+        {database.total_disk_size_gb ? (
+          <>
+            <Box display="flex">
+              <Typography className={classes.label}>Total Disk Size</Typography>
+              {database.total_disk_size_gb} GB
+              <TooltipIcon
+                status="help"
+                sxTooltipIcon={sxTooltipIcon}
+                text={storageCopy}
+              />
+            </Box>
+            <Box display="flex">
+              <Typography className={classes.label}>Used</Typography>
+              {database.used_disk_size_gb} GB
+            </Box>
+          </>
+        ) : (
+          <Box display="flex">
+            <Typography className={classes.label}>Storage</Typography>
+            {convertMegabytesTo(type.disk, true)}
+          </Box>
+        )}
       </div>
     </>
   );

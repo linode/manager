@@ -1000,6 +1000,11 @@ export const handlers = [
         'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
       percent_complete: 15,
     });
+    const dbEvents = eventFactory.buildList(1, {
+      action: 'database_low_disk_space_remaining',
+      entity: { id: 999, label: 'database-1', type: 'database' },
+      message: 'Low disk space.',
+    });
     const oldEvents = eventFactory.buildList(20, {
       action: 'account_update',
       percent_complete: 100,
@@ -1018,7 +1023,12 @@ export const handlers = [
     });
     return res.once(
       ctx.json(
-        makeResourcePage([...events, ...oldEvents, eventWithSpecialCharacters])
+        makeResourcePage([
+          ...events,
+          ...dbEvents,
+          ...oldEvents,
+          eventWithSpecialCharacters,
+        ])
       )
     );
   }),
