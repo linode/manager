@@ -1,4 +1,4 @@
-import { Firewall } from '@linode/api-v4';
+import { Firewall, FirewallDevice } from '@linode/api-v4';
 import * as React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -9,20 +9,30 @@ import {
   getCountOfRules,
   getRuleString,
 } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { LinodeFirewallsActionMenu } from './LinodeFirewallsActionMenu';
 
 interface LinodeFirewallsRowProps {
   firewall: Firewall;
-  triggerRemoveDevice: () => void;
+  linodeID: number;
+  onClickUnassign: (
+    device: FirewallDevice | undefined,
+    firewall: Firewall
+  ) => void;
 }
 
 export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
-  const {
-    firewall: { id, label, rules, status },
-    triggerRemoveDevice,
-  } = props;
+  const { firewall, linodeID, onClickUnassign } = props;
+
+  const { id: firewallID, label, rules, status } = firewall;
+
+  const { data: devices } = useAllFirewallDevicesQuery(firewallID);
+
+  const firewallDevice = devices?.find(
+    (device) => device.entity.type === 'linode' && device.entity.id === linodeID
+  );
 
   const count = getCountOfRules(rules);
 
@@ -30,10 +40,10 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
     <TableRow
       ariaLabel={`Firewall ${label}`}
       data-qa-linode-firewall-row
-      key={`firewall-${id}`}
+      key={`firewall-${firewallID}`}
     >
       <TableCell data-qa-firewall-label>
-        <StyledLink tabIndex={0} to={`/firewalls/${id}`}>
+        <StyledLink tabIndex={0} to={`/firewalls/${firewallID}`}>
           {label}
         </StyledLink>
       </TableCell>
@@ -44,8 +54,8 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
       <TableCell data-qa-firewall-rules>{getRuleString(count)}</TableCell>
       <TableCell actionCell>
         <LinodeFirewallsActionMenu
-          firewallID={id}
-          onUnassign={triggerRemoveDevice}
+          firewallID={firewallID}
+          onUnassign={() => onClickUnassign(firewallDevice, firewall)}
         />
       </TableCell>
     </TableRow>

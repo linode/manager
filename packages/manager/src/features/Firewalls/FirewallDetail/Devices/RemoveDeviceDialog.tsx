@@ -39,8 +39,8 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const onDelete = async () => {
     await mutateAsync();
 
-    // Since the linode was removed as a device, refetch the query if its firewalls were fetched before
-    queryClient.refetchQueries([
+    // Since the linode was removed as a device, invalidate the linode-specific firewall query
+    queryClient.invalidateQueries([
       linodesQueryKey,
       'linode',
       linodeId,

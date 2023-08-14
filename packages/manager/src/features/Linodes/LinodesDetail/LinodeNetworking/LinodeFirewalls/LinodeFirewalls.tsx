@@ -1,5 +1,5 @@
+import { Firewall, FirewallDevice } from '@linode/api-v4';
 import { Stack } from '@mui/material';
-import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -13,7 +13,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 
 import { LinodeFirewallsRow } from './LinodeFirewallsRow';
@@ -25,28 +24,29 @@ interface LinodeFirewallsProps {
 export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const { linodeID } = props;
 
-  const theme = useTheme<Theme>();
-
   const {
     data: attachedFirewallData,
     error,
     isLoading,
   } = useLinodeFirewallsQuery(linodeID);
 
-  const attachedFirewall = attachedFirewallData?.data[0];
+  const attachedFirewalls = attachedFirewallData?.data;
 
-  const { data: devices } = useAllFirewallDevicesQuery(
-    attachedFirewall?.id ?? -1
-  );
-
+  const [selectedFirewall, setSelectedFirewall] = React.useState<Firewall>();
+  const [
+    deviceToBeRemoved,
+    setDeviceToBeRemoved,
+  ] = React.useState<FirewallDevice>();
   const [
     isRemoveDeviceDialogOpen,
     setIsRemoveDeviceDialogOpen,
   ] = React.useState<boolean>(false);
 
-  const firewallDevice = devices?.find(
-    (device) => device.entity.type === 'linode' && device.entity.id === linodeID
-  );
+  const handleClickUnassign = (device: FirewallDevice, firewall: Firewall) => {
+    setDeviceToBeRemoved(device);
+    setSelectedFirewall(firewall);
+    setIsRemoveDeviceDialogOpen(true);
+  };
 
   const renderTableContent = () => {
     if (isLoading) {
@@ -57,28 +57,30 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
       return <ErrorState errorText={error?.[0].reason} />;
     }
 
-    if (!attachedFirewall) {
+    if (attachedFirewalls?.length === 0 || attachedFirewalls === undefined) {
       return <TableRowEmpty colSpan={5} message="No Firewalls are assigned." />;
     }
 
-    return (
+    return attachedFirewalls.map((attachedFirewall) => (
       <LinodeFirewallsRow
         firewall={attachedFirewall}
-        triggerRemoveDevice={() => setIsRemoveDeviceDialogOpen(true)}
+        key={`firewall-${attachedFirewall.id}`}
+        linodeID={linodeID}
+        onClickUnassign={handleClickUnassign}
       />
-    );
+    ));
   };
 
   return (
     <Stack sx={{ marginTop: '20px' }}>
-      <Box bgcolor={theme.color.white} display="flex">
+      <Box bgcolor={(theme) => theme.color.white} display="flex">
         <Typography
-          sx={{
+          sx={(theme) => ({
             lineHeight: '1.5rem',
             marginBottom: theme.spacing(),
             marginLeft: '15px',
             marginTop: theme.spacing(),
-          }}
+          })}
           data-testid="linode-firewalls-table-header"
           variant="h3"
         >
@@ -97,9 +99,9 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         <TableBody>{renderTableContent()}</TableBody>
       </Table>
       <RemoveDeviceDialog
-        device={firewallDevice}
-        firewallId={attachedFirewall?.id ?? -1}
-        firewallLabel={attachedFirewall?.label ?? ''}
+        device={deviceToBeRemoved}
+        firewallId={selectedFirewall?.id ?? -1}
+        firewallLabel={selectedFirewall?.label ?? ''}
         linodeId={linodeID}
         onClose={() => setIsRemoveDeviceDialogOpen(false)}
         onLinodeNetworkTab

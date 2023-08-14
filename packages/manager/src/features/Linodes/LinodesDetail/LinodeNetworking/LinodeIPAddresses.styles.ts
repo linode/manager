@@ -14,7 +14,6 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 })<StyledCopyTooltipProps>(({ isHovered }) => ({
   '& svg': {
     height: `12px`,
-    // opacity: 0,
     width: `12px`,
   },
   ':focus': {
