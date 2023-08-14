@@ -1,5 +1,6 @@
 import Close from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
+import { omit } from 'lodash';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -34,9 +35,11 @@ export const Tag = (props: TagProps) => {
   // If maxLength is set, truncate display to that length.
   const _label = maxLength ? truncateEnd(label, maxLength) : label;
 
+  const tagProps = omit(props, ['asSuggestion', 'closeMenu']);
+
   return (
     <StyledChip
-      {...props}
+      {...tagProps}
       deleteIcon={
         chipProps.onDelete ? (
           <StyledDeleteButton

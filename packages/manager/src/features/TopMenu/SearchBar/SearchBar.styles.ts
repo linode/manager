@@ -79,10 +79,21 @@ const styles = (theme: Theme) =>
       },
       '& .react-select__value-container': {
         '& p': {
-          fontSize: '0.875rem',
           overflow: 'visible',
         },
+        fontSize: '0.875rem',
         overflow: 'hidden',
+      },
+      '& .select-placeholder': {
+        opacity: 1,
+        transition: theme.transitions.create(['opacity'], {
+          duration: theme.transitions.duration.shortest,
+        }),
+      },
+      '&.active': {
+        '& .select-placeholder': {
+          opacity: 0.5,
+        },
       },
       alignItems: 'center',
       backgroundColor: theme.bg.app,
