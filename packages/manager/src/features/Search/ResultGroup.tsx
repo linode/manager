@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { isEmpty, splitAt } from 'ramda';
 import * as React from 'react';
-import { compose, withStateHandlers } from 'recompose';
 
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { Hidden } from 'src/components/Hidden';
@@ -13,22 +12,22 @@ import { TableRow } from 'src/components/TableRow';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { StyledButton, StyledTypography } from './ResultGroup.styles';
-import ResultRow from './ResultRow';
+import { ResultRow } from './ResultRow';
 
-interface Props {
+interface ResultGroupProps {
   entity: string;
   groupSize: number;
   results: Item[];
 }
-interface HandlerProps {
-  showMore: boolean;
-  toggle: () => void;
-}
 
-type CombinedProps = Props & HandlerProps;
+export const ResultGroup = (props: ResultGroupProps) => {
+  const { entity, groupSize, results } = props;
 
-export const ResultGroup = (props: CombinedProps) => {
-  const { entity, groupSize, results, showMore, toggle } = props;
+  const [showMore, setShowMore] = React.useState(false);
+
+  const toggle = () => {
+    setShowMore(!showMore);
+  };
 
   if (isEmpty(results)) {
     return null;
@@ -79,14 +78,3 @@ export const ResultGroup = (props: CombinedProps) => {
     </Grid>
   );
 };
-
-const handlers = withStateHandlers(
-  { showMore: false },
-  {
-    toggle: ({ showMore }) => () => ({ showMore: !showMore }),
-  }
-);
-
-const enhanced = compose<CombinedProps, Props>(handlers)(ResultGroup);
-
-export default enhanced;

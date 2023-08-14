@@ -8,7 +8,7 @@ import { debounce } from 'throttle-debounce';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import useAPISearch from 'src/features/Search/useAPISearch';
+import { useAPISearch } from 'src/features/Search/useAPISearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -30,7 +30,7 @@ import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { getImageLabelForLinode } from '../Images/utils';
-import ResultGroup from './ResultGroup';
+import { ResultGroup } from './ResultGroup';
 import {
   StyledError,
   StyledGrid,
@@ -195,7 +195,7 @@ export const SearchLanding = (props: CombinedProps) => {
     _privateImages,
     regions,
     nodebalancers,
-    //searchableLinodes,
+    // searchableLinodes,
   ]);
 
   const getErrorMessage = () => {

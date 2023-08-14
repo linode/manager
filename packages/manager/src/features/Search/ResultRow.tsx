@@ -50,5 +50,3 @@ export const ResultRow = (props: ResultRowProps) => {
     </StyledTableRow>
   );
 };
-
-export default ResultRow;
