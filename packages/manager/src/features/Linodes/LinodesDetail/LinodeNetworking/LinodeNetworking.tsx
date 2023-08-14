@@ -1,7 +1,7 @@
 import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme, Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -21,7 +22,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   useAllIPsQuery,
@@ -37,18 +37,18 @@ import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
 import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
 import IPSharing from './IPSharing';
 import IPTransfer from './IPTransfer';
+import {
+  StyledActionTableCell,
+  StyledRootGrid,
+  StyledTypography,
+  StyledWrapperGrid,
+} from './LinodeNetworking.styles';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/NetworkingSummaryPanel';
 import { ViewIPDrawer } from './ViewIPDrawer';
 import { ViewRDNSDrawer } from './ViewRDNSDrawer';
 import { ViewRangeDrawer } from './ViewRangeDrawer';
 import { IPTypes } from './types';
-import {
-  StyledActionTableCell,
-  StyledWrapperGrid,
-  StyledTypography,
-  StyledRootGrid,
-} from './LinodeNetworking.styles';
 
 const useStyles = makeStyles<void, 'copy'>()(
   (theme: Theme, _params, classes) => ({

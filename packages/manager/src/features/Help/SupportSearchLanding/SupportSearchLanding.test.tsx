@@ -6,9 +6,9 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import SupportSearchLanding, { CombinedProps } from './SupportSearchLanding';
+import SupportSearchLanding from './SupportSearchLanding';
 
-const props: CombinedProps = {
+const props = {
   searchAlgolia: jest.fn(),
   searchEnabled: true,
   searchResults: [[], []],

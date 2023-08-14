@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -42,10 +42,8 @@ const APITokens = React.lazy(() =>
   }))
 );
 
-const Profile = (props: RouteComponentProps) => {
-  const {
-    match: { url },
-  } = props;
+const Profile = () => {
+  const { url } = useRouteMatch();
 
   const tabs: NavTab[] = [
     {
@@ -92,15 +90,11 @@ const Profile = (props: RouteComponentProps) => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="My Profile " />
-      <LandingHeader
-        data-qa-profile-header
-        removeCrumbX={1}
-        title="My Profile"
-      />
+      <DocumentTitleSegment segment="My Profile" />
+      <LandingHeader removeCrumbX={1} title="My Profile" />
       <NavTabs tabs={tabs} />
     </React.Fragment>
   );
 };
 
-export default withRouter(Profile);
+export default Profile;
