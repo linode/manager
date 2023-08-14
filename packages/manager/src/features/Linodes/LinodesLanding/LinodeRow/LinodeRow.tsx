@@ -180,7 +180,7 @@ export const LinodeRow = (props: Props) => {
         {flags.vpc && (
           <Hidden smDown>
             <TableCell noWrap>
-              {vpcLabel && (vpcId === 0 || vpcId) && (
+              {vpcLabel && (
                 <Link tabIndex={0} to={`/vpc/${vpcId}`}>
                   {vpcLabel}
                 </Link>
