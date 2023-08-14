@@ -1,4 +1,4 @@
-import { tail } from 'ramda';
+import { tail } from 'lodash';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -11,11 +11,6 @@ import {
   StyledRenderIPDiv,
   StyledRootDiv,
 } from './IPAddress.styles';
-
-type RenderIPData = {
-  ip: string;
-  key?: number;
-};
 
 export interface IPAddressProps {
   /**
@@ -100,7 +95,7 @@ export const IPAddress = (props: IPAddressProps) => {
     );
   };
 
-  const renderIP = ({ ip, key }: RenderIPData) => {
+  const renderIP = (ip: string) => {
     const handlers = showTooltipOnIpHover
       ? {
           onMouseEnter: handleMouseEnter,
@@ -111,7 +106,6 @@ export const IPAddress = (props: IPAddressProps) => {
     return (
       <StyledRenderIPDiv
         {...handlers}
-        key={`${key}-${ip}`}
         showTooltipOnIpHover={showTooltipOnIpHover}
       >
         <CopyTooltip copyableText data-qa-copy-ip-text text={ip} />
@@ -122,22 +116,14 @@ export const IPAddress = (props: IPAddressProps) => {
 
   return (
     <StyledRootDiv showAll={showAll}>
-      {!showAll
-        ? renderIP({ ip: formattedIPS[0] })
-        : formattedIPS.map((a, i) => {
-            return renderIP({ ip: a, key: i });
-          })}
+      {!showAll ? renderIP(formattedIPS[0]) : formattedIPS.map(renderIP)}
 
       {formattedIPS.length > 1 && showMore && !showAll && (
         <ShowMore
-          render={(ipsAsArray: string[]) => {
-            return ipsAsArray.map((ip, idx) =>
-              renderIP({ ip: ip.replace('/64', ''), key: idx })
-            );
-          }}
           ariaItemType="IP addresses"
           data-qa-ip-more
           items={tail(formattedIPS)}
+          render={(ipsAsArray: string[]) => ipsAsArray.map(renderIP)}
         />
       )}
     </StyledRootDiv>
