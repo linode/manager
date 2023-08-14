@@ -40,7 +40,8 @@ export const createDomainSchema = domainSchemaBase.shape({
       then: string().required('SOA Email is required.'),
       otherwise: string(),
     })
-    .email('SOA Email is not valid.'),
+    .email('SOA Email is not valid.')
+    .trim(),
   master_ips: array()
     .of(string())
     .when('type', {

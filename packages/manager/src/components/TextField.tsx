@@ -139,6 +139,10 @@ interface BaseProps {
    * Adds `(required)` to the Label
    */
   required?: boolean;
+  /**
+   * The leading and trailing spacing should be trimmed from the textfield on blur; intended to be used for username, emails, and SSH key input only
+   */
+  trimmed?: boolean;
   value?: Value;
 }
 
@@ -193,6 +197,7 @@ export const TextField = (props: TextFieldProps) => {
     max,
     min,
     noMarginTop,
+    onBlur,
     onChange,
     optional,
     required,
@@ -201,6 +206,7 @@ export const TextField = (props: TextFieldProps) => {
     tooltipOnMouseEnter,
     tooltipPosition,
     tooltipText,
+    trimmed,
     type,
     value,
     ...textFieldProps
@@ -211,6 +217,19 @@ export const TextField = (props: TextFieldProps) => {
   React.useEffect(() => {
     setValue(value);
   }, [value]);
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (trimmed) {
+      const trimmedValue = e.target.value.trim();
+      e.target.value = trimmedValue;
+      setValue(trimmedValue);
+    }
+    if (onBlur) {
+      onBlur(e);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const numberTypes = ['tel', 'number'];
@@ -379,6 +398,7 @@ export const TextField = (props: TextFieldProps) => {
            * have the ability to put the helper text under the label at the top.
            */
           label={''}
+          onBlur={handleBlur}
           onChange={handleChange}
           type={type}
           /*

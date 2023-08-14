@@ -7,6 +7,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TextField } from 'src/components/TextField';
+import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
 import { creationSchema } from './credential.schema';
 
@@ -36,80 +37,84 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
         validateOnChange={false}
         validationSchema={creationSchema}
       >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          status,
-          values,
-        }) => (
-          <>
-            {status && (
-              <Notice
-                data-qa-error
-                error
-                key={status}
-                text={status.generalError}
-              />
-            )}
+        {(formikProps: any) => {
+          const {
+            errors,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            status,
+            values,
+          } = formikProps;
 
-            <form onSubmit={handleSubmit}>
-              <TextField
-                data-qa-add-label
-                error={!!errors.label}
-                errorText={errors.label}
-                label="Label"
-                name="label"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.label}
-              />
+          return (
+            <>
+              {status && (
+                <Notice
+                  data-qa-error
+                  error
+                  key={status}
+                  text={status.generalError}
+                />
+              )}
 
-              <TextField
-                data-qa-add-username
-                error={!!errors.username}
-                errorText={errors.username}
-                label="Username"
-                name="username"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                optional
-                value={values.username}
-              />
-
-              <React.Suspense fallback={<SuspenseLoader />}>
-                <PasswordInput
-                  data-qa-add-password
-                  error={!!errors.password}
-                  errorText={errors.password}
-                  // This credential could be anything so might be counterproductive to validate strength
-                  hideValidation
-                  label="Password"
-                  name="password"
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  data-qa-add-label
+                  error={!!errors.label}
+                  errorText={errors.label}
+                  label="Label"
+                  name="label"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  type="password"
-                  value={values.password}
+                  value={values.label}
                 />
-              </React.Suspense>
-              <ActionsPanel
-                primaryButtonProps={{
-                  'data-testid': 'submit',
-                  label: 'Add Credential',
-                  loading: isSubmitting,
-                  onClick: () => handleSubmit(),
-                }}
-                secondaryButtonProps={{
-                  'data-testid': 'cancel',
-                  label: 'Cancel',
-                  onClick: onClose,
-                }}
-              />
-            </form>
-          </>
-        )}
+
+                <TextField
+                  data-qa-add-username
+                  error={!!errors.username}
+                  errorText={errors.username}
+                  label="Username"
+                  name="username"
+                  onBlur={(e) => handleFormikBlur(e, formikProps)}
+                  onChange={handleChange}
+                  optional
+                  value={values.username}
+                />
+
+                <React.Suspense fallback={<SuspenseLoader />}>
+                  <PasswordInput
+                    data-qa-add-password
+                    error={!!errors.password}
+                    errorText={errors.password}
+                    // This credential could be anything so might be counterproductive to validate strength
+                    hideValidation
+                    label="Password"
+                    name="password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="password"
+                    value={values.password}
+                  />
+                </React.Suspense>
+                <ActionsPanel
+                  primaryButtonProps={{
+                    'data-testid': 'submit',
+                    label: 'Add Credential',
+                    loading: isSubmitting,
+                    onClick: () => handleSubmit(),
+                  }}
+                  secondaryButtonProps={{
+                    'data-testid': 'cancel',
+                    label: 'Cancel',
+                    onClick: onClose,
+                  }}
+                />
+              </form>
+            </>
+          );
+        }}
       </Formik>
     </Drawer>
   );
