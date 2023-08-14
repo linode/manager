@@ -48,7 +48,7 @@ const VPCCreate = () => {
     APIError[]
   >();
 
-  const disabled = profile?.restricted && !grants?.global.add_vpcs; 
+  const disabled = profile?.restricted && !grants?.global.add_vpcs;
 
   const determineIfValidIps = () => {
     const validatedIps = validateIPs(
@@ -191,9 +191,7 @@ const VPCCreate = () => {
       <Grid>
         <form onSubmit={handleSubmit}>
           <Paper>
-            <Typography sx={{ marginTop: theme.spacing(1) }} variant="h2">
-              VPC
-            </Typography>
+            <StyledHeaderTypography variant="h2">VPC</StyledHeaderTypography>
             <StyledBodyTypography variant="body1">
               A virtual private cloud (VPC) is an isolated network which allows
               for control over how resources are networked and can communicate.
@@ -230,9 +228,7 @@ const VPCCreate = () => {
             />
           </Paper>
           <Paper sx={{ marginTop: theme.spacing(2.5) }}>
-            <Typography sx={{ marginTop: theme.spacing(1) }} variant="h2">
-              Subnet
-            </Typography>
+            <StyledHeaderTypography variant="h2">Subnet</StyledHeaderTypography>
             <StyledBodyTypography variant="body1">
               A subnet divides a VPC into multiple logically defined networks to
               allow for controlled access to VPC resources. Subnets within a VPC
@@ -249,7 +245,12 @@ const VPCCreate = () => {
                 onChange={(subnet) => {
                   const newSubnets = [...values.subnets];
                   newSubnets[subnetIdx] = subnet;
-                  setFieldValue('subnets', [...newSubnets]);
+                  setFieldValue('subnets', newSubnets);
+                }}
+                onDelete={(subnetIdx) => {
+                  const newSubnets = [...values.subnets];
+                  newSubnets.splice(subnetIdx, 1);
+                  setFieldValue('subnets', newSubnets);
                 }}
               />
             ))}
@@ -297,6 +298,12 @@ const StyledBodyTypography = styled(Typography, {
   [theme.breakpoints.up('sm')]: {
     maxWidth: '80%',
   },
+}));
+
+const StyledHeaderTypography = styled(Typography, {
+  label: 'StyledHeaderTypography',
+})(({ theme }) => ({
+  marginTop: theme.spacing(1),
 }));
 
 export default VPCCreate;

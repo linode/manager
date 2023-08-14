@@ -1,13 +1,10 @@
-
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
-import userEvent from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
 
-import VPCCreate from "./VPCCreate";
-import {
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import VPCCreate from './VPCCreate';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 beforeEach(() => {
   // ignore the console errors in these tests as they're supposed to happen
@@ -30,7 +27,7 @@ describe('VPC create page', () => {
   });
 
   it('should require vpc labels and region', async () => {
-    renderWithTheme(<VPCCreate />)
+    renderWithTheme(<VPCCreate />);
     const createVPCButton = screen.getByText('Create VPC');
     expect(createVPCButton).toBeInTheDocument();
     await act(async () => {
@@ -55,5 +52,22 @@ describe('VPC create page', () => {
     const subnetIps = screen.getAllByText('Subnet IP Range Address');
     expect(subnetLabels).toHaveLength(2);
     expect(subnetIps).toHaveLength(2);
+  });
+
+  it('should display that a subnet ip is invalid if a user adds an invalid subnet ip', async () => {
+    renderWithTheme(<VPCCreate />);
+    const subnetLabel = screen.getByText('Subnet label');
+    expect(subnetLabel).toBeInTheDocument();
+    const subnetIp = screen.getByText('Subnet IP Range Address');
+    expect(subnetIp).toBeInTheDocument();
+    const createVPCButton = screen.getByText('Create VPC');
+    expect(createVPCButton).toBeInTheDocument();
+
+    await act(async () => {
+      await userEvent.type(subnetIp, 'bad ip', { delay: 1 });
+      userEvent.click(createVPCButton);
+    });
+    const badSubnet = screen.getByText('Must be a valid IPv4 or IPv6 address');
+    expect(badSubnet).toBeInTheDocument();
   });
 });
