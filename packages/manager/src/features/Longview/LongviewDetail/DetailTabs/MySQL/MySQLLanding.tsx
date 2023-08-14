@@ -80,7 +80,7 @@ export const MySQLLanding: React.FC<Props> = (props) => {
 
   if (notice !== null) {
     return (
-      <Notice warning>
+      <Notice variant="warning">
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
@@ -94,7 +94,7 @@ export const MySQLLanding: React.FC<Props> = (props) => {
   }
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'MySQL'} />
       <Grid item xs={12}>
         <Box

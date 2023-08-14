@@ -1,7 +1,5 @@
 import { Event, getEvents } from '@linode/api-v4/lib/account';
 import { ResourcePage } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { concat, compose as rCompose, uniq } from 'ramda';
 import * as React from 'react';
@@ -9,7 +7,6 @@ import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 
-import { H1Header } from 'src/components/H1Header/H1Header';
 import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -19,40 +16,19 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { Typography } from 'src/components/Typography';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
-import EventRow from './EventRow';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  columnHeader: {
-    color: theme.textColors.tableHeader,
-    fontFamily: theme.font.bold,
-    fontSize: '0.875rem',
-  },
-  header: {
-    marginBottom: theme.spacing(1),
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-  labelCell: {
-    minWidth: 200,
-    paddingLeft: 10,
-    [theme.breakpoints.down('sm')]: {
-      width: '70%',
-    },
-    width: '60%',
-  },
-  noMoreEvents: {
-    padding: theme.spacing(4),
-    textAlign: 'center',
-  },
-}));
+import { EventRow } from './EventRow';
+import {
+  StyledH1Header,
+  StyledLabelTableCell,
+  StyledTableCell,
+  StyledTypography,
+} from './EventsLanding.styles';
 
 interface Props {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
@@ -172,8 +148,7 @@ export const reducer: EventsReducer = (state, action) => {
   }
 };
 
-export const EventsLanding: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const EventsLanding = (props: CombinedProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -276,29 +251,21 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
   return (
     <>
       {/* Only display this title on the main Events landing page */}
-      {!entityId && <H1Header className={classes.header} title="Events" />}
+      {!entityId && <StyledH1Header title="Events" />}
       <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
             <Hidden smDown>
               <TableCell style={{ padding: 0, width: '1%' }} />
             </Hidden>
-            <TableCell
-              className={`${classes.labelCell} ${classes.columnHeader}`}
-              data-qa-events-subject-header
-            >
+            <StyledLabelTableCell data-qa-events-subject-header>
               Event
-            </TableCell>
-            <TableCell className={classes.columnHeader}>
-              Relative Date
-            </TableCell>
+            </StyledLabelTableCell>
+            <StyledTableCell>Relative Date</StyledTableCell>
             <Hidden mdDown>
-              <TableCell
-                className={classes.columnHeader}
-                data-qa-events-time-header
-              >
+              <StyledTableCell data-qa-events-time-header>
                 Absolute Date
-              </TableCell>
+              </StyledTableCell>
             </Hidden>
           </TableRow>
         </TableHead>
@@ -322,9 +289,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
         !loading &&
         !error &&
         events.reactStateEvents.length > 0 && (
-          <Typography className={classes.noMoreEvents}>
-            No more events to show
-          </Typography>
+          <StyledTypography>No more events to show</StyledTypography>
         )
       )}
     </>

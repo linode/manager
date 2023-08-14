@@ -1,27 +1,35 @@
 import { KubeNodePoolResponse } from '@linode/api-v4';
+import { Typography, styled } from '@mui/material';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { displayPrice } from 'src/components/DisplayPrice';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { getMonthlyPrice } from 'src/features/Kubernetes/kubeUtils';
+import {
+  getKubernetesMonthlyPrice,
+  getTotalClusterPrice,
+} from 'src/utilities/pricing/kubernetes';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
+import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
 
-import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
+import { nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
 
 export interface Props {
-  HIGH_AVAILABILITY_PRICE: number | undefined;
   createCluster: () => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
+  highAvailabilityPrice: number | undefined;
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   removePool: (poolIdx: number) => void;
@@ -33,10 +41,10 @@ export interface Props {
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const {
-    HIGH_AVAILABILITY_PRICE,
     createCluster,
     hasAgreed,
     highAvailability,
+    highAvailabilityPrice,
     pools,
     region,
     removePool,
@@ -48,6 +56,8 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
 
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
+
+  const flags = useFlags();
 
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
@@ -67,9 +77,11 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const haConditions =
     highAvailability === undefined &&
     showHighAvailability &&
-    HIGH_AVAILABILITY_PRICE !== undefined;
+    highAvailabilityPrice !== undefined;
 
-  const disableCheckout = Boolean(needsAPool || gdprConditions || haConditions);
+  const disableCheckout = Boolean(
+    needsAPool || gdprConditions || haConditions || region === ''
+  );
 
   if (isLoading) {
     return <CircleProgress />;
@@ -82,16 +94,25 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
           <EUAgreementCheckbox checked={hasAgreed} onChange={toggleHasAgreed} />
         ) : undefined
       }
-      calculatedPrice={getTotalClusterPrice(
-        pools,
-        types ?? [],
-        highAvailability
-      )}
+      calculatedPrice={
+        region !== ''
+          ? getTotalClusterPrice({
+              flags,
+              highAvailabilityPrice: highAvailability
+                ? highAvailabilityPrice
+                : undefined,
+              pools,
+              region,
+              types: types ?? [],
+            })
+          : undefined
+      }
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
       isMakingRequest={submitting}
       onDeploy={createCluster}
+      priceSelectionText={LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE}
       submitText="Create Cluster"
     >
       <>
@@ -100,22 +121,63 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
+            price={
+              region !== ''
+                ? getKubernetesMonthlyPrice({
+                    count: thisPool.count,
+                    flags,
+                    region,
+                    type: thisPool.type,
+                    types: types ?? [],
+                  })
+                : undefined
+            }
             updateNodeCount={(updatedCount: number) =>
               updatePool(idx, { ...thisPool, count: updatedCount })
             }
             key={idx}
             nodeCount={thisPool.count}
             onRemove={() => removePool(idx)}
-            price={getMonthlyPrice(thisPool.type, thisPool.count, types ?? [])}
           />
         ))}
         <Divider dark spacingBottom={0} spacingTop={16} />
         {showWarning && (
-          <Notice important spacingTop={16} text={nodeWarning} warning />
+          <Notice
+            important
+            spacingTop={16}
+            text={nodeWarning}
+            variant="warning"
+          />
         )}
+        {region != '' && highAvailability ? (
+          <StyledHABox>
+            <StyledHAHeader>
+              High Availability (HA) Control Plane
+            </StyledHAHeader>
+            <Typography>
+              {displayPrice(Number(highAvailabilityPrice))}/month
+            </Typography>
+            <Divider dark spacingBottom={0} spacingTop={16} />
+          </StyledHABox>
+        ) : undefined}
       </>
     </CheckoutBar>
   );
 };
 
 export default RenderGuard(KubeCheckoutBar);
+
+const StyledHAHeader = styled(Typography, {
+  label: 'StyledHAHeader',
+})(({ theme }) => ({
+  fontSize: '16px',
+  fontWeight: 600,
+  paddingBottom: theme.spacing(0.5),
+  paddingTop: theme.spacing(0.5),
+}));
+
+const StyledHABox = styled(Box, {
+  label: 'StyledHABox',
+})(({ theme }) => ({
+  marginTop: theme.spacing(2),
+}));

@@ -1,3 +1,11 @@
+## [2023-08-21] - v0.29.0
+
+
+### Changed:
+
+- Update validation for `linodeInterfaceSchema`: update `subnet` to `subnet_id` ([#9485](https://github.com/linode/manager/pull/9485))
+
+
 ## [2023-08-07] - v0.28.0
 
 

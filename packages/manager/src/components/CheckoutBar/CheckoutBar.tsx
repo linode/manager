@@ -21,6 +21,7 @@ interface CheckoutBarProps {
   isMakingRequest?: boolean;
   onDeploy: () => void;
   priceHelperText?: string;
+  priceSelectionText?: string;
   submitText?: string;
 }
 
@@ -35,6 +36,7 @@ const CheckoutBar = (props: CheckoutBarProps) => {
     isMakingRequest,
     onDeploy,
     priceHelperText,
+    priceSelectionText,
     submitText,
   } = props;
 
@@ -58,7 +60,11 @@ const CheckoutBar = (props: CheckoutBarProps) => {
       {children}
       {
         <StyledCheckoutSection data-qa-total-price>
-          <DisplayPrice interval="mo" price={price} />
+          {price ? (
+            <DisplayPrice interval="mo" price={price} />
+          ) : (
+            <Typography>{priceSelectionText}</Typography>
+          )}
           {priceHelperText && price > 0 && (
             <Typography
               sx={{

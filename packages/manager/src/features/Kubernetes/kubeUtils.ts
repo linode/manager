@@ -6,36 +6,11 @@ import {
 } from '@linode/api-v4/lib/kubernetes';
 import { Region } from '@linode/api-v4/lib/regions';
 
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
-import { ExtendedType } from 'src/utilities/extendType';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
 export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
-
-export const getMonthlyPrice = (
-  type: string,
-  count: number,
-  types: ExtendedType[]
-) => {
-  if (!types) {
-    return 0;
-  }
-  const thisType = types.find((t: ExtendedType) => t.id === type);
-  return thisType ? (thisType.price.monthly ?? 0) * count : 0;
-};
-
-export const getTotalClusterPrice = (
-  pools: KubeNodePoolResponse[],
-  types: ExtendedType[],
-  highAvailability: boolean = false
-) => {
-  const price = pools.reduce((accumulator, node) => {
-    return accumulator + getMonthlyPrice(node.type, node.count, types);
-  }, 0);
-
-  return highAvailability ? price + (HIGH_AVAILABILITY_PRICE || 0) : price;
-};
 
 interface ClusterData {
   CPU: number;

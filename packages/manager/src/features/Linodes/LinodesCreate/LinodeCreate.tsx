@@ -1,4 +1,8 @@
-import { InterfacePayload, restoreBackup } from '@linode/api-v4/lib/linodes';
+import {
+  InterfacePayload,
+  PriceObject,
+  restoreBackup,
+} from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import cloneDeep from 'lodash/cloneDeep';
@@ -28,11 +32,12 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
-import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
+import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -54,7 +59,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
-import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
+import ApiAwarenessModal from './ApiAwarenessModal';
 import {
   StyledButtonGroupBox,
   StyledCreateButton,
@@ -63,11 +68,11 @@ import {
   StyledPaper,
   StyledTabPanel,
 } from './LinodeCreate.styles';
-import { FromAppsContent } from './TabbedContent/FromAppsContent';
-import { FromBackupsContent } from './TabbedContent/FromBackupsContent';
-import { FromImageContent } from './TabbedContent/FromImageContent';
-import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
-import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
+import FromAppsContent from './TabbedContent/FromAppsContent';
+import FromBackupsContent from './TabbedContent/FromBackupsContent';
+import FromImageContent from './TabbedContent/FromImageContent';
+import FromLinodeContent from './TabbedContent/FromLinodeContent';
+import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import {
   AllFormStateAndHandlers,
@@ -83,9 +88,9 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 export interface LinodeCreateProps {
-  backupsMonthlyPrice?: null | number;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
   handleAgreementChange: () => void;
@@ -214,7 +219,6 @@ export class LinodeCreate extends React.PureComponent<
 
     const {
       accountBackupsEnabled,
-      backupsMonthlyPrice,
       errors,
       formIsSubmitting,
       handleAgreementChange,
@@ -305,12 +309,19 @@ export class LinodeCreate extends React.PureComponent<
       displaySections.push(typeDisplayInfoCopy);
     }
 
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+    const type = typesData.find(
+      (type) => type.id === this.props.selectedTypeID
+    );
+
+    const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+      flags: this.props.flags,
+      region: selectedRegionID,
+      type,
+    });
+
+    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
       displaySections.push(
-        renderBackupsDisplaySection(
-          accountBackupsEnabled,
-          typeDisplayInfo.backupsMonthly
-        )
+        renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
       );
     }
 
@@ -343,30 +354,30 @@ export class LinodeCreate extends React.PureComponent<
         'cloud-init'
       );
 
-    const regionSupportsMetadata =
-      this.props.regionsData
-        .find((region) => region.id === this.props.selectedRegionID)
-        ?.capabilities.includes('Metadata') ?? false;
-
     const showUserData =
       this.props.flags.metadata &&
-      regionSupportsMetadata &&
+      regionSupportsMetadata(
+        this.props.regionsData,
+        this.props.selectedRegionID ?? ''
+      ) &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     return (
       <StyledForm>
         <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
-            <Notice error spacingTop={8} text={hasErrorFor.none} />
+            <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
           )}
-          {generalError && <Notice error spacingTop={8} text={generalError} />}
+          {generalError && (
+            <Notice spacingTop={8} text={generalError} variant="error" />
+          )}
           {userCannotCreateLinode && (
             <Notice
               text={
                 "You don't have permissions to create a new Linode. Please contact an account administrator for details."
               }
-              error
               important
+              variant="error"
             />
           )}
           <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>
@@ -487,6 +498,7 @@ export class LinodeCreate extends React.PureComponent<
               helperText={this.props.regionHelperText}
               regions={regionsData!}
               selectedID={this.props.selectedRegionID}
+              selectedLinodeTypeId={this.props.selectedTypeID}
             />
           )}
           <PlansPanel
@@ -554,7 +566,7 @@ export class LinodeCreate extends React.PureComponent<
             }}
             accountBackups={accountBackupsEnabled}
             backups={this.props.backupsEnabled}
-            backupsMonthly={backupsMonthlyPrice}
+            backupsMonthlyPrice={backupsMonthlyPrice}
             changeBackups={this.props.toggleBackupsEnabled}
             createType={this.props.createType}
             data-qa-addons-panel

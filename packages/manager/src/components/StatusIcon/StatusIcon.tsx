@@ -13,7 +13,7 @@ export interface StatusProps extends BoxProps {
 }
 
 const StatusIcon = React.memo((props: StatusProps) => {
-  const { pulse, status } = props;
+  const { pulse, status, ...rest } = props;
 
   const shouldPulse =
     pulse === undefined
@@ -21,7 +21,7 @@ const StatusIcon = React.memo((props: StatusProps) => {
         !['active', 'error', 'inactive'].includes(status)
       : pulse;
 
-  return <StyledDiv pulse={shouldPulse} status={status} />;
+  return <StyledDiv pulse={shouldPulse} status={status} {...rest} />;
 });
 
 export { StatusIcon };
