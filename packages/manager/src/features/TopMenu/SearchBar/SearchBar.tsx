@@ -30,6 +30,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import {
   StyledIconButton,
@@ -54,7 +55,7 @@ const Option = (props: any) => {
 export const selectStyles = {
   control: (base: any) => ({
     ...base,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: 'pink',
     border: 0,
     margin: 0,
     width: '100%',
@@ -78,6 +79,7 @@ export const selectStyles = {
 const SearchBar = (props: SearchProps) => {
   const { combinedResults, entitiesLoading, search } = props;
   const [searchText, setSearchText] = React.useState<string>('');
+  const [value, setValue] = React.useState<Item | null>(null);
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
@@ -85,32 +87,40 @@ const SearchBar = (props: SearchProps) => {
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
   const history = useHistory();
   const isLargeAccount = useIsLargeAccount(searchActive);
-  const { data: regions } = useRegionsQuery();
 
   // Only request things if the search bar is open/active and we
   // know if the account is large or not
   const shouldMakeRequests =
     searchActive && isLargeAccount !== undefined && !isLargeAccount;
 
-  const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
-  const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
-  const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
-  const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
-
+  // Data fetching
   const { data: objectStorageClusters } = useObjectStorageClusters(
     shouldMakeRequests
   );
-
   const { data: objectStorageBuckets } = useObjectStorageBuckets(
     objectStorageClusters,
     shouldMakeRequests
   );
-
+  const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
+  const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
+  const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
+  const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
+  const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
+    {},
+    { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
+    shouldMakeRequests
+  );
+  const { data: publicImages } = useAllImagesQuery(
+    {},
+    { is_public: true },
+    searchActive
+  );
   const { data: linodes, isLoading: linodesLoading } = useAllLinodesQuery(
     {},
     {},
     shouldMakeRequests
   );
+  const { data: regions } = useRegionsQuery();
 
   const typesQuery = useSpecificTypes(
     (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined),
@@ -118,18 +128,6 @@ const SearchBar = (props: SearchProps) => {
   );
 
   const extendedTypes = extendTypesQueryResult(typesQuery);
-
-  const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
-    {},
-    { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
-    shouldMakeRequests
-  );
-
-  const { data: publicImages } = useAllImagesQuery(
-    {},
-    { is_public: true },
-    searchActive
-  );
 
   const searchableLinodes = (linodes ?? []).map((linode) => {
     const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
@@ -158,6 +156,22 @@ const SearchBar = (props: SearchProps) => {
   ).current;
 
   const buckets = objectStorageBuckets?.buckets || [];
+
+  React.useEffect(() => {
+    const { pathname, search } = history.location;
+    const query = getQueryParamsFromQueryString(search);
+
+    if (pathname !== '/search') {
+      setValue(null);
+    } else if (pathname === '/search' && Object.keys(query).length > 0) {
+      const q = query.query;
+      if (!q) {
+        return;
+      }
+
+      setValue({ label: q, value: q });
+    }
+  }, [history.location]);
 
   React.useEffect(() => {
     // We can't store all data for large accounts for client side search,
@@ -210,6 +224,11 @@ const SearchBar = (props: SearchProps) => {
     document.body.classList.add('searchOverlay');
     setSearchActive(true);
     setMenuOpen(true);
+  };
+
+  const onFocus = () => {
+    setSearchActive(true);
+    setValue(null);
   };
 
   const onSelect = (item: Item) => {
@@ -298,9 +317,7 @@ const SearchBar = (props: SearchProps) => {
         </label>
         <EnhancedSelect
           placeholder={
-            searchActive
-              ? 'Search'
-              : 'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
+            'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
           }
           blurInputOnSelect
           components={{ Control, Option }}
@@ -313,6 +330,7 @@ const SearchBar = (props: SearchProps) => {
           label="Main search"
           menuIsOpen={menuOpen}
           onChange={onSelect}
+          onFocus={onFocus}
           onInputChange={handleSearchChange}
           onKeyDown={onKeyDown}
           onMenuClose={onClose}
@@ -321,6 +339,7 @@ const SearchBar = (props: SearchProps) => {
           openMenuOnFocus={false}
           options={finalOptions}
           styles={selectStyles}
+          value={value}
         />
         <StyledIconButton
           aria-label="close menu"
@@ -369,7 +388,6 @@ export const createFinalOptions = (
   };
 
   // Results aren't final as we're loading data
-
   if (loading) {
     return [redirectOption, loadingResults];
   }
