@@ -127,6 +127,7 @@ export const ActionMenu = React.memo((props: Props) => {
         marginThreshold={0}
         onClose={handleClose}
         open={open}
+        transitionDuration={225}
       >
         {actionsList.map((a, idx) => (
           <MenuItem
