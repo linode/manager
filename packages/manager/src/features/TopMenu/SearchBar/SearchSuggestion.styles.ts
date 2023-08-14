@@ -29,7 +29,7 @@ export const StyledWrapperDiv = styled('div', {
       backgroundColor: theme.bg.lightBlue1,
       color: theme.palette.text.primary,
     },
-    backgroundColor: `${theme.bg.main} !important`,
+    backgroundColor: `${theme.bg.main}`,
   }),
 }));
 
