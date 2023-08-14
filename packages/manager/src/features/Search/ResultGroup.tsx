@@ -23,10 +23,10 @@ interface ResultGroupProps {
 export const ResultGroup = (props: ResultGroupProps) => {
   const { entity, groupSize, results } = props;
 
-  const [showMore, setShowMore] = React.useState(false);
+  const [showMore, setShowMore] = React.useState<boolean>(false);
 
   const toggle = () => {
-    setShowMore(!showMore);
+    setShowMore((showMore) => !showMore);
   };
 
   if (isEmpty(results)) {
