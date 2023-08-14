@@ -24,14 +24,6 @@ export interface Action {
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '&[data-reach-menu-button]': {
-      '&:hover': {
-        backgroundColor: '#3683dc',
-        color: '#fff',
-      },
-      '&[aria-expanded="true"]': {
-        backgroundColor: '#3683dc',
-        color: '#fff',
-      },
       alignItems: 'center',
       background: 'none',
       border: 'none',
