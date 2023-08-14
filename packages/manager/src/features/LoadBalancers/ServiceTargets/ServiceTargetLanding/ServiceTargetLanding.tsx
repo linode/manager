@@ -75,8 +75,8 @@ const ServiceTargetLanding = () => {
             <TableSortCell
               active={orderBy === 'label'}
               direction={order}
-              label="label"
               handleClick={handleOrderChange}
+              label="label"
             >
               Label
             </TableSortCell>
@@ -94,8 +94,8 @@ const ServiceTargetLanding = () => {
               <TableSortCell
                 active={orderBy === 'load_balancing_algorithm'}
                 direction={order}
-                label="load_balancing_algorithm"
                 handleClick={handleOrderChange}
+                label="load_balancing_algorithm"
               >
                 Load Balancing Algorithm
               </TableSortCell>
@@ -104,8 +104,8 @@ const ServiceTargetLanding = () => {
               <TableSortCell
                 active={orderBy === 'health_checks'}
                 direction={order}
-                label="health_checks"
                 handleClick={handleOrderChange}
+                label="health_checks"
               >
                 Health Checks
               </TableSortCell>

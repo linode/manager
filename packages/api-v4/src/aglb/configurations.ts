@@ -20,7 +20,11 @@ export const getLoadbalancerConfigurations = (
   filter?: Filter
 ) =>
   Request<ResourcePage<Configuration>>(
-    setURL(`${BETA_API_ROOT}/aglb/${loadbalancerId}/configurations`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/configurations`
+    ),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)

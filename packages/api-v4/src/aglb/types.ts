@@ -14,7 +14,6 @@ export interface CreateLoadbalancerPayload {
   label: string;
   regions: string[];
   tags?: string[];
-  configuration_ids?: number[];
   configurations?: ConfigurationPayload[];
 }
 

@@ -7,7 +7,7 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 
-export const queryKey = 'aglbs';
+import { queryKey } from './loadbalancers';
 
 export const useServiceTargetsQuery = (
   loadbalancerId: number,

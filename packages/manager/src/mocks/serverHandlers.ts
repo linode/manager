@@ -295,8 +295,8 @@ const databases = [
 const aglb = [
   // Configurations
   rest.get('*/aglb/:id/configurations', (req, res, ctx) => {
-    const entrypoints = configurationFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(entrypoints)));
+    const configurations = configurationFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(configurations)));
   }),
   rest.get('*/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json(configurationFactory.build()));

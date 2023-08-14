@@ -15,12 +15,14 @@ import type { Route, RoutePayload } from './types';
  * Returns a paginated list of Akamai Global Load Balancer routes
  */
 export const getLoadbalancerRoutes = (
-  id: number,
+  loadbalancerId: number,
   params?: Params,
   filter?: Filter
 ) =>
   Request<ResourcePage<Route>>(
-    setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}/routes`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(loadbalancerId)}/routes`
+    ),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
@@ -51,7 +53,9 @@ export const createLoadbalancerRoute = (
   data: RoutePayload
 ) =>
   Request<Route>(
-    setURL(`${BETA_API_ROOT}/aglb/${loadbalancerId}/routes`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(loadbalancerId)}/routes`
+    ),
     setData(data),
     setMethod('POST')
   );
