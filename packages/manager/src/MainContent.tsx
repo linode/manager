@@ -147,7 +147,7 @@ const Domains = React.lazy(() =>
 const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
-const Profile = React.lazy(() => import('src/features/Profile'));
+const Profile = React.lazy(() => import('src/features/Profile/Profile'));
 const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
@@ -346,13 +346,7 @@ const MainContent = (props: CombinedProps) => {
                             />
                             <Route component={Kubernetes} path="/kubernetes" />
                             <Route component={Account} path="/account" />
-
-                            <Route
-                              render={(routeProps) => (
-                                <Profile {...routeProps} />
-                              )}
-                              path="/profile"
-                            />
+                            <Route component={Profile} path="/profile" />
                             <Route component={Help} path="/support" />
                             <Route component={SearchLanding} path="/search" />
                             <Route component={EventsLanding} path="/events" />
