@@ -1,10 +1,8 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
 
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
-import { Divider } from 'src/components/Divider';
 import { SubnetFieldState } from 'src/utilities/subnets';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { determineIPType } from '@linode/validation';
@@ -21,7 +19,6 @@ interface Props {
 const RESERVED_IP_NUMBER = 4;
 
 export const SubnetNode = (props: Props) => {
-  const theme = useTheme();
   const { disabled, idx, onChange, subnet } = props;
   const [ipType, setIpType] = React.useState<SubnetIpType | undefined>(
     undefined
@@ -47,7 +44,6 @@ export const SubnetNode = (props: Props) => {
 
   return (
     <Grid key={idx}>
-      {idx !== 0 && <Divider sx={{ marginTop: theme.spacing(3) }} />}
       <Box sx={{ width: 416 }}>
         <TextField
           disabled={disabled}
