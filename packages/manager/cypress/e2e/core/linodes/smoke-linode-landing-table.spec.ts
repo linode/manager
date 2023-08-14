@@ -270,7 +270,7 @@ describe('linode landing checks', () => {
       fbtVisible('Plan');
     });
     getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
-      fbtVisible('IP Address');
+      fbtVisible('Public IP Address');
     });
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
