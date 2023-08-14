@@ -157,15 +157,6 @@ export const linodeInterfaceSchema = array()
         }),
       }),
       primary: boolean().notRequired(),
-      vpc_id: number().when('purpose', {
-        is: 'vpc',
-        then: number().required(),
-        otherwise: number().test({
-          name: testnameDisallowedBasedOnPurpose('VPC'),
-          message: testmessageDisallowedBasedOnPurpose('vpc', 'vpc_id'),
-          test: (value) => typeof value === 'undefined',
-        }),
-      }),
       subnet_id: number().when('purpose', {
         is: 'vpc',
         then: number().required(),
