@@ -1,30 +1,44 @@
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
-import { Paper } from 'src/components/Paper';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { Typography } from 'src/components/Typography';
+import { useAccountBetasQuery } from 'src/queries/accountBetas';
+import { useBetasQuery } from 'src/queries/betas';
+import BetaDetailsList from 'src/features/Betas/BetaDetailsList';
+import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
 
 const BetasLanding = () => {
+  const { data: accountBetas } = useAccountBetasQuery();
+  const { data: betas } = useBetasQuery();
+
+  let categorized_betas: ReturnType<typeof categorizeBetasByStatus> = {
+    active: [],
+    available: [],
+    historical: [],
+    no_status: [],
+  };
+
+  if (accountBetas?.data !== undefined && betas?.data !== undefined) {
+    categorized_betas = categorizeBetasByStatus([
+      ...accountBetas.data,
+      ...betas.data,
+    ]);
+  }
+
+  const { active, historical, available } = categorized_betas;
+
   return (
     <>
       <ProductInformationBanner bannerLocation="Betas" />
       <LandingHeader title="Betas" />
       <Stack spacing={2}>
-        <Paper>
-          <Typography variant="h2">Currently Enrolled Betas</Typography>
-          <Divider />
-        </Paper>
-        <Paper>
-          <Typography variant="h2">Available Betas</Typography>
-          <Divider />
-        </Paper>
-        <Paper>
-          <Typography variant="h2">Beta Participation History</Typography>
-          <Divider />
-        </Paper>
+        <BetaDetailsList betas={active} title="Currently Enrolled Betas" />
+        <BetaDetailsList betas={available} title="Available Betas" />
+        <BetaDetailsList
+          betas={historical}
+          title="Beta Participation History"
+        />
       </Stack>
     </>
   );

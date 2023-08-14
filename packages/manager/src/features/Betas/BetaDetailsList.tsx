@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import Stack from '@mui/material/Stack';
 import { Beta } from '@linode/api-v4/lib/betas';
 import { AccountBeta } from '@linode/api-v4/lib/account';
 
@@ -19,15 +20,12 @@ const BetaDetailsList = (props: Props) => {
   return (
     <Paper>
       <Typography variant="h2">{title}</Typography>
-      <Divider />
-      <ul>
-        {betas.map((beta) => (
-          <>
-            <BetaDetails beta={beta} />
-            <Divider />
-          </>
+      <Divider spacingBottom={20} spacingTop={20} />
+      <Stack divider={<Divider spacingTop={20} spacingBottom={20} />}>
+        {betas.map((beta, index) => (
+          <BetaDetails beta={beta} key={`${index}-${beta.id}`} />
         ))}
-      </ul>
+      </Stack>
     </Paper>
   );
 };
