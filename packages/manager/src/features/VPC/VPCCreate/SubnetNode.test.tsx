@@ -11,9 +11,7 @@ describe('SubnetNode', () => {
       <SubnetNode
         disabled={false}
         idx={0}
-        key={'0'}
         onChange={() => {}}
-        onDelete={() => {}}
         subnet={{ label: '', ip: { address: '' } }}
       />
     );

@@ -27,15 +27,10 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import { SubnetNode } from './SubnetNode';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { ExtendedIP, validateIPs } from 'src/utilities/ipUtils';
-
-export interface SubnetFieldState {
-  label: string;
-  ip: ExtendedIP;
-}
+import { validateIPs } from 'src/utilities/ipUtils';
+import { SubnetFieldState } from 'src/utilities/subnets';
+import { MultipleSubnetInput } from './MultipleSubnetInput';
 
 const VPCCreate = () => {
   const theme = useTheme();
@@ -236,42 +231,16 @@ const VPCCreate = () => {
               <Link to="#"> Learn more</Link>.
               {/* TODO: VPC - subnet learn more link here */}
             </StyledBodyTypography>
-            {values.subnets.map((subnet, subnetIdx) => (
-              <SubnetNode
-                disabled={!!disabled}
-                idx={subnetIdx}
-                key={`subnet-${subnetIdx}`}
-                subnet={subnet}
-                onChange={(subnet) => {
-                  const newSubnets = [...values.subnets];
-                  newSubnets[subnetIdx] = subnet;
-                  setFieldValue('subnets', newSubnets);
-                }}
-                onDelete={(subnetIdx) => {
-                  const newSubnets = [...values.subnets];
-                  newSubnets.splice(subnetIdx, 1);
-                  setFieldValue('subnets', newSubnets);
-                }}
-              />
-            ))}
             {subnetErrorsFromAPI
               ? subnetErrorsFromAPI.map((apiError: APIError) => (
                   <Notice error key={apiError.reason} text={apiError.reason} />
                 ))
               : null}
-            <Button
-              buttonType="outlined"
-              disabled={disabled}
-              onClick={() =>
-                setFieldValue('subnets', [
-                  ...values.subnets,
-                  { label: '', ip: { address: '', error: '' } },
-                ])
-              }
-              sx={{ marginTop: theme.spacing(3) }}
-            >
-              Add a Subnet
-            </Button>
+            <MultipleSubnetInput
+              disabled={!!disabled}
+              onChange={(subnets) => setFieldValue('subnets', subnets)}
+              subnets={values.subnets}
+            />
           </Paper>
           <ActionsPanel
             primaryButtonProps={{

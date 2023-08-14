@@ -1,3 +1,10 @@
+import { ExtendedIP } from './ipUtils';
+
+export interface SubnetFieldState {
+  label: string;
+  ip: ExtendedIP;
+}
+
 export type SubnetIpType = 'ipv4' | 'ipv6';
 
 /**
