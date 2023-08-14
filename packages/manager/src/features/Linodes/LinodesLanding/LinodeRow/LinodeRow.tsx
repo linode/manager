@@ -7,6 +7,7 @@ import Flag from 'src/assets/icons/flag.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
+import { Skeleton } from 'src/components/Skeleton';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -61,9 +62,11 @@ export const LinodeRow = (props: Props) => {
   const { data: notifications } = useNotificationsQuery();
 
   // TODO: VPC - later if there is a way to directly get a linode's vpc, replace this
-  const { data: configs } = useAllLinodeConfigsQuery(id);
+  const { data: configs, isLoading: configsLoading } = useAllLinodeConfigsQuery(
+    id
+  );
   const vpcId = getVPCId(configs ?? []);
-  const { data: vpc } = useVPCQuery(
+  const { data: vpc, isLoading: vpcLoading } = useVPCQuery(
     vpcId ?? -1,
     vpcId !== undefined && vpcId !== null
   );
@@ -180,10 +183,14 @@ export const LinodeRow = (props: Props) => {
         {flags.vpc && (
           <Hidden smDown>
             <TableCell noWrap>
-              {vpcLabel && (
+              {vpcLoading || configsLoading ? (
+                <Skeleton />
+              ) : vpcLabel ? (
                 <Link tabIndex={0} to={`/vpc/${vpcId}`}>
                   {vpcLabel}
                 </Link>
+              ) : (
+                'None'
               )}
             </TableCell>
           </Hidden>
