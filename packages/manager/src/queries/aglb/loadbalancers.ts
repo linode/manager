@@ -1,17 +1,20 @@
-import {
-  Loadbalancer,
-  getLoadbalancer,
-  getLoadbalancers,
-} from '@linode/api-v4';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { getLoadbalancer, getLoadbalancers } from '@linode/api-v4';
 import { useQuery } from 'react-query';
 
-export const queryKey = 'loadbalancer';
+import type {
+  APIError,
+  Filter,
+  Loadbalancer,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4';
 
-export const useLoadBalancers = () => {
+export const queryKey = 'aglbs';
+
+export const useLoadBalancersQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Loadbalancer>, APIError[]>(
-    [queryKey, 'paginated'],
-    () => getLoadbalancers(),
+    [queryKey, 'paginated', params, filter],
+    () => getLoadbalancers(params, filter),
     { keepPreviousData: true }
   );
 };

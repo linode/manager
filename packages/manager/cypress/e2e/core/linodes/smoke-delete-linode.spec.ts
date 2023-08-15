@@ -1,8 +1,15 @@
+import { authenticate } from 'support/api/authentication';
 import { createLinode } from 'support/api/linodes';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { apiMatcher } from 'support/util/intercepts';
 
+authenticate();
 describe('delete linode', () => {
+  before(() => {
+    cleanUp('linodes');
+  });
+
   it('deletes linode from linode details page', () => {
     createLinode().then((linode) => {
       // catch delete request
