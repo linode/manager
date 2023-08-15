@@ -15,7 +15,7 @@ import {
 } from 'src/features/Kubernetes/kubeUtils';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
 
-import { HACopy } from '../KubeCheckoutBar/HACheckbox';
+import { HACopy } from '../CreateCluster/HAControlPlane';
 
 const useStyles = makeStyles((theme: Theme) => ({
   noticeHeader: {

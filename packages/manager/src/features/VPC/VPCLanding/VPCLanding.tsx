@@ -20,6 +20,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { VPCEditDrawer } from './VPCEditDrawer';
 import { VPCEmptyState } from './VPCEmptyState';
 import { VPCRow } from './VPCRow';
 
@@ -51,25 +52,19 @@ const VPCLanding = () => {
 
   const history = useHistory();
 
-  const [deleteDialog, setDeleteDialog] = React.useState({
-    id: -1,
-    label: '',
-    open: false,
-  });
+  const [selectedVPC, setSelectedVPC] = React.useState<VPC | undefined>();
 
-  const handleDeleteVPC = (id: number, label: string) => {
-    setDeleteDialog({
-      id,
-      label,
-      open: true,
-    });
+  const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
+  const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
+
+  const handleEditVPC = (vpc: VPC) => {
+    setSelectedVPC(vpc);
+    setEditVPCDrawerOpen(true);
   };
 
-  const closeDeleteDialog = () => {
-    setDeleteDialog((deleteDialog) => ({
-      ...deleteDialog,
-      open: false,
-    }));
+  const handleDeleteVPC = (vpc: VPC) => {
+    setSelectedVPC(vpc);
+    setDeleteVPCDialogOpen(true);
   };
 
   const createVPC = () => {
@@ -149,7 +144,8 @@ const VPCLanding = () => {
         <TableBody>
           {vpcs?.data.map((vpc: VPC) => (
             <VPCRow
-              handleDeleteVPC={() => handleDeleteVPC(vpc.id, vpc.label)}
+              handleDeleteVPC={() => handleDeleteVPC(vpc)}
+              handleEditVPC={() => handleEditVPC(vpc)}
               key={vpc.id}
               vpc={vpc}
             />
@@ -164,7 +160,17 @@ const VPCLanding = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <VPCDeleteDialog {...deleteDialog} onClose={closeDeleteDialog} />
+      <VPCDeleteDialog
+        id={selectedVPC?.id}
+        label={selectedVPC?.label}
+        onClose={() => setDeleteVPCDialogOpen(false)}
+        open={deleteVPCDialogOpen}
+      />
+      <VPCEditDrawer
+        onClose={() => setEditVPCDrawerOpen(false)}
+        open={editVPCDrawerOpen}
+        vpc={selectedVPC}
+      />
     </>
   );
 };

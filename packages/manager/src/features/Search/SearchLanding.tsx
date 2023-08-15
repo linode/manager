@@ -231,7 +231,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     _privateImages,
     regions,
     nodebalancers,
-    searchableLinodes,
+    linodes,
   ]);
 
   const getErrorMessage = () => {

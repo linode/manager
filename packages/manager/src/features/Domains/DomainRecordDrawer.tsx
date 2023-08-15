@@ -102,6 +102,7 @@ interface AdjustedTextFieldProps {
   min?: number;
   multiline?: boolean;
   placeholder?: string;
+  trimmed?: boolean;
 }
 
 interface NumberFieldProps extends AdjustedTextFieldProps {
@@ -319,6 +320,9 @@ export class DomainRecordDrawer extends React.Component<
           DomainRecordDrawer.errorFields,
           this.state.errors
         )(field)}
+        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+          this.updateField(field)(e.target.value)
+        }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           this.updateField(field)(e.target.value)
         }
@@ -427,12 +431,16 @@ export class DomainRecordDrawer extends React.Component<
     label,
     multiline,
     placeholder,
+    trimmed,
   }: AdjustedTextFieldProps) => (
     <TextField
       errorText={getAPIErrorsFor(
         DomainRecordDrawer.errorFields,
         this.state.errors
       )(field)}
+      onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+        this.updateField(field)(e.target.value)
+      }
       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
         this.updateField(field)(e.target.value)
       }
@@ -445,6 +453,7 @@ export class DomainRecordDrawer extends React.Component<
       label={label}
       multiline={multiline}
       placeholder={placeholder}
+      trimmed={trimmed}
     />
   );
 
@@ -815,7 +824,12 @@ export class DomainRecordDrawer extends React.Component<
           <this.TextField field="domain" key={idx} label="Domain" />
         ),
         (idx: number) => (
-          <this.TextField field="soa_email" key={idx} label="SOA Email" />
+          <this.TextField
+            field="soa_email"
+            key={idx}
+            label="SOA Email"
+            trimmed
+          />
         ),
         (idx: number) => <this.DomainTransferField key={idx} />,
         (idx: number) => <this.DefaultTTLField key={idx} />,

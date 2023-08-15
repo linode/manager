@@ -28,7 +28,10 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { getMonthlyAndHourlyNodePricing } from 'src/features/Linodes/LinodesCreate/utilities';
+import {
+  getMonthlyAndHourlyNodePricing,
+  utoa,
+} from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -699,7 +702,7 @@ export class LinodeCreate extends React.PureComponent<
 
     if (this.props.userData) {
       payload['metadata'] = {
-        user_data: window.btoa(encodeURIComponent(this.props.userData)),
+        user_data: utoa(this.props.userData),
       };
     }
 

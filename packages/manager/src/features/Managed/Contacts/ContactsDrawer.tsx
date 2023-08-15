@@ -18,6 +18,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
 import { ManagedContactGroup, Mode } from './common';
 
@@ -110,16 +111,18 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
         validateOnChange={false}
         validationSchema={createContactSchema}
       >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-        }) => {
+        {(formikProps) => {
+          const {
+            errors,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            setFieldValue,
+            status,
+            values,
+          } = formikProps;
+
           const primaryPhoneError = pathOr('', ['phone', 'primary'], errors);
           // prettier-ignore
           const secondaryPhoneError = pathOr('', ['phone', 'secondary'], errors);
@@ -151,9 +154,10 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                   errorText={errors.email}
                   label="E-mail"
                   name="email"
-                  onBlur={handleBlur}
+                  onBlur={(e) => handleFormikBlur(e, formikProps)}
                   onChange={handleChange}
                   required
+                  type="email"
                   value={values.email}
                 />
 

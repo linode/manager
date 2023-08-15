@@ -7,11 +7,7 @@ import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import {
-  getKubeHighAvailability,
-  getMonthlyPrice,
-} from 'src/features/Kubernetes/kubeUtils';
-import { useAccount } from 'src/queries/account';
+import { getMonthlyPrice } from 'src/features/Kubernetes/kubeUtils';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
@@ -19,17 +15,17 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
 
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
-import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
 
 export interface Props {
+  HIGH_AVAILABILITY_PRICE: number | undefined;
   createCluster: () => void;
   hasAgreed: boolean;
-  highAvailability: boolean;
+  highAvailability?: boolean;
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   removePool: (poolIdx: number) => void;
-  setHighAvailability: (ha: boolean) => void;
+  showHighAvailability: boolean | undefined;
   submitting: boolean;
   toggleHasAgreed: () => void;
   updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
@@ -37,13 +33,14 @@ export interface Props {
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const {
+    HIGH_AVAILABILITY_PRICE,
     createCluster,
     hasAgreed,
     highAvailability,
     pools,
     region,
     removePool,
-    setHighAvailability,
+    showHighAvailability,
     submitting,
     toggleHasAgreed,
     updatePool,
@@ -53,7 +50,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
   const { data: profile } = useProfile();
-  const { data: account } = useAccount();
   const { data: agreements } = useAccountAgreements();
   const typesQuery = useSpecificTypes(pools.map((pool) => pool.type));
   const types = extendTypesQueryResult(typesQuery);
@@ -65,10 +61,15 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     agreements?.eu_model === false;
 
   const needsAPool = pools.length < 1;
-  const disableCheckout = Boolean(
-    needsAPool || (!hasAgreed && showGDPRCheckbox)
-  );
-  const { showHighAvailability } = getKubeHighAvailability(account);
+
+  const gdprConditions = !hasAgreed && showGDPRCheckbox;
+
+  const haConditions =
+    highAvailability === undefined &&
+    showHighAvailability &&
+    HIGH_AVAILABILITY_PRICE !== undefined;
+
+  const disableCheckout = Boolean(needsAPool || gdprConditions || haConditions);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -108,16 +109,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             price={getMonthlyPrice(thisPool.type, thisPool.count, types ?? [])}
           />
         ))}
-        {showHighAvailability ? (
-          <>
-            <Divider dark spacingBottom={12} spacingTop={16} />
-            <HACheckbox
-              checked={highAvailability}
-              onChange={(e) => setHighAvailability(e.target.checked)}
-            />
-            <Divider dark spacingBottom={0} spacingTop={16} />
-          </>
-        ) : null}
+        <Divider dark spacingBottom={0} spacingTop={16} />
         {showWarning && (
           <Notice
             important

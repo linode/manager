@@ -120,7 +120,7 @@ const AccountLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
       <ProductInformationBanner bannerLocation="Account" />
-      <LandingHeader {...landingHeaderProps} data-qa-profile-header />
+      <LandingHeader {...landingHeaderProps} />
 
       <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />

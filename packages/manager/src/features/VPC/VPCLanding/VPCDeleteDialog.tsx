@@ -5,8 +5,8 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { useDeleteVPCMutation } from 'src/queries/vpcs';
 
 interface Props {
-  id: number;
-  label: string;
+  id?: number;
+  label?: string;
   onClose: () => void;
   open: boolean;
 }
@@ -14,7 +14,9 @@ interface Props {
 export const VPCDeleteDialog = (props: Props) => {
   const { id, label, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { error, isLoading, mutateAsync: deleteVPC } = useDeleteVPCMutation(id);
+  const { error, isLoading, mutateAsync: deleteVPC } = useDeleteVPCMutation(
+    id ?? -1
+  );
 
   const onDeleteVPC = () => {
     deleteVPC().then(() => {
