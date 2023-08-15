@@ -663,16 +663,22 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `StackScript ${e.entity!.label} has been updated.`,
   },
   subnet_create: {
-    // notification: (e) => `Subnet ${e.entity!.label} has been created.`,
-    notification: (e) => `Subnet has been created.`,
+    notification: (e) =>
+      `Subnet ${e.entity!.label} has been created in VPC ${
+        e.secondary_entity?.label
+      }.`,
   },
   subnet_delete: {
-    // notification: (e) => `Subnet ${e.entity!.label} has been deleted.`,
-    notification: (e) => `Subnet has been deleted.`,
+    notification: (e) =>
+      `Subnet ${e.entity!.label} has been deleted from VPC ${
+        e.secondary_entity?.label
+      }.`,
   },
   subnet_update: {
-    // notification: (e) => `Subnet ${e.entity!.label} has been updated.`,
-    notification: (e) => `Subnet has been updated.`,
+    notification: (e) =>
+      `Subnet ${e.entity!.label} in VPC ${
+        e.secondary_entity?.label
+      } has been updated.`,
   },
   tag_create: {
     notification: (e) => `Tag ${e.entity!.label} has been created.`,
@@ -785,16 +791,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Volume ${e.entity!.label} has been updated.`,
   },
   vpc_create: {
-    // notification: (e) => `VPC ${e.entity!.label} has been created.`,
-    notification: (e) => `VPC has been created.`,
+    notification: (e) => `VPC ${e.entity!.label} has been created.`,
   },
   vpc_delete: {
-    // notification: (e) => `VPC ${e.entity!.label} has been deleted.`,
-    notification: (e) => `VPC has been deleted.`,
+    notification: (e) => `VPC ${e.entity!.label} has been deleted.`,
   },
   vpc_update: {
-    // notification: (e) => `VPC ${e.entity!.label} has been updated.`,
-    notification: (e) => `VPC has been updated.`,
+    notification: (e) => `VPC ${e.entity!.label} has been updated.`,
   },
 };
 
