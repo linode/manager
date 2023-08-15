@@ -29,7 +29,9 @@ export const ResultRow = (props: ResultRowProps) => {
         <StyledLink title={result.label} to={result.data.path}>
           {result.label}
         </StyledLink>
-        <Typography variant="body1">{result.data.description}</Typography>
+        <Typography fontSize={'0.80rem'} variant="body1">
+          {result.data.description}
+        </Typography>
       </StyledLabelTableCell>
       <StyledRegionTableCell>
         {result.data.region && <RegionIndicator region={result.data.region} />}

@@ -8,9 +8,10 @@ import { authenticate } from 'support/api/authentication';
 import { imageUploadProcessingTimeout } from 'support/constants/images';
 import { ui } from 'support/ui';
 import { SimpleBackoffMethod } from 'support/util/backoff';
+import { cleanUp } from 'support/util/cleanup';
 import { pollImageStatus } from 'support/util/polling';
 import { randomLabel, randomPhrase } from 'support/util/random';
-import { describeRegions } from 'support/util/regions';
+import { testRegions } from 'support/util/regions';
 
 /**
  * Uploads a machine image and waits for it to become available.
@@ -52,7 +53,11 @@ const uploadMachineImage = async (region: Region, data: Blob) => {
 };
 
 authenticate();
-describeRegions('Delete Machine Images', (region: Region) => {
+describe('Delete Machine Images', () => {
+  before(() => {
+    cleanUp('images');
+  });
+
   /*
    * - Updates and deletes a Machine Image for the targeted region.
    * - Confirms that Image label and description can be updated.
@@ -60,7 +65,7 @@ describeRegions('Delete Machine Images', (region: Region) => {
    * - Confirms that Image can be deleted.
    * - Confirms that deleted Image is removed from the landing page.
    */
-  it('can update and delete a Machine Image', () => {
+  testRegions('can update and delete a Machine Image', (region) => {
     const newLabel = randomLabel();
     const newDescription = randomPhrase();
 

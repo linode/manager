@@ -1,14 +1,18 @@
-import { createFirewall } from '@linode/api-v4/lib/firewalls';
-import { Firewall } from '@linode/api-v4/types';
+import { createFirewall, Firewall } from '@linode/api-v4';
 import { firewallFactory } from 'src/factories/firewalls';
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { fbtVisible, fbtClick } from 'support/helpers';
 import { chooseRegion } from 'support/util/regions';
+import { cleanUp } from 'support/util/cleanup';
 
 authenticate();
 describe('delete firewall', () => {
+  before(() => {
+    cleanUp('firewalls');
+  });
+
   /*
    * - Clicks "Delete" action menu item for firewall but cancels operation.
    * - Clicks "Delete" action menu item for firewall and confirms operation.

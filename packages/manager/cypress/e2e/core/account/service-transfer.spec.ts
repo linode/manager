@@ -23,6 +23,7 @@ import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomUuid } from 'support/util/random';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import { chooseRegion } from 'support/util/regions';
+import { cleanUp } from 'support/util/cleanup';
 
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
@@ -106,6 +107,14 @@ const assertReceiptError = (errorMessage: string) => {
 
 authenticate();
 describe('Account service transfers', () => {
+  before(() => {
+    /*
+     * Clean up Linodes and LKE Clusters so that they do not interfere when
+     * selecting Linodes from the list during service transfer initiation.
+     */
+    cleanUp(['service-transfers', 'linodes', 'lke-clusters']);
+  });
+
   /*
    * - Confirms user can navigate to service transfer page via user menu.
    */
