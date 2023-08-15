@@ -320,7 +320,14 @@ const aglb = [
     return res(ctx.json(getLoadbalancerFactory.buildList(3)));
   }),
   rest.get('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
-    return res(ctx.json(getLoadbalancerFactory.build()));
+    return res(
+      ctx.json(
+        getLoadbalancerFactory.build({
+          id: req.params.loadbalancerId,
+          label: `aglb-${req.params.loadbalancerId}`,
+        })
+      )
+    );
   }),
   rest.post('*/aglb/loadbalancers', (req, res, ctx) => {
     const loadbalancer1 = createLoadbalancerFactory.build();

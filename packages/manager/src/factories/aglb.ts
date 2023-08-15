@@ -49,7 +49,7 @@ export const createEntrypointFactory = Factory.Sync.makeFactory<CreateEntrypoint
 export const getLoadbalancerFactory = Factory.Sync.makeFactory<Loadbalancer>({
   entrypoints: ['entrypoint1'],
   id: Factory.each((i) => i),
-  label: 'loadbalancer1',
+  label: Factory.each((i) => `aglb-${i}`),
   regions: ['us-west'],
   tags: ['tag1', 'tag2'],
 });
