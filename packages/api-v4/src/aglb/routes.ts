@@ -1,61 +1,99 @@
-import Request, { setData, setMethod, setURL } from '../request';
-import { ResourcePage } from 'src/types';
-import { BETA_API_ROOT } from 'src/constants';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
+import { Filter, Params, ResourcePage } from '../types';
+import { BETA_API_ROOT } from '../constants';
 import type { Route, RoutePayload } from './types';
 
 /**
- * getRoutes
+ * getLoadbalancerRoutes
  *
  * Returns a paginated list of Akamai Global Load Balancer routes
  */
-export const getRoutes = () =>
+export const getLoadbalancerRoutes = (
+  loadbalancerId: number,
+  params?: Params,
+  filter?: Filter
+) =>
   Request<ResourcePage<Route>>(
-    setURL(`${BETA_API_ROOT}/aglb/routes`),
-    setMethod('GET')
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(loadbalancerId)}/routes`
+    ),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   );
 
 /**
- * getRoute
+ * getLoadbalancerRoute
  *
  * Returns an Akamai Global Load Balancer route
  */
-export const getRoute = (id: number) =>
+export const getLoadbalancerRoute = (loadbalancerId: number, routeId: number) =>
   Request<Route>(
-    setURL(`${BETA_API_ROOT}/aglb/routes/${encodeURIComponent(id)}`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/routes/${encodeURIComponent(routeId)}`
+    ),
     setMethod('GET')
   );
 
 /**
- * createRoute
+ * createLoadbalancerRoute
  *
  * Creates an Akamai Global Load Balancer route
  */
-export const createRoute = (data: RoutePayload) =>
+export const createLoadbalancerRoute = (
+  loadbalancerId: number,
+  data: RoutePayload
+) =>
   Request<Route>(
-    setURL(`${BETA_API_ROOT}/aglb/routes`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(loadbalancerId)}/routes`
+    ),
     setData(data),
     setMethod('POST')
   );
 
 /**
- * updateRoute
+ * updateLoadbalancerRoute
  *
  * Updates an Akamai Global Load Balancer route
  */
-export const updateRoute = (id: number, data: Partial<RoutePayload>) =>
+export const updateLoadbalancerRoute = (
+  loadbalancerId: number,
+  routeId: number,
+  data: Partial<RoutePayload>
+) =>
   Request<Route>(
-    setURL(`${BETA_API_ROOT}/aglb/routes/${encodeURIComponent(id)}`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/routes/${encodeURIComponent(routeId)}`
+    ),
     setData(data),
     setMethod('POST')
   );
 
 /**
- * deleteRoute
+ * deleteLoadbalancerRoute
  *
  * Deletes an Akamai Global Load Balancer route
  */
-export const deleteRoute = (id: number) =>
+export const deleteLoadbalancerRoute = (
+  loadbalancerId: number,
+  routeId: number
+) =>
   Request<{}>(
-    setURL(`${BETA_API_ROOT}/aglb/routes/${encodeURIComponent(id)}`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/routes/${encodeURIComponent(routeId)}`
+    ),
     setMethod('DELETE')
   );
