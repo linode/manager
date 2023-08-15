@@ -4,9 +4,14 @@ import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+import { cleanUp } from 'support/util/cleanup';
 
 authenticate();
 describe('volume update flow', () => {
+  before(() => {
+    cleanUp(['tags', 'volumes']);
+  });
+
   /*
    * - Confirms that volume label and tags can be changed from the Volumes landing page.
    */
