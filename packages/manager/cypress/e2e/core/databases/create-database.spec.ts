@@ -98,9 +98,7 @@ describe('create a database cluster, mocked data', () => {
         cy.findByText('Create Database Cluster').should('be.visible').click();
         cy.wait(['@createDatabase', '@getDatabases']);
 
-        // TODO Un-comment the following line when intended redirect behavior is
-        // better understood.
-        // cy.url().should('endWith', '/databases');
+        // TODO Update assertions upon completion of M3-7030.
         cy.findByText(databaseMock.label)
           .should('be.visible')
           .closest('tr')
