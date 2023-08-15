@@ -18,10 +18,8 @@ import {
   accountTransferFactory,
   appTokenFactory,
   betaFactory,
+  configurationFactory,
   contactFactory,
-  createEntrypointFactory,
-  createLoadbalancerFactory,
-  createLoadbalancerWithAllChildrenFactory,
   createRouteFactory,
   createServiceTargetFactory,
   credentialFactory,
@@ -38,10 +36,6 @@ import {
   eventFactory,
   firewallDeviceFactory,
   firewallFactory,
-  getEntrypointFactory,
-  getLoadbalancerFactory,
-  getRouteFactory,
-  getServiceTargetFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -56,6 +50,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  loadbalancerFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -81,7 +76,9 @@ import {
   proDedicatedTypeFactory,
   profileFactory,
   promoFactory,
+  routeFactory,
   securityQuestionsFactory,
+  serviceTargetFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -296,83 +293,80 @@ const databases = [
 ];
 
 const aglb = [
-  // Entrypoints
-  rest.get('*/aglb/entrypoints', (req, res, ctx) => {
-    const entrypoints = getEntrypointFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(entrypoints)));
+  // Configurations
+  rest.get('*/aglb/:id/configurations', (req, res, ctx) => {
+    const configurations = configurationFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(configurations)));
   }),
-  rest.get('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
-    return res(ctx.json(getEntrypointFactory.build()));
+  rest.get('*/aglb/:id/configurations/:configId', (req, res, ctx) => {
+    return res(ctx.json(configurationFactory.build()));
   }),
-  rest.post('*/aglb/entrypoints', (req, res, ctx) => {
-    return res(ctx.json(createEntrypointFactory.build()));
+  rest.post('*/aglb/:id/configurations', (req, res, ctx) => {
+    return res(ctx.json(configurationFactory.build()));
   }),
-  rest.put('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
-    const id = Number(req.params.entrypointId);
+  rest.put('*/aglb/:id/configurations/:configId', (req, res, ctx) => {
+    const id = Number(req.params.configId);
     const body = req.body as any;
-    return res(ctx.json(getEntrypointFactory.build({ id, ...body })));
+    return res(ctx.json(configurationFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
+  rest.delete('*/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Load Balancers
-  rest.get('*/aglb/loadbalancers', (req, res, ctx) => {
-    return res(ctx.json(getLoadbalancerFactory.buildList(3)));
+  rest.get('*/aglb', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(loadbalancerFactory.buildList(3))));
   }),
-  rest.get('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
-    return res(ctx.json(getLoadbalancerFactory.build()));
+  rest.get('*/aglb/:id', (req, res, ctx) => {
+    return res(ctx.json(loadbalancerFactory.build()));
   }),
-  rest.post('*/aglb/loadbalancers', (req, res, ctx) => {
-    const loadbalancer1 = createLoadbalancerFactory.build();
-    const loadbalancer2 = createLoadbalancerWithAllChildrenFactory.build();
-    return res(ctx.json([loadbalancer1, loadbalancer2]));
+  rest.post('*/aglb', (req, res, ctx) => {
+    return res(ctx.json(loadbalancerFactory.build()));
   }),
-  rest.put('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
-    const id = Number(req.params.loadbalancerId);
+  rest.put('*/aglb/:id', (req, res, ctx) => {
+    const id = Number(req.params.id);
     const body = req.body as any;
     // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
     // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
     // TODO: AGLB - figure out if this is still accurate
     return res(ctx.json(updateLoadbalancerFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
+  rest.delete('*/aglb/:id', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Routes
-  rest.get('*/aglb/routes', (req, res, ctx) => {
-    return res(ctx.json(getRouteFactory.buildList(4)));
+  rest.get('*/aglb/:id/routes', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(routeFactory.buildList(4))));
   }),
-  rest.post('*/aglb/routes', (req, res, ctx) => {
+  rest.post('*/aglb/:id/routes', (req, res, ctx) => {
     return res(ctx.json(createRouteFactory.buildList(4)));
   }),
-  rest.put('*/aglb/routes/:routeId', (req, res, ctx) => {
+  rest.put('*/aglb/:id/routes/:routeId', (req, res, ctx) => {
     const id = Number(req.params.routeId);
     const body = req.body as any;
     return res(ctx.json(createRouteFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/routes/:routeId', (req, res, ctx) => {
+  rest.delete('*/aglb/:id/routes/:routeId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Service Targets
-  rest.get('*/aglb/service-targets', (req, res, ctx) => {
-    const service_targets = getServiceTargetFactory.buildList(3);
+  rest.get('*/aglb/:id/service-targets', (req, res, ctx) => {
+    const service_targets = serviceTargetFactory.buildList(3);
     return res(ctx.json(makeResourcePage(service_targets)));
   }),
-  rest.post('*/aglb/service-targets', (req, res, ctx) => {
+  rest.post('*/aglb/:id/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));
   }),
-  rest.put('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
+  rest.put('*/aglb/:id/service-targets/:serviceTargetId', (req, res, ctx) => {
     const id = Number(req.params.serviceTargetId);
     const body = req.body as any;
-    return res(
-      ctx.json({
-        ...createServiceTargetFactory.build({ id, ...body }),
-      })
-    );
+    return res(ctx.json(createServiceTargetFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
-    return res(ctx.json({}));
-  }),
+  rest.delete(
+    '*/aglb/:id/service-targets/:serviceTargetId',
+    (req, res, ctx) => {
+      return res(ctx.json({}));
+    }
+  ),
 ];
 
 const vpc = [
@@ -397,6 +391,13 @@ const vpc = [
   }),
   rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.put('*/vpcs/:vpcId', (req, res, ctx) => {
+    return res(ctx.json(vpcFactory.build({ description: 'testing' })));
+  }),
+  rest.get('*/vpcs/:vpcID', (req, res, ctx) => {
+    const id = Number(req.params.id);
+    return res(ctx.json(vpcFactory.build({ id })));
   }),
 ];
 

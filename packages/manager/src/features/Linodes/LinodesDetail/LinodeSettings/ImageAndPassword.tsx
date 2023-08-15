@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { ImageSelect } from 'src/features/Images';
+import { ImageSelect } from 'src/features/Images/ImageSelect';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useGrants } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

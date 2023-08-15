@@ -16,25 +16,28 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { getMonthlyAndHourlyNodePricing } from 'src/features/Linodes/LinodesCreate/utilities';
-import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
+import {
+  getMonthlyAndHourlyNodePricing,
+  utoa,
+} from 'src/features/Linodes/LinodesCreate/utilities';
+import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
-import PlansPanel from 'src/features/components/PlansPanel/PlansPanel';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import {
   CreateTypes,
   handleChangeCreateType,
@@ -51,7 +54,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
-import ApiAwarenessModal from './ApiAwarenessModal';
+import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
   StyledButtonGroupBox,
   StyledCreateButton,
@@ -60,11 +63,11 @@ import {
   StyledPaper,
   StyledTabPanel,
 } from './LinodeCreate.styles';
-import FromAppsContent from './TabbedContent/FromAppsContent';
-import FromBackupsContent from './TabbedContent/FromBackupsContent';
-import FromImageContent from './TabbedContent/FromImageContent';
-import FromLinodeContent from './TabbedContent/FromLinodeContent';
-import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+import { FromAppsContent } from './TabbedContent/FromAppsContent';
+import { FromBackupsContent } from './TabbedContent/FromBackupsContent';
+import { FromImageContent } from './TabbedContent/FromImageContent';
+import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
+import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import {
   AllFormStateAndHandlers,
@@ -697,7 +700,7 @@ export class LinodeCreate extends React.PureComponent<
 
     if (this.props.userData) {
       payload['metadata'] = {
-        user_data: window.btoa(encodeURIComponent(this.props.userData)),
+        user_data: utoa(this.props.userData),
       };
     }
 

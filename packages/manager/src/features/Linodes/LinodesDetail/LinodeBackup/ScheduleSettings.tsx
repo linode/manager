@@ -23,7 +23,8 @@ interface Props {
   linodeId: number;
 }
 
-export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
+export const ScheduleSettings = (props: Props) => {
+  const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: profile } = useProfile();

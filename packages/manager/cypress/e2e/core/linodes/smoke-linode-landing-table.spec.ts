@@ -20,6 +20,7 @@ import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { authenticate } from 'support/api/authentication';
 import { mockGetLinodes } from 'support/intercepts/linodes';
+import { cleanUp } from 'support/util/cleanup';
 
 const mockLinodes = new Array(5).fill(null).map(
   (_item: null, index: number): Linode => {
@@ -270,7 +271,7 @@ describe('linode landing checks', () => {
       fbtVisible('Plan');
     });
     getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
-      fbtVisible('IP Address');
+      fbtVisible('Public IP Address');
     });
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
@@ -390,6 +391,10 @@ describe('linode landing checks', () => {
 });
 
 describe('linode landing actions', () => {
+  before(() => {
+    cleanUp('linodes');
+  });
+
   it('deleting multiple linodes with action menu', () => {
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,

@@ -19,12 +19,18 @@ export interface ChipProps extends _ChipProps {
    * @default 'gray'
    */
   outlineColor?: 'gray' | 'green';
+
+  /**
+   * If true, default pill styles will be applied to the chip.
+   */
+  pill?: boolean;
 }
 
 export const Chip = ({
   className,
   inTable,
   outlineColor = 'gray',
+  pill,
   ...props
 }: ChipProps) => {
   return (
@@ -32,6 +38,7 @@ export const Chip = ({
       className={className}
       inTable={inTable}
       outlineColor={outlineColor}
+      pill={pill}
       {...props}
     />
   );
@@ -39,7 +46,8 @@ export const Chip = ({
 
 const StyledChip = styled(_Chip, {
   label: 'StyledChip',
-  shouldForwardProp: (prop) => isPropValid(['inTable', 'outlineColor'], prop),
+  shouldForwardProp: (prop) =>
+    isPropValid(['inTable', 'outlineColor', 'pill'], prop),
 })<ChipProps>(({ theme, ...props }) => ({
   ...(props.inTable && {
     marginBottom: 0,
@@ -51,5 +59,30 @@ const StyledChip = styled(_Chip, {
   }),
   ...(props.variant === 'outlined' && {
     border: `1px solid ${props.outlineColor === 'green' ? '#02B159' : '#ccc'}`,
+  }),
+  ...(props.pill && {
+    '&:before': {
+      borderRadius: '50%',
+      content: '""',
+      display: 'inline-block',
+      height: theme.spacing(2),
+      marginRight: theme.spacing(1),
+      minWidth: theme.spacing(2),
+      width: theme.spacing(2),
+    },
+    backgroundColor: 'transparent',
+    fontSize: '1rem',
+    padding: 0,
+    fontFamily: theme.font.bold,
+    ...(theme.name === 'dark'
+      ? {
+          [theme.breakpoints.down('sm')]: {
+            fontSize: 14,
+          },
+          color: theme.textColors.headlineStatic,
+        }
+      : {
+          color: theme.textColors.tableStatic,
+        }),
   }),
 }));

@@ -17,7 +17,7 @@ interface Props {
   selectedRegion: null | string;
 }
 
-const ConfigureForm = (props: Props) => {
+export const ConfigureForm = React.memo((props: Props) => {
   const { currentRegion } = props;
 
   const { data: regions } = useRegionsQuery();
@@ -57,7 +57,7 @@ const ConfigureForm = (props: Props) => {
       />
     </StyledPaper>
   );
-};
+});
 
 const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
   '& > p:first-of-type': {
@@ -77,5 +77,3 @@ const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
   gap: theme.spacing(),
   marginBottom: theme.spacing(4),
 }));
-
-export default React.memo(ConfigureForm);

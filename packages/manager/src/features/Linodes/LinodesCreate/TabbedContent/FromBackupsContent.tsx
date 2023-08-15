@@ -234,5 +234,3 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     isGettingBackups: false,
   };
 }
-
-export default FromBackupsContent;

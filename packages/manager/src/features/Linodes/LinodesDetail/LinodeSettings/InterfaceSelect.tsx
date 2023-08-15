@@ -32,7 +32,7 @@ export interface ExtendedInterface extends Omit<InterfacePayload, 'purpose'> {
   purpose: ExtendedPurpose;
 }
 
-export const InterfaceSelect: React.FC<Props> = (props) => {
+export const InterfaceSelect = (props: Props) => {
   const theme = useTheme();
   const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -204,5 +204,3 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     </Grid>
   );
 };
-
-export default InterfaceSelect;
