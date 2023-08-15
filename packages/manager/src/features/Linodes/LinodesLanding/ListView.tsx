@@ -53,6 +53,7 @@ export const ListView = (props: RenderLinodesProps) => {
           type={linode.type}
           updated={linode.updated}
           watchdog_enabled={linode.watchdog_enabled}
+          maintenance={linode.maintenance}
         />
       ))}
     </>
