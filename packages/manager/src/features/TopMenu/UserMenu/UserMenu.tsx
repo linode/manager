@@ -68,7 +68,7 @@ export const UserMenu = React.memo(() => {
   const id = open ? 'user-menu-popover' : undefined;
 
   const { data: grants } = useGrants();
-
+  const userName = profile?.username ?? '';
   const hasFullAccountAccess =
     grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
 
@@ -103,8 +103,6 @@ export const UserMenu = React.memo(() => {
     ],
     [hasFullAccountAccess, _isRestrictedUser]
   );
-
-  const userName = profile?.username ?? '';
 
   const renderLink = (link: MenuLink) => {
     if (link.hide) {
