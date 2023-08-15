@@ -44,7 +44,7 @@ describe('VPC Detail Summary section', () => {
     getAllByText('0');
 
     getAllByText('Region');
-    getAllByText(vpcFactory1.region);
+    getAllByText('Newark, NJ');
 
     getAllByText('VPC ID');
     getAllByText(vpcFactory1.id);

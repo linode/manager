@@ -13,6 +13,7 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Paper } from 'src/components/Paper';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
 
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
@@ -22,6 +23,9 @@ const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
   const theme = useTheme();
   const { data: vpc, error, isLoading } = useVPCQuery(+vpcId);
+
+  const { data: regions } = useRegionsQuery();
+  const regionLabel = regions?.find((r) => r.id === vpc?.region)?.label ?? '';
 
   const [selectedVPC, setSelectedVPC] = React.useState<VPC | undefined>();
 
@@ -67,7 +71,7 @@ const VPCDetail = () => {
     [
       {
         label: 'Region',
-        value: vpc?.region,
+        value: regionLabel,
       },
       {
         label: 'VPC ID',
