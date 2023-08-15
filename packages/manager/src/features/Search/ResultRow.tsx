@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   labelCell: {
+    '& a': {
+      display: 'inline-block',
+    },
     [theme.breakpoints.up('md')]: {
       width: '35%',
     },
@@ -38,8 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   root: {
-    cursor: 'pointer',
-    paddingBottom: '0 !important',
+    '& td': {
+      paddingBottom: 4,
+      paddingTop: 4,
+    },
+    paddingBottom: '2px !important',
     paddingTop: '0 !important',
     transition: theme.transitions.create(['background-color']),
     width: '100%',
@@ -80,7 +86,9 @@ export const ResultRow: React.FC<CombinedProps> = (props) => {
         >
           {result.label}
         </Link>
-        <Typography variant="body1">{result.data.description}</Typography>
+        <Typography fontSize={'0.80rem'} variant="body1">
+          {result.data.description}
+        </Typography>
       </TableCell>
       <TableCell className={classes.regionCell}>
         {result.data.region && <RegionIndicator region={result.data.region} />}

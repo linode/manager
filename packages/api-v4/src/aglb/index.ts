@@ -1,4 +1,4 @@
-export * from './entrypoints';
+export * from './configurations';
 
 export * from './loadbalancers';
 

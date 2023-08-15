@@ -10,15 +10,15 @@ import { useProfile } from 'src/queries/profile';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 
-import ActionMenu, { Handlers } from './ImagesActionMenu';
+import { Handlers, ImagesActionMenu } from './ImagesActionMenu';
 
 export interface ImageWithEvent extends Image {
   event?: Event;
 }
 
-type CombinedProps = Handlers & ImageWithEvent;
+type Props = Handlers & ImageWithEvent;
 
-const ImageRow: React.FC<CombinedProps> = (props) => {
+const ImageRow = (props: Props) => {
   const {
     created,
     description,
@@ -93,25 +93,16 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
         ) : null}
       </Hidden>
       <TableCell actionCell>
-        {event?.status !== 'failed' ? (
-          <ActionMenu
-            description={description}
-            id={id}
-            label={label}
-            status={status}
-            {...rest}
-          />
-        ) : (
-          <ActionMenu
-            description={description}
-            event={event}
-            id={id}
-            label={label}
-            onCancelFailed={onCancelFailed}
-            onRetry={onRetry}
-            status={status}
-          />
-        )}
+        <ImagesActionMenu
+          description={description}
+          event={event?.status === 'failed' ? event : undefined}
+          id={id}
+          label={label}
+          onCancelFailed={onCancelFailed}
+          onRetry={onRetry}
+          status={status}
+          {...rest}
+        />
       </TableCell>
     </TableRow>
   );

@@ -118,7 +118,7 @@ const AccountLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
-      <LandingHeader {...landingHeaderProps} data-qa-profile-header />
+      <LandingHeader {...landingHeaderProps} />
 
       <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />

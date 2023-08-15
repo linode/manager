@@ -1,6 +1,12 @@
-import Request, { setData, setMethod, setURL } from '../request';
-import { BETA_API_ROOT } from 'src/constants';
-import { ResourcePage } from 'src/types';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
+import { BETA_API_ROOT } from '../constants';
+import { Filter, Params, ResourcePage } from '../types';
 import type {
   CreateLoadbalancerPayload,
   Loadbalancer,
@@ -12,10 +18,12 @@ import type {
  *
  * Returns a paginated list of Akamai Global Load Balancers
  */
-export const getLoadbalancers = () =>
+export const getLoadbalancers = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<Loadbalancer>>(
-    setURL(`${BETA_API_ROOT}/aglb/loadbalancers`),
-    setMethod('GET')
+    setURL(`${BETA_API_ROOT}/aglb`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   );
 
 /**
@@ -25,7 +33,7 @@ export const getLoadbalancers = () =>
  */
 export const getLoadbalancer = (id: number) =>
   Request<Loadbalancer>(
-    setURL(`${BETA_API_ROOT}/aglb/loadbalancers/${encodeURIComponent(id)}`),
+    setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}`),
     setMethod('GET')
   );
 
@@ -36,7 +44,7 @@ export const getLoadbalancer = (id: number) =>
  */
 export const createLoadbalancer = (data: CreateLoadbalancerPayload) =>
   Request<Loadbalancer>(
-    setURL(`${BETA_API_ROOT}/aglb/loadbalancers`),
+    setURL(`${BETA_API_ROOT}/aglb`),
     setData(data),
     setMethod('POST')
   );
@@ -51,9 +59,9 @@ export const updateLoadbalancer = (
   data: UpdateLoadbalancerPayload
 ) =>
   Request<Loadbalancer>(
-    setURL(`${BETA_API_ROOT}/aglb/loadbalancers/${encodeURIComponent(id)}`),
+    setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}`),
     setData(data),
-    setMethod('POST')
+    setMethod('PUT')
   );
 
 /**
@@ -63,6 +71,6 @@ export const updateLoadbalancer = (
  */
 export const deleteLoadbalancer = (id: number) =>
   Request<{}>(
-    setURL(`${BETA_API_ROOT}/aglb/loadbalancers/${encodeURIComponent(id)}`),
+    setURL(`${BETA_API_ROOT}/aglb/${encodeURIComponent(id)}`),
     setMethod('DELETE')
   );
