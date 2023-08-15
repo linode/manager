@@ -26,7 +26,7 @@ import {
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
 import ToastNotifications from 'src/features/ToastNotifications';
-import TopMenu from 'src/features/TopMenu';
+import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -147,7 +147,7 @@ const Domains = React.lazy(() =>
 const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
-const Profile = React.lazy(() => import('src/features/Profile'));
+const Profile = React.lazy(() => import('src/features/Profile/Profile'));
 const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
@@ -175,6 +175,7 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
+const Betas = React.lazy(() => import('src/features/Betas/BetasLanding'));
 const VPC = React.lazy(() => import('src/features/VPC'));
 
 const MainContent = (props: CombinedProps) => {
@@ -331,7 +332,6 @@ const MainContent = (props: CombinedProps) => {
                               component={NodeBalancers}
                               path="/nodebalancers"
                             />
-                            {flags.vpc && <Route component={VPC} path="/vpc" />}
                             <Route component={Domains} path="/domains" />
                             <Route component={Managed} path="/managed" />
                             <Route component={Longview} path="/longview" />
@@ -346,19 +346,16 @@ const MainContent = (props: CombinedProps) => {
                             />
                             <Route component={Kubernetes} path="/kubernetes" />
                             <Route component={Account} path="/account" />
-
-                            <Route
-                              render={(routeProps) => (
-                                <Profile {...routeProps} />
-                              )}
-                              path="/profile"
-                            />
+                            <Route component={Profile} path="/profile" />
                             <Route component={Help} path="/support" />
                             <Route component={SearchLanding} path="/search" />
                             <Route component={EventsLanding} path="/events" />
                             <Route component={Firewalls} path="/firewalls" />
                             {showDatabases ? (
                               <Route component={Databases} path="/databases" />
+                            ) : null}
+                            {flags.selfServeBetas ? (
+                              <Route component={Betas} path="/betas" />
                             ) : null}
                             {flags.vpc && <Route component={VPC} path="/vpc" />}
                             <Redirect exact from="/" to={defaultRoot} />

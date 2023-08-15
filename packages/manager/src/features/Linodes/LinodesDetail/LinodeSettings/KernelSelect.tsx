@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 
-export interface Props {
+export interface KernelSelectProps {
   errorText?: string;
   kernels: Kernel[];
   onChange: (selected: Item<string>) => void;
@@ -19,7 +19,7 @@ export interface Props {
  * menu that makes more sense.
  */
 
-export const KernelSelect: React.FC<Props> = (props) => {
+export const KernelSelect = React.memo((props: KernelSelectProps) => {
   const { errorText, kernels, onChange, readOnly, selectedKernel } = props;
 
   const options = kernelsToGroupedItems(kernels);
@@ -36,7 +36,7 @@ export const KernelSelect: React.FC<Props> = (props) => {
       value={getSelectedKernelId(selectedKernel, options)}
     />
   );
-};
+});
 
 export const getSelectedKernelId = (
   kernelID: string | undefined,
@@ -135,5 +135,3 @@ export const sortCurrentKernels = (kernels: Kernel[] = []) => {
     kernels.find((thisKernel) => thisKernel.label.match(/grub \(legacy\)/i)),
   ].filter(Boolean) as Kernel[];
 };
-
-export default React.memo(KernelSelect);

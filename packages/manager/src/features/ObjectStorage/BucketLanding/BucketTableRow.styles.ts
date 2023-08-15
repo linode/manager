@@ -21,11 +21,10 @@ export const StyledBucketNameWrapper = styled('div', {
 
 export const StyledBucketLabelLink = styled(Link, {
   label: 'StyledBucketLabelLink',
-})(({ theme }) => ({
+})(() => ({
   '&:hover, &:focus': {
     textDecoration: 'underline',
   },
-  color: theme.textColors.linkActiveLight,
 }));
 
 export const StyledBucketRegionCell = styled(TableCell, {

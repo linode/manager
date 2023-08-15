@@ -164,7 +164,8 @@ export interface Interface {
   purpose: InterfacePurpose;
   ipam_address: string | null;
   primary?: boolean;
-  subnet?: number | null;
+  subnet_id?: number | null;
+  vpc_id?: number | null;
   ipv4?: ConfigInterfaceIPv4;
   ipv6?: ConfigInterfaceIPv6;
   ip_ranges?: string[];

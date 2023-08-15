@@ -82,7 +82,8 @@ export const deleteAllTestBuckets = async () => {
     }
   );
 
-  return Promise.all(deleteBucketsPromises);
+  await Promise.all(deleteBucketsPromises);
+  return;
 };
 
 /**
@@ -92,9 +93,7 @@ export const deleteAllTestBuckets = async () => {
  *
  * @returns Promise that resolves when all test access keys are deleted.
  */
-export const deleteAllTestAccessKeys = async (): Promise<
-  ObjectStorageKey[]
-> => {
+export const deleteAllTestAccessKeys = async (): Promise<void> => {
   authenticate();
   const getAccessKeysPage = (page: number) => getObjectStorageKeys({ page });
 
@@ -112,5 +111,6 @@ export const deleteAllTestAccessKeys = async (): Promise<
     }
   );
 
-  return Promise.all(revokeAccessKeysPromises);
+  await Promise.all(revokeAccessKeysPromises);
+  return;
 };

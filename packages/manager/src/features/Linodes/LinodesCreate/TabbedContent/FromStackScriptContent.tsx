@@ -6,7 +6,7 @@ import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 
 import ImageSelect from 'src/components/ImageSelect';
-import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
+import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
@@ -42,92 +42,38 @@ export type CombinedProps = Props &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
 
-export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
-  render() {
-    const {
-      availableStackScriptImages: compatibleImages,
-      availableUserDefinedFields: userDefinedFields,
-      errors,
-      header,
-      imagesData,
-      request,
-      selectedImageID,
-      selectedStackScriptID,
-      selectedStackScriptLabel,
-      selectedStackScriptUsername,
-      selectedUDFs: udf_data,
-      updateImageID,
-      userCannotCreateLinode,
-    } = this.props;
+export const FromStackScriptContent = React.memo((props: CombinedProps) => {
+  const {
+    availableStackScriptImages: compatibleImages,
+    availableUserDefinedFields: userDefinedFields,
+    category,
+    errors,
+    handleSelectUDFs,
+    header,
+    imagesData,
+    request,
+    selectedImageID,
+    selectedStackScriptID,
+    selectedStackScriptLabel,
+    selectedStackScriptUsername,
+    selectedUDFs: udf_data,
+    updateImageID,
+    updateStackScript,
+    userCannotCreateLinode,
+  } = props;
 
-    // If all of the StackScript's compatibleImages match the full array of images,
-    // we can assume that the StackScript specified any/all
-    const showAllImages = equals(compatibleImages, Object.values(imagesData));
+  const showAllImages = equals(compatibleImages, Object.values(imagesData));
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
-    return (
-      <React.Fragment>
-        <StyledGrid data-qa-panel={header}>
-          <SelectStackScriptPanel
-            category={this.props.category}
-            data-qa-select-stackscript
-            disabled={userCannotCreateLinode}
-            error={hasErrorFor('stackscript_id')}
-            header={header}
-            isOnCreate
-            onSelect={this.handleSelectStackScript}
-            publicImages={filterImagesByType(imagesData, 'public')}
-            request={request}
-            resetSelectedStackScript={() => null}
-            selectedId={selectedStackScriptID}
-            selectedUsername={selectedStackScriptUsername}
-            updateFor={[selectedStackScriptID, errors]}
-          />
-          {!userCannotCreateLinode &&
-            userDefinedFields &&
-            userDefinedFields.length > 0 && (
-              <UserDefinedFieldsPanel
-                data-qa-udf-panel
-                errors={filterUDFErrors(errorResources, this.props.errors)}
-                handleChange={this.handleChangeUDF}
-                selectedLabel={selectedStackScriptLabel || ''}
-                selectedUsername={selectedStackScriptUsername || ''}
-                udf_data={udf_data || {}}
-                updateFor={[userDefinedFields, udf_data, errors]}
-                userDefinedFields={userDefinedFields}
-              />
-            )}
-          {!userCannotCreateLinode &&
-          compatibleImages &&
-          compatibleImages.length > 0 ? (
-            <ImageSelect
-              data-qa-select-image-panel
-              error={hasErrorFor('image')}
-              handleSelectImage={updateImageID}
-              images={compatibleImages}
-              selectedImageID={selectedImageID}
-              title="Select an Image"
-              variant={showAllImages ? 'all' : 'public'}
-            />
-          ) : (
-            <StyledImageEmptyState errorText={hasErrorFor('image')} />
-          )}
-        </StyledGrid>
-
-        <StackScriptDialog />
-      </React.Fragment>
-    );
-  }
-
-  handleChangeUDF = (key: string, value: string) => {
+  const handleChangeUDF = (key: string, value: string) => {
     // either overwrite or create new selection
-    const newUDFData = assocPath([key], value, this.props.selectedUDFs);
+    const newUDFData = assocPath([key], value, udf_data);
 
-    this.props.handleSelectUDFs({ ...this.props.selectedUDFs, ...newUDFData });
+    handleSelectUDFs({ ...udf_data, ...newUDFData });
   };
 
-  handleSelectStackScript = (
+  const handleSelectStackScript = (
     id: number,
     label: string,
     username: string,
@@ -135,7 +81,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     userDefinedFields: UserDefinedField[]
   ) => {
     const allowAllImages = stackScriptImages.includes('any/all');
-    const { imagesData } = this.props;
 
     /**
      * based on the list of images we get back from the API, compare those
@@ -164,7 +109,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       return accum;
     }, {});
 
-    this.props.updateStackScript(
+    updateStackScript(
       id,
       label,
       username,
@@ -173,12 +118,63 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       defaultUDFData
     );
   };
-}
+
+  return (
+    <React.Fragment>
+      <StyledGrid data-qa-panel={header}>
+        <SelectStackScriptPanel
+          category={category}
+          data-qa-select-stackscript
+          disabled={userCannotCreateLinode}
+          error={hasErrorFor('stackscript_id')}
+          header={header}
+          isOnCreate
+          onSelect={handleSelectStackScript}
+          publicImages={filterImagesByType(imagesData, 'public')}
+          request={request}
+          resetSelectedStackScript={() => null}
+          selectedId={selectedStackScriptID}
+          selectedUsername={selectedStackScriptUsername}
+          updateFor={[selectedStackScriptID, errors]}
+        />
+        {!userCannotCreateLinode &&
+          userDefinedFields &&
+          userDefinedFields.length > 0 && (
+            <UserDefinedFieldsPanel
+              data-qa-udf-panel
+              errors={filterUDFErrors(errorResources, errors)}
+              handleChange={handleChangeUDF}
+              selectedLabel={selectedStackScriptLabel || ''}
+              selectedUsername={selectedStackScriptUsername || ''}
+              udf_data={udf_data || {}}
+              updateFor={[userDefinedFields, udf_data, errors]}
+              userDefinedFields={userDefinedFields}
+            />
+          )}
+        {!userCannotCreateLinode &&
+        compatibleImages &&
+        compatibleImages.length > 0 ? (
+          <ImageSelect
+            data-qa-select-image-panel
+            error={hasErrorFor('image')}
+            handleSelectImage={updateImageID}
+            images={compatibleImages}
+            selectedImageID={selectedImageID}
+            title="Select an Image"
+            variant={showAllImages ? 'all' : 'public'}
+          />
+        ) : (
+          <StyledImageEmptyState errorText={hasErrorFor('image')} />
+        )}
+      </StyledGrid>
+
+      <StackScriptDialog />
+    </React.Fragment>
+  );
+});
 
 const StyledImageEmptyState = styled(ImageEmptyState, {
   label: 'StyledImageEmptyState',
 })(({ theme }) => ({
   padding: theme.spacing(3),
 }));
-
-export default FromStackScriptContent;

@@ -1,16 +1,16 @@
-import { describeRegions } from 'support/util/regions';
+import { testRegions } from 'support/util/regions';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import type { Region } from '@linode/api-v4';
 
-describeRegions('Create Linodes', (region: Region) => {
+describe('Create Linodes', () => {
   /*
    * - Navigates to Linode create page.
    * - Selects a region, plan (Dedicated 4 GB), and enters label and password.
    * - Clicks "Create Linode" and confirms that new Linode boots.
    */
-  it('can create and boot a Linode', () => {
+  testRegions('can create and boot a Linode', (region: Region) => {
     const label = randomLabel();
 
     interceptCreateLinode().as('createLinode');
