@@ -1,8 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { compose } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import Community from 'src/assets/icons/community.svg';
@@ -32,8 +31,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const HelpResources = (props: RouteComponentProps) => {
+export const HelpResources = () => {
   const { classes } = useStyles();
+  const history = useHistory();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const openTicketDrawer = () => {
     setDrawerOpen(true);
@@ -47,7 +47,6 @@ export const HelpResources = (props: RouteComponentProps) => {
     ticketId: number,
     attachmentErrors: AttachmentError[] = []
   ) => {
-    const { history } = props;
     history.push({
       pathname: `/support/tickets/${ticketId}`,
       state: { attachmentErrors },
@@ -97,4 +96,5 @@ export const HelpResources = (props: RouteComponentProps) => {
     </>
   );
 };
-export default compose<any, any>(withRouter)(HelpResources);
+
+export default HelpResources;

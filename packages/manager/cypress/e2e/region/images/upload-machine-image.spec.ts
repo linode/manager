@@ -1,19 +1,25 @@
 import type { Region } from '@linode/api-v4';
 import 'cypress-file-upload';
+import { authenticate } from 'support/api/authentication';
 import { imageUploadProcessingTimeout } from 'support/constants/images';
 import { interceptUploadImage } from 'support/intercepts/images';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomPhrase } from 'support/util/random';
-import { describeRegions } from 'support/util/regions';
+import { testRegions } from 'support/util/regions';
 
-describeRegions('Upload Machine Images', (region: Region) => {
+authenticate();
+describe('Upload Machine Images', () => {
+  before(() => {
+    cleanUp('images');
+  });
   /*
    * - Confirms that users can upload Machine Images to the targeted region.
    * - Confirms that user is redirected back to landing page.
    * - Confirms that uploaded Image is listed on the landing page.
    * - Confirms that Image uploads successfully and landing page reflects its status.
    */
-  it('can upload a Machine Image', () => {
+  testRegions('can upload a Machine Image', (region: Region) => {
     const imageLabel = randomLabel();
     const imageDescription = randomPhrase();
     const imageFile = 'machine-images/test-image.gz';
