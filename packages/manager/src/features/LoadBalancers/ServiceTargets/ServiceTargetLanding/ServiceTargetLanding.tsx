@@ -1,5 +1,6 @@
 import { ServiceTarget } from '@linode/api-v4';
 import * as React from 'react';
+
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -12,31 +13,32 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
 import { useServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ServiceTargetRow } from './ServiceTargetRow';
-import { usePagination } from 'src/hooks/usePagination';
 
-const PREFERENCE_KEY = 'serviceTargets';
+import { ServiceTargetRow } from './ServiceTargetRow';
+
+const PREFERENCE_KEY = 'service-targets';
 
 const ServiceTargetLanding = () => {
-  //TODO: AGLB - Need confirmation on pagination
   const pagination = usePagination(1, PREFERENCE_KEY);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'desc',
+      orderBy: 'label',
     },
     `${PREFERENCE_KEY}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
   const { data, error, isLoading } = useServiceTargetsQuery(
+    1,
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -73,8 +75,8 @@ const ServiceTargetLanding = () => {
             <TableSortCell
               active={orderBy === 'label'}
               direction={order}
-              label="label"
               handleClick={handleOrderChange}
+              label="label"
             >
               Label
             </TableSortCell>
@@ -92,8 +94,8 @@ const ServiceTargetLanding = () => {
               <TableSortCell
                 active={orderBy === 'load_balancing_algorithm'}
                 direction={order}
-                label="load_balancing_algorithm"
                 handleClick={handleOrderChange}
+                label="load_balancing_algorithm"
               >
                 Load Balancing Algorithm
               </TableSortCell>
@@ -102,8 +104,8 @@ const ServiceTargetLanding = () => {
               <TableSortCell
                 active={orderBy === 'health_checks'}
                 direction={order}
-                label="health_checks"
                 handleClick={handleOrderChange}
+                label="health_checks"
               >
                 Health Checks
               </TableSortCell>
