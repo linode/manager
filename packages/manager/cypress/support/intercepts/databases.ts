@@ -5,6 +5,8 @@
 import { Database, DatabaseCredentials } from '@linode/api-v4/types';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
+import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
 import { randomString } from 'support/util/random';
 
 /**
@@ -27,6 +29,23 @@ export const mockGetDatabase = (
     'GET',
     apiMatcher(`databases/${database.engine}/instances/${database.id}`),
     database
+  );
+};
+
+/**
+ * Intercepts GET request to fetch database instances and mocks response.
+ *
+ * @param databases - Databases with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetDatabases = (
+  databases: Database[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`databases/instances*`),
+    paginateResponse(databases)
   );
 };
 
@@ -64,6 +83,21 @@ export const mockGetDatabaseCredentials = (
     'GET',
     apiMatcher(`databases/${engine}/instances/${id}/credentials`),
     credentials
+  );
+};
+
+/**
+ * Intercepts POST request to create a database and mocks response.
+ *
+ * @param database - Database with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateDatabase = (database: Database): Cypress.Chainable => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`databases/${database.engine}/instances`),
+    makeResponse(database)
   );
 };
 
