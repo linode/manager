@@ -137,8 +137,8 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
             {status && (
               <Notice
                 data-qa-error
-                error
                 key={status}
+                variant="error"
                 text={status.generalError}
               />
             )}

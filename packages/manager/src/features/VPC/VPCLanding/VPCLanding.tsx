@@ -93,7 +93,7 @@ const VPCLanding = () => {
   if (vpcs?.data.length === 0) {
     return (
       <>
-        <ProductInformationBanner bannerLocation="VPC" important warning />
+        <ProductInformationBanner bannerLocation="VPC" />
         <VPCEmptyState />
       </>
     );
@@ -101,7 +101,7 @@ const VPCLanding = () => {
 
   return (
     <>
-      <ProductInformationBanner bannerLocation="VPC" important warning />
+      <ProductInformationBanner bannerLocation="VPC" />
       <LandingHeader
         createButtonText="Create VPC"
         docsLink="#" // TODO: VPC -  Add docs link

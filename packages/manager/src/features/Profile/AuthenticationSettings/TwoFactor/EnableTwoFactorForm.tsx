@@ -78,7 +78,7 @@ export const EnableTwoFactorForm = (props: Props) => {
 
   return (
     <React.Fragment>
-      {generalError && <Notice error text={generalError} />}
+      {generalError && <Notice variant="error" text={generalError} />}
       {loading ? (
         <CircleProgress />
       ) : (

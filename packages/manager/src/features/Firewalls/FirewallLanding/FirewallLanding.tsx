@@ -116,11 +116,7 @@ const FirewallLanding = () => {
   if (data?.results === 0) {
     return (
       <>
-        <ProductInformationBanner
-          bannerLocation="Firewalls"
-          important
-          warning
-        />
+        <ProductInformationBanner bannerLocation="Firewalls" />
         <FirewallLandingEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
         <CreateFirewallDrawer
           onClose={() => setIsCreateFirewallDrawerOpen(false)}
@@ -142,7 +138,7 @@ const FirewallLanding = () => {
 
   return (
     <React.Fragment>
-      <ProductInformationBanner bannerLocation="Firewalls" important warning />
+      <ProductInformationBanner bannerLocation="Firewalls" />
       <LandingHeader
         breadcrumbProps={{ pathname: '/firewalls' }}
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"

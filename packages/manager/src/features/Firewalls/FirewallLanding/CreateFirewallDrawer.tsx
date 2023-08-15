@@ -146,15 +146,15 @@ export const CreateFirewallDrawer = React.memo(
         <form onSubmit={handleSubmit}>
           {userCannotAddFirewall ? (
             <Notice
-              error
+              variant="error"
               text="You don't have permissions to create a new Firewall. Please contact an account administrator for details."
             />
           ) : null}
           {generalError && (
             <Notice
               data-qa-error
-              error
               key={status}
+              variant="error"
               text={status?.generalError ?? 'An unexpected error occurred'}
             />
           )}

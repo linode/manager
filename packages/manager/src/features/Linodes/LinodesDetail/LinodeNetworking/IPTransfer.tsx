@@ -456,13 +456,13 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
       {error && (
         <Grid xs={12}>
           {error.map(({ reason }, idx) => (
-            <Notice error key={idx} text={reason} />
+            <Notice key={idx} variant="error" text={reason} />
           ))}
         </Grid>
       )}
       {successMessage && (
         <Grid xs={12}>
-          <Notice success text={successMessage} />
+          <Notice variant="success" text={successMessage} />
         </Grid>
       )}
       <Grid lg={8} sm={12} xl={6}>
@@ -476,7 +476,10 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
       </Grid>
       <Grid container spacing={2} xs={12}>
         {!isLoading && !ipv6RangesLoading && ipv6RangesError ? (
-          <Notice error text={'There was an error loading IPv6 Ranges'} />
+          <Notice
+            variant="error"
+            text={'There was an error loading IPv6 Ranges'}
+          />
         ) : null}
         {(isLoading || ipv6RangesLoading) && searchText === '' ? (
           <div style={{ display: 'flex', justifyContent: 'center' }}>

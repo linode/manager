@@ -19,7 +19,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
 
   return (
     <StyledPaper>
-      {error && <Notice error text={error} />}
+      {error && <Notice variant="error" text={error} />}
       <StyledFormControlLabel
         control={
           <Toggle checked={enabled} data-qa-enable-toggle onChange={toggle} />

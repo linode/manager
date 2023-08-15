@@ -270,9 +270,7 @@ export const CreateDomain = () => {
       <DocumentTitleSegment segment="Create Domain" />
       <ProductInformationBanner
         bannerLocation="Domains"
-        important
         sx={{ width: '100%' }}
-        warning
       />
       <LandingHeader
         docsLabel="Docs"
@@ -281,7 +279,7 @@ export const CreateDomain = () => {
       />
       <StyledGrid>
         {generalError && !disabled && (
-          <Notice error spacingTop={8}>
+          <Notice spacingTop={8} variant="error">
             {generalError}
           </Notice>
         )}
@@ -290,8 +288,8 @@ export const CreateDomain = () => {
             text={
               "You don't have permissions to create a new Domain. Please contact an account administrator for details."
             }
-            error
             important
+            variant="error"
           />
         )}
 

@@ -92,11 +92,7 @@ export const NodeBalancerDetail = () => {
 
   return (
     <React.Fragment>
-      <ProductInformationBanner
-        bannerLocation="NodeBalancers"
-        important
-        warning
-      />
+      <ProductInformationBanner bannerLocation="NodeBalancers" />
       <LandingHeader
         breadcrumbProps={{
           firstAndLastOnly: true,
@@ -112,7 +108,7 @@ export const NodeBalancerDetail = () => {
         docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
         title={nodeBalancerLabel}
       />
-      {errorMap.none && <Notice error text={errorMap.none} />}
+      {errorMap.none && <Notice variant="error" text={errorMap.none} />}
       <Tabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),

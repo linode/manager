@@ -221,7 +221,7 @@ const UserDetail: React.FC = () => {
 
         {createdUsername && (
           <Notice
-            success
+            variant="success"
             text={`User ${createdUsername} created successfully`}
           />
         )}

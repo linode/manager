@@ -2,7 +2,10 @@ import * as React from 'react';
 
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { reportException } from 'src/exceptionReporting';
-import { ProductInformationBannerLocation } from 'src/featureFlags';
+import {
+  ProductInformationBannerDecoration,
+  ProductInformationBannerLocation,
+} from 'src/featureFlags';
 import { useFlags } from 'src/hooks/useFlags';
 import { isAfter } from 'src/utilities/date';
 
@@ -29,19 +32,14 @@ export const ProductInformationBanner = React.memo(
       return null;
     }
 
-    let bannerStatuses = {};
-    if (thisBanner.status) {
-      bannerStatuses = thisBanner.status;
-      bannerStatuses = Object.keys(bannerStatuses).reduce(
-        (accumulator, key) => {
-          return {
-            ...accumulator,
-            [key]: bannerStatuses[key] === 'true' ? true : false,
-          };
-        },
-        {}
-      );
-    }
+    const thisBannerDecoration: ProductInformationBannerDecoration =
+      thisBanner.decoration;
+    thisBannerDecoration.important =
+      thisBannerDecoration.important === 'true'
+        ? true
+        : thisBannerDecoration.important === 'false'
+        ? false
+        : true;
 
     let hasBannerExpired = true;
     try {
@@ -58,15 +56,10 @@ export const ProductInformationBanner = React.memo(
     }
 
     return (
-      // ProductInformationBanners have warning and important statuses by default.
       <DismissibleBanner
-        error={bannerStatuses['error'] ?? false}
-        important={bannerStatuses['important'] ?? true}
-        info={bannerStatuses['info'] ?? false}
-        marketing={bannerStatuses['marketing'] ?? false}
+        important={thisBannerDecoration.important}
         preferenceKey={`${bannerLocation}-${thisBanner.expirationDate}`}
-        success={bannerStatuses['success'] ?? false}
-        warning={bannerStatuses['warning'] ?? true}
+        variant={thisBannerDecoration.variant ?? 'warning'}
         {...rest}
       >
         <HighlightedMarkdown textOrMarkdown={thisBanner.message} />

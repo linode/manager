@@ -71,11 +71,7 @@ const LoadBalancerLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Akamai Global Load Balancers" />
-      <ProductInformationBanner
-        bannerLocation="LoadBalancers"
-        important
-        warning
-      />
+      <ProductInformationBanner bannerLocation="LoadBalancers" />
       <LandingHeader
         breadcrumbProps={{ pathname: '/loadbalancers' }}
         createButtonText={createButtonText}

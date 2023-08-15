@@ -87,7 +87,7 @@ export const AddDeviceDrawer = (props: Props) => {
             fontSize: '1rem',
             lineHeight: '20px',
           }}
-          error
+          variant="error"
         >
           {errorMsg.substring(0, labelIndex)}
           <Link to={`/linodes/${id}`}>{label}</Link>
@@ -100,7 +100,7 @@ export const AddDeviceDrawer = (props: Props) => {
         </Notice>
       );
     } else {
-      return <Notice error text={errorMessage} />;
+      return <Notice variant="error" text={errorMessage} />;
     }
   };
 

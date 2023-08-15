@@ -61,11 +61,7 @@ const LoadBalancerDetailLanding = (props: Props) => {
     <>
       {/* TODO: AGLB - Use Load Balancer label */}
       <DocumentTitleSegment segment={loadbalancerId} />
-      <ProductInformationBanner
-        bannerLocation="LoadBalancers"
-        important
-        warning
-      />
+      <ProductInformationBanner bannerLocation="LoadBalancers" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

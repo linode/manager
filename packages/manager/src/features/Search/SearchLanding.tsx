@@ -295,17 +295,17 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
       </Grid>
       {errorMessage && (
         <Grid>
-          <Notice error text={errorMessage} />
+          <Notice variant="error" text={errorMessage} />
         </Grid>
       )}
       {apiError && (
         <Grid>
-          <Notice error text={apiError} />
+          <Notice variant="error" text={apiError} />
         </Grid>
       )}
       {queryError && (
         <Grid>
-          <Notice error text="Invalid query" />
+          <Notice variant="error" text="Invalid query" />
         </Grid>
       )}
       {(loading || apiSearchLoading) && (

@@ -11,9 +11,7 @@ export const ImagesCreateContainer = () => {
     <Grid container>
       <ProductInformationBanner
         bannerLocation="Images"
-        important
         sx={{ width: '100%' }}
-        warning
       />
       <LandingHeader
         breadcrumbDataAttrs={{ 'data-qa-create-image-header': true }}

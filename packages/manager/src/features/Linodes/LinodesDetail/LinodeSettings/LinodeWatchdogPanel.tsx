@@ -36,7 +36,7 @@ export const LinodeWatchdogPanel = (props: Props) => {
       <Grid alignItems="center" container spacing={2}>
         {Boolean(error) && (
           <Grid xs={12}>
-            <Notice error text={error?.[0].reason} />
+            <Notice variant="error" text={error?.[0].reason} />
           </Grid>
         )}
         <Grid md={2} xs={12}>

@@ -156,7 +156,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       >
         {generalError && (
           <Grid xs={12}>
-            <Notice error text={generalError} />
+            <Notice variant="error" text={generalError} />
           </Grid>
         )}
         <Grid xs={12}>

@@ -114,11 +114,7 @@ export const StackScriptsDetail = () => {
 
   return (
     <>
-      <ProductInformationBanner
-        bannerLocation="StackScripts"
-        important
-        warning
-      />
+      <ProductInformationBanner bannerLocation="StackScripts" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

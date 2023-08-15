@@ -60,7 +60,7 @@ const VolumeCreate: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment segment="Create Volume" />
-      <ProductInformationBanner bannerLocation="Volumes" important warning />
+      <ProductInformationBanner bannerLocation="Volumes" />
       <LandingHeader title="Create" />
       <CreateVolumeForm
         history={history}

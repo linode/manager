@@ -82,11 +82,7 @@ export const NodeBalancersLanding = () => {
   if (data?.results === 0) {
     return (
       <>
-        <ProductInformationBanner
-          bannerLocation="NodeBalancers"
-          important
-          warning
-        />
+        <ProductInformationBanner bannerLocation="NodeBalancers" />
         <NodeBalancerLandingEmptyState />
       </>
     );
@@ -95,11 +91,7 @@ export const NodeBalancersLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
-      <ProductInformationBanner
-        bannerLocation="NodeBalancers"
-        important
-        warning
-      />
+      <ProductInformationBanner bannerLocation="NodeBalancers" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
         entity="NodeBalancer"

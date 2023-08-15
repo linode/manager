@@ -183,7 +183,7 @@ export const BillingNotice = React.memo(() => {
       }}
       important
       preferenceKey={NOTIFICATION_KEY}
-      warning
+      variant="warning"
     >
       <Typography variant="body1">
         You are being billed for Object Storage but do not have any Buckets. You

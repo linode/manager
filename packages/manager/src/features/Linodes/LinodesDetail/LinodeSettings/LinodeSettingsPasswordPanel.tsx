@@ -120,7 +120,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
       heading="Reset Root Password"
     >
       <form>
-        {generalError && <Notice error text={generalError} />}
+        {generalError && <Notice variant="error" text={generalError} />}
         {!isBareMetalInstance ? (
           <EnhancedSelect
             data-qa-select-linode

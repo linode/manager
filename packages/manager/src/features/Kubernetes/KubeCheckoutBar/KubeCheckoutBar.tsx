@@ -119,7 +119,12 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
           </>
         ) : null}
         {showWarning && (
-          <Notice important spacingTop={16} text={nodeWarning} warning />
+          <Notice
+            important
+            spacingTop={16}
+            variant="warning"
+            text={nodeWarning}
+          />
         )}
       </>
     </CheckoutBar>

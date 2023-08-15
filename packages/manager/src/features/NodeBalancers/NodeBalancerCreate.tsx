@@ -392,11 +392,7 @@ const NodeBalancerCreate = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Create a NodeBalancer" />
-      <ProductInformationBanner
-        bannerLocation="NodeBalancers"
-        important
-        warning
-      />
+      <ProductInformationBanner bannerLocation="NodeBalancers" />
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: {
@@ -407,7 +403,7 @@ const NodeBalancerCreate = () => {
         title="Create"
       />
       {generalError && !disabled && (
-        <Notice error spacingTop={8}>
+        <Notice spacingTop={8} variant="error">
           {generalError}
         </Notice>
       )}
@@ -416,9 +412,9 @@ const NodeBalancerCreate = () => {
           text={
             "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
           }
-          error={true}
           important
           spacingTop={16}
+          variant="error"
         />
       )}
       <Paper>

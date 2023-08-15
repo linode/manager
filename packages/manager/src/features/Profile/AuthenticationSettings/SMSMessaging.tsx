@@ -52,8 +52,7 @@ export const SMSMessaging = () => {
         spacingBottom={16}
         spacingLeft={1}
         spacingTop={12}
-        success={hasVerifiedPhoneNumber}
-        warning={!hasVerifiedPhoneNumber}
+        variant={hasVerifiedPhoneNumber ? 'success' : 'warning'}
       >
         <Typography sx={{ fontSize: '0.875rem !important' }}>
           <b>
@@ -100,9 +99,9 @@ export const SMSMessaging = () => {
           </Link>
         </Typography>
         <Notice
-          error
           spacingBottom={0}
           spacingTop={16}
+          variant="error"
           sx={{ fontSize: '0.875rem !important' }}
         >
           <b>Warning:</b> As part of this action, your verified phone number{' '}

@@ -105,7 +105,7 @@ export class MutateDrawer extends React.Component<Props, State> {
 
     return (
       <Drawer onClose={handleClose} open={open} title="Free Upgrade Available">
-        {error && <Notice error text={error} />}
+        {error && <Notice variant="error" text={error} />}
         <Typography>
           This Linode has pending upgrades. The resources that are affected
           include:

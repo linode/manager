@@ -91,8 +91,8 @@ export const ResizeVolumeForm = (props: Props) => {
             )}
             {readOnly && (
               <Notice
-                error={true}
                 important
+                variant="error"
                 text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
               />
             )}

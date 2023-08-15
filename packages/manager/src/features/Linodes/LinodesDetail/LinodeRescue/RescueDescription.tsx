@@ -34,8 +34,8 @@ export const RescueDescription = (props: Props) => {
         <Notice
           spacingBottom={16}
           spacingTop={0}
+          variant="warning"
           text={rescueDescription.firewallWarning}
-          warning
         />
       ) : null}
       <Typography>

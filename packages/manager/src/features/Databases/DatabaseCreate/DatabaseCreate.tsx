@@ -444,7 +444,7 @@ const DatabaseCreate = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <ProductInformationBanner bannerLocation="Databases" important warning />
+      <ProductInformationBanner bannerLocation="Databases" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -463,7 +463,7 @@ const DatabaseCreate = () => {
         title="Create"
       />
       <Paper>
-        {createError ? <Notice error text={createError} /> : null}
+        {createError ? <Notice variant="error" text={createError} /> : null}
         <Grid>
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField
@@ -544,7 +544,7 @@ const DatabaseCreate = () => {
             data-testid="database-nodes"
           >
             {errors.cluster_size ? (
-              <Notice error text={errors.cluster_size} />
+              <Notice variant="error" text={errors.cluster_size} />
             ) : null}
             <RadioGroup
               style={{ marginBottom: 0, marginTop: 0 }}
@@ -564,7 +564,7 @@ const DatabaseCreate = () => {
           </FormControl>
           <Grid md={8} xs={12}>
             {flags.databaseBeta ? (
-              <Notice className={classes.notice} info>
+              <Notice className={classes.notice} variant="info">
                 <strong>
                   Notice: There is no charge for database clusters during beta.
                 </strong>{' '}
@@ -601,7 +601,11 @@ const DatabaseCreate = () => {
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
             {ipErrorsFromAPI
               ? ipErrorsFromAPI.map((apiError: APIError) => (
-                  <Notice error key={apiError.reason} text={apiError.reason} />
+                  <Notice
+                    key={apiError.reason}
+                    variant="error"
+                    text={apiError.reason}
+                  />
                 ))
               : null}
             <MultipleIPInput

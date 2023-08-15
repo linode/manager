@@ -104,7 +104,12 @@ const AddCertForm = (props: Props) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       {errorMap.none && (
-        <Notice error spacingBottom={0} spacingTop={8} text={errorMap.none} />
+        <Notice
+          spacingBottom={0}
+          spacingTop={8}
+          variant="error"
+          text={errorMap.none}
+        />
       )}
       <StyledFieldsWrapper>
         <StyledCertWrapper md={6} xs={12}>
@@ -185,7 +190,7 @@ const RemoveCertForm = (props: Props) => {
 
   return (
     <>
-      <Notice info spacingTop={8}>
+      <Notice variant="info" spacingTop={8}>
         A TLS certificate has already been uploaded for this Bucket. To upload a
         new certificate, remove the current certificate.{` `}
       </Notice>

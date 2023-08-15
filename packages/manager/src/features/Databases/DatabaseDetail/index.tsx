@@ -119,7 +119,7 @@ export const DatabaseDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment={database.label} />
-      <ProductInformationBanner bannerLocation="Databases" important warning />
+      <ProductInformationBanner bannerLocation="Databases" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

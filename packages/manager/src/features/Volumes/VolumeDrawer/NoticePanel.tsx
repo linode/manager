@@ -22,14 +22,19 @@ const NoticePanel: React.FC<CombinedProps> = ({
           important={important}
           spacingBottom={24}
           spacingTop={16}
-          success
+          variant="success"
         >
           {success}
         </Notice>
       )}
 
       {error && (
-        <Notice error important={important} spacingBottom={24} spacingTop={16}>
+        <Notice
+          important={important}
+          spacingBottom={24}
+          spacingTop={16}
+          variant="error"
+        >
           {error}
         </Notice>
       )}

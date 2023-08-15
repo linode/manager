@@ -53,7 +53,9 @@ export const CreateOAuthClientDrawer = ({
 
   return (
     <Drawer onClose={onClose} open={open} title="Create OAuth App">
-      {hasErrorFor('none') && <Notice error text={hasErrorFor('none')} />}
+      {hasErrorFor('none') && (
+        <Notice variant="error" text={hasErrorFor('none')} />
+      )}
       <form onSubmit={formik.handleSubmit}>
         <TextField
           errorText={hasErrorFor('label')}

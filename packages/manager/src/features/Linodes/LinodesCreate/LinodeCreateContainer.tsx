@@ -259,11 +259,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
-        <ProductInformationBanner
-          bannerLocation="LinodeCreate"
-          important
-          warning
-        />
+        <ProductInformationBanner bannerLocation="LinodeCreate" />
         <Grid className="m0" container spacing={0}>
           <LandingHeader
             onDocsClick={() =>

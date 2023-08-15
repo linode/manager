@@ -85,7 +85,7 @@ export const Dialog = (props: DialogProps) => {
           }}
           className={className}
         >
-          {error && <Notice error text={error} />}
+          {error && <Notice variant="error" text={error} />}
           {children}
         </DialogContent>
       </Box>

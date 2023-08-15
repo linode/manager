@@ -154,7 +154,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Add Personal Access Token">
-      {errorMap.none && <Notice error text={errorMap.none} />}
+      {errorMap.none && <Notice variant="error" text={errorMap.none} />}
       <TextField
         errorText={errorMap.label}
         label="Label"

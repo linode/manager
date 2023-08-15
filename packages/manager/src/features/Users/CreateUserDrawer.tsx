@@ -53,7 +53,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
 
     return (
       <Drawer onClose={onClose} open={open} title="Add a User">
-        {generalError && <Notice error text={generalError} />}
+        {generalError && <Notice variant="error" text={generalError} />}
         <TextField
           data-qa-create-username
           errorText={hasErrorFor('username')}
@@ -90,8 +90,8 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         />
         <div style={{ marginTop: 8 }}>
           <Notice
+            variant="warning"
             text="The user will be sent an email to set their password"
-            warning
           />
         </div>
         <ActionsPanel

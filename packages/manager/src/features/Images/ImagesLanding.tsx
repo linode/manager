@@ -418,7 +418,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   const renderEmpty = () => {
     return (
       <>
-        <ProductInformationBanner bannerLocation="Images" important warning />
+        <ProductInformationBanner bannerLocation="Images" />
         <ImagesLandingEmptyState />
       </>
     );
@@ -456,7 +456,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
-      <ProductInformationBanner bannerLocation="Images" important warning />
+      <ProductInformationBanner bannerLocation="Images" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
         entity="Image"
@@ -605,7 +605,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
         onClose={closeDialog}
         open={dialog.open}
       >
-        {dialog.error && <Notice error text={dialog.error} />}
+        {dialog.error && <Notice variant="error" text={dialog.error} />}
         <Typography>{dialogMessage}</Typography>
       </ConfirmationDialog>
     </React.Fragment>

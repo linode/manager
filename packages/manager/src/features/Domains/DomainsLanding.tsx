@@ -190,7 +190,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   if (domains?.results === 0) {
     return (
       <>
-        <ProductInformationBanner bannerLocation="Domains" important warning />
+        <ProductInformationBanner bannerLocation="Domains" />
         <DomainsEmptyLandingState
           navigateToCreate={navigateToCreate}
           openImportZoneDrawer={openImportZoneDrawer}
@@ -223,10 +223,10 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   return (
     <>
       <DocumentTitleSegment segment="Domains" />
-      <ProductInformationBanner bannerLocation="Domains" important warning />
+      <ProductInformationBanner bannerLocation="Domains" />
       <DomainBanner hidden={!shouldShowBanner} />
       {location.state?.recordError && (
-        <Notice error text={location.state.recordError} />
+        <Notice variant="error" text={location.state.recordError} />
       )}
       <LandingHeader
         extraActions={

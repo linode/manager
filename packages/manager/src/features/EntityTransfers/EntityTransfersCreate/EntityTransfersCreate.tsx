@@ -117,7 +117,7 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
       {error ? (
         <Notice
           className={classes.error}
-          error
+          variant="error"
           text={getAPIErrorOrDefault(error)[0].reason}
         />
       ) : null}

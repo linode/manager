@@ -118,8 +118,8 @@ export const EnableObjectStorage = (props: Props) => {
         open={isOpen}
         title={`Cancel Object Storage`}
       >
-        {error ? <Notice error text={error} /> : null}
-        <Notice warning>
+        {error ? <Notice variant="error" text={error} /> : null}
+        <Notice variant="warning">
           <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Canceling Object Storage will permanently
             delete all buckets and their objects. Object Storage Access Keys

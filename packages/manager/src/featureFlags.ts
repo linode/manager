@@ -1,6 +1,9 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
 
+import { NoticeVariant } from 'src/components/Notice/Notice';
+
 import { Doc } from './features/OneClickApps/oneClickApps';
+
 // These flags should correspond with active features flags in LD
 
 export interface TaxDetail {
@@ -41,7 +44,6 @@ type OneClickApp = Record<string, string>;
 export interface Flags {
   aglb: boolean;
   apiMaintenance: APIMaintenance;
-  selfServeBetas: boolean;
   databaseBeta: boolean;
   databases: boolean;
   ipv6Sharing: boolean;
@@ -55,6 +57,7 @@ export interface Flags {
   promotionalOffers: PromotionalOffer[];
   referralBannerText: ReferralBannerText;
   regionDropdown: boolean;
+  selfServeBetas: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
@@ -135,27 +138,21 @@ export type ProductInformationBannerLocation =
   | 'VPC'
   | 'Volumes';
 
-export type ProductInformationBannerStatusKey =
-  | 'error'
-  | 'important'
-  | 'info'
-  | 'marketing'
-  | 'success'
-  | 'warning';
-export type ProductInformationBannerStatus = {
-  [status in ProductInformationBannerStatusKey]?: 'false' | 'true';
-};
+export interface ProductInformationBannerDecoration {
+  important: 'false' | 'true' | boolean;
+  variant: NoticeVariant;
+}
 export interface ProductInformationBannerFlag {
   // `bannerLocation` is the location where the banner will be rendered
   bannerLocation: ProductInformationBannerLocation;
+  // `decoration` is applies styling to the banner; 'important' with a 'warning' variant is standard
+  decoration: ProductInformationBannerDecoration;
   // The date where the banner should no longer be displayed.
   expirationDate: string;
   // `key` should be unique across product information banners
   key: string;
   // `message` is rendered as Markdown (to support links)
   message: string;
-  // `status` is applies optional styling with the status of the banner
-  status?: ProductInformationBannerStatus;
 }
 
 export interface SuppliedMaintenanceData {

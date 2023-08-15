@@ -262,8 +262,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                 text={
                   "You don't have permissions to create a new Volume. Please contact an account administrator for details."
                 }
-                error={true}
                 important
+                variant="error"
               />
             ) : null}
             <Box display="flex" flexDirection="column">

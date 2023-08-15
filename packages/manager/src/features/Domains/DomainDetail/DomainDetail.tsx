@@ -86,7 +86,7 @@ export const DomainDetail = () => {
 
   return (
     <>
-      <ProductInformationBanner bannerLocation="Domains" important warning />
+      <ProductInformationBanner bannerLocation="Domains" />
       <LandingHeader
         breadcrumbProps={{
           labelOptions: { noCap: true },
@@ -109,7 +109,7 @@ export const DomainDetail = () => {
         title="Domain Details"
       />
       {location.state && location.state.recordError && (
-        <StyledNotice error text={location.state.recordError} />
+        <StyledNotice variant="error" text={location.state.recordError} />
       )}
       <StyledRootGrid container>
         <StyledMainGrid xs={12}>

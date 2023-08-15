@@ -146,11 +146,7 @@ export const KubernetesLanding = () => {
   if (data?.results === 0) {
     return (
       <>
-        <ProductInformationBanner
-          bannerLocation="Kubernetes"
-          important
-          warning
-        />
+        <ProductInformationBanner bannerLocation="Kubernetes" />
         <KubernetesEmptyState />
       </>
     );
@@ -159,7 +155,7 @@ export const KubernetesLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Kubernetes Clusters" />
-      <ProductInformationBanner bannerLocation="Kubernetes" important warning />
+      <ProductInformationBanner bannerLocation="Kubernetes" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
         entity="Cluster"

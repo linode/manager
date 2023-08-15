@@ -23,6 +23,7 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Typography } from 'src/components/Typography';
 import withImages, {
   DefaultProps as ImagesProps,
@@ -41,7 +42,6 @@ import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 type ClassNames = 'backButton' | 'createTitle';
 
@@ -224,12 +224,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={pageTitle} />
-        <ProductInformationBanner
-          bannerLocation="StackScripts"
-          important
-          warning
-        />
-        {generalError && <Notice error text={generalError} />}
+        <ProductInformationBanner bannerLocation="StackScripts" />
+        {generalError && <Notice variant="error" text={generalError} />}
         <LandingHeader
           breadcrumbProps={{
             breadcrumbDataAttrs: {
@@ -252,8 +248,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                 ? 'create StackScripts'
                 : 'edit this StackScript'
             }. Please contact an account administrator for details.`}
-            error={true}
             important
+            variant="error"
           />
         )}
         <ScriptForm

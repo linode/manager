@@ -16,12 +16,12 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
@@ -354,16 +354,18 @@ export class LinodeCreate extends React.PureComponent<
       <StyledForm>
         <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
-            <Notice error spacingTop={8} text={hasErrorFor.none} />
+            <Notice spacingTop={8} variant="error" text={hasErrorFor.none} />
           )}
-          {generalError && <Notice error spacingTop={8} text={generalError} />}
+          {generalError && (
+            <Notice spacingTop={8} variant="error" text={generalError} />
+          )}
           {userCannotCreateLinode && (
             <Notice
               text={
                 "You don't have permissions to create a new Linode. Please contact an account administrator for details."
               }
-              error
               important
+              variant="error"
             />
           )}
           <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>

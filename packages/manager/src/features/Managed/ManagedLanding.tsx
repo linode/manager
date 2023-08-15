@@ -45,7 +45,7 @@ export const ManagedLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />
-      <ProductInformationBanner bannerLocation="Managed" important warning />
+      <ProductInformationBanner bannerLocation="Managed" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/linode-managed/"
         entity="Managed"

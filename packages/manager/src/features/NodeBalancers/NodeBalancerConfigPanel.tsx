@@ -181,7 +181,7 @@ export const NodeBalancerConfigPanel = (
       {globalFormError && (
         <Notice
           className={`error-for-scroll-${configIdx}`}
-          error
+          variant="error"
           text={globalFormError}
         />
       )}
@@ -354,7 +354,7 @@ export const NodeBalancerConfigPanel = (
         <Grid xs={12}>
           {nodeMessage && (
             <Grid xs={12}>
-              <Notice info text={nodeMessage} />
+              <Notice variant="info" text={nodeMessage} />
             </Grid>
           )}
           <Typography data-qa-backend-ip-header variant="h2">

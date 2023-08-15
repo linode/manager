@@ -15,7 +15,7 @@ export const Panel = (props: React.PropsWithChildren<Props>) => {
 
   return (
     <Paper className={props.className} data-qa-tp="Select Image">
-      {error && <Notice error text={error} />}
+      {error && <Notice variant="error" text={error} />}
       <Typography data-qa-tp="Select Image" variant="h2">
         {title || 'Select an Image'}
       </Typography>

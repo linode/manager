@@ -260,9 +260,7 @@ export const CreateCluster = () => {
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <ProductInformationBanner
         bannerLocation="Kubernetes"
-        important
         sx={{ width: '100%' }}
-        warning
       />
       <LandingHeader
         docsLabel="Docs"
@@ -270,7 +268,7 @@ export const CreateCluster = () => {
         title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
-        {errorMap.none && <Notice error text={errorMap.none} />}
+        {errorMap.none && <Notice variant="error" text={errorMap.none} />}
         <Paper data-qa-label-header>
           <div className={classes.inner}>
             <Box>

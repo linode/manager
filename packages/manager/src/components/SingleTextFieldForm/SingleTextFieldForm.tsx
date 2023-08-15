@@ -108,12 +108,17 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
         <Notice
           spacingBottom={8}
           spacingTop={8}
-          success
+          variant="success"
           text={_successMessage}
         />
       ) : null}
       {generalError ? (
-        <Notice error spacingBottom={8} spacingTop={8} text={generalError} />
+        <Notice
+          spacingBottom={8}
+          spacingTop={8}
+          variant="error"
+          text={generalError}
+        />
       ) : null}
     </>
   );

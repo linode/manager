@@ -7,11 +7,7 @@ const LoadBalancerCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Load Balancers" />
-      <ProductInformationBanner
-        bannerLocation="LoadBalancers"
-        important
-        warning
-      />
+      <ProductInformationBanner bannerLocation="LoadBalancers" />
       TODO: AGLB M3-6815: Load Balancer Create
     </>
   );

@@ -65,11 +65,7 @@ const DatabaseLanding = () => {
   if (data?.results === 0) {
     return (
       <>
-        <ProductInformationBanner
-          bannerLocation="Databases"
-          important
-          warning
-        />
+        <ProductInformationBanner bannerLocation="Databases" />
         <DatabaseEmptyState />
       </>
     );
@@ -77,7 +73,7 @@ const DatabaseLanding = () => {
 
   return (
     <React.Fragment>
-      <ProductInformationBanner bannerLocation="Databases" important warning />
+      <ProductInformationBanner bannerLocation="Databases" />
       <LandingHeader
         createButtonText="Create Database Cluster"
         docsLink="https://www.linode.com/docs/products/databases/managed-databases/"

@@ -30,7 +30,7 @@ const CreditCardDialog: React.SFC<CombinedProps> = (props) => {
       open={open}
       title="Confirm Payment"
     >
-      {error && <Notice error text={error} />}
+      {error && <Notice variant="error" text={error} />}
       <Typography>{`Confirm payment of $${usd} USD to Linode LLC?`}</Typography>
     </ConfirmationDialog>
   );

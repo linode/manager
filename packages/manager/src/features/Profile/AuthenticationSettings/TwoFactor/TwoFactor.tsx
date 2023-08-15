@@ -167,13 +167,18 @@ export const TwoFactor = (props: TwoFactorProps) => {
           Two-Factor Authentication (2FA)
         </Typography>
         {success && (
-          <Notice spacingBottom={16} spacingTop={16} success text={success} />
+          <Notice
+            spacingBottom={16}
+            spacingTop={16}
+            variant="success"
+            text={success}
+          />
         )}
         {generalError && (
           <Notice
-            error
             spacingBottom={16}
             spacingTop={16}
+            variant="error"
             text={generalError}
           />
         )}
@@ -195,10 +200,10 @@ export const TwoFactor = (props: TwoFactorProps) => {
           )
         ) : (
           <Notice
+            variant="warning"
             style={{ marginTop: '8px' }}
             text={needSecurityQuestionsCopy}
             typeProps={{ style: { fontSize: '0.875rem' } }}
-            warning
           />
         )}
         {twoFactorEnabled && (

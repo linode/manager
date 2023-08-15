@@ -7,7 +7,7 @@ const VPCCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="VPC" />
-      <ProductInformationBanner bannerLocation="VPC" important warning />
+      <ProductInformationBanner bannerLocation="VPC" />
       TODO: VPC M3-6757 Add Create VPC page
     </>
   );

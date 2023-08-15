@@ -127,7 +127,11 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
           return (
             <>
               {status && (
-                <Notice error key={status} text={status.generalError} />
+                <Notice
+                  key={status}
+                  variant="error"
+                  text={status.generalError}
+                />
               )}
 
               <form onSubmit={handleSubmit}>

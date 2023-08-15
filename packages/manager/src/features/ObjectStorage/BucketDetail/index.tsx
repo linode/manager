@@ -62,11 +62,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
 
   return (
     <>
-      <ProductInformationBanner
-        bannerLocation="Object Storage"
-        important
-        warning
-      />
+      <ProductInformationBanner bannerLocation="Object Storage" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

@@ -10,7 +10,7 @@ const VPCDetails = () => {
   return (
     <>
       <DocumentTitleSegment segment="VPC" />
-      <ProductInformationBanner bannerLocation="VPC" important warning />
+      <ProductInformationBanner bannerLocation="VPC" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

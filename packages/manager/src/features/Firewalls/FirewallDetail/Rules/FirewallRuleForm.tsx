@@ -3,13 +3,13 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Select from 'src/components/EnhancedSelect';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { RadioGroup } from 'src/components/RadioGroup';
 import {
   addressOptions,
   firewallOptionItemsShort,
@@ -198,7 +198,12 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   return (
     <form onSubmit={handleSubmit}>
       {status && (
-        <Notice data-qa-error error key={status} text={status.generalError} />
+        <Notice
+          data-qa-error
+          key={status}
+          variant="error"
+          text={status.generalError}
+        />
       )}
       <Select
         aria-label="Preset for firewall rule"

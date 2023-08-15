@@ -209,7 +209,7 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <ProductInformationBanner bannerLocation="Longview" important warning />
+      <ProductInformationBanner bannerLocation="Longview" />
       <LandingHeader
         breadcrumbProps={{
           firstAndLastOnly: true,
@@ -225,8 +225,8 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
           key={`lv-warning-${idx}`}
           spacingBottom={0}
           spacingTop={8}
+          variant="warning"
           text={thisNotification.TEXT}
-          warning
         />
       ))}
       <Tabs

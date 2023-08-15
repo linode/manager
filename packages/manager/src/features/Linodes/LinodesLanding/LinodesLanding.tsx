@@ -149,11 +149,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     if (this.props.linodesData.length === 0) {
       return (
         <>
-          <ProductInformationBanner
-            bannerLocation="Linodes"
-            important
-            warning
-          />
+          <ProductInformationBanner bannerLocation="Linodes" />
           <LinodesLandingEmptyState />
         </>
       );
@@ -189,7 +185,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner />
         )}
-        <ProductInformationBanner bannerLocation="Linodes" important warning />
+        <ProductInformationBanner bannerLocation="Linodes" />
         <DocumentTitleSegment segment="Linodes" />
         <PreferenceToggle<boolean>
           localStorageKey="GROUP_LINODES"

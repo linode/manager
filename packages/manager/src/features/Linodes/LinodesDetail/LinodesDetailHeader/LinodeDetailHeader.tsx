@@ -209,7 +209,7 @@ const LinodeDetailHeader = () => {
       <HostMaintenance linodeStatus={linode?.status ?? 'running'} />
       <MutationNotification linodeId={matchedLinodeId} />
       <Notifications />
-      <ProductInformationBanner bannerLocation="Linodes" important warning />
+      <ProductInformationBanner bannerLocation="Linodes" />
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {

@@ -127,7 +127,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
 
   return (
     <>
-      <ProductInformationBanner bannerLocation="Longview" important warning />
+      <ProductInformationBanner bannerLocation="Longview" />
       <LandingHeader
         createButtonText="Add Client"
         docsLink="https://www.linode.com/docs/platform/longview/longview/"

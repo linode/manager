@@ -69,7 +69,7 @@ export const RegionStatusBanner = () => {
   }
 
   return (
-    <Notice data-testid="status-banner" important warning>
+    <Notice data-testid="status-banner" important variant="warning">
       {renderBanner(labelsOfRegionsWithOutages)}
     </Notice>
   );

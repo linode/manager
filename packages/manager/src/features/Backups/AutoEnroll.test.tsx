@@ -20,7 +20,7 @@ describe('AutoEnroll display component', () => {
   it('should render its error prop', () => {
     component.setProps({ error: 'Error' });
     expect(
-      component.containsMatchingElement(<Notice error text="Error" />)
+      component.containsMatchingElement(<Notice variant="error" text="Error" />)
     ).toBeTruthy();
   });
 });

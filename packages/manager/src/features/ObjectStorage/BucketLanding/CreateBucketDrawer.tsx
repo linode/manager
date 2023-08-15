@@ -104,12 +104,14 @@ export const CreateBucketDrawer = (props: Props) => {
         {isRestrictedUser && (
           <Notice
             data-qa-permissions-notice
-            error
             important
+            variant="error"
             text="You don't have permissions to create a Bucket. Please contact an account administrator for details."
           />
         )}
-        {Boolean(errorMap.none) && <Notice error text={errorMap.none} />}
+        {Boolean(errorMap.none) && (
+          <Notice variant="error" text={errorMap.none} />
+        )}
         <TextField
           data-qa-cluster-label
           data-testid="label"

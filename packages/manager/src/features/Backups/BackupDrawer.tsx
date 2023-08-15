@@ -248,7 +248,7 @@ all new Linodes will automatically be backed up.`
         </Grid>
         {enableErrors && !isEmpty(enableErrors) && (
           <Grid data-testid={'result-notice'}>
-            <Notice error spacingBottom={0}>
+            <Notice spacingBottom={0} variant="error">
               {getFailureNotificationText({
                 failedCount: enableErrors.length,
                 successCount: updatedCount,

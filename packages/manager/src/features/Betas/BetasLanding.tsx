@@ -10,7 +10,7 @@ import { Typography } from 'src/components/Typography';
 const BetasLanding = () => {
   return (
     <>
-      <ProductInformationBanner bannerLocation="Betas" important warning />
+      <ProductInformationBanner bannerLocation="Betas" />
       <LandingHeader title="Betas" />
       <Stack spacing={2}>
         <Paper>

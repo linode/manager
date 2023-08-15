@@ -199,7 +199,7 @@ export const StandardRescueDialog = (props: Props) => {
       open={open}
       title={`Rescue Linode ${linode?.label ?? ''}`}
     >
-      {APIError && <Notice error text={APIError} />}
+      {APIError && <Notice variant="error" text={APIError} />}
       {disksError ? (
         <div>
           <ErrorState errorText="There was an error retrieving Disks information." />

@@ -12,9 +12,9 @@ import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { DiskSelect } from 'src/features/Linodes/DiskSelect/DiskSelect';
@@ -214,8 +214,8 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       className={classes.rawDiskWarning}
       spacingBottom={32}
       spacingTop={16}
+      variant="warning"
       text={rawDiskWarningText}
-      warning
     />
   );
 
@@ -240,14 +240,14 @@ export const CreateImageTab: React.FC<Props> = (props) => {
     <Paper className={classes.container}>
       {!canCreateImage ? (
         <Notice
-          error
+          variant="error"
           text="You don't have permissions to create a new Image. Please contact an account administrator for details."
         />
       ) : null}
       {generalError ? (
-        <Notice data-qa-notice error text={generalError} />
+        <Notice data-qa-notice variant="error" text={generalError} />
       ) : null}
-      {notice ? <Notice data-qa-notice info text={notice} /> : null}
+      {notice ? <Notice data-qa-notice variant="info" text={notice} /> : null}
 
       <LinodeSelect
         optionsFilter={(linode) =>

@@ -12,8 +12,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import { FirewallRuleTable } from './FirewallRuleTable';
 import {
-  curriedFirewallRuleEditorReducer,
   hasModified as _hasModified,
+  curriedFirewallRuleEditorReducer,
   editorStateToRules,
   initRuleEditorState,
   prepareRules,
@@ -284,13 +284,13 @@ const FirewallRulesLanding = (props: Props) => {
           text={
             "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
           }
-          error
           important
+          variant="error"
         />
       ) : null}
 
       {generalErrors?.length === 1 && (
-        <Notice error spacingTop={8} text={generalErrors[0].reason} />
+        <Notice spacingTop={8} variant="error" text={generalErrors[0].reason} />
       )}
 
       <StyledDiv>

@@ -61,7 +61,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       />
       {showCrossDataCenterCloneWarning ? (
         <Box data-testid="region-select-warning" marginTop="16px">
-          <Notice text={CROSS_DATA_CENTER_CLONE_WARNING} warning />
+          <Notice variant="warning" text={CROSS_DATA_CENTER_CLONE_WARNING} />
         </Box>
       ) : null}
       <RegionSelect

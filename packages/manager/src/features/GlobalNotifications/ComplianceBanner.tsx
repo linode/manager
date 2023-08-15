@@ -31,7 +31,7 @@ const ComplianceBanner = () => {
       }
       important
       preferenceKey="gdpr-compliance"
-      warning
+      variant="warning"
     >
       <Box
         alignItems="center"

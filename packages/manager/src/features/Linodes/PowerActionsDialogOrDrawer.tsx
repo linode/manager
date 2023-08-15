@@ -181,7 +181,7 @@ export const PowerActionsDialog = (props: Props) => {
                 fontSize: '0.875rem !important',
               },
             }}
-            warning
+            variant="warning"
           >
             <strong>Note: </strong>
             Powered down Linodes will still accrue charges.

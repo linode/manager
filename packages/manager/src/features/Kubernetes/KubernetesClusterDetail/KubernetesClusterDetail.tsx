@@ -79,7 +79,7 @@ export const KubernetesClusterDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster?.label}`} />
-      <ProductInformationBanner bannerLocation="Kubernetes" important warning />
+      <ProductInformationBanner bannerLocation="Kubernetes" />
       <Grid>
         <UpgradeKubernetesVersionBanner
           clusterID={cluster?.id}
