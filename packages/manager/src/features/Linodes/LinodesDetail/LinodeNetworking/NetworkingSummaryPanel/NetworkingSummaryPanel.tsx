@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Paper } from 'src/components/Paper';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile';
+import { getPermissionsForLinode } from 'src/utilities/linodes';
 
 import { LinodePermissionsError } from '../../LinodePermissionsError';
 import { DNSResolvers } from './DNSResolvers';
@@ -23,10 +24,7 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
   const { data: grants } = useGrants();
 
   const readOnly =
-    grants !== undefined &&
-    grants.linode.some(
-      (g) => g.id === props.linodeID && g.permissions === 'read_only'
-    );
+    getPermissionsForLinode(grants, props.linodeID) === 'read_only';
 
   if (!linode) {
     return null;

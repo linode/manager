@@ -27,6 +27,7 @@ import {
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
 import { useGrants } from 'src/queries/profile';
+import { getPermissionsForLinode } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -80,11 +81,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: grants } = useGrants();
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
 
-  const readOnly =
-    grants !== undefined &&
-    grants.linode.some(
-      (g) => g.id === linodeID && g.permissions === 'read_only'
-    );
+  const readOnly = getPermissionsForLinode(grants, linodeID) === 'read_only';
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();

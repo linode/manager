@@ -8,6 +8,8 @@ import { Action, ActionMenu } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useGrants, useProfile } from 'src/queries/profile';
 
+import { checkIfUserCanModifyFirewall } from '../shared';
+
 export interface ActionHandlers {
   [index: string]: any;
   triggerDeleteFirewall: (firewallID: number, firewallLabel: string) => void;
@@ -39,10 +41,11 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     triggerEnableFirewall,
   } = props;
 
-  const userCanModifyFirewall =
-    !profile?.restricted ||
-    grants?.firewall?.find((firewall) => firewall.id === firewallID)
-      ?.permissions === 'read_write';
+  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
+    firewallID,
+    profile,
+    grants
+  );
 
   const disabledProps = !userCanModifyFirewall
     ? {

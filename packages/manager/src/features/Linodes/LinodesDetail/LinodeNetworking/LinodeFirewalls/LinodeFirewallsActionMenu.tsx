@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Action } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { noPermissionTooltipText } from 'src/features/Firewalls/FirewallLanding/FirewallActionMenu';
+import { checkIfUserCanModifyFirewall } from 'src/features/Firewalls/shared';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 interface LinodeFirewallsActionMenuProps {
@@ -18,10 +19,11 @@ export const LinodeFirewallsActionMenu = (
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const userCanModifyFirewall =
-    !profile?.restricted ||
-    grants?.firewall?.find((firewall) => firewall.id === firewallID)
-      ?.permissions === 'read_write';
+  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
+    firewallID,
+    profile,
+    grants
+  );
 
   const disabledProps = !userCanModifyFirewall
     ? {
