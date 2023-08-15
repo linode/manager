@@ -32,6 +32,11 @@ export interface LinkProps extends _LinkProps {
    * @default false
    */
   forceCopyColor?: boolean;
+  /**
+   * Optional prop to forcefully hide the external icon
+   * @default false
+   */
+  hideIcon?: boolean;
 }
 
 /**
@@ -64,6 +69,7 @@ export const Link = (props: LinkProps) => {
     forceCopyColor,
     onClick,
     to,
+    hideIcon,
   } = props;
   const { classes, cx } = useStyles();
   const sanitizedUrl = () => sanitizeUrl(to);
@@ -104,7 +110,7 @@ export const Link = (props: LinkProps) => {
       target="_blank"
     >
       {children}
-      {external && (
+      {external && !hideIcon && (
         <span
           className={cx(classes.iconContainer, {
             [classes.forceCopyColor]: forceCopyColor,
