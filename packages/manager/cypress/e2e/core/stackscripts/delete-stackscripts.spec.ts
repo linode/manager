@@ -9,7 +9,7 @@ import { ui } from 'support/ui';
 authenticate();
 describe('Delete stackscripts', () => {
   /*
-   * - Deletes the stackscripts.
+   * - Confirms StackScript deletion UI flow using mocked API data.
    * - Confirms that the stackscript item still exist when cancelling the delete operation.
    * - Confirms that the stackscript item can be deleted successfully.
    * - Confirms that "Automate Deployment with StackScripts!" welcome page appears when user has no StackScript.

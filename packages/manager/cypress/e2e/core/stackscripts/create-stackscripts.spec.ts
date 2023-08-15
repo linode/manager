@@ -12,6 +12,7 @@ import { createLinode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { createImage } from '@linode/api-v4/lib/images';
 import { chooseRegion } from 'support/util/regions';
 import { SimpleBackoffMethod } from 'support/util/backoff';
+import { cleanUp } from 'support/util/cleanup';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -135,6 +136,10 @@ const createLinodeAndImage = async () => {
 
 authenticate();
 describe('Create stackscripts', () => {
+  before(() => {
+    cleanUp('stackscripts');
+  });
+
   /*
    * - Creates a StackScript with user-defined fields.
    * - Confirms that an error message appears upon submitting script without a shebang.
