@@ -4,11 +4,7 @@ import { QueryClient } from 'react-query';
 
 import { vpcFactory } from 'src/factories/vpcs';
 import { rest, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-  wrapWithTheme,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCDetail from './VPCDetail';
 
@@ -56,7 +52,7 @@ describe('VPC Detail Summary section', () => {
     getAllByText(vpcFactory1.updated);
   });
 
-  it('should display description if one is provided and hide if not', async () => {
+  it('should display description if one is provided', async () => {
     const vpcFactory1 = vpcFactory.build({
       description: `VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver...`,
       id: 101,
@@ -67,32 +63,29 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const {
-      getAllByText,
-      getByTestId,
-      getByText,
-      queryByText,
-      rerender,
-    } = renderWithTheme(<VPCDetail />, {
+    const { getByTestId, getByText } = renderWithTheme(<VPCDetail />, {
       queryClient,
     });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    getAllByText('Description');
+    getByText('Description');
     getByText(vpcFactory1.description);
+  });
 
-    const vpcFactory2 = vpcFactory.build({ id: 102 });
+  it('should hide description if none is provided', async () => {
     server.use(
       rest.get('*/vpcs/:vpcId', (req, res, ctx) => {
-        return res(ctx.json(vpcFactory2));
+        return res(ctx.json(vpcFactory.build()));
       })
     );
-    rerender(
-      wrapWithTheme(<VPCDetail />, {
-        queryClient,
-      })
-    );
+
+    const { getByTestId, queryByText } = renderWithTheme(<VPCDetail />, {
+      queryClient,
+    });
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
     expect(queryByText('Description')).not.toBeInTheDocument();
   });
 });
