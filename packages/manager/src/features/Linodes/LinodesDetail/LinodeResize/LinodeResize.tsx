@@ -14,7 +14,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
-import { VerificationError } from 'src/components/VerificationError';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
@@ -316,12 +315,6 @@ const getError = (error: APIError[] | null) => {
         guide for more detailed instructions.
       </Typography>
     );
-  }
-  if (
-    typeof errorText === 'string' &&
-    errorText.match(/Additional verification/i)
-  ) {
-    return <VerificationError title="Verification Request" />;
   }
 
   return errorText;
