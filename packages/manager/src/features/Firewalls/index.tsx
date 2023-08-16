@@ -18,7 +18,7 @@ const Firewall = () => {
       <React.Fragment>
         <DocumentTitleSegment segment="Firewalls" />
         <Switch>
-          <Route component={FirewallLanding} exact path={`${path}(/create)?`} />
+          <Route component={FirewallLanding} exact path={`${path}/create`} />
           <Route component={FirewallDetail} path={`${path}/:id/:tab?`} />
           <Route component={FirewallLanding} />
         </Switch>
