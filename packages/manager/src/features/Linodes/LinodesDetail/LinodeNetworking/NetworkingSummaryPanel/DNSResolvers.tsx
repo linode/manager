@@ -9,7 +9,7 @@ interface DNSResolversProps {
   region: string;
 }
 
-export const DNSResolvers = (props: DNSResolversProps) => {
+export const DNSResolvers = React.memo((props: DNSResolversProps) => {
   const { region } = props;
   const theme = useTheme();
   const regions = useRegionsQuery().data ?? [];
@@ -81,6 +81,4 @@ export const DNSResolvers = (props: DNSResolversProps) => {
       </Grid>
     </Grid>
   );
-};
-
-export default React.memo(DNSResolvers);
+});

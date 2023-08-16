@@ -125,6 +125,7 @@ packages/manager/test-report.xml
 **/manager/config/staging.json
 **/manager/cypress/videos/
 **/manager/cypress/downloads/
+**/manager/cypress/results/
 
 # ignore all screenshots except records
 # we ignore the png files, not the whole folder recursively

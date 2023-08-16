@@ -39,10 +39,7 @@ import {
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
-import {
-  ConfigSelect,
-  initialValueDefaultId,
-} from '../VolumeDrawer/ConfigSelect';
+import { ConfigSelect } from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
@@ -171,14 +168,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
         createVolume({
           config_id:
-            config_id === initialValueDefaultId
-              ? undefined
-              : maybeCastToNumber(config_id),
+            config_id === null ? undefined : maybeCastToNumber(config_id),
           label,
           linode_id:
-            linode_id === initialValueDefaultId
-              ? undefined
-              : maybeCastToNumber(linode_id),
+            linode_id === null ? undefined : maybeCastToNumber(linode_id),
           region:
             isNilOrEmpty(region) || region === 'none' ? undefined : region,
           size: maybeCastToNumber(size),
@@ -237,7 +230,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
         const generalError = status
           ? status.generalError
-          : config_id === initialValueDefaultId
+          : config_id !== null
           ? errors.config_id
           : undefined;
 
@@ -255,8 +248,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             setFieldValue('linode_id', linode.id);
             setFieldValue('region', linode.region);
           } else {
-            // If the LinodeSelect is cleared, reset the values for Region and Config
-            setFieldValue('linode_id', initialValueDefaultId);
+            setFieldValue('linode_id', null);
+            setFieldValue('config_id', null);
           }
         };
 
@@ -312,7 +305,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   <RegionSelect
                     handleSelection={(value) => {
                       setFieldValue('region', value);
-                      setFieldValue('linode_id', initialValueDefaultId);
+                      setFieldValue('linode_id', null);
                     }}
                     regions={
                       regions?.filter((eachRegion) =>
@@ -423,17 +416,17 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 };
 
 interface FormState {
-  config_id: number;
+  config_id: null | number;
   label: string;
-  linode_id: number;
+  linode_id: null | number;
   region: string;
   size: number;
 }
 
 const initialValues: FormState = {
-  config_id: initialValueDefaultId,
+  config_id: null,
   label: '',
-  linode_id: initialValueDefaultId,
+  linode_id: null,
   region: '',
   size: 20,
 };

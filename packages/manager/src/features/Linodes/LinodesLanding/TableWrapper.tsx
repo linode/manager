@@ -4,7 +4,7 @@ import * as React from 'react';
 import { OrderByProps } from 'src/components/OrderBy';
 import { Table, TableProps } from 'src/components/Table';
 
-import SortableTableHead from './SortableTableHead';
+import { SortableTableHead } from './SortableTableHead';
 
 interface Props {
   children: React.ReactNode;

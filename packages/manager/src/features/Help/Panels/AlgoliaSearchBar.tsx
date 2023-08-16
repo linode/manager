@@ -8,7 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import { Notice } from 'src/components/Notice/Notice';
-import { selectStyles } from 'src/features/TopMenu/SearchBar';
+import { selectStyles } from 'src/features/TopMenu/SearchBar/SearchBar';
 
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import { SearchItem } from './SearchItem';
@@ -125,7 +125,7 @@ const AlgoliaSearchBar = (props: CombinedProps) => {
           disabled={!searchEnabled}
           hideLabel
           inputValue={inputValue}
-          isClearable={false}
+          isClearable={true}
           isMulti={false}
           label="Search for answers"
           onChange={handleSelect}
@@ -139,6 +139,6 @@ const AlgoliaSearchBar = (props: CombinedProps) => {
   );
 };
 
-export default withSearch({ highlight: true, hitsPerPage: 10 })(
+export default withSearch({ highlight: false, hitsPerPage: 10 })(
   withRouter(AlgoliaSearchBar)
 );

@@ -11,7 +11,7 @@ interface Props {
   errorText: string | undefined;
 }
 
-export const ImageEmptyState: React.FC<Props> = (props) => {
+export const ImageEmptyState = (props: Props) => {
   const { className, errorText, sx } = props;
   const theme = useTheme();
 
@@ -34,5 +34,3 @@ export const ImageEmptyState: React.FC<Props> = (props) => {
     </Paper>
   );
 };
-
-export default ImageEmptyState;
