@@ -7,6 +7,7 @@ import {
   LinodeStatus,
   getImage,
   getLinode,
+  getLinodeDisk,
   VolumeStatus,
   getVolume,
 } from '@linode/api-v4';
@@ -115,6 +116,36 @@ export const pollLinodeStatus = async (
     status === desiredStatus;
 
   return poll(getLinodeStatus, checkLinodeStatus, backoffOptions, label);
+};
+
+/**
+ * Polls the size of a Linode disk until it is the given size.
+ *
+ * Useful when waiting for a disk resize to complete.
+ *
+ * @param linodeId - ID of Linode containing the disk to poll.
+ * @param diskId - ID of the disk to poll.
+ * @param desiredSize - Desired size of the disk that is being polled.
+ * @param backoffMethod - Backoff method implementation to manage re-attempts.
+ * @param label - Optional label to assign to poll for logging and troubleshooting.
+ *
+ * @returns A Promise that resolves to the polled disk's size or rejects on timeout.
+ */
+export const pollLinodeDiskSize = async (
+  linodeId: number,
+  diskId: number,
+  desiredSize: number,
+  backoffOptions: PollBackoffConfiguration = undefined,
+  label: string | undefined = undefined
+) => {
+  const getDiskSize = async () => {
+    const disk = await getLinodeDisk(linodeId, diskId);
+    return disk.size;
+  };
+
+  const checkDiskSize = (size: number): boolean => size === desiredSize;
+
+  return poll(getDiskSize, checkDiskSize, backoffOptions, label);
 };
 
 /**

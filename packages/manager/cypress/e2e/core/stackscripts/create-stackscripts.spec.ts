@@ -1,5 +1,9 @@
 import { authenticate } from 'support/api/authentication';
-import { pollLinodeStatus, pollImageStatus } from 'support/util/polling';
+import {
+  pollLinodeStatus,
+  pollImageStatus,
+  pollLinodeDiskSize,
+} from 'support/util/polling';
 import { randomLabel, randomString, randomPhrase } from 'support/util/random';
 import {
   interceptCreateStackScript,
@@ -13,6 +17,7 @@ import { createImage } from '@linode/api-v4/lib/images';
 import { chooseRegion } from 'support/util/regions';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
+import { resizeLinodeDisk } from '@linode/api-v4/lib';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -106,20 +111,26 @@ const fillOutLinodeForm = (label: string, regionName: string) => {
  * @returns Promise that resolves to the new Image.
  */
 const createLinodeAndImage = async () => {
+  const resizedDiskSize = 1536;
   const linode = await createLinode(
     createLinodeRequestFactory.build({
       label: randomLabel(),
       region: chooseRegion().id,
       root_pass: randomString(32),
       type: 'g6-nanode-1',
+      booted: false,
     })
   );
 
-  await pollLinodeStatus(linode.id, 'running', {
+  await pollLinodeStatus(linode.id, 'offline', {
     initialDelay: 15000,
   });
 
+  // Resize the disk.
   const diskId = (await getLinodeDisks(linode.id)).data[0].id;
+  await resizeLinodeDisk(linode.id, diskId, resizedDiskSize);
+  await pollLinodeDiskSize(linode.id, diskId, resizedDiskSize);
+
   const image = await createImage(diskId, randomLabel(), randomPhrase());
 
   await pollImageStatus(
@@ -137,7 +148,7 @@ const createLinodeAndImage = async () => {
 authenticate();
 describe('Create stackscripts', () => {
   before(() => {
-    cleanUp(['images', 'stackscripts']);
+    cleanUp(['linodes', 'images', 'stackscripts']);
   });
 
   /*
@@ -269,7 +280,7 @@ describe('Create stackscripts', () => {
    * - Confirms that private images can be selected when deploying with "Any/All" StackScripts.
    * - Confirms that a Linode can be deployed using StackScript with private image.
    */
-  it('creates a StackScript with Any/All target image', () => {
+  it.only('creates a StackScript with Any/All target image', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     const stackscriptImage = 'Any/All';
