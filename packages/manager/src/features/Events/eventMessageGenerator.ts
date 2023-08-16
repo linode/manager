@@ -3,17 +3,16 @@ import { path } from 'ramda';
 
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
-
 import {
   formatEventWithAppendedText,
   formatEventWithUsername,
-} from './features/Events/Event.helpers';
-import { escapeRegExp } from './utilities/escapeRegExp';
+} from 'src/features/Events/Event.helpers';
+import { escapeRegExp } from 'src/utilities/escapeRegExp';
+import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
-type EventMessageCreator = (e: Event) => string;
+export type EventMessageCreator = (e: Event) => string;
 
-interface CreatorsForStatus {
+export interface CreatorsForStatus {
   failed?: EventMessageCreator;
   finished?: EventMessageCreator;
   notification?: EventMessageCreator;
@@ -30,7 +29,6 @@ export const safeSecondaryEntityLabel = (
   return label ? `${text} ${label}` : fallback;
 };
 
-/** @see https://leo.stcloudstate.edu/grammar/tenses.html */
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   account_agreement_eu_model: {
     notification: () => 'The EU Model Contract has been signed.',
@@ -784,7 +782,7 @@ export const formatEventWithAPIMessage = (e: Event) => {
   return `${e.action}: ${e.message}`;
 };
 
-export default (e: Event): string => {
+export const generateEventMessage = (e: Event): string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators
@@ -831,7 +829,7 @@ export default (e: Event): string => {
    * */
   try {
     const formattedMessage = applyLinking(e, messageWithUsername);
-    return applyBolding(e, formattedMessage);
+    return applyBolding(formattedMessage);
   } catch (error) {
     console.warn('Error with formatting the event message', {
       error,
@@ -847,7 +845,7 @@ export default (e: Event): string => {
   }
 };
 
-function applyBolding(event: Event, message: string) {
+export function applyBolding(message: string) {
   if (!message) {
     return '';
   }

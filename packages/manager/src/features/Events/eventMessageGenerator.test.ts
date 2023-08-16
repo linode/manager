@@ -3,8 +3,9 @@ import { Event } from '@linode/api-v4/lib/account';
 import { entityFactory, eventFactory } from 'src/factories/events';
 
 import { applyLinking } from './eventMessageGenerator';
-import getEventMessage, {
+import {
   eventMessageCreators,
+  generateEventMessage,
   safeSecondaryEntityLabel,
 } from './eventMessageGenerator';
 
@@ -20,7 +21,7 @@ describe('Event message generation', () => {
         action: '__unknown__',
         status: 'started',
       };
-      const result = getEventMessage(mockEvent as Event);
+      const result = generateEventMessage(mockEvent as Event);
 
       expect(result).toBe('__unknown__');
     });
@@ -31,7 +32,7 @@ describe('Event message generation', () => {
         entity: null,
         status: 'scheduled',
       };
-      const result = getEventMessage(mockEvent as Event);
+      const result = generateEventMessage(mockEvent as Event);
 
       expect(result).toBe('');
     });
@@ -47,7 +48,7 @@ describe('Event message generation', () => {
       eventMessageCreators.linode_reboot.scheduled = jest.fn();
 
       /** Invoke the function. */
-      getEventMessage(mockEvent as Event);
+      generateEventMessage(mockEvent as Event);
 
       /** Check that the mocked creator was called w/ the mock event. */
       expect(eventMessageCreators.linode_reboot.scheduled).toHaveBeenCalledWith(
