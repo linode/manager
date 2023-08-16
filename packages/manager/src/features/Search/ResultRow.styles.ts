@@ -16,6 +16,9 @@ export const StyledCreatedTableCell = styled(TableCell, {
 export const StyledLabelTableCell = styled(TableCell, {
   label: 'StyledLabelTableCell',
 })(({ theme }) => ({
+  '& a': {
+    display: 'inline-block',
+  },
   [theme.breakpoints.up('md')]: {
     width: '35%',
   },
@@ -43,11 +46,14 @@ export const StyledTagTableCell = styled(TableCell, {
 export const StyledTableRow = styled(TableRow, {
   label: 'StyledTableRow',
 })(({ theme }) => ({
-  cursor: 'pointer',
-  paddingBottom: 0,
-  paddingTop: 0,
+  '& td': {
+    paddingBottom: 4,
+    paddingTop: 4,
+  },
+  paddingBottom: '2px !important',
+  paddingTop: '0 !important',
   transition: theme.transitions.create(['background-color']),
-  width: '50%',
+  width: '100%',
 }));
 
 export const StyledLink = styled(Link, {
