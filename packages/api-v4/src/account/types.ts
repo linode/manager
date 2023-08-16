@@ -148,7 +148,8 @@ export type GlobalGrantTypes =
   | 'add_nodebalancers'
   | 'add_images'
   | 'add_volumes'
-  | 'add_firewalls';
+  | 'add_firewalls'
+  | 'add_vpcs';
 
 export interface GlobalGrants {
   global: Record<GlobalGrantTypes, boolean | GrantLevel>;

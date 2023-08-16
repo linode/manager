@@ -11,11 +11,6 @@ beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
-jest.mock('src/queries/account', () => ({
-  __esModule: true,
-  useAccount: jest.fn().mockReturnValue({ data: { capabilities: ['VPCs'] } }),
-}));
-
 describe('VPC create page', () => {
   it('should render the vpc and subnet sections', () => {
     const { getAllByText } = renderWithTheme(<VPCCreate />);

@@ -6,12 +6,11 @@ import {
 } from '@linode/api-v4';
 import { useHistory } from 'react-router-dom';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { createVPCSchema } from '@linode/validation';
 
-import { useProfile } from 'src/queries/profile';
-import { useAccount } from 'src/queries/account';
+import { useProfile, useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs';
 
@@ -22,27 +21,27 @@ import { TextField } from 'src/components/TextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { SubnetFieldState, validateSubnets } from 'src/utilities/subnets';
 import { MultipleSubnetInput } from './MultipleSubnetInput';
+import {
+  StyledBodyTypography,
+  StyledHeaderTypography,
+} from './VPCCreate.styles';
 
 const VPCCreate = () => {
   const theme = useTheme();
   const history = useHistory();
   const { data: profile } = useProfile();
-  const { data: account } = useAccount();
+  const { data: grants } = useGrants();
   const { data: regions } = useRegionsQuery();
   const { isLoading, mutateAsync: createVPC } = useCreateVPCMutation();
   const [subnetErrorsFromAPI, setSubnetErrorsFromAPI] = React.useState<
     APIError[]
   >();
 
-  // TODO: VPC - may eventually need to add global grants?
-  // customer tag? + to test, will need to comment out the account restriction
-  const disabled =
-    profile?.restricted || !account?.capabilities.includes('VPCs');
+  const disabled = profile?.restricted && !grants?.global.add_vpcs;
 
   const createSubnetsPayload = () => {
     const subnetPayloads: CreateSubnetPayload[] = [];
@@ -242,21 +241,5 @@ const VPCCreate = () => {
     </>
   );
 };
-
-const StyledBodyTypography = styled(Typography, {
-  label: 'StyledBodyTypography',
-})(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(1),
-  [theme.breakpoints.up('sm')]: {
-    maxWidth: '80%',
-  },
-}));
-
-const StyledHeaderTypography = styled(Typography, {
-  label: 'StyledHeaderTypography',
-})(({ theme }) => ({
-  marginTop: theme.spacing(1),
-}));
 
 export default VPCCreate;
