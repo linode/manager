@@ -110,7 +110,7 @@ describe('Payment Method Row', () => {
   });
 
   it('Disables "Make Default" and "Delete" actions if payment method is set as default', () => {
-    const { getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={jest.fn()}
@@ -118,11 +118,13 @@ describe('Payment Method Row', () => {
         />
       </PayPalScriptProvider>
     );
-
-    expect(getByText('Make Default').getAttribute('aria-disabled')).toEqual(
-      'true'
-    );
-    expect(getByText('Delete').getAttribute('aria-disabled')).toEqual('true');
+    userEvent.click(getByLabelText(/^Action menu for/));
+    expect(
+      getByText('Make Default').closest('li')?.getAttribute('aria-disabled')
+    ).toEqual('true');
+    expect(
+      getByText('Delete').closest('li')?.getAttribute('aria-disabled')
+    ).toEqual('true');
   });
 
   it('Calls `onDelete` callback when "Delete" action is clicked', () => {
