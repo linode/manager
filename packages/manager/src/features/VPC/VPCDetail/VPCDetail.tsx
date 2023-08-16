@@ -26,14 +26,6 @@ const VPCDetail = () => {
   const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
   const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
 
-  const handleEditVPC = () => {
-    setEditVPCDrawerOpen(true);
-  };
-
-  const handleDeleteVPC = () => {
-    setDeleteVPCDialogOpen(true);
-  };
-
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -117,8 +109,10 @@ const VPCDetail = () => {
           </Typography>
         </Box>
         <Box display="flex" justifyContent="end">
-          <StyledActionButton onClick={handleEditVPC}>Edit</StyledActionButton>
-          <StyledActionButton onClick={handleDeleteVPC}>
+          <StyledActionButton onClick={() => setEditVPCDrawerOpen(true)}>
+            Edit
+          </StyledActionButton>
+          <StyledActionButton onClick={() => setDeleteVPCDialogOpen(true)}>
             Delete
           </StyledActionButton>
         </Box>
