@@ -9,7 +9,12 @@ import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
-import { LoadBalancerSummary } from './LoadBalancerSummary';
+
+const LoadBalancerSummary = React.lazy(() =>
+  import('./LoadBalancerSummary').then((module) => ({
+    default: module.LoadBalancerSummary,
+  }))
+);
 
 const LoadBalancerDetailLanding = () => {
   const history = useHistory();
