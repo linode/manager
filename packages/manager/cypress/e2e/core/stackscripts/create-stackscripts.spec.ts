@@ -137,7 +137,7 @@ const createLinodeAndImage = async () => {
 authenticate();
 describe('Create stackscripts', () => {
   before(() => {
-    cleanUp('stackscripts');
+    cleanUp(['images', 'stackscripts']);
   });
 
   /*

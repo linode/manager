@@ -2,8 +2,9 @@
 import { Linode } from '@linode/api-v4/types';
 import { createLinode } from 'support/api/linodes';
 import { containsVisible, fbtClick, fbtVisible } from 'support/helpers';
-import { apiMatcher } from 'support/util/intercepts';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
+import { apiMatcher } from 'support/util/intercepts';
 
 // 3 minutes.
 const LINODE_PROVISION_TIMEOUT = 180_000;
@@ -95,6 +96,10 @@ const addDisk = (diskName: string) => {
 };
 
 describe('linode storage tab', () => {
+  before(() => {
+    cleanUp(['linodes', 'lke-clusters']);
+  });
+
   it('try to delete in use disk', () => {
     const diskName = 'Debian 10 Disk';
     createLinode().then((linode) => {
