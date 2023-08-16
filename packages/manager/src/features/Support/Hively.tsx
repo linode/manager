@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import Stack from '@mui/material/Stack';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
@@ -9,30 +8,6 @@ import { Typography } from 'src/components/Typography';
 import { parseAPIDate } from 'src/utilities/date';
 
 import { OFFICIAL_USERNAMES } from './ticketUtils';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  hivelyContainer: {
-    alignItems: 'center',
-    borderTop: `1px solid ${theme.color.grey2}`,
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    margin: `${theme.spacing(3)} ${theme.spacing(1)} 0`,
-    paddingTop: theme.spacing(1),
-  },
-  hivelyImage: {
-    margin: 3,
-    width: '25px',
-  },
-  hivelyLink: {
-    color: theme.color.black,
-    marginRight: theme.spacing(2),
-    textDecoration: 'none',
-  },
-  hivelyLinkIcon: {
-    display: 'inline-block',
-    marginRight: theme.spacing(1),
-  },
-}));
 
 interface Props {
   linodeUsername: string;
@@ -65,24 +40,23 @@ export const shouldRenderHively = (
   }
 };
 
-export const Hively: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const Hively = (props: Props) => {
   const { linodeUsername, replyId, ticketId } = props;
   const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
 
   return (
-    <div className={classes.hivelyContainer}>
+    <>
       <Divider />
-      <Typography component="span">
-        <Link className={classes.hivelyLink} external to={href + '3'}>
-          How did I do?
-        </Link>
-      </Typography>
-      <span>
+      <Stack alignItems="center" direction="row" pl={1} spacing={1.5}>
+        <Typography mr={3}>
+          <Link external to={href + '3'}>
+            How did I do?
+          </Link>
+        </Typography>
         <Link
           accessibleAriaLabel="Happy feedback"
-          className={classes.hivelyLinkIcon}
           external
+          hideIcon
           to={href + '3'}
         >
           <img
@@ -90,13 +64,12 @@ export const Hively: React.FC<Props> = (props) => {
               'https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png'
             }
             alt="Happy face emoji"
-            className={classes.hivelyImage}
           />
         </Link>
         <Link
           accessibleAriaLabel="Mediocre feedback"
-          className={classes.hivelyLinkIcon}
           external
+          hideIcon
           to={href + '2'}
         >
           <img
@@ -104,13 +77,12 @@ export const Hively: React.FC<Props> = (props) => {
               'https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png'
             }
             alt="Indifferent face emoji"
-            className={classes.hivelyImage}
           />
         </Link>
         <Link
           accessibleAriaLabel="Unhappy feedback"
-          className={classes.hivelyLinkIcon}
           external
+          hideIcon
           to={href + '1'}
         >
           <img
@@ -118,10 +90,9 @@ export const Hively: React.FC<Props> = (props) => {
               'https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png'
             }
             alt="Sad Face emoji"
-            className={classes.hivelyImage}
           />
         </Link>
-      </span>
-    </div>
+      </Stack>
+    </>
   );
 };

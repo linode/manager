@@ -4,11 +4,9 @@ import { take } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { components } from 'react-select';
-import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import { IconButton } from 'src/components/IconButton';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
@@ -34,10 +32,11 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import styled, { StyleProps } from './SearchBar.styles';
-import SearchSuggestion from './SearchSuggestion';
-
-type CombinedProps = SearchProps & StyleProps;
+import {
+  StyledIconButton,
+  StyledSearchBarWrapperDiv,
+} from './SearchBar.styles';
+import { SearchSuggestion } from './SearchSuggestion';
 
 const Control = (props: any) => <components.Control {...props} />;
 
@@ -77,9 +76,8 @@ export const selectStyles = {
   }),
 };
 
-export const SearchBar = (props: CombinedProps) => {
-  const { classes, combinedResults, entitiesLoading, search } = props;
-
+const SearchBar = (props: SearchProps) => {
+  const { combinedResults, entitiesLoading, search } = props;
   const [searchText, setSearchText] = React.useState<string>('');
   const [value, setValue] = React.useState<Item | null>(null);
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
@@ -87,7 +85,6 @@ export const SearchBar = (props: CombinedProps) => {
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
   const [apiError, setAPIError] = React.useState<null | string>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
-
   const history = useHistory();
   const isLargeAccount = useIsLargeAccount(searchActive);
 
@@ -130,11 +127,11 @@ export const SearchBar = (props: CombinedProps) => {
     shouldMakeRequests
   );
 
-  const types = extendTypesQueryResult(typesQuery);
+  const extendedTypes = extendTypesQueryResult(typesQuery);
 
   const searchableLinodes = (linodes ?? []).map((linode) => {
     const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
-    return formatLinode(linode, types, imageLabel);
+    return formatLinode(linode, extendedTypes, imageLabel);
   });
 
   const { searchAPI } = useAPISearch(!isNilOrEmpty(searchText));
@@ -302,22 +299,19 @@ export const SearchBar = (props: CombinedProps) => {
 
   return (
     <React.Fragment>
-      <IconButton
+      <StyledIconButton
         aria-label="open menu"
-        className={classes.navIconHide}
         color="inherit"
         onClick={toggleSearch}
         size="large"
       >
         <Search />
-      </IconButton>
-      <div
-        className={`
-          ${classes.root}
-          ${searchActive ? 'active' : ''}
-        `}
-      >
-        <Search className={classes.icon} data-qa-search-icon />
+      </StyledIconButton>
+      <StyledSearchBarWrapperDiv className={searchActive ? 'active' : ''}>
+        <Search
+          data-qa-search-icon
+          sx={{ color: '#c9cacb', fontSize: '2rem' }}
+        />
         <label className="visually-hidden" htmlFor="main-search">
           Main search
         </label>
@@ -347,24 +341,27 @@ export const SearchBar = (props: CombinedProps) => {
           styles={selectStyles}
           value={value}
         />
-        <IconButton
+        <StyledIconButton
           aria-label="close menu"
-          className={classes.navIconHide}
           color="inherit"
           onClick={toggleSearch}
           size="large"
         >
-          <Close className={classes.close} />
-        </IconButton>
-      </div>
+          <Close
+            sx={(theme) => ({
+              '& > span': {
+                padding: 2,
+              },
+              '&:hover, &:focus': {
+                color: theme.palette.primary.main,
+              },
+            })}
+          />
+        </StyledIconButton>
+      </StyledSearchBarWrapperDiv>
     </React.Fragment>
   );
 };
-
-export default compose<CombinedProps, {}>(
-  withStoreSearch(),
-  styled
-)(SearchBar) as React.ComponentType<{}>;
 
 export const createFinalOptions = (
   results: Item[],
@@ -421,3 +418,5 @@ export const createFinalOptions = (
   const first20Results = take(20, results);
   return [redirectOption, ...first20Results, lastOption];
 };
+
+export default withStoreSearch()(SearchBar);
