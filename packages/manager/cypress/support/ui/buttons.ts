@@ -14,7 +14,7 @@ export const button = {
     attributeName: string,
     attributeValue: string
   ): Cypress.Chainable => {
-    return cy.get(`button[${attributeName}="${attributeValue}"`);
+    return cy.get(`button[${attributeName}="${attributeValue}"]`);
   },
 
   /**

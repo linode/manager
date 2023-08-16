@@ -4,6 +4,7 @@ import {
   mockSetDefaultPaymentMethod,
   mockGetPaymentMethods,
 } from 'support/intercepts/account';
+import { ui } from 'support/ui';
 
 const paymentMethodGpay = (isDefault: boolean) => {
   return paymentMethodFactory.build({
@@ -43,21 +44,15 @@ describe('Default Payment Method', () => {
     mockSetDefaultPaymentMethod(gpayIdCcDefault).as('changeDefault');
     cy.visitWithLogin('/account/billing');
     cy.wait('@getPaymentMethod');
-    cy.get(
-      `[aria-label="Action menu for card ending in ${gpayLastFourCcDefault}"]`
-    )
-      .invoke('attr', 'aria-controls')
-      .then(($id) => {
-        if ($id) {
-          cy.get(
-            `[aria-label="Action menu for card ending in ${gpayLastFourCcDefault}"]`
-          ).click();
-        }
-        mockGetPaymentMethods(gpayDefault).as('getPaymentMethod');
-        cy.get(
-          `[id="option-1--${$id}"][data-qa-action-menu-item="Make Default"]`
-        ).click();
-      });
+
+    ui.actionMenu
+      .findByTitle(`Action menu for card ending in ${gpayLastFourCcDefault}`)
+      .should('be.visible')
+      .click();
+
+    mockGetPaymentMethods(gpayDefault).as('getPaymentMethod');
+    ui.actionMenuItem.findByTitle('Make Default').should('be.visible').click();
+
     cy.wait('@changeDefault');
     cy.wait('@getPaymentMethod');
     cy.get('[data-qa-payment-row=google_pay]').within(() => {
@@ -70,21 +65,15 @@ describe('Default Payment Method', () => {
     mockSetDefaultPaymentMethod(ccIdGpayDefault).as('changeDefault');
     cy.visitWithLogin('/account/billing');
     cy.wait('@getPaymentMethod');
-    cy.get(
-      `[aria-label="Action menu for card ending in ${ccLastFourGpayDefault}"]`
-    )
-      .invoke('attr', 'aria-controls')
-      .then(($id) => {
-        if ($id) {
-          cy.get(
-            `[aria-label="Action menu for card ending in ${ccLastFourGpayDefault}"]`
-          ).click();
-        }
-        mockGetPaymentMethods(ccDefault).as('getPaymentMethod');
-        cy.get(
-          `[id="option-1--${$id}"][data-qa-action-menu-item="Make Default"]`
-        ).click();
-      });
+
+    ui.actionMenu
+      .findByTitle(`Action menu for card ending in ${ccLastFourGpayDefault}`)
+      .should('be.visible')
+      .click();
+
+    mockGetPaymentMethods(ccDefault).as('getPaymentMethod');
+    ui.actionMenuItem.findByTitle('Make Default').should('be.visible').click();
+
     cy.wait('@changeDefault');
     cy.wait('@getPaymentMethod');
     cy.get('[data-qa-payment-row=credit_card]').within(() => {
