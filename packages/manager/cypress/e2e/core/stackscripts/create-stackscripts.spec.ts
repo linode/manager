@@ -111,6 +111,8 @@ const fillOutLinodeForm = (label: string, regionName: string) => {
  * @returns Promise that resolves to the new Image.
  */
 const createLinodeAndImage = async () => {
+  // 1.5GB
+  // Shout out to Debian for fitting on a 1.5GB disk.
   const resizedDiskSize = 1536;
   const linode = await createLinode(
     createLinodeRequestFactory.build({
@@ -126,7 +128,7 @@ const createLinodeAndImage = async () => {
     initialDelay: 15000,
   });
 
-  // Resize the disk.
+  // Resize the disk to speed up Image processing later.
   const diskId = (await getLinodeDisks(linode.id)).data[0].id;
   await resizeLinodeDisk(linode.id, diskId, resizedDiskSize);
   await pollLinodeDiskSize(linode.id, diskId, resizedDiskSize);
@@ -280,7 +282,7 @@ describe('Create stackscripts', () => {
    * - Confirms that private images can be selected when deploying with "Any/All" StackScripts.
    * - Confirms that a Linode can be deployed using StackScript with private image.
    */
-  it.only('creates a StackScript with Any/All target image', () => {
+  it('creates a StackScript with Any/All target image', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     const stackscriptImage = 'Any/All';
