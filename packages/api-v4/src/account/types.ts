@@ -45,7 +45,8 @@ export type AccountCapability =
   | 'Vlans'
   | 'Machine Images'
   | 'LKE HA Control Planes'
-  | 'Managed Databases';
+  | 'Managed Databases'
+  | 'VPCs';
 
 export interface AccountSettings {
   managed: boolean;

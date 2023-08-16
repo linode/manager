@@ -10,7 +10,8 @@ import { styled, useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { createVPCSchema } from '@linode/validation';
 
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile';
+import { useAccount } from 'src/queries/account';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs';
 
@@ -31,15 +32,17 @@ const VPCCreate = () => {
   const theme = useTheme();
   const history = useHistory();
   const { data: profile } = useProfile();
+  const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();
   const { isLoading, mutateAsync: createVPC } = useCreateVPCMutation();
   const [subnetErrorsFromAPI, setSubnetErrorsFromAPI] = React.useState<
     APIError[]
   >();
 
-  // TODO: VPC - may eventually need to add global grants
-  // customer tag?
-  const disabled = profile?.restricted; // || !profile?.vpc_beta;
+  // TODO: VPC - may eventually need to add global grants?
+  // customer tag? + to test, will need to comment out the account restriction
+  const disabled =
+    profile?.restricted || !account?.capabilities.includes('VPCs');
 
   const createSubnetsPayload = () => {
     const subnetPayloads: CreateSubnetPayload[] = [];
@@ -56,19 +59,27 @@ const VPCCreate = () => {
 
   const validateVPCSubnets = () => {
     const validatedSubnets = validateSubnets(values.subnets, {
-      labelError: 'Label is required. Must only be ASCII letters, numbers, and dashes',
+      labelError:
+        'Label is required. Must only be ASCII letters, numbers, and dashes',
       ipv4Error: 'The IPv4 range must be in CIDR format',
     });
 
-    if (validatedSubnets.some((subnet) => subnet.labelError || subnet.ip.ipv4Error)) {
+    if (
+      validatedSubnets.some(
+        (subnet) => subnet.labelError || subnet.ip.ipv4Error
+      )
+    ) {
       setFieldValue('subnets', validatedSubnets);
       return false;
     } else {
-      setFieldValue('subnets', validatedSubnets.map((subnet) => {
-        delete subnet.labelError;
-        delete subnet.ip.ipv4Error;
-        return { ...subnet};
-      }))
+      setFieldValue(
+        'subnets',
+        validatedSubnets.map((subnet) => {
+          delete subnet.labelError;
+          delete subnet.ip.ipv4Error;
+          return { ...subnet };
+        })
+      );
       return true;
     }
   };
