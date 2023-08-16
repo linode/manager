@@ -1,18 +1,17 @@
+import userEvent from '@testing-library/user-event';
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import { QueryClient } from 'react-query';
 
-import { linodeFactory, linodeConfigFactory, vpcFactory } from 'src/factories';
+import { mockNotification } from 'src/__data__/notifications';
+import { linodeConfigFactory, linodeFactory, vpcFactory } from 'src/factories';
 import {
   mockMatchMedia,
   renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
-import { mockNotification } from 'src/__data__/notifications';
-
-import { RenderFlag, LinodeRow } from './LinodeRow';
+import { LinodeRow, RenderFlag } from './LinodeRow';
 
 const queryClient = new QueryClient();
 
@@ -29,8 +28,8 @@ jest.mock('src/hooks/useFlags', () => ({
 jest.mock('src/queries/linodes/configs.ts', () => ({
   useAllLinodeConfigsQuery: jest.fn().mockReturnValue({
     data: linodeConfigFactory.buildList(1),
-    isLoading: false,
     error: {},
+    isLoading: false,
   }),
 }));
 
@@ -93,12 +92,17 @@ describe('LinodeRow', () => {
       />
     );
 
-    const { getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = renderWithTheme(
       wrapWithTableBody(renderedLinode, { queryClient })
     );
 
     getByText('vpc-1');
     getByText(linode.label);
+
+    // Open action menu
+    const actionMenu = getByLabelText(`Action menu for Linode ${linode.label}`);
+    userEvent.click(actionMenu);
+
     getByText('Power Off');
     getByText('Reboot');
     getByText('Launch LISH Console');
