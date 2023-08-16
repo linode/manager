@@ -17,11 +17,11 @@ const LoadBalancer = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
+        <Route component={LoadBalancerCreate} path="/loadbalancers/create" />
         <Route
           component={LoadBalancerDetail}
           path="/loadbalancers/:loadbalancerId/:tab?"
         />
-        <Route component={LoadBalancerCreate} path="/loadbalancers/create" />
         <Route component={LoadBalancerLanding} path="/loadbalancers" />
       </Switch>
     </React.Suspense>
