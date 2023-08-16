@@ -9,16 +9,16 @@ const LoadBalancerLanding = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Akamai Global Load Balancers" />
+      <DocumentTitleSegment segment="Global Load Balancers" />
       <LandingHeader
         breadcrumbProps={{ pathname: '/loadbalancers' }}
         createButtonText="Create Loadbalancer"
         docsLabel="Docs"
         docsLink="" // TODO: AGLB -  Add docs link
-        entity="Akamai Global Load Balancers"
+        entity="Global Load Balancers"
         onButtonClick={() => history.push('/loadbalancers/create')}
         removeCrumbX={1}
-        title="Akamai Global Load Balancers"
+        title="Global Load Balancers"
       />
       TODO: AGLB M3-6807: Load Balancer Landing
     </>

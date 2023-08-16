@@ -6,10 +6,15 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
 
-import { LoadBalancerSummary } from './LoadBalancerSummary';
+const LoadBalancerSummary = React.lazy(() =>
+  import('./LoadBalancerSummary').then((module) => ({
+    default: module.LoadBalancerSummary,
+  }))
+);
 
 const LoadBalancerDetailLanding = () => {
   const history = useHistory();
@@ -59,7 +64,7 @@ const LoadBalancerDetailLanding = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Load Balancer',
+              label: 'Global Load Balancers',
               position: 1,
             },
           ],
@@ -73,7 +78,9 @@ const LoadBalancerDetailLanding = () => {
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
-            <LoadBalancerSummary />
+            <React.Suspense fallback={<SuspenseLoader />}>
+              <LoadBalancerSummary />
+            </React.Suspense>
           </SafeTabPanel>
           <SafeTabPanel index={1}>1</SafeTabPanel>
           <SafeTabPanel index={2}>2</SafeTabPanel>
