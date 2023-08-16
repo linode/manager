@@ -11,6 +11,11 @@ beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
+jest.mock('src/queries/account', () => ({
+  __esModule: true,
+  useAccount: jest.fn().mockReturnValue({ data: { capabilities: ['VPCs'] } }),
+}));
+
 describe('VPC create page', () => {
   it('should render the vpc and subnet sections', () => {
     const { getAllByText } = renderWithTheme(<VPCCreate />);
@@ -27,20 +32,22 @@ describe('VPC create page', () => {
   });
 
   it('should require vpc labels and region and ignore subnets that are blank', async () => {
-    renderWithTheme(<VPCCreate />);
-    const createVPCButton = screen.getByText('Create VPC');
+    const { getByText, queryByText } = renderWithTheme(<VPCCreate />);
+    const createVPCButton = getByText('Create VPC');
     expect(createVPCButton).toBeInTheDocument();
     await act(async () => {
       userEvent.click(createVPCButton);
     });
 
-    const regionError = screen.getByText('Region is required');
+    const regionError = getByText('Region is required');
     expect(regionError).toBeInTheDocument();
-    const labelError = screen.getByText('Label is required');
+    const labelError = getByText('Label is required');
     expect(labelError).toBeInTheDocument();
-    const badSubnetIP = screen.queryByText('The IPv4 range must be in CIDR format');
+    const badSubnetIP = queryByText('The IPv4 range must be in CIDR format');
     expect(badSubnetIP).not.toBeInTheDocument();
-    const badSubnetLabel = screen.queryByText('Label is required. Must only be ASCII letters, numbers, and dashes');
+    const badSubnetLabel = queryByText(
+      'Label is required. Must only be ASCII letters, numbers, and dashes'
+    );
     expect(badSubnetLabel).not.toBeInTheDocument();
   });
 
@@ -82,9 +89,13 @@ describe('VPC create page', () => {
       await userEvent.type(subnetIp, 'bad ip', { delay: 1 });
       userEvent.click(createVPCButton);
     });
-    const badSubnetIP = screen.getByText('The IPv4 range must be in CIDR format');
+    const badSubnetIP = screen.getByText(
+      'The IPv4 range must be in CIDR format'
+    );
     expect(badSubnetIP).toBeInTheDocument();
-    const badSubnetLabel = screen.getByText('Label is required. Must only be ASCII letters, numbers, and dashes');
+    const badSubnetLabel = screen.getByText(
+      'Label is required. Must only be ASCII letters, numbers, and dashes'
+    );
     expect(badSubnetLabel).toBeInTheDocument();
   });
 
@@ -99,9 +110,13 @@ describe('VPC create page', () => {
       await userEvent.type(subnetLabel, 'label', { delay: 1 });
       userEvent.click(createVPCButton);
     });
-    const badSubnetIP = screen.getByText('The IPv4 range must be in CIDR format');
+    const badSubnetIP = screen.getByText(
+      'The IPv4 range must be in CIDR format'
+    );
     expect(badSubnetIP).toBeInTheDocument();
-    const badSubnetLabel = screen.queryByText('Label is required. Must only be ASCII letters, numbers, and dashes');
+    const badSubnetLabel = screen.queryByText(
+      'Label is required. Must only be ASCII letters, numbers, and dashes'
+    );
     expect(badSubnetLabel).not.toBeInTheDocument();
   });
 });
