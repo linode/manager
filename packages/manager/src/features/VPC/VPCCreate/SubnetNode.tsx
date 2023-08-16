@@ -32,21 +32,19 @@ export const SubnetNode = (props: Props) => {
   const [availIps, setAvailIps] = React.useState<number | undefined>(undefined);
 
   const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const subnetError = subnet.labelError ?? '';
     const newSubnet = {
       ...subnet,
       label: e.target.value,
-      labelError: subnetError,
+      labelError: '',
     };
     onChange(newSubnet, idx);
   };
 
   const onIpv4Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     const ipType = determineIPType(e.target.value);
-    const subnetError = subnet.ip.ipv4Error ?? '';
     const newSubnet = {
       ...subnet,
-      ip: { ipv4: e.target.value, ipv4Error: subnetError },
+      ip: { ipv4: e.target.value },
     };
     setAvailIps(calculateAvailableIpv4s(e.target.value, ipType));
     onChange(newSubnet, idx);
@@ -61,9 +59,7 @@ export const SubnetNode = (props: Props) => {
       <Grid
         direction="row"
         container
-        alignItems={'flex-end'}
         spacing={2}
-        justifyContent={'flex-start'}
       >
         <Grid xs={removable ? 11 : 12}>
           <TextField
@@ -71,12 +67,13 @@ export const SubnetNode = (props: Props) => {
             label="Subnet label"
             onChange={onLabelChange}
             value={subnet.label}
+            errorText={subnet.labelError}
           />
         </Grid>
         {removable && !!idx && (
           <Grid xs={1}>
             <StyledButton onClick={removeSubnet}>
-              <Close />
+              <Close data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>
         )}
@@ -108,7 +105,7 @@ const StyledButton = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
     padding: 2,
   },
   color: theme.textColors.tableHeader,
-  marginBottom: 3,
+  marginTop: theme.spacing(6),
   minHeight: 'auto',
   minWidth: 'auto',
   padding: 0,

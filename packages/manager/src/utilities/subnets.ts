@@ -1,3 +1,5 @@
+import { determineIPType, vpcsValidateIP } from "@linode/validation";
+
 // VPC: TODO - added ipv6 related fields here, but they will not be used until VPCs support ipv6
 interface SubnetIPState {
   ipv4?: string;
@@ -21,7 +23,7 @@ export type SubnetIpType = 'ipv4' | 'ipv6';
  * - To get available IPs for our VPCs, subtract 4 (the number of reserved IPs)
  *  from the given number
  */
-export const SubnetMaskToAvailIps = {
+export const SubnetMaskToAvailIPv4s = {
   0: 4294967296,
   1: 2147483648,
   2: 1073741824,
@@ -66,13 +68,33 @@ export const calculateAvailableIpv4s = (
     return undefined;
   }
 
-  return SubnetMaskToAvailIps[mask];
+  return SubnetMaskToAvailIPv4s[mask];
 };
 
+const DEFAULT_LABEL_ERROR = 'Label is required';
+const DEFAULT_IPV4_ERROR = 'The IPv4 range must be in CIDR format';
+
 export const validateSubnets = (
-  subnets: SubnetFieldState[]
+  subnets: SubnetFieldState[],
+  options?: {
+    labelError?: string;
+    ipv4Error?: string;
+    ipv6Error?: string;
+  }
 ): SubnetFieldState[] => {
   return subnets.map((subnet) => {
+    if(subnet.label || subnet.ip.ipv4) {
+      const errorSubnet: SubnetFieldState = {...subnet, labelError: ''};
+      if(!subnet.label) {
+        errorSubnet["labelError"] = options?.labelError ?? DEFAULT_LABEL_ERROR;
+      }
+      if(determineIPType(subnet.ip.ipv4 ?? '') !== 'ipv4' || !vpcsValidateIP(subnet.ip.ipv4, true)) {
+        const errorIP = { ...subnet.ip, ipv4Error: ''};
+        errorIP["ipv4Error"] = options?.ipv4Error ?? DEFAULT_IPV4_ERROR;
+        errorSubnet["ip"] = errorIP;
+      }
+      return errorSubnet;
+    }
     return subnet;
   });
 };

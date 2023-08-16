@@ -147,8 +147,7 @@ export type GlobalGrantTypes =
   | 'add_nodebalancers'
   | 'add_images'
   | 'add_volumes'
-  | 'add_firewalls'
-  | 'add_vpcs';
+  | 'add_firewalls';
 
 export interface GlobalGrants {
   global: Record<GlobalGrantTypes, boolean | GrantLevel>;
@@ -163,8 +162,7 @@ export type GrantType =
   | 'stackscript'
   | 'volume'
   | 'database'
-  | 'firewall'
-  | 'vpc'; // TODO: VPC - check if this grant will be added
+  | 'firewall';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 

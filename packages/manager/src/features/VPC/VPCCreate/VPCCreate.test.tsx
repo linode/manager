@@ -7,7 +7,7 @@ import VPCCreate from './VPCCreate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 beforeEach(() => {
-  // ignore the console errors in these tests as they're supposed to happen
+  // ignores the console errors in these tests as they're supposed to happen
   jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
@@ -26,7 +26,7 @@ describe('VPC create page', () => {
     getAllByText('Create VPC');
   });
 
-  it('should require vpc labels and region', async () => {
+  it('should require vpc labels and region and ignore subnets that are blank', async () => {
     renderWithTheme(<VPCCreate />);
     const createVPCButton = screen.getByText('Create VPC');
     expect(createVPCButton).toBeInTheDocument();
@@ -38,9 +38,13 @@ describe('VPC create page', () => {
     expect(regionError).toBeInTheDocument();
     const labelError = screen.getByText('Label is required');
     expect(labelError).toBeInTheDocument();
+    const badSubnetIP = screen.queryByText('The IPv4 range must be in CIDR format');
+    expect(badSubnetIP).not.toBeInTheDocument();
+    const badSubnetLabel = screen.queryByText('Label is required. Must only be ASCII letters, numbers, and dashes');
+    expect(badSubnetLabel).not.toBeInTheDocument();
   });
 
-  it('should add a subnet if the Add a Subnet button is clicked', async () => {
+  it('should add and delete subnets correctly', async () => {
     renderWithTheme(<VPCCreate />);
     const addSubnet = screen.getByText('Add a Subnet');
     expect(addSubnet).toBeInTheDocument();
@@ -52,9 +56,20 @@ describe('VPC create page', () => {
     const subnetIps = screen.getAllByText('Subnet IP Range Address');
     expect(subnetLabels).toHaveLength(2);
     expect(subnetIps).toHaveLength(2);
+
+    const deleteSubnet = screen.getByTestId('delete-subnet-1');
+    expect(deleteSubnet).toBeInTheDocument();
+    await act(async () => {
+      userEvent.click(deleteSubnet);
+    });
+
+    const subnetLabelAfter = screen.getAllByText('Subnet label');
+    const subnetIpsAfter = screen.getAllByText('Subnet IP Range Address');
+    expect(subnetLabelAfter).toHaveLength(1);
+    expect(subnetIpsAfter).toHaveLength(1);
   });
 
-  it('should display that a subnet ip is invalid if a user adds an invalid subnet ip', async () => {
+  it('should display that a subnet ip is invalid and require a subnet label if a user adds an invalid subnet ip', async () => {
     renderWithTheme(<VPCCreate />);
     const subnetLabel = screen.getByText('Subnet label');
     expect(subnetLabel).toBeInTheDocument();
@@ -67,7 +82,26 @@ describe('VPC create page', () => {
       await userEvent.type(subnetIp, 'bad ip', { delay: 1 });
       userEvent.click(createVPCButton);
     });
-    const badSubnet = screen.getByText('Must be a valid IPv4 or IPv6 address');
-    expect(badSubnet).toBeInTheDocument();
+    const badSubnetIP = screen.getByText('The IPv4 range must be in CIDR format');
+    expect(badSubnetIP).toBeInTheDocument();
+    const badSubnetLabel = screen.getByText('Label is required. Must only be ASCII letters, numbers, and dashes');
+    expect(badSubnetLabel).toBeInTheDocument();
+  });
+
+  it('should require a subnet ip if a subnet label has been changed', async () => {
+    renderWithTheme(<VPCCreate />);
+    const subnetLabel = screen.getByText('Subnet label');
+    expect(subnetLabel).toBeInTheDocument();
+    const createVPCButton = screen.getByText('Create VPC');
+    expect(createVPCButton).toBeInTheDocument();
+
+    await act(async () => {
+      await userEvent.type(subnetLabel, 'label', { delay: 1 });
+      userEvent.click(createVPCButton);
+    });
+    const badSubnetIP = screen.getByText('The IPv4 range must be in CIDR format');
+    expect(badSubnetIP).toBeInTheDocument();
+    const badSubnetLabel = screen.queryByText('Label is required. Must only be ASCII letters, numbers, and dashes');
+    expect(badSubnetLabel).not.toBeInTheDocument();
   });
 });

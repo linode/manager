@@ -6,13 +6,11 @@ import { Divider } from 'src/components/Divider';
 import { Button } from 'src/components/Button/Button';
 import { SubnetFieldState } from 'src/utilities/subnets';
 import { SubnetNode } from './SubnetNode';
-import { SubnetError } from 'src/utilities/formikErrorUtils';
 
 interface Props {
   subnets: SubnetFieldState[];
   onChange: (subnets: SubnetFieldState[]) => void;
   disabled?: boolean;
-  errors?: SubnetError[];
 }
 
 export const MultipleSubnetInput = (props: Props) => {
@@ -26,7 +24,6 @@ export const MultipleSubnetInput = (props: Props) => {
     ]);
   };
 
-  // honestly this is really ugly and I'm starting to be more in favor of my iteration
   const handleSubnetChange = (
     subnet: SubnetFieldState,
     subnetIdx: number,

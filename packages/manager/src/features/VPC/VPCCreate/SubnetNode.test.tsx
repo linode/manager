@@ -17,11 +17,28 @@ describe('SubnetNode', () => {
     );
     const subnetAddress = screen.getAllByTestId('textfield-input');
     expect(subnetAddress[1]).toBeInTheDocument();
-    // this is hacky and should revist this
     await userEvent.type(subnetAddress[1], '192.0.0.0/24', { delay: 1 });
 
     expect(subnetAddress[1]).toHaveValue('192.0.0.0/24');
     const availIps = screen.getByText('Available IP Addresses: 252');
     expect(availIps).toBeInTheDocument();
+  });
+
+  it('should not show a subnet mask for an ip without a mask', async () => {
+    renderWithTheme(
+      <SubnetNode
+        disabled={false}
+        idx={0}
+        onChange={() => {}}
+        subnet={{ label: '', ip: { ipv4: '' } }}
+      />
+    );
+    const subnetAddress = screen.getAllByTestId('textfield-input');
+    expect(subnetAddress[1]).toBeInTheDocument();
+    await userEvent.type(subnetAddress[1], '192.0.0.0', { delay: 1 });
+
+    expect(subnetAddress[1]).toHaveValue('192.0.0.0');
+    const availIps = screen.queryByText('Available IP Addresses:');
+    expect(availIps).not.toBeInTheDocument();
   });
 });

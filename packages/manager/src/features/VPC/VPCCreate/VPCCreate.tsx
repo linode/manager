@@ -24,21 +24,22 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { SubnetFieldState } from 'src/utilities/subnets';
+import { SubnetFieldState, validateSubnets } from 'src/utilities/subnets';
 import { MultipleSubnetInput } from './MultipleSubnetInput';
 
 const VPCCreate = () => {
   const theme = useTheme();
   const history = useHistory();
   const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
   const { data: regions } = useRegionsQuery();
   const { isLoading, mutateAsync: createVPC } = useCreateVPCMutation();
   const [subnetErrorsFromAPI, setSubnetErrorsFromAPI] = React.useState<
     APIError[]
   >();
 
-  const disabled = profile?.restricted && !grants?.global.add_vpcs;
+  // TODO: VPC - may eventually need to add global grants
+  // customer tag?
+  const disabled = profile?.restricted; // || !profile?.vpc_beta;
 
   const createSubnetsPayload = () => {
     const subnetPayloads: CreateSubnetPayload[] = [];
@@ -54,7 +55,22 @@ const VPCCreate = () => {
   };
 
   const validateVPCSubnets = () => {
-    return false;
+    const validatedSubnets = validateSubnets(values.subnets, {
+      labelError: 'Label is required. Must only be ASCII letters, numbers, and dashes',
+      ipv4Error: 'The IPv4 range must be in CIDR format',
+    });
+
+    if (validatedSubnets.some((subnet) => subnet.labelError || subnet.ip.ipv4Error)) {
+      setFieldValue('subnets', validatedSubnets);
+      return false;
+    } else {
+      setFieldValue('subnets', validatedSubnets.map((subnet) => {
+        delete subnet.labelError;
+        delete subnet.ip.ipv4Error;
+        return { ...subnet};
+      }))
+      return true;
+    }
   };
 
   const onCreateVPC = async () => {
@@ -194,7 +210,7 @@ const VPCCreate = () => {
                 ))
               : null}
             <MultipleSubnetInput
-              disabled={!!disabled}
+              disabled={disabled}
               onChange={(subnets) => setFieldValue('subnets', subnets)}
               subnets={values.subnets}
             />
