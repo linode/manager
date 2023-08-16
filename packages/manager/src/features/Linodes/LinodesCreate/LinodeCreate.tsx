@@ -55,6 +55,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
 import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
+import { FirewallPanel } from './FirewallPanel';
 import {
   StyledButtonGroupBox,
   StyledCreateButton,
@@ -69,6 +70,7 @@ import { FromImageContent } from './TabbedContent/FromImageContent';
 import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
 import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
+import { VPCPanel } from './VPCPanel';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -545,6 +547,8 @@ export class LinodeCreate extends React.PureComponent<
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
+          <VPCPanel />
+          <FirewallPanel />
           <AddonsPanel
             userData={{
               createType: this.props.createType,
