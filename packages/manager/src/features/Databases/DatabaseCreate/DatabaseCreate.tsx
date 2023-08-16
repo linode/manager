@@ -276,7 +276,7 @@ const DatabaseCreate = () => {
 
     try {
       const response = await createDatabase(createPayload);
-      history.push(`/databases/${response.id}`);
+      history.push(`/databases/${response.engine}/${response.id}`);
     } catch (errors) {
       const ipErrors = errors.filter(
         (error: APIError) => error.field === 'allow_list'
