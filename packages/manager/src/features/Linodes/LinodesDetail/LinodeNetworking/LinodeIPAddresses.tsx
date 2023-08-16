@@ -4,7 +4,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Theme, useTheme } from '@mui/material/styles';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import AddNewLink from 'src/components/AddNewLink';
@@ -28,8 +27,8 @@ import {
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
 import { useGrants } from 'src/queries/profile';
+import { getPermissionsForLinode } from 'src/utilities/linodes';
 
-import { LinodePermissionsError } from '../LinodePermissionsError';
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
 import { DeleteRangeDialog } from './DeleteRangeDialog';
@@ -42,9 +41,8 @@ import {
   StyledRootGrid,
   StyledTypography,
   StyledWrapperGrid,
-} from './LinodeNetworking.styles';
+} from './LinodeIPAddresses.styles';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
-import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/NetworkingSummaryPanel';
 import { ViewIPDrawer } from './ViewIPDrawer';
 import { ViewRDNSDrawer } from './ViewRDNSDrawer';
 import { ViewRangeDrawer } from './ViewRangeDrawer';
@@ -71,16 +69,19 @@ const useStyles = makeStyles<void, 'copy'>()(
 
 export const ipv4TableID = 'ips';
 
-const LinodeNetworking = () => {
-  const { data: grants } = useGrants();
-  const { classes } = useStyles();
-  const { linodeId } = useParams<{ linodeId: string }>();
-  const id = Number(linodeId);
-  const { data: ips, error, isLoading } = useLinodeIPsQuery(id);
+interface LinodeIPAddressesProps {
+  linodeID: number;
+}
 
-  const readOnly =
-    grants !== undefined &&
-    grants.linode.some((g) => g.id === id && g.permissions === 'read_only');
+export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
+  const { linodeID } = props;
+
+  const { classes } = useStyles();
+
+  const { data: grants } = useGrants();
+  const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
+
+  const readOnly = getPermissionsForLinode(grants, linodeID) === 'read_only';
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -156,7 +157,7 @@ const LinodeNetworking = () => {
           {/* Ranges have special handling for RDNS. */}
           {_range ? (
             <RangeRDNSCell
-              linodeId={id}
+              linodeId={linodeID}
               onViewDetails={() => handleOpenIPV6Details(_range)}
               range={_range}
             />
@@ -279,8 +280,6 @@ const LinodeNetworking = () => {
 
   return (
     <div>
-      {readOnly && <LinodePermissionsError />}
-      <LinodeNetworkingSummaryPanel linodeID={id} />
       {renderIPTable()}
       <ViewIPDrawer
         ip={selectedIP}
@@ -298,31 +297,31 @@ const LinodeNetworking = () => {
         open={isIpRdnsDrawerOpen}
       />
       <EditRangeRDNSDrawer
-        linodeId={id}
+        linodeId={linodeID}
         onClose={() => setIsRangeRdnsDrawerOpen(false)}
         open={isRangeRdnsDrawerOpen}
         range={selectedRange}
       />
       <ViewRDNSDrawer
-        linodeId={id}
+        linodeId={linodeID}
         onClose={() => setIsViewRDNSDialogOpen(false)}
         open={isViewRDNSDialogOpen}
         selectedRange={selectedRange}
       />
       <AddIPDrawer
-        linodeId={id}
+        linodeId={linodeID}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
         readOnly={readOnly}
       />
       <IPTransfer
-        linodeId={id}
+        linodeId={linodeID}
         onClose={() => setIsTransferDialogOpen(false)}
         open={isTransferDialogOpen}
         readOnly={readOnly}
       />
       <IPSharing
-        linodeId={id}
+        linodeId={linodeID}
         onClose={() => setIsShareDialogOpen(false)}
         open={isShareDialogOpen}
         readOnly={readOnly}
@@ -330,7 +329,7 @@ const LinodeNetworking = () => {
       {selectedIP && (
         <DeleteIPDialog
           address={selectedIP.address}
-          linodeId={id}
+          linodeId={linodeID}
           onClose={() => setIsDeleteIPDialogOpen(false)}
           open={isDeleteIPDialogOpen}
         />
@@ -345,8 +344,6 @@ const LinodeNetworking = () => {
     </div>
   );
 };
-
-export default LinodeNetworking;
 
 const RangeRDNSCell = (props: {
   linodeId: number;

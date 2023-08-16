@@ -33,7 +33,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { pluralize } from 'src/utilities/pluralize';
 
-import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
+import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import {

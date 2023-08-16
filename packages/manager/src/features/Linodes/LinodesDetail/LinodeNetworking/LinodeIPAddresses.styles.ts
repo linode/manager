@@ -1,8 +1,8 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Typography } from 'src/components/Typography';
 import { isPropValid } from 'src/utilities/isPropValid';
 
@@ -14,15 +14,14 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 })<StyledCopyTooltipProps>(({ isHovered }) => ({
   '& svg': {
     height: `12px`,
-    //opacity: 0,
     width: `12px`,
   },
-  marginLeft: 4,
-  top: 1,
   ':focus': {
     opacity: 1,
   },
+  marginLeft: 4,
   opacity: isHovered ? 1 : 0,
+  top: 1,
 }));
 
 export const StyledActionTableCell = styled(TableCell, {

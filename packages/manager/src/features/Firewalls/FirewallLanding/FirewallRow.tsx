@@ -11,11 +11,11 @@ import { TableRow } from 'src/components/TableRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
-import { FirewallActionMenu, ActionHandlers } from './FirewallActionMenu';
+import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
 
-export type Props = Firewall & ActionHandlers;
+type CombinedProps = Firewall & ActionHandlers;
 
-export const FirewallRow = React.memo((props: Props) => {
+export const FirewallRow = React.memo((props: CombinedProps) => {
   const { id, label, rules, status, ...actionHandlers } = props;
 
   const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
@@ -54,7 +54,7 @@ export const FirewallRow = React.memo((props: Props) => {
   );
 });
 
-const StyledLink = styled(Link, { label: 'StyledLink' })(() => ({
+export const StyledLink = styled(Link, { label: 'StyledLink' })(() => ({
   '&:hover, &:focus': {
     textDecoration: 'underline',
   },
