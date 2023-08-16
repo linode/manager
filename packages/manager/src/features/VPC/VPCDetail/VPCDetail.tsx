@@ -103,7 +103,7 @@ const VPCDetail = () => {
             },
           ],
           labelOptions: { noCap: true },
-          pathname: `/vpc/${vpcId}`, // TODO: VPC - use vpc label, not id
+          pathname: `/vpc/${vpc?.label}`,
         }}
         docsLabel="Docs"
         docsLink="#" // TODO: VPC - Add docs link
@@ -186,7 +186,7 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
   '& strong': {
     paddingRight: theme.spacing(1),
   },
-  paddingRight: theme.spacing(7),
+  paddingRight: theme.spacing(6),
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
