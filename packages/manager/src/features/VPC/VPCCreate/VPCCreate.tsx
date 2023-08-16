@@ -8,11 +8,7 @@ import { useHistory } from 'react-router-dom';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
-import {
-  createVPCSchema,
-  vpcsValidateIP,
-  determineIPType,
-} from '@linode/validation';
+import { createVPCSchema } from '@linode/validation';
 
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -28,7 +24,6 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { validateIPs } from 'src/utilities/ipUtils';
 import { SubnetFieldState } from 'src/utilities/subnets';
 import { MultipleSubnetInput } from './MultipleSubnetInput';
 
@@ -45,64 +40,25 @@ const VPCCreate = () => {
 
   const disabled = profile?.restricted && !grants?.global.add_vpcs;
 
-  const determineIfValidIps = () => {
-    const validatedIps = validateIPs(
-      values.subnets.map((subnet) => subnet.ip),
-      {
-        allowEmptyAddress: true,
-        errorMessage: 'Must be a valid IPv4 or IPv6 address',
-      }
-    );
-
-    if (validatedIps.some((ip) => ip.error)) {
-      const newSubnets: SubnetFieldState[] = [];
-      for (let i = 0; i < validatedIps.length; i++) {
-        newSubnets.push({
-          label: values.subnets[i].label,
-          ip: validatedIps[i],
-        });
-      }
-
-      setFieldValue('subnets', newSubnets);
-      return false;
-    } else {
-      const newSubnets = values.subnets.map((subnet) => {
-        delete subnet.ip.error;
-        return { ...subnet };
-      });
-      setFieldValue('subnets', newSubnets);
-      return true;
-    }
-  };
-
   const createSubnetsPayload = () => {
     const subnetPayloads: CreateSubnetPayload[] = [];
 
     for (const subnetState of values.subnets) {
       const { label, ip } = subnetState;
-      if (vpcsValidateIP(ip.address) && label !== '') {
-        let subnet: CreateSubnetPayload;
-        const ipType = determineIPType(ip.address);
-        if (ipType === 'ipv4') {
-          subnet = {
-            label: label,
-            ipv4: ip.address,
-          };
-        } else {
-          subnet = {
-            label: label,
-            ipv6: ip.address,
-          };
-        }
-        subnetPayloads.push(subnet);
+      if (ip.ipv4 || label) {
+        subnetPayloads.push({ label: label, ipv4: ip.ipv4 });
       }
     }
 
     return subnetPayloads;
   };
 
+  const validateVPCSubnets = () => {
+    return false;
+  };
+
   const onCreateVPC = async () => {
-    if (!determineIfValidIps()) {
+    if (!validateVPCSubnets()) {
       return;
     }
 
@@ -144,7 +100,8 @@ const VPCCreate = () => {
       subnets: [
         {
           label: '',
-          ip: { address: '', error: '' },
+          labelError: '',
+          ip: { ipv4: '', ipv4Error: '' },
         },
       ] as SubnetFieldState[],
       label: '',

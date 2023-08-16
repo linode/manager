@@ -31,6 +31,68 @@ export const determineIPType = (ip: string) => {
 };
 
 /**
+ * VPC-related IP validation: determines if given value is a valid IPv4 address
+ * @param value  - the IP address string to be validated
+ * @param shouldHaveIPMask boolean indicating whether the value should have a mask or not
+ * @returns
+ */
+export const vpcValidateIPv4 = (
+  value?: string | null,
+  shouldHaveIPMask?: boolean
+) => {
+  if (!value) {
+    return false;
+  }
+
+  try {
+    // Do protocol-specific checks
+    if (determineIPType(value) === 'ipv4') {
+      if (shouldHaveIPMask) {
+        ipaddr.IPv4.parseCIDR(value);
+      } else {
+        ipaddr.IPv4.isValid(value);
+        ipaddr.IPv4.parse(value); // Parse again to prompt test failure if it has a mask but should not.
+      }
+      return true;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+};
+
+/**
+ * VPC-related IP validation: determines if given value is a valid IPv6 address
+ * @param value  - the IP address string to be validated
+ * @param shouldHaveIPMask boolean indicating whether the value should have a mask or not
+ * @returns
+ */
+export const vpcValidateIPv6 = (
+  value?: string | null,
+  shouldHaveIPMask?: boolean
+) => {
+  if (!value) {
+    return false;
+  }
+
+  try {
+    // Do protocol-specific checks
+    if (determineIPType(value) === 'ipv6') {
+      if (shouldHaveIPMask) {
+        ipaddr.IPv6.parseCIDR(value);
+      } else {
+        ipaddr.IPv6.isValid(value);
+        ipaddr.IPv6.parse(value); // Parse again to prompt test failure if it has a mask but should not.
+      }
+      return true;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+};
+
+/**
  * VPC-related IP validation that handles for single IPv4 and IPv6 addresses as well as
  * IPv4 ranges in CIDR format and IPv6 ranges with prefix lengths.
  * @param value - the IP address string to be validated
@@ -77,25 +139,10 @@ export const vpcsValidateIP = (
     }
 
     // Do protocol-specific checks
-    if (isIPv4) {
-      if (shouldHaveIPMask) {
-        ipaddr.IPv4.parseCIDR(value);
-      } else {
-        ipaddr.IPv4.isValid(value);
-        ipaddr.IPv4.parse(value); // Parse again to prompt test failure if it has a mask but should not.
-      }
-    }
-
-    if (isIPv6) {
-      if (shouldHaveIPMask) {
-        ipaddr.IPv6.parseCIDR(value);
-      } else {
-        ipaddr.IPv6.isValid(value);
-        ipaddr.IPv6.parse(value); // Parse again to prompt test failure if it has a mask but should not.
-      }
-    }
-
-    return true;
+    return (
+      vpcValidateIPv4(value, shouldHaveIPMask) ||
+      vpcValidateIPv6(value, shouldHaveIPMask)
+    );
   } catch (err) {
     return false;
   }
@@ -110,13 +157,6 @@ const labelValidation = string()
   .min(1, LABEL_MESSAGE)
   .max(64, LABEL_MESSAGE)
   .matches(/[a-zA-Z0-9-]+/, LABEL_REQUIREMENTS);
-
-export const createVPCSchema = object({
-  label: labelValidation.required(LABEL_REQUIRED),
-  description: string(),
-  region: string().required('Region is required'),
-  subnets: array().of(object()),
-});
 
 export const updateVPCSchema = object({
   label: labelValidation.notRequired(),
@@ -189,6 +229,13 @@ export const createSubnetSchema = object().shape(
     ['ipv4', 'ipv6'],
   ]
 );
+
+export const createVPCSchema = object({
+  label: labelValidation.required(LABEL_REQUIRED),
+  description: string(),
+  region: string().required('Region is required'),
+  subnets: array().of(createSubnetSchema),
+});
 
 export const modifySubnetSchema = object({
   label: labelValidation.required(LABEL_REQUIRED),

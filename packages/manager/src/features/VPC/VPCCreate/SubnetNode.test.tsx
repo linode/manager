@@ -12,7 +12,7 @@ describe('SubnetNode', () => {
         disabled={false}
         idx={0}
         onChange={() => {}}
-        subnet={{ label: '', ip: { address: '' } }}
+        subnet={{ label: '', ip: { ipv4: '' } }}
       />
     );
     const subnetAddress = screen.getAllByTestId('textfield-input');

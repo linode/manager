@@ -1,70 +1,115 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
 
-import { Box } from 'src/components/Box';
+import Close from '@mui/icons-material/Close';
+import { Button } from 'src/components/Button/Button';
 import { TextField } from 'src/components/TextField';
 import { SubnetFieldState } from 'src/utilities/subnets';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { determineIPType } from '@linode/validation';
-import { calculateAvailableIpv4s, SubnetIpType } from 'src/utilities/subnets';
+import { calculateAvailableIpv4s } from 'src/utilities/subnets';
 
 interface Props {
   disabled?: boolean;
   idx?: number;
-  // janky solution to enable SubnetNode to work on its own or be part of MultipleSubnetInput
-  onChange: (subnet: SubnetFieldState, subnetIdx?: number) => void;
+  // janky solution to enable SubnetNode to be an independent component or be part of MultipleSubnetInput
+  // (not the biggest fan tbh)
+  onChange: (
+    subnet: SubnetFieldState,
+    subnetIdx?: number,
+    remove?: boolean
+  ) => void;
+  removable?: boolean;
   subnet: SubnetFieldState;
 }
 
 const RESERVED_IP_NUMBER = 4;
 
+// TODO: VPC - currently only supports IPv4, must update when/if IPv6 is also supported
 export const SubnetNode = (props: Props) => {
-  const { disabled, idx, onChange, subnet } = props;
-  const [ipType, setIpType] = React.useState<SubnetIpType | undefined>(
-    undefined
-  );
+  const { disabled, idx, onChange, subnet, removable } = props;
   const [availIps, setAvailIps] = React.useState<number | undefined>(undefined);
 
   const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSubnet = { ...subnet, label: e.target.value };
+    const subnetError = subnet.labelError ?? '';
+    const newSubnet = {
+      ...subnet,
+      label: e.target.value,
+      labelError: subnetError,
+    };
     onChange(newSubnet, idx);
   };
 
-  const onIpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const subnetError = subnet.ip.error ?? '';
+  const onIpv4Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const ipType = determineIPType(e.target.value);
+    const subnetError = subnet.ip.ipv4Error ?? '';
     const newSubnet = {
       ...subnet,
-      ip: { address: e.target.value, error: subnetError },
+      ip: { ipv4: e.target.value, ipv4Error: subnetError },
     };
-    const ipType = determineIPType(e.target.value);
-    setIpType(ipType);
     setAvailIps(calculateAvailableIpv4s(e.target.value, ipType));
     onChange(newSubnet, idx);
   };
 
+  const removeSubnet = () => {
+    onChange(subnet, idx, removable);
+  };
+
   return (
-    <Grid key={idx}>
-      <Box sx={{ width: 416 }}>
-        <TextField
-          disabled={disabled}
-          label="Subnet label"
-          onChange={onLabelChange}
-          value={subnet.label}
-        />
+    <Grid key={idx} sx={{ maxWidth: 460 }}>
+      <Grid
+        direction="row"
+        container
+        alignItems={'flex-end'}
+        spacing={2}
+        justifyContent={'flex-start'}
+      >
+        <Grid xs={removable ? 11 : 12}>
+          <TextField
+            disabled={disabled}
+            label="Subnet label"
+            onChange={onLabelChange}
+            value={subnet.label}
+          />
+        </Grid>
+        {removable && !!idx && (
+          <Grid xs={1}>
+            <StyledButton onClick={removeSubnet}>
+              <Close />
+            </StyledButton>
+          </Grid>
+        )}
+      </Grid>
+      <Grid xs={removable ? 11 : 12}>
         <TextField
           disabled={disabled}
           label="Subnet IP Range Address"
-          onChange={onIpChange}
-          value={subnet.ip.address}
-          errorText={subnet.ip.error}
+          onChange={onIpv4Change}
+          value={subnet.ip.ipv4}
+          errorText={subnet.ip.ipv4Error}
         />
-        {ipType === 'ipv4' && availIps && (
+        {availIps && (
           <FormHelperText>
             Available IP Addresses:{' '}
             {availIps > 4 ? availIps - RESERVED_IP_NUMBER : 0}
           </FormHelperText>
         )}
-      </Box>
+      </Grid>
     </Grid>
   );
 };
+
+const StyledButton = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
+  '& :hover, & :focus': {
+    backgroundColor: theme.color.grey2,
+  },
+  '& > span': {
+    padding: 2,
+  },
+  color: theme.textColors.tableHeader,
+  marginBottom: 3,
+  minHeight: 'auto',
+  minWidth: 'auto',
+  padding: 0,
+}));

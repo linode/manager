@@ -1,8 +1,15 @@
-import { ExtendedIP } from './ipUtils';
+// VPC: TODO - added ipv6 related fields here, but they will not be used until VPCs support ipv6
+interface SubnetIPState {
+  ipv4?: string;
+  ipv4Error?: string;
+  ipv6?: string;
+  ipv6Error?: string;
+}
 
 export interface SubnetFieldState {
   label: string;
-  ip: ExtendedIP;
+  labelError?: string;
+  ip: SubnetIPState;
 }
 
 export type SubnetIpType = 'ipv4' | 'ipv6';
@@ -60,4 +67,12 @@ export const calculateAvailableIpv4s = (
   }
 
   return SubnetMaskToAvailIps[mask];
+};
+
+export const validateSubnets = (
+  subnets: SubnetFieldState[]
+): SubnetFieldState[] => {
+  return subnets.map((subnet) => {
+    return subnet;
+  });
 };
