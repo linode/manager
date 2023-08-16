@@ -20,6 +20,8 @@ import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import { checkIfUserCanModifyFirewall } from '../shared';
+
 const FirewallLinodesLanding = React.lazy(
   () => import('./Devices/FirewallLinodesLanding')
 );
@@ -37,10 +39,11 @@ export const FirewallDetail = () => {
 
   const firewallId = Number(id);
 
-  const userCanModifyFirewall =
-    !profile?.restricted ||
-    grants?.firewall?.find((firewall) => firewall.id === firewallId)
-      ?.permissions === 'read_write';
+  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
+    firewallId,
+    profile,
+    grants
+  );
 
   const tabs = [
     {

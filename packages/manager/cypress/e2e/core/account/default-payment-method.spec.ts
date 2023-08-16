@@ -51,11 +51,9 @@ describe('Default Payment Method', () => {
       .click();
 
     mockGetPaymentMethods(gpayDefault).as('getPaymentMethods');
-
     ui.actionMenuItem.findByTitle('Make Default').should('be.visible').click();
 
     cy.wait(['@changeDefault', '@getPaymentMethods']);
-
     cy.get('[data-qa-payment-row=google_pay]').within(() => {
       cy.findByText('DEFAULT').should('be.visible');
     });

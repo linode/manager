@@ -1,4 +1,4 @@
-import { databaseInstanceFactory } from 'src/factories/databases';
+import { databaseFactory } from 'src/factories/databases';
 import { eventFactory } from 'src/factories/events';
 import {
   databaseClusterConfiguration,
@@ -9,6 +9,7 @@ import {
   mockGetDatabases,
 } from 'support/intercepts/databases';
 import { mockGetEvents } from 'support/intercepts/events';
+import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
 
 describe('create a database cluster, mocked data', () => {
@@ -17,7 +18,7 @@ describe('create a database cluster, mocked data', () => {
       // @TODO Add assertions for DBaaS pricing.
       it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         // Database mock immediately after instance has been created.
-        const databaseMock = databaseInstanceFactory.build({
+        const databaseMock = databaseFactory.build({
           label: configuration.label,
           type: configuration.linodeType,
           region: configuration.region.id,
@@ -26,8 +27,8 @@ describe('create a database cluster, mocked data', () => {
           cluster_size: configuration.clusterSize,
           engine: configuration.dbType,
           hosts: {
-            primary: undefined,
-            secondary: undefined,
+            primary: null,
+            secondary: null,
           },
         });
 
@@ -36,6 +37,8 @@ describe('create a database cluster, mocked data', () => {
           ...databaseMock,
           status: 'active',
         };
+
+        const databaseRegionLabel = getRegionById(databaseMock.region).label;
 
         // Event mock which will trigger Cloud to re-fetch DBaaS instance.
         const eventMock = eventFactory.build({
@@ -96,9 +99,26 @@ describe('create a database cluster, mocked data', () => {
 
         // Create database, confirm redirect, and that new instance is listed.
         cy.findByText('Create Database Cluster').should('be.visible').click();
-        cy.wait(['@createDatabase', '@getDatabases']);
+        cy.wait('@createDatabase');
 
         // TODO Update assertions upon completion of M3-7030.
+        cy.url().should(
+          'endWith',
+          `/databases/${databaseMock.engine}/${databaseMock.id}`
+        );
+
+        cy.findByText(databaseMock.label).should('be.visible');
+        cy.findByText(databaseRegionLabel).should('be.visible');
+
+        // Navigate back to landing page.
+        ui.entityHeader.find().within(() => {
+          cy.findByText('Database Clusters').should('be.visible').click();
+        });
+
+        cy.url().should('endWith', '/databases');
+
+        cy.wait('@getDatabases');
+
         cy.findByText(databaseMock.label)
           .should('be.visible')
           .closest('tr')

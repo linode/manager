@@ -28,7 +28,7 @@ export const mockGetDatabase = (
   return cy.intercept(
     'GET',
     apiMatcher(`databases/${database.engine}/instances/${database.id}`),
-    database
+    makeResponse(database)
   );
 };
 
