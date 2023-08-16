@@ -1,20 +1,21 @@
-import 'cypress-file-upload';
-import { EventStatus, ImageStatus } from '@linode/api-v4/types';
+import { EventStatus } from '@linode/api-v4/types';
 import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
+import 'cypress-file-upload';
 import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
 import { fbtClick, fbtVisible, getClick } from 'support/helpers';
-import { ui } from 'support/ui';
-import { interceptOnce } from 'support/ui/common';
-import { apiMatcher } from 'support/util/intercepts';
-import { randomLabel, randomPhrase } from 'support/util/random';
 import {
-  mockGetImage,
-  mockGetCustomImages,
   mockDeleteImage,
+  mockGetCustomImages,
+  mockGetImage,
   mockUpdateImage,
 } from 'support/intercepts/images';
+import { ui } from 'support/ui';
+import { interceptOnce } from 'support/ui/common';
+import { cleanUp } from 'support/util/cleanup';
+import { apiMatcher } from 'support/util/intercepts';
+import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 /**
@@ -134,13 +135,17 @@ const uploadImage = (label: string) => {
 };
 
 describe('machine image', () => {
+  before(() => {
+    cleanUp('images');
+  });
+
   /*
    * - Confirms update and delete UI flows using mock API data.
    * - Confirms that image label can be updated.
    * - Confirms that image description can be updated.
    * - Confirms that image can be deleted.
    */
-  it('updates and deletes a machine image', () => {
+  it.only('updates and deletes a machine image', () => {
     const initialLabel = randomLabel();
     const updatedLabel = randomLabel();
     const updatedDescription = randomPhrase();
