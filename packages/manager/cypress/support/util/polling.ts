@@ -2,7 +2,14 @@
  * @file Utilities for polling APIs and other resources.
  */
 
-import { ImageStatus, LinodeStatus, getImage, getLinode } from '@linode/api-v4';
+import {
+  ImageStatus,
+  LinodeStatus,
+  getImage,
+  getLinode,
+  VolumeStatus,
+  getVolume,
+} from '@linode/api-v4';
 
 import {
   BackoffMethod,
@@ -86,7 +93,7 @@ export const poll = async <T>(
 /**
  * Polls a Linode with the given ID until it has the given status.
  *
- * @param linodeId - ID of Linode whose status should be polled.
+ * @param linodeId - ID of Linode to poll.
  * @param desiredStatus - Desired status of Linode that is being polled.
  * @param backoffMethod - Backoff method implementation to manage re-attempts.
  * @param label - Optional label to assign to poll for logging and troubleshooting.
@@ -113,7 +120,7 @@ export const pollLinodeStatus = async (
 /**
  * Polls an Image with the given ID until it has the given status.
  *
- * @param imageId - ID of Image whose status should be polled.
+ * @param imageId - ID of Image to poll.
  * @param desiredStatus - Desired status of Image that is being polled.
  * @param backoffMethod - Backoff method implementation to manage re-attempts.
  * @param label - Optional label to assign to poll for logging and troubleshooting.
@@ -135,4 +142,31 @@ export const pollImageStatus = async (
     status === desiredStatus;
 
   return poll(getImageStatus, checkImageStatus, backoffOptions, label);
+};
+
+/**
+ * Polls a Volume with the given ID until it has the given status.
+ *
+ * @param volumeId - ID of Volume to poll.
+ * @param desiredStatus - Desired status of Volume that is being polled.
+ * @param backoffMethod - Backoff method implementation to manage re-attempts.
+ * @param label - Optional label to assign to poll for logging and troubleshooting.
+ *
+ * @returns A Promise that resolves to the polled Volume's status or rejects on timeout.
+ */
+export const pollVolumeStatus = async (
+  volumeId: number,
+  desiredStatus: VolumeStatus,
+  backoffOptions: PollBackoffConfiguration = undefined,
+  label: string | undefined = undefined
+) => {
+  const getVolumeStatus = async () => {
+    const volume = await getVolume(volumeId);
+    return volume.status;
+  };
+
+  const checkVolumeStatus = (status: VolumeStatus): boolean =>
+    status === desiredStatus;
+
+  return poll(getVolumeStatus, checkVolumeStatus, backoffOptions, label);
 };
