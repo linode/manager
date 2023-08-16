@@ -6,15 +6,10 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
 
-const LoadBalancerSummary = React.lazy(() =>
-  import('./LoadBalancerSummary').then((module) => ({
-    default: module.LoadBalancerSummary,
-  }))
-);
+import { LoadBalancerSummary } from './LoadBalancerSummary';
 
 const LoadBalancerDetailLanding = () => {
   const history = useHistory();
@@ -76,18 +71,16 @@ const LoadBalancerDetailLanding = () => {
       />
       <Tabs index={tabIndex} onChange={(i) => history.push(tabs[i].routeName)}>
         <TabLinkList tabs={tabs} />
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <LoadBalancerSummary />
-            </SafeTabPanel>
-            <SafeTabPanel index={1}>1</SafeTabPanel>
-            <SafeTabPanel index={2}>2</SafeTabPanel>
-            <SafeTabPanel index={3}>3</SafeTabPanel>
-            <SafeTabPanel index={4}>4</SafeTabPanel>
-            <SafeTabPanel index={5}>5</SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
+        <TabPanels>
+          <SafeTabPanel index={0}>
+            <LoadBalancerSummary />
+          </SafeTabPanel>
+          <SafeTabPanel index={1}>1</SafeTabPanel>
+          <SafeTabPanel index={2}>2</SafeTabPanel>
+          <SafeTabPanel index={3}>3</SafeTabPanel>
+          <SafeTabPanel index={4}>4</SafeTabPanel>
+          <SafeTabPanel index={5}>5</SafeTabPanel>
+        </TabPanels>
       </Tabs>
     </>
   );

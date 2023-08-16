@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -21,64 +22,66 @@ export const LoadBalancerSummary = () => {
 
   const ports = configurations?.data.map((config) => config.port);
 
+  const items = [
+    {
+      title: 'Endpoint Health',
+      value: (
+        <Stack alignItems="center" direction="row" spacing={1}>
+          <StatusIcon status="active" />
+          <Typography>4 up</Typography>
+          <Typography>&mdash;</Typography>
+          <StatusIcon status="error" />
+          <Typography>6 down</Typography>
+        </Stack>
+      ),
+    },
+
+    {
+      title: 'Hostname',
+      value: (
+        <Typography>
+          <IPAddress ips={[loadbalancer?.hostname ?? '']} isHovered />
+        </Typography>
+      ),
+    },
+    {
+      title: 'Ports',
+      value: <Typography>{ports?.join(', ')}</Typography>,
+    },
+    {
+      title: 'Regions',
+      value: (
+        <Typography>
+          {loadbalancer?.regions
+            .map((region) => regions?.find((r) => r.id === region)?.label)
+            .join(', ')}
+        </Typography>
+      ),
+    },
+    {
+      title: 'Logs',
+      value: (
+        <Typography>
+          <IPAddress ips={[loadbalancer?.hostname ?? '']} isHovered />
+        </Typography>
+      ),
+    },
+  ];
+
   return (
-    <Paper>
-      <Stack
-        columnGap={4}
-        direction="row"
-        flexWrap="wrap"
-        justifyContent="space-between"
-        rowGap={3}
-      >
-        <Stack>
-          <Stack alignItems="center" direction="row" spacing={1}>
-            <Typography mr={2}>
-              <b>Endpoint Health</b>
-            </Typography>
-            <StatusIcon status="active" />
-            <Typography>4 up</Typography>
-            <Typography>&mdash;</Typography>
-            <StatusIcon status="error" />
-            <Typography>6 down</Typography>
-          </Stack>
-        </Stack>
-        <Stack spacing={2}>
-          <Stack alignItems="center" direction="row" spacing={2}>
-            <Typography minWidth="75px">
-              <b>Hostname</b>
-            </Typography>
-            <Typography>
-              <IPAddress ips={[loadbalancer?.hostname ?? '']} isHovered />
-            </Typography>
-          </Stack>
-          <Stack alignItems="center" direction="row" spacing={2}>
-            <Typography minWidth="75px">
-              <b>Ports</b>
-            </Typography>
-            <Typography>{ports?.join(', ')}</Typography>
-          </Stack>
-          <Stack alignItems="center" direction="row" spacing={2}>
-            <Typography minWidth="75px">
-              <b>Regions</b>
-            </Typography>
-            <Typography>
-              {loadbalancer?.regions
-                .map((region) => regions?.find((r) => r.id === region)?.label)
-                .join(', ')}
-            </Typography>
-          </Stack>
-        </Stack>
-        <Stack>
-          <Stack alignItems="center" direction="row" spacing={2}>
-            <Typography minWidth="75px">
-              <b>Logs</b>
-            </Typography>
-            <Typography>
-              <IPAddress ips={[loadbalancer?.hostname ?? '']} isHovered />
-            </Typography>
-          </Stack>
-        </Stack>
-      </Stack>
+    <Paper sx={{ paddingY: 2.5 }}>
+      <Grid columns={{ lg: 12, md: 8, sm: 4, xs: 1 }} container spacing={1.5}>
+        {items.map(({ title, value }) => (
+          <Grid key={title} md={4} sm={4} xs={2}>
+            <Stack direction="row" spacing={2}>
+              <Typography minWidth="75px" noWrap>
+                <b>{title}</b>
+              </Typography>
+              {value}
+            </Stack>
+          </Grid>
+        ))}
+      </Grid>
     </Paper>
   );
 };
