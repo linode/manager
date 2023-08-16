@@ -62,16 +62,10 @@ export const handleError = (error: AxiosError, store: ApplicationStore) => {
 
   const interceptedErrors = interceptErrors(errors, [
     {
-      condition: (e) => !!e.reason.match(/verification is required/i),
-      replacementText: (
-        <VerificationError
-          title={
-            requestedLinodeType.match(/gpu/i)
-              ? 'GPU Request'
-              : 'Verification Request'
-          }
-        />
-      ),
+      condition: (e) =>
+        !!e.reason.match(/verification is required/i) &&
+        requestedLinodeType.match(/gpu/i),
+      replacementText: <VerificationError title="GPU Request" />,
     },
     {
       callback: () => {
