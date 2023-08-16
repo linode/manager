@@ -13,6 +13,7 @@ import {
 import { mockNotification } from 'src/__data__/notifications';
 
 import { RenderFlag, LinodeRow } from './LinodeRow';
+import userEvent from '@testing-library/user-event';
 
 const queryClient = new QueryClient();
 
@@ -93,12 +94,16 @@ describe('LinodeRow', () => {
       />
     );
 
-    const { getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = renderWithTheme(
       wrapWithTableBody(renderedLinode, { queryClient })
     );
 
     getByText('vpc-1');
     getByText(linode.label);
+
+    const actionMenu = getByLabelText(`Action menu for Linode ${linode.label}`);
+    userEvent.click(actionMenu);
+
     getByText('Power Off');
     getByText('Reboot');
     getByText('Launch LISH Console');
