@@ -50,8 +50,8 @@ export const StyledTableRow = styled(TableRow, {
     paddingBottom: 4,
     paddingTop: 4,
   },
-  paddingBottom: '2px !important',
-  paddingTop: '0 !important',
+  paddingBottom: '2px',
+  paddingTop: 0,
   transition: theme.transitions.create(['background-color']),
   width: '100%',
 }));
