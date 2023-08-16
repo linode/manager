@@ -6,7 +6,7 @@ import {
   createType,
   ipResponseToDisplayRows,
   listIPv6InRange,
-} from './LinodeNetworking';
+} from './LinodeIPAddresses';
 
 describe('listIPv6InRange utility function', () => {
   const ipv4List = ipAddressFactory.buildList(4);

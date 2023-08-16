@@ -267,6 +267,18 @@ const databases = [
     );
   }),
 
+  rest.post('*/databases/:engine/instances', (req, res, ctx) => {
+    const payload: any = req.body;
+    return res(
+      ctx.json({
+        ...databaseFactory.build({
+          label: payload?.label ?? 'Database',
+          engine: req.params.engine,
+        }),
+      })
+    );
+  }),
+
   rest.post(
     '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
     (req, res, ctx) => {
@@ -626,7 +638,7 @@ export const handlers = [
     const ips = linodeIPFactory.build();
     return res(ctx.json(ips));
   }),
-  rest.post('*/instances', async (req, res, ctx) => {
+  rest.post('*/linode/instances', async (req, res, ctx) => {
     const payload = req.body as any;
     const linode = linodeFactory.build({
       image: payload?.image ?? 'linode/debian-10',
