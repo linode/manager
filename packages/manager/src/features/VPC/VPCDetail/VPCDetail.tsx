@@ -118,31 +118,27 @@ const VPCDetail = () => {
         </Box>
       </EntityHeader>
       <StyledPaper>
-        <Box display="flex" flex={1}>
+        <StyledSummaryBox display="flex" flex={1}>
           {summaryData.map((col) => {
             return (
-              <div key={col[0].label}>
-                <StyledSummaryTypography sx={{ paddingBottom: 2 }}>
-                  <StyledSummaryBox>
-                    <strong>{col[0].label}</strong> {col[0].value}
-                  </StyledSummaryBox>
-                </StyledSummaryTypography>
-                <StyledSummaryTypography>
-                  <StyledSummaryBox>
-                    <strong>{col[1].label}</strong> {col[1].value}
-                  </StyledSummaryBox>
-                </StyledSummaryTypography>
-              </div>
+              <Box key={col[0].label} paddingRight={6}>
+                <StyledSummaryTextTypography>
+                  <strong>{col[0].label}</strong> {col[0].value}
+                </StyledSummaryTextTypography>
+                <StyledSummaryTextTypography>
+                  <strong>{col[1].label}</strong> {col[1].value}
+                </StyledSummaryTextTypography>
+              </Box>
             );
           })}
-        </Box>
+        </StyledSummaryBox>
         {vpc.description.length > 0 && (
-          <StyledSummaryBox display="flex" flex={1}>
+          <StyledDescriptionBox display="flex" flex={1}>
             <Typography>
               <strong style={{ paddingRight: 8 }}>Description</strong>{' '}
             </Typography>
             <Typography>{vpc.description}</Typography>
-          </StyledSummaryBox>
+          </StyledDescriptionBox>
         )}
       </StyledPaper>
       <VPCDeleteDialog
@@ -163,7 +159,9 @@ const VPCDetail = () => {
 
 export default VPCDetail;
 
-const StyledActionButton = styled(Button)(({ theme }) => ({
+const StyledActionButton = styled(Button, {
+  label: 'StyledActionButton',
+})(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.color.blueDTwhite,
     color: theme.color.white,
@@ -175,32 +173,49 @@ const StyledActionButton = styled(Button)(({ theme }) => ({
   minWidth: 'auto',
 }));
 
-const StyledSummaryTypography = styled(Typography)(({ theme }) => ({
+const StyledDescriptionBox = styled(Box, {
+  label: 'StyledDescriptionBox',
+})(({ theme }) => ({
+  [theme.breakpoints.down('lg')]: {
+    display: 'flex',
+    flexDirection: 'column',
+    paddingTop: theme.spacing(3),
+  },
+  [theme.breakpoints.down('sm')]: {
+    paddingTop: theme.spacing(1),
+  },
+}));
+
+const StyledSummaryBox = styled(Box, {
+  label: 'StyledSummaryBox',
+})(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+  },
+}));
+
+const StyledSummaryTextTypography = styled(Typography, {
+  label: 'StyledSummaryTextTypography',
+})(({ theme }) => ({
   '& strong': {
     paddingRight: theme.spacing(1),
   },
-  paddingRight: theme.spacing(6),
-  [theme.breakpoints.down('md')]: {
-    paddingRight: theme.spacing(3),
+  '&:first-of-type': {
+    paddingBottom: theme.spacing(2),
   },
+  [theme.breakpoints.down('sm')]: {
+    paddingBottom: theme.spacing(2),
+  },
+  whiteSpace: 'nowrap',
 }));
 
-const StyledSummaryBox = styled(Box)(({ theme }) => ({
-  [theme.breakpoints.down('md')]: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-}));
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
+const StyledPaper = styled(Paper, {
+  label: 'StyledPaper',
+})(({ theme }) => ({
   borderTop: `1px solid ${theme.borderColors.borderTable}`,
   display: 'flex',
   padding: theme.spacing(2),
-  [theme.breakpoints.down('md')]: {
-    '& div': {
-      paddingBottom: theme.spacing(),
-    },
+  [theme.breakpoints.down('lg')]: {
     flexDirection: 'column',
-    padding: theme.spacing(2),
   },
 }));
