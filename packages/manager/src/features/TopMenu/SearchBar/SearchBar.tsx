@@ -8,7 +8,7 @@ import { debounce } from 'throttle-debounce';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
-import useAPISearch from 'src/features/Search/useAPISearch';
+import { useAPISearch } from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
