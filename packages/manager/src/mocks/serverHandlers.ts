@@ -1471,16 +1471,22 @@ export const handlers = [
     );
   }),
   rest.get('*/account/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
   }),
   rest.post('*/account/betas', (_req, res, ctx) => {
     return res(ctx.json({}));
   }),
+  rest.get('*/betas/:id', (req, res, ctx) => {
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(betaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
+  }),
   rest.get('*/betas', (_req, res, ctx) => {
     return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
-  }),
-  rest.get('*/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(betaFactory.build({ id: req.params.id })));
   }),
   ...entityTransfers,
   ...statusPage,

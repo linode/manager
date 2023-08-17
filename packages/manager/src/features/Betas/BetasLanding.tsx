@@ -20,9 +20,13 @@ const BetasLanding = () => {
   };
 
   if (accountBetas?.data !== undefined && betas?.data !== undefined) {
+    const activeBetaIds = accountBetas.data.map((beta) => beta.id);
+    const betasWithoutEnrolledBetas = betas.data.filter(
+      (beta) => !activeBetaIds.includes(beta.id)
+    );
     categorized_betas = categorizeBetasByStatus([
       ...accountBetas.data,
-      ...betas.data,
+      ...betasWithoutEnrolledBetas,
     ]);
   }
 
