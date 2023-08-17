@@ -1,4 +1,4 @@
-import { Loadbalancer } from '@linode/api-v4/lib/AGLB/types';
+import { Loadbalancer } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
