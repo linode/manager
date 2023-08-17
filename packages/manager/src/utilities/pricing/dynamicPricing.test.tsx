@@ -2,10 +2,9 @@ import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import { getDCSpecificPricingDisplay } from './dynamicPricing';
+import { getBackupPrice } from './entityPricing';
 
 import type { DataCenterPricingProps } from './dynamicPricing';
-
-import { getBackupPrice } from './entityPricing';
 
 describe('getDCSpecificPricingDisplay', () => {
   it('calculates dynamic pricing for a region without an upcost', () => {
@@ -19,7 +18,7 @@ describe('getDCSpecificPricingDisplay', () => {
     );
 
     const priceElement = getByTestId('price');
-    expect(priceElement).toBeInTheDocument(); // Make sure the element is in the document
+    expect(priceElement).toBeInTheDocument();
     expect(priceElement.textContent).toBe(getBackupPrice().toFixed(2));
   });
 
@@ -35,7 +34,7 @@ describe('getDCSpecificPricingDisplay', () => {
     );
 
     const priceElement = getByTestId('price');
-    expect(priceElement).toBeInTheDocument(); // Make sure the element is in the document
+    expect(priceElement).toBeInTheDocument();
     expect(priceElement.textContent).toBe('2.40');
   });
 
@@ -50,7 +49,7 @@ describe('getDCSpecificPricingDisplay', () => {
     );
 
     const priceElement = getByTestId('price');
-    expect(priceElement).toBeInTheDocument(); // Make sure the element is in the document
+    expect(priceElement).toBeInTheDocument();
     expect(priceElement.textContent).toBe('0.00');
   });
 });

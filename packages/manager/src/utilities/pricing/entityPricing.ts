@@ -1,5 +1,9 @@
+// These values will eventually come from the API, but for now they are hardcoded and
+// used to generate the region based dynamic pricing.
+
 export const getBackupPrice = () => {
-  // I am unsure where this value is actually coming from
+  // I am unsure where this value is actually coming from and if it should be included here
+  // TODO - DYNAMIC_PRICING: confirm this should be hardcoded
   return 5;
 };
 

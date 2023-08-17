@@ -50,7 +50,6 @@ export const getDCSpecificPricingDisplay = ({
   regionId,
   size,
 }: DataCenterPricingProps) => {
-  let price;
   const isJakarta: boolean = regionId === UpcostRegion.jakarta;
   const isSaoPaulo: boolean = regionId === UpcostRegion.saoPaulo;
   const backupPrice = getBackupPrice();
@@ -76,23 +75,16 @@ export const getDCSpecificPricingDisplay = ({
 
   switch (entity) {
     case 'Backup':
-      price = getDynamicPrice(backupPrice);
-      break;
+      return getDynamicPrice(backupPrice);
     case 'LKE HA':
-      price = getDynamicPrice(lkePrice);
-      break;
+      return getDynamicPrice(lkePrice);
     case 'Nodebalancer':
-      price = getDynamicPrice(nodeBalancerPrice);
-      break;
+      return getDynamicPrice(nodeBalancerPrice);
     case 'Volume':
-      price = getDynamicPrice(volumePrice);
-      break;
-
+      return getDynamicPrice(volumePrice);
     default:
-      price = '0.00';
+      return '0.00';
   }
-
-  return price;
 };
 
 const calculatePrice = ({ initialPrice, upcostValue }: CalculatePriceProps) => {
