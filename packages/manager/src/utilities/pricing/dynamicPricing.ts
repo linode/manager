@@ -36,12 +36,12 @@ enum UpcostValue {
  * This function is used to calculate the dynamic pricing for a given entity, based on potential region upcosts.
  * @param entity The entity to calculate pricing for.
  * @param region The region to calculate pricing for.
- * @param value The value to calculate pricing for.
+ * @param size An optional size value for entities that require it for field validation (ex: Volumes).
  * @example
  * const price = getDCSpecificPricing({
  *   entity: 'Volume',
  *   regionId: 'us-east-1a',
- *   value: 20,
+ *   size: 20,
  * });
  * @returns
  */
