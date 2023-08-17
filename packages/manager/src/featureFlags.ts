@@ -124,7 +124,6 @@ export type ProductInformationBannerLocation =
   | 'Images'
   | 'Kubernetes'
   | 'Linodes'
-  | 'LoadBalancers'
   | 'Managed'
   | 'Marketplace'
   | 'NodeBalancers'

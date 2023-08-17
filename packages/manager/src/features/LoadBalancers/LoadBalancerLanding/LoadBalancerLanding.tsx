@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { useLoadBalancersQuery } from 'src/queries/aglb/loadbalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -42,11 +41,6 @@ const LoadBalancerLanding = () => {
 
   return (
     <>
-      <ProductInformationBanner
-        bannerLocation="LoadBalancers"
-        important
-        warning
-      />
       <LandingHeader
         breadcrumbProps={{ pathname: '/loadbalancers' }}
         createButtonText="Create Loadbalancer"
