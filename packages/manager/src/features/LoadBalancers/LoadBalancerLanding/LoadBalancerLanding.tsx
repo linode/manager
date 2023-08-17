@@ -9,12 +9,18 @@ import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 
-const RouteLanding = React.lazy(
-  () => import('../Routes/RouteLanding/RouteLanding')
-);
-const ServiceTargetLanding = React.lazy(
-  () => import('../ServiceTargets/ServiceTargetLanding/ServiceTargetLanding')
-);
+import RouteLanding from '../Routes/RouteLanding/RouteLanding';
+import ServiceTargetLanding from '../ServiceTargets/ServiceTargetLanding/ServiceTargetLanding';
+
+// const RouteLanding = React.lazy(
+//   () => import('../Routes/RouteLanding/RouteLanding')
+// );
+// const ServiceTargetLanding = React.lazy(
+//   () => import('../ServiceTargets/ServiceTargetLanding/ServiceTargetLanding')
+// );
+
+// const LoadBalancerTable = React.lazy(() => import('./LoadBalancerTable'));
+import LoadBalancerTable from './LoadBalancerTable';
 
 const LoadBalancerLanding = () => {
   const history = useHistory();
@@ -85,7 +91,7 @@ const LoadBalancerLanding = () => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <>TODO: AGLB M3-6807: Load Balancer Landing </>
+              <LoadBalancerTable />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <RouteLanding />

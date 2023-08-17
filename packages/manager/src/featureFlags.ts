@@ -41,7 +41,6 @@ type OneClickApp = Record<string, string>;
 export interface Flags {
   aglb: boolean;
   apiMaintenance: APIMaintenance;
-  selfServeBetas: boolean;
   databaseBeta: boolean;
   databases: boolean;
   ipv6Sharing: boolean;
@@ -55,6 +54,7 @@ export interface Flags {
   promotionalOffers: PromotionalOffer[];
   referralBannerText: ReferralBannerText;
   regionDropdown: boolean;
+  selfServeBetas: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
@@ -124,6 +124,7 @@ export type ProductInformationBannerLocation =
   | 'Images'
   | 'Kubernetes'
   | 'Linodes'
+  | 'LoadBalancers'
   | 'Managed'
   | 'Marketplace'
   | 'NodeBalancers'
