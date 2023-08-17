@@ -1,3 +1,4 @@
+import { Grants, Profile } from '@linode/api-v4';
 import {
   FirewallRuleProtocol,
   FirewallRuleType,
@@ -234,4 +235,16 @@ export const generateAddressesLabel = (
 
   // If no IPs are allowed.
   return 'None';
+};
+
+export const checkIfUserCanModifyFirewall = (
+  firewallId: number,
+  profile?: Profile,
+  grants?: Grants
+) => {
+  return (
+    !profile?.restricted ||
+    grants?.firewall?.find((firewall) => firewall.id === firewallId)
+      ?.permissions === 'read_write'
+  );
 };

@@ -178,6 +178,7 @@ export const UserMenu = React.memo(() => {
         }}
         anchorEl={anchorEl}
         id={id}
+        marginThreshold={0}
         onClose={handleClose}
         open={open}
       >
