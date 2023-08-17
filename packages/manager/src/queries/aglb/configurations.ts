@@ -1,7 +1,7 @@
 import { getLoadbalancerConfigurations } from '@linode/api-v4';
 import { useQuery } from 'react-query';
 
-import { queryKey } from './loadbalancers';
+import { QUERY_KEY } from './loadbalancers';
 
 import type {
   APIError,
@@ -17,7 +17,7 @@ export const useLoadBalancerConfigurationsQuery = (
   filter?: Filter
 ) => {
   return useQuery<ResourcePage<Configuration>, APIError[]>(
-    [queryKey, 'aglb', loadbalancerId, 'configurations', params, filter],
+    [QUERY_KEY, 'aglb', loadbalancerId, 'configurations', params, filter],
     () => getLoadbalancerConfigurations(loadbalancerId, params, filter),
     { keepPreviousData: true }
   );

@@ -75,7 +75,7 @@ export const LoadBalancerSummary = () => {
           <Grid key={title} md={4} sm={4} xs={2}>
             <Stack direction="row" spacing={2}>
               <Typography minWidth="75px" noWrap>
-                <b>{title}</b>
+                <strong>{title}</strong>
               </Typography>
               {value}
             </Stack>
