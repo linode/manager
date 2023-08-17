@@ -8,6 +8,7 @@ import {
 } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
+import { DateTime } from 'luxon';
 
 import { isTestLabel } from './common';
 
@@ -44,10 +45,20 @@ export const deleteAllTestLkeClusters = async (): Promise<void> => {
   const clusterDeletionPromises = clusters
     .filter((cluster) => isTestLabel(cluster.label))
     .map(async (cluster) => {
+      const clusterCreateTime = DateTime.fromISO(cluster.created);
+
+      // If the test cluster is older than 1 hour, delete it regardless of
+      // whether or not all of the Node Pools are ready; this is a safeguard
+      // to prevent LKE clusters with stuck pools from accumulating.
+      if (clusterCreateTime.diffNow().hours >= 1) {
+        return deleteKubernetesCluster(cluster.id);
+      }
+
+      // If the cluster is not older than 1 hour, only delete it if all of its
+      // Node Pools are ready.
       const pools = await depaginate<KubeNodePoolResponse>((page: number) =>
         getNodePools(cluster.id, { page, page_size: pageSize })
       );
-      // Only delete clusters that have finished provisioning.
       if (pools.every(isPoolReady)) {
         return deleteKubernetesCluster(cluster.id);
       }
