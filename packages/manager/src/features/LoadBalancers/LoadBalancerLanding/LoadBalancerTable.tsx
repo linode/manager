@@ -1,8 +1,6 @@
 import { Loadbalancer } from '@linode/api-v4/lib/AGLB/types';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -14,9 +12,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancersQuery } from 'src/queries/aglb/loadbalancers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { LoadBalancerLandingEmptyState } from './LoadBalancerLandingEmptyState';
 import { LoadBalancerRow } from './LoadBalancerRow';
 
 const preferenceKey = 'loadbalancers';
@@ -36,32 +32,13 @@ const LoadBalancerTable = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data: loadBalancers, error, isLoading } = useLoadBalancersQuery(
+  const { data: loadBalancers } = useLoadBalancersQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
     filter
   );
-
-  if (error) {
-    return (
-      <ErrorState
-        errorText={
-          getAPIErrorOrDefault(error, 'Error loading your LoadBalancers.')[0]
-            .reason
-        }
-      />
-    );
-  }
-
-  if (isLoading) {
-    return <CircleProgress />;
-  }
-
-  if (loadBalancers?.data.length === 0) {
-    return <LoadBalancerLandingEmptyState />;
-  }
 
   return (
     <>
