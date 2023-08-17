@@ -25,7 +25,7 @@ import {
   notificationContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
-import ToastNotifications from 'src/features/ToastNotifications';
+import { ToastNotifications } from 'src/features/ToastNotifications/ToastNotifications';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';

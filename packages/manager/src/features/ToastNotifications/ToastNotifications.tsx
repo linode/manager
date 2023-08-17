@@ -70,7 +70,7 @@ export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
   event.secondary_entity?.label ?? '';
 
-export const ToastNotifications = (props: WithSnackbarProps) => {
+export const ToastNotifications = withSnackbar((props: WithSnackbarProps) => {
   React.useEffect(() => {
     const subscription = events$
       .filter(({ event }) => !event._initial)
@@ -289,9 +289,7 @@ export const ToastNotifications = (props: WithSnackbarProps) => {
   }, [props]);
 
   return null;
-};
-
-export default withSnackbar(ToastNotifications);
+});
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
