@@ -15,6 +15,7 @@ import { truncate } from 'src/utilities/truncate';
 
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
+import { getUniqueLinodesFromSubnets } from '../utils';
 import {
   StyledActionButton,
   StyledDescriptionBox,
@@ -52,10 +53,7 @@ const VPCDetail = () => {
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
 
-  const numLinodes = vpc.subnets.reduce(
-    (acc, subnet) => acc + subnet.linodes.length,
-    0
-  );
+  const numLinodes = getUniqueLinodesFromSubnets(vpc.subnets);
 
   const summaryData = [
     [
