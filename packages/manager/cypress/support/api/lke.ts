@@ -45,12 +45,17 @@ export const deleteAllTestLkeClusters = async (): Promise<void> => {
   const clusterDeletionPromises = clusters
     .filter((cluster) => isTestLabel(cluster.label))
     .map(async (cluster) => {
-      const clusterCreateTime = DateTime.fromISO(cluster.created);
+      const clusterCreateTime = DateTime.fromISO(cluster.created, {
+        zone: 'utc',
+      });
+      const createTimeElapsed = Math.abs(
+        clusterCreateTime.diffNow('minutes').minutes
+      );
 
       // If the test cluster is older than 1 hour, delete it regardless of
       // whether or not all of the Node Pools are ready; this is a safeguard
       // to prevent LKE clusters with stuck pools from accumulating.
-      if (clusterCreateTime.diffNow().hours >= 1) {
+      if (createTimeElapsed >= 60) {
         return deleteKubernetesCluster(cluster.id);
       }
 
