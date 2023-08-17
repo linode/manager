@@ -22,11 +22,10 @@ export const LoadBalancerRow = ({ loadBalancer }: Props) => {
   return (
     <TableRow
       ariaLabel={`Load Balancer ${label}`}
-      data-qa-loadbalancers-id={id}
       key={`loadbalancer-row-${id}`}
     >
       <TableCell>
-        <Link to={`/loadbalacner/${id}`}>{label}</Link>
+        <Link to={`/loadbalancers/${id}`}>{label}</Link>
       </TableCell>
       <Hidden mdDown>
         <TableCell>
