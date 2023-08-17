@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  matchPath,
-  useHistory,
-  useLocation,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -20,6 +14,8 @@ import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import { checkIfUserCanModifyFirewall } from '../shared';
+
 const FirewallLinodesLanding = React.lazy(
   () => import('./Devices/FirewallLinodesLanding')
 );
@@ -28,38 +24,31 @@ const FirewallRulesLanding = React.lazy(
 );
 
 export const FirewallDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const { url } = useRouteMatch();
-  const location = useLocation();
+  const { id, tab } = useParams<{ id: string; tab?: string }>();
   const history = useHistory();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
   const firewallId = Number(id);
 
-  const userCanModifyFirewall =
-    !profile?.restricted ||
-    grants?.firewall?.find((firewall) => firewall.id === firewallId)
-      ?.permissions === 'read_write';
+  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
+    firewallId,
+    profile,
+    grants
+  );
 
   const tabs = [
     {
-      routeName: `${url}/rules`,
+      routeName: `/firewalls/${id}/rules`,
       title: 'Rules',
     },
     {
-      routeName: `${url}/linodes`,
+      routeName: `/firewalls/${id}/linodes`,
       title: 'Linodes',
     },
   ];
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
-  };
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
+  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
   const { data: firewall, error, isLoading } = useFirewallQuery(firewallId);
 
@@ -107,18 +96,15 @@ export const FirewallDetail = () => {
             onCancel: resetEditableLabel,
             onEdit: handleLabelChange,
           },
-          pathname: location.pathname,
+          pathname: `/firewalls/${firewall.label}`,
         }}
         docsLabel="Docs"
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
         title="Firewall Details"
       />
       <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
+        index={tabIndex === -1 ? 0 : tabIndex}
+        onChange={(i) => history.push(tabs[i].routeName)}
       >
         <TabLinkList tabs={tabs} />
 

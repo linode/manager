@@ -18,7 +18,6 @@ import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context';
-import BackupDrawer from 'src/features/Backups';
 import { Footer } from 'src/features/Footer/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
@@ -166,7 +165,9 @@ const Help = React.lazy(() =>
     default: module.HelpAndSupport,
   }))
 );
-const SearchLanding = React.lazy(() => import('src/features/Search'));
+const SearchLanding = React.lazy(
+  () => import('src/features/Search/SearchLanding')
+);
 const EventsLanding = React.lazy(
   () => import('src/features/Events/EventsLanding')
 );
@@ -373,7 +374,6 @@ const MainContent = (props: CombinedProps) => {
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
             <ToastNotifications />
             <VolumeDrawer />
-            <BackupDrawer />
           </ComplianceUpdateProvider>
         )}
       </PreferenceToggle>

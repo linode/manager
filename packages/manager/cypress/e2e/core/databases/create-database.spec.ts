@@ -1,4 +1,4 @@
-import { databaseInstanceFactory } from 'src/factories/databases';
+import { databaseFactory } from 'src/factories/databases';
 import { eventFactory } from 'src/factories/events';
 import { sequentialStub } from 'support/stubs/sequential-stub';
 import { paginateResponse } from 'support/util/paginate';
@@ -7,13 +7,15 @@ import {
   databaseClusterConfiguration,
   databaseConfigurations,
 } from 'support/constants/databases';
+import { ui } from 'support/ui';
+import { makeResponse } from 'support/util/response';
 
 describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
       // @TODO Add assertions for DBaaS pricing.
       it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
-        const databaseMock = databaseInstanceFactory.build({
+        const databaseMock = databaseFactory.build({
           label: configuration.label,
           type: configuration.linodeType,
           region: configuration.region.id,
@@ -22,8 +24,8 @@ describe('create a database cluster, mocked data', () => {
           cluster_size: configuration.clusterSize,
           engine: configuration.dbType,
           hosts: {
-            primary: undefined,
-            secondary: undefined,
+            primary: null,
+            secondary: null,
           },
         });
 
@@ -43,7 +45,7 @@ describe('create a database cluster, mocked data', () => {
         cy.intercept(
           'POST',
           apiMatcher(`databases/${configuration.dbType}/instances`),
-          databaseMock
+          makeResponse(databaseMock)
         ).as('createDatabase');
 
         cy.intercept(
@@ -54,6 +56,12 @@ describe('create a database cluster, mocked data', () => {
             paginateResponse({ ...databaseMock, status: 'active' }),
           ])
         ).as('listDatabases');
+
+        cy.intercept(
+          'GET',
+          apiMatcher(`databases/${databaseMock.engine}/${databaseMock.id}`),
+          makeResponse(databaseMock)
+        ).as('getDatabase');
 
         cy.visitWithLogin('/databases/create');
         cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
@@ -84,7 +92,20 @@ describe('create a database cluster, mocked data', () => {
         // Create database.
         cy.findByText('Create Database Cluster').should('be.visible').click();
 
-        cy.wait(['@createDatabase', '@listDatabases']);
+        cy.wait('@createDatabase');
+        cy.url().should(
+          'endWith',
+          `databases/${databaseMock.engine}/${databaseMock.id}`
+        );
+
+        // TODO Add details page assertions before navigating back to landing page.
+        ui.entityHeader.find().within(() => {
+          cy.findByText('Database Clusters').should('be.visible').click();
+        });
+
+        cy.url().should('endWith', '/databases');
+
+        cy.wait('@listDatabases');
         cy.get(`[data-qa-database-cluster-id="${databaseMock.id}"]`).within(
           () => {
             cy.findByText(configuration.label).should('be.visible');
