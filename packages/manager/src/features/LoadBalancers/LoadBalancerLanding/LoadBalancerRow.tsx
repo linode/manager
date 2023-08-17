@@ -25,7 +25,7 @@ export const LoadBalancerRow = ({ loadBalancer }: Props) => {
       key={`loadbalancer-row-${id}`}
     >
       <TableCell>
-        <Link to={`/loadbalacner/${id}`}>{label}</Link>
+        <Link to={`/loadbalancers/${id}`}>{label}</Link>
       </TableCell>
       <Hidden mdDown>
         <TableCell>
