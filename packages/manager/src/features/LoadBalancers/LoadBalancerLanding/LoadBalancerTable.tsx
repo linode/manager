@@ -1,13 +1,10 @@
 import { Loadbalancer } from '@linode/api-v4/lib/AGLB/types';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
-import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -23,7 +20,6 @@ import { LoadBalancerLandingEmptyState } from './LoadBalancerLandingEmptyState';
 import { LoadBalancerRow } from './LoadBalancerRow';
 
 const preferenceKey = 'loadbalancers';
-const VPC_CREATE_ROUTE = 'loadbalancers/create';
 
 const LoadBalancerTable = () => {
   const pagination = usePagination(1, preferenceKey);
@@ -48,12 +44,6 @@ const LoadBalancerTable = () => {
     filter
   );
 
-  const history = useHistory();
-
-  const createVPC = () => {
-    history.push(VPC_CREATE_ROUTE);
-  };
-
   if (error) {
     return (
       <ErrorState
@@ -75,17 +65,6 @@ const LoadBalancerTable = () => {
 
   return (
     <>
-      <ProductInformationBanner
-        bannerLocation="LoadBalancers"
-        important
-        warning
-      />
-      <LandingHeader
-        createButtonText="Create Load Balancer"
-        docsLink="#" // TODO: LoadBalancer -  Add docs link
-        onButtonClick={createVPC}
-        title="Global Load Balancers"
-      />
       <Table>
         <TableHead>
           <TableRow>

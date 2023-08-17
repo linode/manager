@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useLoadBalancerConfigurationsQuery } from 'src/queries/aglb/configurations';
 
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
 import { RegionsCell } from './RegionsCell';
@@ -15,6 +16,8 @@ interface Props {
 
 export const LoadBalancerRow = ({ loadBalancer }: Props) => {
   const { id, label, regions } = loadBalancer;
+  const { data: configurations } = useLoadBalancerConfigurationsQuery(id);
+  const ports = configurations?.data.map((config) => config.port);
 
   return (
     <TableRow
@@ -26,9 +29,12 @@ export const LoadBalancerRow = ({ loadBalancer }: Props) => {
         <Link to={`/loadbalacner/${id}`}>{label}</Link>
       </TableCell>
       <Hidden mdDown>
-        <TableCell>N/A</TableCell>
+        <TableCell>
+          {/* TODO: AGLB - This may change, need confirmation before implementation*/}
+          8 up - 0 down
+        </TableCell>
       </Hidden>
-      <TableCell>port</TableCell>
+      <TableCell>{ports?.join(', ')}</TableCell>
       <TableCell>
         {regions.map((region) => (
           <RegionsCell key={region} region={region} />
