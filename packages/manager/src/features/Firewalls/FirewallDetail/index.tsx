@@ -48,7 +48,7 @@ export const FirewallDetail = () => {
     },
   ];
 
-  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : 0;
+  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
   const { data: firewall, error, isLoading } = useFirewallQuery(firewallId);
 
@@ -102,7 +102,10 @@ export const FirewallDetail = () => {
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
         title="Firewall Details"
       />
-      <Tabs index={tabIndex} onChange={(i) => history.push(tabs[i].routeName)}>
+      <Tabs
+        index={tabIndex === -1 ? 0 : tabIndex}
+        onChange={(i) => history.push(tabs[i].routeName)}
+      >
         <TabLinkList tabs={tabs} />
 
         <TabPanels>
