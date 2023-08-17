@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -9,16 +9,19 @@ const DatabaseDetail = React.lazy(() => import('./DatabaseDetail'));
 const DatabaseCreate = React.lazy(() => import('./DatabaseCreate'));
 
 const Database = () => {
+  const { path } = useRouteMatch();
+
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Databases" />
       <Switch>
-        <Route component={DatabaseCreate} path="/databases/create" />
+        <Route component={DatabaseLanding} exact path={path} />
+        <Route component={DatabaseCreate} path={`${path}/create`} />
         <Route
           component={DatabaseDetail}
-          path="/databases/:engine/:databaseId"
+          path={`${path}/:engine/:databaseId`}
         />
-        <Route component={DatabaseLanding} exact strict />
+        <Redirect to="/databases" />
       </Switch>
     </React.Suspense>
   );

@@ -1,1 +1,1 @@
-export { default } from './BackupDrawer';
+export { BackupDrawer } from './BackupDrawer';
