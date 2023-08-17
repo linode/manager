@@ -1,22 +1,27 @@
 import { Typography } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Paper } from 'src/components/Paper';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
 import { truncate } from 'src/utilities/truncate';
 
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
+import {
+  StyledActionButton,
+  StyledDescriptionBox,
+  StyledPaper,
+  StyledSummaryBox,
+  StyledSummaryTextTypography,
+} from './VPCDetail.styles';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -174,64 +179,3 @@ const VPCDetail = () => {
 };
 
 export default VPCDetail;
-
-const StyledActionButton = styled(Button, {
-  label: 'StyledActionButton',
-})(({ theme }) => ({
-  '&:hover': {
-    backgroundColor: theme.color.blueDTwhite,
-    color: theme.color.white,
-  },
-  color: theme.textColors.linkActiveLight,
-  fontFamily: theme.font.normal,
-  fontSize: '0.875rem',
-  height: theme.spacing(5),
-  minWidth: 'auto',
-}));
-
-const StyledDescriptionBox = styled(Box, {
-  label: 'StyledDescriptionBox',
-})(({ theme }) => ({
-  [theme.breakpoints.down('lg')]: {
-    display: 'flex',
-    flexDirection: 'column',
-    paddingTop: theme.spacing(3),
-  },
-  [theme.breakpoints.down('sm')]: {
-    paddingTop: theme.spacing(1),
-  },
-}));
-
-const StyledSummaryBox = styled(Box, {
-  label: 'StyledSummaryBox',
-})(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    flexDirection: 'column',
-  },
-}));
-
-const StyledSummaryTextTypography = styled(Typography, {
-  label: 'StyledSummaryTextTypography',
-})(({ theme }) => ({
-  '& strong': {
-    paddingRight: theme.spacing(1),
-  },
-  '&:first-of-type': {
-    paddingBottom: theme.spacing(2),
-  },
-  [theme.breakpoints.down('sm')]: {
-    paddingBottom: theme.spacing(2),
-  },
-  whiteSpace: 'nowrap',
-}));
-
-const StyledPaper = styled(Paper, {
-  label: 'StyledPaper',
-})(({ theme }) => ({
-  borderTop: `1px solid ${theme.borderColors.borderTable}`,
-  display: 'flex',
-  padding: theme.spacing(2),
-  [theme.breakpoints.down('lg')]: {
-    flexDirection: 'column',
-  },
-}));
