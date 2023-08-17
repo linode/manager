@@ -16,7 +16,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { MAX_VOLUME_SIZE } from 'src/constants';
+// import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
@@ -273,9 +273,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   data-qa-volume-size-help
                   variant="body1"
                 >
-                  A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
+                  {/* A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
                   size and costs $0.10/GB per month. <br />
-                  Up to eight volumes can be attached to a single Linode.
+                  Up to eight volumes can be attached to a single Linode. */}
+                  A single Volume can range from 10 to 10240 GB in size. Up to
+                  eight Volumes can be attached to a single Linode. Select a
+                  Region to see cost per GB.
                 </Typography>
                 <LabelField
                   tooltipText="Use only ASCII letters, numbers,
@@ -290,17 +293,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   tooltipPosition="right"
                   value={values.label}
                 />
-                <Box alignItems="flex-end" display="flex">
-                  <SizeField
-                    disabled={doesNotHavePermission}
-                    error={touched.size ? errors.size : undefined}
-                    name="size"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    textFieldStyles={classes.size}
-                    value={values.size}
-                  />
-                </Box>
                 <Box alignItems="flex-end" display="flex">
                   <RegionSelect
                     handleSelection={(value) => {
@@ -327,11 +319,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
                   )}
                 </Box>
-                <Box
-                  alignItems="flex-end"
-                  className={classes.linodeConfigSelectWrapper}
-                  display="flex"
-                >
+                <Box className={classes.linodeConfigSelectWrapper}>
                   <Box
                     alignItems="flex-end"
                     className={classes.linodeSelect}
@@ -365,6 +353,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     {renderSelectTooltip(
                       'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
                     )}
+                  </Box>
+                  <Box alignItems="flex-end" display="flex">
+                    <SizeField
+                      disabled={doesNotHavePermission}
+                      error={touched.size ? errors.size : undefined}
+                      hasSelectedRegion={!isNilOrEmpty(values.region)}
+                      name="size"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      textFieldStyles={classes.size}
+                      value={values.size}
+                    />
                   </Box>
                   <ConfigSelect
                     disabled={doesNotHavePermission}
