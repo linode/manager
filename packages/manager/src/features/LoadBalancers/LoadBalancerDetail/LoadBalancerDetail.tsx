@@ -55,7 +55,7 @@ const LoadBalancerDetailLanding = () => {
     },
   ];
 
-  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : 0;
+  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
   return (
     <>
@@ -74,7 +74,10 @@ const LoadBalancerDetailLanding = () => {
         docsLabel="Docs"
         docsLink="" // TODO: AGLB - Add docs link
       />
-      <Tabs index={tabIndex} onChange={(i) => history.push(tabs[i].routeName)}>
+      <Tabs
+        index={tabIndex === -1 ? 0 : tabIndex}
+        onChange={(i) => history.push(tabs[i].routeName)}
+      >
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
