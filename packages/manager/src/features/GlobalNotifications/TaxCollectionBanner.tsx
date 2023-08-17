@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -11,16 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    marginLeft: theme.spacing(2),
-    minWidth: 140,
-    whiteSpace: 'nowrap',
-  },
-}));
-
-const TaxCollectionBanner = () => {
-  const classes = useStyles();
+export const TaxCollectionBanner = () => {
   const history = useHistory();
   const flags = useFlags();
 
@@ -63,13 +53,12 @@ const TaxCollectionBanner = () => {
     bannerRegions.length > 0 && bannerRegions.includes(account.state);
 
   const actionButton = bannerHasAction ? (
-    <Button
+    <StyledButton
       buttonType="primary"
-      className={classes.button}
       onClick={() => history.push('/account/billing/edit')}
     >
       Update Tax ID
-    </Button>
+    </StyledButton>
   ) : undefined;
 
   return (isEntireCountryTaxable || isUserInTaxableRegion) &&
@@ -92,4 +81,10 @@ const TaxCollectionBanner = () => {
   ) : null;
 };
 
-export default TaxCollectionBanner;
+const StyledButton = styled(Button, { label: 'StyledButton ' })(
+  ({ theme }) => ({
+    marginLeft: theme.spacing(2),
+    minWidth: 140,
+    whiteSpace: 'nowrap',
+  })
+);
