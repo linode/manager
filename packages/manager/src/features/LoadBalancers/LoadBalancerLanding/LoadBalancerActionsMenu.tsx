@@ -11,7 +11,7 @@ export const LoadBalancerActionsMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      onClick: () => null,
+      onClick: () => history.push(`/loadbalancers/${loadBalancerId}/configurations`),
       title: 'Configurations',
     },
     {
