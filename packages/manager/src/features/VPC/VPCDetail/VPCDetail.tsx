@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -13,18 +13,21 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Paper } from 'src/components/Paper';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
+import { truncate } from 'src/utilities/truncate';
 
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
-  const { data: vpc, error, isLoading } = useVPCQuery(+vpcId);
+  const theme = useTheme();
 
+  const { data: vpc, error, isLoading } = useVPCQuery(+vpcId);
   const { data: regions } = useRegionsQuery();
 
   const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
   const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
+  const [showFullDescription, setShowFullDescription] = React.useState(false);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -35,6 +38,11 @@ const VPCDetail = () => {
       <ErrorState errorText="There was a problem retrieving your VPC. Please try again." />
     );
   }
+
+  const description =
+    vpc.description.length < 150 || showFullDescription
+      ? vpc.description
+      : truncate(vpc.description, 150);
 
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
@@ -137,7 +145,15 @@ const VPCDetail = () => {
             <Typography>
               <strong style={{ paddingRight: 8 }}>Description</strong>{' '}
             </Typography>
-            <Typography>{vpc.description}</Typography>
+            <Typography>
+              {description}{' '}
+              <button
+                onClick={() => setShowFullDescription((show) => !show)}
+                style={{ ...theme.applyLinkStyles, fontSize: '0.875rem' }}
+              >
+                Read {showFullDescription ? 'Less' : 'More'}
+              </button>
+            </Typography>
           </StyledDescriptionBox>
         )}
       </StyledPaper>
