@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu';
 
@@ -8,10 +9,12 @@ interface Props {
 
 export const LoadBalancerActionsMenu = (props: Props) => {
   const { loadBalancerId } = props;
+  const history = useHistory();
 
   const actions: Action[] = [
     {
-      onClick: () => history.push(`/loadbalancers/${loadBalancerId}/configurations`),
+      onClick: () =>
+        history.push(`/loadbalancers/${loadBalancerId}/configurations`),
       title: 'Configurations',
     },
     {
