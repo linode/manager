@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 
+import LoadBalancerTable from './LoadBalancerTable';
+
 const LoadBalancerLanding = () => {
   const history = useHistory();
 
@@ -20,7 +22,7 @@ const LoadBalancerLanding = () => {
         removeCrumbX={1}
         title="Global Load Balancers"
       />
-      TODO: AGLB M3-6807: Load Balancer Landing
+      <LoadBalancerTable />
     </>
   );
 };

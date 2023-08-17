@@ -109,6 +109,7 @@ const LoadBalancerTable = () => {
                 Region
               </TableSortCell>
             </Hidden>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
