@@ -12,10 +12,10 @@ interface CalculatePriceProps {
   upcostValue: UpcostValue;
 }
 
-interface DataCenterPricingProps {
+export interface DataCenterPricingProps {
   entity: 'Backup' | 'LKE HA' | 'Nodebalancer' | 'Volume';
   regionId: Region['id'];
-  value: number;
+  size?: number;
 }
 
 enum UpcostRegion {
@@ -48,7 +48,7 @@ enum UpcostValue {
 export const getDCSpecificPricingDisplay = ({
   entity,
   regionId,
-  value,
+  size,
 }: DataCenterPricingProps) => {
   let price;
   const isJakarta: boolean = regionId === UpcostRegion.jakarta;
@@ -56,7 +56,7 @@ export const getDCSpecificPricingDisplay = ({
   const backupPrice = getBackupPrice();
   const lkePrice = getLKEClusterHAPrice();
   const nodeBalancerPrice = getNodeBalancerPrice();
-  const volumePrice: number = getVolumePrice(value);
+  const volumePrice: number = getVolumePrice(size);
 
   const getDynamicPrice = (initialPrice: number): string => {
     if (isJakarta) {

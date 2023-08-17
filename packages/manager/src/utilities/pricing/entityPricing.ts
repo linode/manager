@@ -3,8 +3,8 @@ export const getBackupPrice = () => {
   return 5;
 };
 
-export const getVolumePrice = (size: number) => {
-  return size >= 10 ? size / 10 : 0;
+export const getVolumePrice = (size?: number) => {
+  return size ? (size >= 10 ? size / 10 : 0) : 0;
 };
 
 export const getNodeBalancerPrice = () => {
