@@ -1,5 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Linode } from '@linode/api-v4/types';
+import { authenticate } from 'support/api/authentication';
 import { createLinode } from 'support/api/linodes';
 import { containsVisible, fbtClick, fbtVisible } from 'support/helpers';
 import { ui } from 'support/ui';
@@ -95,6 +96,7 @@ const addDisk = (diskName: string) => {
   ui.toast.assertMessage(`Started creation of disk ${diskName}`);
 };
 
+authenticate();
 describe('linode storage tab', () => {
   before(() => {
     cleanUp(['linodes', 'lke-clusters']);
