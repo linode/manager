@@ -15,6 +15,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'databaseBeta', label: 'Database Beta' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'aglb', label: 'AGLB' },
+  { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {
