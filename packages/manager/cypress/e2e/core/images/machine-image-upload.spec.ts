@@ -145,7 +145,7 @@ describe('machine image', () => {
    * - Confirms that image description can be updated.
    * - Confirms that image can be deleted.
    */
-  it.only('updates and deletes a machine image', () => {
+  it('updates and deletes a machine image', () => {
     const initialLabel = randomLabel();
     const updatedLabel = randomLabel();
     const updatedDescription = randomPhrase();
