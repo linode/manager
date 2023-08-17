@@ -286,7 +286,7 @@ export const ToastNotifications = withSnackbar((props: WithSnackbarProps) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [props]);
+  }, []);
 
   return null;
 });
