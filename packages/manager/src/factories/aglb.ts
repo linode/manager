@@ -92,7 +92,7 @@ export const loadbalancerFactory = Factory.Sync.makeFactory<Loadbalancer>({
   configurations: [{ id: 1, label: 'my-config-1' }],
   hostname: 'loadbalancer1.aglb.akamai.com',
   id: Factory.each((i) => i),
-  label: 'loadbalancer1',
+  label: Factory.each((i) => `aglb-${i}`),
   regions: ['us-west'],
   tags: ['tag1', 'tag2'],
 });
