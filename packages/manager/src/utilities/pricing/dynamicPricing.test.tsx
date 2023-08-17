@@ -7,7 +7,7 @@ import { getBackupPrice } from './entityPricing';
 import type { DataCenterPricingProps } from './dynamicPricing';
 
 describe('getDCSpecificPricingDisplay', () => {
-  it('calculates dynamic pricing for a region without an upcost', () => {
+  it('calculates dynamic pricing for a region without an increase', () => {
     const props: DataCenterPricingProps = {
       entity: 'Backup',
       regionId: 'us-east',
@@ -22,7 +22,7 @@ describe('getDCSpecificPricingDisplay', () => {
     expect(priceElement.textContent).toBe(getBackupPrice().toFixed(2));
   });
 
-  it('calculates dynamic pricing for a region with an upcost', () => {
+  it('calculates dynamic pricing for a region with an increase', () => {
     const props: DataCenterPricingProps = {
       entity: 'Volume',
       regionId: 'id-cgk',

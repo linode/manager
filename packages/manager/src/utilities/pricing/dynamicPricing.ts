@@ -8,8 +8,8 @@ import {
 import type { Region } from '@linode/api-v4';
 
 interface CalculatePriceProps {
+  increaseValue: IncreaseValue;
   initialPrice: number;
-  upcostValue: UpcostValue;
 }
 
 export interface DataCenterPricingProps {
@@ -18,22 +18,22 @@ export interface DataCenterPricingProps {
   size?: number;
 }
 
-enum UpcostRegion {
+enum IncreasedRegion {
   jakarta = 'id-cgk',
   saoPaulo = 'br-gru',
 }
 
 /**
- * The UpcostValue represents a percentage of the initial price.
+ * The IncreaseValue represents a percentage of the initial price.
  * We may want to be able to control this value from a flag before being able to fetch it from the API.
  */
-enum UpcostValue {
-  jakartaUpcost = 20,
-  saoPauloUpcost = 30,
+enum IncreaseValue {
+  jakarta = 20,
+  saoPaulo = 30,
 }
 
 /**
- * This function is used to calculate the dynamic pricing for a given entity, based on potential region upcosts.
+ * This function is used to calculate the dynamic pricing for a given entity, based on potential region increased costs.
  * @param entity The entity to calculate pricing for.
  * @param region The region to calculate pricing for.
  * @param size An optional size value for entities that require it for field validation (ex: Volumes).
@@ -50,8 +50,8 @@ export const getDCSpecificPricingDisplay = ({
   regionId,
   size,
 }: DataCenterPricingProps) => {
-  const isJakarta: boolean = regionId === UpcostRegion.jakarta;
-  const isSaoPaulo: boolean = regionId === UpcostRegion.saoPaulo;
+  const isJakarta: boolean = regionId === IncreasedRegion.jakarta;
+  const isSaoPaulo: boolean = regionId === IncreasedRegion.saoPaulo;
   const backupPrice = getBackupPrice();
   const lkePrice = getLKEClusterHAPrice();
   const nodeBalancerPrice = getNodeBalancerPrice();
@@ -60,13 +60,13 @@ export const getDCSpecificPricingDisplay = ({
   const getDynamicPrice = (initialPrice: number): string => {
     if (isJakarta) {
       return calculatePrice({
+        increaseValue: IncreaseValue.jakarta,
         initialPrice,
-        upcostValue: UpcostValue.jakartaUpcost,
       });
     } else if (isSaoPaulo) {
       return calculatePrice({
+        increaseValue: IncreaseValue.saoPaulo,
         initialPrice,
-        upcostValue: UpcostValue.saoPauloUpcost,
       });
     } else {
       return initialPrice.toFixed(2);
@@ -87,9 +87,12 @@ export const getDCSpecificPricingDisplay = ({
   }
 };
 
-const calculatePrice = ({ initialPrice, upcostValue }: CalculatePriceProps) => {
+const calculatePrice = ({
+  increaseValue,
+  initialPrice,
+}: CalculatePriceProps) => {
   const price = Number(initialPrice);
-  const upcost = price * (upcostValue / 100);
+  const increase = price * (increaseValue / 100);
 
-  return (price + upcost).toFixed(2);
+  return (price + increase).toFixed(2);
 };
