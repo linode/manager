@@ -151,5 +151,3 @@ const requestEntities = (
     // API filtering on Object Storage buckets does not work.
   ]).then((results) => (flatten(results) as unknown) as SearchableItem[]);
 };
-
-export default useAPISearch;

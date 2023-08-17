@@ -165,7 +165,9 @@ const Help = React.lazy(() =>
     default: module.HelpAndSupport,
   }))
 );
-const SearchLanding = React.lazy(() => import('src/features/Search'));
+const SearchLanding = React.lazy(
+  () => import('src/features/Search/SearchLanding')
+);
 const EventsLanding = React.lazy(
   () => import('src/features/Events/EventsLanding')
 );
