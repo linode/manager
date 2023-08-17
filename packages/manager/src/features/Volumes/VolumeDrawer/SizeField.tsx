@@ -2,9 +2,11 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -18,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   disabled?: boolean;
   error?: string;
+  hasSelectedRegion?: boolean;
   isFromLinode?: boolean;
   name: string;
   onBlur: (e: any) => void;
@@ -34,6 +37,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
 
   const {
     error,
+    hasSelectedRegion,
     isFromLinode,
     name,
     onBlur,
@@ -47,7 +51,6 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   const helperText = resize
     ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
     : undefined;
-
   const price = value >= 10 ? (value / 10).toFixed(2) : '0.00';
 
   return (
@@ -69,13 +72,19 @@ const SizeField: React.FC<CombinedProps> = (props) => {
         value={value}
         {...rest}
       />
-      <FormHelperText>
-        {resize || isFromLinode ? (
-          'The size of the new volume in GB.'
-        ) : (
-          <span className={classes.createVolumeText}>${price}/month</span>
-        )}
-      </FormHelperText>
+      {hasSelectedRegion ? (
+        <FormHelperText>
+          {resize || isFromLinode ? (
+            'The size of the new volume in GB.'
+          ) : (
+            <span className={classes.createVolumeText}>${price}/month</span>
+          )}
+        </FormHelperText>
+      ) : (
+        <Box alignItems="center" display="flex" height={34} marginLeft={2}>
+          <Typography>Select a Region to see cost per month.</Typography>
+        </Box>
+      )}
     </>
   );
 };
