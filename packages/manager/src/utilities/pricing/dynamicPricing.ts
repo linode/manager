@@ -2,8 +2,20 @@ import type { Region } from '@linode/api-v4';
 import type { FlagSet } from 'src/featureFlags';
 
 export interface DataCenterPricingOptions {
+  /**
+   * The base price for an entity.
+   * @example 5.00
+   */
   basePrice: number;
+  /**
+   * Our feature flags so we can determined whether or not to add price increase.
+   * @example { dcSpecificPricing: true }
+   */
   flags: FlagSet;
+  /**
+   * The `id` of the region we intended to get the price for.
+   * @example us-east
+   */
   regionId: Region['id'];
 }
 
@@ -16,9 +28,6 @@ const priceIncreaseMap = {
 
 /**
  * This function is used to calculate the dynamic pricing for a given entity, based on potential region increased costs.
- * @param entity The entity to calculate pricing for.
- * @param region The region to calculate pricing for.
- * @param size An optional size value for entities that require it for price based on it (ex: Volume).
  * @example
  * const price = getDCSpecificPrice({
  *   basePrice: getVolumePrice(20),
@@ -40,7 +49,7 @@ export const getDCSpecificPrice = ({
 
   if (increaseFactor !== undefined) {
     // If increaseFactor is defined, it means the region has a price increase
-    // and that we should apply it.
+    // and we should apply it.
     const increase = basePrice * increaseFactor;
 
     return (basePrice + increase).toFixed(2);
