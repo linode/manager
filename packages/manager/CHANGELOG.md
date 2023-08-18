@@ -59,6 +59,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Swap VLAN and User Data order in Linode Create ([#9492](https://github.com/linode/manager/pull/9492))
 - Remove customer tag check for Metadata ([#9546](https://github.com/linode/manager/pull/9546))
 
+## [2023-08-11] - v1.99.1
+### Fixed:
+
+Unescape encoding for user data ([#9536](https://github.com/linode/manager/pull/9536))
 
 ## [2023-08-07] - v1.99.0
 
