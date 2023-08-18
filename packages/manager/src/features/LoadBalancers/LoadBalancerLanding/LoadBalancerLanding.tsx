@@ -101,14 +101,7 @@ const LoadBalancerLanding = () => {
               <TableCell>Ports</TableCell>
             </Hidden>
             <Hidden mdDown>
-              <TableSortCell
-                active={orderBy === 'region'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="region"
-              >
-                Region
-              </TableSortCell>
+              <TableCell>Regions</TableCell>
             </Hidden>
             <TableCell></TableCell>
           </TableRow>
