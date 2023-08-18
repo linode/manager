@@ -24,9 +24,7 @@ const pageSizeOverride = {
  *
  * @returns Promise that resolves to created Volume.
  */
-export const createActiveVolume = async (
-  volumeRequest: VolumeRequestPayload
-) => {
+const createActiveVolume = async (volumeRequest: VolumeRequestPayload) => {
   const volume = await createVolume(volumeRequest);
   await pollVolumeStatus(volume.id, 'active', new SimpleBackoffMethod(10000));
   return volume;
