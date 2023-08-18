@@ -7,6 +7,7 @@ import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import { getStorage, setStorage } from 'src/utilities/storage';
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
@@ -74,4 +75,4 @@ const FeatureFlagTool: React.FC<{}> = () => {
   );
 };
 
-export default FeatureFlagTool;
+export default withFeatureFlagProvider(FeatureFlagTool);
