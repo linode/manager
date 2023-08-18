@@ -13,8 +13,8 @@ export const RegionsCell = (props: Props) => {
   const actualRegion = regions?.find((r) => r.id === region);
 
   return (
-    <div style={{ alignItems: 'center', whiteSpace: 'nowrap' }}>
+    <Typography noWrap>
       {actualRegion?.label ? `${actualRegion.label} (${region})` : region}
-    </div>
+    </Typography>
   );
 };
