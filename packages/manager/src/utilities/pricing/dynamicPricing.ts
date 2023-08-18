@@ -40,8 +40,6 @@ export const getDCSpecificPricingDisplay = ({
   regionId,
   size,
 }: DataCenterPricingOptions) => {
-  const volumePrice: number = getVolumePrice(size);
-
   const increaseValue = priceIncreaseMap[regionId] as number | undefined;
 
   const getDynamicPrice = (initialPrice: number): string => {
@@ -63,6 +61,7 @@ export const getDCSpecificPricingDisplay = ({
     case 'Nodebalancer':
       return getDynamicPrice(NODEBALANCER_PRICE);
     case 'Volume':
+      const volumePrice: number = getVolumePrice(size);
       return getDynamicPrice(volumePrice);
     default:
       return '0.00';
