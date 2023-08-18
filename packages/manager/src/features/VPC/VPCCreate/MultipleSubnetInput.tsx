@@ -51,7 +51,7 @@ export const MultipleSubnetInput = (props: Props) => {
             onChange={(subnet, subnetIdx, removable) =>
               handleSubnetChange(subnet, subnetIdx ?? 0, !!removable)
             }
-            removable={true}
+            isRemovable={true}
           />
         </Grid>
       ))}

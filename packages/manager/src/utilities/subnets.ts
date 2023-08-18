@@ -1,4 +1,4 @@
-import { determineIPType, vpcsValidateIP } from "@linode/validation";
+import { determineIPType, vpcsValidateIP } from '@linode/validation';
 
 // VPC: TODO - added ipv6 related fields here, but they will not be used until VPCs support ipv6
 interface SubnetIPState {
@@ -14,7 +14,7 @@ export interface SubnetFieldState {
   ip: SubnetIPState;
 }
 
-export type SubnetIpType = 'ipv4' | 'ipv6';
+export type SubnetIPType = 'ipv4' | 'ipv6';
 
 /**
  * Maps subnet mask length to number of theoretically available IPs.
@@ -59,9 +59,9 @@ export const SubnetMaskToAvailIPv4s = {
   32: 1,
 };
 
-export const calculateAvailableIpv4s = (
+export const calculateAvailableIPv4s = (
   address: string,
-  ipType: SubnetIpType | undefined
+  ipType: SubnetIPType | undefined
 ): number | undefined => {
   const [, mask] = address.split('/');
   if (ipType !== 'ipv4' || mask === '' || mask === undefined) {
@@ -83,15 +83,18 @@ export const validateSubnets = (
   }
 ): SubnetFieldState[] => {
   return subnets.map((subnet) => {
-    if(subnet.label || subnet.ip.ipv4) {
-      const errorSubnet: SubnetFieldState = {...subnet, labelError: ''};
-      if(!subnet.label) {
-        errorSubnet["labelError"] = options?.labelError ?? DEFAULT_LABEL_ERROR;
+    if (subnet.label || subnet.ip.ipv4) {
+      const errorSubnet: SubnetFieldState = { ...subnet, labelError: '' };
+      if (!subnet.label) {
+        errorSubnet['labelError'] = options?.labelError ?? DEFAULT_LABEL_ERROR;
       }
-      if(determineIPType(subnet.ip.ipv4 ?? '') !== 'ipv4' || !vpcsValidateIP(subnet.ip.ipv4, true)) {
-        const errorIP = { ...subnet.ip, ipv4Error: ''};
-        errorIP["ipv4Error"] = options?.ipv4Error ?? DEFAULT_IPV4_ERROR;
-        errorSubnet["ip"] = errorIP;
+      if (
+        determineIPType(subnet.ip.ipv4 ?? '') !== 'ipv4' ||
+        !vpcsValidateIP(subnet.ip.ipv4, true)
+      ) {
+        const errorIP = { ...subnet.ip, ipv4Error: '' };
+        errorIP['ipv4Error'] = options?.ipv4Error ?? DEFAULT_IPV4_ERROR;
+        errorSubnet['ip'] = errorIP;
       }
       return errorSubnet;
     }

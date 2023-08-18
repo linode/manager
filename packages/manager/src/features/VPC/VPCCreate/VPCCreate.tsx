@@ -25,6 +25,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { SubnetFieldState, validateSubnets } from 'src/utilities/subnets';
 import { MultipleSubnetInput } from './MultipleSubnetInput';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   StyledBodyTypography,
   StyledHeaderTypography,
@@ -39,6 +40,9 @@ const VPCCreate = () => {
   const { isLoading, mutateAsync: createVPC } = useCreateVPCMutation();
   const [subnetErrorsFromAPI, setSubnetErrorsFromAPI] = React.useState<
     APIError[]
+  >();
+  const [generalAPIError, setGeneralAPIError] = React.useState<
+    string | undefined
   >();
 
   const disabled = profile?.restricted && !grants?.global.add_vpcs;
@@ -89,6 +93,7 @@ const VPCCreate = () => {
     }
 
     setSubmitting(true);
+    setGeneralAPIError(undefined);
 
     const subnetsPayload = createSubnetsPayload();
 
@@ -107,7 +112,7 @@ const VPCCreate = () => {
       if (apiSubnetErrors) {
         setSubnetErrorsFromAPI(apiSubnetErrors);
       }
-      handleAPIErrors(errors, setFieldError);
+      handleAPIErrors(errors, setFieldError, setGeneralAPIError);
     }
 
     setSubmitting(false);
@@ -139,6 +144,12 @@ const VPCCreate = () => {
     validationSchema: createVPCSchema,
   });
 
+  React.useEffect(() => {
+    if (errors || generalAPIError) {
+      scrollErrorIntoView();
+    }
+  }, [errors, generalAPIError]);
+
   return (
     <>
       <DocumentTitleSegment segment="Create VPC" />
@@ -167,6 +178,7 @@ const VPCCreate = () => {
         />
       )}
       <Grid>
+        {generalAPIError ? <Notice error text={generalAPIError} /> : null}
         <form onSubmit={handleSubmit}>
           <Paper>
             <StyledHeaderTypography variant="h2">VPC</StyledHeaderTypography>
@@ -232,7 +244,6 @@ const VPCCreate = () => {
               disabled: disabled,
               loading: isLoading,
               onClick: onCreateVPC,
-              // TODO: VPC - generate event on creation?
             }}
             style={{ marginTop: theme.spacing(1) }}
           />
