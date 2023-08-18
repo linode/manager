@@ -1,27 +1,17 @@
-import { getVolumePrice } from 'src/utilities/pricing/entityPricing';
-
-import { BACKUP_PRICE, LKE_HA_PRICE, NODEBALANCER_PRICE } from './constants';
-
 import type { Region } from '@linode/api-v4';
 import type { FlagSet } from 'src/featureFlags';
 
-interface CalculatePriceOptions {
-  increaseValue: number;
-  initialPrice: number;
-}
-
 export interface DataCenterPricingOptions {
-  entity: 'Backup' | 'LKE HA' | 'Nodebalancer' | 'Volume';
+  basePrice: number;
   flags: FlagSet;
   regionId: Region['id'];
-  size?: number;
 }
 
 // The key is a region id and the value is the percentage
 // increase in price.
 const priceIncreaseMap = {
-  'br-gru': 30,
-  'id-cgk': 20,
+  'br-gru': 0.3, // Sao Paulo
+  'id-cgk': 0.2, // Jakarta
 };
 
 /**
@@ -30,57 +20,31 @@ const priceIncreaseMap = {
  * @param region The region to calculate pricing for.
  * @param size An optional size value for entities that require it for price based on it (ex: Volume).
  * @example
- * const price = getDCSpecificPricing({
- *   entity: 'Volume',
- *   regionId: 'us-east-1a',
- *   size: 20,
+ * const price = getDCSpecificPrice({
+ *   basePrice: getVolumePrice(20),
+ *   flags: { dcSpecificPricing: true },
+ *   regionId: 'us-east',
  * });
  * @returns a datacenter specific price
  */
-export const getDCSpecificPricingDisplay = ({
-  entity,
+export const getDCSpecificPrice = ({
+  basePrice,
   flags,
   regionId,
-  size,
 }: DataCenterPricingOptions) => {
-  const increaseValue = priceIncreaseMap[regionId] as number | undefined;
-
-  const getDynamicPrice = (initialPrice: number): string => {
-    if (!flags.dcSpecificPricing) {
-      return initialPrice.toFixed(2);
-    }
-
-    if (increaseValue !== undefined) {
-      return calculatePrice({
-        increaseValue,
-        initialPrice,
-      });
-    }
-
-    return initialPrice.toFixed(2);
-  };
-
-  switch (entity) {
-    case 'Backup':
-      return getDynamicPrice(BACKUP_PRICE);
-    case 'LKE HA':
-      return getDynamicPrice(LKE_HA_PRICE);
-    case 'Nodebalancer':
-      return getDynamicPrice(NODEBALANCER_PRICE);
-    case 'Volume':
-      const volumePrice: number = getVolumePrice(size);
-      return getDynamicPrice(volumePrice);
-    default:
-      return '0.00';
+  if (!flags?.dcSpecificPricing) {
+    return basePrice.toFixed(2);
   }
-};
 
-const calculatePrice = ({
-  increaseValue,
-  initialPrice,
-}: CalculatePriceOptions) => {
-  const price = Number(initialPrice);
-  const increase = price * (increaseValue / 100);
+  const increaseFactor = priceIncreaseMap[regionId] as number | undefined;
 
-  return (price + increase).toFixed(2);
+  if (increaseFactor !== undefined) {
+    // If increaseFactor is defined, it means the region has a price increase
+    // and that we should apply it.
+    const increase = basePrice * increaseFactor;
+
+    return (basePrice + increase).toFixed(2);
+  }
+
+  return basePrice.toFixed(2);
 };

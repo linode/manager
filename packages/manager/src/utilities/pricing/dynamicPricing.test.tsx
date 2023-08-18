@@ -1,44 +1,41 @@
-import { BACKUP_PRICE } from './constants';
-import { getDCSpecificPricingDisplay } from './dynamicPricing';
+import { getDCSpecificPrice } from './dynamicPricing';
+import { getVolumePrice } from './entityPricing';
 
 describe('getDCSpecificPricingDisplay', () => {
   it('calculates dynamic pricing for a region without an increase', () => {
     expect(
-      getDCSpecificPricingDisplay({
-        entity: 'Backup',
+      getDCSpecificPrice({
+        basePrice: getVolumePrice(20),
         flags: { dcSpecificPricing: true },
         regionId: 'us-east',
       })
-    ).toBe(BACKUP_PRICE.toFixed(2));
+    ).toBe('2.00');
   });
 
   it('calculates dynamic pricing for a region with an increase', () => {
     expect(
-      getDCSpecificPricingDisplay({
-        entity: 'Volume',
+      getDCSpecificPrice({
+        basePrice: getVolumePrice(20),
         flags: { dcSpecificPricing: true },
         regionId: 'id-cgk',
-        size: 20,
       })
     ).toBe('2.40');
   });
 
   it('does not apply dc specific pricing when flag is off', () => {
     expect(
-      getDCSpecificPricingDisplay({
-        entity: 'Volume',
+      getDCSpecificPrice({
+        basePrice: getVolumePrice(20),
         flags: { dcSpecificPricing: false },
         regionId: 'id-cgk',
-        size: 20,
       })
     ).toBe('2.00');
   });
 
   it('handles default case correctly', () => {
     expect(
-      getDCSpecificPricingDisplay({
-        // @ts-expect-error intentionally breaking type to verify the function works
-        entity: 'InvalidEntity',
+      getDCSpecificPrice({
+        basePrice: 0,
         flags: { dcSpecificPricing: true },
         regionId: 'invalid-region',
       })
