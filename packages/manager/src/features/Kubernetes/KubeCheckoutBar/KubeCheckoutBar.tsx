@@ -18,10 +18,10 @@ import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
 
 export interface Props {
-  highAvailabilityPrice: number;
   createCluster: () => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
+  highAvailabilityPrice: number;
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   removePool: (poolIdx: number) => void;
@@ -33,10 +33,10 @@ export interface Props {
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const {
-    highAvailabilityPrice,
     createCluster,
     hasAgreed,
     highAvailability,
+    highAvailabilityPrice,
     pools,
     region,
     removePool,

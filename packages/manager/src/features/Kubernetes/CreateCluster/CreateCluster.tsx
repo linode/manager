@@ -379,10 +379,10 @@ export const CreateCluster = () => {
             createCluster,
             classes,
           ]}
-          highAvailabilityPrice={getHighAvailabilityPrice(selectedID)}
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
+          highAvailabilityPrice={getHighAvailabilityPrice(selectedID)}
           pools={nodePools}
           region={selectedRegionID}
           removePool={removePool}
