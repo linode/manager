@@ -4,11 +4,11 @@ import * as React from 'react';
 import { BACKUP_PRICE } from './constants';
 import { getDCSpecificPricingDisplay } from './dynamicPricing';
 
-import type { DataCenterPricingProps } from './dynamicPricing';
+import type { DataCenterPricingOptions } from './dynamicPricing';
 
 describe('getDCSpecificPricingDisplay', () => {
   it('calculates dynamic pricing for a region without an increase', () => {
-    const props: DataCenterPricingProps = {
+    const props: DataCenterPricingOptions = {
       entity: 'Backup',
       regionId: 'us-east',
     };
@@ -23,7 +23,7 @@ describe('getDCSpecificPricingDisplay', () => {
   });
 
   it('calculates dynamic pricing for a region with an increase', () => {
-    const props: DataCenterPricingProps = {
+    const props: DataCenterPricingOptions = {
       entity: 'Volume',
       regionId: 'id-cgk',
       size: 20,
@@ -39,8 +39,8 @@ describe('getDCSpecificPricingDisplay', () => {
   });
 
   it('handles default case correctly', () => {
-    const props: DataCenterPricingProps = {
-      entity: 'InvalidEntity' as DataCenterPricingProps['entity'],
+    const props: DataCenterPricingOptions = {
+      entity: 'InvalidEntity' as DataCenterPricingOptions['entity'],
       regionId: 'invalid-region',
     };
 

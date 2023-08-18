@@ -4,30 +4,23 @@ import { BACKUP_PRICE, LKE_HA_PRICE, NODEBALANCER_PRICE } from './constants';
 
 import type { Region } from '@linode/api-v4';
 
-interface CalculatePriceProps {
-  increaseValue: IncreaseValue;
+interface CalculatePriceOptions {
+  increaseValue: number;
   initialPrice: number;
 }
 
-export interface DataCenterPricingProps {
+export interface DataCenterPricingOptions {
   entity: 'Backup' | 'LKE HA' | 'Nodebalancer' | 'Volume';
   regionId: Region['id'];
   size?: number;
 }
 
-enum IncreasedRegion {
-  jakarta = 'id-cgk',
-  saoPaulo = 'br-gru',
-}
-
-/**
- * The IncreaseValue represents a percentage of the initial price.
- * We may want to be able to control this value from a flag before being able to fetch it from the API.
- */
-enum IncreaseValue {
-  jakarta = 20,
-  saoPaulo = 30,
-}
+// The key is a region id and the value is the percentage
+// increase in price.
+const priceIncreaseMap = {
+  'br-gru': 30,
+  'id-cgk': 20,
+};
 
 /**
  * This function is used to calculate the dynamic pricing for a given entity, based on potential region increased costs.
@@ -40,31 +33,26 @@ enum IncreaseValue {
  *   regionId: 'us-east-1a',
  *   size: 20,
  * });
- * @returns
+ * @returns a datacenter specific price
  */
 export const getDCSpecificPricingDisplay = ({
   entity,
   regionId,
   size,
-}: DataCenterPricingProps) => {
-  const isJakarta: boolean = regionId === IncreasedRegion.jakarta;
-  const isSaoPaulo: boolean = regionId === IncreasedRegion.saoPaulo;
+}: DataCenterPricingOptions) => {
   const volumePrice: number = getVolumePrice(size);
 
+  const increaseValue = priceIncreaseMap[regionId] as number | undefined;
+
   const getDynamicPrice = (initialPrice: number): string => {
-    if (isJakarta) {
+    if (increaseValue !== undefined) {
       return calculatePrice({
-        increaseValue: IncreaseValue.jakarta,
+        increaseValue,
         initialPrice,
       });
-    } else if (isSaoPaulo) {
-      return calculatePrice({
-        increaseValue: IncreaseValue.saoPaulo,
-        initialPrice,
-      });
-    } else {
-      return initialPrice.toFixed(2);
     }
+
+    return initialPrice.toFixed(2);
   };
 
   switch (entity) {
@@ -84,7 +72,7 @@ export const getDCSpecificPricingDisplay = ({
 const calculatePrice = ({
   increaseValue,
   initialPrice,
-}: CalculatePriceProps) => {
+}: CalculatePriceOptions) => {
   const price = Number(initialPrice);
   const increase = price * (increaseValue / 100);
 
