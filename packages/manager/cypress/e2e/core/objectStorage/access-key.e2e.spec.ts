@@ -16,7 +16,7 @@ import { cleanUp } from 'support/util/cleanup';
 authenticate();
 describe('object storage access key end-to-end tests', () => {
   before(() => {
-    cleanUp('obj-access-keys');
+    cleanUp(['obj-buckets', 'obj-access-keys']);
   });
 
   /*
