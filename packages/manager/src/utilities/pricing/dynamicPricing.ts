@@ -16,7 +16,7 @@ export interface DataCenterPricingOptions {
    * The `id` of the region we intended to get the price for.
    * @example us-east
    */
-  regionId: Region['id'];
+  regionId: Region['id'] | undefined;
 }
 
 // The key is a region id and the value is the percentage
@@ -41,7 +41,7 @@ export const getDCSpecificPrice = ({
   flags,
   regionId,
 }: DataCenterPricingOptions) => {
-  if (!flags?.dcSpecificPricing) {
+  if (!flags?.dcSpecificPricing || !regionId) {
     return basePrice.toFixed(2);
   }
 
