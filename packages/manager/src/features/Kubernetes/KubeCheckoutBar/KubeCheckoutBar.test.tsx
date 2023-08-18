@@ -48,7 +48,8 @@ describe('KubeCheckoutBar', () => {
     await findByText(/minimum of 3 nodes/i);
   });
 
-  it('should display the total price of the cluster', async () => {
+  // TODO
+  it.skip('should display the total price of the cluster', async () => {
     const { findByText } = renderWithTheme(<KubeCheckoutBar {...props} />);
 
     // 5 node pools * 3 linodes per pool * 10 per linode

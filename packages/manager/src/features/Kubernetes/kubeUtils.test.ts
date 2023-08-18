@@ -46,14 +46,18 @@ describe('helper functions', () => {
 
   describe('getTotalClusterPrice', () => {
     it('should calculate the total cluster price', () => {
-      expect(
-        getTotalClusterPrice([mockNodePool, mockNodePool], types, false)
-      ).toBe(20);
+      expect(getTotalClusterPrice([mockNodePool, mockNodePool], types)).toBe(
+        20
+      );
     });
 
     it('should calculate the total cluster price with HA enabled', () => {
       expect(
-        getTotalClusterPrice([mockNodePool, mockNodePool], types, true)
+        getTotalClusterPrice(
+          [mockNodePool, mockNodePool],
+          types,
+          HIGH_AVAILABILITY_PRICE
+        )
       ).toBe(20 + (HIGH_AVAILABILITY_PRICE || 0));
     });
   });
