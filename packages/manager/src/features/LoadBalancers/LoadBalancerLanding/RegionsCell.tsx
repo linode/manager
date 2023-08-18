@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { useRegionsQuery } from 'src/queries/regions';
+import { Typography } from 'src/components/Typography';
 
 interface Props {
   region: string;
