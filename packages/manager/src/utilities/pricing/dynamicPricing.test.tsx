@@ -6,6 +6,7 @@ describe('getDCSpecificPricingDisplay', () => {
     expect(
       getDCSpecificPricingDisplay({
         entity: 'Backup',
+        flags: { dcSpecificPricing: true },
         regionId: 'us-east',
       })
     ).toBe(BACKUP_PRICE.toFixed(2));
@@ -15,10 +16,22 @@ describe('getDCSpecificPricingDisplay', () => {
     expect(
       getDCSpecificPricingDisplay({
         entity: 'Volume',
+        flags: { dcSpecificPricing: true },
         regionId: 'id-cgk',
         size: 20,
       })
     ).toBe('2.40');
+  });
+
+  it('does not apply dc specific pricing when flag is off', () => {
+    expect(
+      getDCSpecificPricingDisplay({
+        entity: 'Volume',
+        flags: { dcSpecificPricing: false },
+        regionId: 'id-cgk',
+        size: 20,
+      })
+    ).toBe('2.00');
   });
 
   it('handles default case correctly', () => {
@@ -26,6 +39,7 @@ describe('getDCSpecificPricingDisplay', () => {
       getDCSpecificPricingDisplay({
         // @ts-expect-error intentionally breaking type to verify the function works
         entity: 'InvalidEntity',
+        flags: { dcSpecificPricing: true },
         regionId: 'invalid-region',
       })
     ).toBe('0.00');

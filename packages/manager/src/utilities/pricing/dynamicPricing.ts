@@ -3,7 +3,7 @@ import { getVolumePrice } from 'src/utilities/pricing/entityPricing';
 import { BACKUP_PRICE, LKE_HA_PRICE, NODEBALANCER_PRICE } from './constants';
 
 import type { Region } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
+import type { FlagSet } from 'src/featureFlags';
 
 interface CalculatePriceOptions {
   increaseValue: number;
@@ -12,7 +12,7 @@ interface CalculatePriceOptions {
 
 export interface DataCenterPricingOptions {
   entity: 'Backup' | 'LKE HA' | 'Nodebalancer' | 'Volume';
-  flags: Flags;
+  flags: FlagSet;
   regionId: Region['id'];
   size?: number;
 }
@@ -39,14 +39,14 @@ const priceIncreaseMap = {
  */
 export const getDCSpecificPricingDisplay = ({
   entity,
+  flags,
   regionId,
   size,
-  flags,
 }: DataCenterPricingOptions) => {
   const increaseValue = priceIncreaseMap[regionId] as number | undefined;
 
   const getDynamicPrice = (initialPrice: number): string => {
-    if (!flags) {
+    if (!flags.dcSpecificPricing) {
       return initialPrice.toFixed(2);
     }
 
