@@ -22,7 +22,7 @@ export const LoadBalancerActionsMenu = (props: Props) => {
       title: 'Clone Load Balancer',
     },
     {
-      onClick: () => null,
+      onClick: () => history.push(`/loadbalancers/${loadBalancerId}/settings`),
       title: 'Settings',
     },
     {
