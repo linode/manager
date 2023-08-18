@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
+import { BACKUP_PRICE } from './constants';
 import { getDCSpecificPricingDisplay } from './dynamicPricing';
-import { getBackupPrice } from './entityPricing';
 
 import type { DataCenterPricingProps } from './dynamicPricing';
 
@@ -19,7 +19,7 @@ describe('getDCSpecificPricingDisplay', () => {
 
     const priceElement = getByTestId('price');
     expect(priceElement).toBeInTheDocument();
-    expect(priceElement.textContent).toBe(getBackupPrice().toFixed(2));
+    expect(priceElement.textContent).toBe(BACKUP_PRICE.toFixed(2));
   });
 
   it('calculates dynamic pricing for a region with an increase', () => {

@@ -1,9 +1,6 @@
-import {
-  getBackupPrice,
-  getLKEClusterHAPrice,
-  getNodeBalancerPrice,
-  getVolumePrice,
-} from 'src/utilities/pricing/entityPricing';
+import { getVolumePrice } from 'src/utilities/pricing/entityPricing';
+
+import { BACKUP_PRICE, LKE_HA_PRICE, NODEBALANCER_PRICE } from './constants';
 
 import type { Region } from '@linode/api-v4';
 
@@ -36,7 +33,7 @@ enum IncreaseValue {
  * This function is used to calculate the dynamic pricing for a given entity, based on potential region increased costs.
  * @param entity The entity to calculate pricing for.
  * @param region The region to calculate pricing for.
- * @param size An optional size value for entities that require it for field validation (ex: Volumes).
+ * @param size An optional size value for entities that require it for price based on it (ex: Volume).
  * @example
  * const price = getDCSpecificPricing({
  *   entity: 'Volume',
@@ -52,9 +49,6 @@ export const getDCSpecificPricingDisplay = ({
 }: DataCenterPricingProps) => {
   const isJakarta: boolean = regionId === IncreasedRegion.jakarta;
   const isSaoPaulo: boolean = regionId === IncreasedRegion.saoPaulo;
-  const backupPrice = getBackupPrice();
-  const lkePrice = getLKEClusterHAPrice();
-  const nodeBalancerPrice = getNodeBalancerPrice();
   const volumePrice: number = getVolumePrice(size);
 
   const getDynamicPrice = (initialPrice: number): string => {
@@ -75,11 +69,11 @@ export const getDCSpecificPricingDisplay = ({
 
   switch (entity) {
     case 'Backup':
-      return getDynamicPrice(backupPrice);
+      return getDynamicPrice(BACKUP_PRICE);
     case 'LKE HA':
-      return getDynamicPrice(lkePrice);
+      return getDynamicPrice(LKE_HA_PRICE);
     case 'Nodebalancer':
-      return getDynamicPrice(nodeBalancerPrice);
+      return getDynamicPrice(NODEBALANCER_PRICE);
     case 'Volume':
       return getDynamicPrice(volumePrice);
     default:
