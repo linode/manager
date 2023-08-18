@@ -85,7 +85,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       calculatedPrice={getTotalClusterPrice(
         pools,
         types ?? [],
-        highAvailability
+        highAvailability ? HIGH_AVAILABILITY_PRICE : undefined
       )}
       data-qa-checkout-bar
       disabled={disableCheckout}
