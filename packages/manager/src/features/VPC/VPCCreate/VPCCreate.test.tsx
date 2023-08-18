@@ -11,6 +11,8 @@ beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
+jest.mock('src/utilities/scrollErrorIntoView');
+
 describe('VPC create page', () => {
   it('should render the vpc and subnet sections', () => {
     const { getAllByText } = renderWithTheme(<VPCCreate />);
