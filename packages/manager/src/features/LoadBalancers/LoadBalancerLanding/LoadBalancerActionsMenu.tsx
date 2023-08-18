@@ -34,7 +34,7 @@ export const LoadBalancerActionsMenu = (props: Props) => {
   return (
     <ActionMenu
       actionsList={actions}
-      ariaLabel={`Action menu for NodeBalancer ${loadBalancerId}`}
+      ariaLabel={`Action menu for Load Balancer ${loadBalancerId}`}
     />
   );
 };
