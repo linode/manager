@@ -2,15 +2,20 @@ import {
   Step,
   StepConnector,
   StepContent,
-  StepIcon,
   StepLabel,
   Stepper,
 } from '@mui/material';
 import Box from '@mui/material/Box';
-import { Theme, styled } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+
+import {
+  CustomStepIcon,
+  StyledCircleIcon,
+  StyledColorlibConnector,
+} from './VerticalLinearStepper.styles';
 
 type VerticalLinearStep = {
   content: JSX.Element;
@@ -21,49 +26,6 @@ type VerticalLinearStep = {
 interface VerticalLinearStepperProps {
   steps: VerticalLinearStep[];
 }
-
-const ColorlibConnector = () => (
-  <StepConnector
-    sx={{
-      '& .MuiStepConnector-line': {
-        borderColor: '#eaeaf0',
-        borderLeftWidth: '3px',
-        minHeight: '28px',
-      },
-    }}
-  />
-);
-
-const CustomStepIcon = styled(StepIcon)(() => ({
-  active: {},
-  completed: {},
-  root: {
-    '&$completed': {
-      display: 'none', // Hide the checkmark icon on completed steps
-    },
-  },
-}));
-
-type IconStyles = {
-  backgroundColor?: string;
-  border?: string;
-};
-
-const CircleIcon = ({ iconStyles }: { iconStyles: IconStyles }) => (
-  <div
-    style={{
-      alignItems: 'center',
-      borderRadius: '50%',
-      display: 'flex',
-      height: '24px',
-      justifyContent: 'center',
-      width: '24px',
-      ...iconStyles,
-    }}
-  >
-    {/* You can also add any content inside the circle if needed */}
-  </div>
-);
 
 export const VerticalLinearStepper = ({
   steps,
@@ -78,20 +40,10 @@ export const VerticalLinearStepper = ({
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const getCircleIconStyles = (index: number, activeStep: number) => {
-    if (index === activeStep) {
-      return { backgroundColor: '#3683dc' }; // Current step
-    } else if (index < activeStep) {
-      return { backgroundColor: '#ADD8E6', border: '2px solid #3683dc' }; // Completed step
-    } else {
-      return { backgroundColor: 'white', border: '2px solid #f4f5f6' }; // Inactive step
-    }
-  };
-
   return (
     <Box
       sx={(theme: Theme) => ({
-        backgroundColor: 'white',
+        backgroundColor: theme.bg.bgPaper,
         display: 'flex',
         margin: 'auto',
         maxWidth: 800,
@@ -102,7 +54,7 @@ export const VerticalLinearStepper = ({
       <Box>
         <Stepper
           activeStep={activeStep}
-          connector={<ColorlibConnector />}
+          connector={<StyledColorlibConnector />}
           orientation="vertical"
         >
           {steps.map((step: VerticalLinearStep, index: number) => (
@@ -111,9 +63,7 @@ export const VerticalLinearStepper = ({
                 icon={
                   <CustomStepIcon
                     icon={
-                      <CircleIcon
-                        iconStyles={getCircleIconStyles(index, activeStep)}
-                      />
+                      <StyledCircleIcon activeStep={activeStep} index={index} />
                     }
                   />
                 }
