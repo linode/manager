@@ -97,8 +97,10 @@ const LoadBalancerLanding = () => {
               Label
             </TableSortCell>
             <TableCell>Endpoints</TableCell>
-            <TableCell>Ports</TableCell>
             <Hidden smDown>
+              <TableCell>Ports</TableCell>
+            </Hidden>
+            <Hidden mdDown>
               <TableSortCell
                 active={orderBy === 'region'}
                 direction={order}

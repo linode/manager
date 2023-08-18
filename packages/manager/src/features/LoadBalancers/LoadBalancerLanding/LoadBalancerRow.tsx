@@ -30,24 +30,26 @@ export const LoadBalancerRow = ({ loadBalancer }: Props) => {
       <TableCell>
         <Link to={`/loadbalancers/${id}`}>{label}</Link>
       </TableCell>
+      <TableCell>
+        {/* TODO: AGLB - These are stub values for now*/}
+        <Stack alignItems="center" direction="row">
+          <StatusIcon status="active" />
+          <Typography>4 up</Typography>
+          <Typography mx={1}>&mdash;</Typography>
+          <StatusIcon status="error" />
+          <Typography>6 down</Typography>
+        </Stack>
+      </TableCell>
+      <Hidden smDown>
+        <TableCell>{ports?.join(', ')}</TableCell>
+      </Hidden>
       <Hidden mdDown>
         <TableCell>
-          {/* TODO: AGLB - These are stub values for now*/}
-          <Stack alignItems="center" direction="row" spacing={1}>
-            <StatusIcon status="active" />
-            <Typography>4 up</Typography>
-            <Typography>&mdash;</Typography>
-            <StatusIcon status="error" />
-            <Typography>6 down</Typography>
-          </Stack>
+          {regions.map((region) => (
+            <RegionsCell key={region} region={region} />
+          ))}
         </TableCell>
       </Hidden>
-      <TableCell>{ports?.join(', ')}</TableCell>
-      <TableCell>
-        {regions.map((region) => (
-          <RegionsCell key={region} region={region} />
-        ))}
-      </TableCell>
       <TableCell actionCell>
         <LoadBalancerActionsMenu loadBalancerId={id} />
       </TableCell>
