@@ -2,12 +2,12 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { FlagSet, Flags } from 'src/featureFlags';
 import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import { getStorage, setStorage } from 'src/utilities/storage';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
