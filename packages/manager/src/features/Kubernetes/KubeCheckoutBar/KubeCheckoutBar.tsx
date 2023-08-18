@@ -18,7 +18,7 @@ import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
 
 export interface Props {
-  HIGH_AVAILABILITY_PRICE: number | undefined;
+  highAvailabilityPrice: number;
   createCluster: () => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
@@ -33,7 +33,7 @@ export interface Props {
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const {
-    HIGH_AVAILABILITY_PRICE,
+    highAvailabilityPrice,
     createCluster,
     hasAgreed,
     highAvailability,
@@ -67,7 +67,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const haConditions =
     highAvailability === undefined &&
     showHighAvailability &&
-    HIGH_AVAILABILITY_PRICE !== undefined;
+    highAvailabilityPrice !== undefined;
 
   const disableCheckout = Boolean(needsAPool || gdprConditions || haConditions);
 
@@ -85,7 +85,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       calculatedPrice={getTotalClusterPrice(
         pools,
         types ?? [],
-        highAvailability ? HIGH_AVAILABILITY_PRICE : undefined
+        highAvailability ? highAvailabilityPrice : undefined
       )}
       data-qa-checkout-bar
       disabled={disableCheckout}

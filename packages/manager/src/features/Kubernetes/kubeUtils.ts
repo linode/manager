@@ -27,13 +27,13 @@ export const getMonthlyPrice = (
 export const getTotalClusterPrice = (
   pools: KubeNodePoolResponse[],
   types: ExtendedType[],
-  highAvailabilityPrice?: number | undefined
+  highAvailabilityPrice?: number
 ) => {
   const price = pools.reduce((accumulator, node) => {
     return accumulator + getMonthlyPrice(node.type, node.count, types);
   }, 0);
 
-  return highAvailabilityPrice ? price + (highAvailabilityPrice || 0) : price;
+  return highAvailabilityPrice ? price + highAvailabilityPrice : price;
 };
 
 interface ClusterData {

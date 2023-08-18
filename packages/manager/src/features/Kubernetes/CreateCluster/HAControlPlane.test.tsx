@@ -1,12 +1,13 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
+import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HAControlPlane, Props } from './HAControlPlane';
 
 const props: Props = {
-  HIGH_AVAILABILITY_PRICE: 60,
+  highAvailabilityPrice: LKE_HA_PRICE,
   setHighAvailability: jest.fn(),
 };
 
@@ -15,18 +16,6 @@ describe('HAControlPlane', () => {
     const { getByTestId } = renderWithTheme(<HAControlPlane {...props} />);
 
     expect(getByTestId('ha-control-plane-form')).toBeVisible();
-  });
-
-  it('the component should not render when HIGH_AVAILABILITY_PRICE is undefined ', () => {
-    const testProps: Props = {
-      HIGH_AVAILABILITY_PRICE: undefined,
-      setHighAvailability: jest.fn(),
-    };
-    const { queryByTestId } = renderWithTheme(
-      <HAControlPlane {...testProps} />
-    );
-
-    expect(queryByTestId('ha-control-plane-form')).not.toBeInTheDocument();
   });
 
   it('should call the handleChange function on change', () => {

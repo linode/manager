@@ -22,20 +22,16 @@ export const HACopy = () => (
 );
 
 export interface Props {
-  HIGH_AVAILABILITY_PRICE: number | undefined;
+  highAvailabilityPrice: number;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
 
 export const HAControlPlane = (props: Props) => {
-  const { HIGH_AVAILABILITY_PRICE, setHighAvailability } = props;
+  const { highAvailabilityPrice, setHighAvailability } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setHighAvailability(e.target.value === 'yes');
   };
-
-  if (HIGH_AVAILABILITY_PRICE === undefined) {
-    return null;
-  }
 
   return (
     <FormControl data-testid="ha-control-plane-form">
@@ -57,7 +53,7 @@ export const HAControlPlane = (props: Props) => {
       >
         <FormControlLabel
           label={`Yes, enable HA control plane. (${displayPrice(
-            HIGH_AVAILABILITY_PRICE
+            highAvailabilityPrice
           )}/month)`}
           control={<Radio data-testid="ha-radio-button-yes" />}
           name="yes"

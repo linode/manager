@@ -334,7 +334,7 @@ export const CreateCluster = () => {
             {showHighAvailability ? (
               <Box data-testid="ha-control-plane">
                 <HAControlPlane
-                  HIGH_AVAILABILITY_PRICE={getHighAvailabilityPrice(selectedID)}
+                  highAvailabilityPrice={getHighAvailabilityPrice(selectedID)}
                   setHighAvailability={setHighAvailability}
                 />
               </Box>
@@ -379,7 +379,7 @@ export const CreateCluster = () => {
             createCluster,
             classes,
           ]}
-          HIGH_AVAILABILITY_PRICE={getHighAvailabilityPrice(selectedID)}
+          highAvailabilityPrice={getHighAvailabilityPrice(selectedID)}
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}

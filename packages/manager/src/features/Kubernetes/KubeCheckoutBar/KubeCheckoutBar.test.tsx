@@ -2,6 +2,7 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
+import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
@@ -9,7 +10,7 @@ import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
 const pools = nodePoolFactory.buildList(5, { count: 3, type: 'g6-standard-1' });
 
 const props: Props = {
-  HIGH_AVAILABILITY_PRICE: 60,
+  highAvailabilityPrice: LKE_HA_PRICE,
   createCluster: jest.fn(),
   hasAgreed: false,
   highAvailability: true,
