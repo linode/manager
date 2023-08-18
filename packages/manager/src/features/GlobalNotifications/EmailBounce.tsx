@@ -11,7 +11,7 @@ import { Typography } from 'src/components/Typography';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { StyledButton, StyledGrid } from './EmailBounce.styles';
+import { StyledGrid } from './EmailBounce.styles';
 
 // =============================================================================
 // <EmailBounceNotificationSection />
@@ -141,13 +141,16 @@ const EmailBounceNotification = React.memo((props: Props) => {
           >
             {confirmationText}
           </Button>
-          <StyledButton
+          <Button
+            sx={(theme) => ({
+              marginLeft: theme.spacing(2),
+            })}
             buttonType="secondary"
             data-testid="updateButton"
             onClick={changeEmail}
           >
             {updateText}
-          </StyledButton>
+          </Button>
         </StyledGrid>
       </Grid>
     </Notice>

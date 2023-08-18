@@ -1,4 +1,3 @@
-import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -53,12 +52,17 @@ export const TaxCollectionBanner = () => {
     bannerRegions.length > 0 && bannerRegions.includes(account.state);
 
   const actionButton = bannerHasAction ? (
-    <StyledButton
+    <Button
+      sx={(theme) => ({
+        marginLeft: theme.spacing(2),
+        minWidth: '140px',
+        whiteSpace: 'nowrap',
+      })}
       buttonType="primary"
       onClick={() => history.push('/account/billing/edit')}
     >
       Update Tax ID
-    </StyledButton>
+    </Button>
   ) : undefined;
 
   return (isEntireCountryTaxable || isUserInTaxableRegion) &&
@@ -80,11 +84,3 @@ export const TaxCollectionBanner = () => {
     </DismissibleBanner>
   ) : null;
 };
-
-const StyledButton = styled(Button, { label: 'StyledButton ' })(
-  ({ theme }) => ({
-    marginLeft: theme.spacing(2),
-    minWidth: 140,
-    whiteSpace: 'nowrap',
-  })
-);
