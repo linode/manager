@@ -1,23 +1,41 @@
 import { getDCSpecificPrice } from './dynamicPricing';
-import { getVolumePrice } from './entityPricing';
+import { getDynamicVolumePrice } from './dynamicVolumePrice';
 
 describe('getDCSpecificPricingDisplay', () => {
   it('calculates dynamic pricing for a region without an increase', () => {
     expect(
       getDCSpecificPrice({
-        basePrice: getVolumePrice(20),
+        basePrice: 20,
         flags: { dcSpecificPricing: true },
         regionId: 'us-east',
       })
-    ).toBe('2.00');
+    ).toBe('20.00');
   });
 
   it('calculates dynamic pricing for a region with an increase', () => {
     expect(
       getDCSpecificPrice({
-        basePrice: getVolumePrice(20),
+        basePrice: 20,
         flags: { dcSpecificPricing: true },
         regionId: 'id-cgk',
+      })
+    ).toBe('24.00');
+
+    expect(
+      getDCSpecificPrice({
+        basePrice: 20,
+        flags: { dcSpecificPricing: true },
+        regionId: 'br-gru',
+      })
+    ).toBe('26.00');
+  });
+
+  it('calculates dynamic pricing for a volumes based on size', () => {
+    expect(
+      getDynamicVolumePrice({
+        flags: { dcSpecificPricing: true },
+        regionId: 'id-cgk',
+        size: 20,
       })
     ).toBe('2.40');
   });
@@ -25,11 +43,11 @@ describe('getDCSpecificPricingDisplay', () => {
   it('does not apply dc specific pricing when flag is off', () => {
     expect(
       getDCSpecificPrice({
-        basePrice: getVolumePrice(20),
+        basePrice: 20,
         flags: { dcSpecificPricing: false },
         regionId: 'id-cgk',
       })
-    ).toBe('2.00');
+    ).toBe('20.00');
   });
 
   it('handles default case correctly', () => {

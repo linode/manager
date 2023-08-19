@@ -16,9 +16,10 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-// import { MAX_VOLUME_SIZE } from 'src/constants';
+import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -43,6 +44,8 @@ import { ConfigSelect } from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
+
+export const SIZE_FIELD_WIDTH = 160;
 
 const useStyles = makeStyles((theme: Theme) => ({
   agreement: {
@@ -90,7 +93,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 320,
   },
   size: {
-    width: 160,
+    position: 'relative',
+    width: SIZE_FIELD_WIDTH,
   },
   tooltip: {
     '& .MuiTooltip-tooltip': {
@@ -114,6 +118,8 @@ type CombinedProps = Props & StateProps;
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const theme = useTheme();
   const classes = useStyles();
+  const flags = useFlags();
+  const { dcSpecificPricing } = flags;
   const { history, onSuccess, origin } = props;
 
   const { data: profile } = useProfile();
@@ -273,12 +279,20 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   data-qa-volume-size-help
                   variant="body1"
                 >
-                  {/* A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                  size and costs $0.10/GB per month. <br />
-                  Up to eight volumes can be attached to a single Linode. */}
-                  A single Volume can range from 10 to 10240 GB in size. Up to
-                  eight Volumes can be attached to a single Linode. Select a
-                  Region to see cost per GB.
+                  {dcSpecificPricing ? (
+                    <span>
+                      A single Volume can range from 10 to 10240 GB in size. Up
+                      to eight Volumes can be attached to a single Linode.
+                      Select a Region to see cost per GB
+                    </span>
+                  ) : (
+                    <span>
+                      A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB
+                      in size and costs $0.10/GB per month. <br />
+                      Up to eight volumes can be attached to a single Linode.
+                    </span>
+                  )}
+                  .
                 </Typography>
                 <LabelField
                   tooltipText="Use only ASCII letters, numbers,
@@ -354,14 +368,16 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
                     )}
                   </Box>
-                  <Box alignItems="flex-end" display="flex">
+                  <Box alignItems="flex-end" display="flex" position="relative">
                     <SizeField
                       disabled={doesNotHavePermission}
                       error={touched.size ? errors.size : undefined}
+                      flags={flags}
                       hasSelectedRegion={!isNilOrEmpty(values.region)}
                       name="size"
                       onBlur={handleBlur}
                       onChange={handleChange}
+                      regionId={values.region}
                       textFieldStyles={classes.size}
                       value={values.size}
                     />

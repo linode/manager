@@ -15,7 +15,10 @@ import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
+import type { FlagSet } from 'src/featureFlags';
+
 interface Props {
+  flags: FlagSet;
   onClose: () => void;
   onSuccess: (volumeLabel: string, message?: string) => void;
   readOnly?: boolean;
@@ -26,6 +29,7 @@ interface Props {
 
 export const ResizeVolumeForm = (props: Props) => {
   const {
+    flags,
     onClose,
     onSuccess,
     readOnly,
@@ -99,6 +103,7 @@ export const ResizeVolumeForm = (props: Props) => {
             <SizeField
               disabled={readOnly}
               error={errors.size}
+              flags={flags}
               name="size"
               onBlur={handleBlur}
               onChange={handleChange}
