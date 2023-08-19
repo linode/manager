@@ -1,13 +1,13 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
-import { compose } from 'recompose';
 
 import { Drawer } from 'src/components/Drawer';
 import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
+import { useFlags } from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import {
@@ -27,122 +27,121 @@ import { modes } from './modes';
 
 type CombinedProps = StateProps & DispatchProps & WithProfileProps;
 
-class VolumeDrawer extends React.PureComponent<CombinedProps> {
-  render() {
-    const {
-      actions,
-      drawerTitle,
-      grants,
-      isOpen,
-      linodeId,
-      linodeLabel,
-      linodeRegion,
-      message,
-      mode,
-      profile,
-      volumeId,
-      volumeLabel,
-      volumePath,
-      volumeRegion,
-      volumeSize,
-      volumeTags,
-    } = this.props;
+const VolumeDrawer = (props: CombinedProps) => {
+  const {
+    actions,
+    drawerTitle,
+    grants,
+    isOpen,
+    linodeId,
+    linodeLabel,
+    linodeRegion,
+    message,
+    mode,
+    profile,
+    volumeId,
+    volumeLabel,
+    volumePath,
+    volumeRegion,
+    volumeSize,
+    volumeTags,
+  } = props;
 
-    const volumesPermissions = grants.data?.volume;
+  const flags = useFlags();
+  const volumesPermissions = grants.data?.volume;
+  const volumePermissions = volumesPermissions?.find(
+    (v: Grant) => v.id === volumeId
+  );
+  const readOnly =
+    Boolean(profile.data?.restricted) &&
+    volumePermissions &&
+    volumePermissions.permissions === 'read_only';
 
-    const volumePermissions = volumesPermissions?.find(
-      (v: Grant) => v.id === volumeId
-    );
-    const readOnly =
-      Boolean(profile.data?.restricted) &&
-      volumePermissions &&
-      volumePermissions.permissions === 'read_only';
-
-    return (
-      <Drawer onClose={actions.closeDrawer} open={isOpen} title={drawerTitle}>
-        {mode === modes.EDITING &&
-          volumeId !== undefined &&
-          volumeLabel !== undefined &&
-          volumeTags !== undefined && (
-            <EditVolumeForm
-              onClose={actions.closeDrawer}
-              readOnly={readOnly}
-              volumeId={volumeId}
-              volumeLabel={volumeLabel}
-              volumeTags={volumeTags.map((v) => ({ label: v, value: v }))}
-            />
-          )}
-        {mode === modes.RESIZING &&
-          volumeId !== undefined &&
-          volumeSize !== undefined &&
-          volumeLabel !== undefined && (
-            <ResizeVolumeForm
-              onClose={actions.closeDrawer}
-              onSuccess={actions.openForResizeInstructions}
-              readOnly={readOnly}
-              volumeId={volumeId}
-              volumeLabel={volumeLabel}
-              volumeSize={volumeSize}
-            />
-          )}
-        {mode === modes.CLONING &&
-          volumeId !== undefined &&
-          volumeLabel !== undefined &&
-          volumeRegion !== undefined &&
-          volumeSize !== undefined && (
-            <CloneVolumeForm
-              onClose={actions.closeDrawer}
-              volumeId={volumeId}
-              volumeLabel={volumeLabel}
-              volumeRegion={volumeRegion}
-              volumeSize={volumeSize}
-            />
-          )}
-        {mode === modes.CREATING_FOR_LINODE &&
-          linodeId !== undefined &&
-          linodeLabel !== undefined &&
-          linodeRegion !== undefined && (
-            <CreateVolumeForLinodeForm
-              linode_id={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegion}
-              onClose={actions.closeDrawer}
-              onSuccess={actions.openForConfig}
-            />
-          )}
-        {mode === modes.ATTACHING &&
-          linodeId !== undefined &&
-          linodeRegion !== undefined &&
-          linodeLabel !== undefined && (
-            <AttachVolumeToLinodeForm
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegion}
-              onClose={actions.closeDrawer}
-            />
-          )}
-        {mode === modes.VIEWING_CONFIG &&
-          volumeLabel !== undefined &&
-          volumePath !== undefined && (
-            <VolumeConfigForm
-              message={message}
-              onClose={actions.closeDrawer}
-              volumeLabel={volumeLabel}
-              volumePath={volumePath}
-            />
-          )}
-        {mode === modes.VIEW_RESIZE_INSTRUCTIONS &&
-          volumeLabel !== undefined && (
-            <ResizeVolumesInstruction
-              message={message}
-              onClose={actions.closeDrawer}
-              volumeLabel={volumeLabel}
-            />
-          )}
-      </Drawer>
-    );
-  }
-}
+  return (
+    <Drawer onClose={actions.closeDrawer} open={isOpen} title={drawerTitle}>
+      {mode === modes.EDITING &&
+        volumeId !== undefined &&
+        volumeLabel !== undefined &&
+        volumeTags !== undefined && (
+          <EditVolumeForm
+            onClose={actions.closeDrawer}
+            readOnly={readOnly}
+            volumeId={volumeId}
+            volumeLabel={volumeLabel}
+            volumeTags={volumeTags.map((v) => ({ label: v, value: v }))}
+          />
+        )}
+      {mode === modes.RESIZING &&
+        volumeId !== undefined &&
+        volumeSize !== undefined &&
+        volumeLabel !== undefined && (
+          <ResizeVolumeForm
+            flags={flags}
+            onClose={actions.closeDrawer}
+            onSuccess={actions.openForResizeInstructions}
+            readOnly={readOnly}
+            volumeId={volumeId}
+            volumeLabel={volumeLabel}
+            volumeSize={volumeSize}
+          />
+        )}
+      {mode === modes.CLONING &&
+        volumeId !== undefined &&
+        volumeLabel !== undefined &&
+        volumeRegion !== undefined &&
+        volumeSize !== undefined && (
+          <CloneVolumeForm
+            onClose={actions.closeDrawer}
+            volumeId={volumeId}
+            volumeLabel={volumeLabel}
+            volumeRegion={volumeRegion}
+            volumeSize={volumeSize}
+          />
+        )}
+      {mode === modes.CREATING_FOR_LINODE &&
+        linodeId !== undefined &&
+        linodeLabel !== undefined &&
+        linodeRegion !== undefined && (
+          <CreateVolumeForLinodeForm
+            flags={flags}
+            linode_id={linodeId}
+            linodeLabel={linodeLabel}
+            linodeRegion={linodeRegion}
+            onClose={actions.closeDrawer}
+            onSuccess={actions.openForConfig}
+          />
+        )}
+      {mode === modes.ATTACHING &&
+        linodeId !== undefined &&
+        linodeRegion !== undefined &&
+        linodeLabel !== undefined && (
+          <AttachVolumeToLinodeForm
+            linodeId={linodeId}
+            linodeLabel={linodeLabel}
+            linodeRegion={linodeRegion}
+            onClose={actions.closeDrawer}
+          />
+        )}
+      {mode === modes.VIEWING_CONFIG &&
+        volumeLabel !== undefined &&
+        volumePath !== undefined && (
+          <VolumeConfigForm
+            message={message}
+            onClose={actions.closeDrawer}
+            volumeLabel={volumeLabel}
+            volumePath={volumePath}
+          />
+        )}
+      {mode === modes.VIEW_RESIZE_INSTRUCTIONS && volumeLabel !== undefined && (
+        <ResizeVolumesInstruction
+          message={message}
+          onClose={actions.closeDrawer}
+          volumeLabel={volumeLabel}
+        />
+      )}
+    </Drawer>
+  );
+};
 
 interface DispatchProps {
   actions: {
@@ -251,4 +250,6 @@ const titleFromState = (state: ApplicationState['volumeDrawer']) => {
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(connected, withProfile)(VolumeDrawer);
+const VolumeDrawerWithHOCs = withProfile(connected(VolumeDrawer));
+
+export default VolumeDrawerWithHOCs;

@@ -39,6 +39,8 @@ import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import { modes } from './modes';
 
+import type { FlagSet } from 'src/featureFlags';
+
 const useStyles = makeStyles((theme: Theme) => ({
   textWrapper: {
     marginBottom: theme.spacing(1.25),
@@ -46,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  flags: FlagSet;
   linode_id: number;
   linodeLabel: string;
   linodeRegion: string;
@@ -63,6 +66,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     actions,
+    flags,
     linode_id,
     linodeLabel,
     linodeRegion,
@@ -210,10 +214,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             <SizeField
               disabled={disabled}
               error={touched.size ? errors.size : undefined}
+              flags={flags}
               isFromLinode
               name="size"
               onBlur={handleBlur}
               onChange={handleChange}
+              regionId={values.region}
               value={values.size}
             />
 
