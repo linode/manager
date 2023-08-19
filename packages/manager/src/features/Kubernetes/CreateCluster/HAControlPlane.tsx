@@ -14,6 +14,7 @@ export const HACopy = () => (
     Recommended for production workloads, a high availability (HA) control plane
     is replicated on multiple master nodes to 99.99% uptime.
     <br />
+    Prices may vary based on Region.{' '}
     <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
       Learn more about the HA control plane
     </Link>
@@ -22,7 +23,7 @@ export const HACopy = () => (
 );
 
 export interface Props {
-  highAvailabilityPrice: number;
+  highAvailabilityPrice: number | undefined;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
 
@@ -52,9 +53,11 @@ export const HAControlPlane = (props: Props) => {
         onChange={(e) => handleChange(e)}
       >
         <FormControlLabel
-          label={`Yes, enable HA control plane. (${displayPrice(
+          label={`Yes, enable HA control plane. ${
             highAvailabilityPrice
-          )}/month)`}
+              ? `(${displayPrice(highAvailabilityPrice)}/month)`
+              : ''
+          }`}
           control={<Radio data-testid="ha-radio-button-yes" />}
           name="yes"
           value="yes"

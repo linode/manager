@@ -247,13 +247,17 @@ export const CreateCluster = () => {
    * @returns dynamically calculated high availability price by region
    */
   const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
-    return parseFloat(
-      getDCSpecificPrice({
-        basePrice: LKE_HA_PRICE,
-        flags,
-        regionId: regionId ?? undefined,
-      })
-    );
+    if (!regionId) {
+      return undefined;
+    } else {
+      return parseFloat(
+        getDCSpecificPrice({
+          basePrice: LKE_HA_PRICE,
+          flags,
+          regionId,
+        })
+      );
+    }
   };
 
   const errorMap = getErrorMap(

@@ -16,12 +16,13 @@ import { isEURegion } from 'src/utilities/formatRegion';
 
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
+import { Typography } from '@mui/material';
 
 export interface Props {
   createCluster: () => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
-  highAvailabilityPrice: number;
+  highAvailabilityPrice: number | undefined;
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   removePool: (poolIdx: number) => void;
@@ -73,6 +74,18 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
 
   if (isLoading) {
     return <CircleProgress />;
+  }
+
+  if (region === '') {
+    return (
+      <>
+        <Typography variant="h2">Cluster Summary</Typography>
+        <Divider dark spacingBottom={1} spacingTop={16} />
+        <Typography sx={{ padding: `12px 0` }}>
+          Select a Region to view summary and create a cluster.
+        </Typography>
+      </>
+    );
   }
 
   return (
