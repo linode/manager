@@ -103,8 +103,6 @@ export const ResizeVolumeForm = (props: Props) => {
               />
             )}
 
-            {/* {console.log('regionId', volumeRegion)} */}
-
             <SizeField
               disabled={readOnly}
               error={errors.size}
