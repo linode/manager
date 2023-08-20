@@ -20,6 +20,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(1.5),
   },
   priceDisplay: {
+    '& p': {
+      lineHeight: 1,
+      marginTop: 4,
+    },
+
     left: `calc(${SIZE_FIELD_WIDTH}px + ${theme.spacing(2)})`,
     position: 'absolute',
     top: 50,
@@ -83,7 +88,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   );
 
   const dynamicPricingHelperText = !resize && (
-    <Box marginLeft={'10px'} marginTop={'2px'}>
+    <Box marginLeft={'10px'} marginTop={'4px'}>
       <Typography>Select a Region to see cost per month.</Typography>
     </Box>
   );
