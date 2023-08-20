@@ -76,13 +76,14 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     return <CircleProgress />;
   }
 
+  // Do not display the Checkout Bar until a region has been selected for dynamic pricing.
   if (region === '') {
     return (
       <>
         <Typography variant="h2">Cluster Summary</Typography>
         <Divider dark spacingBottom={1} spacingTop={16} />
         <Typography sx={{ padding: `12px 0` }}>
-          Select a Region to view summary and create a cluster.
+          Select a Region and Plan to create a cluster.
         </Typography>
       </>
     );
