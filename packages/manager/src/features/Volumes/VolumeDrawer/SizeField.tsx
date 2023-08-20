@@ -71,6 +71,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
     regionId,
     size: value,
   });
+
   const legacyHelperText = (
     <FormHelperText>
       {resize || isFromLinode ? (
@@ -80,7 +81,8 @@ const SizeField: React.FC<CombinedProps> = (props) => {
       )}
     </FormHelperText>
   );
-  const dynamicPricingHelperText = (
+
+  const dynamicPricingHelperText = !resize && (
     <Box marginLeft={'10px'} marginTop={'2px'}>
       <Typography>Select a Region to see cost per month.</Typography>
     </Box>
