@@ -4,7 +4,7 @@ import { useTheme } from '@mui/styles';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 
-import { ActionMenu, Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface ActionHandlers {
@@ -32,7 +32,8 @@ export interface ActionHandlers {
   openForResize: (
     volumeId: number,
     volumeSize: number,
-    volumeLabel: string
+    volumeLabel: string,
+    volumeRegion: string
   ) => void;
 }
 
@@ -47,6 +48,7 @@ export interface Props extends ActionHandlers {
   size: number;
   volumeId: number;
   volumeLabel: string;
+  volumeRegion: string;
   volumeTags: string[];
 }
 
@@ -67,8 +69,8 @@ export const VolumesActionMenu = (props: Props) => {
   };
 
   const handleResize = () => {
-    const { label, openForResize, size, volumeId } = props;
-    openForResize(volumeId, size, label);
+    const { label, openForResize, size, volumeId, volumeRegion } = props;
+    openForResize(volumeId, size, label, volumeRegion);
   };
 
   const handleClone = () => {

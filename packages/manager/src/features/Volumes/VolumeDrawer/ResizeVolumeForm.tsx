@@ -22,9 +22,9 @@ interface Props {
   onClose: () => void;
   onSuccess: (volumeLabel: string, message?: string) => void;
   readOnly?: boolean;
-  regionId: string;
   volumeId: number;
   volumeLabel: string;
+  volumeRegion: string;
   volumeSize: number;
 }
 
@@ -34,9 +34,9 @@ export const ResizeVolumeForm = (props: Props) => {
     onClose,
     onSuccess,
     readOnly,
-    regionId,
     volumeId,
     volumeLabel,
+    volumeRegion,
     volumeSize,
   } = props;
 
@@ -103,7 +103,7 @@ export const ResizeVolumeForm = (props: Props) => {
               />
             )}
 
-            {console.log('regionId', regionId)}
+            {/* {console.log('regionId', volumeRegion)} */}
 
             <SizeField
               disabled={readOnly}
@@ -112,7 +112,7 @@ export const ResizeVolumeForm = (props: Props) => {
               name="size"
               onBlur={handleBlur}
               onChange={handleChange}
-              regionId={regionId}
+              regionId={volumeRegion}
               resize={volumeSize}
               value={values.size}
             />
@@ -120,7 +120,7 @@ export const ResizeVolumeForm = (props: Props) => {
             <PricePanel
               currentSize={volumeSize}
               flags={flags}
-              regionId={regionId}
+              regionId={volumeRegion}
               value={values.size}
             />
             <VolumesActionsPanel

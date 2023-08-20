@@ -73,6 +73,7 @@ const VolumeDrawer = (props: CombinedProps) => {
         )}
       {mode === modes.RESIZING &&
         volumeId !== undefined &&
+        volumeRegion !== undefined &&
         volumeSize !== undefined &&
         volumeLabel !== undefined && (
           <ResizeVolumeForm
@@ -80,9 +81,9 @@ const VolumeDrawer = (props: CombinedProps) => {
             onClose={actions.closeDrawer}
             onSuccess={actions.openForResizeInstructions}
             readOnly={readOnly}
-            regionId={linodeRegion}
             volumeId={volumeId}
             volumeLabel={volumeLabel}
+            volumeRegion={volumeRegion}
             volumeSize={volumeSize}
           />
         )}
@@ -92,6 +93,7 @@ const VolumeDrawer = (props: CombinedProps) => {
         volumeRegion !== undefined &&
         volumeSize !== undefined && (
           <CloneVolumeForm
+            flags={flags}
             onClose={actions.closeDrawer}
             volumeId={volumeId}
             volumeLabel={volumeLabel}
