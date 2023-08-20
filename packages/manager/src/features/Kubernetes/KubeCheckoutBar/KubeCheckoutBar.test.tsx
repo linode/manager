@@ -10,12 +10,12 @@ import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
 const pools = nodePoolFactory.buildList(5, { count: 3, type: 'g6-standard-1' });
 
 const props: Props = {
-  highAvailabilityPrice: LKE_HA_PRICE,
   createCluster: jest.fn(),
   hasAgreed: false,
-  highAvailability: true,
+  highAvailability: false,
+  highAvailabilityPrice: LKE_HA_PRICE,
   pools,
-  region: undefined,
+  region: 'us-east',
   removePool: jest.fn(),
   showHighAvailability: true,
   submitting: false,
@@ -27,6 +27,17 @@ const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);
 
 describe('KubeCheckoutBar', () => {
+  it('should not render node pools or create button unless a region has been selected', async () => {
+    const { getByTestId, queryAllByTestId, queryAllByText } = renderWithTheme(
+      <KubeCheckoutBar {...props} region="" />
+    );
+
+    await waitForElementToBeRemoved(getByTestId('circle-progress'));
+
+    expect(queryAllByTestId('node-pool-summary')).toHaveLength(0);
+    expect(queryAllByText(/Create Cluster/)).toHaveLength(0);
+  });
+
   it('should render a section for each pool', async () => {
     const { getByTestId, queryAllByTestId } = renderComponent(props);
 
@@ -49,11 +60,19 @@ describe('KubeCheckoutBar', () => {
     await findByText(/minimum of 3 nodes/i);
   });
 
-  // TODO
-  it.skip('should display the total price of the cluster', async () => {
+  it('should display the total price of the cluster without High Availability', async () => {
     const { findByText } = renderWithTheme(<KubeCheckoutBar {...props} />);
 
     // 5 node pools * 3 linodes per pool * 10 per linode
     await findByText(/\$150\.00/);
+  });
+
+  it('should display the total price of the cluster with High Availability', async () => {
+    const { findByText } = renderWithTheme(
+      <KubeCheckoutBar {...props} highAvailability />
+    );
+
+    // 5 node pools * 3 linodes per pool * 10 per linode + 60 per month per cluster for HA
+    await findByText(/\$210\.00/);
   });
 });

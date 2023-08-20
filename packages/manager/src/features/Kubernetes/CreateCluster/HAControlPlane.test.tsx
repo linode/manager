@@ -18,6 +18,20 @@ describe('HAControlPlane', () => {
     expect(getByTestId('ha-control-plane-form')).toBeVisible();
   });
 
+  it('should not render an HA price when the price is undefined', () => {
+    const { queryAllByText } = renderWithTheme(
+      <HAControlPlane {...props} highAvailabilityPrice={undefined} />
+    );
+
+    expect(queryAllByText(/\$60\.00/)).toHaveLength(0);
+  });
+
+  it('should render an HA price when the price is a number', async () => {
+    const { findByText } = renderWithTheme(<HAControlPlane {...props} />);
+
+    await findByText(/\$60\.00/);
+  });
+
   it('should call the handleChange function on change', () => {
     const { getByTestId } = renderWithTheme(<HAControlPlane {...props} />);
     const haRadioButton = getByTestId('ha-radio-button-yes');
