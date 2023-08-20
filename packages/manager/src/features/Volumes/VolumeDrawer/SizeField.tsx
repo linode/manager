@@ -35,7 +35,7 @@ interface Props {
   name: string;
   onBlur: (e: any) => void;
   onChange: (e: React.ChangeEvent<any>) => void;
-  regionId?: string;
+  regionId: string;
   resize?: number;
   textFieldStyles?: string;
   value: number;
@@ -65,9 +65,10 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   const helperText = resize
     ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
     : undefined;
+
   const price = getDynamicVolumePrice({
     flags,
-    regionId: regionId || '',
+    regionId,
     size: value,
   });
   const legacyHelperText = (

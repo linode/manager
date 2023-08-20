@@ -219,7 +219,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               name="size"
               onBlur={handleBlur}
               onChange={handleChange}
-              regionId={values.region}
+              regionId={linodeRegion}
               value={values.size}
             />
 
@@ -251,7 +251,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               value={values.tags}
             />
 
-            <PricePanel currentSize={10} value={values.size} />
+            <PricePanel
+              currentSize={10}
+              flags={flags}
+              regionId={linodeRegion}
+              value={values.size}
+            />
 
             <VolumesActionsPanel
               onCancel={() => {
