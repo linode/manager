@@ -80,6 +80,7 @@ const VolumeDrawer = (props: CombinedProps) => {
             onClose={actions.closeDrawer}
             onSuccess={actions.openForResizeInstructions}
             readOnly={readOnly}
+            regionId={linodeRegion}
             volumeId={volumeId}
             volumeLabel={volumeLabel}
             volumeSize={volumeSize}

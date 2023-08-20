@@ -22,6 +22,7 @@ interface Props {
   onClose: () => void;
   onSuccess: (volumeLabel: string, message?: string) => void;
   readOnly?: boolean;
+  regionId: string;
   volumeId: number;
   volumeLabel: string;
   volumeSize: number;
@@ -33,6 +34,7 @@ export const ResizeVolumeForm = (props: Props) => {
     onClose,
     onSuccess,
     readOnly,
+    regionId,
     volumeId,
     volumeLabel,
     volumeSize,
@@ -100,6 +102,9 @@ export const ResizeVolumeForm = (props: Props) => {
                 text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
               />
             )}
+
+            {console.log('regionId', regionId)}
+
             <SizeField
               disabled={readOnly}
               error={errors.size}
@@ -107,10 +112,17 @@ export const ResizeVolumeForm = (props: Props) => {
               name="size"
               onBlur={handleBlur}
               onChange={handleChange}
+              regionId={regionId}
               resize={volumeSize}
               value={values.size}
             />
-            <PricePanel currentSize={volumeSize} value={values.size} />
+
+            <PricePanel
+              currentSize={volumeSize}
+              flags={flags}
+              regionId={regionId}
+              value={values.size}
+            />
             <VolumesActionsPanel
               onCancel={() => {
                 resetForm();
