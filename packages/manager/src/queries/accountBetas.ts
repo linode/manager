@@ -38,6 +38,7 @@ export const useCreateAccountBetaMutation = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries(['regions', 'paginated']);
       },
     }
   );
