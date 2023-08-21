@@ -12,6 +12,8 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 
+// import { StyledCheckbox, StyledEmptyCheckbox } from './TransferTable.styles';
+
 const useStyles = makeStyles((theme: Theme) => ({
   check: {
     '& svg': {
@@ -72,7 +74,7 @@ export interface Props {
   toggleSelectAll: (isToggled: boolean) => void;
 }
 
-export const TransferTable: React.FC<Props> = (props) => {
+export const TransferTable = React.memo((props: Props) => {
   const {
     count,
     handleSearch,
@@ -140,6 +142,4 @@ export const TransferTable: React.FC<Props> = (props) => {
       ) : null}
     </>
   );
-};
-
-export default React.memo(TransferTable);
+});
