@@ -4,10 +4,10 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { TagDrawer } from 'src/components/TagCell/TagDrawer';
-import LinodeEntityDetail from 'src/features/Linodes/LinodeEntityDetail';
-import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
+import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
+import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import {
   Action,
   PowerActionsDialog,
@@ -27,7 +27,7 @@ import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodeResize/LinodeResize';
-import HostMaintenance from './HostMaintenance';
+import { HostMaintenance } from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 

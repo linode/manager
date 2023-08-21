@@ -4,7 +4,7 @@ import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useProfile } from 'src/queries/profile';
 

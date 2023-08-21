@@ -4,15 +4,14 @@ import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
-import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { RenderGuard } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import eventMessageGenerator from 'src/eventMessageGenerator';
+import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
@@ -52,7 +51,7 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     action: event.action,
     entityId,
     link,
-    message: eventMessageGenerator(event),
+    message: generateEventMessage(event),
     timestamp,
     type,
     username: event.username,
@@ -125,6 +124,4 @@ export const Row: React.FC<RowProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props & RenderGuardProps>(renderGuard);
-
-export default enhanced(EventRow);
+export default RenderGuard(EventRow);

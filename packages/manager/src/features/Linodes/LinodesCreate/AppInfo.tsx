@@ -15,7 +15,7 @@ const getOnClickHandler = (openDrawer: Props['onClick']) => (
   openDrawer();
 };
 
-const AppInfo = (props: Props) => {
+export const AppInfo = (props: Props) => {
   const { onClick } = props;
   const onClickHandler = getOnClickHandler(onClick);
   return (
@@ -24,5 +24,3 @@ const AppInfo = (props: Props) => {
     </IconButton>
   );
 };
-
-export default AppInfo;

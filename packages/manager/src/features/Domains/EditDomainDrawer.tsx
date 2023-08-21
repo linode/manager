@@ -14,6 +14,7 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 import {
   ExtendedIP,
   extendedIPToString,
@@ -162,7 +163,9 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
             id="soa_email"
             label="SOA Email Address"
             name="soa_email"
+            onBlur={(e) => handleFormikBlur(e, formik)}
             onChange={formik.handleChange}
+            type="email"
             value={formik.values.soa_email}
           />
         )}

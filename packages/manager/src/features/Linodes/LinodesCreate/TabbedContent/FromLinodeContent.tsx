@@ -28,7 +28,7 @@ export type CombinedProps = CloneFormStateHandlers &
   ReduxStateProps &
   WithLinodesTypesRegionsAndImages;
 
-export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
+export const FromLinodeContent = (props: CombinedProps) => {
   const {
     errors,
     imagesData,
@@ -116,5 +116,3 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     </React.Fragment>
   );
 };
-
-export default FromLinodeContent;

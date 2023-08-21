@@ -34,6 +34,10 @@ interface ResourcesSectionProps {
    */
   CustomResource?: () => JSX.Element;
   /**
+   * The additional copy to be rendered between primary button and resource links.
+   */
+  additionalCopy?: JSX.Element | string;
+  /**
    * The button's handlers and text
    */
   buttonProps: ButtonProps[];
@@ -94,6 +98,7 @@ const YoutubeLinks = (
 export const ResourcesSection = (props: ResourcesSectionProps) => {
   const {
     CustomResource = () => null,
+    additionalCopy,
     buttonProps,
     descriptionMaxWidth,
     gettingStartedGuidesData,
@@ -153,6 +158,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }
+      additionalCopy={additionalCopy}
       buttonProps={buttonProps}
       dataQAPlaceholder="resources-section"
       descriptionMaxWidth={descriptionMaxWidth}

@@ -2,7 +2,6 @@ import { ManagedContact } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
@@ -12,7 +11,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ContactsRow from './ContactsRow';
 
-interface Props {
+interface ContactsTableContentProps {
   contacts: ManagedContact[];
   error?: APIError[] | null;
   lastUpdated: number;
@@ -21,9 +20,7 @@ interface Props {
   openDrawer: (linodeId: number) => void;
 }
 
-export type CombinedProps = Props;
-
-export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
+export const ContactsTableContent = (props: ContactsTableContentProps) => {
   const {
     contacts,
     error,
@@ -66,7 +63,7 @@ export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const memoized = (component: React.FC<CombinedProps>) =>
+const memoized = (component: React.FC<ContactsTableContentProps>) =>
   React.memo(
     component,
     (prevProps, nextProps) =>
@@ -74,13 +71,11 @@ const memoized = (component: React.FC<CombinedProps>) =>
       // when opening the GroupDrawer or ContactsDrawer
       // when there are a large number of contacts.
       equals(prevProps.contacts, nextProps.contacts) &&
-      arePropsEqual<CombinedProps>(
+      arePropsEqual<ContactsTableContentProps>(
         ['lastUpdated', 'loading', 'error'],
         prevProps,
         nextProps
       )
   );
 
-const enhanced = compose<CombinedProps, Props>(memoized);
-
-export default enhanced(ContactsTableContent);
+export default memoized(ContactsTableContent);

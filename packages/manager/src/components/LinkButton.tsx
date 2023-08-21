@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { Box } from './Box';
 import { StyledLinkButton } from './Button/StyledLinkButton';
-import CircularProgress from './core/CircularProgress';
+import { CircularProgress } from './CircularProgress';
 
 const useStyles = makeStyles((theme: Theme) => ({
   disabled: {

@@ -27,7 +27,7 @@ interface Props {
   userDefinedFields: UserDefinedField[];
 }
 
-export const SelectionCardWrapper: React.FC<Props> = (props) => {
+export const SelectionCardWrapper = (props: Props) => {
   const theme = useTheme();
   const {
     availableImages,
@@ -124,5 +124,3 @@ const InfoGrid = styled(Grid, {
   padding: theme.spacing(1),
   paddingLeft: 0,
 }));
-
-export default SelectionCardWrapper;

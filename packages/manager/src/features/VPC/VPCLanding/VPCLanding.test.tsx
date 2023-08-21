@@ -6,14 +6,9 @@ import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-  wrapWithTableBody,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCLanding from './VPCLanding';
-import { VPCRow } from './VPCRow';
 
 const queryClient = new QueryClient();
 
@@ -24,26 +19,7 @@ afterEach(() => {
 
 const loadingTestId = 'circle-progress';
 
-describe('VPC Table Row', () => {
-  it('should render a VPC row', () => {
-    const vpc = vpcFactory.build();
-
-    const { getAllByText, getByText } = renderWithTheme(
-      wrapWithTableBody(<VPCRow vpc={vpc} />),
-      { queryClient }
-    );
-
-    // Check to see if the row rendered some data
-    getByText(vpc.label);
-    getAllByText(vpc.id);
-    getAllByText(vpc.subnets.length);
-    // Check if actions were rendered
-    getByText('Edit');
-    getByText('Delete');
-  });
-});
-
-describe('VPC Table', () => {
+describe('VPC Landing Table', () => {
   it('should render vpc landing table with items', async () => {
     server.use(
       rest.get('*/vpcs', (req, res, ctx) => {

@@ -1,6 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Volume } from '@linode/api-v4/lib/volumes/types';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';

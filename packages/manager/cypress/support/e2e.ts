@@ -16,25 +16,9 @@
 import chaiString from 'chai-string';
 import 'cypress-real-events/support';
 
-import { authenticate } from './api/authentication';
-import { deleteAllTestData } from './ui/common';
-
 // chai is a global exposed by Cypress which means
 // we can just simply extend it
 chai.use(chaiString);
 
-authenticate();
-
 import './commands';
 import './request-tracking';
-
-// Runs before each test file.
-before(() => {
-  cy.defer(deleteAllTestData(), {
-    // Describe action in Cypress output.
-    label: 'Cleaning up test resources',
-
-    // Make sure there's enough time to accommodate retries when necessary.
-    timeout: 120000,
-  });
-});

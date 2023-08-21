@@ -11,7 +11,8 @@ interface Props {
   createType?: CreateTypes;
 }
 
-export const UserDataAccordionHeading = ({ createType }: Props) => {
+export const UserDataAccordionHeading = (props: Props) => {
+  const { createType } = props;
   const warningMessageMap: Record<CreateTypes, null | string> = {
     fromApp: null,
     fromBackup:

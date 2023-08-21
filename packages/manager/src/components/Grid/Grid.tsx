@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import RenderGuard from 'src/components/RenderGuard';
-import Grid, { GridProps } from 'src/components/core/Grid';
+import { Grid, GridProps } from 'src/components/Grid';
+import { RenderGuard } from 'src/components/RenderGuard';
 
 /* tslint:disable-next-line */
 export type Props = GridProps;

@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Typography } from 'src/components/Typography';
-import eventMessageGenerator from 'src/eventMessageGenerator';
+import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 export const ActivityRow = (props: Props) => {
   const { event } = props;
 
-  const message = eventMessageGenerator(event);
+  const message = generateEventMessage(event);
 
   // There is currently an API bug where host_reboot event durations are not
   // reported correctly. This patch simply hides the duration. @todo remove this
@@ -53,5 +53,3 @@ const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
   padding: theme.spacing(1),
   width: '100%',
 }));
-
-export default ActivityRow;

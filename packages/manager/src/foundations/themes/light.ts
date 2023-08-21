@@ -856,6 +856,7 @@ export const lightTheme: ThemeOptions = {
             [breakpoints.down('xs')]: {
               minWidth: 200,
             },
+            maxWidth: 200,
             maxHeight: 250,
             overflowX: 'hidden',
             overflowY: 'auto',
@@ -893,9 +894,9 @@ export const lightTheme: ThemeOptions = {
           fontFamily: latoWeb.normal,
           fontSize: '.9rem',
           height: 'auto',
-          minHeight: 'auto',
-          paddingBottom: 16,
-          paddingTop: 16,
+          minHeight: '38px',
+          paddingBottom: 8,
+          paddingTop: 8,
           textOverflow: 'initial',
           transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,

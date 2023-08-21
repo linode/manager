@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
-import SvgIcon from 'src/components/core/SvgIcon';
+import { SvgIcon } from 'src/components/SvgIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   active: {
@@ -53,7 +53,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'flex-start',
     borderRadius: 0,
-    color: theme.textColors.linkActiveLight,
     cursor: 'pointer',
     display: 'flex',
     margin: `0 ${theme.spacing(1)} 2px 0`,

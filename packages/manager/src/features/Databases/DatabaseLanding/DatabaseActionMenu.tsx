@@ -4,7 +4,7 @@ import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { ActionMenu, Action } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles()(() => ({

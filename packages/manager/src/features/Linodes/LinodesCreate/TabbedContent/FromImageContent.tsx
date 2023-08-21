@@ -26,7 +26,7 @@ export type CombinedProps = Props &
   ReduxStateProps &
   WithTypesRegionsAndImages;
 
-export const FromImageContent: React.FC<CombinedProps> = (props) => {
+export const FromImageContent = (props: CombinedProps) => {
   const {
     error,
     imagePanelTitle,
@@ -68,5 +68,3 @@ export const FromImageContent: React.FC<CombinedProps> = (props) => {
     </StyledGrid>
   );
 };
-
-export default FromImageContent;

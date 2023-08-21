@@ -24,8 +24,8 @@ import createDevicesFromStrings, {
 } from 'src/utilities/createDevicesFromStrings';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
-import DeviceSelection, { ExtendedDisk } from './DeviceSelection';
-import RescueDescription from './RescueDescription';
+import { DeviceSelection, ExtendedDisk } from './DeviceSelection';
+import { RescueDescription } from './RescueDescription';
 
 interface Props {
   linodeId: number | undefined;

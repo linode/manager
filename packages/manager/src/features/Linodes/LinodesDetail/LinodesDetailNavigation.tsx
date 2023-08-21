@@ -8,21 +8,21 @@ import {
 } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import DismissibleBanner from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
+import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
-const LinodeNetworking = React.lazy(
-  () => import('./LinodeNetworking/LinodeNetworking')
+const LinodeNetwork = React.lazy(
+  () => import('./LinodeNetworking/LinodeNetwork')
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage/LinodeStorage'));
 const LinodeConfigurations = React.lazy(
@@ -142,7 +142,7 @@ const LinodesDetailNavigation = () => {
                 />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
-                <LinodeNetworking />
+                <LinodeNetwork />
               </SafeTabPanel>
               {isBareMetalInstance ? null : (
                 <>

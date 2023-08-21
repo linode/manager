@@ -1,9 +1,8 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { RenderGuard } from 'src/components/RenderGuard';
 
 interface Props {
   disabled?: boolean;
@@ -14,8 +13,6 @@ interface Props {
   required?: boolean;
   selectedDisk: null | string;
 }
-
-type CombinedProps = Props;
 
 const disksToOptions = (disks: Disk[]): Item<string>[] => {
   return disks.map((disk) => ({ label: disk.label, value: String(disk.id) }));
@@ -32,7 +29,7 @@ const diskFromValue = (
   return thisDisk ? thisDisk : null;
 };
 
-const DiskSelect: React.FC<CombinedProps> = (props) => {
+export const DiskSelect = RenderGuard((props: Props) => {
   const {
     disabled,
     diskError,
@@ -57,8 +54,4 @@ const DiskSelect: React.FC<CombinedProps> = (props) => {
       value={diskFromValue(options, selectedDisk)}
     />
   );
-};
-
-export default compose<CombinedProps, Props & RenderGuardProps>(RenderGuard)(
-  DiskSelect
-);
+});

@@ -1,2 +1,1 @@
-export { default } from './BackupDrawer';
-export { default as BackupsCTA } from './BackupsCTA';
+export { BackupDrawer } from './BackupDrawer';

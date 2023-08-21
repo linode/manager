@@ -6,6 +6,7 @@ import { interceptDeleteVolume } from 'support/intercepts/volumes';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
+import { cleanUp } from 'support/util/cleanup';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -16,6 +17,10 @@ const pageSizeOverride = {
 
 authenticate();
 describe('volume delete flow', () => {
+  before(() => {
+    cleanUp('volumes');
+  });
+
   /*
    * - Clicks "Delete" action menu item for volume but cancels operation.
    * - Clicks "Delete" action menu item for volume and confirms operation.

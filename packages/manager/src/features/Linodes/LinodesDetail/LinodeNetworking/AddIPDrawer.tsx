@@ -78,7 +78,7 @@ interface Props {
   readOnly: boolean;
 }
 
-const AddIPDrawer = (props: Props) => {
+export const AddIPDrawer = (props: Props) => {
   const { linodeId, onClose, open, readOnly } = props;
   const theme = useTheme();
 
@@ -273,5 +273,3 @@ const AddIPDrawer = (props: Props) => {
     </Drawer>
   );
 };
-
-export default AddIPDrawer;

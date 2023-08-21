@@ -20,6 +20,7 @@ import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { authenticate } from 'support/api/authentication';
 import { mockGetLinodes } from 'support/intercepts/linodes';
+import { cleanUp } from 'support/util/cleanup';
 
 const mockLinodes = new Array(5).fill(null).map(
   (_item: null, index: number): Linode => {
@@ -46,8 +47,13 @@ const linodeLabel = (number) => {
 };
 
 const deleteLinodeFromActionMenu = (linodeLabel) => {
-  getClick(`[aria-label="Action menu for Linode ${linodeLabel}"]`);
-  cy.get(`[data-qa-action-menu-item="Delete"]`).filter(`:visible`).click();
+  ui.actionMenu
+    .findByTitle(`Action menu for Linode ${linodeLabel}`)
+    .should('be.visible')
+    .click();
+
+  ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
   ui.dialog
     .findByTitle(`Delete ${linodeLabel}?`)
     .should('be.visible')
@@ -270,7 +276,7 @@ describe('linode landing checks', () => {
       fbtVisible('Plan');
     });
     getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
-      fbtVisible('IP Address');
+      fbtVisible('Public IP Address');
     });
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
@@ -287,18 +293,26 @@ describe('linode landing checks', () => {
 
   it('checks the action menu items', () => {
     const label = linodeLabel(1);
-    getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
-      cy.findByLabelText(`Action menu for Linode ${label}`).click();
+    const menuItems = [
+      'Power Off',
+      'Reboot',
+      'Launch LISH Console',
+      'Clone',
+      'Resize',
+      'Rebuild',
+      'Rescue',
+      'Migrate',
+      'Delete',
+    ];
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Linode ${label}`)
+      .should('be.visible')
+      .click();
+
+    menuItems.forEach((menuItem) => {
+      ui.actionMenuItem.findByTitle(menuItem).should('be.visible');
     });
-    getVisible('[data-qa-action-menu-item="Power Off"]');
-    getVisible('[data-qa-action-menu-item="Reboot"]');
-    getVisible('[data-qa-action-menu-item="Launch LISH Console"]');
-    getVisible('[data-qa-action-menu-item="Clone"]');
-    getVisible('[data-qa-action-menu-item="Resize"]');
-    getVisible('[data-qa-action-menu-item="Rebuild"]');
-    getVisible('[data-qa-action-menu-item="Rescue"]');
-    getVisible('[data-qa-action-menu-item="Migrate"]');
-    getVisible('[data-qa-action-menu-item="Delete"]');
   });
 
   it('checks group by tag for linde table', () => {
@@ -350,9 +364,50 @@ describe('linode landing checks', () => {
       cy.findByText(linode.label).should('be.visible');
     });
   });
+
+  it('checks summary view for linode table', () => {
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    cy.visitWithLogin('/linodes');
+    cy.wait('@getLinodes');
+
+    // Check 'Summary View' button works as expected that can be visiable, enabled and clickable
+    getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
+
+    mockLinodes.forEach((linode) => {
+      cy.findByText(linode.label)
+        .should('be.visible')
+        .closest('[data-qa-linode-card]')
+        .within(() => {
+          cy.findByText('Summary').should('be.visible');
+          cy.findByText('IP Addresses').should('be.visible');
+          cy.findByText('Access').should('be.visible');
+
+          cy.findByText('Plan:').should('be.visible');
+          cy.findByText('Region:').should('be.visible');
+          cy.findByText('Linode ID:').should('be.visible');
+          cy.findByText('Created:').should('be.visible');
+        });
+    });
+
+    // Toggle the 'List View' button to check the display of table items are back to the original view.
+    getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
+
+    cy.findByText('Summary').should('not.exist');
+    cy.findByText('IP Addresses').should('not.exist');
+    cy.findByText('Access').should('not.exist');
+
+    cy.findByText('Plan:').should('not.exist');
+    cy.findByText('Region:').should('not.exist');
+    cy.findByText('Linode ID:').should('not.exist');
+    cy.findByText('Created:').should('not.exist');
+  });
 });
 
 describe('linode landing actions', () => {
+  before(() => {
+    cleanUp('linodes');
+  });
+
   it('deleting multiple linodes with action menu', () => {
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
