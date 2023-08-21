@@ -7,7 +7,6 @@ import { Button } from 'src/components/Button/Button';
 import { TextField } from 'src/components/TextField';
 import { SubnetFieldState } from 'src/utilities/subnets';
 import { FormHelperText } from 'src/components/FormHelperText';
-import { determineIPType } from '@linode/validation';
 import { calculateAvailableIPv4s } from 'src/utilities/subnets';
 
 interface Props {
@@ -15,12 +14,12 @@ interface Props {
   idx?: number;
   // janky solution to enable SubnetNode to be an independent component or be part of MultipleSubnetInput
   // (not the biggest fan tbh)
+  isRemovable?: boolean;
   onChange: (
     subnet: SubnetFieldState,
     subnetIdx?: number,
     remove?: boolean
   ) => void;
-  isRemovable?: boolean;
   subnet: SubnetFieldState;
 }
 
@@ -29,7 +28,10 @@ const RESERVED_IP_NUMBER = 4;
 // TODO: VPC - currently only supports IPv4, must update when/if IPv6 is also supported
 export const SubnetNode = (props: Props) => {
   const { disabled, idx, onChange, subnet, isRemovable } = props;
-  const [availIPs, setAvailIPs] = React.useState<number | undefined>(undefined);
+  const initialIPAvailability = calculateAvailableIPv4s(subnet.ip.ipv4 ?? '');
+  const [availIPs, setAvailIPs] = React.useState<number | undefined>(
+    initialIPAvailability
+  );
 
   const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSubnet = {
@@ -41,12 +43,11 @@ export const SubnetNode = (props: Props) => {
   };
 
   const onIpv4Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const ipType = determineIPType(e.target.value);
     const newSubnet = {
       ...subnet,
       ip: { ipv4: e.target.value },
     };
-    setAvailIPs(calculateAvailableIPv4s(e.target.value, ipType));
+    setAvailIPs(calculateAvailableIPv4s(e.target.value));
     onChange(newSubnet, idx);
   };
 

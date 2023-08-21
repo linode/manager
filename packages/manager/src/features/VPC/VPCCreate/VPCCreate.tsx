@@ -23,7 +23,11 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Paper } from 'src/components/Paper';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { SubnetFieldState, validateSubnets } from 'src/utilities/subnets';
+import {
+  DEFAULT_SUBNET_IPV4_VALUE,
+  SubnetFieldState,
+  validateSubnets,
+} from 'src/utilities/subnets';
 import { MultipleSubnetInput } from './MultipleSubnetInput';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
@@ -131,7 +135,7 @@ const VPCCreate = () => {
         {
           label: '',
           labelError: '',
-          ip: { ipv4: '', ipv4Error: '' },
+          ip: { ipv4: DEFAULT_SUBNET_IPV4_VALUE, ipv4Error: '' },
         },
       ] as SubnetFieldState[],
       label: '',

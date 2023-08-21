@@ -45,13 +45,13 @@ export const MultipleSubnetInput = (props: Props) => {
           {subnetIdx !== 0 && <Divider sx={{ marginTop: theme.spacing(3) }} />}
           <SubnetNode
             idx={subnetIdx}
-            subnet={subnet}
             disabled={disabled}
             // janky solution to enable SubnetNode to work on its own or be part of MultipleSubnetInput
+            isRemovable={true}
             onChange={(subnet, subnetIdx, removable) =>
               handleSubnetChange(subnet, subnetIdx ?? 0, !!removable)
             }
-            isRemovable={true}
+            subnet={subnet}
           />
         </Grid>
       ))}
