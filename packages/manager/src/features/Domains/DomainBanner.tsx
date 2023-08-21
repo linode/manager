@@ -1,9 +1,10 @@
+import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
+
+import { DismissibleBanner } from 'src/components/DismissibleBanner';
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 interface DomainBannerProps {
   hidden: boolean;

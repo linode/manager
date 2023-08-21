@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 
-import ActionMenu from './ActionMenu';
+import { ActionMenu } from './ActionMenu';
 
 describe('ActionMenu', () => {
   const action = { onClick: () => undefined, title: 'whatever' };

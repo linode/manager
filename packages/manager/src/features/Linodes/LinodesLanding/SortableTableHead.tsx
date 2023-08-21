@@ -10,6 +10,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Tooltip } from 'src/components/Tooltip';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { StyledToggleButton } from './DisplayLinodes.styles';
 
@@ -26,7 +27,10 @@ interface Props {
 
 type CombinedProps<T> = Props & Omit<OrderByProps<T>, 'data'>;
 
-const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
+export const SortableTableHead = <T extends unknown>(
+  props: CombinedProps<T>
+) => {
+  const flags = useFlags();
   const theme = useTheme();
 
   const {
@@ -114,8 +118,9 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
                 direction={order}
                 handleClick={handleOrderChange}
                 label="ipv4[0]" // we want to sort by the first ipv4
+                noWrap
               >
-                IP Address
+                Public IP Address
               </TableSortCell>
               <Hidden lgDown>
                 <TableSortCell
@@ -136,6 +141,11 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
                 </TableSortCell>
               </Hidden>
             </Hidden>
+            {flags.vpc && (
+              <Hidden smDown>
+                <TableCell>VPC</TableCell>
+              </Hidden>
+            )}
             <Hidden lgDown>
               <TableSortCell
                 active={isActive('backups:last_successful')}
@@ -189,5 +199,3 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
     </TableHead>
   );
 };
-
-export default SortableTableHead;

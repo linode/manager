@@ -7,7 +7,7 @@ interface Props {
   className?: string;
 }
 
-const NotFound = (props: Props) => {
+export const NotFound = (props: Props) => {
   return (
     <Placeholder
       className={props.className}
@@ -16,5 +16,3 @@ const NotFound = (props: Props) => {
     />
   );
 };
-
-export default NotFound;

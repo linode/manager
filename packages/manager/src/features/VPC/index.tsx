@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const VPCCreate = React.lazy(() => import('./VPCCreate/VPCCreate'));
 const VPCDetail = React.lazy(() => import('./VPCDetail/VPCDetail'));

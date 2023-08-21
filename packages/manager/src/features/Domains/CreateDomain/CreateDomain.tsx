@@ -17,7 +17,7 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -37,6 +37,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 import {
   ExtendedIP,
   extendedIPToString,
@@ -335,9 +336,10 @@ export const CreateDomain = () => {
                 disabled={disabled}
                 label="SOA Email Address"
                 name={'soa_email'}
-                onBlur={() => formik.setFieldTouched('soa_email')}
+                onBlur={(e) => handleFormikBlur(e, formik)}
                 onChange={formik.handleChange}
                 required
+                type="email"
                 value={values.soa_email}
               />
             )}

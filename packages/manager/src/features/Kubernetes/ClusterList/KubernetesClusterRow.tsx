@@ -1,6 +1,5 @@
 import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -24,7 +23,7 @@ import {
 } from '../kubeUtils';
 import { ClusterActionMenu } from './ClusterActionMenu';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   clusterRow: {
     '&:before': {
       display: 'none',
@@ -40,7 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover, &:focus': {
       textDecoration: 'underline',
     },
-    color: theme.textColors.linkActiveLight,
     display: 'block',
     fontSize: '.875rem',
     lineHeight: '1.125rem',

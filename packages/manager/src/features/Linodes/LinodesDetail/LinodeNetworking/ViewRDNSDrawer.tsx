@@ -7,7 +7,7 @@ import { Typography } from 'src/components/Typography';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useAllIPsQuery } from 'src/queries/linodes/networking';
 
-import { listIPv6InRange } from './LinodeNetworking';
+import { listIPv6InRange } from './LinodeIPAddresses';
 
 interface Props {
   linodeId: number;
@@ -16,7 +16,7 @@ interface Props {
   selectedRange: IPRange | undefined;
 }
 
-const ViewRDNSDrawer = (props: Props) => {
+export const ViewRDNSDrawer = (props: Props) => {
   const { linodeId, onClose, open, selectedRange } = props;
 
   const { data: linode } = useLinodeQuery(linodeId, open);
@@ -53,5 +53,3 @@ const ViewRDNSDrawer = (props: Props) => {
 const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
-
-export default ViewRDNSDrawer;

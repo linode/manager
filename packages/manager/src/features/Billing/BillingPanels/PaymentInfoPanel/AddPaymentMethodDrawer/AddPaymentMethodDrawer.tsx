@@ -1,5 +1,5 @@
 import { PaymentMethod } from '@linode/api-v4/lib/account';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { VariantType } from 'notistack';
 import * as React from 'react';

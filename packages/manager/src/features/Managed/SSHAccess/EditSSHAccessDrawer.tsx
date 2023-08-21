@@ -1,18 +1,15 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { Formik, FormikHelpers } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
-import { Typography } from 'src/components/Typography';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,
@@ -20,33 +17,20 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
 
+import {
+  StyledIPGrid,
+  StyledPortGrid,
+  StyledTypography,
+} from './EditSSHAccessDrawer.styles';
 import { DEFAULTS } from './common';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  helperText: {
-    marginBottom: theme.spacing(1.25),
-  },
-  ip: {
-    [theme.breakpoints.down('md')]: {
-      paddingBottom: '0px !important',
-    },
-  },
-  port: {
-    [theme.breakpoints.down('md')]: {
-      paddingTop: '0px !important',
-    },
-  },
-}));
-
-interface Props {
+interface EditSSHAccessDrawerProps {
   closeDrawer: () => void;
   isOpen: boolean;
   linodeSetting?: ManagedLinodeSetting;
 }
 
-const EditSSHAccessDrawer: React.FC<Props> = (props) => {
-  const classes = useStyles();
-
+const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
   const { closeDrawer, isOpen, linodeSetting } = props;
 
   const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
@@ -139,11 +123,11 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                   )}
 
                   <form>
-                    <Typography className={classes.helperText} variant="body1">
+                    <StyledTypography variant="body1">
                       We’ll use the default settings for User Account (
                       {DEFAULTS.user}) and Port ({DEFAULTS.port}) if you leave
                       those fields empty.
-                    </Typography>
+                    </StyledTypography>
 
                     <FormControlLabel
                       control={
@@ -168,7 +152,7 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                     />
 
                     <Grid container spacing={2}>
-                      <Grid className={classes.ip} md={8} xs={12}>
+                      <StyledIPGrid md={8} xs={12}>
                         <IPSelect
                           customizeOptions={(options) => [
                             // The first option should always be "Any".
@@ -197,9 +181,9 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                           errorText={ipError}
                           linodeId={linodeSetting.id}
                         />
-                      </Grid>
+                      </StyledIPGrid>
 
-                      <Grid className={classes.port} md={4} xs={12}>
+                      <StyledPortGrid md={4} xs={12}>
                         <TextField
                           error={!!portError}
                           errorText={portError}
@@ -211,7 +195,7 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                           type="number"
                           value={port}
                         />
-                      </Grid>
+                      </StyledPortGrid>
                     </Grid>
                     <ActionsPanel
                       primaryButtonProps={{

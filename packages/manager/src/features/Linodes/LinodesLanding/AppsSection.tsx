@@ -65,7 +65,7 @@ const appLinks = appsLinkData.map((linkData) => (
   <AppLink {...linkData} key={linkData.to} />
 ));
 
-const AppsSection = () => {
+export const AppsSection = () => {
   return <StyledAppSectionDiv>{appLinks}</StyledAppSectionDiv>;
 };
 
@@ -121,5 +121,3 @@ const StyledAppSectionDiv = styled('div', { label: 'StyledAppSectionDiv' })(
     rowGap: theme.spacing(),
   })
 );
-
-export default AppsSection;

@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
@@ -16,8 +16,8 @@ import {
   withProfile,
 } from 'src/containers/profile.container';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
-import { BackupsCTA } from 'src/features/Backups';
-import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
+import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
+import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
 import {
   sendGroupByTagEnabledEvent,
@@ -31,9 +31,9 @@ import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
 import { Action, PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
-import CardView from './CardView';
+import { CardView } from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
-import DisplayGroupedLinodes from './DisplayGroupedLinodes';
+import { DisplayGroupedLinodes } from './DisplayGroupedLinodes';
 import { DisplayLinodes } from './DisplayLinodes';
 import {
   StyledLinkContainerGrid,
@@ -41,7 +41,7 @@ import {
 } from './LinodesLanding.styles';
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
-import ListView from './ListView';
+import { ListView } from './ListView';
 import { ExtendedStatus, statusToPriority } from './utils';
 
 import type { Config } from '@linode/api-v4/lib/linodes/types';

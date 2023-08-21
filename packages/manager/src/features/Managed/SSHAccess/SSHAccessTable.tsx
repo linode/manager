@@ -1,6 +1,4 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import produce from 'immer';
 import * as React from 'react';
 
@@ -18,21 +16,11 @@ import { useOpenClose } from 'src/hooks/useOpenClose';
 import { useAllLinodeSettingsQuery } from 'src/queries/managed/managed';
 
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';
+import { StyledDiv } from './SSHAccessTable.styles';
 import SSHAccessTableContent from './SSHAccessTableContent';
 import { DEFAULTS } from './common';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '&:before': {
-      display: 'none',
-    },
-    marginTop: theme.spacing(4),
-  },
-}));
-
-const SSHAccessTable: React.FC<{}> = () => {
-  const classes = useStyles();
-
+const SSHAccessTable = () => {
   const { data: settings, error, isLoading } = useAllLinodeSettingsQuery();
 
   const data = settings || [];
@@ -74,7 +62,7 @@ const SSHAccessTable: React.FC<{}> = () => {
               }) => {
                 return (
                   <>
-                    <div className={classes.root}>
+                    <StyledDiv>
                       <Table aria-label="List of Your Managed SSH Access Settings">
                         <TableHead>
                           <TableRow>
@@ -140,7 +128,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                           />
                         </TableBody>
                       </Table>
-                    </div>
+                    </StyledDiv>
                     <PaginationFooter
                       count={count}
                       eventCategory="managed ssh access table"

@@ -2,7 +2,7 @@ import type { Image, Linode, Disk } from '@linode/api-v4/types';
 import { imageFactory } from 'src/factories/images';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';
 import {
-  interceptCreateImage,
+  mockCreateImage,
   mockGetCustomImages,
 } from 'support/intercepts/images';
 import { mockGetLinodeDisks } from 'support/intercepts/linodes';
@@ -51,7 +51,7 @@ describe('create image', () => {
     // stub incoming response
     const mockImages = imageFactory.buildList(2);
     mockGetCustomImages(mockImages).as('getImages');
-    interceptCreateImage(mockNewImage).as('createImage');
+    mockCreateImage(mockNewImage).as('createImage');
     createLinode().then((linode: Linode) => {
       // stub incoming disks response
       mockGetLinodeDisks(linode.id, mockDisks).as('getDisks');

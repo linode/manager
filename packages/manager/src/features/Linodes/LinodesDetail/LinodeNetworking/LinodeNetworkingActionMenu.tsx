@@ -4,9 +4,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
@@ -21,9 +20,7 @@ interface Props {
   readOnly: boolean;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-export const LinodeNetworkingActionMenu = (props: CombinedProps) => {
+export const LinodeNetworkingActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -107,5 +104,3 @@ export const LinodeNetworkingActionMenu = (props: CombinedProps) => {
     <Box sx={{ height: 40 }}></Box>
   );
 };
-
-export default withRouter(LinodeNetworkingActionMenu);

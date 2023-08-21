@@ -5,8 +5,9 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TextField } from 'src/components/TextField';
+import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
 import { updateLabelSchema, updatePasswordSchema } from './credential.schema';
 
@@ -14,7 +15,7 @@ const PasswordInput = React.lazy(
   () => import('src/components/PasswordInput/PasswordInput')
 );
 
-export interface Props {
+export interface CredentialDrawerProps {
   label: string;
   onClose: () => void;
   onSubmitLabel: (values: Partial<CredentialPayload>, formikProps: any) => void;
@@ -25,9 +26,7 @@ export interface Props {
   open: boolean;
 }
 
-type CombinedProps = Props;
-
-const CredentialDrawer: React.FC<CombinedProps> = (props) => {
+const CredentialDrawer = (props: CredentialDrawerProps) => {
   const { label, onClose, onSubmitLabel, onSubmitPassword, open } = props;
 
   return (
@@ -103,75 +102,79 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
         validateOnChange={false}
         validationSchema={updatePasswordSchema}
       >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          status,
-          values,
-        }) => (
-          <div style={{ paddingTop: '1em' }}>
-            {status && status.generalError && (
-              <Notice
-                data-qa-error
-                error
-                key={status.generalError}
-                spacingBottom={0}
-                text={status.generalError}
-              />
-            )}
+        {(formikProps) => {
+          const {
+            errors,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            status,
+            values,
+          } = formikProps;
 
-            {status && status.success && (
-              <Notice
-                data-qa-success
-                key={status.success}
-                spacingBottom={0}
-                success
-                text={status.success}
-              />
-            )}
-
-            <form onSubmit={handleSubmit}>
-              <TextField
-                data-qa-add-username
-                error={!!errors.username}
-                errorText={errors.username}
-                label="Username"
-                name="username"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                optional
-                value={values.username}
-              />
-
-              <React.Suspense fallback={<SuspenseLoader />}>
-                <PasswordInput
-                  data-qa-add-password
-                  error={!!errors.password}
-                  errorText={errors.password}
-                  // This credential could be anything so might be counterproductive to validate strength
-                  hideValidation
-                  label="Password"
-                  name="password"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  type="password"
-                  value={values.password}
+          return (
+            <div style={{ paddingTop: '1em' }}>
+              {status && status.generalError && (
+                <Notice
+                  data-qa-error
+                  error
+                  key={status.generalError}
+                  spacingBottom={0}
+                  text={status.generalError}
                 />
-              </React.Suspense>
-              <ActionsPanel
-                primaryButtonProps={{
-                  'data-testid': 'submit',
-                  label: 'Update credentials',
-                  loading: isSubmitting,
-                  onClick: () => handleSubmit(),
-                }}
-              />
-            </form>
-          </div>
-        )}
+              )}
+
+              {status && status.success && (
+                <Notice
+                  data-qa-success
+                  key={status.success}
+                  spacingBottom={0}
+                  success
+                  text={status.success}
+                />
+              )}
+
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  data-qa-add-username
+                  error={!!errors.username}
+                  errorText={errors.username}
+                  label="Username"
+                  name="username"
+                  onBlur={(e) => handleFormikBlur(e, formikProps)}
+                  onChange={handleChange}
+                  optional
+                  value={values.username}
+                />
+
+                <React.Suspense fallback={<SuspenseLoader />}>
+                  <PasswordInput
+                    data-qa-add-password
+                    error={!!errors.password}
+                    errorText={errors.password}
+                    // This credential could be anything so might be counterproductive to validate strength
+                    hideValidation
+                    label="Password"
+                    name="password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="password"
+                    value={values.password}
+                  />
+                </React.Suspense>
+                <ActionsPanel
+                  primaryButtonProps={{
+                    'data-testid': 'submit',
+                    label: 'Update credentials',
+                    loading: isSubmitting,
+                    onClick: () => handleSubmit(),
+                  }}
+                />
+              </form>
+            </div>
+          );
+        }}
       </Formik>
     </Drawer>
   );

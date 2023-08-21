@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader';
-import { Tab } from 'src/components/core/ReachTab';
-import { TabList } from 'src/components/core/ReachTabList';
-import TabPanel from 'src/components/core/ReachTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { Tab } from 'src/components/ReachTab';
+import { TabList } from 'src/components/ReachTabList';
+import { TabPanel } from 'src/components/ReachTabPanel';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';

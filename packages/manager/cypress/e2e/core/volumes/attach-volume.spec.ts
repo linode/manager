@@ -12,6 +12,7 @@ import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
 import { interceptGetLinodeConfigs } from 'support/intercepts/linodes';
+import { cleanUp } from 'support/util/cleanup';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -45,6 +46,10 @@ const createLinodeAndAttachVolume = async (): Promise<[Linode, Volume]> => {
 
 authenticate();
 describe('volume attach and detach flows', () => {
+  before(() => {
+    cleanUp('volumes');
+  });
+
   /*
    * - Clicks "Attach" action menu item for volume, selects Linode with common region, and submits form.
    * - Confirms that volume attach toast appears and that Linode is listed as attached for Volume.

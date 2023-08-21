@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 
 import { Hidden } from 'src/components/Hidden';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
+import { StackScriptActionMenu } from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 
 import { ClassNames, styles } from '../StackScriptRowHelpers';
@@ -109,7 +109,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
         </Hidden>
       )}
       <TableCell actionCell className={classes.row}>
-        <StackScriptsActionMenu
+        <StackScriptActionMenu
           canAddLinodes={canAddLinodes}
           canModify={canModify}
           category={category}

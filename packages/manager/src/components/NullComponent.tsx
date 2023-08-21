@@ -1,6 +1,4 @@
-import * as React from 'react';
-
-const NullComponent: React.FC = () => {
+const NullComponent = () => {
   return null;
 };
 
