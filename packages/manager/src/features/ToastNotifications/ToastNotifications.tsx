@@ -1,5 +1,5 @@
 import { Event, EventStatus } from '@linode/api-v4/lib/account/types';
-import { WithSnackbarProps, withSnackbar } from 'notistack';
+import { WithSnackbarProps, useSnackbar } from 'notistack';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
@@ -69,12 +69,12 @@ export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
   event.secondary_entity?.label ?? '';
 
-export const ToastNotifications = withSnackbar((props: WithSnackbarProps) => {
+export const ToastNotifications = () => {
+  const { enqueueSnackbar } = useSnackbar();
   React.useEffect(() => {
     const subscription = events$
       .filter(({ event }) => !event._initial)
       .map(({ event }) => {
-        const { enqueueSnackbar } = props;
         const label = getLabel(event);
         const secondaryLabel = getSecondaryLabel(event);
         switch (event.action) {
@@ -288,7 +288,7 @@ export const ToastNotifications = withSnackbar((props: WithSnackbarProps) => {
   }, []);
 
   return null;
-});
+};
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
