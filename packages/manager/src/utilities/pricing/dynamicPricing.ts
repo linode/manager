@@ -44,7 +44,7 @@ export const getDCSpecificPrice = ({
     return basePrice.toFixed(2);
   }
 
-  const increaseFactor = priceIncreaseMap[regionId];
+  const increaseFactor = priceIncreaseMap[regionId] as number | undefined;
 
   if (increaseFactor !== undefined) {
     // If increaseFactor is defined, it means the region has a price increase and we should apply it.

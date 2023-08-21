@@ -333,7 +333,11 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
                   )}
                 </Box>
-                <Box className={classes.linodeConfigSelectWrapper}>
+                <Box
+                  alignItems="flex-end"
+                  className={classes.linodeConfigSelectWrapper}
+                  display="flex"
+                >
                   <Box
                     alignItems="flex-end"
                     className={classes.linodeSelect}
@@ -368,20 +372,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
                     )}
                   </Box>
-                  <Box alignItems="flex-end" display="flex" position="relative">
-                    <SizeField
-                      disabled={doesNotHavePermission}
-                      error={touched.size ? errors.size : undefined}
-                      flags={flags}
-                      hasSelectedRegion={!isNilOrEmpty(values.region)}
-                      name="size"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      regionId={values.region}
-                      textFieldStyles={classes.size}
-                      value={values.size}
-                    />
-                  </Box>
                   <ConfigSelect
                     disabled={doesNotHavePermission}
                     error={touched.config_id ? errors.config_id : undefined}
@@ -391,6 +381,20 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     onChange={(id: number) => setFieldValue('config_id', id)}
                     value={config_id}
                     width={320}
+                  />
+                </Box>
+                <Box alignItems="flex-end" display="flex" position="relative">
+                  <SizeField
+                    disabled={doesNotHavePermission}
+                    error={touched.size ? errors.size : undefined}
+                    flags={flags}
+                    hasSelectedRegion={!isNilOrEmpty(values.region)}
+                    name="size"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    regionId={values.region}
+                    textFieldStyles={classes.size}
+                    value={values.size}
                   />
                 </Box>
                 <Box
