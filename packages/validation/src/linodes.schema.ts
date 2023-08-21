@@ -42,6 +42,10 @@ const testmessageDisallowedBasedOnPurpose = (
 ) =>
   `${field} is not allowed for interfaces that do not have a purpose set to ${allowedPurpose}.`;
 
+// Constants
+const LINODE_LABEL_CHAR_REQUIREMENT =
+  'Label must contain between 3 and 64 characters.';
+
 // Schemas
 const stackscript_data = array().of(object()).nullable(true);
 
@@ -257,8 +261,8 @@ export const CreateLinodeSchema = object({
   label: string()
     .transform((v) => (v === '' ? undefined : v))
     .notRequired()
-    .min(3, 'Label must contain between 3 and 64 characters.')
-    .max(64, 'Label must contain between 3 and 64 characters.'),
+    .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
+    .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
   tags: array().of(string()).notRequired(),
   private_ip: boolean().notRequired(),
   authorized_users: array().of(string()).notRequired(),
@@ -272,7 +276,7 @@ export const CreateLinodeSchema = object({
   }),
   interfaces: linodeInterfaceSchema,
   metadata: MetadataSchema,
-  firewall: number().notRequired(),
+  firewall_id: number().notRequired(),
 });
 
 const alerts = object({
@@ -328,8 +332,8 @@ export const UpdateLinodeSchema = object({
   label: string()
     .transform((v) => (v === '' ? undefined : v))
     .notRequired()
-    .min(3, 'Label must contain between 3 and 64 characters.')
-    .max(64, 'Label must contain between 3 and 64 characters.'),
+    .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
+    .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
   tags: array().of(string()).notRequired(),
   watchdog_enabled: boolean().notRequired(),
   alerts,
