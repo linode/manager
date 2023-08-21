@@ -228,12 +228,10 @@ export const MigrateLinode = React.memo((props: Props) => {
       <ConfigureForm
         currentRegion={region}
         handleSelectRegion={handleSelectRegion}
+        linodeType={linode.type}
         selectedRegion={selectedRegion}
       />
       <Box
-        alignItems="center"
-        display="flex"
-        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
         sx={{
           marginTop: theme.spacing(3),
           [theme.breakpoints.down('md')]: {
@@ -241,6 +239,9 @@ export const MigrateLinode = React.memo((props: Props) => {
             justifyContent: 'flex-end',
           },
         }}
+        alignItems="center"
+        display="flex"
+        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
       >
         {showAgreement ? (
           <StyledAgreementCheckbox
@@ -256,14 +257,14 @@ export const MigrateLinode = React.memo((props: Props) => {
             !selectedRegion ||
             (showAgreement && !hasSignedAgreement)
           }
-          buttonType="primary"
-          loading={isLoading}
-          onClick={handleMigrate}
           sx={{
             [theme.breakpoints.down('md')]: {
               marginTop: theme.spacing(2),
             },
           }}
+          buttonType="primary"
+          loading={isLoading}
+          onClick={handleMigrate}
         >
           Enter Migration Queue
         </Button>
