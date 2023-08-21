@@ -73,7 +73,7 @@ const renderQuantity = (v: null | number, label?: string) => {
   }
 
   return label === 'VPC Network Transfer' ? `${v} GB` : `${v}`;
-  // potential TODO: VPC - map network quantity value to GB, TB, etc?
+  // potential TODO: VPC - depending on network transfer quantity size, map value to MB, GB, TB, etc?
 };
 
 const RenderData = (props: { items: InvoiceItem[] }) => {
