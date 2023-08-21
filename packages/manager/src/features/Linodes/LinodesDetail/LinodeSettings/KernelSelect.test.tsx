@@ -4,8 +4,9 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import KernelSelect, {
-  Props,
+import {
+  KernelSelect,
+  KernelSelectProps,
   kernelsToGroupedItems,
   sortCurrentKernels,
 } from './KernelSelect';
@@ -16,7 +17,7 @@ const kernels = cachedKernelRequest.data.filter(
   (thisKernel: Kernel) => thisKernel.kvm
 );
 
-const props: Props = {
+const props: KernelSelectProps = {
   kernels,
   onChange: jest.fn(),
 };

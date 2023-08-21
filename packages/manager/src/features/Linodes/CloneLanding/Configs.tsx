@@ -12,13 +12,13 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
 import { ConfigSelection } from './utilities';
 
-export interface Props {
+export interface ConfigsProps {
   configSelection: ConfigSelection;
   configs: Config[];
   handleSelect: (id: number) => void;
 }
 
-export const Configs: React.FC<Props> = (props) => {
+export const Configs = (props: ConfigsProps) => {
   const { configSelection, configs, handleSelect } = props;
 
   return (

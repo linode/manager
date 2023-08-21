@@ -1,21 +1,14 @@
-import { shallow } from 'enzyme';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
-import { Button } from 'src/components/Button/Button';
-import { Typography } from 'src/components/Typography';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ResultGroup } from './ResultGroup';
-
-jest.mock('@mui/styles', () => ({
-  ...(jest.requireActual('@mui/styles') as any),
-  makeStyles: jest.fn(() => () => ({})),
-}));
 
 const props = {
   entity: 'linodes',
   groupSize: 5,
-  loading: false,
   results: [
     searchbarResult1,
     searchbarResult2,
@@ -24,58 +17,49 @@ const props = {
     searchbarResult1,
     searchbarResult2,
   ],
-  showMore: false,
-  toggle: jest.fn(),
 };
 
 const emptyProps = {
   entity: 'linodes',
   groupSize: 5,
   results: [],
-  showMore: false,
-  toggle: jest.fn(),
 };
-
-const component = shallow(<ResultGroup {...props} />);
 
 describe('ResultGroup component', () => {
   it('should render', () => {
-    expect(component).toBeDefined();
+    const { container } = renderWithTheme(<ResultGroup {...props} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
   it('should return null if there are no results', () => {
-    expect(ResultGroup(emptyProps)).toBeNull();
+    const { container } = renderWithTheme(<ResultGroup {...emptyProps} />);
+    expect(container).toBeEmptyDOMElement();
   });
   it('should render the capitalized entity label', () => {
-    expect(
-      component.containsMatchingElement(<Typography>Linodes</Typography>)
-    ).toBeTruthy();
+    const { getByText } = renderWithTheme(<ResultGroup {...props} />);
+    expect(getByText('Linodes')).toBeInTheDocument();
   });
   it('should render its children', () => {
-    expect(component.find('[data-qa-result-row-component]')).toHaveLength(5);
+    const { container } = renderWithTheme(<ResultGroup {...props} />);
+    const rows = container.querySelectorAll('[data-qa-result-row]');
+    expect(rows).toHaveLength(5);
   });
   describe('Hidden results', () => {
     it('should have a Show All button', () => {
-      expect(
-        component.containsMatchingElement(
-          <Button buttonType="primary">Show All</Button>
-        )
-      );
+      const { getByText } = renderWithTheme(<ResultGroup {...props} />);
+      expect(getByText('Show All')).toBeInTheDocument();
     });
     it('should show hidden results when showMore is true', () => {
-      component.setProps({ showMore: true });
-      expect(component.find('[data-qa-result-row-component]')).toHaveLength(6);
+      const { container, getByText } = renderWithTheme(
+        <ResultGroup {...props} />
+      );
+      fireEvent.click(getByText('Show All'));
+      const rows = container.querySelectorAll('[data-qa-result-row]');
+      expect(rows).toHaveLength(6);
     });
     it('should have a Show Less button', () => {
-      component.setProps({ showMore: true });
-      expect(
-        component.containsMatchingElement(
-          <Button buttonType="primary">Show Less</Button>
-        )
-      ).toBeTruthy();
-    });
-    it('should toggle showMore on click', () => {
-      component.find('[data-qa-show-more-toggle]').simulate('click');
-      expect(props.toggle).toHaveBeenCalled();
+      const { getByText } = renderWithTheme(<ResultGroup {...props} />);
+      fireEvent.click(getByText('Show All'));
+      expect(getByText('Show Less')).toBeInTheDocument();
     });
   });
 });

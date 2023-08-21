@@ -4,8 +4,11 @@ import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constan
 import { accountFactory } from 'src/factories/account';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import SMTPRestrictionText, { Props } from './SMTPRestrictionText';
-import { accountCreatedAfterRestrictions } from './SMTPRestrictionText';
+import {
+  SMTPRestrictionText,
+  SMTPRestrictionTextProps,
+  accountCreatedAfterRestrictions,
+} from './SMTPRestrictionText';
 
 const defaultChildren = (props: { text: React.ReactNode }) => (
   <span>{props.text}</span>
@@ -24,7 +27,7 @@ jest.mock('../../queries/account', () => {
   };
 });
 
-const props: Props = {
+const props: SMTPRestrictionTextProps = {
   children: defaultChildren,
 };
 

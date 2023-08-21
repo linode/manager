@@ -13,7 +13,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';

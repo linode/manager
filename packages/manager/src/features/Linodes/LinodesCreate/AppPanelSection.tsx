@@ -7,7 +7,7 @@ import * as React from 'react';
 import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
-import SelectionCardWrapper from 'src/features/Linodes/LinodesCreate/SelectionCardWrapper';
+import { SelectionCardWrapper } from 'src/features/Linodes/LinodesCreate/SelectionCardWrapper';
 
 interface Props {
   apps: StackScript[];
@@ -25,7 +25,7 @@ interface Props {
   selectedStackScriptID: number | undefined;
 }
 
-export const AppPanelSection: React.FC<Props> = (props) => {
+export const AppPanelSection = (props: Props) => {
   const {
     apps,
     disabled,
@@ -95,5 +95,3 @@ const AppPanelGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(2),
   padding: `${theme.spacing(1)} 0`,
 }));
-
-export default AppPanelSection;

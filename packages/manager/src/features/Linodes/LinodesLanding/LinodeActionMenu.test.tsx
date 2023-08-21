@@ -11,6 +11,7 @@ import {
   LinodeActionMenuProps,
   buildQueryStringForLinodeClone,
 } from './LinodeActionMenu';
+import userEvent from '@testing-library/user-event';
 
 const props: LinodeActionMenuProps = {
   inListView: true,
@@ -81,13 +82,15 @@ describe('LinodeActionMenu', () => {
 
     it('should allow a reboot if the Linode is running', () => {
       renderWithTheme(<LinodeActionMenu {...props} />);
+      userEvent.click(screen.getByLabelText(/^Action menu for/));
       expect(screen.queryByText('Reboot')).not.toHaveAttribute('aria-disabled');
     });
 
     it('should disable the reboot action if the Linode is not running', () => {
       // TODO: Should check for "read_only" permissions too
       renderWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />);
-      expect(screen.queryByText('Reboot')).toHaveAttribute(
+      userEvent.click(screen.getByLabelText(/^Action menu for/));
+      expect(screen.queryByText('Reboot')?.closest('li')).toHaveAttribute(
         'aria-disabled',
         'true'
       );

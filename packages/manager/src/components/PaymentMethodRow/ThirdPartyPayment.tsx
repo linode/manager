@@ -1,5 +1,5 @@
 import { PaymentMethod, ThirdPartyPayment } from '@linode/api-v4/lib/account';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { makeStyles, useTheme } from '@mui/styles';

@@ -1,4 +1,10 @@
-import { MatcherFunction, RenderResult, render } from '@testing-library/react';
+import {
+  MatcherFunction,
+  RenderResult,
+  render,
+  screen,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
@@ -190,6 +196,10 @@ export const includesActions = (
   query: any,
   includes = true
 ) => {
+  const actionMenuButton = screen.queryByLabelText(/^Action menu for/);
+  if (actionMenuButton) {
+    userEvent.click(actionMenuButton);
+  }
   for (const action of actions) {
     includes
       ? expect(query(action)).toBeInTheDocument()

@@ -4,6 +4,7 @@ import { volumeFactory } from 'src/factories';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { VolumeTableRow } from './VolumeTableRow';
+import userEvent from '@testing-library/user-event';
 
 const attachedVolume = volumeFactory.build({
   linode_id: 0,
@@ -28,7 +29,7 @@ const handlers = {
 
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", () => {
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getByText, getByLabelText } = renderWithTheme(
       wrapWithTableBody(<VolumeTableRow {...handlers} {...attachedVolume} />)
     );
 
@@ -38,15 +39,20 @@ describe('Volume table row', () => {
     expect(getByTestId('region'));
     expect(getByText(attachedVolume.linode_label!));
 
+    userEvent.click(getByLabelText(/^Action menu for/));
+
     // Make sure there is a detach button
     expect(getByText('Detach'));
   });
 
   it('should show Unattached if the Volume is not attached to a Linode', () => {
-    const { getByText } = renderWithTheme(
+    const { getByText, getByLabelText } = renderWithTheme(
       wrapWithTableBody(<VolumeTableRow {...handlers} {...unattachedVolume} />)
     );
     expect(getByText('Unattached'));
+
+    userEvent.click(getByLabelText(/^Action menu for/));
+
     // Make sure there is an attach button
     expect(getByText('Attach'));
   });
@@ -54,7 +60,12 @@ describe('Volume table row', () => {
 
 describe('Volume table row - for linodes detail page', () => {
   it("should show the attached Linode's label if present", () => {
-    const { getByText, queryByTestId, queryByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByText,
+      queryByTestId,
+      queryByText,
+    } = renderWithTheme(
       wrapWithTableBody(
         <VolumeTableRow {...handlers} {...attachedVolume} isDetailsPageRow />
       )
@@ -70,6 +81,8 @@ describe('Volume table row - for linodes detail page', () => {
 
     // Because we are on a Linode details page, we don't need to show the Linode label
     expect(queryByText(attachedVolume.linode_label!)).toBeNull();
+
+    userEvent.click(getByLabelText(/^Action menu for/));
 
     // Make sure there is a detach button
     expect(getByText('Detach'));

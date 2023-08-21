@@ -1,6 +1,8 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
+
+import { serviceTargetFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import {
@@ -8,9 +10,9 @@ import {
   renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
+
 import ServiceTargetLanding from './ServiceTargetLanding';
 import { ServiceTargetRow } from './ServiceTargetRow';
-import { getServiceTargetFactory } from 'src/factories';
 
 const queryClient = new QueryClient();
 
@@ -69,7 +71,7 @@ describe('Service Target Table', () => {
   it('should render service target landing table with items', async () => {
     server.use(
       rest.get('*/aglb/service-targets', (req, res, ctx) => {
-        const serviceTargets = getServiceTargetFactory.buildList(1, {
+        const serviceTargets = serviceTargetFactory.buildList(1, {
           label: 'my-service-target',
         });
         return res(ctx.json(makeResourcePage(serviceTargets)));
@@ -100,7 +102,7 @@ describe('Service Target Table', () => {
 
 describe('Service Target Table Row', () => {
   it('should render a service target row', () => {
-    const serviceTarget = getServiceTargetFactory.build();
+    const serviceTarget = serviceTargetFactory.build();
 
     const { getByText } = renderWithTheme(
       wrapWithTableBody(<ServiceTargetRow {...props} {...serviceTarget} />),

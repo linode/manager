@@ -7,12 +7,12 @@ import { TableRow } from 'src/components/TableRow';
 
 import ActionMenu from './SSHAccessActionMenu';
 
-interface Props {
+interface SSHAccessRowProps {
   linodeSetting: ManagedLinodeSetting;
   openDrawer: (linodeId: number) => void;
 }
 
-export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
+export const SSHAccessRow = (props: SSHAccessRowProps) => {
   const { linodeSetting, openDrawer } = props;
 
   const isAccessEnabled = linodeSetting.ssh.access;

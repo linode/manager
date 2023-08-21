@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Language and Environment */
     "jsx": "react",
-    "lib": ["dom", "es2019"],
+    "lib": ["dom", "es2020"],
     "target": "es5",
 
     /* Modules */

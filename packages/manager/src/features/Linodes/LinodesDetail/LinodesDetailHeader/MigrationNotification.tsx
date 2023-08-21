@@ -24,7 +24,7 @@ interface Props {
   requestNotifications: () => void;
 }
 
-const MigrationNotification: React.FC<Props> = (props) => {
+export const MigrationNotification = React.memo((props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -135,6 +135,4 @@ const MigrationNotification: React.FC<Props> = (props) => {
       </ConfirmationDialog>
     </>
   );
-};
-
-export default React.memo(MigrationNotification);
+});

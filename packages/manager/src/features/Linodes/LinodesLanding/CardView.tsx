@@ -4,13 +4,13 @@ import * as React from 'react';
 
 import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import { Typography } from 'src/components/Typography';
-import LinodeEntityDetail from 'src/features/Linodes/LinodeEntityDetail';
+import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 
 import { RenderLinodesProps } from './DisplayLinodes';
 
-const CardView = (props: RenderLinodesProps) => {
+export const CardView = (props: RenderLinodesProps) => {
   const { data: profile } = useProfile();
 
   const [tagDrawer, setTagDrawer] = React.useState<
@@ -68,7 +68,7 @@ const CardView = (props: RenderLinodesProps) => {
       <Grid className="m0" container style={{ width: '100%' }}>
         {data.map((linode, idx: number) => (
           <React.Fragment key={`linode-card-${idx}`}>
-            <StyledSummaryGrid xs={12}>
+            <StyledSummaryGrid xs={12} data-qa-linode-card={linode.id}>
               <LinodeEntityDetail
                 handlers={{
                   onOpenDeleteDialog: () =>
@@ -127,5 +127,3 @@ const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
     paddingBottom: 0,
   })
 );
-
-export default CardView;

@@ -1,10 +1,10 @@
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import Collapse from '@mui/material/Collapse';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
-import Collapse from 'src/components/core/Collapse';
 
 const useStyles = makeStyles<void, 'caret'>()(
   (theme: Theme, _params, classes) => ({
@@ -44,7 +44,7 @@ interface ShowMoreExpansionProps {
   name: string;
 }
 
-const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
+export const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
   const { children, defaultExpanded, name } = props;
 
   const { classes } = useStyles();
@@ -79,5 +79,3 @@ const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
     </React.Fragment>
   );
 };
-
-export default ShowMoreExpansion;

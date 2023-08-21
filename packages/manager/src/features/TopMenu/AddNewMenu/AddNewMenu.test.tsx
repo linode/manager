@@ -1,9 +1,11 @@
+import { fireEvent } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { fireEvent } from '@testing-library/react';
-import { AddNewMenu } from './AddNewMenu';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { AddNewMenu } from './AddNewMenu';
 
 describe('AddNewMenu', () => {
   test('renders the Create button', () => {

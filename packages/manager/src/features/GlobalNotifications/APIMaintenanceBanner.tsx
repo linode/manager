@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
 
-import DismissibleBanner from 'src/components/DismissibleBanner';
+import { DismissibleBanner } from 'src/components/DismissibleBanner';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { SuppliedMaintenanceData } from 'src/featureFlags';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { AddonsPanel, AddonsPanelProps } from './AddonsPanel';
 
@@ -137,12 +137,31 @@ const props: AddonsPanelProps = {
   selectedRegionID: '1234',
   selectedTypeID: '12345',
   togglePrivateIP: jest.fn(),
+  userData: {
+    createType: 'fromLinode',
+    onChange: jest.fn(),
+    showUserData: false,
+    userData: '1234',
+  },
   vlanLabel: 'abc',
 };
 
 describe('AddonsPanel', () => {
   it('should render AddonsPanel', () => {
     renderWithTheme(<AddonsPanel {...props} />);
+  });
+
+  it('should render UserDataAccordion if showUserData is true and hide it if false', () => {
+    const userDataProps = {
+      userData: { ...props.userData, showUserData: true },
+    };
+    const { getByText, queryByText, rerender } = renderWithTheme(
+      <AddonsPanel {...props} {...userDataProps} />
+    );
+    getByText('Add User Data');
+    userDataProps.userData.showUserData = false;
+    rerender(wrapWithTheme(<AddonsPanel {...props} {...userDataProps} />));
+    expect(queryByText('Add User Data')).not.toBeInTheDocument();
   });
 
   it('Should trigger changePrivateIP if source linode has been allocated a private IP', () => {

@@ -24,9 +24,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   hideLabel: {
     '& label': { ...theme.visually.hidden },
   },
-  highlight: {
-    color: theme.palette.primary.main,
-  },
   icon: {
     color: theme.palette.primary.main,
     display: 'inline-block',
@@ -75,10 +72,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   noOptionsMessage: {
     padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
-  },
-  resultContainer: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
   },
   root: {
     '& .react-select__clear-indicator': {
@@ -219,7 +212,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '& .react-select__single-value': {
       color: theme.palette.text.primary,
       overflow: 'hidden',
-      padding: `$theme.spacing(1) 0`,
+      padding: `${theme.spacing(1)} 0`,
     },
     '& .react-select__value-container': {
       '& > div': {
@@ -234,6 +227,11 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
     '& [class*="MuiFormHelperText-error"]': {
       paddingBottom: theme.spacing(1),
+    },
+    '& button': {
+      '& svg': {
+        pointerEvents: 'auto',
+      },
     },
     position: 'relative',
     width: '100%',
@@ -265,49 +263,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     margin: 0,
     marginTop: `calc(${theme.spacing(1)} / 4)`,
     paddingLeft: theme.spacing(1),
-  },
-  suggestionDescription: {
-    color: theme.color.headline,
-    fontSize: '.75rem',
-    marginTop: 2,
-  },
-  suggestionIcon: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-    marginLeft: theme.spacing(1.5),
-  },
-  suggestionItem: {
-    padding: theme.spacing(),
-  },
-  suggestionRoot: {
-    '&:last-child': {
-      borderBottom: 0,
-    },
-    alignItems: 'space-between',
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    cursor: 'pointer',
-    justifyContent: 'space-between',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-    width: 'calc(100% + 2px)',
-  },
-  suggestionTitle: {
-    color: theme.palette.text.primary,
-    fontSize: '1rem',
-    fontWeight: 600,
-    wordBreak: 'break-all',
-  },
-  tagContainer: {
-    '& > div': {
-      margin: '2px',
-    },
-    alignItems: 'center',
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-end',
-    paddingRight: 8,
   },
 }));
 

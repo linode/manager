@@ -36,7 +36,7 @@ const isPoolReady = (pool: KubeNodePoolResponse): boolean =>
  *
  * @returns Promise that resolves when test LKE clusters have been deleted.
  */
-export const deleteAllTestLkeClusters = async (): Promise<any[]> => {
+export const deleteAllTestLkeClusters = async (): Promise<void> => {
   const clusters = await depaginate<KubernetesCluster>((page: number) =>
     getKubernetesClusters({ page, page_size: pageSize })
   );
@@ -53,5 +53,6 @@ export const deleteAllTestLkeClusters = async (): Promise<any[]> => {
       }
     });
 
-  return Promise.all(clusterDeletionPromises);
+  await Promise.all(clusterDeletionPromises);
+  return;
 };

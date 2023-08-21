@@ -20,7 +20,7 @@ interface Props {
   linodeId: number;
 }
 
-const RescueDescription: React.FC<Props> = (props) => {
+export const RescueDescription = (props: Props) => {
   const { isBareMetal, linodeId } = props;
   const theme = useTheme();
 
@@ -54,5 +54,3 @@ const RescueDescription: React.FC<Props> = (props) => {
     </React.Fragment>
   );
 };
-
-export default RescueDescription;

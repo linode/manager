@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import RenderIPs from './RenderIPs';
+import { RenderIPs } from './RenderIPs';
 
 const ipv4Addresses = [
   '45.00.00.100',

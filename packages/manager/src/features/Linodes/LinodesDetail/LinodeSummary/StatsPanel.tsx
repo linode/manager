@@ -10,7 +10,7 @@ interface Props {
   title: string;
 }
 
-export const StatsPanel: React.FC<Props> = (props) => {
+export const StatsPanel = (props: Props) => {
   const { height, loading, renderBody, title } = props;
 
   return (

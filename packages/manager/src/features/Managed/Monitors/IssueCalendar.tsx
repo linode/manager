@@ -10,7 +10,7 @@ import IssueDay from './IssueDay';
 
 const TOTAL_DAYS = 10;
 
-interface Props {
+interface IssueCalendarProps {
   issues: ManagedIssue[];
 }
 
@@ -60,7 +60,7 @@ export const generateCalendar = (timezone: string, issues: ManagedIssue[]) => {
   return days;
 };
 
-export const IssueCalendar: React.FC<Props> = (props) => {
+export const IssueCalendar = (props: IssueCalendarProps) => {
   const { issues } = props;
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
@@ -79,5 +79,3 @@ export const IssueCalendar: React.FC<Props> = (props) => {
     </>
   );
 };
-
-export default IssueCalendar;

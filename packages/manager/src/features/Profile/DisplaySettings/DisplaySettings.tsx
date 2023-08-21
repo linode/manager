@@ -9,10 +9,10 @@ import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Link } from 'src/components/Link';
+import { Paper } from 'src/components/Paper';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
@@ -110,6 +110,7 @@ export const DisplaySettings = () => {
         label="Username"
         submitForm={updateUsername}
         successCallback={requestProfile}
+        trimmed
       />
       <Divider spacingTop={24} />
       <SingleTextFieldForm
@@ -129,6 +130,7 @@ export const DisplaySettings = () => {
         key={emailResetToken}
         label="Email"
         submitForm={updateEmail}
+        trimmed
         type="email"
       />
       <Divider spacingBottom={8} spacingTop={24} />

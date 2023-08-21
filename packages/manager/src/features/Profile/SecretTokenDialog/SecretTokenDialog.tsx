@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
+import { CopyableAndDownloadableTextField } from 'src/components/CopyableAndDownloadableTextField';
 import { Notice } from 'src/components/Notice/Notice';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';

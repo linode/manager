@@ -17,7 +17,6 @@ import { Paper } from 'src/components/Paper';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { useFlags } from 'src/hooks/useFlags';
@@ -114,7 +113,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
   const flags = useFlags();
-  const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
@@ -254,7 +252,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             rows={1}
             value={description}
           />
-          {flags.metadata && hasMetadataCustomerTag ? (
+          {flags.metadata && (
             <div className={classes.cloudInitCheckboxWrapper}>
               <Checkbox
                 checked={isCloudInit}
@@ -264,7 +262,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
                 toolTipText={cloudInitTooltipMessage}
               />
             </div>
-          ) : null}
+          )}
           <RegionSelect
             helperText="For fastest initial upload, select the region that is geographically
             closest to you. Once uploaded you will be able to deploy the image

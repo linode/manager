@@ -4,8 +4,9 @@ import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { KubernetesPlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+
+import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
 
 const DEFAULT_PLAN_COUNT = 3;
 

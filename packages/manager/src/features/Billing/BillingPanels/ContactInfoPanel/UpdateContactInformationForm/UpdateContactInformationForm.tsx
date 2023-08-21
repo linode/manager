@@ -169,6 +169,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             name="email"
             onChange={formik.handleChange}
             required
+            trimmed
             type="email"
             value={formik.values.email}
           />

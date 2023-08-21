@@ -1,4 +1,3 @@
-import { useAllImagesQuery } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 import type { Image, Linode } from '@linode/api-v4';
@@ -25,12 +24,4 @@ export const useImageAndLinodeGrantCheck = () => {
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);
   return image?.label ?? linode.image;
-};
-
-export const useMetadataCustomerTag = () => {
-  const { data: images } = useAllImagesQuery();
-
-  return (
-    images?.some((image) => image.capabilities.includes('cloud-init')) ?? false
-  );
 };

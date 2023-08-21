@@ -29,7 +29,7 @@ import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleVal
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { RegionOption } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
@@ -44,9 +44,10 @@ import { Paper } from 'src/components/Paper';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
-import PlansPanel, {
+import {
+  PlansPanel,
   PlanSelectionType,
-} from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
+} from 'src/features/components/PlansPanel/PlansPanel';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -275,7 +276,7 @@ const DatabaseCreate = () => {
 
     try {
       const response = await createDatabase(createPayload);
-      history.push(`/databases/${response.id}`);
+      history.push(`/databases/${response.engine}/${response.id}`);
     } catch (errors) {
       const ipErrors = errors.filter(
         (error: APIError) => error.field === 'allow_list'

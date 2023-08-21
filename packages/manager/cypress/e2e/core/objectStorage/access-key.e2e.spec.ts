@@ -11,9 +11,14 @@ import {
 } from 'support/intercepts/object-storage';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 
 authenticate();
 describe('object storage access key end-to-end tests', () => {
+  before(() => {
+    cleanUp('obj-access-keys');
+  });
+
   /*
    * - Creates an access key with unlimited access
    * - Confirms that access key and secret key from API response are displayed.

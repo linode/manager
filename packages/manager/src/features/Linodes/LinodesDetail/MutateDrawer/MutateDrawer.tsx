@@ -3,9 +3,9 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import ListItem from 'src/components/core/ListItem';
 
 interface MutateInfo {
   disk: null | number;
@@ -46,10 +46,8 @@ interface State {
   extendedUpgradeInfo: ExtendedUpgradeInfo;
 }
 
-type CombinedProps = Props;
-
-class MutateDrawer extends React.Component<CombinedProps, State> {
-  constructor(props: CombinedProps) {
+export class MutateDrawer extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -191,8 +189,6 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-export default MutateDrawer;
 
 const HighmemG6ToG7: React.FC<{}> = () => {
   return (

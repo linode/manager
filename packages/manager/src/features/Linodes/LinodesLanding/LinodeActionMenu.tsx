@@ -6,7 +6,7 @@ import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { ActionMenu, Action } from 'src/components/ActionMenu';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -80,9 +80,6 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const { data: grants } = useGrants();
 
   const readOnly = getPermissionsForLinode(grants, linodeId) === 'read_only';
-  const toggleOpenActionMenu = () => {
-    sendLinodeActionEvent();
-  };
 
   const handlePowerAction = () => {
     const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';
@@ -212,7 +209,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
-      toggleOpenCallback={toggleOpenActionMenu}
+      onOpen={sendLinodeActionEvent}
     />
   );
 };

@@ -3,6 +3,7 @@ import { Volume } from '@linode/api-v4/types';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { interceptCloneVolume } from 'support/intercepts/volumes';
+import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -15,6 +16,10 @@ const pageSizeOverride = {
 
 authenticate();
 describe('volume clone flow', () => {
+  before(() => {
+    cleanUp('volumes');
+  });
+
   /*
    * - Clicks "Clone" action menu item for volume, enters new label, and submits form.
    * - Confirms that new volume appears in landing page with expected label and size.

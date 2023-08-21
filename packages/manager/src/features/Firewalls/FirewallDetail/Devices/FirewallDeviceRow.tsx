@@ -19,7 +19,7 @@ export const FirewallDeviceRow = React.memo(
         data-testid={`firewall-device-row-${deviceID}`}
       >
         <TableCell>
-          <Link tabIndex={0} to={`/linodes/${deviceEntityID}`}>
+          <Link tabIndex={0} to={`/linodes/${deviceEntityID}/networking`}>
             {deviceLabel}
           </Link>
         </TableCell>

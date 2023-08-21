@@ -24,10 +24,10 @@ const fibonacci = (index: number): number => {
  * Options that apply to all backoff method implementations.
  */
 export interface BackoffOptions {
-  // / Length of time to wait (in milliseconds) before making first attempt.
+  /** Length of time to wait (in milliseconds) before making first attempt. */
   initialDelay: number;
 
-  // / Maximum number of attempts to make before rejecting with an error.
+  /** Maximum number of attempts to make before rejecting with an error. */
   maxAttempts: number;
 }
 
@@ -118,7 +118,7 @@ export class SimpleBackoffMethod extends BackoffMethod {
   /**
    * Constructor.
    *
-   * @param timeout - Timeout between each attempt.
+   * @param timeout - Timeout between each attempt, milliseconds.
    * @param options - Backoff method options.
    */
   constructor(timeout: number, options?: Partial<BackoffOptions>) {

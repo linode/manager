@@ -7,7 +7,7 @@ import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
 
-import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Typography } from 'src/components/Typography';
 
 import TicketAttachmentRow from './TicketAttachmentRow';

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import NotFound from 'src/components/NotFound';
+import { NotFound } from 'src/components/NotFound';
 import { useDomainQuery } from 'src/queries/domains';
 
 const DomainsLanding = React.lazy(() =>
