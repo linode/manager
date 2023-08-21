@@ -7,6 +7,7 @@ import { AccountBeta } from '@linode/api-v4/lib/account';
 import { Typography } from 'src/components/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Button } from 'src/components/Button/Button';
+import { Link } from 'src/components/Link';
 
 interface AccountBetaProps {
   beta: AccountBeta;
@@ -20,25 +21,18 @@ function BetaDetails(props: BetaProps): React.ReactElement;
 function BetaDetails(props: AccountBetaProps) {
   const history = useHistory();
   const {
-    beta: { label, started, description, ended, id },
+    beta: { label, started, description, ended, id, more_info, enrolled },
   } = props;
-  const enrolled = props.beta?.enrolled;
-  const startDate = (
+  const startDate = !enrolled ? (
     <Typography>
       <strong>Start Date: </strong>
       <DateTimeDisplay displayTime={false} value={started} />
     </Typography>
-  );
+  ) : null;
   const endDate = ended ? (
     <Typography>
       <strong>End Date: </strong>
       <DateTimeDisplay displayTime={false} value={ended} />
-    </Typography>
-  ) : null;
-  const enrolledDate = enrolled ? (
-    <Typography>
-      <strong>Enrolled: </strong>
-      <DateTimeDisplay displayTime={false} value={enrolled} />
     </Typography>
   ) : null;
 
@@ -57,13 +51,12 @@ function BetaDetails(props: AccountBetaProps) {
           </Typography>
           <Stack direction="row" spacing="30px">
             {startDate}
-            {enrolledDate}
             {endDate}
           </Stack>
         </Stack>
         <Typography>{description}</Typography>
       </Stack>
-      <Stack minHeight={66} minWidth="111px">
+      <Stack minHeight={66} minWidth="111px" spacing={2} direction="column">
         {enrolled ? null : (
           <Button
             buttonType="primary"
@@ -71,9 +64,14 @@ function BetaDetails(props: AccountBetaProps) {
               history.push(`/betas/signup`, { betaId: id });
             }}
           >
-            More Info
+            Sign Up
           </Button>
         )}
+        {more_info ? (
+          <Link external to={more_info}>
+            More Info
+          </Link>
+        ) : null}
       </Stack>
     </Stack>
   );

@@ -52,9 +52,11 @@ const BetaSignup = () => {
           <CircleProgress />
         ) : (
           <Stack>
-            <Typography variant="h2">{beta.label}</Typography>
-            <Typography>{betaAgreement}</Typography>
-            <Typography>{betaAgreement}</Typography>
+            <Typography variant="h2" paddingBottom={2}>
+              {beta.label}
+            </Typography>
+            <Typography paddingBottom={2}>{beta.description}</Typography>
+            <Typography paddingBottom={2}>{betaAgreement}</Typography>
             <Checkbox
               value={hasAgreed}
               text="I agree to the terms"
