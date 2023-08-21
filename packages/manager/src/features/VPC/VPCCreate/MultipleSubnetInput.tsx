@@ -4,7 +4,10 @@ import { useTheme } from '@mui/material/styles';
 
 import { Divider } from 'src/components/Divider';
 import { Button } from 'src/components/Button/Button';
-import { SubnetFieldState } from 'src/utilities/subnets';
+import {
+  DEFAULT_SUBNET_IPV4_VALUE,
+  SubnetFieldState,
+} from 'src/utilities/subnets';
 import { SubnetNode } from './SubnetNode';
 
 interface Props {
@@ -20,7 +23,11 @@ export const MultipleSubnetInput = (props: Props) => {
   const addSubnet = () => {
     onChange([
       ...subnets,
-      { label: '', labelError: '', ip: { ipv4: '', ipv4Error: '' } },
+      {
+        label: '',
+        labelError: '',
+        ip: { ipv4: DEFAULT_SUBNET_IPV4_VALUE, ipv4Error: '' },
+      },
     ]);
   };
 
