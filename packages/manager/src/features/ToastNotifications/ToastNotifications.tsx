@@ -1,7 +1,6 @@
 import { Event, EventStatus } from '@linode/api-v4/lib/account/types';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
 import * as React from 'react';
-// import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
