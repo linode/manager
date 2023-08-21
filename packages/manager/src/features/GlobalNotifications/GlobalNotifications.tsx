@@ -6,11 +6,11 @@ import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotificatio
 import { useFlags } from 'src/hooks/useFlags';
 
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
-import ComplianceBanner from './ComplianceBanner';
-import ComplianceUpdateModal from './ComplianceUpdateModal';
+import { ComplianceBanner } from './ComplianceBanner';
+import { ComplianceUpdateModal } from './ComplianceUpdateModal';
 import { EmailBounceNotificationSection } from './EmailBounce';
-import RegionStatusBanner from './RegionStatusBanner';
-import TaxCollectionBanner from './TaxCollectionBanner';
+import { RegionStatusBanner } from './RegionStatusBanner';
+import { TaxCollectionBanner } from './TaxCollectionBanner';
 
 export const GlobalNotifications = () => {
   const flags = useFlags();
