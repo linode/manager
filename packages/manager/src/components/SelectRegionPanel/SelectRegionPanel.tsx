@@ -14,9 +14,10 @@ import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { Link } from '../Link';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
+import { Link } from '../Link';
+import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 interface SelectRegionPanelProps {
   disabled?: boolean;
@@ -30,43 +31,6 @@ interface SelectRegionPanelProps {
    */
   selectedLinodeTypeId?: string;
 }
-
-const getLinodeRegionPrice = (
-  type: LinodeType,
-  regionId: string
-): PriceObject => {
-  const regionSpecificPrice = type.region_prices?.find(
-    (regionPrice) => regionPrice.id === regionId
-  );
-
-  if (regionSpecificPrice) {
-    return {
-      hourly: regionSpecificPrice.hourly,
-      monthly: regionSpecificPrice.monthly,
-    };
-  }
-
-  return type.price;
-};
-
-const isLinodeTypeDifferentPriceInSelectedRegion = (
-  type: LinodeType | undefined,
-  fromRegionId: string | undefined,
-  toRegionId: string | undefined
-) => {
-  if (!type || !fromRegionId || !toRegionId) {
-    return false;
-  }
-
-  const currentRegionPrice = getLinodeRegionPrice(type, fromRegionId);
-  const selectedRegionPrice = getLinodeRegionPrice(type, toRegionId);
-
-  if (currentRegionPrice.monthly !== selectedRegionPrice.monthly) {
-    return true;
-  }
-
-  return false;
-};
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const {

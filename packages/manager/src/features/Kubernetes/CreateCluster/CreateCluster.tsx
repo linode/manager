@@ -272,76 +272,67 @@ export const CreateCluster = () => {
         {errorMap.none && <Notice error text={errorMap.none} />}
         <Paper data-qa-label-header>
           <div className={classes.inner}>
-            <Box>
-              <TextField
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  updateLabel(e.target.value)
-                }
-                className={classes.inputWidth}
-                data-qa-label-input
-                errorText={errorMap.label}
-                label="Cluster Label"
-                value={label || ''}
-              />
-            </Box>
-            <Box>
-              <RegionSelect
-                handleSelection={(regionID: string) =>
-                  setSelectedRegionID(regionID)
-                }
-                textFieldProps={{
-                  helperText: <RegionHelperText />,
-                  helperTextPosition: 'top',
-                }}
-                className={classes.regionSubtitle}
-                errorText={errorMap.region}
-                regions={filteredRegions}
-                selectedID={selectedID}
-              />
-            </Box>
-            <Box>
-              <Select
-                onChange={(selected: Item<string>) => {
-                  setVersion(selected);
-                }}
-                className={classes.inputWidth}
-                errorText={errorMap.k8s_version}
-                isClearable={false}
-                label="Kubernetes Version"
-                options={versions}
-                placeholder={' '}
-                value={version || null}
-              />
-            </Box>
+            <TextField
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                updateLabel(e.target.value)
+              }
+              className={classes.inputWidth}
+              data-qa-label-input
+              errorText={errorMap.label}
+              label="Cluster Label"
+              value={label || ''}
+            />
+            <RegionSelect
+              handleSelection={(regionID: string) =>
+                setSelectedRegionID(regionID)
+              }
+              textFieldProps={{
+                helperText: <RegionHelperText />,
+                helperTextPosition: 'top',
+              }}
+              className={classes.regionSubtitle}
+              errorText={errorMap.region}
+              regions={filteredRegions}
+              selectedID={selectedID}
+            />
+            <Select
+              onChange={(selected: Item<string>) => {
+                setVersion(selected);
+              }}
+              className={classes.inputWidth}
+              errorText={errorMap.k8s_version}
+              isClearable={false}
+              label="Kubernetes Version"
+              options={versions}
+              placeholder={' '}
+              value={version || null}
+            />
             {showHighAvailability ? (
-              <Box data-testid="ha-control-plane">
-                <HAControlPlane
-                  HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
-                  setHighAvailability={setHighAvailability}
-                />
-              </Box>
+              <HAControlPlane
+                data-testid="ha-control-plane"
+                HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
+                setHighAvailability={setHighAvailability}
+              />
             ) : null}
           </div>
-          <Box>
-            <NodePoolPanel
-              typesError={
-                typesError
-                  ? getAPIErrorOrDefault(
-                      typesError,
-                      'Error loading Linode type information.'
-                    )[0].reason
-                  : undefined
-              }
-              addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
-              apiError={errorMap.node_pools}
-              hasSelectedRegion={hasSelectedRegion}
-              isPlanPanelDisabled={isPlanPanelDisabled}
-              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-              regionsData={regionsData}
-              types={typesData || []}
-              typesLoading={typesLoading}
-            />
-          </Box>
+          <NodePoolPanel
+            typesError={
+              typesError
+                ? getAPIErrorOrDefault(
+                    typesError,
+                    'Error loading Linode type information.'
+                  )[0].reason
+                : undefined
+            }
+            addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
+            apiError={errorMap.node_pools}
+            hasSelectedRegion={hasSelectedRegion}
+            isPlanPanelDisabled={isPlanPanelDisabled}
+            isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+            regionsData={regionsData}
+            types={typesData || []}
+            typesLoading={typesLoading}
+          />
         </Paper>
       </Grid>
       <Grid
