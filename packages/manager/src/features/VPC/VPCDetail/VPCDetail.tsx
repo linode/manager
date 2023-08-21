@@ -150,12 +150,14 @@ const VPCDetail = () => {
             </Typography>
             <Typography>
               {description}{' '}
-              <button
-                onClick={() => setShowFullDescription((show) => !show)}
-                style={{ ...theme.applyLinkStyles, fontSize: '0.875rem' }}
-              >
-                Read {showFullDescription ? 'Less' : 'More'}
-              </button>
+              {description.length > 150 && (
+                <button
+                  onClick={() => setShowFullDescription((show) => !show)}
+                  style={{ ...theme.applyLinkStyles, fontSize: '0.875rem' }}
+                >
+                  Read {showFullDescription ? 'Less' : 'More'}
+                </button>
+              )}
             </Typography>
           </StyledDescriptionBox>
         )}
