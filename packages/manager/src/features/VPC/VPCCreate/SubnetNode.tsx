@@ -77,7 +77,7 @@ export const SubnetNode = (props: Props) => {
       <Grid xs={isRemovable ? 11 : 12}>
         <TextField
           disabled={disabled}
-          label="Subnet IP Range Address"
+          label="Subnet IP Address Range"
           onChange={onIpv4Change}
           value={subnet.ip.ipv4}
           errorText={subnet.ip.ipv4Error}

@@ -23,7 +23,7 @@ describe('VPC create page', () => {
     getAllByText('Description');
     getAllByText('Subnet');
     getAllByText('Subnet label');
-    getAllByText('Subnet IP Range Address');
+    getAllByText('Subnet IP Address Range');
     getAllByText('Add a Subnet');
     getAllByText('Create VPC');
   });
@@ -57,7 +57,7 @@ describe('VPC create page', () => {
     });
 
     const subnetLabels = screen.getAllByText('Subnet label');
-    const subnetIps = screen.getAllByText('Subnet IP Range Address');
+    const subnetIps = screen.getAllByText('Subnet IP Address Range');
     expect(subnetLabels).toHaveLength(2);
     expect(subnetIps).toHaveLength(2);
 
@@ -68,7 +68,7 @@ describe('VPC create page', () => {
     });
 
     const subnetLabelAfter = screen.getAllByText('Subnet label');
-    const subnetIpsAfter = screen.getAllByText('Subnet IP Range Address');
+    const subnetIpsAfter = screen.getAllByText('Subnet IP Address Range');
     expect(subnetLabelAfter).toHaveLength(1);
     expect(subnetIpsAfter).toHaveLength(1);
   });
@@ -77,7 +77,7 @@ describe('VPC create page', () => {
     renderWithTheme(<VPCCreate />);
     const subnetLabel = screen.getByText('Subnet label');
     expect(subnetLabel).toBeInTheDocument();
-    const subnetIp = screen.getByText('Subnet IP Range Address');
+    const subnetIp = screen.getByText('Subnet IP Address Range');
     expect(subnetIp).toBeInTheDocument();
     const createVPCButton = screen.getByText('Create VPC');
     expect(createVPCButton).toBeInTheDocument();

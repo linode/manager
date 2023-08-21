@@ -124,7 +124,6 @@ const VPCCreate = () => {
     setFieldValue,
     setFieldError,
     setSubmitting,
-    handleChange,
     handleSubmit,
   } = useFormik({
     initialValues: {
@@ -211,7 +210,9 @@ const VPCCreate = () => {
               disabled={disabled}
               label="Description"
               errorText={errors.description}
-              onChange={handleChange}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFieldValue('description', e.target.value)
+              }
               value={values.description}
               optional
               multiline
