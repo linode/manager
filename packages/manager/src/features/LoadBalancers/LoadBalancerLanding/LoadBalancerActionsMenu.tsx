@@ -1,20 +1,21 @@
-import * as React from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu';
 
+import type { Loadbalancer } from '@linode/api-v4';
+
 interface Props {
-  loadBalancerId: number;
+  loadbalancer: Loadbalancer;
 }
 
-export const LoadBalancerActionsMenu = (props: Props) => {
-  const { loadBalancerId } = props;
+export const LoadBalancerActionsMenu = ({ loadbalancer }: Props) => {
   const history = useHistory();
 
   const actions: Action[] = [
     {
       onClick: () =>
-        history.push(`/loadbalancers/${loadBalancerId}/configurations`),
+        history.push(`/loadbalancers/${loadbalancer.id}/configurations`),
       title: 'Configurations',
     },
     {
@@ -22,7 +23,7 @@ export const LoadBalancerActionsMenu = (props: Props) => {
       title: 'Clone Load Balancer',
     },
     {
-      onClick: () => history.push(`/loadbalancers/${loadBalancerId}/settings`),
+      onClick: () => history.push(`/loadbalancers/${loadbalancer.id}/settings`),
       title: 'Settings',
     },
     {
@@ -34,7 +35,7 @@ export const LoadBalancerActionsMenu = (props: Props) => {
   return (
     <ActionMenu
       actionsList={actions}
-      ariaLabel={`Action menu for Load Balancer ${loadBalancerId}`}
+      ariaLabel={`Action menu for Load Balancer ${loadbalancer.label}`}
     />
   );
 };

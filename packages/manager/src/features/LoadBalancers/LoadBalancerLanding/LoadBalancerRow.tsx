@@ -51,7 +51,7 @@ export const LoadBalancerRow = ({ loadBalancer }: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <LoadBalancerActionsMenu loadBalancerId={id} />
+        <LoadBalancerActionsMenu loadbalancer={loadBalancer} />
       </TableCell>
     </TableRow>
   );
