@@ -16,7 +16,7 @@ export interface DataCenterPricingOptions {
    * The `id` of the region we intended to get the price for.
    * @example us-east
    */
-  regionId?: Region['id'] | undefined;
+  regionId: Region['id'] | undefined;
 }
 
 // The key is a region id and the value is the percentage
