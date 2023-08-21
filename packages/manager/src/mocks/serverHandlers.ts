@@ -41,6 +41,7 @@ import {
   invoiceFactory,
   invoiceItemFactory,
   invoiceItemFactoryVPC,
+  invoiceItemFactoryVPCNetworkTransfer,
   kubeEndpointFactory,
   kubernetesAPIResponse,
   kubernetesVersionFactory,
@@ -880,6 +881,7 @@ export const handlers = [
   rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
     const items = [
       invoiceItemFactoryVPC.build(),
+      invoiceItemFactoryVPCNetworkTransfer.build(),
       ...invoiceItemFactory.buildList(10),
     ];
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));

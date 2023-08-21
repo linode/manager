@@ -99,6 +99,11 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
                 </TableCell>
                 <TableCell data-qa-quantity parentColumn="Quantity">
                   {renderQuantity(quantity)}
+                  {`${
+                    quantity !== null && label === 'VPC Network Transfer'
+                      ? ' GB' // placeholder, follow up with api team
+                      : ''
+                  }`}
                 </TableCell>
                 <TableCell data-qa-unit-price parentColumn="Unit Price">
                   {unit_price !== 'None' && renderUnitPrice(unit_price)}
