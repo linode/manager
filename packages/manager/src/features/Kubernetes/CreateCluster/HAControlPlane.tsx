@@ -10,23 +10,19 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 
-interface HACopyProps {
-  isDCSpecificPricing: boolean;
-}
-
 export interface HAControlPlaneProps {
   highAvailabilityPrice: number | undefined;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
 
-export const HACopy = (props: HACopyProps) => {
-  const { isDCSpecificPricing } = props;
+export const HACopy = () => {
+  const flags = useFlags();
   return (
     <Typography>
       Recommended for production workloads, a high availability (HA) control
       plane is replicated on multiple master nodes to 99.99% uptime.
       <br />
-      {isDCSpecificPricing
+      {flags.dcSpecificPricing
         ? 'Prices may vary based on Region.'
         : undefined}{' '}
       <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
@@ -44,8 +40,6 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
     setHighAvailability(e.target.value === 'yes');
   };
 
-  const flags = useFlags();
-
   return (
     <FormControl data-testid="ha-control-plane-form">
       <FormLabel
@@ -58,7 +52,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
       >
         <Typography variant="inherit">HA Control Plane</Typography>
       </FormLabel>
-      <HACopy isDCSpecificPricing={!!flags.dcSpecificPricing} />
+      <HACopy />
       <RadioGroup
         aria-labelledby="ha-radio-buttons-group-label"
         name="ha-radio-buttons-group"

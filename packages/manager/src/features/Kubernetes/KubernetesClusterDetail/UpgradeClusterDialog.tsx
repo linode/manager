@@ -6,6 +6,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { displayPrice } from 'src/components/DisplayPrice';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import {
@@ -18,7 +19,6 @@ import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
 
 import { HACopy } from '../CreateCluster/HAControlPlane';
-import { displayPrice } from 'src/components/DisplayPrice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   noticeHeader: {
@@ -98,7 +98,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
       open={open}
       title="Upgrade to High Availability"
     >
-      <HACopy isDCSpecificPricing={!!flags.dcSpecificPricing} />
+      <HACopy />
       <Typography style={{ marginBottom: 8, marginTop: 12 }} variant="body1">
         {flags.dcSpecificPricing
           ? `For this region, pricing for the HA control plane is $${getDCSpecificPrice(
