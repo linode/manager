@@ -17,7 +17,6 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
-import { DynamicPriceNotice } from '../DynamicPriceNotice';
 
 interface SelectRegionPanelProps {
   disabled?: boolean;
@@ -66,9 +65,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       selectedID
     );
 
-  const showGeneralDynamicPriceNotice =
-    flags.dcSpecificPricing && !showSelectedRegionHasDifferentPriceWarning;
-
   if (props.regions.length === 0) {
     return null;
   }
@@ -97,11 +93,16 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         )}
       </Box>
       <RegionHelperText
+        hidePricingNotice={showSelectedRegionHasDifferentPriceWarning}
         onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
       />
-      {showGeneralDynamicPriceNotice && <DynamicPriceNotice />}
       {showCrossDataCenterCloneWarning ? (
-        <Notice data-testid="region-select-warning" spacingBottom={0} warning>
+        <Notice
+          data-testid="region-select-warning"
+          spacingBottom={0}
+          spacingTop={8}
+          warning
+        >
           <Typography fontWeight="bold">
             {CROSS_DATA_CENTER_CLONE_WARNING}
           </Typography>
@@ -116,7 +117,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         selectedID={selectedID || null}
       />
       {showSelectedRegionHasDifferentPriceWarning && (
-        <Notice info spacingBottom={0} spacingTop={12}>
+        <Notice spacingBottom={0} spacingTop={12} warning>
           <Typography fontWeight="bold">
             The selected region has a different price structure.{' '}
             <Link to="https://www.linode.com/pricing">Learn more.</Link>
