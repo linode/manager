@@ -1,35 +1,35 @@
-import * as React from 'react';
 import {
-  CreateVPCPayload,
-  CreateSubnetPayload,
   APIError,
+  CreateSubnetPayload,
+  CreateVPCPayload,
 } from '@linode/api-v4';
-import { useHistory } from 'react-router-dom';
+import { createVPCSchema } from '@linode/validation';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
-import { createVPCSchema } from '@linode/validation';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { useProfile, useGrants } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
-import { useCreateVPCMutation } from 'src/queries/vpcs';
-
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { TextField } from 'src/components/TextField';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { LandingHeader } from 'src/components/LandingHeader';
 import { Paper } from 'src/components/Paper';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { TextField } from 'src/components/TextField';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
+import { useCreateVPCMutation } from 'src/queries/vpcs';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   SubnetFieldState,
   validateSubnets,
 } from 'src/utilities/subnets';
+
 import { MultipleSubnetInput } from './MultipleSubnetInput';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   StyledBodyTypography,
   StyledHeaderTypography,
@@ -55,9 +55,9 @@ const VPCCreate = () => {
     const subnetPayloads: CreateSubnetPayload[] = [];
 
     for (const subnetState of values.subnets) {
-      const { label, ip } = subnetState;
+      const { ip, label } = subnetState;
       if (ip.ipv4 || label) {
-        subnetPayloads.push({ label: label, ipv4: ip.ipv4 });
+        subnetPayloads.push({ ipv4: ip.ipv4, label });
       }
     }
 
@@ -66,9 +66,9 @@ const VPCCreate = () => {
 
   const validateVPCSubnets = () => {
     const validatedSubnets = validateSubnets(values.subnets, {
+      ipv4Error: 'The IPv4 range must be in CIDR format',
       labelError:
         'Label is required. Must only be ASCII letters, numbers, and dashes',
-      ipv4Error: 'The IPv4 range must be in CIDR format',
     });
 
     if (
@@ -123,24 +123,24 @@ const VPCCreate = () => {
   };
 
   const {
-    values,
     errors,
-    setFieldValue,
-    setFieldError,
-    setSubmitting,
     handleSubmit,
+    setFieldError,
+    setFieldValue,
+    setSubmitting,
+    values,
   } = useFormik({
     initialValues: {
+      description: '',
+      label: '',
+      region: '',
       subnets: [
         {
+          ip: { ipv4: DEFAULT_SUBNET_IPV4_VALUE, ipv4Error: '' },
           label: '',
           labelError: '',
-          ip: { ipv4: DEFAULT_SUBNET_IPV4_VALUE, ipv4Error: '' },
         },
       ] as SubnetFieldState[],
-      label: '',
-      description: '',
-      region: '',
     },
     onSubmit: onCreateVPC,
     validateOnChange: false,
@@ -192,34 +192,34 @@ const VPCCreate = () => {
               {/* TODO: VPC - learn more link here */}
             </StyledBodyTypography>
             <RegionSelect
-              disabled={disabled}
-              errorText={errors.region}
               handleSelection={(region: string) =>
                 setFieldValue('region', region)
               }
-              regions={regions ?? []}
+              disabled={disabled}
+              errorText={errors.region}
               isClearable
+              regions={regions ?? []}
               selectedID={values.region}
             />
             <TextField
-              disabled={disabled}
-              errorText={errors.label}
-              label="VPC label"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFieldValue('label', e.target.value)
               }
+              disabled={disabled}
+              errorText={errors.label}
+              label="VPC label"
               value={values.label}
             />
             <TextField
-              disabled={disabled}
-              label="Description"
-              errorText={errors.description}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFieldValue('description', e.target.value)
               }
-              value={values.description}
-              optional
+              disabled={disabled}
+              errorText={errors.description}
+              label="Description"
               multiline
+              optional
+              value={values.description}
             />
           </Paper>
           <Paper sx={{ marginTop: theme.spacing(2.5) }}>
@@ -245,8 +245,8 @@ const VPCCreate = () => {
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
+              disabled,
               label: 'Create VPC',
-              disabled: disabled,
               loading: isLoading,
               onClick: onCreateVPC,
             }}

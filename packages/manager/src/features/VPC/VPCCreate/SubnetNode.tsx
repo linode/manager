@@ -1,12 +1,13 @@
-import * as React from 'react';
+import Close from '@mui/icons-material/Close';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
 
-import Close from '@mui/icons-material/Close';
 import { Button } from 'src/components/Button/Button';
-import { TextField } from 'src/components/TextField';
-import { SubnetFieldState } from 'src/utilities/subnets';
 import { FormHelperText } from 'src/components/FormHelperText';
+import { TextField } from 'src/components/TextField';
+import { RESERVED_IP_NUMBER } from 'src/utilities/subnets';
+import { SubnetFieldState } from 'src/utilities/subnets';
 import { calculateAvailableIPv4s } from 'src/utilities/subnets';
 
 interface Props {
@@ -23,11 +24,9 @@ interface Props {
   subnet: SubnetFieldState;
 }
 
-const RESERVED_IP_NUMBER = 4;
-
 // TODO: VPC - currently only supports IPv4, must update when/if IPv6 is also supported
 export const SubnetNode = (props: Props) => {
-  const { disabled, idx, onChange, subnet, isRemovable } = props;
+  const { disabled, idx, isRemovable, onChange, subnet } = props;
   const initialIPAvailability = calculateAvailableIPv4s(subnet.ip.ipv4 ?? '');
   const [availIPs, setAvailIPs] = React.useState<number | undefined>(
     initialIPAvailability
@@ -57,14 +56,14 @@ export const SubnetNode = (props: Props) => {
 
   return (
     <Grid key={idx} sx={{ maxWidth: 460 }}>
-      <Grid direction="row" container spacing={2}>
+      <Grid container direction="row" spacing={2}>
         <Grid xs={isRemovable ? 11 : 12}>
           <TextField
             disabled={disabled}
+            errorText={subnet.labelError}
             label="Subnet label"
             onChange={onLabelChange}
             value={subnet.label}
-            errorText={subnet.labelError}
           />
         </Grid>
         {isRemovable && !!idx && (
@@ -78,10 +77,10 @@ export const SubnetNode = (props: Props) => {
       <Grid xs={isRemovable ? 11 : 12}>
         <TextField
           disabled={disabled}
+          errorText={subnet.ip.ipv4Error}
           label="Subnet IP Address Range"
           onChange={onIpv4Change}
           value={subnet.ip.ipv4}
-          errorText={subnet.ip.ipv4Error}
         />
         {availIPs && (
           <FormHelperText>

@@ -1,9 +1,10 @@
-import * as React from 'react';
-import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetNode } from './SubnetNode';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 
 describe('SubnetNode', () => {
   it('should calculate the correct subnet mask', async () => {
@@ -12,7 +13,7 @@ describe('SubnetNode', () => {
         disabled={false}
         idx={0}
         onChange={() => {}}
-        subnet={{ label: '', ip: { ipv4: '' } }}
+        subnet={{ ip: { ipv4: '' }, label: '' }}
       />
     );
     const subnetAddress = screen.getAllByTestId('textfield-input');
@@ -30,7 +31,7 @@ describe('SubnetNode', () => {
         disabled={false}
         idx={0}
         onChange={() => {}}
-        subnet={{ label: '', ip: { ipv4: '' } }}
+        subnet={{ ip: { ipv4: '' }, label: '' }}
       />
     );
     const subnetAddress = screen.getAllByTestId('textfield-input');

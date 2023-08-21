@@ -5,8 +5,8 @@ import { Typography } from 'src/components/Typography';
 export const StyledBodyTypography = styled(Typography, {
   label: 'StyledBodyTypography',
 })(({ theme }) => ({
-  marginTop: theme.spacing(2),
   marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(2),
   [theme.breakpoints.up('sm')]: {
     maxWidth: '80%',
   },

@@ -1,6 +1,7 @@
 import { determineIPType, vpcsValidateIP } from '@linode/validation';
 
 export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.0.0/24';
+export const RESERVED_IP_NUMBER = 4;
 
 // VPC: TODO - added ipv6 related fields here, but they will not be used until VPCs support ipv6
 interface SubnetIPState {
@@ -11,9 +12,9 @@ interface SubnetIPState {
 }
 
 export interface SubnetFieldState {
+  ip: SubnetIPState;
   label: string;
   labelError?: string;
-  ip: SubnetIPState;
 }
 
 export type SubnetIPType = 'ipv4' | 'ipv6';
@@ -79,9 +80,9 @@ const DEFAULT_IPV4_ERROR = 'The IPv4 range must be in CIDR format';
 export const validateSubnets = (
   subnets: SubnetFieldState[],
   options?: {
-    labelError?: string;
     ipv4Error?: string;
     ipv6Error?: string;
+    labelError?: string;
   }
 ): SubnetFieldState[] => {
   return subnets.map((subnet) => {

@@ -1,32 +1,33 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { Button } from 'src/components/Button/Button';
+import { Divider } from 'src/components/Divider';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   SubnetFieldState,
 } from 'src/utilities/subnets';
+
 import { SubnetNode } from './SubnetNode';
 
 interface Props {
-  subnets: SubnetFieldState[];
-  onChange: (subnets: SubnetFieldState[]) => void;
   disabled?: boolean;
+  onChange: (subnets: SubnetFieldState[]) => void;
+  subnets: SubnetFieldState[];
 }
 
 export const MultipleSubnetInput = (props: Props) => {
   const theme = useTheme();
-  const { subnets, onChange, disabled } = props;
+  const { disabled, onChange, subnets } = props;
 
   const addSubnet = () => {
     onChange([
       ...subnets,
       {
+        ip: { ipv4: DEFAULT_SUBNET_IPV4_VALUE, ipv4Error: '' },
         label: '',
         labelError: '',
-        ip: { ipv4: DEFAULT_SUBNET_IPV4_VALUE, ipv4Error: '' },
       },
     ]);
   };
@@ -51,13 +52,13 @@ export const MultipleSubnetInput = (props: Props) => {
         <Grid key={`subnet-${subnetIdx}`}>
           {subnetIdx !== 0 && <Divider sx={{ marginTop: theme.spacing(3) }} />}
           <SubnetNode
-            idx={subnetIdx}
-            disabled={disabled}
-            // janky solution to enable SubnetNode to work on its own or be part of MultipleSubnetInput
-            isRemovable={true}
             onChange={(subnet, subnetIdx, removable) =>
               handleSubnetChange(subnet, subnetIdx ?? 0, !!removable)
             }
+            disabled={disabled}
+            idx={subnetIdx}
+            // janky solution to enable SubnetNode to work on its own or be part of MultipleSubnetInput
+            isRemovable={true}
             subnet={subnet}
           />
         </Grid>

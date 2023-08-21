@@ -1,10 +1,11 @@
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
-import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCCreate from './VPCCreate';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 
 beforeEach(() => {
   // ignores the console errors in these tests as they're supposed to happen
@@ -30,7 +31,7 @@ describe('VPC create page', () => {
 
   // test fails due to new default value for subnet ip addresses
   it.skip('should require vpc labels and region and ignore subnets that are blank', async () => {
-    const { getByText, queryByText, getAllByTestId } = renderWithTheme(
+    const { getAllByTestId, getByText, queryByText } = renderWithTheme(
       <VPCCreate />
     );
     const createVPCButton = getByText('Create VPC');
