@@ -27,8 +27,8 @@ const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);
 
 describe('KubeCheckoutBar', () => {
-  it('with DC-specific pricing feature flag on, should not render node pools or create button unless a region has been selected', async () => {
-    const { getByTestId, queryAllByTestId, queryAllByText } = renderWithTheme(
+  it('with DC-specific pricing feature flag, should render helper text and disable create button until a region has been selected', async () => {
+    const { findByText, getByTestId, getByText } = renderWithTheme(
       <KubeCheckoutBar {...props} region="" />,
       {
         flags: { dcSpecificPricing: true },
@@ -37,8 +37,10 @@ describe('KubeCheckoutBar', () => {
 
     await waitForElementToBeRemoved(getByTestId('circle-progress'));
 
-    expect(queryAllByTestId('node-pool-summary')).toHaveLength(0);
-    expect(queryAllByText(/Create Cluster/)).toHaveLength(0);
+    await findByText(
+      'Select a Region and add a Node Pool to view pricing and create a cluster.'
+    );
+    expect(getByText('Create Cluster').closest('button')).toBeDisabled();
   });
 
   it('should render a section for each pool', async () => {

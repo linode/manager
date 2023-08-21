@@ -8,30 +8,23 @@ import { Link } from 'src/components/Link';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 
 export interface HAControlPlaneProps {
   highAvailabilityPrice: number | undefined;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
 
-export const HACopy = () => {
-  const flags = useFlags();
-  return (
-    <Typography>
-      Recommended for production workloads, a high availability (HA) control
-      plane is replicated on multiple master nodes to 99.99% uptime.
-      <br />
-      {flags.dcSpecificPricing
-        ? 'Prices may vary based on Region.'
-        : undefined}{' '}
-      <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
-        Learn more about the HA control plane
-      </Link>
-      .
-    </Typography>
-  );
-};
+export const HACopy = () => (
+  <Typography>
+    Recommended for production workloads, a high availability (HA) control plane
+    is replicated on multiple master nodes to 99.99% uptime.
+    <br />
+    <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
+      Learn more about the HA control plane
+    </Link>
+    .
+  </Typography>
+);
 
 export const HAControlPlane = (props: HAControlPlaneProps) => {
   const { highAvailabilityPrice, setHighAvailability } = props;
@@ -62,7 +55,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
           label={`Yes, enable HA control plane. ${
             highAvailabilityPrice
               ? `(${displayPrice(highAvailabilityPrice)}/month)`
-              : ''
+              : '(Select a Region to view price information.)'
           }`}
           control={<Radio data-testid="ha-radio-button-yes" />}
           name="yes"

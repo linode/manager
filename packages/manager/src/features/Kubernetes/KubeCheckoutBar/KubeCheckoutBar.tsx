@@ -1,15 +1,16 @@
 import { KubeNodePoolResponse } from '@linode/api-v4';
+import { Typography, styled } from '@mui/material';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { displayPrice } from 'src/components/DisplayPrice';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
-import { Typography } from 'src/components/Typography';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getMonthlyPrice } from 'src/features/Kubernetes/kubeUtils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
@@ -51,7 +52,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
-  const flags = useFlags();
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const typesQuery = useSpecificTypes(pools.map((pool) => pool.type));
@@ -72,23 +72,12 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     showHighAvailability &&
     highAvailabilityPrice !== undefined;
 
-  const disableCheckout = Boolean(needsAPool || gdprConditions || haConditions);
+  const disableCheckout = Boolean(
+    needsAPool || gdprConditions || haConditions || region === ''
+  );
 
   if (isLoading) {
     return <CircleProgress />;
-  }
-
-  // Do not display the Checkout Bar until a region has been selected for dynamic pricing.
-  if (region === '' && flags.dcSpecificPricing) {
-    return (
-      <>
-        <Typography variant="h2">Cluster Summary</Typography>
-        <Divider dark spacingBottom={1} spacingTop={16} />
-        <Typography sx={{ padding: `12px 0` }}>
-          Select a Region and Plan to create a cluster.
-        </Typography>
-      </>
-    );
   }
 
   return (
@@ -98,11 +87,15 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
           <EUAgreementCheckbox checked={hasAgreed} onChange={toggleHasAgreed} />
         ) : undefined
       }
-      calculatedPrice={getTotalClusterPrice(
-        pools,
-        types ?? [],
-        highAvailability ? highAvailabilityPrice : undefined
-      )}
+      calculatedPrice={
+        region !== ''
+          ? getTotalClusterPrice(
+              pools,
+              types ?? [],
+              highAvailability ? highAvailabilityPrice : undefined
+            )
+          : undefined
+      }
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
@@ -116,22 +109,52 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
+            price={
+              region !== ''
+                ? getMonthlyPrice(thisPool.type, thisPool.count, types ?? [])
+                : undefined
+            }
             updateNodeCount={(updatedCount: number) =>
               updatePool(idx, { ...thisPool, count: updatedCount })
             }
             key={idx}
             nodeCount={thisPool.count}
             onRemove={() => removePool(idx)}
-            price={getMonthlyPrice(thisPool.type, thisPool.count, types ?? [])}
           />
         ))}
         <Divider dark spacingBottom={0} spacingTop={16} />
         {showWarning && (
           <Notice important spacingTop={16} text={nodeWarning} warning />
         )}
+        {region != '' && highAvailability ? (
+          <StyledHABox>
+            <StyledHAHeader>
+              High Availability (HA) Control Plane
+            </StyledHAHeader>
+            <Typography>
+              {displayPrice(Number(highAvailabilityPrice))}/month
+            </Typography>
+            <Divider dark spacingBottom={0} spacingTop={16} />
+          </StyledHABox>
+        ) : undefined}
       </>
     </CheckoutBar>
   );
 };
 
 export default RenderGuard(KubeCheckoutBar);
+
+const StyledHAHeader = styled(Typography, {
+  label: 'StyledHAHeader',
+})(({ theme }) => ({
+  fontSize: '16px',
+  fontWeight: 600,
+  paddingBottom: theme.spacing(0.5),
+  paddingTop: theme.spacing(0.5),
+}));
+
+const StyledHABox = styled(Box, {
+  label: 'StyledHABox',
+})(({ theme }) => ({
+  marginTop: theme.spacing(2),
+}));
