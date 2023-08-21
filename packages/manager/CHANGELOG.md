@@ -4,6 +4,66 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-08-21] - v1.100.0
+
+
+### Added:
+
+- Firewalls table to Linode Details > “Network” tab ([#9470](https://github.com/linode/manager/pull/9470))
+
+### Changed:
+
+- Strip whitespace on blur for username and email text fields ([#9463](https://github.com/linode/manager/pull/9463))
+- Move Kubernetes HA Control Plane selection from checkout bar to create form ([#9489](https://github.com/linode/manager/pull/9489))
+
+### Fixed:
+
+- Alignment issue on Service Transfers page ([#9491](https://github.com/linode/manager/pull/9491))
+- Broken K8 node pools display with infinite scrolling ([#9509](https://github.com/linode/manager/pull/9509))
+- Collision caused by IPv6 address in the FW Rules Table ([#9510](https://github.com/linode/manager/pull/9510))
+- Inconsistent Node Pool Summary price font family ([#9512](https://github.com/linode/manager/pull/9512))
+- Persistent OAuth client inputs after canceling or submitting ([#9515](https://github.com/linode/manager/pull/9515))
+- Disabled Select tooltip hover ([#9518](https://github.com/linode/manager/pull/9518))
+- Styling syntax error with EnhancedSelectFields ([#9521](https://github.com/linode/manager/pull/9521))
+- Circular dependency and blur behaviors on main search field ([#9534](https://github.com/linode/manager/pull/9534))
+- Incorrect redirect to DBaaS instance details page upon create ([#9547](https://github.com/linode/manager/pull/9547))
+- Hively icons showing external link icons ([#9548](https://github.com/linode/manager/pull/9548))
+- Crash when resizing a Linode under a user’s reputation score ([#9550](https://github.com/linode/manager/pull/9550))
+- Firewalls breadcrumb containing the firewall id ([#9554](https://github.com/linode/manager/pull/9554))
+
+### Tech Stories:
+
+- Clean up Profile Settings ([#9482](https://github.com/linode/manager/pull/9482))
+- Finish deprecating the `core` folder and clean up components ([#9488](https://github.com/linode/manager/pull/9488))
+- Add event messages story and playground ([#9516](https://github.com/linode/manager/pull/9516))
+- Refactor Backups Drawer ([#9517](https://github.com/linode/manager/pull/9517))
+- Clean up withRouter usage ([#9522](https://github.com/linode/manager/pull/9522))
+- Clean up how dev tools are initialized ([#9525](https://github.com/linode/manager/pull/9525))
+- Replaced deprecated keycodes  ([#9527](https://github.com/linode/manager/pull/9527))
+- MUI v5 Migration - `SRC > Features > TopMenu` ([#9498](https://github.com/linode/manager/pull/9498))
+- MUI v5 Migration - `SRC > Features > Linodes pt2` ([#9501](https://github.com/linode/manager/pull/9501))
+- MUI v5 Migration - `SRC > Features > Search` ([#9532](https://github.com/linode/manager/pull/9532))
+- Make UserMenu use MUI instead of Reach UI ([#9533](https://github.com/linode/manager/pull/9533))
+- Make ActionMenu use MUI instead of Reach UI ([#9540](https://github.com/linode/manager/pull/9540))
+- Duplicate key error on Linode and NodeBalancer Landing ([#9543](https://github.com/linode/manager/pull/9543))
+
+### Upcoming Features:
+
+- Add AGLB empty state ([#9462](https://github.com/linode/manager/pull/9462))
+- Update AGLB API endpoints ([#9496](https://github.com/linode/manager/pull/9496))
+- Add AGLB Details - Summary Page ([#9551](https://github.com/linode/manager/pull/9551))
+- Add Betas Landing page ([#9465](https://github.com/linode/manager/pull/9465))
+- Add VPC column to linodes landing page table ([#9485](https://github.com/linode/manager/pull/9485))
+- Add VPC delete dialog ([#9490](https://github.com/linode/manager/pull/9490))
+- Add VPC Edit drawer ([#9528](https://github.com/linode/manager/pull/9528))
+- Swap VLAN and User Data order in Linode Create ([#9492](https://github.com/linode/manager/pull/9492))
+- Remove customer tag check for Metadata ([#9546](https://github.com/linode/manager/pull/9546))
+
+## [2023-08-11] - v1.99.1
+### Fixed:
+
+Unescape encoding for user data ([#9536](https://github.com/linode/manager/pull/9536))
+
 ## [2023-08-07] - v1.99.0
 
 
