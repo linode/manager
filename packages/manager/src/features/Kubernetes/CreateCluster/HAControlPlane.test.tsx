@@ -4,9 +4,9 @@ import * as React from 'react';
 import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { HAControlPlane, Props } from './HAControlPlane';
+import { HAControlPlane, HAControlPlaneProps } from './HAControlPlane';
 
-const props: Props = {
+const props: HAControlPlaneProps = {
   highAvailabilityPrice: LKE_HA_PRICE,
   setHighAvailability: jest.fn(),
 };

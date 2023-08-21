@@ -6,8 +6,10 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
+import { Typography } from 'src/components/Typography';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getMonthlyPrice } from 'src/features/Kubernetes/kubeUtils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
@@ -16,7 +18,6 @@ import { isEURegion } from 'src/utilities/formatRegion';
 
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
-import { Typography } from '@mui/material';
 
 export interface Props {
   createCluster: () => void;
@@ -50,6 +51,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
+  const flags = useFlags();
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const typesQuery = useSpecificTypes(pools.map((pool) => pool.type));
@@ -77,7 +79,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   }
 
   // Do not display the Checkout Bar until a region has been selected for dynamic pricing.
-  if (region === '') {
+  if (region === '' && flags.dcSpecificPricing) {
     return (
       <>
         <Typography variant="h2">Cluster Summary</Typography>

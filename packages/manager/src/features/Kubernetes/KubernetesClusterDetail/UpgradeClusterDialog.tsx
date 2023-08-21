@@ -18,6 +18,7 @@ import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
 
 import { HACopy } from '../CreateCluster/HAControlPlane';
+import { displayPrice } from 'src/components/DisplayPrice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   noticeHeader: {
@@ -97,15 +98,18 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
       open={open}
       title="Upgrade to High Availability"
     >
-      <HACopy />
+      <HACopy isDCSpecificPricing={!!flags.dcSpecificPricing} />
       <Typography style={{ marginBottom: 8, marginTop: 12 }} variant="body1">
-        For this region, pricing for the HA control plane is $
-        {getDCSpecificPrice({
-          basePrice: LKE_HA_PRICE,
-          flags,
-          regionId: regionID,
-        })}{' '}
-        per month per cluster.
+        {flags.dcSpecificPricing
+          ? `For this region, pricing for the HA control plane is $${getDCSpecificPrice(
+              {
+                basePrice: LKE_HA_PRICE,
+                flags,
+                regionId: regionID,
+              }
+            )}`
+          : `Pricing for the HA control plane is ${displayPrice(LKE_HA_PRICE)}`}
+        &nbsp;per month per cluster.
       </Typography>
       <Notice spacingBottom={16} spacingTop={16} warning>
         <Typography className={classes.noticeHeader} variant="h3">

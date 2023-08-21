@@ -27,9 +27,12 @@ const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);
 
 describe('KubeCheckoutBar', () => {
-  it('should not render node pools or create button unless a region has been selected', async () => {
+  it('with DC-specific pricing feature flag on, should not render node pools or create button unless a region has been selected', async () => {
     const { getByTestId, queryAllByTestId, queryAllByText } = renderWithTheme(
-      <KubeCheckoutBar {...props} region="" />
+      <KubeCheckoutBar {...props} region="" />,
+      {
+        flags: { dcSpecificPricing: true },
+      }
     );
 
     await waitForElementToBeRemoved(getByTestId('circle-progress'));

@@ -8,31 +8,43 @@ import { Link } from 'src/components/Link';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 
-export const HACopy = () => (
-  <Typography>
-    Recommended for production workloads, a high availability (HA) control plane
-    is replicated on multiple master nodes to 99.99% uptime.
-    <br />
-    Prices may vary based on Region.{' '}
-    <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
-      Learn more about the HA control plane
-    </Link>
-    .
-  </Typography>
-);
+interface HACopyProps {
+  isDCSpecificPricing: boolean;
+}
 
-export interface Props {
+export interface HAControlPlaneProps {
   highAvailabilityPrice: number | undefined;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
 
-export const HAControlPlane = (props: Props) => {
+export const HACopy = (props: HACopyProps) => {
+  const { isDCSpecificPricing } = props;
+  return (
+    <Typography>
+      Recommended for production workloads, a high availability (HA) control
+      plane is replicated on multiple master nodes to 99.99% uptime.
+      <br />
+      {isDCSpecificPricing
+        ? 'Prices may vary based on Region.'
+        : undefined}{' '}
+      <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
+        Learn more about the HA control plane
+      </Link>
+      .
+    </Typography>
+  );
+};
+
+export const HAControlPlane = (props: HAControlPlaneProps) => {
   const { highAvailabilityPrice, setHighAvailability } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setHighAvailability(e.target.value === 'yes');
   };
+
+  const flags = useFlags();
 
   return (
     <FormControl data-testid="ha-control-plane-form">
@@ -46,7 +58,7 @@ export const HAControlPlane = (props: Props) => {
       >
         <Typography variant="inherit">HA Control Plane</Typography>
       </FormLabel>
-      <HACopy />
+      <HACopy isDCSpecificPricing={!!flags.dcSpecificPricing} />
       <RadioGroup
         aria-labelledby="ha-radio-buttons-group-label"
         name="ha-radio-buttons-group"

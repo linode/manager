@@ -338,7 +338,11 @@ export const CreateCluster = () => {
             {showHighAvailability ? (
               <Box data-testid="ha-control-plane">
                 <HAControlPlane
-                  highAvailabilityPrice={getHighAvailabilityPrice(selectedID)}
+                  highAvailabilityPrice={
+                    flags.dcSpecificPricing
+                      ? getHighAvailabilityPrice(selectedID)
+                      : LKE_HA_PRICE
+                  }
                   setHighAvailability={setHighAvailability}
                 />
               </Box>
@@ -371,6 +375,11 @@ export const CreateCluster = () => {
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
+          highAvailabilityPrice={
+            flags.dcSpecificPricing
+              ? getHighAvailabilityPrice(selectedID)
+              : LKE_HA_PRICE
+          }
           updateFor={[
             hasAgreed,
             highAvailability,
@@ -386,7 +395,6 @@ export const CreateCluster = () => {
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
-          highAvailabilityPrice={getHighAvailabilityPrice(selectedID)}
           pools={nodePools}
           region={selectedRegionID}
           removePool={removePool}
