@@ -67,7 +67,14 @@ const InvoiceTable = (props: Props) => {
 const renderDate = (v: null | string) =>
   v ? <DateTimeDisplay data-qa-invoice-date value={v} /> : null;
 
-const renderQuantity = (v: null | number) => (v ? v : null);
+const renderQuantity = (v: null | number, label?: string) => {
+  if (!v) {
+    return null;
+  }
+
+  return label === 'VPC Network Transfer' ? `${v} GB` : `${v}`;
+  // potential TODO: VPC - map network quantity value to GB, TB, etc?
+};
 
 const RenderData = (props: { items: InvoiceItem[] }) => {
   const { items } = props;
@@ -98,12 +105,7 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
                   {renderDate(to)}
                 </TableCell>
                 <TableCell data-qa-quantity parentColumn="Quantity">
-                  {renderQuantity(quantity)}
-                  {`${
-                    quantity !== null && label === 'VPC Network Transfer'
-                      ? ' GB' // placeholder, follow up with api team
-                      : ''
-                  }`}
+                  {renderQuantity(quantity, label)}
                 </TableCell>
                 <TableCell data-qa-unit-price parentColumn="Unit Price">
                   {unit_price !== 'None' && renderUnitPrice(unit_price)}

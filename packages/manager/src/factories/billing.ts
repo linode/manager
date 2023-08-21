@@ -19,32 +19,6 @@ export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
   unit_price: '0.0075',
 });
 
-export const invoiceItemFactoryVPC = Factory.Sync.makeFactory<InvoiceItem>({
-  amount: 5,
-  from: '2023-01-01T12:00:00',
-  label: Factory.each((i) => `VPC (${i})`),
-  quantity: 1,
-  tax: 0,
-  to: '2023-01-31T12:00:00',
-  total: 5,
-  type: 'hourly',
-  unit_price: '0.0075',
-});
-
-export const invoiceItemFactoryVPCNetworkTransfer = Factory.Sync.makeFactory<InvoiceItem>(
-  {
-    amount: 5,
-    from: '2023-01-01T12:00:00',
-    label: 'VPC Network Transfer',
-    quantity: 100,
-    tax: 0,
-    to: '2023-01-31T12:00:00',
-    total: 5,
-    type: 'hourly',
-    unit_price: '0.0075',
-  }
-);
-
 const paymentDate = new Date('2020-01-01T00:00:00');
 export const paymentFactory = Factory.Sync.makeFactory<Payment>({
   date: Factory.each((i) => {

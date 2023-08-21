@@ -40,8 +40,6 @@ import {
   incidentResponseFactory,
   invoiceFactory,
   invoiceItemFactory,
-  invoiceItemFactoryVPC,
-  invoiceItemFactoryVPCNetworkTransfer,
   kubeEndpointFactory,
   kubernetesAPIResponse,
   kubernetesVersionFactory,
@@ -880,8 +878,8 @@ export const handlers = [
   }),
   rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
     const items = [
-      invoiceItemFactoryVPC.build(),
-      invoiceItemFactoryVPCNetworkTransfer.build(),
+      invoiceItemFactory.build({ label: 'VPC' }),
+      invoiceItemFactory.build({ label: 'VPC Network Transfer' }),
       ...invoiceItemFactory.buildList(10),
     ];
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
