@@ -12,6 +12,20 @@ export const StyledTableCell = styled(TableCell, {
   fontSize: '0.875rem',
 }));
 
+export const StyledLabelTableCell = styled(TableCell, {
+  label: 'StyledLabelTableCell',
+})(({ theme }) => ({
+  color: theme.textColors.tableHeader,
+  fontFamily: theme.font.bold,
+  fontSize: '0.875rem',
+  minWidth: 200,
+  paddingLeft: 10,
+  [theme.breakpoints.down('sm')]: {
+    width: '70%',
+  },
+  width: '60%',
+}));
+
 export const StyledH1Header = styled(H1Header, {
   label: 'StyledH1Header',
 })(({ theme }) => ({

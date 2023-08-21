@@ -25,6 +25,7 @@ import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import { EventRow } from './EventRow';
 import {
   StyledH1Header,
+  StyledLabelTableCell,
   StyledTableCell,
   StyledTypography,
 } from './EventsLanding.styles';
@@ -257,9 +258,9 @@ export const EventsLanding = (props: CombinedProps) => {
             <Hidden smDown>
               <TableCell style={{ padding: 0, width: '1%' }} />
             </Hidden>
-            <StyledTableCell data-qa-events-subject-header>
+            <StyledLabelTableCell data-qa-events-subject-header>
               Event
-            </StyledTableCell>
+            </StyledLabelTableCell>
             <StyledTableCell>Relative Date</StyledTableCell>
             <Hidden mdDown>
               <StyledTableCell data-qa-events-time-header>
