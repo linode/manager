@@ -22,7 +22,7 @@ export const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   gap: theme.spacing(),
-  marginBottom: theme.spacing(4),
+  marginBottom: theme.spacing(2),
 }));
 
 export const StyledFormLabel = styled(FormLabel, {
@@ -35,12 +35,17 @@ export const StyledFormLabel = styled(FormLabel, {
 export const StyledMigrationContainer = styled(Box, {
   label: 'StyledMigrationContainer',
 })(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
 }));
 
 export const StyledMigrationBox = styled(Box, {
   label: 'StyledMigrationBox',
 })(({ theme }) => ({
-  width: '50%',
+  [theme.breakpoints.up('md')]: {
+    width: '50%',
+  },
+  width: '100%',
 }));

@@ -1,15 +1,17 @@
-import { useTheme } from '@mui/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { DisplayPrice } from 'src/components/DisplayPrice';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
+import {
+  getDCSpecificPrice,
+  priceIncreaseMap,
+} from 'src/utilities/pricing/dynamicPricing';
 
 import {
   StyledDiv,
@@ -18,7 +20,9 @@ import {
   StyledMigrationContainer,
   StyledPaper,
 } from './ConfigureForm.styles';
+import { MigrationPricing } from './MigrationPricing';
 
+import type { MigrationPricingProps } from './MigrationPricing';
 import type { Linode } from '@linode/api-v4';
 
 interface Props {
@@ -31,23 +35,58 @@ interface Props {
 }
 
 export const ConfigureForm = React.memo((props: Props) => {
-  const { currentRegion, linodeType } = props;
-  const theme = useTheme();
+  const {
+    currentRegion,
+    errorText,
+    handleSelectRegion,
+    helperText,
+    linodeType,
+    selectedRegion,
+  } = props;
+
   const { data: regions } = useRegionsQuery();
   const { data: currentLinodeType } = useTypeQuery(
     linodeType || '',
     Boolean(linodeType)
   );
+
+  const flags = useFlags();
+  const { dcSpecificPricing } = flags;
   const currentActualRegion = regions?.find((r) => r.id === currentRegion);
   const country =
     regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
-  const currentPrice = {
+  const hasSelectedRegionDynamicPricing = Boolean(
+    selectedRegion && priceIncreaseMap[selectedRegion]
+  );
+
+  const calculateNewPrice = React.useCallback(
+    (
+      basePrice: null | number | undefined,
+      regionId: null | string
+    ): number | undefined => {
+      if (basePrice && regionId) {
+        return Number(getDCSpecificPrice({ basePrice, flags, regionId }));
+      }
+
+      return undefined;
+    },
+    [flags]
+  );
+
+  const currentPrice: MigrationPricingProps = {
     backups: currentLinodeType?.addons?.backups?.price?.monthly,
     hourly: currentLinodeType?.price?.hourly,
     monthly: currentLinodeType?.price?.monthly,
+    panelType: 'current',
   };
-  const priceFontSize = `${theme.typography.body1.fontSize}`;
+
+  const newPrice: MigrationPricingProps = {
+    backups: calculateNewPrice(currentPrice.backups, selectedRegion),
+    hourly: calculateNewPrice(currentPrice.hourly, selectedRegion),
+    monthly: calculateNewPrice(currentPrice.monthly, selectedRegion),
+    panelType: 'new',
+  };
 
   return (
     <StyledPaper>
@@ -70,7 +109,7 @@ export const ConfigureForm = React.memo((props: Props) => {
           <RegionSelect
             regions={
               regions?.filter(
-                (eachRegion) => eachRegion.id !== props.currentRegion
+                (eachRegion) => eachRegion.id !== currentRegion
               ) ?? []
             }
             styles={{
@@ -80,50 +119,22 @@ export const ConfigureForm = React.memo((props: Props) => {
               }),
             }}
             textFieldProps={{
-              helperText: props.helperText,
+              helperText,
             }}
-            errorText={props.errorText}
-            handleSelection={props.handleSelectRegion}
+            errorText={errorText}
+            handleSelection={handleSelectRegion}
             label="New Region"
             menuPlacement="top"
-            selectedID={props.selectedRegion}
+            selectedID={selectedRegion}
           />
         </StyledMigrationBox>
       </StyledMigrationContainer>
-      <StyledMigrationContainer>
-        <StyledMigrationBox>
-          <StyledFormLabel htmlFor={`current-price`}>
-            Current Price
-          </StyledFormLabel>
-          {currentPrice.monthly && currentPrice.hourly && currentPrice.backups && (
-            <Box alignItems="baseline" display="inline-flex">
-              <DisplayPrice
-                fontSize={priceFontSize}
-                interval="month"
-                price={currentPrice.monthly}
-              />
-              ,&nbsp;
-              <DisplayPrice
-                fontSize={priceFontSize}
-                interval="hour"
-                price={currentPrice.hourly}
-              />
-              &nbsp;
-              <Typography fontSize={priceFontSize} fontWeight="bold">
-                | Backups&nbsp;
-              </Typography>
-              <DisplayPrice
-                fontSize={priceFontSize}
-                interval="month"
-                price={currentPrice.backups}
-              />
-            </Box>
-          )}
-        </StyledMigrationBox>
-        <StyledMigrationBox>
-          <StyledFormLabel htmlFor={`new-price`}>New Price</StyledFormLabel>
-        </StyledMigrationBox>
-      </StyledMigrationContainer>
+      {dcSpecificPricing && hasSelectedRegionDynamicPricing && (
+        <StyledMigrationContainer>
+          <MigrationPricing {...currentPrice} />
+          <MigrationPricing {...newPrice} />
+        </StyledMigrationContainer>
+      )}
     </StyledPaper>
   );
 });
