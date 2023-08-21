@@ -18,7 +18,7 @@ export const StyledCheckbox = styled(Checkbox, {
 export const StyledEmptyCheckbox = styled(Checkbox, {
   label: 'StyledEmptyCheckbox',
 })({
-  '& svg': { color: '#cccccc' },
+  '& svg': { color: '#cccccc', height: 20, width: 20 },
 });
 
 export const StyledPaginationFooter = styled(PaginationFooter, {

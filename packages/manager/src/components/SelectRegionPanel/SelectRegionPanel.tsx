@@ -24,7 +24,7 @@ interface SelectRegionPanelProps {
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const {
-    disabled,
+    // disabled,
     error,
     handleSelection,
     helperText,
@@ -40,6 +40,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   if (props.regions.length === 0) {
     return null;
   }
+
+  const disabled = true;
 
   return (
     <Paper

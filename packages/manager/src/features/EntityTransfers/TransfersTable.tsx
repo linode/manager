@@ -20,7 +20,7 @@ import { capitalize } from 'src/utilities/capitalize';
 
 import ConfirmTransferCancelDialog from './EntityTransfersLanding/ConfirmTransferCancelDialog';
 import TransferDetailsDialog from './EntityTransfersLanding/TransferDetailsDialog';
-import RenderTransferRow from './RenderTransferRow';
+import { RenderTransferRow } from './RenderTransferRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   cellContents: {

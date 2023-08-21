@@ -26,7 +26,7 @@ import {
   transferReducer,
 } from './transferReducer';
 
-export const EntityTransfersCreate: React.FC<{}> = (_) => {
+export const EntityTransfersCreate = () => {
   const { push } = useHistory();
   const { error, isLoading, mutateAsync: createTransfer } = useCreateTransfer();
   const queryClient = useQueryClient();
@@ -119,5 +119,3 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
     </>
   );
 };
-
-export default EntityTransfersCreate;
