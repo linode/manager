@@ -12,6 +12,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { DynamicPriceNotice } from 'src/components/DynamicPriceNotice';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -26,6 +27,7 @@ import {
   getKubeHighAvailability,
   getLatestVersion,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import {
   reportAgreementSigningError,
@@ -74,7 +76,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       maxWidth: 440,
     },
     '& p': {
-      fontWeight: 500,
       lineHeight: '1.43rem',
       margin: 0,
       maxWidth: '100%',
@@ -117,6 +118,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const CreateCluster = () => {
+  const flags = useFlags();
   const classes = useStyles();
   const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
@@ -294,6 +296,9 @@ export const CreateCluster = () => {
               regions={filteredRegions}
               selectedID={selectedID}
             />
+            {flags.dcSpecificPricing && (
+              <DynamicPriceNotice spacingBottom={16} spacingTop={16} />
+            )}
             <Select
               onChange={(selected: Item<string>) => {
                 setVersion(selected);
@@ -308,8 +313,8 @@ export const CreateCluster = () => {
             />
             {showHighAvailability ? (
               <HAControlPlane
-                data-testid="ha-control-plane"
                 HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
+                data-testid="ha-control-plane"
                 setHighAvailability={setHighAvailability}
               />
             ) : null}

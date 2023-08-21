@@ -17,6 +17,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
+import { DynamicPriceNotice } from '../DynamicPriceNotice';
 
 interface SelectRegionPanelProps {
   disabled?: boolean;
@@ -98,14 +99,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       <RegionHelperText
         onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
       />
-      {showGeneralDynamicPriceNotice && (
-        <Notice info spacingBottom={0} spacingTop={12}>
-          <Typography fontWeight="bold">
-            Prices for plans, products, and services may vary based on Region.{' '}
-            <Link to="https://www.linode.com/pricing">Learn more.</Link>
-          </Typography>
-        </Notice>
-      )}
+      {showGeneralDynamicPriceNotice && <DynamicPriceNotice />}
       {showCrossDataCenterCloneWarning ? (
         <Notice data-testid="region-select-warning" spacingBottom={0} warning>
           <Typography fontWeight="bold">
@@ -125,7 +119,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         <Notice info spacingBottom={0} spacingTop={12}>
           <Typography fontWeight="bold">
             The selected region has a different price structure.{' '}
-            <Link to="">Learn more.</Link>
+            <Link to="https://www.linode.com/pricing">Learn more.</Link>
           </Typography>
         </Notice>
       )}
