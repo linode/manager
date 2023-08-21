@@ -1,9 +1,6 @@
 import { ManagedContact } from '@linode/api-v4/lib/managed';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import AddNewLink from 'src/components/AddNewLink';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
@@ -18,7 +15,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { useDialog } from 'src/hooks/useDialog';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
@@ -30,33 +26,13 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
 import { ManagedContactGroup, Mode } from './common';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingRight: 0,
-      paddingTop: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-  copy: {
-    fontSize: '0.875rem',
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-  header: {
-    margin: 0,
-    width: '100%',
-  },
-}));
+import {
+  StyledWrapperGrid,
+  StyledTypography,
+  StyledHeaderGrid,
+} from './Contacts.styles';
 
 const Contacts = () => {
-  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -110,20 +86,19 @@ const Contacts = () => {
   return (
     <>
       <DocumentTitleSegment segment="Contacts" />
-      <Typography className={classes.copy}>
+      <StyledTypography>
         You can assign contact groups to monitors so we know who to talk to in
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).
-      </Typography>
-      <Grid
+      </StyledTypography>
+      <StyledHeaderGrid
         alignItems="center"
-        className={classes.header}
         container
         justifyContent="flex-end"
         ref={contactsTableRef}
         spacing={2}
       >
-        <Grid className={classes.addNewWrapper} sx={{ paddingRight: 0 }}>
+        <StyledWrapperGrid>
           <AddNewLink
             onClick={() => {
               setContactDrawerMode('create');
@@ -131,8 +106,8 @@ const Contacts = () => {
             }}
             label="Add Contact"
           />
-        </Grid>
-      </Grid>
+        </StyledWrapperGrid>
+      </StyledHeaderGrid>
       <OrderBy data={contacts} order="asc" orderBy="name">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (

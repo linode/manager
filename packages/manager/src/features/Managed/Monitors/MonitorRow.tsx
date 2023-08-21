@@ -1,46 +1,24 @@
 import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { ExtendedIssue } from 'src/queries/managed/types';
 
 import ActionMenu from './MonitorActionMenu';
+import {
+  StyledGrid,
+  StyledLink,
+  StyledTableCell,
+  StyledTableRow,
+  StyledTypography,
+} from './MonitorRow.styles';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  errorStatus: {
-    color: theme.color.red,
-  },
-  icon: {
-    '&:hover': {
-      color: theme.color.red,
-    },
-    alignItems: 'center',
-    transition: 'color 225ms ease-in-out',
-  },
-  label: {
-    fontFamily: theme.font.bold,
-    width: '30%',
-  },
-  monitorDescription: {
-    paddingTop: theme.spacing(0.5),
-  },
-  monitorRow: {
-    '&:before': {
-      display: 'none',
-    },
-  },
-}));
-
-interface Props {
+interface MonitorRowProps {
   issues: ExtendedIssue[];
   monitor: ManagedServiceMonitor;
   openDialog: (id: number, label: string) => void;
@@ -48,9 +26,7 @@ interface Props {
   openMonitorDrawer: (id: number, mode: string) => void;
 }
 
-export const MonitorRow: React.FC<Props> = (props) => {
-  const classes = useStyles();
-
+export const MonitorRow = (props: MonitorRowProps) => {
   const {
     issues,
     monitor,
@@ -64,32 +40,30 @@ export const MonitorRow: React.FC<Props> = (props) => {
   // For now, only include a ticket icon in this view if the ticket is still open (per Jay).
   const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
 
+  const ConditionalTypography =
+    monitor.status === 'problem' ? StyledTypography : Typography;
+
   return (
-    <TableRow
+    <StyledTableRow
       ariaLabel={`Monitor ${monitor.label}`}
-      className={classes.monitorRow}
       data-qa-monitor-cell={monitor.id}
       data-testid={'monitor-row'}
       key={monitor.id}
     >
-      <TableCell className={classes.label} data-qa-monitor-label>
+      <StyledTableCell data-qa-monitor-label>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
-          <Grid className={classes.icon} style={{ display: 'flex' }}>
+          <StyledGrid>
             <Icon height={30} width={30} />
-          </Grid>
+          </StyledGrid>
           <Grid>{monitor.label}</Grid>
         </Grid>
-      </TableCell>
+      </StyledTableCell>
       <TableCell data-qa-monitor-status>
         <Grid alignItems="center" container direction="row" spacing={1}>
           <Grid>
-            <Typography
-              className={
-                monitor.status === 'problem' ? classes.errorStatus : ''
-              }
-            >
+            <ConditionalTypography>
               {statusTextMap[monitor.status]}
-            </Typography>
+            </ConditionalTypography>
           </Grid>
           <Grid>
             {openIssues.length > 0 && (
@@ -100,12 +74,9 @@ export const MonitorRow: React.FC<Props> = (props) => {
                 placement={'top'}
                 title={'See the open ticket associated with this incident'}
               >
-                <Link
-                  className={classes.icon}
-                  to={`/support/tickets/${issues[0].entity.id}`}
-                >
+                <StyledLink to={`/support/tickets/${issues[0].entity.id}`}>
                   <TicketIcon />
-                </Link>
+                </StyledLink>
               </Tooltip>
             )}
           </Grid>
@@ -124,7 +95,7 @@ export const MonitorRow: React.FC<Props> = (props) => {
           status={monitor.status}
         />
       </TableCell>
-    </TableRow>
+    </StyledTableRow>
   );
 };
 

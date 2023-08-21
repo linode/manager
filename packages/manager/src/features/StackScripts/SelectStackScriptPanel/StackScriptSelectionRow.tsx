@@ -6,7 +6,7 @@ import { compose as recompose } from 'recompose';
 
 import { Button } from 'src/components/Button/Button';
 import { Radio } from 'src/components/Radio/Radio';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';

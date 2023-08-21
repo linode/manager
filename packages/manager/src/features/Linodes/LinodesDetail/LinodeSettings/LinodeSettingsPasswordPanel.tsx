@@ -6,7 +6,7 @@ import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskChangePasswordMutation,

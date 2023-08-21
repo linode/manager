@@ -9,7 +9,7 @@ import DiskIcon from 'src/assets/icons/longview/disk.svg';
 import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
 import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
 import { IconTextLink } from 'src/components/IconTextLink/IconTextLink';
 import { Typography } from 'src/components/Typography';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';

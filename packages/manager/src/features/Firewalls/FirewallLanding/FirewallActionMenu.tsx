@@ -4,9 +4,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useGrants, useProfile } from 'src/queries/profile';
+
+import { checkIfUserCanModifyFirewall } from '../shared';
 
 export interface ActionHandlers {
   [index: string]: any;
@@ -20,6 +22,9 @@ interface Props extends ActionHandlers {
   firewallLabel: string;
   firewallStatus: FirewallStatus;
 }
+
+export const noPermissionTooltipText =
+  "You don't have permissions to modify this Firewall.";
 
 export const FirewallActionMenu = React.memo((props: Props) => {
   const theme = useTheme<Theme>();
@@ -36,13 +41,11 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     triggerEnableFirewall,
   } = props;
 
-  const userCanModifyFirewall =
-    !profile?.restricted ||
-    grants?.firewall?.find((firewall) => firewall.id === firewallID)
-      ?.permissions === 'read_write';
-
-  const noPermissionTooltipText =
-    "You don't have permissions to modify this Firewall.";
+  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
+    firewallID,
+    profile,
+    grants
+  );
 
   const disabledProps = !userCanModifyFirewall
     ? {
@@ -56,8 +59,7 @@ export const FirewallActionMenu = React.memo((props: Props) => {
       onClick: () => {
         handleEnableDisable();
       },
-      title:
-        firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
+      title: firewallStatus === 'enabled' ? 'Disable' : 'Enable',
       ...disabledProps,
     },
     {

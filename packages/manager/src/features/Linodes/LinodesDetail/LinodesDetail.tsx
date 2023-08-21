@@ -9,7 +9,7 @@ import {
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const LinodesDetailHeader = React.lazy(
@@ -18,7 +18,7 @@ const LinodesDetailHeader = React.lazy(
 const LinodesDetailNavigation = React.lazy(
   () => import('./LinodesDetailNavigation')
 );
-const CloneLanding = React.lazy(() => import('../CloneLanding'));
+const CloneLanding = React.lazy(() => import('../CloneLanding/CloneLanding'));
 
 const LinodeDetail = () => {
   const { path, url } = useRouteMatch();

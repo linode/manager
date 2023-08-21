@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
@@ -14,11 +14,13 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { VPCDeleteDialog } from 'src/features/VPC/VPCLanding/VPCDeleteDialog';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { VPCEditDrawer } from './VPCEditDrawer';
 import { VPCEmptyState } from './VPCEmptyState';
 import { VPCRow } from './VPCRow';
 
@@ -49,6 +51,21 @@ const VPCLanding = () => {
   );
 
   const history = useHistory();
+
+  const [selectedVPC, setSelectedVPC] = React.useState<VPC | undefined>();
+
+  const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
+  const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
+
+  const handleEditVPC = (vpc: VPC) => {
+    setSelectedVPC(vpc);
+    setEditVPCDrawerOpen(true);
+  };
+
+  const handleDeleteVPC = (vpc: VPC) => {
+    setSelectedVPC(vpc);
+    setDeleteVPCDialogOpen(true);
+  };
 
   const createVPC = () => {
     history.push(VPC_CREATE_ROUTE);
@@ -121,7 +138,12 @@ const VPCLanding = () => {
         </TableHead>
         <TableBody>
           {vpcs?.data.map((vpc: VPC) => (
-            <VPCRow key={vpc.id} vpc={vpc} />
+            <VPCRow
+              handleDeleteVPC={() => handleDeleteVPC(vpc)}
+              handleEditVPC={() => handleEditVPC(vpc)}
+              key={vpc.id}
+              vpc={vpc}
+            />
           ))}
         </TableBody>
       </Table>
@@ -132,6 +154,17 @@ const VPCLanding = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <VPCDeleteDialog
+        id={selectedVPC?.id}
+        label={selectedVPC?.label}
+        onClose={() => setDeleteVPCDialogOpen(false)}
+        open={deleteVPCDialogOpen}
+      />
+      <VPCEditDrawer
+        onClose={() => setEditVPCDrawerOpen(false)}
+        open={editVPCDrawerOpen}
+        vpc={selectedVPC}
       />
     </>
   );

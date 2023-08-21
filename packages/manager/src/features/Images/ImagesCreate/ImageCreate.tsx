@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { RouteComponentProps, useHistory, withRouter } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
-import SuspenseLoader from 'src/components/SuspenseLoader';
-
-type CombinedProps = RouteComponentProps<{}>;
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
 const ImageUpload = React.lazy(() => import('../ImageUpload'));
 
-export const ImageCreate: React.FC<CombinedProps> = (props) => {
+export const ImageCreate = () => {
+  const { url } = useRouteMatch();
   const { location } = useHistory<any>();
 
   const [label, setLabel] = React.useState<string>(
@@ -43,7 +42,7 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
           label={label}
         />
       ),
-      routeName: `${props.match.url}/disk`,
+      routeName: `${url}/disk`,
       title: 'Capture Image',
     },
     {
@@ -57,7 +56,7 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
           label={label}
         />
       ),
-      routeName: `${props.match.url}/upload`,
+      routeName: `${url}/upload`,
       title: 'Upload Image',
     },
   ];
@@ -72,4 +71,4 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default withRouter(ImageCreate);
+export default ImageCreate;

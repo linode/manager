@@ -7,9 +7,9 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
+import { ClickAwayListener } from 'src/components/ClickAwayListener';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import ClickAwayListener from 'src/components/core/ClickAwayListener';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {

@@ -1,11 +1,11 @@
 import { Typography } from '@mui/material';
-import Box from '@mui/material/Box';
+import { Box } from 'src/components/Box';
 import Paper from '@mui/material/Paper';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import Grid from 'src/components/Grid';
+import { Grid } from 'src/components/Grid';
 
 import type { Meta, StoryObj } from '@storybook/react';
 

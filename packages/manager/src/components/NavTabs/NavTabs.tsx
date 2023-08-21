@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Redirect, matchPath, useHistory, useLocation } from 'react-router-dom';
 
+import { TabPanel } from 'src/components/ReachTabPanel';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabPanel from 'src/components/core/ReachTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import ReachTabs from 'src/components/core/ReachTabs';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { TabLinkList } from '../TabLinkList/TabLinkList';
 
@@ -55,7 +55,7 @@ export const NavTabs = React.memo((props: NavTabsProps) => {
   }
 
   return (
-    <ReachTabs
+    <Tabs
       index={Math.max(tabMatch.idx, 0)}
       onChange={_navToTabRouteOnChange ? navToURL : undefined}
     >
@@ -83,7 +83,7 @@ export const NavTabs = React.memo((props: NavTabsProps) => {
           })}
         </TabPanels>
       </React.Suspense>
-    </ReachTabs>
+    </Tabs>
   );
 });
 

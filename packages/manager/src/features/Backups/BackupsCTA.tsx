@@ -1,123 +1,65 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { MapDispatchToProps, connect } from 'react-redux';
-import { compose } from 'recompose';
 
-import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { Box } from 'src/components/Box';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useProfile } from 'src/queries/profile';
-import { handleOpen } from 'src/store/backupDrawer';
 
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { BackupDrawer } from './BackupDrawer';
+import { StyledPaper } from './BackupsCTA.styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  closeIcon: {
-    ...theme.applyLinkStyles,
-    lineHeight: '0.5rem',
-    marginLeft: 12,
-  },
-  enableButton: {
-    height: 40,
-    padding: 0,
-    width: 152,
-  },
-  enableText: {
-    ...theme.applyLinkStyles,
-  },
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: `${theme.spacing(1)} 0 ${theme.spacing(3)} 0`,
-    padding: theme.spacing(1),
-    paddingRight: theme.spacing(2),
-  },
-}));
-
-type CombinedProps = StateProps & DispatchProps;
-
-const BackupsCTA: React.FC<CombinedProps> = (props) => {
-  const {
-    actions: { openBackupsDrawer },
-    linodesWithoutBackups,
-  } = props;
-  const classes = useStyles();
-
+export const BackupsCTA = () => {
   const { data: accountSettings } = useAccountSettings();
   const { data: profile } = useProfile();
+
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
+
+  const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);
+
+  const handleDismiss = () => {
+    updatePreferences({ backups_cta_dismissed: true });
+  };
+
+  const { data: linodes } = useAllLinodesQuery();
+
+  const areAllLinodesBackedUp = !linodes?.some(
+    (linode) => !linode.backups.enabled
+  );
 
   if (
     profile?.restricted ||
     accountSettings?.managed ||
-    (linodesWithoutBackups && isEmpty(linodesWithoutBackups))
+    areAllLinodesBackedUp ||
+    preferences?.backups_cta_dismissed
   ) {
     return null;
   }
 
   return (
-    <PreferenceToggle<boolean>
-      localStorageKey="BackupsCtaDismissed"
-      preferenceKey="backups_cta_dismissed"
-      preferenceOptions={[false, true]}
-    >
-      {({
-        preference: isDismissed,
-        togglePreference: dismissed,
-      }: PreferenceToggleProps<boolean>) => {
-        return isDismissed ? (
-          // eslint-disable-next-line react/jsx-no-useless-fragment
-          <React.Fragment />
-        ) : (
-          <Paper className={classes.root}>
-            <Typography style={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
-              <button
-                className={classes.enableText}
-                onClick={openBackupsDrawer}
-              >
-                Enable Linode Backups
-              </button>{' '}
-              to protect your data and recover quickly in an emergency.
-            </Typography>
-            <span style={{ display: 'flex' }}>
-              <button className={classes.closeIcon} onClick={dismissed}>
-                <Close />
-              </button>
-            </span>
-          </Paper>
-        );
-      }}
-    </PreferenceToggle>
+    <StyledPaper>
+      <Typography sx={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
+        <StyledLinkButton onClick={() => setIsBackupsDrawerOpen(true)}>
+          Enable Linode Backups
+        </StyledLinkButton>{' '}
+        to protect your data and recover quickly in an emergency.
+      </Typography>
+      <Box component="span" display="flex">
+        <StyledLinkButton
+          onClick={handleDismiss}
+          sx={{ lineHeight: '0.5rem', marginLeft: 12 }}
+        >
+          <Close />
+        </StyledLinkButton>
+      </Box>
+      <BackupDrawer
+        onClose={() => setIsBackupsDrawerOpen(false)}
+        open={isBackupsDrawerOpen}
+      />
+    </StyledPaper>
   );
 };
-
-interface StateProps {
-  linodesWithoutBackups: Linode[];
-}
-
-interface DispatchProps {
-  actions: {
-    openBackupsDrawer: () => void;
-  };
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch
-) => {
-  return {
-    actions: {
-      openBackupsDrawer: () => dispatch(handleOpen()),
-    },
-  };
-};
-
-const connected = connect(undefined, mapDispatchToProps);
-
-const enhanced = compose<CombinedProps, {}>(connected)(BackupsCTA);
-
-export default enhanced;

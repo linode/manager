@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 
 import ManagedDashboardCard from './ManagedDashboardCard';

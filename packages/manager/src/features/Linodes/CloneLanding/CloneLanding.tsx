@@ -23,8 +23,8 @@ import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
@@ -37,7 +37,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
-import Details from './Details';
+import { Details } from './Details';
 import {
   attachAssociatedDisksToConfigs,
   curriedCloneLandingReducer,

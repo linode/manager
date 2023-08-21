@@ -12,11 +12,13 @@ import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
+import { authenticate } from 'support/api/authentication';
 
 const deployNodeBalancer = () => {
-  // This is not an error, the tag is deploy-linode
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
+
 const createNodeBalancerWithUI = (nodeBal) => {
   const regionName = getRegionById(nodeBal.region).label;
   cy.visitWithLogin('/nodebalancers/create');
@@ -41,7 +43,12 @@ const createNodeBalancerWithUI = (nodeBal) => {
   deployNodeBalancer();
 };
 
+authenticate();
 describe('create NodeBalancer', () => {
+  before(() => {
+    cleanUp(['tags', 'node-balancers']);
+  });
+
   it('creates a nodebal - positive', () => {
     // create a linode in NW where the NB will be created
     const region = chooseRegion();

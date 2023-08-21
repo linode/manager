@@ -1,40 +1,19 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
-import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
 import { ExtendedIssue } from 'src/queries/managed/types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  happyTicket: {
-    color: theme.color.grey1,
-  },
-  openTicketButton: {
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: 12,
-      paddingRight: 12,
-    },
-  },
-  root: {
-    padding: theme.spacing(),
-    textAlign: 'center',
-  },
-  sadTicket: {
-    color: theme.color.red,
-  },
-}));
+import { StyledButton, StyledGrid } from './MonitorTickets.styles';
 
-interface Props {
+interface MonitorTicketsProps {
   issues: ExtendedIssue[];
 }
 
-export const MonitorTickets: React.FC<Props> = (props) => {
+export const MonitorTickets = (props: MonitorTicketsProps) => {
   const { issues } = props;
-  const classes = useStyles();
   const history = useHistory();
 
   const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
@@ -42,15 +21,17 @@ export const MonitorTickets: React.FC<Props> = (props) => {
   const hasIssues = openIssues.length > 0;
 
   return (
-    <Grid
+    <StyledGrid
       alignItems="center"
-      className={classes.root}
       container
       direction="column"
       justifyContent="center"
     >
       <Grid
-        className={`${hasIssues ? classes.sadTicket : classes.happyTicket} py0`}
+        sx={(theme) => ({
+          color: hasIssues ? theme.color.red : theme.color.grey1,
+          padding: `0 ${theme.spacing(1)}`,
+        })}
       >
         <TicketIcon height={39} width={50} />
       </Grid>
@@ -70,7 +51,7 @@ export const MonitorTickets: React.FC<Props> = (props) => {
             a full list of open tickets.
           </Typography>
         ) : (
-          <Button
+          <StyledButton
             onClick={() =>
               history.push({
                 pathname: '/support/tickets',
@@ -81,13 +62,12 @@ export const MonitorTickets: React.FC<Props> = (props) => {
               })
             }
             buttonType="primary"
-            className={classes.openTicketButton}
           >
             Open a ticket
-          </Button>
+          </StyledButton>
         )}
       </Grid>
-    </Grid>
+    </StyledGrid>
   );
 };
 

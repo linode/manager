@@ -64,7 +64,7 @@ const _getMetrics = (data: NetworkStats) => {
   };
 };
 
-export const NetworkGraphs: React.FC<Props> = (props) => {
+export const NetworkGraphs = (props: Props) => {
   const { rangeSelection, stats, ...rest } = props;
 
   const theme = useTheme();
@@ -183,7 +183,7 @@ interface GraphProps {
   unit: string;
 }
 
-const Graph: React.FC<GraphProps> = (props) => {
+const Graph = (props: GraphProps) => {
   const {
     ariaLabel,
     chartHeight,
@@ -308,5 +308,3 @@ const StyledGraphGrid = styled(Grid, { label: 'StyledGraphGrid' })(
     },
   })
 );
-
-export default NetworkGraphs;

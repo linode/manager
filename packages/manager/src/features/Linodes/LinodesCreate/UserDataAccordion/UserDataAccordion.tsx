@@ -11,7 +11,7 @@ import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { useExpandIconStyles } from './UserDataAccordion.styles';
 import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 
-interface Props {
+export interface UserDataAccordionProps {
   createType?: CreateTypes;
   disabled?: boolean;
   onChange: (userData: string) => void;
@@ -20,7 +20,7 @@ interface Props {
   userData: string | undefined;
 }
 
-export const UserDataAccordion = (props: Props) => {
+export const UserDataAccordion = (props: UserDataAccordionProps) => {
   const { classes, cx } = useExpandIconStyles();
   const {
     createType,

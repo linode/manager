@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { ActionMenu, Action } from 'src/components/ActionMenu';
 
 export interface ActionHandlers {
   triggerDeleteLongviewClient: (

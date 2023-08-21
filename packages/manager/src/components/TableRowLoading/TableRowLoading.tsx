@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { Hidden, HiddenProps } from '../Hidden';
+import { Skeleton } from '../Skeleton';
 import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';
-import Skeleton from '../core/Skeleton';
 
 export interface TableRowLoadingProps {
   /**

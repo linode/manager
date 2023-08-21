@@ -18,18 +18,17 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
 import { ManagedContactGroup, Mode } from './common';
 
-interface Props {
+interface ContactsDrawerProps {
   closeDrawer: () => void;
   contact?: ManagedContact;
   groups: ManagedContactGroup[];
   isOpen: boolean;
   mode: Mode;
 }
-
-type CombinedProps = Props;
 
 const emptyContactPayload: ContactPayload = {
   email: '',
@@ -41,7 +40,7 @@ const emptyContactPayload: ContactPayload = {
   },
 };
 
-const ContactsDrawer: React.FC<CombinedProps> = (props) => {
+const ContactsDrawer = (props: ContactsDrawerProps) => {
   const { closeDrawer, contact, groups, isOpen, mode } = props;
 
   const isEditing = mode === 'edit' && contact;
@@ -112,16 +111,18 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
         validateOnChange={false}
         validationSchema={createContactSchema}
       >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-        }) => {
+        {(formikProps) => {
+          const {
+            errors,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            setFieldValue,
+            status,
+            values,
+          } = formikProps;
+
           const primaryPhoneError = pathOr('', ['phone', 'primary'], errors);
           // prettier-ignore
           const secondaryPhoneError = pathOr('', ['phone', 'secondary'], errors);
@@ -149,9 +150,10 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                   errorText={errors.email}
                   label="E-mail"
                   name="email"
-                  onBlur={handleBlur}
+                  onBlur={(e) => handleFormikBlur(e, formikProps)}
                   onChange={handleChange}
                   required
+                  type="email"
                   value={values.email}
                 />
 

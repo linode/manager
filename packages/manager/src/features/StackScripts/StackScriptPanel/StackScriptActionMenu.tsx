@@ -2,10 +2,9 @@ import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory } from 'react-router-dom';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useProfile } from 'src/queries/profile';
@@ -29,18 +28,16 @@ interface Props {
   triggerMakePublic: (id: number, label: string) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
+export const StackScriptActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { data: profile } = useProfile();
+  const history = useHistory();
 
   const {
     canAddLinodes,
     canModify,
     category,
-    history,
     isPublic,
     stackScriptID,
     stackScriptLabel,
@@ -132,7 +129,3 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(withRouter);
-
-export default enhanced(StackScriptActionMenu);

@@ -1,7 +1,10 @@
 import { Config } from '@linode/api-v4/lib/linodes/types';
 import * as Factory from 'factory.ts';
 
-import { LinodeConfigInterfaceFactory } from 'src/factories/linodeConfigInterfaceFactory';
+import {
+  LinodeConfigInterfaceFactory,
+  LinodeConfigInterfaceFactoryWithVPC,
+} from 'src/factories/linodeConfigInterfaceFactory';
 
 const generateRandomId = () => Math.floor(Math.random() * 10000);
 
@@ -12,6 +15,8 @@ const publicInterface = LinodeConfigInterfaceFactory.build({
 const [vlanInterface1, vlanInterface2] = LinodeConfigInterfaceFactory.buildList(
   2
 );
+
+const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build();
 
 export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
   comments: '',
@@ -49,6 +54,7 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
     publicInterface,
     vlanInterface1,
     vlanInterface2,
+    vpcInterface,
   ],
   kernel: 'linode/grub2',
   label: 'My Arch Linux Disk Profile',

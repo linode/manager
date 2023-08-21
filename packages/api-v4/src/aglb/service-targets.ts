@@ -5,18 +5,26 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage } from 'src/types';
-import { BETA_API_ROOT } from 'src/constants';
+import { Filter, Params, ResourcePage } from '../types';
+import { BETA_API_ROOT } from '../constants';
 import type { ServiceTarget, ServiceTargetPayload } from './types';
 
 /**
- * getServiceTargets
+ * getLoadbalancerServiceTargets
  *
  * Returns a paginated list of Akamai Global Load Balancer service targets
  */
-export const getServiceTargets = (params: Params, filter?: Filter) =>
+export const getLoadbalancerServiceTargets = (
+  loadbalancerId: number,
+  params?: Params,
+  filter?: Filter
+) =>
   Request<ResourcePage<ServiceTarget>>(
-    setURL(`${BETA_API_ROOT}/aglb/service-targets`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/service-targets`
+    ),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
@@ -25,48 +33,74 @@ export const getServiceTargets = (params: Params, filter?: Filter) =>
 /**
  * getServiceTarget
  *
- * Returns an Akamai Global Load Balancer route
+ * Returns an Akamai Global Load Balancer service target
  */
-export const getServiceTarget = (id: number) =>
+export const getServiceTarget = (
+  loadbalancerId: number,
+  serviceTargetId: number
+) =>
   Request<ServiceTarget>(
-    setURL(`${BETA_API_ROOT}/aglb/service-targets/${encodeURIComponent(id)}`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/service-targets/${encodeURIComponent(serviceTargetId)}`
+    ),
     setMethod('GET')
   );
 
 /**
- * createServiceTarget
+ * createLoadbalancerServiceTarget
  *
- * Creates an Akamai Global Load Balancer route
+ * Creates an Akamai Global Load Balancer service target
  */
-export const createServiceTarget = (data: ServiceTargetPayload) =>
+export const createLoadbalancerServiceTarget = (
+  loadbalancerId: number,
+  data: ServiceTargetPayload
+) =>
   Request<ServiceTarget>(
-    setURL(`${BETA_API_ROOT}/aglb/service-targets`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/service-targets`
+    ),
     setData(data),
     setMethod('POST')
   );
 
 /**
- * updateServiceTarget
+ * updateLoadbalancerServiceTarget
  *
- * Updates an Akamai Global Load Balancer route
+ * Updates an Akamai Global Load Balancer service target
  */
-export const updateServiceTarget = (
-  id: number,
+export const updateLoadbalancerServiceTarget = (
+  loadbalancerId: number,
+  serviceTargetId: number,
   data: Partial<ServiceTargetPayload>
 ) =>
   Request<ServiceTarget>(
-    setURL(`${BETA_API_ROOT}/aglb/service-targets/${encodeURIComponent(id)}`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/service-targets/${encodeURIComponent(serviceTargetId)}`
+    ),
     setData(data),
     setMethod('POST')
   );
 
 /**
- * deleteServiceTarget
+ * deleteLoadbalancerServiceTarget
  *
  * Deletes an Akamai Global Load Balancer service target
  */
-export const deleteServiceTarget = (id: number) =>
+export const deleteLoadbalancerServiceTarget = (
+  loadbalancerId: number,
+  serviceTargetId: number
+) =>
   Request<{}>(
-    setURL(`${BETA_API_ROOT}/aglb/service-targets/${encodeURIComponent(id)}`),
+    setURL(
+      `${BETA_API_ROOT}/aglb/${encodeURIComponent(
+        loadbalancerId
+      )}/service-targets/${encodeURIComponent(serviceTargetId)}`
+    ),
     setMethod('DELETE')
   );
