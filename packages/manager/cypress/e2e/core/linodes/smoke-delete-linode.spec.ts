@@ -7,7 +7,7 @@ import { apiMatcher } from 'support/util/intercepts';
 authenticate();
 describe('delete linode', () => {
   before(() => {
-    cleanUp('linodes');
+    cleanUp(['linodes', 'lke-clusters']);
   });
 
   it('deletes linode from linode details page', () => {

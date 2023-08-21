@@ -267,6 +267,18 @@ const databases = [
     );
   }),
 
+  rest.post('*/databases/:engine/instances', (req, res, ctx) => {
+    const payload: any = req.body;
+    return res(
+      ctx.json({
+        ...databaseFactory.build({
+          label: payload?.label ?? 'Database',
+          engine: req.params.engine,
+        }),
+      })
+    );
+  }),
+
   rest.post(
     '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
     (req, res, ctx) => {
@@ -294,35 +306,42 @@ const databases = [
 
 const aglb = [
   // Configurations
-  rest.get('*/aglb/:id/configurations', (req, res, ctx) => {
+  rest.get('*/v4beta/aglb/:id/configurations', (req, res, ctx) => {
     const configurations = configurationFactory.buildList(3);
     return res(ctx.json(makeResourcePage(configurations)));
   }),
-  rest.get('*/aglb/:id/configurations/:configId', (req, res, ctx) => {
+  rest.get('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json(configurationFactory.build()));
   }),
-  rest.post('*/aglb/:id/configurations', (req, res, ctx) => {
+  rest.post('*/v4beta/aglb/:id/configurations', (req, res, ctx) => {
     return res(ctx.json(configurationFactory.build()));
   }),
-  rest.put('*/aglb/:id/configurations/:configId', (req, res, ctx) => {
+  rest.put('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
     const id = Number(req.params.configId);
     const body = req.body as any;
     return res(ctx.json(configurationFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/:id/configurations/:configId', (req, res, ctx) => {
+  rest.delete('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Load Balancers
-  rest.get('*/aglb', (req, res, ctx) => {
+  rest.get('*/v4beta/aglb', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(loadbalancerFactory.buildList(3))));
   }),
-  rest.get('*/aglb/:id', (req, res, ctx) => {
+  rest.get('*/v4beta/aglb/:loadbalancerId', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        loadbalancerFactory.build({
+          id: req.params.loadbalancerId,
+          label: `aglb-${req.params.loadbalancerId}`,
+        })
+      )
+    );
+  }),
+  rest.post('*/v4beta/aglb', (req, res, ctx) => {
     return res(ctx.json(loadbalancerFactory.build()));
   }),
-  rest.post('*/aglb', (req, res, ctx) => {
-    return res(ctx.json(loadbalancerFactory.build()));
-  }),
-  rest.put('*/aglb/:id', (req, res, ctx) => {
+  rest.put('*/v4beta/aglb/:id', (req, res, ctx) => {
     const id = Number(req.params.id);
     const body = req.body as any;
     // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
@@ -330,39 +349,42 @@ const aglb = [
     // TODO: AGLB - figure out if this is still accurate
     return res(ctx.json(updateLoadbalancerFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/:id', (req, res, ctx) => {
+  rest.delete('*/v4beta/aglb/:id', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Routes
-  rest.get('*/aglb/:id/routes', (req, res, ctx) => {
+  rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(routeFactory.buildList(4))));
   }),
-  rest.post('*/aglb/:id/routes', (req, res, ctx) => {
+  rest.post('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     return res(ctx.json(createRouteFactory.buildList(4)));
   }),
-  rest.put('*/aglb/:id/routes/:routeId', (req, res, ctx) => {
+  rest.put('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     const id = Number(req.params.routeId);
     const body = req.body as any;
     return res(ctx.json(createRouteFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/:id/routes/:routeId', (req, res, ctx) => {
+  rest.delete('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Service Targets
-  rest.get('*/aglb/:id/service-targets', (req, res, ctx) => {
+  rest.get('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
     const service_targets = serviceTargetFactory.buildList(3);
     return res(ctx.json(makeResourcePage(service_targets)));
   }),
-  rest.post('*/aglb/:id/service-targets', (req, res, ctx) => {
+  rest.post('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));
   }),
-  rest.put('*/aglb/:id/service-targets/:serviceTargetId', (req, res, ctx) => {
-    const id = Number(req.params.serviceTargetId);
-    const body = req.body as any;
-    return res(ctx.json(createServiceTargetFactory.build({ id, ...body })));
-  }),
+  rest.put(
+    '*/v4beta/aglb/:id/service-targets/:serviceTargetId',
+    (req, res, ctx) => {
+      const id = Number(req.params.serviceTargetId);
+      const body = req.body as any;
+      return res(ctx.json(createServiceTargetFactory.build({ id, ...body })));
+    }
+  ),
   rest.delete(
-    '*/aglb/:id/service-targets/:serviceTargetId',
+    '*/v4beta/aglb/:id/service-targets/:serviceTargetId',
     (req, res, ctx) => {
       return res(ctx.json({}));
     }
@@ -386,6 +408,16 @@ const vpc = [
           ...vpcsWithSubnet2,
           ...vpcsWithoutSubnet,
         ])
+      )
+    );
+  }),
+  rest.get('*/vpcs/:vpcId', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        vpcFactory.build({
+          description: `VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver VPC for webserver VPC for webserver VPC for webserver VPC for webserver.VPC for webserver and database!!! VPC`,
+          subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
+        })
       )
     );
   }),
@@ -616,7 +648,7 @@ export const handlers = [
     const ips = linodeIPFactory.build();
     return res(ctx.json(ips));
   }),
-  rest.post('*/instances', async (req, res, ctx) => {
+  rest.post('*/linode/instances', async (req, res, ctx) => {
     const payload = req.body as any;
     const linode = linodeFactory.build({
       image: payload?.image ?? 'linode/debian-10',
