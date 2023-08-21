@@ -10,7 +10,7 @@ import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';
 
-const ComplianceBanner = () => {
+export const ComplianceBanner = () => {
   const context = React.useContext(complianceUpdateContext);
   const { data: notifications } = useNotificationsQuery();
 
@@ -54,5 +54,3 @@ const StyledActionButton = styled(Button)(({}) => ({
   marginLeft: 12,
   minWidth: 150,
 }));
-
-export default ComplianceBanner;
