@@ -1,3 +1,4 @@
+import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
 
@@ -5,7 +6,7 @@ import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Typography } from 'src/components/Typography';
 
-import { StyledFormLabel, StyledMigrationBox } from './ConfigureForm.styles';
+import { StyledFormLabel } from './ConfigureForm.styles';
 
 export interface MigrationPricingProps {
   backups: null | number | undefined;
@@ -22,7 +23,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
   const priceFontSize = `${theme.typography.body1.fontSize}`;
 
   return monthly && hourly && backups ? (
-    <StyledMigrationBox>
+    <StyledMigrationPricingContainer panelType={panelType}>
       <StyledFormLabel htmlFor={`${panelType}-price`}>
         {currentPanel ? 'Current' : 'New'} Price
       </StyledFormLabel>
@@ -48,6 +49,19 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
           price={backups}
         />
       </Box>
-    </StyledMigrationBox>
+    </StyledMigrationPricingContainer>
   ) : null;
 };
+
+const StyledMigrationPricingContainer = styled(Box, {
+  label: 'MigrationPricingContainer',
+})<{ panelType: MigrationPricingProps['panelType'] }>(
+  ({ panelType, theme }) => ({
+    marginBottom: theme.spacing(2),
+    ...(panelType === 'current' && {
+      [theme.breakpoints.up('md')]: {
+        marginTop: 26,
+      },
+    }),
+  })
+);

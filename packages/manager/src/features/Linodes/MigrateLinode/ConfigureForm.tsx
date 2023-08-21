@@ -56,8 +56,8 @@ export const ConfigureForm = React.memo((props: Props) => {
   const country =
     regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
-  const hasSelectedRegionDynamicPricing = Boolean(
-    selectedRegion && priceIncreaseMap[selectedRegion]
+  const shouldDisplayPriceComparison = Boolean(
+    dcSpecificPricing && selectedRegion && priceIncreaseMap[selectedRegion]
   );
 
   const calculateNewPrice = React.useCallback(
@@ -104,7 +104,11 @@ export const ConfigureForm = React.memo((props: Props) => {
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
           </StyledDiv>
+          {shouldDisplayPriceComparison && (
+            <MigrationPricing {...currentPrice} />
+          )}
         </StyledMigrationBox>
+
         <StyledMigrationBox>
           <RegionSelect
             regions={
@@ -127,14 +131,9 @@ export const ConfigureForm = React.memo((props: Props) => {
             menuPlacement="top"
             selectedID={selectedRegion}
           />
+          {shouldDisplayPriceComparison && <MigrationPricing {...newPrice} />}
         </StyledMigrationBox>
       </StyledMigrationContainer>
-      {dcSpecificPricing && hasSelectedRegionDynamicPricing && (
-        <StyledMigrationContainer>
-          <MigrationPricing {...currentPrice} />
-          <MigrationPricing {...newPrice} />
-        </StyledMigrationContainer>
-      )}
     </StyledPaper>
   );
 });
