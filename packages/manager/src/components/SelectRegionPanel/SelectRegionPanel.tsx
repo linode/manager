@@ -1,4 +1,3 @@
-import { LinodeType, PriceObject } from '@linode/api-v4';
 import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -12,12 +11,12 @@ import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCre
 import { useFlags } from 'src/hooks/useFlags';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
-import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 interface SelectRegionPanelProps {
   disabled?: boolean;
