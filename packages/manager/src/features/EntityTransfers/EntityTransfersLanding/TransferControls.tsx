@@ -10,7 +10,7 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
-import ConfirmTransferDialog from './ConfirmTransferDialog';
+import { ConfirmTransferDialog } from './ConfirmTransferDialog';
 
 // sm = 600, md = 960, lg = 1280
 
@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const TransferControls: React.FC<{}> = (_) => {
+export const TransferControls = React.memo(() => {
   const [token, setToken] = React.useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
 
@@ -202,6 +202,4 @@ export const TransferControls: React.FC<{}> = (_) => {
       />
     </>
   );
-};
-
-export default React.memo(TransferControls);
+});

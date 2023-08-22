@@ -3,19 +3,15 @@ import {
   acceptEntityTransfer,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import {
   TRANSFER_FILTERS,
   queryKey,
@@ -30,31 +26,14 @@ import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { countByEntity } from '../utilities';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  entityTypeDisplay: {
-    marginBottom: theme.spacing(),
-  },
-  expiry: {
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
-  },
-  list: {
-    listStyleType: 'none',
-    margin: 0,
-    paddingLeft: 0,
-  },
-  summary: {
-    marginBottom: 4,
-  },
-  transferSummary: {
-    marginBottom: theme.spacing(),
-  },
-}));
+import {
+  StyledActionsPanel,
+  StyledDiv,
+  StyledEntityTypography,
+  StyledExpiryTypography,
+  StyledSummaryTypography,
+  StyledUl,
+} from './ConfirmTransferDialog.styles';
 
 export interface Props {
   onClose: () => void;
@@ -62,9 +41,8 @@ export interface Props {
   token?: string;
 }
 
-export const ConfirmTransferDialog: React.FC<Props> = (props) => {
+export const ConfirmTransferDialog = React.memo((props: Props) => {
   const { onClose, open, token } = props;
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const { data, error, isError, isLoading } = useTransferQuery(
     token ?? '',
@@ -134,14 +112,13 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   };
 
   const actions = (
-    <ActionsPanel
+    <StyledActionsPanel
       primaryButtonProps={{
         disabled: !hasConfirmed || isLoading || isError,
         label: 'Accept Transfer',
         loading: submitting,
         onClick: handleAcceptTransfer,
       }}
-      className={classes.actions}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
     />
   );
@@ -167,7 +144,7 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
       />
     </ConfirmationDialog>
   );
-};
+});
 
 interface ContentProps {
   entities: TransferEntities;
@@ -182,7 +159,7 @@ interface ContentProps {
   submissionErrors: APIError[] | null;
 }
 
-export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
+export const DialogContent = React.memo((props: ContentProps) => {
   const {
     entities,
     errors,
@@ -193,7 +170,6 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
     isLoading,
     submissionErrors,
   } = props;
-  const classes = useStyles();
 
   const { data: profile } = useProfile();
 
@@ -236,18 +212,18 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
             ))
           : null
       }
-      <div className={classes.transferSummary}>
-        <Typography className={classes.summary}>
+      <StyledDiv>
+        <StyledSummaryTypography>
           This transfer contains:
-        </Typography>
-        <ul className={classes.list}>
+        </StyledSummaryTypography>
+        <StyledUl>
           {Object.keys(entities).map((thisEntityType) => {
             // According to spec, all entity names are plural and lowercase
             // (NB: This may cause problems for NodeBalancers if/when they are added to the payload)
             const entityName = capitalize(thisEntityType).slice(0, -1);
             return (
               <li key={thisEntityType}>
-                <Typography className={classes.entityTypeDisplay}>
+                <StyledEntityTypography>
                   <strong>
                     {pluralize(
                       entityName,
@@ -255,14 +231,14 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
                       entities[thisEntityType].length
                     )}
                   </strong>
-                </Typography>
+                </StyledEntityTypography>
               </li>
             );
           })}
-        </ul>
-      </div>
+        </StyledUl>
+      </StyledDiv>
       {timeRemaining ? (
-        <Typography className={classes.expiry}>{timeRemaining}</Typography>
+        <StyledExpiryTypography>{timeRemaining}</StyledExpiryTypography>
       ) : null}
       <div>
         <Checkbox
@@ -303,5 +279,3 @@ export const getTimeRemaining = (
     timezone,
   })}).`;
 };
-
-export default React.memo(ConfirmTransferDialog);

@@ -59,7 +59,7 @@ interface Props {
   transfer?: EntityTransfer;
 }
 
-export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
+export const CreateTransferSuccessDialog = React.memo((props: Props) => {
   const { isOpen, onClose, transfer } = props;
   const [tooltipOpen, setTooltipOpen] = React.useState([false, false]);
   const classes = useStyles();
@@ -160,6 +160,4 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
       </div>
     </Dialog>
   );
-};
-
-export default React.memo(CreateTransferSuccessDialog);
+});

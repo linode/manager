@@ -6,7 +6,8 @@ import { entityTransferFactory } from 'src/factories/entityTransfers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import ConfirmTransferDialog, {
+import {
+  ConfirmTransferDialog,
   Props,
   getTimeRemaining,
 } from './ConfirmTransferDialog';
