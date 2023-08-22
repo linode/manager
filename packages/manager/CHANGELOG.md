@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-08-22] - v1.100.1
+
+### Fixed
+
+- Create Linode from Stackscript field state bug ([#9579](https://github.com/linode/manager/pull/9579))
+
 ## [2023-08-21] - v1.100.0
 
 
