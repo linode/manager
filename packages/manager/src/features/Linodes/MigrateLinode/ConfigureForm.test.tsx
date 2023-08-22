@@ -139,7 +139,7 @@ describe('ConfigureForm component with price comparison', () => {
     selectNewRegion('São Paulo', 'br-gru');
     await waitFor(() => {
       expect(queryByText('$12.00')).toBeInTheDocument();
-      expect(queryByText('$15.60')).toBeInTheDocument();
+      expect(queryByText('$16.80')).toBeInTheDocument();
     });
   });
 });
