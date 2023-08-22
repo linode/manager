@@ -1,5 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { IconButton } from '@mui/material';
+import { Hidden, IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -115,9 +115,15 @@ export const LoadBalancerServiceTargets = () => {
               Label
             </TableSortCell>
             <TableCell>Endpoints</TableCell>
-            <TableCell>Algorithm</TableCell>
-            <TableCell>Certificate</TableCell>
-            <TableCell>Health Checks</TableCell>
+            <Hidden smDown>
+              <TableCell>Algorithm</TableCell>
+            </Hidden>
+            <Hidden mdDown>
+              <TableCell>Certificate</TableCell>
+            </Hidden>
+            <Hidden lgDown>
+              <TableCell>Health Checks</TableCell>
+            </Hidden>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -130,21 +136,27 @@ export const LoadBalancerServiceTargets = () => {
                 <Link to={String(serviceTarget.id)}>{serviceTarget.label}</Link>
               </TableCell>
               <TableCell>
-                <Stack alignItems="center" direction="row" spacing={1}>
+                <Stack alignItems="center" direction="row" spacing={0.5}>
                   <StatusIcon status="active" />
-                  <Typography>4 up</Typography>
+                  <Typography noWrap>4 up</Typography>
                   <Typography>&mdash;</Typography>
                   <StatusIcon status="error" />
-                  <Typography>6 down</Typography>
+                  <Typography noWrap>6 down</Typography>
                 </Stack>
               </TableCell>
-              <TableCell sx={{ textTransform: 'capitalize' }}>
-                {serviceTarget.load_balancing_policy.replace('_', ' ')}
-              </TableCell>
-              <TableCell>{serviceTarget.ca_certificate}</TableCell>
-              <TableCell>
-                {serviceTarget.healthcheck.interval !== 0 ? 'Yes' : 'No'}
-              </TableCell>
+              <Hidden smDown>
+                <TableCell sx={{ textTransform: 'capitalize' }}>
+                  {serviceTarget.load_balancing_policy.replace('_', ' ')}
+                </TableCell>
+              </Hidden>
+              <Hidden mdDown>
+                <TableCell>{serviceTarget.ca_certificate}</TableCell>
+              </Hidden>
+              <Hidden lgDown>
+                <TableCell>
+                  {serviceTarget.healthcheck.interval !== 0 ? 'Yes' : 'No'}
+                </TableCell>
+              </Hidden>
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
