@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 
 - Incorrect timezone form styles on profile page ([#9573](https://github.com/linode/manager/pull/9573))
+- Create Linode from Stackscript field state bug ([#9573](https://github.com/linode/manager/pull/9573))
 
 
 ## [2023-08-21] - v1.100.0
