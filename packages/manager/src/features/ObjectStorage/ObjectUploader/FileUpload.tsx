@@ -93,6 +93,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
           {props.percentCompleted === 100 ? (
             <FileUploadComplete
               className={classes.iconRight}
+              data-qa-file-upload-success
               height={22}
               width={22}
             />
@@ -102,11 +103,16 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
                 [classes.error]: props.error !== '',
                 [classes.iconRight]: true,
               })}
+              data-qa-file-upload-error
               height={22}
               width={22}
             />
           ) : (
-            <StyledUploadPending height={22} width={22} />
+            <StyledUploadPending
+              data-qa-file-upload-pending
+              height={22}
+              width={22}
+            />
           )}
         </StyledRightWrapper>
       </StyledContainer>
