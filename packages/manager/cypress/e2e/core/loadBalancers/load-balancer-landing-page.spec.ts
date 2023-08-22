@@ -98,13 +98,15 @@ describe('Akamai Global Load Balancer landing page', () => {
           });
 
           ui.actionMenu
-            .findByTitle(`Action menu for Load Balancer ${loadbalancerMock.id}`)
+            .findByTitle(
+              `Action menu for Load Balancer ${loadbalancerMock.label}`
+            )
             .should('be.visible')
             .click();
         });
 
       // TODO Assert that clicking on the action menu items navigates to the expected page.
-      ['Configurations', 'Clone Load Balancer', 'Settings', 'Delete'].forEach(
+      ['Configurations', 'Settings', 'Delete'].forEach(
         (actionMenuItem: string) => {
           ui.actionMenuItem.findByTitle(actionMenuItem).should('be.visible');
         }

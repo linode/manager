@@ -19,10 +19,6 @@ export const LoadBalancerActionsMenu = ({ loadbalancer }: Props) => {
       title: 'Configurations',
     },
     {
-      onClick: () => null,
-      title: 'Clone Load Balancer',
-    },
-    {
       onClick: () => history.push(`/loadbalancers/${loadbalancer.id}/settings`),
       title: 'Settings',
     },
