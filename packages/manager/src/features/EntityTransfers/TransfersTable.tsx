@@ -3,14 +3,11 @@ import {
   TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
@@ -21,28 +18,7 @@ import { capitalize } from 'src/utilities/capitalize';
 import { ConfirmTransferCancelDialog } from './EntityTransfersLanding/ConfirmTransferCancelDialog';
 import { TransferDetailsDialog } from './EntityTransfersLanding/TransferDetailsDialog';
 import { RenderTransferRow } from './RenderTransferRow';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  cellContents: {
-    paddingLeft: '1rem',
-  },
-  link: {
-    ...theme.applyLinkStyles,
-    fontSize: '0.875rem',
-  },
-  root: {
-    '& .MuiAccordion-root table': {
-      border: 'none',
-    },
-    '& .MuiAccordionDetails-root': {
-      padding: 0,
-    },
-    marginBottom: theme.spacing(2),
-  },
-  table: {
-    width: '100%',
-  },
-}));
+import { StyledDiv, StyledTable } from './TransfersTable.styles';
 
 interface Props {
   error: APIError[] | null;
@@ -56,9 +32,7 @@ interface Props {
   transfers?: EntityTransfer[];
 }
 
-type CombinedProps = Props;
-
-export const TransfersTable: React.FC<CombinedProps> = (props) => {
+export const TransfersTable = React.memo((props: Props) => {
   const {
     error,
     handlePageChange,
@@ -70,8 +44,6 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
     transferType,
     transfers,
   } = props;
-
-  const classes = useStyles();
 
   const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(
     false
@@ -110,12 +82,12 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <div className={classes.root}>
+      <StyledDiv>
         <Accordion
           defaultExpanded={transfersCount > 0}
           heading={`${capitalize(transferType)} Service Transfers`}
         >
-          <Table className={classes.table}>
+          <StyledTable>
             <TableHead>
               <TableRow>
                 <TableCell key="transfer-token-table-header-token">
@@ -190,7 +162,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
                 ))}
               </TableContentWrapper>
             </TableBody>
-          </Table>
+          </StyledTable>
           <PaginationFooter
             count={results}
             eventCategory="Service Transfer Table"
@@ -209,7 +181,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
             token={tokenBeingCanceled}
           />
         ) : null}
-      </div>
+      </StyledDiv>
       <TransferDetailsDialog
         entities={currentEntities}
         isOpen={detailsDialogOpen}
@@ -218,6 +190,4 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
       />
     </>
   );
-};
-
-export default React.memo(TransfersTable);
+});

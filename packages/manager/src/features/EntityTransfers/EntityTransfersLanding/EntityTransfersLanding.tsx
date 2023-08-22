@@ -10,7 +10,7 @@ import {
   useEntityTransfersQuery,
 } from 'src/queries/entityTransfers';
 
-import TransfersTable from '../TransfersTable';
+import { TransfersTable } from '../TransfersTable';
 import { CreateTransferSuccessDialog } from './CreateTransferSuccessDialog';
 import { TransferControls } from './TransferControls';
 
