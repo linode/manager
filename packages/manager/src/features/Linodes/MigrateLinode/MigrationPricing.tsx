@@ -55,6 +55,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
 
 const StyledMigrationPricingContainer = styled(Box, {
   label: 'MigrationPricingContainer',
+  shouldForwardProp: (prop) => prop !== 'panelType',
 })<{ panelType: MigrationPricingProps['panelType'] }>(
   ({ panelType, theme }) => ({
     marginBottom: theme.spacing(2),
