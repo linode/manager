@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   copy: {
     marginBottom: theme.spacing(),
-    maxWidth: 680,
+    maxWidth: 700,
   },
   labelTooltip: {
     '& .MuiTooltip-tooltip': {
@@ -283,7 +283,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     <span>
                       A single Volume can range from 10 to 10240 GB in size. Up
                       to eight Volumes can be attached to a single Linode.
-                      Select a Region to see cost per GB
+                      Select a Region to see cost per GB.
                     </span>
                   ) : (
                     <span>
@@ -292,7 +292,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       Up to eight volumes can be attached to a single Linode.
                     </span>
                   )}
-                  .
                 </Typography>
                 <LabelField
                   tooltipText="Use only ASCII letters, numbers,
