@@ -58,7 +58,14 @@ const CheckoutBar = (props: CheckoutBarProps) => {
       {children}
       {
         <StyledCheckoutSection data-qa-total-price>
-          <DisplayPrice interval="mo" price={price} />
+          {price ? (
+            <DisplayPrice interval="mo" price={price} />
+          ) : (
+            <Typography>
+              Select a Region and add a Node Pool to view pricing and create a
+              cluster.
+            </Typography>
+          )}
           {priceHelperText && price > 0 && (
             <Typography
               sx={{

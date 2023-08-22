@@ -51,7 +51,7 @@ export interface Props {
   nodeCount: number;
   onRemove: () => void;
   poolType: ExtendedType | null;
-  price: number;
+  price?: number; // Can be undefined until a Region is selected.
   updateNodeCount: (count: number) => void;
 }
 
@@ -102,7 +102,9 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
           />
         </div>
         <div className={classes.price}>
-          <DisplayPrice fontSize="14px" interval="month" price={price} />
+          {price ? (
+            <DisplayPrice fontSize="14px" interval="month" price={price} />
+          ) : undefined}
         </div>
       </Box>
     </>
