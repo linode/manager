@@ -17,7 +17,7 @@ export const useLoadBalancerCertificatesQuery = (
   filter: Filter
 ) => {
   return useQuery<ResourcePage<Certificate>, APIError[]>(
-    [QUERY_KEY, 'paginated', params, filter],
+    [QUERY_KEY, 'loadbalancer', id, 'certificates', params, filter],
     () => getLoadbalancerCertificates(id, params, filter),
     { keepPreviousData: true }
   );
