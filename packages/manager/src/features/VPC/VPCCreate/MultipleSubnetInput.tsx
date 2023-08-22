@@ -57,7 +57,6 @@ export const MultipleSubnetInput = (props: Props) => {
             }
             disabled={disabled}
             idx={subnetIdx}
-            // janky solution to enable SubnetNode to work on its own or be part of MultipleSubnetInput
             isRemovable={true}
             subnet={subnet}
           />

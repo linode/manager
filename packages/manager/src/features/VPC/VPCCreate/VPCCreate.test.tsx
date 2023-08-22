@@ -88,9 +88,10 @@ describe('VPC create page', () => {
     expect(createVPCButton).toBeInTheDocument();
 
     await act(async () => {
-      await userEvent.type(subnetIp, 'bad ip', { delay: 1 });
+      await userEvent.type(subnetIp, 'bad');
       userEvent.click(createVPCButton);
     });
+
     const badSubnetIP = screen.getByText(
       'The IPv4 range must be in CIDR format'
     );

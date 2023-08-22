@@ -49,7 +49,7 @@ const VPCCreate = () => {
     string | undefined
   >();
 
-  const disabled = profile?.restricted && !grants?.global.add_vpcs;
+  const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
 
   const createSubnetsPayload = () => {
     const subnetPayloads: CreateSubnetPayload[] = [];
@@ -170,7 +170,7 @@ const VPCCreate = () => {
         docsLink="#" // TODO: VPC - add correct docs link
         title="Create"
       />
-      {disabled && (
+      {userCannotAddVPC && (
         <Notice
           text={
             "You don't have permissions to create a new VPC. Please contact an account administrator for details."
@@ -195,7 +195,7 @@ const VPCCreate = () => {
               handleSelection={(region: string) =>
                 setFieldValue('region', region)
               }
-              disabled={disabled}
+              disabled={userCannotAddVPC}
               errorText={errors.region}
               isClearable
               regions={regions ?? []}
@@ -205,7 +205,7 @@ const VPCCreate = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFieldValue('label', e.target.value)
               }
-              disabled={disabled}
+              disabled={userCannotAddVPC}
               errorText={errors.label}
               label="VPC label"
               value={values.label}
@@ -214,7 +214,7 @@ const VPCCreate = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFieldValue('description', e.target.value)
               }
-              disabled={disabled}
+              disabled={userCannotAddVPC}
               errorText={errors.description}
               label="Description"
               multiline
@@ -237,7 +237,7 @@ const VPCCreate = () => {
                 ))
               : null}
             <MultipleSubnetInput
-              disabled={disabled}
+              disabled={userCannotAddVPC}
               onChange={(subnets) => setFieldValue('subnets', subnets)}
               subnets={values.subnets}
             />
@@ -245,7 +245,7 @@ const VPCCreate = () => {
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled,
+              disabled: userCannotAddVPC,
               label: 'Create VPC',
               loading: isLoading,
               onClick: onCreateVPC,

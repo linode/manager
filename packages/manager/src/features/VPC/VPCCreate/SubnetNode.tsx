@@ -12,9 +12,9 @@ import { calculateAvailableIPv4s } from 'src/utilities/subnets';
 
 interface Props {
   disabled?: boolean;
+  // extra props enable SubnetNode to be an independent component or be part of MultipleSubnetInput
+  // potential refactor - isRemoveable, and subnetIdx & remove in onChange prop
   idx?: number;
-  // janky solution to enable SubnetNode to be an independent component or be part of MultipleSubnetInput
-  // (not the biggest fan tbh)
   isRemovable?: boolean;
   onChange: (
     subnet: SubnetFieldState,
@@ -61,6 +61,7 @@ export const SubnetNode = (props: Props) => {
           <TextField
             disabled={disabled}
             errorText={subnet.labelError}
+            inputId={`subnet-label-${idx}`}
             label="Subnet label"
             onChange={onLabelChange}
             value={subnet.label}
@@ -78,6 +79,7 @@ export const SubnetNode = (props: Props) => {
         <TextField
           disabled={disabled}
           errorText={subnet.ip.ipv4Error}
+          inputId={`subnet-ipv4-${idx}`}
           label="Subnet IP Address Range"
           onChange={onIpv4Change}
           value={subnet.ip.ipv4}
