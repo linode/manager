@@ -6,6 +6,18 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
 import type { VPC } from '@linode/api-v4';
+import { makeResponse } from 'support/util/response';
+
+/**
+ * Intercepts GET request to fetch a VPC and mocks response.
+ *
+ * @param vpc - VPC with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetVPC = (vpc: VPC): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`vpcs/${vpc.id}`), makeResponse(vpc));
+};
 
 /**
  * Intercepts GET request to fetch VPCs and mocks response.

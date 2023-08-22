@@ -22,6 +22,7 @@ const props: Props = {
   size: 50,
   volumeId: 12345,
   volumeLabel: '',
+  volumeRegion: 'east-us',
   volumeTags: ['abc', 'def'],
 };
 

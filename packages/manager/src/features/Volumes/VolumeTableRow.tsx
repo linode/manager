@@ -168,6 +168,7 @@ export const VolumeTableRow = React.memo((props: CombinedProps) => {
           size={size}
           volumeId={id}
           volumeLabel={label}
+          volumeRegion={region}
           volumeTags={tags}
         />
       </TableCell>

@@ -16,7 +16,10 @@ import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
+import type { FlagSet } from 'src/featureFlags';
+
 interface Props {
+  flags: FlagSet;
   onClose: () => void;
   volumeId: number;
   volumeLabel: string;
@@ -27,7 +30,14 @@ interface Props {
 const initialValues = { label: '' };
 
 export const CloneVolumeForm = (props: Props) => {
-  const { onClose, volumeId, volumeLabel, volumeRegion, volumeSize } = props;
+  const {
+    flags,
+    onClose,
+    volumeId,
+    volumeLabel,
+    volumeRegion,
+    volumeSize,
+  } = props;
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
@@ -87,7 +97,12 @@ export const CloneVolumeForm = (props: Props) => {
               onChange={handleChange}
               value={values.label}
             />
-            <PricePanel currentSize={volumeSize} value={volumeSize} />
+            <PricePanel
+              currentSize={volumeSize}
+              flags={flags}
+              regionId={volumeRegion}
+              value={volumeSize}
+            />
             <VolumesActionsPanel
               onCancel={() => {
                 resetForm();
