@@ -35,7 +35,8 @@ import {
   openForEdit,
   openForResize,
 } from 'src/store/volumeForm';
-import { StyledTypography, StyledRootGrid } from './CommonLinodeStorage.styles';
+
+import { StyledRootGrid, StyledTypography } from './CommonLinodeStorage.styles';
 
 interface DispatchProps {
   openForClone: (
@@ -57,7 +58,8 @@ interface DispatchProps {
   openForResize: (
     volumeId: number,
     volumeSize: number,
-    volumeLabel: string
+    volumeLabel: string,
+    volumeRegion: string
   ) => void;
 }
 

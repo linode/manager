@@ -4,7 +4,7 @@ import type { FlagSet } from 'src/featureFlags';
 export interface DataCenterPricingOptions {
   /**
    * The base price for an entity.
-   * @example 5.00
+   * @example 5 or 5.50
    */
   basePrice: number;
   /**
@@ -19,8 +19,7 @@ export interface DataCenterPricingOptions {
   regionId: Region['id'] | undefined;
 }
 
-// The key is a region id and the value is the percentage
-// increase in price.
+// The key is a region id and the value is the percentage increase in price.
 const priceIncreaseMap = {
   'br-gru': 0.3, // Sao Paulo
   'id-cgk': 0.2, // Jakarta
@@ -48,8 +47,7 @@ export const getDCSpecificPrice = ({
   const increaseFactor = priceIncreaseMap[regionId] as number | undefined;
 
   if (increaseFactor !== undefined) {
-    // If increaseFactor is defined, it means the region has a price increase
-    // and we should apply it.
+    // If increaseFactor is defined, it means the region has a price increase and we should apply it.
     const increase = basePrice * increaseFactor;
 
     return (basePrice + increase).toFixed(2);

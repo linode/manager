@@ -116,14 +116,22 @@ interface Resizing extends Action {
   type: typeof RESIZING;
   volumeId: number;
   volumeLabel: string;
+  volumeRegion: string;
   volumeSize: number;
 }
 
 export const openForResize = (
   volumeId: number,
   volumeSize: number,
-  volumeLabel: string
-): Resizing => ({ type: RESIZING, volumeId, volumeLabel, volumeSize });
+  volumeLabel: string,
+  volumeRegion: string
+): Resizing => ({
+  type: RESIZING,
+  volumeId,
+  volumeLabel,
+  volumeRegion,
+  volumeSize,
+});
 
 interface Cloning extends Action {
   type: typeof CLONING;
@@ -191,6 +199,7 @@ export const defaultState: State = {
   mode: modes.CLOSED,
   volumeId: undefined,
   volumeLabel: undefined,
+  volumeRegion: undefined,
   volumeSize: undefined,
 };
 
@@ -277,6 +286,7 @@ export const volumeForm: Reducer<State> = (
         mode: modes.RESIZING,
         volumeId: action.volumeId,
         volumeLabel: action.volumeLabel,
+        volumeRegion: action.volumeRegion,
         volumeSize: action.volumeSize,
       };
 

@@ -2,26 +2,45 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
+import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
+
+import { SIZE_FIELD_WIDTH } from '../VolumeCreate/CreateVolumeForm';
+
+import type { FlagSet } from 'src/featureFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   createVolumeText: {
     display: 'block',
-    marginBottom: theme.spacing(),
     marginLeft: theme.spacing(1.5),
+  },
+  priceDisplay: {
+    '& p': {
+      lineHeight: 1,
+      marginTop: 4,
+    },
+
+    left: `calc(${SIZE_FIELD_WIDTH}px + ${theme.spacing(2)})`,
+    position: 'absolute',
+    top: 50,
   },
 }));
 
 interface Props {
   disabled?: boolean;
   error?: string;
+  flags: FlagSet;
+  hasSelectedRegion?: boolean;
   isFromLinode?: boolean;
   name: string;
   onBlur: (e: any) => void;
   onChange: (e: React.ChangeEvent<any>) => void;
+  regionId: string;
   resize?: number;
   textFieldStyles?: string;
   value: number;
@@ -34,21 +53,45 @@ const SizeField: React.FC<CombinedProps> = (props) => {
 
   const {
     error,
+    flags,
+    hasSelectedRegion,
     isFromLinode,
     name,
     onBlur,
     onChange,
+    regionId,
     resize,
     textFieldStyles,
     value,
     ...rest
   } = props;
 
+  const { dcSpecificPricing } = flags;
   const helperText = resize
     ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
     : undefined;
 
-  const price = value >= 10 ? (value / 10).toFixed(2) : '0.00';
+  const price = getDynamicVolumePrice({
+    flags,
+    regionId,
+    size: value,
+  });
+
+  const legacyHelperText = (
+    <FormHelperText>
+      {resize || isFromLinode ? (
+        'The size of the new volume in GB.'
+      ) : (
+        <span className={classes.createVolumeText}>${price}/month</span>
+      )}
+    </FormHelperText>
+  );
+
+  const dynamicPricingHelperText = !resize && (
+    <Box marginLeft={'10px'} marginTop={'4px'}>
+      <Typography>Select a Region to see cost per month.</Typography>
+    </Box>
+  );
 
   return (
     <>
@@ -69,13 +112,13 @@ const SizeField: React.FC<CombinedProps> = (props) => {
         value={value}
         {...rest}
       />
-      <FormHelperText>
-        {resize || isFromLinode ? (
-          'The size of the new volume in GB.'
-        ) : (
-          <span className={classes.createVolumeText}>${price}/month</span>
-        )}
-      </FormHelperText>
+      <div className={classes.priceDisplay}>
+        {dcSpecificPricing
+          ? hasSelectedRegion
+            ? legacyHelperText
+            : dynamicPricingHelperText
+          : legacyHelperText}
+      </div>
     </>
   );
 };
