@@ -134,4 +134,12 @@ describe('ConfigureForm component with price comparison', () => {
       });
     });
   });
+
+  it('should provide a proper price comparison', async () => {
+    selectNewRegion('São Paulo', 'br-gru');
+    await waitFor(() => {
+      expect(queryByText('$12.00')).toBeInTheDocument();
+      expect(queryByText('$15.60')).toBeInTheDocument();
+    });
+  });
 });
