@@ -104,7 +104,6 @@ export const TimezoneForm = (props: Props) => {
             loading: isLoading,
             onClick: onSubmit,
             sx: {
-              color: 'white',
               marginTop: (theme: Theme) => (theme.breakpoints.up('md') ? 2 : 0),
               minWidth: 180,
             },
