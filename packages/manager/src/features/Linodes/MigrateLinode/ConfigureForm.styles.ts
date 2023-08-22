@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 
 import { Box } from 'src/components/Box';
-import { FormLabel } from 'src/components/FormLabel';
 import { Paper } from 'src/components/Paper';
 
 export const StyledPaper = styled(Paper, { label: 'StyledPaper' })(
@@ -25,10 +24,15 @@ export const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-export const StyledFormLabel = styled(FormLabel, {
-  label: 'StyledFormLabel',
+export const StyledSpan = styled('span', {
+  label: 'StyledSpan',
 })(({ theme }) => ({
+  color: theme.color.label,
   display: 'block',
+  fontFamily: theme.font.bold,
+  fontSize: theme.typography.body1.fontSize,
+  lineHeight: '1.43rem',
+  marginBottom: theme.spacing(1),
   marginTop: theme.spacing(2),
 }));
 

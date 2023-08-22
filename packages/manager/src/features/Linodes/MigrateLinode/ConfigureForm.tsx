@@ -15,10 +15,10 @@ import {
 
 import {
   StyledDiv,
-  StyledFormLabel,
   StyledMigrationBox,
   StyledMigrationContainer,
   StyledPaper,
+  StyledSpan,
 } from './ConfigureForm.styles';
 import { MigrationPricing } from './MigrationPricing';
 
@@ -93,14 +93,10 @@ export const ConfigureForm = React.memo((props: Props) => {
       <Typography variant="h3">Configure Migration</Typography>
       <StyledMigrationContainer>
         <StyledMigrationBox>
-          <StyledFormLabel htmlFor={`current-region-${currentRegion}`}>
-            Current Region
-          </StyledFormLabel>
+          <StyledSpan>Current Region</StyledSpan>
           <StyledDiv>
             <Flag country={country as Lowercase<Country>} />
-            <Typography
-              id={`current-region-${currentRegion}`}
-            >{`${getRegionCountryGroup(currentActualRegion)}: ${
+            <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
           </StyledDiv>

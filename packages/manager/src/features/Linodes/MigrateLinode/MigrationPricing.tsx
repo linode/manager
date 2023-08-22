@@ -6,7 +6,7 @@ import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Typography } from 'src/components/Typography';
 
-import { StyledFormLabel } from './ConfigureForm.styles';
+import { StyledSpan } from './ConfigureForm.styles';
 
 export interface MigrationPricingProps {
   backups: null | number | undefined;
@@ -24,9 +24,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
 
   return monthly && hourly && backups ? (
     <StyledMigrationPricingContainer panelType={panelType}>
-      <StyledFormLabel htmlFor={`${panelType}-price`}>
-        {currentPanel ? 'Current' : 'New'} Price
-      </StyledFormLabel>
+      <StyledSpan>{currentPanel ? 'Current' : 'New'} Price</StyledSpan>
       <Box
         alignItems="baseline"
         display="inline-flex"
@@ -61,7 +59,7 @@ const StyledMigrationPricingContainer = styled(Box, {
     marginBottom: theme.spacing(2),
     ...(panelType === 'current' && {
       [theme.breakpoints.up('md')]: {
-        marginTop: 26,
+        marginTop: 24,
       },
     }),
   })
