@@ -175,7 +175,7 @@ const VPCCreate = () => {
           text={
             "You don't have permissions to create a new VPC. Please contact an account administrator for details."
           }
-          error={true}
+          error
           important
           spacingTop={16}
         />
