@@ -7,6 +7,7 @@ import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useUpdateVPCMutation } from 'src/queries/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -21,6 +22,12 @@ const REGION_HELPER_TEXT = 'Region cannot be changed during beta.';
 
 export const VPCEditDrawer = (props: Props) => {
   const { onClose, open, vpc } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const vpcPermissions = grants?.vpc.find((v) => v.id === vpc?.id);
+  const readOnly = Boolean(profile?.restricted) && vpcPermissions?.permissions === 'read_only';
 
   const {
     error,
@@ -55,6 +62,13 @@ export const VPCEditDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Edit VPC">
       {errorMap.none && <Notice error text={errorMap.none} />}
+      {readOnly && (
+        <Notice
+          error
+          important
+          text={`You don't have permissions to edit ${vpc?.label}. Please contact an account administrator for details.`}
+        />
+      )}
       <form onSubmit={form.handleSubmit}>
         <TextField
           errorText={errorMap.label}
@@ -62,6 +76,7 @@ export const VPCEditDrawer = (props: Props) => {
           name="label"
           onChange={form.handleChange}
           value={form.values.label}
+          disabled={readOnly}
         />
         <TextField
           errorText={errorMap.description}
@@ -70,6 +85,7 @@ export const VPCEditDrawer = (props: Props) => {
           onChange={form.handleChange}
           rows={1}
           value={form.values.description}
+          disabled={readOnly}
         />
         {regionsData && (
           <RegionSelect
@@ -84,7 +100,7 @@ export const VPCEditDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',
-            disabled: !form.dirty,
+            disabled: !form.dirty || readOnly,
             label: 'Save',
             loading: isLoading,
             type: 'submit',

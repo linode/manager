@@ -45,7 +45,8 @@ export type AccountCapability =
   | 'Vlans'
   | 'Machine Images'
   | 'LKE HA Control Planes'
-  | 'Managed Databases';
+  | 'Managed Databases'
+  | 'VPCs';
 
 export interface AccountSettings {
   managed: boolean;
@@ -147,7 +148,8 @@ export type GlobalGrantTypes =
   | 'add_nodebalancers'
   | 'add_images'
   | 'add_volumes'
-  | 'add_firewalls';
+  | 'add_firewalls'
+  | 'add_vpcs';
 
 export interface GlobalGrants {
   global: Record<GlobalGrantTypes, boolean | GrantLevel>;
@@ -162,7 +164,8 @@ export type GrantType =
   | 'stackscript'
   | 'volume'
   | 'database'
-  | 'firewall';
+  | 'firewall'
+  | 'vpc';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 
