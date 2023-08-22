@@ -1,11 +1,13 @@
 import { ServiceTarget } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
 import React from 'react';
+
 import { Hidden } from 'src/components/Hidden';
 // import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { TableRow } from 'src/components/TableRow/TableRow';
+
 import { ServiceTargetActionMenu } from './ServiceTargetActionMenu';
-import { styled } from '@mui/material/styles';
 
 interface Props extends ServiceTarget {
   onDelete: () => void;
@@ -16,9 +18,9 @@ export const ServiceTargetRow = React.memo((props: Props) => {
 
   return (
     <TableRow
-      key={`service-target-row-${id}`}
       ariaLabel={`Service Target ${label}`}
       data-qa-service-target-cluster-id={id}
+      key={`service-target-row-${id}`}
     >
       <TableCell>
         {/* TODO: AGLB - Link to service target details page */}

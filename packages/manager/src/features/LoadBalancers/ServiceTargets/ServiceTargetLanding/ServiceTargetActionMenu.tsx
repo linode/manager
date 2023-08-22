@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ActionMenu, Action } from 'src/components/ActionMenu';
+
+import { Action, ActionMenu } from 'src/components/ActionMenu';
 
 interface Props {
   label: string;
@@ -12,22 +13,22 @@ export const ServiceTargetActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'TODO',
       onClick: () => {
         return;
       },
+      title: 'TODO',
     },
     {
-      title: 'TODO',
       onClick: () => {
         return;
       },
+      title: 'TODO',
     },
     {
-      title: 'TODO',
       onClick: () => {
         return;
       },
+      title: 'TODO',
     },
   ];
 
