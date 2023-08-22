@@ -116,6 +116,7 @@ export const LoadBalancerServiceTargets = () => {
             </TableSortCell>
             <TableCell>Endpoints</TableCell>
             <TableCell>Algorithm</TableCell>
+            <TableCell>Certificate</TableCell>
             <TableCell>Health Checks</TableCell>
             <TableCell></TableCell>
           </TableRow>
@@ -140,6 +141,7 @@ export const LoadBalancerServiceTargets = () => {
               <TableCell sx={{ textTransform: 'capitalize' }}>
                 {serviceTarget.load_balancing_policy.replace('_', ' ')}
               </TableCell>
+              <TableCell>{serviceTarget.ca_certificate}</TableCell>
               <TableCell>
                 {serviceTarget.healthcheck.interval !== 0 ? 'Yes' : 'No'}
               </TableCell>
