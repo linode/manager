@@ -13,7 +13,7 @@ export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
   color: theme.textColors.headlineStatic,
-  fontSize: '1rem',
+  fontSize: theme.spacing(2),
   marginRight: theme.spacing(),
   [theme.breakpoints.down('md')]: {
     flexBasis: '100%',
@@ -26,6 +26,7 @@ export const StyledLabelWrapperGrid = styled(Grid, {
   label: 'StyledLabelWrapperGrid',
 })(({ theme }) => ({
   margin: 0,
+  paddingLeft: 0,
   [theme.breakpoints.down('lg')]: {
     flexWrap: 'wrap',
   },

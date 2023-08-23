@@ -9,7 +9,7 @@ export const StyledButton = styled(Button, {
 })(({ theme }) => ({
   backgroundColor: 'inherit',
   border: 'none',
-  color: '#979797',
+  minWidth: 0,
   textDecoration: 'none',
   [theme.breakpoints.down('md')]: {
     visibility: 'visible',
@@ -28,9 +28,10 @@ export const StyledSubmitButton = styled(Button, {
 
 export const StyledClose = styled(Close, {
   label: 'StyledClose',
-})({
+})(({ theme }) => ({
   '& svg': { height: 11, width: 11 },
-});
+  color: theme.color.grey1,
+}));
 
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',

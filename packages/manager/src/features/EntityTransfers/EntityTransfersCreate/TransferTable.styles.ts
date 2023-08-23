@@ -4,6 +4,7 @@ import { Checkbox } from 'src/components/Checkbox';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 
 export const StyledCheckbox = styled(Checkbox, {
@@ -18,7 +19,7 @@ export const StyledCheckbox = styled(Checkbox, {
 export const StyledEmptyCheckbox = styled(Checkbox, {
   label: 'StyledEmptyCheckbox',
 })({
-  '& svg': { color: '#cccccc', height: 20, width: 20 },
+  '& svg': { height: 20, width: 20 },
 });
 
 export const StyledPaginationFooter = styled(PaginationFooter, {
@@ -45,26 +46,14 @@ export const StyledDebouncedSearchTextField = styled(DebouncedSearchTextField, {
 export const StyledTable = styled(Table, {
   label: 'StyledTable',
 })(({ theme }) => ({
-  '& thead': {
-    '& th': {
-      '&:first-of-type': {
-        borderLeft: 'none',
-        paddingLeft: 0,
-        paddingRight: 0,
-      },
-      '&:last-of-type': {
-        borderRight: 'none',
-      },
-      backgroundColor: theme.bg.tableHeader,
-      borderBottom: `2px solid ${theme.borderColors.borderTable}`,
-      borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-      borderRight: `1px solid ${theme.borderColors.borderTable}`,
-      borderTop: `2px solid ${theme.borderColors.borderTable}`,
-      color: theme.textColors.tableHeader,
-      fontFamily: theme.font.bold,
-      fontSize: '0.875em !important',
-      padding: '0px 15px',
-    },
-  },
   marginTop: theme.spacing(),
 }));
+
+export const StyledCheckAllTableCell = styled(TableCell, {
+  label: 'StyledCheckAllTableCell',
+})({
+  '&&': {
+    padding: '0px',
+    textAlign: 'center',
+  },
+});

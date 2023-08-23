@@ -33,9 +33,9 @@ export const StyledUl = styled('ul', {
 
 export const StyledSummaryTypography = styled(Typography, {
   label: 'StyledSummaryTypography',
-})({
-  marginBottom: 4,
-});
+})(({ theme }) => ({
+  marginBottom: theme.spacing(0.5),
+}));
 
 export const StyledDiv = styled(Typography, {
   label: 'StyledDiv',

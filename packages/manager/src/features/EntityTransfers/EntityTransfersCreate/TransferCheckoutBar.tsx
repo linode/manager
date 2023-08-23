@@ -54,7 +54,7 @@ export const TransferRow: React.FC<{
   );
 });
 
-export const TransferCheckoutBar: React.FC<Props> = (props) => {
+export const TransferCheckoutBar = React.memo((props: Props) => {
   const { handleSubmit, isCreating, removeEntities, selectedEntities } = props;
   const onSubmit = () => {
     const payload = generatePayload(selectedEntities);
@@ -92,6 +92,4 @@ export const TransferCheckoutBar: React.FC<Props> = (props) => {
       </StyledSubmitButton>
     </div>
   );
-};
-
-export default React.memo(TransferCheckoutBar);
+});

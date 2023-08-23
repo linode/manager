@@ -1,75 +1,23 @@
 import { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { capitalize } from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
 
+import {
+  StyledCopyTooltip,
+  StyledCreatedExpiryTableCell,
+  StyledDiv,
+  StyledEntitiesTableCell,
+  StyledTableCell,
+  StyledTableRow,
+  StyledTokenTableCell,
+} from './RenderTransferRow.styles';
 import { TransfersPendingActionMenu } from './TransfersPendingActionMenu';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  cellContents: {
-    paddingLeft: '1rem',
-  },
-  createdCell: {
-    [theme.breakpoints.down('sm')]: {
-      width: '25%',
-    },
-    width: '20%',
-  },
-  entitiesCell: {
-    [theme.breakpoints.down('md')]: {
-      width: '20%',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '25%',
-    },
-    width: '15%',
-  },
-  expiryCell: {
-    [theme.breakpoints.down('sm')]: {
-      width: '25%',
-    },
-    width: '20%',
-  },
-  icon: {
-    '& svg': {
-      height: 12,
-      width: 12,
-    },
-    marginLeft: theme.spacing(1),
-    marginTop: 2,
-  },
-  link: {
-    ...theme.applyLinkStyles,
-    fontSize: '0.875rem',
-  },
-  row: {
-    '&:hover': {
-      '& [data-qa-copy-token]': {
-        opacity: 1,
-      },
-    },
-  },
-  tokenAndCopyIcon: {
-    '& [data-qa-copy-token]': {
-      opacity: 0,
-    },
-    display: 'flex',
-  },
-  tokenCell: {
-    [theme.breakpoints.down('md')]: {
-      width: '50%',
-    },
-    width: '40%',
-  },
-}));
 
 interface Props {
   created: string;
@@ -85,9 +33,7 @@ interface Props {
   transferType?: 'pending' | 'received' | 'sent';
 }
 
-type CombinedProps = Props;
-
-export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
+export const RenderTransferRow = React.memo((props: Props) => {
   const {
     created,
     entities,
@@ -99,47 +45,35 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
     transferType,
   } = props;
 
-  const classes = useStyles();
-
   const entitiesAndTheirCounts = Object.entries(entities);
 
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsReceived = transferType === 'received';
   const transferTypeIsSent = transferType === 'sent';
 
+  const ConditionalTableCell = !transferTypeIsReceived
+    ? StyledEntitiesTableCell
+    : StyledTableCell;
+
   return (
-    <TableRow className={classes.row}>
-      <TableCell
-        className={`${classes.cellContents} ${classes.tokenCell}`}
-        noWrap
-      >
-        <div className={classes.tokenAndCopyIcon}>
-          <button
-            className={classes.link}
-            onClick={() => handleTokenClick(token, entities)}
-          >
+    <StyledTableRow>
+      <StyledTokenTableCell noWrap>
+        <StyledDiv>
+          <StyledLinkButton onClick={() => handleTokenClick(token, entities)}>
             {token}
-          </button>
+          </StyledLinkButton>
           <div data-qa-copy-token>
-            <CopyTooltip className={`${classes.icon}`} text={token} />
+            <StyledCopyTooltip text={token} />
           </div>
-        </div>
-      </TableCell>
+        </StyledDiv>
+      </StyledTokenTableCell>
       <Hidden mdDown={transferTypeIsPending || transferTypeIsSent}>
-        <TableCell
-          className={`${classes.cellContents} ${classes.createdCell}`}
-          noWrap
-        >
+        <StyledCreatedExpiryTableCell noWrap>
           <DateTimeDisplay value={created} />
-        </TableCell>
+        </StyledCreatedExpiryTableCell>
       </Hidden>
       <Hidden smDown={transferTypeIsPending}>
-        <TableCell
-          className={`${classes.cellContents} ${
-            !transferTypeIsReceived && classes.entitiesCell
-          }`}
-          noWrap
-        >
+        <ConditionalTableCell noWrap>
           {entitiesAndTheirCounts.map((entry, idx) => {
             return (
               <span key={idx}>
@@ -148,16 +82,13 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
               </span>
             );
           })}
-        </TableCell>
+        </ConditionalTableCell>
       </Hidden>
       {transferTypeIsPending ? (
         <>
-          <TableCell
-            className={`${classes.cellContents} ${classes.expiryCell}`}
-            noWrap
-          >
+          <StyledCreatedExpiryTableCell noWrap>
             <DateTimeDisplay value={expiry ?? ''} />
-          </TableCell>
+          </StyledCreatedExpiryTableCell>
           <TableCell actionCell>
             <TransfersPendingActionMenu
               onCancelClick={() =>
@@ -168,13 +99,11 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
         </>
       ) : null}
       {transferTypeIsSent ? (
-        <TableCell className={classes.cellContents}>
-          {capitalize(status ?? '')}
-        </TableCell>
+        <StyledTableCell>{capitalize(status ?? '')}</StyledTableCell>
       ) : null}
-    </TableRow>
+    </StyledTableRow>
   );
-};
+});
 
 export const formatEntitiesCell = (
   entityAndCount: [string, number[]]
@@ -187,5 +116,3 @@ export const formatEntitiesCell = (
 
   return `${pluralize(singleEntity, pluralEntity, entityCount)}`;
 };
-
-export default React.memo(RenderTransferRow);

@@ -18,7 +18,7 @@ import {
   StyledSidebarGrid,
 } from './EntityTransferCreate.styles';
 import { LinodeTransferTable } from './LinodeTransferTable';
-import TransferCheckoutBar from './TransferCheckoutBar';
+import { TransferCheckoutBar } from './TransferCheckoutBar';
 import { TransferHeader } from './TransferHeader';
 import {
   TransferableEntity,

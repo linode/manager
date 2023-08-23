@@ -12,6 +12,7 @@ import {
   StyledPaginationFooter,
   StyledTable,
   StyledTypography,
+  StyledCheckAllTableCell,
 } from './TransferTable.styles';
 
 export interface Props {
@@ -60,7 +61,7 @@ export const TransferTable = React.memo((props: Props) => {
       <StyledTable>
         <TableHead>
           <TableRow>
-            <TableCell style={{ textAlign: 'center', width: 50 }}>
+            <StyledCheckAllTableCell>
               <ConditionalCheckbox
                 inputProps={{
                   'aria-label': `Select all services on page`,
@@ -68,7 +69,7 @@ export const TransferTable = React.memo((props: Props) => {
                 checked={hasSelectedAll}
                 onChange={handleToggleAll}
               />
-            </TableCell>
+            </StyledCheckAllTableCell>
             {headers.map((thisHeader) => (
               <TableCell key={`entity-table-header-${thisHeader}`}>
                 {thisHeader}
