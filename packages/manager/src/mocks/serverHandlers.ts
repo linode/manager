@@ -431,6 +431,10 @@ const vpc = [
     const id = Number(req.params.id);
     return res(ctx.json(vpcFactory.build({ id })));
   }),
+  rest.post('*/vpcs', (req, res, ctx) => {
+    const vpc = vpcFactory.build({ ...(req.body as any) });
+    return res(ctx.json(vpc));
+  }),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
