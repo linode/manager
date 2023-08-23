@@ -111,12 +111,18 @@ const VPCCreate = () => {
       history.push(`/vpc/${response.id}`);
     } catch (errors) {
       const apiSubnetErrors = errors.filter(
-        (error: APIError) => error.field === 'subnets'
+        (error: APIError) => error.field && error.field.includes('subnets')
       );
       if (apiSubnetErrors) {
         setSubnetErrorsFromAPI(apiSubnetErrors);
       }
-      handleAPIErrors(errors, setFieldError, setGeneralAPIError);
+      handleAPIErrors(
+        errors.filter(
+          (error: APIError) => !error.field?.includes('subnets') || !error.field
+        ),
+        setFieldError,
+        setGeneralAPIError
+      );
     }
 
     setSubmitting(false);
@@ -237,7 +243,12 @@ const VPCCreate = () => {
             </StyledBodyTypography>
             {subnetErrorsFromAPI
               ? subnetErrorsFromAPI.map((apiError: APIError) => (
-                  <Notice error key={apiError.reason} text={apiError.reason} />
+                  <Notice
+                    error
+                    key={apiError.reason}
+                    spacingBottom={8}
+                    text={apiError.reason}
+                  />
                 ))
               : null}
             <MultipleSubnetInput
