@@ -612,7 +612,14 @@ export const handlers = [
   }),
   rest.get('*/linode/instances/:id', async (req, res, ctx) => {
     const id = Number(req.params.id);
-    return res(ctx.json(linodeFactory.build({ id })));
+    return res(
+      ctx.json(
+        linodeFactory.build({
+          backups: { enabled: false },
+          id,
+        })
+      )
+    );
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
     return res(ctx.json({}));
