@@ -26,12 +26,14 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 
+import type { Filter } from '@linode/api-v4';
+
 const PREFERENCE_KEY = 'loadbalancer-service-targets';
 
 export const LoadBalancerServiceTargets = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
-  const [label, setLabel] = useState<string>();
+  const [query, setQuery] = useState<string>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -43,13 +45,14 @@ export const LoadBalancerServiceTargets = () => {
     `${PREFERENCE_KEY}-order`
   );
 
-  const filter = {
+  const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
   };
 
-  if (label) {
-    filter['label'] = label;
+  // If the user types in a search query, filter results by label.
+  if (query) {
+    filter['label'] = { '+contains': query };
   }
 
   const { data, error, isLoading } = useLoadBalancerServiceTargetsQuery(
@@ -81,7 +84,7 @@ export const LoadBalancerServiceTargets = () => {
               <InputAdornment position="end">
                 <IconButton
                   aria-label="Clear"
-                  onClick={() => setLabel('')}
+                  onClick={() => setQuery('')}
                   size="small"
                   sx={{ padding: 'unset' }}
                 >
@@ -95,10 +98,10 @@ export const LoadBalancerServiceTargets = () => {
           }}
           hideLabel
           label="Filter"
-          onChange={(e) => setLabel(e.target.value)}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Filter"
           style={{ minWidth: '320px' }}
-          value={label}
+          value={query}
         />
         <Box flexGrow={1} />
         <Button buttonType="primary">Create Service Target</Button>
@@ -163,7 +166,7 @@ export const LoadBalancerServiceTargets = () => {
                     { onClick: () => null, title: 'Edit' },
                     { onClick: () => null, title: 'Delete' },
                   ]}
-                  ariaLabel={`Action Menu for service target ${label}`}
+                  ariaLabel={`Action Menu for service target ${serviceTarget.label}`}
                 />
               </TableCell>
             </TableRow>
