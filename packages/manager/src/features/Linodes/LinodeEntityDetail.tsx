@@ -33,20 +33,6 @@ import { formatDate } from 'src/utilities/formatDate';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { pluralize } from 'src/utilities/pluralize';
 
-import {
-  StyledBodyGrid,
-  StyledChip,
-  StyledColumnLabelGrid,
-  StyledCopyTooltip,
-  StyledGradientDiv,
-  StyledLink,
-  StyledRightColumnGrid,
-  StyledSummaryGrid,
-  StyledTable,
-  StyledTableCell,
-  StyledTableGrid,
-  StyledTableRow,
-} from './LinodeEntityDetail.styles';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
@@ -55,6 +41,20 @@ import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
 } from './transitions';
+import {
+  StyledChip,
+  StyledLink,
+  StyledBodyGrid,
+  StyledColumnLabelGrid,
+  StyledRightColumnGrid,
+  StyledSummaryGrid,
+  StyledTable,
+  StyledTableGrid,
+  StyledTableCell,
+  StyledCopyTooltip,
+  StyledGradientDiv,
+  StyledTableRow,
+} from './LinodeEntityDetail.styles';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -226,19 +226,19 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
 
   return (
     <EntityHeader
-      isSummaryView={isSummaryView}
       title={<StyledLink to={`linodes/${linodeId}`}>{linodeLabel}</StyledLink>}
+      isSummaryView={isSummaryView}
       variant={variant}
     >
       <Box sx={sxBoxFlex}>
         <StyledChip
-          component="span"
-          data-qa-linode-status
           hasSecondaryStatus={hasSecondaryStatus}
           isOffline={isOffline}
           isOther={isOther}
           isRunning={isRunning}
           isSummaryView={isSummaryView}
+          component="span"
+          data-qa-linode-status
           label={formattedStatus}
           pill={true}
         />
@@ -346,12 +346,12 @@ export const Body = React.memo((props: BodyProps) => {
     <StyledBodyGrid container direction="row" spacing={2}>
       {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
       <Grid
-        sx={{
-          flexBasis: '25%',
-        }}
         container
         direction="column"
         spacing={2}
+        sx={{
+          flexBasis: '25%',
+        }}
       >
         <StyledColumnLabelGrid>Summary</StyledColumnLabelGrid>
         <StyledSummaryGrid container direction="row" spacing={2}>
