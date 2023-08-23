@@ -24,7 +24,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerCertificatesQuery } from 'src/queries/aglb/certificates';
 
-import type { Certificate } from '@linode/api-v4';
+import type { Certificate, Filter } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-certificates';
 
@@ -39,7 +39,7 @@ export const LoadBalancerCertificates = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const [type, setType] = useState<CertificateTypeFilter>('all');
-  const [label, setLabel] = useState<string>();
+  const [query, setQuery] = useState<string>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -51,17 +51,19 @@ export const LoadBalancerCertificates = () => {
     `${PREFERENCE_KEY}-order`
   );
 
-  const filter = {
+  const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
   };
 
+  // If the user selects a Certificate type filter, API filter by that type.
   if (type !== 'all') {
     filter['type'] = type;
   }
 
-  if (label) {
-    filter['label'] = label;
+  // If the user types in a search query, API filter by the label.
+  if (query) {
+    filter['label'] = { '+contains': query };
   }
 
   const { data, error, isLoading } = useLoadBalancerCertificatesQuery(
@@ -112,7 +114,7 @@ export const LoadBalancerCertificates = () => {
               <InputAdornment position="end">
                 <IconButton
                   aria-label="Clear"
-                  onClick={() => setLabel('')}
+                  onClick={() => setQuery('')}
                   size="small"
                   sx={{ padding: 'unset' }}
                 >
@@ -126,10 +128,10 @@ export const LoadBalancerCertificates = () => {
           }}
           hideLabel
           label="Filter"
-          onChange={(e) => setLabel(e.target.value)}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Filter"
           style={{ minWidth: '320px' }}
-          value={label}
+          value={query}
         />
         <Box flexGrow={1} />
         <Button buttonType="primary">Upload Certificate</Button>

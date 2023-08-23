@@ -65,7 +65,7 @@ const LoadBalancerDetailLanding = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment={loadbalancerId} />
+      <DocumentTitleSegment segment={loadbalancer?.label ?? ''} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
