@@ -136,7 +136,11 @@ const VPCCreate = () => {
       region: '',
       subnets: [
         {
-          ip: { ipv4: DEFAULT_SUBNET_IPV4_VALUE, ipv4Error: '' },
+          ip: {
+            availIPv4s: 256,
+            ipv4: DEFAULT_SUBNET_IPV4_VALUE,
+            ipv4Error: '',
+          },
           label: '',
           labelError: '',
         },

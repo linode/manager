@@ -1,4 +1,9 @@
-import { calculateAvailableIPv4s, validateSubnets } from './subnets';
+import {
+  DEFAULT_IPV4_ERROR,
+  DEFAULT_LABEL_ERROR,
+  calculateAvailableIPv4s,
+  validateSubnets,
+} from './subnets';
 
 describe('calculateAvailableIPv4s', () => {
   it('should return a number if the input is a valid IPv4 with a mask', () => {
@@ -28,24 +33,6 @@ describe('calculateAvailableIPv4s', () => {
     expect(badMask2).toBe(undefined);
   });
 });
-
-const subnets = [
-  {
-    ip: { ipv4: '', ipv4Error: '' },
-    label: 'subnet 1',
-    labelError: '',
-  },
-  {
-    ip: { ipv4: '', ipv4Error: '' },
-    label: 'subnet 2',
-    labelError: '',
-  },
-  {
-    ip: { ipv4: '', ipv4Error: '' },
-    label: 'subnet 3',
-    labelError: '',
-  },
-];
 
 describe('validateSubnets', () => {
   const emptyIP = {
@@ -84,4 +71,67 @@ describe('validateSubnets', () => {
       labelError: '',
     },
   ];
+
+  it('should use the error messages passed in and error for ip and label', () => {
+    const erroredSubnets = validateSubnets([badIP], {
+      ipv4Error: 'this is a bad ip',
+      labelError: 'this is a bad label',
+    });
+
+    expect(erroredSubnets).toHaveLength(1);
+    expect(erroredSubnets).toStrictEqual([
+      {
+        ip: {
+          ipv4: 'bad ip',
+          ipv4Error: 'this is a bad ip',
+        },
+        label: '',
+        labelError: 'this is a bad label',
+      },
+    ]);
+  });
+
+  it('should return error for IPs', () => {
+    const erroredSubnets = validateSubnets([missingMask, emptyIP]);
+    expect(erroredSubnets).toHaveLength(2);
+    expect(erroredSubnets).toStrictEqual([
+      {
+        ip: {
+          ipv4: '10.0.0.0',
+          ipv4Error: DEFAULT_IPV4_ERROR,
+        },
+        label: 'needs a mask',
+        labelError: '',
+      },
+      {
+        ip: {
+          ipv4: '',
+          ipv4Error: DEFAULT_IPV4_ERROR,
+        },
+        label: 'empty ip',
+        labelError: '',
+      },
+    ]);
+  });
+
+  it('should return error for label', () => {
+    const erroredSubnets = validateSubnets([missingLabel]);
+    expect(erroredSubnets).toHaveLength(1);
+    expect(erroredSubnets).toStrictEqual([
+      {
+        ip: {
+          ipv4: '10.0.0.0/24',
+          ipv4Error: '',
+        },
+        label: '',
+        labelError: DEFAULT_LABEL_ERROR,
+      },
+    ]);
+  });
+
+  it('should not return error messages', () => {
+    const subnets = validateSubnets(goodSubnets);
+    expect(subnets).toHaveLength(2);
+    expect(subnets).toStrictEqual(goodSubnets);
+  });
 });

@@ -5,6 +5,7 @@ export const RESERVED_IP_NUMBER = 4;
 
 // VPC: TODO - added ipv6 related fields here, but they will not be used until VPCs support ipv6
 interface SubnetIPState {
+  availIPv4s?: number;
   ipv4?: string;
   ipv4Error?: string;
   ipv6?: string;
@@ -74,8 +75,8 @@ export const calculateAvailableIPv4s = (
   return SubnetMaskToAvailIPv4s[mask];
 };
 
-const DEFAULT_LABEL_ERROR = 'Label is required';
-const DEFAULT_IPV4_ERROR = 'The IPv4 range must be in CIDR format';
+export const DEFAULT_LABEL_ERROR = 'Label is required';
+export const DEFAULT_IPV4_ERROR = 'The IPv4 range must be in CIDR format';
 
 // TODO: VPC - add error validation for ipv6 when that becomes supported
 export const validateSubnets = (

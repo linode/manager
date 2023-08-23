@@ -27,10 +27,6 @@ interface Props {
 // TODO: VPC - currently only supports IPv4, must update when/if IPv6 is also supported
 export const SubnetNode = (props: Props) => {
   const { disabled, idx, isRemovable, onChange, subnet } = props;
-  const initialIPAvailability = calculateAvailableIPv4s(subnet.ip.ipv4 ?? '');
-  const [availIPs, setAvailIPs] = React.useState<number | undefined>(
-    initialIPAvailability
-  );
 
   const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSubnet = {
@@ -42,11 +38,11 @@ export const SubnetNode = (props: Props) => {
   };
 
   const onIpv4Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const availIPs = calculateAvailableIPv4s(e.target.value);
     const newSubnet = {
       ...subnet,
-      ip: { ipv4: e.target.value },
+      ip: { availIPv4s: availIPs, ipv4: e.target.value },
     };
-    setAvailIPs(calculateAvailableIPv4s(e.target.value));
     onChange(newSubnet, idx);
   };
 
@@ -84,10 +80,12 @@ export const SubnetNode = (props: Props) => {
           onChange={onIpv4Change}
           value={subnet.ip.ipv4}
         />
-        {availIPs && (
+        {subnet.ip.availIPv4s && (
           <FormHelperText>
             Available IP Addresses:{' '}
-            {availIPs > 4 ? availIPs - RESERVED_IP_NUMBER : 0}
+            {subnet.ip.availIPv4s > 4
+              ? subnet.ip.availIPv4s - RESERVED_IP_NUMBER
+              : 0}
           </FormHelperText>
         )}
       </Grid>
