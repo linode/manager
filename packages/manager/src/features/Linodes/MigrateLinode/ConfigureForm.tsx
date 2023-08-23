@@ -8,8 +8,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
-import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
-import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
+import {
+  getLinodeRegionPrice,
+  isLinodeTypeDifferentPriceInSelectedRegion,
+} from 'src/utilities/pricing/linodes';
 
 import {
   StyledDiv,
@@ -64,33 +66,57 @@ export const ConfigureForm = React.memo((props: Props) => {
       })
   );
 
-  const calculateNewPrice = React.useCallback(
-    (
-      basePrice: null | number | undefined,
-      regionId: null | string
-    ): number | undefined => {
-      if (basePrice && regionId) {
-        return Number(getDCSpecificPrice({ basePrice, flags, regionId }));
-      }
+  function useSelectedLinodePrice(
+    selectedRegion: null | string,
+    linodeType: string | undefined
+  ) {
+    const { data: selectLinodeType } = useTypeQuery(
+      linodeType || '',
+      Boolean(linodeType)
+    );
 
-      return undefined;
-    },
-    [flags]
+    const [selectedRegionType, setSelectedRegionType] = React.useState<any>(
+      undefined
+    );
+    const [selectedRegionPrice, setSelectedRegionPrice] = React.useState<any>(
+      undefined
+    );
+
+    React.useEffect(() => {
+      if (selectedRegion && selectLinodeType) {
+        const newRegionPrice = getLinodeRegionPrice(
+          selectLinodeType,
+          selectedRegion
+        );
+        setSelectedRegionType(selectLinodeType);
+        setSelectedRegionPrice(newRegionPrice);
+      }
+    }, [selectedRegion, selectLinodeType]);
+
+    return { selectedRegionPrice, selectedRegionType };
+  }
+
+  const { selectedRegionPrice, selectedRegionType } = useSelectedLinodePrice(
+    selectedRegion,
+    linodeType || ''
   );
+  const currentRegionPrice =
+    currentLinodeType && getLinodeRegionPrice(currentLinodeType, currentRegion);
 
   const currentPrice: MigrationPricingProps = {
-    backups: currentLinodeType?.addons?.backups?.price?.monthly,
-    hourly: currentLinodeType?.price?.hourly,
-    monthly: currentLinodeType?.price?.monthly,
+    backups: currentLinodeType?.addons.backups.price.monthly,
+    hourly: currentRegionPrice?.hourly,
+    monthly: currentRegionPrice?.monthly,
     panelType: 'current',
   };
-
   const newPrice: MigrationPricingProps = {
-    backups: calculateNewPrice(currentPrice.backups, selectedRegion),
-    hourly: calculateNewPrice(currentPrice.hourly, selectedRegion),
-    monthly: calculateNewPrice(currentPrice.monthly, selectedRegion),
+    backups: selectedRegionType?.addons.backups.price.monthly,
+    hourly: selectedRegionPrice?.hourly,
+    monthly: selectedRegionPrice?.monthly,
     panelType: 'new',
   };
+
+  // console.log({ newPrice });
 
   return (
     <StyledPaper>

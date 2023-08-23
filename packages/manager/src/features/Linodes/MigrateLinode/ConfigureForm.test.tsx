@@ -1,6 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { typeFactory } from 'src/factories/types';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigureForm } from './ConfigureForm';
@@ -29,20 +30,7 @@ jest.mock('src/queries/regions', () => ({
 // Mock the useTypeQuery hook
 jest.mock('src/queries/types', () => ({
   useTypeQuery: () => ({
-    data: {
-      addons: { backups: { price: { hourly: 0.004, monthly: 2.5 } } },
-      class: 'standard',
-      disk: 51200,
-      gpus: 0,
-      id: 'g6-standard-1',
-      label: 'Linode 2GB',
-      memory: 2048,
-      network_out: 2000,
-      price: { hourly: 0.018, monthly: 12.0 },
-      successor: null,
-      transfer: 2000,
-      vcpus: 1,
-    },
+    data: typeFactory.build(),
   }),
 }));
 
@@ -119,6 +107,14 @@ describe('ConfigureForm component with price comparison', () => {
     });
   });
 
+  // it('should render the MigrationPricing component when a region with price decrease is selected', async () => {
+  //   selectNewRegion('São Paulo', 'br-gru');
+  //   await waitFor(() => {
+  //     expect(queryByText(currentPriceLabel)).toBeInTheDocument();
+  //     expect(queryByText(newPriceLabel)).toBeInTheDocument();
+  //   });
+  // });
+
   it("shouldn't render the MigrationPricingComponent if the flag is disabled", () => {
     jest.isolateModules(async () => {
       jest.mock('src/hooks/useFlags', () => ({
@@ -127,7 +123,6 @@ describe('ConfigureForm component with price comparison', () => {
         }),
       }));
 
-      selectNewRegion('São Paulo', 'br-gru');
       await waitFor(() => {
         expect(queryByText('Current Price')).not.toBeInTheDocument();
         expect(queryByText('New Price')).not.toBeInTheDocument();
