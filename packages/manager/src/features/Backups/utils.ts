@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from 'react-query';
 
 import { queryKey } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';
+import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
 
 import type { APIError, Linode, LinodeType } from '@linode/api-v4';
 
@@ -12,7 +13,9 @@ export const getTotalBackupsPrice = (
 ) => {
   return linodes.reduce((prevValue: number, linode: Linode) => {
     const type = types.find((type) => type.id === linode.type);
-    return prevValue + (type?.addons.backups.price.monthly ?? 0);
+    const price = type ? getLinodeRegionBackupPrice(type, linode.region) : 0;
+
+    return prevValue + (price['monthly'] ?? 0);
   }, 0);
 };
 
