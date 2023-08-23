@@ -599,6 +599,11 @@ export const handlers = [
       tags: ['test1', 'test2', 'test3'],
     });
     const linodes = [
+      linodeFactory.build({
+        label: 'DC-Specific Pricing Linode',
+        region: 'id-cgk',
+        backups: { enabled: false },
+      }),
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
       ...onlineLinodes,
@@ -641,6 +646,7 @@ export const handlers = [
       ctx.json(
         linodeFactory.build({
           id,
+          region: 'id-cgk',
         })
       )
     );
