@@ -5,7 +5,8 @@ import * as React from 'react';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import { CollapsibleRow } from 'src/features/VPC/VPCDetail/CollapsibleRow';
+
+import { CollapsibleRow } from './CollapsibleRow';
 
 export interface TableItem {
   InnerTable: JSX.Element;

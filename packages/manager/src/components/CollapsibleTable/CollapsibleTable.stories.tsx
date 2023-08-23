@@ -18,7 +18,9 @@ export const Default: StoryObj<typeof CollapsibleTable> = {
           <Table aria-label="Linode" size="small">
             <TableHead style={{ fontSize: '.875rem' }}>
               <TableRow>
-                <TableCell sx={{ width: '24%' }}>Date</TableCell>
+                <TableCell style={{ paddingLeft: 48 }} sx={{ width: '24%' }}>
+                  Date
+                </TableCell>
                 <TableCell sx={{ width: '14%' }}>Customer</TableCell>
                 <TableCell sx={{ width: '10%' }}>Amount</TableCell>
                 <TableCell sx={{ width: '20%' }}>Total price ($)</TableCell>
@@ -26,13 +28,13 @@ export const Default: StoryObj<typeof CollapsibleTable> = {
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>2020-01-05</TableCell>
+                <TableCell style={{ paddingLeft: 48 }}>2020-01-05</TableCell>
                 <TableCell>11091700</TableCell>
                 <TableCell>3</TableCell>
                 <TableCell>11.97</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>2020-01-02</TableCell>
+                <TableCell style={{ paddingLeft: 48 }}>2020-01-02</TableCell>
                 <TableCell>Anonymous</TableCell>
                 <TableCell>1</TableCell>
                 <TableCell>3.99</TableCell>
