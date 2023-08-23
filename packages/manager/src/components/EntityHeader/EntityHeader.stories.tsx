@@ -97,6 +97,7 @@ export const Default: Story = {
                 hourly: 0.0075,
                 monthly: 20,
               },
+              region_prices: [],
               successor: 'g6-standard-1',
               transfer: 2000,
               vcpus: 1,
