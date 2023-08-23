@@ -27,6 +27,7 @@ import { CancelBackupsDialog } from './CancelBackupsDialog';
 import { CaptureSnapshot } from './CaptureSnapshot';
 import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
 import { ScheduleSettings } from './ScheduleSettings';
+import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
 
 export const LinodeBackups = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
@@ -79,7 +80,8 @@ export const LinodeBackups = () => {
     );
   }
 
-  const backupsMonthlyPrice = type?.addons?.backups?.price?.monthly ?? 0;
+  const backupsPrice =
+    type && linode ? getLinodeRegionBackupPrice(type, linode?.region) : 0;
 
   if (isLoading) {
     return <CircleProgress />;
@@ -88,7 +90,7 @@ export const LinodeBackups = () => {
   if (!linode?.backups.enabled) {
     return (
       <BackupsPlaceholder
-        backupsMonthlyPrice={backupsMonthlyPrice}
+        backupsMonthlyPrice={backupsPrice['monthly']}
         disabled={doesNotHavePermission}
         linodeId={id}
       />

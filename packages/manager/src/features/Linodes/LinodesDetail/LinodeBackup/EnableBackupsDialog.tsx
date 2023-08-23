@@ -9,6 +9,7 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
+import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
 
 interface Props {
   linodeId: number | undefined;
@@ -36,7 +37,8 @@ export const EnableBackupsDialog = (props: Props) => {
     Boolean(linode?.type)
   );
 
-  const price = type?.addons?.backups?.price?.monthly ?? 0;
+  const price =
+    type && linode ? getLinodeRegionBackupPrice(type, linode.region) : 0;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -82,7 +84,7 @@ export const EnableBackupsDialog = (props: Props) => {
     >
       <Typography>
         Are you sure you want to enable backups on this Linode?{` `}
-        This will add <Currency quantity={price} />
+        This will add <Currency quantity={price['monthly']} />
         {` `}
         to your monthly bill.
       </Typography>
