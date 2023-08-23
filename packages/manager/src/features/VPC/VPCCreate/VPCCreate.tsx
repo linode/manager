@@ -35,7 +35,6 @@ import {
   StyledHeaderTypography,
 } from './VPCCreate.styles';
 
-// note: creating vpc permissions for this page handled in M3-6757
 const VPCCreate = () => {
   const theme = useTheme();
   const history = useHistory();
