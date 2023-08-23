@@ -920,6 +920,15 @@ export const handlers = [
     });
     return res(ctx.json(makeResourcePage([linodeInvoice, akamaiInvoice])));
   }),
+  rest.get('*/account/invoices/:invoiceId', (req, res, ctx) => {
+    const linodeInvoice = invoiceFactory.build({
+      date: '2022-12-01T18:04:01',
+      id: 1234,
+      label: 'LinodeInvoice',
+    });
+    return res(ctx.json(linodeInvoice));
+  }),
+
   rest.get('*/account/maintenance', (req, res, ctx) => {
     accountMaintenanceFactory.resetSequenceNumber();
     const page = Number(req.url.searchParams.get('page') || 1);
