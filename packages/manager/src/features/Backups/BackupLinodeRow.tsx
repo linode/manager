@@ -5,6 +5,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useTypeQuery } from 'src/queries/types';
+import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
 
 interface Props {
   error?: string;
@@ -14,6 +15,7 @@ interface Props {
 export const BackupLinodeRow = (props: Props) => {
   const { error, linode } = props;
   const { data: type } = useTypeQuery(linode.type ?? '', Boolean(linode.type));
+  const price = type ? getLinodeRegionBackupPrice(type, linode.region) : 0;
   return (
     <TableRow key={`backup-linode-${linode.id}`}>
       <TableCell parentColumn="Label">
@@ -33,8 +35,9 @@ export const BackupLinodeRow = (props: Props) => {
       <TableCell parentColumn="Plan">
         {type?.label ?? linode.type ?? 'Unknown'}
       </TableCell>
+      <TableCell parentColumn="Region">{linode.region ?? 'Unknown'}</TableCell>
       <TableCell parentColumn="Price">
-        {`$${type?.addons.backups.price.monthly?.toFixed(2) ?? 'Unknown'}/mo`}
+        {`$${price['monthly']?.toFixed(2) ?? 'Unknown'}/mo`}
       </TableCell>
     </TableRow>
   );

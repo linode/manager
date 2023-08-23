@@ -32,6 +32,7 @@ import {
   getTotalBackupsPrice,
   useEnableBackupsOnLinodesMutation,
 } from './utils';
+import { styled } from '@mui/material';
 
 interface Props {
   onClose: () => void;
@@ -137,7 +138,7 @@ all new Linodes will automatically be backed up.`
   };
 
   return (
-    <Drawer onClose={onClose} open={open} title="Enable All Backups">
+    <Drawer onClose={onClose} open={open} title="Enable All Backups" wide>
       <Stack spacing={2}>
         <Typography variant="body1">
           Three backup slots are executed and rotated automatically: a daily
@@ -146,9 +147,7 @@ all new Linodes will automatically be backed up.`
           <Link to="https://www.linode.com/docs/platform/disk-images/linode-backup-service/">
             guide on Backups
           </Link>{' '}
-          for more information on features and limitations. Confirm to add
-          backups to{' '}
-          <strong>{pluralize('Linode', 'Linodes', linodeCount)}</strong>.
+          for more information on features and limitations.
         </Typography>
         {failedEnableBackupsCount > 0 && (
           <Box>
@@ -168,12 +167,16 @@ all new Linodes will automatically be backed up.`
             toggle={() => setShouldEnableAutoEnroll((prev) => !prev)}
           />
         )}
-        <Box>
+        <StyledPricingBox>
+          <Typography variant="h2">
+            Total for {pluralize('Linode', 'Linodes', linodeCount)}:
+          </Typography>
+          &nbsp;
           <DisplayPrice
             interval="mo"
             price={getTotalBackupsPrice(linodesWithoutBackups, types ?? [])}
           />
-        </Box>
+        </StyledPricingBox>
         <ActionsPanel
           primaryButtonProps={{
             label: 'Confirm',
@@ -191,6 +194,7 @@ all new Linodes will automatically be backed up.`
             <TableRow>
               <TableCell>Label</TableCell>
               <TableCell>Plan</TableCell>
+              <TableCell>Region</TableCell>
               <TableCell>Price</TableCell>
             </TableRow>
           </TableHead>
@@ -200,3 +204,11 @@ all new Linodes will automatically be backed up.`
     </Drawer>
   );
 };
+
+const StyledPricingBox = styled(Box, { label: 'StyledPricingBox' })(
+  ({ theme }) => ({
+    alignItems: 'center',
+    color: theme.palette.text.primary,
+    display: 'flex',
+  })
+);
