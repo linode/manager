@@ -21,13 +21,13 @@ export interface CopyTooltipProps {
    */
   onClickCallback?: () => void;
   /**
-   * The text to be copied to the clipboard.
-   */
-  text: string;
-  /**
    * The placement of the tooltip.
    */
   placement?: TooltipProps['placement'];
+  /**
+   * The text to be copied to the clipboard.
+   */
+  text: string;
 }
 
 /**
@@ -38,7 +38,7 @@ export interface CopyTooltipProps {
 
 export const CopyTooltip = (props: CopyTooltipProps) => {
   const [copied, setCopied] = React.useState<boolean>(false);
-  const { className, copyableText, onClickCallback, text, placement } = props;
+  const { className, copyableText, onClickCallback, placement, text } = props;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -51,6 +51,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
 
   return (
     <Tooltip
+      className="copy-tooltip"
       data-qa-copied
       placement={placement ?? 'top'}
       title={copied ? 'Copied!' : 'Copy'}

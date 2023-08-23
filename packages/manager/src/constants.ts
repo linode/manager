@@ -208,12 +208,6 @@ export const PAYMENT_MIN = 5;
 export const PAYMENT_SOFT_MAX = 2_000;
 export const PAYMENT_HARD_MAX = 50_000;
 
-// Price of LKE's High Availability offering in USD
-export const HIGH_AVAILABILITY_PRICE =
-  import.meta.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
-    ? undefined
-    : Number(import.meta.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE);
-
 export const DB_ROOT_USERNAME = 'linroot';
 
 // "In an effort to fight spam, Linode restricts outbound connections on ports 25, 465, and 587 on all Linodes for new accounts created after November 5th, 2019."
