@@ -47,7 +47,11 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
     });
 
     expect(
-      isLinodeTypeDifferentPriceInSelectedRegion(type, 'us-east', 'us-west')
+      isLinodeTypeDifferentPriceInSelectedRegion({
+        regionA: 'us-east',
+        regionB: 'us-west',
+        type,
+      })
     ).toBe(false);
   });
   it('returns true if there is a price difference', () => {
@@ -60,7 +64,11 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
     });
 
     expect(
-      isLinodeTypeDifferentPriceInSelectedRegion(type, 'us-east', 'id-cgk')
+      isLinodeTypeDifferentPriceInSelectedRegion({
+        regionA: 'us-east',
+        regionB: 'id-cgk',
+        type,
+      })
     ).toBe(true);
   });
   it('returns false if there is no price difference even if we transfer between two overwitten regions', () => {
@@ -76,7 +84,11 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
     });
 
     expect(
-      isLinodeTypeDifferentPriceInSelectedRegion(type, 'id-cgk', 'id-cgk')
+      isLinodeTypeDifferentPriceInSelectedRegion({
+        regionA: 'id-cgk',
+        regionB: 'id-cgk',
+        type,
+      })
     ).toBe(false);
   });
 });

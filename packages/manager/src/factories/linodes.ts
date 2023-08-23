@@ -153,14 +153,14 @@ export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   },
   region_prices: [
     {
-      hourly: 5,
+      hourly: 0.021,
       id: 'br-gru',
-      monthly: 20,
+      monthly: 14,
     },
     {
-      hourly: 10,
+      hourly: 0.018,
       id: 'id-cgk',
-      monthly: 30,
+      monthly: 12,
     },
   ],
   successor: null,
@@ -196,14 +196,14 @@ export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   },
   region_prices: [
     {
-      hourly: 5,
+      hourly: 4.032,
       id: 'br-gru',
-      monthly: 20,
+      monthly: 2688,
     },
     {
-      hourly: 10,
+      hourly: 3.436,
       id: 'id-cgk',
-      monthly: 30,
+      monthly: 2304,
     },
   ],
   successor: null,

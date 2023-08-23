@@ -13,11 +13,11 @@ interface RegionHelperTextProps extends BoxProps {
 }
 
 export const RegionHelperText = (props: RegionHelperTextProps) => {
-  const { hidePricingNotice, onClick } = props;
+  const { hidePricingNotice, onClick, ...rest } = props;
   const flags = useFlags();
 
   return (
-    <Box {...props}>
+    <Box {...rest}>
       <Typography variant="body1">
         You can use
         {` `}

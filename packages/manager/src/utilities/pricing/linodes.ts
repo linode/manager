@@ -1,4 +1,4 @@
-import type { LinodeType, PriceObject } from '@linode/api-v4';
+import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
 
 /**
  * Gets the price of a Linode type for a specific region.
@@ -25,26 +25,31 @@ export const getLinodeRegionPrice = (
   return type.price;
 };
 
+interface IsPriceDifferentOptions {
+  regionA: Region['id'] | undefined;
+  regionB: Region['id'] | undefined;
+  type: LinodeType | undefined;
+}
+
 /**
  * Given a Linode Type, this function tells you if the Linode type's price
  * is different between two regions.
  *
- * @param type a Linode Type
- * @param fromRegionId the region to compare
- * @param toRegionId the other region to compare to
+ * We use this to display a Notice when users a user moves Linodes between regions.
+ *
  * @returns whether or not the Linode price is different between the two regions
  */
-export const isLinodeTypeDifferentPriceInSelectedRegion = (
-  type: LinodeType | undefined,
-  fromRegionId: string | undefined,
-  toRegionId: string | undefined
-) => {
-  if (!type || !fromRegionId || !toRegionId) {
+export const isLinodeTypeDifferentPriceInSelectedRegion = ({
+  regionA,
+  regionB,
+  type,
+}: IsPriceDifferentOptions) => {
+  if (!type || !regionA || !regionB) {
     return false;
   }
 
-  const currentRegionPrice = getLinodeRegionPrice(type, fromRegionId);
-  const selectedRegionPrice = getLinodeRegionPrice(type, toRegionId);
+  const currentRegionPrice = getLinodeRegionPrice(type, regionA);
+  const selectedRegionPrice = getLinodeRegionPrice(type, regionB);
 
   if (currentRegionPrice.monthly !== selectedRegionPrice.monthly) {
     return true;

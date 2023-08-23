@@ -59,11 +59,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const showSelectedRegionHasDifferentPriceWarning =
     flags.dcSpecificPricing &&
     isCloning &&
-    isLinodeTypeDifferentPriceInSelectedRegion(
+    isLinodeTypeDifferentPriceInSelectedRegion({
+      regionA: params.regionID,
+      regionB: selectedID,
       type,
-      params.regionID,
-      selectedID
-    );
+    });
 
   if (props.regions.length === 0) {
     return null;
