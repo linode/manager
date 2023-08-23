@@ -8,9 +8,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   ConfirmTransferDialog,
-  Props,
   getTimeRemaining,
 } from './ConfirmTransferDialog';
+
+import type { Props } from './ConfirmTransferDialog';
 
 const props: Props = {
   onClose: jest.fn(),

@@ -7,7 +7,7 @@ import { Typography } from 'src/components/Typography';
 
 // sm = 600, md = 960, lg = 1280
 
-const xs_sm = 450;
+const XS_TO_SM_BREAKPOINT = 450;
 
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
@@ -42,7 +42,7 @@ export const StyledLabelWrapperGrid = styled(Grid, {
     margin: `${theme.spacing(1)} 0`,
     width: '100%',
   },
-  [theme.breakpoints.down(xs_sm)]: {
+  [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
     alignItems: 'flex-start',
     flexDirection: 'column',
   },
@@ -73,7 +73,7 @@ export const StyledTransferButton = styled(Button, {
   [theme.breakpoints.down('sm')]: {
     margin: `${theme.spacing()} 0`,
   },
-  [theme.breakpoints.down(xs_sm)]: {
+  [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
     marginTop: 0,
     minWidth: 'auto',
   },
@@ -84,7 +84,7 @@ export const StyledReviewButton = styled(Button, {
   label: 'StyledReviewButton',
 })(({ theme }) => ({
   marginLeft: theme.spacing(2),
-  [theme.breakpoints.down(xs_sm)]: {
+  [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
     marginLeft: 0,
     marginTop: theme.spacing(),
     width: '100%',

@@ -6,14 +6,14 @@ import { TableRow } from 'src/components/TableRow';
 
 export const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
-})({
-  paddingLeft: '1rem',
-});
+})(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
+}));
 
 export const StyledTokenTableCell = styled(TableCell, {
   label: 'StyledTokenTableCell',
 })(({ theme }) => ({
-  paddingLeft: '1rem',
+  paddingLeft: theme.spacing(2),
   [theme.breakpoints.down('md')]: {
     width: '50%',
   },
@@ -23,7 +23,7 @@ export const StyledTokenTableCell = styled(TableCell, {
 export const StyledCreatedExpiryTableCell = styled(TableCell, {
   label: 'StyledCreatedExpiryTableCell',
 })(({ theme }) => ({
-  paddingLeft: '1rem',
+  paddingLeft: theme.spacing(2),
   [theme.breakpoints.down('sm')]: {
     width: '25%',
   },
@@ -33,7 +33,7 @@ export const StyledCreatedExpiryTableCell = styled(TableCell, {
 export const StyledEntitiesTableCell = styled(TableCell, {
   label: 'StyledEntitiesTableCell',
 })(({ theme }) => ({
-  paddingLeft: '1rem',
+  paddingLeft: theme.spacing(2),
   [theme.breakpoints.down('md')]: {
     width: '20%',
   },
@@ -51,14 +51,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
     width: 12,
   },
   marginLeft: theme.spacing(1),
-  marginTop: 2,
-}));
-
-export const StyledButton = styled('button', {
-  label: 'StyledButton',
-})(({ theme }) => ({
-  ...theme.applyLinkStyles,
-  fontSize: '0.875rem',
+  marginTop: theme.spacing(0.25),
 }));
 
 export const StyledTableRow = styled(TableRow, {
