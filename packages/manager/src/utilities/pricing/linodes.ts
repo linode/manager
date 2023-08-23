@@ -35,7 +35,7 @@ interface IsPriceDifferentOptions {
  * Given a Linode Type, this function tells you if the Linode type's price
  * is different between two regions.
  *
- * We use this to display a Notice when users a user moves Linodes between regions.
+ * We use this to display a Notice when a user attempts to move Linodes between regions.
  *
  * @returns whether or not the Linode price is different between the two regions
  */

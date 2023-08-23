@@ -20,7 +20,7 @@ export interface DataCenterPricingOptions {
 }
 
 // The key is a region id and the value is the percentage increase in price.
-export const priceIncreaseMap = {
+const priceIncreaseMap = {
   'br-gru': 0.4, // Sao Paulo
   'id-cgk': 0.2, // Jakarta
 };

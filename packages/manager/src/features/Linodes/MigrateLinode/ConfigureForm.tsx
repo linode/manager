@@ -8,10 +8,8 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
-import {
-  getDCSpecificPrice,
-  priceIncreaseMap,
-} from 'src/utilities/pricing/dynamicPricing';
+import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
+import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 import {
   StyledDiv,
@@ -57,7 +55,13 @@ export const ConfigureForm = React.memo((props: Props) => {
     regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
   const shouldDisplayPriceComparison = Boolean(
-    dcSpecificPricing && selectedRegion && priceIncreaseMap[selectedRegion]
+    dcSpecificPricing &&
+      selectedRegion &&
+      isLinodeTypeDifferentPriceInSelectedRegion({
+        regionA: currentRegion,
+        regionB: selectedRegion,
+        type: currentLinodeType,
+      })
   );
 
   const calculateNewPrice = React.useCallback(
