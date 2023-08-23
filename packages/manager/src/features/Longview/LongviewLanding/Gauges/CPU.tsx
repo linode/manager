@@ -83,6 +83,11 @@ export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {
 };
 
 export const normalizeValue = (value: number, numCores: number) => {
+  // Clamp with throw if `max` is less than `min` and as of Aug 17th, 2023,
+  // the Longview service allows users to have a negative number of cores.
+  if (numCores < 0) {
+    return 0;
+  }
   const clamped = clamp(0, 100 * numCores)(value);
   return Math.round(clamped);
 };
