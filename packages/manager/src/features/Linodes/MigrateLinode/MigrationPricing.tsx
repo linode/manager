@@ -19,7 +19,6 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
   const { backups, hourly, monthly, panelType } = props;
   const currentPanel = panelType === 'current';
   const theme = useTheme();
-
   const priceFontSize = `${theme.typography.body1.fontSize}`;
 
   return monthly && hourly && backups ? (
@@ -36,7 +35,12 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
           price={monthly}
         />
         ,&nbsp;
-        <DisplayPrice fontSize={priceFontSize} interval="hour" price={hourly} />
+        <DisplayPrice
+          decimalPlaces={3}
+          fontSize={priceFontSize}
+          interval="hour"
+          price={hourly}
+        />
         &nbsp;
         <Typography fontSize={priceFontSize} fontWeight="bold">
           | Backups&nbsp;

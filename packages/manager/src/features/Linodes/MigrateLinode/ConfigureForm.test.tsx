@@ -111,8 +111,10 @@ describe('ConfigureForm component with price comparison', () => {
 
   it('should provide a proper price comparison', async () => {
     selectNewRegion({ selectedRegionId: 'br-gru' });
-    expect(getByTestId(currentPricePanel)).toHaveTextContent(/10.00/);
-    expect(getByTestId(newPricePanel)).toHaveTextContent(/14.00/);
+    expect(getByTestId(currentPricePanel)).toHaveTextContent(/10.00\/month/);
+    expect(getByTestId(currentPricePanel)).toHaveTextContent(/0.015\/hour/);
+    expect(getByTestId(newPricePanel)).toHaveTextContent(/14.00\/month/);
+    expect(getByTestId(newPricePanel)).toHaveTextContent(/0.021\/hour/);
   });
 
   it("shouldn't render the MigrationPricingComponent if the flag is disabled", () => {
