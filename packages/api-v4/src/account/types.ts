@@ -1,5 +1,6 @@
 import { APIWarning } from '../types';
 import { Beta } from '../betas/types';
+import { Region } from 'src/regions';
 
 export interface User {
   username: string;
@@ -45,7 +46,8 @@ export type AccountCapability =
   | 'Vlans'
   | 'Machine Images'
   | 'LKE HA Control Planes'
-  | 'Managed Databases';
+  | 'Managed Databases'
+  | 'VPCs';
 
 export interface AccountSettings {
   managed: boolean;
@@ -117,6 +119,7 @@ export interface InvoiceItem {
   unit_price: null | string;
   tax: number;
   total: number;
+  region: Region['id'];
 }
 
 export interface Payment {
@@ -147,7 +150,8 @@ export type GlobalGrantTypes =
   | 'add_nodebalancers'
   | 'add_images'
   | 'add_volumes'
-  | 'add_firewalls';
+  | 'add_firewalls'
+  | 'add_vpcs';
 
 export interface GlobalGrants {
   global: Record<GlobalGrantTypes, boolean | GrantLevel>;
@@ -170,6 +174,12 @@ export interface NetworkUtilization {
   billable: number;
   used: number;
   quota: number;
+}
+export interface RegionalNetworkUtilization extends NetworkUtilization {
+  region_transfers: RegionalTransferObject[];
+}
+export interface RegionalTransferObject extends NetworkUtilization {
+  id: Region['id'];
 }
 
 export interface NetworkTransfer {

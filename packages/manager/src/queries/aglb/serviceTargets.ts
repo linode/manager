@@ -9,7 +9,7 @@ import { useQuery } from 'react-query';
 
 import { QUERY_KEY } from './loadbalancers';
 
-export const useServiceTargetsQuery = (
+export const useLoadBalancerServiceTargetsQuery = (
   loadbalancerId: number,
   params: Params,
   filter: Filter
