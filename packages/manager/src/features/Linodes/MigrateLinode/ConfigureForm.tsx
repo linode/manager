@@ -66,42 +66,16 @@ export const ConfigureForm = React.memo((props: Props) => {
       })
   );
 
-  function useSelectedLinodePrice(
-    selectedRegion: null | string,
-    linodeType: string | undefined
-  ) {
-    const { data: selectLinodeType } = useTypeQuery(
-      linodeType || '',
-      Boolean(linodeType)
-    );
-
-    const [selectedRegionType, setSelectedRegionType] = React.useState<any>(
-      undefined
-    );
-    const [selectedRegionPrice, setSelectedRegionPrice] = React.useState<any>(
-      undefined
-    );
-
-    React.useEffect(() => {
-      if (selectedRegion && selectLinodeType) {
-        const newRegionPrice = getLinodeRegionPrice(
-          selectLinodeType,
-          selectedRegion
-        );
-        setSelectedRegionType(selectLinodeType);
-        setSelectedRegionPrice(newRegionPrice);
-      }
-    }, [selectedRegion, selectLinodeType]);
-
-    return { selectedRegionPrice, selectedRegionType };
-  }
-
-  const { selectedRegionPrice, selectedRegionType } = useSelectedLinodePrice(
-    selectedRegion,
-    linodeType || ''
-  );
   const currentRegionPrice =
     currentLinodeType && getLinodeRegionPrice(currentLinodeType, currentRegion);
+  // TODO: DYNAMIC_PRICING we probably don't want to default to the current price in case something goes wrong,
+  // resulting in misleading pricing.
+  // we will need a way to handle an error for this case here and dynamicPricing.ts
+  const selectedRegionPrice =
+    (currentLinodeType &&
+      selectedRegion &&
+      getLinodeRegionPrice(currentLinodeType, selectedRegion)) ||
+    currentRegionPrice;
 
   const currentPrice: MigrationPricingProps = {
     backups: currentLinodeType?.addons.backups.price.monthly,
@@ -110,13 +84,11 @@ export const ConfigureForm = React.memo((props: Props) => {
     panelType: 'current',
   };
   const newPrice: MigrationPricingProps = {
-    backups: selectedRegionType?.addons.backups.price.monthly,
+    backups: currentLinodeType?.addons.backups.price.monthly,
     hourly: selectedRegionPrice?.hourly,
     monthly: selectedRegionPrice?.monthly,
     panelType: 'new',
   };
-
-  // console.log({ newPrice });
 
   return (
     <StyledPaper>
