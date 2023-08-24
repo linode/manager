@@ -11,18 +11,24 @@ import { AddDeviceDrawer } from './AddDeviceDrawer';
 import { FirewallDevicesTable } from './FirewallDevicesTable';
 import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
+
 interface Props {
   disabled: boolean;
   firewallID: number;
   firewallLabel: string;
+  type: FirewallDeviceEntityType;
 }
 
-export const FirewallNodeBalancerLanding = React.memo((props: Props) => {
-  const { disabled, firewallID, firewallLabel } = props;
+export const FirewallDeviceLanding = React.memo((props: Props) => {
+  const { disabled, firewallID, firewallLabel, type } = props;
 
-  const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(
+  const { data: allDevices, error, isLoading } = useAllFirewallDevicesQuery(
     firewallID
   );
+
+  const devices =
+    allDevices?.filter((device) => device.entity.type === type) || [];
 
   const [
     isRemoveDeviceDialogOpen,
@@ -43,6 +49,13 @@ export const FirewallNodeBalancerLanding = React.memo((props: Props) => {
     setDeviceDrawerOpen(false);
   };
 
+  const typeDialogNames = {
+    linode: 'Linode',
+    nodebalancer: 'NodeBalancer',
+  };
+
+  const typeDialog = typeDialogNames[type];
+
   return (
     <>
       {disabled ? (
@@ -57,8 +70,8 @@ export const FirewallNodeBalancerLanding = React.memo((props: Props) => {
       <Grid container direction="column">
         <Grid style={{ paddingBottom: 0 }}>
           <StyledTypography>
-            The following NodeBalancers have been assigned to this Firewall. A
-            NodeBalancer can only be assigned to a single Firewall.
+            The following {typeDialog}s have been assigned to this Firewall. A{' '}
+            {typeDialog} can only be assigned to a single Firewall.
           </StyledTypography>
         </Grid>
         <StyledGrid>
@@ -67,7 +80,7 @@ export const FirewallNodeBalancerLanding = React.memo((props: Props) => {
             disabled={disabled}
             onClick={() => setDeviceDrawerOpen(true)}
           >
-            Add NodeBalancer to Firewall
+            Add {typeDialog}s to Firewall
           </Button>
         </StyledGrid>
       </Grid>
