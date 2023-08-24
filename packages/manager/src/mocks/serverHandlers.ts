@@ -626,6 +626,11 @@ export const handlers = [
         label: 'eu-linode',
         region: 'eu-west',
       }),
+      linodeFactory.build({
+        backups: { enabled: false },
+        label: 'DC-Specific Pricing Linode',
+        region: 'id-cgk',
+      }),
       eventLinode,
       multipleIPLinode,
     ];
@@ -633,7 +638,14 @@ export const handlers = [
   }),
   rest.get('*/linode/instances/:id', async (req, res, ctx) => {
     const id = Number(req.params.id);
-    return res(ctx.json(linodeFactory.build({ id })));
+    return res(
+      ctx.json(
+        linodeFactory.build({
+          backups: { enabled: false },
+          id,
+        })
+      )
+    );
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
     return res(ctx.json({}));
@@ -941,6 +953,15 @@ export const handlers = [
     });
     return res(ctx.json(makeResourcePage([linodeInvoice, akamaiInvoice])));
   }),
+  rest.get('*/account/invoices/:invoiceId', (req, res, ctx) => {
+    const linodeInvoice = invoiceFactory.build({
+      date: '2022-12-01T18:04:01',
+      id: 1234,
+      label: 'LinodeInvoice',
+    });
+    return res(ctx.json(linodeInvoice));
+  }),
+
   rest.get('*/account/maintenance', (req, res, ctx) => {
     accountMaintenanceFactory.resetSequenceNumber();
     const page = Number(req.url.searchParams.get('page') || 1);

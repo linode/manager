@@ -8,6 +8,18 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
         hourly: 10,
         monthly: 10,
       },
+      region_prices: [
+        {
+          hourly: 0.0048,
+          id: 'id-cgk',
+          monthly: 3.57,
+        },
+        {
+          hourly: 0.0056,
+          id: 'br-gru',
+          monthly: 4.17,
+        },
+      ],
     },
   },
   class: 'standard',
