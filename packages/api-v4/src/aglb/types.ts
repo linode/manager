@@ -80,7 +80,7 @@ export interface Configuration {
   port: number;
   protocol: Protocol;
   certificate_table: CertificateTable[];
-  routes: string[];
+  routes: { id: number; label: string }[];
 }
 
 export interface CertificateTable {

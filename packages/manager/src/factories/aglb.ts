@@ -82,7 +82,11 @@ export const configurationFactory = Factory.Sync.makeFactory<Configuration>({
   label: Factory.each((i) => `configuration-${i}`),
   port: 80,
   protocol: 'http',
-  routes: ['images-route'],
+  routes: [
+    { id: 0, label: 'route-0' },
+    { id: 1, label: 'route-1' },
+    { id: 2, label: 'route-2' },
+  ],
 });
 
 // ***********************

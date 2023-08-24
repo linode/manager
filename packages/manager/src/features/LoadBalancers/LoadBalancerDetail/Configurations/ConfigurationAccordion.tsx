@@ -15,6 +15,8 @@ import { pluralize } from 'src/utilities/pluralize';
 import { CertificateTable } from './CertificateTable';
 
 import type { Configuration } from '@linode/api-v4';
+import { Divider } from 'src/components/Divider';
+import { RoutesTable } from './RoutesTable';
 
 interface Props {
   configuration: Configuration;
@@ -38,6 +40,13 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
   const handleRemoveCert = (index: number) => {
     formik.values.certificate_table.splice(index);
     formik.setFieldValue('certificate_table', formik.values.certificate_table);
+  };
+
+  const handleRemoveRoute = (id: number) => {
+    formik.setFieldValue(
+      'routes',
+      formik.values.routes.filter((route) => route.id !== id)
+    );
   };
 
   return (
@@ -105,7 +114,7 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
               value={formik.values.port}
             />
           </Stack>
-          <Stack maxWidth="400px">
+          <Stack maxWidth="600px">
             <Stack alignItems="center" direction="row">
               <Typography fontWeight="bold">TLS Certificates</Typography>
               <TooltipIcon status="help" text="OMG!" />
@@ -124,8 +133,18 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
             </Box>
           </Stack>
         </Stack>
-        {/* <Divider spacingBottom={16} spacingTop={16} />
-        <Typography variant="h2">Routes</Typography> */}
+        <Divider spacingBottom={16} spacingTop={16} />
+        <Stack spacing={2}>
+          <Typography variant="h2">Routes</Typography>
+          <RoutesTable
+            onRemove={handleRemoveRoute}
+            routes={formik.values.routes}
+            setRoutes={(routes) => formik.setFieldValue('routes', routes)}
+          />
+          <Box>
+            <Button buttonType="outlined">Add Route</Button>
+          </Box>
+        </Stack>
       </form>
     </Accordion>
   );
