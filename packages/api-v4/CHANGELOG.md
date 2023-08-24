@@ -1,3 +1,11 @@
+## [2023-08-21] - v0.99.0
+
+
+### Changed:
+
+- Include `vpc_id` and rename `subnet` to `subnet_id` in Linode config interface return object ([#9485](https://github.com/linode/manager/pull/9485))
+
+
 ## [2023-08-07] - v0.98.0
 
 ### Added:

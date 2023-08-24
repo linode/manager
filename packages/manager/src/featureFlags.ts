@@ -41,9 +41,9 @@ type OneClickApp = Record<string, string>;
 export interface Flags {
   aglb: boolean;
   apiMaintenance: APIMaintenance;
-  selfServeBetas: boolean;
   databaseBeta: boolean;
   databases: boolean;
+  dcSpecificPricing: boolean;
   ipv6Sharing: boolean;
   kubernetesDashboardAvailability: boolean;
   mainContentBanner: MainContentBanner;
@@ -55,6 +55,7 @@ export interface Flags {
   promotionalOffers: PromotionalOffer[];
   referralBannerText: ReferralBannerText;
   regionDropdown: boolean;
+  selfServeBetas: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;

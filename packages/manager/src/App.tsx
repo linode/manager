@@ -1,5 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
 import { ErrorBoundary } from '@sentry/react';
 import 'highlight.js/styles/a11y-dark.css';

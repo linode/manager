@@ -16,7 +16,6 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { DiskSelect } from 'src/features/Linodes/DiskSelect/DiskSelect';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
@@ -102,7 +101,6 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const flags = useFlags();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
-  const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<null | string>('');
@@ -277,7 +275,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         />
       </Box>
       {isRawDisk ? rawDiskWarning : null}
-      {flags.metadata && hasMetadataCustomerTag ? (
+      {flags.metadata && (
         <Box className={classes.cloudInitCheckboxWrapper}>
           <Checkbox
             checked={isCloudInit}
@@ -287,7 +285,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
             toolTipText={cloudInitTooltipMessage}
           />
         </Box>
-      ) : null}
+      )}
       <>
         <TextField
           data-qa-image-label
