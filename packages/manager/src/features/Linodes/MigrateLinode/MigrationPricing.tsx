@@ -27,8 +27,8 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
       <StyledSpan>{currentPanel ? 'Current' : 'New'} Price</StyledSpan>
       <Box
         alignItems="baseline"
+        data-testid={`${panelType}-price-panel`}
         display="inline-flex"
-        id={`${panelType}-price`}
       >
         <DisplayPrice
           fontSize={priceFontSize}

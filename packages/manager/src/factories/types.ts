@@ -40,6 +40,11 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
       monthly: 10,
     },
     {
+      hourly: 0.015,
+      id: 'us-west',
+      monthly: 10,
+    },
+    {
       hourly: 0.021,
       id: 'br-gru',
       monthly: 14,

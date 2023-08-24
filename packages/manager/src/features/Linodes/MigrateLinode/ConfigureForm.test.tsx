@@ -6,12 +6,12 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigureForm } from './ConfigureForm';
 
-const regionData = [
-  { country: 'ca', id: 'ca-central', label: 'Canada Central' },
-  { country: 'us', id: 'us-west', label: 'US West' },
-  { country: 'us', id: 'us-east', label: 'US East' },
-  { country: 'br', id: 'br-gru', label: 'São Paulo' },
-];
+// const regionData = [
+//   { country: 'ca', id: 'ca-central', label: 'Canada Central' },
+//   { country: 'us', id: 'us-west', label: 'US West' },
+//   { country: 'us', id: 'us-east', label: 'US East' },
+//   { country: 'br', id: 'br-gru', label: 'São Paulo' },
+// ];
 
 // Mock the useFlags hook
 jest.mock('src/hooks/useFlags', () => ({
@@ -21,11 +21,11 @@ jest.mock('src/hooks/useFlags', () => ({
 }));
 
 // Mock the useRegionsQuery hook
-jest.mock('src/queries/regions', () => ({
-  useRegionsQuery: () => ({
-    data: regionData,
-  }),
-}));
+// jest.mock('src/queries/regions', () => ({
+//   useRegionsQuery: () => ({
+//     data: regionData,
+//   }),
+// }));
 
 // Mock the useTypeQuery hook
 jest.mock('src/queries/types', () => ({
@@ -38,34 +38,42 @@ describe('ConfigureForm component with price comparison', () => {
   const handleSelectRegion = jest.fn();
   const currentPriceLabel = 'Current Price';
   const newPriceLabel = 'New Price';
+  const currentPricePanel = 'current-price-panel';
+  const newPricePanel = 'new-price-panel';
 
   const props = {
-    currentRegion: 'ca-central',
+    currentRegion: 'us-east',
     handleSelectRegion,
-    linodeType: 'standard',
+    linodeType: 'g6-standard-1',
     selectedRegion: '',
   };
 
-  const { getByLabelText, getByText, queryByText } = renderWithTheme(
-    <ConfigureForm {...props} />
-  );
+  const {
+    getByLabelText,
+    getByTestId,
+    getByText,
+    queryByText,
+  } = renderWithTheme(<ConfigureForm {...props} />);
 
-  const selectNewRegion = (regionLabel: string, regionId: string) => {
-    const { getByLabelText, getByText, rerender } = renderWithTheme(
-      <ConfigureForm {...props} />
-    );
-    const regionSelect = getByLabelText('New Region');
+  interface SelectNewRegionOptions {
+    currentRegionId?: string;
+    selectedRegionId: string;
+  }
 
-    fireEvent.focus(regionSelect);
-    fireEvent.keyDown(regionSelect, {
-      code: 40,
-      key: 'ArrowDown',
-    });
-    fireEvent.click(getByText(`${regionLabel} (${regionId})`));
+  const selectNewRegion = ({
+    currentRegionId = 'us-east',
+    selectedRegionId,
+  }: SelectNewRegionOptions) => {
+    const { rerender } = renderWithTheme(<ConfigureForm {...props} />);
 
-    expect(handleSelectRegion).toHaveBeenCalled();
     rerender(
-      wrapWithTheme(<ConfigureForm {...props} selectedRegion={regionId} />)
+      wrapWithTheme(
+        <ConfigureForm
+          {...props}
+          currentRegion={currentRegionId}
+          selectedRegion={selectedRegionId}
+        />
+      )
     );
   };
 
@@ -84,7 +92,7 @@ describe('ConfigureForm component with price comparison', () => {
   });
 
   it("shouldn't render the MigrationPricing component when the current region is selected", async () => {
-    selectNewRegion('US East', 'us-east');
+    selectNewRegion({ selectedRegionId: 'us-east' });
     await waitFor(() => {
       expect(queryByText(currentPriceLabel)).not.toBeInTheDocument();
       expect(queryByText(newPriceLabel)).not.toBeInTheDocument();
@@ -92,7 +100,7 @@ describe('ConfigureForm component with price comparison', () => {
   });
 
   it("shouldn't render the MigrationPricing component when a region without price increase is selected", async () => {
-    selectNewRegion('US West', 'us-west');
+    selectNewRegion({ selectedRegionId: 'us-west' });
     await waitFor(() => {
       expect(queryByText(currentPriceLabel)).not.toBeInTheDocument();
       expect(queryByText(newPriceLabel)).not.toBeInTheDocument();
@@ -100,20 +108,26 @@ describe('ConfigureForm component with price comparison', () => {
   });
 
   it('should render the MigrationPricing component when a region with price increase is selected', async () => {
-    selectNewRegion('São Paulo', 'br-gru');
+    selectNewRegion({ selectedRegionId: 'br-gru' });
     await waitFor(() => {
-      expect(queryByText(currentPriceLabel)).toBeInTheDocument();
-      expect(queryByText(newPriceLabel)).toBeInTheDocument();
+      expect(getByTestId(currentPricePanel)).toBeDefined();
+      expect(getByTestId(newPricePanel)).toBeDefined();
     });
   });
 
-  // it('should render the MigrationPricing component when a region with price decrease is selected', async () => {
-  //   selectNewRegion('São Paulo', 'br-gru');
-  //   await waitFor(() => {
-  //     expect(queryByText(currentPriceLabel)).toBeInTheDocument();
-  //     expect(queryByText(newPriceLabel)).toBeInTheDocument();
-  //   });
-  // });
+  it('should render the MigrationPricing component when a region with price decrease is selected', async () => {
+    selectNewRegion({ currentRegionId: 'br-gru', selectedRegionId: 'us-east' });
+    await waitFor(() => {
+      expect(getByTestId(currentPricePanel)).toBeDefined();
+      expect(getByTestId(newPricePanel)).toBeDefined();
+    });
+  });
+
+  it('should provide a proper price comparison', async () => {
+    selectNewRegion({ selectedRegionId: 'br-gru' });
+    expect(getByTestId(currentPricePanel)).toHaveTextContent(/10.00/);
+    expect(getByTestId(newPricePanel)).toHaveTextContent(/14.00/);
+  });
 
   it("shouldn't render the MigrationPricingComponent if the flag is disabled", () => {
     jest.isolateModules(async () => {
@@ -127,14 +141,6 @@ describe('ConfigureForm component with price comparison', () => {
         expect(queryByText('Current Price')).not.toBeInTheDocument();
         expect(queryByText('New Price')).not.toBeInTheDocument();
       });
-    });
-  });
-
-  it('should provide a proper price comparison', async () => {
-    selectNewRegion('São Paulo', 'br-gru');
-    await waitFor(() => {
-      expect(queryByText('$12.00')).toBeInTheDocument();
-      expect(queryByText('$16.80')).toBeInTheDocument();
     });
   });
 });

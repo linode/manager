@@ -44,15 +44,12 @@ export const isLinodeTypeDifferentPriceInSelectedRegion = ({
   regionB,
   type,
 }: IsPriceDifferentOptions) => {
-  // console.log({ regionA, regionB, type });
   if (!type || !regionA || !regionB) {
     return false;
   }
 
   const currentRegionPrice = getLinodeRegionPrice(type, regionA);
   const selectedRegionPrice = getLinodeRegionPrice(type, regionB);
-
-  // console.log({ currentRegionPrice, selectedRegionPrice });
 
   if (currentRegionPrice.monthly !== selectedRegionPrice.monthly) {
     return true;
