@@ -94,7 +94,7 @@ const LoadBalancerLanding = () => {
     <>
       <LandingHeader
         breadcrumbProps={{ pathname: '/loadbalancers' }}
-        createButtonText="Create Loadbalancer"
+        createButtonText="Create Load Balancer"
         docsLabel="Docs"
         docsLink="" // TODO: AGLB -  Add docs link
         entity="Global Load Balancers"
