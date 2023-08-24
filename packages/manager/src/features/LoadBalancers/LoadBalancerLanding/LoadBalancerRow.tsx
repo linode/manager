@@ -13,11 +13,16 @@ import { useLoadBalancerConfigurationsQuery } from 'src/queries/aglb/configurati
 import { LoadBalancerActionsMenu } from './LoadBalancerActionsMenu';
 import { RegionsCell } from './RegionsCell';
 
-interface Props {
-  loadBalancer: Loadbalancer;
+export interface LoadBalancerHandlers {
+  onDelete: () => void;
 }
 
-export const LoadBalancerRow = ({ loadBalancer }: Props) => {
+interface Props {
+  loadBalancer: Loadbalancer;
+  handlers: LoadBalancerHandlers;
+}
+
+export const LoadBalancerRow = ({ loadBalancer, handlers }: Props) => {
   const { id, label, regions } = loadBalancer;
   const { data: configurations } = useLoadBalancerConfigurationsQuery(id);
   const ports = configurations?.data.map((config) => config.port);
@@ -51,7 +56,10 @@ export const LoadBalancerRow = ({ loadBalancer }: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <LoadBalancerActionsMenu loadbalancer={loadBalancer} />
+        <LoadBalancerActionsMenu
+          handlers={handlers}
+          loadbalancer={loadBalancer}
+        />
       </TableCell>
     </TableRow>
   );

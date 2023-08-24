@@ -3,13 +3,15 @@ import { useHistory } from 'react-router-dom';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu';
 
+import type { LoadBalancerHandlers } from './LoadBalancerRow';
 import type { Loadbalancer } from '@linode/api-v4';
 
 interface Props {
+  handlers: LoadBalancerHandlers;
   loadbalancer: Loadbalancer;
 }
 
-export const LoadBalancerActionsMenu = ({ loadbalancer }: Props) => {
+export const LoadBalancerActionsMenu = ({ handlers, loadbalancer }: Props) => {
   const history = useHistory();
 
   const actions: Action[] = [
@@ -23,7 +25,7 @@ export const LoadBalancerActionsMenu = ({ loadbalancer }: Props) => {
       title: 'Settings',
     },
     {
-      onClick: () => null,
+      onClick: handlers.onDelete,
       title: 'Delete',
     },
   ];

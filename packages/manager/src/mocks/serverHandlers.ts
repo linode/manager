@@ -86,7 +86,6 @@ import {
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
-  updateLoadbalancerFactory,
   volumeFactory,
   vpcFactory,
 } from 'src/factories';
@@ -348,7 +347,7 @@ const aglb = [
     // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
     // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
     // TODO: AGLB - figure out if this is still accurate
-    return res(ctx.json(updateLoadbalancerFactory.build({ id, ...body })));
+    return res(ctx.json(loadbalancerFactory.build({ id, ...body })));
   }),
   rest.delete('*/v4beta/aglb/:id', (req, res, ctx) => {
     return res(ctx.json({}));
