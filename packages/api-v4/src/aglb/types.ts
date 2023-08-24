@@ -24,7 +24,7 @@ export interface UpdateLoadbalancerPayload {
   configuration_ids?: number[];
 }
 
-type Protocol = 'TCP' | 'HTTP' | 'HTTPS';
+type Protocol = 'tcp' | 'http' | 'https';
 
 type Policy =
   | 'round_robin'

@@ -81,7 +81,7 @@ export const configurationFactory = Factory.Sync.makeFactory<Configuration>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `entrypoint${i}`),
   port: 80,
-  protocol: 'HTTP',
+  protocol: 'http',
   routes: ['images-route'],
 });
 
@@ -109,7 +109,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
         ],
         label: 'myentrypoint1',
         port: 80,
-        protocol: 'HTTP',
+        protocol: 'http',
         routes: [
           {
             label: 'my-route',

@@ -1,5 +1,5 @@
 import { getLoadbalancerConfigurations } from '@linode/api-v4';
-import { useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 
 import { QUERY_KEY } from './loadbalancers';
 
@@ -20,5 +20,18 @@ export const useLoadBalancerConfigurationsQuery = (
     [QUERY_KEY, 'aglb', loadbalancerId, 'configurations', params, filter],
     () => getLoadbalancerConfigurations(loadbalancerId, params, filter),
     { keepPreviousData: true }
+  );
+};
+
+export const useLoabalancerConfigurationsInfiniteQuery = (
+  loadbalancerId: number
+) => {
+  return useInfiniteQuery<ResourcePage<Configuration>, APIError[]>(
+    [QUERY_KEY, 'aglb', loadbalancerId, 'configurations', 'infinite'],
+    ({ pageParam }) =>
+      getLoadbalancerConfigurations(loadbalancerId, {
+        page: pageParam,
+        page_size: 25,
+      })
   );
 };
