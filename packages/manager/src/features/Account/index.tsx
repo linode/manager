@@ -12,7 +12,12 @@ const InvoiceDetail = React.lazy(
 const EntityTransfersCreate = React.lazy(
   () => import('src/features/EntityTransfers/EntityTransfersCreate')
 );
-const UserDetail = React.lazy(() => import('src/features/Users/UserDetail'));
+
+const UserDetail = React.lazy(() =>
+  import('../Users/UserDetail').then((module) => ({
+    default: module.UserDetail,
+  }))
+);
 
 type Props = RouteComponentProps<{}>;
 

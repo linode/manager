@@ -14,18 +14,18 @@ import {
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { queryKey } from 'src/queries/account';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import UserPermissions from './UserPermissions';
-import UserProfile from './UserProfile';
+import { UserPermissions } from './UserPermissions';
+import { UserProfile } from './UserProfile';
 
-const UserDetail: React.FC = () => {
+export const UserDetail = () => {
   const { username: usernameParam } = useParams<{ username: string }>();
   const location = useLocation<{ newUsername: string; success: boolean }>();
   const history = useHistory();
@@ -101,19 +101,15 @@ const UserDetail: React.FC = () => {
     setCreatedUsername(undefined);
   };
 
-  const handleChangeUsername = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
 
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const handleSaveAccount = () => {
+  const onSaveAccount = () => {
     if (!originalUsername) {
       return;
     }
@@ -126,18 +122,14 @@ const UserDetail: React.FC = () => {
 
     updateUser(originalUsername, { restricted, username })
       .then((user) => {
-        /**
-         * Update the state of the component with the updated information.
-         */
+        // Update the state of the component with the updated information.
         setOriginalUsername(user.username);
         setUsername(user.username);
         setAccountSaving(false);
         setAccountErrors(undefined);
 
-        /**
-         * If the user we updated is the current user, we need to reflect that change at the global level.
-         * Otherwise, refetch the account's users so it has the new username
-         */
+        // If the user we updated is the current user, we need to reflect that change at the global level.
+        // Otherwise, refetch the account's users so it has the new username
         if (profile?.username === originalUsername) {
           refreshProfile();
         } else {
@@ -157,7 +149,7 @@ const UserDetail: React.FC = () => {
       });
   };
 
-  const handleSaveProfile = () => {
+  const onSaveProfile = () => {
     setProfileSuccess(false);
     setProfileSaving(true);
     setProfileErrors([]);
@@ -169,9 +161,7 @@ const UserDetail: React.FC = () => {
         setProfileSaving(false);
         setProfileSuccess(true);
         setProfileErrors(undefined);
-        /**
-         * If the user we updated is the current user, we need to reflect that change at the global level.
-         */
+        // If the user we updated is the current user, we need to reflect that change at the global level.
         if (profile.username === originalUsername) {
           refreshProfile();
         }
@@ -235,16 +225,16 @@ const UserDetail: React.FC = () => {
               accountErrors={accountErrors}
               accountSaving={accountSaving}
               accountSuccess={accountSuccess || false}
-              changeEmail={handleChangeEmail}
-              changeUsername={handleChangeUsername}
+              changeEmail={onChangeEmail}
+              changeUsername={onChangeUsername}
               email={email}
               originalEmail={originalEmail}
               originalUsername={originalUsername}
               profileErrors={profileErrors}
               profileSaving={profileSaving}
               profileSuccess={profileSuccess || false}
-              saveAccount={handleSaveAccount}
-              saveProfile={handleSaveProfile}
+              saveAccount={onSaveAccount}
+              saveProfile={onSaveProfile}
               username={username}
             />
           </SafeTabPanel>
@@ -260,5 +250,3 @@ const UserDetail: React.FC = () => {
     </>
   );
 };
-
-export default UserDetail;

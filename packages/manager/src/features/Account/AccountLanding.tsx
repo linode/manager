@@ -20,7 +20,13 @@ const Billing = React.lazy(() => import('src/features/Billing'));
 const EntityTransfersLanding = React.lazy(
   () => import('src/features/EntityTransfers/EntityTransfersLanding')
 );
-const Users = React.lazy(() => import('src/features/Users'));
+
+const Users = React.lazy(() =>
+  import('../Users/UsersLanding').then((module) => ({
+    default: module.UsersLanding,
+  }))
+);
+
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 const MaintenanceLanding = React.lazy(
   () => import('./Maintenance/MaintenanceLanding')

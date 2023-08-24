@@ -2,7 +2,7 @@ import { User, deleteUser } from '@linode/api-v4/lib/account';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { makeStyles, useTheme } from '@mui/styles';
+import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -24,61 +24,11 @@ import { useProfile } from 'src/queries/profile';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { GravatarByEmail } from '../../components/GravatarByEmail';
-import CreateUserDrawer from './CreateUserDrawer';
+import { CreateUserDrawer } from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
-import ActionMenu from './UsersActionMenu';
+import { UsersActionMenu } from './UsersActionMenu';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
-    },
-  },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingRight: 0,
-      paddingTop: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-  avatar: {
-    animation: '$fadeIn 150ms linear forwards',
-    borderRadius: '50%',
-    height: 30,
-    marginRight: theme.spacing(2),
-    width: 30,
-  },
-  emptyImage: {
-    display: 'inline',
-    height: 30,
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      height: 40,
-      width: 40,
-    },
-    width: 30,
-  },
-  headline: {
-    lineHeight: '1.5rem',
-    marginBottom: 8,
-    marginLeft: 15,
-    marginTop: 8,
-  },
-  title: {
-    marginBottom: theme.spacing(2),
-  },
-  userLandingHeader: {
-    margin: 0,
-    width: '100%',
-  },
-}));
-
-const UsersLanding = () => {
+export const UsersLanding = () => {
   const { data: profile } = useProfile();
   const pagination = usePagination(1, 'account-users');
   const { data: users, error, isLoading, refetch } = useAccountUsers({
@@ -104,7 +54,6 @@ const UsersLanding = () => {
     string | undefined
   >('');
 
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -167,7 +116,10 @@ const UsersLanding = () => {
           {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
         <TableCell actionCell>
-          <ActionMenu onDelete={onUsernameDelete} username={user.username} />
+          <UsersActionMenu
+            onDelete={onUsernameDelete}
+            username={user.username}
+          />
         </TableCell>
       </TableRow>
     );
@@ -182,17 +134,13 @@ const UsersLanding = () => {
           rows={1}
         />
       );
-    }
-
-    if (error) {
+    } else if (error) {
       return <TableRowError colSpan={4} message={error[0].reason} />;
-    }
-
-    if (!users || users.results === 0) {
+    } else if (!users || users.results === 0) {
       return <TableRowEmpty colSpan={4} />;
+    } else {
+      return users.data.map((user) => renderUserRow(user));
     }
-
-    return users.data.map((user) => renderUserRow(user));
   };
 
   return (
@@ -210,12 +158,22 @@ const UsersLanding = () => {
       )}
       <Grid
         alignItems="flex-end"
-        className={classes.userLandingHeader}
         container
         justifyContent="flex-end"
         spacing={2}
+        sx={{ margin: 0, width: '100%' }}
       >
-        <Grid className={classes.addNewWrapper}>
+        <Grid
+          sx={{
+            '&.MuiGrid-item': {
+              paddingRight: 0,
+              paddingTop: 0,
+            },
+            [theme.breakpoints.down('md')]: {
+              marginRight: theme.spacing(),
+            },
+          }}
+        >
           <AddNewLink
             disabledReason={
               isRestrictedUser
@@ -263,5 +221,3 @@ const UsersLanding = () => {
     </React.Fragment>
   );
 };
-
-export default UsersLanding;

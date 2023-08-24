@@ -8,19 +8,18 @@ import { Action, ActionMenu } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useProfile } from 'src/queries/profile';
 
-interface Props {
+interface UsersActionMenuProps {
   onDelete: (username: string) => void;
   username: string;
 }
 
-type CombinedProps = Props;
-
-const UsersActionMenu: React.FC<CombinedProps> = (props) => {
+export const UsersActionMenu = ({
+  onDelete,
+  username,
+}: UsersActionMenuProps) => {
   const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-
-  const { onDelete, username } = props;
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
 
@@ -73,5 +72,3 @@ const UsersActionMenu: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default UsersActionMenu;

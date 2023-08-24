@@ -5,10 +5,10 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -18,38 +18,73 @@ interface Props {
   refetch: () => void;
 }
 
-interface State {
-  email: string;
-  errors: APIError[];
-  restricted: boolean;
-  submitting: boolean;
-  username: string;
-}
+type CreateUserDrawerCombinedProps = Props & RouteComponentProps<{}>;
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+export const CreateUserDrawer = withRouter(
+  ({
+    history: { push },
+    onClose,
+    open,
+    refetch,
+  }: CreateUserDrawerCombinedProps) => {
+    const [username, setUsername] = React.useState('');
+    const [email, setEmail] = React.useState('');
+    const [restricted, setRestricted] = React.useState<boolean>(false);
+    const [errors, setErrors] = React.useState<APIError[]>([]);
+    const [submitting, setSubmitting] = React.useState<boolean>(false);
 
-class CreateUserDrawer extends React.Component<CombinedProps, State> {
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (this.props.open === true && prevProps.open === false) {
-      this.setState({
-        email: '',
-        errors: [],
-        restricted: false,
-        submitting: false,
-        username: '',
-      });
-    }
-  }
-
-  render() {
-    const { onClose, open } = this.props;
-    const { email, errors, restricted, submitting, username } = this.state;
+    React.useEffect(() => {
+      setUsername('');
+      setEmail('');
+      setRestricted(false);
+      setErrors([]);
+      setSubmitting(false);
+    }, [open]);
 
     const hasErrorFor = getAPIErrorsFor(
       { email: 'Email', username: 'Username' },
       errors
     );
+
     const generalError = hasErrorFor('none');
+
+    const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+    };
+
+    const onChangeRestricted = () => {
+      setRestricted(true);
+    };
+
+    const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setUsername(e.target.value);
+    };
+
+    const onSubmit = () => {
+      setErrors([]);
+      setSubmitting(true);
+
+      createUser({ email, restricted, username })
+        .then((user: User) => {
+          setSubmitting(false);
+
+          onClose();
+          if (user.restricted) {
+            push(`/account/users/${username}/permissions`, {
+              newUsername: user.username,
+            });
+          }
+          refetch();
+        })
+        .catch((errResponse) => {
+          const errors = getAPIErrorOrDefault(
+            errResponse,
+            'Error creating user.'
+          );
+          setErrors(errors);
+          setSubmitting(false);
+        });
+    };
 
     return (
       <Drawer onClose={onClose} open={open} title="Add a User">
@@ -58,19 +93,16 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           data-qa-create-username
           errorText={hasErrorFor('username')}
           label="Username"
-          onBlur={this.handleChangeUsername}
-          onChange={this.handleChangeUsername}
+          onChange={onChangeUsername}
           required
-          trimmed
           value={username}
         />
         <TextField
           data-qa-create-email
           errorText={hasErrorFor('email')}
           label="Email"
-          onChange={this.handleChangeEmail}
+          onChange={onChangeEmail}
           required
-          trimmed
           type="email"
           value={email}
         />
@@ -79,7 +111,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
             <Toggle
               checked={!restricted}
               data-qa-create-restricted
-              onChange={this.handleChangeRestricted}
+              onChange={onChangeRestricted}
             />
           }
           label={
@@ -102,7 +134,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
             'data-testid': 'submit',
             label: 'Add User',
             loading: submitting,
-            onClick: this.onSubmit,
+            onClick: onSubmit,
           }}
           secondaryButtonProps={{
             'data-testid': 'cancel',
@@ -113,64 +145,4 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
       </Drawer>
     );
   }
-
-  handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      email: e.target.value,
-    });
-  };
-
-  handleChangeRestricted = () => {
-    this.setState({
-      restricted: !this.state.restricted,
-    });
-  };
-
-  handleChangeUsername = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    this.setState({
-      username: e.target.value,
-    });
-  };
-
-  onSubmit = () => {
-    const {
-      history: { push },
-      onClose,
-      refetch,
-    } = this.props;
-    const { email, restricted, username } = this.state;
-    this.setState({ errors: [], submitting: true });
-    createUser({ email, restricted, username })
-      .then((user: User) => {
-        this.setState({ submitting: false });
-        onClose();
-        if (user.restricted) {
-          push(`/account/users/${username}/permissions`, {
-            newUsername: user.username,
-          });
-        }
-        refetch();
-      })
-      .catch((errResponse) => {
-        const errors = getAPIErrorOrDefault(
-          errResponse,
-          'Error creating user.'
-        );
-        this.setState({ errors, submitting: false });
-      });
-  };
-
-  state: State = {
-    email: '',
-    errors: [],
-    restricted: false,
-    submitting: false,
-    username: '',
-  };
-}
-
-export default withRouter(CreateUserDrawer);
+);
