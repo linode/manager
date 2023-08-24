@@ -131,8 +131,8 @@ export const LoadBalancerServiceTargets = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {error && <TableRowError colSpan={3} message={error?.[0].reason} />}
-          {data?.results === 0 && <TableRowEmpty colSpan={3} />}
+          {error && <TableRowError colSpan={6} message={error?.[0]?.reason} />}
+          {data?.results === 0 && <TableRowEmpty colSpan={6} />}
           {data?.data.map((serviceTarget) => (
             <TableRow key={serviceTarget.label}>
               <TableCell>
@@ -164,6 +164,7 @@ export const LoadBalancerServiceTargets = () => {
                 <ActionMenu
                   actionsList={[
                     { onClick: () => null, title: 'Edit' },
+                    { onClick: () => null, title: 'Clone Service Target' },
                     { onClick: () => null, title: 'Delete' },
                   ]}
                   ariaLabel={`Action Menu for service target ${serviceTarget.label}`}
