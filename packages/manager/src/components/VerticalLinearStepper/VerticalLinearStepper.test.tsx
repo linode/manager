@@ -22,7 +22,7 @@ const steps = [
     label: 'Next',
   },
 ];
-
+// TODO: Could add more tests as part of feature ticket
 test('renders all steps and navigates', () => {
   renderWithTheme(<VerticalLinearStepper steps={steps} />);
 });
