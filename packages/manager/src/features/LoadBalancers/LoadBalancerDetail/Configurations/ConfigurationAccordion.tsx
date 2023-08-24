@@ -1,5 +1,3 @@
-import CloseIcon from '@mui/icons-material/Close';
-import { IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { useFormik } from 'formik';
 import React from 'react';
@@ -9,14 +7,12 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import Select from 'src/components/EnhancedSelect/Select';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { pluralize } from 'src/utilities/pluralize';
+
+import { CertificateTable } from './CertificateTable';
 
 import type { Configuration } from '@linode/api-v4';
 
@@ -39,6 +35,11 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
     { label: 'TCP', value: 'tcp' },
   ];
 
+  const handleRemoveCert = (index: number) => {
+    formik.values.certificate_table.splice(index);
+    formik.setFieldValue('certificate_table', formik.values.certificate_table);
+  };
+
   return (
     <Accordion
       heading={
@@ -54,7 +55,8 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
             <Typography variant="h3">{configuration.label}</Typography>
             <Typography>&mdash;</Typography>
             <Typography fontSize="1rem">
-              Port {configuration.port} - {configuration.routes.length} Routes
+              Port {configuration.port} -{' '}
+              {pluralize('Route', 'Routes', configuration.routes.length)}
             </Typography>
           </Stack>
           <Stack direction="row" spacing={2}>
@@ -110,28 +112,16 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
               <Box flexGrow={1} />
               <Button>Upload Certificate</Button>
             </Stack>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Label</TableCell>
-                  <TableCell>Host Header</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {formik.values.certificate_table.map((cert) => (
-                  <TableRow key={`${cert.certificate_id}-${cert.sni_hostname}`}>
-                    <TableCell>{cert.certificate_id}</TableCell>
-                    <TableCell>{cert.sni_hostname}</TableCell>
-                    <TableCell actionCell>
-                      <IconButton>
-                        <CloseIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <CertificateTable
+              certificate_table={formik.values.certificate_table}
+              onRemove={handleRemoveCert}
+            />
+            <Box mt={2}>
+              <Button buttonType="outlined">
+                Apply {configuration.certificate_table.length > 0 ? 'More' : ''}{' '}
+                Certificates
+              </Button>
+            </Box>
           </Stack>
         </Stack>
         {/* <Divider spacingBottom={16} spacingTop={16} />
