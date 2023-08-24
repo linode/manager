@@ -1,10 +1,10 @@
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
 
-import CloudInitIncompatibleIcon from 'src/assets/icons/cloud-init-incompatible.svg';
 import { Box } from 'src/components/Box';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
@@ -75,12 +75,12 @@ const ImageOption = (props: ImageOptionProps) => {
       >
         <span className={`${data.className} ${classes.distroIcon}`} />
         <Box>{label}</Box>
-        {flags.metadata && !data.isCloudInitCompatible ? (
+        {flags.metadata && data.isCloudInitCompatible ? (
           <TooltipIcon
-            icon={<CloudInitIncompatibleIcon />}
+            icon={<DescriptionOutlinedIcon />}
             status="other"
             sxTooltipIcon={sxCloudInitTooltipIcon}
-            text="This image is not compatible with cloud-init."
+            text="This image is compatible with cloud-init."
           />
         ) : null}
       </Box>
@@ -90,10 +90,16 @@ const ImageOption = (props: ImageOptionProps) => {
 
 const sxCloudInitTooltipIcon = {
   '& svg': {
+    '&:hover': {
+      color: 'white',
+    },
     height: 20,
     width: 20,
   },
+  color: 'inherit',
   marginLeft: 'auto',
+  padding: 0,
+  paddingRight: 1,
 };
 
 export { ImageOption };
