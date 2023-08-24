@@ -27,7 +27,7 @@ export const StyledCircleIcon = styled('div', {
   display: 'flex',
   height: '24px',
   justifyContent: 'center',
-  width: '24px',
+  width: theme.spacing(3),
 }));
 
 export const CustomStepIcon = styled(StepIcon, { label: 'StyledCircleIcon' })(
