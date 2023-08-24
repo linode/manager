@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { typeFactory } from 'src/factories/types';
@@ -6,26 +6,12 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigureForm } from './ConfigureForm';
 
-// const regionData = [
-//   { country: 'ca', id: 'ca-central', label: 'Canada Central' },
-//   { country: 'us', id: 'us-west', label: 'US West' },
-//   { country: 'us', id: 'us-east', label: 'US East' },
-//   { country: 'br', id: 'br-gru', label: 'São Paulo' },
-// ];
-
 // Mock the useFlags hook
 jest.mock('src/hooks/useFlags', () => ({
   useFlags: () => ({
     dcSpecificPricing: true, // Mock the flag value
   }),
 }));
-
-// Mock the useRegionsQuery hook
-// jest.mock('src/queries/regions', () => ({
-//   useRegionsQuery: () => ({
-//     data: regionData,
-//   }),
-// }));
 
 // Mock the useTypeQuery hook
 jest.mock('src/queries/types', () => ({
