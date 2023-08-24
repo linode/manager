@@ -21,7 +21,7 @@ export const Default: Story = {
             component step 1.{' '}
           </Typography>
         ),
-        label: 'Step 1',
+        label: 'Step1',
       },
       {
         content: (
@@ -30,7 +30,7 @@ export const Default: Story = {
             component step 2.{' '}
           </Typography>
         ),
-        label: 'Step 2',
+        label: 'Step2',
       },
       {
         content: (
@@ -39,7 +39,7 @@ export const Default: Story = {
             component step 3.{' '}
           </Typography>
         ),
-        label: 'Step 3',
+        label: 'Step3',
       },
     ],
   },
