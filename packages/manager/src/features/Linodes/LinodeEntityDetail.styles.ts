@@ -211,7 +211,7 @@ export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
 );
 
 export const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })({
-  '&:hover $copy > svg, & $copy:focus > svg': {
+  '&:hover .copy-tooltip > svg, & .copy-tooltip:focus > svg': {
     opacity: 1,
   },
 });

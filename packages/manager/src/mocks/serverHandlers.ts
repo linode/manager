@@ -18,6 +18,7 @@ import {
   accountTransferFactory,
   appTokenFactory,
   betaFactory,
+  certificateFactory,
   configurationFactory,
   contactFactory,
   createRouteFactory,
@@ -388,6 +389,22 @@ const aglb = [
       return res(ctx.json({}));
     }
   ),
+  // Certificates
+  rest.get('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
+    const certificates = certificateFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(certificates)));
+  }),
+  rest.post('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
+    return res(ctx.json(certificateFactory.build()));
+  }),
+  rest.put('*/v4beta/aglb/:id/certificates/:certId', (req, res, ctx) => {
+    const id = Number(req.params.certId);
+    const body = req.body as any;
+    return res(ctx.json(certificateFactory.build({ id, ...body })));
+  }),
+  rest.delete('*/v4beta/aglb/:id/certificates/:certId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
 ];
 
 const vpc = [
@@ -429,6 +446,10 @@ const vpc = [
   rest.get('*/vpcs/:vpcID', (req, res, ctx) => {
     const id = Number(req.params.id);
     return res(ctx.json(vpcFactory.build({ id })));
+  }),
+  rest.post('*/vpcs', (req, res, ctx) => {
+    const vpc = vpcFactory.build({ ...(req.body as any) });
+    return res(ctx.json(vpc));
   }),
 ];
 
