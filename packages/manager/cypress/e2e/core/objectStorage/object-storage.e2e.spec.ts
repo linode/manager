@@ -14,6 +14,7 @@ import {
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
+import { cleanUp } from 'support/util/cleanup';
 
 // Message shown on-screen when user navigates to an empty bucket.
 const emptyBucketMessage = 'This bucket is empty.';
@@ -94,6 +95,10 @@ const assertStatusForUrlAtAlias = (
 
 authenticate();
 describe('object storage end-to-end tests', () => {
+  before(() => {
+    cleanUp('obj-buckets');
+  });
+
   /*
    * - Tests object bucket creation flow using real API responses.
    * - Confirms that bucket can be created.
@@ -192,7 +197,9 @@ describe('object storage end-to-end tests', () => {
 
       // Navigate to new bucket page, upload and delete an object.
       cy.visitWithLogin(bucketPage);
-      cy.findByText(bucketLabel).should('be.visible');
+      ui.entityHeader.find().within(() => {
+        cy.findByText(bucketLabel).should('be.visible');
+      });
 
       uploadFile(bucketFiles[0].path, bucketFiles[0].name);
 

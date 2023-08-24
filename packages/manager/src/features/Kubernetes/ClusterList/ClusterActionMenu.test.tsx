@@ -7,7 +7,6 @@ import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { ClusterActionMenu } from './ClusterActionMenu';
 
-jest.mock('src/components/ActionMenu/ActionMenu');
 const mockGetKubeConfig = jest.spyOn<any, any>(kube, 'getKubeConfig');
 
 const props = {

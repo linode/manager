@@ -1,12 +1,11 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { styled } from '@mui/material/styles';
-import { StyledGrid } from './CommonTabbedContent.styles';
 import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 
 import ImageSelect from 'src/components/ImageSelect';
-import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
+import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
@@ -19,6 +18,7 @@ import {
   StackScriptFormStateHandlers,
   WithTypesRegionsAndImages,
 } from '../types';
+import { StyledGrid } from './CommonTabbedContent.styles';
 import { filterUDFErrors } from './formUtilities';
 
 interface Props {

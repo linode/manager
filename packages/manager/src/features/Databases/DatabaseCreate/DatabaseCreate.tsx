@@ -44,7 +44,8 @@ import { Paper } from 'src/components/Paper';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
-import PlansPanel, {
+import {
+  PlansPanel,
   PlanSelectionType,
 } from 'src/features/components/PlansPanel/PlansPanel';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
@@ -275,7 +276,7 @@ const DatabaseCreate = () => {
 
     try {
       const response = await createDatabase(createPayload);
-      history.push(`/databases/${response.id}`);
+      history.push(`/databases/${response.engine}/${response.id}`);
     } catch (errors) {
       const ipErrors = errors.filter(
         (error: APIError) => error.field === 'allow_list'

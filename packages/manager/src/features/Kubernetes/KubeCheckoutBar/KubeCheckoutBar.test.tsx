@@ -2,6 +2,7 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
+import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
@@ -12,10 +13,11 @@ const props: Props = {
   createCluster: jest.fn(),
   hasAgreed: false,
   highAvailability: false,
+  highAvailabilityPrice: LKE_HA_PRICE,
   pools,
-  region: undefined,
+  region: 'us-east',
   removePool: jest.fn(),
-  setHighAvailability: jest.fn(),
+  showHighAvailability: true,
   submitting: false,
   toggleHasAgreed: jest.fn(),
   updatePool: jest.fn(),
@@ -25,6 +27,22 @@ const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);
 
 describe('KubeCheckoutBar', () => {
+  it('with DC-specific pricing feature flag, should render helper text and disable create button until a region has been selected', async () => {
+    const { findByText, getByTestId, getByText } = renderWithTheme(
+      <KubeCheckoutBar {...props} region="" />,
+      {
+        flags: { dcSpecificPricing: true },
+      }
+    );
+
+    await waitForElementToBeRemoved(getByTestId('circle-progress'));
+
+    await findByText(
+      'Select a Region and add a Node Pool to view pricing and create a cluster.'
+    );
+    expect(getByText('Create Cluster').closest('button')).toBeDisabled();
+  });
+
   it('should render a section for each pool', async () => {
     const { getByTestId, queryAllByTestId } = renderComponent(props);
 
@@ -47,10 +65,19 @@ describe('KubeCheckoutBar', () => {
     await findByText(/minimum of 3 nodes/i);
   });
 
-  it('should display the total price of the cluster', async () => {
+  it('should display the total price of the cluster without High Availability', async () => {
     const { findByText } = renderWithTheme(<KubeCheckoutBar {...props} />);
 
     // 5 node pools * 3 linodes per pool * 10 per linode
     await findByText(/\$150\.00/);
+  });
+
+  it('should display the total price of the cluster with High Availability', async () => {
+    const { findByText } = renderWithTheme(
+      <KubeCheckoutBar {...props} highAvailability />
+    );
+
+    // 5 node pools * 3 linodes per pool * 10 per linode + 60 per month per cluster for HA
+    await findByText(/\$210\.00/);
   });
 });

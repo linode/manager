@@ -1,19 +1,24 @@
-import { databaseInstanceFactory } from 'src/factories/databases';
+import { databaseFactory } from 'src/factories/databases';
 import { eventFactory } from 'src/factories/events';
-import { sequentialStub } from 'support/stubs/sequential-stub';
-import { paginateResponse } from 'support/util/paginate';
-import { apiMatcher } from 'support/util/intercepts';
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
 } from 'support/constants/databases';
+import {
+  mockCreateDatabase,
+  mockGetDatabases,
+} from 'support/intercepts/databases';
+import { mockGetEvents } from 'support/intercepts/events';
+import { getRegionById } from 'support/util/regions';
+import { ui } from 'support/ui';
 
 describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
       // @TODO Add assertions for DBaaS pricing.
       it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
-        const databaseMock = databaseInstanceFactory.build({
+        // Database mock immediately after instance has been created.
+        const databaseMock = databaseFactory.build({
           label: configuration.label,
           type: configuration.linodeType,
           region: configuration.region.id,
@@ -22,11 +27,20 @@ describe('create a database cluster, mocked data', () => {
           cluster_size: configuration.clusterSize,
           engine: configuration.dbType,
           hosts: {
-            primary: undefined,
-            secondary: undefined,
+            primary: null,
+            secondary: null,
           },
         });
 
+        // Database mock once instance has been provisioned.
+        const databaseMockActive = {
+          ...databaseMock,
+          status: 'active',
+        };
+
+        const databaseRegionLabel = getRegionById(databaseMock.region).label;
+
+        // Event mock which will trigger Cloud to re-fetch DBaaS instance.
         const eventMock = eventFactory.build({
           status: 'finished',
           action: 'database_create',
@@ -40,77 +54,95 @@ describe('create a database cluster, mocked data', () => {
           secondary_entity: undefined,
         });
 
-        cy.intercept(
-          'POST',
-          apiMatcher(`databases/${configuration.dbType}/instances`),
-          databaseMock
-        ).as('createDatabase');
+        const clusterSizeSelection =
+          configuration.clusterSize > 1 ? '3 Nodes' : '1 Node';
 
-        cy.intercept(
-          'GET',
-          apiMatcher('databases/instances?page=1&page_size=25'),
-          sequentialStub([
-            paginateResponse(databaseMock),
-            paginateResponse({ ...databaseMock, status: 'active' }),
-          ])
-        ).as('listDatabases');
+        const clusterCpuType =
+          configuration.linodeType.indexOf('-dedicated-') !== -1
+            ? 'Dedicated CPU'
+            : 'Shared CPU';
+
+        mockCreateDatabase(databaseMock).as('createDatabase');
+        mockGetDatabases([databaseMock]).as('getDatabases');
 
         cy.visitWithLogin('/databases/create');
-        cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
+        ui.entityHeader
+          .find()
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Create').should('be.visible');
+          });
 
-        cy.contains('Cluster Label').click().type(configuration.label);
-        cy.contains('Select a Database Engine')
+        cy.findByText('Cluster Label')
+          .should('be.visible')
           .click()
-          .type(`${configuration.engine} v${configuration.version} {enter}`);
-        cy.contains('Select a Region')
-          .click()
-          .type(`${configuration.region.label} {enter}`);
+          .type(configuration.label);
 
-        // Database Linode type selection.
-        if (configuration.linodeType.indexOf('-dedicated-') !== -1) {
-          cy.findByText('Dedicated CPU').should('be.visible').click();
-        } else {
-          cy.findByText('Shared CPU').should('be.visible').click();
-        }
+        cy.findByText('Database Engine')
+          .should('be.visible')
+          .click()
+          .type(`${configuration.engine} v${configuration.version}{enter}`);
+
+        cy.findByText('Region')
+          .should('be.visible')
+          .click()
+          .type(`${configuration.region.label}{enter}`);
+
+        // Click either the "Dedicated CPU" or "Shared CPU" tab, according
+        // to the type of cluster being created.
+        cy.findByText(clusterCpuType).should('be.visible').click();
+
         cy.get(`[id="${configuration.linodeType}"]`).click();
 
         // Database cluster size selection.
-        if (configuration.clusterSize > 1) {
-          cy.contains('3 Nodes').click();
-        } else {
-          cy.contains('1 Node').click();
-        }
+        cy.contains(clusterSizeSelection).should('be.visible').click();
 
-        // Create database.
+        // Create database, confirm redirect, and that new instance is listed.
         cy.findByText('Create Database Cluster').should('be.visible').click();
+        cy.wait('@createDatabase');
 
-        cy.wait(['@createDatabase', '@listDatabases']);
-        cy.get(`[data-qa-database-cluster-id="${databaseMock.id}"]`).within(
-          () => {
-            cy.findByText(configuration.label).should('be.visible');
-            cy.findByText('Provisioning').should('be.visible');
-            // Confirm that database is the expected engine and major version.
+        // TODO Update assertions upon completion of M3-7030.
+        cy.url().should(
+          'endWith',
+          `/databases/${databaseMock.engine}/${databaseMock.id}`
+        );
+
+        cy.findByText(databaseMock.label).should('be.visible');
+        cy.findByText(databaseRegionLabel).should('be.visible');
+
+        // Navigate back to landing page.
+        ui.entityHeader.find().within(() => {
+          cy.findByText('Database Clusters').should('be.visible').click();
+        });
+
+        cy.url().should('endWith', '/databases');
+
+        cy.wait('@getDatabases');
+
+        cy.findByText(databaseMock.label)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
             cy.findByText(`${configuration.engine} v${configuration.version}`, {
               exact: false,
             }).should('be.visible');
             cy.findByText(configuration.region.label, {
               exact: false,
             }).should('be.visible');
-          }
-        );
+          });
 
-        // Begin intercepting and stubbing event to mock database creation completion.
-        cy.intercept('GET', apiMatcher('account/events*'), (req) => {
-          req.reply(paginateResponse(eventMock));
-        }).as('getEvent');
+        // Mock next request to fetch databases so that instance appears active.
+        // Mock next event request to trigger Cloud to re-fetch DBaaS instances.
+        mockGetDatabases([databaseMockActive]).as('getDatabases');
+        mockGetEvents([eventMock]).as('getEvents');
+        cy.wait(['@getEvents', '@getDatabases']);
 
-        cy.wait('@getEvent');
-        cy.wait('@listDatabases');
-        cy.get(`[data-qa-database-cluster-id="${databaseMock.id}"]`).within(
-          () => {
+        cy.findByText(databaseMock.label)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
             cy.findByText('Active').should('be.visible');
-          }
-        );
+          });
       });
     }
   );

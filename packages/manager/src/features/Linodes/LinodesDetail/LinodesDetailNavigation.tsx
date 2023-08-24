@@ -16,13 +16,13 @@ import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
+import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
-const LinodeNetworking = React.lazy(
-  () => import('./LinodeNetworking/LinodeNetworking')
+const LinodeNetwork = React.lazy(
+  () => import('./LinodeNetworking/LinodeNetwork')
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage/LinodeStorage'));
 const LinodeConfigurations = React.lazy(
@@ -142,7 +142,7 @@ const LinodesDetailNavigation = () => {
                 />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
-                <LinodeNetworking />
+                <LinodeNetwork />
               </SafeTabPanel>
               {isBareMetalInstance ? null : (
                 <>

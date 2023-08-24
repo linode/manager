@@ -4,59 +4,70 @@ import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants } from 'src/queries/profile';
+import { getPermissionsForLinode } from 'src/utilities/linodes';
 
-import DNSResolvers from './DNSResolvers';
-import NetworkTransfer from './NetworkTransfer';
-import TransferHistory from './TransferHistory';
+import { LinodePermissionsError } from '../../LinodePermissionsError';
+import { DNSResolvers } from './DNSResolvers';
+import { NetworkTransfer } from './NetworkTransfer';
+import { TransferHistory } from './TransferHistory';
 
 interface Props {
   linodeID: number;
 }
 
-const LinodeNetworkingSummaryPanel = (props: Props) => {
+export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
   // @todo maybe move this query closer to the consuming component
   const { data: linode } = useLinodeQuery(props.linodeID);
   const theme = useTheme();
+
+  const { data: grants } = useGrants();
+
+  const readOnly =
+    getPermissionsForLinode(grants, props.linodeID) === 'read_only';
 
   if (!linode) {
     return null;
   }
 
   return (
-    <StyledPaper>
-      <Grid container spacing={4} sx={{ flexGrow: 1 }}>
-        <Grid md={2.5} sm={6} xs={12}>
-          <NetworkTransfer linodeID={linode.id} linodeLabel={linode.label} />
+    <>
+      {readOnly && <LinodePermissionsError />}
+      <StyledPaper>
+        <Grid container spacing={4} sx={{ flexGrow: 1 }}>
+          <Grid md={2.5} sm={6} xs={12}>
+            <NetworkTransfer linodeID={linode.id} linodeLabel={linode.label} />
+          </Grid>
+          <Grid
+            sx={{
+              [theme.breakpoints.down('md')]: {
+                order: 3,
+              },
+            }}
+            md
+            sm
+            xs={12}
+          >
+            <TransferHistory
+              linodeCreated={linode.created}
+              linodeID={linode.id}
+            />
+          </Grid>
+          <StyledDnsResolverGrid
+            sx={{
+              paddingBottom: 0,
+            }}
+            md={3.5}
+            sm={6}
+            xs={12}
+          >
+            <DNSResolvers region={linode.region} />
+          </StyledDnsResolverGrid>
         </Grid>
-        <Grid
-          sx={{
-            [theme.breakpoints.down('md')]: {
-              order: 3,
-            },
-          }}
-          md
-          sm
-          xs={12}
-        >
-          <TransferHistory
-            linodeCreated={linode.created}
-            linodeID={linode.id}
-          />
-        </Grid>
-        <StyledDnsResolverGrid
-          sx={{
-            paddingBottom: 0,
-          }}
-          md={3.5}
-          sm={6}
-          xs={12}
-        >
-          <DNSResolvers region={linode.region} />
-        </StyledDnsResolverGrid>
-      </Grid>
-    </StyledPaper>
+      </StyledPaper>
+    </>
   );
-};
+});
 
 const StyledDnsResolverGrid = styled(Grid, { label: 'StyledDnsResolverGrid' })(
   ({ theme }) => ({
@@ -80,5 +91,3 @@ const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
     flexDirection: 'column',
   },
 }));
-
-export default React.memo(LinodeNetworkingSummaryPanel);

@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import { useTheme, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { makeStyles, useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -12,6 +11,7 @@ import { Typography } from 'src/components/Typography';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { StyledGrid } from './EmailBounce.styles';
 
 // =============================================================================
 // <EmailBounceNotificationSection />
@@ -85,20 +85,6 @@ export const EmailBounceNotificationSection = React.memo(() => {
 // =============================================================================
 // <EmailBounceNotification />
 // =============================================================================
-const useEmailBounceNotificationStyles = makeStyles((theme: Theme) => ({
-  buttonContainer: {
-    justifyContent: 'flex-end',
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'flex-start',
-      marginBottom: 4,
-      marginLeft: 2,
-      marginTop: 8,
-    },
-  },
-  updateButton: {
-    marginLeft: 16,
-  },
-}));
 
 interface Props {
   changeEmail: () => void;
@@ -108,8 +94,6 @@ interface Props {
 
 const EmailBounceNotification = React.memo((props: Props) => {
   const { changeEmail, confirmEmail, text } = props;
-
-  const classes = useEmailBounceNotificationStyles();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -148,13 +132,7 @@ const EmailBounceNotification = React.memo((props: Props) => {
         <Grid lg={8} md={6} xs={12}>
           {text}
         </Grid>
-        <Grid
-          className={classes.buttonContainer}
-          container
-          lg={4}
-          md={6}
-          xs={12}
-        >
+        <StyledGrid container lg={4} md={6} xs={12}>
           <Button
             buttonType="primary"
             data-testid="confirmButton"
@@ -164,14 +142,16 @@ const EmailBounceNotification = React.memo((props: Props) => {
             {confirmationText}
           </Button>
           <Button
+            sx={(theme) => ({
+              marginLeft: theme.spacing(2),
+            })}
             buttonType="secondary"
-            className={classes.updateButton}
             data-testid="updateButton"
             onClick={changeEmail}
           >
             {updateText}
           </Button>
-        </Grid>
+        </StyledGrid>
       </Grid>
     </Notice>
   );

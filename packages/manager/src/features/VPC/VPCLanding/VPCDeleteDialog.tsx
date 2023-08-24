@@ -1,12 +1,13 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useDeleteVPCMutation } from 'src/queries/vpcs';
 
 interface Props {
-  id: number;
-  label: string;
+  id?: number;
+  label?: string;
   onClose: () => void;
   open: boolean;
 }
@@ -14,7 +15,10 @@ interface Props {
 export const VPCDeleteDialog = (props: Props) => {
   const { id, label, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { error, isLoading, mutateAsync: deleteVPC } = useDeleteVPCMutation(id);
+  const { error, isLoading, mutateAsync: deleteVPC } = useDeleteVPCMutation(
+    id ?? -1
+  );
+  const history = useHistory();
 
   const onDeleteVPC = () => {
     deleteVPC().then(() => {
@@ -22,6 +26,9 @@ export const VPCDeleteDialog = (props: Props) => {
         variant: 'success',
       });
       onClose();
+      if (history.location.pathname !== '/vpc') {
+        history.push('/vpc');
+      }
     });
   };
 

@@ -1,3 +1,4 @@
+import { Region } from 'src/regions';
 import { IPAddress, IPRange } from '../networking/types';
 import { SSHKey } from '../profile/types';
 
@@ -164,7 +165,8 @@ export interface Interface {
   purpose: InterfacePurpose;
   ipam_address: string | null;
   primary?: boolean;
-  subnet?: number | null;
+  subnet_id?: number | null;
+  vpc_id?: number | null;
   ipv4?: ConfigInterfaceIPv4;
   ipv6?: ConfigInterfaceIPv6;
   ip_ranges?: string[];
@@ -288,6 +290,10 @@ export interface PriceObject {
   hourly: number | null;
 }
 
+interface RegionPriceObject extends PriceObject {
+  id: Region['id'];
+}
+
 export interface BaseType {
   id: string;
   label: string;
@@ -302,6 +308,7 @@ export interface LinodeType extends BaseType {
   network_out: number;
   gpus: number;
   price: PriceObject;
+  region_prices: RegionPriceObject[];
   addons: {
     backups: { price: PriceObject };
   };

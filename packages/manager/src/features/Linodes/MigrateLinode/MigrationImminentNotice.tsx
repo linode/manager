@@ -1,6 +1,5 @@
 import { Notification } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
@@ -10,9 +9,8 @@ interface Props {
   linodeID: number;
   notifications: Notification[];
 }
-type CombinedProps = Props;
 
-const MigrationImminentNotice: React.FC<CombinedProps> = (props) => {
+export const MigrationImminentNotice = React.memo((props: Props) => {
   const migrationScheduledForThisLinode = !!props.notifications.find(
     (eachNotification) => {
       return (
@@ -35,8 +33,4 @@ const MigrationImminentNotice: React.FC<CombinedProps> = (props) => {
       </React.Fragment>
     </Notice>
   ) : null;
-};
-
-export default compose<CombinedProps, Props>(React.memo)(
-  MigrationImminentNotice
-);
+});

@@ -1,10 +1,10 @@
+import { Region } from '@linode/api-v4';
 import {
   CreateKubeClusterPayload,
   CreateNodePoolData,
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
@@ -12,16 +12,23 @@ import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
-import { Paper } from 'src/components/Paper';
+import {
+  getKubeHighAvailability,
+  getLatestVersion,
+} from 'src/features/Kubernetes/kubeUtils';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
@@ -36,9 +43,12 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
+import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
+import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
+import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -68,7 +78,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       maxWidth: 440,
     },
     '& p': {
-      fontWeight: 500,
       lineHeight: '1.43rem',
       margin: 0,
       maxWidth: '100%',
@@ -112,21 +121,35 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const CreateCluster = () => {
   const classes = useStyles();
+  const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
+  const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
+  const [label, setLabel] = React.useState<string | undefined>();
+  const [version, setVersion] = React.useState<Item<string> | undefined>();
+  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [hasAgreed, setAgreed] = React.useState<boolean>(false);
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
+  const [highAvailability, setHighAvailability] = React.useState<boolean>();
+
+  const { data, error: regionsError } = useRegionsQuery();
+  const regionsData = data ?? [];
+  const flags = useFlags();
+  const history = useHistory();
+  const { data: account } = useAccount();
+  const { showHighAvailability } = getKubeHighAvailability(account);
+
   const {
     data: allTypes,
     error: typesError,
     isLoading: typesLoading,
   } = useAllTypes();
 
+  // Only want to use current types here.
+  const typesData = filterCurrentTypes(allTypes?.map(extendType));
+
   const {
     mutateAsync: createKubernetesCluster,
   } = useCreateKubernetesClusterMutation();
-
-  const { data, error: regionsError } = useRegionsQuery();
-  const regionsData = data ?? [];
-
-  // Only want to use current types here.
-  const typesData = filterCurrentTypes(allTypes?.map(extendType));
 
   // Only include regions that have LKE capability
   const filteredRegions = React.useMemo(() => {
@@ -137,26 +160,15 @@ export const CreateCluster = () => {
       : [];
   }, [regionsData]);
 
-  const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
-  const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
-  const [label, setLabel] = React.useState<string | undefined>();
-  const [highAvailability, setHighAvailability] = React.useState<boolean>(
-    false
-  );
-  const [version, setVersion] = React.useState<Item<string> | undefined>();
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [hasAgreed, setAgreed] = React.useState<boolean>(false);
-  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const {
     data: versionData,
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
+
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
     value: thisVersion.id,
   }));
-  const history = useHistory();
 
   React.useEffect(() => {
     if (filteredRegions.length === 1 && !selectedRegionID) {
@@ -164,17 +176,19 @@ export const CreateCluster = () => {
     }
   }, [filteredRegions, selectedRegionID]);
 
+  React.useEffect(() => {
+    if (versions.length > 0) {
+      setVersion(getLatestVersion(versions));
+    }
+  }, [versionData]);
+
   const createCluster = () => {
     const { push } = history;
-
     setErrors(undefined);
     setSubmitting(true);
-
     const k8s_version = version ? version.value : undefined;
 
-    /**
-     * Only type and count to the API.
-     */
+    // Only type and count to the API.
     const node_pools = nodePools.map(
       pick(['type', 'count'])
     ) as CreateNodePoolData[];
@@ -223,11 +237,26 @@ export const CreateCluster = () => {
   };
 
   const updateLabel = (newLabel: string) => {
-    /**
-     * If the new label is an empty string, use undefined.
-     * This allows it to pass Yup validation.
-     */
+    // If the new label is an empty string, use undefined. This allows it to pass Yup validation.
     setLabel(newLabel ? newLabel : undefined);
+  };
+
+  /**
+   * @param regionId - region selection or null if no selection made
+   * @returns dynamically calculated high availability price by region
+   */
+  const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
+    if (!regionId) {
+      return undefined;
+    } else {
+      return parseFloat(
+        getDCSpecificPrice({
+          basePrice: LKE_HA_PRICE,
+          flags,
+          regionId,
+        })
+      );
+    }
   };
 
   const errorMap = getErrorMap(
@@ -247,11 +276,7 @@ export const CreateCluster = () => {
   });
 
   if (typesError || regionsError || versionLoadError) {
-    /**
-     * This information is necessary to create a Cluster.
-     * Otherwise, show an error state.
-     */
-
+    // This information is necessary to create a Cluster. Otherwise, show an error state.
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
@@ -268,66 +293,72 @@ export const CreateCluster = () => {
         {errorMap.none && <Notice error text={errorMap.none} />}
         <Paper data-qa-label-header>
           <div className={classes.inner}>
-            <Box>
-              <TextField
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  updateLabel(e.target.value)
-                }
-                className={classes.inputWidth}
-                data-qa-label-input
-                errorText={errorMap.label}
-                label="Cluster Label"
-                value={label || ''}
-              />
-            </Box>
-            <Box>
-              <RegionSelect
-                handleSelection={(regionID: string) =>
-                  setSelectedRegionID(regionID)
-                }
-                textFieldProps={{
-                  helperText: <RegionHelperText />,
-                  helperTextPosition: 'top',
-                }}
-                className={classes.regionSubtitle}
-                errorText={errorMap.region}
-                regions={filteredRegions}
-                selectedID={selectedID}
-              />
-            </Box>
-            <Box>
-              <Select
-                className={classes.inputWidth}
-                errorText={errorMap.k8s_version}
-                isClearable={false}
-                label="Kubernetes Version"
-                onChange={(selected: Item<string>) => setVersion(selected)}
-                options={versions}
-                placeholder={' '}
-                value={version || null}
-              />
-            </Box>
-          </div>
-          <Box>
-            <NodePoolPanel
-              typesError={
-                typesError
-                  ? getAPIErrorOrDefault(
-                      typesError,
-                      'Error loading Linode type information.'
-                    )[0].reason
-                  : undefined
+            <TextField
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                updateLabel(e.target.value)
               }
-              addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
-              apiError={errorMap.node_pools}
-              hasSelectedRegion={hasSelectedRegion}
-              isPlanPanelDisabled={isPlanPanelDisabled}
-              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-              regionsData={regionsData}
-              types={typesData || []}
-              typesLoading={typesLoading}
+              className={classes.inputWidth}
+              data-qa-label-input
+              errorText={errorMap.label}
+              label="Cluster Label"
+              value={label || ''}
             />
-          </Box>
+            <RegionSelect
+              handleSelection={(regionID: string) =>
+                setSelectedRegionID(regionID)
+              }
+              textFieldProps={{
+                helperText: <RegionHelperText mb={2} />,
+                helperTextPosition: 'top',
+              }}
+              className={classes.regionSubtitle}
+              errorText={errorMap.region}
+              regions={filteredRegions}
+              selectedID={selectedID}
+            />
+            <Select
+              onChange={(selected: Item<string>) => {
+                setVersion(selected);
+              }}
+              className={classes.inputWidth}
+              errorText={errorMap.k8s_version}
+              isClearable={false}
+              label="Kubernetes Version"
+              options={versions}
+              placeholder={' '}
+              value={version || null}
+            />
+            {showHighAvailability ? (
+              <Box data-testid="ha-control-plane">
+                <HAControlPlane
+                  highAvailabilityPrice={
+                    flags.dcSpecificPricing
+                      ? getHighAvailabilityPrice(selectedID)
+                      : LKE_HA_PRICE
+                  }
+                  setHighAvailability={setHighAvailability}
+                />
+              </Box>
+            ) : null}
+          </div>
+          <NodePoolPanel
+            typesError={
+              typesError
+                ? getAPIErrorOrDefault(
+                    typesError,
+                    'Error loading Linode type information.'
+                  )[0].reason
+                : undefined
+            }
+            addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
+            apiError={errorMap.node_pools}
+            hasSelectedRegion={hasSelectedRegion}
+            isPlanPanelDisabled={isPlanPanelDisabled}
+            isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+            regionsData={regionsData}
+            types={typesData || []}
+            typesLoading={typesLoading}
+          />
         </Paper>
       </Grid>
       <Grid
@@ -335,6 +366,11 @@ export const CreateCluster = () => {
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
+          highAvailabilityPrice={
+            flags.dcSpecificPricing
+              ? getHighAvailabilityPrice(selectedID)
+              : LKE_HA_PRICE
+          }
           updateFor={[
             hasAgreed,
             highAvailability,
@@ -353,7 +389,7 @@ export const CreateCluster = () => {
           pools={nodePools}
           region={selectedRegionID}
           removePool={removePool}
-          setHighAvailability={setHighAvailability}
+          showHighAvailability={showHighAvailability}
           submitting={submitting}
           toggleHasAgreed={toggleHasAgreed}
           updatePool={updatePool}

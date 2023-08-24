@@ -73,17 +73,4 @@ describe('linode backups', () => {
       deleteLinodeById(linode.id);
     });
   });
-
-  // this test has become irrelevant for now
-  it.skip('cant snapshot while booting linode', () => {
-    createLinode({ backups_enabled: true }).then((linode) => {
-      cy.visit(`/linodes/${linode.id}/backup`);
-      fbtClick('Take Snapshot');
-      cy.contains('Label is required.');
-      cy.get('[data-qa-manual-name="true"]').type(`${linode.label} backup`);
-      fbtClick('Take Snapshot');
-      getClick('[data-qa-confirm="true"]');
-      containsVisible('Linode busy.');
-    });
-  });
 });

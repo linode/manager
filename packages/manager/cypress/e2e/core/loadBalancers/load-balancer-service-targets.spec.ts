@@ -3,7 +3,7 @@
  */
 
 import type { ServiceTarget } from '@linode/api-v4';
-import { getServiceTargetFactory } from '@src/factories';
+import { serviceTargetFactory } from '@src/factories';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
@@ -16,7 +16,8 @@ import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 
-describe('Akamai Global Load Balancer service targets', () => {
+// @todo this page won't exist anymore. It will be moved to /loadbalancer/:id/service-targets
+describe.skip('Akamai Global Load Balancer service targets', () => {
   /*
    * - Confirms user can navigate to AGLB service target landing page when feature is enabled.
    * - Confirms that service targets are listed on the landing page.
@@ -24,13 +25,13 @@ describe('Akamai Global Load Balancer service targets', () => {
    */
   it('can navigate to service targets landing page', () => {
     const mockServiceTargets = [
-      getServiceTargetFactory.build({
+      serviceTargetFactory.build({
         label: randomLabel(),
       }),
-      getServiceTargetFactory.build({
+      serviceTargetFactory.build({
         label: randomLabel(),
       }),
-      getServiceTargetFactory.build({
+      serviceTargetFactory.build({
         label: randomLabel(),
       }),
     ];
