@@ -35,7 +35,7 @@ interface FilterConditionTypes {
   '+and'?: Filter[];
   '+or'?: Filter[] | string[];
   '+order_by'?: string;
-  '+order'?: string;
+  '+order'?: 'asc' | 'desc';
   '+gt'?: number;
   '+gte'?: number;
   '+lt'?: number;
