@@ -8,11 +8,12 @@ import { Hidden } from 'src/components/Hidden';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
-import { StyledGravatar, StyledTableRow } from './EventsRow.styles';
+import { StyledGravatar } from './EventRow.styles';
 
 interface ExtendedEvent extends Event {
   _deleted?: string;
@@ -69,7 +70,7 @@ export const Row = (props: RowProps) => {
   }
 
   return (
-    <StyledTableRow
+    <TableRow
       ariaLabel={`Event ${message}`}
       data-qa-event-row
       data-test-id={action}
@@ -96,6 +97,6 @@ export const Row = (props: RowProps) => {
           <DateTimeDisplay value={timestamp.toString()} />
         </TableCell>
       </Hidden>
-    </StyledTableRow>
+    </TableRow>
   );
 };
