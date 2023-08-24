@@ -22,6 +22,12 @@ const LoadBalancerServiceTargets = React.lazy(() =>
   }))
 );
 
+const LoadBalancerCertificates = React.lazy(() =>
+  import('./LoadBalancerCertificates').then((module) => ({
+    default: module.LoadBalancerCertificates,
+  }))
+);
+
 const LoadBalancerDetailLanding = () => {
   const history = useHistory();
 
@@ -65,7 +71,7 @@ const LoadBalancerDetailLanding = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment={loadbalancerId} />
+      <DocumentTitleSegment segment={loadbalancer?.label ?? ''} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -98,7 +104,11 @@ const LoadBalancerDetailLanding = () => {
               <LoadBalancerServiceTargets />
             </React.Suspense>
           </SafeTabPanel>
-          <SafeTabPanel index={4}>4</SafeTabPanel>
+          <SafeTabPanel index={4}>
+            <React.Suspense fallback={<SuspenseLoader />}>
+              <LoadBalancerCertificates />
+            </React.Suspense>
+          </SafeTabPanel>
           <SafeTabPanel index={5}>5</SafeTabPanel>
         </TabPanels>
       </Tabs>
