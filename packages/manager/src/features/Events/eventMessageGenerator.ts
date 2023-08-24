@@ -662,21 +662,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   subnet_create: {
     notification: (e) =>
-      `Subnet ${e.entity!.label} has been created in VPC ${
-        e.secondary_entity?.label
-      }.`,
+      `A subnet has been created in VPC ${e.secondary_entity?.label}.`,
   },
   subnet_delete: {
     notification: (e) =>
-      `Subnet ${e.entity!.label} has been deleted from VPC ${
-        e.secondary_entity?.label
-      }.`,
+      `A subnet has been deleted in VPC ${e.secondary_entity?.label}.`,
   },
   subnet_update: {
     notification: (e) =>
-      `Subnet ${e.entity!.label} in VPC ${
-        e.secondary_entity?.label
-      } has been updated.`,
+      `A subnet in VPC ${e.secondary_entity?.label} has been updated.`,
   },
   tag_create: {
     notification: (e) => `Tag ${e.entity!.label} has been created.`,

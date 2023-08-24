@@ -72,7 +72,9 @@ export interface RowProps {
     | 'linode'
     | 'nodebalancer'
     | 'stackscript'
-    | 'volume';
+    | 'subnet'
+    | 'volume'
+    | 'vpc';
   username: null | string;
 }
 

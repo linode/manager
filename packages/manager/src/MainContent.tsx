@@ -358,7 +358,9 @@ const MainContent = (props: CombinedProps) => {
                             {flags.selfServeBetas ? (
                               <Route component={Betas} path="/betas" />
                             ) : null}
-                            {flags.vpc && <Route component={VPC} path="/vpc" />}
+                            {flags.vpc && (
+                              <Route component={VPC} path="/vpcs" />
+                            )}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />
