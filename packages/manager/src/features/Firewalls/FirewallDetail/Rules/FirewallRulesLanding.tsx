@@ -43,7 +43,7 @@ interface Drawer {
   ruleIdx?: number;
 }
 
-const FirewallRulesLanding = (props: Props) => {
+export const FirewallRulesLanding = React.memo((props: Props) => {
   const { disabled, firewallID, rules } = props;
   const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
     firewallID
@@ -373,7 +373,7 @@ const FirewallRulesLanding = (props: Props) => {
       />
     </>
   );
-};
+});
 
 const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',
@@ -385,8 +385,6 @@ const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
   marginBottom: theme.spacing(4),
   marginTop: theme.spacing(2),
 }));
-
-export default React.memo(FirewallRulesLanding);
 
 interface DiscardChangesDialogProps {
   handleClose: () => void;

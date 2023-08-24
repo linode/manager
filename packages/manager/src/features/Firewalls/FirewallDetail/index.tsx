@@ -16,11 +16,22 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
 
-const FirewallLinodesLanding = React.lazy(
-  () => import('./Devices/FirewallLinodesLanding')
+const FirewallRulesLanding = React.lazy(() =>
+  import('./Rules/FirewallRulesLanding').then((module) => ({
+    default: module.FirewallRulesLanding,
+  }))
 );
-const FirewallRulesLanding = React.lazy(
-  () => import('./Rules/FirewallRulesLanding')
+
+const FirewallLinodesLanding = React.lazy(() =>
+  import('./Devices/FirewallLinodesLanding').then((module) => ({
+    default: module.FirewallLinodesLanding,
+  }))
+);
+
+const FirewallNodeBalancerLanding = React.lazy(() =>
+  import('./Devices/FirewallNodeBalancerLanding').then((module) => ({
+    default: module.FirewallNodeBalancerLanding,
+  }))
 );
 
 export const FirewallDetail = () => {
@@ -45,6 +56,10 @@ export const FirewallDetail = () => {
     {
       routeName: `/firewalls/${id}/linodes`,
       title: 'Linodes',
+    },
+    {
+      routeName: `/firewalls/${id}/nodebalancer`,
+      title: 'NodeBalancers',
     },
   ];
 
@@ -118,6 +133,13 @@ export const FirewallDetail = () => {
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <FirewallLinodesLanding
+              disabled={!userCanModifyFirewall}
+              firewallID={firewallId}
+              firewallLabel={firewall.label}
+            />
+          </SafeTabPanel>
+          <SafeTabPanel index={2}>
+            <FirewallNodeBalancerLanding
               disabled={!userCanModifyFirewall}
               firewallID={firewallId}
               firewallLabel={firewall.label}

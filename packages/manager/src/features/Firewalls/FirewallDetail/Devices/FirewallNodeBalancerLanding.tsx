@@ -17,7 +17,7 @@ interface Props {
   firewallLabel: string;
 }
 
-export const FirewallLinodesLanding = React.memo((props: Props) => {
+export const FirewallNodeBalancerLanding = React.memo((props: Props) => {
   const { disabled, firewallID, firewallLabel } = props;
 
   const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(
@@ -57,8 +57,8 @@ export const FirewallLinodesLanding = React.memo((props: Props) => {
       <Grid container direction="column">
         <Grid style={{ paddingBottom: 0 }}>
           <StyledTypography>
-            The following Linodes have been assigned to this Firewall. A Linode
-            can only be assigned to a single Firewall.
+            The following NodeBalancers have been assigned to this Firewall. A
+            NodeBalancer can only be assigned to a single Firewall.
           </StyledTypography>
         </Grid>
         <StyledGrid>
@@ -67,7 +67,7 @@ export const FirewallLinodesLanding = React.memo((props: Props) => {
             disabled={disabled}
             onClick={() => setDeviceDrawerOpen(true)}
           >
-            Add Linodes to Firewall
+            Add NodeBalancer to Firewall
           </Button>
         </StyledGrid>
       </Grid>
