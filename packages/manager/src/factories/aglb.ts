@@ -79,7 +79,7 @@ export const configurationFactory = Factory.Sync.makeFactory<Configuration>({
     },
   ],
   id: Factory.each((i) => i),
-  label: Factory.each((i) => `entrypoint${i}`),
+  label: Factory.each((i) => `configuration-${i}`),
   port: 80,
   protocol: 'http',
   routes: ['images-route'],
