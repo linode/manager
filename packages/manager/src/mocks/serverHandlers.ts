@@ -605,6 +605,11 @@ export const handlers = [
         label: 'eu-linode',
         region: 'eu-west',
       }),
+      linodeFactory.build({
+        backups: { enabled: false },
+        label: 'DC-Specific Pricing Linode',
+        region: 'id-cgk',
+      }),
       eventLinode,
       multipleIPLinode,
     ];
