@@ -90,11 +90,11 @@ const ImageOption = (props: ImageOptionProps) => {
 
 const sxCloudInitTooltipIcon = {
   '& svg': {
-    '&:hover': {
-      color: 'white',
-    },
     height: 20,
     width: 20,
+  },
+  '&:hover': {
+    color: 'white',
   },
   color: 'inherit',
   marginLeft: 'auto',
