@@ -25,7 +25,7 @@ export const StyledCircleIcon = styled('div', {
       : `2px solid ${theme.borderColors.borderTable}`, // Adjust border styles as needed
   borderRadius: '50%',
   display: 'flex',
-  height: '24px',
+  height: theme.spacing(3),
   justifyContent: 'center',
   width: theme.spacing(3),
 }));
