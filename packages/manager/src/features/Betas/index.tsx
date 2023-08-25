@@ -10,7 +10,7 @@ const BetaSignup = React.lazy(() => import('./BetaSignup'));
 const BetaRoutes = () => (
   <React.Suspense fallback={<SuspenseLoader />}>
     <Switch>
-      <Route component={BetaSignup} path="/betas/:betaId/signup" />
+      <Route component={BetaSignup} path="/betas/:betaId?/signup" />
       <Route component={BetasLanding} exact path="/betas" strict />
     </Switch>
   </React.Suspense>
