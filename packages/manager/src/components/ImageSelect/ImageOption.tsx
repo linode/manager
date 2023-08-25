@@ -94,7 +94,7 @@ const sxCloudInitTooltipIcon = {
     width: 20,
   },
   '&:hover': {
-    color: 'white',
+    color: 'inherit',
   },
   color: 'inherit',
   marginLeft: 'auto',
