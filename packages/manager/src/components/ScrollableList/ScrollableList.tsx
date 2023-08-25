@@ -22,7 +22,7 @@ interface Props extends ListProps {
 }
 
 /**
- * A simple list that is scrollable if there is a large number of list items
+ * A simple list that becomes scrollable if it has a lot of list items
  */
 export const ScrollableList = (props: Props) => {
   const { ListItems, maxHeight, maxWidth, ...listProps } = props;

@@ -11,7 +11,7 @@ import { Typography } from 'src/components/Typography';
 import type { LinodeListItemProps } from './CheckedLinodeListItem';
 
 /**
- * A list item for Linodes in which this item can be removed from a list
+ * A removable list item for a Linode
  */
 export const RemovableLinodeListItem = (props: LinodeListItemProps) => {
   const { linode, onClickListItem, ...listItemProps } = props;

@@ -10,25 +10,25 @@ import type { ListItemProps } from 'src/components/ListItem';
 
 export interface LinodeListItemProps extends ListItemProps {
   /**
-   * The list of all Linode items to render as an individual list item
+   * The Linode to render as a list item
    */
   linode: Linode;
 
   /**
-   * The action when clicking this list item
+   * The action to execute when clicking this list item
    */
   onClickListItem: (item: Linode) => void;
 }
 
 interface Props extends LinodeListItemProps {
   /**
-   * Is this list item currently checked
+   * Determines whether or not the list item checked
    */
   checked: boolean;
 }
 
 /**
- *  A list item for Linodes in which this item can be checked
+ *  A checkable list item for a Linode
  */
 export const CheckedLinodeListItem = (props: Props) => {
   const { checked, linode, onClickListItem, ...listItemProps } = props;
