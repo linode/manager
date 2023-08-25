@@ -37,10 +37,12 @@ export const CheckedLinodeListItem = (props: Props) => {
     <ListItem {...listItemProps} key={linode.id} sx={{ padding: 0 }}>
       <ListItemButton
         onClick={() => onClickListItem(linode)}
-        sx={{ minHeight: '44px', padding: 0 }}
+        sx={{ minHeight: '40px', padding: 0 }}
       >
         <Checkbox checked={checked} />
-        <ListItemText>{linode.label}</ListItemText>
+        <ListItemText sx={(theme) => ({ marginLeft: theme.spacing(0.5) })}>
+          {linode.label}
+        </ListItemText>
       </ListItemButton>
     </ListItem>
   );

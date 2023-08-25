@@ -1,9 +1,12 @@
 import Close from '@mui/icons-material/Close';
+import { styled } from '@mui/material';
+import { ListItemButton } from '@mui/material';
 import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
+import { Link } from 'src/components/Link';
 import { ListItem } from 'src/components/ListItem';
-import { ListItemText } from 'src/components/ListItemText';
+import { Typography } from 'src/components/Typography';
 
 import type { LinodeListItemProps } from './CheckedLinodeListItem';
 
@@ -22,11 +25,29 @@ export const RemovableLinodeListItem = (props: LinodeListItemProps) => {
         </IconButton>
       }
       key={linode.id}
-      sx={{ minHeight: '44px', padding: 0 }}
+      sx={{ padding: 0 }}
     >
-      <ListItemText sx={(theme) => ({ marginLeft: theme.spacing(2) })}>
-        {linode.label}
-      </ListItemText>
+      {/* TODO: unsure of the exact user flow, but based on the mockup, seems like each linode listed
+      should have a link back to its detail page. Will change later if needed */}
+      <ListItemButton sx={{ minHeight: '40px', padding: 0 }}>
+        <StyledLink
+          style={{ textDecoration: 'none' }}
+          to={`/linodes/${linode.id}`}
+        >
+          <Typography
+            sx={(theme) => ({ color: theme.textColors.linkActiveLight })}
+            variant="body1"
+          >
+            {linode.label}
+          </Typography>
+        </StyledLink>
+      </ListItemButton>
     </ListItem>
   );
 };
+
+const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
+  height: '100%',
+  padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+  width: '100%',
+}));

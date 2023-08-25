@@ -116,7 +116,7 @@ export const RemovableListItemsExample: Story = {
 
       return (
         <>
-          <ScrollableList ListItems={removableListItems} maxHeight={445} />
+          <ScrollableList ListItems={removableListItems} />
           <Button onClick={resetList} sx={{ marginTop: 2 }}>
             Reset list
           </Button>
