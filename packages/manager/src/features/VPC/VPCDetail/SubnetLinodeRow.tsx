@@ -10,6 +10,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
@@ -30,6 +31,16 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
     error: firewallsError,
     isLoading: firewallsLoading,
   } = useLinodeFirewallsQuery(linodeId);
+
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const handleMouseEnter = React.useCallback(() => {
+    setIsHovered(true);
+  }, []);
+
+  const handleMouseLeave = React.useCallback(() => {
+    setIsHovered(false);
+  }, []);
 
   if (linodeLoading || !linode) {
     return (
@@ -66,7 +77,10 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
       : 'other';
 
   return (
-    <StyledTableRow>
+    <StyledTableRow
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <StyledTableCell component="th" scope="row" sx={{ paddingLeft: 6 }}>
         <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
       </StyledTableCell>
@@ -75,7 +89,9 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
         {capitalizeAllWords(linode.status.replace('_', ' '))}
       </StyledTableCell>
       <StyledTableCell>{linode.id}</StyledTableCell>
-      <StyledTableCell>{linode.ipv4}</StyledTableCell>
+      <StyledTableCell>
+        <IPAddress ips={linode.ipv4} isHovered={isHovered} />
+      </StyledTableCell>
       <StyledTableCell>
         {getFirewallsCellString(
           attachedFirewalls?.data ?? [],
