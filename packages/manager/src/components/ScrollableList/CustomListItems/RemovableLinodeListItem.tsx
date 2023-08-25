@@ -10,9 +10,8 @@ import { ListItemText } from 'src/components/ListItemText';
  * A list item for Linodes in which this item can be removed from a list
  */
 export const RemovableLinodeListItem = (props: LinodeListItemProps) => {
-  const { linode, onClickListItem } = props;
+  const { linode, onClickListItem, ...listItemProps } = props;
 
-  // cleanup all later
   return (
     <ListItem
       sx={{ padding: 0, minHeight: '44px' }}
@@ -22,6 +21,7 @@ export const RemovableLinodeListItem = (props: LinodeListItemProps) => {
           <Close />
         </IconButton>
       }
+      {...listItemProps}
     >
       <ListItemText sx={{ marginLeft: '16px' }}>{linode.label}</ListItemText>
     </ListItem>
