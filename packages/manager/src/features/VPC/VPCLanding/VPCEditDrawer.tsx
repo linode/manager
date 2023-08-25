@@ -54,7 +54,7 @@ export const VPCEditDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Edit VPC">
-      {errorMap.none && <Notice error text={errorMap.none} />}
+      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <form onSubmit={form.handleSubmit}>
         <TextField
           errorText={errorMap.label}

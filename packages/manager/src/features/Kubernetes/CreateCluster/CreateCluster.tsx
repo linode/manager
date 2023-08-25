@@ -20,7 +20,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import {
@@ -78,7 +77,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       maxWidth: 440,
     },
     '& p': {
-      fontWeight: 500,
       lineHeight: '1.43rem',
       margin: 0,
       maxWidth: '100%',
@@ -284,57 +282,50 @@ export const CreateCluster = () => {
   return (
     <Grid className={classes.root} container>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
-      <ProductInformationBanner bannerLocation="Kubernetes" important warning />
       <LandingHeader
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
         title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
-        {errorMap.none && <Notice error text={errorMap.none} />}
+        {errorMap.none && <Notice text={errorMap.none} variant="error" />}
         <Paper data-qa-label-header>
           <div className={classes.inner}>
-            <Box>
-              <TextField
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  updateLabel(e.target.value)
-                }
-                className={classes.inputWidth}
-                data-qa-label-input
-                errorText={errorMap.label}
-                label="Cluster Label"
-                value={label || ''}
-              />
-            </Box>
-            <Box>
-              <RegionSelect
-                handleSelection={(regionID: string) =>
-                  setSelectedRegionID(regionID)
-                }
-                textFieldProps={{
-                  helperText: <RegionHelperText />,
-                  helperTextPosition: 'top',
-                }}
-                className={classes.regionSubtitle}
-                errorText={errorMap.region}
-                regions={filteredRegions}
-                selectedID={selectedID}
-              />
-            </Box>
-            <Box>
-              <Select
-                onChange={(selected: Item<string>) => {
-                  setVersion(selected);
-                }}
-                className={classes.inputWidth}
-                errorText={errorMap.k8s_version}
-                isClearable={false}
-                label="Kubernetes Version"
-                options={versions}
-                placeholder={' '}
-                value={version || null}
-              />
-            </Box>
+            <TextField
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                updateLabel(e.target.value)
+              }
+              className={classes.inputWidth}
+              data-qa-label-input
+              errorText={errorMap.label}
+              label="Cluster Label"
+              value={label || ''}
+            />
+            <RegionSelect
+              handleSelection={(regionID: string) =>
+                setSelectedRegionID(regionID)
+              }
+              textFieldProps={{
+                helperText: <RegionHelperText mb={2} />,
+                helperTextPosition: 'top',
+              }}
+              className={classes.regionSubtitle}
+              errorText={errorMap.region}
+              regions={filteredRegions}
+              selectedID={selectedID}
+            />
+            <Select
+              onChange={(selected: Item<string>) => {
+                setVersion(selected);
+              }}
+              className={classes.inputWidth}
+              errorText={errorMap.k8s_version}
+              isClearable={false}
+              label="Kubernetes Version"
+              options={versions}
+              placeholder={' '}
+              value={version || null}
+            />
             {showHighAvailability ? (
               <Box data-testid="ha-control-plane">
                 <HAControlPlane
@@ -348,26 +339,24 @@ export const CreateCluster = () => {
               </Box>
             ) : null}
           </div>
-          <Box>
-            <NodePoolPanel
-              typesError={
-                typesError
-                  ? getAPIErrorOrDefault(
-                      typesError,
-                      'Error loading Linode type information.'
-                    )[0].reason
-                  : undefined
-              }
-              addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
-              apiError={errorMap.node_pools}
-              hasSelectedRegion={hasSelectedRegion}
-              isPlanPanelDisabled={isPlanPanelDisabled}
-              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-              regionsData={regionsData}
-              types={typesData || []}
-              typesLoading={typesLoading}
-            />
-          </Box>
+          <NodePoolPanel
+            typesError={
+              typesError
+                ? getAPIErrorOrDefault(
+                    typesError,
+                    'Error loading Linode type information.'
+                  )[0].reason
+                : undefined
+            }
+            addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
+            apiError={errorMap.node_pools}
+            hasSelectedRegion={hasSelectedRegion}
+            isPlanPanelDisabled={isPlanPanelDisabled}
+            isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+            regionsData={regionsData}
+            types={typesData || []}
+            typesLoading={typesLoading}
+          />
         </Paper>
       </Grid>
       <Grid

@@ -3,6 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -18,6 +19,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancersQuery } from 'src/queries/aglb/loadbalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { DeleteLoadBalancerDialog } from '../LoadBalancerDetail/Settings/LoadBalancerDeleteDialog';
 import { LoadBalancerLandingEmptyState } from './LoadBalancerLandingEmptyState';
 import { LoadBalancerRow } from './LoadBalancerRow';
 
@@ -26,6 +28,19 @@ const preferenceKey = 'loadbalancers';
 
 const LoadBalancerLanding = () => {
   const history = useHistory();
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
+  const [
+    selectedLoadbalancerId,
+    setSelectedLoadbalancerId,
+  ] = React.useState<number>();
+
+  const onDelete = (id: number) => {
+    setSelectedLoadbalancerId(id);
+    setIsDeleteDialogOpen(true);
+  };
+
   const pagination = usePagination(1, preferenceKey);
 
   const { handleOrderChange, order, orderBy } = useOrder(
@@ -53,6 +68,10 @@ const LoadBalancerLanding = () => {
     filter
   );
 
+  const selectedLoadbalancer = loadBalancers?.data.find(
+    (l) => l.id === selectedLoadbalancerId
+  );
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -74,9 +93,10 @@ const LoadBalancerLanding = () => {
 
   return (
     <>
+      <DocumentTitleSegment segment="Load Balancers" />
       <LandingHeader
         breadcrumbProps={{ pathname: '/loadbalancers' }}
-        createButtonText="Create Loadbalancer"
+        createButtonText="Create Load Balancer"
         docsLabel="Docs"
         docsLink="" // TODO: AGLB -  Add docs link
         entity="Global Load Balancers"
@@ -109,6 +129,9 @@ const LoadBalancerLanding = () => {
         <TableBody>
           {loadBalancers?.data.map((loadBalancer: Loadbalancer) => (
             <LoadBalancerRow
+              handlers={{
+                onDelete: () => onDelete(loadBalancer.id),
+              }}
               key={loadBalancer.id}
               loadBalancer={loadBalancer}
             />
@@ -122,6 +145,11 @@ const LoadBalancerLanding = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <DeleteLoadBalancerDialog
+        loadbalancer={selectedLoadbalancer}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
       />
     </>
   );

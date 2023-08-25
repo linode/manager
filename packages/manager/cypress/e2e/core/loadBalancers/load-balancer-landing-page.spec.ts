@@ -115,7 +115,7 @@ describe('Akamai Global Load Balancer landing page', () => {
       // TODO Assert that clicking button navigates to '/loadbalancers/create'.
       // First we need to dismiss the action menu that's opened above.
       ui.button
-        .findByTitle('Create Loadbalancer')
+        .findByTitle('Create Load Balancer')
         .should('be.visible')
         .should('be.enabled');
     });

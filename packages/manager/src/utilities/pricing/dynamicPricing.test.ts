@@ -27,7 +27,7 @@ describe('getDCSpecificPricingDisplay', () => {
         flags: { dcSpecificPricing: true },
         regionId: 'br-gru',
       })
-    ).toBe('26.00');
+    ).toBe('28.00');
   });
 
   it('calculates dynamic pricing for a volumes based on size', () => {
