@@ -82,7 +82,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
     }
 
     const newApps = appInstances.filter((app) => {
-      return ['appwrite', 'illa builder', 'owncloud', 'seatable'].includes(
+      return ['nomad-occ', 'nomad-occ-clients',].includes(
         app.label.toLowerCase().trim()
       );
     });
