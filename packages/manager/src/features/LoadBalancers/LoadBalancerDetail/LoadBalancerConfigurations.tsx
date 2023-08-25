@@ -30,6 +30,7 @@ export const LoadBalancerConfigurations = () => {
         <ConfigurationAccordion
           configuration={configuration}
           key={configuration.id}
+          loadbalancerId={Number(loadbalancerId)}
         />
       ))}
       {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}

@@ -32,6 +32,14 @@ export const useLoabalancerConfigurationsInfiniteQuery = (
       getLoadbalancerConfigurations(loadbalancerId, {
         page: pageParam,
         page_size: 25,
-      })
+      }),
+    {
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
+        }
+        return page + 1;
+      },
+    }
   );
 };

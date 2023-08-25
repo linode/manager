@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Accordion } from 'src/components/Accordion';
 import { Box } from 'src/components/Box';
@@ -13,15 +13,20 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 
 import type { Configuration } from '@linode/api-v4';
 
 interface Props {
   configuration: Configuration;
+  loadbalancerId: number;
 }
 
-export const ConfigurationAccordion = ({ configuration }: Props) => {
+export const ConfigurationAccordion = (props: Props) => {
+  const { configuration, loadbalancerId } = props;
+  const [isApplyCertDialogOpen, setIsApplyCertDialogOpen] = useState(false);
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: configuration,
@@ -37,8 +42,15 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
   ];
 
   const handleRemoveCert = (index: number) => {
-    formik.values.certificate_table.splice(index);
-    formik.setFieldValue('certificate_table', formik.values.certificate_table);
+    formik.values.certificates.splice(index, 1);
+    formik.setFieldValue('certificates', formik.values.certificates);
+  };
+
+  const handleAddCerts = (certificates: Configuration['certificates']) => {
+    formik.setFieldValue('certificates', [
+      ...formik.values.certificates,
+      ...certificates,
+    ]);
   };
 
   return (
@@ -114,12 +126,15 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
               <Button>Upload Certificate</Button>
             </Stack>
             <CertificateTable
-              certificate_table={formik.values.certificate_table}
+              certificates={formik.values.certificates}
               onRemove={handleRemoveCert}
             />
             <Box mt={2}>
-              <Button buttonType="outlined">
-                Apply {configuration.certificate_table.length > 0 ? 'More' : ''}{' '}
+              <Button
+                buttonType="outlined"
+                onClick={() => setIsApplyCertDialogOpen(true)}
+              >
+                Apply {configuration.certificates.length > 0 ? 'More' : ''}{' '}
                 Certificates
               </Button>
             </Box>
@@ -129,6 +144,12 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
         </Stack>
+        <ApplyCertificatesDrawer
+          loadbalancerId={loadbalancerId}
+          onAdd={handleAddCerts}
+          onClose={() => setIsApplyCertDialogOpen(false)}
+          open={isApplyCertDialogOpen}
+        />
       </form>
     </Accordion>
   );

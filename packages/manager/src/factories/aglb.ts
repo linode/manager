@@ -72,10 +72,10 @@ LhIhYpJ8UsCVt5snWo2N+M+6ANh5tpWdQnEK6zILh4tRbuzaiHgb
 // Configuration endpoints
 // ********************
 export const configurationFactory = Factory.Sync.makeFactory<Configuration>({
-  certificate_table: [
+  certificates: [
     {
-      certificate_id: 'cert-12345',
-      sni_hostname: 'example.com',
+      hostname: 'example.com',
+      id: 0,
     },
   ],
   id: Factory.each((i) => i),
@@ -105,10 +105,10 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
   {
     configurations: [
       {
-        certificate_table: [
+        certificates: [
           {
-            certificate_id: 'cert-12345',
-            sni_hostname: 'example.com',
+            id: 1,
+            hostname: 'example.com',
           },
         ],
         label: 'myentrypoint1',

@@ -69,7 +69,7 @@ export interface ConfigurationPayload {
   label: string;
   port: number;
   protocol: Protocol;
-  certificate_table: CertificateTable[];
+  certificates: CertificateConfig[];
   routes?: RoutePayload[];
   route_ids?: number[];
 }
@@ -79,13 +79,13 @@ export interface Configuration {
   label: string;
   port: number;
   protocol: Protocol;
-  certificate_table: CertificateTable[];
+  certificates: CertificateConfig[];
   routes: { id: number; label: string }[];
 }
 
-export interface CertificateTable {
-  sni_hostname: string;
-  certificate_id: string;
+export interface CertificateConfig {
+  hostname: string;
+  id: number;
 }
 
 export interface Rule {
