@@ -1,13 +1,13 @@
-import * as React from 'react';
+import { AccountBeta } from '@linode/api-v4/lib/account';
+import { Beta } from '@linode/api-v4/lib/betas';
 import Stack from '@mui/material/Stack';
+import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Beta } from '@linode/api-v4/lib/betas';
-import { AccountBeta } from '@linode/api-v4/lib/account';
-import { Typography } from 'src/components/Typography';
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Button } from 'src/components/Button/Button';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 interface AccountBetaProps {
   beta: AccountBeta;
@@ -21,7 +21,7 @@ function BetaDetails(props: BetaProps): React.ReactElement;
 function BetaDetails(props: AccountBetaProps) {
   const history = useHistory();
   const {
-    beta: { label, started, description, ended, id, more_info, enrolled },
+    beta: { description, ended, enrolled, id, label, more_info, started },
   } = props;
   const startDate = !enrolled ? (
     <Typography>
@@ -38,11 +38,11 @@ function BetaDetails(props: AccountBetaProps) {
 
   return (
     <Stack
-      width="100%"
-      minHeight={66}
       direction="row"
-      spacing={2}
       justifyContent="space-between"
+      minHeight={66}
+      spacing={2}
+      width="100%"
     >
       <Stack minHeight={66} spacing={2} width="100%">
         <Stack direction="row" justifyContent="space-between">
@@ -56,13 +56,13 @@ function BetaDetails(props: AccountBetaProps) {
         </Stack>
         <Typography>{description}</Typography>
       </Stack>
-      <Stack minHeight={66} minWidth="111px" spacing={2} direction="column">
+      <Stack direction="column" minHeight={66} minWidth="111px" spacing={2}>
         {enrolled ? null : (
           <Button
-            buttonType="primary"
             onClick={() => {
               history.push(`/betas/signup`, { betaId: id });
             }}
+            buttonType="primary"
           >
             Sign Up
           </Button>

@@ -12,12 +12,12 @@ import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
 const BetasLanding = () => {
   const {
     data: accountBetasRequest,
-    isLoading: isAccountBetasLoading,
+    isLoading: areAccountBetasLoading,
     error: accountBetasErrors,
   } = useAccountBetasQuery();
   const {
     data: betasRequest,
-    isLoading: isBetasLoading,
+    isLoading: areBetasLoading,
     error: betasErrors,
   } = useBetasQuery();
 
@@ -46,19 +46,19 @@ const BetasLanding = () => {
         <BetaDetailsList
           betas={active}
           title="Currently Enrolled Betas"
-          isLoading={isAccountBetasLoading}
+          isLoading={areAccountBetasLoading}
           errors={accountBetasErrors}
         />
         <BetaDetailsList
           betas={available}
           title="Available Betas"
-          isLoading={isBetasLoading}
+          isLoading={areBetasLoading}
           errors={betasErrors}
         />
         <BetaDetailsList
           betas={historical}
           title="Beta Participation History"
-          isLoading={isAccountBetasLoading}
+          isLoading={areAccountBetasLoading}
           errors={accountBetasErrors}
         />
       </Stack>
