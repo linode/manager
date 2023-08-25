@@ -63,7 +63,7 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
       defaultExpanded
       heading="Linode Label"
     >
-      {Boolean(generalError) && <Notice error text={generalError} />}
+      {Boolean(generalError) && <Notice text={generalError} variant="error" />}
       <TextField
         data-qa-label
         disabled={isReadOnly}

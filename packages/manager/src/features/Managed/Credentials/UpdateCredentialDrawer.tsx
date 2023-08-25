@@ -53,9 +53,9 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
             {status && status.generalError && (
               <Notice
                 data-qa-error
-                error
                 key={status.generalError}
                 text={status.generalError}
+                variant="error"
               />
             )}
 
@@ -63,8 +63,8 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
               <Notice
                 data-qa-success
                 key={status.success}
-                success
                 text={status.success}
+                variant="success"
               />
             )}
 
@@ -118,10 +118,10 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
               {status && status.generalError && (
                 <Notice
                   data-qa-error
-                  error
                   key={status.generalError}
                   spacingBottom={0}
                   text={status.generalError}
+                  variant="error"
                 />
               )}
 
@@ -130,8 +130,8 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
                   data-qa-success
                   key={status.success}
                   spacingBottom={0}
-                  success
                   text={status.success}
+                  variant="success"
                 />
               )}
 

@@ -250,7 +250,7 @@ export const RebuildFromImage = (props: Props) => {
                     }
                     renderNotice={
                       <StyledNotice
-                        success
+                        variant="success"
                         text="Adding new user data is recommended as part of the rebuild process."
                       />
                     }

@@ -20,6 +20,7 @@ import { compose as recompose } from 'recompose';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Tag } from 'src/components/TagsInput/TagsInput';
 import {
   WithAccountSettingsProps,
@@ -258,6 +259,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
+        <ProductInformationBanner bannerLocation="LinodeCreate" />
         <Grid className="m0" container spacing={0}>
           <LandingHeader
             onDocsClick={() =>

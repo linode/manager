@@ -124,7 +124,12 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
         ))}
         <Divider dark spacingBottom={0} spacingTop={16} />
         {showWarning && (
-          <Notice important spacingTop={16} text={nodeWarning} warning />
+          <Notice
+            important
+            spacingTop={16}
+            text={nodeWarning}
+            variant="warning"
+          />
         )}
         {region != '' && highAvailability ? (
           <StyledHABox>

@@ -6,7 +6,7 @@ import { Typography } from './Typography';
 
 export const DynamicPriceNotice = (props: NoticeProps) => {
   return (
-    <Notice info spacingBottom={0} spacingTop={12} {...props}>
+    <Notice spacingBottom={0} spacingTop={12} variant="info" {...props}>
       <Typography fontWeight="bold">
         Prices for plans, products, and services may vary based on Region.{' '}
         <Link to="https://www.linode.com/pricing">Learn more.</Link>

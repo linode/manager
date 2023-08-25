@@ -357,16 +357,18 @@ export class LinodeCreate extends React.PureComponent<
       <StyledForm>
         <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
-            <Notice error spacingTop={8} text={hasErrorFor.none} />
+            <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
           )}
-          {generalError && <Notice error spacingTop={8} text={generalError} />}
+          {generalError && (
+            <Notice spacingTop={8} text={generalError} variant="error" />
+          )}
           {userCannotCreateLinode && (
             <Notice
               text={
                 "You don't have permissions to create a new Linode. Please contact an account administrator for details."
               }
-              error
               important
+              variant="error"
             />
           )}
           <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>

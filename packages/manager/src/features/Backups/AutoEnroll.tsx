@@ -19,7 +19,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
 
   return (
     <StyledPaper>
-      {error && <Notice error text={error} />}
+      {error && <Notice text={error} variant="error" />}
       <StyledFormControlLabel
         label={
           <StyledDiv>

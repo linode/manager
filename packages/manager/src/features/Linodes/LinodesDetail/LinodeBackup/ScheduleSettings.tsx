@@ -89,7 +89,7 @@ export const ScheduleSettings = (props: Props) => {
           are saved.
         </Typography>
         {Boolean(updateLinodeError) && (
-          <Notice error spacingBottom={0} spacingTop={16}>
+          <Notice spacingBottom={0} spacingTop={16} variant="error">
             {updateLinodeError?.[0].reason}
           </Notice>
         )}

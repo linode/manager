@@ -36,10 +36,10 @@ const SelectLinodePanel = (props: Props) => {
   const {
     disabled,
     error,
+    handleSelection,
     header,
     linodes,
     notice,
-    handleSelection,
     selectedLinodeID,
   } = props;
 
@@ -71,13 +71,9 @@ const SelectLinodePanel = (props: Props) => {
         return (
           <>
             <StyledPaper data-qa-select-linode-panel>
-              {error && <Notice error text={error} />}
+              {error && <Notice text={error} variant="error" />}
               {notice && !disabled && (
-                <Notice
-                  error={notice.level === 'error'}
-                  text={notice.text}
-                  warning={notice.level === 'warning'}
-                />
+                <Notice text={notice.text} variant={notice.level} />
               )}
               <Typography data-qa-select-linode-header variant="h2">
                 {!!header ? header : 'Select Linode'}

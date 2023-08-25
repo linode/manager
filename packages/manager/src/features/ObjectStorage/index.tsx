@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const ObjectStorageLanding = React.lazy(() =>
@@ -17,6 +18,7 @@ export const ObjectStorage: React.FC<CombinedProps> = (props) => {
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
+      <ProductInformationBanner bannerLocation="Object Storage" />
       <Switch>
         <Route
           component={BucketDetail}

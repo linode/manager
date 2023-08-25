@@ -206,7 +206,7 @@ export const MigrateLinode = React.memo((props: Props) => {
       open={open}
       title={`Migrate Linode ${linode.label ?? ''} to another region`}
     >
-      {error && <Notice error text={error?.[0].reason} />}
+      {error && <Notice text={error?.[0].reason} variant="error" />}
       <Typography sx={{ marginTop: theme.spacing(2) }} variant="h2">
         {newLabel}
       </Typography>

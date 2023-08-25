@@ -45,7 +45,7 @@ export const UserDataAccordionHeading = (props: Props) => {
         />
       </Box>
       {warningMessage ? (
-        <Notice spacingBottom={16} spacingTop={16} warning>
+        <Notice spacingBottom={16} spacingTop={16} variant="warning">
           {warningMessage}
         </Notice>
       ) : null}

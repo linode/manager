@@ -162,13 +162,13 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   return (
     <Drawer onClose={onClose} open={open} title="Manage Access Controls">
       <React.Fragment>
-        {error ? <Notice error text={error} /> : null}
+        {error ? <Notice text={error} variant="error" /> : null}
         {allowListErrors
           ? allowListErrors.map((allowListError) => (
               <Notice
-                error
                 key={allowListError.reason}
                 text={allowListError.reason}
+                variant="error"
               />
             ))
           : null}

@@ -3,6 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -92,6 +93,7 @@ const LoadBalancerLanding = () => {
 
   return (
     <>
+      <DocumentTitleSegment segment="Load Balancers" />
       <LandingHeader
         breadcrumbProps={{ pathname: '/loadbalancers' }}
         createButtonText="Create Load Balancer"

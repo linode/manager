@@ -118,8 +118,8 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
                 text={
                   "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
                 }
-                error={true}
                 important
+                variant="error"
               />
             )}
 

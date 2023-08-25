@@ -78,7 +78,7 @@ export const LinodeRebuildDialog = (props: Props) => {
       <StyledDiv>
         {unauthorized && <LinodePermissionsError />}
         {hostMaintenance && <HostMaintenanceError />}
-        {rebuildError && <Notice error>{rebuildError}</Notice>}
+        {rebuildError && <Notice variant="error">{rebuildError}</Notice>}
         <Typography
           sx={{ paddingBottom: theme.spacing(2) }}
           data-qa-rebuild-desc

@@ -149,10 +149,14 @@ export class DomainRecordDrawer extends React.Component<
       >
         {otherErrors.length > 0 &&
           otherErrors.map((err, index) => {
-            return <Notice error key={index} text={err} />;
+            return <Notice key={index} variant="error" text={err} />;
           })}
         {!hasARecords && type === 'NS' && (
-          <Notice spacingTop={8} text={noARecordsNoticeText} warning />
+          <Notice
+            spacingTop={8}
+            text={noARecordsNoticeText}
+            variant="warning"
+          />
         )}
         {fields.map((field: any, idx: number) => field(idx))}
 

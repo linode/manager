@@ -186,7 +186,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           )}
         </Typography>
         {showBackupsWarning && (
-          <Notice warning>
+          <Notice variant="warning">
             Linodes must have a disk formatted with an ext3 or ext4 file system
             to use the backup service.
           </Notice>
