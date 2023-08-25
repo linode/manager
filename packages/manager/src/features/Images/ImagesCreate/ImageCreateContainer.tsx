@@ -2,17 +2,12 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 import ImageCreate from './ImageCreate';
 
 export const ImagesCreateContainer = () => {
   return (
     <Grid container>
-      <ProductInformationBanner
-        bannerLocation="Images"
-        sx={{ width: '100%' }}
-      />
       <LandingHeader
         breadcrumbDataAttrs={{ 'data-qa-create-image-header': true }}
         docsLabel="Docs"

@@ -7,7 +7,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
@@ -63,17 +62,11 @@ const DatabaseLanding = () => {
   }
 
   if (data?.results === 0) {
-    return (
-      <>
-        <ProductInformationBanner bannerLocation="Databases" />
-        <DatabaseEmptyState />
-      </>
-    );
+    return <DatabaseEmptyState />;
   }
 
   return (
     <React.Fragment>
-      <ProductInformationBanner bannerLocation="Databases" />
       <LandingHeader
         createButtonText="Create Database Cluster"
         docsLink="https://www.linode.com/docs/products/databases/managed-databases/"

@@ -9,7 +9,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
 import { truncate } from 'src/utilities/truncate';
@@ -93,7 +92,6 @@ const VPCDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment="VPC" />
-      <ProductInformationBanner bannerLocation="VPC" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

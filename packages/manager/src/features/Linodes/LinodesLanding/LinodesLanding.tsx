@@ -185,8 +185,8 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner />
         )}
-        <ProductInformationBanner bannerLocation="Linodes" />
         <DocumentTitleSegment segment="Linodes" />
+        <ProductInformationBanner bannerLocation="Linodes" />
         <PreferenceToggle<boolean>
           localStorageKey="GROUP_LINODES"
           preferenceKey="linodes_group_by_tag"

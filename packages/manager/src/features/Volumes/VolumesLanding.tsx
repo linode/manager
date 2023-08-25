@@ -11,7 +11,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -216,12 +215,7 @@ export const VolumesLanding = (props: CombinedProps) => {
   }
 
   if (volumes?.results === 0) {
-    return (
-      <>
-        <ProductInformationBanner bannerLocation="Volumes" />
-        <VolumesLandingEmptyState />
-      </>
-    );
+    return <VolumesLandingEmptyState />;
   }
 
   const handlers: VolumeHandlers = {
@@ -238,7 +232,6 @@ export const VolumesLanding = (props: CombinedProps) => {
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
-      <ProductInformationBanner bannerLocation="Volumes" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
         entity="Volume"

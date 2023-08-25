@@ -23,7 +23,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
@@ -269,10 +268,6 @@ export const CreateDomain = () => {
   return (
     <Grid container>
       <DocumentTitleSegment segment="Create Domain" />
-      <ProductInformationBanner
-        bannerLocation="Domains"
-        sx={{ width: '100%' }}
-      />
       <LandingHeader
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/dns-manager/"

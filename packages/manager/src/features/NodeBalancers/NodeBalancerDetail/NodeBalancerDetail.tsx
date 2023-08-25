@@ -10,7 +10,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -92,7 +91,6 @@ export const NodeBalancerDetail = () => {
 
   return (
     <React.Fragment>
-      <ProductInformationBanner bannerLocation="NodeBalancers" />
       <LandingHeader
         breadcrumbProps={{
           firstAndLastOnly: true,

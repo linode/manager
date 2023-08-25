@@ -12,7 +12,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -209,7 +208,6 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <ProductInformationBanner bannerLocation="Longview" />
       <LandingHeader
         breadcrumbProps={{
           firstAndLastOnly: true,

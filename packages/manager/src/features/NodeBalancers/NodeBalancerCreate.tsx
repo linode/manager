@@ -23,7 +23,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
@@ -419,7 +418,6 @@ const NodeBalancerCreate = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Create a NodeBalancer" />
-      <ProductInformationBanner bannerLocation="NodeBalancers" />
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: {

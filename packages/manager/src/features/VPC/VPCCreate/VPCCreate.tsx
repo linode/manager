@@ -17,7 +17,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -167,7 +166,6 @@ const VPCCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Create VPC" />
-      <ProductInformationBanner bannerLocation="VPC" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

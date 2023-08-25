@@ -8,7 +8,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Typography } from 'src/components/Typography';
 import {
@@ -86,7 +85,6 @@ export const DomainDetail = () => {
 
   return (
     <>
-      <ProductInformationBanner bannerLocation="Domains" />
       <LandingHeader
         breadcrumbProps={{
           labelOptions: { noCap: true },

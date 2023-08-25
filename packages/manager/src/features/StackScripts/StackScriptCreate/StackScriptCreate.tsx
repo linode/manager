@@ -23,7 +23,6 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Typography } from 'src/components/Typography';
 import withImages, {
   DefaultProps as ImagesProps,
@@ -224,8 +223,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={pageTitle} />
-        <ProductInformationBanner bannerLocation="StackScripts" />
-        {generalError && <Notice variant="error" text={generalError} />}
+        {generalError && <Notice text={generalError} variant="error" />}
         <LandingHeader
           breadcrumbProps={{
             breadcrumbDataAttrs: {

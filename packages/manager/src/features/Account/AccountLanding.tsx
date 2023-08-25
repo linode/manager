@@ -6,7 +6,6 @@ import {
   LandingHeader,
   LandingHeaderProps,
 } from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -119,7 +118,6 @@ const AccountLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
-      <ProductInformationBanner bannerLocation="Account" />
       <LandingHeader {...landingHeaderProps} />
 
       <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>

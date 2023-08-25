@@ -19,7 +19,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -416,12 +415,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   };
 
   const renderEmpty = () => {
-    return (
-      <>
-        <ProductInformationBanner bannerLocation="Images" />
-        <ImagesLandingEmptyState />
-      </>
-    );
+    return <ImagesLandingEmptyState />;
   };
 
   if (manualImagesLoading || automaticImagesLoading) {
@@ -456,7 +450,6 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
-      <ProductInformationBanner bannerLocation="Images" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
         entity="Image"

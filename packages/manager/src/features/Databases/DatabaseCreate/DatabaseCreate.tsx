@@ -36,7 +36,6 @@ import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
@@ -444,7 +443,6 @@ const DatabaseCreate = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <ProductInformationBanner bannerLocation="Databases" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

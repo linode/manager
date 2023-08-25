@@ -7,7 +7,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -119,7 +118,6 @@ export const DatabaseDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment={database.label} />
-      <ProductInformationBanner bannerLocation="Databases" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

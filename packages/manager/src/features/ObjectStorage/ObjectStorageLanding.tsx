@@ -8,7 +8,6 @@ import { DismissibleBanner } from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { PromotionalOfferCard } from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
@@ -116,7 +115,6 @@ export const ObjectStorageLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
-      <ProductInformationBanner bannerLocation="Object Storage" />
       <LandingHeader
         breadcrumbProps={{ pathname: '/object-storage' }}
         createButtonText={createButtonText}

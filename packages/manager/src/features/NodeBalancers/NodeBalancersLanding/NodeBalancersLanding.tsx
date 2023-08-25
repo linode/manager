@@ -7,7 +7,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -80,18 +79,12 @@ export const NodeBalancersLanding = () => {
   }
 
   if (data?.results === 0) {
-    return (
-      <>
-        <ProductInformationBanner bannerLocation="NodeBalancers" />
-        <NodeBalancerLandingEmptyState />
-      </>
-    );
+    return <NodeBalancerLandingEmptyState />;
   }
 
   return (
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
-      <ProductInformationBanner bannerLocation="NodeBalancers" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
         entity="NodeBalancer"

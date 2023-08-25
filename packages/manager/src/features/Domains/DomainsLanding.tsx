@@ -13,7 +13,6 @@ import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -190,7 +189,6 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   if (domains?.results === 0) {
     return (
       <>
-        <ProductInformationBanner bannerLocation="Domains" />
         <DomainsEmptyLandingState
           navigateToCreate={navigateToCreate}
           openImportZoneDrawer={openImportZoneDrawer}
@@ -223,7 +221,6 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   return (
     <>
       <DocumentTitleSegment segment="Domains" />
-      <ProductInformationBanner bannerLocation="Domains" />
       <DomainBanner hidden={!shouldShowBanner} />
       {location.state?.recordError && (
         <Notice text={location.state.recordError} variant="error" />

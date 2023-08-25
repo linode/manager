@@ -8,7 +8,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -144,18 +143,12 @@ export const KubernetesLanding = () => {
   }
 
   if (data?.results === 0) {
-    return (
-      <>
-        <ProductInformationBanner bannerLocation="Kubernetes" />
-        <KubernetesEmptyState />
-      </>
-    );
+    return <KubernetesEmptyState />;
   }
 
   return (
     <>
       <DocumentTitleSegment segment="Kubernetes Clusters" />
-      <ProductInformationBanner bannerLocation="Kubernetes" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
         entity="Cluster"

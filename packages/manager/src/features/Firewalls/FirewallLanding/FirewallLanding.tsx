@@ -6,7 +6,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -102,7 +101,6 @@ const FirewallLanding = () => {
   if (data?.results === 0) {
     return (
       <>
-        <ProductInformationBanner bannerLocation="Firewalls" />
         <FirewallLandingEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
         <CreateFirewallDrawer
           onClose={onCloseCreateDrawer}
@@ -124,7 +122,6 @@ const FirewallLanding = () => {
 
   return (
     <React.Fragment>
-      <ProductInformationBanner bannerLocation="Firewalls" />
       <LandingHeader
         breadcrumbProps={{ pathname: '/firewalls' }}
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
