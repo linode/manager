@@ -5,6 +5,7 @@ import React from 'react';
 import { Accordion } from 'src/components/Accordion';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect/Select';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextField } from 'src/components/TextField';
@@ -15,8 +16,6 @@ import { pluralize } from 'src/utilities/pluralize';
 import { CertificateTable } from './CertificateTable';
 
 import type { Configuration } from '@linode/api-v4';
-import { Divider } from 'src/components/Divider';
-import { RoutesTable } from './RoutesTable';
 
 interface Props {
   configuration: Configuration;
@@ -40,13 +39,6 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
   const handleRemoveCert = (index: number) => {
     formik.values.certificate_table.splice(index);
     formik.setFieldValue('certificate_table', formik.values.certificate_table);
-  };
-
-  const handleRemoveRoute = (id: number) => {
-    formik.setFieldValue(
-      'routes',
-      formik.values.routes.filter((route) => route.id !== id)
-    );
   };
 
   return (
@@ -136,14 +128,6 @@ export const ConfigurationAccordion = ({ configuration }: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
-          <RoutesTable
-            onRemove={handleRemoveRoute}
-            routes={formik.values.routes}
-            setRoutes={(routes) => formik.setFieldValue('routes', routes)}
-          />
-          <Box>
-            <Button buttonType="outlined">Add Route</Button>
-          </Box>
         </Stack>
       </form>
     </Accordion>
