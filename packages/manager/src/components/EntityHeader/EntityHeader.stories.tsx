@@ -84,6 +84,18 @@ export const Default: Story = {
                     hourly: 0.0015,
                     monthly: 5,
                   },
+                  region_prices: [
+                    {
+                      hourly: 0.0048,
+                      id: 'id-cgk',
+                      monthly: 3.57,
+                    },
+                    {
+                      hourly: 0.0056,
+                      id: 'br-gru',
+                      monthly: 4.17,
+                    },
+                  ],
                 },
               },
               class: 'standard',
@@ -97,6 +109,7 @@ export const Default: Story = {
                 hourly: 0.0075,
                 monthly: 20,
               },
+              region_prices: [],
               successor: 'g6-standard-1',
               transfer: 2000,
               vcpus: 1,

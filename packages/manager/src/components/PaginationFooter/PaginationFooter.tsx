@@ -9,7 +9,7 @@ export const MIN_PAGE_SIZE = 25;
 
 export interface PaginationProps {
   count: number;
-  eventCategory: string;
+  eventCategory?: string;
   fixedSize?: boolean;
   page: number;
   pageSize: number;

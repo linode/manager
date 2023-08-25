@@ -119,26 +119,29 @@ export const useStyles = makeStyles<
   },
 }));
 
+export type NoticeVariant =
+  | 'error'
+  | 'info'
+  | 'marketing'
+  | 'success'
+  | 'warning';
+
 export interface NoticeProps extends Grid2Props {
   breakWords?: boolean;
   className?: string;
   dataTestId?: string;
-  error?: boolean;
   errorGroup?: string;
   flag?: boolean;
   important?: boolean;
-  info?: boolean;
-  marketing?: boolean;
   notificationList?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   spacingBottom?: 0 | 4 | 8 | 12 | 16 | 20 | 24 | 32;
   spacingLeft?: number;
   spacingTop?: 0 | 4 | 8 | 12 | 16 | 24 | 32;
-  success?: boolean;
   sx?: SxProps;
   text?: string;
   typeProps?: TypographyProps;
-  warning?: boolean;
+  variant?: NoticeVariant;
 }
 
 export const Notice = (props: NoticeProps) => {
@@ -147,22 +150,18 @@ export const Notice = (props: NoticeProps) => {
     children,
     className,
     dataTestId,
-    error,
     errorGroup,
     flag,
     important,
-    info,
-    marketing,
     notificationList,
     onClick,
     spacingBottom,
     spacingLeft,
     spacingTop,
-    success,
     sx,
     text,
     typeProps,
-    warning,
+    variant,
   } = props;
 
   const { classes, cx } = useStyles();
@@ -176,6 +175,14 @@ export const Notice = (props: NoticeProps) => {
       {text}
     </Typography>
   ) : null;
+
+  const variantMap = {
+    error: variant === 'error',
+    info: variant === 'info',
+    marketing: variant === 'marketing',
+    success: variant === 'success',
+    warning: variant === 'warning',
+  };
 
   /**
    * There are some cases where the message
@@ -198,7 +205,7 @@ export const Notice = (props: NoticeProps) => {
     ? `error-for-scroll-${errorGroup}`
     : `error-for-scroll`;
 
-  const dataAttributes = !props.error
+  const dataAttributes = !variantMap.error
     ? {
         'data-qa-notice': true,
       }
@@ -211,19 +218,19 @@ export const Notice = (props: NoticeProps) => {
     <Grid
       className={cx({
         [classes.breakWords]: breakWords,
-        [classes.error]: error && !notificationList,
-        [classes.errorList]: error && notificationList,
+        [classes.error]: variantMap.error && !notificationList,
+        [classes.errorList]: variantMap.error && notificationList,
         [classes.important]: important,
-        [classes.info]: info && !notificationList,
-        [classes.infoList]: info && notificationList,
-        [classes.marketing]: marketing,
-        [classes.marketing]: marketing && !notificationList,
+        [classes.info]: variantMap.info && !notificationList,
+        [classes.infoList]: variantMap.info && notificationList,
+        [classes.marketing]: variantMap.marketing,
+        [classes.marketing]: variantMap.marketing && !notificationList,
         [classes.root]: true,
-        [classes.success]: success && !notificationList,
-        [classes.successList]: success && notificationList,
-        [classes.warning]: warning && !notificationList,
-        [classes.warningList]: warning && notificationList,
-        [errorScrollClassName]: error,
+        [classes.success]: variantMap.success && !notificationList,
+        [classes.successList]: variantMap.success && notificationList,
+        [classes.warning]: variantMap.warning && !notificationList,
+        [classes.warningList]: variantMap.warning && notificationList,
+        [errorScrollClassName]: variantMap.error,
         notice: true,
         ...(className && { [className]: true }),
       })}
@@ -242,11 +249,15 @@ export const Notice = (props: NoticeProps) => {
         </Grid>
       )}
       {important &&
-        ((success && <Check className={classes.icon} data-qa-success-img />) ||
-          ((warning || info) && (
+        ((variantMap.success && (
+          <Check className={classes.icon} data-qa-success-img />
+        )) ||
+          ((variantMap.warning || variantMap.info) && (
             <Warning className={classes.icon} data-qa-warning-img />
           )) ||
-          (error && <Error className={classes.icon} data-qa-error-img />))}
+          (variantMap.error && (
+            <Error className={classes.icon} data-qa-error-img />
+          )))}
       <div className={classes.inner} data-testid={dataTestId}>
         {innerText || _children}
       </div>

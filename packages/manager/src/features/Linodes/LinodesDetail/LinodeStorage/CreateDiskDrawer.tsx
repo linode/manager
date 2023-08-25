@@ -122,10 +122,10 @@ export const CreateDiskDrawer = (props: Props) => {
         />
         {formik.status && (
           <Notice
-            error
             errorGroup="linode-disk-drawer"
             spacingBottom={8}
             text={formik.status}
+            variant="error"
           />
         )}
         <TextField

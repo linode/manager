@@ -67,7 +67,7 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
         open={open}
         title={`Delete ${linode?.label}?`}
       >
-        <Notice warning>
+        <Notice variant="warning">
           <Typography style={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Deleting your Linode will result in
             permanent data loss.

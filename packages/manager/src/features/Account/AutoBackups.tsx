@@ -4,11 +4,11 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Accordion } from 'src/components/Accordion';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   enableBackupsButton: {
@@ -50,7 +50,7 @@ const AutoBackups = (props: Props) => {
       <Grid container direction="column" spacing={2}>
         <Grid>
           {!!isManagedCustomer ? (
-            <Notice info spacingBottom={20}>
+            <Notice spacingBottom={20} variant="info">
               You&rsquo;re a Managed customer, which means your Linodes are
               already automatically backed up - no need to toggle this setting.
             </Notice>
