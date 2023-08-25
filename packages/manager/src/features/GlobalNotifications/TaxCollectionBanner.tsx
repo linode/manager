@@ -71,7 +71,7 @@ export const TaxCollectionBanner = () => {
       actionButton={actionButton}
       important
       preferenceKey="tax-collection-banner"
-      warning
+      variant="warning"
     >
       <Typography>
         Starting {bannerDateString}, tax may be applied to your Linode services.

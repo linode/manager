@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const VPCCreate = React.lazy(() => import('./VPCCreate/VPCCreate'));
@@ -12,6 +13,7 @@ const VPC = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="VPC" />
+      <ProductInformationBanner bannerLocation="VPC" />
       <Switch>
         <Route component={VPCCreate} path="/vpc/create" />
         <Route component={VPCDetail} path="/vpc/:vpcId/:tab?" />

@@ -156,7 +156,11 @@ export const AddNodePoolDrawer = (props: Props) => {
       title={`Add a Node Pool: ${clusterLabel}`}
     >
       {error && (
-        <Notice className={classes.error} error text={error?.[0].reason} />
+        <Notice
+          className={classes.error}
+          text={error?.[0].reason}
+          variant="error"
+        />
       )}
       <form className={classes.plans}>
         <KubernetesPlansPanel
@@ -188,7 +192,7 @@ export const AddNodePoolDrawer = (props: Props) => {
               spacingBottom={16}
               spacingTop={8}
               text={nodeWarning}
-              warning
+              variant="error"
             />
           )}
 

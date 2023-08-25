@@ -294,18 +294,18 @@ const IPSharingPanel = (props: Props) => {
         <>
           {generalError && (
             <Grid xs={12}>
-              <Notice error text={generalError} />
+              <Notice text={generalError} variant="error" />
             </Grid>
           )}
           {successMessage && (
             <Grid xs={12}>
-              <Notice success text={successMessage} />
+              <Notice text={successMessage} variant="success" />
             </Grid>
           )}
           <Grid container>
             <Grid lg={8} sm={12} xl={6}>
               {flags.ipv6Sharing ? (
-                <Notice warning>
+                <Notice variant="warning">
                   <Typography style={{ fontSize: '0.875rem' }}>
                     <strong>Warning:</strong> Converting a statically routed
                     IPv6 range to a shared range will break existing IPv6

@@ -29,6 +29,13 @@ export const ProductInformationBanner = React.memo(
       return null;
     }
 
+    const isImportantBanner =
+      thisBanner.decoration.important === 'true'
+        ? true
+        : thisBanner.decoration.important === 'false'
+        ? false
+        : true;
+
     let hasBannerExpired = true;
     try {
       hasBannerExpired = isAfter(
@@ -45,7 +52,9 @@ export const ProductInformationBanner = React.memo(
 
     return (
       <DismissibleBanner
+        important={isImportantBanner}
         preferenceKey={`${bannerLocation}-${thisBanner.expirationDate}`}
+        variant={thisBanner.decoration.variant ?? 'warning'}
         {...rest}
       >
         <HighlightedMarkdown textOrMarkdown={thisBanner.message} />
