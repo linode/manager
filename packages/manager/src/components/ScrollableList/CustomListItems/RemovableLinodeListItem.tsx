@@ -1,10 +1,11 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
-import type { LinodeListItemProps } from './CheckedLinodeListItem';
 import { IconButton } from 'src/components/IconButton';
 import { ListItem } from 'src/components/ListItem';
 import { ListItemText } from 'src/components/ListItemText';
+
+import type { LinodeListItemProps } from './CheckedLinodeListItem';
 
 /**
  * A list item for Linodes in which this item can be removed from a list
@@ -14,16 +15,18 @@ export const RemovableLinodeListItem = (props: LinodeListItemProps) => {
 
   return (
     <ListItem
-      sx={{ padding: 0, minHeight: '44px' }}
-      key={linode.id}
+      {...listItemProps}
       secondaryAction={
-        <IconButton sx={{ padding: 0 }} onClick={() => onClickListItem(linode)}>
+        <IconButton onClick={() => onClickListItem(linode)} sx={{ padding: 0 }}>
           <Close />
         </IconButton>
       }
-      {...listItemProps}
+      key={linode.id}
+      sx={{ minHeight: '44px', padding: 0 }}
     >
-      <ListItemText sx={{ marginLeft: '16px' }}>{linode.label}</ListItemText>
+      <ListItemText sx={(theme) => ({ marginLeft: theme.spacing(2) })}>
+        {linode.label}
+      </ListItemText>
     </ListItem>
   );
 };

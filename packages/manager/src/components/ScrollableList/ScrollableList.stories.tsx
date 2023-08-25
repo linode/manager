@@ -1,11 +1,13 @@
 import { Linode } from '@linode/api-v4';
 import * as React from 'react';
 
+import { ListItem } from 'src/components/ListItem';
+
 import { Button } from '../Button/Button';
 import { CheckedLinodeListItem } from './CustomListItems/CheckedLinodeListItem';
 import { RemovableLinodeListItem } from './CustomListItems/RemovableLinodeListItem';
 import { ScrollableList } from './ScrollableList';
-import { ListItem } from 'src/components/ListItem';
+
 import type { Meta, StoryObj } from '@storybook/react';
 
 type Story = StoryObj<typeof ScrollableList>;
@@ -36,7 +38,7 @@ const listItems = [
 }) as Linode[];
 
 /**
- * Default example of a scrollable list
+ * Simple example of a scrollable list
  */
 export const Default: Story = {
   args: {
@@ -69,15 +71,15 @@ export const CheckedListItemsExample: Story = {
       const checkedListItems = listItems.map((item) => {
         return (
           <CheckedLinodeListItem
+            checked={checkedItems.has(item.id)}
             key={item.id}
             linode={item}
             onClickListItem={handleCheck}
-            checked={checkedItems.has(item.id)}
           />
         );
       });
 
-      return <ScrollableList ListItems={checkedListItems} />;
+      return <ScrollableList ListItems={checkedListItems} maxHeight={445} />;
     };
 
     return <ScrollableListWrapper />;
@@ -114,8 +116,8 @@ export const RemovableListItemsExample: Story = {
 
       return (
         <>
-          <ScrollableList ListItems={removableListItems} />
-          <Button sx={{ marginTop: 2 }} onClick={resetList}>
+          <ScrollableList ListItems={removableListItems} maxHeight={445} />
+          <Button onClick={resetList} sx={{ marginTop: 2 }}>
             Reset list
           </Button>
         </>

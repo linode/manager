@@ -4,8 +4,9 @@ import * as React from 'react';
 
 import { Checkbox } from 'src/components/Checkbox';
 import { ListItem } from 'src/components/ListItem';
-import type { ListItemProps } from 'src/components/ListItem';
 import { ListItemText } from 'src/components/ListItemText';
+
+import type { ListItemProps } from 'src/components/ListItem';
 
 export interface LinodeListItemProps extends ListItemProps {
   /**
@@ -33,10 +34,10 @@ export const CheckedLinodeListItem = (props: Props) => {
   const { checked, linode, onClickListItem, ...listItemProps } = props;
 
   return (
-    <ListItem sx={{ padding: 0 }} key={linode.id} {...listItemProps}>
+    <ListItem {...listItemProps} key={linode.id} sx={{ padding: 0 }}>
       <ListItemButton
         onClick={() => onClickListItem(linode)}
-        sx={{ padding: 0, minHeight: '44px' }}
+        sx={{ minHeight: '44px', padding: 0 }}
       >
         <Checkbox checked={checked} />
         <ListItemText>{linode.label}</ListItemText>
