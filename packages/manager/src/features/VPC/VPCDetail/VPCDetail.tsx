@@ -23,6 +23,7 @@ import {
   StyledSummaryBox,
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
+import { VPCSubnetsTable } from './VPCSubnetsTable';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -173,7 +174,10 @@ const VPCDetail = () => {
         open={editVPCDrawerOpen}
         vpc={vpc}
       />
-      <Box paddingTop={2}>Subnets Placeholder</Box>
+      <Box padding={2} paddingLeft={0}>
+        <Typography variant="h2">Subnets</Typography>
+      </Box>
+      <VPCSubnetsTable subnets={vpc.subnets} />
     </>
   );
 };
