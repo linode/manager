@@ -13,6 +13,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
+import { certificateConfigSchema } from '@linode/validation';
 
 interface Props {
   loadbalancerId: number;
@@ -37,6 +38,8 @@ export const ApplyCertificatesDrawer = (props: Props) => {
       onAdd(values.certificates);
       onClose();
     },
+    validateOnChange: false,
+    validationSchema: certificateConfigSchema,
   });
 
   useEffect(() => {
@@ -69,6 +72,7 @@ export const ApplyCertificatesDrawer = (props: Props) => {
                   e.target.value
                 )
               }
+              errorText={formik.errors.certificates?.[index]?.['hostname']}
               label="Host Header"
               value={hostname}
             />
@@ -79,6 +83,7 @@ export const ApplyCertificatesDrawer = (props: Props) => {
                   certificate?.id ?? null
                 )
               }
+              errorText={formik.errors.certificates?.[index]?.['id']}
               loadbalancerId={loadbalancerId}
               value={id}
             />
