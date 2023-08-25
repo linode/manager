@@ -60,7 +60,7 @@ function BetaDetails(props: AccountBetaProps) {
         {enrolled ? null : (
           <Button
             onClick={() => {
-              history.push(`/betas/${id}/signup`);
+              history.push('/betas/signup', { betaId: id });
             }}
             buttonType="primary"
           >
