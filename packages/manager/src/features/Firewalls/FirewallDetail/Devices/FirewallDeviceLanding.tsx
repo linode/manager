@@ -79,6 +79,7 @@ export const FirewallDeviceLanding = React.memo(
           <StyledGrid>
             <Button
               buttonType="primary"
+              data-testid="add-linode-button"
               disabled={disabled}
               onClick={() => setDeviceDrawerOpen(true)}
             >
