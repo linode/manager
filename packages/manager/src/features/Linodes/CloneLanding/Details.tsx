@@ -137,7 +137,7 @@ export const Details = (props: Props) => {
       </StyledHeader>
 
       {noneError && !isNoneErrorActuallyALinodeError && (
-        <Notice text={noneError} variant="warning" />
+        <Notice text={noneError} variant="error" />
       )}
 
       <List>
