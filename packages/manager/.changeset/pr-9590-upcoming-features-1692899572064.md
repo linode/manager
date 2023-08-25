@@ -2,4 +2,4 @@
 "@linode/manager": Upcoming Features
 ---
 
-Create nodebalancer tab in firewalls landing ([#9590](https://github.com/linode/manager/pull/9590))
+Create NodeBalancer tab in Firewalls landing ([#9590](https://github.com/linode/manager/pull/9590))

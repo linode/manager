@@ -109,26 +109,13 @@ export const FirewallDetail = () => {
     return firewall.label;
   };
 
-  function getBreadcrumb() {
-    let breadcrumb = '';
-    switch (tab) {
-      case 'linodes':
-        breadcrumb = ' / Assigned Linodes';
-        break;
-      case 'nodebalancers':
-        breadcrumb = ' / Assigned NodeBalancers';
-        break;
-    }
-    return firewall?.label + breadcrumb;
-  }
-
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={firewall.label} />
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {
-            editableTextTitle: getBreadcrumb(),
+            editableTextTitle: firewall?.label,
             errorText,
             onCancel: resetEditableLabel,
             onEdit: handleLabelChange,

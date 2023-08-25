@@ -20,6 +20,11 @@ interface Props {
   type: FirewallDeviceEntityType;
 }
 
+const formattedTypes = {
+  linode: 'Linode',
+  nodebalancer: 'NodeBalancer',
+};
+
 export const FirewallDeviceLanding = React.memo((props: Props) => {
   const { disabled, firewallID, firewallLabel, type } = props;
 
@@ -49,12 +54,7 @@ export const FirewallDeviceLanding = React.memo((props: Props) => {
     setDeviceDrawerOpen(false);
   };
 
-  const typeDialogNames = {
-    linode: 'Linode',
-    nodebalancer: 'NodeBalancer',
-  };
-
-  const typeDialog = typeDialogNames[type];
+  const formattedType = formattedTypes[type];
 
   return (
     <>
@@ -70,8 +70,8 @@ export const FirewallDeviceLanding = React.memo((props: Props) => {
       <Grid container direction="column">
         <Grid style={{ paddingBottom: 0 }}>
           <StyledTypography>
-            The following {typeDialog}s have been assigned to this Firewall. A{' '}
-            {typeDialog} can only be assigned to a single Firewall.
+            The following {formattedType}s have been assigned to this Firewall.
+            A {formattedType} can only be assigned to a single Firewall.
           </StyledTypography>
         </Grid>
         <StyledGrid>
@@ -80,7 +80,7 @@ export const FirewallDeviceLanding = React.memo((props: Props) => {
             disabled={disabled}
             onClick={() => setDeviceDrawerOpen(true)}
           >
-            Add {typeDialog}s to Firewall
+            Add {formattedType}s to Firewall
           </Button>
         </StyledGrid>
       </Grid>
