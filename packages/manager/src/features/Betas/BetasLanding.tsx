@@ -51,7 +51,7 @@ const BetasLanding = () => {
         />
         <BetaDetailsList
           betas={available}
-          title="Available Betas"
+          title="Available & Upcoming Betas"
           isLoading={areBetasLoading}
           errors={betasErrors}
         />
