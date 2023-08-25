@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import React, { useState } from 'react';
 
 import { Accordion } from 'src/components/Accordion';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
@@ -11,12 +12,14 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { useLoadBalancerConfigurationMutation } from 'src/queries/aglb/configurations';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 
 import type { Configuration } from '@linode/api-v4';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
   configuration: Configuration;
@@ -27,11 +30,17 @@ export const ConfigurationAccordion = (props: Props) => {
   const { configuration, loadbalancerId } = props;
   const [isApplyCertDialogOpen, setIsApplyCertDialogOpen] = useState(false);
 
+  const {
+    error,
+    isLoading,
+    mutateAsync,
+  } = useLoadBalancerConfigurationMutation(loadbalancerId, configuration.id);
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: configuration,
     onSubmit(values) {
-      alert(JSON.stringify(values, null, 2));
+      mutateAsync(values);
     },
   });
 
@@ -52,6 +61,8 @@ export const ConfigurationAccordion = (props: Props) => {
       ...certificates,
     ]);
   };
+
+  const errorMap = getErrorMap(['protocol', 'port', 'label'], error);
 
   return (
     <Accordion
@@ -105,6 +116,7 @@ export const ConfigurationAccordion = (props: Props) => {
                   (option) => option.value === formik.values.protocol
                 ) ?? null
               }
+              errorText={errorMap.protocol}
               isClearable={false}
               label="Protocol"
               onChange={({ value }) => formik.setFieldValue('protocol', value)}
@@ -112,6 +124,7 @@ export const ConfigurationAccordion = (props: Props) => {
               styles={{ container: () => ({ width: 'unset' }) }}
             />
             <TextField
+              errorText={errorMap.port}
               label="Port"
               name="port"
               onChange={formik.handleChange}
@@ -127,6 +140,7 @@ export const ConfigurationAccordion = (props: Props) => {
             </Stack>
             <CertificateTable
               certificates={formik.values.certificates}
+              loadbalancerId={loadbalancerId}
               onRemove={handleRemoveCert}
             />
             <Box mt={2}>
@@ -134,7 +148,7 @@ export const ConfigurationAccordion = (props: Props) => {
                 buttonType="outlined"
                 onClick={() => setIsApplyCertDialogOpen(true)}
               >
-                Apply {configuration.certificates.length > 0 ? 'More' : ''}{' '}
+                Apply {formik.values.certificates.length > 0 ? 'More' : ''}{' '}
                 Certificates
               </Button>
             </Box>
@@ -143,7 +157,19 @@ export const ConfigurationAccordion = (props: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
+          <Typography>Routes Table will go here ⚠️🔜</Typography>
         </Stack>
+        <Divider spacingBottom={16} spacingTop={16} />
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Save Configuration',
+            loading: isLoading,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            label: 'Delete Configuration',
+          }}
+        />
         <ApplyCertificatesDrawer
           loadbalancerId={loadbalancerId}
           onAdd={handleAddCerts}

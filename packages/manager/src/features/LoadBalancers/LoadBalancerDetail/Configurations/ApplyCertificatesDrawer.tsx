@@ -1,11 +1,12 @@
 import { Configuration } from '@linode/api-v4';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Code } from 'src/components/Code/Code';
+import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { TextField } from 'src/components/TextField';
@@ -20,32 +21,34 @@ interface Props {
   open: boolean;
 }
 
+const defaultCertItem = {
+  hostname: '',
+  id: -1,
+};
+
 export const ApplyCertificatesDrawer = (props: Props) => {
   const { loadbalancerId, onAdd, onClose, open } = props;
 
   const formik = useFormik<{ certificates: Configuration['certificates'] }>({
     initialValues: {
-      certificates: [
-        {
-          hostname: '',
-          id: -1,
-        },
-      ],
+      certificates: [defaultCertItem],
     },
-    onSubmit(values, helpers) {
+    onSubmit(values) {
       onAdd(values.certificates);
       onClose();
-      helpers.resetForm();
     },
   });
+
+  useEffect(() => {
+    if (open) {
+      formik.resetForm();
+    }
+  }, [open]);
 
   const onAddAnother = () => {
     formik.setFieldValue('certificates', [
       ...formik.values.certificates,
-      {
-        hostname: '',
-        id: -1,
-      },
+      defaultCertItem,
     ]);
   };
 
@@ -79,6 +82,7 @@ export const ApplyCertificatesDrawer = (props: Props) => {
               loadbalancerId={loadbalancerId}
               value={id}
             />
+            <Divider spacingTop={24} />
           </Box>
         ))}
         <Button buttonType="outlined" onClick={onAddAnother} sx={{ mt: 2 }}>

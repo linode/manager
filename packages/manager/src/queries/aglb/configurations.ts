@@ -1,5 +1,8 @@
-import { getLoadbalancerConfigurations } from '@linode/api-v4';
-import { useInfiniteQuery, useQuery } from 'react-query';
+import {
+  getLoadbalancerConfigurations,
+  updateLoadbalancerConfiguration,
+} from '@linode/api-v4';
+import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 
 import { QUERY_KEY } from './loadbalancers';
 
@@ -41,5 +44,15 @@ export const useLoabalancerConfigurationsInfiniteQuery = (
         return page + 1;
       },
     }
+  );
+};
+
+export const useLoadBalancerConfigurationMutation = (
+  loadbalancerId: number,
+  configurationId: number
+) => {
+  return useMutation<Configuration, APIError[], Partial<Configuration>>(
+    (data) =>
+      updateLoadbalancerConfiguration(loadbalancerId, configurationId, data)
   );
 };
