@@ -130,7 +130,7 @@ export const RemovableListItemsExample: Story = {
 
 const meta: Meta<typeof ScrollableList> = {
   component: ScrollableList,
-  title: 'Components/ScrollableList',
+  title: 'Components/Scrollable List',
 };
 
 export default meta;
