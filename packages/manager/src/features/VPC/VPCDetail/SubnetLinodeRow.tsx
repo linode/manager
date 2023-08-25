@@ -1,29 +1,61 @@
 import { APIError, Firewall } from '@linode/api-v4';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
+
 interface Props {
   linodeId: number;
 }
 
-export const SubnetLinodeRow = (props: Props) => {
-  const { linodeId } = props;
-  const { data: linode } = useLinodeQuery(linodeId);
+export const SubnetLinodeRow = ({ linodeId }: Props) => {
+  const {
+    data: linode,
+    error: linodeError,
+    isLoading: linodeLoading,
+  } = useLinodeQuery(linodeId);
+
   const {
     data: attachedFirewalls,
     error: firewallsError,
     isLoading: firewallsLoading,
   } = useLinodeFirewallsQuery(linodeId);
 
-  if (!linode) {
-    return null;
+  if (linodeLoading || !linode) {
+    return (
+      <Box sx={{ marginLeft: 6 }}>
+        <CircleProgress mini />
+      </Box>
+    );
+  }
+
+  if (linodeError) {
+    return (
+      <TableRow data-testid="subnet-linode-row-error">
+        <TableCell colSpan={5} style={{ paddingLeft: 48 }}>
+          <Box alignItems="center" display="flex">
+            <ErrorOutline
+              data-qa-error-icon
+              sx={(theme) => ({ color: theme.color.red, marginRight: 1 })}
+            />
+            <Typography>
+              There was an error loading{' '}
+              <Link to={`/linodes/${linodeId}`}>Linode {linodeId}</Link>
+            </Typography>
+          </Box>
+        </TableCell>
+      </TableRow>
+    );
   }
 
   const iconStatus =
