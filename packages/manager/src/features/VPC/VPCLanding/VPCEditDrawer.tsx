@@ -27,7 +27,8 @@ export const VPCEditDrawer = (props: Props) => {
   const { data: grants } = useGrants();
 
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpc?.id);
-  const readOnly = Boolean(profile?.restricted) && vpcPermissions?.permissions === 'read_only';
+  const readOnly =
+    Boolean(profile?.restricted) && vpcPermissions?.permissions === 'read_only';
 
   const {
     error,
@@ -61,31 +62,31 @@ export const VPCEditDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Edit VPC">
-      {errorMap.none && <Notice error text={errorMap.none} />}
+      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       {readOnly && (
         <Notice
-          error
           important
           text={`You don't have permissions to edit ${vpc?.label}. Please contact an account administrator for details.`}
+          variant="error"
         />
       )}
       <form onSubmit={form.handleSubmit}>
         <TextField
+          disabled={readOnly}
           errorText={errorMap.label}
           label="Label"
           name="label"
           onChange={form.handleChange}
           value={form.values.label}
-          disabled={readOnly}
         />
         <TextField
+          disabled={readOnly}
           errorText={errorMap.description}
           label="Description"
           multiline
           onChange={form.handleChange}
           rows={1}
           value={form.values.description}
-          disabled={readOnly}
         />
         {regionsData && (
           <RegionSelect

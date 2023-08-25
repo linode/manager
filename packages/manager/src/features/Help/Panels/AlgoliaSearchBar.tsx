@@ -111,7 +111,7 @@ const AlgoliaSearchBar = (props: CombinedProps) => {
   return (
     <React.Fragment>
       {searchError && (
-        <Notice className={classes.notice} error spacingTop={8}>
+        <Notice className={classes.notice} spacingTop={8} variant="error">
           {searchError}
         </Notice>
       )}

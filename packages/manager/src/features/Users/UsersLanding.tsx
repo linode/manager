@@ -199,13 +199,16 @@ const UsersLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Users & Grants" />
       {newUsername && (
-        <Notice success text={`User ${newUsername} created successfully`} />
+        <Notice
+          text={`User ${newUsername} created successfully`}
+          variant="success"
+        />
       )}
       {userDeleteError && (
         <Notice
-          error
           style={{ marginTop: newUsername ? 16 : 0 }}
           text={`Error when deleting user, please try again later`}
+          variant="error"
         />
       )}
       <Grid

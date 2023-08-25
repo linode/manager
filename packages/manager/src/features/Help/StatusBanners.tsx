@@ -60,19 +60,22 @@ export const IncidentBanner = React.memo((props: IncidentProps) => {
   const theme = useTheme();
 
   const preferenceKey = `${href}-${status}`;
+  const variantMap = {
+    error:
+      impact === 'critical' && !['monitoring', 'resolved'].includes(status),
+    warning:
+      ['major', 'minor', 'none'].includes(impact) ||
+      ['monitoring', 'resolved'].includes(status),
+  };
 
   return (
     <DismissibleBanner
-      error={
-        impact === 'critical' && !['monitoring', 'resolved'].includes(status)
-      }
       options={{
         expiry: DateTime.utc().plus({ days: 1 }).toISO(),
         label: preferenceKey,
       }}
-      warning={
-        ['major', 'minor', 'none'].includes(impact) ||
-        ['monitoring', 'resolved'].includes(status)
+      variant={
+        variantMap.error ? 'error' : variantMap.warning ? 'warning' : undefined
       }
       important
       preferenceKey={preferenceKey}

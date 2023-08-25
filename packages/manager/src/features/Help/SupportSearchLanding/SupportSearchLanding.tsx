@@ -80,7 +80,7 @@ const SupportSearchLanding = (props: AlgoliaProps) => {
         />
       </Box>
       <Box>
-        {searchError && <Notice error>{searchError}</Notice>}
+        {searchError && <Notice variant="error">{searchError}</Notice>}
         <TextField
           InputProps={{
             className: classes.searchBar,

@@ -173,9 +173,9 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       return (
         <React.Fragment>
           {fieldError && fieldError.reason && (
-            <Notice error text={fieldError.reason} />
+            <Notice text={fieldError.reason} variant="error" />
           )}
-          {successMessage && <Notice success text={successMessage} />}
+          {successMessage && <Notice text={successMessage} variant="success" />}
           {/*
            * We only want to show this empty state on the initial GET StackScripts request
            * If the user is searching and 0 results come back, we just want to show

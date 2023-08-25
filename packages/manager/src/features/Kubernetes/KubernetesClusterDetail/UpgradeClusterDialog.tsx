@@ -111,7 +111,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
           : `Pricing for the HA control plane is ${displayPrice(LKE_HA_PRICE)}`}
         &nbsp;per month per cluster.
       </Typography>
-      <Notice spacingBottom={16} spacingTop={16} warning>
+      <Notice spacingBottom={16} spacingTop={16} variant="warning">
         <Typography className={classes.noticeHeader} variant="h3">
           Caution:
         </Typography>
