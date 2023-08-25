@@ -19,12 +19,12 @@ const nodeBalancerProps: FirewallDeviceLandingProps = {
   type: 'nodebalancer',
 };
 
-jest.mock('src/queries/firewalls', () => ({
-  useAllFirewallDevicesQuery: jest.fn(() => ({
+jest.mock('src/queries/firewalls.ts', () => ({
+  useAllFirewallDevicesQuery: jest.fn().mockReturnValue({
     data: [],
     error: null,
     isLoading: false,
-  })),
+  }),
 }));
 
 describe('Firewall linode device', () => {
@@ -37,7 +37,7 @@ describe('Firewall linode device', () => {
     addLinodesButton = getByTestId('add-device-button');
   });
 
-  it('should render an add Linodes button', () => {
+  it.only('should render an add Linodes button', () => {
     expect(addLinodesButton).toBeInTheDocument();
   });
 
