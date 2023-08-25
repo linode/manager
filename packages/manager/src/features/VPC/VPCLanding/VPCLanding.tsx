@@ -25,7 +25,7 @@ import { VPCEmptyState } from './VPCEmptyState';
 import { VPCRow } from './VPCRow';
 
 const preferenceKey = 'vpcs';
-const VPC_CREATE_ROUTE = 'vpc/create';
+const VPC_CREATE_ROUTE = 'vpcs/create';
 
 const VPCLanding = () => {
   const pagination = usePagination(1, preferenceKey);
