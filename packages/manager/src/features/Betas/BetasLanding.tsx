@@ -6,7 +6,7 @@ import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { useAccountBetasQuery } from 'src/queries/accountBetas';
 import { useBetasQuery } from 'src/queries/betas';
-import BetaDetailsList from 'src/features/Betas/BetaDetailsList';
+import { BetaDetailsList } from 'src/features/Betas/BetaDetailsList';
 import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
 
 const BetasLanding = () => {

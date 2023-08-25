@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import BetaDetailsList from './BetaDetailsList';
+import { BetaDetailsList } from './BetaDetailsList';
 import { APIError } from '@linode/api-v4';
 
 describe('BetaDetails', () => {

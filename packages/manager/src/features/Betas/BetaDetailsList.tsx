@@ -26,7 +26,7 @@ const BetaError = (props: { errors: APIError[] | null }) =>
 const BetaLoading = (props: { isLoading: boolean }) =>
   props.isLoading ? <CircleProgress /> : null;
 
-const BetaDetailsList = (props: Props) => {
+export const BetaDetailsList = (props: Props) => {
   const { title, betas, isLoading, errors } = props;
   return (
     <Paper>
@@ -42,5 +42,3 @@ const BetaDetailsList = (props: Props) => {
     </Paper>
   );
 };
-
-export default BetaDetailsList;
