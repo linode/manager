@@ -108,7 +108,7 @@ export const NodeBalancerDetail = () => {
         docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
         title={nodeBalancerLabel}
       />
-      {errorMap.none && <Notice variant="error" text={errorMap.none} />}
+      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <Tabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),

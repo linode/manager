@@ -294,12 +294,12 @@ const IPSharingPanel = (props: Props) => {
         <>
           {generalError && (
             <Grid xs={12}>
-              <Notice variant="error" text={generalError} />
+              <Notice text={generalError} variant="error" />
             </Grid>
           )}
           {successMessage && (
             <Grid xs={12}>
-              <Notice variant="success" text={successMessage} />
+              <Notice text={successMessage} variant="success" />
             </Grid>
           )}
           <Grid container>

@@ -132,8 +132,8 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
               {status && (
                 <Notice
                   key={status}
-                  variant="error"
                   text={status.generalError}
+                  variant="error"
                 />
               )}
 

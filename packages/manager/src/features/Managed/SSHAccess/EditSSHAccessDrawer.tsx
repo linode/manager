@@ -120,9 +120,9 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                 <>
                   {status && (
                     <Notice
-                      variant="error"
                       key={status}
                       text={status.generalError}
+                      variant="error"
                     />
                   )}
 

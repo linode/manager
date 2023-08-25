@@ -190,16 +190,16 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                   <Notice
                     data-qa-error
                     key={status}
-                    variant="error"
                     text={status}
+                    variant="error"
                   />
                 )}
 
                 {isRestrictedUser && (
                   <Notice
                     important
-                    variant="error"
                     text="You don't have bucket_access to create an Access Key. Please contact an account administrator for details."
+                    variant="error"
                   />
                 )}
 

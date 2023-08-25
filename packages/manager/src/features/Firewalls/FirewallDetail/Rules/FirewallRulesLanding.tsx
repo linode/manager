@@ -290,7 +290,7 @@ const FirewallRulesLanding = (props: Props) => {
       ) : null}
 
       {generalErrors?.length === 1 && (
-        <Notice spacingTop={8} variant="error" text={generalErrors[0].reason} />
+        <Notice spacingTop={8} text={generalErrors[0].reason} variant="error" />
       )}
 
       <StyledDiv>

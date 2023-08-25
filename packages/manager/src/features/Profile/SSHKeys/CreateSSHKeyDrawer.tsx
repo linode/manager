@@ -62,7 +62,7 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Add SSH Key">
-      {generalError && <Notice variant="error" text={generalError} />}
+      {generalError && <Notice text={generalError} variant="error" />}
       <form onSubmit={formik.handleSubmit}>
         <TextField
           errorText={hasErrorFor('label')}

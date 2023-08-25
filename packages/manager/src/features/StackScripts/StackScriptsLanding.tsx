@@ -35,8 +35,8 @@ export const StackScriptsLanding = () => {
       <ProductInformationBanner bannerLocation="StackScripts" />
       {!!history.location.state && !!history.location.state.successMessage ? (
         <Notice
-          variant="success"
           text={history.location.state.successMessage}
+          variant="success"
         />
       ) : null}
       <LandingHeader

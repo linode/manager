@@ -127,8 +127,8 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
           <Notice
             important
             spacingTop={16}
-            variant="warning"
             text={nodeWarning}
+            variant="warning"
           />
         )}
         {region != '' && highAvailability ? (

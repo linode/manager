@@ -100,7 +100,7 @@ export const AddDeviceDrawer = (props: Props) => {
         </Notice>
       );
     } else {
-      return <Notice variant="error" text={errorMessage} />;
+      return <Notice text={errorMessage} variant="error" />;
     }
   };
 

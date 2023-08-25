@@ -226,7 +226,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
       <ProductInformationBanner bannerLocation="Domains" />
       <DomainBanner hidden={!shouldShowBanner} />
       {location.state?.recordError && (
-        <Notice variant="error" text={location.state.recordError} />
+        <Notice text={location.state.recordError} variant="error" />
       )}
       <LandingHeader
         extraActions={

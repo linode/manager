@@ -411,7 +411,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {generalError && (
-          <Notice spacingTop={8} variant="error" text={generalError} />
+          <Notice spacingTop={8} text={generalError} variant="error" />
         )}
         <Grid
           alignItems="center"

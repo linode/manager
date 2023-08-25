@@ -114,7 +114,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       title="Are you sure you want to close your Linode account?"
     >
       {errors ? (
-        <Notice variant="error" text={errors ? errors[0].reason : ''} />
+        <Notice text={errors ? errors[0].reason : ''} variant="error" />
       ) : null}
       <StyledNoticeWrapper>
         <Notice spacingBottom={12} variant="warning">

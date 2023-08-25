@@ -201,8 +201,8 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         <Notice
           data-qa-error
           key={status}
-          variant="error"
           text={status.generalError}
+          variant="error"
         />
       )}
       <Select

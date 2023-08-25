@@ -121,8 +121,8 @@ const UserProfile: React.FC<Props> = (props) => {
           {generalAccountError && (
             <Notice
               spacingBottom={0}
-              variant="error"
               text={generalAccountError}
+              variant="error"
             />
           )}
           <TextField
@@ -153,8 +153,8 @@ const UserProfile: React.FC<Props> = (props) => {
           {generalProfileError && (
             <Notice
               spacingBottom={0}
-              variant="error"
               text={generalProfileError}
+              variant="error"
             />
           )}
           <TextField
@@ -223,8 +223,8 @@ const UserProfile: React.FC<Props> = (props) => {
         {userDeleteError && (
           <Notice
             className={classes.topMargin}
-            variant="error"
             text="Error when deleting user, please try again later"
+            variant="error"
           />
         )}
         <Button

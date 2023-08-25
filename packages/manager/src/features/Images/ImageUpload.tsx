@@ -225,11 +225,11 @@ export const ImageUpload: React.FC<Props> = (props) => {
       </Prompt>
 
       <Paper className={classes.container}>
-        {errorMap.none ? <Notice variant="error" text={errorMap.none} /> : null}
+        {errorMap.none ? <Notice text={errorMap.none} variant="error" /> : null}
         {!canCreateImage ? (
           <Notice
-            variant="error"
             text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+            variant="error"
           />
         ) : null}
 
@@ -287,8 +287,8 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
           <Notice
             spacingTop={24}
-            variant="warning"
             sx={{ fontSize: '0.875rem' }}
+            variant="warning"
           >
             {imageSizeLimitsMessage}
           </Notice>

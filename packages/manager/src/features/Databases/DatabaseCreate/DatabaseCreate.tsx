@@ -463,7 +463,7 @@ const DatabaseCreate = () => {
         title="Create"
       />
       <Paper>
-        {createError ? <Notice variant="error" text={createError} /> : null}
+        {createError ? <Notice text={createError} variant="error" /> : null}
         <Grid>
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField
@@ -544,7 +544,7 @@ const DatabaseCreate = () => {
             data-testid="database-nodes"
           >
             {errors.cluster_size ? (
-              <Notice variant="error" text={errors.cluster_size} />
+              <Notice text={errors.cluster_size} variant="error" />
             ) : null}
             <RadioGroup
               style={{ marginBottom: 0, marginTop: 0 }}
@@ -603,8 +603,8 @@ const DatabaseCreate = () => {
               ? ipErrorsFromAPI.map((apiError: APIError) => (
                   <Notice
                     key={apiError.reason}
-                    variant="error"
                     text={apiError.reason}
+                    variant="error"
                   />
                 ))
               : null}

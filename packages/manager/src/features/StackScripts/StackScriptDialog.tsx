@@ -66,8 +66,8 @@ export const StackScriptDialog: React.FC<CombinedProps> = (props) => {
         <>
           {error && (
             <Notice
-              variant="error"
               text="There was an error loading this StackScript."
+              variant="error"
             />
           )}
           {stackScript && (

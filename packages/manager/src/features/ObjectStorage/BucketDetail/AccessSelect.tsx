@@ -132,12 +132,12 @@ export const AccessSelect = React.memo((props: Props) => {
     <>
       {updateAccessSuccess ? (
         <Notice
-          variant="success"
           text={`${label} access updated successfully.`}
+          variant="success"
         />
       ) : null}
 
-      {errorText ? <Notice variant="error" text={errorText} /> : null}
+      {errorText ? <Notice text={errorText} variant="error" /> : null}
 
       <EnhancedSelect
         onChange={(selected) => {

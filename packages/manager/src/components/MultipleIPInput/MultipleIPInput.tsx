@@ -148,7 +148,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
       {helperText && (
         <Typography className={classes.helperText}>{helperText}</Typography>
       )}
-      {error && <Notice spacingTop={8} variant="error" text={error} />}
+      {error && <Notice spacingTop={8} text={error} variant="error" />}
       {ips.map((thisIP, idx) => (
         <Grid
           container

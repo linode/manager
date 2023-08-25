@@ -198,8 +198,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
             <Notice
               spacingBottom={0}
               spacingTop={8}
-              variant="error"
               text={error}
+              variant="error"
             />
           )}
           {stackScriptError && (

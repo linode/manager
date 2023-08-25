@@ -107,8 +107,8 @@ const AddCertForm = (props: Props) => {
         <Notice
           spacingBottom={0}
           spacingTop={8}
-          variant="error"
           text={errorMap.none}
+          variant="error"
         />
       )}
       <StyledFieldsWrapper>
@@ -190,7 +190,7 @@ const RemoveCertForm = (props: Props) => {
 
   return (
     <>
-      <Notice variant="info" spacingTop={8}>
+      <Notice spacingTop={8} variant="info">
         A TLS certificate has already been uploaded for this Bucket. To upload a
         new certificate, remove the current certificate.{` `}
       </Notice>

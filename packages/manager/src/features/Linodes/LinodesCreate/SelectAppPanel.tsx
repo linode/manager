@@ -98,7 +98,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
 
     return (
       <StyledPaper data-qa-tp="Select Image">
-        {error && <Notice variant="error" text={error} />}
+        {error && <Notice text={error} variant="error" />}
         {!isFilteringOrSearching ? (
           <AppPanelSection
             apps={newApps}

@@ -212,8 +212,8 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       className={classes.rawDiskWarning}
       spacingBottom={32}
       spacingTop={16}
-      variant="warning"
       text={rawDiskWarningText}
+      variant="warning"
     />
   );
 
@@ -238,14 +238,14 @@ export const CreateImageTab: React.FC<Props> = (props) => {
     <Paper className={classes.container}>
       {!canCreateImage ? (
         <Notice
-          variant="error"
           text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+          variant="error"
         />
       ) : null}
       {generalError ? (
-        <Notice data-qa-notice variant="error" text={generalError} />
+        <Notice data-qa-notice text={generalError} variant="error" />
       ) : null}
-      {notice ? <Notice data-qa-notice variant="info" text={notice} /> : null}
+      {notice ? <Notice data-qa-notice text={notice} variant="info" /> : null}
 
       <LinodeSelect
         optionsFilter={(linode) =>

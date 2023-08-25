@@ -309,15 +309,15 @@ export const ImagesDrawer = (props: CombinedProps) => {
     <Drawer onClose={onClose} open={open} title={titleMap[mode]}>
       {!canCreateImage ? (
         <Notice
-          variant="error"
           text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+          variant="error"
         />
       ) : null}
       {generalError && (
-        <Notice data-qa-notice variant="error" text={generalError} />
+        <Notice data-qa-notice text={generalError} variant="error" />
       )}
 
-      {notice && <Notice data-qa-notice variant="info" text={notice} />}
+      {notice && <Notice data-qa-notice text={notice} variant="info" />}
 
       {['create', 'restore'].includes(mode) && (
         <LinodeSelect

@@ -121,11 +121,11 @@ export const LishSettings = () => {
     <>
       <DocumentTitleSegment segment="LISH Console Settings" />
       <Paper>
-        {success && <Notice variant="success" text={success} />}
+        {success && <Notice text={success} variant="success" />}
         {authorizedKeysError && (
-          <Notice variant="error" text={authorizedKeysError} />
+          <Notice text={authorizedKeysError} variant="error" />
         )}
-        {generalError && <Notice variant="error" text={generalError} />}
+        {generalError && <Notice text={generalError} variant="error" />}
         <Typography sx={{ marginBottom: theme.spacing(2) }}>
           This controls what authentication methods are allowed to connect to
           the Lish console servers.

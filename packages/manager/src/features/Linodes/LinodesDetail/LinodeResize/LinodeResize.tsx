@@ -163,8 +163,8 @@ export const LinodeResize = (props: Props) => {
         {hostMaintenance && <HostMaintenanceError />}
         {disksError && (
           <Notice
-            variant="error"
             text="There was an error loading your Linode&rsquo;s Disks."
+            variant="error"
           />
         )}
         {error && <Notice variant="error">{error}</Notice>}

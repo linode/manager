@@ -357,10 +357,10 @@ export class LinodeCreate extends React.PureComponent<
       <StyledForm>
         <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
-            <Notice spacingTop={8} variant="error" text={hasErrorFor.none} />
+            <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
           )}
           {generalError && (
-            <Notice spacingTop={8} variant="error" text={generalError} />
+            <Notice spacingTop={8} text={generalError} variant="error" />
           )}
           {userCannotCreateLinode && (
             <Notice

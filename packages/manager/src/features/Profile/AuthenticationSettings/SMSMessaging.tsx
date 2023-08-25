@@ -101,8 +101,8 @@ export const SMSMessaging = () => {
         <Notice
           spacingBottom={0}
           spacingTop={16}
-          variant="error"
           sx={{ fontSize: '0.875rem !important' }}
+          variant="error"
         >
           <b>Warning:</b> As part of this action, your verified phone number{' '}
           {profile?.verified_phone_number

@@ -96,7 +96,7 @@ export const CautionNotice = React.memo((props: Props) => {
         </li>
         {props.metadataWarning ? <li>{props.metadataWarning}</li> : null}
       </ul>
-      {props.error && <Notice variant="error" text={props.error} />}
+      {props.error && <Notice text={props.error} variant="error" />}
       <Checkbox
         sx={{
           marginLeft: theme.spacing(2),

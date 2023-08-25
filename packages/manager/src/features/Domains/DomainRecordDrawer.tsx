@@ -154,8 +154,8 @@ export class DomainRecordDrawer extends React.Component<
         {!hasARecords && type === 'NS' && (
           <Notice
             spacingTop={8}
-            variant="warning"
             text={noARecordsNoticeText}
+            variant="warning"
           />
         )}
         {fields.map((field: any, idx: number) => field(idx))}

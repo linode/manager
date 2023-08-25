@@ -170,16 +170,16 @@ export const TwoFactor = (props: TwoFactorProps) => {
           <Notice
             spacingBottom={16}
             spacingTop={16}
-            variant="success"
             text={success}
+            variant="success"
           />
         )}
         {generalError && (
           <Notice
             spacingBottom={16}
             spacingTop={16}
-            variant="error"
             text={generalError}
+            variant="error"
           />
         )}
         <StyledCopy data-qa-copy variant="body1">
@@ -200,10 +200,10 @@ export const TwoFactor = (props: TwoFactorProps) => {
           )
         ) : (
           <Notice
-            variant="warning"
             style={{ marginTop: '8px' }}
             text={needSecurityQuestionsCopy}
             typeProps={{ style: { fontSize: '0.875rem' } }}
+            variant="warning"
           />
         )}
         {twoFactorEnabled && (

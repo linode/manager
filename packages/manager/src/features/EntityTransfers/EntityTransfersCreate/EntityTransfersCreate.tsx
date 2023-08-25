@@ -117,8 +117,8 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
       {error ? (
         <Notice
           className={classes.error}
-          variant="error"
           text={getAPIErrorOrDefault(error)[0].reason}
+          variant="error"
         />
       ) : null}
       <Grid

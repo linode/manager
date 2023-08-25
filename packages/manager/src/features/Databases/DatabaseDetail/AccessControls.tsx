@@ -206,7 +206,7 @@ export const AccessControls = (props: Props) => {
         open={isDialogOpen}
         title={`Remove IP Address ${accessControlToBeRemoved}`}
       >
-        {error ? <Notice variant="error" text={error} /> : null}
+        {error ? <Notice text={error} variant="error" /> : null}
         <Typography data-testid="ip-removal-confirmation-warning">
           IP {accessControlToBeRemoved} will lose all access to the data on this
           database cluster. This action cannot be undone, but you can re-enable

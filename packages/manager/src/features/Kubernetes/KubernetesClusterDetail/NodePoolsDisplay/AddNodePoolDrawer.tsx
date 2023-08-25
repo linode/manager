@@ -158,8 +158,8 @@ export const AddNodePoolDrawer = (props: Props) => {
       {error && (
         <Notice
           className={classes.error}
-          variant="error"
           text={error?.[0].reason}
+          variant="error"
         />
       )}
       <form className={classes.plans}>
@@ -191,8 +191,8 @@ export const AddNodePoolDrawer = (props: Props) => {
               important
               spacingBottom={16}
               spacingTop={8}
-              variant="error"
               text={nodeWarning}
+              variant="error"
             />
           )}
 

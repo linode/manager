@@ -605,7 +605,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
         onClose={closeDialog}
         open={dialog.open}
       >
-        {dialog.error && <Notice variant="error" text={dialog.error} />}
+        {dialog.error && <Notice text={dialog.error} variant="error" />}
         <Typography>{dialogMessage}</Typography>
       </ConfirmationDialog>
     </React.Fragment>

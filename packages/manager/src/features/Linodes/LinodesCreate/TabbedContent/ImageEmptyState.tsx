@@ -17,7 +17,7 @@ export const ImageEmptyState = (props: Props) => {
 
   return (
     <Paper className={className} sx={sx}>
-      {errorText ? <Notice variant="error" text={errorText} /> : null}
+      {errorText ? <Notice text={errorText} variant="error" /> : null}
       <Typography data-qa-tp="Select Image" variant="h2">
         Select Image
       </Typography>

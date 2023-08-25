@@ -116,7 +116,7 @@ const SelectBackupPanel = (props: CombinedProps) => {
 
   return (
     <StyledRootPaper>
-      {error && <Notice variant="error" text={error} />}
+      {error && <Notice text={error} variant="error" />}
       <Typography variant="h2">Select Backup</Typography>
       <StyledWrapperGrid alignItems="center" container spacing={2}>
         {loading ? (

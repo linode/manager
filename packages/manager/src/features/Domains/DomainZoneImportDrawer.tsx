@@ -58,7 +58,7 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
         </Notice>
       )}
       <form onSubmit={formik.handleSubmit}>
-        {generalError && <Notice variant="error" text={generalError} />}
+        {generalError && <Notice text={generalError} variant="error" />}
         <TextField
           disabled={noPermission}
           errorText={domainError}

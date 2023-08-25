@@ -135,15 +135,15 @@ export const PowerActionsDialog = (props: Props) => {
           secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
         />
       }
-      error={error?.[0].reason}
-      onClose={onClose}
-      open={isOpen}
       sx={{
         '& .dialog-content': {
           paddingBottom: 0,
           paddingTop: 0,
         },
       }}
+      error={error?.[0].reason}
+      onClose={onClose}
+      open={isOpen}
       title={`${action} Linode ${linode?.label ?? ''}?`}
     >
       {props.action === 'Power On' ? (

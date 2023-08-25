@@ -39,7 +39,7 @@ export const EditAPITokenDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Edit Personal Access Token">
-      {errorMap.none && <Notice variant="error" text={errorMap.none} />}
+      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <TextField
         errorText={errorMap.label}
         label="Label"

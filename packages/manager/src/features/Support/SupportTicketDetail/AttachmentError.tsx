@@ -15,7 +15,7 @@ const getText = (fileName: string, reason: string) => {
 
 const AttachmentError: React.FC<CombinedProps> = (props) => {
   const { fileName, reason } = props;
-  return <Notice variant="error" text={getText(fileName, reason)} />;
+  return <Notice text={getText(fileName, reason)} variant="error" />;
 };
 
 export default AttachmentError;

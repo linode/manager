@@ -571,7 +571,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       {props.children || (
         <React.Fragment>
           {generalError && (
-            <Notice data-qa-notice variant="error" text={generalError} />
+            <Notice data-qa-notice text={generalError} variant="error" />
           )}
 
           <Typography data-qa-support-ticket-helper-text>

@@ -181,8 +181,8 @@ export const NodeBalancerConfigPanel = (
       {globalFormError && (
         <Notice
           className={`error-for-scroll-${configIdx}`}
-          variant="error"
           text={globalFormError}
+          variant="error"
         />
       )}
       <Grid container spacing={2}>
@@ -354,7 +354,7 @@ export const NodeBalancerConfigPanel = (
         <Grid xs={12}>
           {nodeMessage && (
             <Grid xs={12}>
-              <Notice variant="info" text={nodeMessage} />
+              <Notice text={nodeMessage} variant="info" />
             </Grid>
           )}
           <Typography data-qa-backend-ip-header variant="h2">

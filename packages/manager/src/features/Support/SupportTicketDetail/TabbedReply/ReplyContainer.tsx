@@ -168,8 +168,8 @@ export const ReplyContainer = (props: Props) => {
         <Notice
           spacingBottom={8}
           spacingTop={16}
-          variant="error"
           text={errorMap.none}
+          variant="error"
         />
       )}
       <Grid>

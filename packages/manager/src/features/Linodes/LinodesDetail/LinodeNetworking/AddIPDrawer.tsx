@@ -166,7 +166,7 @@ export const AddIPDrawer = (props: Props) => {
       <React.Fragment>
         <Typography variant="h2">IPv4</Typography>
         {Boolean(ipv4Error) && (
-          <Notice spacingTop={8} variant="error" text={ipv4Error?.[0].reason} />
+          <Notice spacingTop={8} text={ipv4Error?.[0].reason} variant="error" />
         )}
         <Typography sx={{ marginTop: '1rem' }} variant="h3">
           Select type
@@ -224,7 +224,7 @@ export const AddIPDrawer = (props: Props) => {
           IPv6
         </Typography>
         {Boolean(ipv6Error) && (
-          <Notice spacingTop={8} variant="error" text={ipv6Error?.[0].reason} />
+          <Notice spacingTop={8} text={ipv6Error?.[0].reason} variant="error" />
         )}
         <Typography sx={{ marginTop: '1rem' }} variant="h3">
           Select prefix

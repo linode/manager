@@ -568,8 +568,8 @@ export const LinodeConfigDialog = (props: Props) => {
                 <Notice
                   errorGroup="linode-config-dialog"
                   spacingBottom={0}
-                  variant="error"
                   text={generalError}
+                  variant="error"
                 />
               </Grid>
             )}
@@ -849,8 +849,8 @@ export const LinodeConfigDialog = (props: Props) => {
                 </Box>
                 {formik.errors.interfaces ? (
                   <Notice
-                    variant="error"
                     text={formik.errors.interfaces as string}
+                    variant="error"
                   />
                 ) : null}
                 {values.interfaces.map((thisInterface, idx) => {

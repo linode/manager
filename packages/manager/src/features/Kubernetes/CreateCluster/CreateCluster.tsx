@@ -293,7 +293,7 @@ export const CreateCluster = () => {
         title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
-        {errorMap.none && <Notice variant="error" text={errorMap.none} />}
+        {errorMap.none && <Notice text={errorMap.none} variant="error" />}
         <Paper data-qa-label-header>
           <div className={classes.inner}>
             <TextField

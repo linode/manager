@@ -51,7 +51,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
     return (
       <div>
-        {error && <Notice spacingTop={8} variant="error" text={error} />}
+        {error && <Notice spacingTop={8} text={error} variant="error" />}
         <Select
           isMulti={true}
           label={field.label}

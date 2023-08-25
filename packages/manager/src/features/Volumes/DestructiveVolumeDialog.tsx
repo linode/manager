@@ -114,7 +114,7 @@ export const DestructiveVolumeDialog = (props: Props) => {
       title={title}
       typographyStyle={{ marginTop: '10px' }}
     >
-      {error && <Notice variant="error" text={error} />}
+      {error && <Notice text={error} variant="error" />}
       {mode === 'detach' && !poweredOff && linode !== undefined && (
         <Typography className={classes.warningCopy}>
           <strong>Warning:</strong> This operation could cause data loss. Please
