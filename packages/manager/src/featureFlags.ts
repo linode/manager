@@ -139,7 +139,7 @@ export type ProductInformationBannerLocation =
   | 'VPC'
   | 'Volumes';
 
-export interface ProductInformationBannerDecoration {
+interface ProductInformationBannerDecoration {
   important: 'false' | 'true' | boolean;
   variant: NoticeVariant;
 }

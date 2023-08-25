@@ -2,10 +2,7 @@ import * as React from 'react';
 
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { reportException } from 'src/exceptionReporting';
-import {
-  ProductInformationBannerDecoration,
-  ProductInformationBannerLocation,
-} from 'src/featureFlags';
+import { ProductInformationBannerLocation } from 'src/featureFlags';
 import { useFlags } from 'src/hooks/useFlags';
 import { isAfter } from 'src/utilities/date';
 
@@ -32,12 +29,10 @@ export const ProductInformationBanner = React.memo(
       return null;
     }
 
-    const thisBannerDecoration: ProductInformationBannerDecoration =
-      thisBanner.decoration;
-    thisBannerDecoration.important =
-      thisBannerDecoration.important === 'true'
+    const isImportantBanner =
+      thisBanner.decoration.important === 'true'
         ? true
-        : thisBannerDecoration.important === 'false'
+        : thisBanner.decoration.important === 'false'
         ? false
         : true;
 
@@ -57,9 +52,9 @@ export const ProductInformationBanner = React.memo(
 
     return (
       <DismissibleBanner
-        important={thisBannerDecoration.important}
+        important={isImportantBanner}
         preferenceKey={`${bannerLocation}-${thisBanner.expirationDate}`}
-        variant={thisBannerDecoration.variant ?? 'warning'}
+        variant={thisBanner.decoration.variant ?? 'warning'}
         {...rest}
       >
         <HighlightedMarkdown textOrMarkdown={thisBanner.message} />
