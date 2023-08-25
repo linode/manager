@@ -124,6 +124,7 @@ export const KubernetesClusterDetail = () => {
         clusterID={cluster.id}
         onClose={() => setIsUpgradeToHAOpen(false)}
         open={isUpgradeToHAOpen}
+        regionID={cluster.region}
       />
     </>
   );

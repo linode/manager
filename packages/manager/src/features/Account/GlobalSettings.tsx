@@ -1,10 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { MapDispatchToProps, connect } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -13,26 +9,17 @@ import {
   useMutateAccountSettings,
 } from 'src/queries/accountSettings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { ApplicationState } from 'src/store';
-import { handleOpen } from 'src/store/backupDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { BackupDrawer } from '../Backups';
 import AutoBackups from './AutoBackups';
 import CloseAccountSetting from './CloseAccountSetting';
 import { EnableManaged } from './EnableManaged';
 import EnableObjectStorage from './EnableObjectStorage';
 import NetworkHelper from './NetworkHelper';
 
-interface Props {
-  actions: {
-    openBackupsDrawer: () => void;
-  };
-}
-
-const GlobalSettings = (props: Props) => {
-  const {
-    actions: { openBackupsDrawer },
-  } = props;
+const GlobalSettings = () => {
+  const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);
 
   const {
     data: accountSettings,
@@ -42,8 +29,8 @@ const GlobalSettings = (props: Props) => {
 
   const { data: linodes } = useAllLinodesQuery();
 
-  const linodesWithoutBackups =
-    linodes?.filter((linode) => !linode.backups.enabled) ?? [];
+  const hasLinodesWithoutBackups =
+    linodes?.some((linode) => !linode.backups.enabled) ?? false;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -98,10 +85,10 @@ const GlobalSettings = (props: Props) => {
     <div>
       <AutoBackups
         backups_enabled={backups_enabled}
-        hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
+        hasLinodesWithoutBackups={hasLinodesWithoutBackups}
         isManagedCustomer={managed}
         onChange={toggleAutomaticBackups}
-        openBackupsDrawer={openBackupsDrawer}
+        openBackupsDrawer={() => setIsBackupsDrawerOpen(true)}
       />
       <NetworkHelper
         networkHelperEnabled={network_helper}
@@ -110,20 +97,12 @@ const GlobalSettings = (props: Props) => {
       <EnableObjectStorage object_storage={object_storage} />
       <EnableManaged isManaged={managed} />
       <CloseAccountSetting />
+      <BackupDrawer
+        onClose={() => setIsBackupsDrawerOpen(false)}
+        open={isBackupsDrawerOpen}
+      />
     </div>
   );
 };
 
-const mapDispatchToProps: MapDispatchToProps<Props, {}> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
-) => {
-  return {
-    actions: {
-      openBackupsDrawer: () => dispatch(handleOpen()),
-    },
-  };
-};
-
-const connected = connect(undefined, mapDispatchToProps);
-
-export default connected(GlobalSettings);
+export default GlobalSettings;

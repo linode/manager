@@ -2,11 +2,17 @@ import type { Linode } from '@linode/api-v4/types';
 import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
+import { cleanUp } from 'support/util/cleanup';
 import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
 import { interceptCreateVolume } from 'support/intercepts/volumes';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -17,10 +23,13 @@ const pageSizeOverride = {
 
 authenticate();
 describe('volume create flow', () => {
+  before(() => {
+    cleanUp('volumes');
+  });
+
   /*
    * - Creates a volume that is not attached to a Linode.
    * - Confirms that volume is listed correctly on volumes landing page.
-   * - Confirms that tags exist on volume.
    */
   it('creates an unattached volume', () => {
     const region = chooseRegion();
@@ -31,15 +40,28 @@ describe('volume create flow', () => {
       regionLabel: region.label,
     };
 
+    mockAppendFeatureFlags({
+      dcSpecificPricing: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
     interceptCreateVolume().as('createVolume');
+
     cy.visitWithLogin('/volumes/create', {
       localStorageOverrides: pageSizeOverride,
     });
+
+    cy.wait(['@getFeatureFlags', '@getClientStream']);
 
     // Fill out and submit volume create form.
     containsClick('Label').type(volume.label);
     containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
     containsClick('Select a Region').type(`${volume.region}{enter}`);
+
+    cy.findByText('Region')
+      .should('be.visible')
+      .click()
+      .type(`${volume.regionLabel}{enter}`);
 
     fbtClick('Create Volume');
     cy.wait('@createVolume');
@@ -81,10 +103,19 @@ describe('volume create flow', () => {
     };
 
     cy.defer(createLinode(linodeRequest), 'creating Linode').then((linode) => {
+      mockAppendFeatureFlags({
+        dcSpecificPricing: makeFeatureFlagData(false),
+      }).as('getFeatureFlags');
+
+      mockGetFeatureFlagClientstream().as('getClientStream');
+
       interceptCreateVolume().as('createVolume');
+
       cy.visitWithLogin('/volumes/create', {
         localStorageOverrides: pageSizeOverride,
       });
+
+      cy.wait(['@getFeatureFlags', '@getClientStream']);
 
       // Fill out and submit volume create form.
       containsClick('Label').type(volume.label);

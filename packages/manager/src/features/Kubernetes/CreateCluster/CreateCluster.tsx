@@ -1,3 +1,4 @@
+import { Region } from '@linode/api-v4';
 import {
   CreateKubeClusterPayload,
   CreateNodePoolData,
@@ -22,11 +23,11 @@ import { Paper } from 'src/components/Paper';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import {
   getKubeHighAvailability,
   getLatestVersion,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import {
   reportAgreementSigningError,
@@ -42,6 +43,8 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
+import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
+import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
@@ -75,7 +78,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       maxWidth: 440,
     },
     '& p': {
-      fontWeight: 500,
       lineHeight: '1.43rem',
       margin: 0,
       maxWidth: '100%',
@@ -131,6 +133,7 @@ export const CreateCluster = () => {
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
+  const flags = useFlags();
   const history = useHistory();
   const { data: account } = useAccount();
   const { showHighAvailability } = getKubeHighAvailability(account);
@@ -238,6 +241,24 @@ export const CreateCluster = () => {
     setLabel(newLabel ? newLabel : undefined);
   };
 
+  /**
+   * @param regionId - region selection or null if no selection made
+   * @returns dynamically calculated high availability price by region
+   */
+  const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
+    if (!regionId) {
+      return undefined;
+    } else {
+      return parseFloat(
+        getDCSpecificPrice({
+          basePrice: LKE_HA_PRICE,
+          flags,
+          regionId,
+        })
+      );
+    }
+  };
+
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
@@ -275,76 +296,72 @@ export const CreateCluster = () => {
         {errorMap.none && <Notice variant="error" text={errorMap.none} />}
         <Paper data-qa-label-header>
           <div className={classes.inner}>
-            <Box>
-              <TextField
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  updateLabel(e.target.value)
-                }
-                className={classes.inputWidth}
-                data-qa-label-input
-                errorText={errorMap.label}
-                label="Cluster Label"
-                value={label || ''}
-              />
-            </Box>
-            <Box>
-              <RegionSelect
-                handleSelection={(regionID: string) =>
-                  setSelectedRegionID(regionID)
-                }
-                textFieldProps={{
-                  helperText: <RegionHelperText />,
-                  helperTextPosition: 'top',
-                }}
-                className={classes.regionSubtitle}
-                errorText={errorMap.region}
-                regions={filteredRegions}
-                selectedID={selectedID}
-              />
-            </Box>
-            <Box>
-              <Select
-                onChange={(selected: Item<string>) => {
-                  setVersion(selected);
-                }}
-                className={classes.inputWidth}
-                errorText={errorMap.k8s_version}
-                isClearable={false}
-                label="Kubernetes Version"
-                options={versions}
-                placeholder={' '}
-                value={version || null}
-              />
-            </Box>
+            <TextField
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                updateLabel(e.target.value)
+              }
+              className={classes.inputWidth}
+              data-qa-label-input
+              errorText={errorMap.label}
+              label="Cluster Label"
+              value={label || ''}
+            />
+            <RegionSelect
+              handleSelection={(regionID: string) =>
+                setSelectedRegionID(regionID)
+              }
+              textFieldProps={{
+                helperText: <RegionHelperText mb={2} />,
+                helperTextPosition: 'top',
+              }}
+              className={classes.regionSubtitle}
+              errorText={errorMap.region}
+              regions={filteredRegions}
+              selectedID={selectedID}
+            />
+            <Select
+              onChange={(selected: Item<string>) => {
+                setVersion(selected);
+              }}
+              className={classes.inputWidth}
+              errorText={errorMap.k8s_version}
+              isClearable={false}
+              label="Kubernetes Version"
+              options={versions}
+              placeholder={' '}
+              value={version || null}
+            />
             {showHighAvailability ? (
               <Box data-testid="ha-control-plane">
                 <HAControlPlane
-                  HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
+                  highAvailabilityPrice={
+                    flags.dcSpecificPricing
+                      ? getHighAvailabilityPrice(selectedID)
+                      : LKE_HA_PRICE
+                  }
                   setHighAvailability={setHighAvailability}
                 />
               </Box>
             ) : null}
           </div>
-          <Box>
-            <NodePoolPanel
-              typesError={
-                typesError
-                  ? getAPIErrorOrDefault(
-                      typesError,
-                      'Error loading Linode type information.'
-                    )[0].reason
-                  : undefined
-              }
-              addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
-              apiError={errorMap.node_pools}
-              hasSelectedRegion={hasSelectedRegion}
-              isPlanPanelDisabled={isPlanPanelDisabled}
-              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-              regionsData={regionsData}
-              types={typesData || []}
-              typesLoading={typesLoading}
-            />
-          </Box>
+          <NodePoolPanel
+            typesError={
+              typesError
+                ? getAPIErrorOrDefault(
+                    typesError,
+                    'Error loading Linode type information.'
+                  )[0].reason
+                : undefined
+            }
+            addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
+            apiError={errorMap.node_pools}
+            hasSelectedRegion={hasSelectedRegion}
+            isPlanPanelDisabled={isPlanPanelDisabled}
+            isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+            regionsData={regionsData}
+            types={typesData || []}
+            typesLoading={typesLoading}
+          />
         </Paper>
       </Grid>
       <Grid
@@ -352,6 +369,11 @@ export const CreateCluster = () => {
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
+          highAvailabilityPrice={
+            flags.dcSpecificPricing
+              ? getHighAvailabilityPrice(selectedID)
+              : LKE_HA_PRICE
+          }
           updateFor={[
             hasAgreed,
             highAvailability,
@@ -364,7 +386,6 @@ export const CreateCluster = () => {
             createCluster,
             classes,
           ]}
-          HIGH_AVAILABILITY_PRICE={HIGH_AVAILABILITY_PRICE}
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}

@@ -6,7 +6,6 @@ import {
 } from '@linode/api-v4/lib/kubernetes';
 import { Region } from '@linode/api-v4/lib/regions';
 
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import { ExtendedType } from 'src/utilities/extendType';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
@@ -28,13 +27,13 @@ export const getMonthlyPrice = (
 export const getTotalClusterPrice = (
   pools: KubeNodePoolResponse[],
   types: ExtendedType[],
-  highAvailability: boolean = false
+  highAvailabilityPrice?: number
 ) => {
   const price = pools.reduce((accumulator, node) => {
     return accumulator + getMonthlyPrice(node.type, node.count, types);
   }, 0);
 
-  return highAvailability ? price + (HIGH_AVAILABILITY_PRICE || 0) : price;
+  return highAvailabilityPrice ? price + highAvailabilityPrice : price;
 };
 
 interface ClusterData {

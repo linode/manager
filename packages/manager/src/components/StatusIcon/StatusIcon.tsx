@@ -1,15 +1,19 @@
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material';
 import * as React from 'react';
+
+import { isPropValid } from 'src/utilities/isPropValid';
+
+import { Box, BoxProps } from '../Box';
 
 export type Status = 'active' | 'error' | 'inactive' | 'other';
 
-export interface StatusProps {
+export interface StatusProps extends BoxProps {
   pulse?: boolean;
   status: Status;
 }
 
 const StatusIcon = React.memo((props: StatusProps) => {
-  const { pulse, status } = props;
+  const { pulse, status, ...rest } = props;
 
   const shouldPulse =
     pulse === undefined
@@ -17,12 +21,14 @@ const StatusIcon = React.memo((props: StatusProps) => {
         !['active', 'error', 'inactive'].includes(status)
       : pulse;
 
-  return <StyledDiv pulse={shouldPulse} status={status} />;
+  return <StyledDiv pulse={shouldPulse} status={status} {...rest} />;
 });
 
 export { StatusIcon };
 
-const StyledDiv = styled('div')<StatusProps>(({ theme, ...props }) => ({
+const StyledDiv = styled(Box, {
+  shouldForwardProp: (prop) => isPropValid(['pulse', 'status'], prop),
+})<StatusProps>(({ theme, ...props }) => ({
   borderRadius: '50%',
   display: 'inline-block',
   height: '16px',

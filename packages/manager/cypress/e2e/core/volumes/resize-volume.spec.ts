@@ -1,9 +1,13 @@
-import { createVolume } from '@linode/api-v4/lib/volumes';
+import type { VolumeRequestPayload } from '@linode/api-v4';
+import { createVolume } from '@linode/api-v4';
 import { Volume } from '@linode/api-v4/types';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { interceptResizeVolume } from 'support/intercepts/volumes';
-import { randomNumber, randomLabel } from 'support/util/random';
+import { SimpleBackoffMethod } from 'support/util/backoff';
+import { cleanUp } from 'support/util/cleanup';
+import { pollVolumeStatus } from 'support/util/polling';
+import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 // Local storage override to force volume table to list up to 100 items.
@@ -13,8 +17,25 @@ const pageSizeOverride = {
   PAGE_SIZE: 100,
 };
 
+/**
+ * Creates a Volume and waits for it to become active.
+ *
+ * @param volumeRequest - Volume create request payload.
+ *
+ * @returns Promise that resolves to created Volume.
+ */
+const createActiveVolume = async (volumeRequest: VolumeRequestPayload) => {
+  const volume = await createVolume(volumeRequest);
+  await pollVolumeStatus(volume.id, 'active', new SimpleBackoffMethod(10000));
+  return volume;
+};
+
 authenticate();
 describe('volume resize flow', () => {
+  before(() => {
+    cleanUp('volumes');
+  });
+
   /*
    * - Clicks "Resize" action menu item for volume, enters new size, and submits form.
    * - Confirms that volume resize drawer appears after submitting form.
@@ -30,7 +51,7 @@ describe('volume resize flow', () => {
       size: oldSize,
     });
 
-    cy.defer(createVolume(volumeRequest), 'creating Volume').then(
+    cy.defer(createActiveVolume(volumeRequest), 'creating Volume').then(
       (volume: Volume) => {
         interceptResizeVolume(volume.id).as('resizeVolume');
         cy.visitWithLogin('/volumes', {
@@ -42,6 +63,7 @@ describe('volume resize flow', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
+            cy.findByText('active').should('be.visible');
             cy.findByText(`${oldSize} GB`).should('be.visible');
             cy.findByLabelText(
               `Action menu for Volume ${volume.label}`

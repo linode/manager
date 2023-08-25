@@ -1,10 +1,12 @@
+import { getBooleanEnv } from './utilities/env';
+
 // whether or not this is a Vite production build
 // This does not necessarily mean Cloud is running in a production environment.
 // For example, cloud.dev.linode.com is technically a production build.
 export const isProductionBuild = import.meta.env.PROD;
 
 // allow us to explicity enable dev tools
-export const ENABLE_DEV_TOOLS = Boolean(
+export const ENABLE_DEV_TOOLS = getBooleanEnv(
   import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
 );
 
@@ -205,12 +207,6 @@ export const MAXIMUM_PAYMENT_METHODS = 6;
 export const PAYMENT_MIN = 5;
 export const PAYMENT_SOFT_MAX = 2_000;
 export const PAYMENT_HARD_MAX = 50_000;
-
-// Price of LKE's High Availability offering in USD
-export const HIGH_AVAILABILITY_PRICE =
-  import.meta.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
-    ? undefined
-    : Number(import.meta.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE);
 
 export const DB_ROOT_USERNAME = 'linroot';
 

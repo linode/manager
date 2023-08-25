@@ -86,6 +86,7 @@ const FirewallLinodesLanding = (props: Props) => {
         device={selectedDevice}
         firewallId={firewallID}
         firewallLabel={firewallLabel}
+        linodeId={selectedDevice?.entity.id}
         onClose={() => setIsRemoveDeviceDialogOpen(false)}
         open={isRemoveDeviceDialogOpen}
       />

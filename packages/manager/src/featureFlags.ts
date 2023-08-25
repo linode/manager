@@ -46,6 +46,7 @@ export interface Flags {
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
   databases: boolean;
+  dcSpecificPricing: boolean;
   ipv6Sharing: boolean;
   kubernetesDashboardAvailability: boolean;
   mainContentBanner: MainContentBanner;

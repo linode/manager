@@ -10,9 +10,14 @@ import {
   interceptGetLinodeDetails,
   interceptGetLinodes,
 } from 'support/intercepts/linodes';
+import { cleanUp } from 'support/util/cleanup';
 
 authenticate();
 describeRegions('Delete Linodes', (region: Region) => {
+  before(() => {
+    cleanUp('linodes');
+  });
+
   /*
    * - Navigates to a Linode details page.
    * - Deletes the Linode via the "Delete" action menu item.
