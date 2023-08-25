@@ -21,6 +21,11 @@ const LoadBalancerServiceTargets = React.lazy(() =>
     default: module.LoadBalancerServiceTargets,
   }))
 );
+const LoadBalancerRoutes = React.lazy(() =>
+  import('./LoadBalancerRoutes').then((module) => ({
+    default: module.LoadBalancerRoutes,
+  }))
+);
 
 const LoadBalancerCertificates = React.lazy(() =>
   import('./LoadBalancerCertificates').then((module) => ({
@@ -104,7 +109,11 @@ const LoadBalancerDetailLanding = () => {
             </React.Suspense>
           </SafeTabPanel>
           <SafeTabPanel index={1}>1</SafeTabPanel>
-          <SafeTabPanel index={2}>2</SafeTabPanel>
+          <SafeTabPanel index={2}>
+            <React.Suspense fallback={<SuspenseLoader />}>
+              <LoadBalancerRoutes />
+            </React.Suspense>
+          </SafeTabPanel>
           <SafeTabPanel index={3}>
             <React.Suspense fallback={<SuspenseLoader />}>
               <LoadBalancerServiceTargets />
