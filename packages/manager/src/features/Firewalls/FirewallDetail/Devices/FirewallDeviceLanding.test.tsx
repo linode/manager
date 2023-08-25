@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -19,25 +21,22 @@ const nodeBalancerProps: FirewallDeviceLandingProps = {
   type: 'nodebalancer',
 };
 
-jest.mock('src/queries/firewalls.ts', () => ({
-  useAllFirewallDevicesQuery: jest.fn().mockReturnValue({
-    data: [],
-    error: null,
-    isLoading: false,
-  }),
-}));
-
 describe('Firewall linode device', () => {
   let addLinodesButton: HTMLElement;
 
   beforeEach(() => {
+    server.use(
+      rest.get('*/firewalls/*', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([])));
+      })
+    );
     const { getByTestId } = renderWithTheme(
       <FirewallDeviceLanding {...linodeProps} />
     );
     addLinodesButton = getByTestId('add-device-button');
   });
 
-  it.only('should render an add Linodes button', () => {
+  it('should render an add Linodes button', () => {
     expect(addLinodesButton).toBeInTheDocument();
   });
 
