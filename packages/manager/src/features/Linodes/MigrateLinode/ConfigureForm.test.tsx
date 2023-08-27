@@ -28,6 +28,7 @@ describe('ConfigureForm component with price comparison', () => {
   const newPricePanel = 'new-price-panel';
 
   const props = {
+    backupEnabled: false,
     currentRegion: 'us-east',
     handleSelectRegion,
     linodeType: 'g6-standard-1',

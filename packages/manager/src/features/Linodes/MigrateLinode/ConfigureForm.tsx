@@ -9,6 +9,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import {
+  getLinodeBackupPrice,
   getLinodeRegionPrice,
   isLinodeTypeDifferentPriceInSelectedRegion,
 } from 'src/utilities/pricing/linodes';
@@ -23,9 +24,10 @@ import {
 import { MigrationPricing } from './MigrationPricing';
 
 import type { MigrationPricingProps } from './MigrationPricing';
-import type { Linode } from '@linode/api-v4';
+import type { Linode, PriceObject } from '@linode/api-v4';
 
 interface Props {
+  backupEnabled: Linode['backups']['enabled'];
   currentRegion: string;
   errorText?: string;
   handleSelectRegion: (id: string) => void;
@@ -34,8 +36,11 @@ interface Props {
   selectedRegion: null | string;
 }
 
+export type MigratePricePanelType = 'current' | 'new';
+
 export const ConfigureForm = React.memo((props: Props) => {
   const {
+    backupEnabled,
     currentRegion,
     errorText,
     handleSelectRegion,
@@ -49,15 +54,13 @@ export const ConfigureForm = React.memo((props: Props) => {
     linodeType || '',
     Boolean(linodeType)
   );
-
   const flags = useFlags();
-  const { dcSpecificPricing } = flags;
   const currentActualRegion = regions?.find((r) => r.id === currentRegion);
   const country =
     regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
   const shouldDisplayPriceComparison = Boolean(
-    dcSpecificPricing &&
+    flags.dcSpecificPricing &&
       selectedRegion &&
       isLinodeTypeDifferentPriceInSelectedRegion({
         regionA: currentRegion,
@@ -77,18 +80,26 @@ export const ConfigureForm = React.memo((props: Props) => {
       getLinodeRegionPrice(currentLinodeType, selectedRegion)) ||
     currentRegionPrice;
 
-  const currentPrice: MigrationPricingProps = {
-    backups: currentLinodeType?.addons.backups.price.monthly,
-    hourly: currentRegionPrice?.hourly,
-    monthly: currentRegionPrice?.monthly,
-    panelType: 'current',
-  };
-  const newPrice: MigrationPricingProps = {
-    backups: currentLinodeType?.addons.backups.price.monthly,
-    hourly: selectedRegionPrice?.hourly,
-    monthly: selectedRegionPrice?.monthly,
-    panelType: 'new',
-  };
+  const panelPrice = React.useCallback(
+    (
+      region: string,
+      regionPrice: PriceObject | undefined,
+      panelType: MigratePricePanelType
+    ): MigrationPricingProps => {
+      const backupPriceDisplay = (region: string) =>
+        currentLinodeType && backupEnabled
+          ? getLinodeBackupPrice(currentLinodeType, region)
+          : 'disabled';
+
+      return {
+        backups: backupPriceDisplay(region),
+        hourly: regionPrice?.hourly,
+        monthly: regionPrice?.monthly,
+        panelType,
+      };
+    },
+    [backupEnabled, currentLinodeType]
+  );
 
   return (
     <StyledPaper>
@@ -103,7 +114,9 @@ export const ConfigureForm = React.memo((props: Props) => {
             }`}</Typography>
           </StyledDiv>
           {shouldDisplayPriceComparison && (
-            <MigrationPricing {...currentPrice} />
+            <MigrationPricing
+              {...panelPrice(currentRegion, currentRegionPrice, 'current')}
+            />
           )}
         </StyledMigrationBox>
 
@@ -129,7 +142,11 @@ export const ConfigureForm = React.memo((props: Props) => {
             menuPlacement="top"
             selectedID={selectedRegion}
           />
-          {shouldDisplayPriceComparison && <MigrationPricing {...newPrice} />}
+          {shouldDisplayPriceComparison && selectedRegion && (
+            <MigrationPricing
+              {...panelPrice(selectedRegion, selectedRegionPrice, 'new')}
+            />
+          )}
         </StyledMigrationBox>
       </StyledMigrationContainer>
     </StyledPaper>

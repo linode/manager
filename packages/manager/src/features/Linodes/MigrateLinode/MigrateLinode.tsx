@@ -226,6 +226,7 @@ export const MigrateLinode = React.memo((props: Props) => {
         setConfirmed={setConfirmed}
       />
       <ConfigureForm
+        backupEnabled={linode.backups.enabled}
         currentRegion={region}
         handleSelectRegion={handleSelectRegion}
         linodeType={linode.type}

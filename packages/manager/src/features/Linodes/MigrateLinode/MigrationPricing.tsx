@@ -1,3 +1,4 @@
+import { PriceObject } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
@@ -8,11 +9,13 @@ import { Typography } from 'src/components/Typography';
 
 import { StyledSpan } from './ConfigureForm.styles';
 
+import type { MigratePricePanelType } from './ConfigureForm';
+
 export interface MigrationPricingProps {
-  backups: null | number | undefined;
+  backups: 'disabled' | PriceObject;
   hourly: null | number | undefined;
   monthly: null | number | undefined;
-  panelType: 'current' | 'new';
+  panelType: MigratePricePanelType;
 }
 
 export const MigrationPricing = (props: MigrationPricingProps) => {
@@ -41,15 +44,19 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
           interval="hour"
           price={hourly}
         />
-        &nbsp;
-        <Typography fontSize={priceFontSize} fontWeight="bold">
-          | Backups&nbsp;
-        </Typography>
-        <DisplayPrice
-          fontSize={priceFontSize}
-          interval="month"
-          price={backups}
-        />
+        {backups !== 'disabled' && backups?.monthly && (
+          <>
+            &nbsp;
+            <Typography fontSize={priceFontSize} fontWeight="bold">
+              | Backups&nbsp;
+            </Typography>
+            <DisplayPrice
+              fontSize={priceFontSize}
+              interval="month"
+              price={backups.monthly}
+            />
+          </>
+        )}
       </Box>
     </StyledMigrationPricingContainer>
   ) : null;
