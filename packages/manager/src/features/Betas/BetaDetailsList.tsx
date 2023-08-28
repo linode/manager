@@ -23,9 +23,6 @@ interface Props {
 const BetaError = (props: { errors: APIError[] | null }) =>
   props.errors ? <ErrorState errorText={props.errors[0].reason} /> : null;
 
-const BetaLoading = (props: { isLoading: boolean }) =>
-  props.isLoading ? <CircleProgress /> : null;
-
 export const BetaDetailsList = (props: Props) => {
   const { title, betas, isLoading, errors } = props;
   return (
