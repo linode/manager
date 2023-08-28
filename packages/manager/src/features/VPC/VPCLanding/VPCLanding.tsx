@@ -7,7 +7,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -91,7 +90,6 @@ const VPCLanding = () => {
 
   return (
     <>
-      <ProductInformationBanner bannerLocation="VPC" important warning />
       <LandingHeader
         createButtonText="Create VPC"
         docsLink="#" // TODO: VPC -  Add docs link

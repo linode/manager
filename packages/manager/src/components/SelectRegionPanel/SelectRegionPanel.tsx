@@ -101,7 +101,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           data-testid="region-select-warning"
           spacingBottom={0}
           spacingTop={8}
-          warning
+          variant="warning"
         >
           <Typography fontWeight="bold">
             {CROSS_DATA_CENTER_CLONE_WARNING}
@@ -117,7 +117,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         selectedID={selectedID || null}
       />
       {showSelectedRegionHasDifferentPriceWarning && (
-        <Notice spacingBottom={0} spacingTop={12} warning>
+        <Notice spacingBottom={0} spacingTop={12} variant="warning">
           <Typography fontWeight="bold">
             The selected region has a different price structure.{' '}
             <Link to="https://www.linode.com/pricing">Learn more.</Link>

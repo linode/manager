@@ -32,7 +32,10 @@ export const StackScriptsLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="StackScripts" />
       {!!history.location.state && !!history.location.state.successMessage ? (
-        <Notice success text={history.location.state.successMessage} />
+        <Notice
+          text={history.location.state.successMessage}
+          variant="success"
+        />
       ) : null}
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/stackscripts"

@@ -1,5 +1,5 @@
 import { APIWarning } from '../types';
-import { Beta } from '../betas/types';
+import { Region } from 'src/regions';
 
 export interface User {
   username: string;
@@ -118,6 +118,7 @@ export interface InvoiceItem {
   unit_price: null | string;
   tax: number;
   total: number;
+  region: Region['id'];
 }
 
 export interface Payment {
@@ -172,6 +173,12 @@ export interface NetworkUtilization {
   billable: number;
   used: number;
   quota: number;
+}
+export interface RegionalNetworkUtilization extends NetworkUtilization {
+  region_transfers: RegionalTransferObject[];
+}
+export interface RegionalTransferObject extends NetworkUtilization {
+  id: Region['id'];
 }
 
 export interface NetworkTransfer {
@@ -459,7 +466,12 @@ export interface AccountLogin {
   status: AccountLoginStatus;
 }
 
-export interface AccountBeta extends Beta {
+export interface AccountBeta {
+  label: string;
+  started: string;
+  id: string;
+  ended?: string;
+  description?: string;
   enrolled: string;
 }
 
