@@ -16,6 +16,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'vpc', label: 'VPC' },
   { flag: 'aglb', label: 'AGLB' },
   { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
+  { flag: 'selfServeBetas', label: 'Self Serve Betas' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {

@@ -176,7 +176,7 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
-const Betas = React.lazy(() => import('src/features/Betas/BetasLanding'));
+const BetaRoutes = React.lazy(() => import('src/features/Betas'));
 const VPC = React.lazy(() => import('src/features/VPC'));
 
 const MainContent = (props: CombinedProps) => {
@@ -356,7 +356,7 @@ const MainContent = (props: CombinedProps) => {
                               <Route component={Databases} path="/databases" />
                             ) : null}
                             {flags.selfServeBetas ? (
-                              <Route component={Betas} path="/betas" />
+                              <Route component={BetaRoutes} path="/betas" />
                             ) : null}
                             {flags.vpc && <Route component={VPC} path="/vpc" />}
                             <Redirect exact from="/" to={defaultRoot} />
