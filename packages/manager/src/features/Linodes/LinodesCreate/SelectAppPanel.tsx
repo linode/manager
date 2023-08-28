@@ -82,7 +82,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
     }
 
     const newApps = appInstances.filter((app) => {
-      return ['hashiCorp nomad cluster', 'hashiCorp nomad cluster clients',].includes(
+      return ['hashiCorp nomad cluster', 'hashiCorp nomad clients cluster',].includes(
         app.label.toLowerCase().trim()
       );
     });

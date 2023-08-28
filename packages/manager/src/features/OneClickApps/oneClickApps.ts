@@ -820,7 +820,7 @@ export const oneClickApps: OCA[] = [
     description:
       'A simple deployment of multiple clients to horizontally scale an existing Nomad One-Click Cluster.',
     logo_url: 'nomad.svg',
-    name: 'HashiCorp Nomad Cluster Clients',
+    name: 'HashiCorp Nomad Clients Cluster',
     related_guides: [
       {
         href:
