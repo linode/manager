@@ -191,8 +191,12 @@ all new Linodes will automatically be backed up.`
           ) : undefined}
           &nbsp;
           <DisplayPrice
+            price={getTotalBackupsPrice({
+              flags,
+              linodes: linodesWithoutBackups,
+              types: types ?? [],
+            })}
             interval="mo"
-            price={getTotalBackupsPrice(linodesWithoutBackups, types ?? [])}
           />
         </StyledPricingBox>
         <ActionsPanel

@@ -34,7 +34,13 @@ describe('getTotalBackupsPrice', () => {
       addons: { backups: { price: { monthly: 2.5 } } },
       id: 'my-type',
     });
-    expect(getTotalBackupsPrice(linodes, types)).toBe(7.5);
+    expect(
+      getTotalBackupsPrice({
+        flags: { dcSpecificPricing: false },
+        linodes,
+        types,
+      })
+    ).toBe(7.5);
   });
 
   it('correctly calculates the total price with DC-specific pricing for Linode backups', () => {
@@ -62,6 +68,12 @@ describe('getTotalBackupsPrice', () => {
       },
       id: 'my-type',
     });
-    expect(getTotalBackupsPrice(linodes, types)).toBe(8.57);
+    expect(
+      getTotalBackupsPrice({
+        flags: { dcSpecificPricing: true },
+        linodes,
+        types,
+      })
+    ).toBe(8.57);
   });
 });
