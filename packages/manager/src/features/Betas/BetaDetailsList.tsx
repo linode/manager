@@ -33,7 +33,7 @@ export const BetaDetailsList = (props: Props) => {
       <Typography variant="h2">{title}</Typography>
       <Divider spacingBottom={20} spacingTop={20} />
       <BetaError errors={errors} />
-      <BetaLoading isLoading={isLoading} />
+      {isLoading && <CircleProgress />}
       <Stack divider={<Divider spacingTop={20} spacingBottom={20} />}>
         {betas.map((beta, index) => (
           <BetaDetails beta={beta} key={`${index}-${beta.id}`} />
