@@ -3,11 +3,11 @@ import * as React from 'react';
 
 import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { Paper } from 'src/components/Paper';
 
 import { LongviewProcesses, NginxResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import { ProcessGraphs, useStyles } from '../ProcessGraphs';
+import { StyledRootPaper, StyledSmallGraphGrid } from '../CommonStyles.styles';
+import { ProcessGraphs } from '../ProcessGraphs';
 
 interface Props {
   data?: NginxResponse;
@@ -38,8 +38,6 @@ export const NGINXGraphs = React.memo((props: Props) => {
 
   const theme = useTheme();
 
-  const { classes } = useStyles();
-
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
   const graphProps = {
@@ -51,7 +49,7 @@ export const NGINXGraphs = React.memo((props: Props) => {
   };
 
   return (
-    <Paper className={classes.root}>
+    <StyledRootPaper>
       <Grid container direction="column" spacing={0}>
         <Grid item xs={12}>
           <LongviewLineGraph
@@ -72,7 +70,7 @@ export const NGINXGraphs = React.memo((props: Props) => {
         </Grid>
         <Grid item xs={12}>
           <Grid container direction="row">
-            <Grid className={classes.smallGraph} item sm={6} xs={12}>
+            <StyledSmallGraphGrid item sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -94,8 +92,8 @@ export const NGINXGraphs = React.memo((props: Props) => {
                 unit=" connections/s"
                 {...graphProps}
               />
-            </Grid>
-            <Grid className={classes.smallGraph} item sm={6} xs={12}>
+            </StyledSmallGraphGrid>
+            <StyledSmallGraphGrid item sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -121,7 +119,7 @@ export const NGINXGraphs = React.memo((props: Props) => {
                 title="Workers"
                 {...graphProps}
               />
-            </Grid>
+            </StyledSmallGraphGrid>
           </Grid>
         </Grid>
         <ProcessGraphs
@@ -134,6 +132,6 @@ export const NGINXGraphs = React.memo((props: Props) => {
           timezone={timezone}
         />
       </Grid>
-    </Paper>
+    </StyledRootPaper>
   );
 });

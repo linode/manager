@@ -1,43 +1,21 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Grid } from 'src/components/Grid';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import {
+  StyledTimeRangeSelect,
+  StyledTypography,
+} from '../CommonStyles.styles';
 import { CPUGraph } from './CPUGraph';
 import { DiskGraph } from './DiskGraph';
 import { LoadGraph } from './LoadGraph';
 import { MemoryGraph } from './MemoryGraph';
 import { NetworkGraph } from './NetworkGraph';
 import { GraphProps } from './types';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  headerOuter: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing(1.25),
-  },
-  paperSection: {
-    marginBottom: `calc(${theme.spacing(1)} + 3px)`,
-    padding: `calc(${theme.spacing(3)} + 1px)`,
-  },
-  selectTimeRange: {
-    width: 150,
-  },
-  spacing: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-}));
 
 interface Props {
   clientAPIKey: string;
@@ -47,7 +25,7 @@ interface Props {
 }
 
 export const OverviewGraphs = (props: Props) => {
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
@@ -74,15 +52,31 @@ export const OverviewGraphs = (props: Props) => {
 
   return (
     <Grid item>
-      <Grid className={classes.headerOuter} item>
+      <Grid
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginBottom: theme.spacing(1.25),
+        }}
+        item
+      >
         <Grid item>
-          <Typography className={classes.spacing} variant="h2">
+          <StyledTypography variant="h2">
             Resource Allocation History
-          </Typography>
+          </StyledTypography>
         </Grid>
-        <Grid className={classes.spacing} item>
-          <TimeRangeSelect
-            className={classes.selectTimeRange}
+        <Grid
+          sx={{
+            [theme.breakpoints.down('lg')]: {
+              marginLeft: theme.spacing(),
+              marginRight: theme.spacing(),
+            },
+          }}
+          item
+        >
+          <StyledTimeRangeSelect
             defaultValue={'Past 30 Minutes'}
             handleStatsChange={handleStatsChange}
             hideLabel
@@ -92,7 +86,12 @@ export const OverviewGraphs = (props: Props) => {
       </Grid>
       <Grid item />
       <Grid item xs={12}>
-        <Paper className={classes.paperSection}>
+        <Paper
+          sx={{
+            marginBottom: `calc(${theme.spacing(1)} + 3px)`,
+            padding: `calc(${theme.spacing(3)} + 1px)`,
+          }}
+        >
           <Grid
             alignItems="center"
             container

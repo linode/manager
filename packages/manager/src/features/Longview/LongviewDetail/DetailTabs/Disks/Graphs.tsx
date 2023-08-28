@@ -1,5 +1,4 @@
-import { useTheme, Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -10,23 +9,7 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 import { Stat, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  graphContainer: {
-    '& > div': {
-      flexGrow: 1,
-      [theme.breakpoints.down('lg')]: {
-        marginTop: theme.spacing(),
-        width: '60%',
-      },
-      width: '33%',
-    },
-    display: 'flex',
-    flexFlow: 'row wrap',
-    justifyContent: 'space-around',
-    marginTop: theme.spacing(),
-  },
-}));
+import { StyledDiv } from './Graphs.styles';
 
 export interface GraphProps {
   childOf: boolean;
@@ -67,8 +50,6 @@ export const Graphs = React.memo((props: GraphProps) => {
 
   const theme = useTheme();
 
-  const { classes } = useStyles();
-
   const isToday = _isToday(startTime, endTime);
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
 
@@ -93,7 +74,7 @@ export const Graphs = React.memo((props: GraphProps) => {
 
   return (
     <GraphCard helperText={labelHelperText} title={diskLabel}>
-      <div className={classes.graphContainer}>
+      <StyledDiv>
         {sysInfoType.toLowerCase() !== 'openvz' && (
           <div data-testid="diskio-graph">
             <LongviewLineGraph
@@ -171,7 +152,7 @@ export const Graphs = React.memo((props: GraphProps) => {
             </React.Fragment>
           )
         }
-      </div>
+      </StyledDiv>
     </GraphCard>
   );
 });

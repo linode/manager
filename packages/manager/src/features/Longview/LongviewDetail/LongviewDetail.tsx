@@ -36,7 +36,7 @@ import { Apache } from './DetailTabs/Apache/Apache';
 import { MySQLLanding } from './DetailTabs/MySQL/MySQLLanding';
 import { NGINX } from './DetailTabs/NGINX/NGINX';
 import { NetworkLanding } from './DetailTabs/Network/NetworkLanding';
-import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
+import { ProcessesLanding } from './DetailTabs/Processes/ProcessesLanding';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 

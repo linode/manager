@@ -1,10 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
-import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -16,43 +13,9 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { StyledDiv, StyledTable } from './ProcessesTable.styles';
 
 import { Process } from './types';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  processName: {
-    alignItems: 'center',
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    wordBreak: 'break-all',
-  },
-  tableModifier: {
-    '& tbody': {
-      transition: theme.transitions.create(['opacity']),
-    },
-    '& tbody.sorting': {
-      opacity: 0.5,
-    },
-    '& thead': {
-      '& th': {
-        '&:first-of-type': {
-          borderLeft: 'none',
-        },
-        '&:last-of-type': {
-          borderRight: 'none',
-        },
-        borderBottom: `2px solid ${theme.color.grey9}`,
-        borderLeft: `1px solid ${theme.color.grey9}`,
-        borderRight: `1px solid ${theme.color.grey9}`,
-        borderTop: `2px solid ${theme.color.grey9}`,
-        color: theme.palette.text.primary,
-        fontFamily: theme.font.bold,
-        fontSize: '0.875em !important',
-        padding: '10px 15px',
-      },
-    },
-  },
-}));
 
 export interface ProcessesTableProps {
   error?: string;
@@ -64,7 +27,6 @@ export interface ProcessesTableProps {
 }
 
 export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
-  const { classes } = useStyles();
   const { width } = useWindowDimensions();
 
   const {
@@ -83,8 +45,7 @@ export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
       preferenceKey="lv-detail-processes"
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-        <Table
-          className={classes.tableModifier}
+        <StyledTable
           // This prop is necessary to show the "ActiveCaret", and we only
           // want it on large viewports.
           noOverflow={width >= 1280}
@@ -157,7 +118,7 @@ export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
               error
             )}
           </TableBody>
-        </Table>
+        </StyledTable>
       )}
     </OrderBy>
   );
@@ -210,8 +171,6 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
     user,
   } = props;
 
-  const { classes } = useStyles();
-
   return (
     <TableRow
       onKeyUp={(e: any) =>
@@ -224,7 +183,7 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
       selected={isSelected}
     >
       <TableCell data-testid={`name-${name}`}>
-        <div className={classes.processName}>{name}</div>
+        <StyledDiv>{name}</StyledDiv>
       </TableCell>
       <TableCell data-testid={`user-${user}`}>{user}</TableCell>
       <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>

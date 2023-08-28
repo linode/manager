@@ -1,6 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -12,21 +10,12 @@ import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import {
+  StyledTimeRangeSelect,
+  StyledTypography,
+} from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { NGINXGraphs } from './NGINXGraphs';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    width: 250,
-  },
-  title: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-}));
 
 interface Props {
   clientAPIKey?: string;
@@ -36,8 +25,6 @@ interface Props {
 }
 
 export const NGINX = React.memo((props: Props) => {
-  const { classes } = useStyles();
-
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   const [version, setVersion] = React.useState<string | undefined>();
@@ -115,13 +102,10 @@ export const NGINX = React.memo((props: Props) => {
           justifyContent="space-between"
         >
           <div>
-            <Typography className={classes.title} variant="h2">
-              NGINX
-            </Typography>
+            <StyledTypography variant="h2">NGINX</StyledTypography>
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
-          <TimeRangeSelect
-            className={classes.root}
+          <StyledTimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel

@@ -1,30 +1,15 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 import { WithStartAndEnd } from '../../../request.types';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { DiskGraph } from './DiskGraph';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    [theme.breakpoints.down('lg')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-  select: {
-    marginBottom: theme.spacing(),
-    width: 250,
-  },
-}));
+import { StyledBox, StyledTimeRangeSelect } from './Disks.styles';
 
 interface Props {
   clientAPIKey: string;
@@ -36,8 +21,6 @@ interface Props {
 }
 
 const Disks = (props: Props) => {
-  const { classes } = useStyles();
-
   const {
     clientAPIKey,
     clientLastUpdated,
@@ -115,21 +98,15 @@ const Disks = (props: Props) => {
   return (
     <div>
       <DocumentTitleSegment segment="Disks" />
-      <Box
-        className={classes.root}
-        display="flex"
-        flexDirection="row"
-        justifyContent="flex-end"
-      >
-        <TimeRangeSelect
-          className={classes.select}
+      <StyledBox display="flex" flexDirection="row" justifyContent="flex-end">
+        <StyledTimeRangeSelect
           defaultValue="Past 30 Minutes"
           handleStatsChange={handleStatsChange}
           hideLabel
           label="Select Time Range"
           small
         />
-      </Box>
+      </StyledBox>
       {renderContent()}
     </div>
   );

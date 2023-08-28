@@ -1,5 +1,4 @@
-import { useTheme, Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -21,21 +20,6 @@ import {
 
 import { Process } from './types';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  graphWrap: {
-    marginTop: theme.spacing(3),
-  },
-  root: {
-    marginTop: theme.spacing(1.25),
-    padding: theme.spacing(3),
-  },
-  title: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-}));
-
 interface Props {
   clientAPIKey: string;
   error?: string;
@@ -49,8 +33,6 @@ interface Props {
 }
 
 export const ProcessesGraphs = (props: Props) => {
-  const { classes } = useStyles();
-
   const {
     error,
     isToday,
@@ -107,10 +89,22 @@ export const ProcessesGraphs = (props: Props) => {
 
   return (
     <>
-      <Typography className={classes.title} variant="h2">
+      <Typography
+        sx={{
+          [theme.breakpoints.down('lg')]: {
+            marginLeft: theme.spacing(),
+          },
+        }}
+        variant="h2"
+      >
         Process History{name && `: ${name}`}
       </Typography>
-      <Paper className={classes.root}>
+      <Paper
+        sx={{
+          marginTop: theme.spacing(1.25),
+          padding: theme.spacing(3),
+        }}
+      >
         <LongviewLineGraph
           data={[
             {
@@ -126,7 +120,7 @@ export const ProcessesGraphs = (props: Props) => {
           unit="%"
           {...commonGraphProps}
         />
-        <div className={classes.graphWrap}>
+        <div style={{ marginTop: theme.spacing(3) }}>
           <LongviewLineGraph
             data={[
               {
@@ -144,7 +138,7 @@ export const ProcessesGraphs = (props: Props) => {
             {...commonGraphProps}
           />
         </div>
-        <div className={classes.graphWrap}>
+        <div style={{ marginTop: theme.spacing(3) }}>
           <LongviewLineGraph
             data={[
               {
@@ -160,7 +154,7 @@ export const ProcessesGraphs = (props: Props) => {
             {...commonGraphProps}
           />
         </div>
-        <div className={classes.graphWrap}>
+        <div style={{ marginTop: theme.spacing(3) }}>
           <LongviewLineGraph
             data={[
               {

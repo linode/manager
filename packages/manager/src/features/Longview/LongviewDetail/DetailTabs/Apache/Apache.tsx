@@ -1,5 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -11,8 +10,11 @@ import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
+import {
+  StyledTimeRangeSelect,
+  StyledTypography,
+} from '../CommonStyles.styles';
 import { ApacheGraphs } from './ApacheGraphs';
 
 interface Props {
@@ -119,18 +121,3 @@ export const Apache = React.memo((props: Props) => {
     </Grid>
   );
 });
-
-const StyledTimeRangeSelect = styled(TimeRangeSelect, {
-  label: 'StyledTimeRangeSelect',
-})({
-  width: 250,
-});
-
-const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
-  ({ theme }) => ({
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  })
-);

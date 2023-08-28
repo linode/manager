@@ -1,5 +1,3 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Grid } from 'src/components/Grid';
@@ -19,14 +17,6 @@ import { LongviewService } from 'src/features/Longview/request.types';
 
 import { LongviewServiceRow } from './LongviewServiceRow';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  title: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-}));
-
 export interface TableProps {
   services: LongviewService[];
   servicesError?: string;
@@ -34,13 +24,18 @@ export interface TableProps {
 }
 
 export const ListeningServices = (props: TableProps) => {
-  const { classes } = useStyles();
-
   const { services, servicesError, servicesLoading } = props;
 
   return (
     <Grid item md={8} xs={12}>
-      <Typography className={classes.title} variant="h2">
+      <Typography
+        sx={(theme) => ({
+          [theme.breakpoints.down('lg')]: {
+            marginLeft: theme.spacing(),
+          },
+        })}
+        variant="h2"
+      >
         Listening Services
       </Typography>
       <ServicesTable
@@ -52,7 +47,7 @@ export const ListeningServices = (props: TableProps) => {
   );
 };
 
-export const ServicesTable: React.FC<TableProps> = (props) => {
+export const ServicesTable = (props: TableProps) => {
   const { services, servicesError, servicesLoading } = props;
 
   return (
