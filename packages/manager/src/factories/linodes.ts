@@ -1,4 +1,4 @@
-import { NetworkUtilization } from '@linode/api-v4/lib/account';
+import { RegionalNetworkUtilization } from '@linode/api-v4/lib/account';
 import {
   CreateLinodeRequest,
   Linode,
@@ -123,11 +123,15 @@ export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
   },
 });
 
-export const linodeTransferFactory = Factory.Sync.makeFactory<NetworkUtilization>(
+export const linodeTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
   {
     billable: 0,
     quota: 1950,
     used: 13956637,
+    region_transfers: [
+      { id: 'id-cgk', billable: 0, quota: 10000, used: 10 },
+      { id: 'br-gru', billable: 0, quota: 15000, used: 20 },
+    ],
   }
 );
 
@@ -138,6 +142,18 @@ export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
         hourly: 0.004,
         monthly: 2.5,
       },
+      region_prices: [
+        {
+          hourly: 0.0048,
+          id: 'id-cgk',
+          monthly: 3.57,
+        },
+        {
+          hourly: 0.0056,
+          id: 'br-gru',
+          monthly: 4.17,
+        },
+      ],
     },
   },
   class: 'standard',
@@ -181,6 +197,18 @@ export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
         hourly: null,
         monthly: null,
       },
+      region_prices: [
+        {
+          hourly: null,
+          id: null,
+          monthly: null,
+        },
+        {
+          hourly: null,
+          id: null,
+          monthly: null,
+        },
+      ],
     },
   },
   class: 'prodedicated',

@@ -81,7 +81,7 @@ const PromoDialog = (props: Props) => {
       open={open}
       title="Add promo code"
     >
-      {error && <Notice error text={error} />}
+      {error && <Notice text={error} variant="error" />}
       <Typography>
         Enter the promo code in the field below. You will see promo details in
         the Promotions panel on the Billing Info tab.
