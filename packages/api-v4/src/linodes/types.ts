@@ -310,7 +310,7 @@ export interface LinodeType extends BaseType {
   price: PriceObject;
   region_prices: RegionPriceObject[];
   addons: {
-    backups: { price: PriceObject };
+    backups: { price: PriceObject; region_prices: RegionPriceObject[] };
   };
 }
 
