@@ -28,7 +28,7 @@ export const VPCEditDrawer = (props: Props) => {
 
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpc?.id);
   const readOnly =
-    Boolean(profile?.restricted) && vpcPermissions?.permissions === 'read_only';
+    Boolean(profile?.restricted) && (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
   const {
     error,
