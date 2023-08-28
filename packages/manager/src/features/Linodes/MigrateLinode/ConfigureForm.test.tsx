@@ -20,6 +20,13 @@ jest.mock('src/queries/types', () => ({
   }),
 }));
 
+// Mock the useRegionsQuery hook
+jest.mock('src/queries/regions', () => ({
+  useRegionsQuery: () => ({
+    data: [],
+  }),
+}));
+
 describe('ConfigureForm component with price comparison', () => {
   const handleSelectRegion = jest.fn();
   const currentPriceLabel = 'Current Price';
@@ -28,7 +35,7 @@ describe('ConfigureForm component with price comparison', () => {
   const newPricePanel = 'new-price-panel';
 
   const props = {
-    backupEnabled: false,
+    backupEnabled: true,
     currentRegion: 'us-east',
     handleSelectRegion,
     linodeType: 'g6-standard-1',
@@ -43,11 +50,13 @@ describe('ConfigureForm component with price comparison', () => {
   } = renderWithTheme(<ConfigureForm {...props} />);
 
   interface SelectNewRegionOptions {
+    backupEnabled?: boolean;
     currentRegionId?: string;
     selectedRegionId: string;
   }
 
   const selectNewRegion = ({
+    backupEnabled = true,
     currentRegionId = 'us-east',
     selectedRegionId,
   }: SelectNewRegionOptions) => {
@@ -57,6 +66,7 @@ describe('ConfigureForm component with price comparison', () => {
       wrapWithTheme(
         <ConfigureForm
           {...props}
+          backupEnabled={backupEnabled}
           currentRegion={currentRegionId}
           selectedRegion={selectedRegionId}
         />
@@ -112,10 +122,22 @@ describe('ConfigureForm component with price comparison', () => {
 
   it('should provide a proper price comparison', async () => {
     selectNewRegion({ selectedRegionId: 'br-gru' });
-    expect(getByTestId(currentPricePanel)).toHaveTextContent(/10.00\/month/);
-    expect(getByTestId(currentPricePanel)).toHaveTextContent(/0.015\/hour/);
-    expect(getByTestId(newPricePanel)).toHaveTextContent(/14.00\/month/);
-    expect(getByTestId(newPricePanel)).toHaveTextContent(/0.021\/hour/);
+    expect(getByTestId(currentPricePanel)).toHaveTextContent(
+      '$10.00/month, $0.015/hour | Backups $2.50/month'
+    );
+    expect(getByTestId(newPricePanel)).toHaveTextContent(
+      '$14.00/month, $0.021/hour | Backups $4.17/month'
+    );
+  });
+
+  it("shouldn't render the Backup pricing comparison if backups are disabled", () => {
+    selectNewRegion({ backupEnabled: false, selectedRegionId: 'br-gru' });
+    expect(getByTestId(currentPricePanel)).toHaveTextContent(
+      '$10.00/month, $0.015/hour'
+    );
+    expect(getByTestId(newPricePanel)).toHaveTextContent(
+      '$14.00/month, $0.021/hour'
+    );
   });
 
   it("shouldn't render the MigrationPricingComponent if the flag is disabled", () => {

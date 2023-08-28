@@ -5,8 +5,8 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   addons: {
     backups: {
       price: {
-        hourly: 10,
-        monthly: 10,
+        hourly: 0.004,
+        monthly: 2.5,
       },
       region_prices: [
         {
