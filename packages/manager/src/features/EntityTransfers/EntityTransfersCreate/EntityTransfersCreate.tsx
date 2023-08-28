@@ -93,7 +93,10 @@ export const EntityTransfersCreate = () => {
         title="Make a Service Transfer"
       />
       {error ? (
-        <StyledNotice error text={getAPIErrorOrDefault(error)[0].reason} />
+        <StyledNotice
+          text={getAPIErrorOrDefault(error)[0].reason}
+          variant="error"
+        />
       ) : null}
       <StyledRootGrid container direction="row" spacing={3} wrap="wrap">
         <Grid lg={9} md={8} xs={12}>

@@ -207,9 +207,9 @@ export const DialogContent = React.memo((props: ContentProps) => {
         submissionErrors
           ? submissionErrors.map((thisError, idx) => (
               <Notice
-                error
                 key={`form-submit-error-${idx}`}
                 text={thisError.reason}
+                variant="error"
               />
             ))
           : null

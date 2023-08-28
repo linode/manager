@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const AccountLanding = React.lazy(
@@ -28,6 +29,7 @@ class Account extends React.Component<Props> {
 
     return (
       <React.Suspense fallback={<SuspenseLoader />}>
+        <ProductInformationBanner bannerLocation="Account" />
         <Switch>
           <Route component={UserDetail} path={`${path}/users/:username`} />
           <Route

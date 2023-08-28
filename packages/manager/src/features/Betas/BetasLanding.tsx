@@ -4,11 +4,13 @@ import * as React from 'react';
 import { Divider } from 'src/components/Divider';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { Paper } from 'src/components/Paper';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Typography } from 'src/components/Typography';
 
 const BetasLanding = () => {
   return (
     <>
+      <ProductInformationBanner bannerLocation="Betas" />
       <LandingHeader title="Betas" />
       <Stack spacing={2}>
         <Paper>
