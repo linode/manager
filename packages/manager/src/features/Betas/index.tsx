@@ -11,7 +11,7 @@ const BetaRoutes = () => (
   <React.Suspense fallback={<SuspenseLoader />}>
     <Switch>
       <Route component={BetaSignup} path="/betas/signup" />
-      <Route component={BetasLanding} exact path="/betas" strict />
+      <Route component={BetasLanding} exact path="/betas" />
     </Switch>
   </React.Suspense>
 );
