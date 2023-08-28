@@ -131,6 +131,7 @@ const StyledVolumeUl = styled('div', { label: 'StyledVolumeUl' })(
     '& li': {
       fontFamily: theme.font.bold,
     },
+    marginLeft: theme.spacing(4),
     marginTop: theme.spacing(),
   })
 );
