@@ -27,8 +27,12 @@ export const VPCEditDrawer = (props: Props) => {
   const { data: grants } = useGrants();
 
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpc?.id);
+
+  // there isn't a 'view VPC/Subnet' grant that does anything, so all VPCs get returned even for restricted users
+  // with permissions set to 'None'. Therefore, we're treating those as read_only as well
   const readOnly =
-    Boolean(profile?.restricted) && (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
+    Boolean(profile?.restricted) &&
+    (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
   const {
     error,
