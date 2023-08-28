@@ -9,19 +9,22 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-interface AccountBetaProps {
-  beta: AccountBeta;
+interface Props {
+  beta: AccountBeta | Beta;
 }
 
-interface BetaProps {
-  beta: Beta;
-}
-
-function BetaDetails(props: BetaProps): React.ReactElement;
-function BetaDetails(props: AccountBetaProps) {
+const BetaDetails = (props: Props) => {
   const history = useHistory();
+  let more_info = undefined;
+  let enrolled = undefined;
+  if ('more_info' in props.beta) {
+    more_info = props.beta.more_info;
+  }
+  if ('enrolled' in props.beta) {
+    enrolled = props.beta.enrolled;
+  }
   const {
-    beta: { description, ended, enrolled, id, label, more_info, started },
+    beta: { description, ended, id, label, started },
   } = props;
   const startDate = !enrolled ? (
     <Typography>
@@ -75,6 +78,6 @@ function BetaDetails(props: AccountBetaProps) {
       </Stack>
     </Stack>
   );
-}
+};
 
 export default BetaDetails;

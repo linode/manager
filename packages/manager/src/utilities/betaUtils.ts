@@ -24,20 +24,23 @@ export const willStart = (beta: GenericBeta) => !hasStarted(beta);
 export const hasEnded = (beta: GenericBeta) =>
   canEnd(beta) && DateTime.fromISO(beta.ended ?? '') < DateTime.now();
 
-export function isCustomerEnrolled(beta: Beta): boolean;
-export function isCustomerEnrolled(beta: AccountBeta) {
-  const enrollmentDate = DateTime.fromISO(beta.enrolled ?? '');
-  return enrollmentDate.isValid && !hasEnded(beta);
+export function isCustomerEnrolled(beta: GenericBeta) {
+  if ('enrolled' in beta) {
+    const enrollmentDate = DateTime.fromISO(beta.enrolled ?? '');
+    return enrollmentDate.isValid && !hasEnded(beta);
+  }
+  return false;
 }
 
-export function wasCustomerEnrolled(beta: Beta): boolean;
-export function wasCustomerEnrolled(beta: AccountBeta) {
-  const enrollmentDate = DateTime.fromISO(beta.enrolled ?? '');
-  return enrollmentDate.isValid && hasEnded(beta);
+export function wasCustomerEnrolled(beta: GenericBeta) {
+  if ('enrolled' in beta) {
+    const enrollmentDate = DateTime.fromISO(beta?.enrolled ?? '');
+    return enrollmentDate.isValid && hasEnded(beta);
+  }
+  return false;
 }
 
-export function getBetaStatus(beta: Beta): BetaStatus;
-export function getBetaStatus(beta: AccountBeta): BetaStatus {
+export function getBetaStatus(beta: GenericBeta): BetaStatus {
   if (wasCustomerEnrolled(beta) && hasEnded(beta)) {
     return 'historical';
   }
