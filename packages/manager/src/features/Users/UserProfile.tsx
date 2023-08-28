@@ -26,7 +26,11 @@ interface UserProfileProps {
   accountSaving: boolean;
   accountSuccess: boolean;
   changeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeUsername: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeUsername: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   email?: string;
   originalEmail?: string;
   originalUsername?: string;
@@ -113,7 +117,9 @@ export const UserProfile = (props: UserProfileProps) => {
             data-qa-username
             errorText={hasAccountErrorFor('username')}
             label="Username"
+            onBlur={changeUsername}
             onChange={changeUsername}
+            trimmed
             value={username}
           />
           <ActionsPanel
@@ -151,6 +157,7 @@ export const UserProfile = (props: UserProfileProps) => {
             errorText={hasProfileErrorFor('email')}
             label="Email"
             onChange={changeEmail}
+            trimmed
             value={email}
           />
           <ActionsPanel

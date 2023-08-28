@@ -48,15 +48,19 @@ export const CreateUserDrawer = withRouter(
 
     const generalError = hasErrorFor('none');
 
-    const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
       setEmail(e.target.value);
     };
 
-    const onChangeRestricted = () => {
+    const handleChangeRestricted = () => {
       setRestricted(true);
     };
 
-    const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeUsername = (
+      e:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
       setUsername(e.target.value);
     };
 
@@ -93,16 +97,19 @@ export const CreateUserDrawer = withRouter(
           data-qa-create-username
           errorText={hasErrorFor('username')}
           label="Username"
-          onChange={onChangeUsername}
+          onBlur={handleChangeUsername}
+          onChange={handleChangeUsername}
           required
+          trimmed
           value={username}
         />
         <TextField
           data-qa-create-email
           errorText={hasErrorFor('email')}
           label="Email"
-          onChange={onChangeEmail}
+          onChange={handleChangeEmail}
           required
+          trimmed
           type="email"
           value={email}
         />
@@ -111,7 +118,7 @@ export const CreateUserDrawer = withRouter(
             <Toggle
               checked={!restricted}
               data-qa-create-restricted
-              onChange={onChangeRestricted}
+              onChange={handleChangeRestricted}
             />
           }
           label={

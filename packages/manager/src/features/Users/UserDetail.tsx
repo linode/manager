@@ -101,15 +101,19 @@ export const UserDetail = () => {
     setCreatedUsername(undefined);
   };
 
-  const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeUsername = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setUsername(e.target.value);
   };
 
-  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const onSaveAccount = () => {
+  const handleSaveAccount = () => {
     if (!originalUsername) {
       return;
     }
@@ -149,7 +153,7 @@ export const UserDetail = () => {
       });
   };
 
-  const onSaveProfile = () => {
+  const handleSaveProfile = () => {
     setProfileSuccess(false);
     setProfileSaving(true);
     setProfileErrors([]);
@@ -225,16 +229,16 @@ export const UserDetail = () => {
               accountErrors={accountErrors}
               accountSaving={accountSaving}
               accountSuccess={accountSuccess || false}
-              changeEmail={onChangeEmail}
-              changeUsername={onChangeUsername}
+              changeEmail={handleChangeEmail}
+              changeUsername={handleChangeUsername}
               email={email}
               originalEmail={originalEmail}
               originalUsername={originalUsername}
               profileErrors={profileErrors}
               profileSaving={profileSaving}
               profileSuccess={profileSuccess || false}
-              saveAccount={onSaveAccount}
-              saveProfile={onSaveProfile}
+              saveAccount={handleSaveAccount}
+              saveProfile={handleSaveProfile}
               username={username}
             />
           </SafeTabPanel>
