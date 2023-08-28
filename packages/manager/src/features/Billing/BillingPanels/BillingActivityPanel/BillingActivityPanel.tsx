@@ -247,7 +247,8 @@ export const BillingActivityPanel = (props: Props) => {
             account!,
             invoice,
             invoiceItems,
-            taxes
+            taxes,
+            flags
           );
 
           if (result.status === 'error') {

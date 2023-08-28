@@ -17,6 +17,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
+import { useFlags } from 'src/hooks/useFlags';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   table: {
@@ -38,6 +39,7 @@ interface Props {
 
 const InvoiceTable = (props: Props) => {
   const { classes } = useStyles();
+  const flags = useFlags();
 
   const { errors, items, loading } = props;
 
@@ -45,16 +47,15 @@ const InvoiceTable = (props: Props) => {
     <Table aria-label="Invoice Details" className={classes.table} noBorder>
       <TableHead>
         <TableRow>
-          <TableCell data-qa-column="Description">Description</TableCell>
-          <TableCell data-qa-column="From">From</TableCell>
-          <TableCell data-qa-column="To">To</TableCell>
-          <TableCell data-qa-column="Quantity">Quantity</TableCell>
-          <TableCell data-qa-column="Unit Price" noWrap>
-            Unit Price
-          </TableCell>
-          <TableCell data-qa-column="Amount">Amount (USD)</TableCell>
-          <TableCell data-qa-column="Taxes">Tax (USD)</TableCell>
-          <TableCell data-qa-column="Total">Total (USD)</TableCell>
+          <TableCell>Description</TableCell>
+          <TableCell>From</TableCell>
+          <TableCell>To</TableCell>
+          <TableCell>Quantity</TableCell>
+          {flags.dcSpecificPricing && <TableCell>Region</TableCell>}
+          <TableCell noWrap>Unit Price</TableCell>
+          <TableCell>Amount (USD)</TableCell>
+          <TableCell>Tax (USD)</TableCell>
+          <TableCell>Total (USD)</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -70,6 +71,7 @@ const renderDate = (v: null | string) =>
 const renderQuantity = (v: null | number) => (v ? v : null);
 
 const RenderData = (props: { items: InvoiceItem[] }) => {
+  const flags = useFlags();
   const { items } = props;
 
   const MIN_PAGE_SIZE = 25;
@@ -86,7 +88,17 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
       }) => (
         <React.Fragment>
           {paginatedData.map(
-            ({ amount, from, label, quantity, tax, to, total, unit_price }) => (
+            ({
+              amount,
+              from,
+              label,
+              quantity,
+              region,
+              tax,
+              to,
+              total,
+              unit_price,
+            }) => (
               <TableRow key={`${label}-${from}-${to}`}>
                 <TableCell data-qa-description parentColumn="Description">
                   {label}
@@ -100,6 +112,9 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
                 <TableCell data-qa-quantity parentColumn="Quantity">
                   {renderQuantity(quantity)}
                 </TableCell>
+                {flags.dcSpecificPricing && (
+                  <TableCell parentColumn="Region">{region}</TableCell>
+                )}
                 <TableCell data-qa-unit-price parentColumn="Unit Price">
                   {unit_price !== 'None' && renderUnitPrice(unit_price)}
                 </TableCell>
