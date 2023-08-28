@@ -13,9 +13,11 @@ const useStyles = makeStyles({
   },
 });
 
+type Mode = 'attach' | 'create';
+
 interface Props {
-  mode: string;
-  onChange: () => void;
+  mode: Mode;
+  onChange: (value: Mode) => void;
 }
 
 export const ModeSelection = ({ mode, onChange }: Props) => {
@@ -25,7 +27,7 @@ export const ModeSelection = ({ mode, onChange }: Props) => {
       aria-label="mode"
       data-qa-mode-radio-group
       name="mode"
-      onChange={onChange}
+      onChange={(_, value) => onChange(value as Mode)}
       value={mode}
     >
       <FormControlLabel
@@ -33,14 +35,14 @@ export const ModeSelection = ({ mode, onChange }: Props) => {
         control={<Radio />}
         data-qa-radio="Create and Attach Volume"
         label="Create and Attach Volume"
-        value="creating_for_linode"
+        value="create"
       />
       <FormControlLabel
         className={classes.label}
         control={<Radio />}
         data-qa-radio="Attach Existing Volume"
         label="Attach Existing Volume"
-        value="attaching"
+        value="attach"
       />
     </RadioGroup>
   );

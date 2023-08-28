@@ -1,14 +1,12 @@
 /**
  * @todo Display the volume configuration information on success.
  */
+import { Linode } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { Form, Formik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { MapDispatchToProps, connect } from 'react-redux';
-import { compose } from 'recompose';
 import { array, object, string } from 'yup';
 
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
@@ -17,11 +15,6 @@ import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
-import { MapState } from 'src/store/types';
-import {
-  Origin as VolumeDrawerOrigin,
-  openForAttaching,
-} from 'src/store/volumeForm';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getErrorMap, getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -32,48 +25,37 @@ import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
 import { ConfigSelect } from './ConfigSelect';
 import LabelField from './LabelField';
-import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
-import { modes } from './modes';
-
-import type { FlagSet } from 'src/featureFlags';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  textWrapper: {
-    marginBottom: theme.spacing(1.25),
-  },
-}));
 
 interface Props {
-  flags: FlagSet;
-  linode_id: number;
-  linodeLabel: string;
-  linodeRegion: string;
+  linode: Linode;
   onClose: () => void;
-  onSuccess: (
-    volumeLabel: string,
-    volumePath: string,
-    message?: string
-  ) => void;
 }
 
-type CombinedProps = Props & StateProps & DispatchProps;
+interface FormState {
+  config_id: number;
+  label: string;
+  linode_id: number;
+  region: string;
+  size: number;
+  tags: Tag[];
+}
 
-const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-  const {
-    actions,
-    flags,
-    linode_id,
-    linodeLabel,
-    linodeRegion,
-    onClose,
-    onSuccess,
-    origin,
-  } = props;
+const initialValues: FormState = {
+  config_id: -1,
+  label: '',
+  linode_id: -1,
+  region: 'none',
+  size: 20,
+  tags: [],
+};
+
+export const LinodeVolumeCreateForm = (props: Props) => {
+  const { linode, onClose } = props;
+  const { enqueueSnackbar } = useSnackbar();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -108,24 +90,25 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             // If the config_id still set to default value of -1, set this to undefined, so volume gets created on back-end according to the API logic
             config_id === -1 ? undefined : maybeCastToNumber(config_id),
           label,
-          linode_id: maybeCastToNumber(linode_id),
+          linode_id: maybeCastToNumber(linode.id),
           size: maybeCastToNumber(size),
           tags: tags.map((v) => v.value),
         })
-          .then(({ filesystem_path, label: newLabel }) => {
+          .then(() => {
             resetEventsPolling();
-            onSuccess(
-              newLabel,
-              filesystem_path,
-              `Volume scheduled for creation.`
-            );
+            enqueueSnackbar(`Volume scheduled for creation.`, {
+              variant: 'success',
+            });
+            onClose();
             // Analytics Event
             sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
             const mapErrorToStatus = () =>
-              setStatus({ generalError: getErrorMap([], errorResponse).none });
+              setStatus({
+                generalError: getErrorMap([], errorResponse).none,
+              });
 
             setSubmitting(false);
             handleFieldErrors(setErrors, errorResponse);
@@ -178,22 +161,21 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                 important
               />
             )}
-            <ModeSelection
-              mode={modes.CREATING_FOR_LINODE}
-              onChange={actions.switchToAttaching}
-            />
-
             <Typography
-              className={classes.textWrapper}
+              sx={(theme) => ({
+                marginBottom: theme.spacing(1.25),
+              })}
               data-qa-volume-attach-help
               style={{ marginTop: 24 }}
               variant="body1"
             >
-              {`This volume will be immediately scheduled for attachment to ${linodeLabel} and available to other Linodes in the ${linodeRegion} data-center.`}
+              {`This volume will be immediately scheduled for attachment to ${linode.label} and available to other Linodes in the ${linode.region} data-center.`}
             </Typography>
 
             <Typography
-              className={classes.textWrapper}
+              sx={(theme) => ({
+                marginBottom: theme.spacing(1.25),
+              })}
               data-qa-volume-size-help
               variant="body1"
             >
@@ -214,19 +196,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             <SizeField
               disabled={disabled}
               error={touched.size ? errors.size : undefined}
-              flags={flags}
               isFromLinode
               name="size"
               onBlur={handleBlur}
               onChange={handleChange}
-              regionId={linodeRegion}
+              regionId={linode.region}
               value={values.size}
             />
 
             <ConfigSelect
               disabled={disabled}
               error={touched.config_id ? errors.config_id : undefined}
-              linodeId={linode_id}
+              linodeId={linode.id}
               name="configId"
               onBlur={handleBlur}
               onChange={(id: number) => setFieldValue('config_id', id)}
@@ -253,8 +234,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
             <PricePanel
               currentSize={10}
-              flags={flags}
-              regionId={linodeRegion}
+              regionId={linode.region}
               value={values.size}
             />
 
@@ -274,56 +254,3 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
     </Formik>
   );
 };
-interface FormState {
-  config_id: number;
-  label: string;
-  linode_id: number;
-  region: string;
-  size: number;
-  tags: Tag[];
-}
-
-const initialValues: FormState = {
-  config_id: -1,
-  label: '',
-  linode_id: -1,
-  region: 'none',
-  size: 20,
-  tags: [],
-};
-
-interface DispatchProps {
-  actions: {
-    switchToAttaching: () => void;
-  };
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch,
-  ownProps
-) => ({
-  actions: {
-    switchToAttaching: () =>
-      dispatch(
-        openForAttaching(
-          ownProps.linode_id,
-          ownProps.linodeRegion,
-          ownProps.linodeLabel
-        )
-      ),
-  },
-});
-
-interface StateProps {
-  origin?: VolumeDrawerOrigin;
-}
-
-const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  origin: state.volumeDrawer.origin,
-});
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
-const enhanced = compose<CombinedProps, Props>(connected)(CreateVolumeForm);
-
-export default enhanced;

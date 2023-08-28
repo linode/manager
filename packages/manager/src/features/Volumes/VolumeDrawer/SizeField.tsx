@@ -8,11 +8,10 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
 
 import { SIZE_FIELD_WIDTH } from '../VolumeCreate/CreateVolumeForm';
-
-import type { FlagSet } from 'src/featureFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   createVolumeText: {
@@ -34,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   disabled?: boolean;
   error?: string;
-  flags: FlagSet;
   hasSelectedRegion?: boolean;
   isFromLinode?: boolean;
   name: string;
@@ -46,14 +44,12 @@ interface Props {
   value: number;
 }
 
-type CombinedProps = Props;
-
-const SizeField: React.FC<CombinedProps> = (props) => {
+const SizeField = (props: Props) => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const {
     error,
-    flags,
     hasSelectedRegion,
     isFromLinode,
     name,

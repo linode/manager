@@ -1,29 +1,22 @@
 import * as React from 'react';
 
+import { volumeFactory } from 'src/factories';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Props, VolumesActionMenu } from './VolumesActionMenu';
 
 const props: Props = {
-  attached: false,
-  filesystemPath: '',
-  handleAttach: jest.fn(),
-  handleDelete: jest.fn(),
-  handleDetach: jest.fn(),
-  isVolumesLanding: false,
-  label: '',
-  linodeId: 0,
-  linodeLabel: '',
-  openForClone: jest.fn(),
-  openForConfig: jest.fn(),
-  openForEdit: jest.fn(),
-  openForResize: jest.fn(),
-  regionID: '',
-  size: 50,
-  volumeId: 12345,
-  volumeLabel: '',
-  volumeRegion: 'east-us',
-  volumeTags: ['abc', 'def'],
+  handlers: {
+    handleAttach: jest.fn(),
+    handleClone: jest.fn(),
+    handleDelete: jest.fn(),
+    handleDetach: jest.fn(),
+    handleDetails: jest.fn(),
+    handleEdit: jest.fn(),
+    handleResize: jest.fn(),
+  },
+  isVolumesLanding: true,
+  volume: volumeFactory.build(),
 };
 
 describe('Volume action menu', () => {
@@ -41,17 +34,13 @@ describe('Volume action menu', () => {
   });
 
   it('should include Detach if the Volume is attached', () => {
-    const { queryByText } = renderWithTheme(
-      <VolumesActionMenu {...props} attached={true} />
-    );
+    const { queryByText } = renderWithTheme(<VolumesActionMenu {...props} />);
     includesActions(['Detach'], queryByText);
     expect(queryByText('Attach')).toBeNull();
   });
 
   it('should include Delete', () => {
-    const { queryByText } = renderWithTheme(
-      <VolumesActionMenu {...props} attached={false} />
-    );
+    const { queryByText } = renderWithTheme(<VolumesActionMenu {...props} />);
     includesActions(['Delete'], queryByText);
   });
 });

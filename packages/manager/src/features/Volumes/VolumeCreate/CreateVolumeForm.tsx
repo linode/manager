@@ -1,13 +1,10 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
-import { Region } from '@linode/api-v4/lib/regions/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Theme, useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
@@ -28,8 +25,6 @@ import {
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
-import { MapState } from 'src/store/types';
-import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -44,6 +39,7 @@ import { ConfigSelect } from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
+import { useSnackbar } from 'notistack';
 
 export const SIZE_FIELD_WIDTH = 160;
 
@@ -103,24 +99,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  history: RouteComponentProps['history'];
-  onSuccess: (
-    volumeLabel: string,
-    volumePath: string,
-    message?: string
-  ) => void;
-  regions: Region[];
-}
-
-type CombinedProps = Props & StateProps;
-
-const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
+const CreateVolumeForm = () => {
   const theme = useTheme();
   const classes = useStyles();
   const flags = useFlags();
   const { dcSpecificPricing } = flags;
-  const { history, onSuccess, origin } = props;
+  const history = useHistory();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -159,6 +143,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
     );
   };
 
+  const { enqueueSnackbar } = useSnackbar();
+
   return (
     <Formik
       onSubmit={(
@@ -193,11 +179,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             resetForm({ values: initialValues });
             setStatus({ success: `Volume scheduled for creation.` });
             setSubmitting(false);
-            onSuccess(
-              volumeLabel,
-              filesystem_path,
-              `Volume scheduled for creation.`
-            );
+            enqueueSnackbar(`Volume scheduled for creation.`, {
+              variant: 'success',
+            });
             history.push('/volumes');
             // Analytics Event
             sendCreateVolumeEvent(`Size: ${size}GB`, origin);
@@ -386,7 +370,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   <SizeField
                     disabled={doesNotHavePermission}
                     error={touched.size ? errors.size : undefined}
-                    flags={flags}
                     hasSelectedRegion={!isNilOrEmpty(values.region)}
                     name="size"
                     onBlur={handleBlur}
@@ -450,16 +433,4 @@ const initialValues: FormState = {
   size: 20,
 };
 
-interface StateProps {
-  origin?: VolumeDrawerOrigin;
-}
-
-const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  origin: state.volumeDrawer.origin,
-});
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose<CombinedProps, Props>(connected)(CreateVolumeForm);
-
-export default enhanced;
+export default CreateVolumeForm;

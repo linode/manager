@@ -1,15 +1,13 @@
+import { Linode } from '@linode/api-v4';
 import { Grant } from '@linode/api-v4/lib/account';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
-import { MapDispatchToProps, connect } from 'react-redux';
-import { compose } from 'recompose';
 import { number, object } from 'yup';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
-import { openForCreating } from 'src/store/volumeForm';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -17,21 +15,15 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import { ConfigSelect } from './ConfigSelect';
-import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import VolumeSelect from './VolumeSelect';
 import VolumesActionsPanel from './VolumesActionsPanel';
-import { modes } from './modes';
 
 interface Props {
-  linodeId: number;
-  linodeLabel: string;
-  linodeRegion: string;
+  linode: Linode;
   onClose: () => void;
   readOnly?: boolean;
 }
-
-type CombinedProps = Props & DispatchProps;
 
 /**
  * I had to provide a separate validation schema since the linode_id (which is required by API) is
@@ -48,19 +40,18 @@ const AttachVolumeValidationSchema = object({
 
 const initialValues = { config_id: -1, volume_id: -1 };
 
-const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
-  const { actions, linodeId, linodeRegion, onClose, readOnly } = props;
+export const LinodeVolumeAttachForm = (props: Props) => {
+  const { linode, onClose } = props;
 
   const { data: grants } = useGrants();
 
   const linodeGrants = grants?.linode ?? [];
 
   const linodeGrant = linodeGrants.filter(
-    (grant: Grant) => grant.id === linodeId
+    (grant: Grant) => grant.id === linode.id
   )[0];
 
-  const disabled =
-    readOnly || (linodeGrant && linodeGrant.permissions !== 'read_write');
+  const disabled = linodeGrant && linodeGrant.permissions !== 'read_write';
 
   const { mutateAsync: attachVolume } = useAttachVolumeMutation();
 
@@ -69,7 +60,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
       onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
         attachVolume({
           config_id: values.config_id,
-          linode_id: linodeId,
+          linode_id: linode.id,
           volumeId: values.volume_id,
         })
           .then((_) => {
@@ -123,24 +114,19 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
               />
             )}
 
-            <ModeSelection
-              mode={modes.ATTACHING}
-              onChange={actions.switchToCreating}
-            />
-
             <VolumeSelect
               disabled={disabled}
               error={touched.volume_id ? errors.volume_id : undefined}
               onBlur={handleBlur}
               onChange={(v) => setFieldValue('volume_id', v)}
-              region={linodeRegion}
+              region={linode.region}
               value={values.volume_id}
             />
 
             <ConfigSelect
               disabled={disabled}
               error={touched.config_id ? errors.config_id : undefined}
-              linodeId={linodeId}
+              linodeId={linode.id}
               name="config_id"
               onBlur={handleBlur}
               onChange={(id) => setFieldValue('config_id', id)}
@@ -163,31 +149,3 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
     </Formik>
   );
 };
-
-interface DispatchProps {
-  actions: {
-    switchToCreating: () => void;
-  };
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch,
-  ownProps
-) => ({
-  actions: {
-    switchToCreating: () =>
-      dispatch(
-        openForCreating('Created from Linode Details', {
-          linodeId: ownProps.linodeId,
-          linodeLabel: ownProps.linodeLabel,
-          linodeRegion: ownProps.linodeRegion,
-        })
-      ),
-  },
-});
-
-const connected = connect(undefined, mapDispatchToProps);
-
-const enhanced = compose<CombinedProps, Props>(connected);
-
-export default enhanced(AttachVolumeToLinodeForm);

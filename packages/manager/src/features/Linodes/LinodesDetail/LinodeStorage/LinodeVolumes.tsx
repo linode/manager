@@ -1,9 +1,8 @@
+import { Volume } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Dispatch, bindActionCreators } from 'redux';
 
 import AddNewLink from 'src/components/AddNewLink';
 import { Hidden } from 'src/components/Hidden';
@@ -17,79 +16,25 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
-import { VolumeAttachmentDrawer } from 'src/features/Volumes/VolumeAttachmentDrawer';
+import { CloneVolumeDrawer } from 'src/features/Volumes/CloneVolumeDrawer';
+import { DeleteVolumeDialog } from 'src/features/Volumes/DeleteVolumeDialog';
+import { DetachVolumeDialog } from 'src/features/Volumes/DetachVolumeDialog';
+import { EditVolumeDrawer } from 'src/features/Volumes/EditVolumeDrawer';
+import { ResizeVolumeDrawer } from 'src/features/Volumes/ResizeVolumeDrawer';
+import { VolumeDetailsDrawer } from 'src/features/Volumes/VolumeDetailsDrawer';
 import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
-import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import {
-  LinodeOptions,
-  Origin as VolumeDrawerOrigin,
-  openForClone,
-  openForConfig,
-  openForCreating,
-  openForEdit,
-  openForResize,
-} from 'src/store/volumeForm';
 
 import { StyledRootGrid, StyledTypography } from './CommonLinodeStorage.styles';
-
-interface DispatchProps {
-  openForClone: (
-    volumeId: number,
-    volumeLabel: string,
-    volumeSize: number,
-    volumeRegion: string
-  ) => void;
-  openForConfig: (volumeLabel: string, volumePath: string) => void;
-  openForCreating: (
-    origin: VolumeDrawerOrigin,
-    linodeOptions?: LinodeOptions
-  ) => void;
-  openForEdit: (
-    volumeId: number,
-    volumeLabel: string,
-    volumeTags: string[]
-  ) => void;
-  openForResize: (
-    volumeId: number,
-    volumeSize: number,
-    volumeLabel: string,
-    volumeRegion: string
-  ) => void;
-}
-
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {
-      openForClone,
-      openForConfig,
-      openForCreating,
-      openForEdit,
-      openForResize,
-    },
-    dispatch
-  );
-
-const connected = connect(undefined, mapDispatchToProps);
-
-type Props = DispatchProps;
+import { LinodeVolumeAddDrawer } from 'src/features/Volumes/VolumeDrawer/LinodeVolumeAddDrawer';
 
 export const preferenceKey = 'linode-volumes';
 
-export const LinodeVolumes = connected((props: Props) => {
-  const {
-    openForClone,
-    openForConfig,
-    openForCreating,
-    openForEdit,
-    openForResize,
-  } = props;
-
+export const LinodeVolumes = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
@@ -121,91 +66,49 @@ export const LinodeVolumes = connected((props: Props) => {
     filter
   );
 
-  const [attachmentDrawer, setAttachmentDrawer] = React.useState({
-    linodeRegion: '',
-    open: false,
-    volumeId: 0,
-    volumeLabel: '',
-  });
+  const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
+  const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
+  const [isResizeDrawerOpen, setIsResizeDrawerOpen] = React.useState(false);
+  const [isCloneDrawerOpen, setIsCloneDrawerOpen] = React.useState(false);
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
+  const [isDetachDialogOpen, setIsDetachDialogOpen] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-  const [destructiveDialog, setDestructiveDialog] = React.useState<{
-    linodeLabel: string;
-    mode: 'delete' | 'detach';
-    open: boolean;
-    volumeId?: number;
-    volumeLabel: string;
-  }>({
-    linodeLabel: '',
-    mode: 'detach',
-    open: false,
-    volumeId: 0,
-    volumeLabel: '',
-  });
+  const selectedVolume = data?.data.find((v) => v.id === selectedVolumeId);
 
-  const handleCloseAttachDrawer = () => {
-    setAttachmentDrawer((attachmentDrawer) => ({
-      ...attachmentDrawer,
-      open: false,
-    }));
+  const handleDetach = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsDetachDialogOpen(true);
   };
 
-  const handleAttach = (volumeId: number, label: string, regionID: string) => {
-    setAttachmentDrawer((attachmentDrawer) => ({
-      ...attachmentDrawer,
-      linodeRegion: regionID,
-      open: true,
-      volumeId,
-      volumeLabel: label,
-    }));
+  const handleDelete = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsDeleteDialogOpen(true);
   };
 
-  const handleDetach = (
-    volumeId: number,
-    volumeLabel: string,
-    linodeLabel: string,
-    linodeId: number
-  ) => {
-    setDestructiveDialog((destructiveDialog) => ({
-      ...destructiveDialog,
-      error: '',
-      linodeId,
-      linodeLabel,
-      mode: 'detach',
-      open: true,
-      volumeId,
-      volumeLabel,
-    }));
+  const handleDetails = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsDetailsDrawerOpen(true);
   };
 
-  const handleDelete = (volumeId: number, volumeLabel: string) => {
-    setDestructiveDialog((destructiveDialog) => ({
-      ...destructiveDialog,
-      error: '',
-      linodeLabel: '',
-      mode: 'delete',
-      open: true,
-      volumeId,
-      volumeLabel,
-    }));
+  const handleEdit = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsEditDrawerOpen(true);
   };
 
-  const closeDestructiveDialog = () => {
-    setDestructiveDialog((destructiveDialog) => ({
-      ...destructiveDialog,
-      open: false,
-    }));
+  const handleResize = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsResizeDrawerOpen(true);
   };
 
-  const openCreateVolumeDrawer = (e: any) => {
-    e.preventDefault();
+  const handleClone = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsCloneDrawerOpen(true);
+  };
 
-    if (linode) {
-      return openForCreating('Created from Linode Details', {
-        linodeId: linode.id,
-        linodeLabel: linode.label,
-        linodeRegion: linode.region,
-      });
-    }
+  const handleCreateVolume = () => {
+    setIsCreateDrawerOpen(true);
   };
 
   const region = regions.find((thisRegion) => thisRegion.id === linode?.region);
@@ -213,16 +116,6 @@ export const LinodeVolumes = connected((props: Props) => {
   if (!region?.capabilities.includes('Block Storage')) {
     return null;
   }
-
-  const handlers: VolumeHandlers = {
-    handleAttach,
-    handleDelete,
-    handleDetach,
-    openForClone,
-    openForConfig,
-    openForEdit,
-    openForResize,
-  };
 
   const renderTableContent = () => {
     if (isLoading) {
@@ -240,14 +133,24 @@ export const LinodeVolumes = connected((props: Props) => {
     } else if (data?.results === 0) {
       return <TableRowEmpty colSpan={5} message="No Volumes to display." />;
     } else if (data) {
-      return data.data.map((volume) => (
-        <VolumeTableRow
-          key={volume.id}
-          {...volume}
-          {...handlers}
-          isDetailsPageRow
-        />
-      ));
+      return data.data.map((volume) => {
+        return (
+          <VolumeTableRow
+            handlers={{
+              handleAttach: () => null,
+              handleClone: () => handleClone(volume),
+              handleDelete: () => handleDelete(volume),
+              handleDetach: () => handleDetach(volume),
+              handleDetails: () => handleDetails(volume),
+              handleEdit: () => handleEdit(volume),
+              handleResize: () => handleResize(volume),
+            }}
+            isDetailsPageRow
+            key={volume.id}
+            volume={volume}
+          />
+        );
+      });
     }
 
     return null;
@@ -268,7 +171,7 @@ export const LinodeVolumes = connected((props: Props) => {
           <AddNewLink
             disabled={false}
             label="Create Volume"
-            onClick={openCreateVolumeDrawer}
+            onClick={handleCreateVolume}
           />
         </StyledNewWrapperGrid>
       </StyledRootGrid>
@@ -315,25 +218,46 @@ export const LinodeVolumes = connected((props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <VolumeAttachmentDrawer
-        linodeRegion={attachmentDrawer.linodeRegion || ''}
-        onClose={handleCloseAttachDrawer}
-        open={attachmentDrawer.open}
-        volumeId={attachmentDrawer.volumeId || 0}
-        volumeLabel={attachmentDrawer.volumeLabel || ''}
+      {linode && (
+        <LinodeVolumeAddDrawer
+          linode={linode}
+          onClose={() => setIsCreateDrawerOpen(false)}
+          open={isCreateDrawerOpen}
+        />
+      )}
+      <VolumeDetailsDrawer
+        onClose={() => setIsDetailsDrawerOpen(false)}
+        open={isDetailsDrawerOpen}
+        volume={selectedVolume}
       />
-      <DestructiveVolumeDialog
-        linodeId={id}
-        linodeLabel={destructiveDialog.linodeLabel}
-        mode={destructiveDialog.mode}
-        onClose={closeDestructiveDialog}
-        open={destructiveDialog.open}
-        volumeId={destructiveDialog.volumeId ?? 0}
-        volumeLabel={destructiveDialog.volumeLabel}
+      <EditVolumeDrawer
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
+        volume={selectedVolume}
+      />
+      <ResizeVolumeDrawer
+        onClose={() => setIsResizeDrawerOpen(false)}
+        open={isResizeDrawerOpen}
+        volume={selectedVolume}
+      />
+      <CloneVolumeDrawer
+        onClose={() => setIsCloneDrawerOpen(false)}
+        open={isCloneDrawerOpen}
+        volume={selectedVolume}
+      />
+      <DetachVolumeDialog
+        onClose={() => setIsDetachDialogOpen(false)}
+        open={isDetachDialogOpen}
+        volume={selectedVolume}
+      />
+      <DeleteVolumeDialog
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
+        volume={selectedVolume}
       />
     </div>
   );
-});
+};
 
 const StyledNewWrapperGrid = styled(Grid, { label: 'StyledNewWrapperGrid' })(
   ({ theme }) => ({
