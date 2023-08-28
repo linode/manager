@@ -20,7 +20,7 @@ import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useTypeQuery } from 'src/queries/types';
-import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
+import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { BackupTableRow } from './BackupTableRow';
@@ -84,7 +84,7 @@ export const LinodeBackups = () => {
 
   const backupsMonthlyPrice = flags.dcSpecificPricing
     ? type && linode
-      ? getLinodeRegionBackupPrice(type, linode.region).monthly
+      ? getLinodeBackupPrice(type, linode.region).monthly
       : undefined
     : type?.addons?.backups?.price?.monthly;
 

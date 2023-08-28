@@ -1,7 +1,7 @@
 import { linodeTypeFactory } from 'src/factories';
 
 import {
-  getLinodeRegionBackupPrice,
+  getLinodeBackupPrice,
   getLinodeRegionPrice,
   isLinodeTypeDifferentPriceInSelectedRegion,
 } from './linodes';
@@ -37,7 +37,7 @@ describe('getLinodeRegionPrice', () => {
   });
 });
 
-describe('getLinodeRegionBackupPrice', () => {
+describe('getLinodeBackupPrice', () => {
   it('gets a linode backup price without a region override', () => {
     const type = linodeTypeFactory.build({
       addons: {
@@ -51,13 +51,13 @@ describe('getLinodeRegionBackupPrice', () => {
       },
     });
 
-    expect(getLinodeRegionBackupPrice(type, 'us-east')).toEqual({
+    expect(getLinodeBackupPrice(type, 'us-east')).toEqual({
       hourly: 0.004,
       monthly: 2.5,
     });
   });
 
-  it('gets a linode price with a backup override', () => {
+  it('gets a linode backup price with a region override', () => {
     const type = linodeTypeFactory.build({
       addons: {
         backups: {
@@ -81,7 +81,7 @@ describe('getLinodeRegionBackupPrice', () => {
       },
     });
 
-    expect(getLinodeRegionBackupPrice(type, 'id-cgk')).toEqual({
+    expect(getLinodeBackupPrice(type, 'id-cgk')).toEqual({
       hourly: 0.0048,
       monthly: 3.57,
     });

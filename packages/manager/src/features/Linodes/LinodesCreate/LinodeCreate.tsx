@@ -55,7 +55,7 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
+import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
@@ -161,6 +161,7 @@ interface State {
 interface CreateTab extends Tab {
   type: CreateTypes;
 }
+
 export class LinodeCreate extends React.PureComponent<
   CombinedProps & DispatchProps,
   State
@@ -313,8 +314,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const backupsMonthlyPrice = this.props.flags.dcSpecificPricing
       ? this.props.selectedTypeID && selectedRegionID
-        ? getLinodeRegionBackupPrice(type as LinodeType, selectedRegionID)
-            .monthly
+        ? getLinodeBackupPrice(type as LinodeType, selectedRegionID).monthly
         : undefined
       : type?.addons?.backups?.price?.monthly;
 

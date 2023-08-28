@@ -7,7 +7,7 @@ import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
+import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
 
 interface Props {
   error?: string;
@@ -22,7 +22,7 @@ export const BackupLinodeRow = (props: Props) => {
 
   const backupsMonthlyPrice = flags.dcSpecificPricing
     ? type
-      ? getLinodeRegionBackupPrice(type, linode.region).monthly
+      ? getLinodeBackupPrice(type, linode.region).monthly
       : undefined
     : type?.addons.backups.price.monthly;
 

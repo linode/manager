@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { linodeTypeFactory } from 'src/factories/linodes';
-import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
+import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { AddonsPanel, AddonsPanelProps } from './AddonsPanel';
@@ -200,8 +200,7 @@ describe('AddonsPanel', () => {
   });
 
   it('Should display backups price when Backups checkbox is checked', () => {
-    const backupsMonthlyPrice = getLinodeRegionBackupPrice(type, 'us-east')
-      .monthly;
+    const backupsMonthlyPrice = getLinodeBackupPrice(type, 'us-east').monthly;
     const addOnProps = {
       ...props,
       backups: true,
@@ -219,8 +218,7 @@ describe('AddonsPanel', () => {
   });
 
   it('Should display DC-specific backups price when Backups checkbox is checked with the dcSpecificPricing feature flag on', () => {
-    const backupsMonthlyPrice = getLinodeRegionBackupPrice(type, 'id-cgk')
-      .monthly;
+    const backupsMonthlyPrice = getLinodeBackupPrice(type, 'id-cgk').monthly;
     const addOnProps = {
       ...props,
       backups: true,

@@ -10,7 +10,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
-import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
+import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
 
 interface Props {
   linodeId: number | undefined;
@@ -42,7 +42,7 @@ export const EnableBackupsDialog = (props: Props) => {
 
   const backupsMonthlyPrice = flags.dcSpecificPricing
     ? type && linode
-      ? getLinodeRegionBackupPrice(type, linode.region).monthly
+      ? getLinodeBackupPrice(type, linode.region).monthly
       : undefined
     : type?.addons?.backups?.price?.monthly;
 
