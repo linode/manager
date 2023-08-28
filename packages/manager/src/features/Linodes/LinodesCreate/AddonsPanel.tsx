@@ -198,6 +198,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
                 accountBackups ? 'auto backup enabled' : 'auto backup disabled'
               }
               checked={accountBackups || props.backups}
+              data-testid="backups"
               disabled={accountBackups || disabled || isBareMetal}
               onChange={changeBackups}
             />
