@@ -20,7 +20,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import {
@@ -283,14 +282,13 @@ export const CreateCluster = () => {
   return (
     <Grid className={classes.root} container>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
-      <ProductInformationBanner bannerLocation="Kubernetes" important warning />
       <LandingHeader
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
         title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
-        {errorMap.none && <Notice error text={errorMap.none} />}
+        {errorMap.none && <Notice text={errorMap.none} variant="error" />}
         <Paper data-qa-label-header>
           <div className={classes.inner}>
             <TextField

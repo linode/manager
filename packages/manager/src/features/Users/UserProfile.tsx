@@ -98,12 +98,16 @@ export const UserProfile = (props: UserProfileProps) => {
         </Typography>
         <StyledWrapper>
           {accountSuccess && (
-            <Notice spacingBottom={0} success>
+            <Notice spacingBottom={0} variant="success">
               Username updated successfully
             </Notice>
           )}
           {generalAccountError && (
-            <Notice error spacingBottom={0} text={generalAccountError} />
+            <Notice
+              spacingBottom={0}
+              text={generalAccountError}
+              variant="error"
+            />
           )}
           <TextField
             data-qa-username
@@ -124,12 +128,16 @@ export const UserProfile = (props: UserProfileProps) => {
         </StyledWrapper>
         <StyledWrapper>
           {profileSuccess && (
-            <Notice spacingBottom={0} success>
+            <Notice spacingBottom={0} variant="success">
               Email updated successfully
             </Notice>
           )}
           {generalProfileError && (
-            <Notice error spacingBottom={0} text={generalProfileError} />
+            <Notice
+              spacingBottom={0}
+              text={generalProfileError}
+              variant="error"
+            />
           )}
           <TextField
             tooltipText={
@@ -194,9 +202,9 @@ export const UserProfile = (props: UserProfileProps) => {
         </Typography>
         {userDeleteError && (
           <Notice
-            error
             sx={{ marginLeft: 0, marginTop: theme.spacing(2) }}
             text="Error when deleting user, please try again later"
+            variant="error"
           />
         )}
         <Button

@@ -88,7 +88,7 @@ export const CreateUserDrawer = withRouter(
 
     return (
       <Drawer onClose={onClose} open={open} title="Add a User">
-        {generalError && <Notice error text={generalError} />}
+        {generalError && <Notice text={generalError} variant="error" />}
         <TextField
           data-qa-create-username
           errorText={hasErrorFor('username')}
@@ -126,7 +126,7 @@ export const CreateUserDrawer = withRouter(
         <div style={{ marginTop: 8 }}>
           <Notice
             text="The user will be sent an email to set their password"
-            warning
+            variant="warning"
           />
         </div>
         <ActionsPanel

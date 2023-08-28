@@ -51,7 +51,9 @@ export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Create OAuth App">
-      {hasErrorFor('none') && <Notice error text={hasErrorFor('none')} />}
+      {hasErrorFor('none') && (
+        <Notice text={hasErrorFor('none')} variant="error" />
+      )}
       <form onSubmit={formik.handleSubmit}>
         <TextField
           errorText={hasErrorFor('label')}

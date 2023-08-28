@@ -310,7 +310,7 @@ export interface LinodeType extends BaseType {
   price: PriceObject;
   region_prices: RegionPriceObject[];
   addons: {
-    backups: { price: PriceObject };
+    backups: { price: PriceObject; region_prices: RegionPriceObject[] };
   };
 }
 
@@ -351,6 +351,7 @@ export interface CreateLinodeRequest {
   authorized_users?: string[];
   interfaces?: Interface[];
   metadata?: UserData;
+  firewall_id?: number;
 }
 
 export type RescueRequestObject = Pick<

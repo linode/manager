@@ -57,7 +57,9 @@ export const EditIPRDNSDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Edit Reverse DNS">
       <form onSubmit={formik.handleSubmit}>
-        {Boolean(errorMap.none) && <Notice error>{errorMap.none}</Notice>}
+        {Boolean(errorMap.none) && (
+          <Notice variant="error">{errorMap.none}</Notice>
+        )}
         <TextField
           data-qa-domain-name
           errorText={errorMap.rdns}

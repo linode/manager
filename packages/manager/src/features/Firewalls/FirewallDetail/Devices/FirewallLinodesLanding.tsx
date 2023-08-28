@@ -50,8 +50,8 @@ const FirewallLinodesLanding = (props: Props) => {
           text={
             "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
           }
-          error
           important
+          variant="error"
         />
       ) : null}
       <Grid container direction="column">

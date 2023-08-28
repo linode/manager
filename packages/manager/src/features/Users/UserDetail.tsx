@@ -215,8 +215,8 @@ export const UserDetail = () => {
 
         {createdUsername && (
           <Notice
-            success
             text={`User ${createdUsername} created successfully`}
+            variant="success"
           />
         )}
         <TabPanels>

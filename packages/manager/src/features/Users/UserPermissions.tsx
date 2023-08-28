@@ -126,7 +126,7 @@ export const UserPermissions = withQueryClient(
         ) : (
           <React.Fragment>
             {generalError ? (
-              <Notice error spacingTop={8} text={generalError} />
+              <Notice spacingTop={8} text={generalError} variant="error" />
             ) : null}
             <Grid
               alignItems="center"
