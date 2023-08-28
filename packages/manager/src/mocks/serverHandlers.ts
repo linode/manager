@@ -7,6 +7,7 @@ import {
 import { DateTime } from 'luxon';
 import { RequestHandler, rest } from 'msw';
 
+import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import {
   VLANFactory,
@@ -271,8 +272,8 @@ const databases = [
     return res(
       ctx.json({
         ...databaseFactory.build({
-          engine: req.params.engine,
           label: payload?.label ?? 'Database',
+          engine: req.params.engine,
         }),
       })
     );
@@ -491,13 +492,9 @@ export const handlers = [
   rest.post('*/profile/security-questions', (req, res, ctx) => {
     return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
-  // Disabling the cached regions for mocks cause it seems to be a better option to
-  // rely on user's individual flags to display customized region data.
-  // Leaving the code commented out in case we need to revert or a user may want to test with mocked data instead.
-  // relies on `import cachedRegions from 'src/cachedData/regions.json'`;
-  // rest.get('*/regions', async (req, res, ctx) => {
-  //   return res(ctx.json(cachedRegions));
-  // }),
+  rest.get('*/regions', async (req, res, ctx) => {
+    return res(ctx.json(cachedRegions));
+  }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(5, {
       status: 'available',
