@@ -28,6 +28,6 @@ export const StyledSidebarGrid = styled(Grid, {
       paddingLeft: 0,
       paddingRight: 0,
     },
-    padding: '0px 8px',
+    padding: `0 ${theme.spacing(1)}`,
   },
 }));

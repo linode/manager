@@ -104,7 +104,7 @@ interface RowProps {
   linode: Linode;
 }
 
-const LinodeRow: React.FC<RowProps> = (props) => {
+const LinodeRow = (props: RowProps) => {
   const { handleToggleCheck, isChecked, linode } = props;
   const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;

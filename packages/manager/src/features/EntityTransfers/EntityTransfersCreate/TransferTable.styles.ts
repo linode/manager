@@ -53,7 +53,8 @@ export const StyledCheckAllTableCell = styled(TableCell, {
   label: 'StyledCheckAllTableCell',
 })({
   '&&': {
-    padding: '0px',
+    padding: 0,
     textAlign: 'center',
+    width: '68px',
   },
 });

@@ -64,7 +64,7 @@ export const StyledRowDiv = styled('div', {
   borderBottom: `solid 1px ${theme.color.border2}`,
   display: 'flex',
   justifyContent: 'space-between',
-  padding: `5px 0px`,
+  padding: `2px 0px`,
 }));
 
 export const StyledRowBoxDiv = styled('div', {

@@ -37,7 +37,7 @@ export const StyledLabelWrapperGrid = styled(Grid, {
     },
     marginBottom: theme.spacing(1),
     padding: 0,
-    width: 'calc(600px - 32px)',
+    width: '568px',
   },
   [theme.breakpoints.down('sm')]: {
     margin: `${theme.spacing(1)} 0`,
@@ -55,7 +55,7 @@ export const StyledTransferGrid = styled(Grid, {
   paddingLeft: 0,
   paddingRight: 0,
   [theme.breakpoints.down('md')]: {
-    width: 'calc(600px - 32px)',
+    width: '568px',
   },
   [theme.breakpoints.down('sm')]: {
     padding: 0,
@@ -126,7 +126,7 @@ export const StyledTransferWrapperGrid = styled(Grid, {
       flexGrow: 1,
     },
     flexBasis: '100%',
-    width: 'calc(600px-32px)',
+    width: '568px',
   },
   [theme.breakpoints.down('sm')]: {
     width: '100%',

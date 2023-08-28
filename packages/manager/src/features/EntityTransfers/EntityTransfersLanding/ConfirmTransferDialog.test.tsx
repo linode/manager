@@ -11,9 +11,9 @@ import {
   getTimeRemaining,
 } from './ConfirmTransferDialog';
 
-import type { Props } from './ConfirmTransferDialog';
+import type { ConfirmTransferDialogProps } from './ConfirmTransferDialog';
 
-const props: Props = {
+const props: ConfirmTransferDialogProps = {
   onClose: jest.fn(),
   open: true,
   token: 'blahblah',
