@@ -311,16 +311,16 @@ export class LinodeCreate extends React.PureComponent<
       (type) => type.id === this.props.selectedTypeID
     );
 
-    const backupsPrice = this.props.flags.dcSpecificPricing
+    const backupsMonthlyPrice = this.props.flags.dcSpecificPricing
       ? this.props.selectedTypeID && selectedRegionID
         ? getLinodeRegionBackupPrice(type as LinodeType, selectedRegionID)
             .monthly
         : undefined
       : type?.addons?.backups?.price?.monthly;
 
-    if (hasBackups && typeDisplayInfo && backupsPrice) {
+    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
       displaySections.push(
-        renderBackupsDisplaySection(accountBackupsEnabled, backupsPrice)
+        renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
       );
     }
 
@@ -567,7 +567,7 @@ export class LinodeCreate extends React.PureComponent<
             }}
             accountBackups={accountBackupsEnabled}
             backups={this.props.backupsEnabled}
-            backupsMonthly={backupsPrice}
+            backupsMonthlyPrice={backupsMonthlyPrice}
             changeBackups={this.props.toggleBackupsEnabled}
             createType={this.props.createType}
             data-qa-addons-panel

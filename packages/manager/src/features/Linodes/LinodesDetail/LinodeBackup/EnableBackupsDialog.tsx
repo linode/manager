@@ -40,7 +40,7 @@ export const EnableBackupsDialog = (props: Props) => {
     Boolean(linode?.type)
   );
 
-  const backupsPrice = flags.dcSpecificPricing
+  const backupsMonthlyPrice = flags.dcSpecificPricing
     ? type && linode
       ? getLinodeRegionBackupPrice(type, linode.region).monthly
       : undefined
@@ -90,7 +90,7 @@ export const EnableBackupsDialog = (props: Props) => {
     >
       <Typography>
         Are you sure you want to enable backups on this Linode?{` `}
-        This will add <Currency quantity={backupsPrice ?? 0} />
+        This will add <Currency quantity={backupsMonthlyPrice ?? 0} />
         {` `}
         to your monthly bill.
       </Typography>

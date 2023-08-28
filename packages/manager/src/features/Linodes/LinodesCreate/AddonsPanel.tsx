@@ -29,7 +29,7 @@ interface UserDataProps extends UserDataAccordionProps {
 export interface AddonsPanelProps {
   accountBackups: boolean;
   backups: boolean;
-  backupsMonthly?: null | number;
+  backupsMonthlyPrice?: null | number;
   changeBackups: () => void;
   createType: CreateTypes;
   disabled?: boolean;
@@ -51,7 +51,7 @@ export interface AddonsPanelProps {
 export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const {
     accountBackups,
-    backupsMonthly,
+    backupsMonthlyPrice,
     changeBackups,
     createType,
     disabled,
@@ -95,9 +95,9 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   const renderBackupsPrice = () => {
     return (
-      backupsMonthly && (
+      backupsMonthlyPrice && (
         <Typography variant="body1">
-          <Currency quantity={backupsMonthly} /> per month
+          <Currency quantity={backupsMonthlyPrice} /> per month
         </Typography>
       )
     );
