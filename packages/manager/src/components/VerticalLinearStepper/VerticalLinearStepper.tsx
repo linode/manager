@@ -116,7 +116,9 @@ export const VerticalLinearStepper = ({
                       primaryButtonProps={
                         index !== 2
                           ? {
-                              'data-testid': label.toLocaleLowerCase(),
+                              'data-testid': steps[
+                                index + 1
+                              ]?.label.toLocaleLowerCase(),
                               label: `Next: ${steps[index + 1]?.label}`,
                               onClick: () => {
                                 handleNext();
