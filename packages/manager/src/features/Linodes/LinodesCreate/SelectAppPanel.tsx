@@ -82,7 +82,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
     }
 
     const newApps = appInstances.filter((app) => {
-      return ['nomad-occ', 'nomad-occ-clients',].includes(
+      return ['HashiCorp Nomad Cluster', 'HashiCorp Nomad Cluster Clients',].includes(
         app.label.toLowerCase().trim()
       );
     });
