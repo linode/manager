@@ -1,4 +1,5 @@
 import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/PlanSelection';
 
 /**
  * Gets the price of a Linode type for a specific region.
@@ -8,7 +9,7 @@ import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
  * @returns pricing information for this specific linode type in a region
  */
 export const getLinodeRegionPrice = (
-  type: LinodeType,
+  type: LinodeType | PlanSelectionType,
   regionId: string
 ): PriceObject => {
   const regionSpecificPrice = type.region_prices?.find(

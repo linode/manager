@@ -102,6 +102,7 @@ export const PlansPanel = (props: Props) => {
               plans={plans[plan]}
               selectedDiskSize={props.selectedDiskSize}
               selectedID={selectedID}
+              selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}
             />
           </>

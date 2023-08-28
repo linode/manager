@@ -2,19 +2,22 @@ import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
 import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { ExtendedType } from 'src/utilities/extendType';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 import { StyledDisabledTableRow } from './PlansPanel.styles';
+
+import type { Region, RegionPriceObject } from '@linode/api-v4';
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
@@ -22,6 +25,7 @@ export interface PlanSelectionType extends BaseType {
   heading: ExtendedType['heading'];
   network_out?: ExtendedType['network_out'];
   price: ExtendedType['price'];
+  region_prices: RegionPriceObject[];
   subHeadings: ExtendedType['subHeadings'];
   transfer?: ExtendedType['transfer'];
 }
@@ -37,6 +41,7 @@ interface Props {
   onSelect: (key: string) => void;
   selectedDiskSize?: number;
   selectedID?: string;
+  selectedRegionId?: Region['id'];
   showTransfer?: boolean;
   type: PlanSelectionType;
 }
@@ -59,6 +64,7 @@ export const PlanSelection = (props: Props) => {
     onSelect,
     selectedDiskSize,
     selectedID,
+    selectedRegionId,
     showTransfer,
     type,
   } = props;
@@ -77,7 +83,6 @@ export const PlanSelection = (props: Props) => {
     linodeID ?? -1,
     linodeID !== undefined
   );
-
   const selectedLinodePlanType = linode?.type;
 
   const rowAriaLabel =
@@ -86,6 +91,11 @@ export const PlanSelection = (props: Props) => {
       : planTooSmall
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
+
+  const price = selectedRegionId
+    ? getLinodeRegionPrice(type, selectedRegionId)
+    : type.price;
+
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
@@ -144,12 +154,12 @@ export const PlanSelection = (props: Props) => {
               />
             )}
           </TableCell>
-          <TableCell data-qa-monthly> ${type.price?.monthly}</TableCell>
+          <TableCell data-qa-monthly> ${price?.monthly}</TableCell>
           <TableCell data-qa-hourly>
             {isGPU ? (
-              <Currency quantity={type.price.hourly ?? 0} />
+              <Currency quantity={price.hourly ?? 0} />
             ) : (
-              `$${type.price?.hourly}`
+              `$${price?.hourly}`
             )}
           </TableCell>
           <TableCell center data-qa-ram noWrap>

@@ -3,13 +3,20 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
+import { Notice } from 'src/components/Notice/Notice';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
+
+import type { Region } from '@linode/api-v4';
+
+const NO_REGION_SELECTED_MESSAGE = 'Select a region to view plans and prices.';
 
 const tableCells = [
   { cellName: '', center: false, noWrap: false, testId: '' },
@@ -38,6 +45,7 @@ export interface Props {
   plans: PlanSelectionType[];
   selectedDiskSize?: number;
   selectedID?: string;
+  selectedRegionId?: Region['id'];
   showTransfer?: boolean;
 }
 
@@ -52,8 +60,11 @@ export const PlanContainer = (props: Props) => {
     plans,
     selectedDiskSize,
     selectedID,
+    selectedRegionId,
     showTransfer,
   } = props;
+  const { dcSpecificPricing } = useFlags();
+
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
     showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
@@ -61,26 +72,38 @@ export const PlanContainer = (props: Props) => {
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const shouldShowNetwork =
     showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
+  const shouldDisplayNoRegionSelectedMessage =
+    dcSpecificPricing && selectedRegionId === undefined;
 
   return (
     <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
-        {plans.map((plan, id) => (
-          <PlanSelection
-            currentPlanHeading={currentPlanHeading}
-            disabled={disabled}
-            disabledClasses={disabledClasses}
-            idx={id}
-            isCreate={isCreate}
-            key={id}
-            linodeID={linodeID}
-            onSelect={onSelect}
-            selectedDiskSize={selectedDiskSize}
-            selectedID={selectedID}
-            showTransfer={showTransfer}
-            type={plan}
+        {shouldDisplayNoRegionSelectedMessage ? (
+          <Notice
+            spacingLeft={8}
+            spacingTop={8}
+            text={NO_REGION_SELECTED_MESSAGE}
+            variant="warning"
           />
-        ))}
+        ) : (
+          plans.map((plan, id) => (
+            <PlanSelection
+              currentPlanHeading={currentPlanHeading}
+              disabled={disabled}
+              disabledClasses={disabledClasses}
+              idx={id}
+              isCreate={isCreate}
+              key={id}
+              linodeID={linodeID}
+              onSelect={onSelect}
+              selectedDiskSize={selectedDiskSize}
+              selectedID={selectedID}
+              selectedRegionId={selectedRegionId}
+              showTransfer={showTransfer}
+              type={plan}
+            />
+          ))
+        )}
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
@@ -114,22 +137,30 @@ export const PlanContainer = (props: Props) => {
               </TableRow>
             </TableHead>
             <TableBody role="radiogroup">
-              {plans.map((plan, id) => (
-                <PlanSelection
-                  currentPlanHeading={currentPlanHeading}
-                  disabled={disabled}
-                  disabledClasses={disabledClasses}
-                  idx={id}
-                  isCreate={isCreate}
-                  key={id}
-                  linodeID={linodeID}
-                  onSelect={onSelect}
-                  selectedDiskSize={selectedDiskSize}
-                  selectedID={selectedID}
-                  showTransfer={showTransfer}
-                  type={plan}
+              {shouldDisplayNoRegionSelectedMessage ? (
+                <TableRowEmpty
+                  colSpan={9}
+                  message={NO_REGION_SELECTED_MESSAGE}
                 />
-              ))}
+              ) : (
+                plans.map((plan, id) => (
+                  <PlanSelection
+                    currentPlanHeading={currentPlanHeading}
+                    disabled={disabled}
+                    disabledClasses={disabledClasses}
+                    idx={id}
+                    isCreate={isCreate}
+                    key={id}
+                    linodeID={linodeID}
+                    onSelect={onSelect}
+                    selectedDiskSize={selectedDiskSize}
+                    selectedID={selectedID}
+                    selectedRegionId={selectedRegionId}
+                    showTransfer={showTransfer}
+                    type={plan}
+                  />
+                ))
+              )}
             </TableBody>
           </StyledTable>
         </Grid>
