@@ -13,6 +13,7 @@ import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 interface Props {
@@ -31,6 +32,9 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
     error: firewallsError,
     isLoading: firewallsLoading,
   } = useLinodeFirewallsQuery(linodeId);
+
+  const { data: ips } = useLinodeIPsQuery(linodeId);
+  const privateIpv4s = ips?.ipv4.private.map((privateIP) => privateIP.address);
 
   const [isHovered, setIsHovered] = React.useState(false);
 
@@ -90,7 +94,7 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
       </StyledTableCell>
       <StyledTableCell>{linode.id}</StyledTableCell>
       <StyledTableCell>
-        <IPAddress ips={linode.ipv4} isHovered={isHovered} />
+        <IPAddress ips={privateIpv4s ?? []} isHovered={isHovered} />
       </StyledTableCell>
       <StyledTableCell>
         {getFirewallsCellString(
