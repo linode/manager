@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
@@ -19,7 +19,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { Process } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   processName: {
     alignItems: 'center',
     display: 'flex',
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props {
+export interface ProcessesTableProps {
   error?: string;
   lastUpdatedError?: APIError[];
   processesData: ExtendedProcess[];
@@ -63,10 +63,8 @@ export interface Props {
   setSelectedProcess: (process: Process) => void;
 }
 
-export type CombinedProps = Props;
-
-export const ProcessesTable: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
+  const { classes } = useStyles();
   const { width } = useWindowDimensions();
 
   const {
@@ -163,7 +161,7 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
       )}
     </OrderBy>
   );
-};
+});
 
 const renderLoadingErrorData = (
   loading: boolean,
@@ -200,56 +198,54 @@ export interface ProcessTableRowProps extends ExtendedProcess {
   setSelectedProcess: (process: Process) => void;
 }
 
-export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
-  (props) => {
-    const {
-      averageCPU,
-      averageIO,
-      averageMem,
-      isSelected,
-      maxCount,
-      name,
-      setSelectedProcess,
-      user,
-    } = props;
+export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
+  const {
+    averageCPU,
+    averageIO,
+    averageMem,
+    isSelected,
+    maxCount,
+    name,
+    setSelectedProcess,
+    user,
+  } = props;
 
-    const classes = useStyles();
+  const { classes } = useStyles();
 
-    return (
-      <TableRow
-        onKeyUp={(e: any) =>
-          e.key === 'Enter' && setSelectedProcess({ name, user })
+  return (
+    <TableRow
+      onKeyUp={(e: any) =>
+        e.key === 'Enter' && setSelectedProcess({ name, user })
+      }
+      ariaLabel={`${name} for ${user}`}
+      data-testid="longview-service-row"
+      forceIndex
+      onClick={() => setSelectedProcess({ name, user })}
+      selected={isSelected}
+    >
+      <TableCell data-testid={`name-${name}`}>
+        <div className={classes.processName}>{name}</div>
+      </TableCell>
+      <TableCell data-testid={`user-${user}`}>{user}</TableCell>
+      <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
+        {Math.round(maxCount)}
+      </TableCell>
+      <TableCell data-testid={`average-io-${averageIO}`}>
+        {
+          readableBytes(averageIO, { round: 0, unitLabels: { bytes: 'B' } })
+            .formatted
         }
-        ariaLabel={`${name} for ${user}`}
-        data-testid="longview-service-row"
-        forceIndex
-        onClick={() => setSelectedProcess({ name, user })}
-        selected={isSelected}
-      >
-        <TableCell data-testid={`name-${name}`}>
-          <div className={classes.processName}>{name}</div>
-        </TableCell>
-        <TableCell data-testid={`user-${user}`}>{user}</TableCell>
-        <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
-          {Math.round(maxCount)}
-        </TableCell>
-        <TableCell data-testid={`average-io-${averageIO}`}>
-          {
-            readableBytes(averageIO, { round: 0, unitLabels: { bytes: 'B' } })
-              .formatted
-          }
-          /s
-        </TableCell>
-        <TableCell data-testid={`average-cpu-${averageCPU}`}>
-          {formatCPU(averageCPU)}
-        </TableCell>
-        <TableCell data-testid={`average-mem-${averageMem}`}>
-          {readableBytes(averageMem * 1024, { round: 0 }).formatted}
-        </TableCell>
-      </TableRow>
-    );
-  }
-);
+        /s
+      </TableCell>
+      <TableCell data-testid={`average-cpu-${averageCPU}`}>
+        {formatCPU(averageCPU)}
+      </TableCell>
+      <TableCell data-testid={`average-mem-${averageMem}`}>
+        {readableBytes(averageMem * 1024, { round: 0 }).formatted}
+      </TableCell>
+    </TableRow>
+  );
+});
 
 export interface ExtendedProcess {
   averageCPU: number;
@@ -260,5 +256,3 @@ export interface ExtendedProcess {
   name: string;
   user: string;
 }
-
-export default React.memo(ProcessesTable);

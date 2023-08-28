@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Grid } from 'src/components/Grid';
@@ -9,14 +9,14 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
-import CPUGraph from './CPUGraph';
-import DiskGraph from './DiskGraph';
-import LoadGraph from './LoadGraph';
-import MemoryGraph from './MemoryGraph';
-import NetworkGraph from './NetworkGraph';
+import { CPUGraph } from './CPUGraph';
+import { DiskGraph } from './DiskGraph';
+import { LoadGraph } from './LoadGraph';
+import { MemoryGraph } from './MemoryGraph';
+import { NetworkGraph } from './NetworkGraph';
 import { GraphProps } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   headerOuter: {
     alignItems: 'center',
     display: 'flex',
@@ -45,10 +45,9 @@ interface Props {
   lastUpdatedError: boolean;
   timezone: string;
 }
-export type CombinedProps = Props;
 
-export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const OverviewGraphs = (props: Props) => {
+  const { classes } = useStyles();
 
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
@@ -122,5 +121,3 @@ export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
     </Grid>
   );
 };
-
-export default OverviewGraphs;

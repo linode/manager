@@ -1,7 +1,6 @@
-import { Theme } from '@mui/material/styles';
-import { WithTheme, makeStyles, withTheme } from '@mui/styles';
+import { useTheme, Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -17,7 +16,8 @@ import {
   sumRelatedProcessesAcrossAllUsers,
 } from '../../shared/utilities';
 
-export const useStyles = makeStyles((theme: Theme) => ({
+// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
+export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     padding: `${theme.spacing(3.25)} ${theme.spacing(3.25)} ${theme.spacing(
       5.5
@@ -41,11 +41,10 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithTheme;
-
-export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-  const { data, end, error, isToday, loading, start, theme, timezone } = props;
+export const ProcessGraphs = React.memo((props: Props) => {
+  const { classes } = useStyles();
+  const { data, end, error, isToday, loading, start, timezone } = props;
+  const theme = useTheme();
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
   const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
@@ -170,10 +169,4 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
       </Grid>
     </>
   );
-};
-
-const enhanced = compose<CombinedProps, Props>(
-  withTheme,
-  React.memo
-)(ProcessGraphs);
-export default enhanced;
+});

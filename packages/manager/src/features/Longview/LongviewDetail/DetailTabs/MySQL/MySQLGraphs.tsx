@@ -1,4 +1,4 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Grid } from 'src/components/Grid';
@@ -11,7 +11,7 @@ import {
 
 import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import ProcessGraphs, { useStyles } from '../ProcessGraphs';
+import { ProcessGraphs, useStyles } from '../ProcessGraphs';
 
 interface Props {
   data?: MySQLResponse;
@@ -26,9 +26,7 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithTheme;
-
-export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
+export const MySQLGraphs = (props: Props) => {
   const {
     data,
     end,
@@ -39,11 +37,11 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
     processesError,
     processesLoading,
     start,
-    theme,
     timezone,
   } = props;
 
-  const classes = useStyles();
+  const theme = useTheme();
+  const { classes } = useStyles();
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
@@ -236,5 +234,3 @@ const formatAborted = (value: null | number) => {
   }
   return Math.ceil(value);
 };
-
-export default withTheme(MySQLGraphs);

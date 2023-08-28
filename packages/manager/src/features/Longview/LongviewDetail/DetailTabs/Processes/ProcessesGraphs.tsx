@@ -1,5 +1,5 @@
-import { Theme } from '@mui/material/styles';
-import { WithTheme, makeStyles, withTheme } from '@mui/styles';
+import { useTheme, Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -21,7 +21,7 @@ import {
 
 import { Process } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   graphWrap: {
     marginTop: theme.spacing(3),
   },
@@ -48,10 +48,8 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithTheme;
-
-const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const ProcessesGraphs = (props: Props) => {
+  const { classes } = useStyles();
 
   const {
     error,
@@ -59,10 +57,11 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
     processesData,
     processesLoading,
     selectedProcess,
-    theme,
     time,
     timezone,
   } = props;
+
+  const theme = useTheme();
 
   const { end, start } = time;
 
@@ -191,8 +190,6 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default withTheme(ProcessesGraphs);
 
 export const formatCount = (value: null | number) => {
   if (!value) {

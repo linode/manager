@@ -1,8 +1,7 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/longview/disk.svg';
@@ -23,7 +22,7 @@ import {
   sumStorage,
 } from '../../shared/utilities';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   headerSection: {
     marginBottom: `calc(${theme.spacing(3)} - 2)`,
   },
@@ -72,8 +71,8 @@ interface Props {
   openPackageDrawer: () => void;
 }
 
-const IconSection: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const IconSection = React.memo((props: Props) => {
+  const { classes } = useStyles();
 
   const hostname = pathOr(
     'Hostname not available',
@@ -296,6 +295,4 @@ const IconSection: React.FC<Props> = (props) => {
       </Grid>
     </Grid>
   );
-};
-
-export default compose<Props, Props>(React.memo)(IconSection);
+});

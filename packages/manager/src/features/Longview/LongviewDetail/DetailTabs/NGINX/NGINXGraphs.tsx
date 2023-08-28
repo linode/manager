@@ -1,6 +1,5 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -8,7 +7,7 @@ import { Paper } from 'src/components/Paper';
 
 import { LongviewProcesses, NginxResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import ProcessGraphs, { useStyles } from '../ProcessGraphs';
+import { ProcessGraphs, useStyles } from '../ProcessGraphs';
 
 interface Props {
   data?: NginxResponse;
@@ -23,9 +22,7 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithTheme;
-
-export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
+export const NGINXGraphs = React.memo((props: Props) => {
   const {
     data,
     end,
@@ -36,11 +33,12 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
     processesError,
     processesLoading,
     start,
-    theme,
     timezone,
   } = props;
 
-  const classes = useStyles();
+  const theme = useTheme();
+
+  const { classes } = useStyles();
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
@@ -138,10 +136,4 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
       </Grid>
     </Paper>
   );
-};
-
-const enhanced = compose<CombinedProps, Props>(
-  withTheme,
-  React.memo
-)(NGINXGraphs);
-export default enhanced;
+});

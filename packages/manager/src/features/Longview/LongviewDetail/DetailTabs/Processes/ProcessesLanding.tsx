@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 
@@ -18,11 +18,11 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import ProcessesGraphs from './ProcessesGraphs';
-import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
+import { ProcessesGraphs } from './ProcessesGraphs';
+import { ProcessesTable, ExtendedProcess } from './ProcessesTable';
 import { Process } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   filterInput: {
     width: 300,
   },
@@ -64,7 +64,7 @@ export const filterResults = (
 
 const ProcessesLanding: React.FC<Props> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   // Text input for filtering processes by name or user.
   const [inputText, setInputText] = React.useState<string | undefined>();

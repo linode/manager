@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Disk } from '../../../request.types';
-import Graphs from './Graphs';
+import { Graphs } from './Graphs';
 
 interface Props {
   diskLabel: string;
@@ -13,9 +13,7 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props;
-
-const DiskGraph: React.FC<CombinedProps> = (props) => {
+export const DiskGraph = (props: Props) => {
   const {
     diskLabel,
     endTime,
@@ -57,5 +55,3 @@ const DiskGraph: React.FC<CombinedProps> = (props) => {
     />
   );
 };
-
-export default DiskGraph;

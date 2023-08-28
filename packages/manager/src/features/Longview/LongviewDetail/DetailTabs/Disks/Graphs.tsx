@@ -1,8 +1,7 @@
-import { Theme } from '@mui/material/styles';
-import { WithTheme, makeStyles, withTheme } from '@mui/styles';
+import { useTheme, Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { Typography } from 'src/components/Typography';
@@ -12,7 +11,7 @@ import { Stat, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   graphContainer: {
     '& > div': {
       flexGrow: 1,
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props {
+export interface GraphProps {
   childOf: boolean;
   diskLabel: string;
   endTime: number;
@@ -47,9 +46,7 @@ export interface Props {
   writes: Stat[];
 }
 
-type CombinedProps = Props & WithTheme;
-
-const Graphs: React.FC<CombinedProps> = (props) => {
+export const Graphs = React.memo((props: GraphProps) => {
   const {
     childOf,
     diskLabel,
@@ -63,13 +60,14 @@ const Graphs: React.FC<CombinedProps> = (props) => {
     reads,
     startTime,
     sysInfoType,
-    theme,
     timezone,
     total,
     writes,
   } = props;
 
-  const classes = useStyles();
+  const theme = useTheme();
+
+  const { classes } = useStyles();
 
   const isToday = _isToday(startTime, endTime);
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
@@ -176,7 +174,7 @@ const Graphs: React.FC<CombinedProps> = (props) => {
       </div>
     </GraphCard>
   );
-};
+});
 
 export const formatINodes = (
   ifree: StatWithDummyPoint[],
@@ -246,5 +244,3 @@ export const generateHelperText = (
 
   return '';
 };
-
-export default compose<CombinedProps, Props>(React.memo, withTheme)(Graphs);

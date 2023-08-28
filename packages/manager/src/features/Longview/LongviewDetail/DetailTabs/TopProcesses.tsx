@@ -1,5 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -24,15 +23,6 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
 
-const useStyles = makeStyles(() => ({
-  detailsLink: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    position: 'relative',
-    top: 3,
-  },
-}));
-
 export interface Props {
   clientID: number;
   lastUpdatedError?: APIError[];
@@ -41,8 +31,7 @@ export interface Props {
   topProcessesLoading: boolean;
 }
 
-export const TopProcesses: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const TopProcesses = React.memo((props: Props) => {
   const {
     clientID,
     lastUpdatedError,
@@ -60,7 +49,12 @@ export const TopProcesses: React.FC<Props> = (props) => {
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
         <Link
-          className={classes.detailsLink}
+          style={{
+            fontSize: 16,
+            fontWeight: 'bold',
+            position: 'relative',
+            top: 3,
+          }}
           to={`/longview/clients/${clientID}/processes`}
         >
           View Details
@@ -120,7 +114,7 @@ export const TopProcesses: React.FC<Props> = (props) => {
       </OrderBy>
     </Grid>
   );
-};
+});
 
 const renderLoadingErrorData = (
   data: ExtendedTopProcessStat[],
@@ -158,30 +152,26 @@ interface TopProcessRowProps {
   name: string;
 }
 
-export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(
-  (props) => {
-    const { cpu, mem, name } = props;
+export const TopProcessRow = React.memo((props: TopProcessRowProps) => {
+  const { cpu, mem, name } = props;
 
-    // Memory is given from the API in KB.
-    const memInBytes = mem * 1024;
+  // Memory is given from the API in KB.
+  const memInBytes = mem * 1024;
 
-    return (
-      <TableRow ariaLabel={name} data-testid="longview-top-process-row">
-        <TableCell data-qa-top-process-process parentColumn="Process">
-          {name}
-        </TableCell>
-        <TableCell data-qa-top-process-cpu parentColumn="CPU">
-          {formatCPU(cpu)}
-        </TableCell>
-        <TableCell data-qa-top-process-memory parentColumn="Memory">
-          {readableBytes(memInBytes, { round: 0 }).formatted}
-        </TableCell>
-      </TableRow>
-    );
-  }
-);
-
-export default React.memo(TopProcesses);
+  return (
+    <TableRow ariaLabel={name} data-testid="longview-top-process-row">
+      <TableCell data-qa-top-process-process parentColumn="Process">
+        {name}
+      </TableCell>
+      <TableCell data-qa-top-process-cpu parentColumn="CPU">
+        {formatCPU(cpu)}
+      </TableCell>
+      <TableCell data-qa-top-process-memory parentColumn="Memory">
+        {readableBytes(memInBytes, { round: 0 }).formatted}
+      </TableCell>
+    </TableRow>
+  );
+});
 
 interface ExtendedTopProcessStat extends TopProcessStat {
   name: string;

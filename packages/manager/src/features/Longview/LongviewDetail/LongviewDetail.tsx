@@ -1,6 +1,5 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, matchPath } from 'react-router-dom';
@@ -33,17 +32,11 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useProfile } from 'src/queries/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
-import Apache from './DetailTabs/Apache';
-import MySQLLanding from './DetailTabs/MySQL';
-import NGINX from './DetailTabs/NGINX';
-import NetworkLanding from './DetailTabs/Network';
+import { Apache } from './DetailTabs/Apache/Apache';
+import { MySQLLanding } from './DetailTabs/MySQL/MySQLLanding';
+import { NGINX } from './DetailTabs/NGINX/NGINX';
+import { NetworkLanding } from './DetailTabs/Network/NetworkLanding';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  tabList: {
-    marginBottom: `calc(${theme.spacing(3)} + 6px)`,
-  },
-}));
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
@@ -58,14 +51,14 @@ const Overview = React.lazy(
   () => import('./DetailTabs/LongviewDetailOverview')
 );
 const Installation = React.lazy(() => import('./DetailTabs/Installation'));
-const Disks = React.lazy(() => import('./DetailTabs/Disks'));
+const Disks = React.lazy(() => import('./DetailTabs/Disks/Disks'));
 
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
   LVDataProps &
   DispatchProps;
 
-export const LongviewDetail: React.FC<CombinedProps> = (props) => {
+export const LongviewDetail = (props: CombinedProps) => {
   const {
     client,
     longviewClientData,
@@ -78,7 +71,7 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
 
   const timezone = profile?.timezone || 'US/Eastern';
 
-  const classes = useStyles();
+  const theme = useTheme();
 
   React.useEffect(() => {
     /** request clients if they haven't already been requested */
@@ -232,8 +225,8 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
           tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
-        className={classes.tabList}
         onChange={navToURL}
+        sx={{ marginBottom: `calc(${theme.spacing(3)} + 6px)` }}
       >
         <TabLinkList tabs={tabs} />
 

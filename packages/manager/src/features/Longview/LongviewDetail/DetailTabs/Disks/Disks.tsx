@@ -1,8 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -13,9 +12,9 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import DiskGraph from './DiskGraph';
+import { DiskGraph } from './DiskGraph';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(),
@@ -36,10 +35,8 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props;
-
-const Disks: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+const Disks = (props: Props) => {
+  const { classes } = useStyles();
 
   const {
     clientAPIKey,
@@ -138,4 +135,4 @@ const Disks: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(Disks);
+export default React.memo(Disks);

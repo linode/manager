@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -14,9 +14,9 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import NGINXGraphs from './NGINXGraphs';
+import { NGINXGraphs } from './NGINXGraphs';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: 250,
   },
@@ -35,8 +35,8 @@ interface Props {
   timezone: string;
 }
 
-export const NGINX: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const NGINX = React.memo((props: Props) => {
+  const { classes } = useStyles();
 
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
@@ -146,6 +146,4 @@ export const NGINX: React.FC<Props> = (props) => {
       </Grid>
     </Grid>
   );
-};
-
-export default React.memo(NGINX);
+});

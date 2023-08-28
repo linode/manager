@@ -12,12 +12,12 @@ import {
 } from 'src/features/Longview/request.types';
 
 import LongviewPackageDrawer from '../../LongviewPackageDrawer';
-import ActiveConnections from './ActiveConnections';
-import GaugesSection from './GaugesSection';
-import IconSection from './IconSection';
-import ListeningServices from './ListeningServices';
-import OverviewGraphs from './OverviewGraphs';
-import TopProcesses from './TopProcesses';
+import { ActiveConnections } from './ActiveConnections/ActiveConnections';
+import { GaugesSection } from './GaugesSection';
+import { IconSection } from './IconSection';
+import { ListeningServices } from './ListeningServices/ListeningServices';
+import { OverviewGraphs } from './OverviewGraphs/OverviewGraphs';
+import { TopProcesses } from './TopProcesses';
 
 interface Props {
   client: string;
@@ -35,9 +35,7 @@ interface Props {
   topProcessesLoading: boolean;
 }
 
-export type CombinedProps = Props;
-
-export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
+export const LongviewDetailOverview = (props: Props) => {
   const {
     client,
     clientAPIKey,

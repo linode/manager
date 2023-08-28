@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Grid } from 'src/components/Grid';
@@ -17,9 +17,9 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { LongviewService } from 'src/features/Longview/request.types';
 
-import LongviewServiceRow from './LongviewServiceRow';
+import { LongviewServiceRow } from './LongviewServiceRow';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   title: {
     [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
@@ -33,8 +33,8 @@ export interface TableProps {
   servicesLoading: boolean;
 }
 
-export const ListeningServices: React.FC<TableProps> = (props) => {
-  const classes = useStyles();
+export const ListeningServices = (props: TableProps) => {
+  const { classes } = useStyles();
 
   const { services, servicesError, servicesLoading } = props;
 
@@ -171,5 +171,3 @@ const renderLoadingErrorData = (
     <LongviewServiceRow key={`longview-service-${idx}`} service={thisService} />
   ));
 };
-
-export default ListeningServices;

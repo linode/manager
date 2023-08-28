@@ -1,8 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { Grid } from 'src/components/Grid';
 
@@ -13,7 +12,7 @@ import RAMGauge from '../../LongviewLanding/Gauges/RAM';
 import StorageGauge from '../../LongviewLanding/Gauges/Storage';
 import SwapGauge from '../../LongviewLanding/Gauges/Swap';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   gaugeContainer: {
     marginBottom: theme.spacing(6),
   },
@@ -32,8 +31,8 @@ interface Props {
   lastUpdatedError?: APIError[];
 }
 
-const GaugesSection: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const GaugesSection = React.memo((props: Props) => {
+  const { classes } = useStyles();
 
   return (
     <Grid className={classes.gaugesOuter} container item md={5} xs={12}>
@@ -75,6 +74,4 @@ const GaugesSection: React.FC<Props> = (props) => {
       </Grid>
     </Grid>
   );
-};
-
-export default compose<Props, Props>(React.memo)(GaugesSection);
+});
