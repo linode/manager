@@ -126,12 +126,11 @@ const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
   })
 );
 
-const StyledVolumeUl = styled('div', { label: 'StyledVolumeUl' })(
+const StyledVolumeUl = styled('ul', { label: 'StyledVolumeUl' })(
   ({ theme }) => ({
     '& li': {
       fontFamily: theme.font.bold,
     },
-    marginLeft: theme.spacing(4),
     marginTop: theme.spacing(),
   })
 );
