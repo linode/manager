@@ -1,24 +1,23 @@
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
-import _ from 'lodash';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { BetaDetailsList } from 'src/features/Betas/BetaDetailsList';
 import { useAccountBetasQuery } from 'src/queries/accountBetas';
 import { useBetasQuery } from 'src/queries/betas';
-import { BetaDetailsList } from 'src/features/Betas/BetaDetailsList';
 import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
 
 const BetasLanding = () => {
   const {
     data: accountBetasRequest,
-    isLoading: areAccountBetasLoading,
     error: accountBetasErrors,
+    isLoading: areAccountBetasLoading,
   } = useAccountBetasQuery();
   const {
     data: betasRequest,
-    isLoading: areBetasLoading,
     error: betasErrors,
+    isLoading: areBetasLoading,
   } = useBetasQuery();
 
   const accountBetas = accountBetasRequest?.data ?? [];
@@ -45,21 +44,21 @@ const BetasLanding = () => {
       <Stack spacing={2}>
         <BetaDetailsList
           betas={active}
-          title="Currently Enrolled Betas"
-          isLoading={areAccountBetasLoading}
           errors={accountBetasErrors}
+          isLoading={areAccountBetasLoading}
+          title="Currently Enrolled Betas"
         />
         <BetaDetailsList
           betas={available}
-          title="Available & Upcoming Betas"
-          isLoading={areBetasLoading}
           errors={betasErrors}
+          isLoading={areBetasLoading}
+          title="Available & Upcoming Betas"
         />
         <BetaDetailsList
           betas={historical}
-          title="Beta Participation History"
-          isLoading={areAccountBetasLoading}
           errors={accountBetasErrors}
+          isLoading={areAccountBetasLoading}
+          title="Beta Participation History"
         />
       </Stack>
     </>

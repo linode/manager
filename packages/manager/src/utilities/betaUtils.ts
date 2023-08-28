@@ -1,9 +1,8 @@
+import { AccountBeta } from '@linode/api-v4/lib/account';
+import { Beta } from '@linode/api-v4/lib/betas';
 import { DateTime } from 'luxon';
 
-import { Beta } from '@linode/api-v4/lib/betas';
-import { AccountBeta } from '@linode/api-v4/lib/account';
-
-type BetaStatus = 'active' | 'historical' | 'available' | 'no_status';
+type BetaStatus = 'active' | 'available' | 'historical' | 'no_status';
 type GenericBeta = AccountBeta | Beta;
 type GenericBetaByStatus = {
   [status in BetaStatus]: GenericBeta[];
@@ -56,8 +55,8 @@ export function getBetaStatus(beta: GenericBeta): BetaStatus {
 export const categorizeBetasByStatus = (betas: GenericBeta[]) => {
   const sortedBetas: GenericBetaByStatus = {
     active: [],
-    historical: [],
     available: [],
+    historical: [],
     no_status: [],
   };
   return betas.reduce((acc: GenericBetaByStatus, beta: GenericBeta) => {

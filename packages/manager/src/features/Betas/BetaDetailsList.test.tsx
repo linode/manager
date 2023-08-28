@@ -1,18 +1,18 @@
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BetaDetailsList } from './BetaDetailsList';
-import { APIError } from '@linode/api-v4';
 
 describe('BetaDetails', () => {
   it('should display the title supplied in the props as an h2 component', () => {
     const { queryByRole } = renderWithTheme(
       <BetaDetailsList
-        title="Available"
         betas={[]}
         errors={null}
         isLoading={false}
+        title="Available"
       />
     );
     expect(queryByRole('heading')?.textContent).toBe('Available');
@@ -21,16 +21,16 @@ describe('BetaDetails', () => {
   it('should dispaly the circle progress component if the isLoading prop is set to true', () => {
     const { queryByTestId: queryBetasList } = renderWithTheme(
       <BetaDetailsList
-        title="Available"
         betas={[]}
         errors={null}
         isLoading={false}
+        title="Available"
       />
     );
     expect(queryBetasList('circle-progress')).toBeFalsy();
 
     const { queryByTestId: queryLoadingBetasList } = renderWithTheme(
-      <BetaDetailsList title="Available" betas={[]} isLoading errors={null} />
+      <BetaDetailsList betas={[]} errors={null} isLoading title="Available" />
     );
     expect(queryLoadingBetasList('circle-progress')).not.toBeFalsy();
   });
@@ -41,10 +41,10 @@ describe('BetaDetails', () => {
     };
     const betasList = renderWithTheme(
       <BetaDetailsList
-        title="Available"
         betas={[]}
         errors={null}
         isLoading={false}
+        title="Available"
       />
     );
     expect(betasList.queryByTestId('error-state')).toBeFalsy();
@@ -52,10 +52,10 @@ describe('BetaDetails', () => {
 
     const errorBetasList = renderWithTheme(
       <BetaDetailsList
-        title="Available"
         betas={[]}
-        isLoading
         errors={[error]}
+        isLoading
+        title="Available"
       />
     );
     expect(errorBetasList.queryByTestId('error-state')).not.toBeFalsy();

@@ -1,17 +1,17 @@
 import {
   AccountBeta,
-  getAccountBetas,
   EnrollInBetaPayload,
-  getAccountBeta,
   enrollInBeta,
+  getAccountBeta,
+  getAccountBetas,
 } from '@linode/api-v4/lib/account';
-import { useQuery, useQueryClient, useMutation } from 'react-query';
 import {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 export const queryKey = 'account-betas';
 

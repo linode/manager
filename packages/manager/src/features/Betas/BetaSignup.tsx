@@ -6,13 +6,13 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { useCreateAccountBetaMutation } from 'src/queries/accountBetas';
 import { useBetaQuery } from 'src/queries/betas';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 
 const BetaSignup = () => {
   const betaAgreement = `# Early Adopter Testing Program
@@ -110,7 +110,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
   const location = useLocation<{ betaId: string }>();
   const history = useHistory();
   const betaId = location?.state?.betaId;
-  const { data: beta, isLoading, isError } = useBetaQuery(betaId);
+  const { data: beta, isError, isLoading } = useBetaQuery(betaId);
   const [hasAgreed, setHasAgreed] = React.useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
   const { mutateAsync: createAccountBeta } = useCreateAccountBetaMutation();
@@ -142,31 +142,31 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
           <CircleProgress />
         ) : (
           <Stack>
-            <Typography variant="h2" paddingBottom={2}>
+            <Typography paddingBottom={2} variant="h2">
               {beta.label}
             </Typography>
             <Typography paddingBottom={2}>{beta.description}</Typography>
             <HighlightedMarkdown
+              language="plaintext"
               sanitizeOptions={{}}
               textOrMarkdown={betaAgreement}
-              language="plaintext"
             />
             <Checkbox
-              value={hasAgreed}
-              text="I agree to the terms"
               onChange={() => {
                 setHasAgreed(!hasAgreed);
               }}
+              text="I agree to the terms"
+              value={hasAgreed}
             />
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'submit',
-                label: 'Sign Up',
                 disabled: !hasAgreed,
+                label: 'Sign Up',
+                loading: isSubmitting,
                 onClick: () => {
                   enroll(betaId);
                 },
-                loading: isSubmitting,
               }}
               secondaryButtonProps={{
                 'data-testid': 'cancel',

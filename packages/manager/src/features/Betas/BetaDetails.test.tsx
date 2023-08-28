@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { DateTime } from 'luxon';
+import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -8,16 +8,16 @@ import BetaDetails from './BetaDetails';
 describe('BetaDetails', () => {
   it('should be able to display all fields for an AccountBeta type', () => {
     const dates = {
-      started: DateTime.now().minus({ days: 60 }),
       ended: DateTime.now().minus({ days: 30 }),
+      started: DateTime.now().minus({ days: 60 }),
     };
     const beta = {
+      description: 'A cool beta program',
+      ended: dates.ended.toISO(),
       id: 'beta',
       label: 'Beta',
-      started: dates.started.toISO(),
-      ended: dates.ended.toISO(),
-      description: 'A cool beta program',
       more_info: 'https://linode.com',
+      started: dates.started.toISO(),
     };
 
     const { getByText } = renderWithTheme(<BetaDetails beta={beta} />);
@@ -29,12 +29,12 @@ describe('BetaDetails', () => {
 
   it('should not display the end date field if the beta does not have an ended property', () => {
     const beta = {
+      description: 'A cool beta program',
+      enrolled: DateTime.now().minus({ days: 60 }).toISO(),
       id: 'beta',
       label: 'Beta',
-      started: DateTime.now().minus({ days: 60 }).toISO(),
-      description: 'A cool beta program',
       more_info: 'https://linode.com',
-      enrolled: DateTime.now().minus({ days: 60 }).toISO(),
+      started: DateTime.now().minus({ days: 60 }).toISO(),
     };
     const { queryByText } = renderWithTheme(<BetaDetails beta={beta} />);
     expect(queryByText(/End Date:/i)).toBeNull();
@@ -42,10 +42,10 @@ describe('BetaDetails', () => {
 
   it('should not display the more info field if the beta does not have an more_info property', () => {
     const beta = {
+      description: 'A cool beta program',
       id: 'beta',
       label: 'Beta',
       started: DateTime.now().minus({ days: 60 }).toISO(),
-      description: 'A cool beta program',
     };
     const { queryByText } = renderWithTheme(<BetaDetails beta={beta} />);
     expect(queryByText(/More Info:/i)).toBeNull();
@@ -53,18 +53,18 @@ describe('BetaDetails', () => {
 
   it('should not display the Sign Up button if the beta has already been enrolled in', () => {
     const accountBeta = {
+      description: 'A cool beta program',
+      enrolled: DateTime.now().minus({ days: 60 }).toISO(),
       id: 'beta',
       label: 'Beta',
-      started: DateTime.now().minus({ days: 60 }).toISO(),
-      description: 'A cool beta program',
       more_info: 'https://linode.com',
-      enrolled: DateTime.now().minus({ days: 60 }).toISO(),
+      started: DateTime.now().minus({ days: 60 }).toISO(),
     };
     const beta = {
+      description: 'A cool beta program',
       id: 'beta',
       label: 'Beta',
       started: DateTime.now().minus({ days: 60 }).toISO(),
-      description: 'A cool beta program',
     };
 
     const { queryByText: queryAccountBetaByText } = renderWithTheme(
@@ -82,18 +82,18 @@ describe('BetaDetails', () => {
 
   it('should not display the started date if the beta has been enrolled in', () => {
     const accountBeta = {
+      description: 'A cool beta program',
+      enrolled: DateTime.now().minus({ days: 60 }).toISO(),
       id: 'beta',
       label: 'Beta',
-      started: DateTime.now().minus({ days: 60 }).toISO(),
-      description: 'A cool beta program',
       more_info: 'https://linode.com',
-      enrolled: DateTime.now().minus({ days: 60 }).toISO(),
+      started: DateTime.now().minus({ days: 60 }).toISO(),
     };
     const beta = {
+      description: 'A cool beta program',
       id: 'beta',
       label: 'Beta',
       started: DateTime.now().minus({ days: 60 }).toISO(),
-      description: 'A cool beta program',
     };
 
     const { queryByText: queryAccountBetaByText } = renderWithTheme(
