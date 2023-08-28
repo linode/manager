@@ -121,7 +121,7 @@ export const createInvoiceItemsTable = (
         ...(flags.dcSpecificPricing
           ? [
               {
-                content: item.region || '',
+                content: getInvoiceRegion(item) ?? '',
                 styles: {
                   fontSize: 8,
                   halign: 'center',
@@ -292,6 +292,21 @@ export const createFooter = (
 
 const truncateLabel = (label: string) => {
   return label.length > 20 ? `${label.substr(0, 20)}...` : label;
+};
+
+export const getInvoiceRegion = (invoiceItem: InvoiceItem) => {
+  // If the invoice item is not regarding transfer, just return the region.
+  if (!invoiceItem.label.toLowerCase().includes('transfer')) {
+    return invoiceItem.region;
+  }
+
+  // If there is no region, assume this invoice item is for global transfer.
+  if (!invoiceItem.region) {
+    return 'Global';
+  }
+
+  // The transfer is for a specific region's pool.
+  return invoiceItem.region;
 };
 
 const formatDescription = (desc?: string) => {
