@@ -160,6 +160,7 @@ const MaybeRenderContent = (props: {
   items?: any[];
   loading: boolean;
 }) => {
+  const flags = useFlags();
   const { errors, items, loading } = props;
 
   if (loading) {
@@ -168,7 +169,10 @@ const MaybeRenderContent = (props: {
 
   if (errors) {
     return (
-      <TableRowError colSpan={8} message="Unable to retrieve invoice items." />
+      <TableRowError
+        colSpan={flags.dcSpecificPricing ? 9 : 8}
+        message="Unable to retrieve invoice items."
+      />
     );
   }
 
@@ -176,7 +180,7 @@ const MaybeRenderContent = (props: {
     return <RenderData items={items} />;
   }
 
-  return <TableRowEmpty colSpan={8} />;
+  return <TableRowEmpty colSpan={flags.dcSpecificPricing ? 9 : 8} />;
 };
 
 export default InvoiceTable;
