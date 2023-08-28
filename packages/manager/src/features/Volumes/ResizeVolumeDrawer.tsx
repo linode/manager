@@ -91,7 +91,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             disabled: readOnly || !dirty,
-            label: 'Resize',
+            label: 'Resize Volume',
             loading: isSubmitting,
             type: 'submit',
           }}

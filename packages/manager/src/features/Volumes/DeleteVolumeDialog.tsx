@@ -41,7 +41,7 @@ export const DeleteVolumeDialog = (props: Props) => {
       onClick={onDelete}
       onClose={onClose}
       open={open}
-      title={`Delete ${volume?.label}?`}
+      title={`Delete Volume ${volume?.label}?`}
       typographyStyle={{ marginTop: '10px' }}
     >
       {error && <Notice text={error?.[0]?.reason} variant="error" />}

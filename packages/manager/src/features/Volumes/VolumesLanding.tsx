@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -34,6 +34,8 @@ const preferenceKey = 'volumes';
 export const VolumesLanding = () => {
   const history = useHistory();
 
+  const location = useLocation<{ volume: Volume | undefined }>();
+
   const pagination = usePagination(1, preferenceKey);
 
   const { handleOrderChange, order, orderBy } = useOrder(
@@ -58,7 +60,9 @@ export const VolumesLanding = () => {
   );
 
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
-  const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(false);
+  const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(
+    Boolean(location.state?.volume)
+  );
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = React.useState(false);
   const [isCloneDrawerOpen, setIsCloneDrawerOpen] = React.useState(false);
@@ -196,7 +200,7 @@ export const VolumesLanding = () => {
       <VolumeDetailsDrawer
         onClose={() => setIsDetailsDrawerOpen(false)}
         open={isDetailsDrawerOpen}
-        volume={selectedVolume}
+        volume={selectedVolume ?? location.state?.volume}
       />
       <EditVolumeDrawer
         onClose={() => setIsEditDrawerOpen(false)}

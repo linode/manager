@@ -168,7 +168,7 @@ const CreateVolumeForm = () => {
             isNilOrEmpty(region) || region === 'none' ? undefined : region,
           size: maybeCastToNumber(size),
         })
-          .then(({ filesystem_path, label: volumeLabel }) => {
+          .then((volume) => {
             if (hasSignedAgreement) {
               updateAccountAgreements({
                 eu_model: true,
@@ -182,7 +182,7 @@ const CreateVolumeForm = () => {
             enqueueSnackbar(`Volume scheduled for creation.`, {
               variant: 'success',
             });
-            history.push('/volumes');
+            history.push('/volumes', { volume });
             // Analytics Event
             sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })

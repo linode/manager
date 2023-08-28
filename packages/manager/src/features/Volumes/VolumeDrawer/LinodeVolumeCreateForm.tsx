@@ -1,7 +1,4 @@
-/**
- * @todo Display the volume configuration information on success.
- */
-import { Linode } from '@linode/api-v4';
+import { Linode, Volume } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Form, Formik } from 'formik';
@@ -33,6 +30,7 @@ import VolumesActionsPanel from './VolumesActionsPanel';
 interface Props {
   linode: Linode;
   onClose: () => void;
+  openDetails: (volume: Volume) => void;
 }
 
 interface FormState {
@@ -54,7 +52,7 @@ const initialValues: FormState = {
 };
 
 export const LinodeVolumeCreateForm = (props: Props) => {
-  const { linode, onClose } = props;
+  const { linode, onClose, openDetails } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: profile } = useProfile();
@@ -94,12 +92,13 @@ export const LinodeVolumeCreateForm = (props: Props) => {
           size: maybeCastToNumber(size),
           tags: tags.map((v) => v.value),
         })
-          .then(() => {
+          .then((volume) => {
             resetEventsPolling();
             enqueueSnackbar(`Volume scheduled for creation.`, {
               variant: 'success',
             });
             onClose();
+            openDetails(volume);
             // Analytics Event
             sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })

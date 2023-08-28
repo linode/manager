@@ -223,6 +223,7 @@ export const LinodeVolumes = () => {
           linode={linode}
           onClose={() => setIsCreateDrawerOpen(false)}
           open={isCreateDrawerOpen}
+          openDetails={handleDetails}
         />
       )}
       <VolumeDetailsDrawer
