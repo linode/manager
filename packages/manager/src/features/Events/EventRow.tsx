@@ -6,7 +6,6 @@ import * as React from 'react';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
-import { RenderGuard } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
@@ -24,7 +23,7 @@ interface EventRowProps {
   event: ExtendedEvent;
 }
 
-export const EventRow = RenderGuard((props: EventRowProps) => {
+export const EventRow = (props: EventRowProps) => {
   const { entityId, event } = props;
   const link = getLinkForEvent(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
@@ -41,7 +40,7 @@ export const EventRow = RenderGuard((props: EventRowProps) => {
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
-});
+};
 
 export interface RowProps {
   action: EventAction;
