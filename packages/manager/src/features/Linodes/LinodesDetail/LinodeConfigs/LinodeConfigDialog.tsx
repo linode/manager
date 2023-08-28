@@ -58,8 +58,8 @@ import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOption
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import {
-  InterfaceSelect,
   ExtendedInterface,
+  InterfaceSelect,
 } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
 
@@ -566,10 +566,10 @@ export const LinodeConfigDialog = (props: Props) => {
             {generalError && (
               <Grid>
                 <Notice
-                  error
                   errorGroup="linode-config-dialog"
                   spacingBottom={0}
                   text={generalError}
+                  variant="error"
                 />
               </Grid>
             )}
@@ -764,14 +764,14 @@ export const LinodeConfigDialog = (props: Props) => {
                 />
               </FormControl>
               <Button
-                buttonType="secondary"
-                compactX
-                disabled={isReadOnly || deviceCounter >= deviceSlots.length - 1}
-                onClick={() => setDeviceCounter((counter) => counter + 1)}
                 sx={{
                   marginLeft: `1px`,
                   marginTop: theme.spacing(),
                 }}
+                buttonType="secondary"
+                compactX
+                disabled={isReadOnly || deviceCounter >= deviceSlots.length - 1}
+                onClick={() => setDeviceCounter((counter) => counter + 1)}
               >
                 Add a Device
               </Button>
@@ -842,13 +842,16 @@ export const LinodeConfigDialog = (props: Props) => {
                         .
                       </Typography>
                     }
-                    sx={{ tooltip: { maxWidth: 350 } }}
                     interactive
                     status="help"
+                    sx={{ tooltip: { maxWidth: 350 } }}
                   />
                 </Box>
                 {formik.errors.interfaces ? (
-                  <Notice error text={formik.errors.interfaces as string} />
+                  <Notice
+                    text={formik.errors.interfaces as string}
+                    variant="error"
+                  />
                 ) : null}
                 {values.interfaces.map((thisInterface, idx) => {
                   return (

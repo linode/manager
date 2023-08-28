@@ -109,9 +109,9 @@ const TransferContent = (props: ContentProps) => {
         text={
           'Network transfer information for this Linode is currently unavailable.'
         }
-        error={true}
         important
         spacingBottom={0}
+        variant="error"
       />
     );
   }

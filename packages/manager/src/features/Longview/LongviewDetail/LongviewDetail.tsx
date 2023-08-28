@@ -224,7 +224,7 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
           spacingBottom={0}
           spacingTop={8}
           text={thisNotification.TEXT}
-          warning
+          variant="warning"
         />
       ))}
       <Tabs

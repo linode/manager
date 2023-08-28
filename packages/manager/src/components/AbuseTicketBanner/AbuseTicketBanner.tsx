@@ -44,7 +44,7 @@ export const AbuseTicketBanner = () => {
         }}
         important
         preferenceKey={preferenceKey}
-        warning
+        variant="warning"
       >
         <Typography>
           {message}

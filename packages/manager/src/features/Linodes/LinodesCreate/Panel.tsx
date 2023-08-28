@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 
 interface Props {
   className?: string;
@@ -15,7 +15,7 @@ export const Panel = (props: React.PropsWithChildren<Props>) => {
 
   return (
     <Paper className={props.className} data-qa-tp="Select Image">
-      {error && <Notice error text={error} />}
+      {error && <Notice text={error} variant="error" />}
       <Typography data-qa-tp="Select Image" variant="h2">
         {title || 'Select an Image'}
       </Typography>

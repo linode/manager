@@ -71,7 +71,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
       sx={{ flexGrow: 1, ...sx }}
     >
       <div className={innerClass}>
-        {error && <Notice error>{error}</Notice>}
+        {error && <Notice variant="error">{error}</Notice>}
         <Grid container sx={{ display: 'flex' }}>
           {header !== '' && (
             <Grid xs={6}>
