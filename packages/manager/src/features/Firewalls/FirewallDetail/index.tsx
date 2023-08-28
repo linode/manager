@@ -10,17 +10,23 @@ import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
 
-const FirewallLinodesLanding = React.lazy(
-  () => import('./Devices/FirewallLinodesLanding')
+const FirewallRulesLanding = React.lazy(() =>
+  import('./Rules/FirewallRulesLanding').then((module) => ({
+    default: module.FirewallRulesLanding,
+  }))
 );
-const FirewallRulesLanding = React.lazy(
-  () => import('./Rules/FirewallRulesLanding')
+
+const FirewallDeviceLanding = React.lazy(() =>
+  import('./Devices/FirewallDeviceLanding').then((module) => ({
+    default: module.FirewallDeviceLanding,
+  }))
 );
 
 export const FirewallDetail = () => {
@@ -29,13 +35,27 @@ export const FirewallDetail = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const firewallId = Number(id);
+  const firewallID = Number(id);
 
   const userCanModifyFirewall = checkIfUserCanModifyFirewall(
-    firewallId,
+    firewallID,
     profile,
     grants
   );
+
+  const { data: allDevices } = useAllFirewallDevicesQuery(firewallID);
+
+  const { linodeCount, nodebalancerCount } = allDevices?.reduce(
+    (acc, device) => {
+      if (device.entity.type === 'linode') {
+        acc.linodeCount += 1;
+      } else if (device.entity.type === 'nodebalancer') {
+        acc.nodebalancerCount += 1;
+      }
+      return acc;
+    },
+    { linodeCount: 0, nodebalancerCount: 0 }
+  ) || { linodeCount: 0, nodebalancerCount: 0 };
 
   const tabs = [
     {
@@ -44,19 +64,23 @@ export const FirewallDetail = () => {
     },
     {
       routeName: `/firewalls/${id}/linodes`,
-      title: 'Linodes',
+      title: `Linodes (${linodeCount})`,
+    },
+    {
+      routeName: `/firewalls/${id}/nodebalancers`,
+      title: `NodeBalancers (${nodebalancerCount})`,
     },
   ];
 
   const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
-  const { data: firewall, error, isLoading } = useFirewallQuery(firewallId);
+  const { data: firewall, error, isLoading } = useFirewallQuery(firewallID);
 
   const {
     error: updateError,
     mutateAsync: updateFirewall,
     reset,
-  } = useMutateFirewall(firewallId);
+  } = useMutateFirewall(firewallID);
 
   const errorText = getErrorStringOrDefault(updateError ?? '');
 
@@ -91,7 +115,7 @@ export const FirewallDetail = () => {
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {
-            editableTextTitle: firewall.label,
+            editableTextTitle: firewall?.label,
             errorText,
             onCancel: resetEditableLabel,
             onEdit: handleLabelChange,
@@ -112,15 +136,24 @@ export const FirewallDetail = () => {
           <SafeTabPanel index={0}>
             <FirewallRulesLanding
               disabled={!userCanModifyFirewall}
-              firewallID={firewallId}
+              firewallID={firewallID}
               rules={firewall.rules}
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
-            <FirewallLinodesLanding
+            <FirewallDeviceLanding
               disabled={!userCanModifyFirewall}
-              firewallID={firewallId}
+              firewallID={firewallID}
               firewallLabel={firewall.label}
+              type="linode"
+            />
+          </SafeTabPanel>
+          <SafeTabPanel index={2}>
+            <FirewallDeviceLanding
+              disabled={!userCanModifyFirewall}
+              firewallID={firewallID}
+              firewallLabel={firewall.label}
+              type="nodebalancer"
             />
           </SafeTabPanel>
         </TabPanels>
