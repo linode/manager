@@ -1,4 +1,8 @@
-import { InterfacePayload, restoreBackup } from '@linode/api-v4/lib/linodes';
+import {
+  InterfacePayload,
+  LinodeType,
+  restoreBackup,
+} from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import cloneDeep from 'lodash/cloneDeep';
@@ -51,6 +55,7 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { getLinodeRegionBackupPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
@@ -85,7 +90,6 @@ import {
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
 
 export interface LinodeCreateProps {
-  backupsMonthlyPrice?: null | number;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
   handleAgreementChange: () => void;
@@ -157,7 +161,6 @@ interface State {
 interface CreateTab extends Tab {
   type: CreateTypes;
 }
-
 export class LinodeCreate extends React.PureComponent<
   CombinedProps & DispatchProps,
   State
@@ -214,7 +217,6 @@ export class LinodeCreate extends React.PureComponent<
 
     const {
       accountBackupsEnabled,
-      backupsMonthlyPrice,
       errors,
       formIsSubmitting,
       handleAgreementChange,
@@ -305,12 +307,20 @@ export class LinodeCreate extends React.PureComponent<
       displaySections.push(typeDisplayInfoCopy);
     }
 
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+    const type = typesData.find(
+      (type) => type.id === this.props.selectedTypeID
+    );
+
+    const backupsPrice = this.props.flags.dcSpecificPricing
+      ? this.props.selectedTypeID && selectedRegionID
+        ? getLinodeRegionBackupPrice(type as LinodeType, selectedRegionID)
+            .monthly
+        : undefined
+      : type?.addons?.backups?.price?.monthly;
+
+    if (hasBackups && typeDisplayInfo && backupsPrice) {
       displaySections.push(
-        renderBackupsDisplaySection(
-          accountBackupsEnabled,
-          typeDisplayInfo.backupsMonthly
-        )
+        renderBackupsDisplaySection(accountBackupsEnabled, backupsPrice)
       );
     }
 
@@ -557,7 +567,7 @@ export class LinodeCreate extends React.PureComponent<
             }}
             accountBackups={accountBackupsEnabled}
             backups={this.props.backupsEnabled}
-            backupsMonthly={backupsMonthlyPrice}
+            backupsMonthly={backupsPrice}
             changeBackups={this.props.toggleBackupsEnabled}
             createType={this.props.createType}
             data-qa-addons-panel

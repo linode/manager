@@ -18,7 +18,6 @@ export interface ExtendedLinode extends Linode {
 
 export type TypeInfo =
   | {
-      backupsMonthly: null | number;
       details: string;
       hourly: number;
       monthly: number;
@@ -33,7 +32,6 @@ export type Info = { details?: string; title?: string } | undefined;
  * Checkout bar
  */
 export interface WithDisplayData {
-  backupsMonthlyPrice?: null | number;
   imageDisplayInfo?: Info;
   regionDisplayInfo?: Info;
   typeDisplayInfo?: TypeInfo;

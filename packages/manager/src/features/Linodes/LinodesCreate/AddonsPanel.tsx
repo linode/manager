@@ -51,6 +51,7 @@ export interface AddonsPanelProps {
 export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const {
     accountBackups,
+    backupsMonthly,
     changeBackups,
     createType,
     disabled,
@@ -93,7 +94,6 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     : null;
 
   const renderBackupsPrice = () => {
-    const { backupsMonthly } = props;
     return (
       backupsMonthly && (
         <Typography variant="body1">
