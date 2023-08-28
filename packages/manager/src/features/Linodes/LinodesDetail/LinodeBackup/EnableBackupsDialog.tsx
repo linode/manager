@@ -6,6 +6,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Currency } from 'src/components/Currency';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
@@ -19,6 +20,8 @@ interface Props {
 
 export const EnableBackupsDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
+
+  const flags = useFlags();
 
   const {
     error,
@@ -37,8 +40,11 @@ export const EnableBackupsDialog = (props: Props) => {
     Boolean(linode?.type)
   );
 
-  const price =
-    type && linode ? getLinodeRegionBackupPrice(type, linode.region) : 0;
+  const backupsPrice = flags.dcSpecificPricing
+    ? type && linode
+      ? getLinodeRegionBackupPrice(type, linode.region).monthly
+      : undefined
+    : type?.addons?.backups?.price?.monthly;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -84,7 +90,7 @@ export const EnableBackupsDialog = (props: Props) => {
     >
       <Typography>
         Are you sure you want to enable backups on this Linode?{` `}
-        This will add <Currency quantity={price['monthly']} />
+        This will add <Currency quantity={backupsPrice ?? 0} />
         {` `}
         to your monthly bill.
       </Typography>

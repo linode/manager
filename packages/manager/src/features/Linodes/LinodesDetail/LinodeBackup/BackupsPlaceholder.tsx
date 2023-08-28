@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Currency } from 'src/components/Currency';
