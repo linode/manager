@@ -25,7 +25,6 @@ const steps = [
   },
 ];
 
-// TODO: Could add more tests as part of feature ticket
 describe('VerticalLinearStepper', () => {
   test('Should render initial step content', () => {
     renderWithTheme(<VerticalLinearStepper steps={steps} />);
