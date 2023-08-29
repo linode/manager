@@ -194,7 +194,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   componentDidMount() {
     // Allowed apps include the base set of original apps + anything LD tells us to show
     const newApps = this.props.flags.oneClickApps || [];
-    const dcSpecificPricing = this.props.flags.dcSpecificPricing ?? false;
     const allowedApps = Object.keys({ ...baseApps, ...newApps });
     if (nonImageCreateTypes.includes(this.props.createType)) {
       // If we're navigating directly to e.g. the clone page, don't select an image by default
@@ -219,7 +218,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({
           appInstances: trimmedApps,
           appInstancesLoading: false,
-          dcSpecificPricing,
         });
       })
       .catch((_) => {
@@ -231,6 +229,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
+    /**
+     * The flag state gets lost when navigating between create types,
+     * so we need to keep it up to date here.
+     */
+    if (prevProps.createType !== this.props.createType) {
+      this.setState({ dcSpecificPricing: this.props.flags.dcSpecificPricing });
+    }
     /**
      * When switching to a creation flow where
      * having a pre-selected image is problematic,
@@ -489,6 +494,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     string,
     string
   >;
+
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
     const { dcSpecificPricing, selectedRegionID } = this.state;
 
