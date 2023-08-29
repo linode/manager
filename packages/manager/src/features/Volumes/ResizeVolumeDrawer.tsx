@@ -81,6 +81,13 @@ export const ResizeVolumeDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Resize Volume">
       <form onSubmit={handleSubmit}>
+        {isReadOnly && (
+          <Notice
+            spacingBottom={0}
+            text="You don't have permission to edit this volume."
+            variant="error"
+          />
+        )}
         {error && <Notice text={error} variant="error" />}
         <SizeField
           disabled={isReadOnly}

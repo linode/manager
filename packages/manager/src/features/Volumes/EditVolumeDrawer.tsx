@@ -79,12 +79,14 @@ export const EditVolumeDrawer = (props: Props) => {
       <form onSubmit={handleSubmit}>
         {isReadOnly && (
           <Notice
+            spacingBottom={0}
             text="You don't have permission to edit this volume."
-            variant="warning"
+            variant="error"
           />
         )}
         {error && <Notice text={error} variant="error" />}
         <TextField
+          disabled={isReadOnly}
           errorText={errors.label}
           label="Label"
           name="label"
@@ -107,6 +109,7 @@ export const EditVolumeDrawer = (props: Props) => {
                 : undefined
               : undefined
           }
+          disabled={isReadOnly}
           label="Tags"
           name="tags"
           value={values.tags?.map((t) => ({ label: t, value: t })) ?? []}

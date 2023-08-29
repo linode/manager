@@ -1,5 +1,4 @@
 import { Volume } from '@linode/api-v4';
-import { Grant } from '@linode/api-v4/lib/account';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { number, object } from 'yup';
@@ -13,7 +12,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -35,7 +34,6 @@ const AttachVolumeValidationSchema = object({
 export const AttachVolumeDrawer = React.memo((props: Props) => {
   const { open, volume } = props;
 
-  const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
   const { error, mutateAsync: attachVolume } = useAttachVolumeMutation();
@@ -87,15 +85,10 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
     overwrite: 'Overwrite',
   };
 
-  const volumesPermissions = grants?.volume;
-  const volumePermissions = volumesPermissions?.find(
-    (v: Grant) => v.id === volume?.id
-  );
-
-  const readOnly =
-    Boolean(profile?.restricted) &&
-    volumePermissions &&
-    volumePermissions.permissions === 'read_only';
+  const isReadOnly =
+    grants !== undefined &&
+    grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
+      'read_only';
 
   const hasErrorFor = getAPIErrorsFor(
     errorResources,
@@ -112,10 +105,9 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
       title={`Attach Volume ${volume?.label}`}
     >
       <form onSubmit={formik.handleSubmit}>
-        {readOnly && (
+        {isReadOnly && (
           <Notice
-            important
-            text={`You don't have permissions to edit ${volume?.label}. Please contact an account administrator for details.`}
+            text="You don't have permission to edit this volume."
             variant="error"
           />
         )}
@@ -127,9 +119,10 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
             }
           }}
           clearable={false}
-          disabled={readOnly}
+          disabled={isReadOnly}
           errorText={formik.errors.linode_id ?? linodeError}
           filter={{ region: volume?.region }}
+          noMarginTop
           value={formik.values.linode_id}
         />
         {!linodeError && (
@@ -146,13 +139,14 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
             value={configChoices.find(
               (item) => item.value === String(formik.values.config_id)
             )}
-            disabled={readOnly || formik.values.linode_id === -1}
+            disabled={isReadOnly || formik.values.linode_id === -1}
             errorText={formik.errors.config_id ?? configError}
             id="config_id"
             isClearable={false}
             isLoading={configsLoading}
             label="Config"
             name="config_id"
+            noMarginTop
             options={configChoices}
             placeholder="Select a Config"
           />
@@ -160,7 +154,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            disabled: readOnly,
+            disabled: isReadOnly,
             label: 'Attach',
             loading: formik.isSubmitting,
             type: 'submit',

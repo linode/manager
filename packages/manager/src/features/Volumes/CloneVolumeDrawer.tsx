@@ -5,11 +5,12 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useGrants } from 'src/queries/profile';
 import { useCloneVolumeMutation } from 'src/queries/volumes';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -30,6 +31,15 @@ export const CloneVolumeDrawer = (props: Props) => {
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
+  const { data: grants } = useGrants();
+
+  // Even if a restricted user has the ability to create Volumes, they
+  // can't clone a Volume they only have read only permission on.
+  const isReadOnly =
+    grants !== undefined &&
+    grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
+      'read_only';
+
   const {
     errors,
     handleBlur,
@@ -37,6 +47,7 @@ export const CloneVolumeDrawer = (props: Props) => {
     handleSubmit,
     isSubmitting,
     resetForm,
+    status: error,
     touched,
     values,
   } = useFormik({
@@ -48,15 +59,13 @@ export const CloneVolumeDrawer = (props: Props) => {
           resetEventsPolling();
         })
         .catch((errorResponse) => {
-          const defaultMessage = `Unable to clone this volume at this time. Please try again later.`;
-          const mapErrorToStatus = () =>
-            setStatus({
-              generalError: getErrorMap([], errorResponse).none,
-            });
-
           setSubmitting(false);
           handleFieldErrors(setErrors, errorResponse);
-          handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
+          handleGeneralErrors(
+            setStatus,
+            errorResponse,
+            `Unable to clone this volume at this time. Please try again later.`
+          );
         });
     },
     validationSchema: CloneVolumeSchema,
@@ -65,12 +74,21 @@ export const CloneVolumeDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Clone Volume">
       <form onSubmit={handleSubmit}>
+        {isReadOnly && (
+          <Notice
+            spacingBottom={12}
+            text="You don't have permission to clone this volume."
+            variant="error"
+          />
+        )}
+        {error && <Notice text={error} variant="error" />}
         <Typography variant="body1">
           The newly created volume will be an exact clone of{' '}
           <b>{volume?.label}</b>. It will have a size of {volume?.size} GB and
           be available in {volume?.region}.
         </Typography>
         <TextField
+          disabled={isReadOnly}
           errorText={touched.label ? errors.label : undefined}
           label="Label"
           name="label"
@@ -86,6 +104,7 @@ export const CloneVolumeDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
+            disabled: isReadOnly,
             label: 'Clone Volume',
             loading: isSubmitting,
             type: 'submit',
