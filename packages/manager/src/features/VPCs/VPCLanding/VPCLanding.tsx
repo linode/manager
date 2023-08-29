@@ -13,7 +13,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { VPCDeleteDialog } from 'src/features/VPCs/VPCLanding/VPCDeleteDialog';
+import { VPCDeleteDialog } from './VPCDeleteDialog';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
