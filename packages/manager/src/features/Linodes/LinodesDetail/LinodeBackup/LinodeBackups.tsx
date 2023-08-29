@@ -1,4 +1,4 @@
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import { LinodeBackup, PriceObject } from '@linode/api-v4/lib/linodes';
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -20,7 +20,7 @@ import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useTypeQuery } from 'src/queries/types';
-import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { BackupTableRow } from './BackupTableRow';
@@ -82,11 +82,11 @@ export const LinodeBackups = () => {
     );
   }
 
-  const backupsMonthlyPrice = flags.dcSpecificPricing
-    ? type && linode
-      ? getLinodeBackupPrice(type, linode.region).monthly
-      : undefined
-    : type?.addons?.backups?.price?.monthly;
+  const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+    flags,
+    region: linode?.region,
+    type,
+  });
 
   if (isLoading) {
     return <CircleProgress />;
