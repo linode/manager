@@ -226,7 +226,7 @@ export const LongviewDetail = (props: CombinedProps) => {
           0
         )}
         onChange={navToURL}
-        sx={{ marginBottom: `calc(${theme.spacing(3)} + 6px)` }}
+        style={{ marginBottom: `calc(${theme.spacing(3)} + 6px)` }}
       >
         <TabLinkList tabs={tabs} />
 

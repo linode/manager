@@ -19,12 +19,7 @@ import {
   getTotalMemoryUsage,
   sumStorage,
 } from '../../shared/utilities';
-import {
-  StyledIconGrid,
-  StyledIconSectionGrid,
-  StyledIconTextLink,
-  StyledPackageIcon,
-} from './IconSection.styles';
+import { StyledIconGrid, StyledIconTextLink } from './IconSection.styles';
 
 interface Props {
   client: string;
@@ -132,12 +127,7 @@ export const IconSection = React.memo((props: Props) => {
           <Typography>{formattedUptime}</Typography>
         </Grid>
       </Grid>
-      <StyledIconSectionGrid
-        alignItems="flex-start"
-        container
-        item
-        wrap="nowrap"
-      >
+      <Grid alignItems="flex-start" container item wrap="nowrap">
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <ServerIcon />
         </StyledIconGrid>
@@ -146,8 +136,8 @@ export const IconSection = React.memo((props: Props) => {
             {osDist} {osDistVersion} {kernel && `(${kernel})`}
           </Typography>
         </Grid>
-      </StyledIconSectionGrid>
-      <StyledIconSectionGrid alignItems="center" container item wrap="nowrap">
+      </Grid>
+      <Grid alignItems="center" container item wrap="nowrap">
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <CPUIcon />
         </StyledIconGrid>
@@ -157,8 +147,8 @@ export const IconSection = React.memo((props: Props) => {
             <Typography>{`${cpuCoreCount} ${coreCountDisplay}`}</Typography>
           )}
         </Grid>
-      </StyledIconSectionGrid>
-      <StyledIconSectionGrid alignItems="center" container item wrap="nowrap">
+      </Grid>
+      <Grid alignItems="center" container item wrap="nowrap">
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <RamIcon />
         </StyledIconGrid>
@@ -176,8 +166,8 @@ export const IconSection = React.memo((props: Props) => {
             <Typography>RAM information not available</Typography>
           </Grid>
         )}
-      </StyledIconSectionGrid>
-      <StyledIconSectionGrid alignItems="center" container item wrap="nowrap">
+      </Grid>
+      <Grid alignItems="center" container item wrap="nowrap">
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <DiskIcon />
         </StyledIconGrid>
@@ -200,8 +190,8 @@ export const IconSection = React.memo((props: Props) => {
             <Typography>Storage information not available</Typography>
           </Grid>
         )}
-      </StyledIconSectionGrid>
-      <StyledIconSectionGrid alignItems="center" container item wrap="nowrap">
+      </Grid>
+      <Grid alignItems="center" container item wrap="nowrap">
         {packages && packages.length > 0 ? (
           <Grid item md={2} sm={1} sx={{ alignSelf: 'center' }} xs={2}>
             <StyledIconTextLink
@@ -216,14 +206,14 @@ export const IconSection = React.memo((props: Props) => {
         ) : (
           <Grid alignItems="center" container item wrap="nowrap">
             <StyledIconGrid item md={2} sm={1} xs={2}>
-              <StyledPackageIcon />
+              <PackageIcon />
             </StyledIconGrid>
             <Grid item xs={10}>
               <Typography>{packagesToUpdate}</Typography>
             </Grid>
           </Grid>
         )}
-      </StyledIconSectionGrid>
+      </Grid>
     </Grid>
   );
 });
