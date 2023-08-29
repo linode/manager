@@ -30,8 +30,8 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   memory: 16384,
   network_out: 10000,
   price: {
-    hourly: 0,
-    monthly: 0,
+    hourly: 0.015,
+    monthly: 10,
   },
   region_prices: [
     {
