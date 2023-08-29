@@ -14,7 +14,7 @@ const LongviewDetail = React.lazy(
 
 type Props = RouteComponentProps<{}>;
 
-const Longview: React.FC<Props> = (props) => {
+const Longview = (props: Props) => {
   const {
     match: { path },
   } = props;

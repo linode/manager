@@ -11,7 +11,7 @@ import {
   LongviewTopProcesses,
 } from 'src/features/Longview/request.types';
 
-import LongviewPackageDrawer from '../../LongviewPackageDrawer';
+import { LongviewPackageDrawer } from '../../LongviewPackageDrawer';
 import { ActiveConnections } from './ActiveConnections/ActiveConnections';
 import { GaugesSection } from './GaugesSection';
 import { IconSection } from './IconSection';

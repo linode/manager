@@ -8,9 +8,9 @@ import { Paper } from 'src/components/Paper';
 import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import Instructions from '../shared/InstallationInstructions';
+import { InstallationInstructions } from '../shared/InstallationInstructions';
 import { LongviewActionMenu, ActionHandlers } from './LongviewActionMenu';
-import RestrictedUserLabel from './RestrictedUserLabel';
+import { RestrictedUserLabel } from './RestrictedUserLabel';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
@@ -34,7 +34,7 @@ interface Props extends ActionHandlers {
   userCanModifyClient: boolean;
 }
 
-export const LongviewClientInstructions: React.FC<Props> = (props) => {
+export const LongviewClientInstructions = (props: Props) => {
   const {
     clientAPIKey,
     clientID,
@@ -91,7 +91,7 @@ export const LongviewClientInstructions: React.FC<Props> = (props) => {
               )}
             </Grid>
             <Grid item md={9} xs={12}>
-              <Instructions
+              <InstallationInstructions
                 APIKey={clientAPIKey}
                 installationKey={installCode}
               />
@@ -114,5 +114,3 @@ export const LongviewClientInstructions: React.FC<Props> = (props) => {
     </Paper>
   );
 };
-
-export default LongviewClientInstructions;

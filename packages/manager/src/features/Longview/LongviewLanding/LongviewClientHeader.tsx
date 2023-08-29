@@ -21,7 +21,7 @@ import { formatUptime } from 'src/utilities/formatUptime';
 
 import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
-import RestrictedUserLabel from './RestrictedUserLabel';
+import { RestrictedUserLabel } from './RestrictedUserLabel';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   lastUpdatedOuter: {

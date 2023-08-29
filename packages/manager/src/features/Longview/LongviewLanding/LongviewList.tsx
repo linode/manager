@@ -2,7 +2,6 @@ import { LongviewClient } from '@linode/api-v4/lib/longview/types';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -13,7 +12,7 @@ import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import { Props as LVProps } from 'src/containers/longview.container';
 
-import LongviewRows from './LongviewListRows';
+import { LongviewListRows } from './LongviewListRows';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
@@ -53,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props & LongviewProps;
 
-const LongviewList: React.FC<CombinedProps> = (props) => {
+export const LongviewList = React.memo((props: CombinedProps) => {
   const {
     createLongviewClient,
     filteredData,
@@ -131,7 +130,7 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
       }) => (
         <>
           <Box flexDirection="column">
-            <LongviewRows
+            <LongviewListRows
               longviewClientsData={paginatedAndOrderedData}
               openPackageDrawer={openPackageDrawer}
               triggerDeleteLongviewClient={triggerDeleteLongviewClient}
@@ -152,6 +151,4 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
       )}
     </Paginate>
   );
-};
-
-export default compose<CombinedProps, CombinedProps>(React.memo)(LongviewList);
+});

@@ -17,9 +17,7 @@ interface Props {
   lvPackage: LongviewPackage;
 }
 
-type CombinedProps = Props;
-
-export const LongviewPackageRow: React.FC<CombinedProps> = (props) => {
+export const LongviewPackageRow = (props: Props) => {
   const { lvPackage } = props;
 
   const { classes } = useStyles();
@@ -34,5 +32,3 @@ export const LongviewPackageRow: React.FC<CombinedProps> = (props) => {
     </TableRow>
   );
 };
-
-export default LongviewPackageRow;

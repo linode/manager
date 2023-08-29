@@ -2,7 +2,6 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { Drawer } from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
@@ -16,7 +15,7 @@ import withLongviewStats, {
   LVClientData,
 } from 'src/containers/longview.stats.container';
 
-import LongviewPackageRow from './LongviewPackageRow';
+import { LongviewPackageRow } from './LongviewPackageRow';
 import { LongviewPackage } from './request.types';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -34,7 +33,9 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVClientData;
 
-export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
+export const LongviewPackageDrawer = withLongviewStats<Props>(
+  (own) => own.clientID
+)((props: CombinedProps) => {
   const { clientLabel, isOpen, longviewClientData, onClose } = props;
 
   const { classes } = useStyles();
@@ -87,9 +88,4 @@ export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
       </Table>
     </Drawer>
   );
-};
-
-const enhanced = compose<CombinedProps, Props>(
-  withLongviewStats<Props>((own) => own.clientID)
-);
-export default enhanced(LongviewPackageDrawer);
+});

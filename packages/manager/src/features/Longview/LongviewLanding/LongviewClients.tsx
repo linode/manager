@@ -24,14 +24,14 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 
-import LongviewPackageDrawer from '../LongviewPackageDrawer';
+import { LongviewPackageDrawer } from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
 import { getFinalUsedCPU } from './Gauges/CPU';
 import { generateUsedNetworkAsBytes } from './Gauges/Network';
 import { getUsedStorage } from './Gauges/Storage';
 import { LongviewDeleteDialog } from './LongviewDeleteDialog';
-import LongviewList from './LongviewList';
-import SubscriptionDialog from './SubscriptionDialog';
+import { LongviewList } from './LongviewList';
+import { SubscriptionDialog } from './SubscriptionDialog';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cta: {
@@ -84,7 +84,7 @@ export type CombinedProps = Props &
 
 type SortKey = 'cpu' | 'load' | 'name' | 'network' | 'ram' | 'storage' | 'swap';
 
-export const LongviewClients: React.FC<CombinedProps> = (props) => {
+export const LongviewClients = (props: CombinedProps) => {
   const { getLongviewClients } = props;
 
   const { data: profile } = useProfile();

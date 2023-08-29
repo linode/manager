@@ -44,9 +44,7 @@ interface Props {
   installationKey: string;
 }
 
-type CombinedProps = Props;
-
-const InstallationInstructions: React.FC<CombinedProps> = (props) => {
+export const InstallationInstructions = React.memo((props: Props) => {
   const { classes } = useStyles();
 
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
@@ -110,6 +108,4 @@ const InstallationInstructions: React.FC<CombinedProps> = (props) => {
       </Grid>
     </Grid>
   );
-};
-
-export default React.memo(InstallationInstructions);
+});

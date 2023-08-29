@@ -23,7 +23,7 @@ import { StorageGauge } from './Gauges/Storage';
 import { SwapGauge } from './Gauges/Swap';
 import { LongviewActionMenu, ActionHandlers } from './LongviewActionMenu';
 import LongviewClientHeader from './LongviewClientHeader';
-import LongviewClientInstructions from './LongviewClientInstructions';
+import { LongviewClientInstructions } from './LongviewClientInstructions';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   gaugeContainer: {
@@ -50,7 +50,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
-const LongviewClientRow: React.FC<CombinedProps> = (props) => {
+const LongviewClientRow = (props: CombinedProps) => {
   const { classes } = useStyles();
 
   const {
