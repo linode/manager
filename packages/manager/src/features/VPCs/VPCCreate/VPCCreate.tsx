@@ -235,7 +235,9 @@ const VPCCreate = () => {
             />
           </Paper>
           <Paper sx={{ marginTop: theme.spacing(2.5) }}>
-            <StyledHeaderTypography variant="h2">Subnet</StyledHeaderTypography>
+            <StyledHeaderTypography variant="h2">
+              Subnets
+            </StyledHeaderTypography>
             <StyledBodyTypography variant="body1">
               A subnet divides a VPC into multiple logically defined networks to
               allow for controlled access to VPC resources. Subnets within a VPC
