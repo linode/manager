@@ -1,8 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-
-import { Grid } from 'src/components/Grid';
 
 import CPUGauge from '../../LongviewLanding/Gauges/CPU';
 import LoadGauge from '../../LongviewLanding/Gauges/Load';
@@ -18,38 +17,38 @@ interface Props {
 
 export const GaugesSection = React.memo((props: Props) => {
   return (
-    <StyledOuterGrid container item md={5} xs={12}>
-      <StyledGaugeContainerGrid item xs={4}>
+    <StyledOuterGrid container md={5} xs={12}>
+      <StyledGaugeContainerGrid xs={4}>
         <CPUGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </StyledGaugeContainerGrid>
-      <StyledGaugeContainerGrid item xs={4}>
+      <StyledGaugeContainerGrid xs={4}>
         <RAMGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </StyledGaugeContainerGrid>
-      <StyledGaugeContainerGrid item xs={4}>
+      <StyledGaugeContainerGrid xs={4}>
         <SwapGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </StyledGaugeContainerGrid>
-      <StyledGaugeContainerGrid item xs={4}>
+      <StyledGaugeContainerGrid xs={4}>
         <LoadGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </StyledGaugeContainerGrid>
-      <StyledGaugeContainerGrid item xs={4}>
+      <StyledGaugeContainerGrid xs={4}>
         <NetworkGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
         />
       </StyledGaugeContainerGrid>
-      <StyledGaugeContainerGrid item xs={4}>
+      <StyledGaugeContainerGrid xs={4}>
         <StorageGauge
           clientID={props.clientID}
           lastUpdatedError={props.lastUpdatedError}
@@ -63,6 +62,7 @@ const StyledGaugeContainerGrid = styled(Grid, {
   label: 'StyledGaugeContainerGrid',
 })(({ theme }) => ({
   marginBottom: theme.spacing(6),
+  boxSizing: 'border-box',
 }));
 
 const StyledOuterGrid = styled(Grid, { label: 'StyledOuterGrid' })(
