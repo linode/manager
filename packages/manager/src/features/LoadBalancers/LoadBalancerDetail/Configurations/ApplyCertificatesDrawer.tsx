@@ -1,4 +1,5 @@
 import { Configuration } from '@linode/api-v4';
+import { certificateConfigSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 
@@ -13,7 +14,6 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
-import { certificateConfigSchema } from '@linode/validation';
 
 interface Props {
   loadbalancerId: number;
@@ -57,6 +57,7 @@ export const ApplyCertificatesDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Apply Certificates">
+      {/* @TODO Add AGLB docs link - M3-7041 */}
       <Typography>
         Input the host header that the Load Balancer will repsond to and the
         respective certificate to deliver. Use <Code>*</Code> as a wildcard
@@ -90,7 +91,11 @@ export const ApplyCertificatesDrawer = (props: Props) => {
             <Divider spacingTop={24} />
           </Box>
         ))}
-        <Button buttonType="outlined" onClick={onAddAnother} sx={{ mt: 2 }}>
+        <Button
+          buttonType="outlined"
+          onClick={onAddAnother}
+          sx={{ marginTop: 2 }}
+        >
           Add Another
         </Button>
         <ActionsPanel

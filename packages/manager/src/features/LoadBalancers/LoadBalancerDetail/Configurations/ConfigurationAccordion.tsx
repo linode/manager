@@ -13,13 +13,13 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useLoadBalancerConfigurationMutation } from 'src/queries/aglb/configurations';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 
 import type { Configuration } from '@linode/api-v4';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
   configuration: Configuration;
@@ -83,6 +83,7 @@ export const ConfigurationAccordion = (props: Props) => {
               {pluralize('Route', 'Routes', configuration.routes.length)}
             </Typography>
           </Stack>
+          {/* @TODO Hook up endpoint status */}
           <Stack direction="row" spacing={2}>
             <Stack alignItems="center" direction="row" spacing={1}>
               <Typography>Endpoints:</Typography>
@@ -157,6 +158,7 @@ export const ConfigurationAccordion = (props: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
         <Stack spacing={2}>
           <Typography variant="h2">Routes</Typography>
+          {/* @TODO Add AGLB routes table */}
           <Typography>Routes Table will go here ⚠️🔜</Typography>
         </Stack>
         <Divider spacingBottom={16} spacingTop={16} />

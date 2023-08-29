@@ -54,19 +54,21 @@ export const CertificateSelect = (props: Props) => {
   const selectedCertificate =
     certificates?.find((cert) => cert.id === value) ?? null;
 
+  const onScroll = (event: React.SyntheticEvent) => {
+    const listboxNode = event.currentTarget;
+    if (
+      listboxNode.scrollTop + listboxNode.clientHeight >=
+        listboxNode.scrollHeight &&
+      hasNextPage
+    ) {
+      fetchNextPage();
+    }
+  };
+
   return (
     <Autocomplete
       ListboxProps={{
-        onScroll: (event: React.SyntheticEvent) => {
-          const listboxNode = event.currentTarget;
-          if (
-            listboxNode.scrollTop + listboxNode.clientHeight >=
-              listboxNode.scrollHeight &&
-            hasNextPage
-          ) {
-            fetchNextPage();
-          }
-        },
+        onScroll,
       }}
       onInputChange={(_, value, reason) => {
         if (reason === 'input') {

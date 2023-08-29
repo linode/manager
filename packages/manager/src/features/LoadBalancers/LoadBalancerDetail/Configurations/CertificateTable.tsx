@@ -45,7 +45,12 @@ export const CertificateTable = (props: Props) => {
               <TableCell>{certificate?.label ?? cert.id}</TableCell>
               <TableCell>{cert.hostname}</TableCell>
               <TableCell actionCell>
-                <IconButton onClick={() => onRemove(idx)}>
+                <IconButton
+                  aria-label={`Remove Certificate ${
+                    certificate?.label ?? cert.id
+                  }`}
+                  onClick={() => onRemove(idx)}
+                >
                   <CloseIcon />
                 </IconButton>
               </TableCell>
