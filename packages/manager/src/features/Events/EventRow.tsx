@@ -1,6 +1,4 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -8,40 +6,24 @@ import * as React from 'react';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
-import { RenderGuard } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
-import { GravatarByUsername } from '../../components/GravatarByUsername';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  icon: {
-    height: 24,
-    width: 24,
-  },
-  row: {
-    '&:hover': {
-      backgroundColor:
-        theme.name === 'light' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
-    },
-  },
-}));
+import { StyledGravatar } from './EventRow.styles';
 
 interface ExtendedEvent extends Event {
   _deleted?: string;
 }
 
-interface Props {
+interface EventRowProps {
   entityId?: number;
   event: ExtendedEvent;
 }
 
-type CombinedProps = Props;
-
-export const EventRow: React.FC<CombinedProps> = (props) => {
+export const EventRow = (props: EventRowProps) => {
   const { entityId, event } = props;
   const link = getLinkForEvent(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
@@ -78,9 +60,7 @@ export interface RowProps {
   username: null | string;
 }
 
-export const Row: React.FC<RowProps> = (props) => {
-  const classes = useStyles();
-
+export const Row = (props: RowProps) => {
   const { action, message, timestamp, username } = props;
 
   /** Some event types may not be handled by our system (or new types
@@ -93,16 +73,12 @@ export const Row: React.FC<RowProps> = (props) => {
   return (
     <TableRow
       ariaLabel={`Event ${message}`}
-      className={classes.row}
       data-qa-event-row
       data-test-id={action}
     >
       <Hidden smDown>
         <TableCell data-qa-event-icon-cell>
-          <GravatarByUsername
-            className={classes.icon}
-            username={username ?? ''}
-          />
+          <StyledGravatar username={username ?? ''} />
         </TableCell>
       </Hidden>
       <TableCell data-qa-event-message-cell parentColumn="Event">
@@ -125,5 +101,3 @@ export const Row: React.FC<RowProps> = (props) => {
     </TableRow>
   );
 };
-
-export default RenderGuard(EventRow);

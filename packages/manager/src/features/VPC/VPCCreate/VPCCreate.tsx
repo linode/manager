@@ -185,13 +185,15 @@ const VPCCreate = () => {
           text={
             "You don't have permissions to create a new VPC. Please contact an account administrator for details."
           }
-          error
           important
           spacingTop={16}
+          variant="error"
         />
       )}
       <Grid>
-        {generalAPIError ? <Notice error text={generalAPIError} /> : null}
+        {generalAPIError ? (
+          <Notice text={generalAPIError} variant="error" />
+        ) : null}
         <form onSubmit={handleSubmit}>
           <Paper>
             <StyledHeaderTypography variant="h2">VPC</StyledHeaderTypography>
@@ -244,10 +246,10 @@ const VPCCreate = () => {
             {subnetErrorsFromAPI
               ? subnetErrorsFromAPI.map((apiError: APIError) => (
                   <Notice
-                    error
                     key={apiError.reason}
                     spacingBottom={8}
                     text={apiError.reason}
+                    variant="error"
                   />
                 ))
               : null}

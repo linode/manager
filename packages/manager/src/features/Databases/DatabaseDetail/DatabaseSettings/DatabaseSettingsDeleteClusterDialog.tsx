@@ -62,8 +62,8 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
       open={open}
       title={`Delete Database Cluster ${databaseLabel}`}
     >
-      {error ? <Notice error text={error} /> : null}
-      <Notice warning>
+      {error ? <Notice text={error} variant="error" /> : null}
+      <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting your entire database will delete
           any backups and nodes associated with database {databaseLabel}, which

@@ -95,7 +95,11 @@ export const validateSubnets = (
       }
       if (
         determineIPType(subnet.ip.ipv4 ?? '') !== 'ipv4' ||
-        !vpcsValidateIP(subnet.ip.ipv4, true)
+        !vpcsValidateIP({
+          mustBeIPMask: false,
+          shouldHaveIPMask: true,
+          value: subnet.ip.ipv4,
+        })
       ) {
         const errorIP = { ...subnet.ip, ipv4Error: '' };
         errorIP['ipv4Error'] = options?.ipv4Error ?? DEFAULT_IPV4_ERROR;

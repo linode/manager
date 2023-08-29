@@ -1,5 +1,4 @@
 import { APIWarning } from '../types';
-import { Beta } from '../betas/types';
 import { Region } from 'src/regions';
 
 export interface User {
@@ -473,7 +472,12 @@ export interface AccountLogin {
   status: AccountLoginStatus;
 }
 
-export interface AccountBeta extends Beta {
+export interface AccountBeta {
+  label: string;
+  started: string;
+  id: string;
+  ended?: string;
+  description?: string;
   enrolled: string;
 }
 

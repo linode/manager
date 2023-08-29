@@ -248,25 +248,29 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment segment="Plan Details" />
       {isManaged ? (
         <Paper className={`${classes.root} ${classes.collapsedTable}`}>
-          {updateErrorMsg && <Notice error text={updateErrorMsg} />}
-          {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
-          <Notice className={classes.link} success>
+          {updateErrorMsg && <Notice text={updateErrorMsg} variant="error" />}
+          {updateSuccessMsg && (
+            <Notice text={updateSuccessMsg} variant="success" />
+          )}
+          <Notice className={classes.link} variant="success">
             {managedText}
           </Notice>
         </Paper>
       ) : (
         <>
           {mayUserModifyLVSubscription && updateErrorMsg && (
-            <Notice error text={updateErrorMsg} />
+            <Notice text={updateErrorMsg} variant="error" />
           )}
           {!mayUserModifyLVSubscription && (
             <Notice
-              error
               important
               text="You don't have permissions to change the Longview plan. Please contact an account administrator for details."
+              variant="error"
             />
           )}
-          {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
+          {updateSuccessMsg && (
+            <Notice text={updateSuccessMsg} variant="success" />
+          )}
           {isTableDisplayed && (
             <>
               <Table className={classes.table}>

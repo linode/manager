@@ -53,10 +53,12 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
   return (
     <Drawer onClose={onClose} open={open} title="Import a Zone">
       {noPermission && (
-        <Notice error>You do not have permission to create new Domains.</Notice>
+        <Notice variant="error">
+          You do not have permission to create new Domains.
+        </Notice>
       )}
       <form onSubmit={formik.handleSubmit}>
-        {generalError && <Notice error text={generalError} />}
+        {generalError && <Notice text={generalError} variant="error" />}
         <TextField
           disabled={noPermission}
           errorText={domainError}

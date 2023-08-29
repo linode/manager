@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Notice } from 'src/components/Notice/Notice';
+import { Notice, NoticeVariant } from 'src/components/Notice/Notice';
 
 export interface ProductNotificationProps {
   onClick?: () => void;
@@ -18,8 +18,8 @@ export const ProductNotification = ({
   severity,
   text,
 }: ProductNotificationProps) => {
-  const level = severityLevelMap[severity] ?? 'warning';
-  const props = { flag: true, [level]: true };
+  const level = (severityLevelMap[severity] as NoticeVariant) ?? 'warning';
+  const props = { flag: true, variant: level };
 
   return <Notice {...props}>{text}</Notice>;
 };

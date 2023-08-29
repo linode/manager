@@ -56,7 +56,7 @@ export const SecretTokenDialog = (props: Props) => {
           objectStorageKey ? 'secret key' : title.toLowerCase()
         } once, after which it can\u{2019}t be recovered. Be sure to keep it in a safe place.`}
         spacingTop={8}
-        warning
+        variant="warning"
       />
       {objectStorageKey ? (
         <>

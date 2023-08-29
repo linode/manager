@@ -152,7 +152,7 @@ all new Linodes will automatically be backed up.`
         </Typography>
         {failedEnableBackupsCount > 0 && (
           <Box>
-            <Notice error spacingBottom={0}>
+            <Notice spacingBottom={0} variant="error">
               {getFailureNotificationText({
                 failedCount: failedEnableBackupsCount,
                 successCount: successfulEnableBackupsCount,
