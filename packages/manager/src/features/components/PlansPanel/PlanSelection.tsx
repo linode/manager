@@ -9,6 +9,7 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { ExtendedType } from 'src/utilities/extendType';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -68,6 +69,7 @@ export const PlanSelection = (props: Props) => {
     showTransfer,
     type,
   } = props;
+  const { dcSpecificPricing } = useFlags();
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
   const tooltip = planTooSmall
@@ -92,9 +94,10 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  const price = selectedRegionId
-    ? getLinodeRegionPrice(type, selectedRegionId)
-    : type.price;
+  const price =
+    dcSpecificPricing && selectedRegionId
+      ? getLinodeRegionPrice(type, selectedRegionId)
+      : type.price;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>

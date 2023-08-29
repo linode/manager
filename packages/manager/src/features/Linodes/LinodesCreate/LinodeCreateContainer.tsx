@@ -1,11 +1,5 @@
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
-import {
-  CreateLinodeRequest,
-  Interface,
-  Linode,
-  LinodeTypeClass,
-} from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
@@ -66,6 +60,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
@@ -74,6 +69,14 @@ import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+
+import type {
+  CreateLinodeRequest,
+  Interface,
+  Linode,
+  LinodeTypeClass,
+  PriceObject,
+} from '@linode/api-v4/lib/linodes';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -87,6 +90,7 @@ interface State {
   availableUserDefinedFields?: UserDefinedField[];
   backupsEnabled: boolean;
   customLabel?: string;
+  dcSpecificPricing?: boolean;
   disabledClasses?: LinodeTypeClass[];
   errors?: APIError[];
   formIsSubmitting: boolean;
@@ -129,6 +133,7 @@ const defaultState: State = {
   authorized_users: [],
   backupsEnabled: false,
   customLabel: undefined,
+  dcSpecificPricing: false,
   disabledClasses: [],
   errors: undefined,
   formIsSubmitting: false,
@@ -189,6 +194,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   componentDidMount() {
     // Allowed apps include the base set of original apps + anything LD tells us to show
     const newApps = this.props.flags.oneClickApps || [];
+    const dcSpecificPricing = this.props.flags.dcSpecificPricing ?? false;
     const allowedApps = Object.keys({ ...baseApps, ...newApps });
     if (nonImageCreateTypes.includes(this.props.createType)) {
       // If we're navigating directly to e.g. the clone page, don't select an image by default
@@ -213,6 +219,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({
           appInstances: trimmedApps,
           appInstancesLoading: false,
+          dcSpecificPricing,
         });
       })
       .catch((_) => {
@@ -482,13 +489,21 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     string,
     string
   >;
-
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
+    const { dcSpecificPricing, selectedRegionID } = this.state;
+
+    const linodePrice: PriceObject =
+      dcSpecificPricing && type && selectedRegionID
+        ? getLinodeRegionPrice(type, selectedRegionID)
+        : type
+        ? type.price
+        : { hourly: 0, monthly: 0 };
+
     return (
       type && {
-        details: `$${type.price.monthly}/month`,
-        hourly: type.price.hourly ?? 0,
-        monthly: type.price.monthly ?? 0,
+        details: `$${linodePrice?.monthly}/month`,
+        hourly: linodePrice?.hourly ?? 0,
+        monthly: linodePrice?.monthly ?? 0,
         title: type.formattedLabel,
       }
     );
