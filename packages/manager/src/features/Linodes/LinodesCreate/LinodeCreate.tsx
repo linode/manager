@@ -1,6 +1,6 @@
 import {
   InterfacePayload,
-  LinodeType,
+  PriceObject,
   restoreBackup,
 } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
@@ -55,7 +55,6 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
@@ -88,6 +87,7 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 export interface LinodeCreateProps {
   checkValidation: LinodeCreateValidation;
@@ -312,11 +312,11 @@ export class LinodeCreate extends React.PureComponent<
       (type) => type.id === this.props.selectedTypeID
     );
 
-    const backupsMonthlyPrice = this.props.flags.dcSpecificPricing
-      ? this.props.selectedTypeID && selectedRegionID
-        ? getLinodeBackupPrice(type as LinodeType, selectedRegionID).monthly
-        : undefined
-      : type?.addons?.backups?.price?.monthly;
+    const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+      flags: this.props.flags,
+      region: selectedRegionID,
+      type,
+    });
 
     if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
       displaySections.push(

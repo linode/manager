@@ -4,9 +4,9 @@ import { useMutation, useQueryClient } from 'react-query';
 import { FlagSet } from 'src/featureFlags';
 import { queryKey } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';
-import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
-import type { APIError, Linode, LinodeType } from '@linode/api-v4';
+import type { APIError, Linode, LinodeType, PriceObject } from '@linode/api-v4';
 
 export interface TotalBackupsPriceOptions {
   /**
@@ -31,13 +31,15 @@ export const getTotalBackupsPrice = ({
 }: TotalBackupsPriceOptions) => {
   return linodes.reduce((prevValue: number, linode: Linode) => {
     const type = types.find((type) => type.id === linode.type);
-    const backupsMonthlyPrice = flags.dcSpecificPricing
-      ? type && linode
-        ? getLinodeBackupPrice(type, linode.region).monthly
-        : undefined
-      : type?.addons?.backups?.price?.monthly;
 
-    return prevValue + (backupsMonthlyPrice ?? 0);
+    const backupsMonthlyPrice: PriceObject['monthly'] =
+      getMonthlyBackupsPrice({
+        flags,
+        region: linode.region,
+        type,
+      }) || 0;
+
+    return prevValue + backupsMonthlyPrice;
   }, 0);
 };
 

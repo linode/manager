@@ -641,6 +641,9 @@ export const handlers = [
       ctx.json(
         linodeFactory.build({
           id,
+          backups: { enabled: false },
+          label: 'DC-Specific Pricing Linode',
+          region: 'id-cgk',
         })
       )
     );

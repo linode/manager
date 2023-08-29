@@ -1,4 +1,4 @@
-import { Linode } from '@linode/api-v4';
+import { Linode, PriceObject } from '@linode/api-v4';
 import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
@@ -7,7 +7,7 @@ import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 interface Props {
   error?: string;
@@ -20,11 +20,11 @@ export const BackupLinodeRow = (props: Props) => {
   const { data: regions } = useRegionsQuery();
   const flags = useFlags();
 
-  const backupsMonthlyPrice = flags.dcSpecificPricing
-    ? type
-      ? getLinodeBackupPrice(type, linode.region).monthly
-      : undefined
-    : type?.addons.backups.price.monthly;
+  const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+    flags,
+    region: linode.region,
+    type,
+  });
 
   const regionLabel =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
@@ -52,7 +52,9 @@ export const BackupLinodeRow = (props: Props) => {
         <TableCell parentColumn="Region">{regionLabel ?? 'Unknown'}</TableCell>
       )}
       <TableCell parentColumn="Price">
-        {`$${backupsMonthlyPrice?.toFixed(2) ?? 'Unknown'}/mo`}
+        {backupsMonthlyPrice !== 0
+          ? `$${backupsMonthlyPrice?.toFixed(2)}/mo`
+          : '$Unknown/mo'}
       </TableCell>
     </TableRow>
   );

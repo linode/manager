@@ -94,13 +94,11 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     : null;
 
   const renderBackupsPrice = () => {
-    return (
-      backupsMonthlyPrice && (
-        <Typography variant="body1">
-          <Currency quantity={backupsMonthlyPrice} /> per month
-        </Typography>
-      )
-    );
+    return backupsMonthlyPrice && backupsMonthlyPrice > 0 ? (
+      <Typography variant="body1">
+        <Currency quantity={backupsMonthlyPrice} /> per month
+      </Typography>
+    ) : undefined;
   };
 
   const checkBackupsWarning = () => {

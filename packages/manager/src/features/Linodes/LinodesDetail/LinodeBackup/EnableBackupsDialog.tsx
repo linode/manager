@@ -1,3 +1,4 @@
+import { PriceObject } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -10,7 +11,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
-import { getLinodeBackupPrice } from 'src/utilities/pricing/linodes';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 interface Props {
   linodeId: number | undefined;
@@ -40,11 +41,11 @@ export const EnableBackupsDialog = (props: Props) => {
     Boolean(linode?.type)
   );
 
-  const backupsMonthlyPrice = flags.dcSpecificPricing
-    ? type && linode
-      ? getLinodeBackupPrice(type, linode.region).monthly
-      : undefined
-    : type?.addons?.backups?.price?.monthly;
+  const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+    flags,
+    region: linode?.region,
+    type,
+  });
 
   const { enqueueSnackbar } = useSnackbar();
 
