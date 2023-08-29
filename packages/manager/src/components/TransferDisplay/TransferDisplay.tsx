@@ -5,23 +5,15 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import BarPercent from 'src/components/BarPercent';
+import { Box } from 'src/components/Box';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 
+import { StyledLinkButton } from '../Button/StyledLinkButton';
+
 const useStyles = makeStyles()((theme: Theme) => ({
-  link: {
-    marginTop: theme.spacing(1),
-  },
-  openModalButton: {
-    ...theme.applyLinkStyles,
-  },
-  paddedDocsText: {
-    [theme.breakpoints.up('md')]: {
-      paddingRight: theme.spacing(3), // Prevents link text from being split onto two lines.
-    },
-  },
   paper: {
     padding: theme.spacing(3),
   },
@@ -51,9 +43,11 @@ export interface Props {
 
 export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const { classes } = useStyles();
-
   const [modalOpen, setModalOpen] = React.useState(false);
   const { data, isError, isLoading } = useAccountTransfer();
+
+  // console.log('data', data);
+
   const quota = data?.quota ?? 0;
   const used = data?.used ?? 0;
 
@@ -80,12 +74,9 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
             You have used {poolUsagePct.toFixed(poolUsagePct < 1 ? 2 : 0)}% of
             your
             {`  `}
-            <button
-              className={classes.openModalButton}
-              onClick={() => setModalOpen(true)}
-            >
+            <StyledLinkButton onClick={() => setModalOpen(true)}>
               Monthly Network Transfer Pool
-            </button>
+            </StyledLinkButton>
             .
           </>
         )}
@@ -128,14 +119,9 @@ export const TransferDialog = React.memo((props: DialogProps) => {
   // Don't display usage, quota, or bar percent if the network transfer pool is empty (e.g. account has no resources).
   const isEmptyPool = quota === 0;
   const transferQuotaDocsText =
-    used === 0 ? (
-      <span className={classes.paddedDocsText}>
-        Compute instances, NodeBalancers, and Object Storage include network
-        transfer.
-      </span>
-    ) : (
-      'View products and services that include network transfer, and learn how to optimize network usage to avoid billing surprises.'
-    );
+    used === 0
+      ? 'Compute instances, NodeBalancers, and Object Storage include network transfer.'
+      : 'View products and services that include network transfer, and learn how to optimize network usage to avoid billing surprises.';
 
   return (
     <Dialog
@@ -196,17 +182,17 @@ export const TransferDialog = React.memo((props: DialogProps) => {
         transfer associated with active Linode services on your account and is
         prorated based on service creation.
       </Typography>
-      <div className={classes.link}>
+      <Box>
         <Typography>
-          {transferQuotaDocsText}{' '}
-          <Link
-            aria-label="Learn more – link opens in a new tab"
-            to="https://www.linode.com/docs/guides/network-transfer-quota/"
-          >
-            Learn more.
-          </Link>
+          {transferQuotaDocsText}
+          <Box marginTop={2}>
+            <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
+              Learn more
+            </Link>
+          </Box>
+          .
         </Typography>
-      </div>
+      </Box>
     </Dialog>
   );
 });
