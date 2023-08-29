@@ -73,7 +73,7 @@ export const PlanContainer = (props: Props) => {
   const shouldShowNetwork =
     showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
   const shouldDisplayNoRegionSelectedMessage =
-    dcSpecificPricing && selectedRegionId === undefined;
+    dcSpecificPricing && !selectedRegionId;
 
   return (
     <Grid container spacing={2}>
