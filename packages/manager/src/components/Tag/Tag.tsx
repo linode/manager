@@ -13,7 +13,7 @@ export interface TagProps extends ChipProps {
   asSuggestion?: boolean;
   closeMenu?: any;
   colorVariant: Variants;
-  component?: string;
+  component?: React.ElementType;
   label: string;
   maxLength?: number;
 }

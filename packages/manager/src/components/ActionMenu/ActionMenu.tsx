@@ -128,6 +128,7 @@ export const ActionMenu = React.memo((props: Props) => {
         onClose={handleClose}
         open={open}
         transitionDuration={225}
+        disableScrollLock
       >
         {actionsList.map((a, idx) => (
           <MenuItem
