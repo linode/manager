@@ -16,7 +16,7 @@ const props: Props = {
     handleResize: jest.fn(),
   },
   isVolumesLanding: true,
-  volume: volumeFactory.build(),
+  volume: volumeFactory.build({ linode_id: null, linode_label: null }),
 };
 
 describe('Volume action menu', () => {
@@ -34,7 +34,15 @@ describe('Volume action menu', () => {
   });
 
   it('should include Detach if the Volume is attached', () => {
-    const { queryByText } = renderWithTheme(<VolumesActionMenu {...props} />);
+    const { queryByText } = renderWithTheme(
+      <VolumesActionMenu
+        {...props}
+        volume={volumeFactory.build({
+          linode_id: 2,
+          linode_label: 'linode-2',
+        })}
+      />
+    );
     includesActions(['Detach'], queryByText);
     expect(queryByText('Attach')).toBeNull();
   });

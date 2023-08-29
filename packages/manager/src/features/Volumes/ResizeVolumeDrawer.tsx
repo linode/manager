@@ -6,6 +6,7 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useResizeVolumeMutation } from 'src/queries/volumes';
 import {
@@ -14,7 +15,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import { PricePanel } from './VolumeDrawer/PricePanel';
-import SizeField from './VolumeDrawer/SizeField';
+import { SizeField } from './VolumeDrawer/SizeField';
 
 interface Props {
   onClose: () => void;
@@ -41,6 +42,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
     handleSubmit,
     isSubmitting,
     resetForm,
+    status: error,
     values,
   } = useFormik({
     enableReinitialize: true,
@@ -58,13 +60,13 @@ export const ResizeVolumeDrawer = (props: Props) => {
           onClose();
         })
         .catch((errorResponse) => {
-          const defaultMessage = `Unable to resize this volume at this time. Please try again later.`;
-          const mapErrorToStatus = (generalError: string) =>
-            setStatus({ generalError });
-
           setSubmitting(false);
           handleFieldErrors(setErrors, errorResponse);
-          handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
+          handleGeneralErrors(
+            setStatus,
+            errorResponse,
+            `Unable to resize this volume at this time. Please try again later.`
+          );
         });
     },
     validationSchema,
@@ -73,6 +75,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Resize Volume">
       <form onSubmit={handleSubmit}>
+        {error && <Notice text={error} variant="error" />}
         <SizeField
           disabled={readOnly}
           error={errors.size}

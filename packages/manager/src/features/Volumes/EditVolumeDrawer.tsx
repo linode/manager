@@ -5,6 +5,7 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { useUpdateVolumeMutation } from 'src/queries/volumes';
@@ -35,6 +36,7 @@ export const EditVolumeDrawer = (props: Props) => {
     isSubmitting,
     resetForm,
     setFieldValue,
+    status: error,
     touched,
     values,
   } = useFormik({
@@ -48,18 +50,19 @@ export const EditVolumeDrawer = (props: Props) => {
         tags: values.tags,
         volumeId: volume?.id ?? -1,
       })
-        .then((_) => {
+        .then(() => {
           resetForm();
           onClose();
         })
         .catch((errorResponse) => {
-          const defaultMessage = `Unable to edit this Volume at this time. Please try again later.`;
-          const mapErrorToStatus = (generalError: string) =>
-            setStatus({ generalError });
-
           setSubmitting(false);
           handleFieldErrors(setErrors, errorResponse);
-          handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
+
+          handleGeneralErrors(
+            setStatus,
+            errorResponse,
+            `Unable to edit this Volume at this time. Please try again later.`
+          );
         });
     },
     validationSchema: UpdateVolumeSchema,
@@ -68,8 +71,8 @@ export const EditVolumeDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Edit Volume">
       <form onSubmit={handleSubmit}>
+        {error && <Notice text={error} variant="error" />}
         <TextField
-          data-qa-volume-label
           errorText={errors.label}
           label="Label"
           name="label"

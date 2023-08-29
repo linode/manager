@@ -27,7 +27,7 @@ export interface Props {
 export const VolumesActionMenu = (props: Props) => {
   const { handlers, isVolumesLanding, volume } = props;
 
-  const attached = Boolean(volume.linode_id);
+  const attached = volume.linode_id !== null;
 
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));

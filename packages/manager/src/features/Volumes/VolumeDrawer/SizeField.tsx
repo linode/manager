@@ -1,5 +1,3 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -10,25 +8,6 @@ import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
-
-import { SIZE_FIELD_WIDTH } from '../VolumeCreate/CreateVolumeForm';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  createVolumeText: {
-    display: 'block',
-    marginLeft: theme.spacing(1.5),
-  },
-  priceDisplay: {
-    '& p': {
-      lineHeight: 1,
-      marginTop: 4,
-    },
-
-    left: `calc(${SIZE_FIELD_WIDTH}px + ${theme.spacing(2)})`,
-    position: 'absolute',
-    top: 50,
-  },
-}));
 
 interface Props {
   disabled?: boolean;
@@ -44,8 +23,7 @@ interface Props {
   value: number;
 }
 
-const SizeField = (props: Props) => {
-  const classes = useStyles();
+export const SizeField = (props: Props) => {
   const flags = useFlags();
 
   const {
@@ -78,7 +56,7 @@ const SizeField = (props: Props) => {
       {resize || isFromLinode ? (
         'The size of the new volume in GB.'
       ) : (
-        <span className={classes.createVolumeText}>${price}/month</span>
+        <span>${price}/month</span>
       )}
     </FormHelperText>
   );
@@ -108,15 +86,11 @@ const SizeField = (props: Props) => {
         value={value}
         {...rest}
       />
-      <div className={classes.priceDisplay}>
-        {dcSpecificPricing
-          ? hasSelectedRegion
-            ? legacyHelperText
-            : dynamicPricingHelperText
-          : legacyHelperText}
-      </div>
+      {dcSpecificPricing
+        ? hasSelectedRegion
+          ? legacyHelperText
+          : dynamicPricingHelperText
+        : legacyHelperText}
     </>
   );
 };
-
-export default SizeField;

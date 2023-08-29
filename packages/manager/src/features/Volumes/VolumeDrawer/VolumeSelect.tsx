@@ -13,7 +13,7 @@ interface Props {
   value: number;
 }
 
-const VolumeSelect = (props: Props) => {
+export const VolumeSelect = (props: Props) => {
   const { disabled, error, onBlur, onChange, region, value } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
@@ -86,5 +86,3 @@ const VolumeSelect = (props: Props) => {
     />
   );
 };
-
-export default VolumeSelect;

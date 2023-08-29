@@ -1,23 +1,21 @@
 import { Linode } from '@linode/api-v4';
 import { Grant } from '@linode/api-v4/lib/account';
-import { Form, Formik } from 'formik';
+import { useFormik } from 'formik';
 import * as React from 'react';
 import { number, object } from 'yup';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
 import { ConfigSelect } from './ConfigSelect';
-import NoticePanel from './NoticePanel';
-import VolumeSelect from './VolumeSelect';
-import VolumesActionsPanel from './VolumesActionsPanel';
+import { VolumeSelect } from './VolumeSelect';
 
 interface Props {
   linode: Linode;
@@ -55,97 +53,85 @@ export const LinodeVolumeAttachForm = (props: Props) => {
 
   const { mutateAsync: attachVolume } = useAttachVolumeMutation();
 
-  return (
-    <Formik
-      onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
-        attachVolume({
-          config_id: values.config_id,
-          linode_id: linode.id,
-          volumeId: values.volume_id,
+  const {
+    errors,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+    resetForm,
+    setFieldValue,
+    status: error,
+    touched,
+    values,
+  } = useFormik({
+    initialValues,
+    onSubmit: (values, { setErrors, setStatus, setSubmitting }) => {
+      attachVolume({
+        config_id: values.config_id,
+        linode_id: linode.id,
+        volumeId: values.volume_id,
+      })
+        .then((_) => {
+          onClose();
+          resetEventsPolling();
         })
-          .then((_) => {
+        .catch((errorResponse) => {
+          setSubmitting(false);
+          handleFieldErrors(setErrors, errorResponse);
+          handleGeneralErrors(
+            setStatus,
+            errorResponse,
+            `Unable to attach this volume at this time. Please try again later.`
+          );
+        });
+    },
+    validationSchema: AttachVolumeValidationSchema,
+  });
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {error && <Notice text={error} variant="error" />}
+      {disabled && (
+        <Notice
+          text={
+            "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
+          }
+          important
+          variant="error"
+        />
+      )}
+      <VolumeSelect
+        disabled={disabled}
+        error={touched.volume_id ? errors.volume_id : undefined}
+        onBlur={handleBlur}
+        onChange={(v) => setFieldValue('volume_id', v)}
+        region={linode.region}
+        value={values.volume_id}
+      />
+      <ConfigSelect
+        disabled={disabled}
+        error={touched.config_id ? errors.config_id : undefined}
+        linodeId={linode.id}
+        name="config_id"
+        onBlur={handleBlur}
+        onChange={(id) => setFieldValue('config_id', id)}
+        value={values.config_id}
+      />
+      <ActionsPanel
+        primaryButtonProps={{
+          disabled,
+          label: 'Attach Volume',
+          loading: isSubmitting,
+          type: 'submit',
+        }}
+        secondaryButtonProps={{
+          label: 'Cancel',
+          onClick: () => {
+            resetForm();
             onClose();
-            resetEventsPolling();
-          })
-          .catch((errorResponse) => {
-            const defaultMessage = `Unable to attach this volume at this time. Please try again later.`;
-            const mapErrorToStatus = () =>
-              setStatus({ generalError: getErrorMap([], errorResponse).none });
-
-            setSubmitting(false);
-            handleFieldErrors(setErrors, errorResponse);
-            handleGeneralErrors(
-              mapErrorToStatus,
-              errorResponse,
-              defaultMessage
-            );
-          });
-      }}
-      initialValues={initialValues}
-      validationSchema={AttachVolumeValidationSchema}
-    >
-      {({
-        errors,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-        resetForm,
-        setFieldValue,
-        status,
-        touched,
-        values,
-      }) => {
-        return (
-          <Form>
-            {status && !disabled && (
-              <NoticePanel
-                error={status.generalError}
-                success={status.success}
-              />
-            )}
-
-            {disabled && (
-              <Notice
-                text={
-                  "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
-                }
-                important
-                variant="error"
-              />
-            )}
-
-            <VolumeSelect
-              disabled={disabled}
-              error={touched.volume_id ? errors.volume_id : undefined}
-              onBlur={handleBlur}
-              onChange={(v) => setFieldValue('volume_id', v)}
-              region={linode.region}
-              value={values.volume_id}
-            />
-
-            <ConfigSelect
-              disabled={disabled}
-              error={touched.config_id ? errors.config_id : undefined}
-              linodeId={linode.id}
-              name="config_id"
-              onBlur={handleBlur}
-              onChange={(id) => setFieldValue('config_id', id)}
-              value={values.config_id}
-            />
-
-            <VolumesActionsPanel
-              onCancel={() => {
-                resetForm();
-                onClose();
-              }}
-              disabled={disabled}
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-              submitText="Attach Volume"
-            />
-          </Form>
-        );
-      }}
-    </Formik>
+          },
+        }}
+      />
+    </form>
   );
 };
