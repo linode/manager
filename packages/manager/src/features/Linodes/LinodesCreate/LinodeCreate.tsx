@@ -28,6 +28,7 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
@@ -343,14 +344,12 @@ export class LinodeCreate extends React.PureComponent<
         'cloud-init'
       );
 
-    const regionSupportsMetadata =
-      this.props.regionsData
-        .find((region) => region.id === this.props.selectedRegionID)
-        ?.capabilities.includes('Metadata') ?? false;
-
     const showUserData =
       this.props.flags.metadata &&
-      regionSupportsMetadata &&
+      regionSupportsMetadata(
+        this.props.regionsData,
+        this.props.selectedRegionID ?? ''
+      ) &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     return (
