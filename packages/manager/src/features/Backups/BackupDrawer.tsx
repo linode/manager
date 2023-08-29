@@ -163,7 +163,7 @@ all new Linodes will automatically be backed up.`
             guide on Backups
           </Link>{' '}
           for more information on features and limitations.{' '}
-          {!flags.dcSpecificPricing ? backupsConfirmationHelperText : undefined}
+          {!flags.dcSpecificPricing && backupsConfirmationHelperText}
         </Typography>
         {failedEnableBackupsCount > 0 && (
           <Box>
@@ -184,11 +184,11 @@ all new Linodes will automatically be backed up.`
           />
         )}
         <StyledPricingBox>
-          {flags.dcSpecificPricing ? (
+          {flags.dcSpecificPricing && (
             <StyledTypography variant="h2">
               Total for {pluralize('Linode', 'Linodes', linodeCount)}:
             </StyledTypography>
-          ) : undefined}
+          )}
           &nbsp;
           <DisplayPrice
             price={getTotalBackupsPrice({
@@ -216,9 +216,7 @@ all new Linodes will automatically be backed up.`
             <TableRow>
               <TableCell>Label</TableCell>
               <TableCell>Plan</TableCell>
-              {flags.dcSpecificPricing ? (
-                <TableCell>Region</TableCell>
-              ) : undefined}
+              {flags.dcSpecificPricing && <TableCell>Region</TableCell>}
               <TableCell>Price</TableCell>
             </TableRow>
           </TableHead>

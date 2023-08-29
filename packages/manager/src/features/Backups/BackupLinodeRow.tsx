@@ -48,9 +48,9 @@ export const BackupLinodeRow = (props: Props) => {
       <TableCell parentColumn="Plan">
         {type?.label ?? linode.type ?? 'Unknown'}
       </TableCell>
-      {flags.dcSpecificPricing ? (
+      {flags.dcSpecificPricing && (
         <TableCell parentColumn="Region">{regionLabel ?? 'Unknown'}</TableCell>
-      ) : undefined}
+      )}
       <TableCell parentColumn="Price">
         {`$${backupsMonthlyPrice?.toFixed(2) ?? 'Unknown'}/mo`}
       </TableCell>
