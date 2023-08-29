@@ -94,6 +94,7 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
+  // TODO: DYNAMIC PRICING - we should handle a lack of region ID differently - see M3-7063
   const price =
     dcSpecificPricing && selectedRegionId
       ? getLinodeRegionPrice(type, selectedRegionId)
