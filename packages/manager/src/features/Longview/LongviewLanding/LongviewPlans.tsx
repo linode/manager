@@ -5,8 +5,7 @@ import {
 } from '@linode/api-v4/lib/longview';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -29,7 +28,7 @@ import { useAccountSettings } from 'src/queries/accountSettings';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   chip: {
     borderRadius: 1,
     fontSize: '0.65rem',
@@ -137,7 +136,7 @@ export const managedText = (
 
 export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   const { subscriptionRequestHook: subscriptions } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const mounted = React.useRef<boolean>(false);
 
   const { data: profile } = useProfile();
@@ -416,7 +415,7 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
       price,
     } = props;
 
-    const styles = useStyles();
+    const { classes: styles, cx } = useStyles();
 
     const handleClick = () => {
       if (disabled) {
@@ -427,7 +426,7 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
 
     return (
       <TableRow
-        className={classNames({
+        className={cx({
           [styles.disabledTableRow]: disabled,
         })}
         ariaLabel={plan}

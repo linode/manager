@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
@@ -9,10 +9,10 @@ import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import Instructions from '../shared/InstallationInstructions';
-import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
+import { LongviewActionMenu, ActionHandlers } from './LongviewActionMenu';
 import RestrictedUserLabel from './RestrictedUserLabel';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '&:hover': {
       color: theme.color.red,
@@ -44,7 +44,7 @@ export const LongviewClientInstructions: React.FC<Props> = (props) => {
     updateLongviewClient,
     userCanModifyClient,
   } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [updating, setUpdating] = React.useState<boolean>(false);
 
@@ -101,7 +101,7 @@ export const LongviewClientInstructions: React.FC<Props> = (props) => {
         <Grid item xs={1}>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <ActionMenu
+              <LongviewActionMenu
                 longviewClientID={clientID}
                 longviewClientLabel={clientLabel}
                 triggerDeleteLongviewClient={triggerDeleteLongviewClient}

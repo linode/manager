@@ -5,7 +5,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-const LongviewLanding = React.lazy(() => import('./LongviewLanding'));
+const LongviewLanding = React.lazy(
+  () => import('./LongviewLanding/LongviewLanding')
+);
 const LongviewDetail = React.lazy(
   () => import('./LongviewDetail/LongviewDetail')
 );

@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
@@ -7,7 +7,7 @@ import { TableRow } from 'src/components/TableRow';
 
 import { LongviewPackage } from './request.types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   new: {
     color: theme.color.green,
   },
@@ -22,7 +22,7 @@ type CombinedProps = Props;
 export const LongviewPackageRow: React.FC<CombinedProps> = (props) => {
   const { lvPackage } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <TableRow ariaLabel={lvPackage.name}>

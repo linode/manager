@@ -4,7 +4,7 @@ import {
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -29,11 +29,11 @@ import { sumUsedMemory } from '../shared/utilities';
 import { getFinalUsedCPU } from './Gauges/CPU';
 import { generateUsedNetworkAsBytes } from './Gauges/Network';
 import { getUsedStorage } from './Gauges/Storage';
-import DeleteDialog from './LongviewDeleteDialog';
+import { LongviewDeleteDialog } from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   cta: {
     marginTop: theme.spacing(2),
   },
@@ -150,7 +150,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
     setSubscriptionDialogOpen,
   ] = React.useState<boolean>(false);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   React.useEffect(() => {
     getLongviewClients();
@@ -285,7 +285,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
           </Typography>
         </Grid>
       )}
-      <DeleteDialog
+      <LongviewDeleteDialog
         closeDialog={() => toggleDeleteDialog(false)}
         deleteClient={deleteLongviewClient}
         open={deleteDialogOpen}

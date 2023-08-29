@@ -32,9 +32,7 @@ const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
 type CombinedProps = LongviewProps & RouteComponentProps<{}>;
 
-export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+export const LongviewLanding = (props: CombinedProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
     () => getActiveLongviewPlan().then((response) => response),

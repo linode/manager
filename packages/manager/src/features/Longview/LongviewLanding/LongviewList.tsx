@@ -1,6 +1,6 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -15,7 +15,7 @@ import { Props as LVProps } from 'src/containers/longview.container';
 
 import LongviewRows from './LongviewListRows';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
   },
@@ -67,7 +67,7 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
     userCanCreateLongviewClient,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   // Empty state and a new client is being created
   const newClientIsLoading = loading && longviewClientsResults === 0;

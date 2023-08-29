@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -23,7 +23,7 @@ import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
 import RestrictedUserLabel from './RestrictedUserLabel';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   lastUpdatedOuter: {
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing(1),
@@ -73,7 +73,7 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVDataProps;
 
-export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
+export const LongviewClientHeader = (props: CombinedProps) => {
   const {
     clientID,
     clientLabel,
@@ -85,7 +85,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
     updateLongviewClient,
     userCanModifyClient,
   } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [updating, setUpdating] = React.useState<boolean>(false);
 
   const { data: profile } = useProfile();

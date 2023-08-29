@@ -1,6 +1,6 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -15,17 +15,17 @@ import withClientStats, {
 import { useGrants } from 'src/queries/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
-import CPUGauge from './Gauges/CPU';
-import LoadGauge from './Gauges/Load';
-import NetworkGauge from './Gauges/Network';
-import RAMGauge from './Gauges/RAM';
-import StorageGauge from './Gauges/Storage';
-import SwapGauge from './Gauges/Swap';
-import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
+import { CPUGauge } from './Gauges/CPU';
+import { LoadGauge } from './Gauges/Load';
+import { NetworkGauge } from './Gauges/Network';
+import { RAMGauge } from './Gauges/RAM';
+import { StorageGauge } from './Gauges/Storage';
+import { SwapGauge } from './Gauges/Swap';
+import { LongviewActionMenu, ActionHandlers } from './LongviewActionMenu';
 import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   gaugeContainer: {
     [theme.breakpoints.down('md')]: {
       marginBottom: 30,
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(4),
     padding: theme.spacing(3),
     [theme.breakpoints.up('md')]: {
-      height: false,
+      //height: false,
     },
   },
 }));
@@ -51,7 +51,7 @@ interface Props extends ActionHandlers {
 type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
 const LongviewClientRow: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const {
     clientAPIKey,
@@ -169,7 +169,7 @@ const LongviewClientRow: React.FC<CombinedProps> = (props) => {
         <Grid item xs={1}>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <ActionMenu
+              <LongviewActionMenu
                 longviewClientID={clientID}
                 longviewClientLabel={clientLabel}
                 triggerDeleteLongviewClient={triggerDeleteLongviewClient}
