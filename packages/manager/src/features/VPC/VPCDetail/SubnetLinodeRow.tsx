@@ -48,9 +48,11 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
 
   if (linodeLoading || !linode) {
     return (
-      <Box sx={{ marginLeft: 6 }}>
-        <CircleProgress mini />
-      </Box>
+      <TableRow>
+        <TableCell sx={{ marginLeft: 6 }}>
+          <CircleProgress mini />
+        </TableCell>
+      </TableRow>
     );
   }
 
