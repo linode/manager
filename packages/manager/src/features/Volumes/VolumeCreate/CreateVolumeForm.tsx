@@ -180,7 +180,6 @@ const CreateVolumeForm = () => {
           }
 
           resetForm({ values: initialValues });
-          setStatus({ success: `Volume scheduled for creation.` });
           setSubmitting(false);
           enqueueSnackbar(`Volume scheduled for creation.`, {
             variant: 'success',
