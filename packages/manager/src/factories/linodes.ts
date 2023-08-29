@@ -127,11 +127,11 @@ export const linodeTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUti
   {
     billable: 0,
     quota: 1950,
-    used: 13956637,
     region_transfers: [
-      { id: 'id-cgk', billable: 0, quota: 10000, used: 10 },
-      { id: 'br-gru', billable: 0, quota: 15000, used: 20 },
+      { billable: 0, id: 'id-cgk', quota: 10000, used: 10 },
+      { billable: 0, id: 'br-gru', quota: 15000, used: 20 },
     ],
+    used: 13956637,
   }
 );
 

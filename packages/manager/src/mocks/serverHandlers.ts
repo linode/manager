@@ -640,7 +640,6 @@ export const handlers = [
     return res(
       ctx.json(
         linodeFactory.build({
-          backups: { enabled: false },
           id,
         })
       )
