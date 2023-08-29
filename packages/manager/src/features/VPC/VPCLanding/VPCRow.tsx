@@ -43,7 +43,7 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
       key={`vpc-row-${id}`}
     >
       <TableCell>
-        <Link to={`/vpc/${id}`}>{label}</Link>
+        <Link to={`/vpcs/${id}`}>{label}</Link>
       </TableCell>
       <Hidden smDown>
         <TableCell>{regionLabel}</TableCell>

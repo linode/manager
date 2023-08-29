@@ -15,9 +15,9 @@ const VPC = () => {
       <DocumentTitleSegment segment="VPC" />
       <ProductInformationBanner bannerLocation="VPC" />
       <Switch>
-        <Route component={VPCCreate} path="/vpc/create" />
-        <Route component={VPCDetail} path="/vpc/:vpcId/:tab?" />
-        <Route component={VPCLanding} path="/vpc" />
+        <Route component={VPCCreate} path="/vpcs/create" />
+        <Route component={VPCDetail} path="/vpcs/:vpcId/:tab?" />
+        <Route component={VPCLanding} path="/vpcs" />
       </Switch>
     </React.Suspense>
   );

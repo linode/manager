@@ -27,7 +27,7 @@ export const VPCEmptyState = () => {
               category: linkAnalyticsEvent.category,
               label: 'Create VPC',
             });
-            push('/vpc/create');
+            push('/vpcs/create');
           },
         },
       ]}

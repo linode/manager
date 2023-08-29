@@ -82,7 +82,7 @@ export const AddNewMenu = () => {
       entity: 'VPC',
       hide: !flags.vpc,
       icon: VPCIcon,
-      link: '/vpc/create',
+      link: '/vpcs/create',
     },
     {
       description: 'Control network access to your Linodes',

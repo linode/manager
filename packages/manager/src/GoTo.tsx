@@ -93,7 +93,7 @@ const GoTo = (props: Props) => {
       {
         display: 'VPC',
         hide: !flags.vpc,
-        href: '/vpc',
+        href: '/vpcs',
       },
       {
         display: 'NodeBalancers',

@@ -44,7 +44,7 @@ describe('VPC details page', () => {
     mockUpdateVPC(mockVPC.id, mockVPCUpdated).as('updateVPC');
     mockDeleteVPC(mockVPC.id).as('deleteVPC');
 
-    cy.visitWithLogin(`/vpc/${mockVPC.id}`);
+    cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC']);
 
     // Confirm that VPC details are displayed.
@@ -112,7 +112,7 @@ describe('VPC details page', () => {
     cy.wait(['@deleteVPC', '@getVPCs']);
 
     // Confirm that user is redirected to VPC landing page.
-    cy.url().should('endWith', '/vpc');
+    cy.url().should('endWith', '/vpcs');
     cy.findByText('Create a private and isolated network.');
   });
 });
