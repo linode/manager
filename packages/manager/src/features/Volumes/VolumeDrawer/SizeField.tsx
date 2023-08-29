@@ -1,3 +1,4 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -8,6 +9,8 @@ import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
+import { SIZE_FIELD_WIDTH } from '../VolumeCreate/CreateVolumeForm';
+import { makeStyles } from '@mui/styles';
 
 interface Props {
   disabled?: boolean;
@@ -23,7 +26,25 @@ interface Props {
   value: number;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  createVolumeText: {
+    display: 'block',
+    marginLeft: theme.spacing(1.5),
+  },
+  priceDisplay: {
+    '& p': {
+      lineHeight: 1,
+      marginTop: 4,
+    },
+
+    left: `calc(${SIZE_FIELD_WIDTH}px + ${theme.spacing(2)})`,
+    position: 'absolute',
+    top: 50,
+  },
+}));
+
 export const SizeField = (props: Props) => {
+  const classes = useStyles();
   const flags = useFlags();
 
   const {
@@ -53,15 +74,13 @@ export const SizeField = (props: Props) => {
 
   const legacyHelperText = (
     <FormHelperText>
-      {resize || isFromLinode ? (
-        'The size of the new volume in GB.'
-      ) : (
-        <span>${price}/month</span>
+      {resize || isFromLinode ? null : (
+        <span className={classes.createVolumeText}>${price}/month</span>
       )}
     </FormHelperText>
   );
 
-  const dynamicPricingHelperText = !resize && (
+  const dynamicPricingHelperText = !resize && !isFromLinode && (
     <Box marginLeft={'10px'} marginTop={'4px'}>
       <Typography>Select a Region to see cost per month.</Typography>
     </Box>
@@ -86,11 +105,13 @@ export const SizeField = (props: Props) => {
         value={value}
         {...rest}
       />
-      {dcSpecificPricing
-        ? hasSelectedRegion
-          ? legacyHelperText
-          : dynamicPricingHelperText
-        : legacyHelperText}
+      <div className={classes.priceDisplay}>
+        {dcSpecificPricing
+          ? hasSelectedRegion
+            ? legacyHelperText
+            : dynamicPricingHelperText
+          : legacyHelperText}
+      </div>
     </>
   );
 };
