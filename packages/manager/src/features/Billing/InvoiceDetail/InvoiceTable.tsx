@@ -49,8 +49,8 @@ const InvoiceTable = (props: Props) => {
       <TableHead>
         <TableRow>
           <TableCell>Description</TableCell>
-          <TableCell>From</TableCell>
-          <TableCell>To</TableCell>
+          <TableCell sx={{ minWidth: '125px' }}>From</TableCell>
+          <TableCell sx={{ minWidth: '125px' }}>To</TableCell>
           <TableCell>Quantity</TableCell>
           {flags.dcSpecificPricing && <TableCell>Region</TableCell>}
           <TableCell noWrap>Unit Price</TableCell>
