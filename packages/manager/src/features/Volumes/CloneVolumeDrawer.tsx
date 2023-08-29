@@ -52,21 +52,19 @@ export const CloneVolumeDrawer = (props: Props) => {
     values,
   } = useFormik({
     initialValues,
-    onSubmit: (values, { setErrors, setStatus, setSubmitting }) => {
-      cloneVolume({ label: values.label, volumeId: volume?.id ?? -1 })
-        .then((_) => {
-          onClose();
-          resetEventsPolling();
-        })
-        .catch((errorResponse) => {
-          setSubmitting(false);
-          handleFieldErrors(setErrors, errorResponse);
-          handleGeneralErrors(
-            setStatus,
-            errorResponse,
-            `Unable to clone this volume at this time. Please try again later.`
-          );
-        });
+    async onSubmit(values, { setErrors, setStatus }) {
+      try {
+        await cloneVolume({ label: values.label, volumeId: volume?.id ?? -1 });
+        onClose();
+        resetEventsPolling();
+      } catch (error) {
+        handleFieldErrors(setErrors, error);
+        handleGeneralErrors(
+          setStatus,
+          error,
+          `Unable to clone this volume at this time. Please try again later.`
+        );
+      }
     },
     validationSchema: CloneVolumeSchema,
   });

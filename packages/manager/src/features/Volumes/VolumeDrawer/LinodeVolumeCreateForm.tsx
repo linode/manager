@@ -72,49 +72,44 @@ export const LinodeVolumeCreateForm = (props: Props) => {
     values,
   } = useFormik({
     initialValues,
-    onSubmit: (values, { setErrors, setStatus, setSubmitting }) => {
+    async onSubmit(values, { setErrors, setStatus }) {
       const { config_id, label, size, tags } = values;
 
-      setSubmitting(true);
-
-      /** Status holds our success and generalError messages. */
+      /** Status holds our a general error message */
       setStatus(undefined);
 
-      createVolume({
-        config_id:
-          // If the config_id still set to default value of -1, set this to undefined, so volume gets created on back-end according to the API logic
-          config_id === -1 ? undefined : maybeCastToNumber(config_id),
-        label,
-        linode_id: maybeCastToNumber(linode.id),
-        size: maybeCastToNumber(size),
-        tags,
-      })
-        .then((volume) => {
-          resetEventsPolling();
-          enqueueSnackbar(`Volume scheduled for creation.`, {
-            variant: 'success',
-          });
-          onClose();
-          openDetails(volume);
-          // Analytics Event
-          sendCreateVolumeEvent(`Size: ${size}GB`, origin);
-        })
-        .catch((errorResponse) => {
-          setSubmitting(false);
-          handleFieldErrors(setErrors, errorResponse);
-          handleGeneralErrors(
-            setStatus,
-            errorResponse,
-            `Unable to create a volume at this time. Please try again later.`
-          );
+      try {
+        const volume = await createVolume({
+          config_id:
+            // If the config_id still set to default value of -1, set this to undefined, so volume gets created on back-end according to the API logic
+            config_id === -1 ? undefined : maybeCastToNumber(config_id),
+          label,
+          linode_id: maybeCastToNumber(linode.id),
+          size: maybeCastToNumber(size),
+          tags,
         });
+        resetEventsPolling();
+        enqueueSnackbar(`Volume scheduled for creation.`, {
+          variant: 'success',
+        });
+        onClose();
+        openDetails(volume);
+        // Analytics Event
+        sendCreateVolumeEvent(`Size: ${size}GB`, origin);
+      } catch (error) {
+        handleFieldErrors(setErrors, error);
+        handleGeneralErrors(
+          setStatus,
+          error,
+          `Unable to create a volume at this time. Please try again later.`
+        );
+      }
     },
     validationSchema: CreateVolumeSchema,
   });
 
   return (
     <form onSubmit={handleSubmit}>
-      {error && <Notice text={error} variant="error" />}
       {disabled && (
         <Notice
           text={
@@ -123,6 +118,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
           important
         />
       )}
+      {error && <Notice text={error} variant="error" />}
       <Typography
         sx={(theme) => ({
           marginBottom: theme.spacing(1.25),

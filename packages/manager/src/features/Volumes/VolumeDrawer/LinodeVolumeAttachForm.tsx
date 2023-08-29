@@ -63,32 +63,30 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     values,
   } = useFormik({
     initialValues,
-    onSubmit: (values, { setErrors, setStatus, setSubmitting }) => {
-      attachVolume({
-        config_id: values.config_id,
-        linode_id: linode.id,
-        volumeId: values.volume_id,
-      })
-        .then((_) => {
-          onClose();
-          resetEventsPolling();
-        })
-        .catch((errorResponse) => {
-          setSubmitting(false);
-          handleFieldErrors(setErrors, errorResponse);
-          handleGeneralErrors(
-            setStatus,
-            errorResponse,
-            `Unable to attach this volume at this time. Please try again later.`
-          );
+    async onSubmit(values, { setErrors, setStatus, setSubmitting }) {
+      try {
+        await attachVolume({
+          config_id: values.config_id,
+          linode_id: linode.id,
+          volumeId: values.volume_id,
         });
+        onClose();
+        resetEventsPolling();
+      } catch (error) {
+        setSubmitting(false);
+        handleFieldErrors(setErrors, error);
+        handleGeneralErrors(
+          setStatus,
+          error,
+          `Unable to attach this volume at this time. Please try again later.`
+        );
+      }
     },
     validationSchema: AttachVolumeValidationSchema,
   });
 
   return (
     <form onSubmit={handleSubmit}>
-      {error && <Notice text={error} variant="error" />}
       {isReadOnly && (
         <Notice
           text={
@@ -98,6 +96,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
           variant="error"
         />
       )}
+      {error && <Notice text={error} variant="error" />}
       <VolumeSelect
         disabled={isReadOnly}
         error={touched.volume_id ? errors.volume_id : undefined}

@@ -48,28 +48,23 @@ export const EditVolumeDrawer = (props: Props) => {
   } = useFormik({
     enableReinitialize: true,
     initialValues: { label: volume?.label, tags: volume?.tags },
-    onSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
-      setSubmitting(true);
-
-      updateVolume({
-        label: values.label ?? '',
-        tags: values.tags,
-        volumeId: volume?.id ?? -1,
-      })
-        .then(() => {
-          resetForm();
-          onClose();
-        })
-        .catch((errorResponse) => {
-          setSubmitting(false);
-          handleFieldErrors(setErrors, errorResponse);
-
-          handleGeneralErrors(
-            setStatus,
-            errorResponse,
-            `Unable to edit this Volume at this time. Please try again later.`
-          );
+    async onSubmit(values, { setErrors, setStatus }) {
+      try {
+        await updateVolume({
+          label: values.label ?? '',
+          tags: values.tags,
+          volumeId: volume?.id ?? -1,
         });
+
+        onClose();
+      } catch (error) {
+        handleFieldErrors(setErrors, error);
+        handleGeneralErrors(
+          setStatus,
+          error,
+          `Unable to edit this Volume at this time. Please try again later.`
+        );
+      }
     },
     validationSchema: UpdateVolumeSchema,
   });
