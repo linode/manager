@@ -8,6 +8,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
+import { useGrants } from 'src/queries/profile';
 import { useUpdateVolumeMutation } from 'src/queries/volumes';
 import {
   handleFieldErrors,
@@ -23,9 +24,14 @@ interface Props {
 export const EditVolumeDrawer = (props: Props) => {
   const { onClose, open, volume } = props;
 
+  const { data: grants } = useGrants();
+
   const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
 
-  const readOnly = false;
+  const isReadOnly =
+    grants !== undefined &&
+    grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
+      'read_only';
 
   const {
     dirty,
@@ -71,6 +77,12 @@ export const EditVolumeDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Edit Volume">
       <form onSubmit={handleSubmit}>
+        {isReadOnly && (
+          <Notice
+            text="You don't have permission to edit this volume."
+            variant="warning"
+          />
+        )}
         {error && <Notice text={error} variant="error" />}
         <TextField
           errorText={errors.label}
@@ -101,7 +113,7 @@ export const EditVolumeDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: readOnly || !dirty,
+            disabled: isReadOnly || !dirty,
             label: 'Save Changes',
             loading: isSubmitting,
             type: 'submit',

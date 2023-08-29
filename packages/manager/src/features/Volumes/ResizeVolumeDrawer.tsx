@@ -8,6 +8,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useGrants } from 'src/queries/profile';
 import { useResizeVolumeMutation } from 'src/queries/volumes';
 import {
   handleFieldErrors,
@@ -32,7 +33,12 @@ export const ResizeVolumeDrawer = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const readOnly = false;
+  const { data: grants } = useGrants();
+
+  const isReadOnly =
+    grants !== undefined &&
+    grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
+      'read_only';
 
   const {
     dirty,
@@ -77,7 +83,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
       <form onSubmit={handleSubmit}>
         {error && <Notice text={error} variant="error" />}
         <SizeField
-          disabled={readOnly}
+          disabled={isReadOnly}
           error={errors.size}
           name="size"
           onBlur={handleBlur}
@@ -93,7 +99,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: readOnly || !dirty,
+            disabled: isReadOnly || !dirty,
             label: 'Resize Volume',
             loading: isSubmitting,
             type: 'submit',
