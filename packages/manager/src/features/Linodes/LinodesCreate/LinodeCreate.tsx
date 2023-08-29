@@ -1,4 +1,8 @@
-import { InterfacePayload, restoreBackup } from '@linode/api-v4/lib/linodes';
+import {
+  InterfacePayload,
+  PriceObject,
+  restoreBackup,
+} from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import cloneDeep from 'lodash/cloneDeep';
@@ -83,9 +87,9 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 export interface LinodeCreateProps {
-  backupsMonthlyPrice?: null | number;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
   handleAgreementChange: () => void;
@@ -214,7 +218,6 @@ export class LinodeCreate extends React.PureComponent<
 
     const {
       accountBackupsEnabled,
-      backupsMonthlyPrice,
       errors,
       formIsSubmitting,
       handleAgreementChange,
@@ -305,12 +308,19 @@ export class LinodeCreate extends React.PureComponent<
       displaySections.push(typeDisplayInfoCopy);
     }
 
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+    const type = typesData.find(
+      (type) => type.id === this.props.selectedTypeID
+    );
+
+    const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+      flags: this.props.flags,
+      region: selectedRegionID,
+      type,
+    });
+
+    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
       displaySections.push(
-        renderBackupsDisplaySection(
-          accountBackupsEnabled,
-          typeDisplayInfo.backupsMonthly
-        )
+        renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
       );
     }
 
@@ -557,7 +567,7 @@ export class LinodeCreate extends React.PureComponent<
             }}
             accountBackups={accountBackupsEnabled}
             backups={this.props.backupsEnabled}
-            backupsMonthly={backupsMonthlyPrice}
+            backupsMonthlyPrice={backupsMonthlyPrice}
             changeBackups={this.props.toggleBackupsEnabled}
             createType={this.props.createType}
             data-qa-addons-panel
