@@ -233,9 +233,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * The flag state gets lost when navigating between create types,
      * so we need to keep it up to date here.
      */
-    if (prevProps.createType !== this.props.createType) {
-      this.setState({ dcSpecificPricing: this.props.flags.dcSpecificPricing });
-    }
+    this.setState({ dcSpecificPricing: this.props.flags.dcSpecificPricing });
+
     /**
      * When switching to a creation flow where
      * having a pre-selected image is problematic,
@@ -503,7 +502,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         ? getLinodeRegionPrice(type, selectedRegionID)
         : type
         ? type.price
-        : { hourly: 0, monthly: 0 };
+        : { hourly: 0, monthly: 0 }; // TODO: M3-7063 (defaults)
 
     return (
       type && {

@@ -18,7 +18,7 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 import { StyledDisabledTableRow } from './PlansPanel.styles';
 
-import type { Region, RegionPriceObject } from '@linode/api-v4';
+import type { PriceObject, Region, RegionPriceObject } from '@linode/api-v4';
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
@@ -94,11 +94,11 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  // TODO: DYNAMIC PRICING - we should handle a lack of region ID differently - see M3-7063
-  const price =
+  // TODO: M3-7063 (defaults)
+  const price: PriceObject | undefined =
     dcSpecificPricing && selectedRegionId
       ? getLinodeRegionPrice(type, selectedRegionId)
-      : type.price;
+      : undefined;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -160,7 +160,7 @@ export const PlanSelection = (props: Props) => {
           </TableCell>
           <TableCell data-qa-monthly> ${price?.monthly}</TableCell>
           <TableCell data-qa-hourly>
-            {isGPU ? (
+            {isGPU && price ? (
               <Currency quantity={price.hourly ?? 0} />
             ) : (
               `$${price?.hourly}`

@@ -8,8 +8,8 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
+import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
 import {
-  getLinodeBackupPrice,
   getLinodeRegionPrice,
   isLinodeTypeDifferentPriceInSelectedRegion,
 } from 'src/utilities/pricing/linodes';
