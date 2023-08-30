@@ -6,6 +6,7 @@ import {
   CollapsibleTable,
   TableItem,
 } from 'src/components/CollapsibleTable/CollapsibleTable';
+import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -27,9 +28,13 @@ export const VPCSubnetsTable = (props: Props) => {
     return subnets.map((subnet) => {
       const OuterTableCells = (
         <>
-          <TableCell>{subnet.id}</TableCell>
+          <Hidden smDown>
+            <TableCell>{subnet.id}</TableCell>
+          </Hidden>
           <TableCell>{subnet.ipv4}</TableCell>
-          <TableCell>{subnet.linodes.length}</TableCell>
+          <Hidden smDown>
+            <TableCell>{subnet.linodes.length}</TableCell>
+          </Hidden>
           <TableCell align="right">
             <SubnetsActionMenu></SubnetsActionMenu>
           </TableCell>
@@ -78,10 +83,23 @@ const StyledTableCell = styled(TableCell, {
 
 const SubnetTableRowHead = (
   <TableRow>
-    <StyledTableCell sx={{ width: '24%' }}>Subnet Label</StyledTableCell>
-    <StyledTableCell sx={{ width: '10%' }}>Subnet ID</StyledTableCell>
+    <StyledTableCell
+      sx={(theme) => ({
+        [theme.breakpoints.down('sm')]: {
+          width: '50%',
+        },
+        width: '24%',
+      })}
+    >
+      Subnet Label
+    </StyledTableCell>
+    <Hidden smDown>
+      <StyledTableCell sx={{ width: '10%' }}>Subnet ID</StyledTableCell>
+    </Hidden>
     <StyledTableCell sx={{ width: '18%' }}>Subnet IP Range</StyledTableCell>
-    <StyledTableCell sx={{ width: '10%' }}>Linodes</StyledTableCell>
+    <Hidden smDown>
+      <StyledTableCell sx={{ width: '10%' }}>Linodes</StyledTableCell>
+    </Hidden>
     <StyledTableCell></StyledTableCell>
   </TableRow>
 );

@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
@@ -99,17 +100,23 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
         <StatusIcon status={iconStatus} />
         {capitalizeAllWords(linode.status.replace('_', ' '))}
       </StyledTableCell>
-      <StyledTableCell>{linode.id}</StyledTableCell>
-      <StyledTableCell>
-        <IPAddress ips={privateIpv4s ?? []} isHovered={isHovered} />
-      </StyledTableCell>
-      <StyledTableCell>
-        {getFirewallsCellString(
-          attachedFirewalls?.data ?? [],
-          firewallsLoading,
-          firewallsError ?? undefined
-        )}
-      </StyledTableCell>
+      <Hidden lgDown>
+        <StyledTableCell>{linode.id}</StyledTableCell>
+      </Hidden>
+      <Hidden smDown>
+        <StyledTableCell>
+          <IPAddress ips={privateIpv4s ?? []} isHovered={isHovered} />
+        </StyledTableCell>
+      </Hidden>
+      <Hidden smDown>
+        <StyledTableCell>
+          {getFirewallsCellString(
+            attachedFirewalls?.data ?? [],
+            firewallsLoading,
+            firewallsError ?? undefined
+          )}
+        </StyledTableCell>
+      </Hidden>
     </StyledTableRow>
   );
 };
@@ -164,10 +171,16 @@ export const SubnetLinodeTableRowHead = (
       Linode Label
     </StyledTableHeadCell>
     <StyledTableHeadCell sx={{ width: '14%' }}>Status</StyledTableHeadCell>
-    <StyledTableHeadCell sx={{ width: '10%' }}>Linode ID</StyledTableHeadCell>
-    <StyledTableHeadCell sx={{ width: '20%' }}>
-      Private IP Address
-    </StyledTableHeadCell>
-    <StyledTableHeadCell>Firewalls</StyledTableHeadCell>
+    <Hidden lgDown>
+      <StyledTableHeadCell sx={{ width: '10%' }}>Linode ID</StyledTableHeadCell>
+    </Hidden>
+    <Hidden smDown>
+      <StyledTableHeadCell sx={{ width: '20%' }}>
+        Private IP Address
+      </StyledTableHeadCell>
+    </Hidden>
+    <Hidden smDown>
+      <StyledTableHeadCell>Firewalls</StyledTableHeadCell>
+    </Hidden>
   </TableRow>
 );
