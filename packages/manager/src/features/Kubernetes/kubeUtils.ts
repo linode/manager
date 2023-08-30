@@ -18,7 +18,7 @@ interface MonthlyPriceOptions {
   count: number;
   flags: FlagSet;
   region: Region['id'] | undefined;
-  type: string;
+  type: ExtendedType | string;
   types: ExtendedType[];
 }
 
@@ -30,6 +30,10 @@ interface TotalClusterPriceOptions {
   types: ExtendedType[];
 }
 
+/**
+ * Calculates the monthly price of a group of linodes based on region and types.
+ * @returns The monthly price for the linodes, or 0 if price cannot be calculated
+ */
 export const getMonthlyPrice = ({
   count,
   flags,
@@ -37,19 +41,23 @@ export const getMonthlyPrice = ({
   type,
   types,
 }: MonthlyPriceOptions) => {
-  if (!types) {
-    return 0;
+  if (!types || !type || !region) {
+    return 0; // TODO
   }
   const thisType = types.find((t: ExtendedType) => t.id === type);
   const monthlyPrice = flags.dcSpecificPricing
-    ? thisType && region
-      ? getLinodeRegionPrice(thisType, region).monthly
-      : undefined
+    ? thisType
+      ? getLinodeRegionPrice(thisType, region)?.monthly
+      : 0
     : thisType?.price.monthly;
 
   return thisType ? (monthlyPrice ?? 0) * count : 0;
 };
 
+/**
+ * Calculates the total monthly price of all pools in a cluster, plus HA if enabled.
+ * @returns The total monthly cluster price
+ */
 export const getTotalClusterPrice = ({
   flags,
   highAvailabilityPrice,

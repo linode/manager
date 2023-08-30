@@ -19,6 +19,8 @@ import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlans
 import { nodeWarning } from '../../kubeUtils';
 
 import type { Region } from '@linode/api-v4';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { useFlags } from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   boxOuter: {
@@ -89,6 +91,8 @@ export const AddNodePoolDrawer = (props: Props) => {
     mutateAsync: createPool,
   } = useCreateNodePoolMutation(clusterId);
 
+  const flags = useFlags();
+
   // Only want to use current types here.
   const extendedTypes = filterCurrentTypes(types?.map(extendType));
 
@@ -105,7 +109,16 @@ export const AddNodePoolDrawer = (props: Props) => {
   const selectedType = selectedTypeInfo
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
-  const pricePerNode = selectedType?.price?.monthly ?? 0;
+
+  const pricePerNode =
+    flags.dcSpecificPricing && selectedType
+      ? getLinodeRegionPrice(selectedType, clusterRegionId).monthly
+      : selectedType?.price?.monthly;
+
+  const totalPrice =
+    selectedTypeInfo && pricePerNode
+      ? selectedTypeInfo.count * pricePerNode
+      : 0;
 
   React.useEffect(() => {
     if (open) {
@@ -207,9 +220,9 @@ export const AddNodePoolDrawer = (props: Props) => {
             <Typography className={classes.priceDisplay}>
               This pool will add{' '}
               <strong>
-                ${selectedTypeInfo.count * pricePerNode}/month (
+                ${totalPrice}/month (
                 {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
-                {pricePerNode}
+                {pricePerNode ?? 0}
                 /month)
               </strong>{' '}
               to this cluster.

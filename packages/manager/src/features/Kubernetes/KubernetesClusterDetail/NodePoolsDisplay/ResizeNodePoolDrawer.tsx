@@ -1,4 +1,4 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
+import { KubeNodePoolResponse, Region } from '@linode/api-v4';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
@@ -9,10 +9,12 @@ import { Drawer } from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { getMonthlyPrice, nodeWarning } from '../../kubeUtils';
 
@@ -32,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   kubernetesClusterId: number;
+  kubernetesRegionId: Region['id'];
   nodePool: KubeNodePoolResponse | undefined;
   onClose: () => void;
   open: boolean;
@@ -41,7 +44,13 @@ const resizeWarning = `Resizing to fewer nodes will delete random nodes from
 the pool.`;
 
 export const ResizeNodePoolDrawer = (props: Props) => {
-  const { kubernetesClusterId, nodePool, onClose, open } = props;
+  const {
+    kubernetesClusterId,
+    kubernetesRegionId,
+    nodePool,
+    onClose,
+    open,
+  } = props;
   const classes = useStyles();
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
@@ -55,6 +64,8 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     isLoading,
     mutateAsync: updateNodePool,
   } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
+
+  const flags = useFlags();
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
     nodePool?.count ?? 0
@@ -73,8 +84,6 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     setUpdatedCount(Math.min(100, Math.floor(value)));
   };
 
-  const pricePerNode = planType?.price.monthly ?? 0;
-
   if (!nodePool) {
     // This should never happen, but it keeps TypeScript happy and avoids crashing if we
     // are unable to load the specified pool.
@@ -87,11 +96,20 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const totalMonthlyPrice = getMonthlyPrice(
-    nodePool.type,
-    nodePool.count,
-    planType ? [planType] : []
-  );
+  const pricePerNode =
+    (flags.dcSpecificPricing && planType
+      ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly
+      : planType?.price.monthly) || 0;
+
+  const totalMonthlyPrice =
+    planType &&
+    getMonthlyPrice({
+      count: nodePool.count,
+      flags,
+      region: kubernetesRegionId,
+      type: nodePool.type,
+      types: planType ? [planType] : [],
+    });
 
   return (
     <Drawer
