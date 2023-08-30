@@ -13,9 +13,13 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { formattedTypes } from './FirewallDeviceLanding';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
 
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
+
 interface Props {
+  deviceType: FirewallDeviceEntityType;
   devices: FirewallDevice[];
   disabled: boolean;
   error?: APIError[];
@@ -24,7 +28,14 @@ interface Props {
 }
 
 export const FirewallDevicesTable = React.memo((props: Props) => {
-  const { devices, disabled, error, loading, triggerRemoveDevice } = props;
+  const {
+    deviceType,
+    devices,
+    disabled,
+    error,
+    loading,
+    triggerRemoveDevice,
+  } = props;
 
   const _error = error
     ? // @todo change to Devices or make dynamic when NBs are possible as Devices
@@ -55,7 +66,7 @@ export const FirewallDevicesTable = React.memo((props: Props) => {
                       handleClick={handleOrderChange}
                       label={'entity:label'}
                     >
-                      Linode
+                      {formattedTypes[deviceType]}
                     </TableSortCell>
                   </TableRow>
                 </TableHead>
@@ -70,6 +81,7 @@ export const FirewallDevicesTable = React.memo((props: Props) => {
                         deviceEntityID={thisDevice.entity.id}
                         deviceID={thisDevice.id}
                         deviceLabel={thisDevice.entity.label}
+                        deviceType={deviceType}
                         disabled={disabled}
                         key={`device-row-${thisDevice.id}`}
                         triggerRemoveDevice={triggerRemoveDevice}
