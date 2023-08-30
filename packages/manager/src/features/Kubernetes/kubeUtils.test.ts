@@ -30,30 +30,56 @@ describe('helper functions', () => {
   const badPool = nodePoolFactory.build({
     type: 'not-a-real-type',
   });
+  const region = 'us_east';
 
   describe('getMonthlyPrice', () => {
     it('should multiply node price by node count', () => {
       const expectedPrice = (types[0].price.monthly ?? 0) * mockNodePool.count;
       expect(
-        getMonthlyPrice(mockNodePool.type, mockNodePool.count, types)
+        getMonthlyPrice({
+          count: mockNodePool.count,
+          flags: { dcSpecificPricing: false },
+          region,
+          type: mockNodePool.type,
+          types,
+        })
       ).toBe(expectedPrice);
     });
 
     it('should return zero for bad input', () => {
-      expect(getMonthlyPrice(badPool.type, badPool.count, types)).toBe(0);
+      expect(
+        getMonthlyPrice({
+          count: badPool.count,
+          flags: { dcSpecificPricing: false },
+          region,
+          type: badPool.type,
+          types,
+        })
+      ).toBe(0);
     });
   });
 
   describe('getTotalClusterPrice', () => {
     it('should calculate the total cluster price', () => {
-      expect(getTotalClusterPrice([mockNodePool, mockNodePool], types)).toBe(
-        20
-      );
+      expect(
+        getTotalClusterPrice({
+          flags: { dcSpecificPricing: false },
+          pools: [mockNodePool, mockNodePool],
+          region,
+          types,
+        })
+      ).toBe(20);
     });
 
     it('should calculate the total cluster price with HA enabled', () => {
       expect(
-        getTotalClusterPrice([mockNodePool, mockNodePool], types, LKE_HA_PRICE)
+        getTotalClusterPrice({
+          flags: { dcSpecificPricing: false },
+          highAvailabilityPrice: LKE_HA_PRICE,
+          pools: [mockNodePool, mockNodePool],
+          region,
+          types,
+        })
       ).toBe(20 + LKE_HA_PRICE);
     });
   });

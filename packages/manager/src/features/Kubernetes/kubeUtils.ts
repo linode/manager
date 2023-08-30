@@ -6,31 +6,68 @@ import {
 } from '@linode/api-v4/lib/kubernetes';
 import { Region } from '@linode/api-v4/lib/regions';
 
+import { FlagSet } from 'src/featureFlags';
 import { ExtendedType } from 'src/utilities/extendType';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
 export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
 
-export const getMonthlyPrice = (
-  type: string,
-  count: number,
-  types: ExtendedType[]
-) => {
+interface MonthlyPriceOptions {
+  count: number;
+  flags: FlagSet;
+  region: Region['id'] | undefined;
+  type: string;
+  types: ExtendedType[];
+}
+
+interface TotalClusterPriceOptions {
+  flags: FlagSet;
+  highAvailabilityPrice?: number;
+  pools: KubeNodePoolResponse[];
+  region: Region['id'] | undefined;
+  types: ExtendedType[];
+}
+
+export const getMonthlyPrice = ({
+  count,
+  flags,
+  region,
+  type,
+  types,
+}: MonthlyPriceOptions) => {
   if (!types) {
     return 0;
   }
   const thisType = types.find((t: ExtendedType) => t.id === type);
-  return thisType ? (thisType.price.monthly ?? 0) * count : 0;
+  const monthlyPrice = flags.dcSpecificPricing
+    ? thisType && region
+      ? getLinodeRegionPrice(thisType, region).monthly
+      : undefined
+    : thisType?.price.monthly;
+
+  return thisType ? (monthlyPrice ?? 0) * count : 0;
 };
 
-export const getTotalClusterPrice = (
-  pools: KubeNodePoolResponse[],
-  types: ExtendedType[],
-  highAvailabilityPrice?: number
-) => {
+export const getTotalClusterPrice = ({
+  flags,
+  highAvailabilityPrice,
+  pools,
+  region,
+  types,
+}: TotalClusterPriceOptions) => {
   const price = pools.reduce((accumulator, node) => {
-    return accumulator + getMonthlyPrice(node.type, node.count, types);
+    return (
+      accumulator +
+      getMonthlyPrice({
+        count: node.count,
+        flags,
+        region,
+        type: node.type,
+        types,
+      })
+    );
   }, 0);
 
   return highAvailabilityPrice ? price + highAvailabilityPrice : price;
