@@ -640,8 +640,10 @@ export const handlers = [
     return res(
       ctx.json(
         linodeFactory.build({
-          backups: { enabled: false },
           id,
+          backups: { enabled: false },
+          label: 'DC-Specific Pricing Linode',
+          region: 'id-cgk',
         })
       )
     );
@@ -1460,20 +1462,37 @@ export const handlers = [
   rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.get('*/betas', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
-  }),
-  rest.get('*/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(betaFactory.build({ id: req.params.id })));
-  }),
-  rest.get('*/account/betas', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(accountBetaFactory.buildList(5))));
+  rest.get('*/account/betas', (_req, res, ctx) => {
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...accountBetaFactory.buildList(5),
+          accountBetaFactory.build({
+            started: DateTime.now().minus({ days: 30 }).toISO(),
+            enrolled: DateTime.now().minus({ days: 20 }).toISO(),
+            ended: DateTime.now().minus({ days: 5 }).toISO(),
+          }),
+        ])
+      )
+    );
   }),
   rest.get('*/account/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
   }),
-  rest.post('*/account/betas', (req, res, ctx) => {
+  rest.post('*/account/betas', (_req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.get('*/betas/:id', (req, res, ctx) => {
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(betaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
+  }),
+  rest.get('*/betas', (_req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
   }),
   ...entityTransfers,
   ...statusPage,

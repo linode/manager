@@ -12,7 +12,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { SubnetsActionMenu } from 'src/features/VPC/VPCDetail/SubnetActionMenu';
+import { SubnetsActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
 

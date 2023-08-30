@@ -102,7 +102,7 @@ const VPCDetail = () => {
             },
           ],
           labelOptions: { noCap: true },
-          pathname: `/vpc/${vpc.label}`,
+          pathname: `/vpcs/${vpc.label}`,
         }}
         docsLabel="Docs"
         docsLink="#" // TODO: VPC - Add docs link
