@@ -95,10 +95,10 @@ export const PlanSelection = (props: Props) => {
       : type.formattedLabel;
 
   // TODO: M3-7063 (defaults)
-  const price: PriceObject | undefined =
+  const price: PriceObject =
     dcSpecificPricing && selectedRegionId
       ? getLinodeRegionPrice(type, selectedRegionId)
-      : undefined;
+      : type.price;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -160,7 +160,7 @@ export const PlanSelection = (props: Props) => {
           </TableCell>
           <TableCell data-qa-monthly> ${price?.monthly}</TableCell>
           <TableCell data-qa-hourly>
-            {isGPU && price ? (
+            {isGPU ? (
               <Currency quantity={price.hourly ?? 0} />
             ) : (
               `$${price?.hourly}`
