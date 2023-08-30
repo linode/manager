@@ -838,13 +838,6 @@ export const lightTheme: ThemeOptions = {
       },
     },
     MuiMenu: {
-      defaultProps: {
-        slotProps: {
-          backdrop: {
-            invisible: true,
-          },
-        },
-      },
       styleOverrides: {
         paper: {
           '& .selectMenuList': {
