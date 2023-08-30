@@ -503,9 +503,7 @@ const DatabaseCreate = () => {
             regions={regionsData}
             selectedID={values.region}
           />
-          <div style={{ marginTop: 8 }}>
-            <RegionHelperText />
-          </div>
+          <RegionHelperText hidePricingNotice mt={1} />
         </Grid>
         <Divider spacingBottom={12} spacingTop={38} />
         <Grid>
