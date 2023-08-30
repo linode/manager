@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -34,6 +35,8 @@ const helperText =
 export const AddDeviceDrawer = (props: Props) => {
   const { onClose, open, type } = props;
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const { id } = useParams<{ id: string }>();
 
   const { data: grants } = useGrants();
@@ -68,9 +71,17 @@ export const AddDeviceDrawer = (props: Props) => {
   );
 
   const handleSubmit = async () => {
-    await Promise.all(selectedDeviceIds.map((id) => addDevice({ id, type })));
-    onClose();
-    setSelectedDeviceIds([]);
+    try {
+      await Promise.all(selectedDeviceIds.map((id) => addDevice({ id, type })));
+      enqueueSnackbar('All devices added successfully.', {
+        variant: 'success',
+      });
+
+      onClose();
+      setSelectedDeviceIds([]);
+    } catch (error) {
+      enqueueSnackbar('Failed to add some devices.', { variant: 'error' });
+    }
   };
 
   const errorMessage = error
@@ -127,7 +138,10 @@ export const AddDeviceDrawer = (props: Props) => {
 
   return (
     <Drawer
-      onClose={onClose}
+      onClose={() => {
+        setSelectedDeviceIds([]);
+        onClose();
+      }}
       open={open}
       title={`Add ${formattedTypes[type]} to Firewall: ${firewall?.label}`}
     >
