@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
@@ -11,19 +10,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { InstallationInstructions } from '../shared/InstallationInstructions';
 import { LongviewActionMenu, ActionHandlers } from './LongviewActionMenu';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  button: {
-    '&:hover': {
-      color: theme.color.red,
-    },
-    padding: 0,
-  },
-  root: {
-    marginBottom: theme.spacing(4),
-    padding: theme.spacing(3),
-  },
-}));
 
 interface Props extends ActionHandlers {
   clientAPIKey: string;
@@ -44,7 +30,8 @@ export const LongviewClientInstructions = (props: Props) => {
     updateLongviewClient,
     userCanModifyClient,
   } = props;
-  const { classes } = useStyles();
+
+  const theme = useTheme();
 
   const [updating, setUpdating] = React.useState<boolean>(false);
 
@@ -63,7 +50,13 @@ export const LongviewClientInstructions = (props: Props) => {
   };
 
   return (
-    <Paper className={classes.root} data-testid={clientID}>
+    <Paper
+      data-testid={clientID}
+      sx={{
+        marginBottom: theme.spacing(4),
+        padding: theme.spacing(3),
+      }}
+    >
       <Grid
         alignItems="flex-start"
         aria-label="Installation instructions for the Longview agent"

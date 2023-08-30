@@ -27,7 +27,7 @@ Here's an example:
 ```js
 import * as React from 'react';
 import { TimeRangeSelect } from '../../shared/TimeRangeSelect';
-import get from '../../request';
+import { get } from '../../request';
 import { LongviewCPU } from '../../request.types';
 
 interface Props {

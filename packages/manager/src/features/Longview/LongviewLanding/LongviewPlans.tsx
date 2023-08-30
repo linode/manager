@@ -4,19 +4,16 @@ import {
   updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
-import { Chip } from 'src/components/Chip';
 import { CircularProgress } from 'src/components/CircularProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
 import { SupportLink } from 'src/components/SupportLink';
-import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -27,87 +24,16 @@ import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  chip: {
-    borderRadius: 1,
-    fontSize: '0.65rem',
-    marginLeft: theme.spacing(2),
-    paddingLeft: theme.spacing(0.5),
-    paddingRight: theme.spacing(0.5),
-    textTransform: 'uppercase',
-  },
-  clientCell: {
-    [theme.breakpoints.up('md')]: {
-      width: '10%',
-    },
-  },
-  collapsedTable: {
-    minHeight: 0,
-  },
-  currentSubscriptionLabel: {
-    alignItems: 'center',
-    display: 'flex',
-    marginLeft: 2,
-    paddingRight: theme.spacing(3),
-    [theme.breakpoints.down('lg')]: {
-      paddingRight: 0,
-    },
-  },
-  dataResolutionCell: {
-    [theme.breakpoints.up('md')]: {
-      width: '15%',
-    },
-  },
-  dataRetentionCell: {
-    [theme.breakpoints.up('md')]: {
-      width: '15%',
-    },
-  },
-  disabledTableRow: {
-    cursor: 'not-allowed !important',
-  },
-  link: {
-    '& a': {
-      color: theme.textColors.linkActiveLight,
-    },
-    '& a:hover': {
-      color: theme.palette.primary.main,
-    },
-  },
-  planCell: {
-    [theme.breakpoints.up('md')]: {
-      width: '40%',
-    },
-  },
-  priceCell: {
-    [theme.breakpoints.up('md')]: {
-      width: '15%',
-    },
-  },
-  radio: {
-    marginLeft: `-${theme.spacing(0.5)}`,
-    marginRight: theme.spacing(2),
-    padding: 2,
-  },
-  root: {
-    padding: theme.spacing(3),
-    paddingBottom: 4,
-  },
-  submitButton: {
-    marginBottom: theme.spacing(3),
-    marginTop: theme.spacing(3),
-  },
-  table: {
-    '& tbody tr': {
-      cursor: 'pointer',
-    },
-    '& td': {
-      whiteSpace: 'nowrap',
-    },
-    border: `1px solid ${theme.borderColors.borderTable}`,
-  },
-}));
+import {
+  StyledChip,
+  StyledClientCell,
+  StyledDataOrPriceCell,
+  StyledDiv,
+  StyledNotice,
+  StyledPlanCell,
+  StyledTable,
+  StyledTableRow,
+} from './LongviewPlans.styles';
 
 // If an account has the "free" Longview plan,
 // longview_subscription will be {}. We'd rather use
@@ -134,7 +60,7 @@ export const managedText = (
 
 export const LongviewPlans = (props: LongviewPlansProps) => {
   const { subscriptionRequestHook: subscriptions } = props;
-  const { classes } = useStyles();
+  const theme = useTheme();
   const mounted = React.useRef<boolean>(false);
 
   const { data: profile } = useProfile();
@@ -244,14 +170,18 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
     <>
       <DocumentTitleSegment segment="Plan Details" />
       {isManaged ? (
-        <Paper className={`${classes.root} ${classes.collapsedTable}`}>
+        <Paper
+          sx={{
+            minHeight: 0,
+            padding: theme.spacing(3),
+            paddingBottom: 4,
+          }}
+        >
           {updateErrorMsg && <Notice text={updateErrorMsg} variant="error" />}
           {updateSuccessMsg && (
             <Notice text={updateSuccessMsg} variant="success" />
           )}
-          <Notice className={classes.link} variant="success">
-            {managedText}
-          </Notice>
+          <StyledNotice variant="success">{managedText}</StyledNotice>
         </Paper>
       ) : (
         <>
@@ -270,20 +200,18 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
           )}
           {isTableDisplayed && (
             <>
-              <Table className={classes.table}>
+              <StyledTable>
                 <TableHead>
                   <TableRow>
-                    <TableCell className={classes.planCell}>Plan</TableCell>
-                    <TableCell className={classes.clientCell}>
-                      Clients
-                    </TableCell>
-                    <TableCell className={classes.dataRetentionCell}>
+                    <StyledPlanCell>Plan</StyledPlanCell>
+                    <StyledClientCell>Clients</StyledClientCell>
+                    <StyledDataOrPriceCell>
                       Data Retention
-                    </TableCell>
-                    <TableCell className={classes.dataResolutionCell}>
+                    </StyledDataOrPriceCell>
+                    <StyledDataOrPriceCell>
                       Data Resolution
-                    </TableCell>
-                    <TableCell className={classes.priceCell}>Price</TableCell>
+                    </StyledDataOrPriceCell>
+                    <StyledDataOrPriceCell>Price</StyledDataOrPriceCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -298,14 +226,17 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
                     subscriptions={subscriptions.data}
                   />
                 </TableBody>
-              </Table>
+              </StyledTable>
               <Button
                 buttonType="primary"
-                className={classes.submitButton}
                 data-testid="submit-button"
                 disabled={isButtonDisabled}
                 loading={updateLoading}
                 onClick={onSubmit}
+                sx={{
+                  marginBottom: theme.spacing(3),
+                  marginTop: theme.spacing(3),
+                }}
               >
                 Change Plan
               </Button>
@@ -383,7 +314,7 @@ export const LongviewPlansTableBody = React.memo(
 // =============================================================================
 // LongviewSubscriptionRow
 // =============================================================================
-interface LongviewSubscriptionRowProps {
+export interface LongviewSubscriptionRowProps {
   clients: number;
   currentSubscriptionOnAccount?: string;
   dataResolution: string;
@@ -413,7 +344,7 @@ export const LongviewSubscriptionRow = React.memo(
       price,
     } = props;
 
-    const { classes: styles, cx } = useStyles();
+    const theme = useTheme();
 
     const handleClick = () => {
       if (disabled) {
@@ -423,61 +354,50 @@ export const LongviewSubscriptionRow = React.memo(
     };
 
     return (
-      <TableRow
-        className={cx({
-          [styles.disabledTableRow]: disabled,
-        })}
+      <StyledTableRow
         ariaLabel={plan}
+        disabled={disabled}
         data-testid={`lv-sub-table-row-${id}`}
         key={id}
         onClick={handleClick}
       >
         <TableCell data-testid={`plan-cell-${id}`}>
-          <div className={styles.currentSubscriptionLabel}>
+          <StyledDiv>
             <Radio
               checked={isSelected}
-              className={styles.radio}
               data-testid={`lv-sub-radio-${id}`}
               disabled={disabled}
               id={id}
               onChange={onRadioSelect}
+              sx={{
+                marginLeft: `-${theme.spacing(0.5)}`,
+                marginRight: theme.spacing(2),
+                padding: 2,
+              }}
               value={id}
             />
             {plan}
             {currentSubscriptionOnAccount === id && (
-              <Chip
-                className={styles.chip}
+              <StyledChip
                 data-testid={`current-plan-${id}`}
                 label="Current Plan"
               />
             )}
-          </div>
+          </StyledDiv>
         </TableCell>
-        <TableCell
-          className={styles.clientCell}
-          data-testid={`clients-cell-${id}`}
-        >
+        <StyledClientCell data-testid={`clients-cell-${id}`}>
           {clients}
-        </TableCell>
-        <TableCell
-          className={styles.dataRetentionCell}
-          data-testid={`data-retention-cell-${id}`}
-        >
+        </StyledClientCell>
+        <StyledDataOrPriceCell data-testid={`data-retention-cell-${id}`}>
           {dataRetention}
-        </TableCell>
-        <TableCell
-          className={styles.dataResolutionCell}
-          data-testid={`data-resolution-cell-${id}`}
-        >
+        </StyledDataOrPriceCell>
+        <StyledDataOrPriceCell data-testid={`data-resolution-cell-${id}`}>
           {dataResolution}
-        </TableCell>
-        <TableCell
-          className={styles.priceCell}
-          data-testid={`price-cell-${id}`}
-        >
+        </StyledDataOrPriceCell>
+        <StyledDataOrPriceCell data-testid={`price-cell-${id}`}>
           {price}
-        </TableCell>
-      </TableRow>
+        </StyledDataOrPriceCell>
+      </StyledTableRow>
     );
   }
 );

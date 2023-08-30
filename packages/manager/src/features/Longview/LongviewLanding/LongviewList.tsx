@@ -1,33 +1,17 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { Props as LVProps } from 'src/containers/longview.container';
 
 import { LongviewListRows } from './LongviewListRows';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  button: {
-    ...theme.applyLinkStyles,
-  },
-  empty: {
-    alignItems: 'center',
-    display: 'flex',
-    height: '20em',
-    justifyContent: 'center',
-  },
-  emptyText: {
-    fontSize: '1.1em',
-  },
-}));
 
 type LongviewProps = Omit<
   LVProps,
@@ -66,8 +50,6 @@ export const LongviewList = React.memo((props: CombinedProps) => {
     userCanCreateLongviewClient,
   } = props;
 
-  const { classes } = useStyles();
-
   // Empty state and a new client is being created
   const newClientIsLoading = loading && longviewClientsResults === 0;
 
@@ -97,14 +79,22 @@ export const LongviewList = React.memo((props: CombinedProps) => {
   /** Empty state */
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
     return (
-      <Paper className={classes.empty} data-testid="no-client-list">
-        <Typography className={classes.emptyText} variant="body1">
+      <Paper
+        data-testid="no-client-list"
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          height: '20em',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography sx={{ fontSize: '1.1em' }} variant="body1">
           {userCanCreateLongviewClient ? (
             <React.Fragment>
               You have no Longview clients configured.{' '}
-              <button className={classes.button} onClick={createLongviewClient}>
+              <StyledLinkButton onClick={createLongviewClient}>
                 Click here to add one.
-              </button>
+              </StyledLinkButton>
             </React.Fragment>
           ) : (
             'You have no Longview clients configured.'

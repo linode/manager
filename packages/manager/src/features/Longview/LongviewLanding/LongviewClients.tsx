@@ -3,8 +3,6 @@ import {
   LongviewClient,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -14,7 +12,6 @@ import { compose } from 'recompose';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { Grid } from 'src/components/Grid';
 import { Typography } from 'src/components/Typography';
 import withLongviewClients, {
   Props as LongviewProps,
@@ -29,47 +26,15 @@ import { sumUsedMemory } from '../shared/utilities';
 import { getFinalUsedCPU } from './Gauges/CPU';
 import { generateUsedNetworkAsBytes } from './Gauges/Network';
 import { getUsedStorage } from './Gauges/Storage';
+import {
+  StyledCTAGrid,
+  StyledHeadingGrid,
+  StyledSearchbarGrid,
+  StyledSortSelectGrid,
+} from './LongviewClients.styles';
 import { LongviewDeleteDialog } from './LongviewDeleteDialog';
 import { LongviewList } from './LongviewList';
 import { SubscriptionDialog } from './SubscriptionDialog';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  cta: {
-    marginTop: theme.spacing(2),
-  },
-  headingWrapper: {
-    marginBottom: theme.spacing(),
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: 0,
-      marginRight: 0,
-    },
-  },
-  searchbar: {
-    '& > div': {
-      width: '300px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    [theme.breakpoints.only('md')]: {
-      '&.MuiGrid-item': {
-        paddingLeft: 0,
-      },
-    },
-  },
-  selectLabel: {
-    minWidth: '65px',
-  },
-  sortSelect: {
-    alignItems: 'center',
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    [theme.breakpoints.up('xs')]: {
-      width: 221,
-    },
-    width: 210,
-  },
-}));
 
 interface Props {
   activeSubscription: ActiveLongviewPlan;
@@ -149,8 +114,6 @@ export const LongviewClients = (props: CombinedProps) => {
     subscriptionDialogOpen,
     setSubscriptionDialogOpen,
   ] = React.useState<boolean>(false);
-
-  const { classes } = useStyles();
 
   React.useEffect(() => {
     getLongviewClients();
@@ -233,8 +196,8 @@ export const LongviewClients = (props: CombinedProps) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clients" />
-      <Grid alignItems="center" className={classes.headingWrapper} container>
-        <Grid className={classes.searchbar} item>
+      <StyledHeadingGrid>
+        <StyledSearchbarGrid>
           <DebouncedSearchTextField
             debounceTime={250}
             hideLabel
@@ -242,9 +205,9 @@ export const LongviewClients = (props: CombinedProps) => {
             onSearch={handleSearch}
             placeholder="Filter by client label or hostname"
           />
-        </Grid>
-        <Grid className={`py0 ${classes.sortSelect}`} item>
-          <Typography className={classes.selectLabel}>Sort by: </Typography>
+        </StyledSearchbarGrid>
+        <StyledSortSelectGrid>
+          <Typography sx={{ minWidth: '65px' }}>Sort by: </Typography>
           <Select
             value={sortOptions.find(
               (thisOption) => thisOption.value === sortKey
@@ -256,8 +219,8 @@ export const LongviewClients = (props: CombinedProps) => {
             options={sortOptions}
             small
           />
-        </Grid>
-      </Grid>
+        </StyledSortSelectGrid>
+      </StyledHeadingGrid>
       <LongviewList
         createLongviewClient={handleAddClient}
         filteredData={sortedList}
@@ -271,19 +234,13 @@ export const LongviewClients = (props: CombinedProps) => {
         userCanCreateLongviewClient={userCanCreateClient}
       />
       {!isLongviewPro && (
-        <Grid
-          alignItems="center"
-          className={classes.cta}
-          container
-          direction="column"
-          justifyContent="center"
-        >
+        <StyledCTAGrid>
           <Typography data-testid="longview-upgrade">
             <Link to={'/longview/plan-details'}>Upgrade to Longview Pro</Link>
             {` `}for more clients, longer data retention, and more frequent data
             updates.
           </Typography>
-        </Grid>
+        </StyledCTAGrid>
       )}
       <LongviewDeleteDialog
         closeDialog={() => toggleDeleteDialog(false)}

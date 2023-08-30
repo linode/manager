@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -18,12 +17,6 @@ import withLongviewStats, {
 import { LongviewPackageRow } from './LongviewPackageRow';
 import { LongviewPackage } from './request.types';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  new: {
-    color: theme.color.green,
-  },
-}));
-
 interface Props {
   clientID: number;
   clientLabel: string;
@@ -37,8 +30,7 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
   (own) => own.clientID
 )((props: CombinedProps) => {
   const { clientLabel, isOpen, longviewClientData, onClose } = props;
-
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   const lvPackages: LongviewPackage[] = pathOr(
     [],
@@ -58,7 +50,7 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
             <TableCell style={{ width: '40%' }}>Package</TableCell>
             <TableCell>
               Installed Version{` `}/{` `}
-              <span className={classes.new}>Latest Version</span>
+              <span style={{ color: theme.color.green }}>Latest Version</span>
             </TableCell>
           </TableRow>
         </TableHead>
