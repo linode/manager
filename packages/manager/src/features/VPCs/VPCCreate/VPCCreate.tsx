@@ -108,7 +108,7 @@ const VPCCreate = () => {
 
     try {
       const response = await createVPC(createVPCPayload);
-      history.push(`/vpc/${response.id}`);
+      history.push(`/vpcs/${response.id}`);
     } catch (errors) {
       const apiSubnetErrors = errors.filter(
         (error: APIError) => error.field && error.field.includes('subnets')
@@ -174,7 +174,7 @@ const VPCCreate = () => {
               position: 1,
             },
           ],
-          pathname: `/vpc/create`,
+          pathname: `/vpcs/create`,
         }}
         docsLabel="Getting Started"
         docsLink="#" // TODO: VPC - add correct docs link
@@ -235,7 +235,9 @@ const VPCCreate = () => {
             />
           </Paper>
           <Paper sx={{ marginTop: theme.spacing(2.5) }}>
-            <StyledHeaderTypography variant="h2">Subnet</StyledHeaderTypography>
+            <StyledHeaderTypography variant="h2">
+              Subnets
+            </StyledHeaderTypography>
             <StyledBodyTypography variant="body1">
               A subnet divides a VPC into multiple logically defined networks to
               allow for controlled access to VPC resources. Subnets within a VPC
