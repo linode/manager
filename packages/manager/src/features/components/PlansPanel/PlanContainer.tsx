@@ -1,6 +1,7 @@
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
 import { Notice } from 'src/components/Notice/Notice';
@@ -64,6 +65,7 @@ export const PlanContainer = (props: Props) => {
     showTransfer,
   } = props;
   const { dcSpecificPricing } = useFlags();
+  const location = useLocation();
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
@@ -72,8 +74,11 @@ export const PlanContainer = (props: Props) => {
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const shouldShowNetwork =
     showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
+
+  // DC Dynamic price logic - DB creation flow is currently out of scope
+  const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
   const shouldDisplayNoRegionSelectedMessage =
-    dcSpecificPricing && !selectedRegionId;
+    dcSpecificPricing && !selectedRegionId && !isDatabaseCreateFlow;
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => (
