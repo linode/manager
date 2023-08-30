@@ -214,7 +214,7 @@ export const PaymentDrawer = (props: Props) => {
   };
 
   const renderError = (errorMsg: string) => {
-    return <Notice error text={errorMsg} />;
+    return <Notice text={errorMsg} variant="error" />;
   };
 
   if (!accountLoading && account?.balance === undefined) {
@@ -229,7 +229,7 @@ export const PaymentDrawer = (props: Props) => {
     <Drawer onClose={onClose} open={open} title="Make a Payment">
       <Grid container>
         <Grid xs={12}>
-          {errorMessage && <Notice error text={errorMessage ?? ''} />}
+          {errorMessage && <Notice text={errorMessage ?? ''} variant="error" />}
           {warning ? <Warning warning={warning} /> : null}
           {isProcessing ? (
             <LinearProgress className={classes.progress} />
@@ -400,7 +400,7 @@ const Warning = (props: WarningProps) => {
       {warning.title} {ticketLink}
     </>
   );
-  return <Notice warning>{message}</Notice>;
+  return <Notice variant="warning">{message}</Notice>;
 };
 
 export default PaymentDrawer;

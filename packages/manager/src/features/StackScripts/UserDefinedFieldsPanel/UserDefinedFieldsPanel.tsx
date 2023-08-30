@@ -237,7 +237,7 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
           className={classes.clusterNotice}
           data-testid="create-cluster-notice"
         >
-          <Notice success>
+          <Notice variant="success">
             <strong>
               You are creating a cluster with {numberOfNodes} nodes.
             </strong>

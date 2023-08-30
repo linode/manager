@@ -19,7 +19,7 @@ export const DrawerContent = (props: DrawerContentProps) => {
 
   if (error) {
     return (
-      <Notice error spacingTop={8}>
+      <Notice spacingTop={8} variant="error">
         {errorMessage ?? `Couldn't load ${title}`}
       </Notice>
     );

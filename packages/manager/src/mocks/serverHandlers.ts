@@ -18,6 +18,7 @@ import {
   accountTransferFactory,
   appTokenFactory,
   betaFactory,
+  certificateFactory,
   configurationFactory,
   contactFactory,
   createRouteFactory,
@@ -85,7 +86,6 @@ import {
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
-  updateLoadbalancerFactory,
   volumeFactory,
   vpcFactory,
 } from 'src/factories';
@@ -347,7 +347,7 @@ const aglb = [
     // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
     // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
     // TODO: AGLB - figure out if this is still accurate
-    return res(ctx.json(updateLoadbalancerFactory.build({ id, ...body })));
+    return res(ctx.json(loadbalancerFactory.build({ id, ...body })));
   }),
   rest.delete('*/v4beta/aglb/:id', (req, res, ctx) => {
     return res(ctx.json({}));
@@ -389,6 +389,22 @@ const aglb = [
       return res(ctx.json({}));
     }
   ),
+  // Certificates
+  rest.get('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
+    const certificates = certificateFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(certificates)));
+  }),
+  rest.post('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
+    return res(ctx.json(certificateFactory.build()));
+  }),
+  rest.put('*/v4beta/aglb/:id/certificates/:certId', (req, res, ctx) => {
+    const id = Number(req.params.certId);
+    const body = req.body as any;
+    return res(ctx.json(certificateFactory.build({ id, ...body })));
+  }),
+  rest.delete('*/v4beta/aglb/:id/certificates/:certId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
 ];
 
 const vpc = [
@@ -430,6 +446,10 @@ const vpc = [
   rest.get('*/vpcs/:vpcID', (req, res, ctx) => {
     const id = Number(req.params.id);
     return res(ctx.json(vpcFactory.build({ id })));
+  }),
+  rest.post('*/vpcs', (req, res, ctx) => {
+    const vpc = vpcFactory.build({ ...(req.body as any) });
+    return res(ctx.json(vpc));
   }),
 ];
 
@@ -605,6 +625,11 @@ export const handlers = [
         label: 'eu-linode',
         region: 'eu-west',
       }),
+      linodeFactory.build({
+        backups: { enabled: false },
+        label: 'DC-Specific Pricing Linode',
+        region: 'id-cgk',
+      }),
       eventLinode,
       multipleIPLinode,
     ];
@@ -612,7 +637,16 @@ export const handlers = [
   }),
   rest.get('*/linode/instances/:id', async (req, res, ctx) => {
     const id = Number(req.params.id);
-    return res(ctx.json(linodeFactory.build({ id })));
+    return res(
+      ctx.json(
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'DC-Specific Pricing Linode',
+          region: 'id-cgk',
+        })
+      )
+    );
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
     return res(ctx.json({}));
@@ -920,6 +954,15 @@ export const handlers = [
     });
     return res(ctx.json(makeResourcePage([linodeInvoice, akamaiInvoice])));
   }),
+  rest.get('*/account/invoices/:invoiceId', (req, res, ctx) => {
+    const linodeInvoice = invoiceFactory.build({
+      date: '2022-12-01T18:04:01',
+      id: 1234,
+      label: 'LinodeInvoice',
+    });
+    return res(ctx.json(linodeInvoice));
+  }),
+
   rest.get('*/account/maintenance', (req, res, ctx) => {
     accountMaintenanceFactory.resetSequenceNumber();
     const page = Number(req.url.searchParams.get('page') || 1);
@@ -1415,20 +1458,37 @@ export const handlers = [
   rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.get('*/betas', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
-  }),
-  rest.get('*/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(betaFactory.build({ id: req.params.id })));
-  }),
-  rest.get('*/account/betas', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(accountBetaFactory.buildList(5))));
+  rest.get('*/account/betas', (_req, res, ctx) => {
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...accountBetaFactory.buildList(5),
+          accountBetaFactory.build({
+            started: DateTime.now().minus({ days: 30 }).toISO(),
+            enrolled: DateTime.now().minus({ days: 20 }).toISO(),
+            ended: DateTime.now().minus({ days: 5 }).toISO(),
+          }),
+        ])
+      )
+    );
   }),
   rest.get('*/account/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
   }),
-  rest.post('*/account/betas', (req, res, ctx) => {
+  rest.post('*/account/betas', (_req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.get('*/betas/:id', (req, res, ctx) => {
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(betaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
+  }),
+  rest.get('*/betas', (_req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
   }),
   ...entityTransfers,
   ...statusPage,

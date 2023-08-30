@@ -45,7 +45,7 @@ export const NodeBalancerDeleteDialog = ({
       title={`Delete ${label}?`}
       typographyStyle={{ marginTop: '20px' }}
     >
-      <Notice warning>
+      <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           Deleting this NodeBalancer is permanent and can’t be undone.
         </Typography>

@@ -20,6 +20,7 @@ import { compose as recompose } from 'recompose';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Tag } from 'src/components/TagsInput/TagsInput';
 import {
   WithAccountSettingsProps,
@@ -258,6 +259,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
+        <ProductInformationBanner bannerLocation="LinodeCreate" />
         <Grid className="m0" container spacing={0}>
           <LandingHeader
             onDocsClick={() =>
@@ -271,7 +273,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             accountBackupsEnabled={
               this.props.accountSettings.data?.backups_enabled ?? false
             }
-            backupsMonthlyPrice={this.getBackupsMonthlyPrice()}
             checkValidation={this.checkValidation}
             handleAgreementChange={this.handleAgreementChange}
             handleSelectUDFs={this.setUDFs}
@@ -412,12 +413,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     );
   };
 
-  getBackupsMonthlyPrice = (): null | number | undefined => {
-    const type = this.getTypeInfo();
-
-    return !type ? undefined : type.backupsMonthly;
-  };
-
   getImageInfo = (): Info | undefined => {
     const { selectedImageID } = this.state;
 
@@ -491,7 +486,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
     return (
       type && {
-        backupsMonthly: type.addons.backups.price.monthly,
         details: `$${type.price.monthly}/month`,
         hourly: type.price.hourly ?? 0,
         monthly: type.price.monthly ?? 0,
