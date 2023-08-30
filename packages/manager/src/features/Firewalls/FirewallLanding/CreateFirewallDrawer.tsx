@@ -1,4 +1,7 @@
-import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
+import {
+  CreateFirewallPayload,
+  FirewallDeviceEntityType,
+} from '@linode/api-v4/lib/firewalls';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -18,8 +21,12 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
-  'Only Linodes you have permission to modify are shown.';
+import { formattedTypes } from '../FirewallDetail/Devices/FirewallDeviceLanding';
+
+export const READ_ONLY_DEVICES_HIDDEN_MESSAGE = (
+  deviceType: FirewallDeviceEntityType
+) =>
+  `Only ${formattedTypes[deviceType]}s you have permission to modify are shown.`;
 
 export interface CreateFirewallDrawerProps {
   onClose: () => void;
@@ -128,7 +135,7 @@ export const CreateFirewallDrawer = React.memo(
 
     const linodeSelectGuidance =
       readOnlyLinodeIds.length > 0
-        ? READ_ONLY_LINODES_HIDDEN_MESSAGE
+        ? READ_ONLY_DEVICES_HIDDEN_MESSAGE('linode')
         : undefined;
 
     const firewallHelperText = `Assign one or more Linodes to this firewall. You can add Linodes later if you want to customize your rules first. ${

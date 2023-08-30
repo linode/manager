@@ -18,7 +18,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
+import { READ_ONLY_DEVICES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
 import { formattedTypes } from './FirewallDeviceLanding';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
@@ -44,15 +44,15 @@ export const AddDeviceDrawer = (props: Props) => {
     isLoading: currentDevicesLoading,
   } = useAllFirewallDevicesQuery(Number(id));
 
-  const currentLinodeIds =
-    currentDevices
-      ?.filter((device) => device.entity.type === 'linode')
-      .map((device) => device.entity.id) ?? [];
+  const getEntityIdsByType = (entityType: FirewallDeviceEntityType) => {
+    return (
+      currentDevices
+        ?.filter((device) => device.entity.type === entityType)
+        .map((device) => device.entity.id) ?? []
+    );
+  };
 
-  const currentNodebalancerIds =
-    currentDevices
-      ?.filter((device) => device.entity.type === 'nodebalancer')
-      .map((device) => device.entity.id) ?? [];
+  const currentDeviceIds = getEntityIdsByType(type);
 
   const {
     error,
@@ -71,21 +71,23 @@ export const AddDeviceDrawer = (props: Props) => {
     setSelectedDeviceIds([]);
   };
 
-  // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
   const errorMessage = error
-    ? getAPIErrorOrDefault(error, 'Error adding Linode')[0].reason
+    ? getAPIErrorOrDefault(error, `Error adding ${formattedTypes[type]}`)[0]
+        .reason
     : undefined;
 
   // @todo update regex once error messaging updates
   const errorNotice = (errorMsg: string) => {
     // match something like: Linode <linode_label> (ID <linode_id>)
-    const linode = /linode (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
+    const device = /(linode|nodebalancer) (.+?) \(id ([^()]*)\)/i.exec(
+      errorMsg
+    );
     const openTicket = errorMsg.match(/open a support ticket\./i);
     if (openTicket) {
       errorMsg = errorMsg.replace(/open a support ticket\./i, '');
     }
-    if (linode) {
-      const [, label, id] = linode;
+    if (device) {
+      const [, label, id] = device;
       const labelIndex = errorMsg.indexOf(label);
       errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
       return (
@@ -98,7 +100,7 @@ export const AddDeviceDrawer = (props: Props) => {
           variant="error"
         >
           {errorMsg.substring(0, labelIndex)}
-          <Link to={`/linodes/${id}`}>{label}</Link>
+          <Link to={`/${type}s/${id}`}>{label}</Link>
           {errorMsg.substring(labelIndex + label.length)}
           {openTicket ? (
             <>
@@ -113,16 +115,18 @@ export const AddDeviceDrawer = (props: Props) => {
   };
 
   // If a user is restricted, they can not add a read-only Linode to a firewall.
-  const readOnlyLinodeIds = isRestrictedUser
-    ? getEntityIdsByPermission(grants, 'linode', 'read_only')
-    : [];
+  const getReadOnlyEntityIds = (entityType: FirewallDeviceEntityType) => {
+    return isRestrictedUser
+      ? getEntityIdsByPermission(grants, entityType, 'read_only')
+      : [];
+  };
 
-  const readOnlyNodebalancerIds = isRestrictedUser
-    ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
-    : [];
+  const readOnlyDeviceIds = getReadOnlyEntityIds(type);
 
-  const linodeSelectGuidance =
-    readOnlyLinodeIds.length > 0 ? READ_ONLY_LINODES_HIDDEN_MESSAGE : undefined;
+  const deviceSelectGuidance =
+    readOnlyDeviceIds.length > 0
+      ? READ_ONLY_DEVICES_HIDDEN_MESSAGE(type)
+      : undefined;
 
   return (
     <Drawer
@@ -140,13 +144,13 @@ export const AddDeviceDrawer = (props: Props) => {
         {type === 'linode' ? (
           <LinodeSelect
             helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
-              linodeSelectGuidance ? linodeSelectGuidance : ''
+              deviceSelectGuidance ? deviceSelectGuidance : ''
             }`}
             onSelectionChange={(linodes) =>
               setSelectedDeviceIds(linodes.map((linode) => linode.id))
             }
             optionsFilter={(linode) =>
-              ![...currentLinodeIds, ...readOnlyLinodeIds].includes(linode.id)
+              ![...currentDeviceIds, ...readOnlyDeviceIds].includes(linode.id)
             }
             disabled={currentDevicesLoading}
             loading={currentDevicesLoading}
@@ -157,7 +161,7 @@ export const AddDeviceDrawer = (props: Props) => {
         ) : (
           <NodeBalancerSelect
             helperText={`You can assign one or more NodeBalancers to this Firewall. Each NodeBalancer can only be assigned to a single Firewall. ${
-              linodeSelectGuidance ? linodeSelectGuidance : ''
+              deviceSelectGuidance ? deviceSelectGuidance : ''
             }`}
             onSelectionChange={(nodebalancers) =>
               setSelectedDeviceIds(
@@ -165,7 +169,7 @@ export const AddDeviceDrawer = (props: Props) => {
               )
             }
             optionsFilter={(nodebalancer) =>
-              ![...currentNodebalancerIds, ...readOnlyNodebalancerIds].includes(
+              ![...currentDeviceIds, ...readOnlyDeviceIds].includes(
                 nodebalancer.id
               )
             }
