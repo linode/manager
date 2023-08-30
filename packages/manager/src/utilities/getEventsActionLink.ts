@@ -107,6 +107,9 @@ export const getLinkForEvent = (
     case 'user':
       return `/account/users/${label}/profile`;
 
+    case 'vpc':
+      return `/vpcs/${id}`;
+
     default:
       return;
   }

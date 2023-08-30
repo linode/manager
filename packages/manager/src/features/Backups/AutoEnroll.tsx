@@ -35,6 +35,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
               >
                 Backups pricing page
               </Link>
+              .
             </Typography>
           </StyledDiv>
         }

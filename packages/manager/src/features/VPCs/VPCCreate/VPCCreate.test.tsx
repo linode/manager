@@ -22,7 +22,7 @@ describe('VPC create page', () => {
     getAllByText('VPC label');
     getAllByText('Select a Region');
     getAllByText('Description');
-    getAllByText('Subnet');
+    getAllByText('Subnets');
     getAllByText('Subnet label');
     getAllByText('Subnet IP Address Range');
     getAllByText('Add a Subnet');
