@@ -71,17 +71,24 @@ export const AddDeviceDrawer = (props: Props) => {
   );
 
   const handleSubmit = async () => {
-    try {
-      await Promise.all(selectedDeviceIds.map((id) => addDevice({ id, type })));
-      enqueueSnackbar('All devices added successfully.', {
-        variant: 'success',
-      });
+    const results = await Promise.allSettled(
+      selectedDeviceIds.map((id) => addDevice({ id, type }))
+    );
 
-      onClose();
-      setSelectedDeviceIds([]);
-    } catch (error) {
-      enqueueSnackbar('Failed to add some devices.', { variant: 'error' });
-    }
+    results.forEach((result, _) => {
+      if (result.status === 'fulfilled') {
+        // Assuming the response contains the device label, replace with the appropriate property if not.
+        const label = result.value.entity.label;
+        enqueueSnackbar(`${label} added successfully.`, { variant: 'success' });
+      } else {
+        // Assuming the error object contains the device label, replace with the appropriate property if not.
+        const errorLabel = result.reason.label;
+        enqueueSnackbar(`Failed to add ${errorLabel}.`, { variant: 'error' });
+      }
+    });
+
+    onClose();
+    setSelectedDeviceIds([]);
   };
 
   const errorMessage = error
