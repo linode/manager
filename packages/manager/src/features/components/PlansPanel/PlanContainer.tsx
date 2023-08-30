@@ -75,6 +75,38 @@ export const PlanContainer = (props: Props) => {
   const shouldDisplayNoRegionSelectedMessage =
     dcSpecificPricing && !selectedRegionId;
 
+  const renderPlanSelection = React.useCallback(() => {
+    return plans.map((plan, id) => (
+      <PlanSelection
+        currentPlanHeading={currentPlanHeading}
+        disabled={disabled}
+        disabledClasses={disabledClasses}
+        idx={id}
+        isCreate={isCreate}
+        key={id}
+        linodeID={linodeID}
+        onSelect={onSelect}
+        selectedDiskSize={selectedDiskSize}
+        selectedID={selectedID}
+        selectedRegionId={selectedRegionId}
+        showTransfer={showTransfer}
+        type={plan}
+      />
+    ));
+  }, [
+    currentPlanHeading,
+    disabled,
+    disabledClasses,
+    isCreate,
+    linodeID,
+    onSelect,
+    plans,
+    selectedDiskSize,
+    selectedID,
+    selectedRegionId,
+    showTransfer,
+  ]);
+
   return (
     <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
@@ -82,27 +114,12 @@ export const PlanContainer = (props: Props) => {
           <Notice
             spacingLeft={8}
             spacingTop={8}
+            sx={{ '& p': { fontSize: '0.875rem' } }}
             text={NO_REGION_SELECTED_MESSAGE}
             variant="warning"
           />
         ) : (
-          plans.map((plan, id) => (
-            <PlanSelection
-              currentPlanHeading={currentPlanHeading}
-              disabled={disabled}
-              disabledClasses={disabledClasses}
-              idx={id}
-              isCreate={isCreate}
-              key={id}
-              linodeID={linodeID}
-              onSelect={onSelect}
-              selectedDiskSize={selectedDiskSize}
-              selectedID={selectedID}
-              selectedRegionId={selectedRegionId}
-              showTransfer={showTransfer}
-              type={plan}
-            />
-          ))
+          renderPlanSelection()
         )}
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
@@ -143,23 +160,7 @@ export const PlanContainer = (props: Props) => {
                   message={NO_REGION_SELECTED_MESSAGE}
                 />
               ) : (
-                plans.map((plan, id) => (
-                  <PlanSelection
-                    currentPlanHeading={currentPlanHeading}
-                    disabled={disabled}
-                    disabledClasses={disabledClasses}
-                    idx={id}
-                    isCreate={isCreate}
-                    key={id}
-                    linodeID={linodeID}
-                    onSelect={onSelect}
-                    selectedDiskSize={selectedDiskSize}
-                    selectedID={selectedID}
-                    selectedRegionId={selectedRegionId}
-                    showTransfer={showTransfer}
-                    type={plan}
-                  />
-                ))
+                renderPlanSelection()
               )}
             </TableBody>
           </StyledTable>
