@@ -7,7 +7,7 @@ import {
   mockGetVPCs,
   mockDeleteVPC,
   mockUpdateVPC,
-} from 'support/intercepts/vpcs';
+} from 'support/intercepts/vpc';
 import { vpcFactory } from '@src/factories';
 import { ui } from 'support/ui';
 import { randomLabel, randomPhrase } from 'support/util/random';
