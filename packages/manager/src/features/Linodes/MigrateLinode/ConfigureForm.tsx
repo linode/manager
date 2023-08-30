@@ -71,10 +71,9 @@ export const ConfigureForm = React.memo((props: Props) => {
 
   const currentRegionPrice =
     currentLinodeType && getLinodeRegionPrice(currentLinodeType, currentRegion);
-  // TODO: DYNAMIC_PRICING we probably don't want to default to the current price in case something goes wrong,
-  // resulting in misleading pricing.
-  // we will need a way to handle an error for this case here and dynamicPricing.ts
-  const selectedRegionPrice =
+
+  // TODO: M3-7063 (defaults)
+  const selectedRegionPrice: PriceObject | undefined =
     (currentLinodeType &&
       selectedRegion &&
       getLinodeRegionPrice(currentLinodeType, selectedRegion)) ||

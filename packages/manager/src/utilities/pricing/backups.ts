@@ -76,6 +76,7 @@ export const getTotalBackupsPrice = ({
   return linodes.reduce((prevValue: number, linode: Linode) => {
     const type = types.find((type) => type.id === linode.type);
 
+    // TODO: M3-7063 (defaults)
     const backupsMonthlyPrice: PriceObject['monthly'] =
       getMonthlyBackupsPrice({
         flags,
