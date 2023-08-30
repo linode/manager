@@ -13,7 +13,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { VPCDeleteDialog } from 'src/features/VPC/VPCLanding/VPCDeleteDialog';
+import { VPCDeleteDialog } from './VPCDeleteDialog';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVPCsQuery } from 'src/queries/vpcs';
@@ -24,7 +24,7 @@ import { VPCEmptyState } from './VPCEmptyState';
 import { VPCRow } from './VPCRow';
 
 const preferenceKey = 'vpcs';
-const VPC_CREATE_ROUTE = 'vpc/create';
+const VPC_CREATE_ROUTE = 'vpcs/create';
 
 const VPCLanding = () => {
   const pagination = usePagination(1, preferenceKey);

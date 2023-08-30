@@ -7,10 +7,7 @@ import {
   gettingStartedGuides,
   youtubeLinkData,
 } from 'src/features/Linodes/LinodesLanding/LinodesLandingEmptyStateData';
-import {
-  headers,
-  linkAnalyticsEvent,
-} from 'src/features/VPC/VPCLanding/VPCEmptyStateData';
+import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
 import { sendEvent } from 'src/utilities/analytics';
 
 export const VPCEmptyState = () => {
@@ -27,7 +24,7 @@ export const VPCEmptyState = () => {
               category: linkAnalyticsEvent.category,
               label: 'Create VPC',
             });
-            push('/vpc/create');
+            push('/vpcs/create');
           },
         },
       ]}

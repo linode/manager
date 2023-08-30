@@ -30,7 +30,7 @@ describe('Betas landing page', () => {
     cy.url().should('endWith', '/betas');
 
     ui.heading.findByText('Betas').should('be.visible');
-    cy.findByText('Available Betas').should('be.visible');
+    cy.findByText('Available & Upcoming Betas').should('be.visible');
     cy.findByText('Beta Participation History').should('be.visible');
   });
 

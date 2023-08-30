@@ -176,8 +176,8 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
-const Betas = React.lazy(() => import('src/features/Betas/BetasLanding'));
-const VPC = React.lazy(() => import('src/features/VPC'));
+const BetaRoutes = React.lazy(() => import('src/features/Betas'));
+const VPC = React.lazy(() => import('src/features/VPCs'));
 
 const MainContent = (props: CombinedProps) => {
   const { classes, cx } = useStyles();
@@ -362,10 +362,10 @@ const MainContent = (props: CombinedProps) => {
                               <Route component={Databases} path="/databases" />
                             ) : null}
                             {flags.selfServeBetas ? (
-                              <Route component={Betas} path="/betas" />
+                              <Route component={BetaRoutes} path="/betas" />
                             ) : null}
                             {showVPCs ? (
-                              <Route component={VPC} path="/vpc" />
+                              <Route component={VPC} path="/vpcs" />
                             ) : null}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
