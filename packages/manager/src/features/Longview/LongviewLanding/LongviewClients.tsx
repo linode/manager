@@ -42,14 +42,14 @@ interface Props {
   newClientLoading: boolean;
 }
 
-export type CombinedProps = Props &
+export type LongviewClientsCombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
   StateProps;
 
 type SortKey = 'cpu' | 'load' | 'name' | 'network' | 'ram' | 'storage' | 'swap';
 
-export const LongviewClients = (props: CombinedProps) => {
+export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const { getLongviewClients } = props;
 
   const { data: profile } = useProfile();
@@ -288,7 +288,10 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, Props & RouteComponentProps>(
+export default compose<
+  LongviewClientsCombinedProps,
+  Props & RouteComponentProps
+>(
   React.memo,
   connected,
   withLongviewClients()

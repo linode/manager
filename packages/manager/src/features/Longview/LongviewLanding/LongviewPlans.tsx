@@ -174,7 +174,7 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
           sx={{
             minHeight: 0,
             padding: theme.spacing(3),
-            paddingBottom: 4,
+            paddingBottom: '4px',
           }}
         >
           {updateErrorMsg && <Notice text={updateErrorMsg} variant="error" />}
@@ -372,7 +372,7 @@ export const LongviewSubscriptionRow = React.memo(
               sx={{
                 marginLeft: `-${theme.spacing(0.5)}`,
                 marginRight: theme.spacing(2),
-                padding: 2,
+                padding: '2px',
               }}
               value={id}
             />

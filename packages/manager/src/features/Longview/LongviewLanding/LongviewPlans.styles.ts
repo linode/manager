@@ -15,6 +15,9 @@ export const StyledChip = styled(Chip, { label: 'StyledChip' })(
   ({ theme }) => ({
     borderRadius: 1,
     fontSize: '0.65rem',
+    marginLeft: theme.spacing(2),
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
     textTransform: 'uppercase',
   })
 );
