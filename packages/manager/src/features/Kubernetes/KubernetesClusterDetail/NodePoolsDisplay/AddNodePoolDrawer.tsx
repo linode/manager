@@ -7,20 +7,20 @@ import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { nodeWarning } from '../../kubeUtils';
 
 import type { Region } from '@linode/api-v4';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
-import { useFlags } from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   boxOuter: {
@@ -195,6 +195,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           regionsData={regionsData}
           resetValues={resetDrawer}
           selectedID={selectedTypeInfo?.planId}
+          selectedRegionID={clusterRegionId}
           updatePlanCount={updatePlanCount}
         />
         {selectedTypeInfo &&

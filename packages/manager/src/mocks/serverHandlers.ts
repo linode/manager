@@ -712,7 +712,11 @@ export const handlers = [
   rest.put('*/lke/clusters/:clusterId', async (req, res, ctx) => {
     const id = Number(req.params.clusterId);
     const k8s_version = req.params.k8s_version;
-    const cluster = kubernetesAPIResponse.build({ id, k8s_version });
+    const cluster = kubernetesAPIResponse.build({
+      id,
+      k8s_version,
+      region: 'id_cgk',
+    });
     return res(ctx.json(cluster));
   }),
   rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {

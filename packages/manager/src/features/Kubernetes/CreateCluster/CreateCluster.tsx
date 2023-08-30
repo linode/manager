@@ -354,6 +354,7 @@ export const CreateCluster = () => {
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
+            selectedRegionId={selectedRegionID}
             types={typesData || []}
             typesLoading={typesLoading}
           />
