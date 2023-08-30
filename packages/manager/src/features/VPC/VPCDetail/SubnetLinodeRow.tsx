@@ -1,6 +1,5 @@
 import { APIError, Firewall } from '@linode/api-v4';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -15,6 +14,12 @@ import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
+
+import {
+  StyledTableCell,
+  StyledTableHeadCell,
+  StyledTableRow,
+} from './SubnetLinodeRow.styles';
 
 interface Props {
   linodeId: number;
@@ -152,35 +157,6 @@ export const getFirewallLinks = (data: Firewall[]): JSX.Element => {
     </>
   );
 };
-
-const StyledTableRow = styled(TableRow, {
-  label: 'StyledTableRow',
-})(({ theme }) => ({
-  '&:last-of-type': {
-    '& th, td': {
-      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    },
-  },
-}));
-
-const StyledTableCell = styled(TableCell, {
-  label: 'StyledTableCell',
-})(() => ({
-  '&:last-of-type': {
-    paddingRight: 16,
-  },
-  border: 'none',
-}));
-
-const StyledTableHeadCell = styled(TableCell, {
-  label: 'StyledTableCell',
-})(({ theme }) => ({
-  '&:first-of-type': {
-    paddingLeft: 48,
-  },
-  borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
-  borderTop: 'none !important',
-}));
 
 export const SubnetLinodeTableRowHead = (
   <TableRow>
