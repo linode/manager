@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
@@ -69,11 +70,14 @@ export const FirewallDeviceLanding = React.memo(
           />
         ) : null}
         <Grid container direction="column">
-          <Grid style={{ paddingBottom: 0 }}>
+          <Grid sx={{ paddingBottom: 0, width: 'calc(100% - 300px)' }}>
             <StyledTypography>
               The following {formattedType}s have been assigned to this
               Firewall. A {formattedType} can only be assigned to a single
-              Firewall.
+              Firewall.{' '}
+              <Link to="#">
+                Learn about how Firewall rules apply to {formattedType}s.
+              </Link>
             </StyledTypography>
           </Grid>
           <StyledGrid>

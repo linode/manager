@@ -70,6 +70,7 @@ export const EVENT_ACTIONS: Event['action'][] = [
   'nodebalancer_create',
   'nodebalancer_update',
   'nodebalancer_delete',
+  // 'nodebalancer_added_to_firewall',
   'password_reset',
   'profile_update',
   'stackscript_create',

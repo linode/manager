@@ -18,7 +18,6 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-import { READ_ONLY_DEVICES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
 import { formattedTypes } from './FirewallDeviceLanding';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
@@ -28,6 +27,9 @@ interface Props {
   open: boolean;
   type: FirewallDeviceEntityType;
 }
+
+const helperText =
+  'Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.';
 
 export const AddDeviceDrawer = (props: Props) => {
   const { onClose, open, type } = props;
@@ -123,11 +125,6 @@ export const AddDeviceDrawer = (props: Props) => {
 
   const readOnlyDeviceIds = getReadOnlyEntityIds(type);
 
-  const deviceSelectGuidance =
-    readOnlyDeviceIds.length > 0
-      ? READ_ONLY_DEVICES_HIDDEN_MESSAGE(type)
-      : undefined;
-
   return (
     <Drawer
       onClose={onClose}
@@ -143,9 +140,6 @@ export const AddDeviceDrawer = (props: Props) => {
         {errorMessage ? errorNotice(errorMessage) : null}
         {type === 'linode' ? (
           <LinodeSelect
-            helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
-              deviceSelectGuidance ? deviceSelectGuidance : ''
-            }`}
             onSelectionChange={(linodes) =>
               setSelectedDeviceIds(linodes.map((linode) => linode.id))
             }
@@ -153,6 +147,7 @@ export const AddDeviceDrawer = (props: Props) => {
               ![...currentDeviceIds, ...readOnlyDeviceIds].includes(linode.id)
             }
             disabled={currentDevicesLoading}
+            helperText={helperText}
             loading={currentDevicesLoading}
             multiple
             noOptionsMessage={`No ${formattedTypes[type]}s available to add`}
@@ -160,9 +155,6 @@ export const AddDeviceDrawer = (props: Props) => {
           />
         ) : (
           <NodeBalancerSelect
-            helperText={`You can assign one or more NodeBalancers to this Firewall. Each NodeBalancer can only be assigned to a single Firewall. ${
-              deviceSelectGuidance ? deviceSelectGuidance : ''
-            }`}
             onSelectionChange={(nodebalancers) =>
               setSelectedDeviceIds(
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
@@ -174,6 +166,7 @@ export const AddDeviceDrawer = (props: Props) => {
               )
             }
             disabled={currentDevicesLoading}
+            helperText={helperText}
             loading={currentDevicesLoading}
             multiple
             noOptionsMessage={`No ${formattedTypes[type]}s available to add`}

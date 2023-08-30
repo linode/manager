@@ -62,6 +62,7 @@ const eventActions: RecPartial<EventAction>[] = [
   'nodebalancer_config_create',
   'nodebalancer_config_delete',
   'nodebalancer_config_update',
+  'nodebalancer_added_to_firewall',
   'stackscript_create',
   'stackscript_delete',
   'stackscript_update',

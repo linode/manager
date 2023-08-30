@@ -264,6 +264,13 @@ export const ToastNotifications = () => {
               failureMessage: `Error creating Longview Client ${label}.`,
               successMessage: `Longview Client ${label} successfully created.`,
             });
+          // case 'nodebalancer_added_to_firewall':
+          //   return toastSuccessAndFailure({
+          //     enqueueSnackbar,
+          //     eventStatus: event.status,
+          //     failureMessage: `Error adding Nodebalancer ${label}.`,
+          //     successMessage: `Nodebalancer ${label} successfully added.`,
+          //   });
           default:
             // eslint-disable-next-line array-callback-return
             return;
