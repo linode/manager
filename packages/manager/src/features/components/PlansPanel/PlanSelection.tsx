@@ -100,6 +100,8 @@ export const PlanSelection = (props: Props) => {
       ? getLinodeRegionPrice(type, selectedRegionId)
       : type.price;
 
+  type.subHeadings[0] = `$${price.monthly}/mo ($${price.hourly}/hr)`;
+
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}

@@ -11,13 +11,12 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
+import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
 
 import type { Region } from '@linode/api-v4';
-
-const NO_REGION_SELECTED_MESSAGE = 'Select a region to view plans and prices.';
 
 const tableCells = [
   { cellName: '', center: false, noWrap: false, testId: '' },
@@ -120,7 +119,7 @@ export const PlanContainer = (props: Props) => {
             spacingLeft={8}
             spacingTop={8}
             sx={{ '& p': { fontSize: '0.875rem' } }}
-            text={NO_REGION_SELECTED_MESSAGE}
+            text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
             variant="warning"
           />
         ) : (
@@ -162,7 +161,7 @@ export const PlanContainer = (props: Props) => {
               {shouldDisplayNoRegionSelectedMessage ? (
                 <TableRowEmpty
                   colSpan={9}
-                  message={NO_REGION_SELECTED_MESSAGE}
+                  message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
                 />
               ) : (
                 renderPlanSelection()
