@@ -1,7 +1,7 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import * as React from 'react';
 
-import { LongviewClientRow } from './LongviewClientRow';
+import ClientRow from './LongviewClientRow';
 
 interface Props {
   longviewClientsData: LongviewClient[];
@@ -24,7 +24,7 @@ export const LongviewListRows = React.memo((props: Props) => {
     <React.Fragment>
       {longviewClientsData.map((eachClient) => {
         return (
-          <LongviewClientRow
+          <ClientRow
             openPackageDrawer={() =>
               openPackageDrawer(eachClient.id, eachClient.label)
             }

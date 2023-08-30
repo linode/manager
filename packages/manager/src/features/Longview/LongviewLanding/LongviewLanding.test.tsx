@@ -9,13 +9,18 @@ import {
 } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import LongviewClients, {
+import {
+  LongviewClients,
   LongviewClientsCombinedProps,
   filterLongviewClientsByQuery,
   sortClientsBy,
   sortFunc,
 } from './LongviewClients';
 import { LongviewLanding } from './LongviewLanding';
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 jest.mock('../request');
 jest.mock('./LongviewClientRow');
@@ -117,11 +122,11 @@ describe('Longview clients list view', () => {
   });
 
   it('should render a row for each client', () => {
-    const screen = renderWithTheme(<LongviewClients {...props} />);
+    const { queryAllByTestId } = renderWithTheme(
+      <LongviewClients {...props} />
+    );
 
-    screen.debug(undefined, Infinity);
-
-    expect(screen.queryAllByTestId('longview-client-row')).toHaveLength(
+    expect(queryAllByTestId('longview-client-row')).toHaveLength(
       clients.length
     );
   });

@@ -35,14 +35,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  withClientStats<Props>((ownProps) => ownProps.clientID),
-  /** We only need the update action here, easier than prop drilling through 4 components */
-  withLongviewClients(() => ({}))
-);
-
-export const LongviewClientRow = enhanced((props: CombinedProps) => {
+const LongviewClientRow = (props: CombinedProps) => {
   const theme = useTheme();
 
   const {
@@ -179,8 +172,15 @@ export const LongviewClientRow = enhanced((props: CombinedProps) => {
       </Grid>
     </Paper>
   );
-});
+};
 
 interface GrantProps {
   userCanModifyClient: boolean;
 }
+
+export default compose<CombinedProps, Props>(
+  React.memo,
+  withClientStats<Props>((ownProps) => ownProps.clientID),
+  /** We only need the update action here, easier than prop drilling through 4 components */
+  withLongviewClients(() => ({}))
+)(LongviewClientRow);
