@@ -12,6 +12,7 @@ import { Typography } from 'src/components/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import useEvents from 'src/hooks/useEvents';
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -124,13 +125,12 @@ export const MigrateLinode = React.memo((props: Props) => {
       return;
     }
 
-    const regionSupportsMetadata = (_region: string) =>
-      regionsData
-        ?.find((region) => region.id === _region)
-        ?.capabilities.includes('Metadata') ?? false;
-
-    const currentRegionSupportsMetadata = regionSupportsMetadata(linode.region);
+    const currentRegionSupportsMetadata = regionSupportsMetadata(
+      regionsData ?? [],
+      linode.region
+    );
     const selectedRegionSupportsMetadata = regionSupportsMetadata(
+      regionsData ?? [],
       selectedRegion
     );
 
