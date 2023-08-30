@@ -49,8 +49,11 @@ export const KubernetesPlanSelection = (props: Props) => {
       ? getLinodeRegionPrice(type, selectedRegionID)
       : type.price;
 
-  // We don't want network information for LKE so we remove the last two elements.
-  const subHeadings = type.subHeadings.slice(0, -2);
+  // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
+  const subHeadings = [
+    `$${price.monthly}/mo ($${price.hourly}/hr)`,
+    type.subHeadings[1],
+  ];
 
   const renderVariant = () => (
     <Grid xs={12}>
