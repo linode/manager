@@ -186,7 +186,7 @@ export const LinodeRow = (props: Props) => {
               {vpcLoading || configsLoading ? (
                 <Skeleton />
               ) : vpcLabel ? (
-                <Link tabIndex={0} to={`/vpc/${vpcId}`}>
+                <Link tabIndex={0} to={`/vpcs/${vpcId}`}>
                   {vpcLabel}
                 </Link>
               ) : (

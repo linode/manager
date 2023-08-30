@@ -10,7 +10,7 @@ import {
 import {
   headers,
   linkAnalyticsEvent,
-} from 'src/features/VPC/VPCLanding/VPCEmptyStateData';
+} from './VPCEmptyStateData';
 import { sendEvent } from 'src/utilities/analytics';
 
 export const VPCEmptyState = () => {
@@ -27,7 +27,7 @@ export const VPCEmptyState = () => {
               category: linkAnalyticsEvent.category,
               label: 'Create VPC',
             });
-            push('/vpc/create');
+            push('/vpcs/create');
           },
         },
       ]}

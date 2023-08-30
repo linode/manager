@@ -26,7 +26,7 @@ describe('VPC navigation', () => {
 
     ui.nav.findItemByTitle('VPC').should('be.visible').click();
 
-    cy.url().should('endWith', '/vpc');
+    cy.url().should('endWith', '/vpcs');
   });
 
   /*
