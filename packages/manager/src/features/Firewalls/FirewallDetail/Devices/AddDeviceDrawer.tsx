@@ -8,6 +8,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
@@ -18,14 +19,18 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
 import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
+import { formattedTypes } from './FirewallDeviceLanding';
+
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
   open: boolean;
+  type: FirewallDeviceEntityType;
 }
 
 export const AddDeviceDrawer = (props: Props) => {
-  const { onClose, open } = props;
+  const { onClose, open, type } = props;
 
   const { id } = useParams<{ id: string }>();
 
@@ -44,6 +49,11 @@ export const AddDeviceDrawer = (props: Props) => {
       ?.filter((device) => device.entity.type === 'linode')
       .map((device) => device.entity.id) ?? [];
 
+  const currentNodebalancerIds =
+    currentDevices
+      ?.filter((device) => device.entity.type === 'nodebalancer')
+      .map((device) => device.entity.id) ?? [];
+
   const {
     error,
     isLoading,
@@ -51,16 +61,14 @@ export const AddDeviceDrawer = (props: Props) => {
   } = useAddFirewallDeviceMutation(Number(id));
   const theme = useTheme();
 
-  const [selectedLinodeIds, setSelectedLinodeIds] = React.useState<number[]>(
+  const [selectedDeviceIds, setSelectedDeviceIds] = React.useState<number[]>(
     []
   );
 
   const handleSubmit = async () => {
-    await Promise.all(
-      selectedLinodeIds.map((id) => addDevice({ id, type: 'linode' }))
-    );
+    await Promise.all(selectedDeviceIds.map((id) => addDevice({ id, type })));
     onClose();
-    setSelectedLinodeIds([]);
+    setSelectedDeviceIds([]);
   };
 
   // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
@@ -109,6 +117,10 @@ export const AddDeviceDrawer = (props: Props) => {
     ? getEntityIdsByPermission(grants, 'linode', 'read_only')
     : [];
 
+  const readOnlyNodebalancerIds = isRestrictedUser
+    ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
+    : [];
+
   const linodeSelectGuidance =
     readOnlyLinodeIds.length > 0 ? READ_ONLY_LINODES_HIDDEN_MESSAGE : undefined;
 
@@ -116,7 +128,7 @@ export const AddDeviceDrawer = (props: Props) => {
     <Drawer
       onClose={onClose}
       open={open}
-      title={`Add Linode to Firewall: ${firewall?.label}`}
+      title={`Add ${formattedTypes[type]} to Firewall: ${firewall?.label}`}
     >
       <form
         onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
@@ -125,26 +137,49 @@ export const AddDeviceDrawer = (props: Props) => {
         }}
       >
         {errorMessage ? errorNotice(errorMessage) : null}
-        <LinodeSelect
-          helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
-            linodeSelectGuidance ? linodeSelectGuidance : ''
-          }`}
-          onSelectionChange={(linodes) =>
-            setSelectedLinodeIds(linodes.map((linode) => linode.id))
-          }
-          optionsFilter={(linode) =>
-            ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id)
-          }
-          disabled={currentDevicesLoading}
-          loading={currentDevicesLoading}
-          multiple
-          noOptionsMessage="No Linodes available to add"
-          value={selectedLinodeIds}
-        />
+        {type === 'linode' ? (
+          <LinodeSelect
+            helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
+              linodeSelectGuidance ? linodeSelectGuidance : ''
+            }`}
+            onSelectionChange={(linodes) =>
+              setSelectedDeviceIds(linodes.map((linode) => linode.id))
+            }
+            optionsFilter={(linode) =>
+              ![...currentLinodeIds, ...readOnlyLinodeIds].includes(linode.id)
+            }
+            disabled={currentDevicesLoading}
+            loading={currentDevicesLoading}
+            multiple
+            noOptionsMessage={`No ${formattedTypes[type]}s available to add`}
+            value={selectedDeviceIds}
+          />
+        ) : (
+          <NodeBalancerSelect
+            helperText={`You can assign one or more NodeBalancers to this Firewall. Each NodeBalancer can only be assigned to a single Firewall. ${
+              linodeSelectGuidance ? linodeSelectGuidance : ''
+            }`}
+            onSelectionChange={(nodebalancers) =>
+              setSelectedDeviceIds(
+                nodebalancers.map((nodebalancer) => nodebalancer.id)
+              )
+            }
+            optionsFilter={(nodebalancer) =>
+              ![...currentNodebalancerIds, ...readOnlyNodebalancerIds].includes(
+                nodebalancer.id
+              )
+            }
+            disabled={currentDevicesLoading}
+            loading={currentDevicesLoading}
+            multiple
+            noOptionsMessage={`No ${formattedTypes[type]}s available to add`}
+            value={selectedDeviceIds}
+          />
+        )}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            disabled: selectedLinodeIds.length === 0,
+            disabled: selectedDeviceIds.length === 0,
             label: 'Add',
             loading: isLoading,
             onClick: handleSubmit,

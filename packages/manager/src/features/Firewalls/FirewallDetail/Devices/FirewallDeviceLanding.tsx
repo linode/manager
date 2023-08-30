@@ -20,7 +20,7 @@ export interface FirewallDeviceLandingProps {
   type: FirewallDeviceEntityType;
 }
 
-const formattedTypes = {
+export const formattedTypes = {
   linode: 'Linode',
   nodebalancer: 'NodeBalancer',
 };
@@ -97,7 +97,11 @@ export const FirewallDeviceLanding = React.memo(
           error={error ?? undefined}
           loading={isLoading}
         />
-        <AddDeviceDrawer onClose={handleClose} open={addDeviceDrawerOpen} />
+        <AddDeviceDrawer
+          onClose={handleClose}
+          open={addDeviceDrawerOpen}
+          type={type}
+        />
         <RemoveDeviceDialog
           device={selectedDevice}
           firewallId={firewallID}

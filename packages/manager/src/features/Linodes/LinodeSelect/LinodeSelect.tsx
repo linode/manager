@@ -8,7 +8,7 @@ import React from 'react';
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
+import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 import { CustomPopper, SelectedIcon } from './LinodeSelect.styles';
 
@@ -126,8 +126,10 @@ export const LinodeSelect = (
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)
-          ? onSelectionChange(value)
-          : !multiple && !Array.isArray(value) && onSelectionChange(value)
+          ? onSelectionChange(value as Linode[])
+          : !multiple &&
+            !Array.isArray(value) &&
+            onSelectionChange(value as Linode)
       }
       renderInput={(params) => (
         <TextField
@@ -151,7 +153,7 @@ export const LinodeSelect = (
         return (
           <li {...props}>
             {renderOption ? (
-              renderOption(option, selected)
+              renderOption(option as Linode, selected)
             ) : (
               <>
                 <Box
@@ -172,7 +174,7 @@ export const LinodeSelect = (
           ? multiple && Array.isArray(value)
             ? linodes?.filter(value) ?? null
             : linodes?.find(value) ?? null
-          : mapIdsToLinodes(value, linodes)
+          : mapIdsToDevices(value, linodes)
       }
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
