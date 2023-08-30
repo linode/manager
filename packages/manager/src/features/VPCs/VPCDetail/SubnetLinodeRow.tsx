@@ -84,7 +84,7 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
   const iconStatus =
     linode.status === 'running'
       ? 'active'
-      : ['offline', 'stopped'].includes(status)
+      : ['offline', 'stopped'].includes(linode.status)
       ? 'inactive'
       : 'other';
 
