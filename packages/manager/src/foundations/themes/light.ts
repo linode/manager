@@ -762,11 +762,19 @@ export const lightTheme: ThemeOptions = {
           '&::placeholder': {
             opacity: 0.42,
           },
-          height: 'auto',
+        },
+        root: {
+          backgroundColor: primaryColors.white,
+          borderRadius: '0 !important',
+          maxHeight: 35,
         },
       },
     },
     MuiInputLabel: {
+      defaultProps: {
+        disableAnimation: true,
+        shrink: true,
+      },
       styleOverrides: {
         formControl: {
           position: 'relative',
@@ -838,6 +846,9 @@ export const lightTheme: ThemeOptions = {
       },
     },
     MuiMenu: {
+      defaultProps: {
+        marginThreshold: 0,
+      },
       styleOverrides: {
         paper: {
           '& .selectMenuList': {
@@ -874,14 +885,12 @@ export const lightTheme: ThemeOptions = {
           '& em': {
             fontStyle: 'normal !important',
           },
-          '&$selected, &$selected:hover': {
-            backgroundColor: 'transparent',
-            color: primaryColors.main,
-            opacity: 1,
-          },
-          '&:hover': {
+          '&:hover:not(.Mui-selected)': {
             backgroundColor: primaryColors.main,
-            color: 'white',
+            color: primaryColors.white,
+          },
+          '.Mui-selected': {
+            color: primaryColors.text,
           },
           color: primaryColors.text,
           fontFamily: latoWeb.normal,
@@ -895,7 +904,11 @@ export const lightTheme: ThemeOptions = {
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
           whiteSpace: 'initial',
         },
-        selected: {},
+        selected: {
+          ':hover': {
+            color: `${primaryColors.text} !important`,
+          },
+        },
       },
     },
     MuiPaper: {
@@ -968,21 +981,17 @@ export const lightTheme: ThemeOptions = {
       },
     },
     MuiSelect: {
+      defaultProps: {
+        notched: false,
+      },
       styleOverrides: {
-        disabled: {},
         icon: {
           color: '#aaa !important',
-          height: 28,
-          marginRight: 4,
-          marginTop: -2,
-          opacity: 0.5,
-          transition: 'color 225ms ease-in-out',
-          width: 28,
+          fontSize: '24px !important',
+          marginRight: '4px',
         },
-        select: {
-          '&:focus': {
-            backgroundColor: 'transparent',
-          },
+        standard: {
+          backgroundColor: primaryColors.white,
         },
       },
     },

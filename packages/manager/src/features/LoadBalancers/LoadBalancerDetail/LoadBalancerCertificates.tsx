@@ -1,5 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { IconButton } from '@mui/material';
+import { IconButton, MenuItem } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -8,9 +8,9 @@ import { ActionMenu } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import EnhancedSelect from 'src/components/EnhancedSelect';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Select } from 'src/components/Select';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -79,12 +79,6 @@ export const LoadBalancerCertificates = () => {
     return <CircleProgress />;
   }
 
-  const filterOptions = [
-    { label: 'All', value: 'all' },
-    { label: 'TLS Certificates', value: 'tls' },
-    { label: 'Service Target Certificates', value: 'ca' },
-  ];
-
   return (
     <>
       <Stack
@@ -95,19 +89,16 @@ export const LoadBalancerCertificates = () => {
         mb={2}
         mt={1.5}
       >
-        <EnhancedSelect
-          styles={{
-            container: () => ({
-              maxWidth: '200px',
-            }),
-          }}
-          isClearable={false}
+        <Select
           label="Certificate Type"
-          noMarginTop
-          onChange={(option) => setType(option?.value as CertificateTypeFilter)}
-          options={filterOptions}
-          value={filterOptions.find((option) => option.value === type) ?? null}
-        />
+          onChange={(e) => setType(e.target.value as CertificateTypeFilter)}
+          sx={{ minWidth: 250 }}
+          value={type}
+        >
+          <MenuItem value="all">All</MenuItem>
+          <MenuItem value="downstream">TLS Certificates</MenuItem>
+          <MenuItem value="ca">Service Target Certificates</MenuItem>
+        </Select>
         <TextField
           InputProps={{
             endAdornment: (
