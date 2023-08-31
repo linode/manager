@@ -1,4 +1,5 @@
 import { APIError, Firewall } from '@linode/api-v4';
+import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
@@ -10,11 +11,10 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 import {
@@ -40,18 +40,11 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
     isLoading: firewallsLoading,
   } = useLinodeFirewallsQuery(linodeId);
 
-  const { data: ips } = useLinodeIPsQuery(linodeId);
-  const privateIpv4s = ips?.ipv4.private.map((privateIP) => privateIP.address);
-
-  const [isHovered, setIsHovered] = React.useState(false);
-
-  const handleMouseEnter = React.useCallback(() => {
-    setIsHovered(true);
-  }, []);
-
-  const handleMouseLeave = React.useCallback(() => {
-    setIsHovered(false);
-  }, []);
+  const {
+    data: configs,
+    error: configsError,
+    isLoading: configsLoading,
+  } = useAllLinodeConfigsQuery(linodeId);
 
   if (linodeLoading || !linode) {
     return (
@@ -85,10 +78,7 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
   const iconStatus = getLinodeIconStatus(linode.status);
 
   return (
-    <StyledTableRow
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <StyledTableRow>
       <StyledTableCell component="th" scope="row" sx={{ paddingLeft: 6 }}>
         <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
       </StyledTableCell>
@@ -101,7 +91,11 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
       </Hidden>
       <Hidden smDown>
         <StyledTableCell>
-          <IPAddress ips={privateIpv4s ?? []} isHovered={isHovered} />
+          {getIPv4sCellString(
+            configs ?? [],
+            configsLoading,
+            configsError ?? undefined
+          )}
         </StyledTableCell>
       </Hidden>
       <Hidden smDown>
@@ -135,6 +129,46 @@ const getFirewallsCellString = (
   }
 
   return getFirewallLinks(data);
+};
+
+const getIPv4sCellString = (
+  configs: Config[],
+  loading: boolean,
+  error?: APIError[]
+): JSX.Element | string => {
+  if (loading) {
+    return 'Loading...';
+  }
+
+  if (error) {
+    return 'Error retrieving VPC IPv4s';
+  }
+
+  if (configs.length === 0) {
+    return 'None';
+  }
+
+  const interfaces = configs.map((config) => config.interfaces).flat();
+  return getIPv4Links(interfaces);
+};
+
+export const getIPv4Links = (data: Interface[]): JSX.Element => {
+  const firstThreeInterfaces = data.slice(0, 3);
+  return (
+    <>
+      {firstThreeInterfaces.map((configInterface, idx) => (
+        <span key={configInterface.id}>
+          {idx > 0 && `, `}
+          {configInterface.ipv4?.vpc}
+        </span>
+      ))}
+      {data.length > 3 && (
+        <span>
+          {`, `}plus {data.length - 3} more.
+        </span>
+      )}
+    </>
+  );
 };
 
 export const getFirewallLinks = (data: Firewall[]): JSX.Element => {
@@ -171,9 +205,7 @@ export const SubnetLinodeTableRowHead = (
       <StyledTableHeadCell sx={{ width: '10%' }}>Linode ID</StyledTableHeadCell>
     </Hidden>
     <Hidden smDown>
-      <StyledTableHeadCell sx={{ width: '20%' }}>
-        Private IP Address
-      </StyledTableHeadCell>
+      <StyledTableHeadCell sx={{ width: '20%' }}>VPC IPv4</StyledTableHeadCell>
     </Hidden>
     <Hidden smDown>
       <StyledTableHeadCell>Firewalls</StyledTableHeadCell>
