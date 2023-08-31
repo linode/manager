@@ -889,9 +889,6 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: primaryColors.main,
             color: primaryColors.white,
           },
-          '.Mui-selected': {
-            color: primaryColors.text,
-          },
           color: primaryColors.text,
           fontFamily: latoWeb.normal,
           fontSize: '.9rem',
@@ -903,11 +900,6 @@ export const lightTheme: ThemeOptions = {
           transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
           whiteSpace: 'initial',
-        },
-        selected: {
-          ':hover': {
-            color: `${primaryColors.text} !important`,
-          },
         },
       },
     },

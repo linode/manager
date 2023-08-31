@@ -369,13 +369,6 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#444',
-        },
-      },
-    },
     MuiListItem: {
       styleOverrides: {
         root: {
