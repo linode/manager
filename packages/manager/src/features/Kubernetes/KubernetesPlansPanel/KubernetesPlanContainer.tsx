@@ -11,6 +11,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
+import { PLAN_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 
@@ -24,9 +25,7 @@ const tableCells = [
   { cellName: 'Quantity', center: false, noWrap: false, testId: 'quantity' },
 ];
 
-const NO_REGION_SELECTED_MESSAGE = 'Select a region to view plans and prices.';
-
-interface Props {
+export interface KubernetesPlanContainerProps {
   disabled?: boolean;
   getTypeCount: (planId: string) => number;
   onAdd?: (key: string, value: number) => void;
@@ -37,7 +36,9 @@ interface Props {
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 
-export const KubernetesPlanContainer = (props: Props) => {
+export const KubernetesPlanContainer = (
+  props: KubernetesPlanContainerProps
+) => {
   const {
     disabled,
     getTypeCount,
@@ -88,7 +89,7 @@ export const KubernetesPlanContainer = (props: Props) => {
             spacingLeft={8}
             spacingTop={8}
             sx={{ '& p': { fontSize: '0.875rem' } }}
-            text={NO_REGION_SELECTED_MESSAGE}
+            text={PLAN_NO_REGION_SELECTED_MESSAGE}
             variant="info"
           />
         ) : (
@@ -123,7 +124,7 @@ export const KubernetesPlanContainer = (props: Props) => {
               {shouldDisplayNoRegionSelectedMessage ? (
                 <TableRowEmpty
                   colSpan={9}
-                  message={NO_REGION_SELECTED_MESSAGE}
+                  message={PLAN_NO_REGION_SELECTED_MESSAGE}
                 />
               ) : (
                 renderPlanSelection()

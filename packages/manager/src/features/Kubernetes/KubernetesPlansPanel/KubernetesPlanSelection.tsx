@@ -15,7 +15,7 @@ import { ExtendedType } from 'src/utilities/extendType';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
-interface Props {
+export interface KubernetesPlanSelectionProps {
   disabled?: boolean;
   getTypeCount: (planId: string) => number;
   idx: number;
@@ -27,7 +27,9 @@ interface Props {
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 
-export const KubernetesPlanSelection = (props: Props) => {
+export const KubernetesPlanSelection = (
+  props: KubernetesPlanSelectionProps
+) => {
   const {
     disabled,
     getTypeCount,

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import {
-  LKE_CREATE_CLUSTER_CHECKOUT,
+  LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
   LKE_HA_PRICE,
 } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -37,7 +37,7 @@ describe('KubeCheckoutBar', () => {
 
     await waitForElementToBeRemoved(getByTestId('circle-progress'));
 
-    await findByText(LKE_CREATE_CLUSTER_CHECKOUT);
+    await findByText(LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE);
     expect(getByText('Create Cluster').closest('button')).toBeDisabled();
   });
 

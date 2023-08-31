@@ -17,10 +17,10 @@ import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
+import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
-import { LKE_CREATE_CLUSTER_CHECKOUT } from 'src/utilities/pricing/constants';
 
 export interface Props {
   createCluster: () => void;
@@ -104,12 +104,12 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             })
           : undefined
       }
-      priceSelectionText={LKE_CREATE_CLUSTER_CHECKOUT}
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
       isMakingRequest={submitting}
       onDeploy={createCluster}
+      priceSelectionText={LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE}
       submitText="Create Cluster"
     >
       <>
