@@ -26,7 +26,7 @@ describe('VPC landing page', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs(mockVPCs).as('getVPCs');
 
-    cy.visitWithLogin('/vpc');
+    cy.visitWithLogin('/vpcs');
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
 
     // Confirm each VPC is listed with expected data.
@@ -61,7 +61,7 @@ describe('VPC landing page', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs([]).as('getVPCs');
 
-    cy.visitWithLogin('/vpc');
+    cy.visitWithLogin('/vpcs');
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
 
     // Confirm that empty state is shown and that each section is present.
@@ -79,7 +79,7 @@ describe('VPC landing page', () => {
       .should('be.enabled')
       .click();
 
-    cy.url().should('endWith', '/vpc/create');
+    cy.url().should('endWith', '/vpcs/create');
   });
 
   /*
@@ -106,7 +106,7 @@ describe('VPC landing page', () => {
     mockGetVPCs([mockVPC]).as('getVPCs');
     mockUpdateVPC(mockVPC.id, mockUpdatedVPC).as('updateVPC');
 
-    cy.visitWithLogin('/vpc');
+    cy.visitWithLogin('/vpcs');
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
 
     // Find mocked VPC and click its "Edit" button.
@@ -194,7 +194,7 @@ describe('VPC landing page', () => {
     mockGetVPCs(mockVPCs).as('getVPCs');
     mockDeleteVPC(mockVPCs[0].id).as('deleteVPC');
 
-    cy.visitWithLogin('/vpc');
+    cy.visitWithLogin('/vpcs');
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
 
     // Delete first VPC.
@@ -283,7 +283,7 @@ describe('VPC landing page', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
-    cy.visitWithLogin('/vpc');
+    cy.visitWithLogin('/vpcs');
     cy.wait(['@getFeatureFlags', '@getClientStream']);
 
     cy.findByText('Not Found').should('be.visible');

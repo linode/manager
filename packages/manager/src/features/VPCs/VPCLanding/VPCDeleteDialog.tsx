@@ -26,8 +26,8 @@ export const VPCDeleteDialog = (props: Props) => {
         variant: 'success',
       });
       onClose();
-      if (history.location.pathname !== '/vpc') {
-        history.push('/vpc');
+      if (history.location.pathname !== '/vpcs') {
+        history.push('/vpcs');
       }
     });
   };
