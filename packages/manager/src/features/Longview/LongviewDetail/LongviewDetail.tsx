@@ -1,5 +1,4 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
-import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, matchPath } from 'react-router-dom';
@@ -12,7 +11,6 @@ import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
@@ -37,6 +35,7 @@ import { MySQLLanding } from './DetailTabs/MySQL/MySQLLanding';
 import { NGINX } from './DetailTabs/NGINX/NGINX';
 import { NetworkLanding } from './DetailTabs/Network/NetworkLanding';
 import { ProcessesLanding } from './DetailTabs/Processes/ProcessesLanding';
+import { StyledTabs } from './LongviewDetail.styles';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
@@ -70,8 +69,6 @@ export const LongviewDetail = (props: CombinedProps) => {
   const { data: profile } = useProfile();
 
   const timezone = profile?.timezone || 'US/Eastern';
-
-  const theme = useTheme();
 
   React.useEffect(() => {
     /** request clients if they haven't already been requested */
@@ -220,13 +217,12 @@ export const LongviewDetail = (props: CombinedProps) => {
           variant="warning"
         />
       ))}
-      <Tabs
+      <StyledTabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}
-        style={{ marginBottom: `calc(${theme.spacing(3)} + 6px)` }}
       >
         <TabLinkList tabs={tabs} />
 
@@ -322,7 +318,7 @@ export const LongviewDetail = (props: CombinedProps) => {
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-      </Tabs>
+      </StyledTabs>
     </React.Fragment>
   );
 };

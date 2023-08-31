@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { Grid } from 'src/components/Grid';
@@ -22,6 +21,7 @@ import {
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
+import { StyledLink } from './TopProcesses.styles';
 
 export interface Props {
   clientID: number;
@@ -48,17 +48,9 @@ export const TopProcesses = React.memo((props: Props) => {
     <Grid item lg={4} xs={12}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
-        <Link
-          style={{
-            fontSize: 16,
-            fontWeight: 'bold',
-            position: 'relative',
-            top: 3,
-          }}
-          to={`/longview/clients/${clientID}/processes`}
-        >
+        <StyledLink to={`/longview/clients/${clientID}/processes`}>
           View Details
-        </Link>
+        </StyledLink>
       </Box>
       <OrderBy
         data={extendTopProcesses(topProcessesData)}

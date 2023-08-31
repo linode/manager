@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
@@ -120,7 +121,7 @@ export const ProcessesGraphs = (props: Props) => {
           unit="%"
           {...commonGraphProps}
         />
-        <div style={{ marginTop: theme.spacing(3) }}>
+        <Box marginTop={theme.spacing(3)}>
           <LongviewLineGraph
             data={[
               {
@@ -137,8 +138,8 @@ export const ProcessesGraphs = (props: Props) => {
             title="RAM"
             {...commonGraphProps}
           />
-        </div>
-        <div style={{ marginTop: theme.spacing(3) }}>
+        </Box>
+        <Box marginTop={theme.spacing(3)}>
           <LongviewLineGraph
             data={[
               {
@@ -153,8 +154,8 @@ export const ProcessesGraphs = (props: Props) => {
             title="Count"
             {...commonGraphProps}
           />
-        </div>
-        <div style={{ marginTop: theme.spacing(3) }}>
+        </Box>
+        <Box marginTop={theme.spacing(3)}>
           <LongviewLineGraph
             data={[
               {
@@ -179,7 +180,7 @@ export const ProcessesGraphs = (props: Props) => {
             unit={'/s'}
             {...commonGraphProps}
           />
-        </div>
+        </Box>
       </Paper>
     </>
   );
