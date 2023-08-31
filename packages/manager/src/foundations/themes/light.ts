@@ -1416,9 +1416,9 @@ export const lightTheme: ThemeOptions = {
   palette: {
     divider: primaryColors.divider,
     error: {
-      dark: '#cd2227',
-      light: '#f8dedf',
-      main: '#f8dedf',
+      dark: '#ca0813',
+      light: '#ca0813',
+      main: '#ca0813',
     },
     info: {
       dark: '#3682dd',

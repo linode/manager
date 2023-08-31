@@ -566,6 +566,11 @@ export const darkTheme: ThemeOptions = {
       paper: '#2e3238',
     },
     divider: primaryColors.divider,
+    error: {
+      dark: '#fb6d6d',
+      light: '#fb6d6d',
+      main: '#fb6d6d',
+    },
     mode: 'dark',
     primary: primaryColors,
     text: {
