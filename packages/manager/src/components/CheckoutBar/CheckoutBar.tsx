@@ -21,6 +21,7 @@ interface CheckoutBarProps {
   isMakingRequest?: boolean;
   onDeploy: () => void;
   priceHelperText?: string;
+  priceSelectionText?: string;
   submitText?: string;
 }
 
@@ -35,6 +36,7 @@ const CheckoutBar = (props: CheckoutBarProps) => {
     isMakingRequest,
     onDeploy,
     priceHelperText,
+    priceSelectionText,
     submitText,
   } = props;
 
@@ -61,10 +63,7 @@ const CheckoutBar = (props: CheckoutBarProps) => {
           {price ? (
             <DisplayPrice interval="mo" price={price} />
           ) : (
-            <Typography>
-              Select a Region and add a Node Pool to view pricing and create a
-              cluster.
-            </Typography>
+            <Typography>{priceSelectionText}</Typography>
           )}
           {priceHelperText && price > 0 && (
             <Typography
