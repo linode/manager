@@ -1,5 +1,5 @@
 import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
-import type { PlanSelectionType } from 'src/features/components/PlansPanel/PlanSelection';
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 /**

@@ -1,4 +1,3 @@
-import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
@@ -9,32 +8,23 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { ExtendedType } from 'src/utilities/extendType';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 import { StyledDisabledTableRow } from './PlansPanel.styles';
 
-import type { PriceObject, Region, RegionPriceObject } from '@linode/api-v4';
-
-export interface PlanSelectionType extends BaseType {
-  class: ExtendedType['class'];
-  formattedLabel: ExtendedType['formattedLabel'];
-  heading: ExtendedType['heading'];
-  network_out?: ExtendedType['network_out'];
-  price: ExtendedType['price'];
-  region_prices: RegionPriceObject[];
-  subHeadings: ExtendedType['subHeadings'];
-  transfer?: ExtendedType['transfer'];
-}
+import type { PlanSelectionType } from './types';
+import type { PriceObject, Region } from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import type { FlagSet } from 'src/featureFlags';
 
 interface Props {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  flags?: FlagSet;
   header?: string;
   idx: number;
   isCreate?: boolean;
@@ -59,6 +49,7 @@ export const PlanSelection = (props: Props) => {
     currentPlanHeading,
     disabled,
     disabledClasses,
+    flags,
     idx,
     isCreate,
     linodeID,
@@ -69,7 +60,7 @@ export const PlanSelection = (props: Props) => {
     showTransfer,
     type,
   } = props;
-  const { dcSpecificPricing } = useFlags();
+  const dcSpecificPricing = flags?.dcSpecificPricing ?? false;
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
   const tooltip = planTooSmall

@@ -14,8 +14,9 @@ import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
-import { PlanSelection, PlanSelectionType } from './PlanSelection';
+import { PlanSelection } from './PlanSelection';
 
+import type { PlanSelectionType } from './types';
 import type { Region } from '@linode/api-v4';
 
 const tableCells = [
