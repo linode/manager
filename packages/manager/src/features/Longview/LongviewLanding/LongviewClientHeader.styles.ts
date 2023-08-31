@@ -3,18 +3,16 @@ import { styled } from '@mui/material/styles';
 import { Button } from 'src/components/Button/Button';
 import { Grid } from 'src/components/Grid';
 
-export const StyledButton = styled(Button, { label: 'StyledButton' })(
-  ({ theme }) => ({
-    '&:hover': {
-      backgroundColor: 'inherit',
-      color: 'inherit',
-      textDecoration: 'underline',
-    },
-    fontSize: '0.875rem',
-    padding: 0,
-    textAlign: 'left',
-  })
-);
+export const StyledButton = styled(Button, { label: 'StyledButton' })({
+  '&:hover': {
+    backgroundColor: 'inherit',
+    color: 'inherit',
+    textDecoration: 'underline',
+  },
+  fontSize: '0.875rem',
+  padding: 0,
+  textAlign: 'left',
+});
 
 export const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
   [theme.breakpoints.up('md')]: {

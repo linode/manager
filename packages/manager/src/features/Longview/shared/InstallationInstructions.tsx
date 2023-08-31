@@ -1,10 +1,16 @@
-import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
+import {
+  sxContainer,
+  sxItem,
+  StyledContainerGrid,
+  StyledInstructionGrid,
+} from './InstallationInstructions.styles';
 
 interface Props {
   APIKey: string;
@@ -12,8 +18,6 @@ interface Props {
 }
 
 export const InstallationInstructions = React.memo((props: Props) => {
-  const theme = useTheme();
-
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
 
   return (
@@ -71,7 +75,12 @@ export const InstallationInstructions = React.memo((props: Props) => {
           <StyledInstructionGrid>
             <Typography data-testid="api-key">
               API Key:{' '}
-              <span style={{ color: theme.color.grey1 }}>{props.APIKey}</span>
+              <Box
+                component="span"
+                sx={(theme) => ({ color: theme.color.grey1 })}
+              >
+                {props.APIKey}
+              </Box>
             </Typography>
           </StyledInstructionGrid>
         </Grid>
@@ -79,51 +88,3 @@ export const InstallationInstructions = React.memo((props: Props) => {
     </Grid>
   );
 });
-
-const sxItem = {
-  boxSizing: 'border-box',
-  margin: '0',
-};
-
-const sxContainer = {
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexWrap: 'wrap',
-  width: '100%',
-};
-
-const StyledInstructionGrid = styled(Grid, { label: 'StyledInstructionGrid' })(
-  ({ theme }) => ({
-    [theme.breakpoints.up('sm')]: {
-      '&:not(:first-of-type)': {
-        '&:before': {
-          content: "'|'",
-          left: `calc(-${theme.spacing(1)} + 2px)`,
-          position: 'absolute',
-          top: `calc(${theme.spacing(1)} - 3px)`,
-        },
-        marginLeft: theme.spacing(2),
-        paddingLeft: theme.spacing(2),
-        position: 'relative',
-      },
-      width: 'auto',
-    },
-    width: '100%',
-    boxSizing: 'border-box',
-    margin: '0',
-  })
-);
-
-const StyledContainerGrid = styled(Grid, { label: 'StyledContainerGrid' })(
-  ({ theme }) => ({
-    alignItems: 'center',
-    backgroundColor: theme.color.grey5,
-    borderRadius: theme.shape.borderRadius,
-    boxSizing: 'border-box',
-    display: 'flex',
-    flexWrap: 'wrap',
-    margin: `${theme.spacing(1)} 0`,
-    maxWidth: '100%',
-    wrap: 'noWrap',
-  })
-);

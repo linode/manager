@@ -2,6 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -50,7 +51,9 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
             <TableCell style={{ width: '40%' }}>Package</TableCell>
             <TableCell>
               Installed Version{` `}/{` `}
-              <span style={{ color: theme.color.green }}>Latest Version</span>
+              <Box component="span" color={theme.color.green}>
+                Latest Version
+              </Box>
             </TableCell>
           </TableRow>
         </TableHead>
