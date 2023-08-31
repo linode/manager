@@ -2,6 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
+import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -83,7 +84,13 @@ export const KubernetesPlanContainer = (props: Props) => {
     <Grid container spacing={2}>
       <Hidden mdUp>
         {shouldDisplayNoRegionSelectedMessage ? (
-          <TableRowEmpty colSpan={9} message={NO_REGION_SELECTED_MESSAGE} />
+          <Notice
+            spacingLeft={8}
+            spacingTop={8}
+            sx={{ '& p': { fontSize: '0.875rem' } }}
+            text={NO_REGION_SELECTED_MESSAGE}
+            variant="info"
+          />
         ) : (
           renderPlanSelection()
         )}
