@@ -11,6 +11,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
@@ -81,12 +82,7 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
     );
   }
 
-  const iconStatus =
-    linode.status === 'running'
-      ? 'active'
-      : ['offline', 'stopped'].includes(linode.status)
-      ? 'inactive'
-      : 'other';
+  const iconStatus = getLinodeIconStatus(linode.status);
 
   return (
     <StyledTableRow
