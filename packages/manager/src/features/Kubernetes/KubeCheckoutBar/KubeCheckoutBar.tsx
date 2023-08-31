@@ -19,6 +19,7 @@ import { isEURegion } from 'src/utilities/formatRegion';
 
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
+import { LKE_CREATE_CLUSTER_CHECKOUT } from 'src/utilities/pricing/constants';
 
 export interface Props {
   createCluster: () => void;
@@ -96,7 +97,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             )
           : undefined
       }
-      priceSelectionText="Select a Region, HA choice, and add a Node Pool to view pricing and create a cluster."
+      priceSelectionText={LKE_CREATE_CLUSTER_CHECKOUT}
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"

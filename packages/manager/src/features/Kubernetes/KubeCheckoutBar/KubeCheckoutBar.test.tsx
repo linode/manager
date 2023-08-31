@@ -2,7 +2,10 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
+import {
+  LKE_CREATE_CLUSTER_CHECKOUT,
+  LKE_HA_PRICE,
+} from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
@@ -27,7 +30,7 @@ const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);
 
 describe('KubeCheckoutBar', () => {
-  it('with DC-specific pricing feature flag, should render helper text and disable create button until a region has been selected', async () => {
+  it('should render helper text and disable create button until a region has been selected', async () => {
     const { findByText, getByTestId, getByText } = renderWithTheme(
       <KubeCheckoutBar {...props} region="" />,
       {
@@ -37,9 +40,7 @@ describe('KubeCheckoutBar', () => {
 
     await waitForElementToBeRemoved(getByTestId('circle-progress'));
 
-    await findByText(
-      'Select a Region and add a Node Pool to view pricing and create a cluster.'
-    );
+    await findByText(LKE_CREATE_CLUSTER_CHECKOUT);
     expect(getByText('Create Cluster').closest('button')).toBeDisabled();
   });
 
