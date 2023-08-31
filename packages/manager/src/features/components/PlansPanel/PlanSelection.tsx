@@ -60,7 +60,7 @@ export const PlanSelection = (props: Props) => {
     showTransfer,
     type,
   } = props;
-  const dcSpecificPricing = flags?.dcSpecificPricing ?? false;
+  const dcSpecificPricing = flags?.dcSpecificPricing;
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
   const tooltip = planTooSmall

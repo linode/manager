@@ -64,7 +64,7 @@ export const PlanContainer = (props: Props) => {
     selectedRegionId,
     showTransfer,
   } = props;
-  const { dcSpecificPricing } = useFlags();
+  const flags = useFlags();
   const location = useLocation();
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
@@ -78,7 +78,7 @@ export const PlanContainer = (props: Props) => {
   // DC Dynamic price logic - DB creation flow is currently out of scope
   const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
   const shouldDisplayNoRegionSelectedMessage =
-    dcSpecificPricing && !selectedRegionId && !isDatabaseCreateFlow;
+    flags.dcSpecificPricing && !selectedRegionId && !isDatabaseCreateFlow;
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => (
@@ -86,6 +86,7 @@ export const PlanContainer = (props: Props) => {
         currentPlanHeading={currentPlanHeading}
         disabled={disabled}
         disabledClasses={disabledClasses}
+        flags={flags}
         idx={id}
         isCreate={isCreate}
         key={id}
@@ -103,6 +104,7 @@ export const PlanContainer = (props: Props) => {
     disabled,
     disabledClasses,
     isCreate,
+    flags,
     linodeID,
     onSelect,
     plans,
