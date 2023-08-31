@@ -79,6 +79,7 @@ const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
 })(({ theme }) => ({
   borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
+  whiteSpace: 'nowrap',
 }));
 
 const SubnetTableRowHead = (
