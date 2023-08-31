@@ -1,5 +1,6 @@
-import * as React from 'react';
+import { PriceObject } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Currency } from 'src/components/Currency';
@@ -10,7 +11,7 @@ import { LinodePermissionsError } from '../LinodePermissionsError';
 import { EnableBackupsDialog } from './EnableBackupsDialog';
 
 interface Props {
-  backupsMonthlyPrice?: number;
+  backupsMonthlyPrice?: PriceObject['monthly'];
   disabled: boolean;
   linodeId: number;
 }

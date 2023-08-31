@@ -34,6 +34,46 @@ describe('getTotalBackupsPrice', () => {
       addons: { backups: { price: { monthly: 2.5 } } },
       id: 'my-type',
     });
-    expect(getTotalBackupsPrice(linodes, types)).toBe(7.5);
+    expect(
+      getTotalBackupsPrice({
+        flags: { dcSpecificPricing: false },
+        linodes,
+        types,
+      })
+    ).toBe(7.5);
+  });
+
+  it('correctly calculates the total price with DC-specific pricing for Linode backups', () => {
+    const basePriceLinodes = linodeFactory.buildList(2, { type: 'my-type' });
+    const priceIncreaseLinode = linodeFactory.build({
+      region: 'id-cgk',
+      type: 'my-type',
+    });
+    const linodes = [...basePriceLinodes, priceIncreaseLinode];
+    const types = linodeTypeFactory.buildList(1, {
+      addons: {
+        backups: {
+          price: {
+            hourly: 0.004,
+            monthly: 2.5,
+          },
+          region_prices: [
+            {
+              hourly: 0.0048,
+              id: 'id-cgk',
+              monthly: 3.57,
+            },
+          ],
+        },
+      },
+      id: 'my-type',
+    });
+    expect(
+      getTotalBackupsPrice({
+        flags: { dcSpecificPricing: true },
+        linodes,
+        types,
+      })
+    ).toBe(8.57);
   });
 });

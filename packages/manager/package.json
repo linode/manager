@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.100.1",
+  "version": "1.100.2",
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -13,13 +13,13 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@linode/api-v4": "*",
     "@linode/validation": "*",
-    "@mui/icons-material": "^5.10.3",
-    "@mui/material": "^5.10.4",
-    "@mui/styles": "^5.10.3",
+    "@mui/icons-material": "^5.14.7",
+    "@mui/material": "^5.14.7",
+    "@mui/styles": "^5.14.7",
     "@paypal/react-paypal-js": "^7.8.3",
     "@reach/tabs": "^0.10.5",
     "@sentry/react": "^7.57.0",
