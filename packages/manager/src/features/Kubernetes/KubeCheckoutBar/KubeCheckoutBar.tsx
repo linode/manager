@@ -96,6 +96,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             )
           : undefined
       }
+      priceSelectionText="Select a Region, HA choice, and add a Node Pool to view pricing and create a cluster."
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
