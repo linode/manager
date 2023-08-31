@@ -148,7 +148,11 @@ const getIPv4sCellString = (
     return 'None';
   }
 
-  const interfaces = configs.map((config) => config.interfaces).flat();
+  const interfaces = configs
+    .map((config) =>
+      config.interfaces.filter((configInterface) => configInterface.ipv4?.vpc)
+    )
+    .flat();
   return getIPv4Links(interfaces);
 };
 
