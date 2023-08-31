@@ -13,7 +13,9 @@ import type { PlanSelectionType } from './types';
 const mockPlan: PlanSelectionType = planSelectionTypeFactory.build();
 
 describe('PlanSelection (table, desktop)', () => {
-  resizeScreenSize(breakpoints.values.lg);
+  beforeAll(() => {
+    resizeScreenSize(breakpoints.values.lg);
+  });
 
   it('renders the table row', () => {
     const { container } = renderWithTheme(
@@ -25,12 +27,6 @@ describe('PlanSelection (table, desktop)', () => {
         type={mockPlan}
       />
     );
-
-    act(() => {
-      global.window.innerHeight = 500;
-      global.window.innerWidth = 500;
-      fireEvent(window, new Event('resize'));
-    });
 
     expect(container.querySelector('[data-qa-plan-row]')).toBeInTheDocument();
     expect(container.querySelector('[data-qa-plan-name]')).toHaveTextContent(
@@ -91,8 +87,10 @@ describe('PlanSelection (table, desktop)', () => {
   });
 });
 
-describe.only('PlanSelection (card, mobile)', () => {
-  resizeScreenSize(breakpoints.values.sm);
+describe('PlanSelection (card, mobile)', () => {
+  beforeAll(() => {
+    resizeScreenSize(breakpoints.values.sm);
+  });
 
   it('renders the table row', () => {
     const { container } = renderWithTheme(
