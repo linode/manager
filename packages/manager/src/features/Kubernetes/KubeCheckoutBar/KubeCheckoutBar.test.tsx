@@ -32,10 +32,7 @@ const renderComponent = (_props: Props) =>
 describe('KubeCheckoutBar', () => {
   it('should render helper text and disable create button until a region has been selected', async () => {
     const { findByText, getByTestId, getByText } = renderWithTheme(
-      <KubeCheckoutBar {...props} region="" />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      <KubeCheckoutBar {...props} region="" />
     );
 
     await waitForElementToBeRemoved(getByTestId('circle-progress'));
