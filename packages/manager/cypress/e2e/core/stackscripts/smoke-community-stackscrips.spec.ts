@@ -13,6 +13,9 @@ import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
+import { getProfile } from '@linode/api-v4/lib';
+import { Profile } from '@linode/api-v4/types';
+import { formatDate } from '@src/utilities/formatDate';
 
 const mockStackScripts = [
   stackScriptFactory.build({
@@ -102,65 +105,69 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
     cy.findByText('Automate deployment scripts').should('not.exist');
 
-    const updatedTime = stackScript.updated
-      ? DateTime.fromISO(stackScript.updated)
-      : DateTime.fromISO('1970-01-01T00:00:00.000');
-    cy.get(`[data-qa-table-row="${stackScript.label}"]`)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText(stackScript.deployments_total).should('be.visible');
-        cy.findByText(updatedTime.toFormat(ISO_DATE_FORMAT)).should(
-          'be.visible'
-        );
-      });
+    cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
+      const dateFormatOptions = { zone: profile.timezone };
 
-    // Search the corresponding community stack script
-    mockGetStackScripts(stackScript).as('getFilteredStackScripts');
-    cy.get('[id="search-by-label,-username,-or-description"]')
-      .click()
-      .type(`${stackScript.label}{enter}`);
-    cy.wait('@getFilteredStackScripts');
-
-    // Check filtered results
-    cy.get(`[data-qa-table-row="${mockStackScripts[1].label}"]`).should(
-      'not.exist'
-    );
-
-    mockGetStackScript(stackScript.id, stackScript).as('getStackScript');
-    cy.get(`[href="/stackscripts/${stackScript.id}"]`)
-      .should('be.visible')
-      .click();
-    cy.wait('@getStackScript');
-
-    // Check the details page of the community stackscript
-    cy.get(`[data-qa-stack-author="${stackScript.username}"]`).should(
-      'be.visible'
-    );
-    cy.get('[data-qa-stack-deployments="true"]').within(() => {
-      cy.findByText('deployments')
+      const updatedTime = stackScript.updated
+        ? DateTime.fromISO(stackScript.updated, dateFormatOptions)
+        : DateTime.fromISO('1970-01-01T00:00:00.000');
+      cy.get(`[data-qa-table-row="${stackScript.label}"]`)
         .should('be.visible')
         .within(() => {
           cy.findByText(stackScript.deployments_total).should('be.visible');
-        });
-      cy.findByText('still active')
-        .should('be.visible')
-        .within(() => {
-          cy.findByText(stackScript.deployments_active).should('be.visible');
-        });
-      cy.findByText('Last revision:')
-        .should('be.visible')
-        .parent()
-        .within(() => {
-          cy.findByText(updatedTime.toFormat(DATETIME_DISPLAY_FORMAT)).should(
+          cy.findByText(updatedTime.toFormat(ISO_DATE_FORMAT)).should(
             'be.visible'
           );
         });
-      cy.findByText('StackScript ID:')
+
+      // Search the corresponding community stack script
+      mockGetStackScripts(stackScript).as('getFilteredStackScripts');
+      cy.get('[id="search-by-label,-username,-or-description"]')
+        .click()
+        .type(`${stackScript.label}{enter}`);
+      cy.wait('@getFilteredStackScripts');
+
+      // Check filtered results
+      cy.get(`[data-qa-table-row="${mockStackScripts[1].label}"]`).should(
+        'not.exist'
+      );
+
+      mockGetStackScript(stackScript.id, stackScript).as('getStackScript');
+      cy.get(`[href="/stackscripts/${stackScript.id}"]`)
         .should('be.visible')
-        .parent()
-        .within(() => {
-          cy.findByText(stackScript.id).should('be.visible');
-        });
+        .click();
+      cy.wait('@getStackScript');
+
+      // Check the details page of the community stackscript
+      cy.get(`[data-qa-stack-author="${stackScript.username}"]`).should(
+        'be.visible'
+      );
+      cy.get('[data-qa-stack-deployments="true"]').within(() => {
+        cy.findByText('deployments')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText(stackScript.deployments_total).should('be.visible');
+          });
+        cy.findByText('still active')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText(stackScript.deployments_active).should('be.visible');
+          });
+        cy.findByText('Last revision:')
+          .should('be.visible')
+          .parent()
+          .within(() => {
+            cy.findByText(updatedTime.toFormat(DATETIME_DISPLAY_FORMAT)).should(
+              'be.visible'
+            );
+          });
+        cy.findByText('StackScript ID:')
+          .should('be.visible')
+          .parent()
+          .within(() => {
+            cy.findByText(stackScript.id).should('be.visible');
+          });
+      });
     });
   });
 
