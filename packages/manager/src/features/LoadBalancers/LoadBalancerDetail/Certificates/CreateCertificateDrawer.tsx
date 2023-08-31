@@ -64,7 +64,7 @@ export const CreateCertificateDrawer = (props: Props) => {
         >
           <FormControlLabel
             label={
-              <Stack spacing={1}>
+              <Stack mt={1.5} spacing={1}>
                 <Typography>TLS Certificate</Typography>
                 <Typography>
                   Used by your load balancer to terminate the connection and
@@ -75,11 +75,12 @@ export const CreateCertificateDrawer = (props: Props) => {
               </Stack>
             }
             control={<Radio />}
+            sx={{ alignItems: 'flex-start' }}
             value="downstream"
           />
           <FormControlLabel
             label={
-              <Stack spacing={1}>
+              <Stack mt={1.5} spacing={1}>
                 <Typography>Service Target Certificate</Typography>
                 <Typography>
                   Used by the load balancer to accept responses from your
@@ -89,7 +90,7 @@ export const CreateCertificateDrawer = (props: Props) => {
               </Stack>
             }
             control={<Radio />}
-            sx={{ mt: 2 }}
+            sx={{ alignItems: 'flex-start', mt: 2 }}
             value="ca"
           />
         </RadioGroup>
