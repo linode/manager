@@ -74,7 +74,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Overview" />
-      <Grid container>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <Paper>
             <Grid

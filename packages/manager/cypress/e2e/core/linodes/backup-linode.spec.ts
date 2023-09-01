@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { authenticate } from 'support/api/authentication';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';
 import {
   containsClick,
@@ -8,9 +9,15 @@ import {
   getClick,
 } from 'support/helpers';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { apiMatcher } from 'support/util/intercepts';
 
+authenticate();
 describe('linode backups', () => {
+  before(() => {
+    cleanUp('linodes');
+  });
+
   it('enable backups', () => {
     createLinode().then((linode) => {
       // intercept request
