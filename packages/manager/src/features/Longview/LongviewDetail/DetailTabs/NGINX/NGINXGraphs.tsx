@@ -73,7 +73,7 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Grid container direction="row">
+          <Grid container direction="row" spacing={2}>
             <Grid className={classes.smallGraph} item sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
