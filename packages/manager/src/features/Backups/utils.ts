@@ -1,47 +1,10 @@
 import { enableBackups } from '@linode/api-v4';
 import { useMutation, useQueryClient } from 'react-query';
 
-import { FlagSet } from 'src/featureFlags';
 import { queryKey } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';
-import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
-import type { APIError, Linode, LinodeType, PriceObject } from '@linode/api-v4';
-
-export interface TotalBackupsPriceOptions {
-  /**
-   * Our feature flags so we can determined whether or not to add price increase.
-   * @example { dcSpecificPricing: true }
-   */
-  flags: FlagSet;
-  /**
-   * List of linodes without backups enabled
-   */
-  linodes: Linode[];
-  /**
-   * List of types for the linodes without backups
-   */
-  types: LinodeType[];
-}
-
-export const getTotalBackupsPrice = ({
-  flags,
-  linodes,
-  types,
-}: TotalBackupsPriceOptions) => {
-  return linodes.reduce((prevValue: number, linode: Linode) => {
-    const type = types.find((type) => type.id === linode.type);
-
-    const backupsMonthlyPrice: PriceObject['monthly'] =
-      getMonthlyBackupsPrice({
-        flags,
-        region: linode.region,
-        type,
-      }) || 0;
-
-    return prevValue + backupsMonthlyPrice;
-  }, 0);
-};
+import type { APIError, Linode } from '@linode/api-v4';
 
 interface EnableBackupsFufilledResult extends PromiseFulfilledResult<{}> {
   linode: Linode;

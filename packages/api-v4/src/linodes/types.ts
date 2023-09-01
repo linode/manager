@@ -290,7 +290,7 @@ export interface PriceObject {
   hourly: number | null;
 }
 
-interface RegionPriceObject extends PriceObject {
+export interface RegionPriceObject extends PriceObject {
   id: Region['id'];
 }
 

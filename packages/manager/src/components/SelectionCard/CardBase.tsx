@@ -39,7 +39,7 @@ export const CardBase = (props: CardBaseProps) => {
   const renderSubheadings = subheadings.map((subheading, idx) => {
     return (
       <CardBaseSubheading
-        data-qa-select-card-subheading={subheading}
+        data-qa-select-card-subheading={`subheading-${idx + 1}`}
         key={idx}
         sx={sxSubheading}
       >

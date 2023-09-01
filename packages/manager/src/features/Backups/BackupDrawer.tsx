@@ -25,13 +25,13 @@ import {
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllTypes } from 'src/queries/types';
 import { pluralize } from 'src/utilities/pluralize';
+import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 
 import { AutoEnroll } from './AutoEnroll';
 import { BackupLinodeRow } from './BackupLinodeRow';
 import {
   EnableBackupsRejectedResult,
   getFailureNotificationText,
-  getTotalBackupsPrice,
   useEnableBackupsOnLinodesMutation,
 } from './utils';
 
