@@ -84,7 +84,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
 
   // @todo update regex once error messaging updates
   const errorNotice = (errorMsg: string) => {
-    // match something like: Linode <linode_label> (ID <linode_id>)
+    // match something like: Nodebalancer <nodebalancer_label> (ID <nodebalancer_id>)
     const device = /(nodebalancer) (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
     if (openTicket) {

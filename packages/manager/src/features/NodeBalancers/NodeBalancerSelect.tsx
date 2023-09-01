@@ -91,12 +91,6 @@ export const NodeBalancerSelect = (
     '+order_by': 'label',
   });
 
-  React.useEffect(() => {
-    if (hasNextPage && !isLoading) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, isLoading, fetchNextPage]);
-
   const unfilteredNodebalancers = data?.pages.flatMap((page) => page.data);
 
   const nodebalancers = optionsFilter
@@ -112,6 +106,12 @@ export const NodeBalancerSelect = (
       setInputValue('');
     }
   }, [value]);
+
+  const onScroll = () => {
+    if (hasNextPage && !isLoading) {
+      fetchNextPage();
+    }
+  };
 
   return (
     <Autocomplete
@@ -183,6 +183,7 @@ export const NodeBalancerSelect = (
       loading={isLoading || loading}
       multiple={multiple}
       onInputChange={(_, value) => setInputValue(value)}
+      onScroll={onScroll}
       options={options || (nodebalancers ?? [])}
       popupIcon={<KeyboardArrowDownIcon />}
     />
