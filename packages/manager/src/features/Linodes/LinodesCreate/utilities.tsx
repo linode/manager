@@ -112,3 +112,14 @@ export const utoa = (data: string) => {
     return data;
   }
 };
+
+export const regionSupportsMetadata = (
+  regionsData: Region[],
+  region: string
+) => {
+  return (
+    regionsData
+      .find((regionData) => regionData.id === region)
+      ?.capabilities.includes('Metadata') ?? false
+  );
+};

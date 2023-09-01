@@ -44,10 +44,7 @@ import { Typography } from 'src/components/Typography';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import {
-  PlanSelectionType,
-  PlansPanel,
-} from 'src/features/components/PlansPanel/PlansPanel';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
@@ -64,6 +61,8 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -334,7 +333,10 @@ const DatabaseCreate = () => {
       const singleNodePricing = type.engines[selectedEngine].find(
         (cluster) => cluster.quantity === 1
       );
-      const price = singleNodePricing?.price ?? { hourly: null, monthly: null };
+      const price = singleNodePricing?.price ?? {
+        hourly: null,
+        monthly: null,
+      };
       const subHeadings = [
         `$${price.monthly}/mo ($${price.hourly}/hr)`,
         typeLabelDetails(type.memory, type.disk, type.vcpus),
@@ -503,9 +505,7 @@ const DatabaseCreate = () => {
             regions={regionsData}
             selectedID={values.region}
           />
-          <div style={{ marginTop: 8 }}>
-            <RegionHelperText />
-          </div>
+          <RegionHelperText hidePricingNotice mt={1} />
         </Grid>
         <Divider spacingBottom={12} spacingTop={38} />
         <Grid>
