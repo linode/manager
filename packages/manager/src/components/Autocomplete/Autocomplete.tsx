@@ -1,11 +1,7 @@
 import { APIError } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import MuiAutocomplete, {
-  AutocompleteChangeReason,
-  AutocompleteProps,
-  AutocompleteRenderOptionState,
-} from '@mui/material/Autocomplete';
+import MuiAutocomplete from '@mui/material/Autocomplete';
 import { SxProps } from '@mui/system';
 import React, { useCallback } from 'react';
 
@@ -18,6 +14,13 @@ import {
   SelectedIcon,
   StyledListItem,
 } from './Autocomplete.styles';
+
+import type {
+  AutocompleteChangeReason,
+  AutocompleteOwnerState,
+  AutocompleteProps,
+  AutocompleteRenderOptionState,
+} from '@mui/material/Autocomplete';
 
 export interface OptionType<T = any> {
   data?: T;
@@ -178,13 +181,14 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
     (
       props: React.HTMLAttributes<HTMLLIElement>,
       option: OptionType,
-      state: AutocompleteRenderOptionState
+      state: AutocompleteRenderOptionState,
+      ownerState: AutocompleteOwnerState<any, any, any, any, any> // TODO: handle any
     ) => {
       const selectAllOption = option.value === 'all';
       const ListItem = selectAllOption ? StyledListItem : 'li';
 
       return renderOption ? (
-        renderOption(props, option, state)
+        renderOption(props, option, state, ownerState)
       ) : (
         <ListItem {...props}>
           <>
