@@ -7,6 +7,8 @@ import { StyledLinkButton } from '../Button/StyledLinkButton';
 import { StyledTransferDisplayTypography } from './TransferDisplay.styles';
 import { TransferDisplayDialog } from './TransferDisplayDialog';
 
+import type { RegionalNetworkUtilization } from '@linode/api-v4';
+
 export interface Props {
   spacingTop?: number;
 }
@@ -20,9 +22,20 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const quota = data?.quota ?? 0;
   const used = data?.used ?? 0;
 
+  const calculatePoolUsagePct = (
+    data: RegionalNetworkUtilization | undefined
+  ) => {
+    if (!data?.quota || !data?.used) {
+      return 0;
+    }
+
+    const { quota, used } = data;
+
+    return used < quota ? (used / quota) * 100 : used === 0 ? 0 : 100;
+  };
+
   // Usage percentage should not be 100% if there has been no usage or usage has not exceeded quota.
-  const poolUsagePct =
-    used < quota ? (used / quota) * 100 : used === 0 ? 0 : 100;
+  const generalPoolUsagePct = calculatePoolUsagePct(data);
 
   if (isError) {
     // We may want to add an error state for this but I think that would clutter
@@ -37,20 +50,19 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
           'Loading transfer data...'
         ) : (
           <>
-            You have used {poolUsagePct.toFixed(poolUsagePct < 1 ? 2 : 0)}% of
-            your
-            {`  `}
             <StyledLinkButton onClick={() => setModalOpen(true)}>
               Monthly Network Transfer Pool
             </StyledLinkButton>
-            .
+            &nbsp;usage: <br />
+            {generalPoolUsagePct.toFixed(generalPoolUsagePct < 1 ? 2 : 0)}%
+            General Transfer Pool
           </>
         )}
       </StyledTransferDisplayTypography>
       <TransferDisplayDialog
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        poolUsagePct={poolUsagePct}
+        poolUsagePct={generalPoolUsagePct}
         quota={quota}
         used={used}
       />
