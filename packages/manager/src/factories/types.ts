@@ -1,6 +1,8 @@
 import { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import * as Factory from 'factory.ts';
 
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+
 export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   addons: {
     backups: {
@@ -49,3 +51,26 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   transfer: 1000,
   vcpus: 8,
 });
+
+export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanSelectionType>(
+  {
+    class: typeFactory.build().class,
+    disk: typeFactory.build().disk,
+    formattedLabel: '',
+    heading: 'Dedicated 20 GB',
+    id: typeFactory.build().id,
+    label: typeFactory.build().label,
+    memory: typeFactory.build().memory,
+    network_out: typeFactory.build().network_out,
+    price: typeFactory.build().price,
+    region_prices: typeFactory.build().region_prices,
+    subHeadings: [
+      '$10/mo ($0.015/hr)',
+      '1 CPU, 50 GB Storage, 2 GB RAM',
+      '2 TB Transfer',
+      '40 Gbps In / 2 Gbps Out',
+    ],
+    transfer: typeFactory.build().transfer,
+    vcpus: typeFactory.build().vcpus,
+  }
+);
