@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-08-30] - v1.100.2
+
+### Fixed:
+
+- Extra API calls for Linode Configs ([#9609](https://github.com/linode/manager/pull/9609))
+
+
 ## [2023-08-22] - v1.100.1
 
 ### Fixed:

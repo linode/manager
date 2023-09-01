@@ -63,7 +63,8 @@ export const LinodeRow = (props: Props) => {
 
   // TODO: VPC - later if there is a way to directly get a linode's vpc, replace this
   const { data: configs, isLoading: configsLoading } = useAllLinodeConfigsQuery(
-    id
+    id,
+    flags.vpc
   );
   const vpcId = getVPCId(configs ?? []);
   const { data: vpc, isLoading: vpcLoading } = useVPCQuery(

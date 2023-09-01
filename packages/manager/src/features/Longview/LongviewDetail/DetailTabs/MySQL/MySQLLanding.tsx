@@ -81,7 +81,7 @@ export const MySQLLanding = React.memo((props: Props) => {
   }
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'MySQL'} />
       <Grid item xs={12}>
         <Box

@@ -117,6 +117,7 @@ export const IconSection = React.memo((props: Props) => {
         alignItems="flex-start"
         container
         item
+        spacing={2}
         wrap="nowrap"
       >
         <Grid item>
@@ -127,7 +128,7 @@ export const IconSection = React.memo((props: Props) => {
           <Typography>{formattedUptime}</Typography>
         </Grid>
       </Grid>
-      <Grid alignItems="flex-start" container item wrap="nowrap">
+      <Grid alignItems="flex-start" container item spacing={2} wrap="nowrap">
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <ServerIcon />
         </StyledIconGrid>
@@ -137,7 +138,7 @@ export const IconSection = React.memo((props: Props) => {
           </Typography>
         </Grid>
       </Grid>
-      <Grid alignItems="center" container item wrap="nowrap">
+      <Grid alignItems="center" container item spacing={2} wrap="nowrap">
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <CPUIcon />
         </StyledIconGrid>
@@ -148,7 +149,7 @@ export const IconSection = React.memo((props: Props) => {
           )}
         </Grid>
       </Grid>
-      <Grid alignItems="center" container item wrap="nowrap">
+      <Grid alignItems="center" container item spacing={2} wrap="nowrap">
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <RamIcon />
         </StyledIconGrid>
@@ -167,7 +168,7 @@ export const IconSection = React.memo((props: Props) => {
           </Grid>
         )}
       </Grid>
-      <Grid alignItems="center" container item wrap="nowrap">
+      <Grid alignItems="center" container item spacing={2} wrap="nowrap">
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <DiskIcon />
         </StyledIconGrid>
@@ -191,7 +192,7 @@ export const IconSection = React.memo((props: Props) => {
           </Grid>
         )}
       </Grid>
-      <Grid alignItems="center" container item wrap="nowrap">
+      <Grid alignItems="center" container item spacing={2} wrap="nowrap">
         {packages && packages.length > 0 ? (
           <Grid item md={2} sm={1} sx={{ alignSelf: 'center' }} xs={2}>
             <StyledIconTextLink
@@ -204,7 +205,7 @@ export const IconSection = React.memo((props: Props) => {
             </StyledIconTextLink>
           </Grid>
         ) : (
-          <Grid alignItems="center" container item wrap="nowrap">
+          <Grid alignItems="center" container item spacing={2} wrap="nowrap">
             <StyledIconGrid item md={2} sm={1} xs={2}>
               <PackageIcon />
             </StyledIconGrid>

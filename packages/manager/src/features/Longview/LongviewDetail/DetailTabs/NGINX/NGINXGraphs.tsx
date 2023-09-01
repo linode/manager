@@ -69,7 +69,7 @@ export const NGINXGraphs = React.memo((props: Props) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Grid container direction="row">
+          <Grid container direction="row" spacing={2}>
             <StyledSmallGraphGrid item sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
