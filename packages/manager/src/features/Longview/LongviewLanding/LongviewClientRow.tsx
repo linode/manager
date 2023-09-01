@@ -116,7 +116,7 @@ const LongviewClientRow = (props: CombinedProps) => {
                 userCanModifyClient={userCanModifyClient}
               />
             </Grid>
-            <Grid item md={9} xs={12}>
+            <Grid md={9} xs={12}>
               <Grid alignItems="center" container direction="row" spacing={2}>
                 <StyledGrid sm={2} xs={4}>
                   <CPUGauge
@@ -159,15 +159,13 @@ const LongviewClientRow = (props: CombinedProps) => {
           </Grid>
         </Grid>
         <Grid item xs={1}>
-          <Grid container justifyContent="flex-end" spacing={2}>
-            <Grid item>
-              <LongviewActionMenu
-                longviewClientID={clientID}
-                longviewClientLabel={clientLabel}
-                triggerDeleteLongviewClient={triggerDeleteLongviewClient}
-                userCanModifyClient={userCanModifyClient}
-              />
-            </Grid>
+          <Grid container justifyContent="flex-end">
+            <LongviewActionMenu
+              longviewClientID={clientID}
+              longviewClientLabel={clientLabel}
+              triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+              userCanModifyClient={userCanModifyClient}
+            />
           </Grid>
         </Grid>
       </Grid>

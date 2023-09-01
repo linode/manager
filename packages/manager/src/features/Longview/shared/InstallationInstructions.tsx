@@ -21,7 +21,7 @@ export const InstallationInstructions = React.memo((props: Props) => {
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
 
   return (
-    <Grid sx={{ ...sxContainer }} spacing={2}>
+    <Grid container sx={{ ...sxContainer }} spacing={2}>
       <Grid sx={{ ...sxItem }}>
         <Typography>
           Before this client can gather data, you need to install the Longview
@@ -57,7 +57,7 @@ export const InstallationInstructions = React.memo((props: Props) => {
         </Typography>
       </Grid>
       <Grid sx={{ ...sxItem }} xs={12}>
-        <Grid sx={{ ...sxContainer }} spacing={2}>
+        <Grid container sx={{ ...sxContainer }} spacing={2}>
           <StyledInstructionGrid>
             <Typography>
               <Link to="https://www.linode.com/docs/platform/longview/troubleshooting-linode-longview/">

@@ -5,9 +5,8 @@ import { Grid } from 'src/components/Grid';
 export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(
   ({ theme }) => ({
     boxSizing: 'border-box',
-    marginLeft: 0,
-    marginRigh: 0,
-    marginTop: 0,
+    margin: 0,
+    padding: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
       marginBottom: 30,
     },

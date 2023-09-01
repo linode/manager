@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
 import { Button } from 'src/components/Button/Button';
-import { Grid } from 'src/components/Grid';
 
 export const StyledButton = styled(Button, { label: 'StyledButton' })({
   '&:hover': {

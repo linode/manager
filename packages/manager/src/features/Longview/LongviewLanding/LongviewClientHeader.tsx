@@ -1,10 +1,11 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
-import { Grid } from 'src/components/Grid';
+//import { Grid } from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { DispatchProps } from 'src/containers/longview.container';
@@ -108,8 +109,8 @@ export const LongviewClientHeader = enhanced((props: CombinedProps) => {
     longviewClientLastUpdated !== 0;
 
   return (
-    <StyledRootGrid spacing={2}>
-      <Grid item>
+    <StyledRootGrid container spacing={2}>
+      <Grid>
         {userCanModifyClient ? (
           <EditableEntityLabel
             loading={updating}
@@ -140,7 +141,7 @@ export const LongviewClientHeader = enhanced((props: CombinedProps) => {
           </>
         )}
       </StyledUpdatesGrid>
-      <Grid item>
+      <Grid>
         <Link to={`/longview/clients/${clientID}`}>View Details</Link>
         {!loading && (
           <StyledDiv>
