@@ -8,7 +8,8 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
-import { AddDeviceDrawer } from './AddDeviceDrawer';
+import { AddLinodeDrawer } from './AddLinodeDrawer';
+import { AddNodebalancerDrawer } from './AddNodebalancerDrawer';
 import { FirewallDevicesTable } from './FirewallDevicesTable';
 import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 
@@ -25,6 +26,9 @@ export const formattedTypes = {
   linode: 'Linode',
   nodebalancer: 'NodeBalancer',
 };
+
+const helperText =
+  'Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.';
 
 export const FirewallDeviceLanding = React.memo(
   (props: FirewallDeviceLandingProps) => {
@@ -101,11 +105,19 @@ export const FirewallDeviceLanding = React.memo(
           error={error ?? undefined}
           loading={isLoading}
         />
-        <AddDeviceDrawer
-          onClose={handleClose}
-          open={addDeviceDrawerOpen}
-          type={type}
-        />
+        {type === 'linode' ? (
+          <AddLinodeDrawer
+            helperText={helperText}
+            onClose={handleClose}
+            open={addDeviceDrawerOpen}
+          />
+        ) : (
+          <AddNodebalancerDrawer
+            helperText={helperText}
+            onClose={handleClose}
+            open={addDeviceDrawerOpen}
+          />
+        )}
         <RemoveDeviceDialog
           device={selectedDevice}
           firewallId={firewallID}

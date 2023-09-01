@@ -8,7 +8,6 @@ import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import {
   useAddFirewallDeviceMutation,
@@ -19,21 +18,14 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-import { formattedTypes } from './FirewallDeviceLanding';
-
-import type { FirewallDeviceEntityType } from '@linode/api-v4';
-
 interface Props {
+  helperText: string;
   onClose: () => void;
   open: boolean;
-  type: FirewallDeviceEntityType;
 }
 
-const helperText =
-  'Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.';
-
-export const AddDeviceDrawer = (props: Props) => {
-  const { onClose, open, type } = props;
+export const AddNodebalancerDrawer = (props: Props) => {
+  const { helperText, onClose, open } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -49,15 +41,10 @@ export const AddDeviceDrawer = (props: Props) => {
     isLoading: currentDevicesLoading,
   } = useAllFirewallDevicesQuery(Number(id));
 
-  const getEntityIdsByType = (entityType: FirewallDeviceEntityType) => {
-    return (
-      currentDevices
-        ?.filter((device) => device.entity.type === entityType)
-        .map((device) => device.entity.id) ?? []
-    );
-  };
-
-  const currentDeviceIds = getEntityIdsByType(type);
+  const currentNodebalancerIds =
+    currentDevices
+      ?.filter((device) => device.entity.type === 'nodebalancer')
+      .map((device) => device.entity.id) ?? [];
 
   const {
     error,
@@ -72,7 +59,7 @@ export const AddDeviceDrawer = (props: Props) => {
 
   const handleSubmit = async () => {
     const results = await Promise.allSettled(
-      selectedDeviceIds.map((id) => addDevice({ id, type }))
+      selectedDeviceIds.map((id) => addDevice({ id, type: 'nodebalancer' }))
     );
 
     results.forEach((result, _) => {
@@ -92,16 +79,13 @@ export const AddDeviceDrawer = (props: Props) => {
   };
 
   const errorMessage = error
-    ? getAPIErrorOrDefault(error, `Error adding ${formattedTypes[type]}`)[0]
-        .reason
+    ? getAPIErrorOrDefault(error, `Error adding Nodebalancer`)[0].reason
     : undefined;
 
   // @todo update regex once error messaging updates
   const errorNotice = (errorMsg: string) => {
     // match something like: Linode <linode_label> (ID <linode_id>)
-    const device = /(linode|nodebalancer) (.+?) \(id ([^()]*)\)/i.exec(
-      errorMsg
-    );
+    const device = /(nodebalancer) (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
     if (openTicket) {
       errorMsg = errorMsg.replace(/open a support ticket\./i, '');
@@ -120,7 +104,7 @@ export const AddDeviceDrawer = (props: Props) => {
           variant="error"
         >
           {errorMsg.substring(0, labelIndex)}
-          <Link to={`/${type}s/${id}`}>{label}</Link>
+          <Link to={`/nodebalancers/${id}`}>{label}</Link>
           {errorMsg.substring(labelIndex + label.length)}
           {openTicket ? (
             <>
@@ -134,14 +118,10 @@ export const AddDeviceDrawer = (props: Props) => {
     }
   };
 
-  // If a user is restricted, they can not add a read-only Linode to a firewall.
-  const getReadOnlyEntityIds = (entityType: FirewallDeviceEntityType) => {
-    return isRestrictedUser
-      ? getEntityIdsByPermission(grants, entityType, 'read_only')
-      : [];
-  };
-
-  const readOnlyDeviceIds = getReadOnlyEntityIds(type);
+  // If a user is restricted, they can not add a read-only Nodebalancer to a firewall.
+  const readOnlyNodebalancerIds = isRestrictedUser
+    ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
+    : [];
 
   return (
     <Drawer
@@ -150,8 +130,14 @@ export const AddDeviceDrawer = (props: Props) => {
         onClose();
       }}
       open={open}
-      title={`Add ${formattedTypes[type]} to Firewall: ${firewall?.label}`}
+      title={`Add Nodebalancer to Firewall: ${firewall?.label}`}
     >
+      <Notice variant={'warning'}>
+        Only the Firewall's inbound rules apply to NodeBalancers. Any existing
+        outbound rules won't be applied.
+        {/* add documentation link */}
+        <Link to="#"> Learn more.</Link>
+      </Notice>
       <form
         onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
           e.preventDefault();
@@ -159,41 +145,23 @@ export const AddDeviceDrawer = (props: Props) => {
         }}
       >
         {errorMessage ? errorNotice(errorMessage) : null}
-        {type === 'linode' ? (
-          <LinodeSelect
-            onSelectionChange={(linodes) =>
-              setSelectedDeviceIds(linodes.map((linode) => linode.id))
-            }
-            optionsFilter={(linode) =>
-              ![...currentDeviceIds, ...readOnlyDeviceIds].includes(linode.id)
-            }
-            disabled={currentDevicesLoading}
-            helperText={helperText}
-            loading={currentDevicesLoading}
-            multiple
-            noOptionsMessage={`No ${formattedTypes[type]}s available to add`}
-            value={selectedDeviceIds}
-          />
-        ) : (
-          <NodeBalancerSelect
-            onSelectionChange={(nodebalancers) =>
-              setSelectedDeviceIds(
-                nodebalancers.map((nodebalancer) => nodebalancer.id)
-              )
-            }
-            optionsFilter={(nodebalancer) =>
-              ![...currentDeviceIds, ...readOnlyDeviceIds].includes(
-                nodebalancer.id
-              )
-            }
-            disabled={currentDevicesLoading}
-            helperText={helperText}
-            loading={currentDevicesLoading}
-            multiple
-            noOptionsMessage={`No ${formattedTypes[type]}s available to add`}
-            value={selectedDeviceIds}
-          />
-        )}
+        <NodeBalancerSelect
+          onSelectionChange={(nodebalancers) =>
+            setSelectedDeviceIds(
+              nodebalancers.map((nodebalancer) => nodebalancer.id)
+            )
+          }
+          optionsFilter={(nodebalancer) =>
+            ![...currentNodebalancerIds, ...readOnlyNodebalancerIds].includes(
+              nodebalancer.id
+            )
+          }
+          disabled={currentDevicesLoading}
+          helperText={helperText}
+          loading={currentDevicesLoading}
+          multiple
+          value={selectedDeviceIds}
+        />
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',

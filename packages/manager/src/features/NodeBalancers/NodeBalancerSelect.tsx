@@ -5,8 +5,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import {
   CustomPopper,
@@ -116,86 +114,78 @@ export const NodeBalancerSelect = (
   }, [value]);
 
   return (
-    <>
-      <Notice variant={'warning'}>
-        Only the Firewall's inbound rules apply to NodeBalancers. Any existing
-        outbound rules won't be applied.
-        {/* add documentation link */}
-        <Link to="#"> Learn more.</Link>
-      </Notice>
-      <Autocomplete
-        noOptionsText={
-          noOptionsMessage ?? (
-            <i>{getDefaultNoOptionsMessage(error, isLoading, nodebalancers)}</i>
-          )
-        }
-        onChange={(_, value) =>
-          multiple && Array.isArray(value)
-            ? onSelectionChange(value as NodeBalancer[])
-            : !multiple &&
-              !Array.isArray(value) &&
-              onSelectionChange(value as NodeBalancer)
-        }
-        renderInput={(params) => (
-          <TextField
-            placeholder={
-              placeholder
-                ? placeholder
-                : multiple
-                ? 'Select NodeBalancers'
-                : 'Select a NodeBalancer'
-            }
-            errorText={error?.[0].reason ?? errorText}
-            helperText={helperText}
-            inputId={params.id}
-            label={label ? label : multiple ? 'NodeBalancers' : 'NodeBalancer'}
-            loading={isLoading}
-            noMarginTop={noMarginTop}
-            {...params}
-          />
-        )}
-        renderOption={(props, option, { selected }) => {
-          return (
-            <li {...props}>
-              {renderOption ? (
-                renderOption(option as NodeBalancer, selected)
-              ) : (
-                <>
-                  <Box
-                    sx={{
-                      flexGrow: 1,
-                    }}
-                  >
-                    {option.label}
-                  </Box>
-                  <SelectedIcon visible={selected} />
-                </>
-              )}
-            </li>
-          );
-        }}
-        value={
-          typeof value === 'function'
-            ? multiple && Array.isArray(value)
-              ? nodebalancers?.filter(value) ?? null
-              : nodebalancers?.find(value) ?? null
-            : mapIdsToDevices(value ?? null, nodebalancers)
-        }
-        ChipProps={{ deleteIcon: <CloseIcon /> }}
-        PopperComponent={CustomPopper}
-        clearOnBlur={false}
-        disableCloseOnSelect={multiple}
-        disablePortal={true}
-        disabled={disabled}
-        inputValue={inputValue}
-        // isOptionEqualToValue={(option) => option.id === selectedNodebalancer?.id}
-        loading={isLoading || loading}
-        multiple={multiple}
-        onInputChange={(_, value) => setInputValue(value)}
-        options={options || (nodebalancers ?? [])}
-        popupIcon={<KeyboardArrowDownIcon />}
-      />
-    </>
+    <Autocomplete
+      noOptionsText={
+        noOptionsMessage ?? (
+          <i>{getDefaultNoOptionsMessage(error, isLoading, nodebalancers)}</i>
+        )
+      }
+      onChange={(_, value) =>
+        multiple && Array.isArray(value)
+          ? onSelectionChange(value as NodeBalancer[])
+          : !multiple &&
+            !Array.isArray(value) &&
+            onSelectionChange(value as NodeBalancer)
+      }
+      renderInput={(params) => (
+        <TextField
+          placeholder={
+            placeholder
+              ? placeholder
+              : multiple
+              ? 'Select NodeBalancers'
+              : 'Select a NodeBalancer'
+          }
+          errorText={error?.[0].reason ?? errorText}
+          helperText={helperText}
+          inputId={params.id}
+          label={label ? label : multiple ? 'NodeBalancers' : 'NodeBalancer'}
+          loading={isLoading}
+          noMarginTop={noMarginTop}
+          {...params}
+        />
+      )}
+      renderOption={(props, option, { selected }) => {
+        return (
+          <li {...props}>
+            {renderOption ? (
+              renderOption(option as NodeBalancer, selected)
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                  }}
+                >
+                  {option.label}
+                </Box>
+                <SelectedIcon visible={selected} />
+              </>
+            )}
+          </li>
+        );
+      }}
+      value={
+        typeof value === 'function'
+          ? multiple && Array.isArray(value)
+            ? nodebalancers?.filter(value) ?? null
+            : nodebalancers?.find(value) ?? null
+          : mapIdsToDevices(value ?? null, nodebalancers)
+      }
+      ChipProps={{ deleteIcon: <CloseIcon /> }}
+      PopperComponent={CustomPopper}
+      clearOnBlur={false}
+      disableCloseOnSelect={multiple}
+      disablePortal={true}
+      disabled={disabled}
+      inputValue={inputValue}
+      // isOptionEqualToValue={(option) => option.id === selectedNodebalancer?.id}
+      loading={isLoading || loading}
+      multiple={multiple}
+      onInputChange={(_, value) => setInputValue(value)}
+      options={options || (nodebalancers ?? [])}
+      popupIcon={<KeyboardArrowDownIcon />}
+    />
   );
 };
 
