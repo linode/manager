@@ -36,7 +36,14 @@ const GaugesSection: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
-    <Grid className={classes.gaugesOuter} container item md={5} xs={12}>
+    <Grid
+      className={classes.gaugesOuter}
+      container
+      item
+      md={5}
+      spacing={2}
+      xs={12}
+    >
       <Grid className={classes.gaugeContainer} item xs={4}>
         <CPUGauge
           clientID={props.clientID}

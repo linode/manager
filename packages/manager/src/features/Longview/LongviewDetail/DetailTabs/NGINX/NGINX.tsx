@@ -105,7 +105,7 @@ export const NGINX: React.FC<Props> = (props) => {
   }
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'NGINX'} />
       <Grid item xs={12}>
         <Box

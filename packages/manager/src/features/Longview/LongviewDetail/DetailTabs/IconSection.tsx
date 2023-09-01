@@ -160,6 +160,7 @@ const IconSection: React.FC<Props> = (props) => {
         className={classes.headerSection}
         container
         item
+        spacing={2}
         wrap="nowrap"
       >
         <Grid item>
@@ -175,6 +176,7 @@ const IconSection: React.FC<Props> = (props) => {
         className={classes.iconSection}
         container
         item
+        spacing={2}
         wrap="nowrap"
       >
         <Grid className={classes.iconItem} item md={2} sm={1} xs={2}>
@@ -190,6 +192,7 @@ const IconSection: React.FC<Props> = (props) => {
         alignItems="center"
         className={classes.iconSection}
         container
+        spacing={2}
         item
         wrap="nowrap"
       >
@@ -207,6 +210,7 @@ const IconSection: React.FC<Props> = (props) => {
         alignItems="center"
         className={classes.iconSection}
         container
+        spacing={2}
         item
         wrap="nowrap"
       >
@@ -232,6 +236,7 @@ const IconSection: React.FC<Props> = (props) => {
         alignItems="center"
         className={classes.iconSection}
         container
+        spacing={2}
         item
         wrap="nowrap"
       >
@@ -262,6 +267,7 @@ const IconSection: React.FC<Props> = (props) => {
         alignItems="center"
         className={classes.iconSection}
         container
+        spacing={2}
         item
         wrap="nowrap"
       >
@@ -282,6 +288,7 @@ const IconSection: React.FC<Props> = (props) => {
             alignItems="center"
             className={classes.packageStaticOuter}
             container
+            spacing={2}
             item
             wrap="nowrap"
           >

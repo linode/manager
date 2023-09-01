@@ -74,7 +74,7 @@ export const LongviewClientInstructions: React.FC<Props> = (props) => {
         spacing={2}
       >
         <Grid item xs={11}>
-          <Grid container>
+          <Grid container spacing={2}>
             <Grid item md={3} xs={12}>
               {userCanModifyClient ? (
                 <EditableEntityLabel
@@ -99,7 +99,7 @@ export const LongviewClientInstructions: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
         <Grid item xs={1}>
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent="flex-end" spacing={2}>
             <Grid item>
               <ActionMenu
                 longviewClientID={clientID}
