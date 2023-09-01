@@ -16,18 +16,28 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      text: 'Overview of Global Load Balancer',
+      text: 'Overview',
       to:
         'https://www.linode.com/docs/products/networking/global-loadbalancer/',
     },
     {
-      text: 'Getting Started with Global Load Balancer',
+      text: 'Getting Started',
       to:
         'https://www.linode.com/docs/products/networking/global-loadbalancer/get-started/',
     },
+    {
+      text: 'Resources',
+      to:
+        'https://www.linode.com/docs/products/networking/global-loadbalancer/resources/',
+    },
+    {
+      text: 'Developers',
+      to:
+        'https://www.linode.com/docs/products/networking/global-loadbalancer/developers/',
+    },
   ],
   moreInfo: {
-    text: 'View additional Global Load Balancer Guides',
+    text: 'Guides',
     to:
       'https://www.linode.com/docs/products/networking/global-loadbalancer/guides/',
   },

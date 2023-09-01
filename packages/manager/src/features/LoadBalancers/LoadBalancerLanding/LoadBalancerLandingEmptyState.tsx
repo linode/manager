@@ -13,30 +13,15 @@ import {
   gettingStartedGuides,
   headers,
   linkAnalyticsEvent,
-  youtubeLinkData,
 } from './LoadBalancerEmptyStateData';
 
 const AdditionalCopy = () => (
-  <>
-    <Typography> Don’t need a global load balancer?</Typography>
-    <Typography sx={{ mb: '16px' }} variant="body1">
-      {` `}
-      <Link to="https://www.linode.com/products/nodebalancers/">
-        NodeBalancer
-      </Link>
-      {` `}
-      provides Layer 4 and HTTP/S Layer 7 (HTTP/1.1) local load balancing.
-    </Typography>
-    <Typography variant="body1">
-      For a comparison of features available on Global Load Balancer and
-      NodeBalancer, see
-    </Typography>
-    <Typography>
-      <Link to="https://www.linode.com/docs/products/networking/global-loadbalancer/#selecting-a-load-balanceradbalancer#selecting-a-load-balancer#selecting-a-load-balancer ">
-        Selecting a Load Balancer.
-      </Link>
-    </Typography>
-  </>
+  <Typography sx={{ mb: '16px' }} variant="body1">
+    Looking for a single data center Load Balancer? Try {` `}
+    <Link to="https://www.linode.com/products/nodebalancers/">
+      NodeBalancer.
+    </Link>
+  </Typography>
 );
 
 export const LoadBalancerLandingEmptyState = () => {
@@ -62,7 +47,6 @@ export const LoadBalancerLandingEmptyState = () => {
       headers={headers}
       icon={NodeBalancer}
       linkAnalyticsEvent={linkAnalyticsEvent}
-      youtubeLinkData={youtubeLinkData}
     />
   );
 };

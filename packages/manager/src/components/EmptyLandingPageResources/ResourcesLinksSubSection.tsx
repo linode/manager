@@ -41,7 +41,9 @@ export const ResourcesLinksSubSection = (
   props: ResourcesLinksSubSectionProps
 ) => {
   const { MoreLink, children, icon, title } = props;
-
+  if (!title) {
+    return null;
+  }
   return (
     <StyledResourcesLinksSubSection>
       <Typography variant="h2">
