@@ -196,7 +196,7 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clients" />
-      <StyledHeadingGrid>
+      <StyledHeadingGrid spacing={2}>
         <StyledSearchbarGrid>
           <DebouncedSearchTextField
             debounceTime={250}
@@ -234,7 +234,7 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
         userCanCreateLongviewClient={userCanCreateClient}
       />
       {!isLongviewPro && (
-        <StyledCTAGrid>
+        <StyledCTAGrid spacing={2}>
           <Typography data-testid="longview-upgrade">
             <Link to={'/longview/plan-details'}>Upgrade to Longview Pro</Link>
             {` `}for more clients, longer data retention, and more frequent data

@@ -67,7 +67,7 @@ export const LongviewClientInstructions = (props: Props) => {
         spacing={2}
       >
         <Grid item xs={11}>
-          <Grid container>
+          <Grid container spacing={2}>
             <Grid item md={3} xs={12}>
               {userCanModifyClient ? (
                 <EditableEntityLabel
@@ -92,7 +92,7 @@ export const LongviewClientInstructions = (props: Props) => {
           </Grid>
         </Grid>
         <Grid item xs={1}>
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent="flex-end" spacing={2}>
             <Grid item>
               <LongviewActionMenu
                 longviewClientID={clientID}

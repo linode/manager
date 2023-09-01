@@ -17,7 +17,7 @@ interface Props {
 
 export const GaugesSection = React.memo((props: Props) => {
   return (
-    <StyledOuterGrid container md={5} xs={12}>
+    <StyledOuterGrid container md={5} spacing={2} xs={12}>
       <StyledGaugeContainerGrid xs={4}>
         <CPUGauge
           clientID={props.clientID}

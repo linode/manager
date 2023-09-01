@@ -100,10 +100,11 @@ const LongviewClientRow = (props: CombinedProps) => {
         container
         data-testid="longview-client-row"
         justifyContent="space-between"
+        spacing={2}
         wrap="nowrap"
       >
         <Grid item xs={11}>
-          <Grid container>
+          <Grid container spacing={2}>
             <Grid item md={3} xs={12}>
               <LongviewClientHeader
                 clientID={clientID}
@@ -116,7 +117,7 @@ const LongviewClientRow = (props: CombinedProps) => {
               />
             </Grid>
             <Grid item md={9} xs={12}>
-              <Grid alignItems="center" container direction="row">
+              <Grid alignItems="center" container direction="row" spacing={2}>
                 <StyledGrid sm={2} xs={4}>
                   <CPUGauge
                     clientID={clientID}
@@ -158,7 +159,7 @@ const LongviewClientRow = (props: CombinedProps) => {
           </Grid>
         </Grid>
         <Grid item xs={1}>
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent="flex-end" spacing={2}>
             <Grid item>
               <LongviewActionMenu
                 longviewClientID={clientID}

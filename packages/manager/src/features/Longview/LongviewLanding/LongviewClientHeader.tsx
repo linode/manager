@@ -108,7 +108,7 @@ export const LongviewClientHeader = enhanced((props: CombinedProps) => {
     longviewClientLastUpdated !== 0;
 
   return (
-    <StyledRootGrid>
+    <StyledRootGrid spacing={2}>
       <Grid item>
         {userCanModifyClient ? (
           <EditableEntityLabel

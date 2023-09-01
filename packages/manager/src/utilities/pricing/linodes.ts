@@ -1,4 +1,6 @@
 import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 /**
  * Gets the price of a Linode type for a specific region.
@@ -8,7 +10,7 @@ import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
  * @returns pricing information for this specific linode type in a region
  */
 export const getLinodeRegionPrice = (
-  type: LinodeType,
+  type: ExtendedType | LinodeType | PlanSelectionType,
   regionId: string
 ): PriceObject => {
   const regionSpecificPrice = type.region_prices?.find(
@@ -22,32 +24,8 @@ export const getLinodeRegionPrice = (
     };
   }
 
+  // TODO: M3-7063 (defaults)
   return type.price;
-};
-
-/**
- * Gets the backup price of a Linode type for a specific region.
- *
- * @param type The Linode Type
- * @param regionId The region to get the price for
- * @returns backup pricing information for this specific linode type in a region
- */
-export const getLinodeBackupPrice = (
-  type: LinodeType,
-  regionId: string
-): PriceObject => {
-  const regionSpecificBackupPrice = type.addons.backups.region_prices?.find(
-    (regionPrice) => regionPrice.id === regionId
-  );
-
-  if (regionSpecificBackupPrice) {
-    return {
-      hourly: regionSpecificBackupPrice.hourly,
-      monthly: regionSpecificBackupPrice.monthly,
-    };
-  }
-
-  return type.addons.backups.price;
 };
 
 interface IsPriceDifferentOptions {
