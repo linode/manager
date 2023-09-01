@@ -32,7 +32,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
     ...textFieldProps
   } = props;
 
-  const _fieldName = fieldName ?? label.toLowerCase();
+  const _fieldName = fieldName ?? (label?.toLowerCase() || '');
   const _successMessage = successMessage ?? `${label} updated successfully.`;
   const _errorMessage = errorMessage ?? `Error updating ${label}.`;
 

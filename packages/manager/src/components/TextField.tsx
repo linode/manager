@@ -1,14 +1,14 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { Box } from 'src/components/Box';
+import { Theme } from '@mui/material/styles';
 import {
   default as _TextField,
   StandardTextFieldProps,
 } from '@mui/material/TextField';
-import { Theme } from '@mui/material/styles';
 import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
@@ -162,7 +162,7 @@ interface InputToolTipProps {
 
 interface TextFieldPropsOverrides extends StandardTextFieldProps {
   // We override this prop to make it required
-  label: string;
+  label?: string;
 }
 
 export type TextFieldProps = BaseProps &
@@ -303,22 +303,24 @@ export const TextField = (props: TextFieldProps) => {
       })}
     >
       <Box display="flex">
-        <InputLabel
-          className={cx({
-            [classes.noTransform]: true,
-            [classes.wrapper]: noMarginTop ? false : true,
-            'visually-hidden': hideLabel,
-          })}
-          data-qa-textfield-label={label}
-          htmlFor={validInputId}
-        >
-          {label}
-          {required ? (
-            <span className={classes.label}> (required)</span>
-          ) : optional ? (
-            <span className={classes.label}> (optional)</span>
-          ) : null}
-        </InputLabel>
+        {label && (
+          <InputLabel
+            className={cx({
+              [classes.noTransform]: true,
+              [classes.wrapper]: noMarginTop ? false : true,
+              'visually-hidden': hideLabel,
+            })}
+            data-qa-textfield-label={label}
+            htmlFor={validInputId}
+          >
+            {label}
+            {required ? (
+              <span className={classes.label}> (required)</span>
+            ) : optional ? (
+              <span className={classes.label}> (optional)</span>
+            ) : null}
+          </InputLabel>
+        )}
         {labelTooltipText && (
           <TooltipIcon
             sxTooltipIcon={{
