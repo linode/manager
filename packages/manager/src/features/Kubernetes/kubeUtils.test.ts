@@ -71,6 +71,28 @@ describe('helper functions', () => {
       ).toBe(20);
     });
 
+    it('should calculate the total cluster DC-specific price for a region with a price increase when the DC-Specific pricing feature flag is on', () => {
+      expect(
+        getTotalClusterPrice({
+          flags: { dcSpecificPricing: true },
+          pools: [mockNodePool, mockNodePool],
+          region: 'id-cgk',
+          types,
+        })
+      ).toBe(48);
+    });
+
+    it('should calculate the total cluster base price for a region with a price increase when the DC-Specific pricing feature flag is off', () => {
+      expect(
+        getTotalClusterPrice({
+          flags: { dcSpecificPricing: false },
+          pools: [mockNodePool, mockNodePool],
+          region: 'id-cgk',
+          types,
+        })
+      ).toBe(20);
+    });
+
     it('should calculate the total cluster price with HA enabled', () => {
       expect(
         getTotalClusterPrice({

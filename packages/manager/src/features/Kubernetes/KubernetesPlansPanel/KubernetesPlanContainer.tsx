@@ -11,7 +11,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
-import { PLAN_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
+import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 
@@ -89,7 +89,7 @@ export const KubernetesPlanContainer = (
             spacingLeft={8}
             spacingTop={8}
             sx={{ '& p': { fontSize: '0.875rem' } }}
-            text={PLAN_NO_REGION_SELECTED_MESSAGE}
+            text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
             variant="info"
           />
         ) : (
@@ -124,7 +124,7 @@ export const KubernetesPlanContainer = (
               {shouldDisplayNoRegionSelectedMessage ? (
                 <TableRowEmpty
                   colSpan={9}
-                  message={PLAN_NO_REGION_SELECTED_MESSAGE}
+                  message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
                 />
               ) : (
                 renderPlanSelection()

@@ -1,35 +1,28 @@
 import * as React from 'react';
 
-import { extendedTypes } from 'src/__data__/ExtendedType';
-import { PLAN_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { extendedTypeFactory } from 'src/factories/types';
+import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   KubernetesPlanContainer,
   KubernetesPlanContainerProps,
 } from './KubernetesPlanContainer';
 
-// const types = linodeTypeFactory.build({
-//   price: {
-//     hourly: 0.1,
-//     monthly: 5,
-//   },
-//   region_prices: [],
-// });
+const plans = extendedTypeFactory.buildList(2);
 
 const props: KubernetesPlanContainerProps = {
-  disabled: false,
   getTypeCount: jest.fn(),
-  onAdd: jest.fn(),
   onSelect: jest.fn(),
-  plans: extendedTypes,
-  selectedID: '1234',
-  selectedRegionID: 'us-east',
+  plans,
+  selectedRegionID: undefined,
   updatePlanCount: jest.fn(),
 };
 
+beforeAll(() => mockMatchMedia());
+
 describe('KubernetesPlanContainer', () => {
-  it.skip('with the DC-specific pricing feature flag off, it should display plans and pricing without a region', async () => {
+  it('should display a table with column headers', async () => {
     const { findByLabelText, findByText } = renderWithTheme(
       <KubernetesPlanContainer {...props} />
     );
@@ -37,20 +30,21 @@ describe('KubernetesPlanContainer', () => {
     const table = await findByLabelText('List of Linode Plans');
     expect(table).toBeInTheDocument();
 
-    await findByText('Monthly');
+    await findByText('Plan');
     await findByText('Hourly');
-    expect(
-      await findByText(PLAN_NO_REGION_SELECTED_MESSAGE)
-    ).not.toBeInTheDocument();
+    await findByText('Monthly');
+    await findByText('RAM');
+    await findByText('CPUs');
+    await findByText('Storage');
+    await findByText('Quantity');
   });
 
-  it.skip('with the DC-specific pricing feature flag on, it should not display plans and pricing without a region selected', async () => {
-    const { findByText } = renderWithTheme(
-      <KubernetesPlanContainer {...props} selectedRegionID={undefined} />,
+  it('should display no region selection message without a region selection when the DC-specific pricing feature flag is on ', async () => {
+    const { getByText } = renderWithTheme(
+      <KubernetesPlanContainer {...props} />,
       { flags: { dcSpecificPricing: true } }
     );
 
-    await findByText(PLAN_NO_REGION_SELECTED_MESSAGE);
-    expect(await findByText('/$/')).not.toBeInTheDocument();
+    expect(getByText(PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE)).toBeVisible();
   });
 });
