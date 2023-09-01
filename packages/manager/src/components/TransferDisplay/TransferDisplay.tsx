@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
+import { useRegionsQuery } from 'src/queries/regions';
 
 import { StyledLinkButton } from '../Button/StyledLinkButton';
 import { StyledTransferDisplayTypography } from './TransferDisplay.styles';
 import { TransferDisplayDialog } from './TransferDisplayDialog';
-
-import type { RegionalNetworkUtilization } from '@linode/api-v4';
+import { calculatePoolUsagePct, getRegionTransferPools } from './utils';
 
 export interface Props {
   spacingTop?: number;
@@ -15,27 +15,11 @@ export interface Props {
 
 export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { data, isError, isLoading } = useAccountTransfer();
+  const { data: generalPoolUsage, isError, isLoading } = useAccountTransfer();
+  const { data: regions } = useRegionsQuery();
 
-  // console.log('data', data);
-
-  const quota = data?.quota ?? 0;
-  const used = data?.used ?? 0;
-
-  const calculatePoolUsagePct = (
-    data: RegionalNetworkUtilization | undefined
-  ) => {
-    if (!data?.quota || !data?.used) {
-      return 0;
-    }
-
-    const { quota, used } = data;
-
-    return used < quota ? (used / quota) * 100 : used === 0 ? 0 : 100;
-  };
-
-  // Usage percentage should not be 100% if there has been no usage or usage has not exceeded quota.
-  const generalPoolUsagePct = calculatePoolUsagePct(data);
+  const generalPoolUsagePct = calculatePoolUsagePct(generalPoolUsage);
+  const regionTransferPools = getRegionTransferPools(generalPoolUsage, regions);
 
   if (isError) {
     // We may want to add an error state for this but I think that would clutter
@@ -56,15 +40,21 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
             &nbsp;usage: <br />
             {generalPoolUsagePct.toFixed(generalPoolUsagePct < 1 ? 2 : 0)}%
             General Transfer Pool
+            <br />
+            {regionTransferPools?.map((pool) => (
+              <>
+                {pool.pct.toFixed(pool.pct < 1 ? 2 : 0)}% {pool.regionName}
+                <br />
+              </>
+            ))}
           </>
         )}
       </StyledTransferDisplayTypography>
       <TransferDisplayDialog
+        generalPoolUsage={generalPoolUsage ?? { quota: 0, used: 0 }}
+        generalPoolUsagePct={generalPoolUsagePct ?? 0}
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        poolUsagePct={generalPoolUsagePct}
-        quota={quota}
-        used={used}
       />
     </Box>
   );

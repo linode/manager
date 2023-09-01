@@ -11,15 +11,22 @@ import { Typography } from 'src/components/Typography';
 import { getDaysRemaining } from './utils';
 
 interface DialogProps {
+  generalPoolUsage: {
+    quota: number;
+    used: number;
+  };
+  generalPoolUsagePct: number;
   isOpen: boolean;
   onClose: () => void;
-  poolUsagePct: number;
-  quota: number;
-  used: number;
 }
 
 export const TransferDisplayDialog = React.memo((props: DialogProps) => {
-  const { isOpen, onClose, poolUsagePct, quota, used } = props;
+  const {
+    generalPoolUsage: { quota, used },
+    generalPoolUsagePct,
+    isOpen,
+    onClose,
+  } = props;
   const theme = useTheme();
   const daysRemainingInMonth = getDaysRemaining();
   // Don't display usage, quota, or bar percent if the network transfer pool is empty (e.g. account has no resources).
@@ -68,7 +75,7 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
         </Grid>
       </Grid>
       {!isEmptyPool ? (
-        <BarPercent max={100} rounded value={Math.ceil(poolUsagePct)} />
+        <BarPercent max={100} rounded value={Math.ceil(generalPoolUsagePct)} />
       ) : null}
 
       <Typography
