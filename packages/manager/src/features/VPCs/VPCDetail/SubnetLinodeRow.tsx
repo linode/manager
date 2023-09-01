@@ -156,7 +156,7 @@ const getIPv4sCellString = (
   return getIPv4Links(interfaces);
 };
 
-export const getIPv4Links = (data: Interface[]): JSX.Element => {
+const getIPv4Links = (data: Interface[]): JSX.Element => {
   const firstThreeInterfaces = data.slice(0, 3);
   return (
     <>
@@ -175,7 +175,7 @@ export const getIPv4Links = (data: Interface[]): JSX.Element => {
   );
 };
 
-export const getFirewallLinks = (data: Firewall[]): JSX.Element => {
+const getFirewallLinks = (data: Firewall[]): JSX.Element => {
   const firstThreeFirewalls = data.slice(0, 3);
   return (
     <>

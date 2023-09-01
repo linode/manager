@@ -174,7 +174,14 @@ const VPCDetail = () => {
         open={editVPCDrawerOpen}
         vpc={vpc}
       />
-      <Box padding={2} paddingLeft={0}>
+      <Box
+        sx={(theme) => ({
+          [theme.breakpoints.up('lg')]: {
+            paddingLeft: 0,
+          },
+        })}
+        padding={'16px 8px'}
+      >
         <Typography variant="h2">Subnets</Typography>
       </Box>
       <VPCSubnetsTable subnets={vpc.subnets} />

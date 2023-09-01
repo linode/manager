@@ -63,19 +63,7 @@ export const linodeStatsFactory = Factory.Sync.makeFactory<Stats>({
 
 export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
   ipv4: {
-    private: [
-      {
-        address: '50.116.6.212',
-        gateway: '50.116.6.212',
-        linode_id: 2,
-        prefix: 24,
-        public: true,
-        rdns: 'lixxx-xxxxxx.members.linode.com',
-        region: 'us-southeast',
-        subnet_mask: '255.255.255.0',
-        type: 'ipv4',
-      },
-    ],
+    private: [],
     public: [
       {
         address: '10.11.12.13',

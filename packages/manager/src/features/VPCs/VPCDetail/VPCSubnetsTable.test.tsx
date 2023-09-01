@@ -1,17 +1,27 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
+import { QueryClient } from 'react-query';
 
 import { subnetFactory } from 'src/factories/subnets';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
+
+const queryClient = new QueryClient();
+
+beforeAll(() => mockMatchMedia());
+afterEach(() => {
+  queryClient.clear();
+});
 
 describe('VPC Subnets table', () => {
   it('should display subnet label, id, ip range, number of linodes, and action menu', () => {
     const subnets = subnetFactory.buildList(Math.floor(Math.random() * 10) + 1);
-    const { getAllByRole, getAllByText, getByText } = renderWithTheme(
-      <VPCSubnetsTable subnets={subnets} />
-    );
+    const {
+      getAllByRole,
+      getAllByText,
+      getByText,
+    } = renderWithTheme(<VPCSubnetsTable subnets={subnets} />, { queryClient });
 
     getByText('Subnet Label');
     getByText(subnets[0].label);
@@ -59,7 +69,7 @@ describe('VPC Subnets table', () => {
     getByText('Linode Label');
     getByText('Status');
     getByText('Linode ID');
-    getByText('Private IP Address');
+    getByText('VPC IPv4');
     getByText('Firewalls');
   });
 });
