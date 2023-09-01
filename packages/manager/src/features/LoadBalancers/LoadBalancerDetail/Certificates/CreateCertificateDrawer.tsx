@@ -116,6 +116,7 @@ export const CreateCertificateDrawer = (props: Props) => {
           labelTooltipText="TODO"
           multiline
           name="key"
+          onChange={formik.handleChange}
           value={formik.values.key}
         />
         <ActionsPanel
