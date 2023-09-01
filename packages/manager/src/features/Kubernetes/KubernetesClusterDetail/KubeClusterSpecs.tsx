@@ -13,11 +13,9 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
+import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 
-import {
-  getTotalClusterMemoryCPUAndStorage,
-  getTotalClusterPrice,
-} from '../kubeUtils';
+import { getTotalClusterMemoryCPUAndStorage } from '../kubeUtils';
 
 interface Props {
   cluster: KubernetesCluster;

@@ -6,80 +6,11 @@ import {
 } from '@linode/api-v4/lib/kubernetes';
 import { Region } from '@linode/api-v4/lib/regions';
 
-import { FlagSet } from 'src/featureFlags';
-import { ExtendedType } from 'src/utilities/extendType';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
 export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
-
-interface MonthlyPriceOptions {
-  count: number;
-  flags: FlagSet;
-  region: Region['id'] | undefined;
-  type: ExtendedType | string;
-  types: ExtendedType[];
-}
-
-interface TotalClusterPriceOptions {
-  flags: FlagSet;
-  highAvailabilityPrice?: number;
-  pools: KubeNodePoolResponse[];
-  region: Region['id'] | undefined;
-  types: ExtendedType[];
-}
-
-/**
- * Calculates the monthly price of a group of linodes based on region and types.
- * @returns The monthly price for the linodes, or 0 if price cannot be calculated
- */
-export const getMonthlyPrice = ({
-  count,
-  flags,
-  region,
-  type,
-  types,
-}: MonthlyPriceOptions) => {
-  if (!types || !type || !region) {
-    return 0; // TODO
-  }
-  const thisType = types.find((t: ExtendedType) => t.id === type);
-  const monthlyPrice = flags.dcSpecificPricing
-    ? thisType
-      ? getLinodeRegionPrice(thisType, region)?.monthly
-      : 0
-    : thisType?.price.monthly;
-
-  return thisType ? (monthlyPrice ?? 0) * count : 0;
-};
-
-/**
- * Calculates the total monthly price of all pools in a cluster, plus HA if enabled.
- * @returns The total monthly cluster price
- */
-export const getTotalClusterPrice = ({
-  flags,
-  highAvailabilityPrice,
-  pools,
-  region,
-  types,
-}: TotalClusterPriceOptions) => {
-  const price = pools.reduce((accumulator, node) => {
-    return (
-      accumulator +
-      getMonthlyPrice({
-        count: node.count,
-        flags,
-        region,
-        type: node.type,
-        types,
-      })
-    );
-  }, 0);
-
-  return highAvailabilityPrice ? price + highAvailabilityPrice : price;
-};
 
 interface ClusterData {
   CPU: number;

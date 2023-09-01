@@ -10,7 +10,10 @@ import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { getMonthlyPrice } from 'src/features/Kubernetes/kubeUtils';
+import {
+  getKubernetesMonthlyPrice,
+  getTotalClusterPrice,
+} from 'src/utilities/pricing/kubernetes';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
@@ -19,7 +22,7 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
 
-import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
+import { nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
 
 export interface Props {
@@ -120,7 +123,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
             price={
               region !== ''
-                ? getMonthlyPrice({
+                ? getKubernetesMonthlyPrice({
                     count: thisPool.count,
                     flags,
                     region,

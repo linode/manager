@@ -14,9 +14,10 @@ import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
+import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
-import { getMonthlyPrice, nodeWarning } from '../../kubeUtils';
+import { nodeWarning } from '../../kubeUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
@@ -103,7 +104,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   const totalMonthlyPrice =
     planType &&
-    getMonthlyPrice({
+    getKubernetesMonthlyPrice({
       count: nodePool.count,
       flags,
       region: kubernetesRegionId,
