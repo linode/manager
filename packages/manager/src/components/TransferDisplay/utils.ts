@@ -6,6 +6,10 @@ import type {
   RegionalTransferObject,
 } from '@linode/api-v4';
 
+/**
+ * Get the number of days remaining in the current month.
+ * @returns number
+ */
 export const getDaysRemaining = () =>
   Math.floor(
     DateTime.local()
@@ -20,6 +24,7 @@ export const getDaysRemaining = () =>
  * Usage percentage should not be 100% if there has been no usage or usage has not exceeded quota.
  * @param data
  * @returns number
+ * @example calculatePoolUsagePct({ quota: 1000, used: 500 }) // 50
  */
 export const calculatePoolUsagePct = (
   data: RegionalNetworkUtilization | RegionalTransferObject | undefined
@@ -38,6 +43,18 @@ export const calculatePoolUsagePct = (
  * @param generalPoolUsage
  * @param regions
  * @returns an array of objects containing the percentage of network transfer used and the region name
+ * @example
+ * getRegionTransferPools(generalPoolUsage, regions)
+ * // [
+ * //   {
+ * //     pct: 50,
+ * //     regionName: 'us-east',
+ * //   },
+ * //   {
+ * //     pct: 50,
+ * //     regionName: 'us-west',
+ * //   },
+ * // ]
  */
 export const getRegionTransferPools = (
   generalPoolUsage: RegionalNetworkUtilization | undefined,
@@ -55,4 +72,14 @@ export const getRegionTransferPools = (
       regionName,
     };
   });
+};
+
+/**
+ * Format the percentage of network transfer used for display.
+ * @param pct
+ * @returns string
+ * @example formatPoolUsagePct(0.5) // '50%'
+ */
+export const formatPoolUsagePct = (pct: number) => {
+  return `${pct.toFixed(pct < 1 ? 2 : 0)}% `;
 };

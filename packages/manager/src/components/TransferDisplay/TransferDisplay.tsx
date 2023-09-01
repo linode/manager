@@ -1,13 +1,18 @@
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { Typography } from 'src/components/Typography';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { StyledLinkButton } from '../Button/StyledLinkButton';
-import { StyledTransferDisplayTypography } from './TransferDisplay.styles';
+import { StyledTransferDisplayContainer } from './TransferDisplay.styles';
 import { TransferDisplayDialog } from './TransferDisplayDialog';
-import { calculatePoolUsagePct, getRegionTransferPools } from './utils';
+import {
+  calculatePoolUsagePct,
+  formatPoolUsagePct,
+  getRegionTransferPools,
+} from './utils';
 
 export interface Props {
   spacingTop?: number;
@@ -29,27 +34,30 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
 
   return (
     <Box marginTop={spacingTop}>
-      <StyledTransferDisplayTypography>
+      <StyledTransferDisplayContainer>
         {isLoading ? (
-          'Loading transfer data...'
+          <Typography>Loading transfer data...</Typography>
         ) : (
           <>
-            <StyledLinkButton onClick={() => setModalOpen(true)}>
-              Monthly Network Transfer Pool
-            </StyledLinkButton>
-            &nbsp;usage: <br />
-            {generalPoolUsagePct.toFixed(generalPoolUsagePct < 1 ? 2 : 0)}%
-            General Transfer Pool
-            <br />
-            {regionTransferPools?.map((pool) => (
-              <>
-                {pool.pct.toFixed(pool.pct < 1 ? 2 : 0)}% {pool.regionName}
-                <br />
-              </>
+            <Typography>
+              <StyledLinkButton onClick={() => setModalOpen(true)}>
+                Monthly Network Transfer Pool&nbsp;
+              </StyledLinkButton>
+              usage:
+            </Typography>
+            <Typography>
+              {formatPoolUsagePct(generalPoolUsagePct)}
+              General Transfer Pool
+            </Typography>
+            {regionTransferPools?.map((pool, key) => (
+              <Typography key={`transfer-pool-region-${key}`}>
+                {formatPoolUsagePct(pool.pct)}
+                {pool.regionName}
+              </Typography>
             ))}
           </>
         )}
-      </StyledTransferDisplayTypography>
+      </StyledTransferDisplayContainer>
       <TransferDisplayDialog
         generalPoolUsage={generalPoolUsage ?? { quota: 0, used: 0 }}
         generalPoolUsagePct={generalPoolUsagePct ?? 0}

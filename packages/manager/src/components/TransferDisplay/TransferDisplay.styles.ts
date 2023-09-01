@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 
-import { Typography } from 'src/components/Typography';
+import { Box } from 'src/components/Box';
 
-export const StyledTransferDisplayTypography = styled(Typography, {
+export const StyledTransferDisplayContainer = styled(Box, {
   label: 'StyledTransferDisplayTypography',
 })(({ theme }) => ({
   margin: 'auto',

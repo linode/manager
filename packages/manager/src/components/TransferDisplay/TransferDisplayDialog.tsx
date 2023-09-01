@@ -48,7 +48,7 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
         container
         justifyContent="space-between"
         spacing={2}
-        style={{ marginBottom: 0 }}
+        sx={{ marginBottom: 0 }}
       >
         <Grid style={{ marginRight: 10 }}>
           {!isEmptyPool ? (
