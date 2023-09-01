@@ -205,7 +205,7 @@ export const IconSection = React.memo((props: Props) => {
             <PackageIcon />
           </StyledIconGrid>
           <Grid item xs={10}>
-            <Typography>{packagesToUpdate} yay</Typography>
+            <Typography>{packagesToUpdate}</Typography>
           </Grid>
         </StyledIconContainerGrid>
       )}
