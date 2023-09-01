@@ -10,7 +10,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Tooltip } from 'src/components/Tooltip';
-import { useFlags } from 'src/hooks/useFlags';
 
 import { StyledToggleButton } from './DisplayLinodes.styles';
 
@@ -30,7 +29,6 @@ type CombinedProps<T> = Props & Omit<OrderByProps<T>, 'data'>;
 export const SortableTableHead = <T extends unknown>(
   props: CombinedProps<T>
 ) => {
-  const flags = useFlags();
   const theme = useTheme();
 
   const {
@@ -141,11 +139,6 @@ export const SortableTableHead = <T extends unknown>(
                 </TableSortCell>
               </Hidden>
             </Hidden>
-            {flags.vpc && (
-              <Hidden smDown>
-                <TableCell>VPC</TableCell>
-              </Hidden>
-            )}
             <Hidden lgDown>
               <TableSortCell
                 active={isActive('backups:last_successful')}
