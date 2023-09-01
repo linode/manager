@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -19,7 +18,13 @@ import {
   getTotalMemoryUsage,
   sumStorage,
 } from '../../shared/utilities';
-import { StyledIconGrid, StyledIconTextLink } from './IconSection.styles';
+import {
+  StyledHeaderGrid,
+  StyledIconGrid,
+  StyledIconContainerGrid,
+  StyledIconTextLink,
+  StyledPackageGrid,
+} from './IconSection.styles';
 
 interface Props {
   client: string;
@@ -28,8 +33,6 @@ interface Props {
 }
 
 export const IconSection = React.memo((props: Props) => {
-  const theme = useTheme();
-
   const hostname = pathOr(
     'Hostname not available',
     ['SysInfo', 'hostname'],
@@ -110,16 +113,7 @@ export const IconSection = React.memo((props: Props) => {
 
   return (
     <Grid item lg={3} md={6} xs={12}>
-      <Grid
-        sx={{
-          marginBottom: `calc(${theme.spacing(3)} - 2)`,
-        }}
-        alignItems="flex-start"
-        container
-        item
-        spacing={2}
-        wrap="nowrap"
-      >
+      <StyledHeaderGrid spacing={2}>
         <Grid item>
           <Typography sx={{ wordBreak: 'break-all' }} variant="h3">
             {props.client}
@@ -127,8 +121,8 @@ export const IconSection = React.memo((props: Props) => {
           <Typography>{hostname}</Typography>
           <Typography>{formattedUptime}</Typography>
         </Grid>
-      </Grid>
-      <Grid alignItems="flex-start" container item spacing={2} wrap="nowrap">
+      </StyledHeaderGrid>
+      <StyledIconContainerGrid spacing={2}>
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <ServerIcon />
         </StyledIconGrid>
@@ -137,8 +131,8 @@ export const IconSection = React.memo((props: Props) => {
             {osDist} {osDistVersion} {kernel && `(${kernel})`}
           </Typography>
         </Grid>
-      </Grid>
-      <Grid alignItems="center" container item spacing={2} wrap="nowrap">
+      </StyledIconContainerGrid>
+      <StyledIconContainerGrid spacing={2}>
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <CPUIcon />
         </StyledIconGrid>
@@ -148,8 +142,8 @@ export const IconSection = React.memo((props: Props) => {
             <Typography>{`${cpuCoreCount} ${coreCountDisplay}`}</Typography>
           )}
         </Grid>
-      </Grid>
-      <Grid alignItems="center" container item spacing={2} wrap="nowrap">
+      </StyledIconContainerGrid>
+      <StyledIconContainerGrid spacing={2}>
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <RamIcon />
         </StyledIconGrid>
@@ -167,8 +161,8 @@ export const IconSection = React.memo((props: Props) => {
             <Typography>RAM information not available</Typography>
           </Grid>
         )}
-      </Grid>
-      <Grid alignItems="center" container item spacing={2} wrap="nowrap">
+      </StyledIconContainerGrid>
+      <StyledIconContainerGrid spacing={2}>
         <StyledIconGrid item md={2} sm={1} xs={2}>
           <DiskIcon />
         </StyledIconGrid>
@@ -191,10 +185,10 @@ export const IconSection = React.memo((props: Props) => {
             <Typography>Storage information not available</Typography>
           </Grid>
         )}
-      </Grid>
-      <Grid alignItems="center" container item spacing={2} wrap="nowrap">
-        {packages && packages.length > 0 ? (
-          <Grid item md={2} sm={1} sx={{ alignSelf: 'center' }} xs={2}>
+      </StyledIconContainerGrid>
+      {packages && packages.length > 0 ? (
+        <StyledIconContainerGrid spacing={2}>
+          <StyledPackageGrid md={2} sm={1} xs={2}>
             <StyledIconTextLink
               SideIcon={PackageIcon}
               onClick={props.openPackageDrawer}
@@ -203,18 +197,18 @@ export const IconSection = React.memo((props: Props) => {
             >
               {packagesToUpdate}
             </StyledIconTextLink>
+          </StyledPackageGrid>
+        </StyledIconContainerGrid>
+      ) : (
+        <StyledIconContainerGrid spacing={2}>
+          <StyledIconGrid item md={2} sm={1} xs={2}>
+            <PackageIcon />
+          </StyledIconGrid>
+          <Grid item xs={10}>
+            <Typography>{packagesToUpdate} yay</Typography>
           </Grid>
-        ) : (
-          <Grid alignItems="center" container item spacing={2} wrap="nowrap">
-            <StyledIconGrid item md={2} sm={1} xs={2}>
-              <PackageIcon />
-            </StyledIconGrid>
-            <Grid item xs={10}>
-              <Typography>{packagesToUpdate}</Typography>
-            </Grid>
-          </Grid>
-        )}
-      </Grid>
+        </StyledIconContainerGrid>
+      )}
     </Grid>
   );
 });
