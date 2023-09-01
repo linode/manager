@@ -161,9 +161,13 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
   }: HandleMultiSelectionChange) => {
     if (reason === 'clear' && handleClearOptions) {
       handleClearOptions(); // Clear options requested; call callback if available
+      setSelectAllActive(false);
     } else if (selectedOptions.some((option) => option.value === 'all')) {
       handleToggleSelectAll(initialOptions); // Handle 'Select all' option selection
     } else if (handleToggleOption) {
+      if (initialOptions.length !== selectedOptions?.length) {
+        setSelectAllActive(false);
+      }
       handleToggleOption(selectedOptions); // Handle individual options selection
     }
   };

@@ -182,7 +182,7 @@ export const Regions: Story = {
     renderOption: (props, option, { selected }) => {
       return (
         <StyledListItem {...props}>
-          <Box display={'flex'} alignItems={'center'} flexGrow={1}>
+          <Box alignItems={'center'} display={'flex'} flexGrow={1}>
             <StyledFlag>{option.data.flag}</StyledFlag>
             {option.label}
           </Box>
