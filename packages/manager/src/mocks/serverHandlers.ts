@@ -715,7 +715,6 @@ export const handlers = [
     const cluster = kubernetesAPIResponse.build({
       id,
       k8s_version,
-      region: 'id_cgk',
     });
     return res(ctx.json(cluster));
   }),
