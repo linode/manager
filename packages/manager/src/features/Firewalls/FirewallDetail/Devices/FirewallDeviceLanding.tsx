@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -92,11 +92,11 @@ export const FirewallDeviceLanding = React.memo(
             setSelectedDeviceId(id);
             setIsRemoveDeviceDialogOpen(true);
           }}
+          deviceType={type}
           devices={devices ?? []}
           disabled={disabled}
           error={error ?? undefined}
           loading={isLoading}
-          deviceType={type}
         />
         <AddDeviceDrawer onClose={handleClose} open={addDeviceDrawerOpen} />
         <RemoveDeviceDialog
