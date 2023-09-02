@@ -31,6 +31,7 @@ interface Props {
   regionsData: Region[];
   resetValues: () => void;
   selectedID?: string;
+  selectedRegionID?: Region['id'] | string;
   types: ExtendedType[];
   updatePlanCount: (planId: string, newCount: number) => void;
 }
@@ -51,6 +52,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     regionsData,
     resetValues,
     selectedID,
+    selectedRegionID,
     types,
     updatePlanCount,
   } = props;
@@ -77,6 +79,7 @@ export const KubernetesPlansPanel = (props: Props) => {
               onSelect={onSelect}
               plans={plans[plan]}
               selectedID={selectedID}
+              selectedRegionID={selectedRegionID}
               updatePlanCount={updatePlanCount}
             />
           </>
