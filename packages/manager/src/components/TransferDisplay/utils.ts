@@ -38,6 +38,14 @@ export const calculatePoolUsagePct = (
   return used < quota ? (used / quota) * 100 : used === 0 ? 0 : 100;
 };
 
+export interface RegionTransferPool {
+  pct: number;
+  quota: number;
+  regionID: string;
+  regionName: string;
+  used: number;
+}
+
 /**
  * Get the percentage of network transfer used for each region transfer pool.
  * @param generalPoolUsage
@@ -45,31 +53,40 @@ export const calculatePoolUsagePct = (
  * @returns an array of objects containing the percentage of network transfer used and the region name
  * @example
  * getRegionTransferPools(generalPoolUsage, regions)
- * // [
- * //   {
- * //     pct: 50,
- * //     regionName: 'us-east',
- * //   },
- * //   {
- * //     pct: 50,
- * //     regionName: 'us-west',
- * //   },
- * // ]
+ *
+ *[
+ *  {
+ *    pct: 50,
+ *    quota: 1000,
+ *    regionName: 'us-east',
+ *    used: 500,
+ *  },
+ *  {
+ *    pct: 50,
+ *    quota: 1000,
+ *    regionName: 'us-west',
+ *    used: 200,
+ *  },
+ *]
  */
 export const getRegionTransferPools = (
   generalPoolUsage: RegionalNetworkUtilization | undefined,
   regions: Region[] | undefined
-) => {
+): RegionTransferPool[] => {
   if (!generalPoolUsage || !regions) {
     return [];
   }
 
   return generalPoolUsage?.region_transfers.map((pool) => {
-    const regionName = regions?.find((r) => r.id === pool.id)?.label ?? '';
+    const regionName: string =
+      regions?.find((r) => r.id === pool.id)?.label ?? '';
 
     return {
       pct: calculatePoolUsagePct(pool),
+      quota: pool.quota,
+      regionID: pool.id,
       regionName,
+      used: pool.used,
     };
   });
 };
@@ -80,6 +97,6 @@ export const getRegionTransferPools = (
  * @returns string
  * @example formatPoolUsagePct(0.5) // '50%'
  */
-export const formatPoolUsagePct = (pct: number) => {
+export const formatPoolUsagePct = (pct: number): string => {
   return `${pct.toFixed(pct < 1 ? 2 : 0)}% `;
 };

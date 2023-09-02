@@ -63,6 +63,7 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
         generalPoolUsagePct={generalPoolUsagePct ?? 0}
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
+        regionTransferPools={regionTransferPools ?? []}
       />
     </Box>
   );
