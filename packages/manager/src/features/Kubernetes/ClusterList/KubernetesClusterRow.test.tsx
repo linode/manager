@@ -6,7 +6,7 @@ import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { KubernetesClusterRow, Props } from './KubernetesClusterRow';
 
-const cluster = kubernetesClusterFactory.build();
+const cluster = kubernetesClusterFactory.build({ region: 'us-central' });
 
 const props: Props = {
   cluster,

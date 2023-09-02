@@ -211,6 +211,7 @@ export const NodePoolsDisplay = (props: Props) => {
             />
             <ResizeNodePoolDrawer
               kubernetesClusterId={clusterID}
+              kubernetesRegionId={clusterRegionId}
               nodePool={selectedPool}
               onClose={() => setIsResizeDrawerOpen(false)}
               open={isResizeDrawerOpen}

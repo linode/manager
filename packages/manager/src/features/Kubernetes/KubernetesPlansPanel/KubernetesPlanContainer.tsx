@@ -2,12 +2,16 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
+import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
+import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 
@@ -21,17 +25,20 @@ const tableCells = [
   { cellName: 'Quantity', center: false, noWrap: false, testId: 'quantity' },
 ];
 
-interface Props {
+export interface KubernetesPlanContainerProps {
   disabled?: boolean;
   getTypeCount: (planId: string) => number;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   plans: ExtendedType[];
   selectedID?: string;
+  selectedRegionID?: string;
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 
-export const KubernetesPlanContainer = (props: Props) => {
+export const KubernetesPlanContainer = (
+  props: KubernetesPlanContainerProps
+) => {
   const {
     disabled,
     getTypeCount,
@@ -39,25 +46,55 @@ export const KubernetesPlanContainer = (props: Props) => {
     onSelect,
     plans,
     selectedID,
+    selectedRegionID,
     updatePlanCount,
   } = props;
+
+  const flags = useFlags();
+
+  const shouldDisplayNoRegionSelectedMessage =
+    flags.dcSpecificPricing && !selectedRegionID;
+
+  const renderPlanSelection = React.useCallback(() => {
+    return plans.map((plan, id) => (
+      <KubernetesPlanSelection
+        disabled={disabled}
+        getTypeCount={getTypeCount}
+        idx={id}
+        key={id}
+        onAdd={onAdd}
+        onSelect={onSelect}
+        selectedID={selectedID}
+        selectedRegionID={selectedRegionID}
+        type={plan}
+        updatePlanCount={updatePlanCount}
+      />
+    ));
+  }, [
+    disabled,
+    getTypeCount,
+    onAdd,
+    onSelect,
+    plans,
+    selectedID,
+    selectedRegionID,
+    updatePlanCount,
+  ]);
 
   return (
     <Grid container spacing={2}>
       <Hidden mdUp>
-        {plans.map((plan, id) => (
-          <KubernetesPlanSelection
-            disabled={disabled}
-            getTypeCount={getTypeCount}
-            idx={id}
-            key={id}
-            onAdd={onAdd}
-            onSelect={onSelect}
-            selectedID={selectedID}
-            type={plan}
-            updatePlanCount={updatePlanCount}
+        {shouldDisplayNoRegionSelectedMessage ? (
+          <Notice
+            spacingLeft={8}
+            spacingTop={8}
+            sx={{ '& p': { fontSize: '0.875rem' } }}
+            text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+            variant="info"
           />
-        ))}
+        ) : (
+          renderPlanSelection()
+        )}
       </Hidden>
       <Hidden mdDown>
         <Grid lg={12} xs={12}>
@@ -84,19 +121,14 @@ export const KubernetesPlanContainer = (props: Props) => {
               </TableRow>
             </TableHead>
             <TableBody role="grid">
-              {plans.map((plan, id) => (
-                <KubernetesPlanSelection
-                  disabled={disabled}
-                  getTypeCount={getTypeCount}
-                  idx={id}
-                  key={id}
-                  onAdd={onAdd}
-                  onSelect={onSelect}
-                  selectedID={selectedID}
-                  type={plan}
-                  updatePlanCount={updatePlanCount}
+              {shouldDisplayNoRegionSelectedMessage ? (
+                <TableRowEmpty
+                  colSpan={9}
+                  message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
                 />
-              ))}
+              ) : (
+                renderPlanSelection()
+              )}
             </TableBody>
           </Table>
         </Grid>
