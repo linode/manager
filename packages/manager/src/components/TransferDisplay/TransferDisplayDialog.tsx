@@ -9,7 +9,7 @@ import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-import { getDaysRemaining } from './utils';
+import { formatPoolUsagePct, getDaysRemaining } from './utils';
 
 import type { RegionTransferPool } from './utils';
 
@@ -43,7 +43,7 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
       : 'View products and services that include network transfer, and learn how to optimize network usage to avoid billing surprises.';
 
   const renderUsage = React.useCallback(
-    (quota: number, pullUsagePct: number) => {
+    (quota: number, pullUsagePct: number, used: number) => {
       // Don't display usage, quota, or bar percent if the network transfer pool is empty (e.g. account has no resources).
       const isEmptyPool = quota === 0;
 
@@ -57,7 +57,9 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
           >
             <Grid style={{ marginRight: 10 }}>
               {!isEmptyPool ? (
-                <Typography>{used} GB Used</Typography>
+                <Typography>
+                  {used} GB Used ({formatPoolUsagePct(pullUsagePct)})
+                </Typography>
               ) : (
                 <Typography>
                   Your monthly network transfer will be shown when you create a
@@ -86,7 +88,7 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
         </>
       );
     },
-    [used]
+    []
   );
 
   return (
@@ -100,7 +102,7 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
       <Typography fontFamily={theme.font.bold} marginBottom={theme.spacing()}>
         General Transfer Pool
       </Typography>
-      {renderUsage(quota, generalPoolUsagePct)}
+      {renderUsage(quota, generalPoolUsagePct, used)}
       <Divider
         sx={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(3) }}
       />
@@ -126,7 +128,7 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
             {pool.regionName}{' '}
             <Typography component="span">({pool.regionID})</Typography>
           </Typography>
-          {renderUsage(pool.quota, pool.used)}
+          {renderUsage(pool.quota, pool.pct, pool.used)}
         </Box>
       ))}
 

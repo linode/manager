@@ -77,7 +77,7 @@ export const getRegionTransferPools = (
     return [];
   }
 
-  return generalPoolUsage?.region_transfers.map((pool) => {
+  return generalPoolUsage?.region_transfers?.map((pool) => {
     const regionName: string =
       regions?.find((r) => r.id === pool.id)?.label ?? '';
 
@@ -98,5 +98,5 @@ export const getRegionTransferPools = (
  * @example formatPoolUsagePct(0.5) // '50%'
  */
 export const formatPoolUsagePct = (pct: number): string => {
-  return `${pct.toFixed(pct < 1 ? 2 : 0)}% `;
+  return `${pct.toFixed(pct < 1 ? 2 : 0)}%`;
 };
