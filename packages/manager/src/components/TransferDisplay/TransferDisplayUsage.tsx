@@ -1,9 +1,9 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import BarPercent from 'src/components/BarPercent';
 import { Typography } from 'src/components/Typography';
 
+import { StyledBarPercent } from './TransferDisplay.styles';
 import { formatPoolUsagePct } from './utils';
 
 interface Props {
@@ -16,6 +16,7 @@ export const TransferDisplayUsage = React.memo((props: Props) => {
   const { pullUsagePct, quota, used } = props;
   // Don't display usage, quota, or bar percent if the network transfer pool is empty (e.g. account has no resources).
   const isEmptyPool = quota === 0;
+  const fillerRelativePct = (100 / Math.ceil(pullUsagePct)) * 100;
 
   return (
     <>
@@ -52,7 +53,13 @@ export const TransferDisplayUsage = React.memo((props: Props) => {
         </Grid>
       </Grid>
       {!isEmptyPool && (
-        <BarPercent max={100} rounded value={Math.ceil(pullUsagePct)} />
+        <StyledBarPercent
+          fillerRelativePct={fillerRelativePct}
+          max={100}
+          pullUsagePct={pullUsagePct}
+          rounded
+          value={Math.ceil(pullUsagePct)}
+        />
       )}
     </>
   );

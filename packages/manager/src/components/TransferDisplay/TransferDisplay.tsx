@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
@@ -43,7 +44,10 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
     <Box marginTop={spacingTop}>
       <StyledTransferDisplayContainer>
         {isLoading ? (
-          <Typography>Loading transfer data...</Typography>
+          <>
+            <Typography>Loading transfer data...</Typography>
+            <CircleProgress mini />
+          </>
         ) : (
           <>
             <Typography>
