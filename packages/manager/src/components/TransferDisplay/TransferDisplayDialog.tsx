@@ -1,15 +1,15 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import BarPercent from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-import { formatPoolUsagePct, getDaysRemaining } from './utils';
+import { TransferDisplayUsage } from './TransferDisplayUsage';
+import { NETWORK_TRANSFER_QUOTA_DOCS_LINKS } from './constants';
+import { getDaysRemaining } from './utils';
 
 import type { RegionTransferPool } from './utils';
 
@@ -42,55 +42,6 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
       ? 'Compute instances, NodeBalancers, and Object Storage include network transfer.'
       : 'View products and services that include network transfer, and learn how to optimize network usage to avoid billing surprises.';
 
-  const renderUsage = React.useCallback(
-    (quota: number, pullUsagePct: number, used: number) => {
-      // Don't display usage, quota, or bar percent if the network transfer pool is empty (e.g. account has no resources).
-      const isEmptyPool = quota === 0;
-
-      return (
-        <>
-          <Grid
-            container
-            justifyContent="space-between"
-            spacing={2}
-            sx={{ marginBottom: 0 }}
-          >
-            <Grid style={{ marginRight: 10 }}>
-              {!isEmptyPool ? (
-                <Typography>
-                  {used} GB Used ({formatPoolUsagePct(pullUsagePct)})
-                </Typography>
-              ) : (
-                <Typography>
-                  Your monthly network transfer will be shown when you create a
-                  resource.
-                </Typography>
-              )}
-            </Grid>
-            <Grid>
-              {!isEmptyPool && (
-                <Typography>
-                  {quota >= used ? (
-                    <span>{quota - used} GB Available</span>
-                  ) : (
-                    <span>
-                      {(quota - used).toString().replace(/\-/, '')} GB Over
-                      Quota
-                    </span>
-                  )}
-                </Typography>
-              )}
-            </Grid>
-          </Grid>
-          {!isEmptyPool && (
-            <BarPercent max={100} rounded value={Math.ceil(pullUsagePct)} />
-          )}
-        </>
-      );
-    },
-    []
-  );
-
   return (
     <Dialog
       fullWidth
@@ -99,10 +50,17 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
       open={isOpen}
       title="Monthly Network Transfer Pool"
     >
+      {/**
+       *  General Transfer Pool Display
+       */}
       <Typography fontFamily={theme.font.bold} marginBottom={theme.spacing()}>
         General Transfer Pool
       </Typography>
-      {renderUsage(quota, generalPoolUsagePct, used)}
+      <TransferDisplayUsage
+        pullUsagePct={generalPoolUsagePct}
+        quota={quota}
+        used={used}
+      />
       <Divider
         sx={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(3) }}
       />
@@ -113,11 +71,12 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
         In some regions, the montly network transfer is calculated and tracked
         independently. These regions are listed below. Transfer overages will be
         billed separately.{' '}
-        <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
-          Learn more
-        </Link>
-        .
+        <Link to={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}>Learn more</Link>.
       </Typography>
+
+      {/**
+       *  Region-specific Transfer Pool Display
+       */}
       {regionTransferPools.map((pool, key) => (
         <Box key={`transfer-pool-region-${key}`} marginTop={theme.spacing(2)}>
           <Typography
@@ -128,10 +87,17 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
             {pool.regionName}{' '}
             <Typography component="span">({pool.regionID})</Typography>
           </Typography>
-          {renderUsage(pool.quota, pool.pct, pool.used)}
+          <TransferDisplayUsage
+            pullUsagePct={pool.pct}
+            quota={pool.quota}
+            used={pool.used}
+          />
         </Box>
       ))}
 
+      {/**
+       *  General Information about Transfer Pools & Docs Link
+       */}
       <Typography marginBottom={theme.spacing()} marginTop={theme.spacing(3)}>
         <strong>
           Your account&rsquo;s monthly network transfer allotment will reset in{' '}
@@ -144,14 +110,9 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
         prorated based on service creation.
       </Typography>
       <Box>
-        <Typography>
-          {transferQuotaDocsText}
-          <Box marginTop={2}>
-            <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
-              Learn more
-            </Link>
-          </Box>
-          .
+        <Typography>{transferQuotaDocsText}</Typography>
+        <Typography marginTop={theme.spacing(1)}>
+          <Link to={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}>Learn more</Link>.
         </Typography>
       </Box>
     </Dialog>

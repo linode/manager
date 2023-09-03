@@ -2,10 +2,12 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import { StyledLinkButton } from '../Button/StyledLinkButton';
+import { LegacyTransferDisplay } from './LegacyTransferDisplay';
 import { StyledTransferDisplayContainer } from './TransferDisplay.styles';
 import { TransferDisplayDialog } from './TransferDisplayDialog';
 import {
@@ -20,11 +22,16 @@ export interface Props {
 
 export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const [modalOpen, setModalOpen] = React.useState(false);
+  const { dcSpecificPricing } = useFlags();
   const { data: generalPoolUsage, isError, isLoading } = useAccountTransfer();
   const { data: regions } = useRegionsQuery();
 
   const generalPoolUsagePct = calculatePoolUsagePct(generalPoolUsage);
   const regionTransferPools = getRegionTransferPools(generalPoolUsage, regions);
+
+  if (!dcSpecificPricing) {
+    return <LegacyTransferDisplay spacingTop={spacingTop} />;
+  }
 
   if (isError) {
     // We may want to add an error state for this but I think that would clutter

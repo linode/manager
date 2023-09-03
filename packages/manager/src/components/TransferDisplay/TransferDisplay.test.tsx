@@ -4,6 +4,7 @@ import React from 'react';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { NETWORK_TRANSFER_QUOTA_DOCS_LINKS } from './/constants';
 import { TransferDisplay } from './TransferDisplay';
 
 const MockData = {
@@ -14,7 +15,6 @@ const MockData = {
 
 const transferDisplayPercentageSubstring = /You have used \d+\.\d\d%/;
 const transferDisplayButtonSubstring = /Monthly Network Transfer Pool/;
-const docsLink = 'https://www.linode.com/docs/guides/network-transfer-quota/';
 
 describe('TransferDisplay', () => {
   it('renders transfer display text and opens the transfer dialog, with GB data stats, on click', async () => {
@@ -89,7 +89,10 @@ describe('TransferDisplay', () => {
     const transferButton = await findByText(transferDisplayButtonSubstring);
     fireEvent.click(transferButton);
 
-    expect(getByRole('link')).toHaveAttribute('href', docsLink);
+    expect(getByRole('link')).toHaveAttribute(
+      'href',
+      NETWORK_TRANSFER_QUOTA_DOCS_LINKS
+    );
     expect(getByRole('link').getAttribute('aria-label'));
   });
 });
