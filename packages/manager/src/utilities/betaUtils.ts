@@ -1,9 +1,8 @@
+import { AccountBeta } from '@linode/api-v4/lib/account';
+import { Beta } from '@linode/api-v4/lib/betas';
 import { DateTime } from 'luxon';
 
-import { Beta } from '@linode/api-v4/lib/betas';
-import { AccountBeta } from '@linode/api-v4/lib/account';
-
-type BetaStatus = 'active' | 'historical' | 'available' | 'no_status';
+type BetaStatus = 'active' | 'available' | 'historical' | 'no_status';
 type GenericBeta = AccountBeta | Beta;
 type GenericBetaByStatus = {
   [status in BetaStatus]: GenericBeta[];
@@ -24,20 +23,23 @@ export const willStart = (beta: GenericBeta) => !hasStarted(beta);
 export const hasEnded = (beta: GenericBeta) =>
   canEnd(beta) && DateTime.fromISO(beta.ended ?? '') < DateTime.now();
 
-export function isCustomerEnrolled(beta: Beta): boolean;
-export function isCustomerEnrolled(beta: AccountBeta) {
-  const enrollmentDate = DateTime.fromISO(beta.enrolled ?? '');
-  return enrollmentDate.isValid && !hasEnded(beta);
+export function isCustomerEnrolled(beta: GenericBeta) {
+  if ('enrolled' in beta) {
+    const enrollmentDate = DateTime.fromISO(beta.enrolled ?? '');
+    return enrollmentDate.isValid && !hasEnded(beta);
+  }
+  return false;
 }
 
-export function wasCustomerEnrolled(beta: Beta): boolean;
-export function wasCustomerEnrolled(beta: AccountBeta) {
-  const enrollmentDate = DateTime.fromISO(beta.enrolled ?? '');
-  return enrollmentDate.isValid && hasEnded(beta);
+export function wasCustomerEnrolled(beta: GenericBeta) {
+  if ('enrolled' in beta) {
+    const enrollmentDate = DateTime.fromISO(beta?.enrolled ?? '');
+    return enrollmentDate.isValid && hasEnded(beta);
+  }
+  return false;
 }
 
-export function getBetaStatus(beta: Beta): BetaStatus;
-export function getBetaStatus(beta: AccountBeta): BetaStatus {
+export function getBetaStatus(beta: GenericBeta): BetaStatus {
   if (wasCustomerEnrolled(beta) && hasEnded(beta)) {
     return 'historical';
   }
@@ -53,8 +55,8 @@ export function getBetaStatus(beta: AccountBeta): BetaStatus {
 export const categorizeBetasByStatus = (betas: GenericBeta[]) => {
   const sortedBetas: GenericBetaByStatus = {
     active: [],
-    historical: [],
     available: [],
+    historical: [],
     no_status: [],
   };
   return betas.reduce((acc: GenericBetaByStatus, beta: GenericBeta) => {

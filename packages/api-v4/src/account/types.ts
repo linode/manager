@@ -1,5 +1,5 @@
 import { APIWarning } from '../types';
-import { Beta } from '../betas/types';
+import { Region } from 'src/regions';
 
 export interface User {
   username: string;
@@ -45,7 +45,8 @@ export type AccountCapability =
   | 'Vlans'
   | 'Machine Images'
   | 'LKE HA Control Planes'
-  | 'Managed Databases';
+  | 'Managed Databases'
+  | 'VPCs';
 
 export interface AccountSettings {
   managed: boolean;
@@ -117,6 +118,7 @@ export interface InvoiceItem {
   unit_price: null | string;
   tax: number;
   total: number;
+  region: Region['id'];
 }
 
 export interface Payment {
@@ -147,7 +149,8 @@ export type GlobalGrantTypes =
   | 'add_nodebalancers'
   | 'add_images'
   | 'add_volumes'
-  | 'add_firewalls';
+  | 'add_firewalls'
+  | 'add_vpcs';
 
 export interface GlobalGrants {
   global: Record<GlobalGrantTypes, boolean | GrantLevel>;
@@ -170,6 +173,12 @@ export interface NetworkUtilization {
   billable: number;
   used: number;
   quota: number;
+}
+export interface RegionalNetworkUtilization extends NetworkUtilization {
+  region_transfers: RegionalTransferObject[];
+}
+export interface RegionalTransferObject extends NetworkUtilization {
+  id: Region['id'];
 }
 
 export interface NetworkTransfer {
@@ -230,8 +239,8 @@ export interface Entity {
 }
 
 export type EventAction =
-  | 'account_update'
   | 'account_settings_update'
+  | 'account_update'
   | 'backups_cancel'
   | 'backups_enable'
   | 'backups_restore'
@@ -239,18 +248,24 @@ export type EventAction =
   | 'community_mention'
   | 'community_question_reply'
   | 'credit_card_updated'
+  | 'database_backup_restore'
+  | 'database_create'
+  | 'database_credentials_reset'
+  | 'database_delete'
+  | 'database_update_failed'
+  | 'database_update'
   | 'disk_create'
-  | 'disk_update'
   | 'disk_delete'
   | 'disk_duplicate'
   | 'disk_imagize'
   | 'disk_resize'
+  | 'disk_update'
   | 'domain_create'
-  | 'domain_update'
   | 'domain_delete'
   | 'domain_record_create'
-  | 'domain_record_updated'
   | 'domain_record_delete'
+  | 'domain_record_updated'
+  | 'domain_update'
   | 'entity_transfer_accept'
   | 'entity_transfer_cancel'
   | 'entity_transfer_create'
@@ -264,73 +279,73 @@ export type EventAction =
   | 'firewall_enable'
   | 'firewall_update'
   | 'host_reboot'
+  | 'image_delete'
   | 'image_update'
   | 'image_upload'
-  | 'image_delete'
   | 'lassie_reboot'
   | 'linode_addip'
   | 'linode_boot'
   | 'linode_clone'
+  | 'linode_config_create'
+  | 'linode_config_delete'
+  | 'linode_config_update'
   | 'linode_create'
-  | 'linode_update'
   | 'linode_delete'
   | 'linode_deleteip'
-  | 'linode_migrate'
-  | 'linode_reboot'
-  | 'linode_resize'
-  | 'linode_resize_create'
   | 'linode_migrate_datacenter_create'
   | 'linode_migrate_datacenter'
-  | 'linode_mutate'
+  | 'linode_migrate'
   | 'linode_mutate_create'
+  | 'linode_mutate'
+  | 'linode_reboot'
   | 'linode_rebuild'
+  | 'linode_resize_create'
+  | 'linode_resize'
   | 'linode_shutdown'
   | 'linode_snapshot'
-  | 'linode_config_create'
-  | 'linode_config_update'
-  | 'linode_config_delete'
+  | 'linode_update'
   | 'lke_node_create'
   | 'longviewclient_create'
   | 'longviewclient_delete'
   | 'longviewclient_update'
   | 'nodebalancer_config_create'
-  | 'nodebalancer_config_update'
   | 'nodebalancer_config_delete'
+  | 'nodebalancer_config_update'
   | 'nodebalancer_create'
-  | 'nodebalancer_update'
   | 'nodebalancer_delete'
+  | 'nodebalancer_update'
   | 'password_reset'
   | 'profile_update'
   | 'stackscript_create'
-  | 'stackscript_update'
   | 'stackscript_delete'
   | 'stackscript_publicize'
   | 'stackscript_revise'
-  | 'tfa_enabled'
+  | 'stackscript_update'
+  | 'subnet_create'
+  | 'subnet_delete'
+  | 'subnet_update'
   | 'tfa_disabled'
+  | 'tfa_enabled'
   | 'ticket_attachment_upload'
   | 'ticket_update'
+  | 'token_create'
+  | 'token_delete'
+  | 'token_update'
   | 'user_ssh_key_add'
-  | 'user_ssh_key_update'
   | 'user_ssh_key_delete'
+  | 'user_ssh_key_update'
+  | 'volume_attach'
+  | 'volume_clone'
   | 'volume_create'
-  | 'volume_update'
   | 'volume_delete'
   | 'volume_detach'
-  | 'volume_attach'
-  | 'volume_resize'
-  | 'volume_clone'
   | 'volume_migrate_scheduled'
   | 'volume_migrate'
-  | 'database_create'
-  | 'database_delete'
-  | 'database_update'
-  | 'database_update_failed'
-  | 'database_backup_restore'
-  | 'database_credentials_reset'
-  | 'token_create'
-  | 'token_update'
-  | 'token_delete';
+  | 'volume_resize'
+  | 'volume_update'
+  | 'vpc_create'
+  | 'vpc_delete'
+  | 'vpc_update';
 
 export type EventStatus =
   | 'scheduled'
@@ -457,7 +472,12 @@ export interface AccountLogin {
   status: AccountLoginStatus;
 }
 
-export interface AccountBeta extends Beta {
+export interface AccountBeta {
+  label: string;
+  started: string;
+  id: string;
+  ended?: string;
+  description?: string;
   enrolled: string;
 }
 

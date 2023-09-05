@@ -195,7 +195,12 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       <Paper className={classes.panel}>
         <div className={classes.inner}>
           {error && (
-            <Notice error spacingBottom={0} spacingTop={8} text={error} />
+            <Notice
+              spacingBottom={0}
+              spacingTop={8}
+              text={error}
+              variant="error"
+            />
           )}
           {stackScriptError && (
             <Typography variant="body1">

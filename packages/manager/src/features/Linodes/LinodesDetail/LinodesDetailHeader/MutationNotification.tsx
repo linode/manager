@@ -71,7 +71,7 @@ export const MutationNotification = (props: Props) => {
 
   return (
     <>
-      <Notice important warning>
+      <Notice important variant="warning">
         <Typography>
           You have a pending upgrade. The estimated time to complete this
           upgrade is

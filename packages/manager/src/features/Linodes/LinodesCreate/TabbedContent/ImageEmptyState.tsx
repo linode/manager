@@ -2,13 +2,13 @@ import { SxProps, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 
 interface Props {
-  sx?: SxProps;
   className?: string;
   errorText: string | undefined;
+  sx?: SxProps;
 }
 
 export const ImageEmptyState = (props: Props) => {
@@ -16,8 +16,8 @@ export const ImageEmptyState = (props: Props) => {
   const theme = useTheme();
 
   return (
-    <Paper sx={sx} className={className}>
-      {errorText ? <Notice error text={errorText} /> : null}
+    <Paper className={className} sx={sx}>
+      {errorText ? <Notice text={errorText} variant="error" /> : null}
       <Typography data-qa-tp="Select Image" variant="h2">
         Select Image
       </Typography>

@@ -1,10 +1,10 @@
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import {
   kubeLinodeFactory,
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
+import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 
 import {
   getMonthlyPrice,
@@ -46,15 +46,15 @@ describe('helper functions', () => {
 
   describe('getTotalClusterPrice', () => {
     it('should calculate the total cluster price', () => {
-      expect(
-        getTotalClusterPrice([mockNodePool, mockNodePool], types, false)
-      ).toBe(20);
+      expect(getTotalClusterPrice([mockNodePool, mockNodePool], types)).toBe(
+        20
+      );
     });
 
     it('should calculate the total cluster price with HA enabled', () => {
       expect(
-        getTotalClusterPrice([mockNodePool, mockNodePool], types, true)
-      ).toBe(20 + (HIGH_AVAILABILITY_PRICE || 0));
+        getTotalClusterPrice([mockNodePool, mockNodePool], types, LKE_HA_PRICE)
+      ).toBe(20 + LKE_HA_PRICE);
     });
   });
 

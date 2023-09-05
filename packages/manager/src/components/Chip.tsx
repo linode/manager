@@ -8,7 +8,7 @@ export interface ChipProps extends _ChipProps {
   /**
    * Optional component to render instead of a span.
    */
-  component?: string;
+  component?: React.ElementType;
   /**
    * If true, the chip will inherit styles to allow for use in a table.
    * @default false

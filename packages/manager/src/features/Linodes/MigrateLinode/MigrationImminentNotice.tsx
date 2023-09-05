@@ -22,7 +22,7 @@ export const MigrationImminentNotice = React.memo((props: Props) => {
   );
 
   return migrationScheduledForThisLinode ? (
-    <Notice className={props.className} spacingTop={16} warning>
+    <Notice className={props.className} spacingTop={16} variant="warning">
       <React.Fragment>
         Your Linode is already scheduled to be migrated. Please open a{' '}
         <SupportLink

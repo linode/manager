@@ -50,6 +50,9 @@ import {
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
+import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
+import { NODEBALANCER_PRICE } from 'src/utilities/pricing/constants';
+import { useFlags } from 'src/hooks/useFlags';
 
 interface NodeBalancerFieldsState {
   configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
@@ -109,6 +112,8 @@ const NodeBalancerCreate = () => {
 
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const flags = useFlags();
 
   const disabled =
     Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
@@ -388,6 +393,28 @@ const NodeBalancerCreate = () => {
   const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
     ?.label;
 
+  const price = getDCSpecificPrice({
+    basePrice: NODEBALANCER_PRICE,
+    flags,
+    regionId: nodeBalancerFields.region,
+  });
+
+  const summaryItems = [
+    { title: regionLabel },
+    { details: nodeBalancerFields.configs.length, title: 'Configs' },
+    {
+      details: nodeBalancerFields.configs.reduce(
+        (acc, config) => acc + config.nodes.length,
+        0
+      ),
+      title: 'Nodes',
+    },
+  ].filter((item) => Boolean(item.title));
+
+  if (nodeBalancerFields.region) {
+    summaryItems.unshift({ title: `$${price}/month` });
+  }
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Create a NodeBalancer" />
@@ -401,7 +428,7 @@ const NodeBalancerCreate = () => {
         title="Create"
       />
       {generalError && !disabled && (
-        <Notice error spacingTop={8}>
+        <Notice spacingTop={8} variant="error">
           {generalError}
         </Notice>
       )}
@@ -410,9 +437,9 @@ const NodeBalancerCreate = () => {
           text={
             "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
           }
-          error={true}
           important
           spacingTop={16}
+          variant="error"
         />
       )}
       <Paper>
@@ -534,18 +561,7 @@ const NodeBalancerCreate = () => {
         Add another Configuration
       </Button>
       <CheckoutSummary
-        displaySections={[
-          { title: '$10/month' },
-          { title: regionLabel },
-          { details: nodeBalancerFields.configs.length, title: 'Configs' },
-          {
-            details: nodeBalancerFields.configs.reduce(
-              (acc, config) => acc + config.nodes.length,
-              0
-            ),
-            title: 'Nodes',
-          },
-        ].filter((item) => Boolean(item.title))}
+        displaySections={summaryItems}
         heading={`Summary ${nodeBalancerFields.label ?? ''}`}
       />
       <Box

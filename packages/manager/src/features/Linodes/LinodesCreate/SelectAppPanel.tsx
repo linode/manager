@@ -1,5 +1,5 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { styled, Theme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -82,9 +82,10 @@ class SelectAppPanel extends React.PureComponent<Props> {
     }
 
     const newApps = appInstances.filter((app) => {
-      return ['appwrite', 'illa builder', 'owncloud', 'seatable'].includes(
-        app.label.toLowerCase().trim()
-      );
+      return [
+        'hashicorp nomad clients cluster',
+        'hashicorp nomad cluster',
+      ].includes(app.label.toLowerCase().trim());
     });
 
     const popularApps = appInstances.slice(0, 10);
@@ -98,7 +99,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
 
     return (
       <StyledPaper data-qa-tp="Select Image">
-        {error && <Notice error text={error} />}
+        {error && <Notice text={error} variant="error" />}
         {!isFilteringOrSearching ? (
           <AppPanelSection
             apps={newApps}

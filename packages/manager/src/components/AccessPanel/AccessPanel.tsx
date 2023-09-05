@@ -81,7 +81,7 @@ const AccessPanel = (props: Props) => {
         className
       )}
     >
-      {error ? <Notice error text={error} /> : null}
+      {error ? <Notice text={error} variant="error" /> : null}
       <React.Suspense fallback={<SuspenseLoader />}>
         <PasswordInput
           autoComplete="off"

@@ -176,7 +176,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
-      <Notice marketing spacingBottom={0} spacingTop={24}>
+      <Notice spacingBottom={0} spacingTop={24} variant="marketing">
         <Typography
           sx={{
             fontFamily: theme.font.bold,

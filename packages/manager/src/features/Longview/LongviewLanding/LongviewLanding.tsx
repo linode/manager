@@ -13,11 +13,11 @@ import { RouteComponentProps, matchPath } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { LandingHeader } from 'src/components/LandingHeader';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';

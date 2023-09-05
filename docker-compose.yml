@@ -92,9 +92,8 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: manager
-    container_name: web
     ports:
-      - "3000:3000"
+      - "3000"
     volumes:
       - ./packages/manager:/home/node/app/packages/manager
       - ./package.json:/home/node/app/package.json
@@ -105,34 +104,11 @@ services:
       timeout: 10s
       retries: 10
 
-  # Cypress runners for end-to-end tests.
-  e2e-1:
+  e2e:
     <<: *default-runner
-    container_name: cloud-e2e-1
     environment:
       <<: *default-env
-      MANAGER_OAUTH: ${MANAGER_OAUTH_1}
-
-  e2e-2:
-    <<: *default-runner
-    container_name: cloud-e2e-2
-    environment:
-      <<: *default-env
-      MANAGER_OAUTH: ${MANAGER_OAUTH_2}
-
-  e2e-3:
-    <<: *default-runner
-    container_name: cloud-e2e-3
-    environment:
-      <<: *default-env
-      MANAGER_OAUTH: ${MANAGER_OAUTH_3}
-
-  e2e-4:
-    <<: *default-runner
-    container_name: cloud-e2e-4
-    environment:
-      <<: *default-env
-      MANAGER_OAUTH: ${MANAGER_OAUTH_4}
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
 
   region-1:
     build:

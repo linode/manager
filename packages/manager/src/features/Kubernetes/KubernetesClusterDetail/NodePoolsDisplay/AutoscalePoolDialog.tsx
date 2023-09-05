@@ -144,7 +144,7 @@ export const AutoscalePoolDialog = (props: Props) => {
       title="Autoscale Pool"
     >
       {warning ? (
-        <Notice className={classes.notice} warning>
+        <Notice className={classes.notice} variant="warning">
           {warning}
           <div>
             <Button

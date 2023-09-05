@@ -87,10 +87,10 @@ export const ResizeDiskDrawer = (props: Props) => {
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
           <Notice
-            error
             errorGroup="linode-disk-drawer"
             spacingBottom={8}
             text={formik.status}
+            variant="error"
           />
         )}
         <FormHelperText>

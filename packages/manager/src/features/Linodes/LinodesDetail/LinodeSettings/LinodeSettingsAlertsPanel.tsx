@@ -231,7 +231,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       defaultExpanded
       heading="Notification Thresholds"
     >
-      {generalError && <Notice error>{generalError}</Notice>}
+      {generalError && <Notice variant="error">{generalError}</Notice>}
       {alertSections.map((p, idx) => (
         <AlertSection key={idx} {...p} readOnly={isReadOnly} />
       ))}

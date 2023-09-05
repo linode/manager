@@ -141,7 +141,7 @@ export const Tile = (props: Props) => {
           {icon}
         </span>
       ) : null}
-      {errorText ? <Notice error={true} text={errorText} /> : null}
+      {errorText ? <Notice text={errorText} variant="error" /> : null}
       <Typography className={classes.tileTitle} data-qa-tile-title variant="h3">
         {link ? renderLink() : title}
       </Typography>

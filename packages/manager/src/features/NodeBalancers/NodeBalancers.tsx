@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const NodeBalancerDetail = React.lazy(() =>
   import('./NodeBalancerDetail/NodeBalancerDetail').then((module) => ({
@@ -16,6 +17,7 @@ const NodeBalancerCreate = React.lazy(() => import('./NodeBalancerCreate'));
 const NodeBalancers = () => {
   return (
     <React.Suspense fallback={<CircleProgress />}>
+      <ProductInformationBanner bannerLocation="NodeBalancers" />
       <Switch>
         <Route component={NodeBalancersLanding} exact path="/nodebalancers" />
         <Route

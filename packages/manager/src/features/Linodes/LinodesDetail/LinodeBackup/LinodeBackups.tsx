@@ -1,4 +1,4 @@
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import { LinodeBackup, PriceObject } from '@linode/api-v4/lib/linodes';
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -7,6 +7,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -14,11 +15,12 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
+import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useTypeQuery } from 'src/queries/types';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { BackupTableRow } from './BackupTableRow';
@@ -33,6 +35,7 @@ export const LinodeBackups = () => {
   const id = Number(linodeId);
 
   const history = useHistory();
+  const flags = useFlags();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -79,7 +82,11 @@ export const LinodeBackups = () => {
     );
   }
 
-  const backupsMonthlyPrice = type?.addons?.backups?.price?.monthly ?? 0;
+  const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+    flags,
+    region: linode?.region,
+    type,
+  });
 
   if (isLoading) {
     return <CircleProgress />;
@@ -88,7 +95,7 @@ export const LinodeBackups = () => {
   if (!linode?.backups.enabled) {
     return (
       <BackupsPlaceholder
-        backupsMonthlyPrice={backupsMonthlyPrice}
+        backupsMonthlyPrice={backupsMonthlyPrice ?? 0}
         disabled={doesNotHavePermission}
         linodeId={id}
       />

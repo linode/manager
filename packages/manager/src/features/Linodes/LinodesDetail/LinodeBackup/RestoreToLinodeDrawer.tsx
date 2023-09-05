@@ -7,10 +7,10 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
-import { Notice } from 'src/components/Notice/Notice';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
+import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
@@ -97,7 +97,9 @@ export const RestoreToLinodeDrawer = (props: Props) => {
       title={`Restore Backup from ${backup?.created}`}
     >
       <form onSubmit={formik.handleSubmit}>
-        {Boolean(errorMap.none) && <Notice error>{errorMap.none}</Notice>}
+        {Boolean(errorMap.none) && (
+          <Notice variant="error">{errorMap.none}</Notice>
+        )}
         <Select
           textFieldProps={{
             dataAttrs: {
@@ -130,7 +132,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           </FormHelperText>
         </FormControl>
         {Boolean(errorMap.overwrite) && (
-          <Notice error>{errorMap.overwrite}</Notice>
+          <Notice variant="error">{errorMap.overwrite}</Notice>
         )}
         {formik.values.overwrite && (
           <Notice
@@ -141,7 +143,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
             }`}
             spacingBottom={0}
             spacingTop={12}
-            warning
+            variant="warning"
           />
         )}
         <ActionsPanel

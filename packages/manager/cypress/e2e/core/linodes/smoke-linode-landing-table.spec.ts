@@ -405,7 +405,7 @@ describe('linode landing checks', () => {
 
 describe('linode landing actions', () => {
   before(() => {
-    cleanUp('linodes');
+    cleanUp(['linodes', 'lke-clusters']);
   });
 
   it('deleting multiple linodes with action menu', () => {

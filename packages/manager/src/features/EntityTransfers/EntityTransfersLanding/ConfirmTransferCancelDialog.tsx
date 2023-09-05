@@ -113,9 +113,9 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
         submissionErrors
           ? submissionErrors.map((thisError, idx) => (
               <Notice
-                error
                 key={`form-submit-error-${idx}`}
                 text={thisError.reason}
+                variant="error"
               />
             ))
           : null

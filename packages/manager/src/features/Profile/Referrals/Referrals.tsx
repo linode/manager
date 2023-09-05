@@ -40,7 +40,7 @@ export const Referrals = () => {
             'Unable to load referral information.'
           )[0].reason
         }
-        error
+        variant="error"
       />
     );
   }
@@ -123,7 +123,7 @@ export const Referrals = () => {
               }}
               spacingBottom={0}
               spacingTop={8}
-              warning
+              variant="warning"
             >
               Spend $25 with Linode to activate your personal referral link
             </StyledLimitNotice>

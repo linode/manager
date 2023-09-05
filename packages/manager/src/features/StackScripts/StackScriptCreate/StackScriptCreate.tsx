@@ -223,7 +223,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={pageTitle} />
-        {generalError && <Notice error text={generalError} />}
+        {generalError && <Notice text={generalError} variant="error" />}
         <LandingHeader
           breadcrumbProps={{
             breadcrumbDataAttrs: {
@@ -246,8 +246,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                 ? 'create StackScripts'
                 : 'edit this StackScript'
             }. Please contact an account administrator for details.`}
-            error={true}
             important
+            variant="error"
           />
         )}
         <ScriptForm
