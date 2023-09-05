@@ -15,18 +15,18 @@ export const StyledTableRow = styled(TableRow, {
 
 export const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
-})(() => ({
+})(({ theme }) => ({
   '&:last-of-type': {
-    paddingRight: 16,
+    paddingRight: theme.spacing(2),
   },
   border: 'none',
 }));
 
 export const StyledTableHeadCell = styled(TableCell, {
-  label: 'StyledTableCell',
+  label: 'StyledTableHeadCell',
 })(({ theme }) => ({
   '&:first-of-type': {
-    paddingLeft: 48,
+    paddingLeft: theme.spacing(6),
   },
   borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
   borderTop: 'none !important',
