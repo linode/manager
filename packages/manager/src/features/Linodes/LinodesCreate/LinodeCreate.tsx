@@ -32,11 +32,11 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -56,6 +56,7 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
@@ -90,27 +91,36 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
-import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 export interface LinodeCreateProps {
+  assignPublicIPv4Address: boolean;
+  autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
+  firewallID: number | undefined;
   handleAgreementChange: () => void;
+  handleFirewallChange: (firewallID: number) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
+  handleSubnetChange: (subnetID: number) => void;
   handleVLANChange: (updatedInterface: InterfacePayload) => void;
+  handleVPCIPv4Change: (IPv4: string) => void;
   history: any;
   imageDisplayInfo: Info;
   ipamAddress: null | string;
   label: string;
   regionDisplayInfo: Info;
   resetCreationState: () => void;
+  selectedVPCID?: number;
   setAuthorizedUsers: (usernames: string[]) => void;
   setBackupID: (id: number) => void;
+  setSelectedVPC: (vpcID: number) => void;
   showAgreement: boolean;
   showApiAwarenessModal: boolean;
   showGeneralError?: boolean;
   signedAgreement: boolean;
+  toggleAssignPublicIPv4Address: () => void;
+  toggleAutoassignIPv4WithinVPCEnabled: () => void;
   toggleBackupsEnabled: () => void;
   togglePrivateIPEnabled: () => void;
   typeDisplayInfo: TypeInfo;
@@ -122,6 +132,7 @@ export interface LinodeCreateProps {
   updateUserData: (userData: string) => void;
   userData: string | undefined;
   vlanLabel: null | string;
+  vpcIPv4AddressOfLinode: string | undefined;
 }
 
 const errorMap = [
@@ -559,8 +570,25 @@ export class LinodeCreate extends React.PureComponent<
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
-          <VPCPanel />
-          <FirewallPanel />
+          <VPCPanel
+            toggleAssignPublicIPv4Address={
+              this.props.toggleAssignPublicIPv4Address
+            }
+            toggleAutoassignIPv4WithinVPCEnabled={
+              this.props.toggleAutoassignIPv4WithinVPCEnabled
+            }
+            assignPublicIPv4Address={this.props.assignPublicIPv4Address}
+            autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
+            handleSelectVPC={this.props.setSelectedVPC}
+            handleSubnetChange={this.props.handleSubnetChange}
+            handleVPCIPv4Change={this.props.handleVPCIPv4Change}
+            region={this.props.selectedRegionID}
+            selectedVPCID={this.props.selectedVPCID}
+            vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
+          />
+          <FirewallPanel
+            handleFirewallChange={this.props.handleFirewallChange}
+          />
           <AddonsPanel
             userData={{
               createType: this.props.createType,
@@ -671,16 +699,19 @@ export class LinodeCreate extends React.PureComponent<
 
   getPayload = () => {
     const selectedRegion = this.props.selectedRegionID || '';
+
     const regionSupportsVLANs = doesRegionSupportFeature(
       selectedRegion,
       this.props.regionsData,
       'Vlans'
     );
+
     const payload = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,
       booted: true,
+      firewall_id: this.props.firewallID,
       image: this.props.selectedImageID,
       label: this.props.label,
       private_ip: this.props.privateIPEnabled,
