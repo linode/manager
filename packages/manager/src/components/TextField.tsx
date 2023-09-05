@@ -295,6 +295,12 @@ export const TextField = (props: TextFieldProps) => {
   const validInputId =
     inputId || (label ? convertToKebabCase(`${label}`) : undefined);
 
+  const labelContent = required
+    ? ' (required)'
+    : optional
+    ? ' (optional)'
+    : null;
+
   return (
     <div
       className={cx({
@@ -314,10 +320,10 @@ export const TextField = (props: TextFieldProps) => {
             htmlFor={validInputId}
           >
             {label}
-            {required ? (
-              <span className={classes.label}> (required)</span>
+            {labelContent ? (
+              <span className={classes.label}>{labelContent}</span>
             ) : optional ? (
-              <span className={classes.label}> (optional)</span>
+              <span className={classes.label}>{labelContent}</span>
             ) : null}
           </InputLabel>
         )}
