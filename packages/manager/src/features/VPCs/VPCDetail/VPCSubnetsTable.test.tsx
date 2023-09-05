@@ -1,8 +1,11 @@
 import { fireEvent } from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 
 import { subnetFactory } from 'src/factories/subnets';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
@@ -14,27 +17,38 @@ afterEach(() => {
   queryClient.clear();
 });
 
+const loadingTestId = 'circle-progress';
+
 describe('VPC Subnets table', () => {
-  it('should display subnet label, id, ip range, number of linodes, and action menu', () => {
-    const subnets = subnetFactory.buildList(Math.floor(Math.random() * 10) + 1);
+  it('should display subnet label, id, ip range, number of linodes, and action menu', async () => {
+    const subnet = subnetFactory.build({ linodes: [1, 2, 3] });
+    server.use(
+      rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([subnet])));
+      })
+    );
+
     const {
       getAllByRole,
       getAllByText,
+      getByTestId,
       getByText,
-    } = renderWithTheme(<VPCSubnetsTable subnets={subnets} />, { queryClient });
+    } = renderWithTheme(<VPCSubnetsTable vpcId={1} />, { queryClient });
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getByText('Subnet Label');
-    getByText(subnets[0].label);
+    getByText(subnet.label);
     getByText('Subnet ID');
-    getAllByText(subnets[0].id);
+    getAllByText(subnet.id);
 
     getByText('Subnet IP Range');
-    getAllByText(subnets[0].ipv4!);
+    getByText(subnet.ipv4!);
 
     getByText('Linodes');
-    getAllByText(subnets[0].linodes.length);
+    getByText(subnet.linodes.length);
 
-    const actionMenuButton = getAllByRole('button')[1];
+    const actionMenuButton = getAllByRole('button')[3];
     fireEvent.click(actionMenuButton);
 
     getByText('Assign Linode');
@@ -43,27 +57,39 @@ describe('VPC Subnets table', () => {
     getByText('Delete');
   });
 
-  it('should display no linodes text if there are no linodes associated with the subnet', () => {
-    const subnets = subnetFactory.buildList(
-      Math.floor(Math.random() * 10) + 1,
-      { linodes: [] }
-    );
-    const { getAllByRole, getByText } = renderWithTheme(
-      <VPCSubnetsTable subnets={subnets} />
+  it('should display no linodes text if there are no linodes associated with the subnet', async () => {
+    const subnet = subnetFactory.build({ linodes: [] });
+    server.use(
+      rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([subnet])));
+      })
     );
 
-    const expandTableButton = getAllByRole('button')[0];
+    const { getAllByRole, getByTestId, getByText } = renderWithTheme(
+      <VPCSubnetsTable vpcId={2} />
+    );
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const expandTableButton = getAllByRole('button')[2];
     fireEvent.click(expandTableButton);
     getByText('No Linodes');
   });
 
-  it('should show linode table head data when table is expanded', () => {
-    const subnets = subnetFactory.buildList(Math.floor(Math.random() * 10) + 1);
-    const { getAllByRole, getByText } = renderWithTheme(
-      <VPCSubnetsTable subnets={subnets} />
+  it('should show linode table head data when table is expanded', async () => {
+    const subnet = subnetFactory.build({ linodes: [1] });
+    server.use(
+      rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([subnet])));
+      })
+    );
+    const { getAllByRole, getByTestId, getByText } = renderWithTheme(
+      <VPCSubnetsTable vpcId={3} />
     );
 
-    const expandTableButton = getAllByRole('button')[0];
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const expandTableButton = getAllByRole('button')[2];
     fireEvent.click(expandTableButton);
 
     getByText('Linode Label');

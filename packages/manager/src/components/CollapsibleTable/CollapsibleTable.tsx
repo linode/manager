@@ -17,17 +17,19 @@ export interface TableItem {
 
 interface Props {
   TableItems: TableItem[];
+  TableRowEmpty: JSX.Element;
   TableRowHead: JSX.Element;
 }
 
 export const CollapsibleTable = (props: Props) => {
-  const { TableItems, TableRowHead } = props;
+  const { TableItems, TableRowEmpty, TableRowHead } = props;
 
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>{TableRowHead}</TableHead>
         <TableBody>
+          {TableItems.length <= 0 && TableRowEmpty}
           {TableItems.map((item) => {
             return (
               <CollapsibleRow

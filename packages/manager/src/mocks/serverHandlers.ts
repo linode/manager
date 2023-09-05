@@ -272,8 +272,8 @@ const databases = [
     return res(
       ctx.json({
         ...databaseFactory.build({
-          label: payload?.label ?? 'Database',
           engine: req.params.engine,
+          label: payload?.label ?? 'Database',
         }),
       })
     );
@@ -436,6 +436,9 @@ const vpc = [
         })
       )
     );
+  }),
+  rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
   }),
   rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
@@ -640,8 +643,8 @@ export const handlers = [
     return res(
       ctx.json(
         linodeFactory.build({
-          id,
           backups: { enabled: false },
+          id,
           label: 'DC-Specific Pricing Linode',
           region: 'id-cgk',
         })
@@ -1468,9 +1471,9 @@ export const handlers = [
         makeResourcePage([
           ...accountBetaFactory.buildList(5),
           accountBetaFactory.build({
-            started: DateTime.now().minus({ days: 30 }).toISO(),
-            enrolled: DateTime.now().minus({ days: 20 }).toISO(),
             ended: DateTime.now().minus({ days: 5 }).toISO(),
+            enrolled: DateTime.now().minus({ days: 20 }).toISO(),
+            started: DateTime.now().minus({ days: 30 }).toISO(),
           }),
         ])
       )
