@@ -50,7 +50,7 @@ describe('getRegionTransferPools', () => {
     const transferPools = getRegionTransferPools(mockTransferData, mockRegions);
 
     expect(transferPools).toHaveLength(2);
-    expect(transferPools[0]).toEqual({
+    expect(transferPools?.[0]).toEqual({
       pct: 85,
       quota: 10000,
       regionID: 'id-cgk',
@@ -62,7 +62,7 @@ describe('getRegionTransferPools', () => {
   it('should return an empty array when data is undefined', () => {
     const transferPools = getRegionTransferPools(undefined, undefined);
 
-    expect(transferPools).toHaveLength(0);
+    expect(transferPools).toBeUndefined();
   });
 });
 

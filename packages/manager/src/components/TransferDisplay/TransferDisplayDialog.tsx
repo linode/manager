@@ -53,7 +53,11 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
       {/**
        *  General Transfer Pool Display
        */}
-      <Typography fontFamily={theme.font.bold} marginBottom={theme.spacing()}>
+      <Typography
+        data-testid="general-transfer-pool-display"
+        fontFamily={theme.font.bold}
+        marginBottom={theme.spacing()}
+      >
         General Transfer Pool
       </Typography>
       <TransferDisplayUsage
@@ -64,36 +68,51 @@ export const TransferDisplayDialog = React.memo((props: DialogProps) => {
       <Divider
         sx={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(3) }}
       />
-      <Typography fontFamily={theme.font.bold} marginBottom={theme.spacing()}>
-        Region-specific Transfer Pools
-      </Typography>
-      <Typography marginBottom={theme.spacing()} marginTop={theme.spacing()}>
-        In some regions, the montly network transfer is calculated and tracked
-        independently. These regions are listed below. Transfer overages will be
-        billed separately.{' '}
-        <Link to={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}>Learn more</Link>.
-      </Typography>
 
       {/**
        *  Region-specific Transfer Pool Display
        */}
-      {regionTransferPools.map((pool, key) => (
-        <Box key={`transfer-pool-region-${key}`} marginTop={theme.spacing(2)}>
+      {quota > 0 && regionTransferPools.length > 0 && (
+        <>
           <Typography
+            data-testid="region-transfer-pool-display"
             fontFamily={theme.font.bold}
-            fontSize={theme.typography.body2.fontSize}
             marginBottom={theme.spacing()}
           >
-            {pool.regionName}{' '}
-            <Typography component="span">({pool.regionID})</Typography>
+            Region-specific Transfer Pools
           </Typography>
-          <TransferDisplayUsage
-            pullUsagePct={pool.pct}
-            quota={pool.quota}
-            used={pool.used}
-          />
-        </Box>
-      ))}
+          <Typography
+            marginBottom={theme.spacing()}
+            marginTop={theme.spacing()}
+          >
+            In some regions, the montly network transfer is calculated and
+            tracked independently. These regions are listed below. Transfer
+            overages will be billed separately.{' '}
+            <Link to={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}>Learn more</Link>.
+          </Typography>
+
+          {regionTransferPools.map((pool, key) => (
+            <Box
+              key={`transfer-pool-region-${key}`}
+              marginTop={theme.spacing(2)}
+            >
+              <Typography
+                fontFamily={theme.font.bold}
+                fontSize={theme.typography.body2.fontSize}
+                marginBottom={theme.spacing()}
+              >
+                {pool.regionName}{' '}
+                <Typography component="span">({pool.regionID})</Typography>
+              </Typography>
+              <TransferDisplayUsage
+                pullUsagePct={pool.pct}
+                quota={pool.quota}
+                used={pool.used}
+              />
+            </Box>
+          ))}
+        </>
+      )}
 
       {/**
        *  General Information about Transfer Pools & Docs Link

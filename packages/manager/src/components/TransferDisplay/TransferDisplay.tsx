@@ -53,20 +53,25 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
             <Typography>
               <StyledLinkButton
                 aria-label="Show the Monthly Network Transfer Pool"
+                data-testid="open-transfer-display-modal-button"
                 onClick={() => setModalOpen(true)}
               >
                 Monthly Network Transfer Pool
               </StyledLinkButton>
               &nbsp;usage:
             </Typography>
-            <Typography>
+            <Typography data-testid="transfer-pool-pct-display">
               {formatPoolUsagePct(generalPoolUsagePct)} General Transfer Pool
             </Typography>
-            {regionTransferPools?.map((pool, key) => (
-              <Typography key={`transfer-pool-region-${key}`}>
-                {`${formatPoolUsagePct(pool.pct)} ${pool.regionName}`}
-              </Typography>
-            ))}
+            {generalPoolUsage?.quota !== 0 && // Don't display region transfer pools if the general pool is empty (e.g. account has no resources).
+              regionTransferPools?.map((pool, key) => (
+                <Typography
+                  data-testid="transfer-pool-pct-display"
+                  key={`transfer-pool-region-${key}`}
+                >
+                  {`${formatPoolUsagePct(pool.pct)} ${pool.regionName}`}
+                </Typography>
+              ))}
           </>
         )}
       </StyledTransferDisplayContainer>

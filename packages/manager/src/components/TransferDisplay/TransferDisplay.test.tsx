@@ -4,7 +4,6 @@ import React from 'react';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NETWORK_TRANSFER_QUOTA_DOCS_LINKS } from './/constants';
 import { TransferDisplay } from './TransferDisplay';
 
 const MockData = {
@@ -58,41 +57,5 @@ describe('TransferDisplay', () => {
     });
 
     expect(usage.innerHTML).toMatch(/0.00%/);
-  });
-
-  it('renders transfer display dialog without usage or quota data if no quota/resources', async () => {
-    server.use(
-      rest.get('*/account/transfer', (req, res, ctx) => {
-        return res(ctx.json(MockData));
-      })
-    );
-
-    const { findByText, getByTestId } = renderWithTheme(<TransferDisplay />);
-    const transferButton = await findByText(transferDisplayButtonSubstring);
-    fireEvent.click(transferButton);
-
-    const transferDialog = getByTestId('drawer');
-    expect(transferDialog.innerHTML).toMatch(
-      /Your monthly network transfer will be shown when you create a resource./
-    );
-    expect(transferDialog.innerHTML).not.toMatch(/GB/);
-  });
-
-  it('renders the transfer display dialog with an accessible docs link', async () => {
-    server.use(
-      rest.get('*/account/transfer', (req, res, ctx) => {
-        return res(ctx.json(MockData));
-      })
-    );
-
-    const { findByText, getByRole } = renderWithTheme(<TransferDisplay />);
-    const transferButton = await findByText(transferDisplayButtonSubstring);
-    fireEvent.click(transferButton);
-
-    expect(getByRole('link')).toHaveAttribute(
-      'href',
-      NETWORK_TRANSFER_QUOTA_DOCS_LINKS
-    );
-    expect(getByRole('link').getAttribute('aria-label'));
   });
 });

@@ -75,9 +75,9 @@ export interface RegionTransferPool {
 export const getRegionTransferPools = (
   generalPoolUsage: RegionalNetworkUtilization | undefined,
   regions: Region[] | undefined
-): RegionTransferPool[] => {
+): RegionTransferPool[] | undefined => {
   if (!generalPoolUsage || !regions) {
-    return [];
+    return;
   }
 
   return generalPoolUsage?.region_transfers?.map((pool) => {

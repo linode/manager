@@ -71,3 +71,15 @@ export const accountTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUt
     used: 9000,
   }
 );
+
+export const accountTransferNoResourceFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
+  {
+    billable: 0,
+    quota: 0,
+    region_transfers: [
+      { billable: 0, id: 'id-cgk', quota: 0, used: 0 },
+      { billable: 0, id: 'br-gru', quota: 0, used: 0 },
+    ],
+    used: 0,
+  }
+);
