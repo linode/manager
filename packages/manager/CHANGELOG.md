@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-08-30] - v1.100.2
+
+### Fixed:
+
+- Extra API calls for Linode Configs ([#9609](https://github.com/linode/manager/pull/9609))
+
+
+## [2023-08-22] - v1.100.1
+
+### Fixed:
+
+- Incorrect timezone form styles on profile page ([#9573](https://github.com/linode/manager/pull/9573))
+- Create Linode from Stackscript field state bug ([#9573](https://github.com/linode/manager/pull/9573))
+
+
 ## [2023-08-21] - v1.100.0
 
 

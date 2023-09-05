@@ -4,13 +4,13 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -123,9 +123,11 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
   return (
     <Drawer onClose={onClose} open={open} title="Edit Domain">
       {!canEdit && (
-        <Notice error>You do not have permission to modify this Domain.</Notice>
+        <Notice variant="error">
+          You do not have permission to modify this Domain.
+        </Notice>
       )}
-      {errorMap.none && <Notice error>{errorMap.none}</Notice>}
+      {errorMap.none && <Notice variant="error">{errorMap.none}</Notice>}
       <form onSubmit={formik.handleSubmit}>
         <RadioGroup aria-label="type" name="type" row value={domain?.type}>
           <FormControlLabel

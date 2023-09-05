@@ -174,7 +174,9 @@ export const InvoiceDetail = () => {
           </Grid>
         </Grid>
         <Grid xs={12}>
-          {pdfGenerationError && <Notice error>Failed generating PDF.</Notice>}
+          {pdfGenerationError && (
+            <Notice variant="error">Failed generating PDF.</Notice>
+          )}
           <InvoiceTable errors={errors} items={items} loading={loading} />
         </Grid>
         <Grid xs={12}>

@@ -79,8 +79,8 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
       title={`Delete ${titlecase(entity)} ${label}?`}
       {...rest}
     >
-      {error && <Notice error text={error} />}
-      <Notice warning>
+      {error && <Notice text={error} variant="error" />}
+      <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting this {entity} is permanent and
           can&rsquo;t be undone.

@@ -165,7 +165,12 @@ export const ReplyContainer = (props: Props) => {
   return (
     <Grid className={classes.replyContainer}>
       {errorMap.none && (
-        <Notice error spacingBottom={8} spacingTop={16} text={errorMap.none} />
+        <Notice
+          spacingBottom={8}
+          spacingTop={16}
+          text={errorMap.none}
+          variant="error"
+        />
       )}
       <Grid>
         <TabbedReply

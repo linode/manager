@@ -10,10 +10,10 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
@@ -106,7 +106,7 @@ export const NodeBalancerDetail = () => {
         docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
         title={nodeBalancerLabel}
       />
-      {errorMap.none && <Notice error text={errorMap.none} />}
+      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <Tabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),

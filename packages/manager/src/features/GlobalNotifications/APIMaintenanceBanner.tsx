@@ -66,7 +66,7 @@ export const APIMaintenanceBanner = React.memo((props: Props) => {
         important
         key={scheduledAPIMaintenance.id}
         preferenceKey={scheduledAPIMaintenance.id}
-        warning
+        variant="warning"
       >
         <Stack>
           <Typography data-testid="scheduled-maintenance-banner">

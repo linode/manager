@@ -33,7 +33,7 @@ export const MetalNotice = (props: Props) => {
   );
 
   return (
-    <Notice dataTestId={dataTestId} warning>
+    <Notice dataTestId={dataTestId} variant="warning">
       {programInfo}
     </Notice>
   );

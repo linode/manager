@@ -14,18 +14,39 @@ const labelTestDetails = {
 const IP_EITHER_BOTH_NOT_NEITHER =
   'A subnet must have either IPv4 or IPv6, or both, but not neither.';
 
+export const determineIPType = (ip: string) => {
+  try {
+    let addr;
+    const [, mask] = ip.split('/');
+    if (mask) {
+      const parsed = ipaddr.parseCIDR(ip);
+      addr = parsed[0];
+    } else {
+      addr = ipaddr.parse(ip);
+    }
+    return addr.kind();
+  } catch (e) {
+    return undefined;
+  }
+};
+
 /**
  * VPC-related IP validation that handles for single IPv4 and IPv6 addresses as well as
  * IPv4 ranges in CIDR format and IPv6 ranges with prefix lengths.
- * @param value - the IP address string to be validated
- * @param shouldHaveIPMask - a boolean indicating whether the value should have a mask (e.g., /32) or not
- * @param mustBeIPMask - a boolean indicating whether the value MUST be an IP mask/prefix length or not
+ * @param { value } - the IP address string to be validated
+ * @param { shouldHaveIPMask } - a boolean indicating whether the value should have a mask (e.g., /32) or not
+ * @param { mustBeIPMask } - a boolean indicating whether the value MUST be an IP mask/prefix length or not
  */
-export const vpcsValidateIP = (
-  value?: string | null,
-  shouldHaveIPMask?: boolean,
-  mustBeIPMask?: boolean
-): boolean => {
+
+export const vpcsValidateIP = ({
+  value,
+  shouldHaveIPMask,
+  mustBeIPMask,
+}: {
+  value: string | undefined | null;
+  shouldHaveIPMask: boolean;
+  mustBeIPMask: boolean;
+}): boolean => {
   if (!value) {
     return false;
   }
@@ -52,16 +73,7 @@ export const vpcsValidateIP = (
   }
 
   try {
-    let addr;
-
-    if (mask) {
-      const parsedValue = ipaddr.parseCIDR(value);
-      addr = parsedValue[0];
-    } else {
-      addr = ipaddr.parse(value);
-    }
-
-    const type = addr.kind();
+    const type = determineIPType(value);
     const isIPv4 = type === 'ipv4';
     const isIPv6 = type === 'ipv6';
 
@@ -104,13 +116,6 @@ const labelValidation = string()
   .max(64, LABEL_MESSAGE)
   .matches(/[a-zA-Z0-9-]+/, LABEL_REQUIREMENTS);
 
-export const createVPCSchema = object({
-  label: labelValidation.required(LABEL_REQUIRED),
-  description: string(),
-  region: string().required('Region is required'),
-  subnets: array().of(object()),
-});
-
 export const updateVPCSchema = object({
   label: labelValidation.notRequired(),
   description: string().notRequired(),
@@ -126,7 +131,12 @@ export const createSubnetSchema = object().shape(
         .test({
           name: 'IPv4 CIDR format',
           message: 'The IPv4 range must be in CIDR format',
-          test: (value) => vpcsValidateIP(value, true, false),
+          test: (value) =>
+            vpcsValidateIP({
+              value,
+              shouldHaveIPMask: true,
+              mustBeIPMask: false,
+            }),
         }),
       otherwise: lazy((value: string | undefined) => {
         switch (typeof value) {
@@ -139,7 +149,12 @@ export const createSubnetSchema = object().shape(
               .test({
                 name: 'IPv4 CIDR format',
                 message: 'The IPv4 range must be in CIDR format',
-                test: (value) => vpcsValidateIP(value, true, false),
+                test: (value) =>
+                  vpcsValidateIP({
+                    value,
+                    shouldHaveIPMask: true,
+                    mustBeIPMask: false,
+                  }),
               });
 
           default:
@@ -154,7 +169,12 @@ export const createSubnetSchema = object().shape(
         .test({
           name: 'IPv6 prefix length',
           message: 'Must be the prefix length (64-125) of the IP, e.g. /64',
-          test: (value) => vpcsValidateIP(value, true, true),
+          test: (value) =>
+            vpcsValidateIP({
+              value,
+              shouldHaveIPMask: true,
+              mustBeIPMask: true,
+            }),
         }),
       otherwise: lazy((value: string | undefined) => {
         switch (typeof value) {
@@ -168,7 +188,12 @@ export const createSubnetSchema = object().shape(
                 name: 'IPv6 prefix length',
                 message:
                   'Must be the prefix length (64-125) of the IP, e.g. /64',
-                test: (value) => vpcsValidateIP(value, true, true),
+                test: (value) =>
+                  vpcsValidateIP({
+                    value,
+                    shouldHaveIPMask: true,
+                    mustBeIPMask: true,
+                  }),
               });
 
           default:
@@ -182,6 +207,13 @@ export const createSubnetSchema = object().shape(
     ['ipv4', 'ipv6'],
   ]
 );
+
+export const createVPCSchema = object({
+  label: labelValidation.required(LABEL_REQUIRED),
+  description: string(),
+  region: string().required('Region is required'),
+  subnets: array().of(createSubnetSchema),
+});
 
 export const modifySubnetSchema = object({
   label: labelValidation.required(LABEL_REQUIRED),

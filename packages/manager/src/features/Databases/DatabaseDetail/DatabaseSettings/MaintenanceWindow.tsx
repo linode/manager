@@ -180,7 +180,7 @@ export const MaintenanceWindow = (props: Props) => {
             Maintenance Window
           </Typography>
           {maintenanceUpdateError ? (
-            <Notice error spacingTop={8}>
+            <Notice spacingTop={8} variant="error">
               {maintenanceUpdateError[0].reason}
             </Notice>
           ) : null}

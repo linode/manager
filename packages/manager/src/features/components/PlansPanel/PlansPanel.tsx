@@ -1,9 +1,7 @@
-import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
-import { ExtendedType } from 'src/utilities/extendType';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 import { PlanContainer } from './PlanContainer';
@@ -14,18 +12,8 @@ import {
   planTabInfoContent,
 } from './utils';
 
-import type { Region } from '@linode/api-v4';
-
-export interface PlanSelectionType extends BaseType {
-  class: ExtendedType['class'];
-  formattedLabel: ExtendedType['formattedLabel'];
-  heading: ExtendedType['heading'];
-  network_out?: ExtendedType['network_out'];
-  price: ExtendedType['price'];
-  subHeadings: ExtendedType['subHeadings'];
-  transfer?: ExtendedType['transfer'];
-}
-
+import type { PlanSelectionType } from './types';
+import type { LinodeTypeClass, Region } from '@linode/api-v4';
 interface Props {
   className?: string;
   copy?: string;
@@ -102,6 +90,7 @@ export const PlansPanel = (props: Props) => {
               plans={plans[plan]}
               selectedDiskSize={props.selectedDiskSize}
               selectedID={selectedID}
+              selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}
             />
           </>

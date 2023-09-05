@@ -83,7 +83,7 @@ const PlansAvailabilityNoticeMessage = (
 
   if (!hasSelectedRegion) {
     return (
-      <Notice dataTestId={`${planType}-notice-warning`} warning>
+      <Notice dataTestId={`${planType}-notice-warning`} variant="warning">
         <StyledNoticeTypography>
           {formattedPlanType} Plans are currently available in&nbsp;
           <StyledTextTooltip
@@ -98,7 +98,7 @@ const PlansAvailabilityNoticeMessage = (
 
   if (hasSelectedRegion && !isSelectedRegionEligibleForPlan) {
     return (
-      <Notice dataTestId={`${planType}-notice-error`} error>
+      <Notice dataTestId={`${planType}-notice-error`} variant="error">
         <StyledNoticeTypography>
           {formattedPlanType} Plans are not currently available in this
           region.&nbsp;
