@@ -8,7 +8,7 @@ import { Typography } from 'src/components/Typography';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 import { AddDeviceDrawer } from './AddDeviceDrawer';
-import { FirewallDevicesTable } from './FirewallDevicesTable';
+import { FirewallDeviceTable } from './FirewallDeviceTable';
 import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
@@ -87,7 +87,7 @@ export const FirewallDeviceLanding = React.memo(
             </Button>
           </StyledGrid>
         </Grid>
-        <FirewallDevicesTable
+        <FirewallDeviceTable
           triggerRemoveDevice={(id) => {
             setSelectedDeviceId(id);
             setIsRemoveDeviceDialogOpen(true);
