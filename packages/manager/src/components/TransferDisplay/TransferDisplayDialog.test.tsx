@@ -13,11 +13,7 @@ import {
   NETWORK_TRANSFER_QUOTA_DOCS_LINKS,
   TRANSFER_DISPLAY_BUTTON,
 } from './constants';
-import {
-  calculatePoolUsagePct,
-  getRegionTransferPools,
-  mockServerQuery,
-} from './utils';
+import { calculatePoolUsagePct, getRegionTransferPools } from './utils';
 
 import type { TransferDisplayDialogProps } from './TransferDisplayDialog';
 import type { RegionalNetworkUtilization } from '@linode/api-v4';
@@ -52,8 +48,6 @@ export const transferDisplayDialogProps = (
 
 describe('TransferDisplayDialog', () => {
   it('renders the transfer display dialog with accessible doc links', async () => {
-    mockServerQuery(mockTransferData);
-
     const { findByText, getAllByRole } = renderWithTheme(
       <TransferDisplayDialog
         {...transferDisplayDialogProps(mockTransferData)}
@@ -71,8 +65,6 @@ describe('TransferDisplayDialog', () => {
   });
 
   it('renders transfer display dialog without usage or quota data if no quota/resources', async () => {
-    mockServerQuery(mockTransferDataNoResource);
-
     const { findByText, getByTestId } = renderWithTheme(
       <TransferDisplayDialog
         {...transferDisplayDialogProps(mockTransferDataNoResource)}
@@ -89,8 +81,6 @@ describe('TransferDisplayDialog', () => {
   });
 
   it('renders pool transfer headers', async () => {
-    mockServerQuery(mockTransferData);
-
     const { findByText, getByTestId } = renderWithTheme(
       <TransferDisplayDialog
         {...transferDisplayDialogProps(mockTransferData)}

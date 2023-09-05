@@ -2,6 +2,7 @@ import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { accountTransferFactory } from 'src/factories/account';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TransferDisplay } from './TransferDisplay';
@@ -9,11 +10,22 @@ import {
   TRANSFER_DISPLAY_BUTTON,
   TRANSFER_DISPLAY_GENERAL_POOL,
 } from './constants';
-import { mockServerQuery } from './utils';
 
 import type { TransferDataOptions } from './utils';
 
 const mockTransferData: TransferDataOptions = accountTransferFactory.build();
+
+const mockServerQuery = (data: TransferDataOptions) => {
+  if (!data) {
+    return;
+  }
+
+  server.use(
+    rest.get('*/account/transfer', (req, res, ctx) => {
+      return res(ctx.json(data));
+    })
+  );
+};
 
 jest.mock('src/hooks/useFlags', () => ({
   useFlags: () => ({

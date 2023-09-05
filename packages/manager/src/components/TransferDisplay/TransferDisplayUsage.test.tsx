@@ -9,7 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { TransferDisplayDialog } from './TransferDisplayDialog';
 import { transferDisplayDialogProps } from './TransferDisplayDialog.test';
 import { TransferDisplayUsage } from './TransferDisplayUsage';
-import { calculatePoolUsagePct, mockServerQuery } from './utils';
+import { calculatePoolUsagePct } from './utils';
 
 import type { TransferDisplayUsageProps } from './TransferDisplayUsage';
 import type { TransferDataOptions } from './utils';
@@ -30,8 +30,6 @@ jest.mock('src/hooks/useFlags', () => ({
 
 describe('TransferDisplayDialogUsage', () => {
   it('renders general transfer & region transfer progress bars', async () => {
-    mockServerQuery({ ...mockTransferData });
-
     const { findByText, getAllByRole, getByTestId } = renderWithTheme(
       <TransferDisplayDialog {...transferDisplayDialogProps(mockTransferData)}>
         <TransferDisplayUsage {...transferDisplayUsageProps} />
@@ -51,8 +49,6 @@ describe('TransferDisplayDialogUsage', () => {
   });
 
   it('renders only one progress bar if entity does not have region transfers', async () => {
-    mockServerQuery({ ...mockTransferData, region_transfers: [] });
-
     const { getAllByRole, getByTestId } = renderWithTheme(
       <TransferDisplayDialog
         {...transferDisplayDialogProps({
@@ -73,7 +69,6 @@ describe('TransferDisplayDialogUsage', () => {
 
   it('renders no progress bar if general pool has no quota', async () => {
     const mockTransferDataNoResource = accountTransferNoResourceFactory.build();
-    mockServerQuery(mockTransferDataNoResource);
 
     const { queryByRole, queryByTestId } = renderWithTheme(
       <TransferDisplayDialog
