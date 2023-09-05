@@ -52,7 +52,7 @@ const InstallationInstructions: React.FC<CombinedProps> = (props) => {
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
 
   return (
-    <Grid container>
+    <Grid container spacing={2}>
       <Grid item>
         <Typography>
           Before this client can gather data, you need to install the Longview
@@ -66,6 +66,7 @@ const InstallationInstructions: React.FC<CombinedProps> = (props) => {
           alignItems="center"
           className={classes.copyContainer}
           container
+          spacing={2}
           wrap="nowrap"
         >
           <Grid className="py0" item>
@@ -86,7 +87,7 @@ const InstallationInstructions: React.FC<CombinedProps> = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Grid container>
+        <Grid container spacing={2}>
           <Grid className={classes.instruction} item>
             <Typography>
               <Link to="https://www.linode.com/docs/platform/longview/troubleshooting-linode-longview/">
