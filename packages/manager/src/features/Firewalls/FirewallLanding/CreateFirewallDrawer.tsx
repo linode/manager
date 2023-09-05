@@ -1,12 +1,16 @@
 import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
@@ -18,9 +22,13 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
+import { FirewallNodeBalancerSelect } from './FirewallNodeBalancerSelect';
+
 export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
   'Only Linodes you have permission to modify are shown.';
 
+export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
+  'Only Devices you have permission to modify are shown.';
 export interface CreateFirewallDrawerProps {
   onClose: () => void;
   open: boolean;
@@ -29,6 +37,7 @@ export interface CreateFirewallDrawerProps {
 const initialValues: CreateFirewallPayload = {
   devices: {
     linodes: [],
+    nodebalancers: [],
   },
   label: '',
   rules: {
@@ -40,14 +49,12 @@ const initialValues: CreateFirewallPayload = {
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
     const { onClose, open } = props;
-
     /**
      * We'll eventually want to check the read_write firewall
      * grant here too, but it doesn't exist yet.
      */
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
-
     const { mutateAsync } = useCreateFirewall();
 
     const {
@@ -118,6 +125,49 @@ export const CreateFirewallDrawer = React.memo(
       }
     }, [open]);
 
+    const [chosenLinodeRegion, setChosenLinodeRegion] = React.useState(
+      new Set()
+    );
+    const [selectedNodeBalancers, setSelectedNodeBalancers] = React.useState<
+      NodeBalancer[]
+    >([]);
+
+    const handleLinodeChange = (selected: Linode[] = []) => {
+      if (selected.length > 0) {
+        setFieldValue(
+          'devices.linodes',
+          selected.map((linode) => linode.id)
+        );
+        const newSet = new Set();
+        selected.map((linode) => {
+          newSet.add(linode.region);
+          return setChosenLinodeRegion(new Set(newSet));
+        });
+      }
+      if (selected.length <= 0) {
+        setSelectedNodeBalancers([]);
+        setFieldValue('devices', {
+          linodes: [],
+          nodebalancers: selectedNodeBalancers,
+        });
+        setChosenLinodeRegion(new Set());
+      }
+    };
+
+    const handleNodeBalancerChange = (selected: NodeBalancer[]) => {
+      if (selected.length > 0) {
+        setSelectedNodeBalancers(selected.map((nodebalancer) => nodebalancer));
+        setFieldValue(
+          'devices.nodebalancers',
+          selected.map((nodebalancer) => nodebalancer.id)
+        );
+      }
+      if (selected.length <= 0) {
+        setSelectedNodeBalancers([]);
+        setFieldValue('devices.nodebalancers', selectedNodeBalancers);
+      }
+    };
+
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
 
@@ -126,14 +176,23 @@ export const CreateFirewallDrawer = React.memo(
       ? getEntityIdsByPermission(grants, 'linode', 'read_only')
       : [];
 
-    const linodeSelectGuidance =
-      readOnlyLinodeIds.length > 0
-        ? READ_ONLY_LINODES_HIDDEN_MESSAGE
+    // If a user is restricted, they can not add a read-only NodeBalancer to a firewall.
+    const readOnlyNodebalancerIds = _isRestrictedUser
+      ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
+      : [];
+
+    const deviceSelectGuidance =
+      readOnlyLinodeIds.length > 0 || readOnlyNodebalancerIds.length > 0
+        ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
         : undefined;
 
-    const firewallHelperText = `Assign one or more Linodes to this firewall. You can add Linodes later if you want to customize your rules first. ${
-      linodeSelectGuidance ? linodeSelectGuidance : ''
+    const firewallLabelText = `Assign devices to the Firewall.`;
+
+    const firewallHelperText = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.${
+      deviceSelectGuidance ? deviceSelectGuidance : ''
     }`;
+    const nodebalancerHelperText = `Only the Firewall's inbound rules apply to NodeBalancers.`;
+    const devicesHelperText = `You can assign multiple devices to this Firewall. Each device can only be assigned to a single Firewall.`;
 
     const generalError =
       status?.generalError ||
@@ -171,21 +230,45 @@ export const CreateFirewallDrawer = React.memo(
             onChange={handleChange}
             value={values.label}
           />
+          <Box>
+            <Typography
+              sx={(theme) => ({
+                margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
+              })}
+              variant="h3"
+            >
+              {firewallLabelText}
+            </Typography>
+            <Typography> {firewallHelperText}</Typography>
+            <Typography
+              sx={(theme) => ({
+                margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
+              })}
+            >
+              {nodebalancerHelperText}
+            </Typography>
+          </Box>
           <LinodeSelect
-            onSelectionChange={(selected) =>
-              setFieldValue(
-                'devices.linodes',
-                selected.map((linode) => linode.id)
-              )
-            }
             disabled={userCannotAddFirewall}
             errorText={errors['devices.linodes']}
-            helperText={firewallHelperText}
             multiple
             onBlur={handleBlur}
+            onSelectionChange={handleLinodeChange}
             optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
             value={values.devices?.linodes ?? []}
           />
+          <FirewallNodeBalancerSelect
+            optionsFilter={(nodebalancer) =>
+              chosenLinodeRegion.has(nodebalancer.region) &&
+              !readOnlyNodebalancerIds.includes(nodebalancer.id)
+            }
+            errorText={errors['devices.nodebalancers']}
+            multiple
+            onBlur={handleBlur}
+            onSelectionChange={handleNodeBalancerChange}
+            value={values?.devices?.nodebalancers ?? []}
+          />
+          <Typography>{devicesHelperText}</Typography>
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
