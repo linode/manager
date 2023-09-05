@@ -19,6 +19,11 @@ export const getDaysRemaining = () =>
       .toObject().days ?? 0
   );
 
+export type TransferDataOptions =
+  | RegionalNetworkUtilization
+  | RegionalTransferObject
+  | undefined;
+
 /**
  * Calculates the percentage of network transfer used.
  * Usage percentage should not be 100% if there has been no usage or usage has not exceeded quota.
@@ -26,9 +31,7 @@ export const getDaysRemaining = () =>
  * @returns number
  * @example calculatePoolUsagePct({ quota: 1000, used: 500 }) // 50
  */
-export const calculatePoolUsagePct = (
-  data: RegionalNetworkUtilization | RegionalTransferObject | undefined
-) => {
+export const calculatePoolUsagePct = (data: TransferDataOptions) => {
   if (!data?.quota || !data?.used) {
     return 0;
   }
