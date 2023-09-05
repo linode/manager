@@ -296,7 +296,7 @@ const truncateLabel = (label: string) => {
 
 export const getInvoiceRegion = (invoiceItem: InvoiceItem) => {
   // If the invoice item is not regarding transfer, just return the region.
-  if (!invoiceItem.label.toLowerCase().includes('transfer')) {
+  if (!invoiceItem.label.includes('Transfer Overage')) {
     return invoiceItem.region;
   }
 
