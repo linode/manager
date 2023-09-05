@@ -1,7 +1,10 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { accountTransferFactory } from 'src/factories/account';
+import {
+  accountTransferFactory,
+  accountTransferNoResourceFactory,
+} from 'src/factories/account';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -69,5 +72,22 @@ describe('TransferDisplayDialogUsage', () => {
     expect(getByTestId('general-transfer-pool-display')).toBeInTheDocument();
     expect(progressBars.length).toBe(1);
     expect(progressBars[0]).toHaveAttribute('aria-valuenow', '36');
+  });
+
+  it('renders no progress bar if general pool has no quota', async () => {
+    mockServerQuery(accountTransferNoResourceFactory.build());
+
+    const { findByText, queryByRole, queryByTestId } = renderWithTheme(
+      <TransferDisplay />
+    );
+    const transferButton = await findByText(transferDisplayButtonSubstring);
+    fireEvent.click(transferButton);
+
+    const progressBar = queryByRole('progressbar');
+
+    expect(
+      queryByTestId('region-transfer-pool-display')
+    ).not.toBeInTheDocument();
+    expect(progressBar).not.toBeInTheDocument();
   });
 });
