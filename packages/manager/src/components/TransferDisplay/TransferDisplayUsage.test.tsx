@@ -1,50 +1,42 @@
-import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import {
   accountTransferFactory,
   accountTransferNoResourceFactory,
 } from 'src/factories/account';
-import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { TransferDisplay } from './TransferDisplay';
+import { TransferDisplayDialog } from './TransferDisplayDialog';
+import { transferDisplayDialogProps } from './TransferDisplayDialog.test';
+import { TransferDisplayUsage } from './TransferDisplayUsage';
+import { calculatePoolUsagePct, mockServerQuery } from './utils';
 
+import type { TransferDisplayUsageProps } from './TransferDisplayUsage';
 import type { TransferDataOptions } from './utils';
 
 const mockTransferData: TransferDataOptions = accountTransferFactory.build();
 
-const transferDisplayButtonSubstring = /Monthly Network Transfer Pool/;
+const transferDisplayUsageProps: TransferDisplayUsageProps = {
+  pullUsagePct: calculatePoolUsagePct(mockTransferData),
+  quota: mockTransferData.quota,
+  used: mockTransferData.used,
+};
 
-// Mock the useFlags hook
 jest.mock('src/hooks/useFlags', () => ({
   useFlags: () => ({
-    dcSpecificPricing: true, // Mock the flag value
+    dcSpecificPricing: true,
   }),
 }));
-
-const mockServerQuery = (data: TransferDataOptions) => {
-  if (!data) {
-    return;
-  }
-
-  server.use(
-    rest.get('*/account/transfer', (req, res, ctx) => {
-      return res(ctx.json(data));
-    })
-  );
-};
 
 describe('TransferDisplayDialogUsage', () => {
   it('renders general transfer & region transfer progress bars', async () => {
     mockServerQuery({ ...mockTransferData });
 
     const { findByText, getAllByRole, getByTestId } = renderWithTheme(
-      <TransferDisplay />
+      <TransferDisplayDialog {...transferDisplayDialogProps(mockTransferData)}>
+        <TransferDisplayUsage {...transferDisplayUsageProps} />
+      </TransferDisplayDialog>
     );
-    const transferButton = await findByText(transferDisplayButtonSubstring);
-    fireEvent.click(transferButton);
-
     const progressBars = getAllByRole('progressbar');
 
     expect(progressBars.length).toBe(3);
@@ -61,11 +53,16 @@ describe('TransferDisplayDialogUsage', () => {
   it('renders only one progress bar if entity does not have region transfers', async () => {
     mockServerQuery({ ...mockTransferData, region_transfers: [] });
 
-    const { findByText, getAllByRole, getByTestId } = renderWithTheme(
-      <TransferDisplay />
+    const { getAllByRole, getByTestId } = renderWithTheme(
+      <TransferDisplayDialog
+        {...transferDisplayDialogProps({
+          ...mockTransferData,
+          region_transfers: [],
+        })}
+      >
+        <TransferDisplayUsage {...transferDisplayUsageProps} />
+      </TransferDisplayDialog>
     );
-    const transferButton = await findByText(transferDisplayButtonSubstring);
-    fireEvent.click(transferButton);
 
     const progressBars = getAllByRole('progressbar');
 
@@ -75,13 +72,16 @@ describe('TransferDisplayDialogUsage', () => {
   });
 
   it('renders no progress bar if general pool has no quota', async () => {
-    mockServerQuery(accountTransferNoResourceFactory.build());
+    const mockTransferDataNoResource = accountTransferNoResourceFactory.build();
+    mockServerQuery(mockTransferDataNoResource);
 
-    const { findByText, queryByRole, queryByTestId } = renderWithTheme(
-      <TransferDisplay />
+    const { queryByRole, queryByTestId } = renderWithTheme(
+      <TransferDisplayDialog
+        {...transferDisplayDialogProps(mockTransferDataNoResource)}
+      >
+        <TransferDisplayUsage {...transferDisplayUsageProps} />
+      </TransferDisplayDialog>
     );
-    const transferButton = await findByText(transferDisplayButtonSubstring);
-    fireEvent.click(transferButton);
 
     const progressBar = queryByRole('progressbar');
 

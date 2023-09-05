@@ -1,10 +1,16 @@
 import { DateTime } from 'luxon';
 
+import { rest, server } from 'src/mocks/testServer';
+
 import type {
   Region,
   RegionalNetworkUtilization,
   RegionalTransferObject,
 } from '@linode/api-v4';
+
+// ================
+// Components Utils
+// ================
 
 /**
  * Get the number of days remaining in the current month.
@@ -75,9 +81,9 @@ export interface RegionTransferPool {
 export const getRegionTransferPools = (
   generalPoolUsage: RegionalNetworkUtilization | undefined,
   regions: Region[] | undefined
-): RegionTransferPool[] | undefined => {
+): RegionTransferPool[] => {
   if (!generalPoolUsage || !regions) {
-    return;
+    return [];
   }
 
   return generalPoolUsage?.region_transfers?.map((pool) => {
@@ -102,4 +108,20 @@ export const getRegionTransferPools = (
  */
 export const formatPoolUsagePct = (pct: number): string => {
   return `${pct.toFixed(pct < 1 ? 2 : 0)}%`;
+};
+
+// ==========
+// Test Utils
+// ==========
+
+export const mockServerQuery = (data: TransferDataOptions) => {
+  if (!data) {
+    return;
+  }
+
+  server.use(
+    rest.get('*/account/transfer', (req, res, ctx) => {
+      return res(ctx.json(data));
+    })
+  );
 };

@@ -1,58 +1,63 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { rest, server } from 'src/mocks/testServer';
+import { accountTransferFactory } from 'src/factories/account';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TransferDisplay } from './TransferDisplay';
+import {
+  TRANSFER_DISPLAY_BUTTON,
+  TRANSFER_DISPLAY_GENERAL_POOL,
+} from './constants';
+import { mockServerQuery } from './utils';
 
-const MockData = {
-  billable: 0,
-  quota: 0,
-  used: 0,
-};
+import type { TransferDataOptions } from './utils';
 
-const transferDisplayPercentageSubstring = /You have used \d+\.\d\d%/;
-const transferDisplayButtonSubstring = /Monthly Network Transfer Pool/;
+const mockTransferData: TransferDataOptions = accountTransferFactory.build();
+
+jest.mock('src/hooks/useFlags', () => ({
+  useFlags: () => ({
+    dcSpecificPricing: true,
+  }),
+}));
 
 describe('TransferDisplay', () => {
-  it('renders transfer display text and opens the transfer dialog, with GB data stats, on click', async () => {
-    server.use(
-      rest.get('*/account/transfer', (req, res, ctx) => {
-        return res(
-          ctx.json({
-            billable: 0,
-            quota: 11347,
-            used: 50,
-          })
-        );
-      })
-    );
+  it('display the loading state', async () => {
+    mockServerQuery(undefined);
 
-    const { findByText, getByTestId } = renderWithTheme(<TransferDisplay />);
-    const transferButton = await findByText(transferDisplayButtonSubstring, {
+    const { findByText } = renderWithTheme(<TransferDisplay />);
+    const loadingText = await findByText('Loading transfer data...');
+    expect(loadingText).toBeInTheDocument();
+  });
+
+  it('renders transfer display text and opens the transfer dialog on click', async () => {
+    mockServerQuery(mockTransferData);
+
+    const { findByText, getAllByTestId, getByTestId } = renderWithTheme(
+      <TransferDisplay />
+    );
+    const transferButton = await findByText(TRANSFER_DISPLAY_BUTTON, {
       exact: false,
     });
 
     expect(transferButton).toBeInTheDocument();
     expect(
-      await findByText(transferDisplayPercentageSubstring, { exact: false })
+      await findByText(TRANSFER_DISPLAY_GENERAL_POOL, { exact: false })
     ).toBeInTheDocument();
-    fireEvent.click(transferButton);
 
+    const transferPoolPctDisplays = getAllByTestId('transfer-pool-pct-display');
+    expect(transferPoolPctDisplays.length).toBe(3);
+
+    fireEvent.click(transferButton);
     const transferDialog = getByTestId('drawer');
-    expect(transferDialog.innerHTML).toMatch(/GB/);
+    expect(transferDialog).toBeInTheDocument();
   });
 
   it('renders transfer display text with a percentage of 0.00% if no usage', async () => {
-    server.use(
-      rest.get('*/account/transfer', (req, res, ctx) => {
-        return res(ctx.json(MockData));
-      })
-    );
+    mockServerQuery({ ...mockTransferData, used: 0 });
 
     const { findByText } = renderWithTheme(<TransferDisplay />);
-    const usage = await findByText(transferDisplayPercentageSubstring, {
+    const usage = await findByText(TRANSFER_DISPLAY_GENERAL_POOL, {
       exact: false,
     });
 

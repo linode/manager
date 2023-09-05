@@ -62,7 +62,7 @@ describe('getRegionTransferPools', () => {
   it('should return an empty array when data is undefined', () => {
     const transferPools = getRegionTransferPools(undefined, undefined);
 
-    expect(transferPools).toBeUndefined();
+    expect(transferPools).toHaveLength(0);
   });
 });
 

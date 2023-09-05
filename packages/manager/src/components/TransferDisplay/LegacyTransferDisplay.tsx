@@ -1,3 +1,9 @@
+// ======================================================================================
+// This is a copy of the original TransferDisplay component, which is getting deprecated.
+// It can be safely deleted once the new TransferDisplay component
+// is fully rolled out and the dcSpecificPricing flag is cleaned up.
+// ======================================================================================
+
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
