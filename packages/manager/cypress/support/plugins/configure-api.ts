@@ -55,15 +55,6 @@ const configureApiRequests = (
 };
 
 /**
- * Checks for the presence of `MANAGER_OAUTH` environment variable.
- * Authenticates the Linode APIv4 library so subequent plugins can utilize it.
- *
- * If the `MANAGER_OAUTH` environment variable is not defined, or if API
- * authentication otherwise fails, an error is thrown and the tests will not
- * run.
- */
-
-/**
  * Configures API requests to use configure access token and API root.
  *
  * This configuration only applies to API requests made during Cypress start-up,
