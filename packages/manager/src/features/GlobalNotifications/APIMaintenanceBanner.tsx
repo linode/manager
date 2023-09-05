@@ -13,7 +13,7 @@ interface Props {
   suppliedMaintenances: SuppliedMaintenanceData[] | undefined;
 }
 
-export const APIMaintenanceBanner: React.FC<Props> = (props) => {
+export const APIMaintenanceBanner = React.memo((props: Props) => {
   const { suppliedMaintenances } = props;
 
   const { data: maintenancesData } = useMaintenanceQuery({
@@ -66,7 +66,7 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
         important
         key={scheduledAPIMaintenance.id}
         preferenceKey={scheduledAPIMaintenance.id}
-        warning
+        variant="warning"
       >
         <Stack>
           <Typography data-testid="scheduled-maintenance-banner">
@@ -92,6 +92,4 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
       )}
     </>
   );
-};
-
-export default React.memo(APIMaintenanceBanner);
+});

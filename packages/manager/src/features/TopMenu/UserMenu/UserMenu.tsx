@@ -166,15 +166,17 @@ export const UserMenu = React.memo(() => {
         </Button>
       </Tooltip>
       <Popover
-        PaperProps={{
-          sx: {
-            paddingX: 2.5,
-            paddingY: 2,
-          },
-        }}
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              paddingX: 2.5,
+              paddingY: 2,
+            },
+          },
         }}
         anchorEl={anchorEl}
         id={id}
@@ -192,11 +194,23 @@ export const UserMenu = React.memo(() => {
           <Box>
             <Heading>My Profile</Heading>
             <Divider color="#9ea4ae" />
-            <Grid container rowSpacing={1.5}>
-              <Grid direction="column" wrap="nowrap" xs={6}>
+            <Grid container>
+              <Grid
+                container
+                direction="column"
+                rowGap={1}
+                wrap="nowrap"
+                xs={6}
+              >
                 {profileLinks.slice(0, 4).map(renderLink)}
               </Grid>
-              <Grid direction="column" wrap="nowrap" xs={6}>
+              <Grid
+                container
+                direction="column"
+                rowGap={1}
+                wrap="nowrap"
+                xs={6}
+              >
                 {profileLinks.slice(4).map(renderLink)}
               </Grid>
             </Grid>

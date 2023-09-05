@@ -110,7 +110,7 @@ export const MigrationNotification = React.memo((props: Props) => {
 
   return (
     <>
-      <Notice important warning>
+      <Notice important variant="warning">
         <Typography>
           {notificationType === 'migration_scheduled'
             ? migrationScheduledText()

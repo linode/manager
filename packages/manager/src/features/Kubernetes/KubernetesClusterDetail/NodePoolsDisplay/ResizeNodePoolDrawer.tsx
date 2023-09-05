@@ -114,7 +114,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
           </Typography>
         </div>
 
-        {error && <Notice error text={error?.[0].reason} />}
+        {error && <Notice text={error?.[0].reason} variant="error" />}
 
         <div className={classes.section}>
           <Typography className={classes.helperText}>
@@ -135,10 +135,12 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         </div>
 
         {updatedCount < nodePool.count && (
-          <Notice important text={resizeWarning} warning />
+          <Notice important text={resizeWarning} variant="warning" />
         )}
 
-        {updatedCount < 3 && <Notice important text={nodeWarning} warning />}
+        {updatedCount < 3 && (
+          <Notice important text={nodeWarning} variant="warning" />
+        )}
 
         <ActionsPanel
           primaryButtonProps={{

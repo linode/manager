@@ -167,14 +167,19 @@ export const TwoFactor = (props: TwoFactorProps) => {
           Two-Factor Authentication (2FA)
         </Typography>
         {success && (
-          <Notice spacingBottom={16} spacingTop={16} success text={success} />
+          <Notice
+            spacingBottom={16}
+            spacingTop={16}
+            text={success}
+            variant="success"
+          />
         )}
         {generalError && (
           <Notice
-            error
             spacingBottom={16}
             spacingTop={16}
             text={generalError}
+            variant="error"
           />
         )}
         <StyledCopy data-qa-copy variant="body1">
@@ -198,7 +203,7 @@ export const TwoFactor = (props: TwoFactorProps) => {
             style={{ marginTop: '8px' }}
             text={needSecurityQuestionsCopy}
             typeProps={{ style: { fontSize: '0.875rem' } }}
-            warning
+            variant="warning"
           />
         )}
         {twoFactorEnabled && (

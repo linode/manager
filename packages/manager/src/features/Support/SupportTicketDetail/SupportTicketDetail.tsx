@@ -110,7 +110,7 @@ const SupportTicketDetail = () => {
     const target = getLinkTargets(entity);
 
     return (
-      <Notice spacingTop={12} success>
+      <Notice spacingTop={12} variant="success">
         <Stack alignItems="center" direction="row" spacing={1}>
           <EntityIcon size={20} variant={entity.type as EntityVariants} />
           <Typography>

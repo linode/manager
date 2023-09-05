@@ -113,9 +113,11 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       textFieldStyle={{ maxWidth: '415px' }}
       title="Are you sure you want to close your Linode account?"
     >
-      {errors ? <Notice error text={errors ? errors[0].reason : ''} /> : null}
+      {errors ? (
+        <Notice text={errors ? errors[0].reason : ''} variant="error" />
+      ) : null}
       <StyledNoticeWrapper>
-        <Notice spacingBottom={12} warning>
+        <Notice spacingBottom={12} variant="warning">
           <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Please note this is an extremely
             destructive action. Closing your account means that all services

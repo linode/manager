@@ -5,9 +5,21 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   addons: {
     backups: {
       price: {
-        hourly: 10,
-        monthly: 10,
+        hourly: 0.004,
+        monthly: 2.5,
       },
+      region_prices: [
+        {
+          hourly: 0.0048,
+          id: 'id-cgk',
+          monthly: 3.57,
+        },
+        {
+          hourly: 0.0056,
+          id: 'br-gru',
+          monthly: 4.17,
+        },
+      ],
     },
   },
   class: 'standard',
@@ -18,9 +30,21 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   memory: 16384,
   network_out: 10000,
   price: {
-    hourly: 0,
-    monthly: 0,
+    hourly: 0.015,
+    monthly: 10,
   },
+  region_prices: [
+    {
+      hourly: 0.021,
+      id: 'br-gru',
+      monthly: 14,
+    },
+    {
+      hourly: 0.018,
+      id: 'id-cgk',
+      monthly: 12,
+    },
+  ],
   successor: null,
   transfer: 1000,
   vcpus: 8,
