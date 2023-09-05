@@ -193,7 +193,7 @@ export const CreateCluster = () => {
     ) as CreateNodePoolData[];
 
     const payload: CreateKubeClusterPayload = {
-      control_plane: { high_availability: highAvailability },
+      control_plane: { high_availability: highAvailability ?? false },
       k8s_version,
       label,
       node_pools,
