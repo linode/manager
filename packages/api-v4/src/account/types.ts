@@ -165,7 +165,8 @@ export type GrantType =
   | 'stackscript'
   | 'volume'
   | 'database'
-  | 'firewall';
+  | 'firewall'
+  | 'vpc';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 

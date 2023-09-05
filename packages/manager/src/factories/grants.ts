@@ -39,9 +39,9 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
     add_nodebalancers: true,
     add_stackscripts: true,
     add_volumes: true,
+    add_vpcs: true,
     cancel_account: false,
     longview_subscription: true,
-    add_vpcs: true,
   },
   image: [
     {
@@ -83,6 +83,23 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
       id: 123,
       label: 'example-entity',
       permissions: 'read_only',
+    },
+  ],
+  vpc: [
+    {
+      id: 123,
+      label: 'example-entity1',
+      permissions: 'read_only',
+    },
+    {
+      id: 124,
+      label: 'example-entity2',
+      permissions: 'read_write',
+    },
+    {
+      id: 125,
+      label: 'example-entity3',
+      permissions: null,
     },
   ],
 });
