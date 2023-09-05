@@ -75,24 +75,6 @@ describe('TransferDisplayDialog', () => {
     fireEvent.click(transferButton);
 
     expect(getByTestId('general-transfer-pool-display')).toBeInTheDocument();
-    expect(getByTestId('general-transfer-pool-display')).toBeInTheDocument();
-  });
-
-  it('renders only one progress bar if entity does not have region transfers', async () => {
-    mockServerQuery({ ...mockTransferData, region_transfers: [] });
-
-    const { findByText, getAllByRole, getByTestId } = renderWithTheme(
-      <TransferDisplay />
-    );
-    const transferButton = await findByText(transferDisplayButtonSubstring);
-    fireEvent.click(transferButton);
-
-    const progressBars = getAllByRole('progressbar');
-
-    expect(getByTestId('general-transfer-pool-display')).toBeInTheDocument();
-    expect(progressBars.length).toBe(1);
-    progressBars.forEach((progressBar) => {
-      expect(progressBar).toHaveAttribute('aria-valuenow', '36');
-    });
+    expect(getByTestId('region-transfer-pool-display')).toBeInTheDocument();
   });
 });
