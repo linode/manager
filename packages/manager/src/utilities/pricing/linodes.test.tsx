@@ -1,7 +1,7 @@
 import { linodeTypeFactory } from 'src/factories';
 
+import { getLinodeBackupPrice } from './backups';
 import {
-  getLinodeBackupPrice,
   getLinodeRegionPrice,
   isLinodeTypeDifferentPriceInSelectedRegion,
 } from './linodes';
