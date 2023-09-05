@@ -1,3 +1,5 @@
+import { Linode } from '@linode/api-v4';
+import { linodeFactory } from '@src/factories';
 import { createLinode } from 'support/api/linodes';
 import {
   containsClick,
@@ -6,8 +8,34 @@ import {
   getClick,
   getVisible,
 } from 'support/helpers';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { apiMatcher } from 'support/util/intercepts';
+import {
+  tieredPricingRegionNotice,
+  tieredPricingDocsLabel,
+  tieredPricingDocsUrl,
+  tieredPricingPlanPlaceholder,
+} from 'support/constants/tiered-pricing';
+
+/**
+ * Returns the Cloud Manager URL to clone a given Linode.
+ *
+ * @param linode - Linode for which to retrieve clone URL.
+ *
+ * @returns Cloud Manager Clone URL for Linode.
+ */
+const getLinodeCloneUrl = (linode: Linode): string => {
+  return `/linodes/create?linodeID=${linode.id}&type=Clone+Linode&typeID=${linode.type}&regionID=${linode.region}`;
+};
 
 describe('clone linode', () => {
   it('clone linode', () => {
@@ -50,5 +78,35 @@ describe('clone linode', () => {
         });
       }
     });
+  });
+
+  it.only('shows tiered pricing information during clone flow', () => {
+    const mockLinode = linodeFactory.build();
+    mockGetLinodes([mockLinode]).as('getLinodes');
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    mockAppendFeatureFlags({
+      dcSpecificPricing: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    cy.visitWithLogin(getLinodeCloneUrl(mockLinode));
+    cy.wait([
+      '@getLinodes',
+      '@getLinode',
+      '@getFeatureFlags',
+      '@getClientStream',
+    ]);
+
+    // TODO Move these assertions to end-to-end test once `dcSpecificPricing` flag goes away.
+    cy.findByText(tieredPricingRegionNotice, { exact: false }).should(
+      'be.visible'
+    );
+    cy.findByText(tieredPricingDocsLabel)
+      .should('be.visible')
+      .should('have.attr', 'href', tieredPricingDocsUrl);
+
+    //cy.findByText(tieredPricingPlanPlaceholder).should('be.visible');
+
+    cy.wait(100000);
   });
 });
