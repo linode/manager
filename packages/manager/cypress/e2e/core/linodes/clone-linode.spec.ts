@@ -29,13 +29,10 @@ describe('clone linode', () => {
 
         ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
 
-        cy.get('[data-qa-tp="Region"]')
-          .parent()
+        cy.contains('Select a Region')
           .should('be.visible')
-          .within(() => {
-            containsClick('Select a Region');
-            containsClick('Newark, NJ');
-          });
+          .click()
+          .type(`Newark, NJ{enter}`);
 
         getVisible('[data-qa-summary]').within(() => {
           containsVisible(linode.label);

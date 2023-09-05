@@ -132,7 +132,7 @@ export const TPAProviders = (props: Props) => {
             <Typography variant="h3">
               {currentProvider.displayName} Authentication
             </Typography>
-            <StyledNotice spacingBottom={16} spacingTop={16} warning>
+            <StyledNotice spacingBottom={16} spacingTop={16} variant="warning">
               Your login credentials are currently managed via{' '}
               {currentProvider.displayName}.
             </StyledNotice>

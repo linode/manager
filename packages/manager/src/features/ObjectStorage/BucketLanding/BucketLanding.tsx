@@ -220,7 +220,7 @@ export const BucketLanding = () => {
         title={`Delete Bucket ${bucketLabel}`}
         typographyStyle={{ marginTop: '20px' }}
       >
-        <Notice warning>
+        <Notice variant="warning">
           <Typography style={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Deleting a bucket is permanent and
             can&rsquo;t be undone.
@@ -288,7 +288,7 @@ const Banner = React.memo(({ regionsAffected }: BannerProps) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (
-    <Notice important warning>
+    <Notice important variant="warning">
       <Typography component="div" style={{ fontSize: '1rem' }}>
         There was an error loading buckets in{' '}
         {moreThanOneRegionAffected

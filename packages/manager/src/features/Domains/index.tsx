@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const DomainCreate = React.lazy(() =>
@@ -22,6 +23,7 @@ const DomainDetail = React.lazy(() =>
 export const DomainsRoutes = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
+      <ProductInformationBanner bannerLocation="Domains" />
       <Switch>
         <Route component={DomainCreate} exact path="/domains/create" />
         <Route

@@ -53,9 +53,9 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
               {status && (
                 <Notice
                   data-qa-error
-                  error
                   key={status}
                   text={status.generalError}
+                  variant="error"
                 />
               )}
 

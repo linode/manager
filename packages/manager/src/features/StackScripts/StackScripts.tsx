@@ -7,6 +7,7 @@ import {
   useLocation,
   useRouteMatch,
 } from 'react-router-dom';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
@@ -31,6 +32,7 @@ export const StackScripts = () => {
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
+      <ProductInformationBanner bannerLocation="StackScripts" />
       <Switch>
         <Route component={StackScriptsLanding} path={`${path}/account`} />
         <Route component={StackScriptsLanding} path={`${path}/community`} />

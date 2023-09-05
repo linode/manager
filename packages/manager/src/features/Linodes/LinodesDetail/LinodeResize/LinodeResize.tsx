@@ -163,11 +163,11 @@ export const LinodeResize = (props: Props) => {
         {hostMaintenance && <HostMaintenanceError />}
         {disksError && (
           <Notice
-            error
             text="There was an error loading your Linode&rsquo;s Disks."
+            variant="error"
           />
         )}
-        {error && <Notice error>{error}</Notice>}
+        {error && <Notice variant="error">{error}</Notice>}
         <Typography data-qa-description>
           If you&rsquo;re expecting a temporary burst of traffic to your
           website, or if you&rsquo;re not using your Linode as much as you

@@ -51,7 +51,9 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
   return (
     <Drawer onClose={onClose} open={open} title="Clone Domain">
       {noPermission && (
-        <Notice error>You do not have permission to create new Domains.</Notice>
+        <Notice variant="error">
+          You do not have permission to create new Domains.
+        </Notice>
       )}
       <form onSubmit={formik.handleSubmit}>
         <RadioGroup aria-label="type" name="type" row value={domain?.type}>

@@ -29,7 +29,7 @@ interface UserDataProps extends UserDataAccordionProps {
 export interface AddonsPanelProps {
   accountBackups: boolean;
   backups: boolean;
-  backupsMonthly?: null | number;
+  backupsMonthlyPrice?: null | number;
   changeBackups: () => void;
   createType: CreateTypes;
   disabled?: boolean;
@@ -51,6 +51,7 @@ export interface AddonsPanelProps {
 export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const {
     accountBackups,
+    backupsMonthlyPrice,
     changeBackups,
     createType,
     disabled,
@@ -93,14 +94,11 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     : null;
 
   const renderBackupsPrice = () => {
-    const { backupsMonthly } = props;
-    return (
-      backupsMonthly && (
-        <Typography variant="body1">
-          <Currency quantity={backupsMonthly} /> per month
-        </Typography>
-      )
-    );
+    return backupsMonthlyPrice && backupsMonthlyPrice > 0 ? (
+      <Typography variant="body1">
+        <Currency quantity={backupsMonthlyPrice} /> per month
+      </Typography>
+    ) : undefined;
   };
 
   const checkBackupsWarning = () => {
@@ -186,7 +184,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           )}
         </Typography>
         {showBackupsWarning && (
-          <Notice warning>
+          <Notice variant="warning">
             Linodes must have a disk formatted with an ext3 or ext4 file system
             to use the backup service.
           </Notice>
@@ -198,6 +196,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
                 accountBackups ? 'auto backup enabled' : 'auto backup disabled'
               }
               checked={accountBackups || props.backups}
+              data-testid="backups"
               disabled={accountBackups || disabled || isBareMetal}
               onChange={changeBackups}
             />

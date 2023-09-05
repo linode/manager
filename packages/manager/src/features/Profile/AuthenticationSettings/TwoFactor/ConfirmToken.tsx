@@ -47,7 +47,7 @@ export const ConfirmToken = React.memo((props: Props) => {
           }
           spacingBottom={8}
           spacingTop={16}
-          warning
+          variant="warning"
         />
       )}
       <Box display="flex" justifyContent="flex-end" style={{ gap: 16 }}>

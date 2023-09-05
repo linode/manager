@@ -5,11 +5,14 @@ import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
+import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
+import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
 
 import {
   getTotalClusterMemoryCPUAndStorage,
@@ -57,6 +60,8 @@ export const KubeClusterSpecs = (props: Props) => {
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
 
+  const flags = useFlags();
+
   const { CPU, RAM, Storage } = getTotalClusterMemoryCPUAndStorage(
     pools ?? [],
     types ?? []
@@ -73,6 +78,14 @@ export const KubeClusterSpecs = (props: Props) => {
       pools ?? [],
       types ?? [],
       cluster.control_plane.high_availability
+        ? parseFloat(
+            getDCSpecificPrice({
+              basePrice: LKE_HA_PRICE,
+              flags,
+              regionId: region?.id,
+            })
+          )
+        : undefined
     ).toFixed(2)}/month`,
   ];
 

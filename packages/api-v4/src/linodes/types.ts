@@ -1,3 +1,4 @@
+import { Region } from 'src/regions';
 import { IPAddress, IPRange } from '../networking/types';
 import { SSHKey } from '../profile/types';
 
@@ -289,6 +290,10 @@ export interface PriceObject {
   hourly: number | null;
 }
 
+interface RegionPriceObject extends PriceObject {
+  id: Region['id'];
+}
+
 export interface BaseType {
   id: string;
   label: string;
@@ -303,8 +308,9 @@ export interface LinodeType extends BaseType {
   network_out: number;
   gpus: number;
   price: PriceObject;
+  region_prices: RegionPriceObject[];
   addons: {
-    backups: { price: PriceObject };
+    backups: { price: PriceObject; region_prices: RegionPriceObject[] };
   };
 }
 
@@ -345,6 +351,7 @@ export interface CreateLinodeRequest {
   authorized_users?: string[];
   interfaces?: Interface[];
   metadata?: UserData;
+  firewall_id?: number;
 }
 
 export type RescueRequestObject = Pick<

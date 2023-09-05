@@ -7,3 +7,5 @@ export * from './routes';
 export * from './service-targets';
 
 export * from './types';
+
+export * from './certificates';

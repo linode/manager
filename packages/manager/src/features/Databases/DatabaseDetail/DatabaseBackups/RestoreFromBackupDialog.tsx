@@ -65,10 +65,10 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
             getAPIErrorOrDefault(error, 'Unable to restore this backup.')[0]
               .reason
           }
-          error
+          variant="error"
         />
       ) : null}
-      <Notice warning>
+      <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Restoring from a backup will erase all
           existing data on this cluster.

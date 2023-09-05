@@ -5,13 +5,13 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { RadioGroup } from 'src/components/RadioGroup';
 import {
   useAllocateIPMutation,
   useCreateIPv6RangeMutation,
@@ -166,7 +166,7 @@ export const AddIPDrawer = (props: Props) => {
       <React.Fragment>
         <Typography variant="h2">IPv4</Typography>
         {Boolean(ipv4Error) && (
-          <Notice error spacingTop={8} text={ipv4Error?.[0].reason} />
+          <Notice spacingTop={8} text={ipv4Error?.[0].reason} variant="error" />
         )}
         <Typography sx={{ marginTop: '1rem' }} variant="h3">
           Select type
@@ -224,7 +224,7 @@ export const AddIPDrawer = (props: Props) => {
           IPv6
         </Typography>
         {Boolean(ipv6Error) && (
-          <Notice error spacingTop={8} text={ipv6Error?.[0].reason} />
+          <Notice spacingTop={8} text={ipv6Error?.[0].reason} variant="error" />
         )}
         <Typography sx={{ marginTop: '1rem' }} variant="h3">
           Select prefix

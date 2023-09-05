@@ -79,7 +79,7 @@ export const Apache: React.FC<Props> = (props) => {
 
   if (notice !== null) {
     return (
-      <Notice warning>
+      <Notice variant="warning">
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}

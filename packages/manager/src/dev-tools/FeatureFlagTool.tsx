@@ -2,6 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { FlagSet, Flags } from 'src/featureFlags';
 import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
@@ -12,9 +13,10 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'metadata', label: 'Metadata' },
-  { flag: 'databaseBeta', label: 'Database Beta' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'aglb', label: 'AGLB' },
+  { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
+  { flag: 'selfServeBetas', label: 'Self Serve Betas' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {
@@ -73,4 +75,4 @@ const FeatureFlagTool: React.FC<{}> = () => {
   );
 };
 
-export default FeatureFlagTool;
+export default withFeatureFlagProvider(FeatureFlagTool);

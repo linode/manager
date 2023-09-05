@@ -18,8 +18,8 @@ export interface CreateLoadbalancerPayload {
 }
 
 export interface UpdateLoadbalancerPayload {
-  label: string;
-  regions: string[];
+  label?: string;
+  regions?: string[];
   tags?: string[];
   configuration_ids?: number[];
 }

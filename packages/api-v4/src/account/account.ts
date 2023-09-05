@@ -9,8 +9,8 @@ import {
   AccountSettings,
   CancelAccount,
   CancelAccountPayload,
-  NetworkUtilization,
   Agreements,
+  RegionalNetworkUtilization,
 } from './types';
 
 /**
@@ -31,7 +31,7 @@ export const getAccountInfo = () => {
  *
  */
 export const getNetworkUtilization = () =>
-  Request<NetworkUtilization>(
+  Request<RegionalNetworkUtilization>(
     setURL(`${API_ROOT}/account/transfer`),
     setMethod('GET')
   );

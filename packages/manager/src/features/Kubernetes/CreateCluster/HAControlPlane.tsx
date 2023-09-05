@@ -9,6 +9,11 @@ import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
 
+export interface HAControlPlaneProps {
+  highAvailabilityPrice: number | undefined;
+  setHighAvailability: (ha: boolean | undefined) => void;
+}
+
 export const HACopy = () => (
   <Typography>
     Recommended for production workloads, a high availability (HA) control plane
@@ -21,21 +26,12 @@ export const HACopy = () => (
   </Typography>
 );
 
-export interface Props {
-  HIGH_AVAILABILITY_PRICE: number | undefined;
-  setHighAvailability: (ha: boolean | undefined) => void;
-}
-
-export const HAControlPlane = (props: Props) => {
-  const { HIGH_AVAILABILITY_PRICE, setHighAvailability } = props;
+export const HAControlPlane = (props: HAControlPlaneProps) => {
+  const { highAvailabilityPrice, setHighAvailability } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setHighAvailability(e.target.value === 'yes');
   };
-
-  if (HIGH_AVAILABILITY_PRICE === undefined) {
-    return null;
-  }
 
   return (
     <FormControl data-testid="ha-control-plane-form">
@@ -56,9 +52,11 @@ export const HAControlPlane = (props: Props) => {
         onChange={(e) => handleChange(e)}
       >
         <FormControlLabel
-          label={`Yes, enable HA control plane. (${displayPrice(
-            HIGH_AVAILABILITY_PRICE
-          )}/month)`}
+          label={`Yes, enable HA control plane. ${
+            highAvailabilityPrice
+              ? `(${displayPrice(highAvailabilityPrice)}/month)`
+              : '(Select a Region to view price information.)'
+          }`}
           control={<Radio data-testid="ha-radio-button-yes" />}
           name="yes"
           value="yes"

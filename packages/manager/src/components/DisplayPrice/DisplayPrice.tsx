@@ -5,6 +5,7 @@ import { Currency } from 'src/components/Currency';
 import { Typography } from 'src/components/Typography';
 
 export interface DisplayPriceProps {
+  decimalPlaces?: number;
   fontSize?: string;
   interval?: string;
   price: number;
@@ -14,7 +15,7 @@ export const displayPrice = (price: number) => `$${price.toFixed(2)}`;
 
 export const DisplayPrice = (props: DisplayPriceProps) => {
   const theme = useTheme<Theme>();
-  const { fontSize, interval, price } = props;
+  const { decimalPlaces, fontSize, interval, price } = props;
 
   const sx: SxProps = {
     color: theme.palette.text.primary,
@@ -25,7 +26,7 @@ export const DisplayPrice = (props: DisplayPriceProps) => {
   return (
     <>
       <Typography sx={sx} variant="h3">
-        <Currency quantity={price} />
+        <Currency decimalPlaces={decimalPlaces} quantity={price} />
       </Typography>
       {interval && (
         <Typography sx={sx} variant="h3">

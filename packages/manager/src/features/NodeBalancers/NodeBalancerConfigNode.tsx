@@ -74,7 +74,7 @@ export const NodeBalancerConfigNode = React.memo(
           )}
           {nodesErrorMap.none && (
             <Grid>
-              <Notice error text={nodesErrorMap.none} />
+              <Notice text={nodesErrorMap.none} variant="error" />
             </Grid>
           )}
           <Grid container spacing={2}>

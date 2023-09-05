@@ -12,7 +12,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 
-const ComplianceUpdateModal = () => {
+export const ComplianceUpdateModal = () => {
   const [error, setError] = React.useState('');
   const [checked, setChecked] = React.useState(false);
   const queryClient = useQueryClient();
@@ -93,5 +93,3 @@ const ComplianceUpdateModal = () => {
     </ConfirmationDialog>
   );
 };
-
-export default ComplianceUpdateModal;

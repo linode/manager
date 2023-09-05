@@ -24,7 +24,7 @@ import {
   notificationContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
-import ToastNotifications from 'src/features/ToastNotifications';
+import { ToastNotifications } from 'src/features/ToastNotifications/ToastNotifications';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -176,8 +176,8 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
-const Betas = React.lazy(() => import('src/features/Betas/BetasLanding'));
-const VPC = React.lazy(() => import('src/features/VPC'));
+const BetaRoutes = React.lazy(() => import('src/features/Betas'));
+const VPC = React.lazy(() => import('src/features/VPCs'));
 
 const MainContent = (props: CombinedProps) => {
   const { classes, cx } = useStyles();
@@ -356,9 +356,11 @@ const MainContent = (props: CombinedProps) => {
                               <Route component={Databases} path="/databases" />
                             ) : null}
                             {flags.selfServeBetas ? (
-                              <Route component={Betas} path="/betas" />
+                              <Route component={BetaRoutes} path="/betas" />
                             ) : null}
-                            {flags.vpc && <Route component={VPC} path="/vpc" />}
+                            {flags.vpc && (
+                              <Route component={VPC} path="/vpcs" />
+                            )}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />

@@ -26,7 +26,7 @@ export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
       }}
       data-qa-label-header
     >
-      {error && <Notice error text={error} />}
+      {error && <Notice text={error} variant="error" />}
       <TextField
         {...(labelFieldProps || {
           label: 'Label',

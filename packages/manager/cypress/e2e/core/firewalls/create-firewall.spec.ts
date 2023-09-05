@@ -11,7 +11,7 @@ import { cleanUp } from 'support/util/cleanup';
 authenticate();
 describe('create firewall', () => {
   before(() => {
-    cleanUp(['linodes', 'firewalls']);
+    cleanUp(['lke-clusters', 'linodes', 'firewalls']);
   });
 
   /*

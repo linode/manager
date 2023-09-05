@@ -123,7 +123,7 @@ const LinodesDetailNavigation = () => {
             <DismissibleBanner
               preferenceKey={`smtp-restriction-notice-${linode?.label}`}
               spacingTop={32}
-              warning
+              variant="warning"
             >
               <Grid xs={12}>{text}</Grid>
             </DismissibleBanner>

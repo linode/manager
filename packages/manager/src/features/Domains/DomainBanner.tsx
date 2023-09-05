@@ -21,13 +21,13 @@ export const DomainBanner = React.memo((props: DomainBannerProps) => {
 
   return (
     <StyledDismissibleBanner
-      warning
-      important
-      preferenceKey={KEY}
       options={{
         expiry: DateTime.utc().plus({ days: 30 }).toISO(),
         label: KEY,
       }}
+      important
+      preferenceKey={KEY}
+      variant="warning"
     >
       <>
         <StyledTypography>

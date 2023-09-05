@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const DatabaseLanding = React.lazy(() => import('./DatabaseLanding'));
@@ -14,6 +15,7 @@ const Database = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Databases" />
+      <ProductInformationBanner bannerLocation="Databases" />
       <Switch>
         <Route component={DatabaseLanding} exact path={path} />
         <Route component={DatabaseCreate} path={`${path}/create`} />

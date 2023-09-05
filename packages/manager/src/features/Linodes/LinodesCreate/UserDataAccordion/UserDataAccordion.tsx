@@ -99,7 +99,7 @@ export const UserDataAccordion = (props: UserDataAccordionProps) => {
         </Link>{' '}
       </Typography>
       {formatWarning ? (
-        <Notice spacingBottom={16} spacingTop={16} warning>
+        <Notice spacingBottom={16} spacingTop={16} variant="warning">
           The user data may be formatted incorrectly.
         </Notice>
       ) : null}

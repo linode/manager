@@ -197,7 +197,9 @@ describe('object storage end-to-end tests', () => {
 
       // Navigate to new bucket page, upload and delete an object.
       cy.visitWithLogin(bucketPage);
-      cy.findByText(bucketLabel).should('be.visible');
+      ui.entityHeader.find().within(() => {
+        cy.findByText(bucketLabel).should('be.visible');
+      });
 
       uploadFile(bucketFiles[0].path, bucketFiles[0].name);
 

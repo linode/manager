@@ -40,42 +40,41 @@ const ccLastFourGpayDefault = (gpayDefault[0].data as CreditCardData).last_four;
 
 describe('Default Payment Method', () => {
   it('makes google pay default', () => {
-    mockGetPaymentMethods(ccDefault).as('getPaymentMethod');
+    mockGetPaymentMethods(ccDefault).as('getPaymentMethods');
     mockSetDefaultPaymentMethod(gpayIdCcDefault).as('changeDefault');
     cy.visitWithLogin('/account/billing');
-    cy.wait('@getPaymentMethod');
+    cy.wait('@getPaymentMethods');
 
     ui.actionMenu
       .findByTitle(`Action menu for card ending in ${gpayLastFourCcDefault}`)
       .should('be.visible')
       .click();
 
-    mockGetPaymentMethods(gpayDefault).as('getPaymentMethod');
+    mockGetPaymentMethods(gpayDefault).as('getPaymentMethods');
     ui.actionMenuItem.findByTitle('Make Default').should('be.visible').click();
 
-    cy.wait('@changeDefault');
-    cy.wait('@getPaymentMethod');
+    cy.wait(['@changeDefault', '@getPaymentMethods']);
     cy.get('[data-qa-payment-row=google_pay]').within(() => {
       cy.findByText('DEFAULT').should('be.visible');
     });
   });
 
   it('makes cc default', () => {
-    mockGetPaymentMethods(gpayDefault).as('getPaymentMethod');
+    mockGetPaymentMethods(gpayDefault).as('getPaymentMethods');
     mockSetDefaultPaymentMethod(ccIdGpayDefault).as('changeDefault');
     cy.visitWithLogin('/account/billing');
-    cy.wait('@getPaymentMethod');
+    cy.wait('@getPaymentMethods');
 
     ui.actionMenu
       .findByTitle(`Action menu for card ending in ${ccLastFourGpayDefault}`)
       .should('be.visible')
       .click();
 
-    mockGetPaymentMethods(ccDefault).as('getPaymentMethod');
+    mockGetPaymentMethods(ccDefault).as('getPaymentMethods');
+
     ui.actionMenuItem.findByTitle('Make Default').should('be.visible').click();
 
-    cy.wait('@changeDefault');
-    cy.wait('@getPaymentMethod');
+    cy.wait(['@changeDefault', '@getPaymentMethods']);
     cy.get('[data-qa-payment-row=credit_card]').within(() => {
       cy.findByText('DEFAULT').should('be.visible');
     });

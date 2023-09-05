@@ -116,12 +116,12 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
       <form onSubmit={formik.handleSubmit}>
         {readOnly && (
           <Notice
-            error
             important
             text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
+            variant="error"
           />
         )}
-        {generalError && <Notice error={true} text={generalError} />}
+        {generalError && <Notice text={generalError} variant="error" />}
         <LinodeSelect
           onSelectionChange={(linode) => {
             if (linode !== null) {

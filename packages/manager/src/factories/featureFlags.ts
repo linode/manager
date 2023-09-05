@@ -5,6 +5,10 @@ import { ProductInformationBannerFlag } from 'src/featureFlags';
 export const productInformationBannerFactory = Factory.Sync.makeFactory<ProductInformationBannerFlag>(
   {
     bannerLocation: 'Object Storage',
+    decoration: {
+      important: 'true',
+      variant: 'warning',
+    },
     expirationDate: '2030-08-01',
     key: Factory.each((i) => `product-information-banner-${i}`),
     // safe
