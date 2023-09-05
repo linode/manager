@@ -50,7 +50,7 @@ export const UserDefinedSelect = (props: Props) => {
   if (oneof.length > 4) {
     return (
       <div>
-        {error && <Notice error spacingTop={8} text={error} />}
+        {error && <Notice spacingTop={8} text={error} variant="error" />}
         <TextField
           label={field.label}
           onChange={handleSelectOneOf}
@@ -70,7 +70,7 @@ export const UserDefinedSelect = (props: Props) => {
   }
   return (
     <div className={classes.root}>
-      {error && <Notice error spacingTop={8} text={error} />}
+      {error && <Notice spacingTop={8} text={error} variant="error" />}
       <InputLabel className={classes.radioGroupLabel}>
         {field.label}
         {!isOptional && '*'}

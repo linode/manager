@@ -225,8 +225,8 @@ const UserDetail: React.FC = () => {
 
         {createdUsername && (
           <Notice
-            success
             text={`User ${createdUsername} created successfully`}
+            variant="success"
           />
         )}
         <TabPanels>

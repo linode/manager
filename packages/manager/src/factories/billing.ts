@@ -12,6 +12,7 @@ export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
   from: '2020-01-01T12:00:00',
   label: Factory.each((i) => `Nanode 1GB - my-linode-${i} (${i})`),
   quantity: 730,
+  region: 'id-cgk',
   tax: 0,
   to: '2020-01-31T12:00:00',
   total: 5,

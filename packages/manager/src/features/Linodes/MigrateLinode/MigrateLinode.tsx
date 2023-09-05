@@ -12,6 +12,7 @@ import { Typography } from 'src/components/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import useEvents from 'src/hooks/useEvents';
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -124,13 +125,12 @@ export const MigrateLinode = React.memo((props: Props) => {
       return;
     }
 
-    const regionSupportsMetadata = (_region: string) =>
-      regionsData
-        ?.find((region) => region.id === _region)
-        ?.capabilities.includes('Metadata') ?? false;
-
-    const currentRegionSupportsMetadata = regionSupportsMetadata(linode.region);
+    const currentRegionSupportsMetadata = regionSupportsMetadata(
+      regionsData ?? [],
+      linode.region
+    );
     const selectedRegionSupportsMetadata = regionSupportsMetadata(
+      regionsData ?? [],
       selectedRegion
     );
 
@@ -206,7 +206,7 @@ export const MigrateLinode = React.memo((props: Props) => {
       open={open}
       title={`Migrate Linode ${linode.label ?? ''} to another region`}
     >
-      {error && <Notice error text={error?.[0].reason} />}
+      {error && <Notice text={error?.[0].reason} variant="error" />}
       <Typography sx={{ marginTop: theme.spacing(2) }} variant="h2">
         {newLabel}
       </Typography>
@@ -226,14 +226,13 @@ export const MigrateLinode = React.memo((props: Props) => {
         setConfirmed={setConfirmed}
       />
       <ConfigureForm
+        backupEnabled={linode.backups.enabled}
         currentRegion={region}
         handleSelectRegion={handleSelectRegion}
+        linodeType={linode.type}
         selectedRegion={selectedRegion}
       />
       <Box
-        alignItems="center"
-        display="flex"
-        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
         sx={{
           marginTop: theme.spacing(3),
           [theme.breakpoints.down('md')]: {
@@ -241,6 +240,9 @@ export const MigrateLinode = React.memo((props: Props) => {
             justifyContent: 'flex-end',
           },
         }}
+        alignItems="center"
+        display="flex"
+        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
       >
         {showAgreement ? (
           <StyledAgreementCheckbox
@@ -256,14 +258,14 @@ export const MigrateLinode = React.memo((props: Props) => {
             !selectedRegion ||
             (showAgreement && !hasSignedAgreement)
           }
-          buttonType="primary"
-          loading={isLoading}
-          onClick={handleMigrate}
           sx={{
             [theme.breakpoints.down('md')]: {
               marginTop: theme.spacing(2),
             },
           }}
+          buttonType="primary"
+          loading={isLoading}
+          onClick={handleMigrate}
         >
           Enter Migration Queue
         </Button>

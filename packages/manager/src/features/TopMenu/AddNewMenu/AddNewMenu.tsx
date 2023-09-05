@@ -82,7 +82,7 @@ export const AddNewMenu = () => {
       entity: 'VPC',
       hide: !flags.vpc,
       icon: VPCIcon,
-      link: '/vpc/create',
+      link: '/vpcs/create',
     },
     {
       description: 'Control network access to your Linodes',
@@ -147,10 +147,12 @@ export const AddNewMenu = () => {
         MenuListProps={{
           'aria-labelledby': 'create-menu',
         }}
-        PaperProps={{
-          // UX requested a drop shadow that didn't affect the button.
-          // If we revise our theme's shadows, we could consider removing
-          sx: { boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)' },
+        slotProps={{
+          paper: {
+            // UX requested a drop shadow that didn't affect the button.
+            // If we revise our theme's shadows, we could consider removing
+            sx: { boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)' },
+          },
         }}
         sx={{
           '& hr': {
