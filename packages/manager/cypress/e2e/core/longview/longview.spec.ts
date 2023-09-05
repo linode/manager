@@ -11,7 +11,7 @@ import { authenticate } from 'support/api/authentication';
 authenticate();
 describe('longview', () => {
   before(() => {
-    cleanUp('longview-clients');
+    cleanUp(['linodes', 'longview-clients']);
   });
 
   it('tests longview', () => {

@@ -1,6 +1,4 @@
-import { linodeFactory, linodeTypeFactory } from 'src/factories';
-
-import { getFailureNotificationText, getTotalBackupsPrice } from './utils';
+import { getFailureNotificationText } from './utils';
 
 describe('getFailureNotificationText', () => {
   it('has message for when all enables fail', () => {
@@ -24,16 +22,5 @@ describe('getFailureNotificationText', () => {
     expect(
       getFailureNotificationText({ failedCount: 1, successCount: 5 })
     ).toBe('Enabled backups successfully for 5 Linodes, but 1 Linode failed.');
-  });
-});
-
-describe('getTotalBackupsPrice', () => {
-  it('correctly calculates the total price for Linode backups', () => {
-    const linodes = linodeFactory.buildList(3, { type: 'my-type' });
-    const types = linodeTypeFactory.buildList(1, {
-      addons: { backups: { price: { monthly: 2.5 } } },
-      id: 'my-type',
-    });
-    expect(getTotalBackupsPrice(linodes, types)).toBe(7.5);
   });
 });
