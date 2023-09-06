@@ -20,7 +20,9 @@ describe('BetasLanding', () => {
     const enrolledPageHeader = getByText('Currently Enrolled Betas', {
       selector: 'h2',
     });
-    const activePageHeader = getByText('Available Betas', { selector: 'h2' });
+    const activePageHeader = getByText('Available & Upcoming Betas', {
+      selector: 'h2',
+    });
     const expiredPageHeader = getByText('Beta Participation History', {
       selector: 'h2',
     });

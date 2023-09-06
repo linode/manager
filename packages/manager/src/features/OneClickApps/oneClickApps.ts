@@ -797,6 +797,53 @@ export const oneClickApps: OCA[] = [
     description:
       'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
     logo_url: 'nomad.svg',
+    name: 'HashiCorp Nomad Cluster',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-cluster',
+        title: 'Deploy HashiCorp Nomad Cluster through the Linode Marketplace',
+      },
+    ],
+    summary: 'Flexible scheduling and orchestration for diverse workloads.',
+    website: 'https://www.nomadproject.io/docs',
+  },
+  {
+    alt_description:
+      'HashiCorp Nomad clients for horizontally scaling a Nomad One-Click Cluster',
+    alt_name: 'Container scheduler and orchestrator',
+    categories: ['Development'],
+    colors: {
+      end: '545556',
+      start: '60dea9',
+    },
+    description:
+      'A simple deployment of multiple clients to horizontally scale an existing Nomad One-Click Cluster.',
+    logo_url: 'nomad.svg',
+    name: 'HashiCorp Nomad Clients Cluster',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-clients-cluster',
+        title:
+          'Deploy HashiCorp Nomad Clients Cluster through the Linode Marketplace',
+      },
+    ],
+    summary: 'Flexible scheduling and orchestration for diverse workloads.',
+    website: 'https://www.nomadproject.io/docs',
+  },
+  {
+    alt_description:
+      'HashiCorp containerization tool to use instead of or with Kubernetes',
+    alt_name: 'Container scheduler and orchestrator',
+    categories: ['Development'],
+    colors: {
+      end: '545556',
+      start: '60dea9',
+    },
+    description:
+      'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
+    logo_url: 'nomad.svg',
     name: 'HashiCorp Nomad',
     related_guides: [
       {

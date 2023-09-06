@@ -272,8 +272,8 @@ const databases = [
     return res(
       ctx.json({
         ...databaseFactory.build({
-          label: payload?.label ?? 'Database',
           engine: req.params.engine,
+          label: payload?.label ?? 'Database',
         }),
       })
     );
@@ -436,6 +436,9 @@ const vpc = [
         })
       )
     );
+  }),
+  rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
   }),
   rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
@@ -642,6 +645,8 @@ export const handlers = [
         linodeFactory.build({
           backups: { enabled: false },
           id,
+          label: 'DC-Specific Pricing Linode',
+          region: 'id-cgk',
         })
       )
     );
@@ -710,7 +715,10 @@ export const handlers = [
   rest.put('*/lke/clusters/:clusterId', async (req, res, ctx) => {
     const id = Number(req.params.clusterId);
     const k8s_version = req.params.k8s_version;
-    const cluster = kubernetesAPIResponse.build({ id, k8s_version });
+    const cluster = kubernetesAPIResponse.build({
+      id,
+      k8s_version,
+    });
     return res(ctx.json(cluster));
   }),
   rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
@@ -733,6 +741,10 @@ export const handlers = [
   rest.get('*/firewalls/*/devices', (req, res, ctx) => {
     const devices = firewallDeviceFactory.buildList(10);
     return res(ctx.json(makeResourcePage(devices)));
+  }),
+  rest.get('*/firewalls/:firewallId', (req, res, ctx) => {
+    const firewall = firewallFactory.build();
+    return res(ctx.json(firewall));
   }),
   rest.put('*/firewalls/:firewallId', (req, res, ctx) => {
     const firewall = firewallFactory.build({
@@ -917,6 +929,26 @@ export const handlers = [
   }),
   rest.get('*/kubeconfig', (req, res, ctx) => {
     return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
+  }),
+  rest.get('*invoices/555/items', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        makeResourcePage([
+          invoiceItemFactory.build({
+            label: 'Linode',
+            region: 'br-gru',
+          }),
+          invoiceItemFactory.build({
+            label: 'Outbound Transfer',
+            region: null,
+          }),
+          invoiceItemFactory.build({
+            label: 'Outbound Transfer',
+            region: 'id-cgk',
+          }),
+        ])
+      )
+    );
   }),
   rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
     const items = invoiceItemFactory.buildList(10);
@@ -1456,20 +1488,37 @@ export const handlers = [
   rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.get('*/betas', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
-  }),
-  rest.get('*/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(betaFactory.build({ id: req.params.id })));
-  }),
-  rest.get('*/account/betas', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(accountBetaFactory.buildList(5))));
+  rest.get('*/account/betas', (_req, res, ctx) => {
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...accountBetaFactory.buildList(5),
+          accountBetaFactory.build({
+            ended: DateTime.now().minus({ days: 5 }).toISO(),
+            enrolled: DateTime.now().minus({ days: 20 }).toISO(),
+            started: DateTime.now().minus({ days: 30 }).toISO(),
+          }),
+        ])
+      )
+    );
   }),
   rest.get('*/account/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
   }),
-  rest.post('*/account/betas', (req, res, ctx) => {
+  rest.post('*/account/betas', (_req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.get('*/betas/:id', (req, res, ctx) => {
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(betaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
+  }),
+  rest.get('*/betas', (_req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
   }),
   ...entityTransfers,
   ...statusPage,

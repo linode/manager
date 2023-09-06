@@ -111,6 +111,7 @@ export const LinodeRebuildDialog = (props: Props) => {
           handleRebuildError={handleRebuildError}
           linodeId={linodeId ?? -1}
           linodeLabel={linode?.label}
+          linodeRegion={linode?.region}
           onClose={onClose}
           passwordHelperText={passwordHelperText}
         />
