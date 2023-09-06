@@ -176,7 +176,7 @@ export const NodeBalancerSelect = (
           ? multiple && Array.isArray(value)
             ? nodebalancers?.filter(value) ?? null
             : nodebalancers?.find(value) ?? null
-          : mapIdsToDevices(value ?? null, nodebalancers)
+          : mapIdsToDevices<NodeBalancer>(value ?? null, nodebalancers)
       }
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}

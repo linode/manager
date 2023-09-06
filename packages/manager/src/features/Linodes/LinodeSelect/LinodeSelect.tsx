@@ -126,10 +126,8 @@ export const LinodeSelect = (
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)
-          ? onSelectionChange(value as Linode[])
-          : !multiple &&
-            !Array.isArray(value) &&
-            onSelectionChange(value as Linode)
+          ? onSelectionChange(value)
+          : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
       renderInput={(params) => (
         <TextField
@@ -174,7 +172,7 @@ export const LinodeSelect = (
           ? multiple && Array.isArray(value)
             ? linodes?.filter(value) ?? null
             : linodes?.find(value) ?? null
-          : mapIdsToDevices(value, linodes)
+          : mapIdsToDevices<Linode>(value, linodes)
       }
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
