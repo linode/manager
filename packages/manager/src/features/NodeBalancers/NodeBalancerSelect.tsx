@@ -128,10 +128,8 @@ export const NodeBalancerSelect = (
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)
-          ? onSelectionChange(value as NodeBalancer[])
-          : !multiple &&
-            !Array.isArray(value) &&
-            onSelectionChange(value as NodeBalancer)
+          ? onSelectionChange(value)
+          : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
       renderInput={(params) => (
         <TextField
@@ -155,7 +153,7 @@ export const NodeBalancerSelect = (
         return (
           <li {...props}>
             {renderOption ? (
-              renderOption(option as NodeBalancer, selected)
+              renderOption(option, selected)
             ) : (
               <>
                 <Box
