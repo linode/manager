@@ -64,7 +64,7 @@ export const RegionStatusBanner = React.memo(() => {
   }
 
   return (
-    <Notice data-testid="status-banner" important warning>
+    <Notice data-testid="status-banner" important variant="warning">
       {renderBanner(labelsOfRegionsWithOutages)}
     </Notice>
   );

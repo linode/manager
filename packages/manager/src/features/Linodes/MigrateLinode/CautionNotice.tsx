@@ -96,14 +96,14 @@ export const CautionNotice = React.memo((props: Props) => {
         </li>
         {props.metadataWarning ? <li>{props.metadataWarning}</li> : null}
       </ul>
-      {props.error && <Notice error text={props.error} />}
+      {props.error && <Notice text={props.error} variant="error" />}
       <Checkbox
-        checked={props.hasConfirmed}
-        onChange={() => props.setConfirmed(!props.hasConfirmed)}
-        text="Accept"
         sx={{
           marginLeft: theme.spacing(2),
         }}
+        checked={props.hasConfirmed}
+        onChange={() => props.setConfirmed(!props.hasConfirmed)}
+        text="Accept"
       />
     </StyledRootDiv>
   );
@@ -126,7 +126,7 @@ const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
   })
 );
 
-const StyledVolumeUl = styled('div', { label: 'StyledVolumeUl' })(
+const StyledVolumeUl = styled('ul', { label: 'StyledVolumeUl' })(
   ({ theme }) => ({
     '& li': {
       fontFamily: theme.font.bold,

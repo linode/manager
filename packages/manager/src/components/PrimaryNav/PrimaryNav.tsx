@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
+import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
 import Domain from 'src/assets/icons/entityIcons/domain.svg';
@@ -18,7 +19,6 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import VPC from 'src/assets/icons/entityIcons/vpc.svg';
 import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Divider } from 'src/components/Divider';
@@ -127,6 +127,12 @@ export const PrimaryNav = (props: Props) => {
     account?.capabilities ?? []
   );
 
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
   const prefetchObjectStorage = () => {
     if (!enableObjectPrefetch) {
       setEnableObjectPrefetch(true);
@@ -177,8 +183,8 @@ export const PrimaryNav = (props: Props) => {
         },
         {
           display: 'VPC',
-          hide: !flags.vpc,
-          href: '/vpc',
+          hide: !showVPCs,
+          href: '/vpcs',
           icon: <VPC />,
           isBeta: true,
         },
@@ -273,7 +279,7 @@ export const PrimaryNav = (props: Props) => {
       allowMarketplacePrefetch,
       flags.databaseBeta,
       flags.aglb,
-      flags.vpc,
+      showVPCs,
     ]
   );
 

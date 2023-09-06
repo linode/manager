@@ -10,6 +10,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
   WithProfileProps,
@@ -146,7 +147,12 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     }
 
     if (this.props.linodesData.length === 0) {
-      return <LinodesLandingEmptyState />;
+      return (
+        <>
+          <ProductInformationBanner bannerLocation="Linodes" />
+          <LinodesLandingEmptyState />
+        </>
+      );
     }
 
     return (
@@ -180,6 +186,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           <MaintenanceBanner />
         )}
         <DocumentTitleSegment segment="Linodes" />
+        <ProductInformationBanner bannerLocation="Linodes" />
         <PreferenceToggle<boolean>
           localStorageKey="GROUP_LINODES"
           preferenceKey="linodes_group_by_tag"

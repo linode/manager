@@ -1,3 +1,4 @@
+import { styled } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -16,6 +17,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useAccountSettings,
   useMutateAccountSettings,
@@ -23,13 +25,13 @@ import {
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllTypes } from 'src/queries/types';
 import { pluralize } from 'src/utilities/pluralize';
+import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 
 import { AutoEnroll } from './AutoEnroll';
 import { BackupLinodeRow } from './BackupLinodeRow';
 import {
   EnableBackupsRejectedResult,
   getFailureNotificationText,
-  getTotalBackupsPrice,
   useEnableBackupsOnLinodesMutation,
 } from './utils';
 
@@ -41,6 +43,8 @@ interface Props {
 export const BackupDrawer = (props: Props) => {
   const { onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
+
+  const flags = useFlags();
 
   const {
     data: linodes,
@@ -83,6 +87,13 @@ export const BackupDrawer = (props: Props) => {
     linodes?.filter((linode) => !linode.backups.enabled) ?? [];
 
   const linodeCount = linodesWithoutBackups.length;
+
+  const backupsConfirmationHelperText = (
+    <>
+      Confirm to add backups to{' '}
+      <strong>{pluralize('Linode', 'Linodes', linodeCount)}</strong>.
+    </>
+  );
 
   const renderBackupsTable = () => {
     if (linodesLoading || typesLoading || accountSettingsLoading) {
@@ -137,7 +148,12 @@ all new Linodes will automatically be backed up.`
   };
 
   return (
-    <Drawer onClose={onClose} open={open} title="Enable All Backups">
+    <Drawer
+      onClose={onClose}
+      open={open}
+      title="Enable All Backups"
+      wide={flags.dcSpecificPricing}
+    >
       <Stack spacing={2}>
         <Typography variant="body1">
           Three backup slots are executed and rotated automatically: a daily
@@ -146,13 +162,12 @@ all new Linodes will automatically be backed up.`
           <Link to="https://www.linode.com/docs/platform/disk-images/linode-backup-service/">
             guide on Backups
           </Link>{' '}
-          for more information on features and limitations. Confirm to add
-          backups to{' '}
-          <strong>{pluralize('Linode', 'Linodes', linodeCount)}</strong>.
+          for more information on features and limitations.{' '}
+          {!flags.dcSpecificPricing && backupsConfirmationHelperText}
         </Typography>
         {failedEnableBackupsCount > 0 && (
           <Box>
-            <Notice error spacingBottom={0}>
+            <Notice spacingBottom={0} variant="error">
               {getFailureNotificationText({
                 failedCount: failedEnableBackupsCount,
                 successCount: successfulEnableBackupsCount,
@@ -168,12 +183,22 @@ all new Linodes will automatically be backed up.`
             toggle={() => setShouldEnableAutoEnroll((prev) => !prev)}
           />
         )}
-        <Box>
+        <StyledPricingBox>
+          {flags.dcSpecificPricing && (
+            <StyledTypography variant="h2">
+              Total for {pluralize('Linode', 'Linodes', linodeCount)}:
+            </StyledTypography>
+          )}
+          &nbsp;
           <DisplayPrice
+            price={getTotalBackupsPrice({
+              flags,
+              linodes: linodesWithoutBackups,
+              types: types ?? [],
+            })}
             interval="mo"
-            price={getTotalBackupsPrice(linodesWithoutBackups, types ?? [])}
           />
-        </Box>
+        </StyledPricingBox>
         <ActionsPanel
           primaryButtonProps={{
             label: 'Confirm',
@@ -191,6 +216,7 @@ all new Linodes will automatically be backed up.`
             <TableRow>
               <TableCell>Label</TableCell>
               <TableCell>Plan</TableCell>
+              {flags.dcSpecificPricing && <TableCell>Region</TableCell>}
               <TableCell>Price</TableCell>
             </TableRow>
           </TableHead>
@@ -200,3 +226,14 @@ all new Linodes will automatically be backed up.`
     </Drawer>
   );
 };
+
+const StyledPricingBox = styled(Box, { label: 'StyledPricingBox' })(({}) => ({
+  alignItems: 'center',
+  display: 'flex',
+}));
+
+const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    color: theme.palette.text.primary,
+  })
+);

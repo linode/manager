@@ -3,6 +3,7 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
@@ -44,6 +45,7 @@ export const ManagedLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />
+      <ProductInformationBanner bannerLocation="Managed" />
       <LandingHeader
         docsLink="https://www.linode.com/docs/platform/linode-managed/"
         entity="Managed"
