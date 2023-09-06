@@ -29,7 +29,7 @@ import { IPAddress } from '../IPAddress';
 import { LinodeActionMenu } from '../LinodeActionMenu';
 import { LinodeHandlers } from '../LinodesLanding';
 import { RegionIndicator } from '../RegionIndicator';
-import { parseMaintenanceStartTime } from '../utils';
+import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
 import {
   StyledButton,
   StyledIpTableCell,
@@ -45,10 +45,10 @@ export const LinodeRow = (props: Props) => {
     id,
     ipv4,
     label,
+    maintenance,
     region,
     status,
     type,
-    maintenance,
   } = props;
 
   const notificationContext = React.useContext(_notificationContext);
@@ -83,12 +83,7 @@ export const LinodeRow = (props: Props) => {
     );
   };
 
-  const iconStatus =
-    status === 'running'
-      ? 'active'
-      : ['offline', 'stopped'].includes(status)
-      ? 'inactive'
-      : 'other';
+  const iconStatus = getLinodeIconStatus(status);
 
   const [isHovered, setIsHovered] = React.useState(false);
 
@@ -116,8 +111,8 @@ export const LinodeRow = (props: Props) => {
         </Link>
       </TableCell>
       <StyledMaintenanceTableCell
-        maintenance={Boolean(maintenance)}
         data-qa-status
+        maintenance={Boolean(maintenance)}
         statusCell
       >
         {!Boolean(maintenance) ? (
@@ -142,9 +137,9 @@ export const LinodeRow = (props: Props) => {
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <strong>Maintenance Scheduled</strong>
             <TooltipIcon
-              sx={{ tooltip: { maxWidth: 300 } }}
               interactive
               status="help"
+              sx={{ tooltip: { maxWidth: 300 } }}
               text={<MaintenanceText />}
               tooltipPosition="top"
             />
