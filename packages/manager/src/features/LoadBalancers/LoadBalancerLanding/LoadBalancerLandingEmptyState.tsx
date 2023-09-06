@@ -2,8 +2,11 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 // TODO: AGLB - This is just a placeholder icon for now.
+import DocsIcon from 'src/assets/icons/docs.svg';
 // will be updated with relevant icon once we get from UX
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
+import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
@@ -13,7 +16,13 @@ import {
   gettingStartedGuides,
   headers,
   linkAnalyticsEvent,
+  resourcesLinks,
 } from './LoadBalancerEmptyStateData';
+
+import type {
+  ResourcesLinkSection,
+  linkAnalyticsEvent as linkAnalyticsEventType,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 const AdditionalCopy = () => (
   <Typography sx={{ mb: '16px' }} variant="body1">
@@ -24,11 +33,23 @@ const AdditionalCopy = () => (
   </Typography>
 );
 
+const GuideLinks = (
+  guides: ResourcesLinkSection,
+  linkAnalyticsEvent: linkAnalyticsEventType
+) => (
+  <ResourceLinks linkAnalyticsEvent={linkAnalyticsEvent} links={guides.links} />
+);
+
 export const LoadBalancerLandingEmptyState = () => {
   const { push } = useHistory();
 
   return (
     <ResourcesSection
+      CustomResource={() => (
+        <ResourcesLinksSubSection icon={<DocsIcon />} title="Resources">
+          {GuideLinks(resourcesLinks, linkAnalyticsEvent)}
+        </ResourcesLinksSubSection>
+      )}
       buttonProps={[
         {
           children: 'Create Global Load Balancer',

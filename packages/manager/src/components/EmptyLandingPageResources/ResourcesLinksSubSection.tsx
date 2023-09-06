@@ -4,11 +4,11 @@ import * as React from 'react';
 import { Typography } from 'src/components/Typography';
 
 interface ResourcesLinksSubSectionProps {
-  MoreLink: (props: { className?: any }) => JSX.Element;
+  MoreLink?: (props: { className?: any }) => JSX.Element;
   children?: JSX.Element | JSX.Element[];
   external?: boolean;
-  icon: JSX.Element;
-  title: string;
+  icon?: JSX.Element;
+  title?: string;
 }
 
 const StyledResourcesLinksSubSection = styled('div', {
@@ -50,7 +50,7 @@ export const ResourcesLinksSubSection = (
         {icon} {title}
       </Typography>
       {children}
-      <MoreLink />
+      {MoreLink && <MoreLink />}
     </StyledResourcesLinksSubSection>
   );
 };

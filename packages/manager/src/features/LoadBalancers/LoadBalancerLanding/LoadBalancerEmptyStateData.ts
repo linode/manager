@@ -25,6 +25,17 @@ export const gettingStartedGuides: ResourcesLinkSection = {
       to:
         'https://www.linode.com/docs/products/networking/global-loadbalancer/get-started/',
     },
+  ],
+  moreInfo: {
+    text: 'Guides',
+    to:
+      'https://www.linode.com/docs/products/networking/global-loadbalancer/guides/',
+  },
+  title: 'Getting Started Guides',
+};
+
+export const resourcesLinks: ResourcesLinkSection = {
+  links: [
     {
       text: 'Resources',
       to:
@@ -41,7 +52,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     to:
       'https://www.linode.com/docs/products/networking/global-loadbalancer/guides/',
   },
-  title: 'Getting Started Guides',
+  title: 'Resources',
 };
 // TODO: AGLB - This is placeholder for video resources.
 // Will be updated with links and text once we get them from docs team.
