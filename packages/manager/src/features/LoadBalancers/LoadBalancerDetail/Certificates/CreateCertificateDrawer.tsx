@@ -108,6 +108,7 @@ export const CreateCertificateDrawer = (props: Props) => {
           multiline
           name="certificate"
           onChange={formik.handleChange}
+          trimmed
           value={formik.values.certificate}
         />
         <TextField
@@ -117,6 +118,7 @@ export const CreateCertificateDrawer = (props: Props) => {
           multiline
           name="key"
           onChange={formik.handleChange}
+          trimmed
           value={formik.values.key}
         />
         <ActionsPanel
