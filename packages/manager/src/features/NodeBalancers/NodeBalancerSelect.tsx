@@ -107,14 +107,20 @@ export const NodeBalancerSelect = (
     }
   }, [value]);
 
-  const onScroll = () => {
-    if (hasNextPage && !isLoading) {
-      fetchNextPage();
-    }
-  };
-
   return (
     <Autocomplete
+      ListboxProps={{
+        onScroll: (event: React.SyntheticEvent) => {
+          const listboxNode = event.currentTarget;
+          if (
+            listboxNode.scrollTop + listboxNode.clientHeight >=
+              listboxNode.scrollHeight &&
+            hasNextPage
+          ) {
+            fetchNextPage();
+          }
+        },
+      }}
       noOptionsText={
         noOptionsMessage ?? (
           <i>{getDefaultNoOptionsMessage(error, isLoading, nodebalancers)}</i>
@@ -183,7 +189,6 @@ export const NodeBalancerSelect = (
       loading={isLoading || loading}
       multiple={multiple}
       onInputChange={(_, value) => setInputValue(value)}
-      onScroll={onScroll}
       options={options || (nodebalancers ?? [])}
       popupIcon={<KeyboardArrowDownIcon />}
     />

@@ -164,7 +164,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            'data-testid': 'submit',
             disabled: selectedDeviceIds.length === 0,
             label: 'Add',
             loading: isLoading,
