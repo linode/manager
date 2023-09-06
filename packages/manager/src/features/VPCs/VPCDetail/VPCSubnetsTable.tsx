@@ -16,7 +16,10 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { SubnetsActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
+import {
+  SubnetActionHandlers,
+  SubnetsActionMenu,
+} from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSubnetsQuery } from 'src/queries/vpcs';
@@ -27,9 +30,13 @@ interface Props {
   vpcId: number;
 }
 
+type CombinedProps = Props & SubnetActionHandlers;
+
 const preferenceKey = 'vpc-subnets';
 
-export const VPCSubnetsTable = ({ vpcId }: Props) => {
+export const VPCSubnetsTable = (props: CombinedProps) => {
+  const { vpcId, handleDelete } = props;
+
   const pagination = usePagination(1, preferenceKey);
 
   const { handleOrderChange, order, orderBy } = useOrder(
@@ -111,7 +118,13 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
             <TableCell>{subnet.linodes.length}</TableCell>
           </Hidden>
           <TableCell align="right">
-            <SubnetsActionMenu></SubnetsActionMenu>
+            <SubnetsActionMenu
+              handleDelete={handleDelete}
+              numSubnets={subnet.linodes.length}
+              subnetId={subnet.id}
+              subnetLabel={subnet.label}
+              vpcId={vpcId}
+            />
           </TableCell>
         </>
       );

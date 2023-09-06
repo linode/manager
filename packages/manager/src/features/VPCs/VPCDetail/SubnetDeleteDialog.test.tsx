@@ -6,9 +6,9 @@ import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 const props = {
   onClose: jest.fn(),
   open: true,
-  subnetID: 1,
+  subnetId: 1,
   subnetLabel: 'some subnet',
-  vpcID: 1,
+  vpcId: 1,
 };
 
 describe('Delete Subnet drawer', () => {

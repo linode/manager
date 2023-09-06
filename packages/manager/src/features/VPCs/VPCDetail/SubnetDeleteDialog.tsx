@@ -8,19 +8,19 @@ import { useDeleteSubnetMutation } from 'src/queries/vpcs';
 interface Props {
   onClose: () => void;
   open: boolean;
-  subnetID?: number;
+  subnetId?: number;
   subnetLabel: string;
-  vpcID: number;
+  vpcId: number;
 }
 
 export const SubnetDeleteDialog = (props: Props) => {
-  const { onClose, open, subnetID, subnetLabel, vpcID } = props;
+  const { onClose, open, subnetId, subnetLabel, vpcId } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
     isLoading,
     mutateAsync: deleteSubnet,
-  } = useDeleteSubnetMutation(vpcID, subnetID ?? -1);
+  } = useDeleteSubnetMutation(vpcId, subnetId ?? -1);
   const history = useHistory();
 
   const onDeleteSubnet = async () => {
@@ -29,8 +29,8 @@ export const SubnetDeleteDialog = (props: Props) => {
       variant: 'success',
     });
     onClose();
-    if (history.location.pathname !== `/vpcs/${vpcID}`) {
-      history.push(`/vpcs/${vpcID}`);
+    if (history.location.pathname !== `/vpcs/${vpcId}`) {
+      history.push(`/vpcs/${vpcId}`);
     }
   };
 
