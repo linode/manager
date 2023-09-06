@@ -414,7 +414,7 @@ export const CreateDomain = () => {
                 <React.Fragment>
                   <NodeBalancerSelect
                     onSelectionChange={(nodebalancer) =>
-                      setSelectedDefaultNodeBalancer(nodebalancer)
+                      setSelectedDefaultNodeBalancer(nodebalancer ?? undefined)
                     }
                     disabled={disabled}
                     errorText={errorMap.defaultNodeBalancer}

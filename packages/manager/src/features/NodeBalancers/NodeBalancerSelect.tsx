@@ -41,7 +41,7 @@ export interface NodeBalancerSingleSelectProps extends NodeBalancerSelectProps {
   /* Enable single-select. */
   multiple?: false;
   /* Called when the value changes */
-  onSelectionChange: (nodebalancer: NodeBalancer | undefined) => void;
+  onSelectionChange: (nodebalancer: NodeBalancer | null) => void;
   /* The `id` of the selected NodeBalancer or a function that should return `true` if the NodeBalancer should be selected. */
   value: ((nodebalancer: NodeBalancer) => boolean) | null | number;
 }
