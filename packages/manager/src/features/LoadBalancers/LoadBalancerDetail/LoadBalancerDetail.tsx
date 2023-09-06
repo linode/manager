@@ -59,7 +59,7 @@ const LoadBalancerDetailLanding = () => {
     },
     {
       routeName: `/loadbalancers/${id}/configurations`,
-      title: 'Configrations',
+      title: 'Configurations',
     },
     {
       routeName: `/loadbalancers/${id}/routes`,

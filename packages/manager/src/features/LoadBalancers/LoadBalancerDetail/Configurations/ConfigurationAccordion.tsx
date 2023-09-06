@@ -20,6 +20,7 @@ import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
 
 import type { Configuration } from '@linode/api-v4';
+import { InputLabel } from 'src/components/InputLabel';
 
 interface Props {
   configuration: Configuration;
@@ -112,6 +113,9 @@ export const ConfigurationAccordion = (props: Props) => {
         <Stack spacing={2}>
           <Stack direction="row" spacing={2}>
             <Select
+              textFieldProps={{
+                labelTooltipText: 'TODO',
+              }}
               value={
                 protocolOptions.find(
                   (option) => option.value === formik.values.protocol
@@ -127,6 +131,7 @@ export const ConfigurationAccordion = (props: Props) => {
             <TextField
               errorText={errorMap.port}
               label="Port"
+              labelTooltipText="TODO"
               name="port"
               onChange={formik.handleChange}
               value={formik.values.port}
@@ -134,7 +139,7 @@ export const ConfigurationAccordion = (props: Props) => {
           </Stack>
           <Stack maxWidth="600px">
             <Stack alignItems="center" direction="row">
-              <Typography fontWeight="bold">TLS Certificates</Typography>
+              <InputLabel sx={{ marginBottom: 0 }}>TLS Certificates</InputLabel>
               <TooltipIcon status="help" text="OMG!" />
               <Box flexGrow={1} />
               <Button>Upload Certificate</Button>
