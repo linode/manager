@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -51,7 +50,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
     isLoading,
     mutateAsync: addDevice,
   } = useAddFirewallDeviceMutation(Number(id));
-  const theme = useTheme();
 
   const [selectedDeviceIds, setSelectedDeviceIds] = React.useState<number[]>(
     []
@@ -62,20 +60,25 @@ export const AddNodebalancerDrawer = (props: Props) => {
       selectedDeviceIds.map((id) => addDevice({ id, type: 'nodebalancer' }))
     );
 
+    let hasError = false;
+
     results.forEach((result, _) => {
       if (result.status === 'fulfilled') {
         // Assuming the response contains the device label, replace with the appropriate property if not.
         const label = result.value.entity.label;
         enqueueSnackbar(`${label} added successfully.`, { variant: 'success' });
       } else {
+        hasError = true;
         // Assuming the error object contains the device label, replace with the appropriate property if not.
         const errorLabel = result.reason.label;
         enqueueSnackbar(`Failed to add ${errorLabel}.`, { variant: 'error' });
       }
     });
 
-    onClose();
-    setSelectedDeviceIds([]);
+    if (!hasError) {
+      onClose();
+      setSelectedDeviceIds([]);
+    }
   };
 
   const errorMessage = error
@@ -83,7 +86,8 @@ export const AddNodebalancerDrawer = (props: Props) => {
     : undefined;
 
   // @todo update regex once error messaging updates
-  const errorNotice = (errorMsg: string) => {
+  const errorNotice = () => {
+    let errorMsg = errorMessage || '';
     // match something like: Nodebalancer <nodebalancer_label> (ID <nodebalancer_id>)
     const device = /(nodebalancer) (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
@@ -97,8 +101,8 @@ export const AddNodebalancerDrawer = (props: Props) => {
       return (
         <Notice
           sx={{
-            fontFamily: theme.font.bold,
             fontSize: '1rem',
+            fontWeight: 'bold',
             lineHeight: '20px',
           }}
           variant="error"
@@ -144,7 +148,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
           handleSubmit();
         }}
       >
-        {errorMessage ? errorNotice(errorMessage) : null}
+        {errorMessage ? errorNotice() : null}
         <NodeBalancerSelect
           onSelectionChange={(nodebalancers) =>
             setSelectedDeviceIds(
@@ -170,7 +174,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
             onClick: handleSubmit,
           }}
           secondaryButtonProps={{
-            'data-testid': 'cancel',
             label: 'Cancel',
             onClick: onClose,
           }}

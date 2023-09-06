@@ -70,13 +70,11 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
       actions={
         <ActionsPanel
           primaryButtonProps={{
-            'data-testid': 'confirm',
             label: primaryButtonText,
             loading: isLoading,
             onClick: onDelete,
           }}
           secondaryButtonProps={{
-            'data-testid': 'cancel',
             label: 'Cancel',
             onClick: onClose,
           }}

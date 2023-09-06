@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -51,7 +50,6 @@ export const AddLinodeDrawer = (props: Props) => {
     isLoading,
     mutateAsync: addDevice,
   } = useAddFirewallDeviceMutation(Number(id));
-  const theme = useTheme();
 
   const [selectedLinodeIds, setSelectedLinodeIds] = React.useState<number[]>(
     []
@@ -84,7 +82,8 @@ export const AddLinodeDrawer = (props: Props) => {
     : undefined;
 
   // @todo update regex once error messaging updates
-  const errorNotice = (errorMsg: string) => {
+  const errorNotice = () => {
+    let errorMsg = errorMessage || '';
     // match something like: Linode <linode_label> (ID <linode_id>)
     const linode = /linode (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
@@ -98,8 +97,8 @@ export const AddLinodeDrawer = (props: Props) => {
       return (
         <Notice
           sx={{
-            fontFamily: theme.font.bold,
             fontSize: '1rem',
+            fontWeight: 'bold',
             lineHeight: '20px',
           }}
           variant="error"
@@ -139,7 +138,7 @@ export const AddLinodeDrawer = (props: Props) => {
           handleSubmit();
         }}
       >
-        {errorMessage ? errorNotice(errorMessage) : null}
+        {errorMessage ? errorNotice() : null}
         <LinodeSelect
           onSelectionChange={(linodes) =>
             setSelectedLinodeIds(linodes.map((linode) => linode.id))
@@ -156,14 +155,12 @@ export const AddLinodeDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            'data-testid': 'submit',
             disabled: selectedLinodeIds.length === 0,
             label: 'Add',
             loading: isLoading,
             onClick: handleSubmit,
           }}
           secondaryButtonProps={{
-            'data-testid': 'cancel',
             label: 'Cancel',
             onClick: onClose,
           }}
