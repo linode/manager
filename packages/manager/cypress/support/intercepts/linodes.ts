@@ -193,3 +193,16 @@ export const mockGetLinodeType = (
     makeResponse(type)
   );
 };
+
+/**
+ * Intercepts POST request to clone a Linode.
+ *
+ * @param linodeId - ID of Linode being cloned.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCloneLinode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`linode/instances/${linodeId}/clone`));
+};
