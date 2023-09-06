@@ -33,7 +33,7 @@ const AdditionalCopy = () => (
   </Typography>
 );
 
-const GuideLinks = (
+const GetResourceLinks = (
   guides: ResourcesLinkSection,
   linkAnalyticsEvent: linkAnalyticsEventType
 ) => (
@@ -47,7 +47,7 @@ export const LoadBalancerLandingEmptyState = () => {
     <ResourcesSection
       CustomResource={() => (
         <ResourcesLinksSubSection icon={<DocsIcon />} title="Resources">
-          {GuideLinks(resourcesLinks, linkAnalyticsEvent)}
+          {GetResourceLinks(resourcesLinks, linkAnalyticsEvent)}
         </ResourcesLinksSubSection>
       )}
       buttonProps={[
