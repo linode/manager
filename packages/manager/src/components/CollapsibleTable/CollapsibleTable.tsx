@@ -29,7 +29,7 @@ export const CollapsibleTable = (props: Props) => {
       <Table aria-label="collapsible table">
         <TableHead>{TableRowHead}</TableHead>
         <TableBody>
-          {TableItems.length <= 0 && TableRowEmpty}
+          {TableItems.length === 0 && TableRowEmpty}
           {TableItems.map((item) => {
             return (
               <CollapsibleRow
