@@ -10,14 +10,19 @@ import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { getMonthlyPrice } from 'src/features/Kubernetes/kubeUtils';
+import {
+  getKubernetesMonthlyPrice,
+  getTotalClusterPrice,
+} from 'src/utilities/pricing/kubernetes';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
+import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
 
-import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
+import { nodeWarning } from '../kubeUtils';
 import NodePoolSummary from './NodePoolSummary';
 
 export interface Props {
@@ -51,6 +56,8 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
 
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
+
+  const flags = useFlags();
 
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
@@ -89,11 +96,15 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       }
       calculatedPrice={
         region !== ''
-          ? getTotalClusterPrice(
+          ? getTotalClusterPrice({
+              flags,
+              highAvailabilityPrice: highAvailability
+                ? highAvailabilityPrice
+                : undefined,
               pools,
-              types ?? [],
-              highAvailability ? highAvailabilityPrice : undefined
-            )
+              region,
+              types: types ?? [],
+            })
           : undefined
       }
       data-qa-checkout-bar
@@ -101,6 +112,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       heading="Cluster Summary"
       isMakingRequest={submitting}
       onDeploy={createCluster}
+      priceSelectionText={LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE}
       submitText="Create Cluster"
     >
       <>
@@ -111,7 +123,13 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
             price={
               region !== ''
-                ? getMonthlyPrice(thisPool.type, thisPool.count, types ?? [])
+                ? getKubernetesMonthlyPrice({
+                    count: thisPool.count,
+                    flags,
+                    region,
+                    type: thisPool.type,
+                    types: types ?? [],
+                  })
                 : undefined
             }
             updateNodeCount={(updatedCount: number) =>

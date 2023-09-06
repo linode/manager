@@ -1,11 +1,13 @@
-import type { Image, Linode, Disk } from '@linode/api-v4/types';
+import type { Linode, Disk } from '@linode/api-v4/types';
 import { imageFactory } from 'src/factories/images';
+import { authenticate } from 'support/api/authentication';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';
 import {
   mockCreateImage,
   mockGetCustomImages,
 } from 'support/intercepts/images';
 import { mockGetLinodeDisks } from 'support/intercepts/linodes';
+import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
 
 const diskLabel = 'Debian 10 Disk';
@@ -31,7 +33,12 @@ const mockDisks: Disk[] = [
   },
 ];
 
+authenticate();
 describe('create image', () => {
+  before(() => {
+    cleanUp('linodes');
+  });
+
   it('captures image from Linode and mocks create image', () => {
     const imageLabel = randomLabel();
     const imageDescription = randomPhrase();

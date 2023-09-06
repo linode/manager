@@ -2,7 +2,10 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
+import {
+  LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
+  LKE_HA_PRICE,
+} from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
@@ -27,19 +30,14 @@ const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);
 
 describe('KubeCheckoutBar', () => {
-  it('with DC-specific pricing feature flag, should render helper text and disable create button until a region has been selected', async () => {
+  it('should render helper text and disable create button until a region has been selected', async () => {
     const { findByText, getByTestId, getByText } = renderWithTheme(
-      <KubeCheckoutBar {...props} region="" />,
-      {
-        flags: { dcSpecificPricing: true },
-      }
+      <KubeCheckoutBar {...props} region="" />
     );
 
     await waitForElementToBeRemoved(getByTestId('circle-progress'));
 
-    await findByText(
-      'Select a Region and add a Node Pool to view pricing and create a cluster.'
-    );
+    await findByText(LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE);
     expect(getByText('Create Cluster').closest('button')).toBeDisabled();
   });
 
@@ -79,5 +77,26 @@ describe('KubeCheckoutBar', () => {
 
     // 5 node pools * 3 linodes per pool * 10 per linode + 60 per month per cluster for HA
     await findByText(/\$210\.00/);
+  });
+
+  it('should display the DC-Specific total price of the cluster for a region with a price increase if the DC-Specific pricing feature flag is on', async () => {
+    const { findByText } = renderWithTheme(
+      <KubeCheckoutBar {...props} region="id-cgk" />,
+      {
+        flags: { dcSpecificPricing: true },
+      }
+    );
+
+    // 5 node pools * 3 linodes per pool * 10 per linode * 20% increase for Jakarta
+    await findByText(/\$180\.00/);
+  });
+
+  it('should display the base total price of the cluster for a region with a price increase if the DC-Specific pricing feature flag is off', async () => {
+    const { findByText } = renderWithTheme(
+      <KubeCheckoutBar {...props} region="id-cgk" />
+    );
+
+    // 5 node pools * 3 linodes per pool * 10 per linode * no price increase for Jakarta
+    await findByText(/\$150\.00/);
   });
 });
