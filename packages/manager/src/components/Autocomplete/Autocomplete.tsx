@@ -29,7 +29,7 @@ export interface OptionType<T = any> {
 }
 
 interface DefaultNoOptionsMessage {
-  errorText: APIError[] | null | string | undefined;
+  errorText: APIError[] | null | string;
   options: readonly OptionType[];
 }
 
@@ -101,7 +101,7 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
     clearOnBlur = false,
     defaultValue,
     disablePortal = true,
-    errorText,
+    errorText = '',
     helperText,
     label,
     limitTags = 2,
