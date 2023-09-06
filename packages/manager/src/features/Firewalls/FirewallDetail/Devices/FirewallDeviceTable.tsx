@@ -39,8 +39,10 @@ export const FirewallDeviceTable = React.memo(
     } = props;
 
     const _error = error
-      ? // @todo change to Devices or make dynamic when NBs are possible as Devices
-        getAPIErrorOrDefault(error, 'Unable to retrieve Linodes')
+      ? getAPIErrorOrDefault(
+          error,
+          `Unable to retrieve ${formattedTypes[deviceType]}s`
+        )
       : undefined;
 
     return (
