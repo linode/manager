@@ -60,20 +60,25 @@ export const AddLinodeDrawer = (props: Props) => {
       selectedLinodeIds.map((id) => addDevice({ id, type: 'linode' }))
     );
 
+    let hasError = false;
+
     results.forEach((result, _) => {
       if (result.status === 'fulfilled') {
         // Assuming the response contains the device label, replace with the appropriate property if not.
         const label = result.value.entity.label;
         enqueueSnackbar(`${label} added successfully.`, { variant: 'success' });
       } else {
+        hasError = true;
         // Assuming the error object contains the device label, replace with the appropriate property if not.
         const errorLabel = result.reason.label;
         enqueueSnackbar(`Failed to add ${errorLabel}.`, { variant: 'error' });
       }
     });
 
-    onClose();
-    setSelectedLinodeIds([]);
+    if (!hasError) {
+      onClose();
+      setSelectedLinodeIds([]);
+    }
   };
 
   // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
