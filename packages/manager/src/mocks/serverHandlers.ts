@@ -923,6 +923,26 @@ export const handlers = [
   rest.get('*/kubeconfig', (req, res, ctx) => {
     return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
   }),
+  rest.get('*invoices/555/items', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        makeResourcePage([
+          invoiceItemFactory.build({
+            label: 'Linode',
+            region: 'br-gru',
+          }),
+          invoiceItemFactory.build({
+            label: 'Outbound Transfer',
+            region: null,
+          }),
+          invoiceItemFactory.build({
+            label: 'Outbound Transfer',
+            region: 'id-cgk',
+          }),
+        ])
+      )
+    );
+  }),
   rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
     const items = invoiceItemFactory.buildList(10);
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
