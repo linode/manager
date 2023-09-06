@@ -46,7 +46,10 @@ export const LoadBalancerLandingEmptyState = () => {
   return (
     <ResourcesSection
       CustomResource={() => (
-        <ResourcesLinksSubSection icon={<DocsIcon />} title="Resources">
+        <ResourcesLinksSubSection
+          icon={<DocsIcon />}
+          title={resourcesLinks.title}
+        >
           {GetResourceLinks(resourcesLinks, linkAnalyticsEvent)}
         </ResourcesLinksSubSection>
       )}
