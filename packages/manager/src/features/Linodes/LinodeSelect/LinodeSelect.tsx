@@ -151,7 +151,7 @@ export const LinodeSelect = (
         return (
           <li {...props}>
             {renderOption ? (
-              renderOption(option as Linode, selected)
+              renderOption(option, selected)
             ) : (
               <>
                 <Box
