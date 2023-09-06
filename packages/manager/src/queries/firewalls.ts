@@ -26,8 +26,8 @@ import { EventWithStore } from 'src/events';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
 import { updateInPaginatedStore } from './base';
+import { queryKey as PROFILE_QUERY_KEY } from './profile';
 
 export const queryKey = 'firewall';
 
@@ -122,7 +122,7 @@ export const useCreateFirewall = () => {
       onSuccess(firewall) {
         queryClient.invalidateQueries([queryKey, 'paginated']);
         queryClient.setQueryData([queryKey, 'firewall', firewall.id], firewall);
-        // If a restricted user created a Firewall, grants will be re-fetched.
+        // If a restricted user creates an entity, we must make sure grants are up to date.
         queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
       },
     }
