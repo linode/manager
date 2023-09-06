@@ -59,7 +59,7 @@ export const TransferDisplayDialog = React.memo(
           fontFamily={theme.font.bold}
           marginBottom={theme.spacing()}
         >
-          General Transfer Pool
+          Global Network Transfer Pool
         </Typography>
         <TransferDisplayUsage
           pullUsagePct={generalPoolUsagePct}
@@ -69,7 +69,6 @@ export const TransferDisplayDialog = React.memo(
         <Divider
           sx={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(3) }}
         />
-
         {/**
          *  Region-specific Transfer Pool Display
          */}
@@ -80,13 +79,13 @@ export const TransferDisplayDialog = React.memo(
               fontFamily={theme.font.bold}
               marginBottom={theme.spacing()}
             >
-              Region-specific Transfer Pools
+              Datacenter-specific Network Transfer Pools
             </Typography>
             <Typography
               marginBottom={theme.spacing()}
               marginTop={theme.spacing()}
             >
-              In some regions, the montly network transfer is calculated and
+              In some regions, the monthly network transfer is calculated and
               tracked independently. These regions are listed below. Transfer
               overages will be billed separately.{' '}
               <Link to={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}>Learn more</Link>.
@@ -114,7 +113,6 @@ export const TransferDisplayDialog = React.memo(
             ))}
           </>
         )}
-
         {/**
          *  General Information about Transfer Pools & Docs Link
          */}
@@ -129,12 +127,10 @@ export const TransferDisplayDialog = React.memo(
           transfer associated with active Linode services on your account and is
           prorated based on service creation.
         </Typography>
-        <Box>
-          <Typography>{transferQuotaDocsText}</Typography>
-          <Typography marginTop={theme.spacing(1)}>
-            <Link to={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}>Learn more</Link>.
-          </Typography>
-        </Box>
+        <Typography>
+          {transferQuotaDocsText}{' '}
+          <Link to={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}>Learn more</Link>.{' '}
+        </Typography>
       </Dialog>
     );
   }

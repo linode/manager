@@ -9,10 +9,8 @@ import {
 import { typeFactory } from 'src/factories/types';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  NetworkTransfer,
-  calculatePercentageWithCeiling,
-} from './NetworkTransfer';
+import { NetworkTransfer } from './NetworkTransfer';
+import { calculatePercentageWithCeiling } from './utils';
 
 jest.mock('src/hooks/useAPIRequest', () => ({
   useAPIRequest: jest.fn().mockReturnValue({
