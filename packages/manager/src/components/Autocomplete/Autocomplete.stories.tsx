@@ -1,4 +1,5 @@
 import { Region } from '@linode/api-v4/lib/regions';
+import Close from '@mui/icons-material/Close';
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
@@ -6,6 +7,9 @@ import React from 'react';
 
 import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
+import { IconButton } from 'src/components/IconButton';
+import { List } from 'src/components/List';
+import { ListItem } from 'src/components/ListItem';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { Autocomplete } from './Autocomplete';
@@ -14,31 +18,33 @@ import { SelectedIcon } from './Autocomplete.styles';
 import type { EnhancedAutocompleteProps, OptionType } from './Autocomplete';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
-interface FruitProps {
+const LABEL = 'Select a Linode';
+
+interface LinodeProps {
   label: string;
   value: string;
 }
 
-const fruits: FruitProps[] = [
+const linodes: LinodeProps[] = [
   {
-    label: 'Apple',
-    value: 'apple',
+    label: 'Linode-001',
+    value: 'linode-001',
   },
   {
-    label: 'Pear',
-    value: 'pear',
+    label: 'Linode-002',
+    value: 'linode-002',
   },
   {
-    label: 'Mango',
-    value: 'mango',
+    label: 'Linode-003',
+    value: 'linode-003',
   },
   {
-    label: 'Durian',
-    value: 'durian',
+    label: 'Linode-004',
+    value: 'linode-004',
   },
   {
-    label: 'Strawberry',
-    value: 'strawberry',
+    label: 'Linode-005',
+    value: 'linode-005',
   },
 ];
 
@@ -87,6 +93,60 @@ const getRegionsOptions = (
   });
 };
 
+const AutocompleteWithSeparateSelectedOptions = (
+  props: EnhancedAutocompleteProps<OptionType>
+) => {
+  const [selectedOptions, setSelectedOptions] = React.useState<OptionType[]>(
+    []
+  );
+
+  const handleSelectedOptions = React.useCallback((selected: OptionType[]) => {
+    setSelectedOptions(selected);
+  }, []);
+
+  // Function to remove an option from the list of selected options
+  const removeOption = (optionToRemove: OptionType) => {
+    const updatedSelectedOptions = selectedOptions.filter(
+      (option) => option.value !== optionToRemove.value
+    );
+
+    // Call onSelectionChange to update the selected options
+    handleSelectedOptions(updatedSelectedOptions);
+  };
+
+  return (
+    <Stack>
+      <Autocomplete
+        {...props}
+        onSelectionChange={handleSelectedOptions}
+        renderTags={() => null}
+        value={selectedOptions}
+      />
+      {selectedOptions.length > 0 && (
+        <>
+          <SelectedOptionsHeader>{`Linodes to be Unassigned from Subnet (${selectedOptions.length})`}</SelectedOptionsHeader>
+
+          <SelectedOptionsList>
+            {selectedOptions.map((option) => (
+              <SelectedOptionsListItem alignItems="center" key={option.value}>
+                <StyledLabel>{option.label}</StyledLabel>
+                <IconButton
+                  aria-label={`remove ${option.value}`}
+                  disableRipple
+                  onClick={() => removeOption(option)}
+                  size="medium"
+                >
+                  <Close />
+                </IconButton>
+              </SelectedOptionsListItem>
+            ))}
+          </SelectedOptionsList>
+        </>
+      )}
+    </Stack>
+  );
+};
+
 // Story Config ========================================================
 
 const meta: Meta<EnhancedAutocompleteProps<OptionType>> = {
@@ -96,9 +156,9 @@ const meta: Meta<EnhancedAutocompleteProps<OptionType>> = {
     },
   },
   args: {
-    label: 'Select a Fruit',
+    label: LABEL,
     onSelectionChange: action('onSelectionChange'),
-    options: fruits,
+    options: linodes,
   },
   component: Autocomplete,
   decorators: [
@@ -133,8 +193,34 @@ const StyledListItem = styled('li')(() => ({
   width: '100%',
 }));
 
+const StyledLabel = styled('span')(({ theme }) => ({
+  color: theme.color.label,
+  fontFamily: theme.font.semiBold,
+  fontSize: '14px',
+}));
+
 const StyledFlag = styled('span')(({ theme }) => ({
   marginRight: theme.spacing(1),
+}));
+
+const SelectedOptionsHeader = styled('h4')(({ theme }) => ({
+  color: theme.color.headline,
+  fontFamily: theme.font.bold,
+  fontSize: '14px',
+  textTransform: 'initial',
+}));
+
+const SelectedOptionsList = styled(List)(({ theme }) => ({
+  background: theme.bg.main,
+  maxWidth: '416px',
+  padding: '5px 0',
+  width: '100%',
+}));
+
+const SelectedOptionsListItem = styled(ListItem)(() => ({
+  justifyContent: 'space-between',
+  paddingBottom: 0,
+  paddingTop: 0,
 }));
 
 const GroupHeader = styled('div')(({ theme }) => ({
@@ -153,7 +239,7 @@ const GroupItems = styled('ul')({
 
 export const Default: Story = {
   args: {
-    defaultValue: fruits[0],
+    defaultValue: linodes[0],
   },
   render: (args) => <Autocomplete {...args} />,
 };
@@ -227,13 +313,26 @@ export const CustomRenderOptions: Story = {
 
 export const MultiSelect: Story = {
   args: {
-    defaultValue: [fruits[0]],
+    defaultValue: [linodes[0]],
     multiple: true,
     onSelectionChange: (selected: OptionType[]) => {
       action('onSelectionChange')(selected.map((options) => options.value));
     },
-    placeholder: 'Select a Fruit',
-    selectAllLabel: 'Fruits',
+    placeholder: LABEL,
+    selectAllLabel: 'Linodes',
   },
   render: (args) => <Autocomplete {...args} />,
+};
+
+export const MultiSelectWithSeparateSelectionOptions: Story = {
+  args: {
+    defaultValue: [linodes[0]],
+    multiple: true,
+    onSelectionChange: (selected: OptionType[]) => {
+      action('onSelectionChange')(selected.map((options) => options.value));
+    },
+    placeholder: LABEL,
+    selectAllLabel: 'Linodes',
+  },
+  render: (args) => <AutocompleteWithSeparateSelectedOptions {...args} />,
 };
