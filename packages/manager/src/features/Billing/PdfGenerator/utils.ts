@@ -300,12 +300,12 @@ export const getInvoiceRegion = (invoiceItem: InvoiceItem) => {
     return invoiceItem.region;
   }
 
-  // If there is no region, assume this invoice item is for global transfer.
+  // If there is no region, this Transfer Overage item is for global transfer.
   if (!invoiceItem.region) {
     return 'Global';
   }
 
-  // The transfer is for a specific region's pool.
+  // The Transfer Overage item is for a specific region's pool.
   return invoiceItem.region;
 };
 
