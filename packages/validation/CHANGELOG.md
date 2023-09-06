@@ -1,3 +1,12 @@
+## [2023-09-05] - v0.30.0
+
+
+### Changed:
+
+- Include 'firewall_id' field as optional in CreateLinodeSchema ([#9453](https://github.com/linode/manager/pull/9453))
+- Include `createSubnetSchema` in `createVPCSchema` validation ([#9537](https://github.com/linode/manager/pull/9537))
+
+
 ## [2023-08-21] - v0.29.0
 
 
