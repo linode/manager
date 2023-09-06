@@ -107,15 +107,17 @@ export const ActionMenu = React.memo((props: Props) => {
         MenuListProps={{
           'aria-labelledby': buttonId,
         }}
-        PaperProps={{
-          sx: (theme) => ({
-            backgroundColor: theme.palette.primary.main,
-            boxShadow: 'none',
-          }),
-        }}
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',
+        }}
+        slotProps={{
+          paper: {
+            sx: (theme) => ({
+              backgroundColor: theme.palette.primary.main,
+              boxShadow: 'none',
+            }),
+          },
         }}
         transformOrigin={{
           horizontal: 'right',
@@ -123,6 +125,7 @@ export const ActionMenu = React.memo((props: Props) => {
         }}
         anchorEl={anchorEl}
         data-qa-action-menu
+        disableScrollLock
         id={menuId}
         marginThreshold={0}
         onClose={handleClose}

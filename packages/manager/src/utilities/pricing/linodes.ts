@@ -1,4 +1,6 @@
 import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 /**
  * Gets the price of a Linode type for a specific region.
@@ -8,7 +10,7 @@ import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
  * @returns pricing information for this specific linode type in a region
  */
 export const getLinodeRegionPrice = (
-  type: LinodeType,
+  type: ExtendedType | LinodeType | PlanSelectionType,
   regionId: string
 ): PriceObject => {
   const regionSpecificPrice = type.region_prices?.find(
@@ -22,6 +24,7 @@ export const getLinodeRegionPrice = (
     };
   }
 
+  // TODO: M3-7063 (defaults)
   return type.price;
 };
 
@@ -35,7 +38,7 @@ interface IsPriceDifferentOptions {
  * Given a Linode Type, this function tells you if the Linode type's price
  * is different between two regions.
  *
- * We use this to display a Notice when users a user moves Linodes between regions.
+ * We use this to display a Notice when a user attempts to move Linodes between regions.
  *
  * @returns whether or not the Linode price is different between the two regions
  */
