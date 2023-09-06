@@ -667,7 +667,6 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: 'transparent',
             color: primaryColors.main,
           },
-          padding: 12,
         },
       },
     },
@@ -896,8 +895,7 @@ export const lightTheme: ThemeOptions = {
           paddingBottom: 8,
           paddingTop: 8,
           textOverflow: 'initial',
-          transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
-        ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
+          transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1)'}`,
           whiteSpace: 'initial',
         },
         selected: {},

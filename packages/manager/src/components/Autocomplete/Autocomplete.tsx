@@ -40,6 +40,7 @@ interface AutocompleteOnChange {
 }
 
 interface HandleMultiSelectionChange extends AutocompleteOnChange {
+  onSelectionChange: (selection: OptionType | OptionType[]) => void;
   selectedOptions: OptionType[];
 }
 
@@ -117,6 +118,7 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
     renderOptionLabel,
     selectAllLabel = '',
     sx,
+    value,
     ...rest
   } = props;
 
@@ -136,6 +138,12 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
     ...options,
   ];
 
+  const clearOptions = () => {
+    handleClearOptions(); // Clear options requested; call callback if available
+    setSelectAllActive(false);
+    onSelectionChange([]);
+  };
+
   /**
    * This function leverages type narrowing to differentiate between single-select
    * and multi-select modes and calls the appropriate callback functions accordingly.
@@ -148,7 +156,12 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
     selectedOptions,
   }: HandleChangeParams) => {
     if (Array.isArray(selectedOptions)) {
-      handleMultiSelectionChange({ initialOptions, reason, selectedOptions }); // Handle changes for multi-select mode
+      handleMultiSelectionChange({
+        initialOptions,
+        onSelectionChange,
+        reason,
+        selectedOptions,
+      }); // Handle changes for multi-select mode
     } else {
       onSelectionChange(selectedOptions); // Handle changes for single-select mode
     }
@@ -156,12 +169,12 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
 
   const handleMultiSelectionChange = ({
     initialOptions,
+    onSelectionChange,
     reason,
     selectedOptions,
   }: HandleMultiSelectionChange) => {
-    if (reason === 'clear' && handleClearOptions) {
-      handleClearOptions(); // Clear options requested; call callback if available
-      setSelectAllActive(false);
+    if (reason === 'clear') {
+      clearOptions();
     } else if (selectedOptions.some((option) => option.value === 'all')) {
       handleToggleSelectAll(initialOptions); // Handle 'Select all' option selection
     } else if (handleToggleOption) {
@@ -169,16 +182,20 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
         setSelectAllActive(false);
       }
       handleToggleOption(selectedOptions); // Handle individual options selection
+      onSelectionChange(selectedOptions);
     }
   };
 
   const handleToggleSelectAll = (initialOptions: OptionType[]) => {
     const allSelected = initialOptions.length === selectedOptions?.length;
 
-    if (handleSelectAll) {
-      setSelectAllActive(!allSelected); // Toggle the 'Select all' option
-      handleSelectAll(!allSelected, initialOptions); // If 'onSelectAll' callback exists, toggle the selection of all options
+    if (allSelected) {
+      return clearOptions();
     }
+
+    handleSelectAll(!allSelected, initialOptions); // If 'onSelectAll' callback exists, toggle the selection of all options
+    setSelectAllActive(!allSelected); // Toggle the 'Select all' option
+    onSelectionChange(initialOptions);
   };
 
   const handleRenderOption = useCallback(
@@ -186,7 +203,12 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
       props: React.HTMLAttributes<HTMLLIElement>,
       option: OptionType,
       state: AutocompleteRenderOptionState,
-      ownerState: AutocompleteOwnerState<any, any, any, any, any> // TODO: handle any
+      ownerState: AutocompleteOwnerState<
+        OptionType,
+        boolean | undefined,
+        boolean | undefined,
+        boolean | undefined
+      >
     ) => {
       const selectAllOption = option.value === 'all';
       const ListItem = selectAllOption ? StyledListItem : 'li';
@@ -280,7 +302,7 @@ export const Autocomplete = (props: EnhancedAutocompleteProps<OptionType>) => {
       popupIcon={<KeyboardArrowDownIcon />}
       renderOption={handleRenderOption}
       sx={sx}
-      value={multiple ? selectedOptions : undefined} // Only pass value prop for multi-select mode
+      value={multiple ? value || selectedOptions : value} // Only pass value prop for multi-select mode
     />
   );
 };
@@ -297,9 +319,9 @@ const getDefaultNoOptionsMessage = ({
 }: DefaultNoOptionsMessage): NoOptionsMessage => {
   if (errorText) {
     return NoOptionsMessage.Error;
-  } else if (!options?.length) {
-    return NoOptionsMessage.NoOptions;
-  } else {
-    return NoOptionsMessage.NoResults;
   }
+  if (!options?.length) {
+    return NoOptionsMessage.NoOptions;
+  }
+  return NoOptionsMessage.NoResults;
 };

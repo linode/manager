@@ -31,6 +31,7 @@ export const StyledListItem = styled('li', {
 }));
 
 export const SelectedIcon = styled(DoneIcon, {
+  label: 'SelectedIcon',
   shouldForwardProp: (prop) => prop != 'visible',
 })<{ visible: boolean }>(({ visible }) => ({
   height: 17,
