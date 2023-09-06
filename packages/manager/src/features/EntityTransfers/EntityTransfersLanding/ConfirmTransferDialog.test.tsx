@@ -6,12 +6,14 @@ import { entityTransferFactory } from 'src/factories/entityTransfers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import ConfirmTransferDialog, {
-  Props,
+import {
+  ConfirmTransferDialog,
   getTimeRemaining,
 } from './ConfirmTransferDialog';
 
-const props: Props = {
+import type { ConfirmTransferDialogProps } from './ConfirmTransferDialog';
+
+const props: ConfirmTransferDialogProps = {
   onClose: jest.fn(),
   open: true,
   token: 'blahblah',
