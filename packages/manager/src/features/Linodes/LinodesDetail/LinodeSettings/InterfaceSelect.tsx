@@ -134,7 +134,7 @@ export const InterfaceSelect = (props: Props) => {
         </Grid>
       )}
       {purpose === 'vlan' ? (
-        <Grid md={7} sm={9} xs={12}>
+        <Grid container>
           <Grid
             sx={{
               flexDirection: 'row',
