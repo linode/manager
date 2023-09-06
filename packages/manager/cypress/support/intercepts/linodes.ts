@@ -6,7 +6,7 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import type { Disk, Linode, Volume } from '@linode/api-v4/types';
+import type { Disk, Linode, LinodeType, Volume } from '@linode/api-v4/types';
 
 /**
  * Intercepts POST request to create a Linode.
@@ -157,5 +157,39 @@ export const mockDeleteLinodes = (
     'DELETE',
     apiMatcher(`linode/instances/${linodeId}`),
     makeResponse({})
+  );
+};
+
+/**
+ * Intercepts GET request to fetch Linode types and mocks the response.
+ *
+ * @param types - Linode types with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeTypes = (
+  types: LinodeType[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('linode/types*'),
+    paginateResponse(types)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch a Linode type and mocks the response.
+ *
+ * @param type - Linode type with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeType = (
+  type: LinodeType
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/types/${type.id}`),
+    makeResponse(type)
   );
 };
