@@ -1,4 +1,54 @@
-import { calculatePercentageWithCeiling } from './NetworkTransfer';
+import React from 'react';
+
+import {
+  accountTransferFactory,
+  linodeTransferFactory,
+  regionFactory,
+  regionWithDynamicPricingFactory,
+} from 'src/factories';
+import { typeFactory } from 'src/factories/types';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import {
+  NetworkTransfer,
+  calculatePercentageWithCeiling,
+} from './NetworkTransfer';
+
+jest.mock('src/hooks/useAPIRequest', () => ({
+  useAPIRequest: jest.fn().mockReturnValue({
+    data: linodeTransferFactory.build(),
+    error: undefined,
+    isLoading: false,
+  }),
+}));
+
+jest.mock('src/queries/accountTransfer', () => ({
+  useAccountTransfer: jest.fn().mockReturnValue({
+    data: accountTransferFactory.build(),
+    error: undefined,
+    isLoading: false,
+  }),
+}));
+
+jest.mock('src/queries/regions', () => {
+  const mockRegions = [
+    ...regionFactory.buildList(5),
+    regionWithDynamicPricingFactory.build(),
+  ];
+
+  return {
+    useRegionsQuery: jest.fn().mockReturnValue({
+      data: mockRegions,
+      error: undefined,
+    }),
+  };
+});
+
+jest.mock('src/queries/types', () => ({
+  useTypeQuery: jest
+    .fn()
+    .mockReturnValue({ data: typeFactory.build(), error: undefined }),
+}));
 
 describe('calculatePercentage', () => {
   it('returns the correct percentage of a value in relation to a target', () => {
@@ -8,5 +58,55 @@ describe('calculatePercentage', () => {
   });
   it('caps the percentage at 100', () => {
     expect(calculatePercentageWithCeiling(101, 100)).toBe(100);
+  });
+});
+
+describe('renders the component with the right data', () => {
+  it('renders the component with the right data', () => {
+    const { getByRole, getByText } = renderWithTheme(
+      <NetworkTransfer
+        linodeID={1234}
+        linodeLabel="test-linode"
+        linodeRegionID="us-east"
+        linodeType="g6-standard-1"
+      />,
+      {
+        flags: {
+          dcSpecificPricing: false,
+        },
+      }
+    );
+
+    expect(getByText('Monthly Network Transfer')).toBeInTheDocument();
+    expect(getByRole('progressbar')).toBeInTheDocument();
+    expect(getByText('test-linode (0.01 GB)')).toBeInTheDocument();
+    expect(getByText('Remaining (16000 GB)')).toBeInTheDocument();
+  });
+
+  it('renders the DC specific pricing copy for linodes in eligible regions and flag is on', () => {
+    const { container, getByRole, getByText } = renderWithTheme(
+      <NetworkTransfer
+        linodeID={1234}
+        linodeLabel="test-linode"
+        linodeRegionID="br-gru"
+        linodeType="g6-standard-1"
+      />,
+      {
+        flags: {
+          dcSpecificPricing: true,
+        },
+      }
+    );
+
+    expect(getByText('Monthly Network Transfer')).toBeInTheDocument();
+    expect(getByRole('progressbar')).toBeInTheDocument();
+    expect(getByText('test-linode (0.01 GB)')).toBeInTheDocument();
+    expect(getByText('Remaining (16000 GB)')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-mui-internal-clone-element]')
+    ).toHaveAttribute(
+      'aria-label',
+      'In some datacenters, the monthly network transfer is calculated and tracked independently.'
+    );
   });
 });

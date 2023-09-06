@@ -60,3 +60,23 @@ export const isLinodeTypeDifferentPriceInSelectedRegion = ({
 
   return false;
 };
+
+/**
+ * @param regionId the region of the current Linode
+ * @param type the type of the current Linode
+ * @returns boolean
+ */
+export const isLinodeInDynamicPricingDC = (
+  regionId: Region['id'],
+  type: LinodeType | undefined
+) => {
+  if (!regionId || !type) {
+    return false;
+  }
+
+  const priceIncreaseRegions: Region['id'][] = type.region_prices.map(
+    (regionPrice) => regionPrice.id
+  );
+
+  return priceIncreaseRegions.includes(regionId) ? true : false;
+};

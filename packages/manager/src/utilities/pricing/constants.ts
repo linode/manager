@@ -8,3 +8,5 @@ export const PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE =
   'Select a region to view plans and prices.';
 export const LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE =
   'Select a Region, HA choice, and add a Node Pool to view pricing and create a cluster.';
+export const MONTHLY_NETWORK_TRANSFER_TOOLTIP_MESSAGE =
+  'In some datacenters, the monthly network transfer is calculated and tracked independently.';

@@ -36,7 +36,12 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
       <StyledPaper>
         <Grid container spacing={4} sx={{ flexGrow: 1 }}>
           <Grid md={2.5} sm={6} xs={12}>
-            <NetworkTransfer linodeID={linode.id} linodeLabel={linode.label} />
+            <NetworkTransfer
+              linodeID={linode.id}
+              linodeLabel={linode.label}
+              linodeRegionID={linode.region}
+              linodeType={linode.type}
+            />
           </Grid>
           <Grid
             sx={{

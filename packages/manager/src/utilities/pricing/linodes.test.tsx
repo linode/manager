@@ -3,6 +3,7 @@ import { linodeTypeFactory } from 'src/factories';
 import { getLinodeBackupPrice } from './backups';
 import {
   getLinodeRegionPrice,
+  isLinodeInDynamicPricingDC,
   isLinodeTypeDifferentPriceInSelectedRegion,
 } from './linodes';
 
@@ -142,5 +143,22 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
         type,
       })
     ).toBe(false);
+  });
+
+  describe('isLinodeInDynamicPricingDC', () => {
+    const type = linodeTypeFactory.build();
+
+    it('returns true if the linode is in a dynamic pricing DC', () => {
+      expect(isLinodeInDynamicPricingDC('br-gru', type)).toBe(true);
+    });
+
+    it('returns false if the linode is not in a dynamic pricing DC', () => {
+      expect(isLinodeInDynamicPricingDC('us-east', type)).toBe(false);
+    });
+
+    it('returns false if the linode if the linode region is falsy or the linode type is undefined', () => {
+      expect(isLinodeInDynamicPricingDC('', type)).toBe(false);
+      expect(isLinodeInDynamicPricingDC('us-east', undefined)).toBe(false);
+    });
   });
 });

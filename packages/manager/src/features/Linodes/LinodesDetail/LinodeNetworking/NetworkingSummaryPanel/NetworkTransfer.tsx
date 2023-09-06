@@ -6,45 +6,80 @@ import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
+import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
+import { useRegionsQuery } from 'src/queries/regions';
+import { useTypeQuery } from 'src/queries/types';
+import { MONTHLY_NETWORK_TRANSFER_TOOLTIP_MESSAGE } from 'src/utilities/pricing/constants';
+import { isLinodeInDynamicPricingDC } from 'src/utilities/pricing/linodes';
 import { readableBytes } from 'src/utilities/unitConversions';
+
+import type { Region } from '@linode/api-v4';
 
 interface Props {
   linodeID: number;
   linodeLabel: string;
+  linodeRegionID: Region['id'];
+  linodeType: null | string;
 }
 
 export const NetworkTransfer = React.memo((props: Props) => {
-  const { linodeID, linodeLabel } = props;
+  const { linodeID, linodeLabel, linodeRegionID, linodeType } = props;
+  const theme = useTheme();
+  const { dcSpecificPricing } = useFlags();
 
   const linodeTransfer = useAPIRequest(
     () => getLinodeTransfer(linodeID),
     { billable: 0, quota: 0, used: 0 },
     [linodeID]
   );
-
+  const regions = useRegionsQuery();
+  const { data: type } = useTypeQuery(linodeType || '', Boolean(linodeType));
   const {
     data: accountTransfer,
     error: accountTransferError,
     isLoading: accountTransferLoading,
   } = useAccountTransfer();
 
+  const currentRegion = regions.data?.find(
+    (region) => region.id === linodeRegionID
+  );
   const linodeUsedInGB = readableBytes(linodeTransfer.data.used, {
     unit: 'GB',
   }).value;
   const totalUsedInGB = accountTransfer?.used || 0;
   const accountQuotaInGB = accountTransfer?.quota || 0;
-
   const error = Boolean(linodeTransfer.error || accountTransferError);
   const loading = linodeTransfer.loading || accountTransferLoading;
+  const isDynamicPricingDC = isLinodeInDynamicPricingDC(linodeRegionID, type);
+
+  const dynamicDCTooltip = isDynamicPricingDC ? (
+    <TextTooltip
+      displayText={currentRegion?.label || ''}
+      minWidth={275}
+      placement="right-end"
+      tooltipText={MONTHLY_NETWORK_TRANSFER_TOOLTIP_MESSAGE}
+    />
+  ) : null;
 
   return (
     <div>
-      <Typography sx={{ paddingBottom: `10px` }}>
+      <Typography marginBottom={theme.spacing()}>
         <strong>Monthly Network Transfer</strong>{' '}
       </Typography>
+      {dcSpecificPricing && (
+        <Typography
+          fontSize="0.8rem"
+          lineHeight={1.2}
+          marginBottom={theme.spacing()}
+        >
+          Usage by {linodeLabel} of the {dynamicDCTooltip} Monthly Network
+          Transfer Pool.
+        </Typography>
+      )}
       <TransferContent
         accountBillableInGB={accountTransfer?.billable || 0}
         accountQuotaInGB={accountQuotaInGB}
@@ -129,17 +164,19 @@ const TransferContent = (props: ContentProps) => {
   return (
     <div>
       <BarPercent
-        sx={{ marginBottom: `${theme.spacing(0.5)}px` }}
         max={100}
         rounded
+        sx={{ marginBottom: `${theme.spacing(0.5)}px` }}
         value={Math.ceil(linodeUsagePercent)}
         valueBuffer={Math.ceil(totalUsagePercent)}
       />
       <StyledGreenTypography>
-        {linodeLabel} ({linodeUsedInGB} GB)
+        <span>
+          {linodeLabel} ({linodeUsedInGB} GB)
+        </span>
       </StyledGreenTypography>
       <StyledGreyTypography>
-        Remaining ({remainingInGB} GB)
+        <span>Remaining ({remainingInGB} GB)</span>
       </StyledGreyTypography>
       {/* @todo: display overages  */}
     </div>
@@ -164,6 +201,9 @@ const StyledGreyTypography = styled(Typography, {
   label: 'StyledGreyTypography',
 })(({ theme }) => ({
   ...sxLegendItem,
+  '&  span': {
+    flex: 1,
+  },
   '&:before': {
     ...sxLegendItemBefore,
     backgroundColor: theme.color.grey2,
@@ -174,6 +214,9 @@ const StyledGreenTypography = styled(Typography, {
   label: 'StyledGreenTypography ',
 })({
   ...sxLegendItem,
+  '&  span': {
+    flex: 1,
+  },
   '&:before': {
     ...sxLegendItemBefore,
     backgroundColor: '#5ad865',
