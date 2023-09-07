@@ -233,7 +233,12 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clients" />
-      <Grid alignItems="center" className={classes.headingWrapper} container>
+      <Grid
+        alignItems="center"
+        className={classes.headingWrapper}
+        container
+        spacing={2}
+      >
         <Grid className={classes.searchbar} item>
           <DebouncedSearchTextField
             debounceTime={250}
@@ -277,6 +282,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
           container
           direction="column"
           justifyContent="center"
+          spacing={2}
         >
           <Typography data-testid="longview-upgrade">
             <Link to={'/longview/plan-details'}>Upgrade to Longview Pro</Link>

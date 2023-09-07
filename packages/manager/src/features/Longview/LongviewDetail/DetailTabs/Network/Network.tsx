@@ -64,7 +64,7 @@ export const NetworkLanding: React.FC<Props> = (props) => {
   const isToday = _isToday(time.start, time.end);
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'Network'} />
       <Grid item xs={12}>
         <Box

@@ -139,7 +139,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
     longviewClientLastUpdated !== 0;
 
   return (
-    <Grid className={classes.root} container direction="column">
+    <Grid className={classes.root} container direction="column" spacing={2}>
       <Grid item>
         {userCanModifyClient ? (
           <EditableEntityLabel
