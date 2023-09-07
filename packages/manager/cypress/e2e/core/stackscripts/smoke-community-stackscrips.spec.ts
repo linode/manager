@@ -5,8 +5,6 @@ import {
   mockGetStackScripts,
   mockGetStackScript,
 } from 'support/intercepts/stackscripts';
-import { DateTime } from 'luxon';
-import { ISO_DATE_FORMAT, DATETIME_DISPLAY_FORMAT } from '@src/constants';
 import { containsClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
@@ -106,18 +104,19 @@ describe('Community Stackscripts integration tests', () => {
     cy.findByText('Automate deployment scripts').should('not.exist');
 
     cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
-      const dateFormatOptions = { zone: profile.timezone };
+      const dateFormatOptions = {
+        timezone: profile.timezone,
+        displayTime: false,
+      };
 
       const updatedTime = stackScript.updated
-        ? DateTime.fromISO(stackScript.updated, dateFormatOptions)
-        : DateTime.fromISO('1970-01-01T00:00:00.000');
+        ? formatDate(stackScript.updated, dateFormatOptions)
+        : formatDate('1970-01-01T00:00:00.000');
       cy.get(`[data-qa-table-row="${stackScript.label}"]`)
         .should('be.visible')
         .within(() => {
           cy.findByText(stackScript.deployments_total).should('be.visible');
-          cy.findByText(updatedTime.toFormat(ISO_DATE_FORMAT)).should(
-            'be.visible'
-          );
+          cy.findByText(updatedTime).should('be.visible');
         });
 
       // Search the corresponding community stack script
@@ -153,13 +152,18 @@ describe('Community Stackscripts integration tests', () => {
           .within(() => {
             cy.findByText(stackScript.deployments_active).should('be.visible');
           });
+        const dateFormatOptions = {
+          timezone: profile.timezone,
+          displayTime: false,
+        };
+        const updatedDatetimeDisplay = stackScript.updated
+          ? formatDate(stackScript.updated, dateFormatOptions)
+          : formatDate('1970-01-01T00:00:00.000');
         cy.findByText('Last revision:')
           .should('be.visible')
           .parent()
           .within(() => {
-            cy.findByText(updatedTime.toFormat(DATETIME_DISPLAY_FORMAT)).should(
-              'be.visible'
-            );
+            cy.findByText(updatedDatetimeDisplay).should('be.visible');
           });
         cy.findByText('StackScript ID:')
           .should('be.visible')
