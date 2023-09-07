@@ -19,7 +19,7 @@ import {
   tieredPricingRegionDifferenceNotice,
 } from 'support/constants/tiered-pricing';
 import { chooseRegion, getRegionById } from 'support/util/regions';
-import { randomLabel, randomString } from 'support/util/random';
+import { randomLabel } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 
@@ -46,12 +46,17 @@ describe('clone linode', () => {
     cleanUp('linodes');
   });
 
+  /*
+   * - Confirms Linode Clone flow via the Linode details page.
+   * - Confirms that Linode can be cloned successfully.
+   */
   it('can clone a Linode from Linode details page', () => {
     const linodeRegion = chooseRegion();
     const linodePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: linodeRegion.id,
-      root_pass: randomString(32),
+      // Specifying no image allows the Linode to provision and clone faster.
+      image: undefined,
       type: 'g6-nanode-1',
     });
 
@@ -68,7 +73,7 @@ describe('clone linode', () => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
       // Wait for Linode to boot, then initiate clone flow.
-      cy.findByText('RUNNING', { timeout: 180000 }).should('be.visible');
+      cy.findByText('OFFLINE', { timeout: 180000 }).should('be.visible');
 
       ui.actionMenu
         .findByTitle(`Action menu for Linode ${linode.label}`)
@@ -81,6 +86,7 @@ describe('clone linode', () => {
       // (Cloning from the Linodes landing does pre-select a region, however.)
       cy.url().should('endWith', getLinodeCloneUrl(linode, false));
 
+      // Select clone region and Linode type.
       cy.findByText('Select a Region')
         .should('be.visible')
         .click()
@@ -93,6 +99,7 @@ describe('clone linode', () => {
         .should('be.visible')
         .click();
 
+      // Confirm summary displays expected information and begin clone.
       cy.findByText(`Summary ${newLinodeLabel}`).should('be.visible');
 
       ui.button
@@ -108,6 +115,9 @@ describe('clone linode', () => {
       });
 
       ui.toast.assertMessage(`Your Linode ${newLinodeLabel} is being created.`);
+      ui.toast.assertMessage(
+        `Linode ${linode.label} has been cloned successfully to ${newLinodeLabel}.`
+      );
     });
   });
 
