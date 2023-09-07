@@ -74,7 +74,7 @@ export const CreateCertificateDrawer = (props: Props) => {
                 </Typography>
               </Stack>
             }
-            control={<Radio />}
+            control={<Radio data-qa-cert-tls />}
             sx={{ alignItems: 'flex-start' }}
             value="downstream"
           />
@@ -89,7 +89,7 @@ export const CreateCertificateDrawer = (props: Props) => {
                 </Typography>
               </Stack>
             }
-            control={<Radio />}
+            control={<Radio data-qa-cert-service-target />}
             sx={{ alignItems: 'flex-start', mt: 2 }}
             value="ca"
           />
