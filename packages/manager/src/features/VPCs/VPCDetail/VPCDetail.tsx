@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
@@ -16,6 +17,7 @@ import { truncate } from 'src/utilities/truncate';
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
 import { getUniqueLinodesFromSubnets } from '../utils';
+import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import {
   StyledActionButton,
   StyledDescriptionBox,
@@ -33,6 +35,9 @@ const VPCDetail = () => {
   const { data: regions } = useRegionsQuery();
 
   const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
+  const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
+    false
+  );
   const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
@@ -184,6 +189,17 @@ const VPCDetail = () => {
       >
         <Typography variant="h2">Subnets</Typography>
       </Box>
+      <Box>
+        {/* todo: search bar can maybe go here too? */}
+        <Button onClick={() => setSubnetCreateDrawerOpen(true)}>
+          Create Subnet
+        </Button>
+      </Box>
+      <SubnetCreateDrawer
+        onClose={() => setSubnetCreateDrawerOpen(false)}
+        open={subnetCreateDrawerOpen}
+        vpcId={vpc.id}
+      />
       <VPCSubnetsTable vpcId={vpc.id} />
     </>
   );

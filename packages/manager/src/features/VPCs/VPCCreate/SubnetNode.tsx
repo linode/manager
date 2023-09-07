@@ -13,6 +13,10 @@ import { calculateAvailableIPv4s } from 'src/utilities/subnets';
 interface Props {
   disabled?: boolean;
   // extra props enable SubnetNode to be an independent component or be part of MultipleSubnetInput
+  // Note: when I first created this component, I wanted to make it reusable as an independent component for the Create subnet drawer,
+  // edit subnet drawer, etc. However, now that I'm working on the Create Subnet drawer, imo it's easier to not use this component
+  // If I've time, may look into getting rid of the props that enabled this to be an independent component
+  // actually wait tbd maybe it's not so bad to use this... i'm thinking lol (do i have brain cells rn????)
   // potential refactor - isRemoveable, and subnetIdx & remove in onChange prop
   idx?: number;
   isRemovable?: boolean;
