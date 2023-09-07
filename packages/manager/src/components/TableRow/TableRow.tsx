@@ -5,7 +5,6 @@ import { Hidden } from 'src/components/Hidden';
 
 import {
   StyledActiveCaret,
-  StyledActiveCaretOverlay,
   StyledTableDataCell,
   StyledTableRow,
 } from './TableRow.styles';
@@ -29,6 +28,7 @@ export const TableRow = React.memo((props: TableRowProps) => {
     <StyledTableRow
       aria-label={ariaLabel ?? `View Details`}
       ref={domRef}
+      selected={selected}
       {...rest}
     >
       {props.children}
@@ -36,7 +36,6 @@ export const TableRow = React.memo((props: TableRowProps) => {
         <Hidden lgDown>
           <StyledTableDataCell>
             <StyledActiveCaret />
-            <StyledActiveCaretOverlay />
           </StyledTableDataCell>
         </Hidden>
       )}
