@@ -33,6 +33,8 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   },
   title: 'Getting Started Guides',
 };
+// TODO: AGLB - These are not finalized yet; changes may be expected.
+// Links may currently show 404 as work is in progress from the docs team side.
 
 export const resourcesLinks: ResourcesLinkSection = {
   links: [
