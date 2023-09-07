@@ -14,10 +14,10 @@ import {
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
-  tieredPricingRegionNotice,
-  tieredPricingMockLinodeTypes,
-  tieredPricingRegionDifferenceNotice,
-} from 'support/constants/tiered-pricing';
+  dcPricingRegionNotice,
+  dcPricingMockLinodeTypes,
+  dcPricingRegionDifferenceNotice,
+} from 'support/constants/dc-specific-pricing';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { randomLabel } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
@@ -73,7 +73,7 @@ describe('clone linode', () => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
       // Wait for Linode to boot, then initiate clone flow.
-      cy.findByText('OFFLINE', { timeout: 180000 }).should('be.visible');
+      cy.findByText('OFFLINE').should('be.visible');
 
       ui.actionMenu
         .findByTitle(`Action menu for Linode ${linode.label}`)
@@ -126,13 +126,13 @@ describe('clone linode', () => {
    * - Confirms that pricing notice is shown in "Region" section.
    * - Confirms that notice is shown when selecting a region with a different price structure.
    */
-  it('shows tiered pricing information during clone flow', () => {
+  it('shows DC-specific pricing information during clone flow', () => {
     const initialRegion = getRegionById('us-west');
     const newRegion = getRegionById('us-east');
 
     const mockLinode = linodeFactory.build({
       region: initialRegion.id,
-      type: tieredPricingMockLinodeTypes[0].id,
+      type: dcPricingMockLinodeTypes[0].id,
     });
 
     mockGetLinodes([mockLinode]).as('getLinodes');
@@ -143,9 +143,9 @@ describe('clone linode', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock requests to get all Linode types, and to get individual types.
-    mockGetLinodeType(tieredPricingMockLinodeTypes[0]);
-    mockGetLinodeType(tieredPricingMockLinodeTypes[1]);
-    mockGetLinodeTypes(tieredPricingMockLinodeTypes).as('getLinodeTypes');
+    mockGetLinodeType(dcPricingMockLinodeTypes[0]);
+    mockGetLinodeType(dcPricingMockLinodeTypes[1]);
+    mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
     cy.visitWithLogin(getLinodeCloneUrl(mockLinode));
     cy.wait([
@@ -157,18 +157,16 @@ describe('clone linode', () => {
     ]);
 
     // TODO Move these assertions to end-to-end test once `dcSpecificPricing` flag goes away.
-    // TODO Remove this assertion when tiered pricing notice goes away.
-    cy.findByText(tieredPricingRegionNotice, { exact: false }).should(
-      'be.visible'
-    );
+    // TODO Remove this assertion when DC-specific pricing notice goes away.
+    cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
 
     // TODO Uncomment docs link assertion when docs links are added.
-    // cy.findByText(tieredPricingDocsLabel)
+    // cy.findByText(dcPricingDocsLabel)
     //   .should('be.visible')
-    //   .should('have.attr', 'href', tieredPricingDocsUrl);
+    //   .should('have.attr', 'href', dcPricingDocsUrl);
 
-    // Confirm that tiered pricing difference notice is not yet shown.
-    cy.findByText(tieredPricingRegionDifferenceNotice, { exact: false }).should(
+    // Confirm that DC-specific pricing difference notice is not yet shown.
+    cy.findByText(dcPricingRegionDifferenceNotice, { exact: false }).should(
       'not.exist'
     );
 
@@ -177,7 +175,7 @@ describe('clone linode', () => {
       .click()
       .type(`${newRegion.label}{enter}`);
 
-    cy.findByText(tieredPricingRegionDifferenceNotice, { exact: false }).should(
+    cy.findByText(dcPricingRegionDifferenceNotice, { exact: false }).should(
       'be.visible'
     );
   });
