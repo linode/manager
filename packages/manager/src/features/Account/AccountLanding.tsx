@@ -17,8 +17,12 @@ import { useGrants } from 'src/queries/profile';
 import AccountLogins from './AccountLogins';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
-const EntityTransfersLanding = React.lazy(
-  () => import('src/features/EntityTransfers/EntityTransfersLanding')
+const EntityTransfersLanding = React.lazy(() =>
+  import(
+    'src/features/EntityTransfers/EntityTransfersLanding/EntityTransfersLanding'
+  ).then((module) => ({
+    default: module.EntityTransfersLanding,
+  }))
 );
 const Users = React.lazy(() => import('src/features/Users'));
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
