@@ -15,9 +15,14 @@ const queryClient = new QueryClient();
 beforeAll(() => mockMatchMedia());
 afterEach(() => {
   queryClient.clear();
+  jest.clearAllMocks();
 });
 
 const loadingTestId = 'circle-progress';
+
+const propsDelete = {
+  handleDelete: jest.fn(),
+};
 
 describe('VPC Subnets table', () => {
   it('should display subnet label, id, ip range, number of linodes, and action menu', async () => {
@@ -34,7 +39,7 @@ describe('VPC Subnets table', () => {
       getByTestId,
       getByText,
     } = renderWithTheme(
-      <VPCSubnetsTable handleDelete={jest.fn()} vpcId={1} />,
+      <VPCSubnetsTable handleDelete={propsDelete.handleDelete} vpcId={1} />,
       { queryClient }
     );
 
@@ -69,7 +74,7 @@ describe('VPC Subnets table', () => {
     );
 
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
-      <VPCSubnetsTable handleDelete={jest.fn()} vpcId={2} />
+      <VPCSubnetsTable handleDelete={propsDelete.handleDelete} vpcId={2} />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -87,7 +92,7 @@ describe('VPC Subnets table', () => {
       })
     );
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
-      <VPCSubnetsTable handleDelete={jest.fn()} vpcId={3} />
+      <VPCSubnetsTable handleDelete={propsDelete.handleDelete} vpcId={3} />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -100,5 +105,57 @@ describe('VPC Subnets table', () => {
     getByText('Linode ID');
     getByText('VPC IPv4');
     getByText('Firewalls');
+  });
+
+  it('should not allow subnet to be deleted if there are multiple linodes assigned to the subnet', async () => {
+    const subnet = subnetFactory.build({ linodes: [1, 2, 3] });
+    server.use(
+      rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([subnet])));
+      })
+    );
+
+    const {
+      getAllByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
+      <VPCSubnetsTable handleDelete={propsDelete.handleDelete} vpcId={1} />,
+      { queryClient }
+    );
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const actionMenuButton = getAllByRole('button')[3];
+    fireEvent.click(actionMenuButton);
+    const deleteButton = getByText('Delete');
+    fireEvent.click(deleteButton);
+    expect(propsDelete.handleDelete).not.toHaveBeenCalled();
+  });
+
+  it('should allow subnet to be deleted if there are multiple linodes assigned to the subnet', async () => {
+    const subnet = subnetFactory.build({
+      id: 99,
+      label: 'delete this',
+      linodes: [],
+    });
+    server.use(
+      rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([subnet])));
+      })
+    );
+
+    const screen = renderWithTheme(
+      <VPCSubnetsTable handleDelete={propsDelete.handleDelete} vpcId={1} />,
+      { queryClient }
+    );
+
+    await waitForElementToBeRemoved(screen.getByTestId(loadingTestId));
+
+    const actionMenuButton = screen.getAllByRole('button')[3];
+    fireEvent.click(actionMenuButton);
+    const deleteButton = screen.getByText('Delete');
+    fireEvent.click(deleteButton);
+    expect(propsDelete.handleDelete).toHaveBeenCalledWith(99, 'delete this');
   });
 });

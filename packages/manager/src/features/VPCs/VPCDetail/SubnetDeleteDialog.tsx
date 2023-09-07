@@ -48,7 +48,7 @@ export const SubnetDeleteDialog = (props: Props) => {
       onClick={onDeleteSubnet}
       onClose={onClose}
       open={open}
-      title={`Delete subnet ${subnetLabel}`}
+      title={`Delete Subnet ${subnetLabel}`}
     />
   );
 };

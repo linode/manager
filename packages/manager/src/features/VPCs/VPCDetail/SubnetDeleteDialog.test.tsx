@@ -11,11 +11,11 @@ const props = {
   vpcId: 1,
 };
 
-describe('Delete Subnet drawer', () => {
-  it('should render a SubnetDeleteDrawer', () => {
+describe('Delete Subnet dialog', () => {
+  it('should render a SubnetDeleteDialog', () => {
     const { getByText } = renderWithTheme(<SubnetDeleteDialog {...props} />);
 
-    getByText('Delete subnet some subnet');
+    getByText('Delete Subnet some subnet');
     getByText('Subnet label');
     getByText('Cancel');
     getByText('Delete');

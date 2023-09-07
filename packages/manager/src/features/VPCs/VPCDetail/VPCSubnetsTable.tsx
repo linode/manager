@@ -120,7 +120,7 @@ export const VPCSubnetsTable = (props: CombinedProps) => {
           <TableCell align="right">
             <SubnetsActionMenu
               handleDelete={handleDelete}
-              numSubnets={subnet.linodes.length}
+              numLinodes={subnet.linodes.length}
               subnetId={subnet.id}
               subnetLabel={subnet.label}
               vpcId={vpcId}

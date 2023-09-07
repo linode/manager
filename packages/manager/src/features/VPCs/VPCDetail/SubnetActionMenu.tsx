@@ -8,14 +8,14 @@ export interface SubnetActionHandlers {
 }
 
 interface Props extends SubnetActionHandlers {
-  numSubnets: number;
+  numLinodes: number;
   subnetId: number;
   subnetLabel: string;
   vpcId: number;
 }
 
 export const SubnetsActionMenu = (props: Props) => {
-  const { numSubnets, subnetId, subnetLabel } = props;
+  const { numLinodes, subnetId, subnetLabel } = props;
 
   const handleAssignLinode = () => {};
 
@@ -52,7 +52,7 @@ export const SubnetsActionMenu = (props: Props) => {
         handleDelete();
       },
       title: 'Delete',
-      disabled: numSubnets !== 0,
+      disabled: numLinodes !== 0,
       tooltip:
         'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.',
     },

@@ -1,9 +1,12 @@
 import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 
+import { subnetFactory } from 'src/factories/subnets';
 import { vpcFactory } from 'src/factories/vpcs';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -110,5 +113,51 @@ describe('VPC Detail Summary section', () => {
 
     fireEvent.click(readMoreButton);
     expect(readMoreButton.innerHTML).toBe('Read Less');
+  });
+
+  // todo: this test does not yet fully work
+  it('should remove a subnet from the page if it is deleted', async () => {
+    const vpcFactory1 = vpcFactory.build({});
+    const subnetFactory1 = subnetFactory.build({
+      id: 1,
+      label: 'subnet-1',
+      linodes: [],
+      created: '2023-07-12T16:08:53',
+      updated: '2023-07-12T16:08:53',
+    });
+
+    server.use(
+      rest.get('*/vpcs/:vpcId', (req, res, ctx) => {
+        return res(ctx.json(vpcFactory1));
+      }),
+      rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([subnetFactory1])));
+      }),
+      rest.delete('*/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
+        return res(ctx.json({}));
+      })
+    );
+
+    const screen = renderWithTheme(<VPCDetail />, {
+      queryClient,
+    });
+
+    await waitForElementToBeRemoved(screen.getByTestId(loadingTestId));
+    await waitForElementToBeRemoved(screen.getByTestId(loadingTestId));
+    const subnet = screen.getByText('subnet-1');
+    expect(subnet).toBeInTheDocument();
+    const actionMenuButton = screen.getAllByRole('button')[5];
+    fireEvent.click(actionMenuButton);
+    const deleteButtons = screen.getAllByText('Delete');
+    fireEvent.click(deleteButtons[1]);
+    expect(screen.getByText('Delete Subnet subnet-1')).toBeInTheDocument();
+    const textbox = screen.getByTestId('textfield-input');
+    expect(textbox).toBeInTheDocument();
+    userEvent.type(textbox, 'subnet-1');
+    expect(screen.getByTestId('confirm')).toBeInTheDocument();
+    // const deleteSubnet = screen.getByTestId('confirm');
+    // userEvent.click(deleteSubnet);
+
+    screen.debug(undefined, Infinity);
   });
 });
