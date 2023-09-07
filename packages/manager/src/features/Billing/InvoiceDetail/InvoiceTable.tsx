@@ -17,6 +17,8 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
+import { useFlags } from 'src/hooks/useFlags';
+import { getInvoiceRegion } from '../PdfGenerator/utils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   table: {
@@ -38,6 +40,7 @@ interface Props {
 
 const InvoiceTable = (props: Props) => {
   const { classes } = useStyles();
+  const flags = useFlags();
 
   const { errors, items, loading } = props;
 
@@ -45,16 +48,15 @@ const InvoiceTable = (props: Props) => {
     <Table aria-label="Invoice Details" className={classes.table} noBorder>
       <TableHead>
         <TableRow>
-          <TableCell data-qa-column="Description">Description</TableCell>
-          <TableCell data-qa-column="From">From</TableCell>
-          <TableCell data-qa-column="To">To</TableCell>
-          <TableCell data-qa-column="Quantity">Quantity</TableCell>
-          <TableCell data-qa-column="Unit Price" noWrap>
-            Unit Price
-          </TableCell>
-          <TableCell data-qa-column="Amount">Amount (USD)</TableCell>
-          <TableCell data-qa-column="Taxes">Tax (USD)</TableCell>
-          <TableCell data-qa-column="Total">Total (USD)</TableCell>
+          <TableCell>Description</TableCell>
+          <TableCell sx={{ minWidth: '125px' }}>From</TableCell>
+          <TableCell sx={{ minWidth: '125px' }}>To</TableCell>
+          <TableCell>Quantity</TableCell>
+          {flags.dcSpecificPricing && <TableCell>Region</TableCell>}
+          <TableCell noWrap>Unit Price</TableCell>
+          <TableCell>Amount (USD)</TableCell>
+          <TableCell>Tax (USD)</TableCell>
+          <TableCell>Total (USD)</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -70,6 +72,7 @@ const renderDate = (v: null | string) =>
 const renderQuantity = (v: null | number) => (v ? v : null);
 
 const RenderData = (props: { items: InvoiceItem[] }) => {
+  const flags = useFlags();
   const { items } = props;
 
   const MIN_PAGE_SIZE = 25;
@@ -85,36 +88,48 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
         pageSize,
       }) => (
         <React.Fragment>
-          {paginatedData.map(
-            ({ amount, from, label, quantity, tax, to, total, unit_price }) => (
-              <TableRow key={`${label}-${from}-${to}`}>
-                <TableCell data-qa-description parentColumn="Description">
-                  {label}
+          {paginatedData.map((invoiceItem: InvoiceItem) => (
+            <TableRow
+              key={`${invoiceItem.label}-${invoiceItem.from}-${invoiceItem.to}`}
+            >
+              <TableCell data-qa-description parentColumn="Description">
+                {invoiceItem.label}
+              </TableCell>
+              <TableCell data-qa-from parentColumn="From">
+                {renderDate(invoiceItem.from)}
+              </TableCell>
+              <TableCell data-qa-to parentColumn="To">
+                {renderDate(invoiceItem.to)}
+              </TableCell>
+              <TableCell data-qa-quantity parentColumn="Quantity">
+                {renderQuantity(invoiceItem.quantity)}
+              </TableCell>
+              {flags.dcSpecificPricing && (
+                <TableCell parentColumn="Region">
+                  {getInvoiceRegion(invoiceItem)}
                 </TableCell>
-                <TableCell data-qa-from parentColumn="From">
-                  {renderDate(from)}
-                </TableCell>
-                <TableCell data-qa-to parentColumn="To">
-                  {renderDate(to)}
-                </TableCell>
-                <TableCell data-qa-quantity parentColumn="Quantity">
-                  {renderQuantity(quantity)}
-                </TableCell>
-                <TableCell data-qa-unit-price parentColumn="Unit Price">
-                  {unit_price !== 'None' && renderUnitPrice(unit_price)}
-                </TableCell>
-                <TableCell data-qa-amount parentColumn="Amount (USD)">
-                  <Currency quantity={amount} wrapInParentheses={amount < 0} />
-                </TableCell>
-                <TableCell data-qa-tax parentColumn="Tax (USD)">
-                  <Currency quantity={tax} />
-                </TableCell>
-                <TableCell data-qa-total parentColumn="Total (USD)">
-                  <Currency quantity={total} wrapInParentheses={total < 0} />
-                </TableCell>
-              </TableRow>
-            )
-          )}
+              )}
+              <TableCell data-qa-unit-price parentColumn="Unit Price">
+                {invoiceItem.unit_price !== 'None' &&
+                  renderUnitPrice(invoiceItem.unit_price)}
+              </TableCell>
+              <TableCell data-qa-amount parentColumn="Amount (USD)">
+                <Currency
+                  quantity={invoiceItem.amount}
+                  wrapInParentheses={invoiceItem.amount < 0}
+                />
+              </TableCell>
+              <TableCell data-qa-tax parentColumn="Tax (USD)">
+                <Currency quantity={invoiceItem.tax} />
+              </TableCell>
+              <TableCell data-qa-total parentColumn="Total (USD)">
+                <Currency
+                  quantity={invoiceItem.total}
+                  wrapInParentheses={invoiceItem.total < 0}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
           {count > MIN_PAGE_SIZE && (
             <TableRow>
               <TableCell
@@ -145,15 +160,21 @@ const MaybeRenderContent = (props: {
   items?: any[];
   loading: boolean;
 }) => {
+  const flags = useFlags();
   const { errors, items, loading } = props;
 
+  const columns = flags.dcSpecificPricing ? 9 : 8;
+
   if (loading) {
-    return <TableRowLoading columns={8} />;
+    return <TableRowLoading columns={columns} />;
   }
 
   if (errors) {
     return (
-      <TableRowError colSpan={8} message="Unable to retrieve invoice items." />
+      <TableRowError
+        colSpan={columns}
+        message="Unable to retrieve invoice items."
+      />
     );
   }
 
@@ -161,7 +182,7 @@ const MaybeRenderContent = (props: {
     return <RenderData items={items} />;
   }
 
-  return <TableRowEmpty colSpan={8} />;
+  return <TableRowEmpty colSpan={columns} />;
 };
 
 export default InvoiceTable;
