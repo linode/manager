@@ -8,6 +8,13 @@ import {
 } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { vpcFactory } from '@src/factories/vpcs';
+import { mockGetVPCs } from 'support/intercepts/vpc';
+import {
   containsVisible,
   fbtVisible,
   getClick,
@@ -400,6 +407,73 @@ describe('linode landing checks', () => {
     cy.findByText('Region:').should('not.exist');
     cy.findByText('Linode ID:').should('not.exist');
     cy.findByText('Created:').should('not.exist');
+  });
+
+  it('checks VPC column is not shown when LauchDarkly is disabled', () => {
+    // TODO: Remove this test when VPC feature flag is removed from codebase.
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    cy.visitWithLogin('/linodes');
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getLinodes']);
+
+    ui.nav.find().findByText('VPC').should('not.exist');
+
+    cy.visitWithLogin('/vpcs');
+
+    cy.findByText('Not Found').should('be.visible');
+  });
+
+  it('checks VPC column is shown when LauchDarkly is enabled', () => {
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    cy.visitWithLogin('/linodes');
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getLinodes']);
+
+    const mockVPCs = vpcFactory.buildList(5);
+    mockGetVPCs(mockVPCs).as('getVPCs');
+    ui.nav.findItemByTitle('VPC').should('be.visible').click();
+    cy.wait('@getVPCs');
+
+    // Check VPC landing page details
+    cy.url().should('endWith', '/vpcs');
+    ui.button
+      .findByTitle('Create VPC')
+      .should('be.visible')
+      .should('be.enabled');
+    cy.findByText('Virtual Private Cloud (VPC)').should('be.visible');
+    cy.findByText('Label').should('be.visible');
+    cy.findByText('Region').should('be.visible');
+    cy.findByText('VPC ID').should('be.visible');
+    cy.findByText('Subnets').should('be.visible');
+
+    // Confirm each VPC is listed with expected data.
+    mockVPCs.forEach((mockVPC) => {
+      const regionLabel = getRegionById(mockVPC.region).label;
+      cy.findByText(mockVPC.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText(regionLabel).should('be.visible');
+
+          ui.button
+            .findByTitle('Edit')
+            .should('be.visible')
+            .should('be.enabled');
+
+          ui.button
+            .findByTitle('Delete')
+            .should('be.visible')
+            .should('be.enabled');
+        });
+    });
   });
 });
 
