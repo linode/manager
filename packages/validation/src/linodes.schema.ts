@@ -145,10 +145,14 @@ export const linodeInterfaceSchema = array()
             /[a-zA-Z0-9-]+/,
             'Must include only ASCII letters, numbers, and dashes'
           ),
-        otherwise: string().test({
-          name: testnameDisallowedBasedOnPurpose('VLAN'),
-          message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
-          test: (value) => typeof value === 'undefined' || value === '',
+        otherwise: string().when('label', {
+          is: null,
+          then: string().nullable(),
+          otherwise: string().test({
+            name: testnameDisallowedBasedOnPurpose('VLAN'),
+            message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
+            test: (value) => typeof value === 'undefined' || value === '',
+          }),
         }),
       }),
       ipam_address: string().when('purpose', {
@@ -158,10 +162,17 @@ export const linodeInterfaceSchema = array()
           message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
           test: validateIP,
         }),
-        otherwise: string().test({
-          name: testnameDisallowedBasedOnPurpose('VLAN'),
-          message: testmessageDisallowedBasedOnPurpose('vlan', 'ipam_address'),
-          test: (value) => typeof value === 'undefined' || value === '',
+        otherwise: string().when('ipam_address', {
+          is: null,
+          then: string().nullable(),
+          otherwise: string().test({
+            name: testnameDisallowedBasedOnPurpose('VLAN'),
+            message: testmessageDisallowedBasedOnPurpose(
+              'vlan',
+              'ipam_address'
+            ),
+            test: (value) => typeof value === 'undefined' || value === '',
+          }),
         }),
       }),
       primary: boolean().notRequired(),
