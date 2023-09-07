@@ -56,27 +56,6 @@ export const resourcesLinks: ResourcesLinkSection = {
   },
   title: 'Resources',
 };
-// TODO: AGLB - This is placeholder for video resources.
-// Will be updated with links and text once we get them from docs team.
-export const youtubeLinkData: ResourcesLinkSection = {
-  links: [
-    {
-      external: true,
-      text: '',
-      to: '',
-    },
-    {
-      external: true,
-      text: '',
-      to: '',
-    },
-  ],
-  moreInfo: {
-    text: '',
-    to: '',
-  },
-  title: 'Video Playlist',
-};
 
 export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
   action: 'Click:link',
