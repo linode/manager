@@ -24,6 +24,7 @@ import type {
   linkAnalyticsEvent as linkAnalyticsEventType,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
+//* * *TODO:Confirm with the docs team and UX where the link should point: the product page or the CM NodeBalancer page. */}
 const AdditionalCopy = () => (
   <Typography sx={{ mb: '16px' }} variant="body1">
     Looking for a single data center Load Balancer? Try {` `}
