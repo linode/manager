@@ -9,7 +9,7 @@ interface Props {
   onClose: () => void;
   open: boolean;
   subnetId?: number;
-  subnetLabel: string;
+  subnetLabel?: string;
   vpcId: number;
 }
 

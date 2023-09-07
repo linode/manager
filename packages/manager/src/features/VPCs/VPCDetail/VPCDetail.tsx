@@ -209,7 +209,7 @@ const VPCDetail = () => {
         }
         open={deleteSubnetDialogData.open}
         subnetId={deleteSubnetDialogData.subnetId}
-        subnetLabel={deleteSubnetDialogData.subnetLabel ?? ''}
+        subnetLabel={deleteSubnetDialogData.subnetLabel}
         vpcId={vpc.id}
       />
     </>

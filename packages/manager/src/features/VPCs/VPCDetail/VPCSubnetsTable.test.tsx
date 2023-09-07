@@ -107,7 +107,7 @@ describe('VPC Subnets table', () => {
     getByText('Firewalls');
   });
 
-  it('should not allow subnet to be deleted if there are multiple linodes assigned to the subnet', async () => {
+  it('should not allow the subnet delete action menu button to be clicked if there are linodes associated with subnet', async () => {
     const subnet = subnetFactory.build({ linodes: [1, 2, 3] });
     server.use(
       rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
@@ -133,7 +133,7 @@ describe('VPC Subnets table', () => {
     expect(propsDelete.handleDelete).not.toHaveBeenCalled();
   });
 
-  it('should allow subnet to be deleted if there are multiple linodes assigned to the subnet', async () => {
+  it('should allow the subnet delete action menu button to be clicked if there are no linodes associated with subnet', async () => {
     const subnet = subnetFactory.build({
       id: 99,
       label: 'delete this',
