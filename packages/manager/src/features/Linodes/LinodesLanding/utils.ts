@@ -41,3 +41,13 @@ export const statusToPriority = (status: ExtendedStatus): number => {
       return 3;
   }
 };
+
+export const getLinodeIconStatus = (status: LinodeStatus) => {
+  if (status === 'running') {
+    return 'active';
+  }
+  if (['offline', 'stopped'].includes(status)) {
+    return 'inactive';
+  }
+  return 'other';
+};
