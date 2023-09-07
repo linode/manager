@@ -584,10 +584,6 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   managed_service_delete: {
     notification: (e) => `Managed service ${e.entity!.label} has been deleted.`,
   },
-  nodebalancer_added_to_firewall: {
-    notification: (e) =>
-      `NodeBalancer ${e.entity!.label} has been added to Firewall.`,
-  },
   nodebalancer_config_create: {
     notification: (e) =>
       `A config on NodeBalancer ${e.entity!.label} has been created.`,
