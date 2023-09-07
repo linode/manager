@@ -25,6 +25,8 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { EventWithStore } from 'src/events';
 import { getAll } from 'src/utilities/getAll';
 
+import { queryKey as PROFILE_QUERY_KEY } from './profile';
+
 export const queryKey = 'domains';
 
 export const useDomainsQuery = (params: Params, filter: Filter) =>
@@ -54,6 +56,8 @@ export const useCreateDomainMutation = () => {
     onSuccess: (domain) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
     },
   });
 };
