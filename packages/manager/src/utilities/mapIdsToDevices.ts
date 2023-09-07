@@ -10,7 +10,7 @@ export const mapIdsToDevices = <T extends Device>(
 ): T | T[] | null => {
   const deviceMap = new Map(
     // Even though the types extend Device. type insertion is still required here
-    devices.map((device) => [(device as Device).id, device])
+    devices.map((device) => [device.id, device])
   );
   if (Array.isArray(ids)) {
     return ids.map((id) => deviceMap.get(id)).filter(isNotNullOrUndefined);

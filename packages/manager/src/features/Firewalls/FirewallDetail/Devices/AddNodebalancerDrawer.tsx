@@ -1,3 +1,4 @@
+import { NodeBalancer } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -51,51 +52,63 @@ export const AddNodebalancerDrawer = (props: Props) => {
     mutateAsync: addDevice,
   } = useAddFirewallDeviceMutation(Number(id));
 
-  const [selectedDeviceIds, setSelectedDeviceIds] = React.useState<number[]>(
-    []
+  const [selectedNodebalancers, setSelectedNodebalancers] = React.useState<
+    NodeBalancer[]
+  >([]);
+
+  const [localError, setLocalError] = React.useState<string | undefined>(
+    undefined
   );
 
   const handleSubmit = async () => {
     const results = await Promise.allSettled(
-      selectedDeviceIds.map((id) => addDevice({ id, type: 'nodebalancer' }))
+      selectedNodebalancers.map((nodebalancer) =>
+        addDevice({ id: nodebalancer.id, type: 'nodebalancer' })
+      )
     );
 
     let hasError = false;
 
-    results.forEach((result, _) => {
+    results.forEach((result, index) => {
+      const label = selectedNodebalancers[index].label;
       if (result.status === 'fulfilled') {
         // Assuming the response contains the device label, replace with the appropriate property if not.
-        const label = result.value.entity.label;
         enqueueSnackbar(`${label} added successfully.`, { variant: 'success' });
       } else {
         hasError = true;
         // Assuming the error object contains the device label, replace with the appropriate property if not.
-        const errorLabel = result.reason.label;
-        enqueueSnackbar(`Failed to add ${errorLabel}.`, { variant: 'error' });
+        // const errorLabel = result.reason.label;
+        enqueueSnackbar(`Failed to add ${label}.`, {
+          variant: 'error',
+        });
       }
     });
 
     if (!hasError) {
       onClose();
-      setSelectedDeviceIds([]);
+      setSelectedNodebalancers([]);
     }
   };
 
-  const errorMessage = error
-    ? getAPIErrorOrDefault(error, `Error adding Nodebalancer`)[0].reason
-    : undefined;
+  React.useEffect(() => {
+    setLocalError(
+      error
+        ? getAPIErrorOrDefault(error, `Error adding Nodebalancer`)[0].reason
+        : undefined
+    );
+  }, [error]);
 
   // @todo update regex once error messaging updates
   const errorNotice = () => {
-    let errorMsg = errorMessage || '';
+    let errorMsg = localError || '';
     // match something like: Nodebalancer <nodebalancer_label> (ID <nodebalancer_id>)
-    const device = /(nodebalancer) (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
+    const nodebalancer = /NodeBalancer (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
     if (openTicket) {
       errorMsg = errorMsg.replace(/open a support ticket\./i, '');
     }
-    if (device) {
-      const [, label, id] = device;
+    if (nodebalancer) {
+      const [, label, id] = nodebalancer;
       const labelIndex = errorMsg.indexOf(label);
       errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
       return (
@@ -118,7 +131,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
         </Notice>
       );
     } else {
-      return <Notice text={errorMessage} variant="error" />;
+      return <Notice text={localError} variant="error" />;
     }
   };
 
@@ -130,7 +143,8 @@ export const AddNodebalancerDrawer = (props: Props) => {
   return (
     <Drawer
       onClose={() => {
-        setSelectedDeviceIds([]);
+        setSelectedNodebalancers([]);
+        setLocalError(undefined);
         onClose();
       }}
       open={open}
@@ -148,12 +162,10 @@ export const AddNodebalancerDrawer = (props: Props) => {
           handleSubmit();
         }}
       >
-        {errorMessage ? errorNotice() : null}
+        {localError ? errorNotice() : null}
         <NodeBalancerSelect
           onSelectionChange={(nodebalancers) =>
-            setSelectedDeviceIds(
-              nodebalancers.map((nodebalancer) => nodebalancer.id)
-            )
+            setSelectedNodebalancers(nodebalancers)
           }
           optionsFilter={(nodebalancer) =>
             ![...currentNodebalancerIds, ...readOnlyNodebalancerIds].includes(
@@ -164,11 +176,11 @@ export const AddNodebalancerDrawer = (props: Props) => {
           helperText={helperText}
           loading={currentDevicesLoading}
           multiple
-          value={selectedDeviceIds}
+          value={selectedNodebalancers.map((nodebalancer) => nodebalancer.id)}
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: selectedDeviceIds.length === 0,
+            disabled: selectedNodebalancers.length === 0,
             label: 'Add',
             loading: isLoading,
             onClick: handleSubmit,

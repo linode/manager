@@ -1,3 +1,4 @@
+import { Linode } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -51,33 +52,32 @@ export const AddLinodeDrawer = (props: Props) => {
     mutateAsync: addDevice,
   } = useAddFirewallDeviceMutation(Number(id));
 
-  const [selectedLinodeIds, setSelectedLinodeIds] = React.useState<number[]>(
-    []
-  );
+  const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
 
   const handleSubmit = async () => {
     const results = await Promise.allSettled(
-      selectedLinodeIds.map((id) => addDevice({ id, type: 'linode' }))
+      selectedLinodes.map((linode) =>
+        addDevice({ id: linode.id, type: 'linode' })
+      )
     );
 
     let hasError = false;
 
-    results.forEach((result, _) => {
+    results.forEach((result, index) => {
+      const label = selectedLinodes[index].label;
       if (result.status === 'fulfilled') {
         // Assuming the response contains the device label, replace with the appropriate property if not.
-        const label = result.value.entity.label;
         enqueueSnackbar(`${label} added successfully.`, { variant: 'success' });
       } else {
         hasError = true;
         // Assuming the error object contains the device label, replace with the appropriate property if not.
-        const errorLabel = result.reason.label;
-        enqueueSnackbar(`Failed to add ${errorLabel}.`, { variant: 'error' });
+        enqueueSnackbar(`Failed to add ${label}.`, { variant: 'error' });
       }
     });
 
     if (!hasError) {
       onClose();
-      setSelectedLinodeIds([]);
+      setSelectedLinodes([]);
     }
   };
 
@@ -90,7 +90,7 @@ export const AddLinodeDrawer = (props: Props) => {
   const errorNotice = () => {
     let errorMsg = errorMessage || '';
     // match something like: Linode <linode_label> (ID <linode_id>)
-    const linode = /linode (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
+    const linode = /Linode (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
     if (openTicket) {
       errorMsg = errorMsg.replace(/open a support ticket\./i, '');
@@ -131,7 +131,7 @@ export const AddLinodeDrawer = (props: Props) => {
   return (
     <Drawer
       onClose={() => {
-        setSelectedLinodeIds([]);
+        setSelectedLinodes([]);
         onClose();
       }}
       open={open}
@@ -145,9 +145,6 @@ export const AddLinodeDrawer = (props: Props) => {
       >
         {errorMessage ? errorNotice() : null}
         <LinodeSelect
-          onSelectionChange={(linodes) =>
-            setSelectedLinodeIds(linodes.map((linode) => linode.id))
-          }
           optionsFilter={(linode) =>
             ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id)
           }
@@ -156,11 +153,12 @@ export const AddLinodeDrawer = (props: Props) => {
           loading={currentDevicesLoading}
           multiple
           noOptionsMessage="No Linodes available to add"
-          value={selectedLinodeIds}
+          onSelectionChange={(linodes) => setSelectedLinodes(linodes)}
+          value={selectedLinodes.map((linode) => linode.id)}
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: selectedLinodeIds.length === 0,
+            disabled: selectedLinodes.length === 0,
             label: 'Add',
             loading: isLoading,
             onClick: handleSubmit,
