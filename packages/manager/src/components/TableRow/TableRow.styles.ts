@@ -69,12 +69,6 @@ export const StyledTableRow = styled(_TableRow, {
 
 export const StyledTableDataCell = styled('td', {
   label: 'StyledTableDataCell',
-})(() => ({
-  padding: 0,
-}));
-
-export const StyledActiveCaret = styled('span', {
-  label: 'StyledActiveCaret',
 })(({ theme }) => ({
   '&:after': {
     border: 'solid',
@@ -104,4 +98,5 @@ export const StyledActiveCaret = styled('span', {
     transform: 'translateY(-50%)',
     width: 0,
   },
+  padding: 0,
 }));
