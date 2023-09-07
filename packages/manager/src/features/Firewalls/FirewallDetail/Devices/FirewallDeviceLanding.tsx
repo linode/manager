@@ -78,10 +78,11 @@ export const FirewallDeviceLanding = React.memo(
             <StyledTypography>
               The following {formattedType}s have been assigned to this
               Firewall. A {formattedType} can only be assigned to a single
-              Firewall.{' '}
+              Firewall.
               <Link to="#">
                 Learn about how Firewall rules apply to {formattedType}s.
               </Link>
+              {/* @todo add documentation link */}
             </StyledTypography>
           </Grid>
           <StyledGrid>
