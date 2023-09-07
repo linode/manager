@@ -139,7 +139,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
       <Notice variant={'warning'}>
         Only the Firewall's inbound rules apply to NodeBalancers. Any existing
         outbound rules won't be applied.
-        {/* add documentation link */}
+        {/* @todo add documentation link */}
         <Link to="#"> Learn more.</Link>
       </Notice>
       <form
