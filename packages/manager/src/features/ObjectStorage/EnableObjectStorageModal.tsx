@@ -34,7 +34,7 @@ export const EnableObjectStorageModal = ({
           }}
         />
       )}
-      onClose={close}
+      onClose={onClose}
       open={open}
       title="Just to confirm..."
     >

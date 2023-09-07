@@ -39,6 +39,14 @@ describe('EnableObjectStorageModal', () => {
     expect(props.onClose).toHaveBeenCalled();
   });
 
+  it('calls the onClose prop/handler when the X button is clicked', () => {
+    const { getByLabelText } = render(
+      wrapWithTheme(<EnableObjectStorageModal {...props} />)
+    );
+    fireEvent.click(getByLabelText('Close'));
+    expect(props.onClose).toHaveBeenCalled();
+  });
+
   it('calls the handleSubmit prop/handler when the Enable Object Storage button is clicked', () => {
     const { getByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />)
