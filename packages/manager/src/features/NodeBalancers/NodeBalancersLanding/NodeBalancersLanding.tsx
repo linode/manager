@@ -106,7 +106,7 @@ export const NodeBalancersLanding = () => {
               <TableCell>Backend Status</TableCell>
             </Hidden>
             <Hidden mdDown>
-              <TableCell>Transfered</TableCell>
+              <TableCell>Transferred</TableCell>
               <TableCell>Ports</TableCell>
             </Hidden>
             <TableCell>IP Address</TableCell>
