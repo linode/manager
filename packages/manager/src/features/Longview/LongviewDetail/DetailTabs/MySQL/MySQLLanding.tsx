@@ -1,9 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Grid } from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -14,6 +14,7 @@ import {
   StyledTimeRangeSelect,
   StyledTypography,
 } from '../CommonStyles.styles';
+import { StyledItemGrid } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { MySQLGraphs } from './MySQLGraphs';
 
@@ -83,7 +84,7 @@ export const MySQLLanding = React.memo((props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'MySQL'} />
-      <Grid item xs={12}>
+      <StyledItemGrid xs={12}>
         <Box
           alignItems="center"
           display="flex"
@@ -103,8 +104,8 @@ export const MySQLLanding = React.memo((props: Props) => {
             small
           />
         </Box>
-      </Grid>
-      <Grid className="py0" item xs={12}>
+      </StyledItemGrid>
+      <StyledItemGrid className="py0" xs={12}>
         <MySQLGraphs
           data={data?.Applications?.MySQL}
           end={time.end}
@@ -117,7 +118,7 @@ export const MySQLLanding = React.memo((props: Props) => {
           start={time.start}
           timezone={timezone}
         />
-      </Grid>
+      </StyledItemGrid>
     </Grid>
   );
 });

@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import {
   formatNetworkTooltip,
@@ -10,7 +10,11 @@ import {
 
 import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import { StyledRootPaper, StyledSmallGraphGrid } from '../CommonStyles.styles';
+import {
+  StyledRootPaper,
+  StyledItemGrid,
+  StyledSmallGraphGrid,
+} from '../CommonStyles.styles';
 import { ProcessGraphs } from '../ProcessGraphs';
 
 interface Props {
@@ -63,7 +67,7 @@ export const MySQLGraphs = (props: Props) => {
   return (
     <StyledRootPaper>
       <Grid container direction="column" spacing={0}>
-        <Grid item xs={12}>
+        <StyledItemGrid xs={12}>
           <LongviewLineGraph
             data={[
               {
@@ -100,10 +104,10 @@ export const MySQLGraphs = (props: Props) => {
             timezone={timezone}
             title="Queries"
           />
-        </Grid>
-        <Grid item xs={12}>
+        </StyledItemGrid>
+        <StyledItemGrid xs={12}>
           <Grid container direction="row">
-            <StyledSmallGraphGrid item sm={6} xs={12}>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -132,7 +136,7 @@ export const MySQLGraphs = (props: Props) => {
                 unit={'/s'}
               />
             </StyledSmallGraphGrid>
-            <StyledSmallGraphGrid item sm={6} xs={12}>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -154,10 +158,10 @@ export const MySQLGraphs = (props: Props) => {
               />
             </StyledSmallGraphGrid>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
+        </StyledItemGrid>
+        <StyledItemGrid xs={12}>
           <Grid container direction="row">
-            <StyledSmallGraphGrid item sm={6} xs={12}>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -176,7 +180,7 @@ export const MySQLGraphs = (props: Props) => {
                 title="Slow Queries"
               />
             </StyledSmallGraphGrid>
-            <StyledSmallGraphGrid item sm={6} xs={12}>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -212,7 +216,7 @@ export const MySQLGraphs = (props: Props) => {
               />
             </StyledSmallGraphGrid>
           </Grid>
-        </Grid>
+        </StyledItemGrid>
         <ProcessGraphs
           data={processesData}
           end={end}

@@ -1,9 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Grid } from 'src/components/Grid';
 import { TextField } from 'src/components/TextField';
 import {
   LongviewProcesses,
@@ -13,6 +13,7 @@ import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
+import { StyledItemGrid } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { ProcessesGraphs } from './ProcessesGraphs';
 import { ProcessesTable, ExtendedProcess } from './ProcessesTable';
@@ -112,7 +113,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
     <>
       <DocumentTitleSegment segment="Processes" />
       <Grid container spacing={4}>
-        <Grid item lg={7} xs={12}>
+        <StyledItemGrid lg={7} xs={12}>
           <StyledBox display="flex" justifyContent="space-between">
             <TextField
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -143,8 +144,8 @@ export const ProcessesLanding = React.memo((props: Props) => {
             selectedProcess={selectedProcess}
             setSelectedProcess={setSelectedProcess}
           />
-        </Grid>
-        <Grid item lg={5} xs={12}>
+        </StyledItemGrid>
+        <StyledItemGrid lg={5} xs={12}>
           <ProcessesGraphs
             clientAPIKey={clientAPIKey || ''}
             error={lastUpdatedError?.[0]?.reason || error}
@@ -156,7 +157,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
             time={time}
             timezone={timezone}
           />
-        </Grid>
+        </StyledItemGrid>
       </Grid>
     </>
   );

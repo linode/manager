@@ -50,7 +50,7 @@ export const OverviewGraphs = (props: Props) => {
   };
 
   return (
-    <Grid sx={{ ...itemSpacing, padding: '8px' }}>
+    <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
       <Grid
         sx={{
           alignItems: 'center',

@@ -1,9 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Grid } from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -83,7 +83,7 @@ export const Apache = React.memo((props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'Apache'} />
-      <Grid item xs={12}>
+      <Grid sx={{ boxSizing: 'border-box', margin: '0' }} xs={12}>
         <Box
           alignItems="center"
           display="flex"
@@ -104,7 +104,11 @@ export const Apache = React.memo((props: Props) => {
           />
         </Box>
       </Grid>
-      <Grid className="py0" item xs={12}>
+      <Grid
+        className="py0"
+        sx={{ boxSizing: 'border-box', margin: '0' }}
+        xs={12}
+      >
         <ApacheGraphs
           data={data?.Applications?.Apache}
           end={time.end}

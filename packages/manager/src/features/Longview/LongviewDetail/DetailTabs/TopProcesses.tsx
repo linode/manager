@@ -2,7 +2,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { Grid } from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -21,6 +20,7 @@ import {
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
+import { StyledItemGrid } from './CommonStyles.styles';
 import { StyledLink } from './TopProcesses.styles';
 
 export interface Props {
@@ -45,7 +45,7 @@ export const TopProcesses = React.memo((props: Props) => {
     : undefined;
 
   return (
-    <Grid item lg={4} xs={12}>
+    <StyledItemGrid lg={4} xs={12}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
         <StyledLink to={`/longview/clients/${clientID}/processes`}>
@@ -104,7 +104,7 @@ export const TopProcesses = React.memo((props: Props) => {
           </Table>
         )}
       </OrderBy>
-    </Grid>
+    </StyledItemGrid>
   );
 });
 
