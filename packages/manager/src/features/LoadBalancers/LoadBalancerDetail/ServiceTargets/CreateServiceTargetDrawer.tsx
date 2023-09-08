@@ -8,8 +8,10 @@ import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
+import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useServiceTargetCreateMutation } from 'src/queries/aglb/serviceTargets';
@@ -55,20 +57,20 @@ const algorithmOptions = [
 const defaultEndpoint: Endpoint = {
   host: '',
   ip: '',
-  port: 0,
-  rate_capacity: 0,
+  port: 80,
+  rate_capacity: 10_000,
 };
 
 const initialValues: ServiceTargetPayload = {
   ca_certificate: '',
   endpoints: [defaultEndpoint],
   healthcheck: {
-    healthy_threshold: 0,
+    healthy_threshold: 3,
     host: '',
-    interval: 0,
+    interval: 10,
     path: '',
-    timeout: 0,
-    unhealthy_threshold: 0,
+    timeout: 5,
+    unhealthy_threshold: 3,
   },
   label: '',
   load_balancing_policy: 'round_robin',
@@ -202,6 +204,28 @@ export const CreateServiceTargetDrawer = (props: Props) => {
         <Typography variant="h3">Health Checks</Typography>
         <TooltipIcon status="help" text="TODO" />
       </Stack>
+      <FormControlLabel
+        control={
+          <Toggle
+            onChange={(_, checked) =>
+              formik.setFieldValue('healthcheck.interval', checked ? 10 : 0)
+            }
+            value={formik.values.healthcheck.interval !== 0}
+          />
+        }
+        label="Use Health Checks"
+      />
+      {formik.values.healthcheck.interval !== 0 && (
+        <Box>
+          <TextField
+            label="Interval"
+            labelTooltipText="TODO"
+            name="healthcheck.interval"
+            onChange={formik.handleChange}
+            value={formik.values.healthcheck.interval}
+          />
+        </Box>
+      )}
     </Drawer>
   );
 };
