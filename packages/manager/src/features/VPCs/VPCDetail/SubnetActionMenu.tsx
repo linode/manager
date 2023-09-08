@@ -3,18 +3,18 @@ import * as React from 'react';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu';
 
-export interface SubnetActionHandlers {
+interface SubnetsActionHandlers {
   handleDelete: (subnetId: number, subnetLabel: string) => void;
 }
 
-interface Props extends SubnetActionHandlers {
+interface Props extends SubnetsActionHandlers {
   numLinodes: number;
   subnetId: number;
   subnetLabel: string;
   vpcId: number;
 }
 
-export const SubnetsActionMenu = (props: Props) => {
+export const SubnetActionMenu = (props: Props) => {
   const { handleDelete, numLinodes, subnetId, subnetLabel } = props;
 
   const handleAssignLinode = () => {};
@@ -60,4 +60,4 @@ export const SubnetsActionMenu = (props: Props) => {
   );
 };
 
-export default SubnetsActionMenu;
+export default SubnetActionMenu;

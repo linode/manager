@@ -16,8 +16,6 @@ import { truncate } from 'src/utilities/truncate';
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
 import { getUniqueLinodesFromSubnets } from '../utils';
-import type { SubnetActionHandlers } from './SubnetActionMenu';
-import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import {
   StyledActionButton,
   StyledDescriptionBox,
@@ -36,11 +34,6 @@ const VPCDetail = () => {
 
   const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
   const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
-  const [deleteSubnetDialogData, setDeleteSubnetDialogData] = React.useState<{
-    open: boolean;
-    subnetId?: number;
-    subnetLabel?: string;
-  }>({ open: false, subnetId: -1 });
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
   if (isLoading) {
@@ -96,14 +89,6 @@ const VPCDetail = () => {
       },
     ],
   ];
-
-  const handleSubnetDelete = (subnetId: number, subnetLabel: string) => {
-    setDeleteSubnetDialogData({ open: true, subnetId, subnetLabel });
-  };
-
-  const subnetHandlers: SubnetActionHandlers = {
-    handleDelete: handleSubnetDelete,
-  };
 
   return (
     <>
@@ -199,19 +184,7 @@ const VPCDetail = () => {
       >
         <Typography variant="h2">Subnets ({vpc.subnets.length})</Typography>
       </Box>
-      <VPCSubnetsTable {...subnetHandlers} vpcId={vpc.id} />
-      <SubnetDeleteDialog
-        onClose={() =>
-          setDeleteSubnetDialogData((subnetDialogData) => ({
-            ...subnetDialogData,
-            open: false,
-          }))
-        }
-        open={deleteSubnetDialogData.open}
-        subnetId={deleteSubnetDialogData.subnetId}
-        subnetLabel={deleteSubnetDialogData.subnetLabel}
-        vpcId={vpc.id}
-      />
+      <VPCSubnetsTable vpcId={vpc.id} />
     </>
   );
 };
