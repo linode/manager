@@ -1,16 +1,20 @@
-import { CreateSubnetPayload, Subnet } from '@linode/api-v4';
+import { CreateSubnetPayload } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateSubnetMutation } from 'src/queries/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
-
-import { SubnetNode } from '../VPCCreate/SubnetNode';
+import {
+  calculateAvailableIPv4s,
+  DEFAULT_SUBNET_IPV4_VALUE,
+  RESERVED_IP_NUMBER,
+} from 'src/utilities/subnets';
 
 interface Props {
   onClose: () => void;
@@ -33,23 +37,34 @@ export const SubnetCreateDrawer = (props: Props) => {
     reset,
   } = useCreateSubnetMutation(vpcId);
 
-  const form = useFormik<CreateSubnetPayload>({
+  const [availIPv4s, setAvailIPv4s] = React.useState<number | undefined>(256);
+
+  const {
+    dirty,
+    handleSubmit,
+    resetForm,
+    setFieldValue,
+    values,
+  } = useFormik<CreateSubnetPayload>({
     enableReinitialize: true,
     initialValues: {
       // TODO VPC - add IPv6 when that is supported
       label: '',
-      ipv4: '',
+      ipv4: DEFAULT_SUBNET_IPV4_VALUE,
     },
     async onSubmit(values) {
-      // may need to change this if we want to use subnet node ... lol
-      await createSubnet(values);
-      onClose();
+      try {
+        await createSubnet(values);
+        onClose();
+      } catch (errors) {
+        // will have warnings for uncaught errors without a try/catch - is that ok?
+      }
     },
   });
 
   React.useEffect(() => {
     if (open) {
-      form.resetForm();
+      resetForm();
       reset();
     }
   }, [open]);
@@ -69,25 +84,39 @@ export const SubnetCreateDrawer = (props: Props) => {
           variant="error"
         />
       )}
-      <form onSubmit={form.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <TextField
           disabled={userCannotAddSubnet}
           errorText={errorMap.label}
           label="Subnet label"
-          onChange={form.handleChange}
-          value={form.values.label}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setFieldValue('label', e.target.value)
+          }
+          placeholder="Enter a subnet label"
+          value={values.label}
         />
         <TextField
           disabled={userCannotAddSubnet}
           errorText={errorMap.ipv4}
           label="Subnet IP Address Range"
-          onChange={form.handleChange}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setFieldValue('ipv4', e.target.value);
+            const availIPAddresses = calculateAvailableIPv4s(e.target.value);
+            setAvailIPv4s(availIPAddresses);
+          }}
           rows={1}
-          value={form.values.ipv4}
+          value={values.ipv4}
         />
+        {availIPv4s && (
+          <FormHelperText>
+            Available IP Addresses:{' '}
+            {availIPv4s > 4 ? availIPv4s - RESERVED_IP_NUMBER : 0}
+          </FormHelperText>
+        )}
         <ActionsPanel
           primaryButtonProps={{
-            disabled: !form.dirty || userCannotAddSubnet,
+            'data-testid': 'create-subnet-button',
+            disabled: !dirty || userCannotAddSubnet,
             label: 'Create subnet',
             loading: isLoading,
             type: 'submit',

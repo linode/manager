@@ -6,17 +6,18 @@ import * as React from 'react';
 import { Button } from 'src/components/Button/Button';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { TextField } from 'src/components/TextField';
-import { RESERVED_IP_NUMBER } from 'src/utilities/subnets';
-import { SubnetFieldState } from 'src/utilities/subnets';
-import { calculateAvailableIPv4s } from 'src/utilities/subnets';
+import {
+  calculateAvailableIPv4s,
+  SubnetFieldState,
+  RESERVED_IP_NUMBER,
+} from 'src/utilities/subnets';
 
 interface Props {
   disabled?: boolean;
   // extra props enable SubnetNode to be an independent component or be part of MultipleSubnetInput
-  // Note: when I first created this component, I wanted to make it reusable as an independent component for the Create subnet drawer,
-  // edit subnet drawer, etc. However, now that I'm working on the Create Subnet drawer, imo it's easier to not use this component
-  // If I've time, may look into getting rid of the props that enabled this to be an independent component
-  // actually wait tbd maybe it's not so bad to use this... i'm thinking lol (do i have brain cells rn????)
+  // Note: when I first created this component, I wanted to make it possible to use it as an independent component for the Create subnet drawer,
+  // edit subnet drawer, etc. However, now that I'm working on the Create Subnet drawer, imo it's a lot easier to not use this component
+  // If I've time, will look into simplifying it/combining it with the MultipleSubnetInput
   // potential refactor - isRemoveable, and subnetIdx & remove in onChange prop
   idx?: number;
   isRemovable?: boolean;

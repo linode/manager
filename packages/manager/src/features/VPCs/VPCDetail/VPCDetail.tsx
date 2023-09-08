@@ -189,9 +189,16 @@ const VPCDetail = () => {
       >
         <Typography variant="h2">Subnets</Typography>
       </Box>
-      <Box>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'} // space-between if searchbar is placed in this box
+        paddingBottom={`${theme.spacing(2)}`}
+      >
         {/* todo: search bar can maybe go here too? */}
-        <Button onClick={() => setSubnetCreateDrawerOpen(true)}>
+        <Button
+          buttonType="primary"
+          onClick={() => setSubnetCreateDrawerOpen(true)}
+        >
           Create Subnet
         </Button>
       </Box>
