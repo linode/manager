@@ -85,10 +85,22 @@ export const InvoiceDetail = () => {
   ) => {
     const taxes =
       flags[getShouldUseAkamaiBilling(invoice.date) ? 'taxes' : 'taxBanner'];
-    const result = await printInvoice(account, invoice, items, taxes);
+    const result = await printInvoice(account, invoice, items, taxes, flags);
 
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
   };
+
+  const csvHeaders = [
+    { key: 'label', label: 'Description' },
+    { key: 'from', label: 'From' },
+    { key: 'to', label: 'To' },
+    { key: 'quantity', label: 'Quantity' },
+    ...(flags.dcSpecificPricing ? [{ key: 'region', label: 'Region' }] : []),
+    { key: 'unit_price', label: 'Unit Price' },
+    { key: 'amount', label: 'Amount (USD)' },
+    { key: 'tax', label: 'Tax (USD)' },
+    { key: 'total', label: 'Total (USD)' },
+  ];
 
   const sxGrid = {
     alignItems: 'center',
@@ -226,14 +238,3 @@ export const InvoiceDetail = () => {
 };
 
 export default InvoiceDetail;
-
-const csvHeaders = [
-  { key: 'label', label: 'Description' },
-  { key: 'from', label: 'From' },
-  { key: 'to', label: 'To' },
-  { key: 'quantity', label: 'Quantity' },
-  { key: 'unit_price', label: 'Unit Price' },
-  { key: 'amount', label: 'Amount (USD)' },
-  { key: 'tax', label: 'Tax (USD)' },
-  { key: 'total', label: 'Total (USD)' },
-];

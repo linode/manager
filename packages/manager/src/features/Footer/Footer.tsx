@@ -14,6 +14,7 @@ interface Props {
 const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     backgroundColor: theme.bg.main,
+    fontSize: '1rem',
     margin: 0,
     padding: '4px 0px',
     [theme.breakpoints.down('sm')]: {

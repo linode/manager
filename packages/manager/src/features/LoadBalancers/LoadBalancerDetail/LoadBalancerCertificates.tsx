@@ -25,6 +25,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerCertificatesQuery } from 'src/queries/aglb/certificates';
 
 import type { Certificate, Filter } from '@linode/api-v4';
+import { CreateCertificateDrawer } from './Certificates/CreateCertificateDrawer';
 
 const PREFERENCE_KEY = 'loadbalancer-certificates';
 
@@ -38,6 +39,7 @@ type CertificateTypeFilter = 'all' | Certificate['type'];
 export const LoadBalancerCertificates = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [type, setType] = useState<CertificateTypeFilter>('all');
   const [query, setQuery] = useState<string>();
 
@@ -134,7 +136,12 @@ export const LoadBalancerCertificates = () => {
           value={query}
         />
         <Box flexGrow={1} />
-        <Button buttonType="primary">Upload Certificate</Button>
+        <Button
+          buttonType="primary"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        >
+          Upload Certificate
+        </Button>
       </Stack>
       <Table>
         <TableHead>
@@ -184,6 +191,11 @@ export const LoadBalancerCertificates = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <CreateCertificateDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
       />
     </>
   );

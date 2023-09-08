@@ -21,38 +21,38 @@ export type TransferAction =
   | { entity: Entity; entityType: TransferableEntity; type: 'TOGGLE' }
   | { entityType: TransferableEntity; type: 'RESET' };
 
-const transferReducer = (draft: TransferState, action: TransferAction) => {
-  switch (action.type) {
-    // Add entities to the transfer
-    case 'ADD':
-      const newEntities = action.entitiesToAdd;
-      newEntities.forEach((thisEntity) => {
-        draft[action.entityType][thisEntity.id] = thisEntity.label;
-      });
-      break;
+export const transferReducer = produce(
+  (draft: TransferState, action: TransferAction) => {
+    switch (action.type) {
+      // Add entities to the transfer
+      case 'ADD':
+        const newEntities = action.entitiesToAdd;
+        newEntities.forEach((thisEntity) => {
+          draft[action.entityType][thisEntity.id] = thisEntity.label;
+        });
+        break;
 
-    // Remove entities
-    case 'REMOVE':
-      action.entitiesToRemove.forEach((thisEntity) => {
-        delete draft[action.entityType][thisEntity];
-      });
-      break;
+      // Remove entities
+      case 'REMOVE':
+        action.entitiesToRemove.forEach((thisEntity) => {
+          delete draft[action.entityType][thisEntity];
+        });
+        break;
 
-    case 'TOGGLE':
-      const entity = action.entity;
-      const type = draft[action.entityType];
-      if (type[entity.id]) {
-        delete type[entity.id];
-      } else {
-        type[entity.id] = entity.label;
-      }
-      break;
+      case 'TOGGLE':
+        const entity = action.entity;
+        const type = draft[action.entityType];
+        if (type[entity.id]) {
+          delete type[entity.id];
+        } else {
+          type[entity.id] = entity.label;
+        }
+        break;
 
-    // Reset the state
-    case 'RESET':
-      draft[action.entityType] = {};
-      break;
+      // Reset the state
+      case 'RESET':
+        draft[action.entityType] = {};
+        break;
+    }
   }
-};
-
-export const curriedTransferReducer = produce(transferReducer);
+);

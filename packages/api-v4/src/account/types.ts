@@ -118,7 +118,7 @@ export interface InvoiceItem {
   unit_price: null | string;
   tax: number;
   total: number;
-  region: Region['id'];
+  region: string | null;
 }
 
 export interface Payment {
@@ -165,7 +165,8 @@ export type GrantType =
   | 'stackscript'
   | 'volume'
   | 'database'
-  | 'firewall';
+  | 'firewall'
+  | 'vpc';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 

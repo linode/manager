@@ -14,7 +14,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
-import TransferTable from './TransferTable';
+import { TransferTable } from './TransferTable';
 import { Entity, TransferEntity } from './transferReducer';
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
   selectedLinodes: TransferEntity;
 }
 
-export const LinodeTransferTable = (props: Props) => {
+export const LinodeTransferTable = React.memo((props: Props) => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
   const [searchText, setSearchText] = React.useState('');
 
@@ -96,7 +96,7 @@ export const LinodeTransferTable = (props: Props) => {
       </TableContentWrapper>
     </TransferTable>
   );
-};
+});
 
 interface RowProps {
   handleToggleCheck: () => void;
@@ -104,7 +104,7 @@ interface RowProps {
   linode: Linode;
 }
 
-const LinodeRow: React.FC<RowProps> = (props) => {
+const LinodeRow = (props: RowProps) => {
   const { handleToggleCheck, isChecked, linode } = props;
   const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
@@ -136,5 +136,3 @@ export const generateLinodeXFilter = (searchText: string) => {
     label: { '+contains': searchText },
   };
 };
-
-export default React.memo(LinodeTransferTable);
