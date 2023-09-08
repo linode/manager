@@ -6,6 +6,7 @@ import {
   CollapsibleTable,
   TableItem,
 } from 'src/components/CollapsibleTable/CollapsibleTable';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -30,6 +31,8 @@ interface Props {
 const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = ({ vpcId }: Props) => {
+  const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
+
   const pagination = usePagination(1, preferenceKey);
 
   const { handleOrderChange, order, orderBy } = useOrder(
@@ -45,14 +48,37 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
     ['+order_by']: orderBy,
   };
 
+  const generateSubnetsXFilter = (searchText: string) => {
+    if (searchText === '') {
+      return filter;
+    }
+    return {
+      '+or': [
+        {
+          label: { '+contains': searchText },
+        },
+        {
+          id: { '+contains': searchText },
+        },
+      ],
+      ...filter,
+    };
+  };
+
   const { data: subnets, error, isLoading } = useSubnetsQuery(
     vpcId,
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter
+    generateSubnetsXFilter(subnetsFilterText)
   );
+
+  const handleSearch = (searchText: string) => {
+    setSubnetsFilterText(searchText);
+    // If you're on page 2+, need to go back to page 1 to see the actual results
+    pagination.handlePageChange(1);
+  };
 
   if (isLoading) {
     return <CircleProgress />;
@@ -144,6 +170,15 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
 
   return (
     <>
+      <DebouncedSearchTextField
+        debounceTime={250}
+        hideLabel
+        isSearching={false}
+        label="Filter Subnets by label or id"
+        onSearch={handleSearch}
+        placeholder="Filter Subnets by label or id"
+        sx={{ paddingBottom: 2 }}
+      />
       <CollapsibleTable
         TableItems={getTableItems()}
         TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Subnets'} />}

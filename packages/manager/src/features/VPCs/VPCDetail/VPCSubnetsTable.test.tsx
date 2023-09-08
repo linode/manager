@@ -20,7 +20,7 @@ afterEach(() => {
 const loadingTestId = 'circle-progress';
 
 describe('VPC Subnets table', () => {
-  it('should display subnet label, id, ip range, number of linodes, and action menu', async () => {
+  it('should display filter input, subnet label, id, ip range, number of linodes, and action menu', async () => {
     const subnet = subnetFactory.build({ linodes: [1, 2, 3] });
     server.use(
       rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
@@ -31,12 +31,14 @@ describe('VPC Subnets table', () => {
     const {
       getAllByRole,
       getAllByText,
+      getByPlaceholderText,
       getByTestId,
       getByText,
     } = renderWithTheme(<VPCSubnetsTable vpcId={1} />, { queryClient });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
+    getByPlaceholderText('Filter Subnets by label or id');
     getByText('Subnet Label');
     getByText(subnet.label);
     getByText('Subnet ID');
