@@ -1,4 +1,4 @@
-import { Region } from '../regions';
+import type { Region } from '../regions';
 import { IPAddress, IPRange } from '../networking/types';
 import { SSHKey } from '../profile/types';
 

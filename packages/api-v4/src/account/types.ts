@@ -1,5 +1,5 @@
 import { APIWarning } from '../types';
-import { Region } from '../regions';
+import type { Region } from '../regions';
 
 export interface User {
   username: string;
