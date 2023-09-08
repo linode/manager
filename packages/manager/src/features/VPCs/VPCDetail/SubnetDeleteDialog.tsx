@@ -1,6 +1,5 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useDeleteSubnetMutation } from 'src/queries/vpcs';
@@ -21,7 +20,6 @@ export const SubnetDeleteDialog = (props: Props) => {
     isLoading,
     mutateAsync: deleteSubnet,
   } = useDeleteSubnetMutation(vpcId, subnetId ?? -1);
-  const history = useHistory();
 
   const onDeleteSubnet = async () => {
     await deleteSubnet();
@@ -29,9 +27,6 @@ export const SubnetDeleteDialog = (props: Props) => {
       variant: 'success',
     });
     onClose();
-    if (history.location.pathname !== `/vpcs/${vpcId}`) {
-      history.push(`/vpcs/${vpcId}`);
-    }
   };
 
   return (

@@ -15,18 +15,13 @@ interface Props extends SubnetActionHandlers {
 }
 
 export const SubnetsActionMenu = (props: Props) => {
-  const { numLinodes, subnetId, subnetLabel } = props;
+  const { handleDelete, numLinodes, subnetId, subnetLabel } = props;
 
   const handleAssignLinode = () => {};
 
   const handleUnassignLinode = () => {};
 
   const handleEdit = () => {};
-
-  const handleDelete = () => {
-    const { handleDelete } = props;
-    handleDelete(subnetId, subnetLabel);
-  };
 
   const actions: Action[] = [
     {
@@ -49,7 +44,7 @@ export const SubnetsActionMenu = (props: Props) => {
     },
     {
       onClick: () => {
-        handleDelete();
+        handleDelete(subnetId, subnetLabel);
       },
       title: 'Delete',
       disabled: numLinodes !== 0,
