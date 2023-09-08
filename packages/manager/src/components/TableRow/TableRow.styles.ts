@@ -46,13 +46,14 @@ export const StyledTableRow = styled(_TableRow, {
         },
       },
     },
-    '&:before': {
+
+    '&.Mui-selected': {
+      '&:hover': {
+        backgroundColor: theme.bg.lightBlue1,
+      },
       backgroundColor: theme.bg.lightBlue1,
-      borderColor: theme.borderColors.borderTable,
-      transition: 'none',
+      boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue1}`,
     },
-    backgroundColor: theme.bg.lightBlue1,
-    boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue1}`,
     transform: 'scale(1)',
   }),
   ...(props.highlight && {
@@ -68,52 +69,34 @@ export const StyledTableRow = styled(_TableRow, {
 
 export const StyledTableDataCell = styled('td', {
   label: 'StyledTableDataCell',
-})(() => ({
+})(({ theme }) => ({
+  '&:after': {
+    border: 'solid',
+    borderColor: 'rgba(136, 183, 213, 0)',
+    borderLeftColor: theme.bg.lightBlue1,
+    borderWidth: '19px',
+    content: "''",
+    height: 0,
+    left: '100%',
+    pointerEvents: 'none',
+    position: 'absolute',
+    top: 'calc(50% - 1px)',
+    transform: 'translateY(-50%)',
+    width: 0,
+  },
+  '&:before': {
+    border: 'solid',
+    borderColor: 'rgba(194, 225, 245, 0)',
+    borderLeftColor: theme.palette.primary.light,
+    borderWidth: '20px',
+    content: "''",
+    height: 0,
+    left: '100%',
+    pointerEvents: 'none',
+    position: 'absolute',
+    top: 'calc(50% - 1px)',
+    transform: 'translateY(-50%)',
+    width: 0,
+  },
   padding: 0,
-}));
-
-export const StyledActiveCaret = styled('span', {
-  label: 'StyledActiveCaret',
-})(({ theme }) => ({
-  '&:after': {
-    background: `linear-gradient(to right bottom, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`,
-    content: '""',
-    height: '50%',
-    left: 0,
-    position: 'absolute',
-    top: '50%',
-    width: 15,
-  },
-  '&:before': {
-    background: `linear-gradient(to right top, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`,
-    content: '""',
-    height: '50%',
-    left: 0,
-    position: 'absolute',
-    top: 0,
-    width: 15,
-  },
-}));
-
-export const StyledActiveCaretOverlay = styled('span', {
-  label: 'StyledActiveCaretOverlay',
-})(({ theme }) => ({
-  '&:after': {
-    background: `linear-gradient(to right bottom, ${theme.bg.lightBlue1} 0%, ${theme.bg.lightBlue1} 45%, transparent 46.1%)`,
-    bottom: 0,
-    content: '""',
-    height: '50%',
-    left: 0,
-    position: 'absolute',
-    width: 15,
-  },
-  '&:before': {
-    background: `linear-gradient(to right top, ${theme.bg.lightBlue1} 0%, ${theme.bg.lightBlue1} 45%, transparent 46.1%)`,
-    content: '""',
-    height: '50%',
-    left: 0,
-    position: 'absolute',
-    top: 0,
-    width: 15,
-  },
 }));

@@ -87,70 +87,72 @@ const LoadBalancerLanding = () => {
     );
   }
 
-  if (loadBalancers?.data.length === 0) {
-    return <LoadBalancerLandingEmptyState />;
-  }
-
   return (
     <>
       <DocumentTitleSegment segment="Load Balancers" />
-      <LandingHeader
-        breadcrumbProps={{ pathname: '/loadbalancers' }}
-        createButtonText="Create Load Balancer"
-        docsLabel="Docs"
-        docsLink="" // TODO: AGLB -  Add docs link
-        entity="Global Load Balancers"
-        onButtonClick={createLoadBalancer}
-        removeCrumbX={1}
-        title="Global Load Balancers"
-      />
+      {loadBalancers?.data.length === 0 ? (
+        <LoadBalancerLandingEmptyState />
+      ) : (
+        <>
+          <LandingHeader
+            breadcrumbProps={{ pathname: '/loadbalancers' }}
+            createButtonText="Create Load Balancer"
+            docsLabel="Docs"
+            docsLink="" // TODO: AGLB -  Add docs link
+            entity="Global Load Balancers"
+            onButtonClick={createLoadBalancer}
+            removeCrumbX={1}
+            title="Global Load Balancers"
+          />
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
-            >
-              Label
-            </TableSortCell>
-            <TableCell>Endpoints</TableCell>
-            <Hidden smDown>
-              <TableCell>Ports</TableCell>
-            </Hidden>
-            <Hidden mdDown>
-              <TableCell>Regions</TableCell>
-            </Hidden>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {loadBalancers?.data.map((loadBalancer: Loadbalancer) => (
-            <LoadBalancerRow
-              handlers={{
-                onDelete: () => onDelete(loadBalancer.id),
-              }}
-              key={loadBalancer.id}
-              loadBalancer={loadBalancer}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={loadBalancers?.data.length || 0}
-        eventCategory="Load Balancer Table"
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
-      <DeleteLoadBalancerDialog
-        loadbalancer={selectedLoadbalancer}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
-      />
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableSortCell
+                  active={orderBy === 'label'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="label"
+                >
+                  Label
+                </TableSortCell>
+                <TableCell>Endpoints</TableCell>
+                <Hidden smDown>
+                  <TableCell>Ports</TableCell>
+                </Hidden>
+                <Hidden mdDown>
+                  <TableCell>Regions</TableCell>
+                </Hidden>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {loadBalancers?.data.map((loadBalancer: Loadbalancer) => (
+                <LoadBalancerRow
+                  handlers={{
+                    onDelete: () => onDelete(loadBalancer.id),
+                  }}
+                  key={loadBalancer.id}
+                  loadBalancer={loadBalancer}
+                />
+              ))}
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={loadBalancers?.data.length || 0}
+            eventCategory="Load Balancer Table"
+            handlePageChange={pagination.handlePageChange}
+            handleSizeChange={pagination.handlePageSizeChange}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+          />
+          <DeleteLoadBalancerDialog
+            loadbalancer={selectedLoadbalancer}
+            onClose={() => setIsDeleteDialogOpen(false)}
+            open={isDeleteDialogOpen}
+          />
+        </>
+      )}
     </>
   );
 };
