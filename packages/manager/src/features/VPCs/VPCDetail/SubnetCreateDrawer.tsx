@@ -1,4 +1,5 @@
 import { CreateSubnetPayload } from '@linode/api-v4';
+import { createSubnetSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
@@ -39,6 +40,15 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const [availIPv4s, setAvailIPv4s] = React.useState<number | undefined>(256);
 
+  const onCreateSubnet = async () => {
+    try {
+      await createSubnet(values);
+      onClose();
+    } catch (errors) {
+      // will get an warning for uncaught error messages without a try/catch - is that ok?
+    }
+  };
+
   const {
     dirty,
     handleSubmit,
@@ -52,14 +62,10 @@ export const SubnetCreateDrawer = (props: Props) => {
       label: '',
       ipv4: DEFAULT_SUBNET_IPV4_VALUE,
     },
-    async onSubmit(values) {
-      try {
-        await createSubnet(values);
-        onClose();
-      } catch (errors) {
-        // will have warnings for uncaught errors without a try/catch - is that ok?
-      }
-    },
+    onSubmit: onCreateSubnet,
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: createSubnetSchema,
   });
 
   React.useEffect(() => {
@@ -89,6 +95,7 @@ export const SubnetCreateDrawer = (props: Props) => {
           disabled={userCannotAddSubnet}
           errorText={errorMap.label}
           label="Subnet label"
+          name="label"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFieldValue('label', e.target.value)
           }
@@ -99,6 +106,7 @@ export const SubnetCreateDrawer = (props: Props) => {
           disabled={userCannotAddSubnet}
           errorText={errorMap.ipv4}
           label="Subnet IP Address Range"
+          name="ipv4"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setFieldValue('ipv4', e.target.value);
             const availIPAddresses = calculateAvailableIPv4s(e.target.value);
@@ -120,6 +128,7 @@ export const SubnetCreateDrawer = (props: Props) => {
             label: 'Create subnet',
             loading: isLoading,
             type: 'submit',
+            onClick: onCreateSubnet,
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
         />
