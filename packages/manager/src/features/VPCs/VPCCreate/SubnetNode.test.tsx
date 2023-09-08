@@ -44,4 +44,49 @@ describe('SubnetNode', () => {
     const availIps = screen.queryByText('Available IP Addresses:');
     expect(availIps).not.toBeInTheDocument();
   });
+
+  it('should show a label and ip textfield inputs at minimum', () => {
+    renderWithTheme(
+      <SubnetNode
+        disabled={false}
+        onChange={() => {}}
+        subnet={{ ip: { ipv4: '' }, label: '' }}
+      />
+    );
+
+    const label = screen.getByText('Subnet label');
+    expect(label).toBeInTheDocument();
+    const ipAddress = screen.getByText('Subnet IP Address Range');
+    expect(ipAddress).toBeInTheDocument();
+  });
+
+  it('should show a removeable button if isRemovable is true and subnet idx exists and is > 0', () => {
+    renderWithTheme(
+      <SubnetNode
+        disabled={false}
+        idx={1}
+        isRemovable={true}
+        onChange={() => {}}
+        subnet={{ ip: { ipv4: '' }, label: '' }}
+      />
+    );
+
+    const removeableButton = screen.getByTestId('delete-subnet-1');
+    expect(removeableButton).toBeInTheDocument();
+  });
+
+  it('should not show a removeable button for a subnet with idx 0', () => {
+    renderWithTheme(
+      <SubnetNode
+        disabled={false}
+        idx={0}
+        isRemovable={true}
+        onChange={() => {}}
+        subnet={{ ip: { ipv4: '' }, label: '' }}
+      />
+    );
+
+    const removeableButton = screen.queryByTestId('delete-subnet-0');
+    expect(removeableButton).not.toBeInTheDocument();
+  });
 });
