@@ -46,5 +46,5 @@ export const CreateServiceTargetSchema = object({
   load_balancing_policy: string()
     .required()
     .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev']),
-  health_check: HealthCheckSchema,
+  healthcheck: HealthCheckSchema,
 });
