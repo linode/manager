@@ -150,6 +150,7 @@ export const CreateBucketDrawer = (props: Props) => {
         />
 
         <EnableObjectStorageModal
+          regionId={formik.values.cluster.slice(0, -2)}
           handleSubmit={formik.handleSubmit}
           onClose={() => setIsEnableObjDialogOpen(false)}
           open={isEnableObjDialogOpen}
