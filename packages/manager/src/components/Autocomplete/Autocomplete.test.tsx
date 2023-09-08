@@ -1,7 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
-import { TextField } from 'src/components/TextField';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Autocomplete } from './Autocomplete';
@@ -21,9 +20,8 @@ describe('Autocomplete Component', () => {
     renderWithTheme(
       <Autocomplete
         label="Test Label"
-        onSelectionChange={handleSelectionChange}
+        onChange={handleSelectionChange}
         options={options}
-        renderInput={(params) => <TextField label="test" {...params} />}
       />
     );
 
@@ -35,9 +33,8 @@ describe('Autocomplete Component', () => {
     renderWithTheme(
       <Autocomplete
         label="Test Label"
-        onSelectionChange={handleSelectionChange}
+        onChange={handleSelectionChange}
         options={options}
-        renderInput={(params) => <TextField label="test" {...params} />}
       />
     );
 
@@ -48,10 +45,9 @@ describe('Autocomplete Component', () => {
     const optionElement = screen.getByText('Option 1');
     fireEvent.click(optionElement);
 
-    expect(handleSelectionChange).toHaveBeenCalledWith({
-      label: 'Option 1',
-      value: 'option1',
-    });
+    const selectOption = handleSelectionChange.mock.calls[0][1];
+
+    expect(selectOption).toEqual(options[0]);
   });
 
   it('displays the error message when errorText prop is provided', () => {
@@ -61,9 +57,8 @@ describe('Autocomplete Component', () => {
       <Autocomplete
         errorText={errorMessage}
         label="Test Label"
-        onSelectionChange={handleSelectionChange}
+        onChange={handleSelectionChange}
         options={options}
-        renderInput={(params) => <TextField label="test" {...params} />}
       />
     );
 
@@ -75,9 +70,8 @@ describe('Autocomplete Component', () => {
     renderWithTheme(
       <Autocomplete
         label="Test Label"
-        onSelectionChange={handleSelectionChange}
+        onChange={handleSelectionChange}
         options={options}
-        renderInput={(params) => <TextField label="test" {...params} />}
       />
     );
 
@@ -91,9 +85,8 @@ describe('Autocomplete Component', () => {
         <Autocomplete
           label="Test Label"
           loading
-          onSelectionChange={handleSelectionChange}
+          onChange={handleSelectionChange}
           options={[]}
-          renderInput={(params) => <TextField label="test" {...params} />}
         />
       );
 
@@ -109,9 +102,8 @@ describe('Autocomplete Component', () => {
       renderWithTheme(
         <Autocomplete
           label="Test Label"
-          onSelectionChange={handleSelectionChange}
+          onChange={handleSelectionChange}
           options={[]}
-          renderInput={(params) => <TextField label="test" {...params} />}
         />
       );
 
@@ -121,46 +113,6 @@ describe('Autocomplete Component', () => {
 
       const noOptionsMessage = screen.getByText(
         'You have no options to choose from'
-      );
-      expect(noOptionsMessage).toBeInTheDocument();
-    });
-
-    it('displays "No results" message when no options match the user\'s search', () => {
-      renderWithTheme(
-        <Autocomplete
-          label="Test Label"
-          onSelectionChange={handleSelectionChange}
-          options={options}
-          renderInput={(params) => <TextField label="test" {...params} />}
-        />
-      );
-
-      const inputElement = screen.getByRole('combobox');
-      fireEvent.focus(inputElement);
-      fireEvent.change(inputElement, { target: { value: '1234234523' } });
-      fireEvent.keyDown(inputElement, { key: 'ArrowDown' });
-
-      const noOptionsMessage = screen.getByText('No results');
-      expect(noOptionsMessage).toBeInTheDocument();
-    });
-
-    it("displays error message if there's error text", () => {
-      renderWithTheme(
-        <Autocomplete
-          errorText="This is an error"
-          label="Test Label"
-          onSelectionChange={handleSelectionChange}
-          options={[]}
-          renderInput={(params) => <TextField label="test" {...params} />}
-        />
-      );
-
-      const inputElement = screen.getByRole('combobox');
-      fireEvent.focus(inputElement);
-      fireEvent.keyDown(inputElement, { key: 'ArrowDown' });
-
-      const noOptionsMessage = screen.getByText(
-        'An error occurred while fetching your options'
       );
       expect(noOptionsMessage).toBeInTheDocument();
     });
