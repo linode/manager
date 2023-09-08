@@ -39,6 +39,8 @@ import { queryKey as accountNotificationsQueryKey } from '../accountNotification
 import { queryPresets } from '../base';
 import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
 
+import { queryKey as PROFILE_QUERY_KEY } from '../profile';
+
 export const queryKey = 'linodes';
 
 export const useLinodesQuery = (
@@ -154,6 +156,8 @@ export const useCreateLinodeMutation = () => {
         [queryKey, 'linode', linode.id, 'details'],
         linode
       );
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
     },
   });
 };
