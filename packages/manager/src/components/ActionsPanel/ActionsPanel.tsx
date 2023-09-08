@@ -13,19 +13,18 @@ interface ActionButtonsProps extends ButtonProps {
   label?: string;
 }
 
-export interface ActionPanelProps extends BoxProps {
+interface Props extends BoxProps {
   /**
    * primary type actionable button custom aria descripton.
    */
   primaryButtonProps?: ActionButtonsProps;
-
   /**
    * secondary type actionable button custom aria descripton.
    */
   secondaryButtonProps?: ActionButtonsProps;
 }
 
-export const ActionsPanel = RenderGuard((props: ActionPanelProps) => {
+export const ActionsPanel = RenderGuard((props: Props) => {
   const {
     className,
     primaryButtonProps,
