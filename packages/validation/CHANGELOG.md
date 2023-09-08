@@ -1,3 +1,10 @@
+## [2023-09-07] - v0.30.1
+
+
+### Fixed:
+
+- Edit interfaces config validation to allow null values for label and ipam_address ([#9641](https://github.com/linode/manager/pull/9641))
+
 ## [2023-09-05] - v0.30.0
 
 
