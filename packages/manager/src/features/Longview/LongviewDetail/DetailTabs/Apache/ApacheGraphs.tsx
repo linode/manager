@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import {
   convertNetworkToUnit,
@@ -13,7 +13,11 @@ import roundTo from 'src/utilities/roundTo';
 
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import { StyledRootPaper, StyledSmallGraphGrid } from '../CommonStyles.styles';
+import {
+  StyledItemGrid,
+  StyledRootPaper,
+  StyledSmallGraphGrid,
+} from '../CommonStyles.styles';
 import { ProcessGraphs } from '../ProcessGraphs';
 
 interface Props {
@@ -87,7 +91,7 @@ export const ApacheGraphs = React.memo((props: Props) => {
   return (
     <StyledRootPaper>
       <Grid container direction="column" spacing={0}>
-        <Grid item xs={12}>
+        <StyledItemGrid xs={12}>
           <LongviewLineGraph
             data={[
               {
@@ -102,10 +106,10 @@ export const ApacheGraphs = React.memo((props: Props) => {
             title="Requests"
             {...graphProps}
           />
-        </Grid>
-        <Grid item xs={12}>
+        </StyledItemGrid>
+        <StyledItemGrid xs={12}>
           <Grid container direction="row">
-            <StyledSmallGraphGrid item sm={6} xs={12}>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -131,7 +135,7 @@ export const ApacheGraphs = React.memo((props: Props) => {
                 {...graphProps}
               />
             </StyledSmallGraphGrid>
-            <StyledSmallGraphGrid item sm={6} xs={12}>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -201,7 +205,7 @@ export const ApacheGraphs = React.memo((props: Props) => {
               />
             </StyledSmallGraphGrid>
           </Grid>
-        </Grid>
+        </StyledItemGrid>
         <ProcessGraphs
           data={processesData}
           end={end}

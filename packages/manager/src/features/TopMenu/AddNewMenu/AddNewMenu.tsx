@@ -25,6 +25,8 @@ import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 interface LinkProps {
   attr?: { [key: string]: boolean };
@@ -37,9 +39,16 @@ interface LinkProps {
 
 export const AddNewMenu = () => {
   const theme = useTheme();
+  const { data: account } = useAccount();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const flags = useFlags();
   const open = Boolean(anchorEl);
+
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -80,7 +89,7 @@ export const AddNewMenu = () => {
     {
       description: 'Create a private and isolated network',
       entity: 'VPC',
-      hide: !flags.vpc,
+      hide: !showVPCs,
       icon: VPCIcon,
       link: '/vpcs/create',
     },

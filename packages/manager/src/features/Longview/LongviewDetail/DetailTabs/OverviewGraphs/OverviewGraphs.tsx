@@ -50,17 +50,8 @@ export const OverviewGraphs = (props: Props) => {
   };
 
   return (
-    <Grid sx={{ ...itemSpacing, padding: '8px' }}>
-      <Grid
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginBottom: theme.spacing(1.25),
-          boxSizing: 'border-box',
-        }}
-      >
+    <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
+      <StyledGrid xs={12}>
         <Grid sx={{ ...itemSpacing }}>
           <StyledTypography variant="h2">
             Resource Allocation History
@@ -82,7 +73,7 @@ export const OverviewGraphs = (props: Props) => {
             label="Select Time Range"
           />
         </Grid>
-      </Grid>
+      </StyledGrid>
       <Grid sx={{ ...itemSpacing }} />
       <Grid sx={{ ...itemSpacing }} xs={12}>
         <Paper
@@ -125,6 +116,15 @@ const StyledTimeRangeSelect = styled(TimeRangeSelect, {
 })({
   width: 150,
 });
+
+const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: theme.spacing(1.25),
+  boxSizing: 'border-box',
+}));
 
 const itemSpacing = {
   boxSizing: 'border-box',

@@ -1,15 +1,15 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Grid } from 'src/components/Grid';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import {
   LongviewNetworkInterface,
   WithStartAndEnd,
 } from '../../../request.types';
-import { StyledTimeRangeSelect } from '../CommonStyles.styles';
+import { StyledItemGrid, StyledTimeRangeSelect } from '../CommonStyles.styles';
 import { StyledBox } from '../Disks/Disks.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { NetworkGraphs } from './NetworkGraphs';
@@ -51,7 +51,7 @@ export const NetworkLanding = (props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'Network'} />
-      <Grid item xs={12}>
+      <StyledItemGrid xs={12}>
         <StyledBox
           alignItems="center"
           display="flex"
@@ -66,8 +66,8 @@ export const NetworkLanding = (props: Props) => {
             small
           />
         </StyledBox>
-      </Grid>
-      <Grid className="py0" item xs={12}>
+      </StyledItemGrid>
+      <StyledItemGrid className="py0" xs={12}>
         <NetworkGraphs
           end={time.end}
           error={lastUpdatedError?.[0]?.reason || error}
@@ -77,7 +77,7 @@ export const NetworkLanding = (props: Props) => {
           start={time.start}
           timezone={timezone}
         />
-      </Grid>
+      </StyledItemGrid>
     </Grid>
   );
 };

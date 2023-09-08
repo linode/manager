@@ -1,6 +1,6 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Grid } from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -27,7 +27,11 @@ export const ListeningServices = (props: TableProps) => {
   const { services, servicesError, servicesLoading } = props;
 
   return (
-    <Grid item md={8} xs={12}>
+    <Grid
+      sx={{ boxSizing: 'border-box', margin: '0', padding: '0' }}
+      md={8}
+      xs={12}
+    >
       <Typography
         sx={(theme) => ({
           [theme.breakpoints.down('lg')]: {

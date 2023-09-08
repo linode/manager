@@ -75,7 +75,7 @@ export const createLoadbalancerConfiguration = (
 export const updateLoadbalancerConfiguration = (
   loadbalancerId: number,
   configurationId: number,
-  data: Partial<ConfigurationPayload>
+  data: Partial<Configuration>
 ) =>
   Request<Configuration>(
     setURL(

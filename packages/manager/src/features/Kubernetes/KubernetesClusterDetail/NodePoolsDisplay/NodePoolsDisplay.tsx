@@ -87,7 +87,7 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const [isAutoscaleDialogOpen, setIsAutoscaleDialogOpen] = useState(false);
 
-  const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
+  const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(5);
   const _pools = pools?.slice(0, numPoolsToDisplay);
 
   const typesQuery = useSpecificTypes(_pools?.map((pool) => pool.type) ?? []);
@@ -211,6 +211,7 @@ export const NodePoolsDisplay = (props: Props) => {
             />
             <ResizeNodePoolDrawer
               kubernetesClusterId={clusterID}
+              kubernetesRegionId={clusterRegionId}
               nodePool={selectedPool}
               onClose={() => setIsResizeDrawerOpen(false)}
               open={isResizeDrawerOpen}

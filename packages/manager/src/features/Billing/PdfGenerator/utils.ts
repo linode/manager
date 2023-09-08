@@ -12,6 +12,7 @@ import { ADDRESSES } from 'src/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
+import { FlagSet } from 'src/featureFlags';
 
 /**
  * Margin that has to be applied to every item added to the PDF.
@@ -90,6 +91,7 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
 export const createInvoiceItemsTable = (
   doc: JSPDF,
   items: InvoiceItem[],
+  flags: FlagSet,
   timezone?: string
 ) => {
   autoTable(doc, {
@@ -116,6 +118,18 @@ export const createInvoiceItemsTable = (
           content: item.quantity || '',
           styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
         },
+        ...(flags.dcSpecificPricing
+          ? [
+              {
+                content: getInvoiceRegion(item) ?? '',
+                styles: {
+                  fontSize: 8,
+                  halign: 'center',
+                  overflow: 'linebreak',
+                },
+              } as const,
+            ]
+          : []),
         {
           content: item.unit_price || '',
           styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
@@ -146,6 +160,7 @@ export const createInvoiceItemsTable = (
         'From',
         'To',
         'Quantity',
+        ...(flags.dcSpecificPricing ? ['Region'] : []),
         'Unit Price',
         'Amount',
         'Tax',
@@ -277,6 +292,21 @@ export const createFooter = (
 
 const truncateLabel = (label: string) => {
   return label.length > 20 ? `${label.substr(0, 20)}...` : label;
+};
+
+export const getInvoiceRegion = (invoiceItem: InvoiceItem) => {
+  // If the invoice item is not regarding transfer, just return the region.
+  if (!invoiceItem.label.includes('Transfer Overage')) {
+    return invoiceItem.region;
+  }
+
+  // If there is no region, this Transfer Overage item is for global transfer.
+  if (!invoiceItem.region) {
+    return 'Global';
+  }
+
+  // The Transfer Overage item is for a specific region's pool.
+  return invoiceItem.region;
 };
 
 const formatDescription = (desc?: string) => {
