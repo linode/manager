@@ -193,7 +193,6 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
             [theme.breakpoints.up('sm')]: {
               width: '416px',
             },
-            width: '100%',
           }}
         />
         <Button
