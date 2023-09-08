@@ -123,7 +123,10 @@ export const Details = (props: Props) => {
   const estimatedCloneTime = getEstimatedCloneTime(totalSize, mode);
 
   return (
-    <Paper sx={{ padding: theme.spacing(2) }}>
+    <Paper
+      data-testid="config-clone-selection-details"
+      sx={{ padding: theme.spacing(2) }}
+    >
       <StyledHeader>
         <Typography variant="h2">Selected</Typography>
         <Button
@@ -196,7 +199,7 @@ export const Details = (props: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
       )}
 
-      <Typography>
+      <Typography data-testid={`current-datacenter-${region?.id}`}>
         Current Data Center: {region?.label ?? thisLinodeRegion}
       </Typography>
 
