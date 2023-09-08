@@ -171,7 +171,7 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
   return (
     <>
       <DebouncedSearchTextField
-        debounceTime={400}
+        debounceTime={250}
         hideLabel
         isSearching={false}
         label="Filter Subnets by label or id"
