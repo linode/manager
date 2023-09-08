@@ -31,12 +31,6 @@ export interface EnhancedAutocompleteProps<
   label: string;
   /** Removes the top margin from the input label, if desired. */
   noMarginTop?: boolean;
-  /** Callback function triggered when the input field loses focus. */
-  onBlur?: (e: React.FocusEvent) => void;
-  /** Placeholder text displayed in the input field. */
-  placeholder?: string;
-  /** Indicates whether the input is required, displaying an appropriate indicator. */
-  required?: boolean;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
 }
