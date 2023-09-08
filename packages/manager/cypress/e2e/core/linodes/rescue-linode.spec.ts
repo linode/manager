@@ -6,10 +6,9 @@ import {
   interceptRebootLinodeIntoRescueMode,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
-import { SimpleBackoffMethod } from 'support/util/backoff';
-import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+import { createAndBootLinode } from './linode-utils';
 
 // Submits the Rescue Linode dialog, initiating reboot into rescue mode.
 const rebootInRescueMode = () => {
@@ -18,26 +17,6 @@ const rebootInRescueMode = () => {
     .should('be.visible')
     .should('be.enabled')
     .click();
-};
-
-// Creates a Linode and waits for it to be in "running" state.
-const createAndBootLinode = async () => {
-  const linodeRequest = createLinodeRequestFactory.build({
-    label: randomLabel(),
-    region: chooseRegion().id,
-  });
-
-  const linode = await createLinode(linodeRequest);
-  await pollLinodeStatus(
-    linode.id,
-    'running',
-    new SimpleBackoffMethod(5000, {
-      initialDelay: 15000,
-      maxAttempts: 25,
-    })
-  );
-
-  return linode;
 };
 
 authenticate();

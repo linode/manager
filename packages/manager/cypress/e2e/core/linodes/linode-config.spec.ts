@@ -3,55 +3,19 @@ import { containsVisible } from 'support/helpers';
 import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
+import { interceptRebootLinode } from 'support/intercepts/linodes';
+import { createAndBootLinode } from './linode-utils';
+import type { Linode } from '@linode/api-v4';
 
 authenticate();
-describe('edit linode config', () => {
+
+describe('Linode cConfig', () => {
   before(() => {
     cleanUp('linodes');
   });
 
-  it('edits an existing config successfully', () => {
-    createLinode({
-      interfaces: [
-        {
-          ipam_address: '',
-          label: '',
-          purpose: 'public',
-        },
-        {
-          ipam_address: '',
-          label: 'testvlan',
-          purpose: 'vlan',
-        },
-      ],
-    }).then((linode) => {
-      cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
-
-      containsVisible('My Debian 10 Disk Profile – GRUB 2');
-      cy.findByText('Edit').click();
-
-      ui.dialog
-        .findByTitle('Edit Configuration')
-        .should('be.visible')
-        .within(() => {
-          cy.get('#ipam-input-1').type('192.0.2.0/25');
-          ui.button
-            .findByTitle('Save Changes')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      cy.get(`[aria-label="List of Configurations"]`).within(() => {
-        containsVisible('eth0 – Public Internet');
-        containsVisible('eth1 – VLAN: testvlan (192.0.2.0/25)');
-      });
-    });
-  });
-
-  it('creates a new config successfully', () => {
-    createLinode().then((linode) => {
+  it('Creates a new config', () => {
+    createLinode().then((linode: Linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
 
       containsVisible('My Debian 10 Disk Profile – GRUB 2');
@@ -77,5 +41,78 @@ describe('edit linode config', () => {
         containsVisible('eth0 – Public Internet');
       });
     });
+  });
+
+  it('Edits an existing config', () => {
+    createLinode({
+      interfaces: [
+        {
+          ipam_address: '',
+          label: '',
+          purpose: 'public',
+        },
+        {
+          ipam_address: '',
+          label: 'testvlan',
+          purpose: 'vlan',
+        },
+      ],
+    }).then((linode: Linode) => {
+      cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+
+      containsVisible('My Debian 10 Disk Profile – GRUB 2');
+      cy.findByText('Edit').click();
+
+      ui.dialog
+        .findByTitle('Edit Configuration')
+        .should('be.visible')
+        .within(() => {
+          cy.get('#ipam-input-1').type('192.0.2.0/25');
+          ui.button
+            .findByTitle('Save Changes')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.get(`[aria-label="List of Configurations"]`).within(() => {
+        containsVisible('eth0 – Public Internet');
+        containsVisible('eth1 – VLAN: testvlan (192.0.2.0/25)');
+      });
+    });
+  });
+
+  it.only('Boots an existing config', () => {
+    cy.defer(createAndBootLinode(), 'creating and booting Linode').then(
+      (linode: Linode) => {
+        cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+        interceptRebootLinode(linode.id).as('rebootLinode');
+
+        containsVisible('My Debian 10 Disk Profile – GRUB 2');
+        cy.findByText('Boot').click();
+
+        ui.dialog
+          .findByTitle('Confirm Boot')
+          .should('be.visible')
+          .within(() => {
+            containsVisible(
+              'Are you sure you want to boot "My Debian 10 Disk Profile"?'
+            );
+            ui.button
+              .findByTitle('Boot')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        cy.wait('@rebootLinode').its('response.statusCode').should('eq', 200);
+
+        ui.toast.assertMessage(
+          'Successfully booted config My Debian 10 Disk Profile'
+        );
+        cy.findByText('REBOOTING').should('be.visible');
+      }
+    );
   });
 });

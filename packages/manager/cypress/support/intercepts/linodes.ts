@@ -109,6 +109,22 @@ export const mockGetLinodeVolumes = (
 };
 
 /**
+ * Intercepts POST request to reboot a Linode.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptRebootLinode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/reboot`)
+  );
+};
+
+/**
  * Intercepts POST request to reboot a Linode into rescue mode.
  *
  * @param linodeId - ID of Linode for intercepted request.
