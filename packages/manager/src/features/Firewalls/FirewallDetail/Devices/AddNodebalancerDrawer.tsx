@@ -98,19 +98,29 @@ export const AddNodebalancerDrawer = (props: Props) => {
     );
   }, [error]);
 
-  // @todo update regex once error messaging updates
   const errorNotice = () => {
     let errorMsg = localError || '';
-    // match something like: Nodebalancer <nodebalancer_label> (ID <nodebalancer_id>)
-    const nodebalancer = /NodeBalancer (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
+    // match something like: Linode <linode_label> (ID <linode_id>)
+
+    const linode = /Linode (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
+
     if (openTicket) {
       errorMsg = errorMsg.replace(/open a support ticket\./i, '');
     }
-    if (nodebalancer) {
-      const [, label, id] = nodebalancer;
-      const labelIndex = errorMsg.indexOf(label);
-      errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
+
+    if (linode) {
+      const [, label, id] = linode;
+
+      // Break the errorMsg into two parts: before and after the linode pattern
+      const startMsg = errorMsg.substring(
+        0,
+        errorMsg.indexOf(`NodeBalancer ${label}`)
+      );
+      const endMsg = errorMsg.substring(
+        errorMsg.indexOf(`(ID ${id})`) + `(ID ${id})`.length
+      );
+
       return (
         <Notice
           sx={{
@@ -120,9 +130,9 @@ export const AddNodebalancerDrawer = (props: Props) => {
           }}
           variant="error"
         >
-          {errorMsg.substring(0, labelIndex)}
-          <Link to={`/nodebalancers/${id}`}>{label}</Link>
-          {errorMsg.substring(labelIndex + label.length)}
+          {startMsg}
+          <Link to={`/nodebalancer/${id}`}>{label}</Link>
+          {endMsg}
           {openTicket ? (
             <>
               <SupportLink text="open a Support ticket" />.

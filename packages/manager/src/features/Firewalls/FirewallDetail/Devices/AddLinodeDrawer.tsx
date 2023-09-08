@@ -54,6 +54,10 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
 
+  const [localError, setLocalError] = React.useState<string | undefined>(
+    undefined
+  );
+
   const handleSubmit = async () => {
     const results = await Promise.allSettled(
       selectedLinodes.map((linode) =>
@@ -81,24 +85,37 @@ export const AddLinodeDrawer = (props: Props) => {
     }
   };
 
-  // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
-  const errorMessage = error
-    ? getAPIErrorOrDefault(error, 'Error adding Linode')[0].reason
-    : undefined;
+  React.useEffect(() => {
+    setLocalError(
+      error
+        ? getAPIErrorOrDefault(error, `Error adding Linode`)[0].reason
+        : undefined
+    );
+  }, [error]);
 
-  // @todo update regex once error messaging updates
   const errorNotice = () => {
-    let errorMsg = errorMessage || '';
+    let errorMsg = localError || '';
     // match something like: Linode <linode_label> (ID <linode_id>)
+
     const linode = /Linode (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
+
     if (openTicket) {
       errorMsg = errorMsg.replace(/open a support ticket\./i, '');
     }
+
     if (linode) {
       const [, label, id] = linode;
-      const labelIndex = errorMsg.indexOf(label);
-      errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
+
+      // Break the errorMsg into two parts: before and after the linode pattern
+      const startMsg = errorMsg.substring(
+        0,
+        errorMsg.indexOf(`Linode ${label}`)
+      );
+      const endMsg = errorMsg.substring(
+        errorMsg.indexOf(`(ID ${id})`) + `(ID ${id})`.length
+      );
+
       return (
         <Notice
           sx={{
@@ -108,9 +125,9 @@ export const AddLinodeDrawer = (props: Props) => {
           }}
           variant="error"
         >
-          {errorMsg.substring(0, labelIndex)}
+          {startMsg}
           <Link to={`/linodes/${id}`}>{label}</Link>
-          {errorMsg.substring(labelIndex + label.length)}
+          {endMsg}
           {openTicket ? (
             <>
               <SupportLink text="open a Support ticket" />.
@@ -119,7 +136,7 @@ export const AddLinodeDrawer = (props: Props) => {
         </Notice>
       );
     } else {
-      return <Notice text={errorMessage} variant="error" />;
+      return <Notice text={localError} variant="error" />;
     }
   };
 
@@ -132,6 +149,7 @@ export const AddLinodeDrawer = (props: Props) => {
     <Drawer
       onClose={() => {
         setSelectedLinodes([]);
+        setLocalError(undefined);
         onClose();
       }}
       open={open}
@@ -143,7 +161,7 @@ export const AddLinodeDrawer = (props: Props) => {
           handleSubmit();
         }}
       >
-        {errorMessage ? errorNotice() : null}
+        {localError ? errorNotice() : null}
         <LinodeSelect
           optionsFilter={(linode) =>
             ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id)
