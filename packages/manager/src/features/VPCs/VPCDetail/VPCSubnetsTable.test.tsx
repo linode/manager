@@ -50,7 +50,7 @@ describe('VPC Subnets table', () => {
     getByText('Linodes');
     getByText(subnet.linodes.length);
 
-    const actionMenuButton = getAllByRole('button')[3];
+    const actionMenuButton = getAllByRole('button')[4];
     fireEvent.click(actionMenuButton);
 
     getByText('Assign Linode');
@@ -73,7 +73,7 @@ describe('VPC Subnets table', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const expandTableButton = getAllByRole('button')[2];
+    const expandTableButton = getAllByRole('button')[3];
     fireEvent.click(expandTableButton);
     getByText('No Linodes');
   });
@@ -91,7 +91,7 @@ describe('VPC Subnets table', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const expandTableButton = getAllByRole('button')[2];
+    const expandTableButton = getAllByRole('button')[3];
     fireEvent.click(expandTableButton);
 
     getByText('Linode Label');

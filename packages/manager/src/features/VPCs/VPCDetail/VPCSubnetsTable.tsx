@@ -1,6 +1,8 @@
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import {
   CollapsibleTable,
@@ -22,6 +24,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSubnetsQuery } from 'src/queries/vpcs';
 
+import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
 
 interface Props {
@@ -31,7 +34,11 @@ interface Props {
 const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = ({ vpcId }: Props) => {
+  const theme = useTheme();
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
+  const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
+    false
+  );
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -170,14 +177,36 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
 
   return (
     <>
-      <DebouncedSearchTextField
-        debounceTime={250}
-        hideLabel
-        isSearching={false}
-        label="Filter Subnets by label or id"
-        onSearch={handleSearch}
-        placeholder="Filter Subnets by label or id"
-        sx={{ paddingBottom: 2 }}
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        paddingBottom={`${theme.spacing(2)}`}
+      >
+        <DebouncedSearchTextField
+          debounceTime={250}
+          hideLabel
+          isSearching={false}
+          label="Filter Subnets by label or id"
+          onSearch={handleSearch}
+          placeholder="Filter Subnets by label or id"
+          sx={{
+            [theme.breakpoints.up('sm')]: {
+              width: '416px',
+            },
+            width: '100%',
+          }}
+        />
+        <Button
+          buttonType="primary"
+          onClick={() => setSubnetCreateDrawerOpen(true)}
+        >
+          Create Subnet
+        </Button>
+      </Box>
+      <SubnetCreateDrawer
+        onClose={() => setSubnetCreateDrawerOpen(false)}
+        open={subnetCreateDrawerOpen}
+        vpcId={vpcId}
       />
       <CollapsibleTable
         TableItems={getTableItems()}
