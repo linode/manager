@@ -34,6 +34,7 @@ export const ActiveConnections = (props: TableProps) => {
       sx={{
         boxSizing: 'border-box',
         margin: '0',
+        padding: '0',
         [theme.breakpoints.down('md')]: {
           marginTop: theme.spacing(3),
         },

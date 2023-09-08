@@ -108,7 +108,12 @@ export const LongviewDetailOverview = (props: Props) => {
           lastUpdatedError={!!lastUpdatedError}
           timezone={timezone}
         />
-        <StyledItemGrid container justifyContent="space-between" spacing={0}>
+        <StyledItemGrid
+          container
+          justifyContent="space-between"
+          spacing={0}
+          xs={12}
+        >
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
             servicesError={portsError}
