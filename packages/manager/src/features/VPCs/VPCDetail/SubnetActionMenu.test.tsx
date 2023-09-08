@@ -5,6 +5,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetActionMenu } from './SubnetActionMenu';
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 const props = {
   handleDelete: jest.fn(),
   numLinodes: 1,

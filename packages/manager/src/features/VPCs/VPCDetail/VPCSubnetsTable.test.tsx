@@ -15,7 +15,6 @@ const queryClient = new QueryClient();
 beforeAll(() => mockMatchMedia());
 afterEach(() => {
   queryClient.clear();
-  jest.clearAllMocks();
 });
 
 const loadingTestId = 'circle-progress';
