@@ -107,8 +107,8 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
       {
         certificates: [
           {
-            id: 1,
             hostname: 'example.com',
+            id: 1,
           },
         ],
         label: 'myentrypoint1',
@@ -141,6 +141,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                       host: 'linode.com',
                       interval: 10000,
                       path: '/images',
+                      protocol: 'http',
                       timeout: 5000,
                       unhealthy_threshold: 5,
                     },
@@ -234,6 +235,7 @@ export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
     host: 'linode.com',
     interval: 10000,
     path: '/images',
+    protocol: 'http',
     timeout: 5000,
     unhealthy_threshold: 5,
   },
@@ -257,6 +259,7 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
       host: 'linode.com',
       interval: 10000,
       path: '/images',
+      protocol: 'http',
       timeout: 5000,
       unhealthy_threshold: 5,
     },

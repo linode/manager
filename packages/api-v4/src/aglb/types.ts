@@ -115,6 +115,7 @@ export interface ServiceTargetPayload {
 }
 
 interface HealthCheck {
+  protocol: 'tcp' | 'http';
   interval: number;
   timeout: number;
   unhealthy_threshold: number;

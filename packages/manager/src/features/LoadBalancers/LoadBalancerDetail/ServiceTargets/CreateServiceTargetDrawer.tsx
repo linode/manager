@@ -9,7 +9,10 @@ import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { FormLabel } from 'src/components/FormLabel';
 import { InputAdornment } from 'src/components/InputAdornment';
+import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -69,6 +72,7 @@ const initialValues: ServiceTargetPayload = {
     host: '',
     interval: 10,
     path: '',
+    protocol: 'http',
     timeout: 5,
     unhealthy_threshold: 3,
   },
@@ -210,20 +214,99 @@ export const CreateServiceTargetDrawer = (props: Props) => {
             onChange={(_, checked) =>
               formik.setFieldValue('healthcheck.interval', checked ? 10 : 0)
             }
-            value={formik.values.healthcheck.interval !== 0}
+            checked={formik.values.healthcheck.interval !== 0}
           />
         }
         label="Use Health Checks"
       />
       {formik.values.healthcheck.interval !== 0 && (
         <Box>
-          <TextField
-            label="Interval"
-            labelTooltipText="TODO"
-            name="healthcheck.interval"
-            onChange={formik.handleChange}
-            value={formik.values.healthcheck.interval}
-          />
+          <RadioGroup
+            onChange={(_, value) =>
+              formik.setFieldValue('healthcheck.protocol', value)
+            }
+            value={formik.values.healthcheck.protocol}
+          >
+            <FormLabel>Protocol</FormLabel>
+            <FormControlLabel control={<Radio />} label="HTTP" value="http" />
+            <FormControlLabel control={<Radio />} label="TCP" value="tcp" />
+          </RadioGroup>
+          <Stack direction="row" spacing={2}>
+            <TextField
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="start">seconds</InputAdornment>
+                ),
+              }}
+              label="Interval"
+              labelTooltipText="TODO"
+              name="healthcheck.interval"
+              onChange={formik.handleChange}
+              type="number"
+              value={formik.values.healthcheck.interval}
+            />
+            <TextField
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="start">checks</InputAdornment>
+                ),
+              }}
+              label="Healthy Threshold"
+              labelTooltipText="TODO"
+              name="healthcheck.healthy_threshold"
+              onChange={formik.handleChange}
+              type="number"
+              value={formik.values.healthcheck.healthy_threshold}
+            />
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <TextField
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="start">seconds</InputAdornment>
+                ),
+              }}
+              label="Timeout"
+              labelTooltipText="TODO"
+              name="healthcheck.timeout"
+              onChange={formik.handleChange}
+              type="number"
+              value={formik.values.healthcheck.timeout}
+            />
+            <TextField
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="start">checks</InputAdornment>
+                ),
+              }}
+              label="Unhealthy Threshold"
+              labelTooltipText="TODO"
+              name="healthcheck.unhealthy_threshold"
+              onChange={formik.handleChange}
+              type="number"
+              value={formik.values.healthcheck.unhealthy_threshold}
+            />
+          </Stack>
+          {formik.values.healthcheck.protocol === 'http' && (
+            <>
+              <TextField
+                label="Health Check Path"
+                labelTooltipText="TODO"
+                name="healthcheck.path"
+                onChange={formik.handleChange}
+                optional
+                value={formik.values.healthcheck.path}
+              />
+              <TextField
+                label="Health Check Host"
+                labelTooltipText="TODO"
+                name="healthcheck.host"
+                onChange={formik.handleChange}
+                optional
+                value={formik.values.healthcheck.host}
+              />
+            </>
+          )}
         </Box>
       )}
     </Drawer>
