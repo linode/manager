@@ -407,3 +407,12 @@ export const sendApiAwarenessClickEvent = (
     label,
   });
 };
+
+// LinodeConfigs.tsx
+export const sendLinodeConfigurationDocsEvent = (label: string) => {
+  sendEvent({
+    action: 'Click:link',
+    category: 'Linode Configuration Contextual Help',
+    label,
+  });
+};
