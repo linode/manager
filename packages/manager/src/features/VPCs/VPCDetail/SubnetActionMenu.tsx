@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { Subnet } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu';
 
 interface SubnetsActionHandlers {
-  handleDelete: (subnetId: number, subnetLabel: string) => void;
+  handleDelete: (subnet: Subnet) => void;
 }
 
 interface Props extends SubnetsActionHandlers {
   numLinodes: number;
-  subnetId: number;
-  subnetLabel: string;
+  subnet: Subnet;
   vpcId: number;
 }
 
 export const SubnetActionMenu = (props: Props) => {
-  const { handleDelete, numLinodes, subnetId, subnetLabel } = props;
+  const { handleDelete, numLinodes, subnet } = props;
 
   const handleAssignLinode = () => {};
 
@@ -44,7 +44,7 @@ export const SubnetActionMenu = (props: Props) => {
     },
     {
       onClick: () => {
-        handleDelete(subnetId, subnetLabel);
+        handleDelete(subnet);
       },
       title: 'Delete',
       disabled: numLinodes !== 0,

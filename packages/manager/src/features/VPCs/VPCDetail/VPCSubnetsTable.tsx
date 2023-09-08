@@ -1,3 +1,4 @@
+import { Subnet } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -34,12 +35,12 @@ const preferenceKey = 'vpc-subnets';
 export const VPCSubnetsTable = (props: Props) => {
   const { vpcId } = props;
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
-
-  const [deleteSubnetDialogData, setDeleteSubnetDialogData] = React.useState<{
-    open: boolean;
-    subnetId?: number;
-    subnetLabel?: string;
-  }>({ open: false, subnetId: -1 });
+  const [selectedSubnet, setSelectedSubnet] = React.useState<
+    Subnet | undefined
+  >();
+  const [deleteSubnetDialogOpen, setDeleteSubnetDialogOpen] = React.useState(
+    false
+  );
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -88,8 +89,9 @@ export const VPCSubnetsTable = (props: Props) => {
     pagination.handlePageChange(1);
   };
 
-  const handleSubnetDelete = (subnetId: number, subnetLabel: string) => {
-    setDeleteSubnetDialogData({ open: true, subnetId, subnetLabel });
+  const handleSubnetDelete = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
+    setDeleteSubnetDialogOpen(true);
   };
 
   if (isLoading) {
@@ -152,8 +154,7 @@ export const VPCSubnetsTable = (props: Props) => {
             <SubnetActionMenu
               handleDelete={handleSubnetDelete}
               numLinodes={subnet.linodes.length}
-              subnetId={subnet.id}
-              subnetLabel={subnet.label}
+              subnet={subnet}
               vpcId={vpcId}
             />
           </TableCell>
@@ -210,15 +211,9 @@ export const VPCSubnetsTable = (props: Props) => {
         pageSize={pagination.pageSize}
       />
       <SubnetDeleteDialog
-        onClose={() =>
-          setDeleteSubnetDialogData((subnetDialogData) => ({
-            ...subnetDialogData,
-            open: false,
-          }))
-        }
-        open={deleteSubnetDialogData.open}
-        subnetId={deleteSubnetDialogData.subnetId}
-        subnetLabel={deleteSubnetDialogData.subnetLabel}
+        onClose={() => setDeleteSubnetDialogOpen(false)}
+        open={deleteSubnetDialogOpen}
+        subnet={selectedSubnet}
         vpcId={vpcId}
       />
     </>

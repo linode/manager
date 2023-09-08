@@ -1,3 +1,4 @@
+import { Subnet } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -7,19 +8,18 @@ import { useDeleteSubnetMutation } from 'src/queries/vpcs';
 interface Props {
   onClose: () => void;
   open: boolean;
-  subnetId?: number;
-  subnetLabel?: string;
+  subnet?: Subnet;
   vpcId: number;
 }
 
 export const SubnetDeleteDialog = (props: Props) => {
-  const { onClose, open, subnetId, subnetLabel, vpcId } = props;
+  const { onClose, open, subnet, vpcId } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
     isLoading,
     mutateAsync: deleteSubnet,
-  } = useDeleteSubnetMutation(vpcId, subnetId ?? -1);
+  } = useDeleteSubnetMutation(vpcId, subnet?.id ?? -1);
 
   const onDeleteSubnet = async () => {
     await deleteSubnet();
@@ -33,7 +33,7 @@ export const SubnetDeleteDialog = (props: Props) => {
     <TypeToConfirmDialog
       entity={{
         action: 'deletion',
-        name: subnetLabel,
+        name: subnet?.label,
         primaryBtnText: 'Delete',
         type: 'Subnet',
       }}
@@ -43,7 +43,7 @@ export const SubnetDeleteDialog = (props: Props) => {
       onClick={onDeleteSubnet}
       onClose={onClose}
       open={open}
-      title={`Delete Subnet ${subnetLabel}`}
+      title={`Delete Subnet ${subnet?.label}`}
     />
   );
 };

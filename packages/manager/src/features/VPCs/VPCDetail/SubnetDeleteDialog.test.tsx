@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+import { subnetFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
@@ -6,8 +8,7 @@ import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 const props = {
   onClose: jest.fn(),
   open: true,
-  subnetId: 1,
-  subnetLabel: 'some subnet',
+  subnet: subnetFactory.build({ label: 'some subnet' }),
   vpcId: 1,
 };
 

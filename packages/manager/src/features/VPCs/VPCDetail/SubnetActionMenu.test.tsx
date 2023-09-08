@@ -1,6 +1,7 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
+import { subnetFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetActionMenu } from './SubnetActionMenu';
@@ -12,8 +13,7 @@ afterEach(() => {
 const props = {
   handleDelete: jest.fn(),
   numLinodes: 1,
-  subnetId: 1,
-  subnetLabel: 'subnet-1',
+  subnet: subnetFactory.build({ label: 'subnet-1' }),
   vpcId: 1,
 };
 
