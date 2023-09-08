@@ -72,17 +72,21 @@ LhIhYpJ8UsCVt5snWo2N+M+6ANh5tpWdQnEK6zILh4tRbuzaiHgb
 // Configuration endpoints
 // ********************
 export const configurationFactory = Factory.Sync.makeFactory<Configuration>({
-  certificate_table: [
+  certificates: [
     {
-      certificate_id: 'cert-12345',
-      sni_hostname: 'example.com',
+      hostname: 'example.com',
+      id: 0,
     },
   ],
   id: Factory.each((i) => i),
-  label: Factory.each((i) => `entrypoint${i}`),
+  label: Factory.each((i) => `configuration-${i}`),
   port: 80,
-  protocol: 'HTTP',
-  routes: ['images-route'],
+  protocol: 'http',
+  routes: [
+    { id: 0, label: 'route-0' },
+    { id: 1, label: 'route-1' },
+    { id: 2, label: 'route-2' },
+  ],
 });
 
 // ***********************
@@ -101,15 +105,15 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
   {
     configurations: [
       {
-        certificate_table: [
+        certificates: [
           {
-            certificate_id: 'cert-12345',
-            sni_hostname: 'example.com',
+            id: 1,
+            hostname: 'example.com',
           },
         ],
         label: 'myentrypoint1',
         port: 80,
-        protocol: 'HTTP',
+        protocol: 'http',
         routes: [
           {
             label: 'my-route',
