@@ -552,6 +552,7 @@ export const darkTheme: ThemeOptions = {
   name: 'dark',
   palette: {
     background: {
+      default: customDarkModeOptions.bg.app,
       paper: '#2e3238',
     },
     divider: primaryColors.divider,
