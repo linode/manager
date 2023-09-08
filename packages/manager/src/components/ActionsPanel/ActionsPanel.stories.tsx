@@ -18,37 +18,13 @@ const secondaryButtonProps = {
   label: 'Cancel',
 };
 
-const disabledPrimaryButtonProps = {
-  ...primaryButtonProps,
-  disabled: true,
-};
-
-const disabledSecondaryButtonProps = {
-  ...secondaryButtonProps,
-  disabled: true,
-};
-
 export const StandardActions: Story = {
-  argTypes: {
-    primaryButtonProps: {
-      options: {
-        'disabled actions': disabledPrimaryButtonProps,
-        'standard actions': primaryButtonProps,
-      },
-    },
-    secondaryButtonProps: {
-      options: {
-        'disabled actions': disabledSecondaryButtonProps,
-        'standard actions': secondaryButtonProps,
-      },
-    },
-  },
   args: {
     primaryButtonProps,
     secondaryButtonProps,
   },
   render: (args: ActionPanelProps) => {
-    return <ActionsPanel {...args} />;
+    return <ActionsPanel sx={{ justifyContent: 'flex-start' }} {...args} />;
   },
 };
 

@@ -3,7 +3,6 @@ import cx from 'classnames';
 import * as React from 'react';
 
 import { Button, ButtonProps } from 'src/components/Button/Button';
-import { RenderGuard } from 'src/components/RenderGuard';
 
 import { Box, BoxProps } from '../Box';
 
@@ -28,7 +27,7 @@ export interface ActionPanelProps extends BoxProps {
  * An `<ActionsPanel />` is a UI component that provides a primary and secondary action.
  * It can also be used to render a single action within modals or drawers for consistency.
  */
-export const ActionsPanel = RenderGuard((props: ActionPanelProps) => {
+export const ActionsPanel = (props: ActionPanelProps) => {
   const {
     className,
     primaryButtonProps,
@@ -67,7 +66,7 @@ export const ActionsPanel = RenderGuard((props: ActionPanelProps) => {
       ) : null}
     </StyledBox>
   );
-});
+};
 
 const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
   '& > :first-of-type': {
