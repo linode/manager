@@ -5,7 +5,6 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
-//import { Grid } from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { DispatchProps } from 'src/containers/longview.container';
