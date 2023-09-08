@@ -26,6 +26,8 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 
+import { CreateServiceTargetDrawer } from './ServiceTargets/CreateServiceTargetDrawer';
+
 import type { Filter } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-service-targets';
@@ -34,6 +36,7 @@ export const LoadBalancerServiceTargets = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const [query, setQuery] = useState<string>();
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -104,7 +107,12 @@ export const LoadBalancerServiceTargets = () => {
           value={query}
         />
         <Box flexGrow={1} />
-        <Button buttonType="primary">Create Service Target</Button>
+        <Button
+          buttonType="primary"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        >
+          Create Service Target
+        </Button>
       </Stack>
       <Table>
         <TableHead>
@@ -180,6 +188,11 @@ export const LoadBalancerServiceTargets = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <CreateServiceTargetDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
       />
     </>
   );

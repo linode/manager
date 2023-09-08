@@ -1,5 +1,5 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { Box } from 'src/components/Box';
+import { Box, BoxProps } from 'src/components/Box';
 import {
   default as _TextField,
   StandardTextFieldProps,
@@ -71,6 +71,10 @@ interface BaseProps {
    * className to apply to the underlying TextField component
    */
   className?: string;
+  /**
+   * Props applied to the root container.
+   */
+  containerProps?: BoxProps;
   /**
    * Data attributes are applied to the underlying TextField component for testing purposes
    */
@@ -209,6 +213,7 @@ export const TextField = (props: TextFieldProps) => {
     trimmed,
     type,
     value,
+    containerProps,
     ...textFieldProps
   } = props;
 
@@ -296,11 +301,15 @@ export const TextField = (props: TextFieldProps) => {
     inputId || (label ? convertToKebabCase(`${label}`) : undefined);
 
   return (
-    <div
-      className={cx({
-        [classes.helpWrapper]: Boolean(tooltipText),
-        [errorScrollClassName]: !!errorText,
-      })}
+    <Box
+      {...containerProps}
+      className={cx(
+        {
+          [classes.helpWrapper]: Boolean(tooltipText),
+          [errorScrollClassName]: !!errorText,
+        },
+        containerProps?.className
+      )}
     >
       <Box display="flex">
         <InputLabel
@@ -443,6 +452,6 @@ export const TextField = (props: TextFieldProps) => {
             {helperText}
           </FormHelperText>
         )}
-    </div>
+    </Box>
   );
 };
