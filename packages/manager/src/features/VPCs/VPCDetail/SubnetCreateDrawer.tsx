@@ -1,21 +1,19 @@
-import { CreateSubnetPayload } from '@linode/api-v4';
 import { createSubnetSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateSubnetMutation } from 'src/queries/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
-  calculateAvailableIPv4s,
   DEFAULT_SUBNET_IPV4_VALUE,
-  RESERVED_IP_NUMBER,
+  SubnetFieldState,
 } from 'src/utilities/subnets';
+
+import { SubnetNode } from '../VPCCreate/SubnetNode';
 
 interface Props {
   onClose: () => void;
@@ -31,37 +29,44 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const userCannotAddSubnet = profile?.restricted && !grants?.global.add_vpcs;
 
+  const [errorMap, setErrorMap] = React.useState<
+    Record<string, string | undefined>
+  >({});
+
   const {
-    error,
     isLoading,
     mutateAsync: createSubnet,
     reset,
   } = useCreateSubnetMutation(vpcId);
 
-  const [availIPv4s, setAvailIPv4s] = React.useState<number | undefined>(256);
-
   const onCreateSubnet = async () => {
     try {
-      await createSubnet(values);
+      await createSubnet({ label: values.label, ipv4: values.ip.ipv4 });
       onClose();
     } catch (errors) {
-      // will get an warning for uncaught error messages without a try/catch - is that ok?
+      const newErrors = getErrorMap(['label', 'ipv4'], errors);
+      setErrorMap(newErrors);
+      setValues({
+        label: values.label,
+        labelError: newErrors.label,
+        ip: {
+          ...values.ip,
+          ipv4Error: newErrors.ipv4,
+        },
+      });
     }
   };
 
-  const {
-    dirty,
-    handleSubmit,
-    resetForm,
-    setFieldValue,
-    values,
-  } = useFormik<CreateSubnetPayload>({
+  const { dirty, handleSubmit, resetForm, setValues, values } = useFormik({
     enableReinitialize: true,
     initialValues: {
       // TODO VPC - add IPv6 when that is supported
       label: '',
-      ipv4: DEFAULT_SUBNET_IPV4_VALUE,
-    },
+      ip: {
+        ipv4: DEFAULT_SUBNET_IPV4_VALUE,
+        availIPv4s: 256,
+      },
+    } as SubnetFieldState,
     onSubmit: onCreateSubnet,
     validateOnBlur: false,
     validateOnChange: false,
@@ -74,8 +79,6 @@ export const SubnetCreateDrawer = (props: Props) => {
       reset();
     }
   }, [open]);
-
-  const errorMap = getErrorMap(['label', 'ipv4'], error);
 
   return (
     <Drawer onClose={onClose} open={open} title={'Create Subnet'}>
@@ -91,36 +94,12 @@ export const SubnetCreateDrawer = (props: Props) => {
         />
       )}
       <form onSubmit={handleSubmit}>
-        <TextField
-          disabled={userCannotAddSubnet}
-          errorText={errorMap.label}
-          label="Subnet label"
-          name="label"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFieldValue('label', e.target.value)
-          }
-          placeholder="Enter a subnet label"
-          value={values.label}
-        />
-        <TextField
-          disabled={userCannotAddSubnet}
-          errorText={errorMap.ipv4}
-          label="Subnet IP Address Range"
-          name="ipv4"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setFieldValue('ipv4', e.target.value);
-            const availIPAddresses = calculateAvailableIPv4s(e.target.value);
-            setAvailIPv4s(availIPAddresses);
+        <SubnetNode
+          onChange={(subnetState) => {
+            setValues(subnetState);
           }}
-          rows={1}
-          value={values.ipv4}
+          subnet={values}
         />
-        {availIPv4s && (
-          <FormHelperText>
-            Available IP Addresses:{' '}
-            {availIPv4s > 4 ? availIPv4s - RESERVED_IP_NUMBER : 0}
-          </FormHelperText>
-        )}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-subnet-button',

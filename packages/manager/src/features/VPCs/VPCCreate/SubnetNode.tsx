@@ -15,9 +15,6 @@ import {
 interface Props {
   disabled?: boolean;
   // extra props enable SubnetNode to be an independent component or be part of MultipleSubnetInput
-  // Note: when I first created this component, I wanted to make it possible to use it as an independent component for the Create subnet drawer,
-  // edit subnet drawer, etc. However, now that I'm working on the Create Subnet drawer, imo it's a lot easier to not use this component
-  // If I've time, will look into simplifying it/combining it with the MultipleSubnetInput
   // potential refactor - isRemoveable, and subnetIdx & remove in onChange prop
   idx?: number;
   isRemovable?: boolean;
@@ -58,7 +55,10 @@ export const SubnetNode = (props: Props) => {
   return (
     <Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
-        <Grid xs={isRemovable ? 11 : 12}>
+        <Grid
+          xs={isRemovable ? 11 : 12}
+          sx={{ ...(!isRemovable && { width: '100%' }) }}
+        >
           <TextField
             disabled={disabled}
             errorText={subnet.labelError}
