@@ -54,7 +54,9 @@ export const SubnetsActionMenu = (props: Props) => {
       title: 'Delete',
       disabled: numLinodes !== 0,
       tooltip:
-        'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.',
+        numLinodes > 0
+          ? 'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
+          : '',
     },
   ];
 
