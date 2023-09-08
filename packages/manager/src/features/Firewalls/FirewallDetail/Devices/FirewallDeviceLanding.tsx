@@ -1,6 +1,6 @@
-import { styled } from '@mui/material/styles';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -107,6 +107,8 @@ export const FirewallDeviceLanding = React.memo(
                   filter(val);
                 }}
                 expand={true}
+                hideLabel
+                label=""
                 placeholder={`Search ${formattedType}s`}
                 value={searchText}
               />

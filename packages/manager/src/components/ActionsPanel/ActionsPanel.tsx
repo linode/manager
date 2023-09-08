@@ -13,7 +13,7 @@ interface ActionButtonsProps extends ButtonProps {
   label?: string;
 }
 
-interface ActionPanelProps extends BoxProps {
+export interface ActionPanelProps extends BoxProps {
   /**
    * primary type actionable button custom aria descripton.
    */
@@ -25,7 +25,7 @@ interface ActionPanelProps extends BoxProps {
   secondaryButtonProps?: ActionButtonsProps;
 }
 
-const ActionsPanelComponent = (props: ActionPanelProps) => {
+export const ActionsPanel = RenderGuard((props: ActionPanelProps) => {
   const {
     className,
     primaryButtonProps,
@@ -64,7 +64,7 @@ const ActionsPanelComponent = (props: ActionPanelProps) => {
       ) : null}
     </StyledBox>
   );
-};
+});
 
 const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
   '& > :first-of-type': {
@@ -83,7 +83,3 @@ const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
   paddingBottom: spacing(1),
   paddingTop: spacing(2),
 }));
-
-const ActionsPanel = RenderGuard(ActionsPanelComponent);
-
-export { ActionsPanel };

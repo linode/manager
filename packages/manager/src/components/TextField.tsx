@@ -162,7 +162,7 @@ interface InputToolTipProps {
 
 interface TextFieldPropsOverrides extends StandardTextFieldProps {
   // We override this prop to make it required
-  label?: string;
+  label: string;
 }
 
 export type TextFieldProps = BaseProps &
