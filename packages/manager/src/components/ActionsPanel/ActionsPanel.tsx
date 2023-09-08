@@ -13,7 +13,7 @@ interface ActionButtonsProps extends ButtonProps {
   label?: string;
 }
 
-interface Props extends BoxProps {
+export interface ActionPanelProps extends BoxProps {
   /**
    * primary type actionable button custom aria descripton.
    */
@@ -24,7 +24,11 @@ interface Props extends BoxProps {
   secondaryButtonProps?: ActionButtonsProps;
 }
 
-export const ActionsPanel = RenderGuard((props: Props) => {
+/**
+ * An `<ActionsPanel />` is a UI component that provides a primary and secondary action.
+ * It can also be used to render a single action within modals or drawers for consistency.
+ */
+export const ActionsPanel = RenderGuard((props: ActionPanelProps) => {
   const {
     className,
     primaryButtonProps,
