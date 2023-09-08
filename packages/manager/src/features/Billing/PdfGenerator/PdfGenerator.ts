@@ -184,6 +184,7 @@ export const printInvoice = async (
   invoice: Invoice,
   items: InvoiceItem[],
   taxes: FlagSet['taxBanner'] | FlagSet['taxes'],
+  flags: FlagSet,
   timezone?: string
 ): Promise<PdfResult> => {
   try {
@@ -264,7 +265,7 @@ export const printInvoice = async (
         text: `Invoice: #${invoiceId}`,
       });
 
-      createInvoiceItemsTable(doc, itemsChunk, timezone);
+      createInvoiceItemsTable(doc, itemsChunk, flags, timezone);
       createFooter(doc, baseFont, account.country, invoice.date);
       if (index < itemsChunks.length - 1) {
         doc.addPage();
