@@ -37,6 +37,7 @@ describe('edit linode config', () => {
           cy.get('#ipam-input-1').type('192.0.2.0/25');
           ui.button
             .findByTitle('Save Changes')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -49,7 +50,7 @@ describe('edit linode config', () => {
     });
   });
 
-  it.only('creates a new config successfully', () => {
+  it('creates a new config successfully', () => {
     createLinode().then((linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
 
@@ -63,6 +64,7 @@ describe('edit linode config', () => {
           cy.get('#label').type(`${linode.id}-test-config`);
           ui.buttonGroup
             .findButtonByTitle('Add Configuration')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
