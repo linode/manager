@@ -21,10 +21,7 @@ import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs';
-import {
-  handleVPCAndSubnetErrors,
-  handleAPIErrors,
-} from 'src/utilities/formikErrorUtils';
+import { handleVPCAndSubnetErrors } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
@@ -51,17 +48,13 @@ const VPCCreate = () => {
   const [generalAPIError, setGeneralAPIError] = React.useState<
     string | undefined
   >();
-  // mapping of the subnets that appear on the UI to the subnets that the API will receive. This
-  // enables users to leave subnets blank on the UI and still have any errprs returned by the API to
-  // correspond to the correct subnet
-  const [
-    visualToAPISubnetIdxMapping,
-    setVisualToAPISubnetIdxMapping,
-  ] = React.useState({});
 
   const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
 
-  const createSubnetsPayload = () => {
+  // When creating the subnet payloads, we also create a mapping of the indexes of the subnets that appear on
+  // the UI to the subnets that the API will receive. This enables users to leave subnets blank on the UI and
+  // still have any errors returned by the API to correspond to the correct subnet
+  const createSubnetsPayloadAndMapping = () => {
     const subnetPayloads: CreateSubnetPayload[] = [];
     const newSubnetIdxMapping = {};
     let apiSubnetIdx = 0;
@@ -75,21 +68,29 @@ const VPCCreate = () => {
       }
     }
 
-    setVisualToAPISubnetIdxMapping(newSubnetIdxMapping);
-    return subnetPayloads;
+    return {
+      subnetPayloads: subnetPayloads,
+      visualToAPISubnetMapping: newSubnetIdxMapping,
+    };
   };
 
-  const combineErrorsAndSubnets = (errors: {}) => {
+  const combineErrorsAndSubnets = (
+    errors: {},
+    visualToAPISubnetMapping: {}
+  ) => {
     const combinedSubnets: SubnetFieldState[] = [];
     for (let i = 0; i < values.subnets.length; i++) {
-      const apiSubnetIdx = visualToAPISubnetIdxMapping[i];
+      const apiSubnetIdx = visualToAPISubnetMapping[i];
       // If the subnet has errors associated with it, include those errors in its state
-      if (apiSubnetIdx && errors[apiSubnetIdx]) {
+      if ((apiSubnetIdx || apiSubnetIdx === 0) && errors[apiSubnetIdx]) {
         const subnet = {
           label: values.subnets[i].label,
-          labelError: errors[i].label ?? '',
+          labelError: errors[apiSubnetIdx].label ?? '',
           // todo: ipv6 error handling
-          ip: { ...values.subnets[i].ip, ipv4Error: errors[i].ipv4 ?? '' },
+          ip: {
+            ...values.subnets[i].ip,
+            ipv4Error: errors[apiSubnetIdx].ipv4 ?? '',
+          },
         };
         combinedSubnets.push(subnet);
       } else {
@@ -103,11 +104,14 @@ const VPCCreate = () => {
     setSubmitting(true);
     setGeneralAPIError(undefined);
 
-    const subnetsPayload = createSubnetsPayload();
+    const {
+      subnetPayloads,
+      visualToAPISubnetMapping,
+    } = createSubnetsPayloadAndMapping();
 
     const createVPCPayload: CreateVPCPayload = {
       ...values,
-      subnets: subnetsPayload,
+      subnets: subnetPayloads,
     };
 
     try {
@@ -124,18 +128,23 @@ const VPCCreate = () => {
       if (generalSubnetErrors) {
         setGeneralSubnetErrorsFromAPI(generalSubnetErrors);
       }
-
       const indivSubnetErrors = handleVPCAndSubnetErrors(
         errors.filter(
-          // ignore general subnet errors
-          (error: APIError) => error.field?.includes('subnets[') || !error.field
+          // ignore general subnet errors: !(the logic of filtering for only general subnet errors)
+          (error: APIError) =>
+            !error.field?.includes('subnets') ||
+            !error.field ||
+            error.field.includes('[')
         ),
         setFieldError,
         setGeneralAPIError
       );
 
       // must combine errors and subnet data to avoid indexing weirdness when deleting a subnet
-      const subnetsAndErrors = combineErrorsAndSubnets(indivSubnetErrors);
+      const subnetsAndErrors = combineErrorsAndSubnets(
+        indivSubnetErrors,
+        visualToAPISubnetMapping
+      );
       setFieldValue('subnets', subnetsAndErrors);
     }
 

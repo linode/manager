@@ -75,10 +75,10 @@ export interface SubnetError {
 
 /**
  * Handles given API errors and converts any specific subnet related errors into a usable format;
- * Returns a map of subnets to their @interface SubnetError, using known indexes
+ * Returns a map of subnets' indexes to their @interface SubnetError
  * Example: errors = [{ reason: 'error1', field: 'subnets[1].label' },
  *                    { reason: 'error2', field: 'subnets[1].ipv4' },
- *                    { reason: 'not a subnet error', field: 'label'},
+ *                    { reason: 'not a subnet error so will not appear in return obj', field: 'label'},
  *                    { reason: 'error3', field: 'subnets[4].ipv4' }]
  * returns: {
  *            0: {},
@@ -91,7 +91,6 @@ export interface SubnetError {
  * return object. This does not cause any issues
  *
  * @param errors the errors from the API
- *        ex: numSubnets = 10, then the highest indexed subnet in errors should be at most subnet[9]
  * @param setFieldError function to set non subnet related field errors
  * @param setError function to set (non subnet related) general API errors
  */
@@ -127,7 +126,7 @@ export const handleVPCAndSubnetErrors = (
   }
 
   // check to ensure that if a SubnetError was built but
-  // wasn't added in the for loop above, it gets included
+  // wasn't added in the for loop above, it will still be included
   if (idx !== undefined && !subnetErrors[idx]) {
     subnetErrors[idx] = subnetErrorBuilder;
   }
