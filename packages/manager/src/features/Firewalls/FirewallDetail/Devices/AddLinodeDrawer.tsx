@@ -43,11 +43,6 @@ export const AddLinodeDrawer = (props: Props) => {
     isLoading: currentDevicesLoading,
   } = useAllFirewallDevicesQuery(Number(id));
 
-  const currentLinodeIds =
-    currentDevices
-      ?.filter((device) => device.entity.type === 'linode')
-      .map((device) => device.entity.id) ?? [];
-
   const {
     error,
     isLoading,
@@ -144,13 +139,18 @@ export const AddLinodeDrawer = (props: Props) => {
 
   type OptionType = { id: number; label: string };
 
+  const currentLinodeIds =
+    currentDevices
+      ?.filter((device) => device.entity.type === 'linode')
+      .map((device) => device.entity.id) ?? [];
+
   // If a user is restricted, they can not add a read-only Linode to a firewall.
   const readOnlyLinodeIds = isRestrictedUser
     ? getEntityIdsByPermission(grants, 'linode', 'read_only')
     : [];
 
   const optionsFilter = (linode: Linode) => {
-    ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id);
+    return ![...currentLinodeIds, ...readOnlyLinodeIds].includes(linode.id);
   };
 
   const {
@@ -164,19 +164,17 @@ export const AddLinodeDrawer = (props: Props) => {
   const options =
     linodes?.map((linode) => ({ id: linode.id, label: linode.label })) || [];
 
-  const onChange = (linodes: OptionType[]) => {
-    let mappedLinodes: Linode[] = [];
+  const onChange = (selectedLinodes: OptionType[]) => {
+    const result = mapIdsToDevices<Linode>(
+      selectedLinodes.map((linode) => linode.id),
+      linodes
+    );
 
-    if (Array.isArray(linodes)) {
-      const result = mapIdsToDevices<Linode>(
-        linodes.map((linode) => linode.id)
-      );
-      if (Array.isArray(result)) {
-        mappedLinodes = result;
-      } else if (result) {
-        mappedLinodes = [result];
-      }
-    }
+    const mappedLinodes: Linode[] = Array.isArray(result)
+      ? result
+      : result
+      ? [result]
+      : [];
 
     setSelectedLinodes(mappedLinodes);
   };
@@ -207,7 +205,7 @@ export const AddLinodeDrawer = (props: Props) => {
           helperText={helperText}
           label="Linodes"
           loading={currentDevicesLoading || linodesIsLoading}
-          multiple={true}
+          multiple
           noOptionsText="No Linodes available to add"
           onChange={(_, linodes) => onChange(linodes)}
           options={options}
