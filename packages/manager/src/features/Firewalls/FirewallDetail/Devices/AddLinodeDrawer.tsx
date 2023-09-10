@@ -197,10 +197,9 @@ export const AddLinodeDrawer = (props: Props) => {
       >
         {localError ? errorNotice() : null}
         <Autocomplete<{ id: number; label: string }, true>
-          value={selectedLinodes.map((linode) => ({
-            id: linode.id,
-            label: linode.label,
-          }))}
+          value={options.filter((option) =>
+            selectedLinodes.some((linode) => linode.id === option.id)
+          )}
           disabled={currentDevicesLoading || linodesIsLoading}
           helperText={helperText}
           label="Linodes"
