@@ -5,12 +5,14 @@ import { Autocomplete } from '@mui/material';
 import { SxProps } from '@mui/system';
 import React from 'react';
 
+import {
+  CustomPopper,
+  SelectedIcon,
+} from 'src/components/Autocomplete/Autocomplete.styles';
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
-
-import { CustomPopper, SelectedIcon } from './LinodeSelect.styles';
 
 interface LinodeSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */
