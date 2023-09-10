@@ -100,9 +100,9 @@ export const AddNodebalancerDrawer = (props: Props) => {
 
   const errorNotice = () => {
     let errorMsg = localError || '';
-    // match something like: Linode <linode_label> (ID <linode_id>)
+    // match something like: NodeBalancer <nodebalancer_label> (ID <nodebalancer_id>)
 
-    const linode = /Linode (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
+    const linode = /NodeBalancer (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
 
     if (openTicket) {
@@ -112,7 +112,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
     if (linode) {
       const [, label, id] = linode;
 
-      // Break the errorMsg into two parts: before and after the linode pattern
+      // Break the errorMsg into two parts: before and after the nodebalancer pattern
       const startMsg = errorMsg.substring(
         0,
         errorMsg.indexOf(`NodeBalancer ${label}`)
@@ -131,7 +131,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
           variant="error"
         >
           {startMsg}
-          <Link to={`/nodebalancer/${id}`}>{label}</Link>
+          <Link to={`/nodebalancers/${id}`}>{label}</Link>
           {endMsg}
           {openTicket ? (
             <>
