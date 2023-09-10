@@ -4,12 +4,12 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Autocomplete from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { TextField } from 'src/components/TextField';
 import {
   CustomPopper,
   SelectedIcon,
-} from 'src/features/Linodes/LinodeSelect/LinodeSelect.styles';
+} from 'src/components/Autocomplete/Autocomplete.styles';
+import { Box } from 'src/components/Box';
+import { TextField } from 'src/components/TextField';
 import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
