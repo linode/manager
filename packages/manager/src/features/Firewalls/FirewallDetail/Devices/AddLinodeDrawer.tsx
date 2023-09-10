@@ -4,19 +4,21 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
   useFirewallQuery,
 } from 'src/queries/firewalls';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 interface Props {
   helperText: string;
@@ -140,10 +142,44 @@ export const AddLinodeDrawer = (props: Props) => {
     }
   };
 
+  type OptionType = { id: number; label: string };
+
   // If a user is restricted, they can not add a read-only Linode to a firewall.
   const readOnlyLinodeIds = isRestrictedUser
     ? getEntityIdsByPermission(grants, 'linode', 'read_only')
     : [];
+
+  const optionsFilter = (linode: Linode) => {
+    ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id);
+  };
+
+  const {
+    data,
+    // error: linodesError,
+    isLoading: linodesIsLoading,
+  } = useAllLinodesQuery();
+
+  const linodes = data?.filter(optionsFilter);
+
+  const options =
+    linodes?.map((linode) => ({ id: linode.id, label: linode.label })) || [];
+
+  const onChange = (linodes: OptionType[]) => {
+    let mappedLinodes: Linode[] = [];
+
+    if (Array.isArray(linodes)) {
+      const result = mapIdsToDevices<Linode>(
+        linodes.map((linode) => linode.id)
+      );
+      if (Array.isArray(result)) {
+        mappedLinodes = result;
+      } else if (result) {
+        mappedLinodes = [result];
+      }
+    }
+
+    setSelectedLinodes(mappedLinodes);
+  };
 
   return (
     <Drawer
@@ -162,17 +198,19 @@ export const AddLinodeDrawer = (props: Props) => {
         }}
       >
         {localError ? errorNotice() : null}
-        <LinodeSelect
-          optionsFilter={(linode) =>
-            ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id)
-          }
-          disabled={currentDevicesLoading}
+        <Autocomplete<{ id: number; label: string }, true>
+          value={selectedLinodes.map((linode) => ({
+            id: linode.id,
+            label: linode.label,
+          }))}
+          disabled={currentDevicesLoading || linodesIsLoading}
           helperText={helperText}
-          loading={currentDevicesLoading}
-          multiple
-          noOptionsMessage="No Linodes available to add"
-          onSelectionChange={(linodes) => setSelectedLinodes(linodes)}
-          value={selectedLinodes.map((linode) => linode.id)}
+          label="Linodes"
+          loading={currentDevicesLoading || linodesIsLoading}
+          multiple={true}
+          noOptionsText="No Linodes available to add"
+          onChange={(_, linodes) => onChange(linodes)}
+          options={options}
         />
         <ActionsPanel
           primaryButtonProps={{
