@@ -42,6 +42,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       color: '#fff',
       display: 'flex',
       fontFamily: 'LatoWebBold', // we keep this bold at all times
+      fontSize: '1rem',
       opacity: 1,
       position: 'relative',
       transition: theme.transitions.create(['color']),

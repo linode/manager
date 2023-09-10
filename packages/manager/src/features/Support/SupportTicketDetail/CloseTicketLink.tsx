@@ -37,7 +37,7 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'dialog-submit',
-        label: 'Confrim',
+        label: 'Confirm',
         loading: isLoading,
         onClick: closeTicket,
       }}
