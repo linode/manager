@@ -825,7 +825,8 @@ export const oneClickApps: OCA[] = [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-clients-cluster',
-        title: 'Deploy HashiCorp Nomad Clients Cluster through the Linode Marketplace',
+        title:
+          'Deploy HashiCorp Nomad Clients Cluster through the Linode Marketplace',
       },
     ],
     summary: 'Flexible scheduling and orchestration for diverse workloads.',
