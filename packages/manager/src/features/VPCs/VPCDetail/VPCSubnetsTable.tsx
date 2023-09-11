@@ -178,9 +178,9 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
   return (
     <>
       <Box
-        display={'flex'}
-        justifyContent={'space-between'}
-        paddingBottom={`${theme.spacing(2)}`}
+        display="flex"
+        justifyContent="space-between"
+        paddingBottom={theme.spacing(2)}
       >
         <DebouncedSearchTextField
           debounceTime={250}
