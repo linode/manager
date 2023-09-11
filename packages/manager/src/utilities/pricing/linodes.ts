@@ -92,6 +92,16 @@ interface DynamicPricingLinodeTransferData {
   regionId: Region['id'] | undefined;
 }
 
+/**
+ * This function is used to determine the network transfer quota and used data for
+ * either a given Linode or the global region data.
+ * If a the linode is in a dynamic pricing data center, we will use the region specific network transfer data.
+ *
+ * @param dcSpecificPricingFlag the flag that determines whether or not to apply dynamic pricing
+ * @param networkTransferData the network transfer data for the current Linode or the global network transfer data
+ * @param regionId the region of the current Linode
+ * @returns the quota and used network transfer data for the current Linode or the global network transfer data
+ */
 export const getDynamicDCNetworkTransferData = ({
   dcSpecificPricingFlag,
   networkTransferData,
@@ -101,12 +111,12 @@ export const getDynamicDCNetworkTransferData = ({
     return { quota: 0, used: 0 };
   }
 
-  if (networkTransferData.region_transfers) {
+  if (networkTransferData.region_transfers && dcSpecificPricingFlag) {
     const dataCenterSpecificLinodeTransfer = networkTransferData.region_transfers.find(
       (networkTransferDataRegion) => networkTransferDataRegion.id === regionId
     );
 
-    if (dataCenterSpecificLinodeTransfer && dcSpecificPricingFlag) {
+    if (dataCenterSpecificLinodeTransfer) {
       return {
         quota: dataCenterSpecificLinodeTransfer.quota || 0,
         used: dataCenterSpecificLinodeTransfer.used || 0,

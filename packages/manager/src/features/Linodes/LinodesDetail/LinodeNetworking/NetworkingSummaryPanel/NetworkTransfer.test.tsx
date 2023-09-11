@@ -78,11 +78,12 @@ describe('renders the component with the right data', () => {
     expect(getByText('Monthly Network Transfer')).toBeInTheDocument();
     expect(getByRole('progressbar')).toBeInTheDocument();
     expect(getByText('test-linode (0.01 GB)')).toBeInTheDocument();
-    expect(getByText('Remaining (16000 GB)')).toBeInTheDocument();
+    expect(getByText('Global Pool Used (9000 GB)')).toBeInTheDocument();
+    expect(getByText('Global Pool Remaining (16000 GB)')).toBeInTheDocument();
   });
 
   it('renders the DC specific pricing copy for linodes in eligible regions and flag is on', () => {
-    const { container, getByRole, getByText } = renderWithTheme(
+    const { getByRole, getByText } = renderWithTheme(
       <NetworkTransfer
         linodeID={1234}
         linodeLabel="test-linode"
@@ -98,13 +99,8 @@ describe('renders the component with the right data', () => {
 
     expect(getByText('Monthly Network Transfer')).toBeInTheDocument();
     expect(getByRole('progressbar')).toBeInTheDocument();
-    expect(getByText('test-linode (0.01 GB)')).toBeInTheDocument();
-    expect(getByText('Remaining (16000 GB)')).toBeInTheDocument();
-    expect(
-      container.querySelector('[data-mui-internal-clone-element]')
-    ).toHaveAttribute(
-      'aria-label',
-      'In some datacenters, the monthly network transfer is calculated and tracked independently.'
-    );
+    expect(getByText('test-linode (83.8 GB)')).toBeInTheDocument();
+    expect(getByText('Transfer Used (500 GB)')).toBeInTheDocument();
+    expect(getByText('Transfer Remaining (14500 GB)')).toBeInTheDocument();
   });
 });

@@ -38,8 +38,6 @@ export const BarPercent = (props: BarPercentProps) => {
     valueBuffer,
   } = props;
 
-  const fillerRelativePct = (100 / value) * 100;
-
   return (
     <StyledDiv className={`${className}`}>
       <StyledLinearProgress
@@ -50,7 +48,6 @@ export const BarPercent = (props: BarPercentProps) => {
             ? 'buffer'
             : 'determinate'
         }
-        fillerRelativePct={fillerRelativePct}
         narrow={narrow}
         rounded={rounded}
         sx={sx}
@@ -75,21 +72,19 @@ const StyledDiv = styled('div')({
 const StyledLinearProgress = styled(LinearProgress, {
   label: 'StyledLinearProgress',
   shouldForwardProp: (prop) => isPropValid(['rounded'], prop),
-})<Partial<BarPercentProps> & { fillerRelativePct: number }>(
-  ({ theme, ...props }) => ({
-    '& .MuiLinearProgress-bar2Buffer': {
-      backgroundColor: '#99ec79',
-    },
-    '& .MuiLinearProgress-barColorPrimary': {
-      // Increase contrast if we have a buffer bar
-      backgroundColor: props.valueBuffer ? '#1CB35C' : '#5ad865',
-    },
-    '& .MuiLinearProgress-dashed': {
-      display: 'none',
-    },
-    backgroundColor: theme.color.grey2,
-    borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
-    padding: props.narrow ? 8 : 12,
-    width: '100%',
-  })
-);
+})<Partial<BarPercentProps>>(({ theme, ...props }) => ({
+  '& .MuiLinearProgress-bar2Buffer': {
+    backgroundColor: '#99ec79',
+  },
+  '& .MuiLinearProgress-barColorPrimary': {
+    // Increase contrast if we have a buffer bar
+    backgroundColor: props.valueBuffer ? '#1CB35C' : '#5ad865',
+  },
+  '& .MuiLinearProgress-dashed': {
+    display: 'none',
+  },
+  backgroundColor: theme.color.grey2,
+  borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
+  padding: props.narrow ? 8 : 12,
+  width: '100%',
+}));
