@@ -182,7 +182,7 @@ const VPCDetail = () => {
         })}
         padding={`${theme.spacing(2)} ${theme.spacing()}`}
       >
-        <Typography variant="h2">Subnets</Typography>
+        <Typography variant="h2">Subnets ({vpc.subnets.length})</Typography>
       </Box>
       <VPCSubnetsTable vpcId={vpc.id} />
     </>
