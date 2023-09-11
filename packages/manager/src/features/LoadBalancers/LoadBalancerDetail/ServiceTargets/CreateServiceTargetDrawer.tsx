@@ -238,10 +238,12 @@ export const CreateServiceTargetDrawer = (props: Props) => {
           <TooltipIcon status="help" text="TODO" />
         </Stack>
         <CertificateSelect
+          onChange={(cert) =>
+            formik.setFieldValue('ca_certificate', cert?.label ?? null)
+          }
           errorText={error?.find((e) => e.field === 'ca_certificate')?.reason}
           loadbalancerId={loadbalancerId}
-          onChange={() => null}
-          value={0}
+          value={(cert) => cert.label === formik.values.ca_certificate}
         />
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">

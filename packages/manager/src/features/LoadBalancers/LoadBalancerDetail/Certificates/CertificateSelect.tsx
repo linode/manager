@@ -27,7 +27,7 @@ interface Props {
   /**
    * The id of the selected certificate
    */
-  value: number;
+  value: ((certificate: Certificate) => boolean) | number;
 }
 
 export const CertificateSelect = (props: Props) => {
@@ -52,7 +52,9 @@ export const CertificateSelect = (props: Props) => {
   const certificates = data?.pages.flatMap((page) => page.data);
 
   const selectedCertificate =
-    certificates?.find((cert) => cert.id === value) ?? null;
+    typeof value === 'function'
+      ? certificates?.find(value) ?? null
+      : certificates?.find((cert) => cert.id === value) ?? null;
 
   const onScroll = (event: React.SyntheticEvent) => {
     const listboxNode = event.currentTarget;
