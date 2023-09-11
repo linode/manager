@@ -96,13 +96,16 @@ export const TransferContent = (props: ContentProps) => {
         <>
           <StyledLinodeUsage>
             <span>
-              {linodeLabel} ({linodeUsedInGB} GB)
+              {linodeLabel} ({linodeUsedInGB} GB -{' '}
+              {Math.ceil(linodeUsagePercent)}%)
             </span>
           </StyledLinodeUsage>
           <StyledPoolUsage>
             <span>
               {isDynamicPricingDC
-                ? `${regionName} Transfer Used (${totalUsedInGB} GB)`
+                ? `${regionName} Transfer Used (${totalUsedInGB} GB - ${Math.ceil(
+                    totalUsagePercent
+                  )}%)`
                 : `Global Pool Used (${totalUsedInGB} GB)`}
             </span>
           </StyledPoolUsage>

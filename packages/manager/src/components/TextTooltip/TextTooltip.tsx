@@ -72,5 +72,5 @@ const StyledRootTooltip = styled(Tooltip, {
   cursor: 'pointer',
   position: 'relative',
   textDecoration: `underline dotted ${theme.palette.primary.main}`,
-  textUnderlineOffset: 2,
+  textUnderlineOffset: 4,
 }));

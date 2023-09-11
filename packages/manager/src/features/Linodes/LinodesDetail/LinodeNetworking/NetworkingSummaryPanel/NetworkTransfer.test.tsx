@@ -98,8 +98,8 @@ describe('renders the component with the right data', () => {
 
     expect(getByText('Monthly Network Transfer')).toBeInTheDocument();
     expect(getByRole('progressbar')).toBeInTheDocument();
-    expect(getByText('test-linode (83.8 GB)')).toBeInTheDocument();
-    expect(getByText('Transfer Used (500 GB)')).toBeInTheDocument();
+    expect(getByText('test-linode (83.8 GB - 1%)')).toBeInTheDocument();
+    expect(getByText('Transfer Used (500 GB - 4%)')).toBeInTheDocument();
     expect(getByText('Transfer Remaining (14500 GB)')).toBeInTheDocument();
   });
 });
