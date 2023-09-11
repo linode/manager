@@ -65,6 +65,7 @@ export const SubnetNode = (props: Props) => {
             inputId={`subnet-label-${idx}`}
             label="Subnet label"
             onChange={onLabelChange}
+            placeholder="Enter a subnet label"
             value={subnet.label}
           />
         </Grid>
