@@ -118,10 +118,12 @@ export const CreateServiceTargetDrawer = (props: Props) => {
     ]);
   };
 
+  const generalError = error?.find((e) => !e.field)?.reason;
+
   return (
     <Drawer onClose={onClose} open={open} title="Add a Service Target">
       <form onSubmit={formik.handleSubmit}>
-        {formik.status && <Notice text={formik.status} variant="error" />}
+        {generalError && <Notice text={generalError} variant="error" />}
         <TextField
           errorText={error?.find((e) => e.field === 'label')?.reason}
           label="Service Target Label"
