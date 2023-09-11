@@ -12,10 +12,10 @@ import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { getProfile } from '@linode/api-v4/lib';
-import { Profile } from '@linode/api-v4/types';
+import { Profile, StackScript } from '@linode/api-v4/types';
 import { formatDate } from '@src/utilities/formatDate';
 
-const mockStackScripts = [
+const mockStackScripts: StackScript[] = [
   stackScriptFactory.build({
     id: 443929,
     username: 'litespeed',
@@ -104,23 +104,34 @@ describe('Community Stackscripts integration tests', () => {
     cy.findByText('Automate deployment scripts').should('not.exist');
 
     cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
-      const dateFormatOptions = {
+      const dateFormatOptionsLanding = {
         timezone: profile.timezone,
         displayTime: false,
       };
 
-      const updatedTime = stackScript.updated
-        ? formatDate(stackScript.updated, dateFormatOptions)
-        : formatDate('1970-01-01T00:00:00.000');
+      const dateFormatOptionsDetails = {
+        timezone: profile.timezone,
+        displayTime: true,
+      };
+
+      const updatedTimeLanding = formatDate(
+        stackScript.updated,
+        dateFormatOptionsLanding
+      );
+      const updatedTimeDetails = formatDate(
+        stackScript.updated,
+        dateFormatOptionsDetails
+      );
+
       cy.get(`[data-qa-table-row="${stackScript.label}"]`)
         .should('be.visible')
         .within(() => {
           cy.findByText(stackScript.deployments_total).should('be.visible');
-          cy.findByText(updatedTime).should('be.visible');
+          cy.findByText(updatedTimeLanding).should('be.visible');
         });
 
       // Search the corresponding community stack script
-      mockGetStackScripts(stackScript).as('getFilteredStackScripts');
+      mockGetStackScripts([stackScript]).as('getFilteredStackScripts');
       cy.get('[id="search-by-label,-username,-or-description"]')
         .click()
         .type(`${stackScript.label}{enter}`);
@@ -152,18 +163,11 @@ describe('Community Stackscripts integration tests', () => {
           .within(() => {
             cy.findByText(stackScript.deployments_active).should('be.visible');
           });
-        const dateFormatOptions = {
-          timezone: profile.timezone,
-          displayTime: false,
-        };
-        const updatedDatetimeDisplay = stackScript.updated
-          ? formatDate(stackScript.updated, dateFormatOptions)
-          : formatDate('1970-01-01T00:00:00.000');
         cy.findByText('Last revision:')
           .should('be.visible')
           .parent()
           .within(() => {
-            cy.findByText(updatedDatetimeDisplay).should('be.visible');
+            cy.findByText(updatedTimeDetails).should('be.visible');
           });
         cy.findByText('StackScript ID:')
           .should('be.visible')
