@@ -158,7 +158,7 @@ describe('VPC details page', () => {
 
     // confirm that subnet can be deleted and that page reflects changes
     ui.actionMenu
-      .findByTitle(`Action menu for Domain ${mockSubnet.label}`)
+      .findByTitle(`Action menu for Subnet ${mockSubnet.label}`)
       .should('be.visible')
       .click();
     ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
@@ -167,7 +167,7 @@ describe('VPC details page', () => {
       .findByTitle(`Delete Subnet ${mockSubnet.label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Subnet Label')
+        cy.findByLabelText('Subnet label')
           .should('be.visible')
           .click()
           .type(mockSubnet.label);
@@ -179,15 +179,16 @@ describe('VPC details page', () => {
           .click();
       });
 
-    // ?? renaming the mocks
     mockGetVPC(mockVPCAfterSubnetDeletion).as('getVPCAfter');
     mockGetSubnets(mockVPC.id, []).as('getSubnetsAfter');
+    cy.visitWithLogin(`/vpcs/${mockVPCAfterSubnetDeletion.id}`);
     cy.wait(['@deleteSubnet', '@getVPCAfter', '@getSubnetsAfter']);
 
     // confirm that user should still be on VPC's detail page
     // confirm there are no remaining subnets
     cy.url().should('endWith', `/${mockVPC.id}`);
     cy.findByText('Subnets (0)');
-    cy.findByText('No subnets found');
+    cy.findByText('No Subnets');
+    cy.findByText(mockSubnet.label).should('not.exist');
   });
 });

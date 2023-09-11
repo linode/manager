@@ -70,7 +70,7 @@ export const mockGetSubnets = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`vpcs/${vpcId}/subnets`),
+    apiMatcher(`vpcs/${vpcId}/subnets*`),
     paginateResponse(subnets)
   );
 };
