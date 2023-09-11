@@ -42,7 +42,7 @@ const HealthCheckSchema = object({
 export const CreateServiceTargetSchema = object({
   label: string().required('Label is required.'),
   endpoints: array(EndpointSchema).required(),
-  ca_certificate: string(),
+  ca_certificate: string().nullable(),
   load_balancing_policy: string()
     .required()
     .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev']),
