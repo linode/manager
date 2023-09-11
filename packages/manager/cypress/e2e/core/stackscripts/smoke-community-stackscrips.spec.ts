@@ -255,6 +255,7 @@ describe('Community Stackscripts integration tests', () => {
     const rootPassword = randomString(16);
     const image = 'AlmaLinux 9';
     const region = chooseRegion();
+    const linodeLabel = randomLabel();
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin('/stackscripts/community');
@@ -277,7 +278,15 @@ describe('Community Stackscripts integration tests', () => {
         );
       });
 
-    cy.visitWithLogin('/stackscripts/community');
+    ui.nav.findItemByTitle('StackScripts').should('be.visible').click();
+
+    ui.tabList
+      .findTabByTitle('Community StackScripts')
+      .should('be.visible')
+      .click();
+
+    cy.url().should('endWith', '/stackscripts/community');
+
     cy.get(`[href="/stackscripts/${stackScriptId}"]`)
       .should('be.visible')
       .click();
@@ -304,6 +313,7 @@ describe('Community Stackscripts integration tests', () => {
       .should('be.visible')
       .click()
       .type(`${vpnPassword}{enter}`);
+
     // Check each field should persist when moving onto another field
     cy.get('[id="ipsec-pre-shared-key"]').should('have.value', sharedKey);
     cy.get('[id="vpn-username"]').should('have.value', vpnUser);
@@ -332,6 +342,14 @@ describe('Community Stackscripts integration tests', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
+
+    // Enter a label.
+    cy.findByText('Linode Label')
+      .should('be.visible')
+      .click()
+      .type('{selectAll}{backspace}')
+      .type(linodeLabel);
+
     // An error message shows up when no region is selected
     cy.contains('Plan is required.').should('be.visible');
     cy.get('[data-qa-plan-row="Dedicated 8 GB"]')
@@ -361,18 +379,14 @@ describe('Community Stackscripts integration tests', () => {
     // Only strong password is allowed to rebuild the linode
     cy.get('[id="root-password"]').type(rootPassword);
     interceptCreateLinode().as('createLinode');
+
     ui.button
       .findByTitle('Create Linode')
       .should('be.visible')
       .should('be.enabled')
       .click();
-    cy.wait('@createLinode');
-    cy.contains('RUNNING').should('be.visible');
 
-    // Modify to name of linode clean up.
-    cy.get(`[aria-label="Edit ${stackScriptName}-${region.id}"]`).click();
-    cy.get(`[id="edit-${stackScriptName}-${region.id}-label"]`)
-      .clear()
-      .type(`${randomLabel()}{enter}`);
+    cy.wait('@createLinode');
+    ui.toast.assertMessage(`Your Linode ${linodeLabel} is being created.`);
   });
 });
