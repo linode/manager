@@ -40,11 +40,13 @@ import { pluralize } from 'src/utilities/pluralize';
 
 import {
   StyledBodyGrid,
+  StyledBox,
   StyledChip,
   StyledColumnLabelGrid,
   StyledCopyTooltip,
   StyledGradientDiv,
   StyledLink,
+  StyledListItem,
   StyledRightColumnGrid,
   StyledSummaryGrid,
   StyledTable,
@@ -52,7 +54,9 @@ import {
   StyledTableGrid,
   StyledTableRow,
   StyledVPCGrid,
-  useSxObjects,
+  sxLabel,
+  sxLastListItem,
+  sxListItemFirstChild,
 } from './LinodeEntityDetail.styles';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -63,7 +67,11 @@ import {
   isEventWithSecondaryLinodeStatus,
 } from './transitions';
 
-import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
+import type {
+  Interface,
+  Linode,
+  LinodeType,
+} from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 
 interface LinodeEntityDetailProps {
@@ -352,11 +360,7 @@ export const Body = React.memo((props: BodyProps) => {
     account?.capabilities ?? []
   );
 
-  const {
-    data: vpcData,
-    error: vpcsError,
-    isLoading: vpcsLoading,
-  } = useVPCsQuery({}, {}, displayVPCSection);
+  const { data: vpcData } = useVPCsQuery({}, {}, displayVPCSection);
   const vpcsList = vpcData?.data ?? [];
 
   const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
@@ -366,19 +370,22 @@ export const Body = React.memo((props: BodyProps) => {
   });
 
   const { data: configs } = useAllLinodeConfigsQuery(linodeId);
-  const configWithVPC = configs?.find((config) => {
+  let _configInterfaceWithVPC: Interface | undefined;
+
+  // eslint-disable-next-line no-unused-expressions
+  configs?.find((config) => {
     const interfaces = config.interfaces;
 
-    return interfaces.find(
+    const interfaceWithVPC = interfaces.find(
       (_interface) => _interface.vpc_id === vpcLinodeIsAssignedTo?.id
     );
+
+    if (interfaceWithVPC) {
+      _configInterfaceWithVPC = interfaceWithVPC;
+    }
+
+    return interfaceWithVPC;
   });
-
-  const configInterfaceWithVPC = configWithVPC?.interfaces.find(
-    (_interface) => _interface.vpc_id === vpcLinodeIsAssignedTo?.id
-  );
-
-  const { sxLabel, sxLastListItem, sxListItem } = useSxObjects();
 
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
@@ -473,7 +480,9 @@ export const Body = React.memo((props: BodyProps) => {
           direction="column"
           spacing={2}
         >
-          <StyledColumnLabelGrid>VPC</StyledColumnLabelGrid>
+          <StyledColumnLabelGrid data-testid="vpc-section-title">
+            VPC
+          </StyledColumnLabelGrid>
           <Grid
             sx={{
               margin: 0,
@@ -489,30 +498,30 @@ export const Body = React.memo((props: BodyProps) => {
             spacing={2}
           >
             <StyledVPCGrid>
-              <Typography sx={{ ...sxListItem }}>
+              <StyledListItem>
                 <Box component="span" sx={sxLabel}>
                   Label:
                 </Box>{' '}
                 <Link to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}>
                   {vpcLinodeIsAssignedTo.label}
                 </Link>
-              </Typography>
+              </StyledListItem>
             </StyledVPCGrid>
             <StyledVPCGrid>
-              <Typography sx={{ ...sxListItem }}>
+              <StyledListItem>
                 <Box component="span" sx={sxLabel}>
                   Subnets:
                 </Box>{' '}
                 {getSubnetsString(vpcLinodeIsAssignedTo.subnets)}
-              </Typography>
+              </StyledListItem>
             </StyledVPCGrid>
             <StyledVPCGrid>
-              <Typography sx={{ ...sxListItem, ...sxLastListItem }}>
+              <StyledListItem sx={{ ...sxLastListItem }}>
                 <Box component="span" sx={sxLabel}>
                   VPC IPv4:
                 </Box>{' '}
-                {configInterfaceWithVPC?.ipv4?.vpc ?? 'Blank'}
-              </Typography>
+                {_configInterfaceWithVPC?.ipv4?.vpc}
+              </StyledListItem>
             </StyledVPCGrid>
           </Grid>
         </Grid>
@@ -608,14 +617,6 @@ export const Footer = React.memo((props: FooterProps) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    sxBox,
-    sxLabel,
-    sxLastListItem,
-    sxListItem,
-    sxListItemFirstChild,
-  } = useSxObjects();
-
   const updateTags = React.useCallback(
     (tags: string[]) => {
       return updateLinode({ tags }).catch((e) =>
@@ -658,11 +659,10 @@ export const Footer = React.memo((props: FooterProps) => {
         lg={8}
         xs={12}
       >
-        <Box sx={sxBox}>
+        <StyledBox>
           {linodePlan && (
-            <Typography
+            <StyledListItem
               sx={{
-                ...sxListItem,
                 ...sxListItemFirstChild,
                 [theme.breakpoints.down('lg')]: {
                   paddingLeft: 0,
@@ -673,31 +673,26 @@ export const Footer = React.memo((props: FooterProps) => {
                 Plan:{' '}
               </Box>{' '}
               {linodePlan}
-            </Typography>
+            </StyledListItem>
           )}
           {linodeRegionDisplay && (
-            <Typography
-              sx={{
-                ...sxListItem,
-              }}
-            >
+            <StyledListItem>
               <Box component="span" sx={sxLabel}>
                 Region:
               </Box>{' '}
               {linodeRegionDisplay}
-            </Typography>
+            </StyledListItem>
           )}
-        </Box>
-        <Box sx={sxBox}>
-          <Typography sx={{ ...sxListItem, ...sxListItemFirstChild }}>
+        </StyledBox>
+        <StyledBox>
+          <StyledListItem sx={{ ...sxListItemFirstChild }}>
             <Box component="span" sx={sxLabel}>
               Linode ID:
             </Box>{' '}
             {linodeId}
-          </Typography>
-          <Typography
+          </StyledListItem>
+          <StyledListItem
             sx={{
-              ...sxListItem,
               ...sxLastListItem,
             }}
           >
@@ -707,8 +702,8 @@ export const Footer = React.memo((props: FooterProps) => {
             {formatDate(linodeCreated, {
               timezone: profile?.timezone,
             })}
-          </Typography>
-        </Box>
+          </StyledListItem>
+        </StyledBox>
       </Grid>
       <Grid
         sx={{
@@ -738,7 +733,7 @@ export const Footer = React.memo((props: FooterProps) => {
   );
 });
 
-const getSubnetsString = (data: Subnet[]) => {
+export const getSubnetsString = (data: Subnet[]) => {
   const firstThreeSubnets = data.slice(0, 3);
   const subnetLabels = firstThreeSubnets.map((subnet) => subnet.label);
   const firstThreeSubnetsString = subnetLabels.join(', ');

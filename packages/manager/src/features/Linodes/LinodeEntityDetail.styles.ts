@@ -1,14 +1,16 @@
 // This component was built asuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 import { isPropValid } from 'src/utilities/isPropValid';
 
 import type { HeaderProps } from './LinodeEntityDetail';
@@ -137,6 +139,70 @@ export const StyledVPCGrid = styled(Grid, { label: 'StyledVPCGrid' })(
   })
 );
 
+export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  [theme.breakpoints.down('md')]: {
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
+}));
+
+export const sxLabel = (theme: Theme) => ({
+  fontFamily: theme.font.bold,
+  marginRight: '4px',
+});
+
+export const sxListItemMdBp = {
+  borderRight: 0,
+  flex: '50%',
+  padding: 0,
+};
+
+export const sxLastListItem = {
+  borderRight: 0,
+  paddingRight: 0,
+};
+
+export const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    color: theme.textColors.tableStatic,
+    display: 'flex',
+    padding: `0px 10px`,
+    [theme.breakpoints.down('md')]: {
+      ...sxListItemMdBp,
+    },
+  })
+);
+
+export const sxListItemFirstChild = (theme: Theme) => ({
+  [theme.breakpoints.down('md')]: {
+    ...sxListItemMdBp,
+    '&:first-of-type': {
+      paddingBottom: theme.spacing(0.5),
+    },
+  },
+});
+
+// sxListItem: (theme: Theme) => ({
+//   borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+//   color: theme.textColors.tableStatic,
+//   display: 'flex',
+//   padding: `0px 10px`,
+//   [theme.breakpoints.down('md')]: {
+//     ...sxObjects.sxListItemMdBp,
+//   },
+// }),
+
+// sxListItemFirstChild: (theme: Theme) => ({
+//   [theme.breakpoints.down('md')]: {
+//     ...sxObjects.sxListItemMdBp,
+//     '&:first-of-type': {
+//       paddingBottom: theme.spacing(0.5),
+//     },
+//   }
+
 // ---------------------------------------------------------------------
 // AccessTable Styles
 // ---------------------------------------------------------------------
@@ -226,64 +292,3 @@ export const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })({
     opacity: 1,
   },
 });
-
-// ---------------------------------------------------------------------
-// Hook
-// ---------------------------------------------------------------------
-
-export const useSxObjects = () => {
-  const theme = useTheme();
-
-  const sxListItemMdBp = {
-    borderRight: 0,
-    flex: '50%',
-    padding: 0,
-  };
-
-  const sxListItem = {
-    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-    color: theme.textColors.tableStatic,
-    display: 'flex',
-    padding: `0px 10px`,
-    [theme.breakpoints.down('md')]: {
-      ...sxListItemMdBp,
-    },
-  };
-
-  const sxListItemFirstChild = {
-    [theme.breakpoints.down('md')]: {
-      ...sxListItemMdBp,
-      '&:first-of-type': {
-        paddingBottom: theme.spacing(0.5),
-      },
-    },
-  };
-
-  const sxLastListItem = {
-    borderRight: 0,
-    paddingRight: 0,
-  };
-
-  const sxBox = {
-    alignItems: 'center',
-    display: 'flex',
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'flex-start',
-      flexDirection: 'column',
-    },
-  };
-
-  const sxLabel = {
-    fontFamily: theme.font.bold,
-    marginRight: '4px',
-  };
-
-  return {
-    sxBox,
-    sxLabel,
-    sxLastListItem,
-    sxListItem,
-    sxListItemFirstChild,
-    sxListItemMdBp,
-  };
-};
