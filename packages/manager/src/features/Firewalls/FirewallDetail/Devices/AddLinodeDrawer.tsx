@@ -43,11 +43,9 @@ export const AddLinodeDrawer = (props: Props) => {
     isLoading: currentDevicesLoading,
   } = useAllFirewallDevicesQuery(Number(id));
 
-  const {
-    error,
-    isLoading,
-    mutateAsync: addDevice,
-  } = useAddFirewallDeviceMutation(Number(id));
+  const { isLoading, mutateAsync: addDevice } = useAddFirewallDeviceMutation(
+    Number(id)
+  );
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
 
@@ -56,39 +54,42 @@ export const AddLinodeDrawer = (props: Props) => {
   );
 
   const handleSubmit = async () => {
+    let firstError: string | undefined = undefined;
+    const failedLinodes: Linode[] = [];
+
     const results = await Promise.allSettled(
       selectedLinodes.map((linode) =>
         addDevice({ id: linode.id, type: 'linode' })
       )
     );
 
-    let hasError = false;
-
     results.forEach((result, index) => {
       const label = selectedLinodes[index].label;
+      const id = selectedLinodes[index].id;
       if (result.status === 'fulfilled') {
-        // Assuming the response contains the device label, replace with the appropriate property if not.
         enqueueSnackbar(`${label} added successfully.`, { variant: 'success' });
       } else {
-        hasError = true;
-        // Assuming the error object contains the device label, replace with the appropriate property if not.
+        failedLinodes?.push(selectedLinodes[index]);
+        const errorReason = getAPIErrorOrDefault(
+          result.reason,
+          `Failed to add Linode ${label} (ID ${id}).`
+        )[0].reason;
+
+        if (!firstError) {
+          firstError = errorReason;
+        }
+
         enqueueSnackbar(`Failed to add ${label}.`, { variant: 'error' });
       }
     });
 
-    if (!hasError) {
+    setLocalError(firstError);
+    setSelectedLinodes(failedLinodes);
+
+    if (!firstError) {
       onClose();
-      setSelectedLinodes([]);
     }
   };
-
-  React.useEffect(() => {
-    setLocalError(
-      error
-        ? getAPIErrorOrDefault(error, `Error adding Linode`)[0].reason
-        : undefined
-    );
-  }, [error]);
 
   const errorNotice = () => {
     let errorMsg = localError || '';
@@ -155,9 +156,15 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const {
     data,
-    // error: linodesError,
-    isLoading: linodesIsLoading,
+    error: linodeError,
+    isLoading: linodeIsLoading,
   } = useAllLinodesQuery();
+
+  React.useEffect(() => {
+    if (linodeError) {
+      setLocalError('Could not load Linode Data');
+    }
+  }, [linodeError]);
 
   const linodes = data?.filter(optionsFilter);
 
@@ -197,17 +204,16 @@ export const AddLinodeDrawer = (props: Props) => {
       >
         {localError ? errorNotice() : null}
         <Autocomplete<{ id: number; label: string }, true>
-          value={options.filter((option) =>
-            selectedLinodes.some((linode) => linode.id === option.id)
-          )}
-          disabled={currentDevicesLoading || linodesIsLoading}
+          disabled={currentDevicesLoading || linodeIsLoading}
           helperText={helperText}
+          isOptionEqualToValue={(option, value) => option.id == value.id}
           label="Linodes"
-          loading={currentDevicesLoading || linodesIsLoading}
+          loading={currentDevicesLoading || linodeIsLoading}
           multiple
           noOptionsText="No Linodes available to add"
           onChange={(_, linodes) => onChange(linodes)}
           options={options}
+          value={selectedLinodes}
         />
         <ActionsPanel
           primaryButtonProps={{

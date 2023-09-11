@@ -4,19 +4,21 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
-import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
   useFirewallQuery,
 } from 'src/queries/firewalls';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 interface Props {
   helperText: string;
@@ -41,16 +43,9 @@ export const AddNodebalancerDrawer = (props: Props) => {
     isLoading: currentDevicesLoading,
   } = useAllFirewallDevicesQuery(Number(id));
 
-  const currentNodebalancerIds =
-    currentDevices
-      ?.filter((device) => device.entity.type === 'nodebalancer')
-      .map((device) => device.entity.id) ?? [];
-
-  const {
-    error,
-    isLoading,
-    mutateAsync: addDevice,
-  } = useAddFirewallDeviceMutation(Number(id));
+  const { isLoading, mutateAsync: addDevice } = useAddFirewallDeviceMutation(
+    Number(id)
+  );
 
   const [selectedNodebalancers, setSelectedNodebalancers] = React.useState<
     NodeBalancer[]
@@ -61,56 +56,56 @@ export const AddNodebalancerDrawer = (props: Props) => {
   );
 
   const handleSubmit = async () => {
+    let firstError: string | undefined = undefined;
+    const failedNodebalancers: NodeBalancer[] = [];
+
     const results = await Promise.allSettled(
       selectedNodebalancers.map((nodebalancer) =>
         addDevice({ id: nodebalancer.id, type: 'nodebalancer' })
       )
     );
 
-    let hasError = false;
-
     results.forEach((result, index) => {
       const label = selectedNodebalancers[index].label;
+      const id = selectedNodebalancers[index].id;
       if (result.status === 'fulfilled') {
-        // Assuming the response contains the device label, replace with the appropriate property if not.
         enqueueSnackbar(`${label} added successfully.`, { variant: 'success' });
       } else {
-        hasError = true;
-        // Assuming the error object contains the device label, replace with the appropriate property if not.
-        // const errorLabel = result.reason.label;
-        enqueueSnackbar(`Failed to add ${label}.`, {
-          variant: 'error',
-        });
+        failedNodebalancers?.push(selectedNodebalancers[index]);
+        const errorReason = getAPIErrorOrDefault(
+          result.reason,
+          `Failed to add NodeBalancer ${label} (ID ${id}).`
+        )[0].reason;
+
+        if (!firstError) {
+          firstError = errorReason;
+        }
+
+        enqueueSnackbar(`Failed to add ${label}.`, { variant: 'error' });
       }
     });
 
-    if (!hasError) {
+    setLocalError(firstError);
+    setSelectedNodebalancers(failedNodebalancers);
+
+    if (!firstError) {
       onClose();
-      setSelectedNodebalancers([]);
     }
   };
-
-  React.useEffect(() => {
-    setLocalError(
-      error
-        ? getAPIErrorOrDefault(error, `Error adding Nodebalancer`)[0].reason
-        : undefined
-    );
-  }, [error]);
 
   const errorNotice = () => {
     let errorMsg = localError || '';
     // match something like: NodeBalancer <nodebalancer_label> (ID <nodebalancer_id>)
 
-    const linode = /NodeBalancer (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
+    const nodebalancer = /NodeBalancer (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
     const openTicket = errorMsg.match(/open a support ticket\./i);
 
     if (openTicket) {
       errorMsg = errorMsg.replace(/open a support ticket\./i, '');
     }
 
-    if (linode) {
-      const [, label, id] = linode;
+    if (nodebalancer) {
+      const [, label, id] = nodebalancer;
 
       // Break the errorMsg into two parts: before and after the nodebalancer pattern
       const startMsg = errorMsg.substring(
@@ -145,10 +140,58 @@ export const AddNodebalancerDrawer = (props: Props) => {
     }
   };
 
+  type OptionType = { id: number; label: string };
+
+  const currentNodebalancerIds =
+    currentDevices
+      ?.filter((device) => device.entity.type === 'nodebalancer')
+      .map((device) => device.entity.id) ?? [];
+
   // If a user is restricted, they can not add a read-only Nodebalancer to a firewall.
   const readOnlyNodebalancerIds = isRestrictedUser
     ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
     : [];
+
+  const optionsFilter = (nodebalancer: NodeBalancer) => {
+    return ![...currentNodebalancerIds, ...readOnlyNodebalancerIds].includes(
+      nodebalancer.id
+    );
+  };
+
+  const {
+    data,
+    error: nodebalancerError,
+    isLoading: nodebalancerIsLoading,
+  } = useAllNodeBalancersQuery();
+
+  React.useEffect(() => {
+    if (nodebalancerError) {
+      setLocalError('Could not load NodeBalancer Data');
+    }
+  }, [nodebalancerError]);
+
+  const nodebalancers = data?.filter(optionsFilter);
+
+  const options =
+    nodebalancers?.map((nodebalancer) => ({
+      id: nodebalancer.id,
+      label: nodebalancer.label,
+    })) || [];
+
+  const onChange = (selectedNodebalancers: OptionType[]) => {
+    const result = mapIdsToDevices<NodeBalancer>(
+      selectedNodebalancers.map((nodebalancer) => nodebalancer.id),
+      nodebalancers
+    );
+
+    const mappedNodebalancers: NodeBalancer[] = Array.isArray(result)
+      ? result
+      : result
+      ? [result]
+      : [];
+
+    setSelectedNodebalancers(mappedNodebalancers);
+  };
 
   return (
     <Drawer
@@ -173,20 +216,17 @@ export const AddNodebalancerDrawer = (props: Props) => {
         }}
       >
         {localError ? errorNotice() : null}
-        <NodeBalancerSelect
-          onSelectionChange={(nodebalancers) =>
-            setSelectedNodebalancers(nodebalancers)
-          }
-          optionsFilter={(nodebalancer) =>
-            ![...currentNodebalancerIds, ...readOnlyNodebalancerIds].includes(
-              nodebalancer.id
-            )
-          }
-          disabled={currentDevicesLoading}
+        <Autocomplete<{ id: number; label: string }, true>
+          disabled={currentDevicesLoading || nodebalancerIsLoading}
           helperText={helperText}
-          loading={currentDevicesLoading}
+          isOptionEqualToValue={(option, value) => option.id == value.id}
+          label="NodeBalancers"
+          loading={currentDevicesLoading || nodebalancerIsLoading}
           multiple
-          value={selectedNodebalancers.map((nodebalancer) => nodebalancer.id)}
+          noOptionsText="No NodeBalancers available to add"
+          onChange={(_, nodebalancers) => onChange(nodebalancers)}
+          options={options}
+          value={selectedNodebalancers}
         />
         <ActionsPanel
           primaryButtonProps={{
