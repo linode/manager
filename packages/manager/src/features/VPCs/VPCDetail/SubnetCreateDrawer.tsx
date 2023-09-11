@@ -95,6 +95,7 @@ export const SubnetCreateDrawer = (props: Props) => {
       )}
       <form onSubmit={handleSubmit}>
         <SubnetNode
+          disabled={userCannotAddSubnet}
           onChange={(subnetState) => {
             setValues(subnetState);
           }}
