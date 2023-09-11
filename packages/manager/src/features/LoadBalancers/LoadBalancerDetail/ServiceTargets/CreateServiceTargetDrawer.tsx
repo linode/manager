@@ -8,7 +8,6 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
-import Select from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { FormLabel } from 'src/components/FormLabel';
@@ -25,6 +24,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
 import { LinodeOrIPSelect } from './LinodeOrIPSelect';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
 
 interface Props {
   loadbalancerId: number;
@@ -132,33 +133,30 @@ export const CreateServiceTargetDrawer = (props: Props) => {
           onChange={formik.handleChange}
           value={formik.values.label}
         />
-        <Select
+        <Autocomplete
           errorText={
             error?.find((e) => e.field === 'load_balancing_policy')?.reason
           }
-          formatOptionLabel={(option, meta) => {
-            if (meta.context === 'value') {
-              return option.label;
-            }
-            return (
-              <>
-                <Typography>
-                  <b>{option.label}</b>
-                </Typography>
-                <Typography>{option.description}</Typography>
-              </>
-            );
-          }}
-          onChange={(selected) =>
+          onChange={(e, selected) =>
             formik.setFieldValue('load_balancing_policy', selected.value)
           }
-          textFieldProps={{
-            labelTooltipText: 'TODO',
+          renderOption={(props, option, state) => {
+            return (
+              <li {...props}>
+                <Stack flexGrow={1}>
+                  <Typography color="inherit">
+                    <b>{option.label}</b>
+                  </Typography>
+                  <Typography color="inherit">{option.description}</Typography>
+                </Stack>
+                <SelectedIcon visible={state.selected} />
+              </li>
+            );
           }}
           value={algorithmOptions.find(
             (option) => option.value === formik.values.load_balancing_policy
           )}
-          isClearable={false}
+          disableClearable
           label="Algorithm"
           options={algorithmOptions}
         />

@@ -147,7 +147,7 @@ export const LoadBalancerServiceTargets = () => {
                 <Link to={String(serviceTarget.id)}>{serviceTarget.label}</Link>
               </TableCell>
               <TableCell>
-                <Stack alignItems="center" direction="row" spacing={0.5}>
+                <Stack alignItems="center" direction="row" spacing={1}>
                   <StatusIcon status="active" />
                   <Typography noWrap>4 up</Typography>
                   <Typography>&mdash;</Typography>

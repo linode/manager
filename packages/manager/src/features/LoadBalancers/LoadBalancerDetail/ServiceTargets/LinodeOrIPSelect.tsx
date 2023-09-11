@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
-import { Typography } from 'src/components/Typography';
+import { Box } from 'src/components/Box';
 import { linodeFactory } from 'src/factories';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 
@@ -89,10 +89,10 @@ export const LinodeOrIPSelect = (props: Props) => {
         return (
           <li {...props}>
             <Stack flexGrow={1}>
-              <Typography>
+              <Box>
                 <b>{option === customIP ? 'Custom IP' : option.label}</b>
-              </Typography>
-              <Typography>{option.ipv4[0]}</Typography>
+              </Box>
+              <Box>{option.ipv4[0]}</Box>
             </Stack>
             <SelectedIcon visible={state.selected} />
           </li>
