@@ -10,11 +10,6 @@ export const Default: StoryObj<BarPercentProps> = {
   render: (args) => <BarPercent {...args} />,
 };
 
-/** Gradient BarPercent */
-export const Gradient: StoryObj<BarPercentProps> = {
-  render: (args) => <BarPercent {...args} gradientFiller value={95} />,
-};
-
 /** Narrow BarPercent */
 export const Narrow: StoryObj<BarPercentProps> = {
   render: (args) => <BarPercent {...args} narrow value={20} />,

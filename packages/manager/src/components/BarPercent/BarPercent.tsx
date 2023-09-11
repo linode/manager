@@ -8,12 +8,6 @@ import { isPropValid } from 'src/utilities/isPropValid';
 export interface BarPercentProps {
   /** Additional css class to pass to the component */
   className?: string;
-  /**
-   * Applies a gradient to the filler bar to show
-   * when getting close to the limit. (green to red)
-   * Orange will show at 75% and red at 90%.
-   */
-  gradientFiller?: boolean;
   /** Applies styles to show that the value is being retrieved. */
   isFetchingValue?: boolean;
   /** The maximum allowed value and should not be equal to min. */
@@ -35,7 +29,6 @@ export interface BarPercentProps {
 export const BarPercent = (props: BarPercentProps) => {
   const {
     className,
-    gradientFiller,
     isFetchingValue,
     max,
     narrow,
@@ -58,7 +51,6 @@ export const BarPercent = (props: BarPercentProps) => {
             : 'determinate'
         }
         fillerRelativePct={fillerRelativePct}
-        gradientFiller={gradientFiller}
         narrow={narrow}
         rounded={rounded}
         sx={sx}
@@ -89,7 +81,8 @@ const StyledLinearProgress = styled(LinearProgress, {
       backgroundColor: '#99ec79',
     },
     '& .MuiLinearProgress-barColorPrimary': {
-      backgroundColor: '#5ad865',
+      // Increase contrast if we have a buffer bar
+      backgroundColor: props.valueBuffer ? '#1CB35C' : '#5ad865',
     },
     '& .MuiLinearProgress-dashed': {
       display: 'none',
@@ -98,14 +91,5 @@ const StyledLinearProgress = styled(LinearProgress, {
     borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
     padding: props.narrow ? 8 : 12,
     width: '100%',
-    ...(props.gradientFiller && {
-      '& .MuiLinearProgress-bar': {
-        background: `linear-gradient(90deg, #5ad865 0%, #5ad865 75%, orange 90%, red);`,
-        transform: 'none !important',
-        width: `${props.fillerRelativePct}%`,
-      },
-      backgroundColor: 'rgb(231, 231, 231)',
-      width: `${props.value}%`,
-    }),
   })
 );

@@ -63,12 +63,22 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
 export const accountTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
   {
     billable: 0,
-    quota: 25000,
+    quota: 25000, // GB
     region_transfers: [
-      { billable: 0, id: 'id-cgk', quota: 10000, used: 8500 },
-      { billable: 0, id: 'br-gru', quota: 15000, used: 500 },
+      {
+        billable: 0,
+        id: 'id-cgk',
+        quota: 10000, // GB
+        used: 8500, // GB
+      },
+      {
+        billable: 0,
+        id: 'br-gru',
+        quota: 15000, // GB
+        used: 500, // GB
+      },
     ],
-    used: 9000,
+    used: 9000, // GB
   }
 );
 

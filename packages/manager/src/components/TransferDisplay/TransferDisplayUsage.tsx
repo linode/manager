@@ -53,12 +53,7 @@ export const TransferDisplayUsage = React.memo(
           </Grid>
         </Grid>
         {!isEmptyPool && (
-          <BarPercent
-            gradientFiller
-            max={100}
-            rounded
-            value={Math.ceil(pullUsagePct)}
-          />
+          <BarPercent max={100} rounded value={Math.ceil(pullUsagePct)} />
         )}
       </>
     );

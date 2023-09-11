@@ -1,4 +1,9 @@
-import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
+import type {
+  LinodeType,
+  PriceObject,
+  Region,
+  RegionalNetworkUtilization,
+} from '@linode/api-v4';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
@@ -69,8 +74,8 @@ export const isLinodeTypeDifferentPriceInSelectedRegion = ({
 export const isLinodeInDynamicPricingDC = (
   regionId: Region['id'],
   type: LinodeType | undefined
-) => {
-  if (!regionId || !type) {
+): boolean => {
+  if (!regionId || !type || !type.region_prices) {
     return false;
   }
 
@@ -79,4 +84,38 @@ export const isLinodeInDynamicPricingDC = (
   );
 
   return priceIncreaseRegions.includes(regionId) ? true : false;
+};
+
+interface DynamicPricingLinodeTransferData {
+  dcSpecificPricingFlag: boolean;
+  networkTransferData: Partial<RegionalNetworkUtilization> | undefined;
+  regionId: Region['id'] | undefined;
+}
+
+export const getDynamicDCNetworkTransferData = ({
+  dcSpecificPricingFlag,
+  networkTransferData,
+  regionId,
+}: DynamicPricingLinodeTransferData) => {
+  if (!networkTransferData || !regionId) {
+    return { quota: 0, used: 0 };
+  }
+
+  if (networkTransferData.region_transfers) {
+    const dataCenterSpecificLinodeTransfer = networkTransferData.region_transfers.find(
+      (networkTransferDataRegion) => networkTransferDataRegion.id === regionId
+    );
+
+    if (dataCenterSpecificLinodeTransfer && dcSpecificPricingFlag) {
+      return {
+        quota: dataCenterSpecificLinodeTransfer.quota || 0,
+        used: dataCenterSpecificLinodeTransfer.used || 0,
+      };
+    }
+  }
+
+  return {
+    quota: networkTransferData.quota || 0,
+    used: networkTransferData.used || 0,
+  };
 };

@@ -16,28 +16,32 @@ const sxLegendItem = {
   marginTop: 10,
 };
 
-export const StyledGreyTypography = styled(Typography, {
-  label: 'StyledGreyTypography',
-})(({ theme }) => ({
+const styledLinodeUsage = (backgroundColor: string) => ({
   ...sxLegendItem,
   '&  span': {
     flex: 1,
+    lineHeight: 1.1,
   },
   '&:before': {
     ...sxLegendItemBefore,
-    backgroundColor: theme.color.grey2,
-  },
-}));
-
-export const StyledGreenTypography = styled(Typography, {
-  label: 'StyledGreenTypography ',
-})({
-  ...sxLegendItem,
-  '&  span': {
-    flex: 1,
-  },
-  '&:before': {
-    ...sxLegendItemBefore,
-    backgroundColor: '#5ad865',
+    backgroundColor,
   },
 });
+
+export const StyledLinodeUsage = styled(Typography, {
+  label: 'StyledLinodeUsage ',
+})({
+  ...styledLinodeUsage('#1CB35C'),
+});
+
+export const StyledPoolUsage = styled(Typography, {
+  label: 'StyledPoolUsage',
+})(() => ({
+  ...styledLinodeUsage('#99ec79'),
+}));
+
+export const StyledRemainingPoolUsage = styled(Typography, {
+  label: 'StyledRemainingUsage',
+})(({ theme }) => ({
+  ...styledLinodeUsage(theme.color.grey2),
+}));

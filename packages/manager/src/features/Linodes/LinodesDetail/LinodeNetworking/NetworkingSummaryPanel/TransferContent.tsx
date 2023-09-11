@@ -7,30 +7,36 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 
 import {
-  StyledGreenTypography,
-  StyledGreyTypography,
+  StyledLinodeUsage,
+  StyledPoolUsage,
+  StyledRemainingPoolUsage,
 } from './TransferContent.styles';
 import { calculatePercentageWithCeiling } from './utils';
 
 interface ContentProps {
   accountBillableInGB: number;
   accountQuotaInGB: number;
+  dcSpecificPricingFlag: boolean;
   error: boolean;
+  isDynamicPricingDC: boolean;
   linodeLabel: string;
   linodeUsedInGB: number;
   loading: boolean;
+  regionName: string;
   totalUsedInGB: number;
 }
 
 export const TransferContent = (props: ContentProps) => {
   const {
     accountQuotaInGB,
+    dcSpecificPricingFlag,
     error,
+    isDynamicPricingDC,
     linodeLabel,
     linodeUsedInGB,
     loading,
+    regionName,
     totalUsedInGB,
-    // accountBillableInGB
   } = props;
   const theme = useTheme();
 
@@ -86,14 +92,25 @@ export const TransferContent = (props: ContentProps) => {
         value={Math.ceil(linodeUsagePercent)}
         valueBuffer={Math.ceil(totalUsagePercent)}
       />
-      <StyledGreenTypography>
+      <StyledLinodeUsage>
         <span>
           {linodeLabel} ({linodeUsedInGB} GB)
         </span>
-      </StyledGreenTypography>
-      <StyledGreyTypography>
-        <span>Remaining ({remainingInGB} GB)</span>
-      </StyledGreyTypography>
+      </StyledLinodeUsage>
+      <StyledPoolUsage>
+        <span>
+          {dcSpecificPricingFlag && isDynamicPricingDC
+            ? `${regionName} Transfer Used (${totalUsedInGB} GB)`
+            : `Global Pool Used (${totalUsedInGB} GB)`}
+        </span>
+      </StyledPoolUsage>
+      <StyledRemainingPoolUsage>
+        <span>
+          {dcSpecificPricingFlag && isDynamicPricingDC
+            ? `${regionName} Transfer Remaining (${remainingInGB} GB)`
+            : `Global Pool Remaining (${remainingInGB} GB)`}
+        </span>
+      </StyledRemainingPoolUsage>
       {/* @todo: display overages  */}
     </div>
   );
