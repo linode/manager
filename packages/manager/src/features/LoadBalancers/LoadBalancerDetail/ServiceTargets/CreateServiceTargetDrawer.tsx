@@ -1,5 +1,4 @@
 import { Endpoint, ServiceTargetPayload } from '@linode/api-v4';
-import { CreateServiceTargetSchema } from '@linode/validation';
 import Stack from '@mui/material/Stack';
 import { useFormik } from 'formik';
 import React from 'react';
@@ -22,9 +21,9 @@ import { Toggle } from 'src/components/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useServiceTargetCreateMutation } from 'src/queries/aglb/serviceTargets';
-import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 interface Props {
   loadbalancerId: number;
@@ -88,9 +87,11 @@ const initialValues: ServiceTargetPayload = {
 export const CreateServiceTargetDrawer = (props: Props) => {
   const { loadbalancerId, onClose: _onClose, open } = props;
 
-  const { mutateAsync: createServiceTarget } = useServiceTargetCreateMutation(
-    loadbalancerId
-  );
+  const {
+    error,
+    mutateAsync: createServiceTarget,
+    reset,
+  } = useServiceTargetCreateMutation(loadbalancerId);
 
   const formik = useFormik<ServiceTargetPayload>({
     initialValues,
@@ -99,16 +100,14 @@ export const CreateServiceTargetDrawer = (props: Props) => {
         await createServiceTarget(values);
         onClose();
       } catch (error) {
-        // @TODO fix api error handling
-        handleAPIErrors(error, formik.setFieldError, formik.setStatus);
+        scrollErrorIntoView();
       }
     },
-    validateOnChange: false,
-    validationSchema: CreateServiceTargetSchema,
   });
 
   const onClose = () => {
     formik.resetForm();
+    reset();
     _onClose();
   };
 
@@ -124,13 +123,16 @@ export const CreateServiceTargetDrawer = (props: Props) => {
       <form onSubmit={formik.handleSubmit}>
         {formik.status && <Notice text={formik.status} variant="error" />}
         <TextField
-          errorText={formik.errors.label}
+          errorText={error?.find((e) => e.field === 'label')?.reason}
           label="Service Target Label"
           name="label"
           onChange={formik.handleChange}
           value={formik.values.label}
         />
         <Select
+          errorText={
+            error?.find((e) => e.field === 'load_balancing_policy')?.reason
+          }
           formatOptionLabel={(option, meta) => {
             if (meta.context === 'value') {
               return option.label;
@@ -153,7 +155,6 @@ export const CreateServiceTargetDrawer = (props: Props) => {
           value={algorithmOptions.find(
             (option) => option.value === formik.values.load_balancing_policy
           )}
-          errorText={formik.errors.load_balancing_policy}
           isClearable={false}
           label="Algorithm"
           options={algorithmOptions}
@@ -164,8 +165,10 @@ export const CreateServiceTargetDrawer = (props: Props) => {
           <Box key={`endpoint-${idx}`}>
             <Stack direction="row" spacing={2}>
               <TextField
+                errorText={
+                  error?.find((e) => e.field === `endpoints[${idx}].ip`)?.reason
+                }
                 containerProps={{ flexGrow: 1 }}
-                errorText={formik.errors.endpoints?.[idx]?.['ip']}
                 label="Public IP Address"
                 labelTooltipText="TODO"
                 name={`endpoints[${idx}].ip`}
@@ -173,7 +176,10 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                 value={endpoint.ip}
               />
               <TextField
-                errorText={formik.errors.endpoints?.[idx]?.['port']}
+                errorText={
+                  error?.find((e) => e.field === `endpoints[${idx}].port`)
+                    ?.reason
+                }
                 label="Port"
                 labelTooltipText="TODO"
                 name={`endpoints[${idx}].port`}
@@ -183,7 +189,9 @@ export const CreateServiceTargetDrawer = (props: Props) => {
               />
             </Stack>
             <TextField
-              errorText={formik.errors.endpoints?.[idx]?.['host']}
+              errorText={
+                error?.find((e) => e.field === `endpoints[${idx}].host`)?.reason
+              }
               label="Host"
               labelTooltipText="TODO"
               name={`endpoints[${idx}].host`}
@@ -200,7 +208,11 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                   </InputAdornment>
                 ),
               }}
-              errorText={formik.errors.endpoints?.[idx]?.['capacity']}
+              errorText={
+                error?.find(
+                  (e) => e.field === `endpoints[${idx}].rate_capacity`
+                )?.reason
+              }
               label="Capacity"
               labelTooltipText="TODO"
               name={`endpoints[${idx}].capacity`}
@@ -208,6 +220,9 @@ export const CreateServiceTargetDrawer = (props: Props) => {
               type="number"
               value={endpoint.rate_capacity}
             />
+            {idx !== formik.values.endpoints.length - 1 && (
+              <Divider spacingTop={24} />
+            )}
           </Box>
         ))}
         <Button
@@ -223,7 +238,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
           <TooltipIcon status="help" text="TODO" />
         </Stack>
         <CertificateSelect
-          errorText={formik.errors.ca_certificate}
+          errorText={error?.find((e) => e.field === 'ca_certificate')?.reason}
           loadbalancerId={loadbalancerId}
           onChange={() => null}
           value={0}
@@ -256,7 +271,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
               <FormControlLabel control={<Radio />} label="HTTP" value="http" />
               <FormControlLabel control={<Radio />} label="TCP" value="tcp" />
               <FormHelperText>
-                {formik.errors.healthcheck?.protocol}
+                {error?.find((e) => e.field === 'healthcheck.protocol')?.reason}
               </FormHelperText>
             </RadioGroup>
             <Stack direction="row" spacing={2}>
@@ -266,7 +281,9 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                     <InputAdornment position="start">seconds</InputAdornment>
                   ),
                 }}
-                errorText={formik.errors.healthcheck?.interval}
+                errorText={
+                  error?.find((e) => e.field === 'healthcheck.interval')?.reason
+                }
                 label="Interval"
                 labelTooltipText="TODO"
                 name="healthcheck.interval"
@@ -280,7 +297,11 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                     <InputAdornment position="start">checks</InputAdornment>
                   ),
                 }}
-                errorText={formik.errors.healthcheck?.healthy_threshold}
+                errorText={
+                  error?.find(
+                    (e) => e.field === 'healthcheck.healthy_threshold'
+                  )?.reason
+                }
                 label="Healthy Threshold"
                 labelTooltipText="TODO"
                 name="healthcheck.healthy_threshold"
@@ -296,7 +317,9 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                     <InputAdornment position="start">seconds</InputAdornment>
                   ),
                 }}
-                errorText={formik.errors.healthcheck?.timeout}
+                errorText={
+                  error?.find((e) => e.field === 'healthcheck.timeout')?.reason
+                }
                 label="Timeout"
                 labelTooltipText="TODO"
                 name="healthcheck.timeout"
@@ -310,7 +333,11 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                     <InputAdornment position="start">checks</InputAdornment>
                   ),
                 }}
-                errorText={formik.errors.healthcheck?.unhealthy_threshold}
+                errorText={
+                  error?.find(
+                    (e) => e.field === 'healthcheck.unhealthy_threshold'
+                  )?.reason
+                }
                 label="Unhealthy Threshold"
                 labelTooltipText="TODO"
                 name="healthcheck.unhealthy_threshold"
@@ -322,7 +349,9 @@ export const CreateServiceTargetDrawer = (props: Props) => {
             {formik.values.healthcheck.protocol === 'http' && (
               <>
                 <TextField
-                  errorText={formik.errors.healthcheck?.path}
+                  errorText={
+                    error?.find((e) => e.field === 'healthcheck.path')?.reason
+                  }
                   label="Health Check Path"
                   labelTooltipText="TODO"
                   name="healthcheck.path"
@@ -331,7 +360,9 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                   value={formik.values.healthcheck.path}
                 />
                 <TextField
-                  errorText={formik.errors.healthcheck?.host}
+                  errorText={
+                    error?.find((e) => e.field === 'healthcheck.host')?.reason
+                  }
                   label="Health Check Host"
                   labelTooltipText="TODO"
                   name="healthcheck.host"
