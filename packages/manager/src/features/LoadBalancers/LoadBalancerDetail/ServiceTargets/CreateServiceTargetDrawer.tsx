@@ -24,6 +24,7 @@ import { useServiceTargetCreateMutation } from 'src/queries/aglb/serviceTargets'
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
+import { LinodeOrIPSelect } from './LinodeOrIPSelect';
 
 interface Props {
   loadbalancerId: number;
@@ -166,15 +167,13 @@ export const CreateServiceTargetDrawer = (props: Props) => {
         {formik.values.endpoints.map((endpoint, idx) => (
           <Box key={`endpoint-${idx}`}>
             <Stack direction="row" spacing={2}>
-              <TextField
+              <LinodeOrIPSelect
                 errorText={
                   error?.find((e) => e.field === `endpoints[${idx}].ip`)?.reason
                 }
-                containerProps={{ flexGrow: 1 }}
-                label="Public IP Address"
-                labelTooltipText="TODO"
-                name={`endpoints[${idx}].ip`}
-                onChange={formik.handleChange}
+                onChange={(ip) =>
+                  formik.setFieldValue(`endpoints[${idx}].ip`, ip)
+                }
                 value={endpoint.ip}
               />
               <TextField

@@ -129,7 +129,7 @@ export interface ServiceTarget extends ServiceTargetPayload {
 }
 
 export interface Endpoint {
-  ip?: string;
+  ip: string;
   host?: string;
   port: number;
   rate_capacity: number;

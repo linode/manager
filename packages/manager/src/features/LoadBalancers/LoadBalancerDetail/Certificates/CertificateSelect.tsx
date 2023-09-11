@@ -1,7 +1,6 @@
-import Autocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 
-import { TextField } from 'src/components/TextField';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useLoadBalancerCertificatesInfiniteQuery } from 'src/queries/aglb/certificates';
 
 import type { Certificate, Filter } from '@linode/api-v4';
@@ -77,17 +76,13 @@ export const CertificateSelect = (props: Props) => {
           setInputValue(value);
         }
       }}
-      renderInput={(params) => (
-        <TextField
-          label={label ?? 'Certificate'}
-          {...params}
-          errorText={error?.[0].reason ?? errorText}
-        />
-      )}
+      errorText={error?.[0].reason ?? errorText}
       inputValue={selectedCertificate ? selectedCertificate.label : inputValue}
+      label={label ?? 'Certificate'}
       loading={isLoading}
       onChange={(e, value) => onChange(value)}
       options={certificates ?? []}
+      placeholder="Select a Certificate"
       value={selectedCertificate}
     />
   );
