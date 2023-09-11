@@ -144,7 +144,6 @@ describe('VPC details page', () => {
 
     mockGetVPC(mockVPC).as('getVPC');
     mockGetFeatureFlagClientstream().as('getClientStream');
-    mockGetVPC(mockVPC).as('getVPC');
     mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
     mockDeleteSubnet(mockVPC.id, mockSubnet.id).as('deleteSubnet');
 
