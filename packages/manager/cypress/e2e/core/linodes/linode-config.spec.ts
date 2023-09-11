@@ -4,6 +4,11 @@ import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 import { interceptRebootLinode } from 'support/intercepts/linodes';
+import {
+  interceptDeleteLinodeConfig,
+  interceptPostLinodeConfigs,
+  interceptPutLinodeConfigs,
+} from 'support/intercepts/configs';
 import { createAndBootLinode, createLinodeAndGetConfig } from './linode-utils';
 
 import type { Config, Linode } from '@linode/api-v4';
@@ -15,13 +20,18 @@ describe('Linode cConfig', () => {
     cleanUp('linodes');
   });
 
-  it('Creates a new config', () => {
+  it('Creates a new config and list all configs', () => {
     createLinode().then((linode: Linode) => {
+      interceptPostLinodeConfigs(linode.id).as('postLinodeConfigs');
+
       cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
 
+      cy.get(`[aria-label="List of Configurations"]`).within(() => {
+        containsVisible('My Debian 10 Disk Profile – GRUB 2');
+      });
       containsVisible('My Debian 10 Disk Profile – GRUB 2');
-      cy.findByText('Add Configuration').click();
 
+      cy.findByText('Add Configuration').click();
       ui.dialog
         .findByTitle('Add Configuration')
         .should('be.visible')
@@ -35,7 +45,12 @@ describe('Linode cConfig', () => {
             .click();
         });
 
+      cy.wait('@postLinodeConfigs')
+        .its('response.statusCode')
+        .should('eq', 200);
+
       cy.get(`[aria-label="List of Configurations"]`).within(() => {
+        cy.get('tr').should('have.length', 2);
         containsVisible(
           `${linode.id}-test-config – Latest 64 bit (6.2.9-x86_64-linode160)`
         );
@@ -45,21 +60,30 @@ describe('Linode cConfig', () => {
   });
 
   it('Edits an existing config', () => {
-    createLinode({
-      interfaces: [
-        {
-          ipam_address: '',
-          label: '',
-          purpose: 'public',
+    cy.defer(
+      createLinodeAndGetConfig({
+        waitForLinodeToBeRunning: true,
+        linodeRequestOverride: {
+          interfaces: [
+            {
+              id: 0,
+              ipam_address: '',
+              label: '',
+              purpose: 'public',
+            },
+            {
+              id: 1,
+              ipam_address: '',
+              label: 'testvlan',
+              purpose: 'vlan',
+            },
+          ],
         },
-        {
-          ipam_address: '',
-          label: 'testvlan',
-          purpose: 'vlan',
-        },
-      ],
-    }).then((linode: Linode) => {
+      }),
+      'creating a linode and getting its config'
+    ).then(([linode, config]: [Linode, Config]) => {
       cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+      interceptPutLinodeConfigs(linode.id, config.id).as('putLinodeConfigs');
 
       containsVisible('My Debian 10 Disk Profile – GRUB 2');
       cy.findByText('Edit').click();
@@ -76,6 +100,8 @@ describe('Linode cConfig', () => {
             .should('be.enabled')
             .click();
         });
+
+      cy.wait('@putLinodeConfigs').its('response.statusCode').should('eq', 200);
 
       cy.get(`[aria-label="List of Configurations"]`).within(() => {
         containsVisible('eth0 – Public Internet');
@@ -118,7 +144,7 @@ describe('Linode cConfig', () => {
   });
 
   it('Clones an existing config', () => {
-    // Creating a linode to clone the config to
+    // Creating a linode to clone the config to and delete its configs so a new one can be cloned
     const DESTINATION_LINODE = 'cy-test-destination-linode';
     createLinode({
       label: DESTINATION_LINODE,
@@ -127,8 +153,8 @@ describe('Linode cConfig', () => {
 
     // testing the clone feature
     cy.defer(
-      createLinodeAndGetConfig(),
-      'creating a linode and getting its configs'
+      createLinodeAndGetConfig({ waitForLinodeToBeRunning: true }),
+      'creating a linode and getting its config'
     ).then(([linode, config]: [Linode, Config]) => {
       cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
 
@@ -165,6 +191,45 @@ describe('Linode cConfig', () => {
 
         // TODO assert that the clone was successful
         // However it looks like the feature is not working
+      });
+    });
+  });
+
+  it('Deletes an existing config', () => {
+    cy.defer(
+      createLinodeAndGetConfig({}),
+      'creating a linode and getting its config'
+    ).then(([linode, config]: [Linode, Config]) => {
+      interceptDeleteLinodeConfig(linode.id, config.id).as(
+        'deleteLinodeConfig'
+      );
+      cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+
+      containsVisible('My Debian 10 Disk Profile – GRUB 2');
+      ui.actionMenu
+        .findByTitle('Action menu for Linode Config My Debian 10 Disk Profile')
+        .should('be.visible')
+        .click();
+      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+      ui.dialog
+        .findByTitle('Confirm Delete')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Delete')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait('@deleteLinodeConfig')
+        .its('response.statusCode')
+        .should('eq', 200);
+      ui.toast.assertMessage('Successfully deleted config');
+      cy.get(`[aria-label="List of Configurations"]`).within(() => {
+        containsVisible('No data to display.');
       });
     });
   });
