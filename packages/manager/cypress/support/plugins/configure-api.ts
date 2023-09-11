@@ -1,58 +1,6 @@
 import { CypressPlugin } from './plugin';
-import { baseRequest, getProfile, Profile } from '@linode/api-v4';
-
-const defaultApiRoot = 'https://api.linode.com/v4';
-
-/**
- * Returns an object containing an overridden API request URL.
- *
- * If no request URL or base override URL is passed, an empty object is returned.
- *
- * @param requestUrl - API request URL.
- * @param baseUrl - API base URL override.
- *
- * @returns API request URL override object.
- */
-const getApiRequestUrlOverride = (requestUrl?: string, baseUrl?: string) => {
-  // Short-circuit and return an empty object if no base URL is passed.
-  if (!baseUrl || !requestUrl) {
-    return {};
-  }
-  const overriddenUrl = requestUrl.replace(defaultApiRoot, baseUrl);
-  return {
-    url: overriddenUrl,
-  };
-};
-
-/**
- * Authenticate API requests. Necessary to make API requests during Cypress start-up.
- * Configure Linode API-v4 API requests.
- *
- * This is necessary to make API requests during Cypress start-up. It
- * authenticates the API and configures it to make requests to the correct
- * environment.
- *
- * @param apiAccessToken - Personal access token for API requests.
- * @param baseUrlOverride - Optional base URL with which to override API requests.
- */
-const configureApiRequests = (
-  apiAccessToken: string,
-  baseUrlOverride?: string
-) => {
-  baseRequest.interceptors.request.use((config) => {
-    return {
-      ...config,
-      headers: {
-        ...config.headers,
-        common: {
-          ...config.headers.common,
-          authorization: `Bearer ${apiAccessToken}`,
-        },
-      },
-      ...getApiRequestUrlOverride(config.url, baseUrlOverride),
-    };
-  });
-};
+import { configureLinodeApi, defaultApiRoot } from '../util/api';
+import { getProfile, Profile } from '@linode/api-v4';
 
 /**
  * Configures API requests to use configure access token and API root.
@@ -80,7 +28,7 @@ export const configureApi: CypressPlugin = async (
   }
 
   // Configure API, attempt to make an API request.
-  configureApiRequests(token, apiBaseUrl);
+  configureLinodeApi(token, apiBaseUrl);
   let profile: Profile | null = null;
   try {
     profile = await getProfile();
