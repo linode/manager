@@ -498,20 +498,17 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const { dcSpecificPricing, selectedRegionID } = this.state;
 
     const linodePrice: PriceObject =
-      dcSpecificPricing && type && selectedRegionID
+      dcSpecificPricing && selectedRegionID
         ? getLinodeRegionPrice(type, selectedRegionID)
-        : type
-        ? type.price
-        : { hourly: 0, monthly: 0 }; // TODO: M3-7063 (defaults)
+        : type?.price ?? { hourly: 'unknown', monthly: 'unknown' };
+    // TODO: M3-7063 (defaults)
 
-    return (
-      type && {
-        details: `$${linodePrice?.monthly}/month`,
-        hourly: linodePrice?.hourly ?? 0,
-        monthly: linodePrice?.monthly ?? 0,
-        title: type.formattedLabel,
-      }
-    );
+    return {
+      details: `$${linodePrice?.monthly}/month`,
+      hourly: linodePrice?.hourly,
+      monthly: linodePrice?.monthly,
+      title: type?.formattedLabel,
+    };
   };
 
   setAuthorizedUsers = (usernames: string[]) =>

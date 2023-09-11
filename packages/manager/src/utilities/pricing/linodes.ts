@@ -10,9 +10,17 @@ import type { ExtendedType } from 'src/utilities/extendType';
  * @returns pricing information for this specific linode type in a region
  */
 export const getLinodeRegionPrice = (
-  type: ExtendedType | LinodeType | PlanSelectionType,
-  regionId: string
+  type?: ExtendedType | LinodeType | PlanSelectionType,
+  regionId?: string
 ): PriceObject => {
+  // TODO: M3-7063 (defaults)
+  if (!type || !regionId) {
+    return {
+      hourly: 'unknown',
+      monthly: 'unknown',
+    };
+  }
+
   const regionSpecificPrice = type.region_prices?.find(
     (regionPrice) => regionPrice.id === regionId
   );
@@ -24,7 +32,6 @@ export const getLinodeRegionPrice = (
     };
   }
 
-  // TODO: M3-7063 (defaults)
   return type.price;
 };
 

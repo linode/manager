@@ -116,7 +116,7 @@ export const AddNodePoolDrawer = (props: Props) => {
       : selectedType?.price?.monthly;
 
   const totalPrice =
-    selectedTypeInfo && pricePerNode
+    selectedTypeInfo && pricePerNode && pricePerNode !== 'unknown'
       ? selectedTypeInfo.count * pricePerNode
       : 0;
 

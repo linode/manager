@@ -148,8 +148,12 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Resized pool: ${updatedCount * pricePerNode}/month (
-            {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}/month)
+            Resized pool: $
+            {pricePerNode !== 'unknown'
+              ? updatedCount * pricePerNode
+              : 'unknown'}
+            /month ({pluralize('node', 'nodes', updatedCount)} at $
+            {pricePerNode}/month)
           </Typography>
         </div>
 

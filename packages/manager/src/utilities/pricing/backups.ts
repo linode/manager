@@ -13,6 +13,12 @@ export const getLinodeBackupPrice = (
   type: LinodeType,
   regionId: string
 ): PriceObject => {
+  if (!type || !regionId) {
+    return {
+      hourly: 'unknown',
+      monthly: 'unknown',
+    };
+  }
   const regionSpecificBackupPrice = type.addons.backups.region_prices?.find(
     (regionPrice) => regionPrice.id === regionId
   );
@@ -44,7 +50,7 @@ export const getMonthlyBackupsPrice = ({
 }: BackupsPriceOptions): PriceObject['monthly'] => {
   if (!region || !type) {
     // TODO: M3-7063 (defaults)
-    return 0;
+    return 'unknown';
   }
 
   return flags.dcSpecificPricing
@@ -84,6 +90,8 @@ export const getTotalBackupsPrice = ({
         type,
       }) || 0;
 
-    return prevValue + backupsMonthlyPrice;
+    return (
+      prevValue + (backupsMonthlyPrice !== 'unknown' ? backupsMonthlyPrice : 0)
+    );
   }, 0);
 };

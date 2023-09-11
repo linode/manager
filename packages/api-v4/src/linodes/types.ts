@@ -286,8 +286,8 @@ export interface LinodeConfigCreationData {
 }
 
 export interface PriceObject {
-  monthly: number | null;
-  hourly: number | null;
+  monthly: number | null | 'unknown';
+  hourly: number | null | 'unknown';
 }
 
 export interface RegionPriceObject extends PriceObject {

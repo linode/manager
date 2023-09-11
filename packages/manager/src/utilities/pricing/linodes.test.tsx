@@ -7,6 +7,23 @@ import {
 } from './linodes';
 
 describe('getLinodeRegionPrice', () => {
+  it('gets a linode price as unknow when regionId is undefined', () => {
+    const type = linodeTypeFactory.build({
+      price: undefined,
+      region_prices: [],
+    });
+    const actual = getLinodeRegionPrice(type, undefined);
+    const expected = { hourly: 'unknown', monthly: 'unknown' };
+    expect(actual).toEqual(expected);
+  });
+  it('gets a linode price as unknow when regionId is undefined', () => {
+    const actual = getLinodeRegionPrice(undefined, 'us-east');
+    const expected = { hourly: 'unknown', monthly: 'unknown' };
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe('getLinodeRegionPrice', () => {
   it('gets a linode price without a region override', () => {
     const type = linodeTypeFactory.build({
       price: {

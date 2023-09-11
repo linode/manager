@@ -32,16 +32,16 @@ export const getKubernetesMonthlyPrice = ({
   types,
 }: MonthlyPriceOptions) => {
   if (!types || !type || !region) {
-    return 0; // TODO
+    return 'unknown'; // TODO
   }
   const thisType = types.find((t: ExtendedType) => t.id === type);
   const monthlyPrice = flags.dcSpecificPricing
-    ? thisType
-      ? getLinodeRegionPrice(thisType, region)?.monthly
-      : 0
+    ? getLinodeRegionPrice(thisType, region)?.monthly
     : thisType?.price.monthly;
 
-  return thisType ? (monthlyPrice ?? 0) * count : 0;
+  return monthlyPrice !== 'unknown'
+    ? (monthlyPrice ?? 0) * count
+    : monthlyPrice;
 };
 
 /**
@@ -56,15 +56,16 @@ export const getTotalClusterPrice = ({
   types,
 }: TotalClusterPriceOptions) => {
   const price = pools.reduce((accumulator, node) => {
+    const kubernetesMonthlyPrice = getKubernetesMonthlyPrice({
+      count: node.count,
+      flags,
+      region,
+      type: node.type,
+      types,
+    });
     return (
       accumulator +
-      getKubernetesMonthlyPrice({
-        count: node.count,
-        flags,
-        region,
-        type: node.type,
-        types,
-      })
+      (kubernetesMonthlyPrice === 'unknown' ? 0 : kubernetesMonthlyPrice)
     );
   }, 0);
 

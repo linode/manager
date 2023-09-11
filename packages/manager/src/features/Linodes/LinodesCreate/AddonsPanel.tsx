@@ -29,7 +29,7 @@ interface UserDataProps extends UserDataAccordionProps {
 export interface AddonsPanelProps {
   accountBackups: boolean;
   backups: boolean;
-  backupsMonthlyPrice?: null | number;
+  backupsMonthlyPrice?: 'unknown' | null | number;
   changeBackups: () => void;
   createType: CreateTypes;
   disabled?: boolean;

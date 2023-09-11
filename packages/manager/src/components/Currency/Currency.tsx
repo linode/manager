@@ -1,9 +1,10 @@
+import { isNumber } from 'lodash';
 import * as React from 'react';
 
 interface CurrencyFormatterProps {
   dataAttrs?: Record<string, any>;
   decimalPlaces?: number;
-  quantity: number;
+  quantity: number | string;
   wrapInParentheses?: boolean;
 }
 
@@ -16,7 +17,10 @@ export const Currency = (props: CurrencyFormatterProps) => {
     style: 'currency',
   });
 
-  const formattedQuantity = formatter.format(Math.abs(quantity));
+  const formattedQuantity =
+    quantity !== 'unknown' && isNumber(quantity)
+      ? formatter.format(Math.abs(quantity))
+      : quantity;
   const isNegative = quantity < 0;
 
   let output;

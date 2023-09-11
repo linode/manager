@@ -52,7 +52,7 @@ export const BackupLinodeRow = (props: Props) => {
         <TableCell parentColumn="Region">{regionLabel ?? 'Unknown'}</TableCell>
       )}
       <TableCell parentColumn="Price">
-        {backupsMonthlyPrice !== 0
+        {backupsMonthlyPrice !== 'unknown'
           ? `$${backupsMonthlyPrice?.toFixed(2)}/mo`
           : '$Unknown/mo'}
       </TableCell>
