@@ -185,24 +185,6 @@ export const sxListItemFirstChild = (theme: Theme) => ({
   },
 });
 
-// sxListItem: (theme: Theme) => ({
-//   borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-//   color: theme.textColors.tableStatic,
-//   display: 'flex',
-//   padding: `0px 10px`,
-//   [theme.breakpoints.down('md')]: {
-//     ...sxObjects.sxListItemMdBp,
-//   },
-// }),
-
-// sxListItemFirstChild: (theme: Theme) => ({
-//   [theme.breakpoints.down('md')]: {
-//     ...sxObjects.sxListItemMdBp,
-//     '&:first-of-type': {
-//       paddingBottom: theme.spacing(0.5),
-//     },
-//   }
-
 // ---------------------------------------------------------------------
 // AccessTable Styles
 // ---------------------------------------------------------------------
