@@ -12,7 +12,7 @@ import {
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
+import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 interface LinodeSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */
@@ -174,7 +174,7 @@ export const LinodeSelect = (
           ? multiple && Array.isArray(value)
             ? linodes?.filter(value) ?? null
             : linodes?.find(value) ?? null
-          : mapIdsToLinodes(value, linodes)
+          : mapIdsToDevices<Linode>(value, linodes)
       }
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}

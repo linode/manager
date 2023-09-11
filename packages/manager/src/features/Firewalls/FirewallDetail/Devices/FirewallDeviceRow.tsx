@@ -11,13 +11,10 @@ import {
 
 export const FirewallDeviceRow = React.memo(
   (props: FirewallDeviceActionMenuProps) => {
-    const { deviceEntityID, deviceID, deviceLabel } = props;
+    const { deviceEntityID, deviceLabel } = props;
 
     return (
-      <TableRow
-        ariaLabel={`Device ${deviceLabel}`}
-        data-testid={`firewall-device-row-${deviceID}`}
-      >
+      <TableRow ariaLabel={`Device ${deviceLabel}`}>
         <TableCell>
           <Link tabIndex={0} to={`/linodes/${deviceEntityID}/networking`}>
             {deviceLabel}
