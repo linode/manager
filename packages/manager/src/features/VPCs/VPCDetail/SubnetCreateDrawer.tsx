@@ -103,9 +103,9 @@ export const SubnetCreateDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            'data-testid': 'create-subnet-button',
+            'data-testid': 'create-subnet-drawer-button',
             disabled: !dirty || userCannotAddSubnet,
-            label: 'Create subnet',
+            label: 'Create Subnet',
             loading: isLoading,
             type: 'submit',
             onClick: onCreateSubnet,

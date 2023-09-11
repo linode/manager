@@ -13,12 +13,15 @@ const props = {
 
 describe('Create Subnet Drawer', () => {
   it('should render title, label, ipv4 input, ipv4 availability, and action buttons', () => {
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getAllByText, getByText } = renderWithTheme(
       <SubnetCreateDrawer {...props} />
     );
 
-    const drawerTitle = getByText('Create Subnet');
-    expect(drawerTitle).toBeVisible();
+    const createSubnetTexts = getAllByText('Create Subnet');
+    expect(createSubnetTexts).toHaveLength(2);
+
+    expect(createSubnetTexts[0]).toBeVisible(); // the Drawer title
+    expect(createSubnetTexts[1]).toBeVisible(); // the button
 
     const label = getByText('Subnet label');
     expect(label).toBeVisible();
@@ -28,7 +31,7 @@ describe('Create Subnet Drawer', () => {
     expect(ipv4Input).toBeVisible();
     expect(ipv4Input).toBeEnabled();
 
-    const saveButton = getByTestId('create-subnet-button');
+    const saveButton = getByTestId('create-subnet-drawer-button');
     expect(saveButton).toBeVisible();
 
     const cancelBtn = getByText(/Cancel/);

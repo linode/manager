@@ -5,7 +5,7 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
-import type { VPC } from '@linode/api-v4';
+import type { Subnet, VPC } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
 
 /**
@@ -54,4 +54,34 @@ export const mockUpdateVPC = (
  */
 export const mockDeleteVPC = (vpcId: number): Cypress.Chainable<null> => {
   return cy.intercept('DELETE', apiMatcher(`vpcs/${vpcId}`), {});
+};
+
+/**
+ * Intercepts GET request to get a VPC's subnets and mocks response.
+ *
+ * @param vpcId - ID of VPC for which to mock response.
+ * @param subnets - Array of subnets for which to mock response
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSubnets = (
+  vpcId: number,
+  subnets: Subnet[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`vpcs/${vpcId}/subnets*`),
+    paginateResponse(subnets)
+  );
+};
+
+/**
+ * Intercepts POST request to create a subnet for a VPC and mocks response.
+ *
+ * @param vpcId - ID of VPC for which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateSubnet = (vpcId: number): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`vpcs/${vpcId}/subnets`), {});
 };
