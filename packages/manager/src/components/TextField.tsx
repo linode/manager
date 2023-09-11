@@ -1,9 +1,9 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { Theme } from '@mui/material/styles';
 import {
   default as _TextField,
   StandardTextFieldProps,
 } from '@mui/material/TextField';
+import { Theme } from '@mui/material/styles';
 import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -309,24 +309,22 @@ export const TextField = (props: TextFieldProps) => {
       })}
     >
       <Box display="flex">
-        {label && (
-          <InputLabel
-            className={cx({
-              [classes.noTransform]: true,
-              [classes.wrapper]: noMarginTop ? false : true,
-              'visually-hidden': hideLabel,
-            })}
-            data-qa-textfield-label={label}
-            htmlFor={validInputId}
-          >
-            {label}
-            {labelContent ? (
-              <span className={classes.label}>{labelContent}</span>
-            ) : optional ? (
-              <span className={classes.label}>{labelContent}</span>
-            ) : null}
-          </InputLabel>
-        )}
+        <InputLabel
+          className={cx({
+            [classes.noTransform]: true,
+            [classes.wrapper]: noMarginTop ? false : true,
+            'visually-hidden': hideLabel,
+          })}
+          data-qa-textfield-label={label}
+          htmlFor={validInputId}
+        >
+          {label}
+          {labelContent ? (
+            <span className={classes.label}>{labelContent}</span>
+          ) : optional ? (
+            <span className={classes.label}>{labelContent}</span>
+          ) : null}
+        </InputLabel>
         {labelTooltipText && (
           <TooltipIcon
             sxTooltipIcon={{
