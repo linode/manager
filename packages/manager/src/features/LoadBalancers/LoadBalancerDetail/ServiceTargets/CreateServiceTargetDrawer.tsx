@@ -267,6 +267,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
               onChange={(_, value) =>
                 formik.setFieldValue('healthcheck.protocol', value)
               }
+              sx={{ marginBottom: '0px !important' }}
               value={formik.values.healthcheck.protocol}
             >
               <FormLabel>Protocol</FormLabel>
