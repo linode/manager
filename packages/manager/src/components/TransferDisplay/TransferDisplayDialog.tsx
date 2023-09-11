@@ -52,7 +52,7 @@ export const TransferDisplayDialog = React.memo(
         title="Monthly Network Transfer Pool"
       >
         {/**
-         *  General Transfer Pool Display
+         *  Global Transfer Pool Display
          */}
         <Typography
           data-testid="general-transfer-pool-display"

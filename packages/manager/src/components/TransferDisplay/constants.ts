@@ -7,5 +7,5 @@ export const NETWORK_TRANSFER_QUOTA_DOCS_LINKS =
 // ====================
 // Test constants
 // ====================
-export const TRANSFER_DISPLAY_GENERAL_POOL = /General Transfer Pool/;
+export const TRANSFER_DISPLAY_GENERAL_POOL = /Global Transfer Pool/;
 export const TRANSFER_DISPLAY_BUTTON = /Monthly Network Transfer Pool/;

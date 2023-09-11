@@ -92,26 +92,40 @@ export const TransferContent = (props: ContentProps) => {
         value={Math.ceil(linodeUsagePercent)}
         valueBuffer={Math.ceil(totalUsagePercent)}
       />
-      <StyledLinodeUsage>
-        <span>
-          {linodeLabel} ({linodeUsedInGB} GB)
-        </span>
-      </StyledLinodeUsage>
-      <StyledPoolUsage>
-        <span>
-          {dcSpecificPricingFlag && isDynamicPricingDC
-            ? `${regionName} Transfer Used (${totalUsedInGB} GB)`
-            : `Global Pool Used (${totalUsedInGB} GB)`}
-        </span>
-      </StyledPoolUsage>
-      <StyledRemainingPoolUsage>
-        <span>
-          {dcSpecificPricingFlag && isDynamicPricingDC
-            ? `${regionName} Transfer Remaining (${remainingInGB} GB)`
-            : `Global Pool Remaining (${remainingInGB} GB)`}
-        </span>
-      </StyledRemainingPoolUsage>
-      {/* @todo: display overages  */}
+      {dcSpecificPricingFlag ? (
+        <>
+          <StyledLinodeUsage>
+            <span>
+              {linodeLabel} ({linodeUsedInGB} GB)
+            </span>
+          </StyledLinodeUsage>
+          <StyledPoolUsage>
+            <span>
+              {isDynamicPricingDC
+                ? `${regionName} Transfer Used (${totalUsedInGB} GB)`
+                : `Global Pool Used (${totalUsedInGB} GB)`}
+            </span>
+          </StyledPoolUsage>
+          <StyledRemainingPoolUsage>
+            <span>
+              {isDynamicPricingDC
+                ? `${regionName} Transfer Remaining (${remainingInGB} GB)`
+                : `Global Pool Remaining (${remainingInGB} GB)`}
+            </span>
+          </StyledRemainingPoolUsage>
+        </>
+      ) : (
+        <>
+          <StyledLinodeUsage>
+            <span>
+              {linodeLabel} ({linodeUsedInGB} GB)
+            </span>
+          </StyledLinodeUsage>
+          <StyledRemainingPoolUsage>
+            <span>Remaining ({remainingInGB} GB)</span>
+          </StyledRemainingPoolUsage>
+        </>
+      )}
     </div>
   );
 };
