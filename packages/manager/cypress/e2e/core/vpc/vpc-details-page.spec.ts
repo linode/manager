@@ -163,6 +163,9 @@ describe('VPC details page', () => {
       .click();
     ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
+    mockGetVPC(mockVPCAfterSubnetDeletion).as('getVPC');
+    mockGetSubnets(mockVPC.id, []).as('getSubnets');
+
     ui.dialog
       .findByTitle(`Delete Subnet ${mockSubnet.label}`)
       .should('be.visible')
@@ -179,10 +182,7 @@ describe('VPC details page', () => {
           .click();
       });
 
-    mockGetVPC(mockVPCAfterSubnetDeletion).as('getVPCAfter');
-    mockGetSubnets(mockVPC.id, []).as('getSubnetsAfter');
-    cy.visitWithLogin(`/vpcs/${mockVPCAfterSubnetDeletion.id}`);
-    cy.wait(['@deleteSubnet', '@getVPCAfter', '@getSubnetsAfter']);
+    cy.wait(['@deleteSubnet', '@getVPC', '@getSubnets']);
 
     // confirm that user should still be on VPC's detail page
     // confirm there are no remaining subnets
