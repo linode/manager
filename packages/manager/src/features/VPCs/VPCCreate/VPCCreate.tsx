@@ -52,25 +52,25 @@ const VPCCreate = () => {
   const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
 
   // When creating the subnet payloads, we also create a mapping of the indexes of the subnets that appear on
-  // the UI to the subnets that the API will receive. This enables users to leave subnets blank on the UI and
-  // still have any errors returned by the API to correspond to the correct subnet
+  // the UI to the indexes of the subnets that the API will receive. This enables users to leave subnets blank
+  // on the UI and still have any errors returned by the API to correspond to the correct subnet
   const createSubnetsPayloadAndMapping = () => {
-    const subnetPayloads: CreateSubnetPayload[] = [];
-    const newSubnetIdxMapping = {};
+    const subnetsPayload: CreateSubnetPayload[] = [];
+    const subnetIdxMapping = {};
     let apiSubnetIdx = 0;
 
     for (let i = 0; i < values.subnets.length; i++) {
       const { ip, label } = values.subnets[i];
       if (ip.ipv4 || label) {
-        subnetPayloads.push({ ipv4: ip.ipv4, label });
-        newSubnetIdxMapping[i] = apiSubnetIdx;
+        subnetsPayload.push({ ipv4: ip.ipv4, label });
+        subnetIdxMapping[i] = apiSubnetIdx;
         apiSubnetIdx++;
       }
     }
 
     return {
-      subnetPayloads: subnetPayloads,
-      visualToAPISubnetMapping: newSubnetIdxMapping,
+      subnetsPayload,
+      visualToAPISubnetMapping: subnetIdxMapping,
     };
   };
 
@@ -105,13 +105,13 @@ const VPCCreate = () => {
     setGeneralAPIError(undefined);
 
     const {
-      subnetPayloads,
+      subnetsPayload,
       visualToAPISubnetMapping,
     } = createSubnetsPayloadAndMapping();
 
     const createVPCPayload: CreateVPCPayload = {
       ...values,
-      subnets: subnetPayloads,
+      subnets: subnetsPayload,
     };
 
     try {
