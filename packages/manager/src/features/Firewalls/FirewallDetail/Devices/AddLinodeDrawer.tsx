@@ -18,7 +18,6 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
-import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 interface Props {
   helperText: string;
@@ -138,8 +137,6 @@ export const AddLinodeDrawer = (props: Props) => {
     }
   };
 
-  type OptionType = { id: number; label: string };
-
   const currentLinodeIds =
     currentDevices
       ?.filter((device) => device.entity.type === 'linode')
@@ -168,24 +165,6 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const linodes = data?.filter(optionsFilter);
 
-  const options =
-    linodes?.map((linode) => ({ id: linode.id, label: linode.label })) || [];
-
-  const onChange = (selectedLinodes: OptionType[]) => {
-    const result = mapIdsToDevices<Linode>(
-      selectedLinodes.map((linode) => linode.id),
-      linodes
-    );
-
-    const mappedLinodes: Linode[] = Array.isArray(result)
-      ? result
-      : result
-      ? [result]
-      : [];
-
-    setSelectedLinodes(mappedLinodes);
-  };
-
   return (
     <Drawer
       onClose={() => {
@@ -203,16 +182,15 @@ export const AddLinodeDrawer = (props: Props) => {
         }}
       >
         {localError ? errorNotice() : null}
-        <Autocomplete<{ id: number; label: string }, true>
+        <Autocomplete
           disabled={currentDevicesLoading || linodeIsLoading}
           helperText={helperText}
-          isOptionEqualToValue={(option, value) => option.id == value.id}
           label="Linodes"
           loading={currentDevicesLoading || linodeIsLoading}
           multiple
           noOptionsText="No Linodes available to add"
-          onChange={(_, linodes) => onChange(linodes)}
-          options={options}
+          onChange={(_, linodes) => setSelectedLinodes(linodes)}
+          options={linodes || []}
           value={selectedLinodes}
         />
         <ActionsPanel
