@@ -29,18 +29,7 @@ export const ActiveConnections = (props: TableProps) => {
   const theme = useTheme();
 
   return (
-    <Grid
-      md={4}
-      sx={{
-        boxSizing: 'border-box',
-        margin: '0',
-        padding: '0',
-        [theme.breakpoints.down('md')]: {
-          marginTop: theme.spacing(3),
-        },
-      }}
-      xs={12}
-    >
+    <Grid md={4} xs={12}>
       <Typography
         sx={{
           [theme.breakpoints.down('lg')]: {
