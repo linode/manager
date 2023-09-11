@@ -5,7 +5,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { BETA_API_ROOT } from 'src/constants';
+import { BETA_API_ROOT } from '../constants';
 import { Filter, Params, ResourcePage } from '../types';
 import { Certificate, CreateCertificatePayload } from './types';
 import { CreateCertificateSchema } from '@linode/validation';

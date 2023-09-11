@@ -200,12 +200,12 @@ export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
       region_prices: [
         {
           hourly: null,
-          id: null,
+          id: 'id-cgk',
           monthly: null,
         },
         {
           hourly: null,
-          id: null,
+          id: 'br-gru',
           monthly: null,
         },
       ],
