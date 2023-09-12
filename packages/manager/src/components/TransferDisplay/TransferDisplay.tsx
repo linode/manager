@@ -63,15 +63,14 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
             <Typography data-testid="transfer-pool-pct-display">
               {formatPoolUsagePct(generalPoolUsagePct)} Global Transfer Pool
             </Typography>
-            {generalPoolUsage?.quota !== 0 && // Don't display region transfer pools if the general pool is empty (e.g. account has no resources).
-              regionTransferPools?.map((pool, key) => (
-                <Typography
-                  data-testid="transfer-pool-pct-display"
-                  key={`transfer-pool-region-${key}`}
-                >
-                  {`${formatPoolUsagePct(pool.pct)} ${pool.regionName}`}
-                </Typography>
-              ))}
+            {regionTransferPools?.map((pool, key) => (
+              <Typography
+                data-testid="transfer-pool-pct-display"
+                key={`transfer-pool-region-${key}`}
+              >
+                {`${formatPoolUsagePct(pool.pct)} ${pool.regionName}`}
+              </Typography>
+            ))}
           </>
         )}
       </StyledTransferDisplayContainer>

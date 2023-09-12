@@ -13,18 +13,18 @@ import { NetworkTransfer } from './NetworkTransfer';
 import { TransferHistory } from './TransferHistory';
 
 interface Props {
-  linodeID: number;
+  linodeId: number;
 }
 
 export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
   // @todo maybe move this query closer to the consuming component
-  const { data: linode } = useLinodeQuery(props.linodeID);
+  const { data: linode } = useLinodeQuery(props.linodeId);
   const theme = useTheme();
 
   const { data: grants } = useGrants();
 
   const readOnly =
-    getPermissionsForLinode(grants, props.linodeID) === 'read_only';
+    getPermissionsForLinode(grants, props.linodeId) === 'read_only';
 
   if (!linode) {
     return null;
@@ -37,9 +37,9 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
         <Grid container spacing={4} sx={{ flexGrow: 1 }}>
           <Grid md={2.5} sm={6} xs={12}>
             <NetworkTransfer
-              linodeID={linode.id}
+              linodeId={linode.id}
               linodeLabel={linode.label}
-              linodeRegionID={linode.region}
+              linodeRegionId={linode.region}
               linodeType={linode.type}
             />
           </Grid>

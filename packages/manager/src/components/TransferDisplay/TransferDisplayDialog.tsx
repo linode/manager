@@ -72,7 +72,7 @@ export const TransferDisplayDialog = React.memo(
         {/**
          *  Region-specific Transfer Pool Display
          */}
-        {quota > 0 && regionTransferPools.length > 0 && (
+        {regionTransferPools.length > 0 && (
           <>
             <Typography
               data-testid="region-transfer-pool-display"

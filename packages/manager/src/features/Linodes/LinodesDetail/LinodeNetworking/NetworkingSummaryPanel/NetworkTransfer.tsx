@@ -19,21 +19,21 @@ import { TransferContent } from './TransferContent';
 import type { Region } from '@linode/api-v4';
 
 interface Props {
-  linodeID: number;
+  linodeId: number;
   linodeLabel: string;
-  linodeRegionID: Region['id'];
+  linodeRegionId: Region['id'];
   linodeType: null | string;
 }
 
 export const NetworkTransfer = React.memo((props: Props) => {
-  const { linodeID, linodeLabel, linodeRegionID, linodeType } = props;
+  const { linodeId, linodeLabel, linodeRegionId, linodeType } = props;
   const theme = useTheme();
   const { dcSpecificPricing } = useFlags();
 
   const linodeTransfer = useAPIRequest(
-    () => getLinodeTransfer(linodeID),
+    () => getLinodeTransfer(linodeId),
     { billable: 0, quota: 0, region_transfers: [], used: 0 },
-    [linodeID]
+    [linodeId]
   );
   const regions = useRegionsQuery();
   const { data: type } = useTypeQuery(linodeType || '', Boolean(linodeType));
@@ -44,12 +44,12 @@ export const NetworkTransfer = React.memo((props: Props) => {
   } = useAccountTransfer();
 
   const currentRegion = regions.data?.find(
-    (region) => region.id === linodeRegionID
+    (region) => region.id === linodeRegionId
   );
   const dynamicDClinodeTransferData = getDynamicDCNetworkTransferData({
     dcSpecificPricingFlag: dcSpecificPricing || false,
     networkTransferData: linodeTransfer.data,
-    regionId: linodeRegionID,
+    regionId: linodeRegionId,
   });
   const linodeUsedInGB = readableBytes(dynamicDClinodeTransferData.used, {
     unit: 'GB',
@@ -57,13 +57,13 @@ export const NetworkTransfer = React.memo((props: Props) => {
   const dynamicDCPoolData = getDynamicDCNetworkTransferData({
     dcSpecificPricingFlag: dcSpecificPricing || false,
     networkTransferData: accountTransfer,
-    regionId: linodeRegionID,
+    regionId: linodeRegionId,
   });
   const totalUsedInGB = dynamicDCPoolData.used;
   const accountQuotaInGB = dynamicDCPoolData.quota;
   const error = Boolean(linodeTransfer.error || accountTransferError);
   const loading = linodeTransfer.loading || accountTransferLoading;
-  const isDynamicPricingDC = isLinodeInDynamicPricingDC(linodeRegionID, type);
+  const isDynamicPricingDC = isLinodeInDynamicPricingDC(linodeRegionId, type);
 
   return (
     <div>

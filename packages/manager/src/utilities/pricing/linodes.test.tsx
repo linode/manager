@@ -158,7 +158,7 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
       expect(isLinodeInDynamicPricingDC('us-east', type)).toBe(false);
     });
 
-    it('returns false if the linode if the linode region is falsy or the linode type is undefined', () => {
+    it('returns false if the linode region is falsy or the linode type is undefined', () => {
       expect(isLinodeInDynamicPricingDC('', type)).toBe(false);
       expect(isLinodeInDynamicPricingDC('us-east', undefined)).toBe(false);
     });

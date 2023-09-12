@@ -63,9 +63,9 @@ describe('renders the component with the right data', () => {
   it('renders the component with the right data', () => {
     const { getByRole, getByText } = renderWithTheme(
       <NetworkTransfer
-        linodeID={1234}
+        linodeId={1234}
         linodeLabel="test-linode"
-        linodeRegionID="us-east"
+        linodeRegionId="us-east"
         linodeType="g6-standard-1"
       />,
       {
@@ -84,9 +84,9 @@ describe('renders the component with the right data', () => {
   it('renders the DC specific pricing copy for linodes in eligible regions and flag is on', () => {
     const { getByRole, getByText } = renderWithTheme(
       <NetworkTransfer
-        linodeID={1234}
+        linodeId={1234}
         linodeLabel="test-linode"
-        linodeRegionID="br-gru"
+        linodeRegionId="br-gru"
         linodeType="g6-standard-1"
       />,
       {
