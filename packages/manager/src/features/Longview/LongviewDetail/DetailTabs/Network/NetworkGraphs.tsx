@@ -1,4 +1,4 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -29,19 +29,10 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithTheme;
+export const NetworkGraphs = (props: Props) => {
+  const { end, error, isToday, loading, networkData, start, timezone } = props;
 
-export const NetworkGraphs: React.FC<CombinedProps> = (props) => {
-  const {
-    end,
-    error,
-    isToday,
-    loading,
-    networkData,
-    start,
-    theme,
-    timezone,
-  } = props;
+  const theme = useTheme();
 
   const _convertData = React.useCallback(convertData, [
     networkData,
@@ -131,5 +122,3 @@ export const sortInterfaces = (a: InterfaceItem, b: InterfaceItem) => {
   }
   return 0;
 };
-
-export default withTheme(NetworkGraphs);
