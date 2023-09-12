@@ -6,10 +6,13 @@ export interface ActionHandlers {
   triggerRemoveDevice: (deviceID: number, label: string) => void;
 }
 
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
+
 export interface FirewallDeviceActionMenuProps extends ActionHandlers {
   deviceEntityID: string;
   deviceID: number;
   deviceLabel: string;
+  deviceType: FirewallDeviceEntityType;
   disabled: boolean;
 }
 

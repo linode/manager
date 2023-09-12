@@ -1,5 +1,3 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -7,26 +5,21 @@ import { Paper } from 'src/components/Paper';
 
 import Instructions from '../../shared/InstallationInstructions';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(3),
-  },
-}));
-
 interface Props {
   clientAPIKey: string;
   clientInstallationKey: string;
 }
 
-type CombinedProps = Props;
-
-const Installation: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+const Installation = (props: Props) => {
   return (
     <>
       <DocumentTitleSegment segment="Installation" />
-      <Paper className={classes.root} data-testid="longview-clients">
+      <Paper
+        data-testid="longview-clients"
+        sx={(theme) => ({
+          padding: theme.spacing(3),
+        })}
+      >
         <Instructions
           APIKey={props.clientAPIKey}
           data-qa-instructions

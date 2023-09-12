@@ -11,7 +11,7 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 import { AddLinodeDrawer } from './AddLinodeDrawer';
 import { AddNodebalancerDrawer } from './AddNodebalancerDrawer';
-import { FirewallDevicesTable } from './FirewallDevicesTable';
+import { FirewallDeviceTable } from './FirewallDeviceTable';
 import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 
 import type { FirewallDevice, FirewallDeviceEntityType } from '@linode/api-v4';
@@ -130,11 +130,12 @@ export const FirewallDeviceLanding = React.memo(
             </Grid>
           </Grid>
         </Grid>
-        <FirewallDevicesTable
+        <FirewallDeviceTable
           triggerRemoveDevice={(id) => {
             setSelectedDeviceId(id);
             setIsRemoveDeviceDialogOpen(true);
           }}
+          deviceType={type}
           devices={filteredDevices ?? []}
           disabled={disabled}
           error={error ?? undefined}
