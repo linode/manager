@@ -9,14 +9,27 @@ import {
   FirewallDeviceActionMenuProps,
 } from './FirewallDeviceActionMenu';
 
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
+
+interface ExtendedFirewallDeviceActionMenuProps
+  extends FirewallDeviceActionMenuProps {
+  deviceType: FirewallDeviceEntityType;
+}
+
 export const FirewallDeviceRow = React.memo(
-  (props: FirewallDeviceActionMenuProps) => {
-    const { deviceEntityID, deviceLabel } = props;
+  (props: ExtendedFirewallDeviceActionMenuProps) => {
+    const { deviceEntityID, deviceID, deviceLabel, deviceType } = props;
 
     return (
-      <TableRow ariaLabel={`Device ${deviceLabel}`}>
+      <TableRow
+        ariaLabel={`Device ${deviceLabel}`}
+        data-testid={`firewall-device-row-${deviceID}`}
+      >
         <TableCell>
-          <Link tabIndex={0} to={`/linodes/${deviceEntityID}/networking`}>
+          <Link
+            tabIndex={0}
+            to={`/${deviceType}s/${deviceEntityID}/networking`}
+          >
             {deviceLabel}
           </Link>
         </TableCell>
