@@ -5,7 +5,7 @@ import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import type { Config, Linode } from '@linode/api-v4';
+import type { Config, Linode, LinodeConfigCreationData } from '@linode/api-v4';
 
 const linodeRequest = createLinodeRequestFactory.build({
   label: randomLabel(),
@@ -34,16 +34,17 @@ export const createAndBootLinode = async (): Promise<Linode> => {
  * Creates a Linode and returns the first config for that Linode.
  */
 export const createLinodeAndGetConfig = async ({
-  linodeRequestOverride = {},
+  linodeConfigRequestOverride = {},
   waitForLinodeToBeRunning = false,
 }: {
-  linodeRequestOverride?: Partial<Config>;
+  linodeConfigRequestOverride?: Partial<Linode & LinodeConfigCreationData>;
   waitForLinodeToBeRunning?: boolean;
 }): Promise<[Linode, Config]> => {
   const linode = await createLinode({
     ...linodeRequest,
-    ...linodeRequestOverride,
+    ...linodeConfigRequestOverride,
   });
+
   const { data: configs } = await getLinodeConfigs(linode.id);
 
   // we may want the linode to be booted to interact with the config
@@ -58,7 +59,7 @@ export const createLinodeAndGetConfig = async ({
     ));
 
   // Throw if Linode has no config.
-  if (!configs[0]) {
+  if (!configs[0] || !linode.id) {
     throw new Error('Created Linode does not have any config');
   }
 

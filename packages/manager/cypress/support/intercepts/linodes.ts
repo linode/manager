@@ -71,6 +71,19 @@ export const interceptGetLinodeConfigs = (
 };
 
 /**
+ * Intercepts Clone Linode.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCloneLinode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`linode/instances/${linodeId}/clone`));
+};
+
+/**
  * Intercepts GET request to retrieve Linode details and mocks response.
  *
  * @param linodeId - ID of Linode for intercepted request.

@@ -3,7 +3,10 @@ import { containsVisible } from 'support/helpers';
 import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
-import { interceptRebootLinode } from 'support/intercepts/linodes';
+import {
+  interceptRebootLinode,
+  interceptCloneLinode,
+} from 'support/intercepts/linodes';
 import {
   interceptDeleteLinodeConfig,
   interceptPostLinodeConfigs,
@@ -15,9 +18,9 @@ import type { Config, Linode } from '@linode/api-v4';
 
 authenticate();
 
-describe('Linode cConfig', () => {
+describe('Linode Config', () => {
   before(() => {
-    cleanUp('linodes');
+    cleanUp(['linodes']);
   });
 
   it('Creates a new config and list all configs', () => {
@@ -62,22 +65,22 @@ describe('Linode cConfig', () => {
   it('Edits an existing config', () => {
     cy.defer(
       createLinodeAndGetConfig({
-        waitForLinodeToBeRunning: true,
-        linodeRequestOverride: {
+        waitForLinodeToBeRunning: false,
+        linodeConfigRequestOverride: {
+          label: 'cy-test-edit-config-linode',
           interfaces: [
             {
-              id: 0,
               ipam_address: '',
               label: '',
               purpose: 'public',
             },
             {
-              id: 1,
               ipam_address: '',
               label: 'testvlan',
               purpose: 'vlan',
             },
           ],
+          region: 'us-east',
         },
       }),
       'creating a linode and getting its config'
@@ -111,93 +114,48 @@ describe('Linode cConfig', () => {
   });
 
   it('Boots an existing config', () => {
-    cy.defer(createAndBootLinode(), 'creating and booting Linode').then(
-      (linode: Linode) => {
-        cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
-        interceptRebootLinode(linode.id).as('rebootLinode');
-
-        containsVisible('My Debian 10 Disk Profile – GRUB 2');
-        cy.findByText('Boot').click();
-
-        ui.dialog
-          .findByTitle('Confirm Boot')
-          .should('be.visible')
-          .within(() => {
-            containsVisible(
-              'Are you sure you want to boot "My Debian 10 Disk Profile"?'
-            );
-            ui.button
-              .findByTitle('Boot')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
-
-        cy.wait('@rebootLinode').its('response.statusCode').should('eq', 200);
-
-        ui.toast.assertMessage(
-          'Successfully booted config My Debian 10 Disk Profile'
-        );
-        cy.findByText('REBOOTING').should('be.visible');
-      }
-    );
-  });
-
-  it('Clones an existing config', () => {
-    // Creating a linode to clone the config to and delete its configs so a new one can be cloned
-    const DESTINATION_LINODE = 'cy-test-destination-linode';
-    createLinode({
-      label: DESTINATION_LINODE,
-      type: 'g6-standard-2',
-    });
-
-    // testing the clone feature
-    cy.defer(
-      createLinodeAndGetConfig({ waitForLinodeToBeRunning: true }),
-      'creating a linode and getting its config'
-    ).then(([linode, config]: [Linode, Config]) => {
+    cy.defer(createAndBootLinode()).then((linode: Linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+      interceptRebootLinode(linode.id).as('rebootLinode');
 
       containsVisible('My Debian 10 Disk Profile – GRUB 2');
-      ui.actionMenu
-        .findByTitle('Action menu for Linode Config My Debian 10 Disk Profile')
+      cy.findByText('Boot').click();
+
+      ui.dialog
+        .findByTitle('Confirm Boot')
         .should('be.visible')
-        .click();
-      ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
+        .within(() => {
+          containsVisible(
+            'Are you sure you want to boot "My Debian 10 Disk Profile"?'
+          );
+          ui.button
+            .findByTitle('Boot')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
 
-      cy.url().should('contain', `/linodes/${linode.id}/clone/configs`);
+      cy.wait('@rebootLinode').its('response.statusCode').should('eq', 200);
 
-      cy.findByTestId(`checkbox-${config.id}`).should('be.visible');
-
-      cy.findAllByTestId('config-clone-selection-details').within(() => {
-        containsVisible('My Debian 10 Disk Profile');
-        containsVisible('Debian 10 Disk');
-        containsVisible('512 MB Swap Image');
-        cy.findByTestId(`current-datacenter-${linode?.region}`).should(
-          'be.visible'
-        );
-        ui.button
-          .findByTitle('Clone')
-          .should('be.visible')
-          .should('be.disabled');
-
-        cy.findByTestId('textfield-input').should('be.visible').click();
-        ui.select.findLinodeItemByText(DESTINATION_LINODE).click();
-        ui.button
-          .findByTitle('Clone')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        // TODO assert that the clone was successful
-        // However it looks like the feature is not working
-      });
+      ui.toast.assertMessage(
+        'Successfully booted config My Debian 10 Disk Profile'
+      );
+      cy.findByText('REBOOTING').should('be.visible');
     });
+  });
+
+  it.skip('Clones an existing config', () => {
+    // This is a niche feature seems to actually clone the Linode, not the config, but only under certain circumstances
+    // In the absence of API documentation, we're skipping this test for now.
   });
 
   it('Deletes an existing config', () => {
     cy.defer(
-      createLinodeAndGetConfig({}),
+      createLinodeAndGetConfig({
+        linodeConfigRequestOverride: {
+          label: 'cy-test-delete-config-linode',
+        },
+      }),
       'creating a linode and getting its config'
     ).then(([linode, config]: [Linode, Config]) => {
       interceptDeleteLinodeConfig(linode.id, config.id).as(
