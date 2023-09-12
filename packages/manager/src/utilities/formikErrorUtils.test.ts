@@ -56,7 +56,7 @@ const subnetMultipleErrorsPerField = [
   },
 ];
 
-const generalSubnetErrors = [
+const subnetErrors = [
   {
     reason: 'Label required',
     field: 'subnets[1].label',
@@ -82,7 +82,7 @@ const generalSubnetErrors = [
 describe('handleVpcAndConvertSubnetErrors', () => {
   it('converts API errors for subnets into a map of subnet index to SubnetErrors', () => {
     const errors = handleVPCAndSubnetErrors(
-      generalSubnetErrors,
+      subnetErrors,
       setFieldError,
       setError
     );
