@@ -13,6 +13,7 @@ export const FirewallDeviceRow = React.memo(
   (props: FirewallDeviceActionMenuProps) => {
     const { deviceEntityID, deviceID, deviceLabel, deviceType } = props;
 
+    // test
     return (
       <TableRow
         ariaLabel={`Device ${deviceLabel}`}
