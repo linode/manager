@@ -126,7 +126,7 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
     ).toBe(true);
   });
 
-  it('returns false if there is no price difference even if we transfer between two overwitten regions', () => {
+  it('returns false if there is no price difference even if we transfer between two overwritten regions', () => {
     const type = linodeTypeFactory.build({
       price: {
         hourly: 0.1,

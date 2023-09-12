@@ -86,10 +86,7 @@ export const accountTransferNoResourceFactory = Factory.Sync.makeFactory<Regiona
   {
     billable: 0,
     quota: 0,
-    region_transfers: [
-      { billable: 0, id: 'id-cgk', quota: 0, used: 0 },
-      { billable: 0, id: 'br-gru', quota: 0, used: 0 },
-    ],
+    region_transfers: [],
     used: 0,
   }
 );
