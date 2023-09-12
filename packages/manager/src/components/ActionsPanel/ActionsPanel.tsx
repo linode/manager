@@ -24,8 +24,8 @@ export interface ActionPanelProps extends BoxProps {
 }
 
 /**
- * An `<ActionsPanel />` is a UI component that provides a primary and secondary action.
- * It can also be used to render a single action within modals or drawers for consistency.
+ * `ActionPanel` is a container for primary and secondary actions (ex: "Cancel" & "Save")
+ * It can also be used to render a single action within modals or drawers for styling and layout consistency.
  */
 export const ActionsPanel = (props: ActionPanelProps) => {
   const {

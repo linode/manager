@@ -110,6 +110,7 @@ export const FirewallDeviceLanding = React.memo(
                 onSearch={(val) => {
                   filter(val);
                 }}
+                debounceTime={250}
                 expand={true}
                 hideLabel
                 label=""
