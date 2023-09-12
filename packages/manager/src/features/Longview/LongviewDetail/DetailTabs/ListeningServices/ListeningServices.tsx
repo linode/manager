@@ -27,11 +27,7 @@ export const ListeningServices = (props: TableProps) => {
   const { services, servicesError, servicesLoading } = props;
 
   return (
-    <Grid
-      sx={{ boxSizing: 'border-box', margin: '0', padding: '0' }}
-      md={8}
-      xs={12}
-    >
+    <Grid md={8} xs={12}>
       <Typography
         sx={(theme) => ({
           [theme.breakpoints.down('lg')]: {

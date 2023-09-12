@@ -111,7 +111,7 @@ export const LongviewDetailOverview = (props: Props) => {
         <StyledItemGrid
           container
           justifyContent="space-between"
-          spacing={0}
+          sx={{ paddingLeft: 0, paddingRight: 0 }}
           xs={12}
         >
           <ListeningServices
