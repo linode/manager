@@ -196,7 +196,6 @@ export const CreateServiceTargetDrawer = (props: Props) => {
               name={`endpoints[${idx}].host`}
               onChange={formik.handleChange}
               optional
-              type="number"
               value={endpoint.host}
             />
             <TextField

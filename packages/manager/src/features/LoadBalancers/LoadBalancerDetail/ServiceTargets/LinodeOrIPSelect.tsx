@@ -63,7 +63,7 @@ export const LinodeOrIPSelect = (props: Props) => {
     }
   };
 
-  const customIP = linodeFactory.build({
+  const customIpPlaceholder = linodeFactory.build({
     ipv4: [inputValue],
     label: `Use IP ${inputValue}`,
   });
@@ -71,7 +71,7 @@ export const LinodeOrIPSelect = (props: Props) => {
   const options = [...linodes];
 
   if (linodes.length === 0 && !isLoading) {
-    options.push(customIP);
+    options.push(customIpPlaceholder);
   }
 
   return (
@@ -90,7 +90,9 @@ export const LinodeOrIPSelect = (props: Props) => {
           <li {...props}>
             <Stack flexGrow={1}>
               <Box>
-                <b>{option === customIP ? 'Custom IP' : option.label}</b>
+                <b>
+                  {option === customIpPlaceholder ? 'Custom IP' : option.label}
+                </b>
               </Box>
               <Box>{option.ipv4[0]}</Box>
             </Stack>
@@ -99,6 +101,7 @@ export const LinodeOrIPSelect = (props: Props) => {
         );
       }}
       errorText={error?.[0].reason ?? errorText}
+      // Disable MUI's filtering because we use API filtering
       filterOptions={(x) => x}
       fullWidth
       inputValue={selectedLinode ? selectedLinode.label : inputValue}
@@ -107,7 +110,7 @@ export const LinodeOrIPSelect = (props: Props) => {
       onChange={(e, value) => onChange(value?.ipv4[0] ?? '')}
       options={options}
       placeholder="Select Linode or IP Address"
-      value={linodes.length === 0 ? customIP : selectedLinode}
+      value={linodes.length === 0 ? customIpPlaceholder : selectedLinode}
     />
   );
 };
