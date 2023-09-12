@@ -1,9 +1,8 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { Paper } from 'src/components/Paper';
 import {
   formatNetworkTooltip,
   getMaxUnitAndFormatNetwork,
@@ -11,7 +10,12 @@ import {
 
 import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import ProcessGraphs, { useStyles } from '../ProcessGraphs';
+import {
+  StyledRootPaper,
+  StyledItemGrid,
+  StyledSmallGraphGrid,
+} from '../CommonStyles.styles';
+import { ProcessGraphs } from '../ProcessGraphs';
 
 interface Props {
   data?: MySQLResponse;
@@ -26,9 +30,7 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithTheme;
-
-export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
+export const MySQLGraphs = (props: Props) => {
   const {
     data,
     end,
@@ -39,11 +41,10 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
     processesError,
     processesLoading,
     start,
-    theme,
     timezone,
   } = props;
 
-  const classes = useStyles();
+  const theme = useTheme();
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
@@ -64,9 +65,9 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
   );
 
   return (
-    <Paper className={classes.root}>
+    <StyledRootPaper>
       <Grid container direction="column" spacing={0}>
-        <Grid item xs={12}>
+        <StyledItemGrid xs={12}>
           <LongviewLineGraph
             data={[
               {
@@ -103,10 +104,10 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
             timezone={timezone}
             title="Queries"
           />
-        </Grid>
-        <Grid item xs={12}>
+        </StyledItemGrid>
+        <StyledItemGrid xs={12}>
           <Grid container direction="row">
-            <Grid className={classes.smallGraph} item sm={6} xs={12}>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -134,8 +135,8 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 title="Throughput"
                 unit={'/s'}
               />
-            </Grid>
-            <Grid className={classes.smallGraph} item sm={6} xs={12}>
+            </StyledSmallGraphGrid>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -155,12 +156,12 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 title="Connections"
                 unit={' connections/s'}
               />
-            </Grid>
+            </StyledSmallGraphGrid>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
+        </StyledItemGrid>
+        <StyledItemGrid xs={12}>
           <Grid container direction="row">
-            <Grid className={classes.smallGraph} item sm={6} xs={12}>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -178,8 +179,8 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 timezone={timezone}
                 title="Slow Queries"
               />
-            </Grid>
-            <Grid className={classes.smallGraph} item sm={6} xs={12}>
+            </StyledSmallGraphGrid>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -213,9 +214,9 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 timezone={timezone}
                 title="Aborted"
               />
-            </Grid>
+            </StyledSmallGraphGrid>
           </Grid>
-        </Grid>
+        </StyledItemGrid>
         <ProcessGraphs
           data={processesData}
           end={end}
@@ -226,7 +227,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
           timezone={timezone}
         />
       </Grid>
-    </Paper>
+    </StyledRootPaper>
   );
 };
 
@@ -236,5 +237,3 @@ const formatAborted = (value: null | number) => {
   }
   return Math.ceil(value);
 };
-
-export default withTheme(MySQLGraphs);
