@@ -60,7 +60,7 @@ describe('SubnetNode', () => {
     expect(ipAddress).toBeInTheDocument();
   });
 
-  it('should show a removeable button if isRemovable is true and subnet idx exists and is > 0', () => {
+  it('should show a removable button if isRemovable is true and subnet idx exists and is > 0', () => {
     renderWithTheme(
       <SubnetNode
         disabled={false}
@@ -71,11 +71,11 @@ describe('SubnetNode', () => {
       />
     );
 
-    const removeableButton = screen.getByTestId('delete-subnet-1');
-    expect(removeableButton).toBeInTheDocument();
+    const removableButton = screen.getByTestId('delete-subnet-1');
+    expect(removableButton).toBeInTheDocument();
   });
 
-  it('should not show a removeable button for a subnet with idx 0', () => {
+  it('should not show a removable button for a subnet with idx 0', () => {
     renderWithTheme(
       <SubnetNode
         disabled={false}
@@ -86,7 +86,7 @@ describe('SubnetNode', () => {
       />
     );
 
-    const removeableButton = screen.queryByTestId('delete-subnet-0');
-    expect(removeableButton).not.toBeInTheDocument();
+    const removableButton = screen.queryByTestId('delete-subnet-0');
+    expect(removableButton).not.toBeInTheDocument();
   });
 });
