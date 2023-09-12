@@ -56,7 +56,7 @@ const subnetMultipleErrorsPerField = [
   },
 ];
 
-const subnetsWithWithoutErrors = [
+const generalSubnetErrors = [
   {
     reason: 'Label required',
     field: 'subnets[1].label',
@@ -82,13 +82,12 @@ const subnetsWithWithoutErrors = [
 describe('handleVpcAndConvertSubnetErrors', () => {
   it('converts API errors for subnets into a map of subnet index to SubnetErrors', () => {
     const errors = handleVPCAndSubnetErrors(
-      subnetsWithWithoutErrors,
+      generalSubnetErrors,
       setFieldError,
       setError
     );
-    expect(Object.keys(errors)).toHaveLength(4);
-    expect(Object.keys(errors)).toEqual(['0', '1', '2', '4']);
-    expect(errors[0]).toEqual({});
+    expect(Object.keys(errors)).toHaveLength(3);
+    expect(Object.keys(errors)).toEqual(['1', '2', '4']);
     expect(errors[1]).toEqual({ label: 'Label required' });
     expect(errors[2]).toEqual({ label: 'bad label', ipv4: 'cidr ipv4' });
     expect(errors[4]).toEqual({ ipv4: 'needs an ip', ipv6: 'needs an ipv6' });

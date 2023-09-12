@@ -81,14 +81,9 @@ export interface SubnetError {
  *                    { reason: 'not a subnet error so will not appear in return obj', field: 'label'},
  *                    { reason: 'error3', field: 'subnets[4].ipv4' }]
  * returns: {
- *            0: {},
  *            1: { label: 'error1', ipv4: 'error2' },
  *            4: { ipv4: 'error3'}
  *          }
- *
- * ** Note: if the errors passed in contain subnet specific errors (ex: a field with value subnets[some-idx].some_subnet_field),
- * and there is no subnet[0] with an error, this function will insert an empty object for index 0 in the
- * return object. This does not cause any issues
  *
  * @param errors the errors from the API
  * @param setFieldError function to set non subnet related field errors
@@ -100,36 +95,28 @@ export const handleVPCAndSubnetErrors = (
   setError?: (message: string) => void
 ) => {
   const subnetErrors = {};
-  let subnetErrorBuilder: SubnetError = {};
-  let curSubnetIndex = 0;
-  let idx;
+  const nonSubnetErrors: APIError[] = [];
 
-  for (let i = 0; i < errors.length; i++) {
-    const error: APIError = errors[i];
+  errors.forEach((error) => {
     if (error.field && error.field.includes('subnets[')) {
       const [subnetIdx, field] = error.field.split('.');
-      idx = parseInt(
+      const idx = parseInt(
         subnetIdx.substring(subnetIdx.indexOf('[') + 1, subnetIdx.indexOf(']')),
         10
       );
-      // now that we're on a new idx, we store the previous
-      // SubnetError, and start building a new one
-      if (idx !== curSubnetIndex) {
-        subnetErrors[curSubnetIndex] = subnetErrorBuilder;
-        curSubnetIndex = idx;
-        subnetErrorBuilder = {};
+
+      // if there already exists some previous error for the subnet at index idx, we
+      // just add the current error. Otherwise, we create a new entry for the subnet.
+      if (subnetErrors[idx]) {
+        subnetErrors[idx] = { ...subnetErrors[idx], [field]: error.reason };
+      } else {
+        subnetErrors[idx] = { [field]: error.reason };
       }
-      subnetErrorBuilder[field] = error.reason;
     } else {
-      handleAPIErrors([error], setFieldError, setError);
+      nonSubnetErrors.push(error);
     }
-  }
+  });
 
-  // check to ensure that if a SubnetError was built but
-  // wasn't added in the for loop above, it will still be included
-  if (idx !== undefined && !subnetErrors[idx]) {
-    subnetErrors[idx] = subnetErrorBuilder;
-  }
-
+  handleAPIErrors(nonSubnetErrors, setFieldError, setError);
   return subnetErrors;
 };
