@@ -77,6 +77,7 @@ export const SubnetCreateDrawer = (props: Props) => {
     if (open) {
       resetForm();
       reset();
+      setErrorMap({});
     }
   }, [open]);
 
