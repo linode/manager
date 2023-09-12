@@ -133,7 +133,10 @@ export const InvoiceTable = (props: Props) => {
               ))}
               {count > MIN_PAGE_SIZE && (
                 <TableRow>
-                  <TableCell colSpan={columns}>
+                  <TableCell
+                    colSpan={columns}
+                    sx={{ paddingLeft: '0px !important' }}
+                  >
                     <PaginationFooter
                       count={count}
                       eventCategory="invoice_items"
