@@ -21,7 +21,7 @@ const props = {
 describe('SubnetActionMenu', () => {
   it('should render the subnet action menu', () => {
     const screen = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet`);
+    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
     fireEvent.click(actionMenu);
     screen.getByText('Assign Linode');
     screen.getByText('Unassign Linode');
@@ -31,7 +31,7 @@ describe('SubnetActionMenu', () => {
 
   it('should not allow the delete button to be clicked', () => {
     const screen = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet`);
+    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
     fireEvent.click(actionMenu);
 
     const deleteButton = screen.getByText('Delete');
@@ -47,7 +47,7 @@ describe('SubnetActionMenu', () => {
     const screen = renderWithTheme(
       <SubnetActionMenu {...props} numLinodes={0} />
     );
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet`);
+    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
     fireEvent.click(actionMenu);
 
     const deleteButton = screen.getByText('Delete');

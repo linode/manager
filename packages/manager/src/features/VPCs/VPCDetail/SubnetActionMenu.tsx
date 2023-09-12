@@ -55,7 +55,10 @@ export const SubnetActionMenu = (props: Props) => {
   ];
 
   return (
-    <ActionMenu actionsList={actions} ariaLabel={`Action menu for Subnet`} />
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Subnet ${subnet.label}`}
+    />
   );
 };
 
