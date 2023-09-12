@@ -502,14 +502,17 @@ export const Body = React.memo((props: BodyProps) => {
                 <Box component="span" sx={sxLabel}>
                   Label:
                 </Box>{' '}
-                <Link to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}>
+                <Link
+                  data-testid="assigned-vpc-label"
+                  to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
+                >
                   {vpcLinodeIsAssignedTo.label}
                 </Link>
               </StyledListItem>
             </StyledVPCGrid>
             <StyledVPCGrid>
               <StyledListItem>
-                <Box component="span" sx={sxLabel}>
+                <Box component="span" data-testid="subnets-string" sx={sxLabel}>
                   Subnets:
                 </Box>{' '}
                 {getSubnetsString(vpcLinodeIsAssignedTo.subnets)}
@@ -517,7 +520,7 @@ export const Body = React.memo((props: BodyProps) => {
             </StyledVPCGrid>
             <StyledVPCGrid>
               <StyledListItem sx={{ ...sxLastListItem }}>
-                <Box component="span" sx={sxLabel}>
+                <Box component="span" data-testid="vpc-ipv4" sx={sxLabel}>
                   VPC IPv4:
                 </Box>{' '}
                 {_configInterfaceWithVPC?.ipv4?.vpc}

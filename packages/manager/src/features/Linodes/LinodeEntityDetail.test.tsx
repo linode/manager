@@ -1,4 +1,5 @@
 import { AccountCapability } from '@linode/api-v4';
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import {
@@ -27,20 +28,23 @@ describe('Linode Entity Detail', () => {
     id: 5,
   });
 
-  const subnet = subnetFactory.build({
-    id: 2,
-    linodes: [5],
-  });
-
-  const vpc = vpcFactory.build({
-    subnets: [subnet],
-  });
-
   const handlers = {} as LinodeHandlers;
 
-  it.skip('should not display a VPC section if the feature flag is off and the account capabilities do not include VPC', async () => {
+  const vpcSectionTestId = 'vpc-section-title';
+  const assignedVPCLabelTestId = 'assigned-vpc-label';
+
+  it('should not display a VPC section if the feature flag is off and the account capabilities do not include VPC', async () => {
     const account = accountFactory.build({
-      capabilities: accountCapabilities,
+      capabilities: accountCapabilitiesWithoutVPC,
+    });
+
+    const subnet = subnetFactory.build({
+      id: 2,
+      linodes: [5],
+    });
+
+    const vpc = vpcFactory.build({
+      subnets: [subnet],
     });
 
     server.use(
@@ -65,16 +69,14 @@ describe('Linode Entity Detail', () => {
       }
     );
 
-    expect(queryByTestId('vpc-section-title')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByTestId(vpcSectionTestId)).not.toBeInTheDocument();
+    });
   });
 
-  it.skip('should not display the VPC section if the linode is not assigned to a VPC', async () => {
+  it('should not display the VPC section if the linode is not assigned to a VPC', async () => {
     const account = accountFactory.build({
-      capabilities: [...accountCapabilities, 'VPCs'],
-    });
-
-    const linode = linodeFactory.build({
-      id: 10,
+      capabilities: [...accountCapabilitiesWithoutVPC, 'VPCs'],
     });
 
     const subnet = subnetFactory.build({
@@ -96,43 +98,34 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       <LinodeEntityDetail
         handlers={handlers}
-        id={10}
+        id={5}
         linode={linode}
         openTagDrawer={jest.fn()}
-      />,
-      {
-        flags: { vpc: true },
-      }
+      />
     );
 
-    expect(getByTestId('vpc-section')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByTestId(vpcSectionTestId)).not.toBeInTheDocument();
+    });
   });
 
-  it.skip('should display the VPC section if the linode is assigned to a VPC', async () => {
-    const account = accountFactory.build({
-      capabilities: [...accountCapabilities, 'VPCs'],
-    });
-
-    const linode = linodeFactory.build({
-      id: 10,
-    });
-
+  it('should display the VPC section if the linode is assigned to a VPC', async () => {
     const subnet = subnetFactory.build({
       id: 4,
+      label: '1st-subnet',
       linodes: [linode.id],
     });
 
     const _vpcs = vpcFactory.buildList(3);
-    const vpcs = [..._vpcs, vpcFactory.build({ subnets: [subnet] })];
+    const vpcs = [
+      ..._vpcs,
+      vpcFactory.build({ label: 'test-vpc', subnets: [subnet] }),
+    ];
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
-      }),
-
       rest.get('*/vpcs', (req, res, ctx) => {
         return res(ctx.json(makeResourcePage(vpcs)));
       })
@@ -151,7 +144,10 @@ describe('Linode Entity Detail', () => {
       }
     );
 
-    expect(getByTestId('vpc-section-title')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByTestId(vpcSectionTestId)).toBeInTheDocument();
+      expect(getByTestId(assignedVPCLabelTestId).innerHTML).toEqual('test-vpc');
+    });
   });
 });
 
@@ -187,7 +183,7 @@ describe('getSubnetsString function', () => {
   });
 });
 
-const accountCapabilities: AccountCapability[] = [
+const accountCapabilitiesWithoutVPC: AccountCapability[] = [
   'Linodes',
   'NodeBalancers',
   'Block Storage',
