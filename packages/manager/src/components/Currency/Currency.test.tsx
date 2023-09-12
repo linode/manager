@@ -45,6 +45,11 @@ describe('Currency Component', () => {
     getByText('-$5.000');
   });
 
+  it('handles custom default values', () => {
+    const { getByText } = renderWithTheme(<Currency quantity={'unknown'} />);
+    getByText('unknown');
+  });
+
   it('groups by comma', () => {
     const { getByText, rerender } = renderWithTheme(
       <Currency quantity={1000} />
