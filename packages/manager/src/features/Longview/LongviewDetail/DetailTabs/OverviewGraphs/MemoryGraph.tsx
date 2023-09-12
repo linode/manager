@@ -1,4 +1,4 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -14,9 +14,7 @@ import { generateUsedMemory, getMaxUnit } from '../../../shared/utilities';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
 
-export type CombinedProps = GraphProps & WithTheme;
-
-export const MemoryGraph: React.FC<CombinedProps> = (props) => {
+export const MemoryGraph = (props: GraphProps) => {
   const {
     clientAPIKey,
     end,
@@ -24,9 +22,10 @@ export const MemoryGraph: React.FC<CombinedProps> = (props) => {
     lastUpdated,
     lastUpdatedError,
     start,
-    theme,
     timezone,
   } = props;
+
+  const theme = useTheme();
 
   const { data, error, loading, request } = useGraphs(
     ['memory'],
@@ -127,5 +126,3 @@ export const getUsedMemory = (used: Stat[], cache: Stat[], buffers: Stat[]) => {
   }
   return result;
 };
-
-export default withTheme(MemoryGraph);

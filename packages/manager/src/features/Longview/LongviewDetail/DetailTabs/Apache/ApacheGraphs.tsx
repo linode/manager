@@ -1,10 +1,8 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { compose } from 'recompose';
 
-import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { Paper } from 'src/components/Paper';
 import {
   convertNetworkToUnit,
   formatNetworkTooltip,
@@ -15,7 +13,12 @@ import roundTo from 'src/utilities/roundTo';
 
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import ProcessGraphs, { useStyles } from '../ProcessGraphs';
+import {
+  StyledItemGrid,
+  StyledRootPaper,
+  StyledSmallGraphGrid,
+} from '../CommonStyles.styles';
+import { ProcessGraphs } from '../ProcessGraphs';
 
 interface Props {
   data?: ApacheResponse;
@@ -30,9 +33,7 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithTheme;
-
-export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
+export const ApacheGraphs = React.memo((props: Props) => {
   const {
     data,
     end,
@@ -43,11 +44,10 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
     processesError,
     processesLoading,
     start,
-    theme,
     timezone,
   } = props;
 
-  const classes = useStyles();
+  const theme = useTheme();
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
@@ -89,9 +89,9 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Paper className={classes.root}>
+    <StyledRootPaper>
       <Grid container direction="column" spacing={0}>
-        <Grid item xs={12}>
+        <StyledItemGrid xs={12}>
           <LongviewLineGraph
             data={[
               {
@@ -106,10 +106,10 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
             title="Requests"
             {...graphProps}
           />
-        </Grid>
-        <Grid item xs={12}>
+        </StyledItemGrid>
+        <StyledItemGrid xs={12}>
           <Grid container direction="row">
-            <Grid className={classes.smallGraph} item sm={6} xs={12}>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -134,8 +134,8 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
                 unit={'/s'}
                 {...graphProps}
               />
-            </Grid>
-            <Grid className={classes.smallGraph} item sm={6} xs={12}>
+            </StyledSmallGraphGrid>
+            <StyledSmallGraphGrid sm={6} xs={12}>
               <LongviewLineGraph
                 data={[
                   {
@@ -203,9 +203,9 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
                 title="Workers"
                 {...graphProps}
               />
-            </Grid>
+            </StyledSmallGraphGrid>
           </Grid>
-        </Grid>
+        </StyledItemGrid>
         <ProcessGraphs
           data={processesData}
           end={end}
@@ -216,9 +216,9 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
           timezone={timezone}
         />
       </Grid>
-    </Paper>
+    </StyledRootPaper>
   );
-};
+});
 
 export const kilobytesToBytes = (value: null | number) => {
   if (value === null) {
@@ -226,9 +226,3 @@ export const kilobytesToBytes = (value: null | number) => {
   }
   return value * 1024;
 };
-
-const enhanced = compose<CombinedProps, Props>(
-  withTheme,
-  React.memo
-)(ApacheGraphs);
-export default enhanced;

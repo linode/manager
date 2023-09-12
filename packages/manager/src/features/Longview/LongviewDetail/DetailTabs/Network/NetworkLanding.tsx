@@ -1,31 +1,18 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Grid } from 'src/components/Grid';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import {
   LongviewNetworkInterface,
   WithStartAndEnd,
 } from '../../../request.types';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import { StyledItemGrid, StyledTimeRangeSelect } from '../CommonStyles.styles';
+import { StyledBox } from '../Disks/Disks.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import NetworkGraphs from './NetworkGraphs';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    [theme.breakpoints.down('lg')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-  select: {
-    width: 250,
-  },
-}));
+import { NetworkGraphs } from './NetworkGraphs';
 
 interface Props {
   clientAPIKey: string;
@@ -34,9 +21,7 @@ interface Props {
   timezone: string;
 }
 
-export const NetworkLanding: React.FC<Props> = (props) => {
-  const classes = useStyles();
-
+export const NetworkLanding = (props: Props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
@@ -66,25 +51,23 @@ export const NetworkLanding: React.FC<Props> = (props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'Network'} />
-      <Grid item xs={12}>
-        <Box
+      <StyledItemGrid xs={12}>
+        <StyledBox
           alignItems="center"
-          className={classes.root}
           display="flex"
           flexDirection="row"
           justifyContent="flex-end"
         >
-          <TimeRangeSelect
-            className={classes.select}
+          <StyledTimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
             small
           />
-        </Box>
-      </Grid>
-      <Grid className="py0" item xs={12}>
+        </StyledBox>
+      </StyledItemGrid>
+      <StyledItemGrid className="py0" xs={12}>
         <NetworkGraphs
           end={time.end}
           error={lastUpdatedError?.[0]?.reason || error}
@@ -94,9 +77,7 @@ export const NetworkLanding: React.FC<Props> = (props) => {
           start={time.start}
           timezone={timezone}
         />
-      </Grid>
+      </StyledItemGrid>
     </Grid>
   );
 };
-
-export default NetworkLanding;

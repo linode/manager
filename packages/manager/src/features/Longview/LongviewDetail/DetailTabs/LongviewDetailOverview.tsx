@@ -1,9 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Grid } from 'src/components/Grid';
 import { Paper } from 'src/components/Paper';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import {
@@ -12,12 +12,13 @@ import {
 } from 'src/features/Longview/request.types';
 
 import LongviewPackageDrawer from '../../LongviewPackageDrawer';
-import ActiveConnections from './ActiveConnections';
-import GaugesSection from './GaugesSection';
-import IconSection from './IconSection';
-import ListeningServices from './ListeningServices';
-import OverviewGraphs from './OverviewGraphs';
-import TopProcesses from './TopProcesses';
+import { ActiveConnections } from './ActiveConnections/ActiveConnections';
+import { StyledItemGrid } from './CommonStyles.styles';
+import { GaugesSection } from './GaugesSection';
+import { IconSection } from './IconSection';
+import { ListeningServices } from './ListeningServices/ListeningServices';
+import { OverviewGraphs } from './OverviewGraphs/OverviewGraphs';
+import { TopProcesses } from './TopProcesses';
 
 interface Props {
   client: string;
@@ -35,9 +36,7 @@ interface Props {
   topProcessesLoading: boolean;
 }
 
-export type CombinedProps = Props;
-
-export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
+export const LongviewDetailOverview = (props: Props) => {
   const {
     client,
     clientAPIKey,
@@ -75,12 +74,11 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
     <React.Fragment>
       <DocumentTitleSegment segment="Overview" />
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <StyledItemGrid xs={12}>
           <Paper>
-            <Grid
+            <StyledItemGrid
               alignItems="flex-start"
               container
-              item
               justifyContent="space-between"
               spacing={0}
               xs={12}
@@ -101,16 +99,21 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
                 topProcessesError={topProcessesError}
                 topProcessesLoading={topProcessesLoading}
               />
-            </Grid>
+            </StyledItemGrid>
           </Paper>
-        </Grid>
+        </StyledItemGrid>
         <OverviewGraphs
           clientAPIKey={clientAPIKey}
           lastUpdated={lastUpdated}
           lastUpdatedError={!!lastUpdatedError}
           timezone={timezone}
         />
-        <Grid container item justifyContent="space-between" spacing={0}>
+        <StyledItemGrid
+          container
+          justifyContent="space-between"
+          sx={{ paddingLeft: 0, paddingRight: 0 }}
+          xs={12}
+        >
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
             servicesError={portsError}
@@ -121,7 +124,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
             connectionsError={portsError}
             connectionsLoading={listeningPortsLoading && !lastUpdated}
           />
-        </Grid>
+        </StyledItemGrid>
       </Grid>
       <LongviewPackageDrawer
         clientID={clientID}
