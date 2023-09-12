@@ -48,7 +48,7 @@ export const transferDisplayDialogProps = (
 
 describe('TransferDisplayDialog', () => {
   it('renders the transfer display dialog with accessible doc links', async () => {
-    const { findByText, getAllByRole } = renderWithTheme(
+    const { findByText, getByRole } = renderWithTheme(
       <TransferDisplayDialog
         {...transferDisplayDialogProps(mockTransferData)}
       />
@@ -56,12 +56,10 @@ describe('TransferDisplayDialog', () => {
     const transferButton = await findByText(TRANSFER_DISPLAY_BUTTON);
     fireEvent.click(transferButton);
 
-    const docsLinks = getAllByRole('link');
+    const docsLink = getByRole('link');
 
-    expect(docsLinks.length).toBe(2);
-    docsLinks.forEach((link) => {
-      expect(link).toHaveAttribute('href', NETWORK_TRANSFER_QUOTA_DOCS_LINKS);
-    });
+    expect(docsLink).toBeInTheDocument();
+    expect(docsLink).toHaveAttribute('href', NETWORK_TRANSFER_QUOTA_DOCS_LINKS);
   });
 
   it('renders transfer display dialog without usage or quota data if no quota/resources', async () => {

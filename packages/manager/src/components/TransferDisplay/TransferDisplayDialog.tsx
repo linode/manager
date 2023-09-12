@@ -4,9 +4,9 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
-import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
+import { DocsLink } from '../DocsLink/DocsLink';
 import { TransferDisplayUsage } from './TransferDisplayUsage';
 import { NETWORK_TRANSFER_QUOTA_DOCS_LINKS } from './constants';
 import { getDaysRemaining } from './utils';
@@ -87,8 +87,7 @@ export const TransferDisplayDialog = React.memo(
             >
               In some regions, the monthly network transfer is calculated and
               tracked independently. These regions are listed below. Transfer
-              overages will be billed separately.{' '}
-              <Link to={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}>Learn more</Link>.
+              overages will be billed separately.
             </Typography>
 
             {regionTransferPools.map((pool, key) => (
@@ -127,10 +126,13 @@ export const TransferDisplayDialog = React.memo(
           transfer associated with active Linode services on your account and is
           prorated based on service creation.
         </Typography>
-        <Typography>
-          {transferQuotaDocsText}{' '}
-          <Link to={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}>Learn more</Link>.{' '}
-        </Typography>
+        <Typography>{transferQuotaDocsText}</Typography>
+        <Box marginTop={theme.spacing(2)}>
+          <DocsLink
+            href={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}
+            label="Network Transfer Usage and Costs"
+          />
+        </Box>
       </Dialog>
     );
   }
