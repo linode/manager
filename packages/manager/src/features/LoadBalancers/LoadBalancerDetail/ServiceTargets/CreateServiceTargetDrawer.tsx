@@ -191,6 +191,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
               errorText={
                 error?.find((e) => e.field === `endpoints[${idx}].host`)?.reason
               }
+              inputId={`host-${idx}`}
               label="Host"
               labelTooltipText="TODO"
               name={`endpoints[${idx}].host`}
@@ -211,6 +212,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                   (e) => e.field === `endpoints[${idx}].rate_capacity`
                 )?.reason
               }
+              inputId={`capacity-${idx}`}
               label="Capacity"
               labelTooltipText="TODO"
               name={`endpoints[${idx}].capacity`}
