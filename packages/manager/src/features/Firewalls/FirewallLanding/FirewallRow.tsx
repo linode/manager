@@ -173,6 +173,7 @@ export const DeviceTableCell = (props: DeviceTableCellProps) => {
 
     const handleResize = () => {
       // console.log('');
+      // console.log('bounds.width: ', bounds.width);
       // console.log('bounds.height: ', bounds.height);
       // console.log('visibleCount: ', visibleCount);
       const currentNumberOfRows = Math.floor(bounds.height / rowHeight);
@@ -182,21 +183,17 @@ export const DeviceTableCell = (props: DeviceTableCellProps) => {
         setVisibleCount((prevCount) => {
           return Math.max(prevCount - 1, 0);
         });
-        // Schedule the next frame ONLY if the condition is met
         frameId = window.requestAnimationFrame(handleResize);
       } else if (currentNumberOfRows < maxRows && visibleCount < data.length) {
         setVisibleCount((prevCount) => {
           return Math.min(prevCount + 1, data.length);
         });
-        // Schedule the next frame ONLY if the condition is met
         frameId = window.requestAnimationFrame(handleResize);
       }
     };
 
-    // Trigger the initial animation frame
     frameId = window.requestAnimationFrame(handleResize);
 
-    // Optional: cleanup to cancel the animation frame if needed
     return () => window.cancelAnimationFrame(frameId);
   }, [
     bounds.height,
