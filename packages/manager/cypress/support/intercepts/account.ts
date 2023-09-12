@@ -12,6 +12,7 @@ import type {
   AccountSettings,
   EntityTransfer,
   Invoice,
+  Payment,
   PaymentMethod,
 } from '@linode/api-v4/types';
 
@@ -242,7 +243,7 @@ export const mockSetDefaultPaymentMethod = (
 /**
  * Intercepts GET request to fetch account invoices and mocks response.
  *
- * @param invoices - Invoice data with which to respond.
+ * @param invoices - Invoice data with which to mock response.
  *
  * @returns Cypress chainable.
  */
@@ -253,5 +254,22 @@ export const mockGetInvoices = (
     'GET',
     apiMatcher('account/invoices*'),
     paginateResponse(invoices)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch account payments and mocks response.
+ *
+ * @param payments - Payment data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetPayments = (
+  payments: Payment[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/payments*'),
+    paginateResponse(payments)
   );
 };
