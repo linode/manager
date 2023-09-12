@@ -3,6 +3,7 @@ import Close from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
@@ -31,6 +32,7 @@ interface Props {
   clearAll: () => void;
   currentLinodeId: number;
   errorMap: Record<string, string | undefined>;
+  handleCancel: () => void;
   handleClone: () => void;
   handleSelectLinode: (linodeId: number) => void;
   handleToggleConfig: (id: number) => void;
@@ -48,6 +50,7 @@ export const Details = (props: Props) => {
     clearAll,
     currentLinodeId,
     errorMap,
+    handleCancel,
     handleClone,
     handleSelectLinode,
     handleToggleConfig,
@@ -235,16 +238,18 @@ export const Details = (props: Props) => {
           </Link>
         </StyledTypography>
       )}
-
-      <Button
-        buttonType="primary"
-        disabled={isCloneButtonDisabled}
-        loading={isSubmitting}
-        onClick={handleClone}
-        sx={{ marginTop: theme.spacing(3) }}
-      >
-        Clone
-      </Button>
+      <ActionsPanel
+        primaryButtonProps={{
+          disabled: isCloneButtonDisabled,
+          label: 'Clone',
+          loading: isSubmitting,
+          onClick: handleClone,
+        }}
+        secondaryButtonProps={{
+          label: 'Cancel',
+          onClick: handleCancel,
+        }}
+      />
     </Paper>
   );
 };
