@@ -97,10 +97,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const pricePerNode =
-    (flags.dcSpecificPricing && planType
-      ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly
-      : planType?.price.monthly) || 0;
+  const pricePerNode = flags.dcSpecificPricing
+    ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly
+    : planType?.price.monthly ?? 'unknown';
 
   const totalMonthlyPrice =
     planType &&
@@ -149,7 +148,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         <div className={classes.section}>
           <Typography className={classes.summary}>
             Resized pool: $
-            {pricePerNode !== 'unknown'
+            {pricePerNode && pricePerNode !== 'unknown'
               ? updatedCount * pricePerNode
               : 'unknown'}
             /month ({pluralize('node', 'nodes', updatedCount)} at $

@@ -41,7 +41,9 @@ export const EnableBackupsDialog = (props: Props) => {
     Boolean(linode?.type)
   );
 
-  const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+  const backupsMonthlyPrice:
+    | PriceObject['monthly']
+    | undefined = getMonthlyBackupsPrice({
     flags,
     region: linode?.region,
     type,
@@ -91,7 +93,7 @@ export const EnableBackupsDialog = (props: Props) => {
     >
       <Typography>
         Are you sure you want to enable backups on this Linode?{` `}
-        This will add <Currency quantity={backupsMonthlyPrice ?? 0} />
+        This will add <Currency quantity={backupsMonthlyPrice ?? 'unknown'} />
         {` `}
         to your monthly bill.
       </Typography>

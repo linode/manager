@@ -85,13 +85,14 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  // TODO: M3-7063 (defaults)
-  const price: PriceObject =
+  const price: PriceObject | undefined =
     dcSpecificPricing && selectedRegionId
       ? getLinodeRegionPrice(type, selectedRegionId)
-      : type.price;
+      : type?.price ?? undefined;
 
-  type.subHeadings[0] = `$${price.monthly}/mo ($${price.hourly}/hr)`;
+  type.subHeadings[0] = `$${price?.monthly ?? 'unknown'}/mo ($${
+    price?.hourly ?? 'unknown'
+  }/hr)`;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -154,9 +155,9 @@ export const PlanSelection = (props: Props) => {
           <TableCell data-qa-monthly> ${price?.monthly}</TableCell>
           <TableCell data-qa-hourly>
             {isGPU ? (
-              <Currency quantity={price.hourly ?? 0} />
+              <Currency quantity={price?.hourly ?? 'unknown'} />
             ) : (
-              `$${price?.hourly}`
+              `$${price?.hourly ?? 'unknown'}`
             )}
           </TableCell>
           <TableCell center data-qa-ram noWrap>

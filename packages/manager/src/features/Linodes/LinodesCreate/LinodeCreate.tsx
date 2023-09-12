@@ -313,7 +313,9 @@ export class LinodeCreate extends React.PureComponent<
       (type) => type.id === this.props.selectedTypeID
     );
 
-    const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+    const backupsMonthlyPrice:
+      | PriceObject['monthly']
+      | undefined = getMonthlyBackupsPrice({
       flags: this.props.flags,
       region: selectedRegionID,
       type,

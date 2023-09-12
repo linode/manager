@@ -20,7 +20,9 @@ export const BackupLinodeRow = (props: Props) => {
   const { data: regions } = useRegionsQuery();
   const flags = useFlags();
 
-  const backupsMonthlyPrice: PriceObject['monthly'] = getMonthlyBackupsPrice({
+  const backupsMonthlyPrice:
+    | PriceObject['monthly']
+    | undefined = getMonthlyBackupsPrice({
     flags,
     region: linode.region,
     type,
@@ -52,7 +54,7 @@ export const BackupLinodeRow = (props: Props) => {
         <TableCell parentColumn="Region">{regionLabel ?? 'Unknown'}</TableCell>
       )}
       <TableCell parentColumn="Price">
-        {backupsMonthlyPrice !== 'unknown'
+        {backupsMonthlyPrice
           ? `$${backupsMonthlyPrice?.toFixed(2)}/mo`
           : '$Unknown/mo'}
       </TableCell>

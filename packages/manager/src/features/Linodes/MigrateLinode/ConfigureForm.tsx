@@ -69,15 +69,15 @@ export const ConfigureForm = React.memo((props: Props) => {
       })
   );
 
-  const currentRegionPrice =
-    currentLinodeType && getLinodeRegionPrice(currentLinodeType, currentRegion);
+  const currentRegionPrice: PriceObject | undefined = getLinodeRegionPrice(
+    currentLinodeType,
+    currentRegion
+  );
 
-  // TODO: M3-7063 (defaults)
-  const selectedRegionPrice: PriceObject | undefined =
-    (currentLinodeType &&
-      selectedRegion &&
-      getLinodeRegionPrice(currentLinodeType, selectedRegion)) ||
-    currentRegionPrice;
+  const selectedRegionPrice: PriceObject | undefined = getLinodeRegionPrice(
+    currentLinodeType,
+    selectedRegion
+  );
 
   const panelPrice = React.useCallback(
     (
@@ -92,8 +92,8 @@ export const ConfigureForm = React.memo((props: Props) => {
 
       return {
         backups: backupPriceDisplay(region),
-        hourly: regionPrice?.hourly,
-        monthly: regionPrice?.monthly,
+        hourly: regionPrice?.hourly ?? 'unknown',
+        monthly: regionPrice?.monthly ?? 'unknown',
         panelType,
       };
     },

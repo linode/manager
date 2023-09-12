@@ -11,14 +11,11 @@ import type { ExtendedType } from 'src/utilities/extendType';
  */
 export const getLinodeRegionPrice = (
   type?: ExtendedType | LinodeType | PlanSelectionType,
-  regionId?: string
-): PriceObject => {
+  regionId?: null | string
+): PriceObject | undefined => {
   // TODO: M3-7063 (defaults)
   if (!type || !regionId) {
-    return {
-      hourly: 'unknown',
-      monthly: 'unknown',
-    };
+    return undefined;
   }
 
   const regionSpecificPrice = type.region_prices?.find(
@@ -61,7 +58,7 @@ export const isLinodeTypeDifferentPriceInSelectedRegion = ({
   const currentRegionPrice = getLinodeRegionPrice(type, regionA);
   const selectedRegionPrice = getLinodeRegionPrice(type, regionB);
 
-  if (currentRegionPrice.monthly !== selectedRegionPrice.monthly) {
+  if (currentRegionPrice?.monthly !== selectedRegionPrice?.monthly) {
     return true;
   }
 

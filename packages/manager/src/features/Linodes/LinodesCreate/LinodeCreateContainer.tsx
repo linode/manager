@@ -497,16 +497,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
     const { dcSpecificPricing, selectedRegionID } = this.state;
 
-    const linodePrice: PriceObject =
-      dcSpecificPricing && selectedRegionID
-        ? getLinodeRegionPrice(type, selectedRegionID)
-        : type?.price ?? { hourly: 'unknown', monthly: 'unknown' };
-    // TODO: M3-7063 (defaults)
+    const linodePrice: PriceObject | undefined = dcSpecificPricing
+      ? getLinodeRegionPrice(type, selectedRegionID)
+      : type?.price ?? undefined;
 
     return {
       details: `$${linodePrice?.monthly}/month`,
-      hourly: linodePrice?.hourly,
-      monthly: linodePrice?.monthly,
+      hourly: linodePrice?.hourly ?? 'unknown',
+      monthly: linodePrice?.monthly ?? 'unknown',
       title: type?.formattedLabel,
     };
   };

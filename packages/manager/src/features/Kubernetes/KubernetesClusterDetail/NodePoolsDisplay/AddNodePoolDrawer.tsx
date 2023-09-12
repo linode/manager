@@ -110,15 +110,14 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode =
-    flags.dcSpecificPricing && selectedType
-      ? getLinodeRegionPrice(selectedType, clusterRegionId).monthly
-      : selectedType?.price?.monthly;
+  const pricePerNode = flags.dcSpecificPricing
+    ? getLinodeRegionPrice(selectedType, clusterRegionId)?.monthly
+    : selectedType?.price?.monthly ?? 'unknown';
 
   const totalPrice =
     selectedTypeInfo && pricePerNode && pricePerNode !== 'unknown'
       ? selectedTypeInfo.count * pricePerNode
-      : 0;
+      : 'unknown';
 
   React.useEffect(() => {
     if (open) {

@@ -46,14 +46,13 @@ export const KubernetesPlanSelection = (
 
   const count = getTypeCount(type.id);
 
-  const price: PriceObject =
-    flags.dcSpecificPricing && selectedRegionID
-      ? getLinodeRegionPrice(type, selectedRegionID)
-      : type.price;
+  const price: PriceObject | undefined = flags.dcSpecificPricing
+    ? getLinodeRegionPrice(type, selectedRegionID)
+    : type?.price ?? undefined;
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
   const subHeadings = [
-    `$${price.monthly}/mo ($${price.hourly}/hr)`,
+    `$${price?.monthly ?? 'unknown'}/mo ($${price?.hourly ?? 'unknown'}/hr)`,
     type.subHeadings[1],
   ];
 
@@ -88,8 +87,8 @@ export const KubernetesPlanSelection = (
           key={type.id}
         >
           <TableCell data-qa-plan-name>{type.heading}</TableCell>
-          <TableCell data-qa-monthly> ${price.monthly}</TableCell>
-          <TableCell data-qa-hourly>${price.hourly}</TableCell>
+          <TableCell data-qa-monthly> ${price?.monthly ?? 'unknown'}</TableCell>
+          <TableCell data-qa-hourly>${price?.hourly ?? 'unknown'}</TableCell>
           <TableCell center data-qa-ram>
             {convertMegabytesTo(type.memory, true)}
           </TableCell>
