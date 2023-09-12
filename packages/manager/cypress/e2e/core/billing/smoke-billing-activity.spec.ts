@@ -1,111 +1,334 @@
-import { DateTime, IANAZone } from 'luxon';
-import { Invoice, Profile } from '@linode/api-v4/types';
-import { getProfile } from '@linode/api-v4/lib/profile';
-import { profileFactory } from 'src/factories/profile';
-import { invoiceFactory } from 'src/factories/billing';
+import { DateTime } from 'luxon';
+import { getProfile } from '@linode/api-v4';
+import type { Invoice, Profile, Payment } from '@linode/api-v4';
+import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { authenticate } from 'support/api/authentication';
-import { mockGetInvoices } from 'support/intercepts/account';
-import { mockGetProfile } from 'support/intercepts/profile';
-import { randomString } from 'support/util/random';
-
-// Time zones against which
-const timeZonesList = ['America/New_York', 'GMT', 'Asia/Hong_Kong'];
-
-// Array of mock invoice objects to use for tests.
-const invoiceMocks: Invoice[] = [
-  invoiceFactory.build({
-    id: 12346,
-    date: '2020-01-03T00:01:01',
-    label: `Invoice ${randomString(6)}`,
-    subtotal: 90.25,
-    tax: 9.25,
-    total: 99.5,
-  }),
-  invoiceFactory.build({
-    id: 12345,
-    date: '2020-01-01T00:01:01',
-    label: `Invoice ${randomString(6)}`,
-    subtotal: 120.25,
-    tax: 12.25,
-    total: 132.5,
-  }),
-];
+import {
+  mockGetInvoices,
+  mockGetPayments,
+  mockGetPaymentMethods,
+} from 'support/intercepts/account';
+import { formatDate } from '@src/utilities/formatDate';
+import { randomNumber } from 'support/util/random';
+import { ui } from 'support/ui';
+import { profileFactory } from '@src/factories';
+import { mockGetProfile, mockUpdateProfile } from 'support/intercepts/profile';
 
 /**
- * Localizes an API date string for the given time zone.
+ * Uses the user menu to navigate to the Profile Display page.
  *
- * @param apiDate - API date string to localize.
- * @param timeZone - Time zone string for desired localization.
- *
- * @returns Localized date string.
+ * Assumes the user menu is not already open.
  */
-const localizeDate = (apiDate: string, timeZone: string): string => {
-  expect(IANAZone.isValidZone(timeZone)).to.be.true;
-  return DateTime.fromISO(apiDate, { zone: 'utc' })
-    .setZone(timeZone)
-    .toFormat('yyyy-LL-dd');
+const navigateToProfileDisplay = () => {
+  ui.userMenuButton.find().click();
+
+  ui.userMenu
+    .find()
+    .should('be.visible')
+    .within(() => {
+      cy.findByText('Display').should('be.visible').click();
+    });
+
+  cy.url().should('endWith', '/profile/display');
 };
 
 /**
- * Creates a mocked profile using cached data from a real request with a custom time zone.
+ * Uses the user menu to navigate to the Billing & Contact Information page.
  *
- * @param timeZone - Time zone to include in mocked profile.
- *
- * @returns Profile mock.
+ * Assumes the user menu is not already open.
  */
-const createProfileMock = (timeZone: string): Profile => {
-  return profileFactory.build({
-    ...cachedGetProfile,
-    timezone: timeZone,
+const navigateToBilling = () => {
+  ui.userMenuButton.find().click();
+
+  ui.userMenu
+    .find()
+    .should('be.visible')
+    .within(() => {
+      cy.findByText('Billing & Contact Information')
+        .should('be.visible')
+        .click();
+    });
+
+  cy.url().should('endWith', '/account/billing');
+};
+
+/**
+ * Confirms that an invoice is listed in the billing activity section.
+ *
+ * Confirms that the invoice label, date, total, and PDF download button are
+ * displayed as expected.
+ *
+ * Assumes that the user has already navigated to the Billing & Contact Info
+ * page.
+ *
+ * @param invoice - Invoice that should be displayed.
+ * @param timezone - Current user's timezone.
+ */
+const assertInvoiceInfo = (invoice: Invoice, timezone: string) => {
+  const invoiceDate = formatDate(invoice.date, {
+    timezone,
+    displayTime: true,
   });
+  cy.findByText(invoice.label)
+    .should('be.visible')
+    .closest('tr')
+    .within(() => {
+      cy.findByText(invoiceDate).should('be.visible');
+      cy.findByText(`$${invoice.total}.00`).should('be.visible');
+      ui.button
+        .findByTitle('Download PDF')
+        .should('be.visible')
+        .should('be.enabled');
+    });
 };
 
 /**
- * Assert that the given invoice is shown with expected information.
+ * Confirms that a payment is listed in the billing activity section.
  *
- * @param invoice - Invoice to check.
- * @param timeZone - Time zone for invoice dates.
+ * Confirms that the payment label, date, total, and PDF download button are
+ * displayed as expected.
+ *
+ * Assumes that the user has already navigated to the Billing & Contact Info
+ * page.
+ *
+ * @param payment - Payment that should be displayed.
+ * @param timezone - Current user's timezone.
  */
-const checkInvoice = (invoice: Invoice, timeZone: string) => {
-  mockGetInvoices(invoiceMocks).as('getInvoices');
-  mockGetProfile(createProfileMock(timeZone)).as('getProfile');
-  cy.visitWithLogin('/account/billing');
-  // need to select show all time, to not have invoices hidden due to date
-  // findbylabel fails due to react-select being a non acc essible component, will change soon
-  // cy.findByLabelText('Transaction Dates').select('All Times')
-  cy.wait('@getProfile');
-  cy.wait('@getInvoices');
-  cy.findByText('Billing & Payment History').should('be.visible');
-  cy.contains('6 Months').click().type('All time{enter}');
-  cy.log(invoice.date, timeZone);
-  cy.contains(localizeDate(invoice.date, timeZone)).should('be.visible');
-  cy.findByText(invoice.label).should('be.visible');
-  cy.findByText(`$${invoice.total.toFixed(2)}`).should('be.visible');
+const assertPaymentInfo = (payment: Payment, timezone: string) => {
+  const paymentDate = formatDate(payment.date, {
+    timezone,
+    displayTime: true,
+  });
+  cy.findByText(`Payment #${payment.id}`)
+    .should('be.visible')
+    .closest('tr')
+    .within(() => {
+      cy.findByText(paymentDate).should('be.visible');
+      cy.findByText(`$${payment.usd}.00`).should('be.visible');
+      ui.button
+        .findByTitle('Download PDF')
+        .should('be.visible')
+        .should('be.enabled');
+    });
 };
 
 authenticate();
-let cachedGetProfile = {};
-
-// Fetch and cache real profile object.
-beforeEach(() => {
-  cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
-    cachedGetProfile = profile;
-  });
-});
-
 describe('Billling Activity Feed', () => {
-  describe('Lists Invoices', () => {
-    invoiceMocks.forEach((invoice) => {
-      return it(`ID ${invoice.id}`, () => {
-        checkInvoice(invoice, timeZonesList[0]);
+  /*
+   * - Uses mocked API data to confirm that invoices and payments are listed on billing page.
+   * - Confirms that invoice and payment labels, dates, and totals are displayed as expected.
+   * - Confirms that Billing Activity section updates to reflect changes to time period selection.
+   * - Confirms that Billing Activity section updates to reflect changes to transaction type selection.
+   * - Confirms that clicking on an invoice's label directs the user to the invoice details page.
+   */
+  it('lists invoices and payments', () => {
+    const invoiceMocks = new Array(10).fill(null).map(
+      (_item: null, i: number): Invoice => {
+        const id = randomNumber(1, 999999);
+        const date = DateTime.now().minus({ days: 2, months: i }).toISO();
+        const subtotal = randomNumber(25, 949);
+        const tax = randomNumber(5, 50);
+
+        return invoiceFactory.build({
+          id,
+          label: `Invoice #${id}`,
+          date,
+          subtotal,
+          tax,
+          total: subtotal + tax,
+        });
+      }
+    );
+
+    const paymentMocks = invoiceMocks.map(
+      (invoice: Invoice, i: number): Payment => {
+        const id = randomNumber(1, 999999);
+        const date = DateTime.now().minus({ months: i }).toISO();
+
+        return paymentFactory.build({
+          id,
+          date,
+          usd: invoice.total,
+        });
+      }
+    );
+
+    const invoiceMocks6Months = invoiceMocks.slice(0, 5);
+    const paymentMocks6Months = paymentMocks.slice(0, 5);
+
+    mockGetInvoices(invoiceMocks6Months).as('getInvoices');
+    mockGetPayments(paymentMocks6Months).as('getPayments');
+    mockGetPaymentMethods([]);
+
+    cy.defer(getProfile()).then((profile: Profile) => {
+      const timezone = profile.timezone;
+      cy.visitWithLogin('/account/billing');
+      cy.wait(['@getInvoices', '@getPayments']);
+      cy.findByText('Billing & Payment History')
+        .scrollIntoView()
+        .should('be.visible');
+
+      cy.contains('[data-qa-enhanced-select]', 'All Transaction Types').should(
+        'be.visible'
+      );
+      cy.contains('[data-qa-enhanced-select]', '6 Months').should('be.visible');
+
+      // Confirm that payments and invoices from the past 6 months are displayed,
+      // and that payments and invoices beyond 6 months are not displayed.
+      invoiceMocks6Months.forEach((invoice) =>
+        assertInvoiceInfo(invoice, timezone)
+      );
+      paymentMocks6Months.forEach((payment) =>
+        assertPaymentInfo(payment, timezone)
+      );
+
+      invoiceMocks
+        .filter((invoice: Invoice) => !invoiceMocks6Months.includes(invoice))
+        .forEach((invoice) => {
+          cy.findByText(invoice.label).should('not.exist');
+        });
+
+      paymentMocks
+        .filter((payment: Payment) => !paymentMocks6Months.includes(payment))
+        .forEach((payment) => {
+          cy.findByText(`Payment #${payment.id}`).should('not.exist');
+        });
+
+      // Change drop-down value from "6 Months" to "All Time", and mock subsequent
+      // invoice and payment requests to include older transactions.
+      mockGetInvoices(invoiceMocks).as('getInvoices');
+      mockGetPayments(paymentMocks).as('getPayments');
+
+      cy.contains('[data-qa-enhanced-select]', '6 Months')
+        .should('be.visible')
+        .click();
+
+      ui.select.findItemByText('All Time').should('be.visible').click();
+
+      cy.wait(['@getInvoices', '@getPayments']);
+
+      // Confirm that all invoices and payments are displayed.
+      invoiceMocks.forEach((invoice) => {
+        cy.findByText(invoice.label).should('be.visible');
       });
+
+      paymentMocks.forEach((payment) => {
+        cy.findByText(`Payment #${payment.id}`).should('be.visible');
+      });
+
+      // Change transaction type drop-down to "Payments" only.
+      cy.contains('[data-qa-enhanced-select]', 'All Transaction Types')
+        .should('be.visible')
+        .click();
+
+      ui.select.findItemByText('Payments').should('be.visible').click();
+
+      // Confirm that all payments are shown and that all invoices are hidden.
+      paymentMocks.forEach((payment) =>
+        cy.findByText(`Payment #${payment.id}`).should('be.visible')
+      );
+      invoiceMocks.forEach((invoice) =>
+        cy.findByText(invoice.label).should('not.exist')
+      );
+
+      // Change transaction type drop-down to "Invoices" only.
+      cy.contains('[data-qa-enhanced-select]', 'Payments')
+        .should('be.visible')
+        .click();
+
+      ui.select.findItemByText('Invoices').should('be.visible').click();
+
+      // Confirm that all invoices are shown and that all payments are hidden.
+      invoiceMocks6Months.forEach((invoice) => {
+        cy.findByText(invoice.label).should('be.visible');
+      });
+      paymentMocks.forEach((payment) => {
+        cy.findByText(`Payment #${payment.id}`).should('not.exist');
+      });
+
+      // Click on the first invoice and confirm that it redirects the user to
+      // the corresponding invoice details page.
+      cy.findByText(invoiceMocks[0].label).should('be.visible').click();
+
+      cy.url().should('endWith', `/billing/invoices/${invoiceMocks[0].id}`);
     });
   });
-  describe('Test different timezones', () => {
-    timeZonesList.forEach((timeZone) => {
-      return it(`Check Invoice date with timezone ${timeZone}`, () => {
-        checkInvoice(invoiceMocks[0], timeZone);
-      });
+
+  /*
+   * - Uses mocked API data to confirm that invoice and payment dates reflect user's chosen timezone.
+   */
+  it('displays correct timezone for invoice and payment dates', () => {
+    // Time zones against which to verify invoice and payment dates.
+    const timeZonesList = [
+      { key: 'America/New_York', human: 'Eastern Time - New York' },
+      { key: 'GMT', human: 'Coordinated Universal Time' },
+      { key: 'Asia/Honk_Kong', human: 'Hong Kong Standard Time' },
+    ];
+
+    const mockProfile = profileFactory.build();
+    const mockInvoice = invoiceFactory.build({
+      date: DateTime.now().minus({ days: 2 }).toISO(),
+    });
+    const mockPayment = paymentFactory.build({
+      date: DateTime.now().toISO(),
+    });
+
+    mockGetInvoices([mockInvoice]).as('getInvoices');
+    mockGetPayments([mockPayment]).as('getPayments');
+    mockGetProfile(mockProfile).as('getProfile');
+
+    // Navigate initially to Profile Display page where timezone can be selected.
+    cy.visitWithLogin('/profile/display');
+    cy.wait('@getProfile');
+
+    // Iterate through each timezone and confirm that payment and invoice dates
+    // reflect each timezone.
+    timeZonesList.forEach((timezone) => {
+      const timezoneId = timezone.key;
+      const humanReadable = timezone.human;
+
+      mockUpdateProfile({
+        ...mockProfile,
+        timezone: timezoneId,
+      }).as('updateProfile');
+
+      // Update the mock user's profile.
+      // This isn't strictly necessary, but is the most straightforward way to
+      // get Cloud to re-fetch the user's profile data with the new timezone
+      // applied.
+      cy.findByText('Timezone')
+        .should('be.visible')
+        .click()
+        .type(`${humanReadable}{enter}`);
+
+      ui.button
+        .findByTitle('Update Timezone')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@updateProfile');
+
+      // Navigate back to Billing & Contact Information page to confirm that
+      // invoice and payment data correctly reflects updated timezone.
+      navigateToBilling();
+
+      cy.findByText(mockInvoice.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          assertInvoiceInfo(mockInvoice, timezoneId);
+        });
+
+      cy.findByText(`Payment #${mockPayment.id}`)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          assertPaymentInfo(mockPayment, timezoneId);
+        });
+
+      // Navigate back to Profile Display page for next iteration.
+      navigateToProfileDisplay();
     });
   });
 });
