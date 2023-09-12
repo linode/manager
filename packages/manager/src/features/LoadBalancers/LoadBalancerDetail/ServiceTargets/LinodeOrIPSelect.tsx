@@ -31,6 +31,7 @@ export const LinodeOrIPSelect = (props: Props) => {
 
   const filter: Filter = {};
 
+  // If the user types in the Autocomplete, API filter for Linodes.
   if (inputValue) {
     filter['+or'] = [
       { label: { '+contains': inputValue } },
@@ -100,9 +101,7 @@ export const LinodeOrIPSelect = (props: Props) => {
           </li>
         );
       }}
-      errorText={error?.[0].reason ?? errorText}
-      // Disable MUI's filtering because we use API filtering
-      filterOptions={(x) => x}
+      errorText={error?.[0]?.reason ?? errorText}
       fullWidth
       inputValue={selectedLinode ? selectedLinode.label : inputValue}
       label="Linode or Public IP Address"
