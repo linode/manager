@@ -79,7 +79,6 @@ const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
   },
   display: 'flex',
   justifyContent: 'flex-end',
-  marginTop: spacing(2),
   paddingBottom: spacing(1),
   paddingTop: spacing(2),
 }));

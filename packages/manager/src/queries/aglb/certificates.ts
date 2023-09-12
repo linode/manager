@@ -1,5 +1,6 @@
 import {
   createLoadbalancerCertificate,
+  deleteLoadbalancerCertificate,
   getLoadbalancerCertificates,
 } from '@linode/api-v4';
 import {
@@ -26,22 +27,52 @@ export const useLoadBalancerCertificatesQuery = (
   filter: Filter
 ) => {
   return useQuery<ResourcePage<Certificate>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'certificates', params, filter],
+    [
+      QUERY_KEY,
+      'loadbalancer',
+      id,
+      'certificates',
+      'paginated',
+      params,
+      filter,
+    ],
     () => getLoadbalancerCertificates(id, params, filter),
     { keepPreviousData: true }
   );
 };
 
-export const useLoadBalancerCertificateCreateMutation = (id: number) => {
+export const useLoadBalancerCertificateCreateMutation = (
+  loadbalancerId: number
+) => {
   const queryClient = useQueryClient();
   return useMutation<Certificate, APIError[], CreateCertificatePayload>(
-    (data) => createLoadbalancerCertificate(id, data),
+    (data) => createLoadbalancerCertificate(loadbalancerId, data),
     {
       onSuccess() {
         queryClient.invalidateQueries([
           QUERY_KEY,
           'loadbalancer',
-          id,
+          loadbalancerId,
+          'certificates',
+        ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerCertificateDeleteMutation = (
+  loadbalancerId: number,
+  certificateId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(
+    () => deleteLoadbalancerCertificate(loadbalancerId, certificateId),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
           'certificates',
         ]);
       },
