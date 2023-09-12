@@ -171,28 +171,37 @@ export const DeviceTableCell = (props: DeviceTableCellProps) => {
   React.useEffect(() => {
     let frameId: number; // to store the requestAnimationFrame ID
 
-    const handleResize = () => {
+    const handleResize = (recentlySelected: boolean, timestamp: number) => {
       // console.log('');
       // console.log('bounds.width: ', bounds.width);
       // console.log('bounds.height: ', bounds.height);
       // console.log('visibleCount: ', visibleCount);
       const currentNumberOfRows = Math.floor(bounds.height / rowHeight);
       // console.log('currentNumberOfRows: ', currentNumberOfRows);
-
       if (currentNumberOfRows > maxRows) {
         setVisibleCount((prevCount) => {
           return Math.max(prevCount - 1, 0);
         });
-        frameId = window.requestAnimationFrame(handleResize);
-      } else if (currentNumberOfRows < maxRows && visibleCount < data.length) {
+        frameId = window.requestAnimationFrame((timestamp) =>
+          handleResize(true, timestamp)
+        );
+      } else if (
+        currentNumberOfRows <= maxRows &&
+        visibleCount < data.length &&
+        !recentlySelected
+      ) {
         setVisibleCount((prevCount) => {
           return Math.min(prevCount + 1, data.length);
         });
-        frameId = window.requestAnimationFrame(handleResize);
+        frameId = window.requestAnimationFrame((timestamp) =>
+          handleResize(false, timestamp)
+        );
       }
     };
 
-    frameId = window.requestAnimationFrame(handleResize);
+    frameId = window.requestAnimationFrame((timestamp) =>
+      handleResize(false, timestamp)
+    );
 
     return () => window.cancelAnimationFrame(frameId);
   }, [
