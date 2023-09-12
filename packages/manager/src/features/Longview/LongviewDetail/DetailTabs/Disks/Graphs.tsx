@@ -1,8 +1,6 @@
-import { Theme } from '@mui/material/styles';
-import { WithTheme, makeStyles, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { Typography } from 'src/components/Typography';
@@ -11,25 +9,9 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 import { Stat, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
+import { StyledDiv } from './Graphs.styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  graphContainer: {
-    '& > div': {
-      flexGrow: 1,
-      [theme.breakpoints.down('lg')]: {
-        marginTop: theme.spacing(),
-        width: '60%',
-      },
-      width: '33%',
-    },
-    display: 'flex',
-    flexFlow: 'row wrap',
-    justifyContent: 'space-around',
-    marginTop: theme.spacing(),
-  },
-}));
-
-export interface Props {
+export interface GraphProps {
   childOf: boolean;
   diskLabel: string;
   endTime: number;
@@ -47,9 +29,7 @@ export interface Props {
   writes: Stat[];
 }
 
-type CombinedProps = Props & WithTheme;
-
-const Graphs: React.FC<CombinedProps> = (props) => {
+export const Graphs = React.memo((props: GraphProps) => {
   const {
     childOf,
     diskLabel,
@@ -63,13 +43,12 @@ const Graphs: React.FC<CombinedProps> = (props) => {
     reads,
     startTime,
     sysInfoType,
-    theme,
     timezone,
     total,
     writes,
   } = props;
 
-  const classes = useStyles();
+  const theme = useTheme();
 
   const isToday = _isToday(startTime, endTime);
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
@@ -95,7 +74,7 @@ const Graphs: React.FC<CombinedProps> = (props) => {
 
   return (
     <GraphCard helperText={labelHelperText} title={diskLabel}>
-      <div className={classes.graphContainer}>
+      <StyledDiv>
         {sysInfoType.toLowerCase() !== 'openvz' && (
           <div data-testid="diskio-graph">
             <LongviewLineGraph
@@ -173,10 +152,10 @@ const Graphs: React.FC<CombinedProps> = (props) => {
             </React.Fragment>
           )
         }
-      </div>
+      </StyledDiv>
     </GraphCard>
   );
-};
+});
 
 export const formatINodes = (
   ifree: StatWithDummyPoint[],
@@ -246,5 +225,3 @@ export const generateHelperText = (
 
   return '';
 };
-
-export default compose<CombinedProps, Props>(React.memo, withTheme)(Graphs);

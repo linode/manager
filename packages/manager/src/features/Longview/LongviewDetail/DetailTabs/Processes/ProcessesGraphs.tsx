@@ -1,7 +1,7 @@
-import { Theme } from '@mui/material/styles';
-import { WithTheme, makeStyles, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
@@ -21,21 +21,6 @@ import {
 
 import { Process } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  graphWrap: {
-    marginTop: theme.spacing(3),
-  },
-  root: {
-    marginTop: theme.spacing(1.25),
-    padding: theme.spacing(3),
-  },
-  title: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-}));
-
 interface Props {
   clientAPIKey: string;
   error?: string;
@@ -48,21 +33,18 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithTheme;
-
-const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+export const ProcessesGraphs = (props: Props) => {
   const {
     error,
     isToday,
     processesData,
     processesLoading,
     selectedProcess,
-    theme,
     time,
     timezone,
   } = props;
+
+  const theme = useTheme();
 
   const { end, start } = time;
 
@@ -108,10 +90,22 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Typography className={classes.title} variant="h2">
+      <Typography
+        sx={{
+          [theme.breakpoints.down('lg')]: {
+            marginLeft: theme.spacing(),
+          },
+        }}
+        variant="h2"
+      >
         Process History{name && `: ${name}`}
       </Typography>
-      <Paper className={classes.root}>
+      <Paper
+        sx={{
+          marginTop: theme.spacing(1.25),
+          padding: theme.spacing(3),
+        }}
+      >
         <LongviewLineGraph
           data={[
             {
@@ -127,7 +121,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
           unit="%"
           {...commonGraphProps}
         />
-        <div className={classes.graphWrap}>
+        <Box marginTop={theme.spacing(3)}>
           <LongviewLineGraph
             data={[
               {
@@ -144,8 +138,8 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
             title="RAM"
             {...commonGraphProps}
           />
-        </div>
-        <div className={classes.graphWrap}>
+        </Box>
+        <Box marginTop={theme.spacing(3)}>
           <LongviewLineGraph
             data={[
               {
@@ -160,8 +154,8 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
             title="Count"
             {...commonGraphProps}
           />
-        </div>
-        <div className={classes.graphWrap}>
+        </Box>
+        <Box marginTop={theme.spacing(3)}>
           <LongviewLineGraph
             data={[
               {
@@ -186,13 +180,11 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
             unit={'/s'}
             {...commonGraphProps}
           />
-        </div>
+        </Box>
       </Paper>
     </>
   );
 };
-
-export default withTheme(ProcessesGraphs);
 
 export const formatCount = (value: null | number) => {
   if (!value) {
