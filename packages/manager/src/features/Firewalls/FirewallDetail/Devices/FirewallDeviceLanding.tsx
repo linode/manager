@@ -41,12 +41,15 @@ export const FirewallDeviceLanding = React.memo(
 
     const theme = useTheme();
 
-    const devices =
-      allDevices?.filter((device) => device.entity.type === type) || [];
-
     const [filteredDevices, setFilteredDevices] = React.useState<
       FirewallDevice[]
-    >(devices);
+    >([]);
+
+    React.useEffect(() => {
+      setFilteredDevices(
+        allDevices?.filter((device) => device.entity.type === type) || []
+      );
+    }, [allDevices, type]);
 
     const [
       isRemoveDeviceDialogOpen,
@@ -55,7 +58,7 @@ export const FirewallDeviceLanding = React.memo(
 
     const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(-1);
 
-    const selectedDevice = devices?.find(
+    const selectedDevice = filteredDevices?.find(
       (device) => device.id === selectedDeviceId
     );
 
@@ -71,7 +74,7 @@ export const FirewallDeviceLanding = React.memo(
 
     const filter = (value: string) => {
       setSearchText(value);
-      const filtered = devices.filter((device) => {
+      const filtered = filteredDevices.filter((device) => {
         return device.entity.label.toLowerCase().includes(value.toLowerCase());
       });
       setFilteredDevices(filtered);
