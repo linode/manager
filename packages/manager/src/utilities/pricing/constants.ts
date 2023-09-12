@@ -1,8 +1,6 @@
 export interface ObjStoragePriceObject {
   monthly: number;
-  storage: number;
   storage_overage: number;
-  transfer: number;
   transfer_overage: number;
 }
 
@@ -12,9 +10,7 @@ export const NODEBALANCER_PRICE = 10;
 export const LKE_HA_PRICE = 60;
 export const OBJ_STORAGE_PRICE: ObjStoragePriceObject = {
   monthly: 5.0,
-  storage: 32, // GB
   storage_overage: 0.02,
-  transfer: 1, // TB
   transfer_overage: 0.005,
 };
 
@@ -25,3 +21,5 @@ export const LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE =
   'Select a region, HA choice, and add a Node Pool to view pricing and create a cluster.';
 export const DIFFERENT_PRICE_STRUCTURE_WARNING =
   'The selected region has a different price structure.';
+export const ENABLE_OBJ_ACCESS_KEYS_MESSAGE =
+  'Pricing for monthly rate and overage costs will depend on the data center you select for deployment.';

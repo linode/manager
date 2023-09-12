@@ -1,4 +1,3 @@
-import type { ObjStoragePriceObject } from './constants';
 import type { Region } from '@linode/api-v4';
 import type { FlagSet } from 'src/featureFlags';
 
@@ -20,31 +19,21 @@ export interface DataCenterPricingOptions {
   regionId: Region['id'] | undefined;
 }
 
-export interface ObjStorageDataCenterPricingOptions {
-  basePrice: ObjStoragePriceObject;
-  flags: FlagSet;
-  regionId: Region['id'];
-}
-
 // The key is a region id and the value is the percentage increase in price.
 export const priceIncreaseMap = {
   'br-gru': 0.4, // Sao Paulo
   'id-cgk': 0.2, // Jakarta
 };
 
-const objectStorageIncreaseMap = {
+export const objectStoragePriceIncreaseMap = {
   'br-gru': {
-    monthly: 1.0,
-    storage: 36, // GB
+    monthly: 7.0,
     storage_overage: 0.028,
-    transfer: 1, // TB
     transfer_overage: 0.007,
   },
   'id-cgk': {
-    monthly: 1.0,
-    storage: 42, // GB
+    monthly: 6.0,
     storage_overage: 0.024,
-    transfer: 1, // TB
     transfer_overage: 0.015,
   },
 };
@@ -79,26 +68,4 @@ export const getDCSpecificPrice = ({
   }
 
   return basePrice.toFixed(2);
-};
-
-/**
- * This function is used to calculate the dynamic pricing, storage, and transfer for object storage, based on potential region increased costs.
- * @example
- * const objStoragePrice = getObjectStorageDCSpecificPrices({
- *   basePrice: OBJ_STORAGE_PRICES,
- *   flags: { dcSpecificPricing: true },
- *   regionId: 'us-east',
- * });
- * @returns a datacenter specific price for object storage
- */
-export const getObjectStorageDCSpecificPrices = ({
-  basePrice,
-  flags,
-  regionId,
-}: ObjStorageDataCenterPricingOptions) => {
-  if (!flags?.dcSpecificPricing) {
-    return basePrice;
-  }
-
-  return objectStorageIncreaseMap[regionId] ?? basePrice;
 };

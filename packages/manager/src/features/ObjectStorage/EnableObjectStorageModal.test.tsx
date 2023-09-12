@@ -2,9 +2,17 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
+import {
+  ENABLE_OBJ_ACCESS_KEYS_MESSAGE,
+  OBJ_STORAGE_PRICE,
+} from 'src/utilities/pricing/constants';
+import { objectStoragePriceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { EnableObjectStorageModal, Props } from './EnableObjectStorageModal';
+
+const DC_PRICING_REGION = 'id-cgk';
+const BASE_PRICING_REGION = 'us-east';
 
 const handleSubmit = jest.fn();
 const onClose = jest.fn();
@@ -21,6 +29,67 @@ describe('EnableObjectStorageModal', () => {
       wrapWithTheme(<EnableObjectStorageModal {...props} />)
     );
     getByText('Just to confirm...');
+  });
+
+  it('displays base prices for a region without price increases', () => {
+    const { getByText } = render(
+      wrapWithTheme(
+        <EnableObjectStorageModal {...props} regionId={BASE_PRICING_REGION} />
+      )
+    );
+    getByText(`$${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
+    getByText(`$${OBJ_STORAGE_PRICE.storage_overage} per GB`, { exact: false });
+    getByText(`$${OBJ_STORAGE_PRICE.transfer_overage} per GB`, {
+      exact: false,
+    });
+  });
+
+  it('displays DC-specific prices if the DC-specific pricing flag is on', () => {
+    const { getByText } = render(
+      wrapWithTheme(
+        <EnableObjectStorageModal {...props} regionId={DC_PRICING_REGION} />,
+        {
+          flags: { dcSpecificPricing: true },
+        }
+      )
+    );
+    getByText(
+      `$${objectStoragePriceIncreaseMap[DC_PRICING_REGION].monthly}/month`,
+      {
+        exact: false,
+      }
+    );
+    getByText(
+      `$${objectStoragePriceIncreaseMap[DC_PRICING_REGION].storage_overage} per GB`,
+      { exact: false }
+    );
+    getByText(
+      `$${objectStoragePriceIncreaseMap[DC_PRICING_REGION].transfer_overage} per GB`,
+      { exact: false }
+    );
+  });
+
+  it('displays base prices if the DC-specific pricing flag is off', () => {
+    const { getByText } = render(
+      wrapWithTheme(
+        <EnableObjectStorageModal {...props} regionId={DC_PRICING_REGION} />,
+        {
+          flags: { dcSpecificPricing: false },
+        }
+      )
+    );
+    getByText(`${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
+    getByText(`$${OBJ_STORAGE_PRICE.storage_overage} per GB`, { exact: false });
+    getByText(`$${OBJ_STORAGE_PRICE.transfer_overage} per GB`, {
+      exact: false,
+    });
+  });
+
+  it('displays a message without pricing if no region exists, e.g. access key flow', () => {
+    const { getByText } = render(
+      wrapWithTheme(<EnableObjectStorageModal {...props} />)
+    );
+    getByText(ENABLE_OBJ_ACCESS_KEYS_MESSAGE);
   });
 
   it('includes a link to Account Settings', () => {

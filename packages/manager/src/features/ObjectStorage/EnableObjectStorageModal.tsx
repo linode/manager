@@ -8,11 +8,14 @@ import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import {
+  ENABLE_OBJ_ACCESS_KEYS_MESSAGE,
   OBJ_STORAGE_PRICE,
   ObjStoragePriceObject,
 } from 'src/utilities/pricing/constants';
-import { getObjectStorageDCSpecificPrices } from 'src/utilities/pricing/dynamicPricing';
+import { objectStoragePriceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 
+const OBJ_STORAGE_STORAGE_AMT = '250 GB';
+const OBJ_STORAGE_NETWORK_TRANSFER_AMT = '1 TB';
 export interface Props {
   handleSubmit: () => void;
   onClose: () => void;
@@ -25,12 +28,9 @@ export const EnableObjectStorageModal = (props: Props) => {
 
   const flags = useFlags();
   const objStoragePrices: ObjStoragePriceObject =
-    regionId &&
-    getObjectStorageDCSpecificPrices({
-      basePrice: OBJ_STORAGE_PRICE,
-      flags,
-      regionId,
-    });
+    regionId && flags.dcSpecificPricing
+      ? objectStoragePriceIncreaseMap[regionId] ?? OBJ_STORAGE_PRICE
+      : OBJ_STORAGE_PRICE;
 
   return (
     <ConfirmationDialog
@@ -58,16 +58,12 @@ export const EnableObjectStorageModal = (props: Props) => {
         <Typography>
           Linode Object Storage costs a flat rate of{' '}
           <strong>${objStoragePrices?.monthly ?? 'Unknown'}/month</strong> for
-          this data center, and includes{' '}
-          {objStoragePrices?.storage ?? 'Unknown'} GB of storage.{' '}
-          {objStoragePrices?.transfer ?? 'Unknown'} TB of outbound data transfer
-          will be added to your Global Monthly Transfer Pool.
+          this data center, and includes {OBJ_STORAGE_STORAGE_AMT} of storage.{' '}
+          {OBJ_STORAGE_NETWORK_TRANSFER_AMT} of outbound data transfer will be
+          added to your Global Monthly Transfer Pool.
         </Typography>
       ) : (
-        <Typography>
-          Pricing for monthly rate, storage allotments, and overage costs will
-          depend on the data center you select for deployment.
-        </Typography>
+        <Typography>{ENABLE_OBJ_ACCESS_KEYS_MESSAGE}</Typography>
       )}
       {regionId && (
         <>
