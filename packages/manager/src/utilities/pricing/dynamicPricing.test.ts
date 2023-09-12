@@ -57,6 +57,6 @@ describe('getDCSpecificPricingDisplay', () => {
         flags: { dcSpecificPricing: true },
         regionId: 'invalid-region',
       })
-    ).toBe('0.00');
+    ).toBe('unknown');
   });
 });

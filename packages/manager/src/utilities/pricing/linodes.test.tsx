@@ -13,12 +13,12 @@ describe('getLinodeRegionPrice', () => {
       region_prices: [],
     });
     const actual = getLinodeRegionPrice(type, undefined);
-    const expected = { hourly: 'unknown', monthly: 'unknown' };
+    const expected = undefined;
     expect(actual).toEqual(expected);
   });
   it('gets a linode price as unknow when regionId is undefined', () => {
     const actual = getLinodeRegionPrice(undefined, 'us-east');
-    const expected = { hourly: 'unknown', monthly: 'unknown' };
+    const expected = undefined;
     expect(actual).toEqual(expected);
   });
 });
