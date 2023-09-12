@@ -5,10 +5,10 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import {
-  StyledLink,
   getCountOfRules,
   getRuleString,
 } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
+import { StyledDevicesLink } from 'src/features/Firewalls/FirewallLanding/FirewallRow.styles';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
@@ -43,9 +43,9 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
       key={`firewall-${firewallID}`}
     >
       <TableCell data-qa-firewall-label>
-        <StyledLink tabIndex={0} to={`/firewalls/${firewallID}`}>
+        <StyledDevicesLink tabIndex={0} to={`/firewalls/${firewallID}`}>
           {label}
-        </StyledLink>
+        </StyledDevicesLink>
       </TableCell>
       <TableCell data-qa-firewall-status statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
