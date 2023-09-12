@@ -28,4 +28,17 @@ describe('getInvoiceRegion', () => {
 
     expect(getInvoiceRegion(invoiceItems, regions)).toBe(null);
   });
+  it('should return "Gloabl" if the invoice item is about Transfer and region is null', () => {
+    // This is what a Global network transfer invoice item will look like
+    const invoiceItems = invoiceItemFactory.build({
+      label: 'Transfer Overage',
+      region: null,
+    });
+    const regions = regionFactory.buildList(1, {
+      id: 'id-cgk',
+      label: 'Jakarta, ID',
+    });
+
+    expect(getInvoiceRegion(invoiceItems, regions)).toBe('Global');
+  });
 });
