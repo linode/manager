@@ -1,32 +1,21 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Grid } from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import ApacheGraphs from './ApacheGraphs';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: 250,
-  },
-  title: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-}));
+import {
+  StyledTimeRangeSelect,
+  StyledTypography,
+} from '../CommonStyles.styles';
+import { ApacheGraphs } from './ApacheGraphs';
 
 interface Props {
   clientAPIKey?: string;
@@ -35,9 +24,8 @@ interface Props {
   timezone: string;
 }
 
-export const Apache: React.FC<Props> = (props) => {
+export const Apache = React.memo((props: Props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
-  const classes = useStyles();
   const [version, setVersion] = React.useState<string | undefined>();
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
@@ -95,7 +83,7 @@ export const Apache: React.FC<Props> = (props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'Apache'} />
-      <Grid item xs={12}>
+      <Grid sx={{ boxSizing: 'border-box', margin: '0' }} xs={12}>
         <Box
           alignItems="center"
           display="flex"
@@ -103,14 +91,11 @@ export const Apache: React.FC<Props> = (props) => {
           justifyContent="space-between"
         >
           <div>
-            <Typography className={classes.title} variant="h2">
-              Apache
-            </Typography>
+            <StyledTypography variant="h2">Apache</StyledTypography>
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
 
-          <TimeRangeSelect
-            className={classes.root}
+          <StyledTimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
@@ -119,7 +104,11 @@ export const Apache: React.FC<Props> = (props) => {
           />
         </Box>
       </Grid>
-      <Grid className="py0" item xs={12}>
+      <Grid
+        className="py0"
+        sx={{ boxSizing: 'border-box', margin: '0' }}
+        xs={12}
+      >
         <ApacheGraphs
           data={data?.Applications?.Apache}
           end={time.end}
@@ -135,6 +124,4 @@ export const Apache: React.FC<Props> = (props) => {
       </Grid>
     </Grid>
   );
-};
-
-export default React.memo(Apache);
+});

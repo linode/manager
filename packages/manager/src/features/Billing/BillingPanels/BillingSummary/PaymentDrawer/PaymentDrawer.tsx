@@ -1,8 +1,8 @@
 import { PaymentMethod } from '@linode/api-v4';
 import { makePayment } from '@linode/api-v4/lib/account';
 import { APIWarning } from '@linode/api-v4/lib/types';
+import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -13,13 +13,13 @@ import { Currency } from 'src/components/Currency';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
 import isCreditCardExpired from 'src/utilities/creditCard';
@@ -32,7 +32,7 @@ import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import { SetSuccess } from './types';
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()(() => ({
   button: {
     alignSelf: 'flex-end',
     marginLeft: 'auto',
@@ -42,11 +42,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   currentBalance: {
     fontSize: '1.1rem',
-    marginBottom: theme.spacing(4),
   },
   header: {
     fontSize: '1.1rem',
-    marginBottom: theme.spacing(4),
   },
   input: {
     display: 'flex',
@@ -227,149 +225,129 @@ export const PaymentDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Make a Payment">
-      <Grid container>
-        <Grid xs={12}>
-          {errorMessage && <Notice text={errorMessage ?? ''} variant="error" />}
-          {warning ? <Warning warning={warning} /> : null}
-          {isProcessing ? (
-            <LinearProgress className={classes.progress} />
-          ) : null}
-          {accountLoading ? (
-            <Typography data-testid="loading-account">Loading</Typography>
-          ) : account ? (
-            <Grid>
-              <Typography className={classes.currentBalance} variant="h3">
-                <strong>
-                  Current balance:{' '}
-                  <span
-                    className={cx({
-                      [classes.credit]: account?.balance < 0,
-                    })}
-                  >
-                    <Currency quantity={Math.abs(account?.balance || 0)} />
-                    {account?.balance < 0 ? ' Credit' : ''}
-                  </span>
-                </strong>
-              </Typography>
-            </Grid>
-          ) : null}
-          <Grid xs={6}>
-            <TextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="end">$</InputAdornment>
-                ),
-              }}
-              disabled={isProcessing}
-              label="Payment Amount"
-              onBlur={handleOnBlur}
-              onChange={handleUSDChange}
-              placeholder={`${minimumPayment} minimum`}
-              type="number"
-              value={usd}
-            />
-          </Grid>
-          <Divider spacingBottom={16} spacingTop={32} />
-          <Grid container direction="column" rowGap={2}>
-            <Grid>
-              <Typography
-                className={classes.header}
-                style={{ marginBottom: 8 }}
-                variant="h3"
+      <Stack spacing={2}>
+        {errorMessage && <Notice text={errorMessage ?? ''} variant="error" />}
+        {warning ? <Warning warning={warning} /> : null}
+        {isProcessing ? <LinearProgress className={classes.progress} /> : null}
+        {accountLoading ? (
+          <Typography data-testid="loading-account">Loading</Typography>
+        ) : account ? (
+          <Typography className={classes.currentBalance} variant="h3">
+            <strong>
+              Current balance:{' '}
+              <span
+                className={cx({
+                  [classes.credit]: account?.balance < 0,
+                })}
               >
-                <strong>Payment Methods:</strong>
-              </Typography>
-            </Grid>
-            <Grid container spacing={1}>
-              {hasPaymentMethods ? (
-                paymentMethods?.map((paymentMethod: PaymentMethod) => (
-                  <PaymentMethodCard
-                    handlePaymentMethodChange={handlePaymentMethodChange}
-                    key={paymentMethod.id}
-                    paymentMethod={paymentMethod}
-                    paymentMethodId={paymentMethodId}
-                  />
-                ))
-              ) : (
-                <Grid>
-                  <Typography>No payment methods on file.</Typography>
-                </Grid>
-              )}
-            </Grid>
-            {hasPaymentMethods ? (
-              <Grid className={classes.input}>
-                <Grid className={classes.button}>
-                  {paymentTooLow || selectedCardExpired ? (
-                    <TooltipIcon
-                      text={
-                        paymentTooLow
-                          ? `Payment amount must be at least ${minimumPayment}.`
-                          : selectedCardExpired
-                          ? 'The selected card has expired.'
-                          : ''
-                      }
-                      status="help"
-                      sxTooltipIcon={{ padding: `0px 8px` }}
-                    />
-                  ) : null}
-                  <Button
-                    disabled={
-                      paymentTooLow || selectedCardExpired || isProcessing
-                    }
-                    buttonType="primary"
-                    onClick={handleOpenDialog}
-                  >
-                    Pay Now
-                  </Button>
-                </Grid>
-              </Grid>
-            ) : null}
-          </Grid>
-          <CreditCardDialog
-            cancel={handleClose}
-            error={errorMessage}
-            executePayment={confirmCardPayment}
-            isMakingPayment={submitting}
-            open={dialogOpen}
-            usd={usd}
-          />
-          <Divider spacingBottom={16} spacingTop={28} />
-          <Grid>
-            <Typography className={classes.header} variant="h3">
-              <strong>Or pay via:</strong>
-            </Typography>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid sm={6} xs={9}>
-              <PayPalErrorBoundary renderError={renderError}>
-                <PayPalButton
-                  disabled={isProcessing}
-                  renderError={renderError}
-                  setError={setErrorMessage}
-                  setProcessing={setIsProcessing}
-                  setSuccess={setSuccess}
-                  usd={usd}
+                <Currency quantity={Math.abs(account?.balance || 0)} />
+                {account?.balance < 0 ? ' Credit' : ''}
+              </span>
+            </strong>
+          </Typography>
+        ) : null}
+        <TextField
+          InputProps={{
+            startAdornment: <InputAdornment position="end">$</InputAdornment>,
+          }}
+          disabled={isProcessing}
+          label="Payment Amount"
+          noMarginTop
+          onBlur={handleOnBlur}
+          onChange={handleUSDChange}
+          placeholder={`${minimumPayment} minimum`}
+          sx={{ maxWidth: 175 }}
+          type="number"
+          value={usd}
+        />
+        <Divider spacingBottom={16} spacingTop={32} />
+        <Typography className={classes.header} variant="h3">
+          <strong>Payment Methods:</strong>
+        </Typography>
+        <Stack spacing={1}>
+          {hasPaymentMethods ? (
+            paymentMethods?.map((paymentMethod: PaymentMethod) => (
+              <PaymentMethodCard
+                handlePaymentMethodChange={handlePaymentMethodChange}
+                key={paymentMethod.id}
+                paymentMethod={paymentMethod}
+                paymentMethodId={paymentMethodId}
+              />
+            ))
+          ) : (
+            <Typography>No payment methods on file.</Typography>
+          )}
+        </Stack>
+        {hasPaymentMethods ? (
+          <Grid className={classes.input}>
+            <Grid className={classes.button}>
+              {paymentTooLow || selectedCardExpired ? (
+                <TooltipIcon
+                  text={
+                    paymentTooLow
+                      ? `Payment amount must be at least ${minimumPayment}.`
+                      : selectedCardExpired
+                      ? 'The selected card has expired.'
+                      : ''
+                  }
+                  status="help"
+                  sxTooltipIcon={{ padding: `0px 8px` }}
                 />
-              </PayPalErrorBoundary>
+              ) : null}
+              <Button
+                buttonType="primary"
+                disabled={paymentTooLow || selectedCardExpired || isProcessing}
+                onClick={handleOpenDialog}
+              >
+                Pay Now
+              </Button>
             </Grid>
-            <Grid sm={6} xs={9}>
-              <GooglePayButton
-                transactionInfo={{
-                  countryCode: 'US',
-                  currencyCode: 'USD',
-                  totalPrice: usd,
-                  totalPriceStatus: 'FINAL',
-                }}
+          </Grid>
+        ) : null}
+        <Divider spacingBottom={16} spacingTop={28} />
+        <Grid>
+          <Typography className={classes.header} variant="h3">
+            <strong>Or pay via:</strong>
+          </Typography>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid sm={6} xs={9}>
+            <PayPalErrorBoundary renderError={renderError}>
+              <PayPalButton
                 disabled={isProcessing}
                 renderError={renderError}
                 setError={setErrorMessage}
                 setProcessing={setIsProcessing}
                 setSuccess={setSuccess}
+                usd={usd}
               />
-            </Grid>
+            </PayPalErrorBoundary>
+          </Grid>
+          <Grid sm={6} xs={9}>
+            <GooglePayButton
+              transactionInfo={{
+                countryCode: 'US',
+                currencyCode: 'USD',
+                totalPrice: usd,
+                totalPriceStatus: 'FINAL',
+              }}
+              disabled={isProcessing}
+              renderError={renderError}
+              setError={setErrorMessage}
+              setProcessing={setIsProcessing}
+              setSuccess={setSuccess}
+            />
           </Grid>
         </Grid>
-      </Grid>
+      </Stack>
+      <CreditCardDialog
+        cancel={handleClose}
+        error={errorMessage}
+        executePayment={confirmCardPayment}
+        isMakingPayment={submitting}
+        open={dialogOpen}
+        usd={usd}
+      />
     </Drawer>
   );
 };
