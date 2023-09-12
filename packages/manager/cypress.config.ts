@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { defineConfig } from 'cypress';
 import { setupPlugins } from './cypress/support/plugins';
+import { configureFileWatching } from './cypress/support/plugins/configure-file-watching';
 import { configureTestSuite } from './cypress/support/plugins/configure-test-suite';
 import { disableGoogleSafeBrowsing } from './cypress/support/plugins/disable-google-safe-browsing';
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
@@ -52,6 +53,7 @@ export default defineConfig({
         loadEnvironmentConfig,
         nodeVersionCheck,
         authenticateApi,
+        configureFileWatching,
         configureTestSuite,
         vitePreprocess,
         disableGoogleSafeBrowsing,
