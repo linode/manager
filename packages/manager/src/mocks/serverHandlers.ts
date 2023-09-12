@@ -440,6 +440,9 @@ const vpc = [
   rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
   }),
+  rest.delete('*/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
