@@ -44,7 +44,7 @@ export const InvoiceTable = (props: Props) => {
   const { classes } = useStyles();
   const MIN_PAGE_SIZE = 25;
   const flags = useFlags();
-  const columns = flags.dcSpecificPricing ? 9 : 8;
+  const NUM_COLUMNS = flags.dcSpecificPricing ? 9 : 8;
 
   const {
     data: regions,
@@ -56,13 +56,13 @@ export const InvoiceTable = (props: Props) => {
 
   const renderTableContent = () => {
     if (loading || regionsLoading) {
-      return <TableRowLoading columns={columns} />;
+      return <TableRowLoading columns={NUM_COLUMNS} />;
     }
 
     if (regionsError) {
       return (
         <TableRowError
-          colSpan={columns}
+          colSpan={NUM_COLUMNS}
           message="Unable to retrieve regions for this invoice."
         />
       );
@@ -71,7 +71,7 @@ export const InvoiceTable = (props: Props) => {
     if (errors) {
       return (
         <TableRowError
-          colSpan={columns}
+          colSpan={NUM_COLUMNS}
           message="Unable to retrieve invoice items."
         />
       );
@@ -134,7 +134,7 @@ export const InvoiceTable = (props: Props) => {
               {count > MIN_PAGE_SIZE && (
                 <TableRow>
                   <TableCell
-                    colSpan={columns}
+                    colSpan={NUM_COLUMNS}
                     sx={{ paddingLeft: '0px !important' }}
                   >
                     <PaginationFooter
@@ -154,7 +154,7 @@ export const InvoiceTable = (props: Props) => {
       );
     }
 
-    return <TableRowEmpty colSpan={columns} />;
+    return <TableRowEmpty colSpan={NUM_COLUMNS} />;
   };
 
   return (

@@ -19,7 +19,7 @@ describe('getInvoiceRegion', () => {
 
     expect(getInvoiceRegion(invoiceItems, [])).toBe('id-cgk');
   });
-  it('passthrough null if the invoice item does not have a region', () => {
+  it('should passthrough null if the invoice item does not have a region', () => {
     const invoiceItems = invoiceItemFactory.build({ region: null });
     const regions = regionFactory.buildList(1, {
       id: 'id-cgk',
@@ -28,7 +28,7 @@ describe('getInvoiceRegion', () => {
 
     expect(getInvoiceRegion(invoiceItems, regions)).toBe(null);
   });
-  it('should return "Gloabl" if the invoice item is about Transfer and region is null', () => {
+  it('should return "Global" if the invoice item is about Transfer and region is null', () => {
     // This is what a Global network transfer invoice item will look like
     const invoiceItems = invoiceItemFactory.build({
       label: 'Transfer Overage',
