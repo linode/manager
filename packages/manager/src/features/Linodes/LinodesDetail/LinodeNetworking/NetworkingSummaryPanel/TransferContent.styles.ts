@@ -37,7 +37,7 @@ export const StyledLinodeUsage = styled(Typography, {
 export const StyledPoolUsage = styled(Typography, {
   label: 'StyledPoolUsage',
 })(() => ({
-  ...styledLinodeUsage('#99ec79'),
+  ...styledLinodeUsage('#5ad865'),
 }));
 
 export const StyledRemainingPoolUsage = styled(Typography, {
