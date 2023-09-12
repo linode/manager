@@ -13,6 +13,7 @@ import * as select from './select';
 import * as tabList from './tab-list';
 import * as toast from './toast';
 import * as toggle from './toggle';
+import * as userMenu from './user-menu';
 
 export const ui = {
   ...actionMenu,
@@ -30,4 +31,5 @@ export const ui = {
   ...toast,
   ...tabList,
   ...toggle,
+  ...userMenu,
 };
