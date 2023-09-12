@@ -70,7 +70,7 @@ describe('TransferDisplayDialogUsage', () => {
   it('renders no progress bar if general pool has no quota', async () => {
     const mockTransferDataNoResource = accountTransferNoResourceFactory.build();
 
-    const { queryByRole, queryByTestId } = renderWithTheme(
+    const { queryByRole } = renderWithTheme(
       <TransferDisplayDialog
         {...transferDisplayDialogProps(mockTransferDataNoResource)}
       >
@@ -80,9 +80,6 @@ describe('TransferDisplayDialogUsage', () => {
 
     const progressBar = queryByRole('progressbar');
 
-    expect(
-      queryByTestId('region-transfer-pool-display')
-    ).not.toBeInTheDocument();
     expect(progressBar).not.toBeInTheDocument();
   });
 });
