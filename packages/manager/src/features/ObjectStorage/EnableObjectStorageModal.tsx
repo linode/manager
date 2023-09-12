@@ -70,10 +70,10 @@ export const EnableObjectStorageModal = (props: Props) => {
           <Typography style={{ marginTop: 12 }}>
             Additional storage costs{' '}
             <strong>
-              ${objStoragePrices?.storage_overage ?? 'Unknown'} per GB.
+              ${objStoragePrices?.storage_overage ?? 'Unknown'} per GB
             </strong>
             . Additional outbound transfer will cost{' '}
-            <strong>${objStoragePrices?.transfer_overage} per GB.</strong>{' '}
+            <strong>${objStoragePrices?.transfer_overage} per GB</strong>.{' '}
           </Typography>{' '}
           <Typography style={{ marginTop: 12 }}>
             Some{' '}
