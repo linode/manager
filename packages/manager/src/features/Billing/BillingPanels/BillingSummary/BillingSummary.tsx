@@ -3,7 +3,7 @@ import { ActivePromotion } from '@linode/api-v4/lib/account/types';
 import { GridSize } from '@mui/material/Grid';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Breakpoint } from '@mui/material/styles';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -22,10 +22,6 @@ import { BillingPaper } from '../../BillingDetail';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
 import { PromoDisplay } from './PromoDisplay';
-
-const GridContainer = styled(Grid)({
-  marginBottom: 0,
-});
 
 interface BillingSummaryProps {
   balance: number;
@@ -163,7 +159,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   return (
     <>
-      <GridContainer container spacing={2} xs={12}>
+      <Grid container margin={0} spacing={2} xs={12}>
         <Grid {...gridDimensions} sm={6}>
           <BillingPaper variant="outlined">
             <Typography variant="h3">Account Balance</Typography>
@@ -257,7 +253,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
             </Box>
           </BillingPaper>
         </Grid>
-      </GridContainer>
+      </Grid>
       <PaymentDrawer
         onClose={closePaymentDrawer}
         open={paymentDrawerOpen}

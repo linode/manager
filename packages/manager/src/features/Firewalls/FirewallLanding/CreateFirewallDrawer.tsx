@@ -1,4 +1,7 @@
-import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
+import {
+  CreateFirewallPayload,
+  FirewallDeviceEntityType,
+} from '@linode/api-v4/lib/firewalls';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
@@ -26,9 +29,14 @@ import { FirewallNodeBalancerSelect } from './FirewallNodeBalancerSelect';
 
 export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
   'Only Linodes you have permission to modify are shown.';
+import { formattedTypes } from '../FirewallDetail/Devices/FirewallDeviceLanding';
 
-export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
-  'Only Devices you have permission to modify are shown.';
+export const READ_ONLY_DEVICES_HIDDEN_MESSAGE = (
+  deviceType: FirewallDeviceEntityType
+) =>
+  `Only ${formattedTypes[deviceType]}s you have permission to modify are shown.`;
+
+// export const READ_ONLY_DEVICES_HIDDEN_MESSAGE = 'Only Devices you have permission to modify are shown.';
 export interface CreateFirewallDrawerProps {
   onClose: () => void;
   open: boolean;
@@ -183,12 +191,15 @@ export const CreateFirewallDrawer = React.memo(
 
     const deviceSelectGuidance =
       readOnlyLinodeIds.length > 0 || readOnlyNodebalancerIds.length > 0
-        ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
+        ? // ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
+          // const linodeSelectGuidance =
+          // readOnlyLinodeIds.length > 0
+          READ_ONLY_DEVICES_HIDDEN_MESSAGE('linode')
         : undefined;
 
     const firewallLabelText = `Assign devices to the Firewall.`;
 
-    const firewallHelperText = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.${
+    const firewallHelperText = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first. ${
       deviceSelectGuidance ? deviceSelectGuidance : ''
     }`;
 

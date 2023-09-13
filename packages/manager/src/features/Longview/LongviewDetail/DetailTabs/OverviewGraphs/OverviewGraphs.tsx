@@ -1,43 +1,20 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import Grid from '@mui/material/Unstable_Grid2';
 
-import { Grid } from 'src/components/Grid';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
-import CPUGraph from './CPUGraph';
-import DiskGraph from './DiskGraph';
-import LoadGraph from './LoadGraph';
-import MemoryGraph from './MemoryGraph';
-import NetworkGraph from './NetworkGraph';
-import { GraphProps } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  headerOuter: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing(1.25),
-  },
-  paperSection: {
-    marginBottom: `calc(${theme.spacing(1)} + 3px)`,
-    padding: `calc(${theme.spacing(3)} + 1px)`,
-  },
-  selectTimeRange: {
-    width: 150,
-  },
-  spacing: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-}));
+import { StyledTypography } from '../CommonStyles.styles';
+import { CPUGraph } from './CPUGraph';
+import { DiskGraph } from './DiskGraph';
+import { LoadGraph } from './LoadGraph';
+import { MemoryGraph } from './MemoryGraph';
+import { NetworkGraph } from './NetworkGraph';
+import { GraphProps } from './types';
 
 interface Props {
   clientAPIKey: string;
@@ -45,10 +22,9 @@ interface Props {
   lastUpdatedError: boolean;
   timezone: string;
 }
-export type CombinedProps = Props;
 
-export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const OverviewGraphs = (props: Props) => {
+  const theme = useTheme();
 
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
@@ -74,26 +50,38 @@ export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Grid item>
-      <Grid className={classes.headerOuter} item>
-        <Grid item>
-          <Typography className={classes.spacing} variant="h2">
+    <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
+      <StyledGrid xs={12}>
+        <Grid sx={{ ...itemSpacing }}>
+          <StyledTypography variant="h2">
             Resource Allocation History
-          </Typography>
+          </StyledTypography>
         </Grid>
-        <Grid className={classes.spacing} item>
-          <TimeRangeSelect
-            className={classes.selectTimeRange}
+        <Grid
+          sx={{
+            ...itemSpacing,
+            [theme.breakpoints.down('lg')]: {
+              marginLeft: theme.spacing(),
+              marginRight: theme.spacing(),
+            },
+          }}
+        >
+          <StyledTimeRangeSelect
             defaultValue={'Past 30 Minutes'}
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
           />
         </Grid>
-      </Grid>
-      <Grid item />
-      <Grid item xs={12}>
-        <Paper className={classes.paperSection}>
+      </StyledGrid>
+      <Grid sx={{ ...itemSpacing }} />
+      <Grid sx={{ ...itemSpacing }} xs={12}>
+        <Paper
+          sx={{
+            marginBottom: `calc(${theme.spacing(1)} + 3px)`,
+            padding: `calc(${theme.spacing(3)} + 1px)`,
+          }}
+        >
           <Grid
             alignItems="center"
             container
@@ -101,19 +89,19 @@ export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
             justifyContent="space-between"
             spacing={4}
           >
-            <Grid item sm={6} xs={12}>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <CPUGraph {...graphProps} />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <MemoryGraph {...graphProps} />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <NetworkGraph {...graphProps} />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <DiskGraph {...graphProps} />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <LoadGraph {...graphProps} />
             </Grid>
           </Grid>
@@ -123,4 +111,22 @@ export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default OverviewGraphs;
+const StyledTimeRangeSelect = styled(TimeRangeSelect, {
+  label: 'StyledTimeRangeSelect',
+})({
+  width: 150,
+});
+
+const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: theme.spacing(1.25),
+  boxSizing: 'border-box',
+}));
+
+const itemSpacing = {
+  boxSizing: 'border-box',
+  margin: '0',
+};

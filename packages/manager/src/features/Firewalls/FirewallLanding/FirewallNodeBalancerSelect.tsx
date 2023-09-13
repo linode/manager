@@ -9,7 +9,7 @@ import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
 import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
 
-import { SelectedIcon } from '../../../features/Linodes/LinodeSelect/LinodeSelect.styles';
+// import { SelectedIcon } from '../../../features/Linodes/LinodeSelect/LinodeSelect.styles';
 
 interface FirewallNodeBalancerSelectProps {
   clearable?: boolean;
@@ -110,7 +110,7 @@ export const FirewallNodeBalancerSelect = (
             >
               {option.label}
             </Box>
-            <SelectedIcon visible={selected} />
+            {/* <SelectedIcon visible={selected} /> */}
           </li>
         );
       }}

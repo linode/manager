@@ -1,5 +1,5 @@
 import { APIWarning } from '../types';
-import { Region } from 'src/regions';
+import type { Region } from '../regions';
 
 export interface User {
   username: string;
@@ -118,7 +118,7 @@ export interface InvoiceItem {
   unit_price: null | string;
   tax: number;
   total: number;
-  region: Region['id'];
+  region: string | null;
 }
 
 export interface Payment {
