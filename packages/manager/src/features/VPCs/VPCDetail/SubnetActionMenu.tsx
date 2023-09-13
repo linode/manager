@@ -4,12 +4,12 @@ import * as React from 'react';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu';
 
-interface SubnetsActionHandlers {
+interface SubnetActionHandlers {
   handleDelete: (subnet: Subnet) => void;
   handleEdit: (subnet: Subnet) => void;
 }
 
-interface Props extends SubnetsActionHandlers {
+interface Props extends SubnetActionHandlers {
   numLinodes: number;
   subnet: Subnet;
   vpcId: number;

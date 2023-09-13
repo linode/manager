@@ -58,4 +58,16 @@ describe('SubnetActionMenu', () => {
     );
     expect(tooltipText).not.toBeInTheDocument();
   });
+
+  it('should allow the edit button to be clicked', () => {
+    const screen = renderWithTheme(
+      <SubnetActionMenu {...props} numLinodes={0} />
+    );
+    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
+    fireEvent.click(actionMenu);
+
+    const editButton = screen.getByText('Edit');
+    fireEvent.click(editButton);
+    expect(props.handleEdit).toHaveBeenCalled();
+  });
 });

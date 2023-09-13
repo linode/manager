@@ -19,7 +19,7 @@ interface Props {
 }
 
 const IP_HELPER_TEXT =
-  'Once a subnet is created, its IP range cannot be edited.';
+  'Once a subnet is created its IP range cannot be edited.';
 
 export const SubnetEditDrawer = (props: Props) => {
   const { onClose, open, subnet, vpcId } = props;
