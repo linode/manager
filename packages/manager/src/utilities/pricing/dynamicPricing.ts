@@ -33,7 +33,7 @@ const priceIncreaseMap = {
  *   flags: { dcSpecificPricing: true },
  *   regionId: 'us-east',
  * });
- * @returns a datacenter specific price
+ * @returns a data center specific price
  */
 export const getDCSpecificPrice = ({
   basePrice,

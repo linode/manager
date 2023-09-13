@@ -197,7 +197,7 @@ export const Details = (props: Props) => {
       )}
 
       <Typography>
-        Current Datacenter: {region?.label ?? thisLinodeRegion}
+        Current Data Center: {region?.label ?? thisLinodeRegion}
       </Typography>
 
       {/* Show the estimated clone time if we're able to submit the form. */}

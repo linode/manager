@@ -8,7 +8,7 @@ export const DynamicPriceNotice = (props: NoticeProps) => {
   return (
     <Notice spacingBottom={0} spacingTop={12} variant="info" {...props}>
       <Typography fontWeight="bold">
-        Prices for plans, products, and services may vary based on Region.{' '}
+        Prices for plans, products, and services may vary based on region.{' '}
         <Link to="https://www.linode.com/pricing">Learn more.</Link>
       </Typography>
     </Notice>

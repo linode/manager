@@ -240,7 +240,7 @@ const interceptNotification = (
 
   // Outage interception
   if (notification.type === 'outage') {
-    /** this is an outage to one of the datacenters */
+    /** this is an outage to one of the data centers */
     if (
       notification.type === 'outage' &&
       notification.entity?.type === 'region'
