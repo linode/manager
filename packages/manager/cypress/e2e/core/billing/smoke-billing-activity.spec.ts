@@ -114,7 +114,7 @@ const assertPaymentInfo = (payment: Payment, timezone: string) => {
 };
 
 authenticate();
-describe('Billling Activity Feed', () => {
+describe('Billing Activity Feed', () => {
   /*
    * - Uses mocked API data to confirm that invoices and payments are listed on billing page.
    * - Confirms that invoice and payment labels, dates, and totals are displayed as expected.

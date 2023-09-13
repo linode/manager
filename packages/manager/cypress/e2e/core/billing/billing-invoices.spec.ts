@@ -247,7 +247,7 @@ describe('Account invoices', () => {
    * - Confirms that invoice item pagination works as expected using mock API data.
    * - Confirms that the expected number of pages are shown for invoice items.
    * - Confirms that the expected invoice items are shown for each page.
-   * - Confrims that page updates to reflect changes to page size selection.
+   * - Confirms that page updates to reflect changes to page size selection.
    */
   it('paginates the list of invoice items for large invoices', () => {
     const mockInvoice = invoiceFactory.build();
