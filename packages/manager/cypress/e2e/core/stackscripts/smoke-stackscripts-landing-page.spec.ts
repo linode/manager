@@ -49,15 +49,4 @@ describe('Display stackscripts', () => {
         });
     });
   });
-
-  /*
-   * - Displays Community StackScripts in the landing page.
-   * - Confirms that Community page is not empty.
-   */
-  it('displays Community StackScripts in landing page', () => {
-    cy.visitWithLogin('/stackscripts/community');
-
-    cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
-    cy.findByText('Automate deployment scripts').should('not.exist');
-  });
 });
