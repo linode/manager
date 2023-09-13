@@ -1,4 +1,4 @@
-import { Subnet } from '@linode/api-v4';
+import { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -25,8 +25,9 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSubnetsQuery } from 'src/queries/vpcs';
 
-import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
+import { SubnetDeleteDialog } from './SubnetDeleteDialog';
+import { SubnetEditDrawer } from './SubnetEditDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
 
 interface Props {
@@ -43,6 +44,9 @@ export const VPCSubnetsTable = (props: Props) => {
     Subnet | undefined
   >();
   const [deleteSubnetDialogOpen, setDeleteSubnetDialogOpen] = React.useState(
+    false
+  );
+  const [editSubnetsDrawerOpen, setEditSubnetsDrawerOpen] = React.useState(
     false
   );
   const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
@@ -99,6 +103,11 @@ export const VPCSubnetsTable = (props: Props) => {
   const handleSubnetDelete = (subnet: Subnet) => {
     setSelectedSubnet(subnet);
     setDeleteSubnetDialogOpen(true);
+  };
+
+  const handleEditSubnet = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
+    setEditSubnetsDrawerOpen(true);
   };
 
   if (isLoading) {
@@ -160,6 +169,7 @@ export const VPCSubnetsTable = (props: Props) => {
           <TableCell align="right">
             <SubnetActionMenu
               handleDelete={handleSubnetDelete}
+              handleEdit={handleEditSubnet}
               numLinodes={subnet.linodes.length}
               subnet={subnet}
               vpcId={vpcId}
@@ -202,17 +212,17 @@ export const VPCSubnetsTable = (props: Props) => {
         paddingBottom={theme.spacing(2)}
       >
         <DebouncedSearchTextField
+          sx={{
+            [theme.breakpoints.up('sm')]: {
+              width: '416px',
+            },
+          }}
           debounceTime={250}
           hideLabel
           isSearching={false}
           label="Filter Subnets by label or id"
           onSearch={handleSearch}
           placeholder="Filter Subnets by label or id"
-          sx={{
-            [theme.breakpoints.up('sm')]: {
-              width: '416px',
-            },
-          }}
         />
         <Button
           buttonType="primary"
@@ -241,6 +251,12 @@ export const VPCSubnetsTable = (props: Props) => {
       <SubnetDeleteDialog
         onClose={() => setDeleteSubnetDialogOpen(false)}
         open={deleteSubnetDialogOpen}
+        subnet={selectedSubnet}
+        vpcId={vpcId}
+      />
+      <SubnetEditDrawer
+        onClose={() => setEditSubnetsDrawerOpen(false)}
+        open={editSubnetsDrawerOpen}
         subnet={selectedSubnet}
         vpcId={vpcId}
       />

@@ -12,6 +12,7 @@ afterEach(() => {
 
 const props = {
   handleDelete: jest.fn(),
+  handleEdit: jest.fn(),
   numLinodes: 1,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   vpcId: 1,
@@ -56,5 +57,17 @@ describe('SubnetActionMenu', () => {
       'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
     );
     expect(tooltipText).not.toBeInTheDocument();
+  });
+
+  it('should allow the edit button to be clicked', () => {
+    const screen = renderWithTheme(
+      <SubnetActionMenu {...props} numLinodes={0} />
+    );
+    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
+    fireEvent.click(actionMenu);
+
+    const editButton = screen.getByText('Edit');
+    fireEvent.click(editButton);
+    expect(props.handleEdit).toHaveBeenCalled();
   });
 });
