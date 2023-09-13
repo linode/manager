@@ -11,7 +11,12 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
-import { StyledTableCell, StyledTruncateLinks } from './FirewallRow.styles';
+import {
+  StyledDivWrapper,
+  StyledSpan,
+  StyledTableCell,
+  StyledTruncateLinks,
+} from './FirewallRow.styles';
 
 type CombinedProps = Firewall & ActionHandlers;
 
@@ -106,19 +111,21 @@ const getDevicesCellString = (
 
 export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
   return (
-    <StyledTruncateLinks>
-      {data.map((thisDevice, idx) => (
-        <span key={thisDevice.id}>
-          {idx > 0 && `, `}
-          <Link
-            className="link secondaryLink"
-            data-testid="firewall-row-link"
-            to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
-          >
-            {thisDevice.entity.label}
-          </Link>
-        </span>
-      ))}
-    </StyledTruncateLinks>
+    <StyledDivWrapper>
+      <StyledTruncateLinks>
+        {data.map((thisDevice, idx) => (
+          <StyledSpan key={thisDevice.id}>
+            <Link
+              className="link secondaryLink"
+              data-testid="firewall-row-link"
+              to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
+            >
+              {thisDevice.entity.label}
+            </Link>
+            {idx !== data.length - 1 && ','}
+          </StyledSpan>
+        ))}
+      </StyledTruncateLinks>
+    </StyledDivWrapper>
   );
 };
