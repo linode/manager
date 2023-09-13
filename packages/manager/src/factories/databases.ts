@@ -180,6 +180,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   region: 'us-east',
   ssl_connection: false,
   status: pickRandom(possibleStatuses),
+  total_disk_size_gb: 15,
   type: 'g6-standard-0',
   updated: '2021-12-16T17:15:12',
   updates: {
@@ -189,6 +190,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
     hour_of_day: 20,
     week_of_month: null,
   },
+  used_disk_size_gb: 5,
   version: '5.8.13',
 });
 
