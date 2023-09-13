@@ -53,7 +53,7 @@ const VPCCreate = () => {
 
   // When creating the subnet payloads, we also create a mapping of the indexes of the subnets that appear on
   // the UI to the indexes of the subnets that the API will receive. This enables users to leave subnets blank
-  // on the UI and still have any errors returned by the API to correspond to the correct subnet
+  // on the UI and still have any errors returned by the API correspond to the correct subnet
   const createSubnetsPayloadAndMapping = () => {
     const subnetsPayload: CreateSubnetPayload[] = [];
     const subnetIdxMapping = {};
@@ -120,6 +120,10 @@ const VPCCreate = () => {
     } catch (errors) {
       const generalSubnetErrors = errors.filter(
         (error: APIError) =>
+          // Both general and specific subnet errors include 'subnets' in their error field.
+          // General subnet errors come in as { field: subnets.some_field, ...}, whereas
+          // specific subnet errors come in as { field: subnets[some_index].some_field, ...}. So,
+          // to avoid specific subnet errors, we filter out errors with a field that includes '['
           error.field &&
           error.field.includes('subnets') &&
           !error.field.includes('[')
