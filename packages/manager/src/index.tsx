@@ -20,7 +20,6 @@ import LinodeThemeWrapper from './LinodeThemeWrapper';
 import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
 import './index.css';
 import { queryClientFactory } from './queries/base';
-import CssBaseline from '@mui/material/CssBaseline';
 
 const queryClient = queryClientFactory();
 const store = storeFactory(queryClient);
@@ -59,7 +58,6 @@ const ContextWrapper = () => (
   <ReduxStoreProvider store={store}>
     <QueryClientProvider client={queryClient}>
       <LinodeThemeWrapper>
-        <CssBaseline />
         <React.Suspense fallback={<SplashScreen />}>
           <Switch>
             <Route component={OAuthCallbackPage} exact path="/oauth/callback" />

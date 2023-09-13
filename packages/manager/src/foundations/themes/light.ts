@@ -1408,9 +1408,6 @@ export const lightTheme: ThemeOptions = {
   },
   name: 'light', // @todo remove this because we leverage pallete.mode now
   palette: {
-    background: {
-      default: bg.app,
-    },
     divider: primaryColors.divider,
     error: {
       dark: '#cd2227',
