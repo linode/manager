@@ -41,6 +41,7 @@ import { EventWithStore } from 'src/events';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets, updateInPaginatedStore } from './base';
+import { queryKey as PROFILE_QUERY_KEY } from './profile';
 
 export const queryKey = 'databases';
 
@@ -114,6 +115,8 @@ export const useCreateDatabaseMutation = () => {
         queryClient.invalidateQueries(`${queryKey}-list`);
         // Add database to the cache
         queryClient.setQueryData([queryKey, data.id], data);
+        // If a restricted user creates an entity, we must make sure grants are up to date.
+        queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
       },
     }
   );

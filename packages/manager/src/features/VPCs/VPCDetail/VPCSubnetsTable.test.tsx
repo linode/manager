@@ -20,7 +20,7 @@ afterEach(() => {
 const loadingTestId = 'circle-progress';
 
 describe('VPC Subnets table', () => {
-  it('should display subnet label, id, ip range, number of linodes, and action menu', async () => {
+  it('should display filter input, subnet label, id, ip range, number of linodes, and action menu', async () => {
     const subnet = subnetFactory.build({ linodes: [1, 2, 3] });
     server.use(
       rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
@@ -31,12 +31,14 @@ describe('VPC Subnets table', () => {
     const {
       getAllByRole,
       getAllByText,
+      getByPlaceholderText,
       getByTestId,
       getByText,
     } = renderWithTheme(<VPCSubnetsTable vpcId={1} />, { queryClient });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
+    getByPlaceholderText('Filter Subnets by label or id');
     getByText('Subnet Label');
     getByText(subnet.label);
     getByText('Subnet ID');
@@ -48,7 +50,7 @@ describe('VPC Subnets table', () => {
     getByText('Linodes');
     getByText(subnet.linodes.length);
 
-    const actionMenuButton = getAllByRole('button')[3];
+    const actionMenuButton = getAllByRole('button')[4];
     fireEvent.click(actionMenuButton);
 
     getByText('Assign Linode');
@@ -71,7 +73,7 @@ describe('VPC Subnets table', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const expandTableButton = getAllByRole('button')[2];
+    const expandTableButton = getAllByRole('button')[3];
     fireEvent.click(expandTableButton);
     getByText('No Linodes');
   });
@@ -89,7 +91,7 @@ describe('VPC Subnets table', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const expandTableButton = getAllByRole('button')[2];
+    const expandTableButton = getAllByRole('button')[3];
     fireEvent.click(expandTableButton);
 
     getByText('Linode Label');

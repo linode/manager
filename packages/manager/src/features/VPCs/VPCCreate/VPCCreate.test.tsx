@@ -106,6 +106,6 @@ describe('VPC create page', () => {
     const { getAllByTestId } = renderWithTheme(<VPCCreate />);
     const subnetIP = getAllByTestId('textfield-input');
     expect(subnetIP[3]).toBeInTheDocument();
-    expect(subnetIP[3]).toHaveValue('10.0.0.0/24');
+    expect(subnetIP[3]).toHaveValue('10.0.4.0/24');
   });
 });

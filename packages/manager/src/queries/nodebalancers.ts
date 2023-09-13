@@ -34,6 +34,7 @@ import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
+import { queryKey as PROFILE_QUERY_KEY } from './profile';
 
 export const queryKey = 'nodebalancers';
 
@@ -108,6 +109,8 @@ export const useNodebalancerCreateMutation = () => {
       onSuccess(data) {
         queryClient.invalidateQueries([queryKey]);
         queryClient.setQueryData([queryKey, 'nodebalancer', data.id], data);
+        // If a restricted user creates an entity, we must make sure grants are up to date.
+        queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
       },
     }
   );

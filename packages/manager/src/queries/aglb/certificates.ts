@@ -1,11 +1,21 @@
-import { getLoadbalancerCertificates } from '@linode/api-v4';
-import { useInfiniteQuery, useQuery } from 'react-query';
+import {
+  createLoadbalancerCertificate,
+  deleteLoadbalancerCertificate,
+  getLoadbalancerCertificates,
+} from '@linode/api-v4';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
   APIError,
   Certificate,
+  CreateCertificatePayload,
   Filter,
   Params,
   ResourcePage,
@@ -17,9 +27,56 @@ export const useLoadBalancerCertificatesQuery = (
   filter: Filter
 ) => {
   return useQuery<ResourcePage<Certificate>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'certificates', params, filter],
+    [
+      QUERY_KEY,
+      'loadbalancer',
+      id,
+      'certificates',
+      'paginated',
+      params,
+      filter,
+    ],
     () => getLoadbalancerCertificates(id, params, filter),
     { keepPreviousData: true }
+  );
+};
+
+export const useLoadBalancerCertificateCreateMutation = (
+  loadbalancerId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<Certificate, APIError[], CreateCertificatePayload>(
+    (data) => createLoadbalancerCertificate(loadbalancerId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'certificates',
+        ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerCertificateDeleteMutation = (
+  loadbalancerId: number,
+  certificateId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(
+    () => deleteLoadbalancerCertificate(loadbalancerId, certificateId),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'certificates',
+        ]);
+      },
+    }
   );
 };
 

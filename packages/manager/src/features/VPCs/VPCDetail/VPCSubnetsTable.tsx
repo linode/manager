@@ -1,11 +1,15 @@
-import { styled } from '@mui/material/styles';
+import { Subnet } from '@linode/api-v4';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import {
   CollapsibleTable,
   TableItem,
 } from 'src/components/CollapsibleTable/CollapsibleTable';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -16,11 +20,13 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { SubnetsActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
+import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSubnetsQuery } from 'src/queries/vpcs';
 
+import { SubnetDeleteDialog } from './SubnetDeleteDialog';
+import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
 
 interface Props {
@@ -29,7 +35,20 @@ interface Props {
 
 const preferenceKey = 'vpc-subnets';
 
-export const VPCSubnetsTable = ({ vpcId }: Props) => {
+export const VPCSubnetsTable = (props: Props) => {
+  const { vpcId } = props;
+  const theme = useTheme();
+  const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
+  const [selectedSubnet, setSelectedSubnet] = React.useState<
+    Subnet | undefined
+  >();
+  const [deleteSubnetDialogOpen, setDeleteSubnetDialogOpen] = React.useState(
+    false
+  );
+  const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
+    false
+  );
+
   const pagination = usePagination(1, preferenceKey);
 
   const { handleOrderChange, order, orderBy } = useOrder(
@@ -45,14 +64,42 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
     ['+order_by']: orderBy,
   };
 
+  const generateSubnetsXFilter = (searchText: string) => {
+    if (searchText === '') {
+      return filter;
+    }
+    return {
+      '+or': [
+        {
+          label: { '+contains': searchText },
+        },
+        {
+          id: { '+contains': searchText },
+        },
+      ],
+      ...filter,
+    };
+  };
+
   const { data: subnets, error, isLoading } = useSubnetsQuery(
     vpcId,
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter
+    generateSubnetsXFilter(subnetsFilterText)
   );
+
+  const handleSearch = (searchText: string) => {
+    setSubnetsFilterText(searchText);
+    // If you're on page 2+, need to go back to page 1 to see the actual results
+    pagination.handlePageChange(1);
+  };
+
+  const handleSubnetDelete = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
+    setDeleteSubnetDialogOpen(true);
+  };
 
   if (isLoading) {
     return <CircleProgress />;
@@ -111,7 +158,12 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
             <TableCell>{subnet.linodes.length}</TableCell>
           </Hidden>
           <TableCell align="right">
-            <SubnetsActionMenu></SubnetsActionMenu>
+            <SubnetActionMenu
+              handleDelete={handleSubnetDelete}
+              numLinodes={subnet.linodes.length}
+              subnet={subnet}
+              vpcId={vpcId}
+            />
           </TableCell>
         </>
       );
@@ -144,6 +196,36 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
 
   return (
     <>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        paddingBottom={theme.spacing(2)}
+      >
+        <DebouncedSearchTextField
+          debounceTime={250}
+          hideLabel
+          isSearching={false}
+          label="Filter Subnets by label or id"
+          onSearch={handleSearch}
+          placeholder="Filter Subnets by label or id"
+          sx={{
+            [theme.breakpoints.up('sm')]: {
+              width: '416px',
+            },
+          }}
+        />
+        <Button
+          buttonType="primary"
+          onClick={() => setSubnetCreateDrawerOpen(true)}
+        >
+          Create Subnet
+        </Button>
+      </Box>
+      <SubnetCreateDrawer
+        onClose={() => setSubnetCreateDrawerOpen(false)}
+        open={subnetCreateDrawerOpen}
+        vpcId={vpcId}
+      />
       <CollapsibleTable
         TableItems={getTableItems()}
         TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Subnets'} />}
@@ -155,6 +237,12 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <SubnetDeleteDialog
+        onClose={() => setDeleteSubnetDialogOpen(false)}
+        open={deleteSubnetDialogOpen}
+        subnet={selectedSubnet}
+        vpcId={vpcId}
       />
     </>
   );
