@@ -38,7 +38,7 @@ import { getLinodes, Linode } from '@linode/api-v4/lib/linodes'
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import React from 'react'
 
-const MyComponent: React.FC<{}> = () => {
+const MyComponent = () => {
   const [linodes, setLinodesData] = React.useState<Linode[] | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
