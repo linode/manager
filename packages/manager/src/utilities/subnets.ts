@@ -1,6 +1,6 @@
 import { determineIPType, vpcsValidateIP } from '@linode/validation';
 
-export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.0.0/24';
+export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.4.0/24';
 export const RESERVED_IP_NUMBER = 4;
 
 // VPC: TODO - added ipv6 related fields here, but they will not be used until VPCs support ipv6

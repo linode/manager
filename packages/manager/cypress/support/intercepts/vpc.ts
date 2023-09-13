@@ -93,3 +93,14 @@ export const mockDeleteSubnet = (
     {}
   );
 };
+
+/**
+ * Intercepts POST request to create a subnet for a VPC and mocks response.
+ *
+ * @param vpcId - ID of VPC for which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateSubnet = (vpcId: number): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`vpcs/${vpcId}/subnets`), {});
+};

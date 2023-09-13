@@ -6,9 +6,11 @@ import * as React from 'react';
 import { Button } from 'src/components/Button/Button';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { TextField } from 'src/components/TextField';
-import { RESERVED_IP_NUMBER } from 'src/utilities/subnets';
-import { SubnetFieldState } from 'src/utilities/subnets';
-import { calculateAvailableIPv4s } from 'src/utilities/subnets';
+import {
+  calculateAvailableIPv4s,
+  SubnetFieldState,
+  RESERVED_IP_NUMBER,
+} from 'src/utilities/subnets';
 
 interface Props {
   disabled?: boolean;
@@ -53,13 +55,17 @@ export const SubnetNode = (props: Props) => {
   return (
     <Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
-        <Grid xs={isRemovable ? 11 : 12}>
+        <Grid
+          xs={isRemovable ? 11 : 12}
+          sx={{ ...(!isRemovable && { width: '100%' }) }}
+        >
           <TextField
             disabled={disabled}
             errorText={subnet.labelError}
             inputId={`subnet-label-${idx}`}
             label="Subnet label"
             onChange={onLabelChange}
+            placeholder="Enter a subnet label"
             value={subnet.label}
           />
         </Grid>
