@@ -86,7 +86,7 @@ const VPCCreate = () => {
         const subnet = {
           label: values.subnets[i].label,
           labelError: errors[apiSubnetIdx].label ?? '',
-          // todo: ipv6 error handling
+          // @TODO VPC: IPv6 error handling
           ip: {
             ...values.subnets[i].ip,
             ipv4Error: errors[apiSubnetIdx].ipv4 ?? '',
