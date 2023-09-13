@@ -105,7 +105,7 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
                 {renderQuantity(invoiceItem.quantity)}
               </TableCell>
               {flags.dcSpecificPricing && (
-                <TableCell parentColumn="Region">
+                <TableCell data-qa-region parentColumn="Region">
                   {getInvoiceRegion(invoiceItem)}
                 </TableCell>
               )}
