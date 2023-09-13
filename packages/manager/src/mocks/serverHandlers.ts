@@ -942,11 +942,11 @@ export const handlers = [
             region: 'br-gru',
           }),
           invoiceItemFactory.build({
-            label: 'Outbound Transfer',
+            label: 'Outbound Transfer Overage',
             region: null,
           }),
           invoiceItemFactory.build({
-            label: 'Outbound Transfer',
+            label: 'Outbound Transfer Overage',
             region: 'id-cgk',
           }),
         ])

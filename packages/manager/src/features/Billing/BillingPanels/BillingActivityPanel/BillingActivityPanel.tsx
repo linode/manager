@@ -45,6 +45,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
+import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
@@ -186,6 +187,8 @@ export const BillingActivityPanel = (props: Props) => {
 
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
+  const { data: regions } = useRegionsQuery();
+
   const isAkamaiCustomer = account?.billing_source === 'akamai';
 
   const { classes } = useStyles();
@@ -243,13 +246,14 @@ export const BillingActivityPanel = (props: Props) => {
         .then(async (invoiceItems) => {
           pdfLoading.delete(id);
 
-          const result = await printInvoice(
-            account!,
+          const result = await printInvoice({
+            account,
+            flags,
             invoice,
-            invoiceItems,
+            items: invoiceItems,
+            regions: regions ?? [],
             taxes,
-            flags
-          );
+          });
 
           if (result.status === 'error') {
             pdfErrors.add(id);
@@ -260,7 +264,7 @@ export const BillingActivityPanel = (props: Props) => {
           pdfErrors.add(id);
         });
     },
-    [account, flags, invoices, pdfErrors, pdfLoading]
+    [account, flags, invoices, pdfErrors, pdfLoading, regions]
   );
 
   const downloadPaymentPDF = React.useCallback(
