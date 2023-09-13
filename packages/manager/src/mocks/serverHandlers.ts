@@ -440,6 +440,9 @@ const vpc = [
   rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
   }),
+  rest.delete('*/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
@@ -453,6 +456,10 @@ const vpc = [
   rest.post('*/vpcs', (req, res, ctx) => {
     const vpc = vpcFactory.build({ ...(req.body as any) });
     return res(ctx.json(vpc));
+  }),
+  rest.post('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    const subnet = subnetFactory.build({ ...(req.body as any) });
+    return res(ctx.json(subnet));
   }),
 ];
 
@@ -939,11 +946,11 @@ export const handlers = [
             region: 'br-gru',
           }),
           invoiceItemFactory.build({
-            label: 'Outbound Transfer',
+            label: 'Outbound Transfer Overage',
             region: null,
           }),
           invoiceItemFactory.build({
-            label: 'Outbound Transfer',
+            label: 'Outbound Transfer Overage',
             region: 'id-cgk',
           }),
         ])
