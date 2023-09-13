@@ -283,7 +283,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     <span>
                       A single Volume can range from 10 to 10240 GB in size. Up
                       to eight Volumes can be attached to a single Linode.
-                      Select a Region to see cost per GB.
+                      Select a region to see cost per GB.
                     </span>
                   ) : (
                     <span>
