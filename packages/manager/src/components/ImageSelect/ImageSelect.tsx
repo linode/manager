@@ -213,7 +213,6 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
             placeholder="Choose an image"
             {...reactSelectProps}
             className={classNames}
-            menuIsOpen={true}
           />
         </Grid>
       </Grid>
