@@ -3,12 +3,14 @@ import {
   mockGetVPCs,
   mockDeleteVPC,
   mockUpdateVPC,
+  mockDeleteSubnet,
+  mockGetSubnets,
 } from 'support/intercepts/vpc';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
-import { vpcFactory } from '@src/factories';
+import { vpcFactory, subnetFactory } from '@src/factories';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import type { VPC } from '@linode/api-v4';
@@ -114,5 +116,78 @@ describe('VPC details page', () => {
     // Confirm that user is redirected to VPC landing page.
     cy.url().should('endWith', '/vpcs');
     cy.findByText('Create a private and isolated network.');
+  });
+
+  /**
+   * - Confirms Subnets section and table is shown on the VPC details page
+   * - Confirms UI flow when deleting a subnet from a VPC's detail page
+   */
+  it('can delete a subnet from the VPC details page', () => {
+    const mockSubnet = subnetFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+    const mockVPC = vpcFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      subnets: [mockSubnet],
+    });
+
+    const mockVPCAfterSubnetDeletion = vpcFactory.build({
+      ...mockVPC,
+      subnets: [],
+    });
+
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+
+    mockGetVPC(mockVPC).as('getVPC');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
+    mockDeleteSubnet(mockVPC.id, mockSubnet.id).as('deleteSubnet');
+
+    cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC', '@getSubnets']);
+
+    // confirm that vpc and subnet details get displayed
+    cy.findByText(mockVPC.label).should('be.visible');
+    cy.findByText('Subnets (1)').should('be.visible');
+    cy.findByText(mockSubnet.label).should('be.visible');
+
+    // confirm that subnet can be deleted and that page reflects changes
+    ui.actionMenu
+      .findByTitle(`Action menu for Subnet ${mockSubnet.label}`)
+      .should('be.visible')
+      .click();
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    mockGetVPC(mockVPCAfterSubnetDeletion).as('getVPC');
+    mockGetSubnets(mockVPC.id, []).as('getSubnets');
+
+    ui.dialog
+      .findByTitle(`Delete Subnet ${mockSubnet.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Subnet label')
+          .should('be.visible')
+          .click()
+          .type(mockSubnet.label);
+
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait(['@deleteSubnet', '@getVPC', '@getSubnets']);
+
+    // confirm that user should still be on VPC's detail page
+    // confirm there are no remaining subnets
+    cy.url().should('endWith', `/${mockVPC.id}`);
+    cy.findByText('Subnets (0)');
+    cy.findByText('No Subnets');
+    cy.findByText(mockSubnet.label).should('not.exist');
   });
 });
