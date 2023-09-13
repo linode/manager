@@ -29,6 +29,7 @@ describe('Account invoices', () => {
    * - Confirms that subtotals and tax breakdowns are shown in summary.
    * - Confirms that download buttons are present and enabled.
    * - Confirms that clicking the "Back to Billing" button redirects to billing page.
+   * - Confirms that the "Region" column is not present when DC-specific pricing is disabled.
    */
   it('lists invoice items on invoice details page', () => {
     const mockInvoiceItems = buildArray(20, (i) => {
@@ -106,6 +107,12 @@ describe('Account invoices', () => {
       '@getInvoiceItems',
     ]);
 
+    // TODO Remove this and replace with positive assertions when DC pricing goes live.
+    // Confirm that "Region" table column is not present.
+    cy.findByLabelText('Invoice Details').within(() => {
+      cy.get('thead').findByText('Region').should('not.exist');
+    });
+
     // Confirm that each invoice item is listed on the page with expected data.
     mockInvoiceItems.forEach((invoiceItem: InvoiceItem) => {
       cy.findByText(invoiceItem.label)
@@ -168,13 +175,19 @@ describe('Account invoices', () => {
     // Confirm that clicking the "Back to Billing" button redirects the user to
     // the account billing page.
     cy.get('[data-qa-back-to-billing]').should('be.visible').click();
-
     cy.url().should('endWith', '/account/billing');
   });
 
-  // it('paginates the list of invoice items for large invoices', () => {
+  it.only('paginates the list of invoice items for large invoices', () => {
+    const mockInvoice = invoiceFactory.build();
+    const mockInvoiceItems = invoiceItemFactory.buildList(100);
 
-  // });
+    mockGetInvoice(mockInvoice).as('getInvoice');
+    mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
+
+    cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
+    cy.wait(['@getInvoice', '@getInvoiceItems']);
+  });
 
   /*
    * - Confirms that invoice item region info is shown when DC-specific pricing is enabled.
