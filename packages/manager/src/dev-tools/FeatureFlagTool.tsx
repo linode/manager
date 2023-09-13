@@ -13,7 +13,6 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'metadata', label: 'Metadata' },
-  { flag: 'databaseBeta', label: 'Database Beta' },
   { flag: 'vpc', label: 'VPC' },
   { flag: 'aglb', label: 'AGLB' },
   { flag: 'dcSpecificPricing', label: 'DC-Specific Pricing' },
