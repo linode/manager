@@ -19,25 +19,7 @@ export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
 export const StyledTruncateLinks = styled('div', {
   label: 'StyledTruncateLinks',
 })(() => ({
-  '&::after': {
-    background: 'white',
-    content: '""',
-    height: '1rem',
-    position: 'absolute',
-    right: 0,
-    width: '1rem',
-  },
-  '&::before': {
-    bottom: 0,
-    content: '"... + More"',
-    position: 'absolute',
-    right: 0,
-  },
-  '--max-lines': 3,
-  maxHeight: `3rem`,
-  overflow: 'hidden',
-
-  paddingRight: '1rem',
-
-  position: 'relative',
+  WebkitBoxOrient: 'vertical',
+  WebkitLineClamp: 3,
+  display: '-webkit-box',
 }));
