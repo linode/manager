@@ -36,5 +36,5 @@ export const StyledSpan = styled('span', {
 })(({ theme }) => ({
   display: 'inline-block',
   marginBottom: theme.spacing(0.25),
-  marginRight: theme.spacing(1),
+  marginRight: theme.spacing(0.5),
 }));
