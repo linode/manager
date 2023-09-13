@@ -36,7 +36,7 @@ describe('Create Firewall Drawer', () => {
     expect(error).toBeInTheDocument();
   });
 
-  it('should be submittable when form is filled out correctly', async () => {
+  it('should be able to submit when fields are filled out correctly', async () => {
     const { getByTestId } = renderWithTheme(
       <CreateFirewallDrawer {...props} />
     );
