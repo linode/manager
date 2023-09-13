@@ -86,7 +86,7 @@ export interface SubnetError {
  *          }
  *
  * @param errors the errors from the API
- * @param setFieldError function to set non subnet related field errors
+ * @param setFieldError function to set non-subnet related field errors
  * @param setError function to set (non subnet related) general API errors
  */
 export const handleVPCAndSubnetErrors = (
