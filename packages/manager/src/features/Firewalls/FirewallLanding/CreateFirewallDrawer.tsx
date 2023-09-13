@@ -139,8 +139,9 @@ export const CreateFirewallDrawer = React.memo(
     React.useEffect(() => {
       if (open) {
         resetForm();
+        setSelectedNodeBalancers([]);
       }
-    }, [open]);
+    }, [open, resetForm]);
 
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
@@ -261,6 +262,7 @@ export const CreateFirewallDrawer = React.memo(
               marginTop: theme.spacing(2),
             })}
             disabled={userCannotAddFirewall || !!nodebalancerError}
+            errorText={errors['devices.nodebalancers']}
             label="NodeBalancers"
             loading={nodebalancerIsLoading}
             multiple
