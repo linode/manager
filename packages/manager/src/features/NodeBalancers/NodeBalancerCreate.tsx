@@ -27,6 +27,7 @@ import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegion
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
@@ -38,6 +39,8 @@ import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { NODEBALANCER_PRICE } from 'src/utilities/pricing/constants';
+import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
@@ -50,9 +53,6 @@ import {
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
-import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
-import { NODEBALANCER_PRICE } from 'src/utilities/pricing/constants';
-import { useFlags } from 'src/hooks/useFlags';
 
 interface NodeBalancerFieldsState {
   configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
@@ -483,6 +483,9 @@ const NodeBalancerCreate = () => {
               heading={`Configuration - Port ${
                 nodeBalancerFields.configs[idx].port ?? ''
               }`}
+              sx={{
+                padding: 1,
+              }}
               defaultExpanded
               key={idx}
             >
