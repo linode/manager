@@ -143,14 +143,15 @@ export const linodeInterfaceSchema = object().shape({
         /[a-zA-Z0-9-]+/,
         'Must include only ASCII letters, numbers, and dashes'
       ),
-    otherwise: string()
-      .nullable()
-      .test({
+    otherwise: string().when('label', {
+      is: null,
+      then: string().nullable(),
+      otherwise: string().test({
         name: testnameDisallowedBasedOnPurpose('VLAN'),
         message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
-        test: (value) =>
-          typeof value === 'undefined' || value === '' || value === null,
+        test: (value) => typeof value === 'undefined' || value === '',
       }),
+    }),
   }),
   ipam_address: string().when('purpose', {
     is: 'vlan',
@@ -159,14 +160,15 @@ export const linodeInterfaceSchema = object().shape({
       message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
       test: validateIP,
     }),
-    otherwise: string()
-      .nullable()
-      .test({
+    otherwise: string().when('ipam_address', {
+      is: null,
+      then: string().nullable(),
+      otherwise: string().test({
         name: testnameDisallowedBasedOnPurpose('VLAN'),
         message: testmessageDisallowedBasedOnPurpose('vlan', 'ipam_address'),
-        test: (value) =>
-          typeof value === 'undefined' || value === '' || value === null,
+        test: (value) => typeof value === 'undefined' || value === '',
       }),
+    }),
   }),
   primary: boolean().notRequired(),
   subnet_id: number().when('purpose', {

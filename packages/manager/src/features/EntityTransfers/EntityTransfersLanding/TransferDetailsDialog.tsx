@@ -1,23 +1,9 @@
 import { TransferEntities } from '@linode/api-v4/lib/entity-transfers/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Typography } from 'src/components/Typography';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  entities: {
-    marginBottom: theme.spacing(2),
-  },
-  label: {
-    color: theme.textColors.headlineStatic,
-    fontFamily: theme.font.bold,
-  },
-  token: {
-    marginBottom: theme.spacing(3),
-  },
-}));
 
 export interface Props {
   entities?: TransferEntities;
@@ -26,8 +12,7 @@ export interface Props {
   token: string;
 }
 
-export const TransferDetailsDialog: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const TransferDetailsDialog = React.memo((props: Props) => {
   const { entities, isOpen, onClose, token } = props;
 
   return (
@@ -37,12 +22,12 @@ export const TransferDetailsDialog: React.FC<Props> = (props) => {
       open={isOpen}
       title="Service Transfer Details"
     >
-      <div className={classes.token}>
-        <Typography className={classes.label}>Token: </Typography>
+      <StyledTokenDiv>
+        <StyledTypography>Token: </StyledTypography>
         {token}
-      </div>
-      <Typography className={classes.label}>Linode IDs:</Typography>
-      <div className={classes.entities}>
+      </StyledTokenDiv>
+      <StyledTypography>Linode IDs:</StyledTypography>
+      <StyledEntitiesDiv>
         {entities?.linodes.map((entity, idx) => {
           return (
             <Typography data-testid={idx} key={idx}>
@@ -50,9 +35,26 @@ export const TransferDetailsDialog: React.FC<Props> = (props) => {
             </Typography>
           );
         })}
-      </div>
+      </StyledEntitiesDiv>
     </Dialog>
   );
-};
+});
 
-export default React.memo(TransferDetailsDialog);
+export const StyledEntitiesDiv = styled('div', {
+  label: 'StyledDiv',
+})(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+}));
+
+export const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  color: theme.textColors.headlineStatic,
+  fontFamily: theme.font.bold,
+}));
+
+export const StyledTokenDiv = styled('div', {
+  label: 'StyledTokenDiv',
+})(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+}));
