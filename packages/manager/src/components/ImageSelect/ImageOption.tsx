@@ -53,7 +53,7 @@ interface ImageOptionProps extends OptionProps<any, any> {
   data: ImageItem;
 }
 
-export const ImageOption = React.memo((props: ImageOptionProps) => {
+export const ImageOption = (props: ImageOptionProps) => {
   const classes = useStyles();
   const { data, isFocused, isSelected, label } = props;
   const flags = useFlags();
@@ -90,7 +90,7 @@ export const ImageOption = React.memo((props: ImageOptionProps) => {
       </Box>
     </Option>
   );
-});
+};
 
 const sxCloudInitTooltipIcon = {
   '& svg': {
