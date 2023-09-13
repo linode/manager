@@ -19,6 +19,7 @@ import { randomNumber } from 'support/util/random';
 import { DateTime } from 'luxon';
 import { chooseRegion } from 'support/util/regions';
 import { formatUsd } from 'support/util/currency';
+import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
 
 describe('Account invoices', () => {
@@ -237,8 +238,15 @@ describe('Account invoices', () => {
             // If the invoice item has a region, confirm that it is displayed
             // in the table row. Otherwise, confirm that the table cell which
             // would normally show the region is empty.
+            const getRegionLabel = (regionId: string) => {
+              const region = getRegionById(regionId);
+              return `${region.label} (${region.id})`;
+            };
+
             !!invoiceItem.region
-              ? cy.findByText(invoiceItem.region).should('be.visible')
+              ? cy
+                  .findByText(getRegionLabel(invoiceItem.region))
+                  .should('be.visible')
               : cy
                   .get('[data-qa-region]')
                   .should('be.visible')
