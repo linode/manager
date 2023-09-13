@@ -1,6 +1,8 @@
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
+import { TableCell } from 'src/components/TableCell';
+
 export const StyledDiv = styled('div', {
   label: 'StyledDiv',
 })(() => ({
@@ -21,5 +23,12 @@ export const StyledFirewallLink = styled(Link, { label: 'StyledFirewallLink' })(
     display: 'block',
     fontSize: '.875rem',
     lineHeight: '1.125rem',
+  })
+);
+
+export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
+  () => ({
+    border: 0,
+    padding: 0,
   })
 );

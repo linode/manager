@@ -1,6 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,13 +12,11 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
-import { StyledFirewallLink } from './FirewallRow.styles';
+import { StyledTableCell } from './FirewallRow.styles';
 
 type CombinedProps = Firewall & ActionHandlers;
 
 export const FirewallRow = React.memo((props: CombinedProps) => {
-  const cellRef = React.useRef<HTMLTableCellElement | null>(null);
-
   const { id, label, rules, status, ...actionHandlers } = props;
 
   const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
@@ -31,9 +29,9 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
       data-testid={`firewall-row-${id}`}
     >
       <TableCell>
-        <StyledFirewallLink tabIndex={0} to={`/firewalls/${id}`}>
+        <StyledLink tabIndex={0} to={`/firewalls/${id}`}>
           {label}
-        </StyledFirewallLink>
+        </StyledLink>
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
@@ -42,22 +40,30 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
         <TableCell>
-          <div ref={cellRef}>
-            {getLinodesCellString(devices ?? [], isLoading, error ?? undefined)}
-          </div>
+          {getDevicesCellString(devices ?? [], isLoading, error ?? undefined)}
         </TableCell>
       </Hidden>
-      <TableCell actionCell>
+      <StyledTableCell actionCell>
         <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}
           firewallStatus={status}
           {...actionHandlers}
+          style={{ border: '0', padding: '0' }}
         />
-      </TableCell>
+      </StyledTableCell>
     </TableRow>
   );
 });
+
+export const StyledLink = styled(Link, { label: 'StyledLink' })(() => ({
+  '&:hover, &:focus': {
+    textDecoration: 'underline',
+  },
+  display: 'block',
+  fontSize: '.875rem',
+  lineHeight: '1.125rem',
+}));
 
 /**
  *
@@ -88,7 +94,7 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
   return [(rules.inbound || []).length, (rules.outbound || []).length];
 };
 
-const getLinodesCellString = (
+const getDevicesCellString = (
   data: FirewallDevice[],
   loading: boolean,
   error?: APIError[]
@@ -105,96 +111,29 @@ const getLinodesCellString = (
     return 'None assigned';
   }
 
-  return <DeviceTableCell data={data} />;
+  return getDeviceLinks(data);
 };
 
-function useMeasure() {
-  const ref = React.useRef<HTMLDivElement | null>(null);
-  const [bounds, setBounds] = React.useState({ height: 0, width: 0 });
-
-  React.useEffect(() => {
-    if (ref.current) {
-      const resizeObserver = new ResizeObserver(([entry]) =>
-        setBounds(entry.contentRect)
-      );
-      resizeObserver.observe(ref.current);
-      return () => resizeObserver.disconnect();
-    }
-    // Disabling the next line ESLint check because we want to ensure all code paths return a value for TypeScript
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    return () => {};
-  }, []);
-
-  return { bounds, ref };
-}
-
-interface DeviceTableCellProps {
-  data: FirewallDevice[];
-}
-
-export const DeviceTableCell = (props: DeviceTableCellProps) => {
-  const { data } = props;
-  const { bounds, ref } = useMeasure();
-
-  const rowHeight = parseFloat(getComputedStyle(document.body).fontSize);
-  const maxRows = 3;
-
-  const [visibleCount, setVisibleCount] = React.useState<number>(data.length);
-
-  React.useEffect(() => {
-    let frameId: number; // to store the requestAnimationFrame ID
-
-    const handleResize = () => {
-      // console.log('');
-      // console.log('bounds.width: ', bounds.width);
-      // console.log('bounds.height: ', bounds.height);
-      // console.log('visibleCount: ', visibleCount);
-      const currentNumberOfRows = Math.floor(bounds.height / rowHeight);
-      // console.log('currentNumberOfRows: ', currentNumberOfRows);
-      if (currentNumberOfRows > maxRows) {
-        setVisibleCount((prevCount) => {
-          return Math.max(prevCount - 1, 0);
-        });
-        frameId = window.requestAnimationFrame(handleResize);
-      } else if (currentNumberOfRows < maxRows && visibleCount < data.length) {
-        setVisibleCount((prevCount) => {
-          return Math.min(prevCount + 1, data.length);
-        });
-        frameId = window.requestAnimationFrame(handleResize);
-      }
-    };
-
-    frameId = window.requestAnimationFrame(handleResize);
-
-    return () => window.cancelAnimationFrame(frameId);
-  }, [
-    bounds.height,
-    bounds.width,
-    rowHeight,
-    maxRows,
-    visibleCount,
-    data.length,
-  ]);
-
+export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
+  const firstThree = data.slice(0, 8);
   return (
-    <div ref={ref}>
-      {data.slice(0, visibleCount).map((device, idx) => (
-        <React.Fragment key={device.id}>
+    <>
+      {firstThree.map((thisDevice, idx) => (
+        <Link
+          className="link secondaryLink"
+          data-testid="firewall-row-link"
+          key={thisDevice.id}
+          to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
+        >
           {idx > 0 && `, `}
-          <Link
-            className="link secondaryLink"
-            data-testid="firewall-row-link"
-            to={`/${device.entity.type}s/${device.entity.id}`}
-          >
-            {device.entity.label}
-          </Link>
-        </React.Fragment>
+          {thisDevice.entity.label}
+        </Link>
       ))}
-      {data.length > visibleCount && (
+      {data.length > 8 && (
         <span>
-          {`, `}+{data.length - visibleCount}
+          {`, `}+ {data.length - 8}
         </span>
       )}
-    </div>
+    </>
   );
 };
