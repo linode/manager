@@ -41,6 +41,8 @@ type CertificateTypeFilter = 'all' | Certificate['type'];
 export const LoadBalancerCertificates = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
+  const id = Number(loadbalancerId);
+
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
 
@@ -75,7 +77,7 @@ export const LoadBalancerCertificates = () => {
   }
 
   const { data, error, isLoading } = useLoadBalancerCertificatesQuery(
-    Number(loadbalancerId),
+    id,
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -213,13 +215,13 @@ export const LoadBalancerCertificates = () => {
         pageSize={pagination.pageSize}
       />
       <CreateCertificateDrawer
-        loadbalancerId={Number(loadbalancerId)}
+        loadbalancerId={id}
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
       />
       <DeleteCertificateDialog
         certificate={selectedCertificate}
-        loadbalancerId={Number(loadbalancerId)}
+        loadbalancerId={id}
         onClose={() => setIsDeleteDrawerOpen(false)}
         open={isDeleteDrawerOpen}
       />
