@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 
-import ImageSelect from 'src/components/ImageSelect';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
