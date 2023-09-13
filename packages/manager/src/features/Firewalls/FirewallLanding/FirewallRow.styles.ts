@@ -3,15 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { TableCell } from 'src/components/TableCell';
 
-export const StyledLink = styled(Link, { label: 'StyledLink' })(() => ({
-  '&:hover, &:focus': {
-    textDecoration: 'underline',
-  },
-  display: 'block',
-  fontSize: '.875rem',
-  lineHeight: '1.125rem',
-}));
-
 export const StyledDevicesLink = styled(Link, {
   label: 'StyledDevicesLink',
 })(() => ({

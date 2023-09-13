@@ -11,7 +11,7 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
-import { StyledLink, StyledTableCell } from './FirewallRow.styles';
+import { StyledTableCell } from './FirewallRow.styles';
 
 type CombinedProps = Firewall & ActionHandlers;
 
@@ -28,9 +28,9 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
       data-testid={`firewall-row-${id}`}
     >
       <TableCell>
-        <StyledLink tabIndex={0} to={`/firewalls/${id}`}>
+        <Link tabIndex={0} to={`/firewalls/${id}`}>
           {label}
-        </StyledLink>
+        </Link>
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
