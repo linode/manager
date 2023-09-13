@@ -45,6 +45,7 @@ import {
   StyledColumnLabelGrid,
   StyledCopyTooltip,
   StyledGradientDiv,
+  StyledLabelBox,
   StyledLink,
   StyledListItem,
   StyledRightColumnGrid,
@@ -53,8 +54,7 @@ import {
   StyledTableCell,
   StyledTableGrid,
   StyledTableRow,
-  StyledVPCGrid,
-  sxLabel,
+  StyledVPCBox,
   sxLastListItem,
   sxListItemFirstChild,
 } from './LinodeEntityDetail.styles';
@@ -369,7 +369,10 @@ export const Body = React.memo((props: BodyProps) => {
     return Boolean(subnets.find((subnet) => subnet.linodes.includes(linodeId)));
   });
 
-  const { data: configs } = useAllLinodeConfigsQuery(linodeId);
+  const { data: configs } = useAllLinodeConfigsQuery(
+    linodeId,
+    Boolean(vpcLinodeIsAssignedTo) // only grab configs if necessary
+  );
   let _configInterfaceWithVPC: Interface | undefined;
 
   // eslint-disable-next-line no-unused-expressions
@@ -497,11 +500,9 @@ export const Body = React.memo((props: BodyProps) => {
             direction="row"
             spacing={2}
           >
-            <StyledVPCGrid>
+            <StyledVPCBox>
               <StyledListItem>
-                <Box component="span" sx={sxLabel}>
-                  Label:
-                </Box>{' '}
+                <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
                 <Link
                   data-testid="assigned-vpc-label"
                   to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
@@ -509,23 +510,23 @@ export const Body = React.memo((props: BodyProps) => {
                   {vpcLinodeIsAssignedTo.label}
                 </Link>
               </StyledListItem>
-            </StyledVPCGrid>
-            <StyledVPCGrid>
+            </StyledVPCBox>
+            <StyledVPCBox>
               <StyledListItem>
-                <Box component="span" data-testid="subnets-string" sx={sxLabel}>
+                <StyledLabelBox component="span" data-testid="subnets-string">
                   Subnets:
-                </Box>{' '}
+                </StyledLabelBox>{' '}
                 {getSubnetsString(vpcLinodeIsAssignedTo.subnets)}
               </StyledListItem>
-            </StyledVPCGrid>
-            <StyledVPCGrid>
+            </StyledVPCBox>
+            <StyledVPCBox>
               <StyledListItem sx={{ ...sxLastListItem }}>
-                <Box component="span" data-testid="vpc-ipv4" sx={sxLabel}>
+                <StyledLabelBox component="span" data-testid="vpc-ipv4">
                   VPC IPv4:
-                </Box>{' '}
+                </StyledLabelBox>{' '}
                 {_configInterfaceWithVPC?.ipv4?.vpc}
               </StyledListItem>
-            </StyledVPCGrid>
+            </StyledVPCBox>
           </Grid>
         </Grid>
       )}
@@ -672,26 +673,20 @@ export const Footer = React.memo((props: FooterProps) => {
                 },
               }}
             >
-              <Box component="span" sx={sxLabel}>
-                Plan:{' '}
-              </Box>{' '}
+              <StyledLabelBox component="span">Plan: </StyledLabelBox>{' '}
               {linodePlan}
             </StyledListItem>
           )}
           {linodeRegionDisplay && (
             <StyledListItem>
-              <Box component="span" sx={sxLabel}>
-                Region:
-              </Box>{' '}
+              <StyledLabelBox component="span">Region:</StyledLabelBox>{' '}
               {linodeRegionDisplay}
             </StyledListItem>
           )}
         </StyledBox>
         <StyledBox>
           <StyledListItem sx={{ ...sxListItemFirstChild }}>
-            <Box component="span" sx={sxLabel}>
-              Linode ID:
-            </Box>{' '}
+            <StyledLabelBox component="span">Linode ID:</StyledLabelBox>{' '}
             {linodeId}
           </StyledListItem>
           <StyledListItem
@@ -699,9 +694,7 @@ export const Footer = React.memo((props: FooterProps) => {
               ...sxLastListItem,
             }}
           >
-            <Box component="span" sx={sxLabel}>
-              Created:
-            </Box>{' '}
+            <StyledLabelBox component="span">Created:</StyledLabelBox>{' '}
             {formatDate(linodeCreated, {
               timezone: profile?.timezone,
             })}

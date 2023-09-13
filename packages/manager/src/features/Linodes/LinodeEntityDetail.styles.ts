@@ -1,8 +1,8 @@
 // This component was built asuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
@@ -130,7 +130,7 @@ export const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
   })
 );
 
-export const StyledVPCGrid = styled(Grid, { label: 'StyledVPCGrid' })(
+export const StyledVPCBox = styled(Box, { label: 'StyledVPCBox' })(
   ({ theme }) => ({
     padding: 0,
     [theme.breakpoints.down('md')]: {
@@ -148,10 +148,12 @@ export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
   },
 }));
 
-export const sxLabel = (theme: Theme) => ({
-  fontFamily: theme.font.bold,
-  marginRight: '4px',
-});
+export const StyledLabelBox = styled(Box, { label: 'StyledLabelBox' })(
+  ({ theme }) => ({
+    fontFamily: theme.font.bold,
+    marginRight: '4px',
+  })
+);
 
 export const sxListItemMdBp = {
   borderRight: 0,
