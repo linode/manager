@@ -266,7 +266,7 @@ const VPCCreate = () => {
               allow for controlled access to VPC resources. Subnets within a VPC
               are routable regardless of the address spaces they are in.
               <Link to="#"> Learn more</Link>.
-              {/* TODO: VPC - subnet learn more link here */}
+              {/* @TODO VPC: subnet learn more link here */}
             </StyledBodyTypography>
             {generalSubnetErrorsFromAPI
               ? generalSubnetErrorsFromAPI.map((apiError: APIError) => (
