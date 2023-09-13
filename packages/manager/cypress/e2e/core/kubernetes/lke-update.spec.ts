@@ -20,10 +20,17 @@ import {
   mockGetDashboardUrl,
   mockGetApiEndpoints,
 } from 'support/intercepts/lke';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetLinodeType, mockGetLinodes } from 'support/intercepts/linodes';
 import type { PoolNodeResponse, Linode } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { randomIp, randomLabel } from 'support/util/random';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { getRegionById } from 'support/util/regions';
+import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -727,5 +734,143 @@ describe('LKE cluster updates', () => {
       .findByTitle('Delete Pool')
       .should('be.visible')
       .should('be.disabled');
+  });
+});
+
+describe('LKE cluster updates for DC-specific prices', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      dcSpecificPricing: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+  });
+
+  /*
+   * - Confirms node pool resize UI flow using mocked API responses.
+   * - Confirms that pool size can be increased and decreased.
+   * - Confirms that UI updates to reflect new node pool size in regions with DC-specific pricing.
+   */
+  it('can resize pools with DC-specific prices', () => {
+    const dcSpecificPricingRegion = getRegionById('us-east');
+
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+      region: dcSpecificPricingRegion.id,
+    });
+
+    const mockNodePoolResized = nodePoolFactory.build({
+      count: 3,
+      type: dcPricingMockLinodeTypes[0].id,
+      nodes: kubeLinodeFactory.buildList(3),
+    });
+
+    const mockNodePoolInitial = {
+      ...mockNodePoolResized,
+      count: 1,
+      nodes: [mockNodePoolResized.nodes[0]],
+    };
+
+    const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
+      (node: PoolNodeResponse): Linode => {
+        return linodeFactory.build({
+          id: node.instance_id,
+          ipv4: [randomIp()],
+          region: dcSpecificPricingRegion.id,
+          type: dcPricingMockLinodeTypes[0].id,
+        });
+      }
+    );
+
+    const mockNodePoolDrawerTitle = 'Resize Pool: Linode 0 GB Plan';
+
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+      'getNodePools'
+    );
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    mockGetLinodeType(dcPricingMockLinodeTypes[0]).as('getLinodeType');
+    mockGetKubernetesVersions().as('getVersions');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait([
+      '@getCluster',
+      '@getNodePools',
+      '@getLinodes',
+      '@getVersions',
+      '@getLinodeType',
+    ]);
+
+    // Confirm that nodes are listed with correct details.
+    mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
+      cy.get(`tr[data-qa-node-row="${node.id}"]`)
+        .should('be.visible')
+        .within(() => {
+          const nodeLinode = mockLinodes.find(
+            (linode: Linode) => linode.id === node.instance_id
+          );
+          if (nodeLinode) {
+            cy.findByText(nodeLinode.label).should('be.visible');
+            cy.findByText(nodeLinode.ipv4[0]).should('be.visible');
+            ui.button
+              .findByTitle('Recycle')
+              .should('be.visible')
+              .should('be.enabled');
+          }
+        });
+    });
+
+    // Click "Resize Pool" and increase size to 3 nodes.
+    ui.button
+      .findByTitle('Resize Pool')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockUpdateNodePool(mockCluster.id, mockNodePoolResized).as(
+      'resizeNodePool'
+    );
+    mockGetClusterPools(mockCluster.id, [mockNodePoolResized]).as(
+      'getNodePools'
+    );
+    ui.drawer
+      .findByTitle(mockNodePoolDrawerTitle)
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        cy.findByText('Current pool: $14/month (1 node at $14/month)').should(
+          'be.visible'
+        );
+        cy.findByText('Resized pool: $14/month (1 node at $14/month)').should(
+          'be.visible'
+        );
+
+        cy.findByLabelText('Add 1')
+          .should('be.visible')
+          .should('be.enabled')
+          .click()
+          .click();
+
+        cy.findByLabelText('Edit Quantity').should('have.value', '3');
+        cy.findByText('Current pool: $14/month (1 node at $14/month)').should(
+          'be.visible'
+        );
+        cy.findByText('Resized pool: $42/month (3 nodes at $14/month)').should(
+          'be.visible'
+        );
+
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait(['@resizeNodePool', '@getNodePools']);
   });
 });
