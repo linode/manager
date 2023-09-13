@@ -11,7 +11,7 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
-import { StyledTableCell } from './FirewallRow.styles';
+import { StyledTableCell, StyledTruncateLinks } from './FirewallRow.styles';
 
 type CombinedProps = Firewall & ActionHandlers;
 
@@ -105,25 +105,20 @@ const getDevicesCellString = (
 };
 
 export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
-  const firstEight = data.slice(0, 8);
   return (
-    <>
-      {firstEight.map((thisDevice, idx) => (
-        <Link
-          className="link secondaryLink"
-          data-testid="firewall-row-link"
-          key={thisDevice.id}
-          to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
-        >
+    <StyledTruncateLinks>
+      {data.map((thisDevice, idx) => (
+        <span key={thisDevice.id}>
           {idx > 0 && `, `}
-          {thisDevice.entity.label}
-        </Link>
-      ))}
-      {data.length > 8 && (
-        <span>
-          {`, `}+ {data.length - 8}
+          <Link
+            className="link secondaryLink"
+            data-testid="firewall-row-link"
+            to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
+          >
+            {thisDevice.entity.label}
+          </Link>
         </span>
-      )}
-    </>
+      ))}
+    </StyledTruncateLinks>
   );
 };
