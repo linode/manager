@@ -78,7 +78,7 @@ export const calculateAvailableIPv4s = (
 export const DEFAULT_LABEL_ERROR = 'Label is required';
 export const DEFAULT_IPV4_ERROR = 'The IPv4 range must be in CIDR format';
 
-// TODO: VPC - add error validation for ipv6 when that becomes supported
+// @TODO VPC: add error validation for ipv6 when that becomes supported
 export const validateSubnets = (
   subnets: SubnetFieldState[],
   options?: {

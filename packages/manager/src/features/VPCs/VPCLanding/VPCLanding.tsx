@@ -92,7 +92,7 @@ const VPCLanding = () => {
     <>
       <LandingHeader
         createButtonText="Create VPC"
-        docsLink="#" // TODO: VPC -  Add docs link
+        docsLink="#" // @TODO VPC: Add docs link
         onButtonClick={createVPC}
         title="Virtual Private Cloud (VPC)"
       />

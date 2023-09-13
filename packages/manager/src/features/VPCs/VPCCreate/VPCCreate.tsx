@@ -177,7 +177,7 @@ const VPCCreate = () => {
           pathname: `/vpcs/create`,
         }}
         docsLabel="Getting Started"
-        docsLink="#" // TODO: VPC - add correct docs link
+        docsLink="#" // @TODO VPC: add correct docs link
         title="Create"
       />
       {userCannotAddVPC && (
@@ -201,7 +201,7 @@ const VPCCreate = () => {
               A virtual private cloud (VPC) is an isolated network which allows
               for control over how resources are networked and can communicate.
               <Link to="#"> Learn more</Link>.
-              {/* TODO: VPC - learn more link here */}
+              {/* @TODO VPC: learn more link here */}
             </StyledBodyTypography>
             <RegionSelect
               handleSelection={(region: string) =>
@@ -243,7 +243,7 @@ const VPCCreate = () => {
               allow for controlled access to VPC resources. Subnets within a VPC
               are routable regardless of the address spaces they are in.
               <Link to="#"> Learn more</Link>.
-              {/* TODO: VPC - subnet learn more link here */}
+              {/* @TODO VPC: subnet learn more link here */}
             </StyledBodyTypography>
             {subnetErrorsFromAPI
               ? subnetErrorsFromAPI.map((apiError: APIError) => (
