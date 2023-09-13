@@ -257,6 +257,79 @@ describe('Billling Activity Feed', () => {
   });
 
   /*
+   * - Confirms that invoice pagination works as expected using mock API data.
+   * - Confirms that the expected number of pages are shown for invoices.
+   * - Confirms that the expected invoices are shown for each page.
+   * - Confirms that invoice list updates to reflect changes to page size selection.
+   */
+  it('paginates the list of invoices', () => {
+    const mockInvoices = invoiceFactory.buildList(100);
+    const pages = [1, 2, 3, 4];
+
+    mockGetInvoices(mockInvoices).as('getInvoices');
+    mockGetPayments([]).as('getPayments');
+    mockGetPaymentMethods([]).as('getPaymentMethods');
+
+    cy.visitWithLogin('/account/billing');
+    cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
+
+    // Change invoice date selection from "6 Months" to "All Time".
+    cy.contains('[data-qa-enhanced-select]', '6 Months')
+      .should('be.visible')
+      .click();
+
+    ui.select.findItemByText('All Time').should('be.visible').click();
+
+    cy.get('[data-qa-billing-activity-panel]')
+      .should('be.visible')
+      .within(() => {
+        // Confirm that pagination page size selection is set to "Show 25".
+        ui.pagination.findPageSizeSelect().click();
+
+        ui.select.findItemByText('Show 25').should('be.visible').click();
+
+        // Confirm that pagination controls list exactly 4 pages.
+        ui.pagination
+          .findControls()
+          .should('be.visible')
+          .within(() => {
+            pages.forEach((page: number) => {
+              cy.findByText(`${page}`).should('be.visible');
+            });
+            cy.findByText('5').should('not.exist');
+          });
+
+        // Click each page, and confirm that the expected 25 invoices are shown.
+        pages.forEach((page: number) => {
+          const invoiceSubset = mockInvoices.slice(
+            25 * (page - 1),
+            25 * (page - 1) + 24
+          );
+          ui.pagination.findControls().within(() => {
+            cy.findByText(`${page}`).should('be.visible').click();
+          });
+          // We have to account for the table header row when counting the number
+          // of <tr /> elements.
+          cy.get('tr').should('have.length', 26);
+          invoiceSubset.forEach((invoice: Invoice) => {
+            cy.findByText(invoice.label).should('be.visible');
+          });
+        });
+
+        // Change page size selection from "Show 25" to "Show 100".
+        ui.pagination.findPageSizeSelect().click();
+
+        ui.select.findItemByText('Show 100').should('be.visible').click();
+
+        // Confirm that all 100 invoices are shown.
+        cy.get('tr').should('have.length', 101);
+        mockInvoices.forEach((invoice: Invoice) => {
+          cy.findByText(invoice.label).should('be.visible');
+        });
+      });
+  });
+
+  /*
    * - Uses mocked API data to confirm that invoice and payment dates reflect user's chosen timezone.
    */
   it('displays correct timezone for invoice and payment dates', () => {
