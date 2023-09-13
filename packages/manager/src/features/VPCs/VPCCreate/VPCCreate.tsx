@@ -21,12 +21,14 @@ import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs';
-import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+import {
+  SubnetError,
+  handleVPCAndSubnetErrors,
+} from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   SubnetFieldState,
-  validateSubnets,
 } from 'src/utilities/subnets';
 
 import { MultipleSubnetInput } from './MultipleSubnetInput';
@@ -42,64 +44,71 @@ const VPCCreate = () => {
   const { data: grants } = useGrants();
   const { data: regions } = useRegionsQuery();
   const { isLoading, mutateAsync: createVPC } = useCreateVPCMutation();
-  const [subnetErrorsFromAPI, setSubnetErrorsFromAPI] = React.useState<
-    APIError[]
-  >();
+  const [
+    generalSubnetErrorsFromAPI,
+    setGeneralSubnetErrorsFromAPI,
+  ] = React.useState<APIError[]>();
   const [generalAPIError, setGeneralAPIError] = React.useState<
     string | undefined
   >();
 
   const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
 
-  const createSubnetsPayload = () => {
-    const subnetPayloads: CreateSubnetPayload[] = [];
+  // When creating the subnet payloads, we also create a mapping of the indexes of the subnets that appear on
+  // the UI to the indexes of the subnets that the API will receive. This enables users to leave subnets blank
+  // on the UI and still have any errors returned by the API correspond to the correct subnet
+  const createSubnetsPayloadAndMapping = () => {
+    const subnetsPayload: CreateSubnetPayload[] = [];
+    const subnetIdxMapping = {};
+    let apiSubnetIdx = 0;
 
-    for (const subnetState of values.subnets) {
-      const { ip, label } = subnetState;
+    for (let i = 0; i < values.subnets.length; i++) {
+      const { ip, label } = values.subnets[i];
       if (ip.ipv4 || label) {
-        subnetPayloads.push({ ipv4: ip.ipv4, label });
+        subnetsPayload.push({ ipv4: ip.ipv4, label });
+        subnetIdxMapping[i] = apiSubnetIdx;
+        apiSubnetIdx++;
       }
     }
 
-    return subnetPayloads;
+    return {
+      subnetsPayload,
+      visualToAPISubnetMapping: subnetIdxMapping,
+    };
   };
 
-  const validateVPCSubnets = () => {
-    const validatedSubnets = validateSubnets(values.subnets, {
-      ipv4Error: 'The IPv4 range must be in CIDR format',
-      labelError:
-        'Label is required. Must only be ASCII letters, numbers, and dashes',
+  const combineErrorsAndSubnets = (
+    errors: {},
+    visualToAPISubnetMapping: {}
+  ) => {
+    return values.subnets.map((subnet, idx) => {
+      const apiSubnetIdx: number | undefined = visualToAPISubnetMapping[idx];
+      // If the subnet has errors associated with it, include those errors in its state
+      if ((apiSubnetIdx || apiSubnetIdx === 0) && errors[apiSubnetIdx]) {
+        const errorData: SubnetError = errors[apiSubnetIdx];
+        return {
+          ...subnet,
+          labelError: errorData.label ?? '',
+          // @TODO VPC: IPv6 error handling
+          ip: {
+            ...subnet.ip,
+            ipv4Error: errorData.ipv4 ?? '',
+          },
+        };
+      } else {
+        return subnet;
+      }
     });
-
-    if (
-      validatedSubnets.some(
-        (subnet) => subnet.labelError || subnet.ip.ipv4Error
-      )
-    ) {
-      setFieldValue('subnets', validatedSubnets);
-      return false;
-    } else {
-      setFieldValue(
-        'subnets',
-        validatedSubnets.map((subnet) => {
-          delete subnet.labelError;
-          delete subnet.ip.ipv4Error;
-          return { ...subnet };
-        })
-      );
-      return true;
-    }
   };
 
   const onCreateVPC = async () => {
-    if (!validateVPCSubnets()) {
-      return;
-    }
-
     setSubmitting(true);
     setGeneralAPIError(undefined);
 
-    const subnetsPayload = createSubnetsPayload();
+    const {
+      subnetsPayload,
+      visualToAPISubnetMapping,
+    } = createSubnetsPayloadAndMapping();
 
     const createVPCPayload: CreateVPCPayload = {
       ...values,
@@ -110,19 +119,38 @@ const VPCCreate = () => {
       const response = await createVPC(createVPCPayload);
       history.push(`/vpcs/${response.id}`);
     } catch (errors) {
-      const apiSubnetErrors = errors.filter(
-        (error: APIError) => error.field && error.field.includes('subnets')
+      const generalSubnetErrors = errors.filter(
+        (error: APIError) =>
+          // Both general and specific subnet errors include 'subnets' in their error field.
+          // General subnet errors come in as { field: subnets.some_field, ...}, whereas
+          // specific subnet errors come in as { field: subnets[some_index].some_field, ...}. So,
+          // to avoid specific subnet errors, we filter out errors with a field that includes '['
+          error.field &&
+          error.field.includes('subnets') &&
+          !error.field.includes('[')
       );
-      if (apiSubnetErrors) {
-        setSubnetErrorsFromAPI(apiSubnetErrors);
+
+      if (generalSubnetErrors) {
+        setGeneralSubnetErrorsFromAPI(generalSubnetErrors);
       }
-      handleAPIErrors(
+      const indivSubnetErrors = handleVPCAndSubnetErrors(
         errors.filter(
-          (error: APIError) => !error.field?.includes('subnets') || !error.field
+          // ignore general subnet errors: !(the logic of filtering for only general subnet errors)
+          (error: APIError) =>
+            !error.field?.includes('subnets') ||
+            !error.field ||
+            error.field.includes('[')
         ),
         setFieldError,
         setGeneralAPIError
       );
+
+      // must combine errors and subnet data to avoid indexing weirdness when deleting a subnet
+      const subnetsAndErrors = combineErrorsAndSubnets(
+        indivSubnetErrors,
+        visualToAPISubnetMapping
+      );
+      setFieldValue('subnets', subnetsAndErrors);
     }
 
     setSubmitting(false);
@@ -245,8 +273,8 @@ const VPCCreate = () => {
               <Link to="#"> Learn more</Link>.
               {/* @TODO VPC: subnet learn more link here */}
             </StyledBodyTypography>
-            {subnetErrorsFromAPI
-              ? subnetErrorsFromAPI.map((apiError: APIError) => (
+            {generalSubnetErrorsFromAPI
+              ? generalSubnetErrorsFromAPI.map((apiError: APIError) => (
                   <Notice
                     key={apiError.reason}
                     spacingBottom={8}

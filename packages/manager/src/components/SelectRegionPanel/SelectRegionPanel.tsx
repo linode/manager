@@ -15,7 +15,7 @@ import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricin
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Box } from '../Box';
-import { DocsLink } from '../DocsLink/DocsLink';
+// import { DocsLink } from '../DocsLink/DocsLink'; //TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed
 import { Link } from '../Link';
 
 interface SelectRegionPanelProps {
@@ -85,12 +85,13 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         <Typography data-qa-tp="Region" variant="h2">
           Region
         </Typography>
-        {flags.dcSpecificPricing && (
+        {/* TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed */}
+        {/* {flags.dcSpecificPricing && (
           <DocsLink
             href="https://www.linode.com/pricing"
             label="How Data Center Pricing Works"
           />
-        )}
+        )} */}
       </Box>
       <RegionHelperText
         hidePricingNotice={showSelectedRegionHasDifferentPriceWarning}

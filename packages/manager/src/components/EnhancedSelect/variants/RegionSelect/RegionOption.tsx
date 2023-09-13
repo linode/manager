@@ -5,7 +5,7 @@ import { OptionProps } from 'react-select';
 import { makeStyles } from 'tss-react/mui';
 
 import { Item } from 'src/components/EnhancedSelect';
-import Option from 'src/components/EnhancedSelect/components/Option';
+import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { Tooltip } from 'src/components/Tooltip';
 
 const useStyles = makeStyles()((theme: Theme) => ({
