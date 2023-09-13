@@ -70,7 +70,7 @@ export const TransferDisplayDialog = React.memo(
           sx={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(3) }}
         />
         {/**
-         *  Region-specific Transfer Pool Display
+         *  DC-specific Transfer Pool Display
          */}
         {regionTransferPools.length > 0 && (
           <>
@@ -79,7 +79,7 @@ export const TransferDisplayDialog = React.memo(
               fontFamily={theme.font.bold}
               marginBottom={theme.spacing()}
             >
-              Datacenter-specific Network Transfer Pools
+              Data Center Specific Network Transfer Pools
             </Typography>
             <Typography
               marginBottom={theme.spacing()}

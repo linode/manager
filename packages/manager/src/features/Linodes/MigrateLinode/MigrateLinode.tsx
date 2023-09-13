@@ -212,7 +212,7 @@ export const MigrateLinode = React.memo((props: Props) => {
       </Typography>
       {/*
          commenting out for now because we need further clarification from
-         stakeholders about whether or not we want to prevent multiple cross-datacenter migrations.
+         stakeholders about whether or not we want to prevent multiple cross-data-center migrations.
          */}
       {/* <MigrationImminentNotice
         linodeID={props.linodeID}

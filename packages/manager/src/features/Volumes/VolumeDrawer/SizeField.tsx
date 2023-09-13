@@ -89,7 +89,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
 
   const dynamicPricingHelperText = !resize && (
     <Box marginLeft={'10px'} marginTop={'4px'}>
-      <Typography>Select a Region to see cost per month.</Typography>
+      <Typography>Select a region to see cost per month.</Typography>
     </Box>
   );
 

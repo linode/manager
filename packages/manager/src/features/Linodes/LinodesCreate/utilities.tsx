@@ -99,7 +99,7 @@ export const getMonthlyAndHourlyNodePricing = (
 };
 
 export const CROSS_DATA_CENTER_CLONE_WARNING =
-  'Cloning a Powered Off instance across Data Centers may cause long periods of down time.';
+  'Cloning a Powered Off instance across data centers may cause long periods of down time.';
 
 /**
  * Unicode to ASCII (encode data to Base64)
