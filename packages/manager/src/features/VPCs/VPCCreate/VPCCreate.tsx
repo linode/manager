@@ -205,7 +205,7 @@ const VPCCreate = () => {
           pathname: `/vpcs/create`,
         }}
         docsLabel="Getting Started"
-        docsLink="#" // TODO: VPC - add correct docs link
+        docsLink="#" // @TODO VPC: add correct docs link
         title="Create"
       />
       {userCannotAddVPC && (
@@ -229,7 +229,7 @@ const VPCCreate = () => {
               A virtual private cloud (VPC) is an isolated network which allows
               for control over how resources are networked and can communicate.
               <Link to="#"> Learn more</Link>.
-              {/* TODO: VPC - learn more link here */}
+              {/* @TODO VPC: learn more link here */}
             </StyledBodyTypography>
             <RegionSelect
               handleSelection={(region: string) =>

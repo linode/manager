@@ -22,20 +22,20 @@ const VPC = () => {
     account?.capabilities ?? []
   );
 
+  if (!showVPCs) {
+    return null;
+  }
+
   return (
-    <>
-      {showVPCs ? (
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <DocumentTitleSegment segment="VPC" />
-          <ProductInformationBanner bannerLocation="VPC" />
-          <Switch>
-            <Route component={VPCCreate} path="/vpcs/create" />
-            <Route component={VPCDetail} path="/vpcs/:vpcId/:tab?" />
-            <Route component={VPCLanding} path="/vpcs" />
-          </Switch>
-        </React.Suspense>
-      ) : null}
-    </>
+    <React.Suspense fallback={<SuspenseLoader />}>
+      <DocumentTitleSegment segment="VPC" />
+      <ProductInformationBanner bannerLocation="VPC" />
+      <Switch>
+        <Route component={VPCCreate} path="/vpcs/create" />
+        <Route component={VPCDetail} path="/vpcs/:vpcId/:tab?" />
+        <Route component={VPCLanding} path="/vpcs" />
+      </Switch>
+    </React.Suspense>
   );
 };
 

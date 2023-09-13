@@ -3,7 +3,7 @@ import { determineIPType } from '@linode/validation';
 export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.4.0/24';
 export const RESERVED_IP_NUMBER = 4;
 
-// VPC: TODO - added ipv6 related fields here, but they will not be used until VPCs support ipv6
+// @TODO VPC: added ipv6 related fields here, but they will not be used until VPCs support ipv6
 interface SubnetIPState {
   availIPv4s?: number;
   ipv4?: string;
