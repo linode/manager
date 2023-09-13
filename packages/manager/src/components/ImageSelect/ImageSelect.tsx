@@ -126,7 +126,18 @@ export const imagesToGroupedItems = (images: Image[]) => {
     }, []);
 };
 
-export const ImageSelect = (props: ImageSelectProps) => {
+const isMemo = (prevProps: ImageSelectProps, nextProps: ImageSelectProps) => {
+  return (
+    equals(prevProps.images, nextProps.images) &&
+    arePropsEqual<ImageSelectProps>(
+      ['selectedImageID', 'error', 'disabled', 'handleSelectImage'],
+      prevProps,
+      nextProps
+    )
+  );
+};
+
+export const ImageSelect = React.memo((props: ImageSelectProps) => {
   const {
     classNames,
     disabled,
@@ -202,21 +213,10 @@ export const ImageSelect = (props: ImageSelectProps) => {
             placeholder="Choose an image"
             {...reactSelectProps}
             className={classNames}
+            menuIsOpen={true}
           />
         </Grid>
       </Grid>
     </Paper>
   );
-};
-
-const isMemo = (prevProps: ImageSelectProps, nextProps: ImageSelectProps) => {
-  return (
-    equals(prevProps.images, nextProps.images) &&
-    arePropsEqual<ImageSelectProps>(
-      ['selectedImageID', 'error', 'disabled', 'handleSelectImage'],
-      prevProps,
-      nextProps
-    )
-  );
-};
-export default React.memo(ImageSelect, isMemo);
+}, isMemo);
