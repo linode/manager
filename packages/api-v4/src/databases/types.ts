@@ -128,7 +128,15 @@ export interface BaseDatabase {
   hosts: DatabaseHosts;
   port: number;
   updates: UpdatesSchedule;
+  /**
+   * total_disk_size_gb is feature flagged by the API,
+   * it may not be defined.
+   */
   total_disk_size_gb?: number;
+  /**
+   * used_disk_size_gb is feature flagged by the API,
+   * it may not be defined.
+   */
   used_disk_size_gb?: number;
 }
 

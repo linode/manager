@@ -67,11 +67,11 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
       : `Primary +${database.cluster_size - 1} replicas`;
 
   const sxTooltipIcon = {
-    padding: '0px',
     marginLeft: '4px',
+    padding: '0px',
   };
 
-  const storageCopy =
+  const STORAGE_COPY =
     'The total disk size is smaller than the selected plan capacity due to the OS overhead.';
 
   return (
@@ -119,7 +119,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
               <TooltipIcon
                 status="help"
                 sxTooltipIcon={sxTooltipIcon}
-                text={storageCopy}
+                text={STORAGE_COPY}
               />
             </Box>
             <Box display="flex">
