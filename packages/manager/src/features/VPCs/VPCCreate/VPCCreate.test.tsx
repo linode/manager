@@ -29,11 +29,15 @@ describe('VPC create page', () => {
     getAllByText('Create VPC');
   });
 
-  // test fails due to new default value for subnet ip addresses
+  // test fails due to new default value for subnet ip addresses - if we remove default text and just
+  // have a placeholder, we can put this test back in
   it.skip('should require vpc labels and region and ignore subnets that are blank', async () => {
-    const { getAllByTestId, getByText, queryByText } = renderWithTheme(
-      <VPCCreate />
-    );
+    const {
+      getAllByTestId,
+      getByText,
+      getAllByText,
+      queryByText,
+    } = renderWithTheme(<VPCCreate />);
     const createVPCButton = getByText('Create VPC');
     const subnetIP = getAllByTestId('textfield-input');
     expect(createVPCButton).toBeInTheDocument();
@@ -43,14 +47,10 @@ describe('VPC create page', () => {
     });
     const regionError = getByText('Region is required');
     expect(regionError).toBeInTheDocument();
-    const labelError = getByText('Label is required');
-    expect(labelError).toBeInTheDocument();
+    const labelErrors = getAllByText('Label is required');
+    expect(labelErrors).toHaveLength(1);
     const badSubnetIP = queryByText('The IPv4 range must be in CIDR format');
     expect(badSubnetIP).not.toBeInTheDocument();
-    const badSubnetLabel = queryByText(
-      'Label is required. Must only be ASCII letters, numbers, and dashes'
-    );
-    expect(badSubnetLabel).not.toBeInTheDocument();
   });
 
   it('should add and delete subnets correctly', async () => {
@@ -96,10 +96,8 @@ describe('VPC create page', () => {
       'The IPv4 range must be in CIDR format'
     );
     expect(badSubnetIP).toBeInTheDocument();
-    const badSubnetLabel = screen.getByText(
-      'Label is required. Must only be ASCII letters, numbers, and dashes'
-    );
-    expect(badSubnetLabel).toBeInTheDocument();
+    const badLabels = screen.getAllByText('Label is required');
+    expect(badLabels).toHaveLength(2);
   });
 
   it('should have a default value for the subnet ip address', () => {
