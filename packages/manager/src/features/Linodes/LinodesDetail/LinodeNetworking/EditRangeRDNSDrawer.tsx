@@ -16,7 +16,7 @@ import {
 } from 'src/queries/linodes/networking';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import { listIPv6InRange } from './LinodeNetworking';
+import { listIPv6InRange } from './LinodeIPAddresses';
 
 interface Props {
   linodeId: number;
@@ -84,7 +84,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
     <Drawer onClose={onClose} open={open} title="Edit Reverse DNS">
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && (
-          <Notice data-qa-error error style={{ marginTop: 16 }}>
+          <Notice data-qa-error style={{ marginTop: 16 }} variant="error">
             {errorMap.none}
           </Notice>
         )}

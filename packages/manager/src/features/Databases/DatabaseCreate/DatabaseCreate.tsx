@@ -29,26 +29,22 @@ import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleVal
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { RegionOption } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { FormControl } from 'src/components/FormControl';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { FormControl } from 'src/components/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Paper } from 'src/components/Paper';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
-import {
-  PlansPanel,
-  PlanSelectionType,
-} from 'src/features/components/PlansPanel/PlansPanel';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
@@ -65,6 +61,8 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -276,7 +274,7 @@ const DatabaseCreate = () => {
 
     try {
       const response = await createDatabase(createPayload);
-      history.push(`/databases/${response.id}`);
+      history.push(`/databases/${response.engine}/${response.id}`);
     } catch (errors) {
       const ipErrors = errors.filter(
         (error: APIError) => error.field === 'allow_list'
@@ -335,7 +333,10 @@ const DatabaseCreate = () => {
       const singleNodePricing = type.engines[selectedEngine].find(
         (cluster) => cluster.quantity === 1
       );
-      const price = singleNodePricing?.price ?? { hourly: null, monthly: null };
+      const price = singleNodePricing?.price ?? {
+        hourly: null,
+        monthly: null,
+      };
       const subHeadings = [
         `$${price.monthly}/mo ($${price.hourly}/hr)`,
         typeLabelDetails(type.memory, type.disk, type.vcpus),
@@ -444,7 +445,6 @@ const DatabaseCreate = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <ProductInformationBanner bannerLocation="Databases" important warning />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -463,7 +463,7 @@ const DatabaseCreate = () => {
         title="Create"
       />
       <Paper>
-        {createError ? <Notice error text={createError} /> : null}
+        {createError ? <Notice text={createError} variant="error" /> : null}
         <Grid>
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField
@@ -505,9 +505,7 @@ const DatabaseCreate = () => {
             regions={regionsData}
             selectedID={values.region}
           />
-          <div style={{ marginTop: 8 }}>
-            <RegionHelperText />
-          </div>
+          <RegionHelperText hidePricingNotice mt={1} />
         </Grid>
         <Divider spacingBottom={12} spacingTop={38} />
         <Grid>
@@ -544,7 +542,7 @@ const DatabaseCreate = () => {
             data-testid="database-nodes"
           >
             {errors.cluster_size ? (
-              <Notice error text={errors.cluster_size} />
+              <Notice text={errors.cluster_size} variant="error" />
             ) : null}
             <RadioGroup
               style={{ marginBottom: 0, marginTop: 0 }}
@@ -564,7 +562,7 @@ const DatabaseCreate = () => {
           </FormControl>
           <Grid md={8} xs={12}>
             {flags.databaseBeta ? (
-              <Notice className={classes.notice} info>
+              <Notice className={classes.notice} variant="info">
                 <strong>
                   Notice: There is no charge for database clusters during beta.
                 </strong>{' '}
@@ -601,7 +599,11 @@ const DatabaseCreate = () => {
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
             {ipErrorsFromAPI
               ? ipErrorsFromAPI.map((apiError: APIError) => (
-                  <Notice error key={apiError.reason} text={apiError.reason} />
+                  <Notice
+                    key={apiError.reason}
+                    text={apiError.reason}
+                    variant="error"
+                  />
                 ))
               : null}
             <MultipleIPInput

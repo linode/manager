@@ -1,11 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { createLinode } from '@linode/api-v4';
 import { Linode } from '@linode/api-v4/types';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
-import {
-  createLinodeRequestFactory,
-  linodeFactory,
-} from '@src/factories/linodes';
+import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import {
   containsVisible,
@@ -16,7 +12,6 @@ import {
 import { ui } from 'support/ui';
 import { routes } from 'support/ui/constants';
 import { apiMatcher } from 'support/util/intercepts';
-import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { authenticate } from 'support/api/authentication';
 import { mockGetLinodes } from 'support/intercepts/linodes';
@@ -46,8 +41,13 @@ const linodeLabel = (number) => {
 };
 
 const deleteLinodeFromActionMenu = (linodeLabel) => {
-  getClick(`[aria-label="Action menu for Linode ${linodeLabel}"]`);
-  cy.get(`[data-qa-action-menu-item="Delete"]`).filter(`:visible`).click();
+  ui.actionMenu
+    .findByTitle(`Action menu for Linode ${linodeLabel}`)
+    .should('be.visible')
+    .click();
+
+  ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
   ui.dialog
     .findByTitle(`Delete ${linodeLabel}?`)
     .should('be.visible')
@@ -270,7 +270,7 @@ describe('linode landing checks', () => {
       fbtVisible('Plan');
     });
     getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
-      fbtVisible('IP Address');
+      fbtVisible('Public IP Address');
     });
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
@@ -287,18 +287,26 @@ describe('linode landing checks', () => {
 
   it('checks the action menu items', () => {
     const label = linodeLabel(1);
-    getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
-      cy.findByLabelText(`Action menu for Linode ${label}`).click();
+    const menuItems = [
+      'Power Off',
+      'Reboot',
+      'Launch LISH Console',
+      'Clone',
+      'Resize',
+      'Rebuild',
+      'Rescue',
+      'Migrate',
+      'Delete',
+    ];
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Linode ${label}`)
+      .should('be.visible')
+      .click();
+
+    menuItems.forEach((menuItem) => {
+      ui.actionMenuItem.findByTitle(menuItem).should('be.visible');
     });
-    getVisible('[data-qa-action-menu-item="Power Off"]');
-    getVisible('[data-qa-action-menu-item="Reboot"]');
-    getVisible('[data-qa-action-menu-item="Launch LISH Console"]');
-    getVisible('[data-qa-action-menu-item="Clone"]');
-    getVisible('[data-qa-action-menu-item="Resize"]');
-    getVisible('[data-qa-action-menu-item="Rebuild"]');
-    getVisible('[data-qa-action-menu-item="Rescue"]');
-    getVisible('[data-qa-action-menu-item="Migrate"]');
-    getVisible('[data-qa-action-menu-item="Delete"]');
   });
 
   it('checks group by tag for linde table', () => {
@@ -386,41 +394,5 @@ describe('linode landing checks', () => {
     cy.findByText('Region:').should('not.exist');
     cy.findByText('Linode ID:').should('not.exist');
     cy.findByText('Created:').should('not.exist');
-  });
-});
-
-describe('linode landing actions', () => {
-  it('deleting multiple linodes with action menu', () => {
-    const mockAccountSettings = accountSettingsFactory.build({
-      managed: false,
-    });
-
-    const createTwoLinodes = async (): Promise<[Linode, Linode]> => {
-      return Promise.all([
-        createLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
-        ),
-        createLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
-        ),
-      ]);
-    };
-
-    cy.intercept('GET', apiMatcher('account/settings'), (req) => {
-      req.reply(mockAccountSettings);
-    }).as('getAccountSettings');
-
-    cy.intercept('DELETE', apiMatcher('linode/instances/*')).as('deleteLinode');
-    cy.defer(createTwoLinodes()).then(([linodeA, linodeB]) => {
-      cy.visitWithLogin('/linodes', { preferenceOverrides });
-      cy.wait('@getAccountSettings');
-      getVisible('[data-qa-header="Linodes"]');
-      if (!cy.get('[data-qa-sort-label="asc"]')) {
-        getClick('[aria-label="Sort by label"]');
-      }
-      deleteLinodeFromActionMenu(linodeA.label);
-      deleteLinodeFromActionMenu(linodeB.label);
-      cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.exist');
-    });
   });
 });

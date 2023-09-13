@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { authenticate } from 'support/api/authentication';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';
 import {
   containsClick,
@@ -8,9 +9,15 @@ import {
   getClick,
 } from 'support/helpers';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { apiMatcher } from 'support/util/intercepts';
 
+authenticate();
 describe('linode backups', () => {
+  before(() => {
+    cleanUp('linodes');
+  });
+
   it('enable backups', () => {
     createLinode().then((linode) => {
       // intercept request
@@ -71,19 +78,6 @@ describe('linode backups', () => {
       cy.wait('@enableBackups').its('response.statusCode').should('eq', 200);
       ui.toast.assertMessage('Starting to capture snapshot');
       deleteLinodeById(linode.id);
-    });
-  });
-
-  // this test has become irrelevant for now
-  it.skip('cant snapshot while booting linode', () => {
-    createLinode({ backups_enabled: true }).then((linode) => {
-      cy.visit(`/linodes/${linode.id}/backup`);
-      fbtClick('Take Snapshot');
-      cy.contains('Label is required.');
-      cy.get('[data-qa-manual-name="true"]').type(`${linode.label} backup`);
-      fbtClick('Take Snapshot');
-      getClick('[data-qa-confirm="true"]');
-      containsVisible('Linode busy.');
     });
   });
 });

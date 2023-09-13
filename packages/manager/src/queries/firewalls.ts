@@ -23,9 +23,11 @@ import {
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { EventWithStore } from 'src/events';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
-import { itemInListCreationHandler, updateInPaginatedStore } from './base';
+import { updateInPaginatedStore } from './base';
+import { queryKey as PROFILE_QUERY_KEY } from './profile';
 
 export const queryKey = 'firewall';
 
@@ -39,10 +41,20 @@ export const useAddFirewallDeviceMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<FirewallDevice, APIError[], FirewallDevicePayload>(
     (data) => addFirewallDevice(id, data),
-    itemInListCreationHandler(
-      [queryKey, 'firewall', id, 'devices'],
-      queryClient
-    )
+    {
+      onSuccess(data) {
+        // Refresh the cached device list
+        queryClient.invalidateQueries([queryKey, 'firewall', id, 'devices']);
+
+        // Refresh the cached result of the linode-specific firewalls query
+        queryClient.invalidateQueries([
+          linodesQueryKey,
+          'linode',
+          data.entity.id,
+          'firewalls',
+        ]);
+      },
+    }
   );
 };
 
@@ -51,6 +63,7 @@ export const useRemoveFirewallDeviceMutation = (
   deviceId: number
 ) => {
   const queryClient = useQueryClient();
+
   return useMutation<{}, APIError[]>(
     () => deleteFirewallDevice(firewallId, deviceId),
     {
@@ -65,6 +78,7 @@ export const useRemoveFirewallDeviceMutation = (
     }
   );
 };
+
 export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Firewall>, APIError[]>(
     [queryKey, 'paginated', params, filter],
@@ -108,6 +122,8 @@ export const useCreateFirewall = () => {
       onSuccess(firewall) {
         queryClient.invalidateQueries([queryKey, 'paginated']);
         queryClient.setQueryData([queryKey, 'firewall', firewall.id], firewall);
+        // If a restricted user creates an entity, we must make sure grants are up to date.
+        queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
       },
     }
   );

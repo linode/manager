@@ -1,12 +1,7 @@
 import * as React from 'react';
-import {
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter,
-} from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const ImagesLanding = React.lazy(() => import('./ImagesLanding'));
@@ -14,15 +9,12 @@ const ImageCreate = React.lazy(
   () => import('./ImagesCreate/ImageCreateContainer')
 );
 
-type Props = RouteComponentProps<{}>;
-
-export const ImagesRoutes: React.FC<Props> = (props) => {
-  const {
-    match: { path },
-  } = props;
+export const ImagesRoutes = () => {
+  const { path } = useRouteMatch();
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
+      <ProductInformationBanner bannerLocation="Images" />
       <Switch>
         <Route component={ImagesLanding} exact path={path} />
         <Route component={ImageCreate} path={`${path}/create`} />
@@ -32,6 +24,4 @@ export const ImagesRoutes: React.FC<Props> = (props) => {
   );
 };
 
-export default withRouter(ImagesRoutes);
-
-export { default as ImageSelect } from './ImageSelect';
+export default ImagesRoutes;

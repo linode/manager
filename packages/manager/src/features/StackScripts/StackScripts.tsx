@@ -2,10 +2,12 @@ import * as React from 'react';
 import {
   Redirect,
   Route,
-  RouteComponentProps,
   Switch,
-  withRouter,
+  useHistory,
+  useLocation,
+  useRouteMatch,
 } from 'react-router-dom';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
@@ -13,26 +15,24 @@ const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
 const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));
 const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
 
-type Props = RouteComponentProps<{}>;
-
-export const StackScripts: React.FC<Props> = (props) => {
-  const {
-    location: { search },
-    match: { path },
-  } = props;
+export const StackScripts = () => {
+  const { search } = useLocation();
+  const history = useHistory();
+  const { path } = useRouteMatch();
 
   // Redirects to prevent breaking old stackscripts?type=whatever bookmarks
   const searchParams = new URLSearchParams(search);
 
   if (searchParams.get('type') === 'community') {
-    props.history.replace('stackscripts/community');
+    history.replace('stackscripts/community');
   }
   if (searchParams.get('type') === 'account') {
-    props.history.replace('stackscripts/account');
+    history.replace('stackscripts/account');
   }
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
+      <ProductInformationBanner bannerLocation="StackScripts" />
       <Switch>
         <Route component={StackScriptsLanding} path={`${path}/account`} />
         <Route component={StackScriptsLanding} path={`${path}/community`} />
@@ -58,4 +58,4 @@ export const StackScripts: React.FC<Props> = (props) => {
   );
 };
 
-export default withRouter(StackScripts);
+export default StackScripts;

@@ -17,9 +17,10 @@ import { storeFactory } from 'src/store';
 
 import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
-import loadDevTools from './dev-tools/load';
+import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
 import './index.css';
 import { queryClientFactory } from './queries/base';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const queryClient = queryClientFactory();
 const store = storeFactory(queryClient);
@@ -58,6 +59,7 @@ const ContextWrapper = () => (
   <ReduxStoreProvider store={store}>
     <QueryClientProvider client={queryClient}>
       <LinodeThemeWrapper>
+        <CssBaseline />
         <React.Suspense fallback={<SplashScreen />}>
           <Switch>
             <Route component={OAuthCallbackPage} exact path="/oauth/callback" />
@@ -87,22 +89,24 @@ const ContextWrapper = () => (
   </ReduxStoreProvider>
 );
 
-// Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
-//
-// Load dev tools if need be.
-loadDevTools(store, () => {
-  ReactDOM.render(
-    navigator.cookieEnabled ? (
-      <Router>
-        <Switch>
-          {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-          <Route component={Null} exact path="/null" />
-          <Route component={ContextWrapper} />
-        </Switch>
-      </Router>
-    ) : (
-      <CookieWarning />
-    ),
-    document.getElementById('root') as HTMLElement
+const Main = () => {
+  if (!navigator.cookieEnabled) {
+    return <CookieWarning />;
+  }
+
+  return (
+    <Router>
+      <Switch>
+        {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+        <Route component={Null} exact path="/null" />
+        <Route component={ContextWrapper} />
+      </Switch>
+    </Router>
   );
-});
+};
+
+if (shouldEnableDevTools) {
+  loadDevTools(store);
+}
+
+ReactDOM.render(<Main />, document.getElementById('root'));

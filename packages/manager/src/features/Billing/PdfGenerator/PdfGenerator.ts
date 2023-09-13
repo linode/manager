@@ -26,6 +26,8 @@ import {
   pageMargin,
 } from './utils';
 
+import type { Region } from '@linode/api-v4';
+
 const baseFont = 'helvetica';
 
 const addLeftHeader = (
@@ -179,13 +181,24 @@ const getAkamaiLogo = () => {
     });
 };
 
+interface PrintInvoiceOptions {
+  account: Account;
+  flags: FlagSet;
+  invoice: Invoice;
+  items: InvoiceItem[];
+  /**
+   * Used to add Region labels to the `Region` column
+   */
+  regions: Region[];
+  taxes: FlagSet['taxBanner'] | FlagSet['taxes'];
+  timezone?: string;
+}
+
 export const printInvoice = async (
-  account: Account,
-  invoice: Invoice,
-  items: InvoiceItem[],
-  taxes: FlagSet['taxBanner'] | FlagSet['taxes'],
-  timezone?: string
+  options: PrintInvoiceOptions
 ): Promise<PdfResult> => {
+  const { account, flags, invoice, items, taxes, timezone, regions } = options;
+
   try {
     const itemsPerPage = 12;
     const date = formatDate(invoice.date, {
@@ -264,7 +277,14 @@ export const printInvoice = async (
         text: `Invoice: #${invoiceId}`,
       });
 
-      createInvoiceItemsTable(doc, itemsChunk, timezone);
+      createInvoiceItemsTable({
+        doc,
+        flags,
+        items: itemsChunk,
+        regions,
+        timezone,
+      });
+
       createFooter(doc, baseFont, account.country, invoice.date);
       if (index < itemsChunks.length - 1) {
         doc.addPage();

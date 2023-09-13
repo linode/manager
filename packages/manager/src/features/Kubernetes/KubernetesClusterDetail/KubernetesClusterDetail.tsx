@@ -6,7 +6,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account';
 import {
@@ -79,7 +78,6 @@ export const KubernetesClusterDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster?.label}`} />
-      <ProductInformationBanner bannerLocation="Kubernetes" important warning />
       <Grid>
         <UpgradeKubernetesVersionBanner
           clusterID={cluster?.id}
@@ -124,6 +122,7 @@ export const KubernetesClusterDetail = () => {
         clusterID={cluster.id}
         onClose={() => setIsUpgradeToHAOpen(false)}
         open={isUpgradeToHAOpen}
+        regionID={cluster.region}
       />
     </>
   );

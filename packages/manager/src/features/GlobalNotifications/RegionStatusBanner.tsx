@@ -1,14 +1,9 @@
-import { Region } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
-
-export interface Props {
-  regions: Region[];
-}
 
 const getFacilitiesList = (warnings: string[]) => (
   <ul>
@@ -57,7 +52,7 @@ const renderBanner = (statusWarnings: string[]): JSX.Element => {
   );
 };
 
-export const RegionStatusBanner = () => {
+export const RegionStatusBanner = React.memo(() => {
   const { data: regions } = useRegionsQuery();
 
   const labelsOfRegionsWithOutages = regions
@@ -69,10 +64,8 @@ export const RegionStatusBanner = () => {
   }
 
   return (
-    <Notice data-testid="status-banner" important warning>
+    <Notice data-testid="status-banner" important variant="warning">
       {renderBanner(labelsOfRegionsWithOutages)}
     </Notice>
   );
-};
-
-export default React.memo(RegionStatusBanner);
+});

@@ -18,15 +18,14 @@ import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context';
-import BackupDrawer from 'src/features/Backups';
 import { Footer } from 'src/features/Footer/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
   notificationContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
-import ToastNotifications from 'src/features/ToastNotifications';
-import TopMenu from 'src/features/TopMenu';
+import { ToastNotifications } from 'src/features/ToastNotifications/ToastNotifications';
+import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -147,7 +146,7 @@ const Domains = React.lazy(() =>
 const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
-const Profile = React.lazy(() => import('src/features/Profile'));
+const Profile = React.lazy(() => import('src/features/Profile/Profile'));
 const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
@@ -166,7 +165,9 @@ const Help = React.lazy(() =>
     default: module.HelpAndSupport,
   }))
 );
-const SearchLanding = React.lazy(() => import('src/features/Search'));
+const SearchLanding = React.lazy(
+  () => import('src/features/Search/SearchLanding')
+);
 const EventsLanding = React.lazy(
   () => import('src/features/Events/EventsLanding')
 );
@@ -175,8 +176,8 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
-const Betas = React.lazy(() => import('src/features/Betas/BetasLanding'));
-const VPC = React.lazy(() => import('src/features/VPC'));
+const BetaRoutes = React.lazy(() => import('src/features/Betas'));
+const VPC = React.lazy(() => import('src/features/VPCs'));
 
 const MainContent = (props: CombinedProps) => {
   const { classes, cx } = useStyles();
@@ -199,6 +200,12 @@ const MainContent = (props: CombinedProps) => {
   const showDatabases = isFeatureEnabled(
     'Managed Databases',
     Boolean(flags.databases),
+    account?.capabilities ?? []
+  );
+
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
     account?.capabilities ?? []
   );
 
@@ -346,13 +353,7 @@ const MainContent = (props: CombinedProps) => {
                             />
                             <Route component={Kubernetes} path="/kubernetes" />
                             <Route component={Account} path="/account" />
-
-                            <Route
-                              render={(routeProps) => (
-                                <Profile {...routeProps} />
-                              )}
-                              path="/profile"
-                            />
+                            <Route component={Profile} path="/profile" />
                             <Route component={Help} path="/support" />
                             <Route component={SearchLanding} path="/search" />
                             <Route component={EventsLanding} path="/events" />
@@ -361,9 +362,11 @@ const MainContent = (props: CombinedProps) => {
                               <Route component={Databases} path="/databases" />
                             ) : null}
                             {flags.selfServeBetas ? (
-                              <Route component={Betas} path="/betas" />
+                              <Route component={BetaRoutes} path="/betas" />
                             ) : null}
-                            {flags.vpc && <Route component={VPC} path="/vpc" />}
+                            {showVPCs ? (
+                              <Route component={VPC} path="/vpcs" />
+                            ) : null}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />
@@ -379,7 +382,6 @@ const MainContent = (props: CombinedProps) => {
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
             <ToastNotifications />
             <VolumeDrawer />
-            <BackupDrawer />
           </ComplianceUpdateProvider>
         )}
       </PreferenceToggle>

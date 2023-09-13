@@ -50,8 +50,8 @@ const FirewallLinodesLanding = (props: Props) => {
           text={
             "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
           }
-          error
           important
+          variant="error"
         />
       ) : null}
       <Grid container direction="column">
@@ -86,6 +86,7 @@ const FirewallLinodesLanding = (props: Props) => {
         device={selectedDevice}
         firewallId={firewallID}
         firewallLabel={firewallLabel}
+        linodeId={selectedDevice?.entity.id}
         onClose={() => setIsRemoveDeviceDialogOpen(false)}
         open={isRemoveDeviceDialogOpen}
       />

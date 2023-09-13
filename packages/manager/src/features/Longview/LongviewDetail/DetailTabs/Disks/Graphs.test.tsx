@@ -2,13 +2,14 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import Graphs, { Props } from './Graphs';
+import { Graphs } from './Graphs';
+import type { GraphProps } from './Graphs';
 
 afterAll(async (done) => {
   done();
 });
 
-const baseProps: Props = {
+const baseProps: GraphProps = {
   childOf: false,
   diskLabel: 'helloworld',
   endTime: 0,

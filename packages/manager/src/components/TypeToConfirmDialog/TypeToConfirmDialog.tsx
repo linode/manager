@@ -23,7 +23,9 @@ interface EntityInfo {
     | 'Database'
     | 'Kubernetes'
     | 'Linode'
+    | 'Load Balancer'
     | 'NodeBalancer'
+    | 'Subnet'
     | 'VPC'
     | 'Volume';
 }

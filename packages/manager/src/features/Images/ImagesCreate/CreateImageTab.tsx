@@ -12,11 +12,10 @@ import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { DiskSelect } from 'src/features/Linodes/DiskSelect/DiskSelect';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
@@ -102,7 +101,6 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const flags = useFlags();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
-  const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<null | string>('');
@@ -215,7 +213,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       spacingBottom={32}
       spacingTop={16}
       text={rawDiskWarningText}
-      warning
+      variant="warning"
     />
   );
 
@@ -240,14 +238,14 @@ export const CreateImageTab: React.FC<Props> = (props) => {
     <Paper className={classes.container}>
       {!canCreateImage ? (
         <Notice
-          error
           text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+          variant="error"
         />
       ) : null}
       {generalError ? (
-        <Notice data-qa-notice error text={generalError} />
+        <Notice data-qa-notice text={generalError} variant="error" />
       ) : null}
-      {notice ? <Notice data-qa-notice info text={notice} /> : null}
+      {notice ? <Notice data-qa-notice text={notice} variant="info" /> : null}
 
       <LinodeSelect
         optionsFilter={(linode) =>
@@ -277,7 +275,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         />
       </Box>
       {isRawDisk ? rawDiskWarning : null}
-      {flags.metadata && hasMetadataCustomerTag ? (
+      {flags.metadata && (
         <Box className={classes.cloudInitCheckboxWrapper}>
           <Checkbox
             checked={isCloudInit}
@@ -287,7 +285,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
             toolTipText={cloudInitTooltipMessage}
           />
         </Box>
-      ) : null}
+      )}
       <>
         <TextField
           data-qa-image-label

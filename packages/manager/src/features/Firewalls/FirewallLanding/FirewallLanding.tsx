@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -26,6 +26,8 @@ import { FirewallRow } from './FirewallRow';
 const preferenceKey = 'firewalls';
 
 const FirewallLanding = () => {
+  const location = useLocation();
+  const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -47,10 +49,7 @@ const FirewallLanding = () => {
 
   const { data, error, isLoading } = useFirewallsQuery(params, filter);
 
-  const [
-    isCreateFirewallDrawerOpen,
-    setIsCreateFirewallDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const isCreateFirewallDrawerOpen = location.pathname.endsWith('create');
 
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
@@ -81,26 +80,13 @@ const FirewallLanding = () => {
     openModal('disable', id);
   };
 
-  const onOpenCreateDrawer = React.useCallback(
-    () => setIsCreateFirewallDrawerOpen(true),
-    [setIsCreateFirewallDrawerOpen]
-  );
+  const onOpenCreateDrawer = () => {
+    history.replace('/firewalls/create');
+  };
 
-  // On-the-fly route matching so this component can open the drawer itself.
-  const createFirewallRouteMatch = Boolean(useRouteMatch('/firewalls/create'));
-
-  React.useEffect(() => {
-    if (createFirewallRouteMatch) {
-      onOpenCreateDrawer();
-    }
-  }, [createFirewallRouteMatch, onOpenCreateDrawer]);
-
-  const { replace } = useHistory();
-
-  const closeDrawer = React.useCallback(() => {
-    setIsCreateFirewallDrawerOpen(false);
-    replace('/firewalls');
-  }, [setIsCreateFirewallDrawerOpen, replace]);
+  const onCloseCreateDrawer = () => {
+    history.replace('/firewalls');
+  };
 
   const handlers: FirewallHandlers = {
     triggerDeleteFirewall: handleOpenDeleteFirewallModal,
@@ -117,7 +103,7 @@ const FirewallLanding = () => {
       <>
         <FirewallLandingEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
         <CreateFirewallDrawer
-          onClose={() => setIsCreateFirewallDrawerOpen(false)}
+          onClose={onCloseCreateDrawer}
           open={isCreateFirewallDrawerOpen}
         />
       </>
@@ -184,7 +170,7 @@ const FirewallLanding = () => {
         pageSize={pagination.pageSize}
       />
       <CreateFirewallDrawer
-        onClose={closeDrawer}
+        onClose={onCloseCreateDrawer}
         open={isCreateFirewallDrawerOpen}
       />
       <FirewallDialog

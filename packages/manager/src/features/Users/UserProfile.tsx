@@ -46,7 +46,11 @@ interface Props {
   accountSaving: boolean;
   accountSuccess: boolean;
   changeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeUsername: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeUsername: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   email?: string;
   originalEmail?: string;
   originalUsername?: string;
@@ -105,27 +109,29 @@ const UserProfile: React.FC<Props> = (props) => {
 
     return (
       <>
-        <Typography
-          className={classes.title}
-          data-qa-profile-header
-          variant="h2"
-        >
+        <Typography className={classes.title} variant="h2">
           User Profile
         </Typography>
         <Paper className={classes.wrapper}>
           {accountSuccess && (
-            <Notice spacingBottom={0} success>
+            <Notice spacingBottom={0} variant="success">
               Username updated successfully
             </Notice>
           )}
           {generalAccountError && (
-            <Notice error spacingBottom={0} text={generalAccountError} />
+            <Notice
+              spacingBottom={0}
+              text={generalAccountError}
+              variant="error"
+            />
           )}
           <TextField
             data-qa-username
             errorText={hasAccountErrorFor('username')}
             label="Username"
+            onBlur={changeUsername}
             onChange={changeUsername}
+            trimmed
             value={username}
           />
           <ActionsPanel
@@ -140,12 +146,16 @@ const UserProfile: React.FC<Props> = (props) => {
         </Paper>
         <Paper className={classes.wrapper}>
           {profileSuccess && (
-            <Notice spacingBottom={0} success>
+            <Notice spacingBottom={0} variant="success">
               Email updated successfully
             </Notice>
           )}
           {generalProfileError && (
-            <Notice error spacingBottom={0} text={generalProfileError} />
+            <Notice
+              spacingBottom={0}
+              text={generalProfileError}
+              variant="error"
+            />
           )}
           <TextField
             tooltipText={
@@ -159,6 +169,8 @@ const UserProfile: React.FC<Props> = (props) => {
             errorText={hasProfileErrorFor('email')}
             label="Email"
             onChange={changeEmail}
+            trimmed
+            type="email"
             value={email}
           />
           <ActionsPanel
@@ -211,8 +223,8 @@ const UserProfile: React.FC<Props> = (props) => {
         {userDeleteError && (
           <Notice
             className={classes.topMargin}
-            error
             text="Error when deleting user, please try again later"
+            variant="error"
           />
         )}
         <Button

@@ -7,12 +7,14 @@ import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
+import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
@@ -89,6 +91,8 @@ export const AddNodePoolDrawer = (props: Props) => {
     mutateAsync: createPool,
   } = useCreateNodePoolMutation(clusterId);
 
+  const flags = useFlags();
+
   // Only want to use current types here.
   const extendedTypes = filterCurrentTypes(types?.map(extendType));
 
@@ -105,7 +109,16 @@ export const AddNodePoolDrawer = (props: Props) => {
   const selectedType = selectedTypeInfo
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
-  const pricePerNode = selectedType?.price?.monthly ?? 0;
+
+  const pricePerNode =
+    flags.dcSpecificPricing && selectedType
+      ? getLinodeRegionPrice(selectedType, clusterRegionId).monthly
+      : selectedType?.price?.monthly;
+
+  const totalPrice =
+    selectedTypeInfo && pricePerNode
+      ? selectedTypeInfo.count * pricePerNode
+      : 0;
 
   React.useEffect(() => {
     if (open) {
@@ -156,7 +169,11 @@ export const AddNodePoolDrawer = (props: Props) => {
       title={`Add a Node Pool: ${clusterLabel}`}
     >
       {error && (
-        <Notice className={classes.error} error text={error?.[0].reason} />
+        <Notice
+          className={classes.error}
+          text={error?.[0].reason}
+          variant="error"
+        />
       )}
       <form className={classes.plans}>
         <KubernetesPlansPanel
@@ -178,6 +195,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           regionsData={regionsData}
           resetValues={resetDrawer}
           selectedID={selectedTypeInfo?.planId}
+          selectedRegionID={clusterRegionId}
           updatePlanCount={updatePlanCount}
         />
         {selectedTypeInfo &&
@@ -188,7 +206,7 @@ export const AddNodePoolDrawer = (props: Props) => {
               spacingBottom={16}
               spacingTop={8}
               text={nodeWarning}
-              warning
+              variant="error"
             />
           )}
 
@@ -203,9 +221,9 @@ export const AddNodePoolDrawer = (props: Props) => {
             <Typography className={classes.priceDisplay}>
               This pool will add{' '}
               <strong>
-                ${selectedTypeInfo.count * pricePerNode}/month (
+                ${totalPrice}/month (
                 {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
-                {pricePerNode}
+                {pricePerNode ?? 0}
                 /month)
               </strong>{' '}
               to this cluster.

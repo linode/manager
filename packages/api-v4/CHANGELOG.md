@@ -1,3 +1,24 @@
+## [2023-09-05] - v0.100.0
+
+### Changed:
+
+- Include 'firewall_id' field as optional in CreateLinodeRequest ([#9453](https://github.com/linode/manager/pull/9453))
+
+### Upcoming Features:
+
+- Add add_vpcs to GlobalGrantTypes ([#9537](https://github.com/linode/manager/pull/9537))
+- Update account and linode types for DC-specific pricing ([#9586](https://github.com/linode/manager/pull/9586))
+- VPC and Subnet related event types ([#9530](https://github.com/linode/manager/pull/9530))
+
+
+## [2023-08-21] - v0.99.0
+
+
+### Changed:
+
+- Include `vpc_id` and rename `subnet` to `subnet_id` in Linode config interface return object ([#9485](https://github.com/linode/manager/pull/9485))
+
+
 ## [2023-08-07] - v0.98.0
 
 ### Added:

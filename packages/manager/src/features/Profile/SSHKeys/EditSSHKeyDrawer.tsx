@@ -61,7 +61,7 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
       open={open}
       title={`Edit SSH Key ${sshKey?.label}`}
     >
-      {generalError && <Notice error text={generalError} />}
+      {generalError && <Notice text={generalError} variant="error" />}
       <form onSubmit={formik.handleSubmit}>
         <TextField
           errorText={hasErrorFor('label')}

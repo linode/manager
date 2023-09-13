@@ -1,18 +1,11 @@
-import { Theme } from '@mui/material/styles';
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  MenuPopover,
-} from '@reach/menu-button';
-import '@reach/menu-button/styles.css';
-import { positionRight } from '@reach/popover';
+import { IconButton, ListItemText } from '@mui/material';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import KebabIcon from 'src/assets/icons/kebab.svg';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 export interface Action {
   disabled?: boolean;
@@ -21,99 +14,48 @@ export interface Action {
   tooltip?: string;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  button: {
-    '&[data-reach-menu-button]': {
-      alignItems: 'center',
-      background: 'none',
-      border: 'none',
-      color: theme.textColors.linkActiveLight,
-      cursor: 'pointer',
-      display: 'flex',
-      fontSize: '1rem',
-      padding: '10px',
-    },
-  },
-  disabled: {
-    '&[data-reach-menu-item]': {
-      color: '#93bcec',
-      cursor: 'auto',
-    },
-    '&[data-reach-menu-item][data-selected]': {
-      background: '#3683dc',
-      color: '#93bcec',
-    },
-  },
-  icon: {
-    '& svg': {
-      fill: theme.palette.primary.main,
-    },
-  },
-  item: {
-    '&[data-reach-menu-item]': {
-      background: '#3683dc',
-      borderBottom: '1px solid #5294e0',
-      color: '#fff',
-      display: 'flex',
-      justifyContent: 'space-between',
-      padding: theme.spacing(1.25),
-      paddingLeft: '16px',
-    },
-    '&[data-reach-menu-item][data-selected]': {
-      background: '#226dc3',
-    },
-  },
-  itemsOuter: {
-    '&[data-reach-menu-items]': {
-      background: '#3683dc',
-      border: 'none',
-      color: '#fff',
-      fontSize: 14,
-      minWidth: 200,
-      padding: 0,
-      textAlign: 'left',
-    },
-  },
-  popover: {
-    zIndex: 1,
-  },
-  tooltip: {
-    '& :hover': {
-      color: '#4d99f1',
-    },
-    '& svg': {
-      height: 20,
-      width: 20,
-    },
-    color: '#fff',
-    padding: '0 0 0 8px',
-  },
-}));
-
 export interface Props {
+  /**
+   * A list of actions to show in the Menu
+   */
   actionsList: Action[];
-  // as they don't have text (just an icon)
+  /**
+   * Gives the Menu Button an accessable name
+   */
   ariaLabel: string;
-  // We want to require using aria label for these buttons
-  className?: string;
-  toggleOpenCallback?: () => void;
+  /*
+   * A function that is called when the Menu is opened.
+   * Useful for analytics.
+   */
+  onOpen?: () => void;
 }
 
 export const ActionMenu = React.memo((props: Props) => {
-  const { classes, cx } = useStyles();
-  const { actionsList, toggleOpenCallback } = props;
+  const { actionsList, ariaLabel, onOpen } = props;
 
-  const { ariaLabel } = props;
+  const menuId = convertToKebabCase(ariaLabel);
+  const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
 
-  const handleClick = () => {
-    if (toggleOpenCallback) {
-      toggleOpenCallback();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+    if (onOpen) {
+      onOpen();
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (toggleOpenCallback && e.key === 'Enter') {
-      toggleOpenCallback();
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === 'Enter') {
+      setAnchorEl(e.currentTarget);
+      if (onOpen) {
+        onOpen();
+      }
     }
   };
 
@@ -132,52 +74,100 @@ export const ActionMenu = React.memo((props: Props) => {
     },
     color: '#fff',
     padding: '0 0 0 8px',
+    pointerEvents: 'all', // Allows the tooltip to be hovered on a disabled MenuItem
   };
 
   return (
-    <Menu>
-      <MenuButton
-        className={cx({
-          [classes.button]: true,
+    <>
+      <IconButton
+        sx={(theme) => ({
+          ':hover': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+          },
+          backgroundColor: open ? theme.palette.primary.main : undefined,
+          borderRadius: 'unset',
+          color: open ? '#fff' : theme.textColors.linkActiveLight,
+          height: '100%',
+          minWidth: '40px',
+          padding: '10px',
         })}
+        aria-controls={open ? menuId : undefined}
+        aria-expanded={open ? 'true' : undefined}
+        aria-haspopup="true"
         aria-label={ariaLabel}
+        color="inherit"
+        id={buttonId}
+        onClick={handleClick}
         onKeyDown={handleKeyPress}
-        onMouseDown={handleClick}
       >
-        <KebabIcon aria-hidden className={classes.icon} type="primary" />
-      </MenuButton>
-      <MenuPopover className={classes.popover} position={positionRight}>
-        <MenuItems className={classes.itemsOuter}>
-          {(actionsList as Action[]).map((a, idx) => (
-            <MenuItem
-              className={cx({
-                [classes.disabled]: a.disabled,
-                [classes.item]: true,
-              })}
-              onSelect={() => {
-                if (!a.disabled) {
-                  return a.onClick();
-                }
-              }}
-              data-qa-action-menu-item={a.title}
-              disabled={a.disabled}
-              key={idx}
-              valueText={a.title}
-            >
+        <KebabIcon />
+      </IconButton>
+      <Menu
+        MenuListProps={{
+          'aria-labelledby': buttonId,
+        }}
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        slotProps={{
+          paper: {
+            sx: (theme) => ({
+              backgroundColor: theme.palette.primary.main,
+              boxShadow: 'none',
+            }),
+          },
+        }}
+        transformOrigin={{
+          horizontal: 'right',
+          vertical: 'top',
+        }}
+        anchorEl={anchorEl}
+        data-qa-action-menu
+        disableScrollLock
+        id={menuId}
+        marginThreshold={0}
+        onClose={handleClose}
+        open={open}
+        transitionDuration={225}
+      >
+        {actionsList.map((a, idx) => (
+          <MenuItem
+            onClick={() => {
+              if (!a.disabled) {
+                handleClose();
+                a.onClick();
+              }
+            }}
+            sx={{
+              '&:hover': {
+                background: '#226dc3',
+              },
+              background: '#3683dc',
+              borderBottom: '1px solid #5294e0',
+              color: '#fff',
+              padding: '10px 10px 10px 16px',
+            }}
+            data-qa-action-menu-item={a.title}
+            disabled={a.disabled}
+            key={idx}
+          >
+            <ListItemText primaryTypographyProps={{ color: 'inherit' }}>
               {a.title}
-              {a.tooltip ? (
-                <TooltipIcon
-                  data-qa-tooltip-icon
-                  status="help"
-                  sxTooltipIcon={sxTooltipIcon}
-                  text={a.tooltip}
-                  tooltipPosition="right"
-                />
-              ) : null}
-            </MenuItem>
-          ))}
-        </MenuItems>
-      </MenuPopover>
-    </Menu>
+            </ListItemText>
+            {a.tooltip && (
+              <TooltipIcon
+                data-qa-tooltip-icon
+                status="help"
+                sxTooltipIcon={sxTooltipIcon}
+                text={a.tooltip}
+                tooltipPosition="right"
+              />
+            )}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
   );
 });

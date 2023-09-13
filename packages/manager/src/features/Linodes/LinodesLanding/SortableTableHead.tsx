@@ -116,8 +116,9 @@ export const SortableTableHead = <T extends unknown>(
                 direction={order}
                 handleClick={handleOrderChange}
                 label="ipv4[0]" // we want to sort by the first ipv4
+                noWrap
               >
-                IP Address
+                Public IP Address
               </TableSortCell>
               <Hidden lgDown>
                 <TableSortCell

@@ -1,5 +1,4 @@
 import { Notification } from '@linode/api-v4/lib/account';
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 
@@ -19,41 +18,42 @@ import {
   transitionText,
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useTypeQuery } from 'src/queries/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { IPAddress } from '../IPAddress';
 import { LinodeActionMenu } from '../LinodeActionMenu';
 import { LinodeHandlers } from '../LinodesLanding';
 import { RegionIndicator } from '../RegionIndicator';
-import { parseMaintenanceStartTime } from '../utils';
+import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
 import {
   StyledButton,
   StyledIpTableCell,
   StyledMaintenanceTableCell,
 } from './LinodeRow.styles';
 
-type Props = Linode & { handlers: LinodeHandlers };
+type Props = LinodeWithMaintenance & { handlers: LinodeHandlers };
 
 export const LinodeRow = (props: Props) => {
-  const { backups, handlers, id, ipv4, label, region, status, type } = props;
+  const {
+    backups,
+    handlers,
+    id,
+    ipv4,
+    label,
+    maintenance,
+    region,
+    status,
+    type,
+  } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
   const { data: notifications } = useNotificationsQuery();
-
-  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
-    {},
-    { status: { '+or': ['pending, started'] } }
-  );
-
-  const maintenance = accountMaintenanceData?.find(
-    (m) => m.entity.id === id && m.entity.type === 'linode'
-  );
 
   const linodeNotifications =
     notifications?.filter(
@@ -83,12 +83,7 @@ export const LinodeRow = (props: Props) => {
     );
   };
 
-  const iconStatus =
-    status === 'running'
-      ? 'active'
-      : ['offline', 'stopped'].includes(status)
-      ? 'inactive'
-      : 'other';
+  const iconStatus = getLinodeIconStatus(status);
 
   const [isHovered, setIsHovered] = React.useState(false);
 
@@ -116,8 +111,8 @@ export const LinodeRow = (props: Props) => {
         </Link>
       </TableCell>
       <StyledMaintenanceTableCell
-        maintenance={Boolean(maintenance)}
         data-qa-status
+        maintenance={Boolean(maintenance)}
         statusCell
       >
         {!Boolean(maintenance) ? (
@@ -142,9 +137,9 @@ export const LinodeRow = (props: Props) => {
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <strong>Maintenance Scheduled</strong>
             <TooltipIcon
-              sx={{ tooltip: { maxWidth: 300 } }}
               interactive
               status="help"
+              sx={{ tooltip: { maxWidth: 300 } }}
               text={<MaintenanceText />}
               tooltipPosition="top"
             />

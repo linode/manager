@@ -1,36 +1,29 @@
 import * as React from 'react';
-import {
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter,
-} from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const VolumesLanding = React.lazy(() => import('./VolumesLanding'));
 const VolumeCreate = React.lazy(() => import('./VolumeCreate/VolumeCreate'));
 
-type Props = RouteComponentProps<{}>;
-
-const Volumes: React.FC<Props> = (props) => {
-  const {
-    match: { path },
-  } = props;
+const Volumes = () => {
+  const { path } = useRouteMatch();
 
   return (
-    <Switch>
-      <Route
-        render={(routeProps) => (
-          <VolumesLanding isVolumesLanding removeBreadCrumb {...routeProps} />
-        )}
-        exact
-        path={path}
-        strict
-      />
-      <Route component={VolumeCreate} exact path={`${path}/create`} strict />
-      <Redirect to={path} />
-    </Switch>
+    <>
+      <ProductInformationBanner bannerLocation="Volumes" />
+      <Switch>
+        <Route
+          exact
+          path={path}
+          render={() => <VolumesLanding isVolumesLanding removeBreadCrumb />}
+          strict
+        />
+        <Route component={VolumeCreate} exact path={`${path}/create`} strict />
+        <Redirect to={path} />
+      </Switch>
+    </>
   );
 };
 
-export default withRouter(Volumes);
+export default Volumes;

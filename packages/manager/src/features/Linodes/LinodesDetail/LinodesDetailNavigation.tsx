@@ -21,8 +21,8 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
-const LinodeNetworking = React.lazy(
-  () => import('./LinodeNetworking/LinodeNetworking')
+const LinodeNetwork = React.lazy(
+  () => import('./LinodeNetworking/LinodeNetwork')
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage/LinodeStorage'));
 const LinodeConfigurations = React.lazy(
@@ -123,7 +123,7 @@ const LinodesDetailNavigation = () => {
             <DismissibleBanner
               preferenceKey={`smtp-restriction-notice-${linode?.label}`}
               spacingTop={32}
-              warning
+              variant="warning"
             >
               <Grid xs={12}>{text}</Grid>
             </DismissibleBanner>
@@ -142,7 +142,7 @@ const LinodesDetailNavigation = () => {
                 />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
-                <LinodeNetworking />
+                <LinodeNetwork />
               </SafeTabPanel>
               {isBareMetalInstance ? null : (
                 <>

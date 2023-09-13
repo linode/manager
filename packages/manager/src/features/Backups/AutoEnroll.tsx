@@ -19,28 +19,27 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
 
   return (
     <StyledPaper>
-      {error && <Notice error text={error} />}
+      {error && <Notice text={error} variant="error" />}
       <StyledFormControlLabel
-        control={
-          <Toggle checked={enabled} data-qa-enable-toggle onChange={toggle} />
-        }
         label={
           <StyledDiv>
             <StyledTypography>
               Auto Enroll All New Linodes in Backups
             </StyledTypography>
             <Typography variant="body1">
-              {`Enroll all future Linodes in backups. Your account will be billed
-                    the additional hourly rate noted on the `}
+              Enroll all future Linodes in backups. Your account will be billed
+              the additional hourly rate noted on the{' '}
               <Link
                 data-qa-backups-price
                 to="https://www.linode.com/products/backups/"
               >
                 Backups pricing page
               </Link>
+              .
             </Typography>
           </StyledDiv>
         }
+        control={<Toggle checked={enabled} onChange={toggle} />}
       />
     </StyledPaper>
   );

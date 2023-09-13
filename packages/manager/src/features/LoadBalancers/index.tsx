@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const LoadBalancerLanding = React.lazy(
@@ -12,28 +13,18 @@ const LoadBalancerDetail = React.lazy(
 const LoadBalancerCreate = React.lazy(
   () => import('./LoadBalancerCreate/LoadBalancerCreate')
 );
-const ServiceTargetCreate = React.lazy(
-  () => import('./ServiceTargets/ServiceTargetCreate/ServiceTargetCreate')
-);
-const RouteCreate = React.lazy(
-  () => import('./Routes/RouteCreate/RouteCreate')
-);
 
 const LoadBalancer = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
+      <ProductInformationBanner bannerLocation="LoadBalancers" />
       <Switch>
-        <Route component={RouteCreate} path="/loadbalancers/routes/create" />
-        <Route
-          component={ServiceTargetCreate}
-          path="/loadbalancers/service-target/create"
-        />
         <Route component={LoadBalancerCreate} path="/loadbalancers/create" />
         <Route
           component={LoadBalancerDetail}
-          path="/loadbalancer/:loadbalancerId/:tab?"
+          path="/loadbalancers/:loadbalancerId/:tab?"
         />
-        <Route component={LoadBalancerLanding} path="/loadbalancers/:tab?" />
+        <Route component={LoadBalancerLanding} path="/loadbalancers" />
       </Switch>
     </React.Suspense>
   );

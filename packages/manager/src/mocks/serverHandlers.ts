@@ -18,10 +18,9 @@ import {
   accountTransferFactory,
   appTokenFactory,
   betaFactory,
+  certificateFactory,
+  configurationFactory,
   contactFactory,
-  createEntrypointFactory,
-  createLoadbalancerFactory,
-  createLoadbalancerWithAllChildrenFactory,
   createRouteFactory,
   createServiceTargetFactory,
   credentialFactory,
@@ -38,10 +37,6 @@ import {
   eventFactory,
   firewallDeviceFactory,
   firewallFactory,
-  getEntrypointFactory,
-  getLoadbalancerFactory,
-  getRouteFactory,
-  getServiceTargetFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -56,6 +51,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  loadbalancerFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -81,14 +77,15 @@ import {
   proDedicatedTypeFactory,
   profileFactory,
   promoFactory,
+  routeFactory,
   securityQuestionsFactory,
+  serviceTargetFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
-  updateLoadbalancerFactory,
   volumeFactory,
   vpcFactory,
 } from 'src/factories';
@@ -270,6 +267,18 @@ const databases = [
     );
   }),
 
+  rest.post('*/databases/:engine/instances', (req, res, ctx) => {
+    const payload: any = req.body;
+    return res(
+      ctx.json({
+        ...databaseFactory.build({
+          engine: req.params.engine,
+          label: payload?.label ?? 'Database',
+        }),
+      })
+    );
+  }),
+
   rest.post(
     '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
     (req, res, ctx) => {
@@ -296,81 +305,104 @@ const databases = [
 ];
 
 const aglb = [
-  // Entrypoints
-  rest.get('*/aglb/entrypoints', (req, res, ctx) => {
-    const entrypoints = getEntrypointFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(entrypoints)));
+  // Configurations
+  rest.get('*/v4beta/aglb/:id/configurations', (req, res, ctx) => {
+    const configurations = configurationFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(configurations)));
   }),
-  rest.get('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
-    return res(ctx.json(getEntrypointFactory.build()));
+  rest.get('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
+    return res(ctx.json(configurationFactory.build()));
   }),
-  rest.post('*/aglb/entrypoints', (req, res, ctx) => {
-    return res(ctx.json(createEntrypointFactory.build()));
+  rest.post('*/v4beta/aglb/:id/configurations', (req, res, ctx) => {
+    return res(ctx.json(configurationFactory.build()));
   }),
-  rest.put('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
-    const id = Number(req.params.entrypointId);
+  rest.put('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
+    const id = Number(req.params.configId);
     const body = req.body as any;
-    return res(ctx.json(getEntrypointFactory.build({ id, ...body })));
+    return res(ctx.json(configurationFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
+  rest.delete('*/v4beta/aglb/:id/configurations/:configId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Load Balancers
-  rest.get('*/aglb/loadbalancers', (req, res, ctx) => {
-    return res(ctx.json(getLoadbalancerFactory.buildList(3)));
+  rest.get('*/v4beta/aglb', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(loadbalancerFactory.buildList(3))));
   }),
-  rest.get('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
-    return res(ctx.json(getLoadbalancerFactory.build()));
+  rest.get('*/v4beta/aglb/:loadbalancerId', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        loadbalancerFactory.build({
+          id: req.params.loadbalancerId,
+          label: `aglb-${req.params.loadbalancerId}`,
+        })
+      )
+    );
   }),
-  rest.post('*/aglb/loadbalancers', (req, res, ctx) => {
-    const loadbalancer1 = createLoadbalancerFactory.build();
-    const loadbalancer2 = createLoadbalancerWithAllChildrenFactory.build();
-    return res(ctx.json([loadbalancer1, loadbalancer2]));
+  rest.post('*/v4beta/aglb', (req, res, ctx) => {
+    return res(ctx.json(loadbalancerFactory.build()));
   }),
-  rest.put('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
-    const id = Number(req.params.loadbalancerId);
+  rest.put('*/v4beta/aglb/:id', (req, res, ctx) => {
+    const id = Number(req.params.id);
     const body = req.body as any;
     // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
     // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
     // TODO: AGLB - figure out if this is still accurate
-    return res(ctx.json(updateLoadbalancerFactory.build({ id, ...body })));
+    return res(ctx.json(loadbalancerFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
+  rest.delete('*/v4beta/aglb/:id', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Routes
-  rest.get('*/aglb/routes', (req, res, ctx) => {
-    return res(ctx.json(getRouteFactory.buildList(4)));
+  rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(routeFactory.buildList(4))));
   }),
-  rest.post('*/aglb/routes', (req, res, ctx) => {
+  rest.post('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     return res(ctx.json(createRouteFactory.buildList(4)));
   }),
-  rest.put('*/aglb/routes/:routeId', (req, res, ctx) => {
+  rest.put('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     const id = Number(req.params.routeId);
     const body = req.body as any;
     return res(ctx.json(createRouteFactory.build({ id, ...body })));
   }),
-  rest.delete('*/aglb/routes/:routeId', (req, res, ctx) => {
+  rest.delete('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   // Service Targets
-  rest.get('*/aglb/service-targets', (req, res, ctx) => {
-    const service_targets = getServiceTargetFactory.buildList(3);
+  rest.get('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
+    const service_targets = serviceTargetFactory.buildList(3);
     return res(ctx.json(makeResourcePage(service_targets)));
   }),
-  rest.post('*/aglb/service-targets', (req, res, ctx) => {
+  rest.post('*/v4beta/aglb/:id/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));
   }),
-  rest.put('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
-    const id = Number(req.params.serviceTargetId);
-    const body = req.body as any;
-    return res(
-      ctx.json({
-        ...createServiceTargetFactory.build({ id, ...body }),
-      })
-    );
+  rest.put(
+    '*/v4beta/aglb/:id/service-targets/:serviceTargetId',
+    (req, res, ctx) => {
+      const id = Number(req.params.serviceTargetId);
+      const body = req.body as any;
+      return res(ctx.json(createServiceTargetFactory.build({ id, ...body })));
+    }
+  ),
+  rest.delete(
+    '*/v4beta/aglb/:id/service-targets/:serviceTargetId',
+    (req, res, ctx) => {
+      return res(ctx.json({}));
+    }
+  ),
+  // Certificates
+  rest.get('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
+    const certificates = certificateFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(certificates)));
   }),
-  rest.delete('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
+  rest.post('*/v4beta/aglb/:id/certificates', (req, res, ctx) => {
+    return res(ctx.json(certificateFactory.build()));
+  }),
+  rest.put('*/v4beta/aglb/:id/certificates/:certId', (req, res, ctx) => {
+    const id = Number(req.params.certId);
+    const body = req.body as any;
+    return res(ctx.json(certificateFactory.build({ id, ...body })));
+  }),
+  rest.delete('*/v4beta/aglb/:id/certificates/:certId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
 ];
@@ -395,11 +427,39 @@ const vpc = [
       )
     );
   }),
+  rest.get('*/vpcs/:vpcId', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        vpcFactory.build({
+          description: `VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver VPC for webserver VPC for webserver VPC for webserver VPC for webserver.VPC for webserver and database!!! VPC`,
+          subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
+        })
+      )
+    );
+  }),
+  rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
+  }),
+  rest.delete('*/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   rest.put('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json(vpcFactory.build({ description: 'testing' })));
+  }),
+  rest.get('*/vpcs/:vpcID', (req, res, ctx) => {
+    const id = Number(req.params.id);
+    return res(ctx.json(vpcFactory.build({ id })));
+  }),
+  rest.post('*/vpcs', (req, res, ctx) => {
+    const vpc = vpcFactory.build({ ...(req.body as any) });
+    return res(ctx.json(vpc));
+  }),
+  rest.post('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    const subnet = subnetFactory.build({ ...(req.body as any) });
+    return res(ctx.json(subnet));
   }),
 ];
 
@@ -575,6 +635,11 @@ export const handlers = [
         label: 'eu-linode',
         region: 'eu-west',
       }),
+      linodeFactory.build({
+        backups: { enabled: false },
+        label: 'DC-Specific Pricing Linode',
+        region: 'id-cgk',
+      }),
       eventLinode,
       multipleIPLinode,
     ];
@@ -582,7 +647,16 @@ export const handlers = [
   }),
   rest.get('*/linode/instances/:id', async (req, res, ctx) => {
     const id = Number(req.params.id);
-    return res(ctx.json(linodeFactory.build({ id })));
+    return res(
+      ctx.json(
+        linodeFactory.build({
+          backups: { enabled: false },
+          id,
+          label: 'DC-Specific Pricing Linode',
+          region: 'id-cgk',
+        })
+      )
+    );
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
     return res(ctx.json({}));
@@ -618,7 +692,7 @@ export const handlers = [
     const ips = linodeIPFactory.build();
     return res(ctx.json(ips));
   }),
-  rest.post('*/instances', async (req, res, ctx) => {
+  rest.post('*/linode/instances', async (req, res, ctx) => {
     const payload = req.body as any;
     const linode = linodeFactory.build({
       image: payload?.image ?? 'linode/debian-10',
@@ -648,7 +722,10 @@ export const handlers = [
   rest.put('*/lke/clusters/:clusterId', async (req, res, ctx) => {
     const id = Number(req.params.clusterId);
     const k8s_version = req.params.k8s_version;
-    const cluster = kubernetesAPIResponse.build({ id, k8s_version });
+    const cluster = kubernetesAPIResponse.build({
+      id,
+      k8s_version,
+    });
     return res(ctx.json(cluster));
   }),
   rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
@@ -671,6 +748,10 @@ export const handlers = [
   rest.get('*/firewalls/*/devices', (req, res, ctx) => {
     const devices = firewallDeviceFactory.buildList(10);
     return res(ctx.json(makeResourcePage(devices)));
+  }),
+  rest.get('*/firewalls/:firewallId', (req, res, ctx) => {
+    const firewall = firewallFactory.build();
+    return res(ctx.json(firewall));
   }),
   rest.put('*/firewalls/:firewallId', (req, res, ctx) => {
     const firewall = firewallFactory.build({
@@ -856,6 +937,26 @@ export const handlers = [
   rest.get('*/kubeconfig', (req, res, ctx) => {
     return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
   }),
+  rest.get('*invoices/555/items', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        makeResourcePage([
+          invoiceItemFactory.build({
+            label: 'Linode',
+            region: 'br-gru',
+          }),
+          invoiceItemFactory.build({
+            label: 'Outbound Transfer Overage',
+            region: null,
+          }),
+          invoiceItemFactory.build({
+            label: 'Outbound Transfer Overage',
+            region: 'id-cgk',
+          }),
+        ])
+      )
+    );
+  }),
   rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
     const items = invoiceItemFactory.buildList(10);
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
@@ -890,6 +991,15 @@ export const handlers = [
     });
     return res(ctx.json(makeResourcePage([linodeInvoice, akamaiInvoice])));
   }),
+  rest.get('*/account/invoices/:invoiceId', (req, res, ctx) => {
+    const linodeInvoice = invoiceFactory.build({
+      date: '2022-12-01T18:04:01',
+      id: 1234,
+      label: 'LinodeInvoice',
+    });
+    return res(ctx.json(linodeInvoice));
+  }),
+
   rest.get('*/account/maintenance', (req, res, ctx) => {
     accountMaintenanceFactory.resetSequenceNumber();
     const page = Number(req.url.searchParams.get('page') || 1);
@@ -1395,20 +1505,37 @@ export const handlers = [
   rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.get('*/betas', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
-  }),
-  rest.get('*/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(betaFactory.build({ id: req.params.id })));
-  }),
-  rest.get('*/account/betas', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(accountBetaFactory.buildList(5))));
+  rest.get('*/account/betas', (_req, res, ctx) => {
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...accountBetaFactory.buildList(5),
+          accountBetaFactory.build({
+            ended: DateTime.now().minus({ days: 5 }).toISO(),
+            enrolled: DateTime.now().minus({ days: 20 }).toISO(),
+            started: DateTime.now().minus({ days: 30 }).toISO(),
+          }),
+        ])
+      )
+    );
   }),
   rest.get('*/account/betas/:id', (req, res, ctx) => {
-    return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(accountBetaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
   }),
-  rest.post('*/account/betas', (req, res, ctx) => {
+  rest.post('*/account/betas', (_req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.get('*/betas/:id', (req, res, ctx) => {
+    if (req.params.id !== 'undefined') {
+      return res(ctx.json(betaFactory.build({ id: req.params.id })));
+    }
+    return res(ctx.status(404));
+  }),
+  rest.get('*/betas', (_req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(betaFactory.buildList(5))));
   }),
   ...entityTransfers,
   ...statusPage,

@@ -4,9 +4,16 @@ import { createLinode } from 'support/api/linodes';
 import { createClient } from 'support/api/longview';
 import { containsVisible, fbtVisible, getVisible } from 'support/helpers';
 import { waitForAppLoad } from 'support/ui/common';
+import { cleanUp } from 'support/util/cleanup';
+import { authenticate } from 'support/api/authentication';
 
 /* eslint-disable sonarjs/no-duplicate-string */
+authenticate();
 describe('longview', () => {
+  before(() => {
+    cleanUp(['linodes', 'longview-clients']);
+  });
+
   it('tests longview', () => {
     const linodePassword = randomString(32);
     const clientLabel = randomLabel();

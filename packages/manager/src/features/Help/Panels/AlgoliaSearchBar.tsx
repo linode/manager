@@ -8,7 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import { Notice } from 'src/components/Notice/Notice';
-import { selectStyles } from 'src/features/TopMenu/SearchBar';
+import { selectStyles } from 'src/features/TopMenu/SearchBar/SearchBar';
 
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import { SearchItem } from './SearchItem';
@@ -111,7 +111,7 @@ const AlgoliaSearchBar = (props: CombinedProps) => {
   return (
     <React.Fragment>
       {searchError && (
-        <Notice className={classes.notice} error spacingTop={8}>
+        <Notice className={classes.notice} spacingTop={8} variant="error">
           {searchError}
         </Notice>
       )}

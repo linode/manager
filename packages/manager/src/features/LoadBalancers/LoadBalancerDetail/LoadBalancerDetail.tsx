@@ -1,99 +1,136 @@
-// import { useLocation } from '@reach/router';
 import * as React from 'react';
-import { matchPath, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
+import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
 
-interface Props {
-  location: Location;
-}
+const LoadBalancerSummary = React.lazy(() =>
+  import('./LoadBalancerSummary').then((module) => ({
+    default: module.LoadBalancerSummary,
+  }))
+);
 
-const LoadBalancerDetailLanding = (props: Props) => {
-  const { location } = props;
+const LoadBalancerConfigurations = React.lazy(() =>
+  import('./LoadBalancerConfigurations').then((module) => ({
+    default: module.LoadBalancerConfigurations,
+  }))
+);
 
+const LoadBalancerServiceTargets = React.lazy(() =>
+  import('./LoadBalancerServiceTargets').then((module) => ({
+    default: module.LoadBalancerServiceTargets,
+  }))
+);
+
+const LoadBalancerCertificates = React.lazy(() =>
+  import('./LoadBalancerCertificates').then((module) => ({
+    default: module.LoadBalancerCertificates,
+  }))
+);
+
+const LoadBalancerSettings = React.lazy(() =>
+  import('./LoadBalancerSettings').then((module) => ({
+    default: module.LoadBalancerSettings,
+  }))
+);
+
+const LoadBalancerDetailLanding = () => {
   const history = useHistory();
-  const { loadbalancerId } = useParams<{
+
+  const { loadbalancerId, tab } = useParams<{
     loadbalancerId: string;
-    tab?: 'activity' | 'entrypoints' | 'settings' | 'summary';
+    tab?: string;
   }>();
 
   const id = Number(loadbalancerId);
 
+  const { data: loadbalancer } = useLoadBalancerQuery(id);
+
   const tabs = [
     {
-      routeName: `/loadbalancer/${id}`,
+      routeName: `/loadbalancers/${id}/summary`,
       title: 'Summary',
     },
     {
-      routeName: `/loadbalancer/${id}/entrypoints`,
-      title: 'Entry Points',
+      routeName: `/loadbalancers/${id}/configurations`,
+      title: 'Configurations',
     },
     {
-      routeName: `/loadbalancer/${id}/activity`,
-      title: 'Activity Feed',
+      routeName: `/loadbalancers/${id}/routes`,
+      title: 'Routes',
     },
     {
-      routeName: `/loadbalancer/${id}/settings`,
+      routeName: `/loadbalancers/${id}/service-targets`,
+      title: 'Service Targets',
+    },
+    {
+      routeName: `/loadbalancers/${id}/certificates`,
+      title: 'Certificates',
+    },
+    {
+      routeName: `/loadbalancers/${id}/settings`,
       title: 'Settings',
     },
   ];
 
-  const [index, setIndex] = React.useState(
-    tabs.findIndex(
-      (tab) =>
-        Boolean(matchPath(tab.routeName, { path: location.pathname })) || 0
-    )
-  );
-
-  const handleTabChange = (index: number) => {
-    setIndex(index);
-    history.push(tabs[index].routeName);
-  };
+  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
   return (
     <>
-      {/* TODO: AGLB - Use Load Balancer label */}
-      <DocumentTitleSegment segment={loadbalancerId} />
+      <DocumentTitleSegment segment={loadbalancer?.label ?? ''} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Load Balancer',
+              label: 'Global Load Balancers',
               position: 1,
             },
           ],
           labelOptions: { noCap: true },
-          pathname: `/loadbalancers/${id}`, // TODO: AGLB - Use Load Balancer label
+          pathname: `/loadbalancers/${loadbalancer?.label}`,
         }}
         docsLabel="Docs"
         docsLink="" // TODO: AGLB - Add docs link
       />
-
-      <Tabs index={index} onChange={handleTabChange}>
+      <Tabs
+        index={tabIndex === -1 ? 0 : tabIndex}
+        onChange={(i) => history.push(tabs[i].routeName)}
+      >
         <TabLinkList tabs={tabs} />
-
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <>TODO: AGLB M3-6818: Load Balancer Details Summary </>
-            </SafeTabPanel>
-            <SafeTabPanel index={1}>
-              <>TODO: AGLB M3-6819: Load Balancer Details Entry Points </>
-            </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <>TODO: AGLB M3-6820: Load Balancer Details Activity Feed </>
-            </SafeTabPanel>
-            <SafeTabPanel index={3}>
-              <>TODO: AGLB M3-6821: Load Balancer Details Settings </>
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
+        <TabPanels>
+          <SafeTabPanel index={0}>
+            <React.Suspense fallback={<SuspenseLoader />}>
+              <LoadBalancerSummary />
+            </React.Suspense>
+          </SafeTabPanel>
+          <SafeTabPanel index={1}>
+            <React.Suspense fallback={<SuspenseLoader />}>
+              <LoadBalancerConfigurations />
+            </React.Suspense>
+          </SafeTabPanel>
+          <SafeTabPanel index={2}>2</SafeTabPanel>
+          <SafeTabPanel index={3}>
+            <React.Suspense fallback={<SuspenseLoader />}>
+              <LoadBalancerServiceTargets />
+            </React.Suspense>
+          </SafeTabPanel>
+          <SafeTabPanel index={4}>
+            <React.Suspense fallback={<SuspenseLoader />}>
+              <LoadBalancerCertificates />
+            </React.Suspense>
+          </SafeTabPanel>
+          <SafeTabPanel index={5}>
+            <React.Suspense fallback={<SuspenseLoader />}>
+              <LoadBalancerSettings />
+            </React.Suspense>
+          </SafeTabPanel>
+        </TabPanels>
       </Tabs>
     </>
   );

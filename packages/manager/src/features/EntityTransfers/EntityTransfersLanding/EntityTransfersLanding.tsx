@@ -10,11 +10,11 @@ import {
   useEntityTransfersQuery,
 } from 'src/queries/entityTransfers';
 
-import TransfersTable from '../TransfersTable';
-import CreateTransferSuccessDialog from './CreateTransferSuccessDialog';
-import TransferControls from './TransferControls';
+import { TransfersTable } from '../TransfersTable';
+import { CreateTransferSuccessDialog } from './CreateTransferSuccessDialog';
+import { TransferControls } from './TransferControls';
 
-export const EntityTransfersLanding: React.FC<{}> = (_) => {
+export const EntityTransfersLanding = () => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);
   const [transfer, setTransfer] = React.useState<EntityTransfer | undefined>(
     undefined
@@ -167,5 +167,3 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
     </div>
   );
 };
-
-export default EntityTransfersLanding;

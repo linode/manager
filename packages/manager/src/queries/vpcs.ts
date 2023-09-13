@@ -36,8 +36,10 @@ export const useVPCsQuery = (params: Params, filter: Filter) => {
   );
 };
 
-export const useVPCQuery = (id: number) => {
-  return useQuery<VPC, APIError[]>([vpcQueryKey, 'vpc', id], () => getVPC(id));
+export const useVPCQuery = (id: number, enabled: boolean = true) => {
+  return useQuery<VPC, APIError[]>([vpcQueryKey, 'vpc', id], () => getVPC(id), {
+    enabled,
+  });
 };
 
 export const useCreateVPCMutation = () => {

@@ -68,7 +68,7 @@ export const UserMenu = React.memo(() => {
   const id = open ? 'user-menu-popover' : undefined;
 
   const { data: grants } = useGrants();
-
+  const userName = profile?.username ?? '';
   const hasFullAccountAccess =
     grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
 
@@ -103,8 +103,6 @@ export const UserMenu = React.memo(() => {
     ],
     [hasFullAccountAccess, _isRestrictedUser]
   );
-
-  const userName = profile?.username ?? '';
 
   const renderLink = (link: MenuLink) => {
     if (link.hide) {
@@ -168,18 +166,21 @@ export const UserMenu = React.memo(() => {
         </Button>
       </Tooltip>
       <Popover
-        PaperProps={{
-          sx: {
-            paddingX: 2.5,
-            paddingY: 2,
-          },
-        }}
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',
         }}
+        slotProps={{
+          paper: {
+            sx: {
+              paddingX: 2.5,
+              paddingY: 2,
+            },
+          },
+        }}
         anchorEl={anchorEl}
         id={id}
+        marginThreshold={0}
         onClose={handleClose}
         open={open}
       >
@@ -193,11 +194,23 @@ export const UserMenu = React.memo(() => {
           <Box>
             <Heading>My Profile</Heading>
             <Divider color="#9ea4ae" />
-            <Grid container rowSpacing={1.5}>
-              <Grid direction="column" wrap="nowrap" xs={6}>
+            <Grid container>
+              <Grid
+                container
+                direction="column"
+                rowGap={1}
+                wrap="nowrap"
+                xs={6}
+              >
                 {profileLinks.slice(0, 4).map(renderLink)}
               </Grid>
-              <Grid direction="column" wrap="nowrap" xs={6}>
+              <Grid
+                container
+                direction="column"
+                rowGap={1}
+                wrap="nowrap"
+                xs={6}
+              >
                 {profileLinks.slice(4).map(renderLink)}
               </Grid>
             </Grid>

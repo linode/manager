@@ -13,10 +13,6 @@ import { State as AuthState } from 'src/store/authentication';
 import authentication, {
   defaultState as authenticationDefaultState,
 } from 'src/store/authentication/authentication.reducer';
-import backups, {
-  State as BackupDrawerState,
-  defaultState as backupsDefaultState,
-} from 'src/store/backupDrawer';
 import events, {
   State as EventsState,
   defaultState as eventsDefaultState,
@@ -68,7 +64,6 @@ const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
 export interface ApplicationState {
   authentication: AuthState;
-  backups: BackupDrawerState;
   createLinode: LinodeCreateState;
   events: EventsState;
   featureFlagsLoad: FeatureFlagsLoadState;
@@ -84,7 +79,6 @@ export interface ApplicationState {
 
 export const defaultState: ApplicationState = {
   authentication: authenticationDefaultState,
-  backups: backupsDefaultState,
   createLinode: linodeCreateDefaultState,
   events: eventsDefaultState,
   featureFlagsLoad: featureFlagsLoadState,
@@ -103,7 +97,6 @@ export const defaultState: ApplicationState = {
  */
 const reducers = combineReducers<ApplicationState>({
   authentication,
-  backups,
   createLinode: linodeCreateReducer,
   events,
   featureFlagsLoad,

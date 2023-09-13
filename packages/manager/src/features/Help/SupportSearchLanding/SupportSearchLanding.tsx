@@ -1,15 +1,15 @@
 import Search from '@mui/icons-material/Search';
-import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
+import { Box } from 'src/components/Box';
 import { H1Header } from 'src/components/H1Header/H1Header';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
@@ -37,16 +37,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export type CombinedProps = AlgoliaProps & RouteComponentProps<{}>;
-
-const SupportSearchLanding = (props: CombinedProps) => {
-  const {
-    history,
-    searchAlgolia,
-    searchEnabled,
-    searchError,
-    searchResults,
-  } = props;
+const SupportSearchLanding = (props: AlgoliaProps) => {
+  const history = useHistory();
+  const { searchAlgolia, searchEnabled, searchError, searchResults } = props;
   const [docs, community] = searchResults;
   const { classes } = useStyles();
 
@@ -87,7 +80,7 @@ const SupportSearchLanding = (props: CombinedProps) => {
         />
       </Box>
       <Box>
-        {searchError && <Notice error>{searchError}</Notice>}
+        {searchError && <Notice variant="error">{searchError}</Notice>}
         <TextField
           InputProps={{
             className: classes.searchBar,
@@ -127,5 +120,5 @@ const SupportSearchLanding = (props: CombinedProps) => {
 };
 
 export default withSearch({ highlight: false, hitsPerPage: 5 })(
-  withRouter(SupportSearchLanding)
+  SupportSearchLanding
 );

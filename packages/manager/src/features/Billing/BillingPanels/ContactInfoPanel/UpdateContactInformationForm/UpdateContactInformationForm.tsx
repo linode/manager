@@ -156,7 +156,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       >
         {generalError && (
           <Grid xs={12}>
-            <Notice error text={generalError} />
+            <Notice text={generalError} variant="error" />
           </Grid>
         )}
         <Grid xs={12}>
@@ -169,6 +169,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             name="email"
             onChange={formik.handleChange}
             required
+            trimmed
             type="email"
             value={formik.values.email}
           />

@@ -28,6 +28,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
     successCallback,
     successMessage,
     tooltipText,
+    trimmed,
     ...textFieldProps
   } = props;
 
@@ -85,8 +86,10 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
           disabled={disabled}
           errorText={fieldError}
           label={label}
+          onBlur={(e) => setValue(e.target.value)}
           onChange={(e) => setValue(e.target.value)}
           tooltipText={tooltipText ? tooltipText : undefined}
+          trimmed={trimmed}
           value={value}
         />
         <ActionsPanel
@@ -108,12 +111,17 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
         <Notice
           spacingBottom={8}
           spacingTop={8}
-          success
           text={_successMessage}
+          variant="success"
         />
       ) : null}
       {generalError ? (
-        <Notice error spacingBottom={8} spacingTop={8} text={generalError} />
+        <Notice
+          spacingBottom={8}
+          spacingTop={8}
+          text={generalError}
+          variant="error"
+        />
       ) : null}
     </>
   );

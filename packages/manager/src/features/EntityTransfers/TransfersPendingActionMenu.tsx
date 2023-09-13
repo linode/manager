@@ -1,26 +1,14 @@
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Action } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-}));
-
 interface Props {
   onCancelClick: () => void;
 }
 
-type CombinedProps = Props;
-
-const TransfersPendingActionMenu: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+export const TransfersPendingActionMenu = (props: Props) => {
   const { onCancelClick } = props;
 
   const actions: Action[] = [
@@ -33,7 +21,7 @@ const TransfersPendingActionMenu: React.FC<CombinedProps> = (props) => {
   ];
 
   return (
-    <div className={classes.root}>
+    <StyledDiv>
       {actions.map((action) => {
         return (
           <InlineMenuAction
@@ -44,8 +32,14 @@ const TransfersPendingActionMenu: React.FC<CombinedProps> = (props) => {
           />
         );
       })}
-    </div>
+    </StyledDiv>
   );
 };
 
-export default TransfersPendingActionMenu;
+export const StyledDiv = styled('div', {
+  label: 'StyledDiv',
+})({
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'flex-end',
+});

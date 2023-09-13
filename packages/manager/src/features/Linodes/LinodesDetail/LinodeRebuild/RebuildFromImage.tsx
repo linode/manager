@@ -4,13 +4,13 @@ import {
   rebuildLinode,
 } from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
@@ -18,9 +18,11 @@ import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
+import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -40,6 +42,7 @@ interface Props {
   handleRebuildError: (status: string) => void;
   linodeId: number;
   linodeLabel?: string;
+  linodeRegion?: string;
   onClose: () => void;
   passwordHelperText: string;
 }
@@ -66,6 +69,7 @@ export const RebuildFromImage = (props: Props) => {
     handleRebuildError,
     linodeId,
     linodeLabel,
+    linodeRegion,
     onClose,
     passwordHelperText,
   } = props;
@@ -76,6 +80,7 @@ export const RebuildFromImage = (props: Props) => {
   const flags = useFlags();
 
   const { data: _imagesData, error: imagesError } = useAllImagesQuery();
+  const { data: regionsData } = useRegionsQuery();
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
@@ -200,6 +205,7 @@ export const RebuildFromImage = (props: Props) => {
 
         const shouldDisplayUserDataAccordion =
           flags.metadata &&
+          regionSupportsMetadata(regionsData ?? [], linodeRegion ?? '') &&
           Boolean(
             values.image &&
               _imagesData
@@ -250,8 +256,8 @@ export const RebuildFromImage = (props: Props) => {
                     }
                     renderNotice={
                       <StyledNotice
-                        success
                         text="Adding new user data is recommended as part of the rebuild process."
+                        variant="success"
                       />
                     }
                     disabled={shouldReuseUserData}

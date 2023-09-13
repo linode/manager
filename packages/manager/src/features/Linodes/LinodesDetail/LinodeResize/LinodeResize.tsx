@@ -15,8 +15,8 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
@@ -163,11 +163,11 @@ export const LinodeResize = (props: Props) => {
         {hostMaintenance && <HostMaintenanceError />}
         {disksError && (
           <Notice
-            error
             text="There was an error loading your Linode&rsquo;s Disks."
+            variant="error"
           />
         )}
-        {error && <Notice error>{error}</Notice>}
+        {error && <Notice variant="error">{error}</Notice>}
         <Typography data-qa-description>
           If you&rsquo;re expecting a temporary burst of traffic to your
           website, or if you&rsquo;re not using your Linode as much as you
@@ -300,7 +300,10 @@ const getError = (error: APIError[] | null) => {
   }
 
   const errorText = error?.[0]?.reason;
-  if (errorText.match(/allocated more disk/i)) {
+  if (
+    typeof errorText === 'string' &&
+    errorText.match(/allocated more disk/i)
+  ) {
     return (
       <Typography>
         The current disk size of your Linode is too large for the new service

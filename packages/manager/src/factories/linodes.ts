@@ -1,4 +1,4 @@
-import { NetworkUtilization } from '@linode/api-v4/lib/account';
+import { RegionalNetworkUtilization } from '@linode/api-v4/lib/account';
 import {
   CreateLinodeRequest,
   Linode,
@@ -123,11 +123,25 @@ export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
   },
 });
 
-export const linodeTransferFactory = Factory.Sync.makeFactory<NetworkUtilization>(
+export const linodeTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
   {
     billable: 0,
-    quota: 1950,
-    used: 13956637,
+    quota: 1950, // GB
+    region_transfers: [
+      {
+        billable: 0,
+        id: 'id-cgk',
+        quota: 1200, // GB
+        used: 1120000000000, // Bytes
+      },
+      {
+        billable: 0,
+        id: 'br-gru',
+        quota: 1500, // GB
+        used: 90000000000, // Bytes
+      },
+    ],
+    used: 13956637, // Bytes
   }
 );
 
@@ -138,6 +152,18 @@ export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
         hourly: 0.004,
         monthly: 2.5,
       },
+      region_prices: [
+        {
+          hourly: 0.0048,
+          id: 'id-cgk',
+          monthly: 3.57,
+        },
+        {
+          hourly: 0.0056,
+          id: 'br-gru',
+          monthly: 4.17,
+        },
+      ],
     },
   },
   class: 'standard',
@@ -151,6 +177,18 @@ export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
     hourly: 0.015,
     monthly: 10.0,
   },
+  region_prices: [
+    {
+      hourly: 0.021,
+      id: 'br-gru',
+      monthly: 14,
+    },
+    {
+      hourly: 0.018,
+      id: 'id-cgk',
+      monthly: 12,
+    },
+  ],
   successor: null,
   transfer: 2000,
   vcpus: 1,
@@ -169,6 +207,18 @@ export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
         hourly: null,
         monthly: null,
       },
+      region_prices: [
+        {
+          hourly: null,
+          id: 'id-cgk',
+          monthly: null,
+        },
+        {
+          hourly: null,
+          id: 'br-gru',
+          monthly: null,
+        },
+      ],
     },
   },
   class: 'prodedicated',
@@ -182,6 +232,18 @@ export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
     hourly: 2.88,
     monthly: 1920.0,
   },
+  region_prices: [
+    {
+      hourly: 4.032,
+      id: 'br-gru',
+      monthly: 2688,
+    },
+    {
+      hourly: 3.436,
+      id: 'id-cgk',
+      monthly: 2304,
+    },
+  ],
   successor: null,
   transfer: 11000,
   vcpus: 56,
