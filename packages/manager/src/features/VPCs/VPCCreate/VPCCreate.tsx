@@ -80,7 +80,7 @@ const VPCCreate = () => {
   ) => {
     const combinedSubnets: SubnetFieldState[] = [];
     for (let i = 0; i < values.subnets.length; i++) {
-      const apiSubnetIdx = visualToAPISubnetMapping[i];
+      const apiSubnetIdx: number | undefined = visualToAPISubnetMapping[i];
       // If the subnet has errors associated with it, include those errors in its state
       if ((apiSubnetIdx || apiSubnetIdx === 0) && errors[apiSubnetIdx]) {
         const subnet = {
