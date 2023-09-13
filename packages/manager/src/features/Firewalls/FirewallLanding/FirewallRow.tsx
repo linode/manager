@@ -1,6 +1,5 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,7 +11,7 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
-import { StyledTableCell } from './FirewallRow.styles';
+import { StyledLink, StyledTableCell } from './FirewallRow.styles';
 
 type CombinedProps = Firewall & ActionHandlers;
 
@@ -55,15 +54,6 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
     </TableRow>
   );
 });
-
-export const StyledLink = styled(Link, { label: 'StyledLink' })(() => ({
-  '&:hover, &:focus': {
-    textDecoration: 'underline',
-  },
-  display: 'block',
-  fontSize: '.875rem',
-  lineHeight: '1.125rem',
-}));
 
 /**
  *

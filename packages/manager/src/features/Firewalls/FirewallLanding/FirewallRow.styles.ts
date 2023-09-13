@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 
 import { TableCell } from 'src/components/TableCell';
 
-export const StyledDiv = styled('div', {
-  label: 'StyledDiv',
-})(() => ({
-  maxHeight: '3rem',
+export const StyledLink = styled(Link, { label: 'StyledLink' })(() => ({
+  '&:hover, &:focus': {
+    textDecoration: 'underline',
+  },
+  display: 'block',
+  fontSize: '.875rem',
+  lineHeight: '1.125rem',
 }));
 
 export const StyledDevicesLink = styled(Link, {
@@ -14,17 +17,6 @@ export const StyledDevicesLink = styled(Link, {
 })(() => ({
   display: 'inline-block',
 }));
-
-export const StyledFirewallLink = styled(Link, { label: 'StyledFirewallLink' })(
-  () => ({
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-    },
-    display: 'block',
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
-  })
-);
 
 export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
   () => ({
