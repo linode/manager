@@ -150,7 +150,7 @@ const FirewallLanding = () => {
             </TableSortCell>
             <Hidden smDown>
               <TableCell>Rules</TableCell>
-              <TableCell>Linodes</TableCell>
+              <TableCell>Devices</TableCell>
             </Hidden>
             <TableCell></TableCell>
           </TableRow>

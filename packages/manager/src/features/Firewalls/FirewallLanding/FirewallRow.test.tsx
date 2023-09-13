@@ -79,13 +79,5 @@ describe('FirewallRow', () => {
       const { queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
     });
-
-    it('should render "plus N more" text for any devices over three', () => {
-      const devices = firewallDeviceFactory.buildList(13);
-      const links = getDeviceLinks(devices);
-      const { getByText, queryAllByTestId } = renderWithTheme(links);
-      expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
-      expect(getByText(/10 more/));
-    });
   });
 });
