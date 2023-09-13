@@ -13,6 +13,7 @@ import { randomNumber } from 'support/util/random';
 import { ui } from 'support/ui';
 import { profileFactory } from '@src/factories';
 import { mockGetProfile, mockUpdateProfile } from 'support/intercepts/profile';
+import { buildArray } from 'support/util/arrays';
 
 /**
  * Uses the user menu to navigate to the Profile Display page.
@@ -122,8 +123,9 @@ describe('Billling Activity Feed', () => {
    * - Confirms that clicking on an invoice's label directs the user to the invoice details page.
    */
   it('lists invoices and payments', () => {
-    const invoiceMocks = new Array(10).fill(null).map(
-      (_item: null, i: number): Invoice => {
+    const invoiceMocks = buildArray(
+      10,
+      (i: number): Invoice => {
         const id = randomNumber(1, 999999);
         const date = DateTime.now().minus({ days: 2, months: i }).toISO();
         const subtotal = randomNumber(25, 949);
