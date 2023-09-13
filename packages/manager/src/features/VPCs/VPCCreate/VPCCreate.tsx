@@ -21,7 +21,10 @@ import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs';
-import { handleVPCAndSubnetErrors } from 'src/utilities/formikErrorUtils';
+import {
+  SubnetError,
+  handleVPCAndSubnetErrors,
+} from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
@@ -78,26 +81,24 @@ const VPCCreate = () => {
     errors: {},
     visualToAPISubnetMapping: {}
   ) => {
-    const combinedSubnets: SubnetFieldState[] = [];
-    for (let i = 0; i < values.subnets.length; i++) {
-      const apiSubnetIdx: number | undefined = visualToAPISubnetMapping[i];
+    return values.subnets.map((subnet, idx) => {
+      const apiSubnetIdx: number | undefined = visualToAPISubnetMapping[idx];
       // If the subnet has errors associated with it, include those errors in its state
       if ((apiSubnetIdx || apiSubnetIdx === 0) && errors[apiSubnetIdx]) {
-        const subnet = {
-          label: values.subnets[i].label,
-          labelError: errors[apiSubnetIdx].label ?? '',
+        const errorData: SubnetError = errors[apiSubnetIdx];
+        return {
+          ...subnet,
+          labelError: errorData.label ?? '',
           // @TODO VPC: IPv6 error handling
           ip: {
-            ...values.subnets[i].ip,
-            ipv4Error: errors[apiSubnetIdx].ipv4 ?? '',
+            ...subnet.ip,
+            ipv4Error: errorData.ipv4 ?? '',
           },
         };
-        combinedSubnets.push(subnet);
       } else {
-        combinedSubnets.push(values.subnets[i]);
+        return subnet;
       }
-    }
-    return combinedSubnets;
+    });
   };
 
   const onCreateVPC = async () => {
