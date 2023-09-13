@@ -3,7 +3,7 @@ import * as React from 'react';
 import { OptionProps } from 'react-select';
 
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-import Option from 'src/components/EnhancedSelect/components/Option';
+import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
