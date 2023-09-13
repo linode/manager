@@ -520,7 +520,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
                 }}
               >
                 You have no other linodes in this Linode&rsquo;s data center
-                which to transfer IPs.
+                with which to transfer IPs.
               </Typography>
             ) : (
               <Grid container spacing={2} sx={{ width: '100%' }}>
