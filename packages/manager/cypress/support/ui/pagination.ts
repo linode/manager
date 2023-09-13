@@ -19,8 +19,8 @@ export const pagination = {
   findPageSizeSelect: () => {
     return pagination
       .find()
-      .get('[data-qa-pagination-page-size]')
-      .get('[data-qa-enhanced-select]');
+      .find('[data-qa-pagination-page-size]')
+      .find('[data-qa-enhanced-select]');
   },
 
   /**
@@ -29,6 +29,6 @@ export const pagination = {
    * @returns Cypress chainable.
    */
   findControls: () => {
-    return pagination.find().get('[data-qa-pagination-controls]');
+    return pagination.find().find('[data-qa-pagination-controls]');
   },
 };
