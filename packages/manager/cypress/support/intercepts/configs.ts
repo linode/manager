@@ -28,7 +28,7 @@ export const interceptGetLinodeConfigs = (
  *
  * @returns Cypress chainable.
  */
-export const interceptPostLinodeConfigs = (
+export const interceptCreateLinodeConfigs = (
   linodeId: number
 ): Cypress.Chainable<null> => {
   return cy.intercept(
@@ -45,7 +45,7 @@ export const interceptPostLinodeConfigs = (
  *
  * @returns Cypress chainable.
  */
-export const interceptPutLinodeConfigs = (
+export const interceptUpdateLinodeConfigs = (
   linodeId: number,
   configId: number
 ): Cypress.Chainable<null> => {

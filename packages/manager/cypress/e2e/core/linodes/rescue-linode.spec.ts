@@ -8,7 +8,7 @@ import {
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { createAndBootLinode } from './linode-utils';
+import { createAndBootLinode } from '../../../support/util/linode-utils';
 
 // Submits the Rescue Linode dialog, initiating reboot into rescue mode.
 const rebootInRescueMode = () => {
