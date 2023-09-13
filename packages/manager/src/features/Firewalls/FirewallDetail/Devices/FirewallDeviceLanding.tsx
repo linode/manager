@@ -1,19 +1,20 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
-import { Link } from 'src/components/Link';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 import { AddLinodeDrawer } from './AddLinodeDrawer';
 import { AddNodebalancerDrawer } from './AddNodebalancerDrawer';
-import { FirewallDevicesTable } from './FirewallDevicesTable';
+import { FirewallDeviceTable } from './FirewallDeviceTable';
 import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 
-import type { FirewallDeviceEntityType } from '@linode/api-v4';
+import type { FirewallDevice, FirewallDeviceEntityType } from '@linode/api-v4';
 
 export interface FirewallDeviceLandingProps {
   disabled: boolean;
@@ -38,8 +39,17 @@ export const FirewallDeviceLanding = React.memo(
       firewallID
     );
 
-    const devices =
-      allDevices?.filter((device) => device.entity.type === type) || [];
+    const theme = useTheme();
+
+    const [filteredDevices, setFilteredDevices] = React.useState<
+      FirewallDevice[]
+    >([]);
+
+    React.useEffect(() => {
+      setFilteredDevices(
+        allDevices?.filter((device) => device.entity.type === type) || []
+      );
+    }, [allDevices, type]);
 
     const [
       isRemoveDeviceDialogOpen,
@@ -48,7 +58,7 @@ export const FirewallDeviceLanding = React.memo(
 
     const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(-1);
 
-    const selectedDevice = devices?.find(
+    const selectedDevice = filteredDevices?.find(
       (device) => device.id === selectedDeviceId
     );
 
@@ -58,6 +68,16 @@ export const FirewallDeviceLanding = React.memo(
 
     const handleClose = () => {
       setDeviceDrawerOpen(false);
+    };
+
+    const [searchText, setSearchText] = React.useState('');
+
+    const filter = (value: string) => {
+      setSearchText(value);
+      const filtered = filteredDevices.filter((device) => {
+        return device.entity.label.toLowerCase().includes(value.toLowerCase());
+      });
+      setFilteredDevices(filtered);
     };
 
     const formattedType = formattedTypes[type];
@@ -73,35 +93,53 @@ export const FirewallDeviceLanding = React.memo(
             variant="error"
           />
         ) : null}
-        <Grid container direction="column">
-          <Grid sx={{ paddingBottom: 0, width: 'calc(100% - 300px)' }}>
-            <StyledTypography>
-              The following {formattedType}s have been assigned to this
-              Firewall. A {formattedType} can only be assigned to a single
-              Firewall.
-              <Link to="#">
-                Learn about how Firewall rules apply to {formattedType}s.
-              </Link>
-              {/* @todo add documentation link */}
-            </StyledTypography>
+        <Grid
+          container
+          direction="column"
+          sx={{ marginBottom: theme.spacing(2) }}
+        >
+          <StyledTypography>
+            The following {formattedType}s have been assigned to this Firewall.
+            A {formattedType} can only be assigned to a single Firewall.
+          </StyledTypography>
+          <Grid
+            alignItems="center"
+            container
+            direction="row"
+            justifyContent="space-between"
+          >
+            <Grid sx={{ width: '30%' }}>
+              <DebouncedSearchTextField
+                onSearch={(val) => {
+                  filter(val);
+                }}
+                debounceTime={250}
+                expand={true}
+                hideLabel
+                label=""
+                placeholder={`Search ${formattedType}s`}
+                value={searchText}
+              />
+            </Grid>
+            <Grid>
+              <Button
+                buttonType="primary"
+                data-testid="add-device-button"
+                disabled={disabled}
+                onClick={() => setDeviceDrawerOpen(true)}
+              >
+                Add {formattedType}s to Firewall
+              </Button>
+            </Grid>
           </Grid>
-          <StyledGrid>
-            <Button
-              buttonType="primary"
-              data-testid="add-device-button"
-              disabled={disabled}
-              onClick={() => setDeviceDrawerOpen(true)}
-            >
-              Add {formattedType}s to Firewall
-            </Button>
-          </StyledGrid>
         </Grid>
-        <FirewallDevicesTable
+        <FirewallDeviceTable
           triggerRemoveDevice={(id) => {
             setSelectedDeviceId(id);
             setIsRemoveDeviceDialogOpen(true);
           }}
-          devices={devices ?? []}
+          deviceType={type}
+          devices={filteredDevices ?? []}
           disabled={disabled}
           error={error ?? undefined}
           loading={isLoading}
@@ -135,22 +173,7 @@ export const FirewallDeviceLanding = React.memo(
 const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
   ({ theme }) => ({
     fontSize: '0.875rem',
+    marginBottom: theme.spacing(2),
     marginTop: theme.spacing(),
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
   })
 );
-
-const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
-  '&.MuiGrid-item': {
-    paddingTop: 0,
-  },
-  display: 'flex',
-  justifyContent: 'flex-end',
-  marginBottom: theme.spacing(),
-  [theme.breakpoints.only('sm')]: {
-    marginRight: theme.spacing(),
-  },
-}));
