@@ -141,37 +141,10 @@ export const DeviceTableCell = (props: DeviceTableCellProps) => {
 
   const [visibleCount, setVisibleCount] = React.useState<number>(data.length);
 
-  // React.useEffect(() => {
-  //   let frameId; // to store the requestAnimationFrame ID
-
-  //   const handleResize = () => {
-  //     console.log('');
-  //     console.log('bounds.height: ', bounds.height);
-  //     console.log('visibleCount: ', visibleCount);
-  //     const currentNumberOfRows = Math.floor(bounds.height / rowHeight);
-  //     console.log('currentNumberOfRows: ', currentNumberOfRows);
-
-  //     if (currentNumberOfRows > maxRows) {
-  //       setVisibleCount(prevCount => {
-  //         // Update state using a function to ensure it's based on the accurate previous value
-  //         return prevCount - 1;
-  //       });
-  //       // Schedule the next frame ONLY if the condition is met
-  //       frameId = window.requestAnimationFrame(handleResize);
-  //     }
-  //   };
-
-  //   // Trigger the initial animation frame
-  //   frameId = window.requestAnimationFrame(handleResize);
-
-  //   // Optional: cleanup to cancel the animation frame if needed
-  //   return () => window.cancelAnimationFrame(frameId);
-  // }, [bounds.height, bounds.width, rowHeight, maxRows]);
-
   React.useEffect(() => {
     let frameId: number; // to store the requestAnimationFrame ID
 
-    const handleResize = (recentlySelected: boolean, timestamp: number) => {
+    const handleResize = () => {
       // console.log('');
       // console.log('bounds.width: ', bounds.width);
       // console.log('bounds.height: ', bounds.height);
@@ -182,26 +155,16 @@ export const DeviceTableCell = (props: DeviceTableCellProps) => {
         setVisibleCount((prevCount) => {
           return Math.max(prevCount - 1, 0);
         });
-        frameId = window.requestAnimationFrame((timestamp) =>
-          handleResize(true, timestamp)
-        );
-      } else if (
-        currentNumberOfRows <= maxRows &&
-        visibleCount < data.length &&
-        !recentlySelected
-      ) {
+        frameId = window.requestAnimationFrame(handleResize);
+      } else if (currentNumberOfRows < maxRows && visibleCount < data.length) {
         setVisibleCount((prevCount) => {
           return Math.min(prevCount + 1, data.length);
         });
-        frameId = window.requestAnimationFrame((timestamp) =>
-          handleResize(false, timestamp)
-        );
+        frameId = window.requestAnimationFrame(handleResize);
       }
     };
 
-    frameId = window.requestAnimationFrame((timestamp) =>
-      handleResize(false, timestamp)
-    );
+    frameId = window.requestAnimationFrame(handleResize);
 
     return () => window.cancelAnimationFrame(frameId);
   }, [
