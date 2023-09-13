@@ -206,7 +206,6 @@ describe('Billing Activity Feed', () => {
         .click();
 
       ui.select.findItemByText('All Time').should('be.visible').click();
-
       cy.wait(['@getInvoices', '@getPayments']);
 
       // Confirm that all invoices and payments are displayed.
@@ -251,7 +250,6 @@ describe('Billing Activity Feed', () => {
       // Click on the first invoice and confirm that it redirects the user to
       // the corresponding invoice details page.
       cy.findByText(invoiceMocks[0].label).should('be.visible').click();
-
       cy.url().should('endWith', `/billing/invoices/${invoiceMocks[0].id}`);
     });
   });
