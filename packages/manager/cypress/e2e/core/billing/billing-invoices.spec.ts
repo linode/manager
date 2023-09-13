@@ -4,6 +4,7 @@
 
 import type { InvoiceItem, TaxSummary } from '@linode/api-v4';
 import { invoiceFactory, invoiceItemFactory } from '@src/factories';
+import { DateTime } from 'luxon';
 import {
   mockGetInvoice,
   mockGetInvoiceItems,
@@ -12,15 +13,12 @@ import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { randomLabel, randomItem } from 'support/util/random';
-import { buildArray } from 'support/util/arrays';
-import { randomNumber } from 'support/util/random';
-import { DateTime } from 'luxon';
-import { chooseRegion } from 'support/util/regions';
-import { formatUsd } from 'support/util/currency';
-import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
+import { buildArray } from 'support/util/arrays';
+import { formatUsd } from 'support/util/currency';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { randomItem, randomLabel, randomNumber } from 'support/util/random';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
 describe('Account invoices', () => {
   /*
@@ -179,17 +177,6 @@ describe('Account invoices', () => {
     cy.url().should('endWith', '/account/billing');
   });
 
-  it.only('paginates the list of invoice items for large invoices', () => {
-    const mockInvoice = invoiceFactory.build();
-    const mockInvoiceItems = invoiceItemFactory.buildList(100);
-
-    mockGetInvoice(mockInvoice).as('getInvoice');
-    mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
-
-    cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
-    cy.wait(['@getInvoice', '@getInvoiceItems']);
-  });
-
   /*
    * - Confirms that invoice item region info is shown when DC-specific pricing is enabled.
    * - Confirms that table "Region" column is shown when DC-specific pricing is enabled.
@@ -252,6 +239,73 @@ describe('Account invoices', () => {
                   .should('be.visible')
                   .should('be.empty');
           });
+      });
+    });
+  });
+
+  /*
+   * - Confirms that invoice item pagination works as expected using mock API data.
+   * - Confirms that the expected number of pages are shown for invoice items.
+   * - Confirms that the expected invoice items are shown for each page.
+   * - Confrims that page updates to reflect changes to page size selection.
+   */
+  it('paginates the list of invoice items for large invoices', () => {
+    const mockInvoice = invoiceFactory.build();
+    const mockInvoiceItems = invoiceItemFactory.buildList(100);
+    const pages = [1, 2, 3, 4];
+
+    mockGetInvoice(mockInvoice).as('getInvoice');
+    mockGetInvoiceItems(mockInvoice, mockInvoiceItems).as('getInvoiceItems');
+
+    cy.visitWithLogin(`/account/billing/invoices/${mockInvoice.id}`);
+    cy.wait(['@getInvoice', '@getInvoiceItems']);
+
+    cy.findByLabelText('Invoice Details').within(() => {
+      // Confirm that page size selection is set to "Show 25".
+      ui.pagination.findPageSizeSelect().click();
+
+      ui.select.findItemByText('Show 25').should('be.visible').click();
+
+      // Confirm that pagination controls list exactly 4 pages.
+      ui.pagination
+        .findControls()
+        .should('be.visible')
+        .within(() => {
+          pages.forEach((page: number) =>
+            cy.findByText(`${page}`).should('be.visible')
+          );
+          cy.findByText('5').should('not.exist');
+        });
+
+      // Click through each page and confirm correct invoice items are displayed.
+      pages.forEach((page: number) => {
+        const invoiceItemSubset = mockInvoiceItems.slice(
+          25 * (page - 1),
+          25 * (page - 1) + 24
+        );
+        ui.pagination.findControls().within(() => {
+          cy.findByText(`${page}`).should('be.visible').click();
+        });
+
+        // Confirm that 25 invoice items are shown, and they correspond to the
+        // expected items given the selected pagination page. There are two
+        // additional table rows to account for: the table header, and the
+        // table row containing pagination.
+        cy.get('tr').should('have.length', 27);
+        invoiceItemSubset.forEach((invoiceItem: InvoiceItem) => {
+          cy.findByText(invoiceItem.label).should('be.visible');
+        });
+      });
+
+      // Change pagination size selection from "Show 25" to "Show 100".
+      ui.pagination.findPageSizeSelect().click();
+
+      ui.select.findItemByText('Show 100').should('be.visible').click();
+
+      // Confirm that all invoice items are listed.
+      cy.get('tr').should('have.length', 102);
+      mockInvoiceItems.forEach((invoiceItem: InvoiceItem) => {
+        cy.findByText(invoiceItem.label).should('be.visible');
       });
     });
   });
