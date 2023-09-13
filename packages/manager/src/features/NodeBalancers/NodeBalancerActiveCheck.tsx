@@ -123,7 +123,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
           </FormHelperText>
         </Grid>
         {healthCheckType !== 'none' && (
-          <React.Fragment>
+          <Grid container>
             <Grid xs={12}>
               <TextField
                 InputProps={{
@@ -212,7 +212,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 />
               </Grid>
             )}
-          </React.Fragment>
+          </Grid>
         )}
       </Grid>
     </Grid>
