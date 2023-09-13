@@ -1,3 +1,4 @@
+import { Subnet } from '@linode/api-v4';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -19,11 +20,12 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { SubnetsActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
+import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSubnetsQuery } from 'src/queries/vpcs';
 
+import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
 
@@ -33,9 +35,16 @@ interface Props {
 
 const preferenceKey = 'vpc-subnets';
 
-export const VPCSubnetsTable = ({ vpcId }: Props) => {
+export const VPCSubnetsTable = (props: Props) => {
+  const { vpcId } = props;
   const theme = useTheme();
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
+  const [selectedSubnet, setSelectedSubnet] = React.useState<
+    Subnet | undefined
+  >();
+  const [deleteSubnetDialogOpen, setDeleteSubnetDialogOpen] = React.useState(
+    false
+  );
   const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
     false
   );
@@ -85,6 +94,11 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
     setSubnetsFilterText(searchText);
     // If you're on page 2+, need to go back to page 1 to see the actual results
     pagination.handlePageChange(1);
+  };
+
+  const handleSubnetDelete = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
+    setDeleteSubnetDialogOpen(true);
   };
 
   if (isLoading) {
@@ -144,7 +158,12 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
             <TableCell>{subnet.linodes.length}</TableCell>
           </Hidden>
           <TableCell align="right">
-            <SubnetsActionMenu></SubnetsActionMenu>
+            <SubnetActionMenu
+              handleDelete={handleSubnetDelete}
+              numLinodes={subnet.linodes.length}
+              subnet={subnet}
+              vpcId={vpcId}
+            />
           </TableCell>
         </>
       );
@@ -218,6 +237,12 @@ export const VPCSubnetsTable = ({ vpcId }: Props) => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <SubnetDeleteDialog
+        onClose={() => setDeleteSubnetDialogOpen(false)}
+        open={deleteSubnetDialogOpen}
+        subnet={selectedSubnet}
+        vpcId={vpcId}
       />
     </>
   );

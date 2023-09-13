@@ -76,6 +76,25 @@ export const mockGetSubnets = (
 };
 
 /**
+ * Intercepts DELETE request to delete a subnet of a VPC and mocks response
+ *
+ * @param vpcId - ID of VPC for which to mock response.
+ * @param subnetId - ID of subnet for which to mock response
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteSubnet = (
+  vpcId: number,
+  subnetId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`vpcs/${vpcId}/subnets/${subnetId}`),
+    {}
+  );
+};
+
+/**
  * Intercepts POST request to create a subnet for a VPC and mocks response.
  *
  * @param vpcId - ID of VPC for which to mock response.
