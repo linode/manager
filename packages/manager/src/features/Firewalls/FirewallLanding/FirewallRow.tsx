@@ -105,10 +105,10 @@ const getDevicesCellString = (
 };
 
 export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
-  const firstThree = data.slice(0, 8);
+  const firstEight = data.slice(0, 8);
   return (
     <>
-      {firstThree.map((thisDevice, idx) => (
+      {firstEight.map((thisDevice, idx) => (
         <Link
           className="link secondaryLink"
           data-testid="firewall-row-link"
