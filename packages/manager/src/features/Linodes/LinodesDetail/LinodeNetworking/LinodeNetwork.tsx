@@ -7,13 +7,13 @@ import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/Networkin
 
 export const LinodeStorage = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
-  const linodeID = Number(linodeId);
+  const _linodeId = Number(linodeId);
 
   return (
     <>
-      <LinodeNetworkingSummaryPanel linodeID={linodeID} />
-      <LinodeFirewalls linodeID={linodeID} />
-      <LinodeIPAddresses linodeID={linodeID} />
+      <LinodeNetworkingSummaryPanel linodeId={_linodeId} />
+      <LinodeFirewalls linodeID={_linodeId} />
+      <LinodeIPAddresses linodeID={_linodeId} />
     </>
   );
 };

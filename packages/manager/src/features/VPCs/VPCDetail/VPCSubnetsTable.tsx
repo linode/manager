@@ -1,7 +1,9 @@
 import { Subnet } from '@linode/api-v4/lib/vpcs/types';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import {
   CollapsibleTable,
@@ -23,6 +25,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSubnetsQuery } from 'src/queries/vpcs';
 
+import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import { SubnetEditDrawer } from './SubnetEditDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
@@ -35,6 +38,7 @@ const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = (props: Props) => {
   const { vpcId } = props;
+  const theme = useTheme();
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
   const [selectedSubnet, setSelectedSubnet] = React.useState<
     Subnet | undefined
@@ -43,6 +47,9 @@ export const VPCSubnetsTable = (props: Props) => {
     false
   );
   const [editSubnetsDrawerOpen, setEditSubnetsDrawerOpen] = React.useState(
+    false
+  );
+  const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
     false
   );
 
@@ -199,14 +206,35 @@ export const VPCSubnetsTable = (props: Props) => {
 
   return (
     <>
-      <DebouncedSearchTextField
-        debounceTime={250}
-        hideLabel
-        isSearching={false}
-        label="Filter Subnets by label or id"
-        onSearch={handleSearch}
-        placeholder="Filter Subnets by label or id"
-        sx={{ paddingBottom: 2 }}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        paddingBottom={theme.spacing(2)}
+      >
+        <DebouncedSearchTextField
+          sx={{
+            [theme.breakpoints.up('sm')]: {
+              width: '416px',
+            },
+          }}
+          debounceTime={250}
+          hideLabel
+          isSearching={false}
+          label="Filter Subnets by label or id"
+          onSearch={handleSearch}
+          placeholder="Filter Subnets by label or id"
+        />
+        <Button
+          buttonType="primary"
+          onClick={() => setSubnetCreateDrawerOpen(true)}
+        >
+          Create Subnet
+        </Button>
+      </Box>
+      <SubnetCreateDrawer
+        onClose={() => setSubnetCreateDrawerOpen(false)}
+        open={subnetCreateDrawerOpen}
+        vpcId={vpcId}
       />
       <CollapsibleTable
         TableItems={getTableItems()}

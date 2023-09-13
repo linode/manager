@@ -457,6 +457,10 @@ const vpc = [
     const vpc = vpcFactory.build({ ...(req.body as any) });
     return res(ctx.json(vpc));
   }),
+  rest.post('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    const subnet = subnetFactory.build({ ...(req.body as any) });
+    return res(ctx.json(subnet));
+  }),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
@@ -942,11 +946,11 @@ export const handlers = [
             region: 'br-gru',
           }),
           invoiceItemFactory.build({
-            label: 'Outbound Transfer',
+            label: 'Outbound Transfer Overage',
             region: null,
           }),
           invoiceItemFactory.build({
-            label: 'Outbound Transfer',
+            label: 'Outbound Transfer Overage',
             region: 'id-cgk',
           }),
         ])
