@@ -4,6 +4,8 @@ import { useFormik } from 'formik';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
@@ -24,8 +26,6 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
 import { LinodeOrIPSelect } from './LinodeOrIPSelect';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
 
 interface Props {
   loadbalancerId: number;
