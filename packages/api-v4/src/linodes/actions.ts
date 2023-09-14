@@ -77,10 +77,13 @@ export const linodeShutdown = (linodeId: number | string) =>
  * than the new Type allows.
  *
  * @param linodeId { number } The id of the Linode to resize.
- * @param type { string } the new size of the Linode
- * @param auto_resize_linode { boolean } do you want to resize your disks after
+ * @param data { object }
+ * @param data.type { string } the new size of the Linode
+ * @param data.allow_auto_disk_resize { boolean } do you want to resize your disks after
  * the Linode is resized? NOTE: Unless the user has 1 ext disk or 1 ext disk and
- * 1 swap disk, this flag does nothing, regardless of whether it's true or false
+ * 1 swap disk, this flag 4does nothing, regardless of whether it's true or false
+ * @param data.migrate_type { string } Warm migrations allow Linodes to remain booted during
+ * most of their cold migration, reducing their downtime to the duration of a simple reboot.
  */
 export const resizeLinode = (linodeId: number, data: ResizeLinodePayload) =>
   Request<{}>(

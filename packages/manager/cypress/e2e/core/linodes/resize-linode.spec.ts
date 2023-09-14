@@ -6,7 +6,7 @@ import { authenticate } from 'support/api/authentication';
 
 authenticate();
 describe('resize linode', () => {
-  it('resizes a linode by increasing size', () => {
+  it('resizes a linode by increasing size: warm migration', () => {
     createLinode().then((linode) => {
       cy.intercept(
         'POST',
@@ -16,6 +16,72 @@ describe('resize linode', () => {
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 8 GB');
       getClick('[id="g6-standard-4"]');
+      cy.get('[data-qa-radio="warm"]').find('input').should('be.checked');
+      cy.get('[data-testid="textfield-input"]').type(linode.label);
+      cy.get('[data-qa-resize="true"]').click();
+      cy.get('[data-qa-confirm-resize="true"]').click();
+      cy.wait('@linodeResize');
+      cy.contains(
+        'Your Linode will soon be automatically powered off, migrated, and restored to its previous state (booted or powered off).'
+      ).should('be.visible');
+      // TODO: Unified Migration: [M3-7115] - Waiting on copy
+    });
+  });
+
+  it('resizes a linode by increasing size: cold migration', () => {
+    createLinode().then((linode) => {
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/resize`)
+      ).as('linodeResize');
+      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.findByText('Shared CPU').click({ scrollBehavior: false });
+      containsVisible('Linode 8 GB');
+      getClick('[id="g6-standard-4"]');
+      cy.get('[data-qa-radio="cold"]').click();
+      cy.get('[data-qa-radio="cold"]').find('input').should('be.checked');
+      cy.get('[data-testid="textfield-input"]').type(linode.label);
+      cy.get('[data-qa-resize="true"]').click();
+      cy.wait('@linodeResize');
+      cy.contains(
+        'Your Linode will soon be automatically powered off, migrated, and restored to its previous state (booted or powered off).'
+      ).should('be.visible');
+    });
+  });
+
+  it.only('resizes a linode by increasing size when offline: cold migration', () => {
+    createLinode().then((linode) => {
+      cy.visitWithLogin(`/linodes/${linode.id}`);
+
+      // Turn off the linode to resize the disk
+      ui.button.findByTitle('Power Off').should('be.visible').click();
+
+      ui.dialog
+        .findByTitle(`Power Off Linode ${linode.label}?`)
+        .should('be.visible')
+        .then(() => {
+          ui.button
+            .findByTitle(`Power Off Linode`)
+            .should('be.visible')
+            .click();
+        });
+
+      containsVisible('OFFLINE');
+
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/resize`)
+      ).as('linodeResize');
+      cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.findByText('Shared CPU').click({ scrollBehavior: false });
+      containsVisible('Linode 8 GB');
+      getClick('[id="g6-standard-4"]');
+      // We disable the options if the linode is offline, and proceed with a
+      // cold migration even though warm is selected by default.
+      cy.get('[data-qa-radio="warm"]')
+        .find('input')
+        .should('be.checked')
+        .should('be.disabled');
       cy.get('[data-testid="textfield-input"]').type(linode.label);
       cy.get('[data-qa-resize="true"]').click();
       cy.wait('@linodeResize');
