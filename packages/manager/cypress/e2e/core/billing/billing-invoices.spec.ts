@@ -90,7 +90,7 @@ describe('Account invoices', () => {
       ],
     });
 
-    // TODO Remove feature flag mocks when DC specific pricing goes live.
+    // TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
     mockAppendFeatureFlags({
       dcSpecificPricing: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
@@ -106,7 +106,7 @@ describe('Account invoices', () => {
       '@getInvoiceItems',
     ]);
 
-    // TODO Remove this and replace with positive assertions when DC pricing goes live.
+    // TODO: DC Pricing - M3-7073: Remove this and replace with positive assertions when DC pricing goes live.
     // Confirm that "Region" table column is not present.
     cy.findByLabelText('Invoice Details').within(() => {
       cy.get('thead').findByText('Region').should('not.exist');
@@ -118,7 +118,6 @@ describe('Account invoices', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          // TODO Remove this assertion once DC-specific pricing goes live.
           cy.findByText(`${invoiceItem.quantity}`).should('be.visible');
           cy.findByText(`$${invoiceItem.unit_price}`).should('be.visible');
           cy.findByText(`${formatUsd(invoiceItem.amount)}`).should(
@@ -183,7 +182,7 @@ describe('Account invoices', () => {
    * - Confirms that invoice items that do not have a region are displayed as expected.
    */
   it('lists invoice item region when DC-specific pricing flag is enabled', () => {
-    // TODO Delete this test when DC-specific pricing launches and move assertions to above test.
+    // TODO: DC Pricing - M3-7073: Delete this test when DC-specific pricing launches and move assertions to above test.
     // We don't have to be fancy with the mocks here since we are only concerned with the region.
     const mockInvoice = invoiceFactory.build({ id: randomNumber() });
     const mockInvoiceItems = [
