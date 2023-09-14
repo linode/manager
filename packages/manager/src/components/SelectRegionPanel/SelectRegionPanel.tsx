@@ -7,13 +7,11 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
-import {
-  CROSS_DATA_CENTER_CLONE_WARNING,
-  DIFFERENT_PRICE_STRUCTURE_WARNING,
-} from 'src/features/Linodes/LinodesCreate/constants';
+import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllTypes, useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { DIFFERENT_PRICE_STRUCTURE_WARNING } from 'src/utilities/pricing/constants';
 import { priceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 import {
   doesRegionHaveUniquePricing,
