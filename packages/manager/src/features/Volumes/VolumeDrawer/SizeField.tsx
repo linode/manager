@@ -77,7 +77,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
     size: value,
   });
 
-  const legacyHelperText = (
+  const priceDisplayText = (
     <FormHelperText>
       {resize || isFromLinode ? null : (
         <span className={classes.createVolumeText}>${price}/month</span>
@@ -113,9 +113,9 @@ const SizeField: React.FC<CombinedProps> = (props) => {
       <div className={classes.priceDisplay}>
         {dcSpecificPricing
           ? hasSelectedRegion
-            ? legacyHelperText
+            ? priceDisplayText
             : dynamicPricingHelperText
-          : legacyHelperText}
+          : priceDisplayText}
       </div>
     </>
   );
