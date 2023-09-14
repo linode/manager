@@ -57,7 +57,6 @@ interface Props {
 
 const migrationTypeOptions: { [key in MigrationTypes]: key } = {
   cold: 'cold',
-  live: 'live',
   warm: 'warm',
 };
 
