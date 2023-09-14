@@ -399,85 +399,88 @@ export const Body = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
 
   return (
-    <StyledBodyGrid container direction="row" spacing={2}>
-      {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
-      <Grid
-        sx={{
-          flexBasis: '25%',
-        }}
-        container
-        direction="column"
-        spacing={2}
-      >
-        <StyledColumnLabelGrid>Summary</StyledColumnLabelGrid>
-        <StyledSummaryGrid container direction="row" spacing={2}>
-          <Grid>
-            <Typography>
-              {pluralize('CPU Core', 'CPU Cores', numCPUs)}
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography>{gbStorage} GB Storage</Typography>
-          </Grid>
-          <Grid>
-            <Typography>{gbRAM} GB RAM</Typography>
-          </Grid>
-          <Grid>
-            <Typography>
-              {pluralize('Volume', 'Volumes', numVolumes)}
-            </Typography>
-          </Grid>
-        </StyledSummaryGrid>
-      </Grid>
-      <StyledRightColumnGrid
-        container
-        direction="row"
-        justifyContent="space-between"
-        spacing={2}
-      >
-        <AccessTable
-          footer={
-            numIPAddresses > 2 ? (
-              <Typography variant="body1">
-                <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
-                  View all IP Addresses
-                </HashLink>
+    <>
+      <StyledBodyGrid container direction="row" spacing={2}>
+        {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
+        <Grid
+          sx={{
+            flexBasis: '25%',
+          }}
+          container
+          direction="column"
+          spacing={2}
+        >
+          <StyledColumnLabelGrid>Summary</StyledColumnLabelGrid>
+          <StyledSummaryGrid container direction="row" spacing={2}>
+            <Grid>
+              <Typography>
+                {pluralize('CPU Core', 'CPU Cores', numCPUs)}
               </Typography>
-            ) : undefined
-          }
-          sx={{
-            [theme.breakpoints.up('md')]: {
-              paddingRight: theme.spacing(2.5),
-            },
-          }}
-          gridProps={{ md: 5 }}
-          rows={[{ text: firstAddress }, { text: secondAddress }]}
-          title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
-        />
+            </Grid>
+            <Grid>
+              <Typography>{gbStorage} GB Storage</Typography>
+            </Grid>
+            <Grid>
+              <Typography>{gbRAM} GB RAM</Typography>
+            </Grid>
+            <Grid>
+              <Typography>
+                {pluralize('Volume', 'Volumes', numVolumes)}
+              </Typography>
+            </Grid>
+          </StyledSummaryGrid>
+        </Grid>
+        <StyledRightColumnGrid
+          container
+          direction="row"
+          justifyContent="space-between"
+          spacing={2}
+        >
+          <AccessTable
+            footer={
+              numIPAddresses > 2 ? (
+                <Typography variant="body1">
+                  <HashLink
+                    to={`/linodes/${linodeId}/networking#${ipv4TableID}`}
+                  >
+                    View all IP Addresses
+                  </HashLink>
+                </Typography>
+              ) : undefined
+            }
+            sx={{
+              [theme.breakpoints.up('md')]: {
+                paddingRight: theme.spacing(2.5),
+              },
+            }}
+            gridProps={{ md: 5 }}
+            rows={[{ text: firstAddress }, { text: secondAddress }]}
+            title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
+          />
 
-        <AccessTable
-          rows={[
-            { heading: 'SSH Access', text: sshLink(ipv4[0]) },
-            {
-              heading: 'LISH Console via SSH',
-              text: lishLink(username, region, linodeLabel),
-            },
-          ]}
-          sx={{
-            [theme.breakpoints.up('md')]: {
-              paddingLeft: theme.spacing(2.5),
-            },
-          }}
-          gridProps={{ md: 7 }}
-          title="Access"
-        />
-      </StyledRightColumnGrid>
+          <AccessTable
+            rows={[
+              { heading: 'SSH Access', text: sshLink(ipv4[0]) },
+              {
+                heading: 'LISH Console via SSH',
+                text: lishLink(username, region, linodeLabel),
+              },
+            ]}
+            sx={{
+              [theme.breakpoints.up('md')]: {
+                paddingLeft: theme.spacing(2.5),
+              },
+            }}
+            gridProps={{ md: 7 }}
+            title="Access"
+          />
+        </StyledRightColumnGrid>
+      </StyledBodyGrid>
       {displayVPCSection && vpcLinodeIsAssignedTo && (
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            marginTop: theme.spacing(),
-            width: '100%',
+            padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
           }}
           container
           direction="column"
@@ -530,7 +533,7 @@ export const Body = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       )}
-    </StyledBodyGrid>
+    </>
   );
 });
 
