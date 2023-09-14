@@ -492,7 +492,7 @@ export const Body = React.memo((props: BodyProps) => {
           <Grid
             sx={{
               margin: 0,
-              padding: 0,
+              padding: '0 0 8px 0',
               [theme.breakpoints.down('md')]: {
                 display: 'flex',
                 flexDirection: 'column',
