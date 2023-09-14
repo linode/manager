@@ -79,15 +79,13 @@ const SizeField: React.FC<CombinedProps> = (props) => {
 
   const legacyHelperText = (
     <FormHelperText>
-      {resize || isFromLinode ? (
-        'The size of the new volume in GB.'
-      ) : (
+      {resize || isFromLinode ? null : (
         <span className={classes.createVolumeText}>${price}/month</span>
       )}
     </FormHelperText>
   );
 
-  const dynamicPricingHelperText = !resize && (
+  const dynamicPricingHelperText = !resize && !isFromLinode && (
     <Box marginLeft={'10px'} marginTop={'4px'}>
       <Typography>Select a region to see cost per month.</Typography>
     </Box>
