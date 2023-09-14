@@ -1,3 +1,4 @@
+import { ServiceTarget } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import { Hidden, IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
@@ -26,6 +27,8 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 
+import { DeleteServiceTargetDialog } from './DeleteServiceTargetDialog';
+
 import type { Filter } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-service-targets';
@@ -34,6 +37,11 @@ export const LoadBalancerServiceTargets = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const [query, setQuery] = useState<string>();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [
+    selectedServiceTarget,
+    setSelectedServiceTarget,
+  ] = useState<ServiceTarget>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -48,6 +56,14 @@ export const LoadBalancerServiceTargets = () => {
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+  };
+
+  const handleDeleteServiceTarget = (serviceTarget: ServiceTarget) => {
+    if (serviceTarget) {
+      setIsDeleteDialogOpen(true);
+    }
+
+    setSelectedServiceTarget(serviceTarget);
   };
 
   // If the user types in a search query, filter results by label.
@@ -165,7 +181,10 @@ export const LoadBalancerServiceTargets = () => {
                   actionsList={[
                     { onClick: () => null, title: 'Edit' },
                     { onClick: () => null, title: 'Clone Service Target' },
-                    { onClick: () => null, title: 'Delete' },
+                    {
+                      onClick: () => handleDeleteServiceTarget(serviceTarget),
+                      title: 'Delete',
+                    },
                   ]}
                   ariaLabel={`Action Menu for service target ${serviceTarget.label}`}
                 />
@@ -180,6 +199,13 @@ export const LoadBalancerServiceTargets = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+
+      <DeleteServiceTargetDialog
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
+        serviceTarget={selectedServiceTarget}
       />
     </>
   );
