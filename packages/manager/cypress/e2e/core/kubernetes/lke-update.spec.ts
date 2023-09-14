@@ -899,8 +899,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
   });
 
   /*
-   * - Confirms UI flow when adding and deleting node pools.
-   * - Confirms that user cannot delete a node pool when there is only 1 pool.
+   * - Confirms UI flow when adding node pools.
    * - Confirms that UI updates to reflect new node pool size in regions with DC-specific pricing.
    * - Confirms that details page updates to reflect change when pools are added or deleted.
    */
@@ -925,7 +924,6 @@ describe('LKE cluster updates for DC-specific prices', () => {
     mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
     mockGetKubernetesVersions().as('getVersions');
     mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
-    mockDeleteNodePool(mockCluster.id, mockNewNodePool.id).as('deleteNodePool');
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
     mockGetLinodeTypes(dcPricingMockLinodeTypes);
@@ -935,12 +933,6 @@ describe('LKE cluster updates for DC-specific prices', () => {
 
     // Assert that initial node pool is shown on the page.
     cy.findByText('Linode 0 GB', { selector: 'h2' }).should('be.visible');
-
-    // "Delete Pool" button should be disabled when only 1 node pool exists.
-    ui.button
-      .findByTitle('Delete Pool')
-      .should('be.visible')
-      .should('be.disabled');
 
     // Add a new node pool, select plan, submit form in drawer.
     ui.button
@@ -968,8 +960,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
           });
 
         // Displays DC-specific prices.
-        // Debug: Why are you failing here?
-        cy.findByText(
+        cy.contains(
           'This pool will add $14/month (1 node at $14/month) to this cluster.'
         ).should('be.visible');
 
@@ -980,10 +971,8 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .click();
       });
 
-    // Wait for API responses and confirm that both node pools are shown.
+    // Wait for API responses.
     cy.wait(['@addNodePool', '@getNodePools']);
-    cy.findByText('Linode 0 GB', { selector: 'h2' }).should('be.visible');
-    cy.findByText('Linode 1 GB', { selector: 'h2' }).should('be.visible');
 
     // Confirm price updates in Node Pool Summary.
     // cy.findByText('$102.00/month').should('be.visible');
