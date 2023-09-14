@@ -1,8 +1,14 @@
 import {
+  deleteLoadbalancerConfiguration,
   getLoadbalancerConfigurations,
   updateLoadbalancerConfiguration,
 } from '@linode/api-v4';
-import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import { QUERY_KEY } from './loadbalancers';
 
@@ -51,8 +57,41 @@ export const useLoadBalancerConfigurationMutation = (
   loadbalancerId: number,
   configurationId: number
 ) => {
+  const queryClient = useQueryClient();
+
   return useMutation<Configuration, APIError[], Partial<Configuration>>(
     (data) =>
-      updateLoadbalancerConfiguration(loadbalancerId, configurationId, data)
+      updateLoadbalancerConfiguration(loadbalancerId, configurationId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'aglb',
+          loadbalancerId,
+          'configurations',
+        ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerConfigurationDeleteMutation = (
+  loadbalancerId: number,
+  configurationId: number
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<{}, APIError[]>(
+    () => deleteLoadbalancerConfiguration(loadbalancerId, configurationId),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'aglb',
+          loadbalancerId,
+          'configurations',
+        ]);
+      },
+    }
   );
 };
