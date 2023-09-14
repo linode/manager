@@ -10,6 +10,7 @@ import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { APP_ROOT } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -28,9 +29,11 @@ interface VPCPanelProps {
   handleVPCIPv4Change: (IPv4: string) => void;
   region?: string;
   selectedVPCID: number | undefined;
+  subnetError?: string;
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
   vpcIPv4AddressOfLinode: string | undefined;
+  vpcIPv4Error?: string;
 }
 
 export const VPCPanel = (props: VPCPanelProps) => {
@@ -42,16 +45,18 @@ export const VPCPanel = (props: VPCPanelProps) => {
     handleVPCIPv4Change,
     region,
     selectedVPCID,
+    subnetError,
     toggleAssignPublicIPv4Address,
     toggleAutoassignIPv4WithinVPCEnabled,
     vpcIPv4AddressOfLinode,
+    vpcIPv4Error,
   } = props;
 
   const [selectedVPC, setSelectedVPC] = React.useState<number>(-1);
 
   const flags = useFlags();
   const { account } = useAccountManagement();
-  const { data: vpcData, error, isLoading } = useVPCsQuery({}, {});
+  const { data: vpcData, error, isLoading } = useVPCsQuery({}, {}, true);
 
   const regions = useRegionsQuery().data ?? [];
   const selectedRegion = region || '';
@@ -142,7 +147,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
           </Typography>
         )}
 
-        <StyledCreateLink to="/vpc/create">Create VPC</StyledCreateLink>
+        <StyledCreateLink to={`${APP_ROOT}/vpcs/create`}>
+          Create VPC
+        </StyledCreateLink>
 
         {selectedVPC !== -1 && regionSupportsVPCs && (
           <Stack>
@@ -150,6 +157,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
               onChange={(selectedSubnet: Item<number, string>) =>
                 handleSubnetChange(selectedSubnet.value)
               }
+              errorText={subnetError}
               isClearable={false}
               label="Subnet"
               options={subnetDropdownOptions}
@@ -194,8 +202,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
             </Box>
             {!autoassignIPv4WithinVPC ? (
               <TextField
+                errorText={vpcIPv4Error}
                 label="VPC IPv4"
                 onChange={(e) => handleVPCIPv4Change(e.target.value)}
+                required={!autoassignIPv4WithinVPC}
                 value={vpcIPv4AddressOfLinode}
               />
             ) : null}
@@ -226,7 +236,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     </Typography>
                     <TooltipIcon
                       text={
-                        'A public IP address is an IPv4 address that is reachable from the internet.'
+                        'Assign a public IP address for this VPC via 1:1 static NAT.'
                       }
                       status="help"
                     />

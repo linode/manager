@@ -146,6 +146,8 @@ const errorMap = [
   'type',
   'interfaces[1].label',
   'interfaces[1].ipam_address',
+  'subnet_id',
+  'ipv4.vpc',
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -584,7 +586,9 @@ export class LinodeCreate extends React.PureComponent<
             handleVPCIPv4Change={this.props.handleVPCIPv4Change}
             region={this.props.selectedRegionID}
             selectedVPCID={this.props.selectedVPCID}
+            subnetError={hasErrorFor['subnet_id']}
             vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
+            vpcIPv4Error={hasErrorFor['ipv4.vpc']}
           />
           <FirewallPanel
             handleFirewallChange={this.props.handleFirewallChange}

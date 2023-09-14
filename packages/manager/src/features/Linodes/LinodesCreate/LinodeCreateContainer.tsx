@@ -5,6 +5,7 @@ import { Region } from '@linode/api-v4/lib/regions';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import { vpcsValidateIP } from '@linode/validation';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
@@ -54,6 +55,7 @@ import { simpleMutationHandlers } from 'src/queries/base';
 import { getAllLinodeConfigsRequest } from 'src/queries/linodes/configs';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
+import { vpcQueryKey } from 'src/queries/vpcs';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';
 import {
@@ -739,6 +741,49 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       }
     }
 
+    // Validation for VPC fields
+    if (
+      this.state.selectedVPCID !== undefined &&
+      this.state.selectedVPCID !== -1
+    ) {
+      const validVPCIPv4 = vpcsValidateIP({
+        mustBeIPMask: false,
+        shouldHaveIPMask: false,
+        value: this.state.vpcIPv4AddressOfLinode,
+      });
+
+      // Situation: Subnet not selected
+      if (this.state.selectedSubnetID === undefined) {
+        return this.setState(
+          () => ({
+            errors: [
+              {
+                field: 'subnet_id',
+                reason: 'You must select a subnet',
+              },
+            ],
+          }),
+          () => scrollErrorIntoView()
+        );
+      }
+
+      // Situation: 'Auto-assign a private IPv4 address for this Linode in the VPC' checkbox
+      // unchecked but a valid VPC IPv4 not provided
+      if (!this.state.autoassignIPv4WithinVPCEnabled && !validVPCIPv4) {
+        return this.setState(
+          () => ({
+            errors: [
+              {
+                field: 'ipv4.vpc',
+                reason: 'Must be a valid IPv4 address, e.g. 192.0.2.0',
+              },
+            ],
+          }),
+          () => scrollErrorIntoView()
+        );
+      }
+    }
+
     /**
      * run a certain linode action based on the type
      * if clone, run clone service request and upsert linode
@@ -798,8 +843,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         () => scrollErrorIntoView()
       );
     }
-
-    // @TODO: Add validation for VPC-related fields
 
     const request =
       createType === 'fromLinode'
@@ -878,15 +921,29 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
                   vpc_id: this.state.selectedVPCID,
                 };
 
-                // console.log(data);
-
-                appendConfigInterface(response.id, config.id, data)
-                  .then((res) => console.log(res))
-                  .catch((e) => console.log(e));
+                appendConfigInterface(response.id, config.id, data).then(() => {
+                  this.props.queryClient.invalidateQueries([
+                    vpcQueryKey,
+                    'paginated',
+                  ]);
+                  this.props.queryClient.invalidateQueries([
+                    vpcQueryKey,
+                    'vpc',
+                    this.state.selectedVPCID,
+                  ]);
+                });
+                // .catch((err) =>
+                //   this.props.enqueueSnackbar(
+                //     `Error assigning Linode ${response.label} to VPC.`,
+                //     { variant: 'error' }
+                //   )
+                // );
               });
           } catch (err) {
+            // Get this working
             this.props.enqueueSnackbar(
-              `Error assigning Linode ${response.label} to VPC.`
+              `Error assigning Linode ${response.label} to VPC.`,
+              { variant: 'error' }
             );
           }
         }
