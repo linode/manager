@@ -180,12 +180,16 @@ describe('Account invoices', () => {
    * - Confirms that invoice item region info is shown when DC-specific pricing is enabled.
    * - Confirms that table "Region" column is shown when DC-specific pricing is enabled.
    * - Confirms that invoice items that do not have a region are displayed as expected.
+   * - Confirms that outbound transfer overage items display the associated region when applicable.
+   * - Confirms that outbound transfer overage items display "Global" when no region is applicable.
    */
   it('lists invoice item region when DC-specific pricing flag is enabled', () => {
     // TODO: DC Pricing - M3-7073: Delete this test when DC-specific pricing launches and move assertions to above test.
     // We don't have to be fancy with the mocks here since we are only concerned with the region.
     const mockInvoice = invoiceFactory.build({ id: randomNumber() });
-    const mockInvoiceItems = [
+
+    // Regular invoice items.
+    const mockInvoiceItemsRegular = [
       ...buildArray(10, () =>
         invoiceItemFactory.build({ region: chooseRegion().id })
       ),
@@ -193,6 +197,36 @@ describe('Account invoices', () => {
         region: null,
       }),
     ];
+
+    // Outbound transfer overage items.
+    const mockInvoiceItemsOverages = [
+      invoiceItemFactory.build({
+        label: 'Outbound Transfer Overage',
+        region: null,
+      }),
+      invoiceItemFactory.build({
+        label: 'Outbound Transfer Overage',
+        region: chooseRegion().id,
+      }),
+    ];
+
+    // All mocked invoice items.
+    const mockInvoiceItems = [
+      ...mockInvoiceItemsRegular,
+      ...mockInvoiceItemsOverages,
+    ];
+
+    /**
+     * Returns a string representation of a region, as shown on the invoice details page.
+     *
+     * @param regionId - ID of region for which to get label.
+     *
+     * @returns Region label in `<label> (<id>)` format.
+     */
+    const getRegionLabel = (regionId: string) => {
+      const region = getRegionById(regionId);
+      return `${region.label} (${region.id})`;
+    };
 
     mockAppendFeatureFlags({
       dcSpecificPricing: makeFeatureFlagData(true),
@@ -214,9 +248,9 @@ describe('Account invoices', () => {
       // Confirm that 'Region' table column is present.
       cy.get('thead').findByText('Region').should('be.visible');
 
-      // Confirm that each invoice item is shown, and that the region is
+      // Confirm that each regular invoice item is shown, and that the region is
       // displayed as expected.
-      mockInvoiceItems.forEach((invoiceItem: InvoiceItem) => {
+      mockInvoiceItemsRegular.forEach((invoiceItem: InvoiceItem) => {
         cy.findByText(invoiceItem.label)
           .should('be.visible')
           .closest('tr')
@@ -224,11 +258,6 @@ describe('Account invoices', () => {
             // If the invoice item has a region, confirm that it is displayed
             // in the table row. Otherwise, confirm that the table cell which
             // would normally show the region is empty.
-            const getRegionLabel = (regionId: string) => {
-              const region = getRegionById(regionId);
-              return `${region.label} (${region.id})`;
-            };
-
             !!invoiceItem.region
               ? cy
                   .findByText(getRegionLabel(invoiceItem.region))
@@ -238,6 +267,33 @@ describe('Account invoices', () => {
                   .should('be.visible')
                   .should('be.empty');
           });
+
+        // Confirm that outbound transfer overages are listed as expected.
+        mockInvoiceItemsOverages.forEach(
+          (invoiceItem: InvoiceItem, i: number) => {
+            // There will be multiple instances of the label "Outbound Transfer Overage".
+            // Select them all, then select the individual item that corresponds to the
+            // item being iterated upon in the array.
+            //
+            // This relies on the items being shown in the same order on-screen as
+            // they are defined in the array. This may be fragile to breakage if
+            // we ever change the way invoice items are sorted on this page.
+            cy.findAllByText(invoiceItem.label)
+              .should('have.length', 2)
+              .eq(i)
+              .closest('tr')
+              .within(() => {
+                // If the invoice item has a region, confirm that it is displayed
+                // in the table row. Otherwise, confirm that "Global" is displayed
+                // in the region column.
+                !!invoiceItem.region
+                  ? cy
+                      .findByText(getRegionLabel(invoiceItem.region))
+                      .should('be.visible')
+                  : cy.findByText('Global').should('be.visible');
+              });
+          }
+        );
       });
     });
   });
