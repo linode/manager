@@ -1,4 +1,3 @@
-import type { Config } from '@linode/api-v4';
 import { Notification } from '@linode/api-v4/lib/account';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
@@ -7,7 +6,6 @@ import Flag from 'src/assets/icons/flag.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { Skeleton } from 'src/components/Skeleton';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -21,10 +19,7 @@ import {
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useVPCQuery } from 'src/queries/vpcs';
 import { useTypeQuery } from 'src/queries/types';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -34,7 +29,7 @@ import { IPAddress } from '../IPAddress';
 import { LinodeActionMenu } from '../LinodeActionMenu';
 import { LinodeHandlers } from '../LinodesLanding';
 import { RegionIndicator } from '../RegionIndicator';
-import { parseMaintenanceStartTime } from '../utils';
+import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
 import {
   StyledButton,
   StyledIpTableCell,
@@ -44,33 +39,21 @@ import {
 type Props = LinodeWithMaintenance & { handlers: LinodeHandlers };
 
 export const LinodeRow = (props: Props) => {
-  const flags = useFlags();
   const {
     backups,
     handlers,
     id,
     ipv4,
     label,
+    maintenance,
     region,
     status,
     type,
-    maintenance,
   } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
   const { data: notifications } = useNotificationsQuery();
-
-  // TODO: VPC - later if there is a way to directly get a linode's vpc, replace this
-  const { data: configs, isLoading: configsLoading } = useAllLinodeConfigsQuery(
-    id
-  );
-  const vpcId = getVPCId(configs ?? []);
-  const { data: vpc, isLoading: vpcLoading } = useVPCQuery(
-    vpcId ?? -1,
-    vpcId !== undefined && vpcId !== null
-  );
-  const vpcLabel = vpc?.label;
 
   const linodeNotifications =
     notifications?.filter(
@@ -100,12 +83,7 @@ export const LinodeRow = (props: Props) => {
     );
   };
 
-  const iconStatus =
-    status === 'running'
-      ? 'active'
-      : ['offline', 'stopped'].includes(status)
-      ? 'inactive'
-      : 'other';
+  const iconStatus = getLinodeIconStatus(status);
 
   const [isHovered, setIsHovered] = React.useState(false);
 
@@ -133,8 +111,8 @@ export const LinodeRow = (props: Props) => {
         </Link>
       </TableCell>
       <StyledMaintenanceTableCell
-        maintenance={Boolean(maintenance)}
         data-qa-status
+        maintenance={Boolean(maintenance)}
         statusCell
       >
         {!Boolean(maintenance) ? (
@@ -159,9 +137,9 @@ export const LinodeRow = (props: Props) => {
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <strong>Maintenance Scheduled</strong>
             <TooltipIcon
-              sx={{ tooltip: { maxWidth: 300 } }}
               interactive
               status="help"
+              sx={{ tooltip: { maxWidth: 300 } }}
               text={<MaintenanceText />}
               tooltipPosition="top"
             />
@@ -180,21 +158,6 @@ export const LinodeRow = (props: Props) => {
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
-        {flags.vpc && (
-          <Hidden smDown>
-            <TableCell noWrap>
-              {vpcLoading || configsLoading ? (
-                <Skeleton />
-              ) : vpcLabel ? (
-                <Link tabIndex={0} to={`/vpcs/${vpcId}`}>
-                  {vpcLabel}
-                </Link>
-              ) : (
-                'None'
-              )}
-            </TableCell>
-          </Hidden>
-        )}
       </Hidden>
       <Hidden lgDown>
         <TableCell>
@@ -259,18 +222,6 @@ export const RenderFlag: React.FC<{
     );
   }
   return null;
-};
-
-const getVPCId = (configs: Config[]) => {
-  for (const config of configs) {
-    for (const linodeInterface of config.interfaces) {
-      if (linodeInterface.purpose === 'vpc') {
-        return linodeInterface.vpc_id;
-      }
-    }
-  }
-
-  return undefined;
 };
 
 RenderFlag.displayName = `RenderFlag`;

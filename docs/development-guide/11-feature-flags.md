@@ -32,7 +32,7 @@ To consume a feature flag from a function component, use the `useFlags` hook:
 import * as React from "react";
 import { useFlags } from "src/hooks/useFlags";
 
-const ImagesPricingBanner: React.FC<> = () => {
+const ImagesPricingBanner = () => {
   const flags = useFlags();
 
   if (flags.imagesPricingBanner) {

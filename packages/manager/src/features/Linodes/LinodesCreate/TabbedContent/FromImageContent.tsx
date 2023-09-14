@@ -2,18 +2,18 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
-import ImageSelect from 'src/components/ImageSelect';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
+import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import { StyledGrid } from './CommonTabbedContent.styles';
 
 import {
   BasicFromContentProps,
   ReduxStateProps,
   WithTypesRegionsAndImages,
 } from '../types';
+import { StyledGrid } from './CommonTabbedContent.styles';
 
 interface Props extends BasicFromContentProps {
   error?: string;

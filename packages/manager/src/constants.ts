@@ -157,7 +157,7 @@ export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
 export const MBpsIntraDC = 200;
 
 /**
- * MBps rate for inter DC migrations (AKA Cross-Datacenter migrations )
+ * MBps rate for inter DC migrations (AKA Cross-Data-Center migrations )
  */
 export const MBpsInterDC = 7.5;
 

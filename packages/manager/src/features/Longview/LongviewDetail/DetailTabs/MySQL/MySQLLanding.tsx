@@ -1,32 +1,22 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Grid } from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import {
+  StyledTimeRangeSelect,
+  StyledTypography,
+} from '../CommonStyles.styles';
+import { StyledItemGrid } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import MySQLGraphs from './MySQLGraphs';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: 250,
-  },
-  title: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-}));
+import { MySQLGraphs } from './MySQLGraphs';
 
 interface Props {
   clientAPIKey?: string;
@@ -35,9 +25,7 @@ interface Props {
   timezone: string;
 }
 
-export const MySQLLanding: React.FC<Props> = (props) => {
-  const classes = useStyles();
-
+export const MySQLLanding = React.memo((props: Props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   const [version, setVersion] = React.useState<string | undefined>();
@@ -94,9 +82,9 @@ export const MySQLLanding: React.FC<Props> = (props) => {
   }
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'MySQL'} />
-      <Grid item xs={12}>
+      <StyledItemGrid xs={12}>
         <Box
           alignItems="center"
           display="flex"
@@ -104,14 +92,11 @@ export const MySQLLanding: React.FC<Props> = (props) => {
           justifyContent="space-between"
         >
           <div>
-            <Typography className={classes.title} variant="h2">
-              MySQL
-            </Typography>
+            <StyledTypography variant="h2">MySQL</StyledTypography>
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
 
-          <TimeRangeSelect
-            className={classes.root}
+          <StyledTimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
@@ -119,8 +104,8 @@ export const MySQLLanding: React.FC<Props> = (props) => {
             small
           />
         </Box>
-      </Grid>
-      <Grid className="py0" item xs={12}>
+      </StyledItemGrid>
+      <StyledItemGrid className="py0" xs={12}>
         <MySQLGraphs
           data={data?.Applications?.MySQL}
           end={time.end}
@@ -133,9 +118,7 @@ export const MySQLLanding: React.FC<Props> = (props) => {
           start={time.start}
           timezone={timezone}
         />
-      </Grid>
+      </StyledItemGrid>
     </Grid>
   );
-};
-
-export default React.memo(MySQLLanding);
+});

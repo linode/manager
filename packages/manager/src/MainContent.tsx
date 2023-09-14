@@ -202,6 +202,12 @@ const MainContent = (props: CombinedProps) => {
     account?.capabilities ?? []
   );
 
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
 
   const shouldDisplayMainContentBanner =
@@ -357,9 +363,9 @@ const MainContent = (props: CombinedProps) => {
                             {flags.selfServeBetas ? (
                               <Route component={BetaRoutes} path="/betas" />
                             ) : null}
-                            {flags.vpc && (
+                            {showVPCs ? (
                               <Route component={VPC} path="/vpcs" />
-                            )}
+                            ) : null}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />
