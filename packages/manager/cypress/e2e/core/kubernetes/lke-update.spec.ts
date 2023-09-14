@@ -752,7 +752,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
   /*
    * - Confirms node pool resize UI flow using mocked API responses.
    * - Confirms that pool size can be increased and decreased.
-   * - Confirms that UI updates to reflect new node pool size in regions with DC-specific pricing.
+   * - Confirms that resized pool pricing takes DC-specific prices into account.
    */
   it('can resize pools with DC-specific prices', () => {
     const dcSpecificPricingRegion = getRegionById('us-east');
@@ -785,6 +785,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
       }
     );
 
+    // TODO: Determine whether 0 GB (and other instances in other test case) should be used here.
     const mockNodePoolDrawerTitle = 'Resize Pool: Linode 0 GB Plan';
 
     mockGetCluster(mockCluster).as('getCluster');
@@ -825,6 +826,10 @@ describe('LKE cluster updates for DC-specific prices', () => {
         });
     });
 
+    // Confirm price is listed in Node Pool Summary.
+    // TODO: Check this math. I'm not certain where this is coming from.
+    cy.findByText('$74.00/month').should('be.visible');
+
     // Click "Resize Pool" and increase size to 3 nodes.
     ui.button
       .findByTitle('Resize Pool')
@@ -858,12 +863,23 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .should('be.visible')
           .should('be.enabled')
           .click()
+          .click()
           .click();
 
-        cy.findByLabelText('Edit Quantity').should('have.value', '3');
+        cy.findByLabelText('Edit Quantity').should('have.value', '4');
         cy.findByText('Current pool: $14/month (1 node at $14/month)').should(
           'be.visible'
         );
+        cy.findByText('Resized pool: $56/month (4 nodes at $14/month)').should(
+          'be.visible'
+        );
+
+        cy.findByLabelText('Subtract 1')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.findByLabelText('Edit Quantity').should('have.value', '3');
         cy.findByText('Resized pool: $42/month (3 nodes at $14/month)').should(
           'be.visible'
         );
@@ -876,6 +892,10 @@ describe('LKE cluster updates for DC-specific prices', () => {
       });
 
     cy.wait(['@resizeNodePool', '@getNodePools']);
+
+    // Confirm price updates in Node Pool Summary.
+    // TODO: Check this math. I'm not certain where this is coming from.
+    cy.findByText('$102.00/month').should('be.visible');
   });
 
   /*
@@ -929,12 +949,15 @@ describe('LKE cluster updates for DC-specific prices', () => {
       .click();
 
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
-    cy.wait(['@getLinodeTypes']); //Debug: Timing out here
+    cy.wait(['@getLinodeTypes']); //Debug: Timing out here and if we remove this...
 
     mockGetClusterPools(mockCluster.id, [mockNodePool, mockNewNodePool]).as(
       'getNodePools'
     );
 
+    // Debug: ...the plans table is not displaying the plans data I expected based on the mocked
+    // request. I'm sure I'm missing mocking something or have mocked incorrectly,
+    // but the types request is made when the drawer opens.
     ui.drawer
       .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
       .should('be.visible')
@@ -943,7 +966,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            // Displays DC-specific prices in the plan table
+            // Displays DC-specific prices in the plan table.
             cy.findByText('$14').should('be.visible');
             cy.findByText('$0.021').should('be.visible');
             cy.findByLabelText('Add 1').should('be.visible').click();
@@ -965,6 +988,12 @@ describe('LKE cluster updates for DC-specific prices', () => {
     cy.wait(['@addNodePool', '@getNodePools']);
     cy.findByText('Linode 0 GB', { selector: 'h2' }).should('be.visible');
     cy.findByText('Dedicated 4 GB', { selector: 'h2' }).should('be.visible');
+
+    // Confirm price updates in Node Pool Summary.
+    // cy.findByText('$102.00/month').should('be.visible');
+
+    // TODO: Determine whether to retest the behavior below with DC-specific prices.
+    // (It's the same as the previous add/remove test.)
 
     // Delete the newly added node pool.
     cy.get(`[data-qa-node-pool-id="${mockNewNodePool.id}"]`)
