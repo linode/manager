@@ -22,7 +22,7 @@ export const certificateConfigSchema = object({
   ),
 });
 
-const EndpointSchema = object({
+export const EndpointSchema = object({
   ip: string().required('IP is required.'),
   host: string(),
   port: number().required('Port is required.').min(0).max(65_535),

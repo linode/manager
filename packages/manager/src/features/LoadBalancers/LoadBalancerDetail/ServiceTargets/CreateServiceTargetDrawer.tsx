@@ -7,7 +7,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -25,7 +24,8 @@ import { useServiceTargetCreateMutation } from 'src/queries/aglb/serviceTargets'
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { CertificateSelect } from '../Certificates/CertificateSelect';
-import { LinodeOrIPSelect } from './LinodeOrIPSelect';
+import { AddEndpointForm } from './AddEndpointForm';
+import { EndpointTable } from './EndpointTable';
 
 interface Props {
   loadbalancerId: number;
@@ -63,16 +63,9 @@ const algorithmOptions = [
   },
 ];
 
-const defaultEndpoint: Endpoint = {
-  host: '',
-  ip: '',
-  port: 80,
-  rate_capacity: 10_000,
-};
-
 const initialValues: ServiceTargetPayload = {
   ca_certificate: '',
-  endpoints: [defaultEndpoint],
+  endpoints: [],
   healthcheck: {
     healthy_threshold: 3,
     host: '',
@@ -113,11 +106,13 @@ export const CreateServiceTargetDrawer = (props: Props) => {
     _onClose();
   };
 
-  const onAddAnotherEndpoint = () => {
-    formik.setFieldValue('endpoints', [
-      ...formik.values.endpoints,
-      defaultEndpoint,
-    ]);
+  const onAddEndpoint = (endpoint: Endpoint) => {
+    formik.setFieldValue('endpoints', [...formik.values.endpoints, endpoint]);
+  };
+
+  const onRemoveEndpoint = (index: number) => {
+    formik.values.endpoints.splice(index, 1);
+    formik.setFieldValue('endpoints', formik.values.endpoints);
   };
 
   const generalError = error?.find((e) => !e.field)?.reason;
@@ -161,77 +156,17 @@ export const CreateServiceTargetDrawer = (props: Props) => {
           options={algorithmOptions}
         />
         <Divider spacingBottom={24} spacingTop={24} />
-        <Typography variant="h3">Endpoints</Typography>
-        {formik.values.endpoints.map((endpoint, idx) => (
-          <Box key={`endpoint-${idx}`} data-qa-endpoint={idx}>
-            <Stack direction="row" spacing={2}>
-              <LinodeOrIPSelect
-                errorText={
-                  error?.find((e) => e.field === `endpoints[${idx}].ip`)?.reason
-                }
-                onChange={(ip) =>
-                  formik.setFieldValue(`endpoints[${idx}].ip`, ip)
-                }
-                value={endpoint.ip}
-              />
-              <TextField
-                errorText={
-                  error?.find((e) => e.field === `endpoints[${idx}].port`)
-                    ?.reason
-                }
-                label="Port"
-                labelTooltipText="TODO"
-                name={`endpoints[${idx}].port`}
-                onChange={formik.handleChange}
-                type="number"
-                value={endpoint.port}
-              />
-            </Stack>
-            <TextField
-              errorText={
-                error?.find((e) => e.field === `endpoints[${idx}].host`)?.reason
-              }
-              inputId={`host-${idx}`}
-              label="Host"
-              labelTooltipText="TODO"
-              name={`endpoints[${idx}].host`}
-              onChange={formik.handleChange}
-              optional
-              value={endpoint.host}
-            />
-            <TextField
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start">
-                    Requests per second
-                  </InputAdornment>
-                ),
-              }}
-              errorText={
-                error?.find(
-                  (e) => e.field === `endpoints[${idx}].rate_capacity`
-                )?.reason
-              }
-              inputId={`capacity-${idx}`}
-              label="Capacity"
-              labelTooltipText="TODO"
-              name={`endpoints[${idx}].capacity`}
-              onChange={formik.handleChange}
-              type="number"
-              value={endpoint.rate_capacity}
-            />
-            {idx !== formik.values.endpoints.length - 1 && (
-              <Divider spacingTop={24} />
-            )}
-          </Box>
-        ))}
-        <Button
-          buttonType="outlined"
-          onClick={onAddAnotherEndpoint}
-          sx={{ marginTop: 2 }}
-        >
-          Add Another Endpoint
-        </Button>
+        <Typography sx={{ marginBottom: 2 }} variant="h3">
+          Endpoints
+        </Typography>
+        <EndpointTable
+          errors={error?.filter((error) =>
+            error.field?.startsWith('endpoints')
+          )}
+          endpoints={formik.values.endpoints}
+          onRemove={onRemoveEndpoint}
+        />
+        <AddEndpointForm onAdd={onAddEndpoint} />
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">
           <Typography variant="h3">Service Target CA Certificate</Typography>
