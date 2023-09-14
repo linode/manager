@@ -9,7 +9,7 @@ import { apiMatcher } from 'support/util/intercepts';
 
 const overrideLocalStorage = (
   window: any,
-  storageOverrides: Map<string, any>
+  storageOverrides: Record<string, any>
 ): void => {
   Object.keys(storageOverrides).forEach((key: string) => {
     const value = storageOverrides[key];
@@ -39,9 +39,8 @@ export interface LinodeVisitOptions {
    *
    * If `undefined` is passed, local storage overriding will be disabled.
    *
-   * @var {Map<string, any>}
    */
-  localStorageOverrides?: Map<string, any>;
+  localStorageOverrides?: Record<string, any>;
 
   /**
    * Whether or not to mock common Linode API requests.
@@ -50,7 +49,6 @@ export interface LinodeVisitOptions {
    * `CommonRequestMockOptions` object is passed, mocks are enabled with the
    * provided options. Otherwise (e.g. `false` or `undefined`) mocks are disabled.
    *
-   * @var {boolean | CommonRequestMockOptions | undefined}
    */
   mockRequests?: CommonRequestMockOptions | boolean;
 
@@ -62,7 +60,6 @@ export interface LinodeVisitOptions {
    *
    * If `undefined` is passed, preference overriding will be disabled.
    *
-   * @var {UserPreferences | undefined}
    */
   preferenceOverrides?: UserPreferences;
 }
