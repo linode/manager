@@ -44,6 +44,10 @@ const initialValues: CreateFirewallPayload = {
   },
 };
 
+const firewallLabelText = `Assign devices to the Firewall.`;
+const firewallHelperText = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.`;
+const nodebalancerHelperText = `Only the Firewall's inbound rules apply to NodeBalancers.`;
+
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
     const { onClose, open } = props;
@@ -175,10 +179,7 @@ export const CreateFirewallDrawer = React.memo(
 
     const nodebalancers = data?.filter(optionsFilter);
 
-    const firewallLabelText = `Assign devices to the Firewall.`;
-    const firewallHelperText = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.`;
-    const nodebalancerHelperText = `Only the Firewall's inbound rules apply to NodeBalancers.`;
-    // ToDo: Placeholder until real link is available
+    // TODO: NBFW - Placeholder until real link is available
     const learnMoreLink = <a href="#">Learn more</a>;
 
     const generalError =
