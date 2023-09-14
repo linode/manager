@@ -163,7 +163,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
         <Divider spacingBottom={24} spacingTop={24} />
         <Typography variant="h3">Endpoints</Typography>
         {formik.values.endpoints.map((endpoint, idx) => (
-          <Box key={`endpoint-${idx}`}>
+          <Box key={`endpoint-${idx}`} data-qa-endpoint={idx}>
             <Stack direction="row" spacing={2}>
               <LinodeOrIPSelect
                 errorText={
@@ -262,7 +262,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
           label="Use Health Checks"
         />
         {formik.values.healthcheck.interval !== 0 && (
-          <Box>
+          <Box data-qa-healthcheck-options>
             <RadioGroup
               onChange={(_, value) =>
                 formik.setFieldValue('healthcheck.protocol', value)
