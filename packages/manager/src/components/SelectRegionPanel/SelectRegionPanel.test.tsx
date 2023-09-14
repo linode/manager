@@ -7,7 +7,19 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectRegionPanel } from './SelectRegionPanel';
 
-describe('SelectRegionPanel', () => {
+jest.mock('src/utilities/pricing/linodes', () => ({
+  isLinodeTypeDifferentPriceInSelectedRegion: jest.fn(() => false),
+}));
+jest.mock('src/utilities/queryParams', () => ({
+  getQueryParamsFromQueryString: jest.fn(() => ({})),
+}));
+jest.mock('src/hooks/useFlags', () => ({
+  useFlags: () => ({
+    dcSpecificPricing: true,
+  }),
+}));
+
+describe('SelectRegionPanel on the Create Flow', () => {
   it('should render a notice when the selected region has unique pricing and the flag is on', async () => {
     server.use(
       rest.get('*/linode/types', (req, res, ctx) => {
@@ -49,5 +61,132 @@ describe('SelectRegionPanel', () => {
       `Prices for plans, products, and services in ${regions[0].label} may vary from other regions.`,
       { exact: false }
     );
+  });
+});
+
+describe('SelectRegionPanel on the Clone Flow', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const regions = [...regionFactory.buildList(3)];
+  const mockedProps = {
+    handleSelection: () => jest.fn(),
+    regions,
+    selectedLinodeTypeId: 'g6-standard-2',
+  };
+
+  it('renders expected content on initial render', () => {
+    const { container, getAllByRole, getByRole, getByTestId } = renderWithTheme(
+      <SelectRegionPanel {...mockedProps} />
+    );
+
+    // Header
+    expect(getByRole('heading')).toHaveTextContent('Region');
+
+    // Helper Text
+    expect(getByTestId('region-select-helper-test')).toHaveTextContent(
+      'You can use our speedtest page to find the best region for your current location.'
+    );
+
+    // Dynamic Pricing Notice
+    expect(getByTestId('dynamic-pricing-notice')).toBeInTheDocument();
+
+    // Links
+    const links = getAllByRole('link');
+    expect(links).toHaveLength(2);
+    expect(links[0]).toHaveAttribute(
+      'href',
+      'https://www.linode.com/speed-test/'
+    );
+    expect(links[1]).toHaveAttribute('href', 'https://www.linode.com/pricing');
+
+    // Select
+    expect(
+      container.querySelector('[data-qa-textfield-label]')
+    ).toHaveTextContent('Region');
+    expect(
+      container.querySelector('[data-qa-select-placeholder]')
+    ).toHaveTextContent('Select a Region');
+  });
+
+  it('displays only the dynamic pricing notice when cloning to same region', () => {
+    jest
+      .spyOn(
+        require('src/utilities/queryParams'),
+        'getQueryParamsFromQueryString'
+      )
+      .mockReturnValue({
+        regionID: 'br-gru',
+        type: 'Clone+Linode',
+      });
+    jest
+      .spyOn(
+        require('src/utilities/pricing/linodes'),
+        'isLinodeTypeDifferentPriceInSelectedRegion'
+      )
+      .mockReturnValue(false);
+
+    const { getAllByRole, getByTestId } = renderWithTheme(
+      <SelectRegionPanel {...mockedProps} selectedID="br-gru" />
+    );
+
+    const warnings = getAllByRole('alert');
+    expect(warnings).toHaveLength(1);
+    expect(getByTestId('dynamic-pricing-notice')).toBeInTheDocument();
+  });
+
+  it('displays the region and cloning notices when cloning to a different region with the same price', () => {
+    jest
+      .spyOn(
+        require('src/utilities/queryParams'),
+        'getQueryParamsFromQueryString'
+      )
+      .mockReturnValue({
+        regionID: 'us-east',
+        type: 'Clone+Linode',
+      });
+    jest
+      .spyOn(
+        require('src/utilities/pricing/linodes'),
+        'isLinodeTypeDifferentPriceInSelectedRegion'
+      )
+      .mockReturnValue(false);
+
+    const { getAllByRole, getByTestId } = renderWithTheme(
+      <SelectRegionPanel {...mockedProps} selectedID="br-gru" />
+    );
+
+    const warnings = getAllByRole('alert');
+    expect(warnings).toHaveLength(2);
+    expect(getByTestId('dynamic-pricing-notice')).toBeInTheDocument();
+    expect(getByTestId('cross-data-center-notice')).toBeInTheDocument();
+  });
+
+  it('displays the cloning and price structure notices when cloning to a different region with a different price', () => {
+    jest
+      .spyOn(
+        require('src/utilities/queryParams'),
+        'getQueryParamsFromQueryString'
+      )
+      .mockReturnValue({
+        regionID: 'us-east',
+        type: 'Clone+Linode',
+      });
+    jest
+      .spyOn(
+        require('src/utilities/pricing/linodes'),
+        'isLinodeTypeDifferentPriceInSelectedRegion'
+      )
+      .mockReturnValue(true);
+
+    const { getAllByRole, getByTestId } = renderWithTheme(
+      <SelectRegionPanel {...mockedProps} selectedID="br-gru" />
+    );
+
+    const warnings = getAllByRole('alert');
+    expect(warnings).toHaveLength(2);
+    expect(getByTestId('cross-data-center-notice')).toBeInTheDocument();
+    expect(getByTestId('different-price-structure-notice')).toBeInTheDocument();
   });
 });

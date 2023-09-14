@@ -98,9 +98,6 @@ export const getMonthlyAndHourlyNodePricing = (
   };
 };
 
-export const CROSS_DATA_CENTER_CLONE_WARNING =
-  'Cloning a powered off instance across data centers may cause long periods of down time.';
-
 /**
  * Unicode to ASCII (encode data to Base64)
  * https://base64.guru/developers/javascript/examples/unicode-strings
