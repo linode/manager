@@ -184,7 +184,7 @@ const VPCDetail = () => {
       >
         <Typography variant="h2">Subnets ({vpc.subnets.length})</Typography>
       </Box>
-      <VPCSubnetsTable vpcId={vpc.id} />
+      <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
     </>
   );
 };

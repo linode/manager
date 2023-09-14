@@ -11,6 +11,7 @@ afterEach(() => {
 });
 
 const props = {
+  handleAssignLinodes: jest.fn(),
   handleDelete: jest.fn(),
   handleEdit: jest.fn(),
   numLinodes: 1,

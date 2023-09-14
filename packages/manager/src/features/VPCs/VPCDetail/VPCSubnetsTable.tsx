@@ -25,6 +25,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSubnetsQuery } from 'src/queries/vpcs';
 
+import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import { SubnetEditDrawer } from './SubnetEditDrawer';
@@ -32,12 +33,13 @@ import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
 
 interface Props {
   vpcId: number;
+  vpcRegion: string;
 }
 
 const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = (props: Props) => {
-  const { vpcId } = props;
+  const { vpcId, vpcRegion } = props;
   const theme = useTheme();
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
   const [selectedSubnet, setSelectedSubnet] = React.useState<
@@ -52,6 +54,7 @@ export const VPCSubnetsTable = (props: Props) => {
   const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
     false
   );
+  const [subnetAssignLinodesDrawerOpen, setSubnetAssignLinodesDrawerOpen] = React.useState(false);
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -109,6 +112,11 @@ export const VPCSubnetsTable = (props: Props) => {
     setSelectedSubnet(subnet);
     setEditSubnetsDrawerOpen(true);
   };
+
+  const handleSubnetAssignLinodes = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
+    setSubnetAssignLinodesDrawerOpen(true);
+  }
 
   if (isLoading) {
     return <CircleProgress />;
@@ -168,6 +176,7 @@ export const VPCSubnetsTable = (props: Props) => {
           </Hidden>
           <TableCell align="right">
             <SubnetActionMenu
+              handleAssignLinodes={handleSubnetAssignLinodes}
               handleDelete={handleSubnetDelete}
               handleEdit={handleEditSubnet}
               numLinodes={subnet.linodes.length}
@@ -247,6 +256,13 @@ export const VPCSubnetsTable = (props: Props) => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <SubnetAssignLinodesDrawer 
+        onClose={() => setSubnetAssignLinodesDrawerOpen(false)}
+        open={subnetAssignLinodesDrawerOpen}
+        vpcId={vpcId}
+        subnet={selectedSubnet}
+        vpcRegion={vpcRegion}
       />
       <SubnetDeleteDialog
         onClose={() => setDeleteSubnetDialogOpen(false)}
