@@ -6,11 +6,11 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect/Select';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { FormHelperText } from 'src/components/FormHelperText';
 
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
@@ -224,42 +224,40 @@ export const NodeBalancerConfigPanel = (
         </Grid>
 
         {protocol === 'https' && (
-          <Grid xs={12}>
-            <Grid container spacing={2}>
-              <Grid xs={12}>
-                <TextField
-                  data-qa-cert-field
-                  disabled={disabled}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  errorText={errorMap.ssl_cert}
-                  label="SSL Certificate"
-                  multiline
-                  onChange={onSslCertificateChange}
-                  required={protocol === 'https'}
-                  rows={3}
-                  value={sslCertificate || ''}
-                />
-              </Grid>
-              <Grid xs={12}>
-                <TextField
-                  data-qa-private-key-field
-                  disabled={disabled}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  errorText={errorMap.ssl_key}
-                  label="Private Key"
-                  multiline
-                  onChange={onPrivateKeyChange}
-                  required={protocol === 'https'}
-                  rows={3}
-                  value={privateKey || ''}
-                />
-              </Grid>
+          <Grid container spacing={2} xs={12}>
+            <Grid md={5} sm={6} xs={12}>
+              <TextField
+                data-qa-cert-field
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.ssl_cert}
+                label="SSL Certificate"
+                multiline
+                onChange={onSslCertificateChange}
+                required={protocol === 'https'}
+                rows={3}
+                value={sslCertificate || ''}
+              />
+            </Grid>
+            <Grid md={5} sm={6} xs={12}>
+              <TextField
+                data-qa-private-key-field
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.ssl_key}
+                label="Private Key"
+                multiline
+                onChange={onPrivateKeyChange}
+                required={protocol === 'https'}
+                rows={3}
+                value={privateKey || ''}
+              />
             </Grid>
           </Grid>
         )}
 
         {tcpSelected && (
-          <Grid md={3} xs={6}>
+          <Grid md={6} xs={12}>
             <Select
               textFieldProps={{
                 dataAttrs: {
