@@ -1,5 +1,4 @@
 import { EndpointSchema } from '@linode/validation';
-import Stack from '@mui/material/Stack';
 import { useFormik } from 'formik';
 import React from 'react';
 
@@ -38,22 +37,21 @@ export const AddEndpointForm = (props: Props) => {
   return (
     <>
       <Box>
-        <Stack direction="row" spacing={2}>
-          <LinodeOrIPSelect
-            errorText={formik.errors.ip}
-            onChange={(ip) => formik.setFieldValue(`ip`, ip)}
-            value={formik.values.ip}
-          />
-          <TextField
-            errorText={formik.errors.port}
-            label="Port"
-            labelTooltipText="TODO"
-            name="port"
-            onChange={formik.handleChange}
-            type="number"
-            value={formik.values.port}
-          />
-        </Stack>
+        <LinodeOrIPSelect
+          errorText={formik.errors.ip}
+          onChange={(ip) => formik.setFieldValue(`ip`, ip)}
+          value={formik.values.ip}
+        />
+        <TextField
+          errorText={formik.errors.port}
+          label="Port"
+          labelTooltipText="TODO"
+          name="port"
+          onChange={formik.handleChange}
+          sx={{ maxWidth: '100px' }}
+          type="number"
+          value={formik.values.port}
+        />
         <TextField
           errorText={formik.errors.host}
           label="Host"
@@ -72,7 +70,7 @@ export const AddEndpointForm = (props: Props) => {
             ),
           }}
           errorText={formik.errors.rate_capacity}
-          label="Capacity"
+          label="Rate Capacity"
           labelTooltipText="TODO"
           name="rate_capacity"
           onChange={formik.handleChange}
