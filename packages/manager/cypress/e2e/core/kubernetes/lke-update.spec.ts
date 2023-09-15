@@ -825,7 +825,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
         });
     });
 
-    // Confirm price is listed in Node Pool Summary.
+    // Confirm total price is listed in Kube Specs.
     cy.findByText('$14.00/month').should('be.visible');
 
     // Click "Resize Pool" and increase size to 3 nodes.
@@ -891,7 +891,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
 
     cy.wait(['@resizeNodePool', '@getNodePools']);
 
-    // Confirm price updates in Node Pool Summary.
+    // Confirm total price updates in Kube Specs.
     cy.findByText('$42.00/month').should('be.visible');
   });
 
@@ -938,7 +938,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     // Assert that initial node pool is shown on the page.
     cy.findByText('Linode 0 GB', { selector: 'h2' }).should('be.visible');
 
-    // Confirm price is listed in Node Pool Summary.
+    // Confirm total price is listed in Kube Specs.
     cy.findByText('$14.00/month').should('be.visible');
 
     // Add a new node pool, select plan, submit form in drawer.
@@ -981,7 +981,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     // Wait for API responses.
     cy.wait(['@addNodePool', '@getNodePools']);
 
-    // Confirm price updates in Node Pool Summary: $14/mo existing pool + $28/mo new pool.
+    // Confirm total price updates in Kube Specs: $14/mo existing pool + $28/mo new pool.
     cy.findByText('$42.00/month').should('be.visible');
   });
 });
