@@ -67,7 +67,7 @@ export const FirewallDevicesTable = React.memo((props: Props) => {
                   >
                     {paginatedAndOrderedData.map((thisDevice) => (
                       <FirewallDeviceRow
-                        deviceEntityID={thisDevice.entity.id}
+                        deviceEntityID={String(thisDevice.entity.id)}
                         deviceID={thisDevice.id}
                         deviceLabel={thisDevice.entity.label}
                         disabled={disabled}
