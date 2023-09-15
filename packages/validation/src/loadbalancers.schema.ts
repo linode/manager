@@ -26,7 +26,7 @@ export const EndpointSchema = object({
   ip: string().required('IP is required.'),
   host: string(),
   port: number().required('Port is required.').min(0).max(65_535),
-  rate_capacity: number(),
+  rate_capacity: number().required(),
 });
 
 const HealthCheckSchema = object({
