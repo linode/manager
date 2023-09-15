@@ -76,7 +76,7 @@ describe('Akamai Global Load Balancer service targets', () => {
    * - Confirms that health check can be disabled or re-enabled, and UI responds to toggle.
    * - [TODO] Confirms that service target list updates to reflect created service target.
    */
-  it.only('can create a Load Balancer service target', () => {
+  it('can create a Load Balancer service target', () => {
     const loadBalancerRegion = chooseRegion();
     const mockLinodes = new Array(2).fill(null).map(
       (_item: null, _i: number): Linode => {
@@ -145,6 +145,7 @@ describe('Akamai Global Load Balancer service targets', () => {
     mockCreateServiceTarget(mockLoadBalancer, mockServiceTarget).as(
       'createServiceTarget'
     );
+
     ui.drawer
       .findByTitle('Add a Service Target')
       .should('be.visible')
@@ -155,42 +156,40 @@ describe('Akamai Global Load Balancer service targets', () => {
           .type(mockServiceTarget.label);
 
         // Fill out the first endpoint using the mocked Linode's label.
-        cy.get('[data-qa-endpoint]')
+        cy.findByText('Linode or Public IP Address')
           .should('be.visible')
-          .within(() => {
-            cy.findByText('Linode or Public IP Address')
-              .should('be.visible')
-              .click()
-              .type(`${mockLinodes[0].label}`);
+          .click()
+          .type(`${mockLinodes[0].label}`);
 
-            ui.autocompletePopper
-              .findByTitle(mockLinodes[0].label)
-              .should('be.visible')
-              .click();
-          });
-
-        // Add a second endpoint.
-        ui.button
-          .findByTitle('Add Another Endpoint')
+        ui.autocompletePopper
+          .findByTitle(mockLinodes[0].label)
           .should('be.visible')
           .click();
 
-        // Fill out the second endpoint using the mocked Linode's IP address,
-        // then select the Linode from the autocomplete popper.
-        cy.get('[data-qa-endpoint="1"]')
-          .scrollIntoView()
-          .should('be.visible')
-          .within(() => {
-            cy.findByText('Linode or Public IP Address')
-              .should('be.visible')
-              .click()
-              .type(mockLinodes[1].ipv4[0]);
+        ui.button.findByTitle('Add Endpoint').should('be.visible').click();
 
-            ui.autocompletePopper
-              .findByTitle(mockLinodes[1].label)
-              .should('be.visible')
-              .click();
-          });
+        // Verify the first endpoint was added to the table
+        cy.findByText(mockLinodes[0].ipv4[0], { exact: false })
+          .scrollIntoView()
+          .should('be.visible');
+
+        // Create another endpoint
+        cy.findByText('Linode or Public IP Address')
+          .should('be.visible')
+          .click()
+          .type(mockLinodes[1].ipv4[0]);
+
+        ui.autocompletePopper
+          .findByTitle(mockLinodes[1].label)
+          .should('be.visible')
+          .click();
+
+        ui.button.findByTitle('Add Endpoint').should('be.visible').click();
+
+        // Verify the second endpoint was added to the table
+        cy.findByText(mockLinodes[1].ipv4[0], { exact: false })
+          .scrollIntoView()
+          .should('be.visible');
 
         // Select the certificate mocked for this load balancer.
         cy.findByText('Certificate').click().type(mockCertificate.label);
