@@ -4,6 +4,7 @@ import {
   CreateCertificatePayload,
   CreateLoadbalancerPayload,
   CreateRoutePayload,
+  Endpoint,
   Loadbalancer,
   Route,
   ServiceTarget,
@@ -285,3 +286,10 @@ export const createCertificateFactory = Factory.Sync.makeFactory<CreateCertifica
     type: 'downstream',
   }
 );
+
+export const endpointFactory = Factory.Sync.makeFactory<Endpoint>({
+  host: 'example.com',
+  ip: '192.168.1.1',
+  port: 80,
+  rate_capacity: 10_000,
+});

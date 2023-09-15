@@ -1,4 +1,4 @@
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -20,10 +20,11 @@ describe('CreateServiceTargetDrawer', () => {
 
     const submitButton = getByText('Create Service Target').closest('button')!;
 
-    userEvent.click(submitButton);
+    act(() => {
+      userEvent.click(submitButton);
+    });
 
     await findByText('Label is required.');
-    await findByText('IP is required.');
   });
   it('should be submittable when correctly configured', async () => {
     const { getByLabelText, getByText } = renderWithTheme(
@@ -31,12 +32,31 @@ describe('CreateServiceTargetDrawer', () => {
     );
 
     const labelInput = getByLabelText('Service Target Label');
-    const ipInput = getByLabelText('Linode or Public IP Address');
     const submitButton = getByText('Create Service Target').closest('button')!;
 
-    userEvent.type(labelInput, 'my-service-target');
-    userEvent.type(ipInput, '192.168.1.1');
-    userEvent.click(submitButton);
+    act(async () => {
+      userEvent.type(labelInput, 'my-service-target');
+      userEvent.click(submitButton);
+    });
+
+    await waitFor(() => expect(props.onClose).toBeCalled());
+  });
+  it('should be submittable when an endpoint is added', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <CreateServiceTargetDrawer {...props} />
+    );
+
+    const labelInput = getByLabelText('Service Target Label');
+    const ipInput = getByLabelText('Linode or Public IP Address');
+    const submitButton = getByText('Create Service Target').closest('button')!;
+    const addEndpointButton = getByText('Add Endpoint').closest('button')!;
+
+    act(() => {
+      userEvent.type(labelInput, 'my-service-target');
+      userEvent.type(ipInput, '192.168.1.1');
+      userEvent.click(addEndpointButton);
+      userEvent.click(submitButton);
+    });
 
     await waitFor(() => expect(props.onClose).toBeCalled());
   });
