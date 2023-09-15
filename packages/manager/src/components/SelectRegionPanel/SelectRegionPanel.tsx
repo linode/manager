@@ -17,6 +17,8 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 // import { DocsLink } from '../DocsLink/DocsLink'; //TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed
 import { Link } from '../Link';
+import { DynamicPriceNotice } from '../DynamicPriceNotice';
+import { priceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 
 interface SelectRegionPanelProps {
   disabled?: boolean;
@@ -56,7 +58,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const showCrossDataCenterCloneWarning =
     isCloning && selectedID && params.regionID !== selectedID;
 
-  const showSelectedRegionHasDifferentPriceWarning =
+  const showClonePriceWarning =
     flags.dcSpecificPricing &&
     isCloning &&
     isLinodeTypeDifferentPriceInSelectedRegion({
@@ -64,6 +66,9 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       regionB: selectedID,
       type,
     });
+
+  const showRegionHasCustomPriceWarning =
+    !showClonePriceWarning && selectedID && priceIncreaseMap[selectedID];
 
   if (props.regions.length === 0) {
     return null;
@@ -94,7 +99,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         )} */}
       </Box>
       <RegionHelperText
-        hidePricingNotice={showSelectedRegionHasDifferentPriceWarning}
         onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
       />
       {showCrossDataCenterCloneWarning ? (
@@ -117,13 +121,16 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         regions={regions}
         selectedID={selectedID || null}
       />
-      {showSelectedRegionHasDifferentPriceWarning && (
+      {showClonePriceWarning && (
         <Notice spacingBottom={0} spacingTop={12} variant="warning">
           <Typography fontWeight="bold">
             The selected region has a different price structure.{' '}
             <Link to="https://www.linode.com/pricing">Learn more.</Link>
           </Typography>
         </Notice>
+      )}
+      {showRegionHasCustomPriceWarning && (
+        <DynamicPriceNotice region={selectedID} />
       )}
     </Paper>
   );
