@@ -528,7 +528,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   handleVPCChange = (vpcID: number) => {
-    this.setState({ selectedVPCID: vpcID });
+    this.setState({
+      selectedSubnetID: -1, // Ensure the selected subnet is cleared
+      selectedVPCID: vpcID,
+    });
   };
 
   handleVPCIPv4Change = (IPv4: string) => {
@@ -753,7 +756,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       });
 
       // Situation: Subnet not selected
-      if (this.state.selectedSubnetID === undefined) {
+      if (
+        this.state.selectedSubnetID === undefined ||
+        this.state.selectedSubnetID === -1
+      ) {
         return this.setState(
           () => ({
             errors: [
@@ -895,33 +901,33 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           this.state.selectedVPCID !== undefined &&
           this.state.selectedVPCID !== -1
         ) {
-          try {
-            this.props.queryClient
-              .fetchQuery(
-                [linodesQueryKey, 'linode', response.id, 'configs'],
-                () => getAllLinodeConfigsRequest(response.id, {})
-              )
-              .then((res) => {
-                // the Linode was just created, so it only has one config
-                const config = res[0];
-                const data: InterfacePayload = {
-                  ipam_address: null,
-                  ipv4: {
-                    nat_1_1: this.state.assignPublicIPv4Address
-                      ? 'any'
-                      : response.ipv4[0],
-                    vpc: this.state.autoassignIPv4WithinVPCEnabled
-                      ? undefined
-                      : this.state.vpcIPv4AddressOfLinode,
-                  },
-                  label: null,
-                  primary: true,
-                  purpose: 'vpc',
-                  subnet_id: this.state.selectedSubnetID,
-                  vpc_id: this.state.selectedVPCID,
-                };
+          this.props.queryClient
+            .fetchQuery(
+              [linodesQueryKey, 'linode', response.id, 'configs'],
+              () => getAllLinodeConfigsRequest(response.id, {})
+            )
+            .then((res) => {
+              // the Linode was just created, so it only has one config
+              const config = res[0];
+              const data: InterfacePayload = {
+                ipam_address: null,
+                ipv4: {
+                  nat_1_1: this.state.assignPublicIPv4Address
+                    ? 'any'
+                    : response.ipv4[0],
+                  vpc: this.state.autoassignIPv4WithinVPCEnabled
+                    ? undefined
+                    : this.state.vpcIPv4AddressOfLinode,
+                },
+                label: null,
+                primary: true,
+                purpose: 'vpc',
+                subnet_id: this.state.selectedSubnetID,
+                vpc_id: this.state.selectedVPCID,
+              };
 
-                appendConfigInterface(response.id, config.id, data).then(() => {
+              appendConfigInterface(response.id, config.id, data)
+                .then(() => {
                   this.props.queryClient.invalidateQueries([
                     vpcQueryKey,
                     'paginated',
@@ -931,21 +937,24 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
                     'vpc',
                     this.state.selectedVPCID,
                   ]);
+                })
+                .catch((errors: APIError[]) => {
+                  const error = getAPIErrorOrDefault(errors)[0].reason;
+
+                  this.props.enqueueSnackbar(
+                    `Error assigning Linode ${
+                      response.label
+                    } to VPC: ${error.toLowerCase()}`,
+                    { persist: true, variant: 'error' }
+                  );
                 });
-                // .catch((err) =>
-                //   this.props.enqueueSnackbar(
-                //     `Error assigning Linode ${response.label} to VPC.`,
-                //     { variant: 'error' }
-                //   )
-                // );
-              });
-          } catch (err) {
-            // Get this working
-            this.props.enqueueSnackbar(
-              `Error assigning Linode ${response.label} to VPC.`,
-              { variant: 'error' }
-            );
-          }
+            })
+            .catch((_) => {
+              this.props.enqueueSnackbar(
+                'An error occurred while assigning your Linode to the VPC.',
+                { persist: true, variant: 'error' }
+              );
+            });
         }
 
         /** reset the Events polling */
