@@ -224,36 +224,34 @@ export const NodeBalancerConfigPanel = (
         </Grid>
 
         {protocol === 'https' && (
-          <Grid xs={12}>
-            <Grid columns={12} container spacing={2}>
-              <Grid md={5} sm={6} xs={12}>
-                <TextField
-                  data-qa-cert-field
-                  disabled={disabled}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  errorText={errorMap.ssl_cert}
-                  label="SSL Certificate"
-                  multiline
-                  onChange={onSslCertificateChange}
-                  required={protocol === 'https'}
-                  rows={3}
-                  value={sslCertificate || ''}
-                />
-              </Grid>
-              <Grid md={5} sm={6} xs={12}>
-                <TextField
-                  data-qa-private-key-field
-                  disabled={disabled}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  errorText={errorMap.ssl_key}
-                  label="Private Key"
-                  multiline
-                  onChange={onPrivateKeyChange}
-                  required={protocol === 'https'}
-                  rows={3}
-                  value={privateKey || ''}
-                />
-              </Grid>
+          <Grid container spacing={2} xs={12}>
+            <Grid md={5} sm={6} xs={12}>
+              <TextField
+                data-qa-cert-field
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.ssl_cert}
+                label="SSL Certificate"
+                multiline
+                onChange={onSslCertificateChange}
+                required={protocol === 'https'}
+                rows={3}
+                value={sslCertificate || ''}
+              />
+            </Grid>
+            <Grid md={5} sm={6} xs={12}>
+              <TextField
+                data-qa-private-key-field
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.ssl_key}
+                label="Private Key"
+                multiline
+                onChange={onPrivateKeyChange}
+                required={protocol === 'https'}
+                rows={3}
+                value={privateKey || ''}
+              />
             </Grid>
           </Grid>
         )}

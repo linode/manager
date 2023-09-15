@@ -200,7 +200,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               </Grid>
             )}
             {healthCheckType === 'http_body' && (
-              <Grid md={4} xs={12}>
+              <Grid md={12} xs={12}>
                 <TextField
                   disabled={disabled}
                   errorGroup={forEdit ? `${configIdx}` : undefined}

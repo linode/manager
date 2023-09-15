@@ -86,7 +86,7 @@ export const NodeBalancerConfigNode = React.memo(
               }}
               lg={forEdit ? 2 : 4}
               sm={forEdit ? 4 : 6}
-              xs={6}
+              xs={12}
             >
               <TextField
                 data-qa-backend-ip-label
