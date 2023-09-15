@@ -1111,7 +1111,7 @@ export const handlers = [
       percent_complete: 15,
     });
     const dbEvents = eventFactory.buildList(1, {
-      action: 'database_low_disk_space_remaining',
+      action: 'database_low_disk_space',
       entity: { id: 999, label: 'database-1', type: 'database' },
       message: 'Low disk space.',
     });

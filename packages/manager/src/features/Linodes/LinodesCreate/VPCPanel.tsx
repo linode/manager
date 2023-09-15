@@ -56,7 +56,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
   const flags = useFlags();
   const { account } = useAccountManagement();
-  const { data: vpcData, error, isLoading } = useVPCsQuery({}, {}, true);
+  const { data: vpcData, error, isLoading } = useVPCsQuery({}, {}, true, true);
 
   const regions = useRegionsQuery().data ?? [];
   const selectedRegion = region || '';

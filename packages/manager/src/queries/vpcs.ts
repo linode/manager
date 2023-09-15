@@ -31,12 +31,14 @@ export const subnetQueryKey = 'subnets';
 export const useVPCsQuery = (
   params: Params,
   filter: Filter,
+  enabled: boolean = true,
   alwaysRefetch: boolean = false
 ) => {
   return useQuery<ResourcePage<VPC>, APIError[]>(
     [vpcQueryKey, 'paginated', params, filter],
     () => getVPCs(params, filter),
     {
+      enabled,
       keepPreviousData: true,
       refetchOnWindowFocus: alwaysRefetch,
     }
