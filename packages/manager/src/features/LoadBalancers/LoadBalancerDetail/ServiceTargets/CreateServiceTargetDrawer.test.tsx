@@ -34,7 +34,7 @@ describe('CreateServiceTargetDrawer', () => {
     const labelInput = getByLabelText('Service Target Label');
     const submitButton = getByText('Create Service Target').closest('button')!;
 
-    act(async () => {
+    act(() => {
       userEvent.type(labelInput, 'my-service-target');
       userEvent.click(submitButton);
     });

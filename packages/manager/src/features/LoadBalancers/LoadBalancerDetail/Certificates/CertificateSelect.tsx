@@ -24,7 +24,8 @@ interface Props {
    */
   onChange: (certificate: Certificate | null) => void;
   /**
-   * The id of the selected certificate
+   * The id of the selected certificate OR a function that should return `true`
+   * if the certificate should be selected.
    */
   value: ((certificate: Certificate) => boolean) | number;
 }

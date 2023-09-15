@@ -1413,9 +1413,9 @@ export const lightTheme: ThemeOptions = {
     },
     divider: primaryColors.divider,
     error: {
-      dark: '#ca0813',
-      light: '#ca0813',
-      main: '#ca0813',
+      dark: color.red,
+      light: color.red,
+      main: color.red,
     },
     info: {
       dark: '#3682dd',

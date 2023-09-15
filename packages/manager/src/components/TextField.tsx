@@ -1,5 +1,4 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { Box, BoxProps } from 'src/components/Box';
 import {
   default as _TextField,
   StandardTextFieldProps,
@@ -9,6 +8,7 @@ import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
@@ -71,10 +71,6 @@ interface BaseProps {
    * className to apply to the underlying TextField component
    */
   className?: string;
-  /**
-   * Props applied to the root container.
-   */
-  containerProps?: BoxProps;
   /**
    * Data attributes are applied to the underlying TextField component for testing purposes
    */
@@ -213,7 +209,6 @@ export const TextField = (props: TextFieldProps) => {
     trimmed,
     type,
     value,
-    containerProps,
     ...textFieldProps
   } = props;
 
@@ -302,14 +297,10 @@ export const TextField = (props: TextFieldProps) => {
 
   return (
     <Box
-      {...containerProps}
-      className={cx(
-        {
-          [classes.helpWrapper]: Boolean(tooltipText),
-          [errorScrollClassName]: !!errorText,
-        },
-        containerProps?.className
-      )}
+      className={cx({
+        [classes.helpWrapper]: Boolean(tooltipText),
+        [errorScrollClassName]: !!errorText,
+      })}
     >
       <Box display="flex">
         <InputLabel

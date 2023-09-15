@@ -557,9 +557,9 @@ export const darkTheme: ThemeOptions = {
     },
     divider: primaryColors.divider,
     error: {
-      dark: '#fb6d6d',
-      light: '#fb6d6d',
-      main: '#fb6d6d',
+      dark: customDarkModeOptions.color.red,
+      light: customDarkModeOptions.color.red,
+      main: customDarkModeOptions.color.red,
     },
     mode: 'dark',
     primary: primaryColors,
