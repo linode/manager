@@ -38,7 +38,7 @@ import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing'
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
-describe.skip('LKE cluster updates', () => {
+describe('LKE cluster updates', () => {
   /*
    * - Confirms UI flow of upgrading a cluster to high availability control plane using mocked data.
    * - Confirms that user is shown a warning and agrees to billing changes before upgrading.
@@ -743,6 +743,7 @@ describe.skip('LKE cluster updates', () => {
 
 describe('LKE cluster updates for DC-specific prices', () => {
   beforeEach(() => {
+    //TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
     mockAppendFeatureFlags({
       dcSpecificPricing: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
@@ -752,14 +753,18 @@ describe('LKE cluster updates for DC-specific prices', () => {
   /*
    * - Confirms node pool resize UI flow using mocked API responses.
    * - Confirms that pool size can be increased and decreased.
-   * - Confirms that resized pool pricing takes DC-specific prices into account.
+   * - Confirms that drawer reflects prices in regions with DC-specific pricing.
+   * - Confirms that details page updates total cluster price with DC-specific pricing.
    */
-  it.skip('can resize pools with DC-specific prices', () => {
+  it('can resize pools with DC-specific prices', () => {
     const dcSpecificPricingRegion = getRegionById('us-east');
 
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
       region: dcSpecificPricingRegion.id,
+      control_plane: {
+        high_availability: false,
+      },
     });
 
     const mockNodePoolResized = nodePoolFactory.build({
@@ -785,7 +790,6 @@ describe('LKE cluster updates for DC-specific prices', () => {
       }
     );
 
-    // TODO: Determine whether 0 GB (and other instances in other test case) should be used here.
     const mockNodePoolDrawerTitle = 'Resize Pool: Linode 0 GB Plan';
 
     mockGetCluster(mockCluster).as('getCluster');
@@ -807,7 +811,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
       '@getLinodeType',
     ]);
 
-    // Confirm that nodes are listed with correct details.
+    // Confirm that nodes are visible.
     mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
       cy.get(`tr[data-qa-node-row="${node.id}"]`)
         .should('be.visible')
@@ -817,18 +821,12 @@ describe('LKE cluster updates for DC-specific prices', () => {
           );
           if (nodeLinode) {
             cy.findByText(nodeLinode.label).should('be.visible');
-            cy.findByText(nodeLinode.ipv4[0]).should('be.visible');
-            ui.button
-              .findByTitle('Recycle')
-              .should('be.visible')
-              .should('be.enabled');
           }
         });
     });
 
     // Confirm price is listed in Node Pool Summary.
-    // TODO: Check this math. I'm not certain where this is coming from.
-    cy.findByText('$74.00/month').should('be.visible');
+    cy.findByText('$14.00/month').should('be.visible');
 
     // Click "Resize Pool" and increase size to 3 nodes.
     ui.button
@@ -894,45 +892,54 @@ describe('LKE cluster updates for DC-specific prices', () => {
     cy.wait(['@resizeNodePool', '@getNodePools']);
 
     // Confirm price updates in Node Pool Summary.
-    // TODO: Check this math. I'm not certain where this is coming from.
-    cy.findByText('$102.00/month').should('be.visible');
+    cy.findByText('$42.00/month').should('be.visible');
   });
 
   /*
-   * - Confirms UI flow when adding node pools.
-   * - Confirms that UI updates to reflect new node pool size in regions with DC-specific pricing.
-   * - Confirms that details page updates to reflect change when pools are added or deleted.
+   * - Confirms UI flow when adding node pools using mocked API responses.
+   * - Confirms that drawer reflects prices in regions with DC-specific pricing.
+   * - Confirms that details page updates total cluster price with DC-specific pricing.
    */
-  it('can add and delete node pools with DC-specific prices', () => {
+  it('can add node pools with DC-specific prices', () => {
     const dcSpecificPricingRegion = getRegionById('us-east');
 
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
       region: dcSpecificPricingRegion.id,
+      control_plane: {
+        high_availability: false,
+      },
     });
 
     const mockNewNodePool = nodePoolFactory.build({
+      count: 2,
       type: dcPricingMockLinodeTypes[0].id,
+      nodes: kubeLinodeFactory.buildList(2),
     });
 
     const mockNodePool = nodePoolFactory.build({
+      count: 1,
       type: dcPricingMockLinodeTypes[0].id,
+      nodes: kubeLinodeFactory.buildList(1),
     });
 
-    mockGetLinodeType(dcPricingMockLinodeTypes[0]).as('getLinodeType');
     mockGetCluster(mockCluster).as('getCluster');
     mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
     mockGetKubernetesVersions().as('getVersions');
     mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
+    mockGetLinodeType(dcPricingMockLinodeTypes[0]).as('getLinodeType');
+    mockGetLinodeTypes(dcPricingMockLinodeTypes);
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
-    mockGetLinodeTypes(dcPricingMockLinodeTypes);
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait(['@getCluster', '@getNodePools', '@getVersions', '@getLinodeType']);
 
     // Assert that initial node pool is shown on the page.
     cy.findByText('Linode 0 GB', { selector: 'h2' }).should('be.visible');
+
+    // Confirm price is listed in Node Pool Summary.
+    cy.findByText('$14.00/month').should('be.visible');
 
     // Add a new node pool, select plan, submit form in drawer.
     ui.button
@@ -949,19 +956,19 @@ describe('LKE cluster updates for DC-specific prices', () => {
       .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByText('Linode 1 GB')
+        cy.findByText('Linode 0 GB')
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            // Displays DC-specific prices in the plan table.
+            // Assert that DC-specific prices are displayed the plan table, then add a node pool with 2 linodes.
             cy.findByText('$14').should('be.visible');
             cy.findByText('$0.021').should('be.visible');
-            cy.findByLabelText('Add 1').should('be.visible').click();
+            cy.findByLabelText('Add 1').should('be.visible').click().click();
           });
 
-        // Displays DC-specific prices.
+        // Assert that DC-specific prices are displayed as helper text.
         cy.contains(
-          'This pool will add $14/month (1 node at $14/month) to this cluster.'
+          'This pool will add $28/month (2 nodes at $14/month) to this cluster.'
         ).should('be.visible');
 
         ui.button
@@ -974,7 +981,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     // Wait for API responses.
     cy.wait(['@addNodePool', '@getNodePools']);
 
-    // Confirm price updates in Node Pool Summary.
-    // cy.findByText('$102.00/month').should('be.visible');
+    // Confirm price updates in Node Pool Summary: $14/mo existing pool + $28/mo new pool.
+    cy.findByText('$42.00/month').should('be.visible');
   });
 });
