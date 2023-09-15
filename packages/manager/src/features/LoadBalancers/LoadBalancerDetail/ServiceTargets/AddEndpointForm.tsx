@@ -74,6 +74,7 @@ export const AddEndpointForm = (props: Props) => {
           labelTooltipText="TODO"
           name="rate_capacity"
           onChange={formik.handleChange}
+          sx={{ maxWidth: '275px' }}
           type="number"
           value={formik.values.rate_capacity}
         />
