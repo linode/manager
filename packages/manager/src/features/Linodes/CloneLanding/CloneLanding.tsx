@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { castDraft } from 'immer';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
@@ -18,7 +18,9 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
@@ -264,12 +266,14 @@ const CloneLanding = () => {
       <MutationNotification linodeId={linodeId} />
       <Notifications />
       <LinodesDetailHeader />
-      <Paper>
-        <Grid container sx={{ marginTop: theme.spacing(1) }}>
-          <Grid lg={9} md={8} xs={12}>
-            <Paper
-              sx={{ padding: `${theme.spacing(3)} ${theme.spacing(3)} 0` }}
-            >
+      <Paper sx={{ padding: theme.spacing(2) }}>
+        <Grid
+          container
+          justifyContent="space-between"
+          sx={{ marginTop: theme.spacing(1) }}
+        >
+          <Grid md={7} xs={12}>
+            <Paper sx={{ padding: 0 }}>
               <Typography
                 aria-level={2}
                 data-qa-title
@@ -290,25 +294,25 @@ const CloneLanding = () => {
                 <TabLinkList tabs={tabs} />
                 <TabPanels>
                   <SafeTabPanel index={0}>
-                    <StyledOuterDiv>
+                    <Box>
                       <Configs
                         // Cast the results of the Immer state to a mutable data structure.
                         configSelection={castDraft(state.configSelection)}
                         configs={configsInState}
                         handleSelect={toggleConfig}
                       />
-                    </StyledOuterDiv>
+                    </Box>
                   </SafeTabPanel>
 
                   <SafeTabPanel index={1}>
-                    <StyledOuterDiv>
-                      <Typography>
+                    <Box>
+                      <Notice spacingTop={16} variant="info">
                         You can make a copy of a disk to the same or different
                         Linode. We recommend you power off your Linode first,
                         and keep it powered off until the disk has finished
                         being cloned.
-                      </Typography>
-                      <div style={{ marginTop: theme.spacing(4) }}>
+                      </Notice>
+                      <div>
                         <Disks
                           // Cast the results of the Immer state to a mutable data structure.
                           diskSelection={castDraft(state.diskSelection)}
@@ -317,13 +321,13 @@ const CloneLanding = () => {
                           selectedConfigIds={selectedConfigIds}
                         />
                       </div>
-                    </StyledOuterDiv>
+                    </Box>
                   </SafeTabPanel>
                 </TabPanels>
               </Tabs>
             </Paper>
           </Grid>
-          <Grid lg={3} md={4} xs={12}>
+          <Grid md={4} xs={12}>
             <Details
               selectedConfigs={attachAssociatedDisksToConfigs(
                 selectedConfigs,
@@ -366,13 +370,5 @@ const CloneLanding = () => {
     </React.Fragment>
   );
 };
-
-const StyledOuterDiv = styled('div', { label: 'StyledOuterDiv' })(
-  ({ theme }) => ({
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-  })
-);
 
 export default CloneLanding;
