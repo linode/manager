@@ -9,7 +9,7 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
 import { useFlags } from 'src/hooks/useFlags';
-import { useTypeQuery } from 'src/queries/types';
+import { useAllTypes, useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -48,27 +48,39 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const flags = useFlags();
   const params = getQueryParamsFromQueryString(location.search);
 
+  const { data: types } = useAllTypes();
   const { data: type } = useTypeQuery(
     selectedLinodeTypeId ?? '',
     Boolean(selectedLinodeTypeId)
   );
 
+  const currentLinodeRegion = params.regionID;
+
   const isCloning = /clone/i.test(params.type);
+  const isLinode = location.pathname.startsWith('/linodes');
 
   const showCrossDataCenterCloneWarning =
-    isCloning && selectedID && params.regionID !== selectedID;
+    isCloning && selectedID && currentLinodeRegion !== selectedID;
 
   const showClonePriceWarning =
     flags.dcSpecificPricing &&
     isCloning &&
     isLinodeTypeDifferentPriceInSelectedRegion({
-      regionA: params.regionID,
+      regionA: currentLinodeRegion,
       regionB: selectedID,
       type,
     });
 
-  const showRegionHasCustomPriceWarning =
-    !showClonePriceWarning && selectedID && priceIncreaseMap[selectedID];
+  const selectedRegionHasUniquePricing =
+    !showClonePriceWarning &&
+    selectedID &&
+    types?.some((type) =>
+      type.region_prices.find((regionPrice) => regionPrice.id === selectedID)
+    );
+
+  const showRegionPriceNotice = isLinode
+    ? selectedRegionHasUniquePricing
+    : selectedID && priceIncreaseMap[selectedID];
 
   if (props.regions.length === 0) {
     return null;
@@ -129,7 +141,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       )}
-      {showRegionHasCustomPriceWarning && (
+      {selectedID && showRegionPriceNotice && (
         <DynamicPriceNotice region={selectedID} />
       )}
     </Paper>

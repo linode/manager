@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { DynamicPriceNotice } from 'src/components/DynamicPriceNotice';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -258,6 +259,17 @@ export const CreateCluster = () => {
     }
   };
 
+  // Show "Prices in region may vary" if
+  // - A region is selected
+  // - Any of the Linode types include a region_price object for the selected region
+  const showPricingNotice =
+    selectedRegionID &&
+    typesData.some((type) =>
+      type.region_prices.find(
+        (regionPrice) => regionPrice.id === selectedRegionID
+      )
+    );
+
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
@@ -314,6 +326,12 @@ export const CreateCluster = () => {
               regions={filteredRegions}
               selectedID={selectedID}
             />
+            {showPricingNotice && (
+              <DynamicPriceNotice
+                region={selectedRegionID}
+                spacingBottom={16}
+              />
+            )}
             <Select
               onChange={(selected: Item<string>) => {
                 setVersion(selected);
