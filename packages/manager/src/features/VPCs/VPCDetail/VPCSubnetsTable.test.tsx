@@ -53,8 +53,8 @@ describe('VPC Subnets table', () => {
     const actionMenuButton = getAllByRole('button')[4];
     fireEvent.click(actionMenuButton);
 
-    getByText('Assign Linode');
-    getByText('Unassign Linode');
+    getByText('Assign Linodes');
+    getByText('Unassign Linodes');
     getByText('Edit');
     getByText('Delete');
   });

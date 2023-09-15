@@ -26,13 +26,13 @@ export const SubnetActionMenu = (props: Props) => {
       onClick: () => {
         handleAssignLinodes(subnet);
       },
-      title: 'Assign Linode',
+      title: 'Assign Linodes',
     },
     {
       onClick: () => {
         handleUnassignLinode();
       },
-      title: 'Unassign Linode',
+      title: 'Unassign Linodes',
     },
     {
       onClick: () => {

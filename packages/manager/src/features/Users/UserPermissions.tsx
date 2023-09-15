@@ -767,5 +767,5 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
 export default recompose<CombinedProps, Props>(
   withSnackbar,
-  withQueryClient
+  
 )(withStyles(UserPermissions, styles));

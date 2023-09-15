@@ -24,8 +24,8 @@ describe('SubnetActionMenu', () => {
     const screen = renderWithTheme(<SubnetActionMenu {...props} />);
     const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
     fireEvent.click(actionMenu);
-    screen.getByText('Assign Linode');
-    screen.getByText('Unassign Linode');
+    screen.getByText('Assign Linodes');
+    screen.getByText('Unassign Linodes');
     screen.getByText('Edit');
     screen.getByText('Delete');
   });
