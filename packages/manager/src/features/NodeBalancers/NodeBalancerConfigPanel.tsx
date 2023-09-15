@@ -225,8 +225,8 @@ export const NodeBalancerConfigPanel = (
 
         {protocol === 'https' && (
           <Grid xs={12}>
-            <Grid container spacing={2}>
-              <Grid xs={12}>
+            <Grid columns={12} container spacing={2}>
+              <Grid md={5} sm={6} xs={12}>
                 <TextField
                   data-qa-cert-field
                   disabled={disabled}
@@ -240,7 +240,7 @@ export const NodeBalancerConfigPanel = (
                   value={sslCertificate || ''}
                 />
               </Grid>
-              <Grid xs={12}>
+              <Grid md={5} sm={6} xs={12}>
                 <TextField
                   data-qa-private-key-field
                   disabled={disabled}
