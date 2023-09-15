@@ -8,7 +8,7 @@ import {
 import { apiMatcher } from 'support/util/intercepts';
 
 const overrideLocalStorage = (
-  window: any,
+  window: Window,
   storageOverrides: Record<string, any>
 ): void => {
   Object.keys(storageOverrides).forEach((key: string) => {
@@ -17,7 +17,7 @@ const overrideLocalStorage = (
   });
 };
 
-const _loginWithToken = (win) => {
+const _loginWithToken = (win: Window) => {
   win.localStorage.setItem('authentication/oauth-token', oauthToken);
   win.localStorage.setItem('authentication/scopes', '*');
   // cy.log(window.localStorage.getItem('authentication/oauth-token'));
@@ -85,7 +85,7 @@ Cypress.Commands.add(
     Cypress.on('uncaught:exception', (_err, _runnable) => false);
 
     const opt = {
-      onBeforeLoad: (win: any) => {
+      onBeforeLoad: (win: Window) => {
         _loginWithToken(win);
         if (resolvedLinodeOptions.localStorageOverrides) {
           overrideLocalStorage(
