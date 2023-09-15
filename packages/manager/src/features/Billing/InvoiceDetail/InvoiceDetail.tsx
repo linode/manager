@@ -129,14 +129,13 @@ export const InvoiceDetail = () => {
     >
       <Grid container rowGap={2}>
         <Grid xs={12}>
-          <Grid container spacing={2} sx={sxGrid}>
+          <Grid container spacing={2} sx={sxGrid} data-qa-invoice-header>
             <Grid sm={4} sx={sxGrid} xs={12}>
-              <Link to={`/account/billing`}>
+              <Link to={`/account/billing`} data-qa-back-to-billing>
                 <IconButton
                   sx={{
                     padding: 0,
                   }}
-                  data-qa-back-to-billing
                   size="large"
                 >
                   <KeyboardArrowLeft
@@ -211,6 +210,7 @@ export const InvoiceDetail = () => {
                 gap: theme.spacing(2),
                 padding: theme.spacing(1),
               }}
+              data-qa-invoice-summary
             >
               <Typography variant="h2">
                 Subtotal:{' '}
