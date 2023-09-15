@@ -21,7 +21,7 @@ export const DeleteServiceTargetDialog = (props: Props) => {
     mutateAsync,
   } = useLoadBalancerServiceTargetDeleteMutation(
     loadbalancerId,
-    serviceTarget ? serviceTarget?.id : 0
+    serviceTarget?.id ?? -1
   );
 
   const onDelete = async () => {
