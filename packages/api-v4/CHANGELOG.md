@@ -1,6 +1,5 @@
 ## [2023-09-18] - v0.101.0
 
-
 ### Changed:
 
 - Change `Account` and `Grant`-related types to include VPC-related grants and capabilities ([#9585](https://github.com/linode/manager/pull/9585))
@@ -11,7 +10,8 @@
 
 ### Upcoming Features:
 
-- DbaaS disk size and used size ([#9638](https://github.com/linode/manager/pull/9638))
+- DBaaS disk size and used size ([#9638](https://github.com/linode/manager/pull/9638))
+
 
 ## [2023-09-05] - v0.100.0
 
