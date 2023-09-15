@@ -159,7 +159,7 @@ describe('Akamai Global Load Balancer service targets', () => {
         cy.findByText('Linode or Public IP Address')
           .should('be.visible')
           .click()
-          .type(`${mockLinodes[0].label}`);
+          .type(mockLinodes[0].label);
 
         ui.autocompletePopper
           .findByTitle(mockLinodes[0].label)
@@ -169,7 +169,7 @@ describe('Akamai Global Load Balancer service targets', () => {
         ui.button.findByTitle('Add Endpoint').should('be.visible').click();
 
         // Verify the first endpoint was added to the table
-        cy.findByText(mockLinodes[0].ipv4[0], { exact: false })
+        cy.findByText(mockLinodes[0].label, { exact: false })
           .scrollIntoView()
           .should('be.visible');
 
@@ -187,7 +187,7 @@ describe('Akamai Global Load Balancer service targets', () => {
         ui.button.findByTitle('Add Endpoint').should('be.visible').click();
 
         // Verify the second endpoint was added to the table
-        cy.findByText(mockLinodes[1].ipv4[0], { exact: false })
+        cy.findByText(mockLinodes[1].label, { exact: false })
           .scrollIntoView()
           .should('be.visible');
 
