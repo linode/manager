@@ -9,6 +9,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
 
 import type { APIError, Endpoint } from '@linode/api-v4';
 
@@ -20,6 +21,15 @@ interface Props {
 
 export const EndpointTable = (props: Props) => {
   const { endpoints, errors, onRemove } = props;
+
+  const { data: linodes } = useLinodesQuery(
+    { page_size: 500 },
+    {
+      '+or': endpoints.map((endpoint) => ({
+        ipv4: { '+contains': endpoint.ip },
+      })),
+    }
+  );
 
   return (
     <Table>
@@ -46,10 +56,14 @@ export const EndpointTable = (props: Props) => {
             )?.reason,
           };
 
+          const linode = linodes?.data.find((linode) =>
+            linode.ipv4.includes(endpoint.ip)
+          );
+
           return (
             <TableRow key={idx}>
               <TableCell>
-                {endpoint.ip}:{endpoint.port}
+                {linode?.label ?? endpoint.ip}:{endpoint.port}
                 {fieldErrors.ip && (
                   <Typography color={(theme) => theme.palette.error.main}>
                     {fieldErrors.ip}

@@ -6,6 +6,7 @@ import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
 import { Box } from 'src/components/Box';
 import { linodeFactory } from 'src/factories';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
+import { useRegionsQuery } from 'src/queries/regions';
 
 import type { Filter } from '@linode/api-v4';
 
@@ -47,6 +48,8 @@ export const LinodeOrIPSelect = (props: Props) => {
     isLoading,
   } = useInfiniteLinodesQuery(filter);
 
+  const { data: regions } = useRegionsQuery();
+
   const linodes = data?.pages.flatMap((page) => page.data) ?? [];
 
   const selectedLinode = value
@@ -87,28 +90,34 @@ export const LinodeOrIPSelect = (props: Props) => {
         }
       }}
       renderOption={(props, option, state) => {
+        const region =
+          regions?.find((r) => r.id === option.region)?.label ?? option.region;
+
+        const isCustomIp = option === customIpPlaceholder;
+
         return (
           <li {...props}>
             <Stack flexGrow={1}>
               <Box>
-                <b>
-                  {option === customIpPlaceholder ? 'Custom IP' : option.label}
-                </b>
+                <b>{isCustomIp ? 'Custom IP' : option.label}</b>
               </Box>
-              <Box>{option.ipv4[0]}</Box>
+              <Box>
+                {isCustomIp ? option.ipv4[0] : `${option.ipv4[0]} - ${region}`}
+              </Box>
             </Stack>
             <SelectedIcon visible={state.selected} />
           </li>
         );
       }}
       errorText={error?.[0]?.reason ?? errorText}
+      filterOptions={(x) => x}
       fullWidth
       inputValue={selectedLinode ? selectedLinode.label : inputValue}
       label="Linode or Public IP Address"
       loading={isLoading}
       onChange={(e, value) => onChange(value?.ipv4[0] ?? '')}
       options={options}
-      placeholder="Select Linode or IP Address"
+      placeholder="Select Linode or Enter IPv4 Address"
       value={linodes.length === 0 ? customIpPlaceholder : selectedLinode}
     />
   );
