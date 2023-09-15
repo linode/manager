@@ -259,7 +259,7 @@ export const NodeBalancerConfigPanel = (
         )}
 
         {tcpSelected && (
-          <Grid md={3} xs={6}>
+          <Grid md={6} xs={12}>
             <Select
               textFieldProps={{
                 dataAttrs: {
