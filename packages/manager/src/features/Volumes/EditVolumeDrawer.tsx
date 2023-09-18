@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const EditVolumeDrawer = (props: Props) => {
-  const { onClose, open, volume } = props;
+  const { onClose: _onClose, open, volume } = props;
 
   const { data: grants } = useGrants();
 
@@ -68,6 +68,11 @@ export const EditVolumeDrawer = (props: Props) => {
     },
     validationSchema: UpdateVolumeSchema,
   });
+
+  const onClose = () => {
+    _onClose();
+    resetForm();
+  };
 
   return (
     <Drawer onClose={onClose} open={open} title="Edit Volume">

@@ -27,7 +27,7 @@ interface Props {
 const initialValues = { label: '' };
 
 export const CloneVolumeDrawer = (props: Props) => {
-  const { onClose, open, volume } = props;
+  const { onClose: _onClose, open, volume } = props;
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
@@ -68,6 +68,11 @@ export const CloneVolumeDrawer = (props: Props) => {
     },
     validationSchema: CloneVolumeSchema,
   });
+
+  const onClose = () => {
+    _onClose();
+    resetForm();
+  };
 
   return (
     <Drawer onClose={onClose} open={open} title="Clone Volume">
