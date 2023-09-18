@@ -9,9 +9,12 @@ import autoTable, { CellHookData } from 'jspdf-autotable';
 import { pathOr } from 'ramda';
 
 import { ADDRESSES } from 'src/constants';
+import { FlagSet } from 'src/featureFlags';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
+
+import type { Region } from '@linode/api-v4';
 
 /**
  * Margin that has to be applied to every item added to the PDF.
@@ -84,14 +87,25 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
   });
 };
 
+interface CreateInvoiceItemsTableOptions {
+  doc: JSPDF;
+  flags: FlagSet;
+  items: InvoiceItem[];
+  /**
+   * Used to add Region labels to the `Region` column
+   */
+  regions: Region[];
+  timezone?: string;
+}
+
 /**
  * Creates the table header and rows for an Invoice PDF
  */
 export const createInvoiceItemsTable = (
-  doc: JSPDF,
-  items: InvoiceItem[],
-  timezone?: string
+  options: CreateInvoiceItemsTableOptions
 ) => {
+  const { doc, flags, items, regions, timezone } = options;
+
   autoTable(doc, {
     body: items.map((item) => {
       const [toDate, toTime] = formatDateForTable(item.to || '', timezone);
@@ -116,6 +130,18 @@ export const createInvoiceItemsTable = (
           content: item.quantity || '',
           styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
         },
+        ...(flags.dcSpecificPricing
+          ? [
+              {
+                content: getInvoiceRegion(item, regions) ?? '',
+                styles: {
+                  fontSize: 8,
+                  halign: 'center',
+                  overflow: 'linebreak',
+                },
+              } as const,
+            ]
+          : []),
         {
           content: item.unit_price || '',
           styles: { fontSize: 8, halign: 'center', overflow: 'linebreak' },
@@ -146,6 +172,7 @@ export const createInvoiceItemsTable = (
         'From',
         'To',
         'Quantity',
+        ...(flags.dcSpecificPricing ? ['Region'] : []),
         'Unit Price',
         'Amount',
         'Tax',
@@ -277,6 +304,30 @@ export const createFooter = (
 
 const truncateLabel = (label: string) => {
   return label.length > 20 ? `${label.substr(0, 20)}...` : label;
+};
+
+export const getInvoiceRegion = (
+  invoiceItem: InvoiceItem,
+  regions: Region[]
+) => {
+  const region = regions.find((r) => r.id === invoiceItem.region);
+
+  const regionLabel = region
+    ? `${region.label} (${region.id})`
+    : invoiceItem.region;
+
+  // If the invoice item is not regarding transfer, just return the region.
+  if (!invoiceItem.label.includes('Transfer Overage')) {
+    return regionLabel;
+  }
+
+  // If there is no region, this Transfer Overage item is for global transfer.
+  if (!invoiceItem.region) {
+    return 'Global';
+  }
+
+  // The Transfer Overage item is for a specific region's pool.
+  return regionLabel;
 };
 
 const formatDescription = (desc?: string) => {

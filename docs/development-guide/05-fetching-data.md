@@ -40,7 +40,7 @@ import * as React from 'react';
 import { getProfile } from '@linode/api-v4/lib/profile';
 // ... other imports
 
-const UsernameDisplay: React.FC<> = () => {
+const UsernameDisplay = () => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<APIError | null>(null);
   const [profile, setProfile] = React.useState<Profile | null>(null);
@@ -114,7 +114,7 @@ Loading and error states are managed by React Query. The earlier username displa
 import * as React from "react";
 import { useProfile } from "src/queries/profile";
 
-const UsernameDisplay: React.FC<> = () => {
+const UsernameDisplay = () => {
   const { loading, error, data: profile } = useProfile();
 
   if (loading) {
@@ -157,7 +157,7 @@ import profileContainer, {
   Props as ProfileProps,
 } from "src/containers/profile.container";
 
-const UsernameDisplay: React.FC<ProfileProps> = (props) => {
+const UsernameDisplay = (props: ProfileProps) => {
   const { requestProfile, profileLoading, profileError, profileData } = props;
 
   React.useEffect(() => requestProfile, []);

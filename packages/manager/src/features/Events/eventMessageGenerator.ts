@@ -101,6 +101,11 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   database_delete: {
     notification: (e) => `Database ${e.entity!.label} has been deleted.`,
   },
+  database_low_disk_space: {
+    finished: (e) =>
+      `Low disk space alert for database ${e.entity!.label} has cleared.`,
+    notification: (e) => `Database ${e.entity!.label} has low disk space.`,
+  },
   database_update: {
     finished: (e) => `Database ${e.entity!.label} has been updated.`,
   },
