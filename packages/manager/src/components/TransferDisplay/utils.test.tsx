@@ -7,6 +7,7 @@ import {
 import {
   calculatePoolUsagePct,
   formatPoolUsagePct,
+  formatRegionList,
   getDaysRemaining,
   getRegionTransferPools,
 } from './utils';
@@ -70,5 +71,17 @@ describe('formatPoolUsagePct', () => {
   it('should format the percentage correctly', () => {
     const formattedPct = formatPoolUsagePct(85);
     expect(formattedPct).toBe('85%');
+  });
+});
+
+describe('formatRegionList', () => {
+  it('should format the list of regions correctly', () => {
+    const listOfOneRegion = ['Newark, NJ'];
+    const formattedListOneRegion = formatRegionList(listOfOneRegion);
+    expect(formattedListOneRegion).toBe('Newark, NJ');
+
+    const listOfRegions = ['Newark, NJ', 'Dallas, TX', 'Fremont, CA'];
+    const formattedList = formatRegionList(listOfRegions);
+    expect(formattedList).toBe('Newark, NJ, Dallas, TX and Fremont, CA');
   });
 });
