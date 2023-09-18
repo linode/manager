@@ -1924,7 +1924,7 @@ export const oneClickApps: OCA[] = [
     },
     description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others. "*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies."`,
     logo_url: 'redis.svg',
-    name: 'Redis&reg;',
+    name: 'Marketplace App for Redis&reg;',
     related_guides: [
       {
         href:
@@ -1946,12 +1946,13 @@ export const oneClickApps: OCA[] = [
     },
     description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others. "*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies."`,
     logo_url: 'redissentinelmarketplaceocc.svg',
-    name: 'Redis&reg; Sentinel Cluster',
+    name: 'Marketplace App for Redis&reg; Sentinel Cluster',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
-        title: 'Deploy Redis&reg; Sentinel Cluster through the Linode Marketplace',
+        title:
+          'Deploy Redis&reg; Sentinel Cluster through the Linode Marketplace',
       },
     ],
     summary:
