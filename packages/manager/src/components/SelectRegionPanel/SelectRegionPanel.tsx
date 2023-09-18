@@ -79,17 +79,19 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     types
   );
 
-  const showUnqiuePricingNotice =
+  const showUniquePricingNotice =
     flags.dcSpecificPricing &&
     !showClonePriceWarning && // Don't show both notices at the same time.
     selectedRegionHasUniquePricing;
 
   // If this component is used in the context of Linodes,
   // use Linode types from the API to determine if the region
-  // has specific pricing. Otherwise, check aginst our local pricing map.
-  const showRegionPriceNotice = isLinode
-    ? showUnqiuePricingNotice
-    : selectedID && priceIncreaseMap[selectedID];
+  // has specific pricing. Otherwise, check against our local pricing map.
+  const showRegionPriceNotice = flags.dcSpecificPricing
+    ? isLinode
+      ? showUniquePricingNotice
+      : selectedID && priceIncreaseMap[selectedID]
+    : false;
 
   if (props.regions.length === 0) {
     return null;

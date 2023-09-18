@@ -281,13 +281,13 @@ describe('doesRegionHaveUniquePricing', () => {
     });
     expect(doesRegionHaveUniquePricing('us-east', types)).toBe(false);
   });
-  it('should return false when no linode type has unique pricing for the specificed region', () => {
+  it('should return false when no linode type has unique pricing for the specified region', () => {
     const types = linodeTypeFactory.buildList(1, {
       region_prices: [{ id: 'id-cgk' }],
     });
     expect(doesRegionHaveUniquePricing('us-east', types)).toBe(false);
   });
-  it('should return true when any linode type has unique pricing for the specificed region', () => {
+  it('should return true when any linode type has unique pricing for the specified region', () => {
     const types = linodeTypeFactory.buildList(1, {
       region_prices: [{ id: 'id-cgk' }],
     });

@@ -135,7 +135,7 @@ export const getDynamicDCNetworkTransferData = ({
  * given any number of Linode Types
  * @param regionId the region to check for specific pricing
  * @param types an array of Linode Types
- * @returns true if there is at least one linode type with a DC sprcific price for the provided region
+ * @returns true if there is at least one linode type with a DC specific price for the provided region
  */
 export const doesRegionHaveUniquePricing = (
   regionId: Region['id'] | undefined,
