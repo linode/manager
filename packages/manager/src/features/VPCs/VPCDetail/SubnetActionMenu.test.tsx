@@ -71,4 +71,14 @@ describe('SubnetActionMenu', () => {
     fireEvent.click(editButton);
     expect(props.handleEdit).toHaveBeenCalled();
   });
+
+  it('should allow the Assign Linodes button to be clicked', () => {
+    const screen = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
+    fireEvent.click(actionMenu);
+
+    const assignButton = screen.getByText('Assign Linodes');
+    fireEvent.click(assignButton);
+    expect(props.handleAssignLinodes).toHaveBeenCalled();
+  });
 });
