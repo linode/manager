@@ -59,10 +59,7 @@ export const LoadBalancerServiceTargets = () => {
   };
 
   const handleDeleteServiceTarget = (serviceTarget: ServiceTarget) => {
-    if (serviceTarget) {
-      setIsDeleteDialogOpen(true);
-    }
-
+    setIsDeleteDialogOpen(true);
     setSelectedServiceTarget(serviceTarget);
   };
 

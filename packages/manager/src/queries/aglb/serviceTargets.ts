@@ -36,7 +36,7 @@ export const useLoadBalancerServiceTargetDeleteMutation = (
       onSuccess() {
         queryClient.invalidateQueries([
           QUERY_KEY,
-          'loadbalancer',
+          'aglb',
           loadbalancerId,
           'service-targets',
         ]);
