@@ -825,7 +825,8 @@ export const oneClickApps: OCA[] = [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-clients-cluster',
-        title: 'Deploy HashiCorp Nomad Clients Cluster through the Linode Marketplace',
+        title:
+          'Deploy HashiCorp Nomad Clients Cluster through the Linode Marketplace',
       },
     ],
     summary: 'Flexible scheduling and orchestration for diverse workloads.',
@@ -1921,14 +1922,14 @@ export const oneClickApps: OCA[] = [
       end: '722b20',
       start: '222222',
     },
-    description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
+    description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.<br/><br/>*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies.`,
     logo_url: 'redis.svg',
-    name: 'Redis',
+    name: 'Marketplace App for Redis&reg;',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
-        title: 'Deploy Redis through the Linode Marketplace',
+        title: 'Deploy Redis&reg; through the Linode Marketplace',
       },
     ],
     summary:
@@ -1943,14 +1944,15 @@ export const oneClickApps: OCA[] = [
       end: '722b20',
       start: '222222',
     },
-    description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
+    description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.<br/><br/>*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies.`,
     logo_url: 'redissentinelmarketplaceocc.svg',
-    name: 'Redis Sentinel Cluster',
+    name: 'Marketplace App for Redis&reg; Sentinel Cluster',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
-        title: 'Deploy Redis Sentinel Cluster through the Linode Marketplace',
+        title:
+          'Deploy Redis&reg; Sentinel Cluster through the Linode Marketplace',
       },
     ],
     summary:

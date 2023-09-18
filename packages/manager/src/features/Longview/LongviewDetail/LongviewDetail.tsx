@@ -1,6 +1,4 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, matchPath } from 'react-router-dom';
@@ -13,7 +11,6 @@ import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
@@ -33,17 +30,12 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useProfile } from 'src/queries/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
-import Apache from './DetailTabs/Apache';
-import MySQLLanding from './DetailTabs/MySQL';
-import NGINX from './DetailTabs/NGINX';
-import NetworkLanding from './DetailTabs/Network';
-import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  tabList: {
-    marginBottom: `calc(${theme.spacing(3)} + 6px)`,
-  },
-}));
+import { Apache } from './DetailTabs/Apache/Apache';
+import { MySQLLanding } from './DetailTabs/MySQL/MySQLLanding';
+import { NGINX } from './DetailTabs/NGINX/NGINX';
+import { NetworkLanding } from './DetailTabs/Network/NetworkLanding';
+import { ProcessesLanding } from './DetailTabs/Processes/ProcessesLanding';
+import { StyledTabs } from './LongviewDetail.styles';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
@@ -58,14 +50,14 @@ const Overview = React.lazy(
   () => import('./DetailTabs/LongviewDetailOverview')
 );
 const Installation = React.lazy(() => import('./DetailTabs/Installation'));
-const Disks = React.lazy(() => import('./DetailTabs/Disks'));
+const Disks = React.lazy(() => import('./DetailTabs/Disks/Disks'));
 
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
   LVDataProps &
   DispatchProps;
 
-export const LongviewDetail: React.FC<CombinedProps> = (props) => {
+export const LongviewDetail = (props: CombinedProps) => {
   const {
     client,
     longviewClientData,
@@ -77,8 +69,6 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
   const { data: profile } = useProfile();
 
   const timezone = profile?.timezone || 'US/Eastern';
-
-  const classes = useStyles();
 
   React.useEffect(() => {
     /** request clients if they haven't already been requested */
@@ -227,12 +217,11 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
           variant="warning"
         />
       ))}
-      <Tabs
+      <StyledTabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
-        className={classes.tabList}
         onChange={navToURL}
       >
         <TabLinkList tabs={tabs} />
@@ -329,7 +318,7 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-      </Tabs>
+      </StyledTabs>
     </React.Fragment>
   );
 };

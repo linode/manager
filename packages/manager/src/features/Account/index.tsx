@@ -10,8 +10,12 @@ const AccountLanding = React.lazy(
 const InvoiceDetail = React.lazy(
   () => import('src/features/Billing/InvoiceDetail')
 );
-const EntityTransfersCreate = React.lazy(
-  () => import('src/features/EntityTransfers/EntityTransfersCreate')
+const EntityTransfersCreate = React.lazy(() =>
+  import(
+    'src/features/EntityTransfers/EntityTransfersCreate/EntityTransfersCreate'
+  ).then((module) => ({
+    default: module.EntityTransfersCreate,
+  }))
 );
 const UserDetail = React.lazy(() => import('src/features/Users/UserDetail'));
 

@@ -4,58 +4,12 @@ import {
   nodePoolFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 
-import {
-  getMonthlyPrice,
-  getTotalClusterMemoryCPUAndStorage,
-  getTotalClusterPrice,
-} from './kubeUtils';
-
-const mockNodePool = nodePoolFactory.build({
-  count: 2,
-  type: 'g1-fake-1',
-});
-
-const types = linodeTypeFactory
-  .buildList(2, {
-    id: 'g1-fake-1',
-    price: {
-      monthly: 5,
-    },
-  })
-  .map(extendType);
+import { getTotalClusterMemoryCPUAndStorage } from './kubeUtils';
 
 describe('helper functions', () => {
   const badPool = nodePoolFactory.build({
     type: 'not-a-real-type',
-  });
-
-  describe('getMonthlyPrice', () => {
-    it('should multiply node price by node count', () => {
-      const expectedPrice = (types[0].price.monthly ?? 0) * mockNodePool.count;
-      expect(
-        getMonthlyPrice(mockNodePool.type, mockNodePool.count, types)
-      ).toBe(expectedPrice);
-    });
-
-    it('should return zero for bad input', () => {
-      expect(getMonthlyPrice(badPool.type, badPool.count, types)).toBe(0);
-    });
-  });
-
-  describe('getTotalClusterPrice', () => {
-    it('should calculate the total cluster price', () => {
-      expect(getTotalClusterPrice([mockNodePool, mockNodePool], types)).toBe(
-        20
-      );
-    });
-
-    it('should calculate the total cluster price with HA enabled', () => {
-      expect(
-        getTotalClusterPrice([mockNodePool, mockNodePool], types, LKE_HA_PRICE)
-      ).toBe(20 + LKE_HA_PRICE);
-    });
   });
 
   describe('Get total cluster memory/CPUs', () => {

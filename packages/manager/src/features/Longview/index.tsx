@@ -6,7 +6,9 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const LongviewLanding = React.lazy(() => import('./LongviewLanding'));
-const LongviewDetail = React.lazy(() => import('./LongviewDetail'));
+const LongviewDetail = React.lazy(
+  () => import('./LongviewDetail/LongviewDetail')
+);
 
 type Props = RouteComponentProps<{}>;
 
