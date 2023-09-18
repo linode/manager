@@ -13,6 +13,7 @@ const props: NodePoolPanelProps = {
   isPlanPanelDisabled: () => false,
   isSelectedRegionEligibleForPlan: () => false,
   regionsData: [],
+  selectedRegionId: 'us-east',
   types: extendedTypes,
   typesLoading: false,
 };

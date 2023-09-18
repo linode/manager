@@ -49,12 +49,15 @@ export const CollapsibleRow = (props: Props) => {
 
 const StyledOuterTableRow = styled(TableRow, {
   label: 'StyledOuterTableRow',
-})(() => ({
+})(({ theme }) => ({
   '& > *': { borderBottom: 'unset' },
   '& th': {
     '&:first-of-type': {
       paddingLeft: 0,
     },
+  },
+  '& th, td': {
+    borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
   },
 }));
 

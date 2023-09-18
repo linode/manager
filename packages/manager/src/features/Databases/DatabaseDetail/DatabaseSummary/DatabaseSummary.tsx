@@ -4,8 +4,8 @@ import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 
 import AccessControls from '../AccessControls';
 import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
@@ -38,10 +38,10 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
   return (
     <Paper>
       <Grid container spacing={2}>
-        <Grid sm={4} xs={12}>
+        <Grid md={4} sm={12}>
           <ClusterConfiguration database={database} />
         </Grid>
-        <Grid sm={8} xs={12}>
+        <Grid md={8} sm={12}>
           <ConnectionDetails database={database} />
         </Grid>
       </Grid>

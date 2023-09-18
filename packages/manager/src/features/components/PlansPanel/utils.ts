@@ -4,7 +4,7 @@ import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { ExtendedType } from 'src/utilities/extendType';
 
-import { PlanSelectionType } from './PlansPanel';
+import { PlanSelectionType } from './types';
 
 import type { LinodeTypeClass } from '@linode/api-v4';
 

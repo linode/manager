@@ -1,9 +1,7 @@
-import { Theme } from '@mui/material/styles';
-import { WithTheme, makeStyles, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { compose } from 'recompose';
 
-import { Grid } from 'src/components/Grid';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import {
   convertBytesToTarget,
@@ -16,20 +14,7 @@ import {
   statMax,
   sumRelatedProcessesAcrossAllUsers,
 } from '../../shared/utilities';
-
-export const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: `${theme.spacing(3.25)} ${theme.spacing(3.25)} ${theme.spacing(
-      5.5
-    )}`,
-  },
-  smallGraph: {
-    marginTop: `calc(${theme.spacing(6)} + 3px)`,
-    [theme.breakpoints.down('md')]: {
-      marginTop: theme.spacing(3.25),
-    },
-  },
-}));
+import { StyledItemGrid, StyledSmallGraphGrid } from './CommonStyles.styles';
 
 interface Props {
   data: LongviewProcesses;
@@ -41,11 +26,9 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithTheme;
-
-export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-  const { data, end, error, isToday, loading, start, theme, timezone } = props;
+export const ProcessGraphs = React.memo((props: Props) => {
+  const { data, end, error, isToday, loading, start, timezone } = props;
+  const theme = useTheme();
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
   const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
@@ -80,9 +63,9 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Grid item xs={12}>
-        <Grid container direction="row">
-          <Grid className={classes.smallGraph} item sm={6} xs={12}>
+      <StyledItemGrid xs={12}>
+        <Grid container direction="row" spacing={2}>
+          <StyledSmallGraphGrid sm={6} xs={12}>
             <LongviewLineGraph
               data={[
                 {
@@ -98,8 +81,8 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               unit="%"
               {...graphProps}
             />
-          </Grid>
-          <Grid className={classes.smallGraph} item sm={6} xs={12}>
+          </StyledSmallGraphGrid>
+          <StyledSmallGraphGrid sm={6} xs={12}>
             <LongviewLineGraph
               data={[
                 {
@@ -118,12 +101,12 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               title="RAM"
               {...graphProps}
             />
-          </Grid>
+          </StyledSmallGraphGrid>
         </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <Grid container direction="row">
-          <Grid className={classes.smallGraph} item sm={6} xs={12}>
+      </StyledItemGrid>
+      <StyledItemGrid xs={12}>
+        <Grid container direction="row" spacing={2}>
+          <StyledSmallGraphGrid sm={6} xs={12}>
             <LongviewLineGraph
               data={[
                 {
@@ -149,8 +132,8 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               unit={`/s`}
               {...graphProps}
             />
-          </Grid>
-          <Grid className={classes.smallGraph} item sm={6} xs={12}>
+          </StyledSmallGraphGrid>
+          <StyledSmallGraphGrid sm={6} xs={12}>
             <LongviewLineGraph
               data={[
                 {
@@ -165,15 +148,9 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               title="Process Count"
               {...graphProps}
             />
-          </Grid>
+          </StyledSmallGraphGrid>
         </Grid>
-      </Grid>
+      </StyledItemGrid>
     </>
   );
-};
-
-const enhanced = compose<CombinedProps, Props>(
-  withTheme,
-  React.memo
-)(ProcessGraphs);
-export default enhanced;
+});

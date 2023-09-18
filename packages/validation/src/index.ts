@@ -6,6 +6,7 @@ export * from './firewalls.schema';
 export * from './images.schema';
 export * from './kubernetes.schema';
 export * from './linodes.schema';
+export * from './loadbalancers.schema';
 export * from './longview.schema';
 export * from './managed.schema';
 export * from './networking.schema';

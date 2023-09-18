@@ -23,6 +23,7 @@ import {
   StyledSummaryBox,
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
+import { VPCSubnetsTable } from './VPCSubnetsTable';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -91,7 +92,7 @@ const VPCDetail = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment="VPC" />
+      <DocumentTitleSegment segment={vpc.label} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -104,7 +105,7 @@ const VPCDetail = () => {
           pathname: `/vpcs/${vpc.label}`,
         }}
         docsLabel="Docs"
-        docsLink="#" // TODO: VPC - Add docs link
+        docsLink="#" // @TODO VPC: Add docs link
       />
       <EntityHeader>
         <Box>
@@ -173,7 +174,17 @@ const VPCDetail = () => {
         open={editVPCDrawerOpen}
         vpc={vpc}
       />
-      <Box paddingTop={2}>Subnets Placeholder</Box>
+      <Box
+        sx={(theme) => ({
+          [theme.breakpoints.up('lg')]: {
+            paddingLeft: 0,
+          },
+        })}
+        padding={`${theme.spacing(2)} ${theme.spacing()}`}
+      >
+        <Typography variant="h2">Subnets ({vpc.subnets.length})</Typography>
+      </Box>
+      <VPCSubnetsTable vpcId={vpc.id} />
     </>
   );
 };

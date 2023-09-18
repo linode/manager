@@ -1,11 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { createLinode } from '@linode/api-v4';
 import { Linode } from '@linode/api-v4/types';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
-import {
-  createLinodeRequestFactory,
-  linodeFactory,
-} from '@src/factories/linodes';
+import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import {
   containsVisible,
@@ -16,11 +12,9 @@ import {
 import { ui } from 'support/ui';
 import { routes } from 'support/ui/constants';
 import { apiMatcher } from 'support/util/intercepts';
-import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { authenticate } from 'support/api/authentication';
 import { mockGetLinodes } from 'support/intercepts/linodes';
-import { cleanUp } from 'support/util/cleanup';
 
 const mockLinodes = new Array(5).fill(null).map(
   (_item: null, index: number): Linode => {
@@ -400,45 +394,5 @@ describe('linode landing checks', () => {
     cy.findByText('Region:').should('not.exist');
     cy.findByText('Linode ID:').should('not.exist');
     cy.findByText('Created:').should('not.exist');
-  });
-});
-
-describe('linode landing actions', () => {
-  before(() => {
-    cleanUp(['linodes', 'lke-clusters']);
-  });
-
-  it('deleting multiple linodes with action menu', () => {
-    const mockAccountSettings = accountSettingsFactory.build({
-      managed: false,
-    });
-
-    const createTwoLinodes = async (): Promise<[Linode, Linode]> => {
-      return Promise.all([
-        createLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
-        ),
-        createLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
-        ),
-      ]);
-    };
-
-    cy.intercept('GET', apiMatcher('account/settings'), (req) => {
-      req.reply(mockAccountSettings);
-    }).as('getAccountSettings');
-
-    cy.intercept('DELETE', apiMatcher('linode/instances/*')).as('deleteLinode');
-    cy.defer(createTwoLinodes()).then(([linodeA, linodeB]) => {
-      cy.visitWithLogin('/linodes', { preferenceOverrides });
-      cy.wait('@getAccountSettings');
-      getVisible('[data-qa-header="Linodes"]');
-      if (!cy.get('[data-qa-sort-label="asc"]')) {
-        getClick('[aria-label="Sort by label"]');
-      }
-      deleteLinodeFromActionMenu(linodeA.label);
-      deleteLinodeFromActionMenu(linodeB.label);
-      cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.exist');
-    });
   });
 });

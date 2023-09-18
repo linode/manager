@@ -55,7 +55,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
           label={`Yes, enable HA control plane. ${
             highAvailabilityPrice
               ? `(${displayPrice(highAvailabilityPrice)}/month)`
-              : '(Select a Region to view price information.)'
+              : '(Select a region to view price information.)'
           }`}
           control={<Radio data-testid="ha-radio-button-yes" />}
           name="yes"

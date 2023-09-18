@@ -3,7 +3,8 @@ import * as React from 'react';
 import { longviewPortFactory } from 'src/factories/longviewService';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import ActiveConnections, { TableProps } from './ActiveConnections';
+import { ActiveConnections } from './ActiveConnections';
+import type { TableProps } from './ActiveConnections';
 
 const mockConnections = longviewPortFactory.buildList(10);
 

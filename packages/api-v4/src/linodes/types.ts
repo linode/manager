@@ -1,4 +1,4 @@
-import { Region } from 'src/regions';
+import type { Region } from '../regions';
 import { IPAddress, IPRange } from '../networking/types';
 import { SSHKey } from '../profile/types';
 
@@ -290,7 +290,7 @@ export interface PriceObject {
   hourly: number | null;
 }
 
-interface RegionPriceObject extends PriceObject {
+export interface RegionPriceObject extends PriceObject {
   id: Region['id'];
 }
 

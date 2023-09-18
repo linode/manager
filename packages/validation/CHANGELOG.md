@@ -1,3 +1,10 @@
+## [2023-09-18] - v0.31.0
+
+
+### Added:
+
+- Add create certificate schema for AGLB ([#9616](https://github.com/linode/manager/pull/9616))
+
 ## [2023-09-07] - v0.30.1
 
 

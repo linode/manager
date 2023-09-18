@@ -11,7 +11,7 @@ import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import ImageSelect from 'src/components/ImageSelect';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';

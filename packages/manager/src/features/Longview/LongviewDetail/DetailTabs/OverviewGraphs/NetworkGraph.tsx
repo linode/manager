@@ -1,7 +1,6 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import {
@@ -14,9 +13,7 @@ import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
 
-export type CombinedProps = GraphProps & WithTheme;
-
-export const NetworkGraph: React.FC<CombinedProps> = (props) => {
+export const NetworkGraph = React.memo((props: GraphProps) => {
   const {
     clientAPIKey,
     end,
@@ -24,9 +21,10 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
     lastUpdated,
     lastUpdatedError,
     start,
-    theme,
     timezone,
   } = props;
+
+  const theme = useTheme();
 
   const { data, error, loading, request } = useGraphs(
     ['network'],
@@ -82,8 +80,4 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
       unit={'/s'}
     />
   );
-};
-
-const enhanced = compose<CombinedProps, GraphProps>(React.memo, withTheme);
-
-export default enhanced(NetworkGraph);
+});
