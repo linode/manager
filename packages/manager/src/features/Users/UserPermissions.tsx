@@ -223,11 +223,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   getTabInformation = (grants: Grants) =>
     this.entityPerms.reduce(
       (acc: TabInfo, entity: GrantType) => {
-        const grantsForEntity = grants[entity];
-        if (grantsForEntity.length > 25) {
+        const grantsForEntity = grants?.[entity];
+        if (grantsForEntity?.length > 25) {
           return { showTabs: true, tabs: [...acc.tabs, entity] };
         }
-        if (grantsForEntity.length > 0) {
+        if (grantsForEntity?.length > 0) {
           return { ...acc, tabs: [...acc.tabs, entity] };
         }
         return acc;
