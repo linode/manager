@@ -4,12 +4,28 @@ import { Route, Switch } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 const VPCCreate = React.lazy(() => import('./VPCCreate/VPCCreate'));
 const VPCDetail = React.lazy(() => import('./VPCDetail/VPCDetail'));
 const VPCLanding = React.lazy(() => import('./VPCLanding/VPCLanding'));
 
 const VPC = () => {
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
+  if (!showVPCs) {
+    return null;
+  }
+
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="VPC" />

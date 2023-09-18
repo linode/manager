@@ -8,6 +8,9 @@ const linodeData = {
   ...linodeRequest,
   authorized_users: ['Linny', 'Gritty'],
   backup_id: undefined,
+  metadata: {
+    user_data: 'cmVrbmpnYmloZXVma2xkbQpqZXZia2Y=',
+  },
   stackscript_data: {
     gh_username: 'linode',
   },
@@ -15,16 +18,18 @@ const linodeData = {
 };
 
 const linodeDataForCLI = `
-  --label ${linodeRequest.label} \\
-  --root_pass ${linodeRequest.root_pass} \\
-  --image ${linodeRequest.image} \\
-  --type ${linodeRequest.type} \\
-  --region ${linodeRequest.region} \\
+  linode-cli linodes create \\
   --booted ${linodeRequest.booted} \\
-  --stackscript_id 10079 \\
-  --stackscript_data '{"gh_username": "linode"}' \\
+  --image ${linodeRequest.image} \\
+  --label ${linodeRequest.label} \\
+  --region ${linodeRequest.region} \\
+  --root_pass ${linodeRequest.root_pass} \\
+  --type ${linodeRequest.type} \\
   --authorized_users Linny \\
-  --authorized_users Gritty
+  --authorized_users Gritty \\
+  --metadata.user_data="cmVrbmpnYmloZXVma2xkbQpqZXZia2Y=" \\
+  --stackscript_data '{"gh_username": "linode"}' \\
+  --stackscript_id 10079
 `.trim();
 
 const generatedCommand = generateCLICommand(linodeData);
@@ -36,7 +41,7 @@ describe('generateCLICommand', () => {
     ).toBeTruthy();
   });
 
-  it.skip('should return a linode-cli command with the data provided formatted as arguments', () => {
+  it('should return a linode-cli command with the data provided formatted as arguments', () => {
     expect(generatedCommand).toMatch(linodeDataForCLI);
   });
 

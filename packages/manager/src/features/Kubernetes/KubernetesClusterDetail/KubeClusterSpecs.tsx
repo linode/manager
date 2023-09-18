@@ -13,11 +13,9 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
+import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 
-import {
-  getTotalClusterMemoryCPUAndStorage,
-  getTotalClusterPrice,
-} from '../kubeUtils';
+import { getTotalClusterMemoryCPUAndStorage } from '../kubeUtils';
 
 interface Props {
   cluster: KubernetesCluster;
@@ -71,22 +69,26 @@ export const KubeClusterSpecs = (props: Props) => {
 
   const displayRegion = region?.label ?? cluster.region;
 
+  const highAvailabilityPrice = cluster.control_plane.high_availability
+    ? parseFloat(
+        getDCSpecificPrice({
+          basePrice: LKE_HA_PRICE,
+          flags,
+          regionId: region?.id,
+        })
+      )
+    : undefined;
+
   const kubeSpecsLeft = [
     `Version ${cluster.k8s_version}`,
     displayRegion,
-    `$${getTotalClusterPrice(
-      pools ?? [],
-      types ?? [],
-      cluster.control_plane.high_availability
-        ? parseFloat(
-            getDCSpecificPrice({
-              basePrice: LKE_HA_PRICE,
-              flags,
-              regionId: region?.id,
-            })
-          )
-        : undefined
-    ).toFixed(2)}/month`,
+    `$${getTotalClusterPrice({
+      flags,
+      highAvailabilityPrice,
+      pools: pools ?? [],
+      region: region?.id,
+      types: types ?? [],
+    }).toFixed(2)}/month`,
   ];
 
   const kubeSpecsRight = [

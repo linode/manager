@@ -1,8 +1,7 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Grid } from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -17,21 +16,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { LongviewPort } from 'src/features/Longview/request.types';
 
-import ConnectionRow from './ConnectionRow';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    [theme.breakpoints.down('md')]: {
-      marginTop: theme.spacing(3),
-    },
-  },
-  title: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-}));
+import { ConnectionRow } from './ConnectionRow';
 
 export interface TableProps {
   connections: LongviewPort[];
@@ -39,13 +24,21 @@ export interface TableProps {
   connectionsLoading: boolean;
 }
 
-export const ActiveConnections: React.FC<TableProps> = (props) => {
+export const ActiveConnections = (props: TableProps) => {
   const { connections, connectionsError, connectionsLoading } = props;
-  const classes = useStyles();
+  const theme = useTheme();
 
   return (
-    <Grid className={classes.container} item md={4} xs={12}>
-      <Typography className={classes.title} variant="h2">
+    <Grid md={4} xs={12}>
+      <Typography
+        sx={{
+          [theme.breakpoints.down('lg')]: {
+            marginLeft: theme.spacing(),
+            marginRight: theme.spacing(),
+          },
+        }}
+        variant="h2"
+      >
         Active Connections
       </Typography>
       <ConnectionsTable
@@ -56,7 +49,8 @@ export const ActiveConnections: React.FC<TableProps> = (props) => {
     </Grid>
   );
 };
-export const ConnectionsTable: React.FC<TableProps> = (props) => {
+
+export const ConnectionsTable = (props: TableProps) => {
   const { connections, connectionsError, connectionsLoading } = props;
 
   return (
@@ -155,5 +149,3 @@ const renderLoadingErrorData = (
     />
   ));
 };
-
-export default ActiveConnections;

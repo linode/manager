@@ -519,8 +519,8 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
                   marginTop: theme.spacing(2),
                 }}
               >
-                You have no other linodes in this Linode&rsquo;s datacenter with
-                which to transfer IPs.
+                You have no other linodes in this Linode&rsquo;s data center
+                with which to transfer IPs.
               </Typography>
             ) : (
               <Grid container spacing={2} sx={{ width: '100%' }}>

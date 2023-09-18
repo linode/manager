@@ -1,11 +1,12 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { styled, useTheme, Theme } from '@mui/material/styles';
+import { Theme, styled, useTheme } from '@mui/material/styles';
 import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { Box } from 'src/components/Box';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
@@ -24,7 +25,6 @@ import {
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 interface Props {
   linodeCreated: string;
@@ -154,7 +154,7 @@ export const TransferHistory = React.memo((props: Props) => {
       <LineGraph
         data={[
           {
-            backgroundColor: '#5ad865',
+            backgroundColor: '#1CB35C',
             borderColor: 'transparent',
             data: combinedData,
             label: 'Public Outbound Traffic',
@@ -179,12 +179,12 @@ export const TransferHistory = React.memo((props: Props) => {
     <div aria-label={graphAriaLabel} role="graphics-document" tabIndex={0}>
       <Box
         alignItems="center"
+        borderBottom={`1px solid ${theme.color.grey6}`}
         display="flex"
         flexDirection="row"
         justifyContent="space-between"
         marginBottom="8px"
         paddingBottom="6px"
-        borderBottom={`1px solid ${theme.color.grey6}`}
       >
         <Typography>
           <strong>Network Transfer History ({unit}/s)</strong>
@@ -229,8 +229,8 @@ export const TransferHistory = React.memo((props: Props) => {
                 ...(monthOffset === minMonthOffset
                   ? sxArrowIconDisabled(theme)
                   : {}),
-                transform: 'rotate(180deg)',
                 fontSize: '1rem',
+                transform: 'rotate(180deg)',
               }}
             />
           </StyledButton>

@@ -16,43 +16,45 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      text: 'Overview of Global Load Balancer',
+      text: 'Overview',
       to:
         'https://www.linode.com/docs/products/networking/global-loadbalancer/',
     },
     {
-      text: 'Getting Started with Global Load Balancer',
+      text: 'Getting Started',
       to:
         'https://www.linode.com/docs/products/networking/global-loadbalancer/get-started/',
     },
   ],
   moreInfo: {
-    text: 'View additional Global Load Balancer Guides',
+    text: 'Guides',
     to:
       'https://www.linode.com/docs/products/networking/global-loadbalancer/guides/',
   },
   title: 'Getting Started Guides',
 };
-// TODO: AGLB - This is placeholder for video resources.
-// Will be updated with links and text once we get them from docs team.
-export const youtubeLinkData: ResourcesLinkSection = {
+// TODO: AGLB - These are not finalized yet; changes may be expected.
+// Links may currently show 404 as work is in progress from the docs team side.
+
+export const resourcesLinks: ResourcesLinkSection = {
   links: [
     {
-      external: true,
-      text: '',
-      to: '',
+      text: 'Resources',
+      to:
+        'https://www.linode.com/docs/products/networking/global-loadbalancer/resources/',
     },
     {
-      external: true,
-      text: '',
-      to: '',
+      text: 'Developers',
+      to:
+        'https://www.linode.com/docs/products/networking/global-loadbalancer/developers/',
     },
   ],
   moreInfo: {
-    text: '',
-    to: '',
+    text: 'Guides',
+    to:
+      'https://www.linode.com/docs/products/networking/global-loadbalancer/guides/',
   },
-  title: 'Video Playlist',
+  title: 'Resources',
 };
 
 export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {

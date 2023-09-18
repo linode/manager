@@ -1,4 +1,4 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -11,9 +11,7 @@ import {
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
 
-export type CombinedProps = GraphProps & WithTheme;
-
-export const CPUGraph: React.FC<CombinedProps> = (props) => {
+export const CPUGraph = (props: GraphProps) => {
   const {
     clientAPIKey,
     end,
@@ -21,9 +19,10 @@ export const CPUGraph: React.FC<CombinedProps> = (props) => {
     lastUpdated,
     lastUpdatedError,
     start,
-    theme,
     timezone,
   } = props;
+
+  const theme = useTheme();
 
   const { data, error, loading, request } = useGraphs(
     ['cpu'],
@@ -81,5 +80,3 @@ export const CPUGraph: React.FC<CombinedProps> = (props) => {
     />
   );
 };
-
-export default withTheme(CPUGraph);

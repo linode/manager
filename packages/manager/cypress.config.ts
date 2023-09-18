@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { defineConfig } from 'cypress';
 import { setupPlugins } from './cypress/support/plugins';
+import { configureFileWatching } from './cypress/support/plugins/configure-file-watching';
 import { configureTestSuite } from './cypress/support/plugins/configure-test-suite';
 import { disableGoogleSafeBrowsing } from './cypress/support/plugins/disable-google-safe-browsing';
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
@@ -8,7 +9,7 @@ import { loadEnvironmentConfig } from './cypress/support/plugins/load-env-config
 import { nodeVersionCheck } from './cypress/support/plugins/node-version-check';
 import { regionOverrideCheck } from './cypress/support/plugins/region-override-check';
 import { vitePreprocess } from './cypress/support/plugins/vite-preprocessor';
-import { authenticateApi } from './cypress/support/plugins/authenticate-api';
+import { configureApi } from './cypress/support/plugins/configure-api';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 import { splitCypressRun } from './cypress/support/plugins/split-run';
 import { enableJunitReport } from './cypress/support/plugins/junit-report';
@@ -51,7 +52,8 @@ export default defineConfig({
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         nodeVersionCheck,
-        authenticateApi,
+        configureApi,
+        configureFileWatching,
         configureTestSuite,
         vitePreprocess,
         disableGoogleSafeBrowsing,

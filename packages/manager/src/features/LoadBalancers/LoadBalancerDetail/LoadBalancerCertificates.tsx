@@ -24,6 +24,9 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerCertificatesQuery } from 'src/queries/aglb/certificates';
 
+import { CreateCertificateDrawer } from './Certificates/CreateCertificateDrawer';
+import { DeleteCertificateDialog } from './Certificates/DeleteCertificateDialog';
+
 import type { Certificate, Filter } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-certificates';
@@ -37,6 +40,13 @@ type CertificateTypeFilter = 'all' | Certificate['type'];
 
 export const LoadBalancerCertificates = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
+
+  const id = Number(loadbalancerId);
+
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
+
+  const [selectedCertificateId, setSelectedCertificateId] = useState<number>();
 
   const [type, setType] = useState<CertificateTypeFilter>('all');
   const [query, setQuery] = useState<string>();
@@ -67,13 +77,18 @@ export const LoadBalancerCertificates = () => {
   }
 
   const { data, error, isLoading } = useLoadBalancerCertificatesQuery(
-    Number(loadbalancerId),
+    id,
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
     filter
   );
+
+  const onDeleteCertificate = (certificate: Certificate) => {
+    setIsDeleteDrawerOpen(true);
+    setSelectedCertificateId(certificate.id);
+  };
 
   if (isLoading) {
     return <CircleProgress />;
@@ -85,6 +100,10 @@ export const LoadBalancerCertificates = () => {
     { label: 'Service Target Certificates', value: 'ca' },
   ];
 
+  const selectedCertificate = data?.data.find(
+    (cert) => cert.id === selectedCertificateId
+  );
+
   return (
     <>
       <Stack
@@ -92,8 +111,8 @@ export const LoadBalancerCertificates = () => {
         direction="row"
         flexWrap="wrap"
         gap={2}
-        mb={2}
-        mt={1.5}
+        mb={1}
+        mt={1}
       >
         <EnhancedSelect
           styles={{
@@ -134,7 +153,12 @@ export const LoadBalancerCertificates = () => {
           value={query}
         />
         <Box flexGrow={1} />
-        <Button buttonType="primary">Upload Certificate</Button>
+        <Button
+          buttonType="primary"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        >
+          Upload Certificate
+        </Button>
       </Stack>
       <Table>
         <TableHead>
@@ -161,17 +185,22 @@ export const LoadBalancerCertificates = () => {
         <TableBody>
           {error && <TableRowError colSpan={3} message={error?.[0].reason} />}
           {data?.results === 0 && <TableRowEmpty colSpan={3} />}
-          {data?.data.map(({ label, type }) => (
-            <TableRow key={`${label}-${type}`}>
-              <TableCell>{label}</TableCell>
-              <TableCell>{CERTIFICATE_TYPE_LABEL_MAP[type]}</TableCell>
+          {data?.data.map((certificate) => (
+            <TableRow key={`${certificate.label}-${certificate.type}`}>
+              <TableCell>{certificate.label}</TableCell>
+              <TableCell>
+                {CERTIFICATE_TYPE_LABEL_MAP[certificate.type]}
+              </TableCell>
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
                     { onClick: () => null, title: 'Edit' },
-                    { onClick: () => null, title: 'Delete' },
+                    {
+                      onClick: () => onDeleteCertificate(certificate),
+                      title: 'Delete',
+                    },
                   ]}
-                  ariaLabel={`Action Menu for certificate ${label}`}
+                  ariaLabel={`Action Menu for certificate ${certificate.label}`}
                 />
               </TableCell>
             </TableRow>
@@ -184,6 +213,17 @@ export const LoadBalancerCertificates = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <CreateCertificateDrawer
+        loadbalancerId={id}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
+      />
+      <DeleteCertificateDialog
+        certificate={selectedCertificate}
+        loadbalancerId={id}
+        onClose={() => setIsDeleteDrawerOpen(false)}
+        open={isDeleteDrawerOpen}
       />
     </>
   );

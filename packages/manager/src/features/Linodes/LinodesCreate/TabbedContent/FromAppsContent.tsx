@@ -9,7 +9,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect';
-import ImageSelect from 'src/components/ImageSelect';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
 import { APP_ROOT } from 'src/constants';

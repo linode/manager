@@ -75,7 +75,7 @@ interface ResourcesSectionProps {
   /**
    * The data for the youtube links section
    */
-  youtubeLinkData: ResourcesLinkSection;
+  youtubeLinkData?: ResourcesLinkSection;
 }
 
 const GuideLinks = (
@@ -152,9 +152,10 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
               </ResourcesMoreLink>
             )}
             icon={<YoutubeIcon />}
-            title={youtubeLinkData.title}
+            title={youtubeLinkData?.title || ''}
           >
-            {YoutubeLinks(youtubeLinkData, linkAnalyticsEvent)}
+            {youtubeLinkData &&
+              YoutubeLinks(youtubeLinkData, linkAnalyticsEvent)}
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }

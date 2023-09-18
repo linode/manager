@@ -14,3 +14,23 @@ export const regionFactory = Factory.Sync.makeFactory<Region>({
   resolvers: resolverFactory.build(),
   status: 'ok',
 });
+
+export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
+  {
+    capabilities: [
+      'Linodes',
+      'NodeBalancers',
+      'Block Storage',
+      'Object Storage',
+      'Kubernetes',
+      'Cloud Firewall',
+      'Vlans',
+      'Premium Plans',
+    ],
+    country: 'id',
+    id: 'id-cgk',
+    label: 'Jakarta, ID',
+    resolvers: resolverFactory.build(),
+    status: 'ok',
+  }
+);

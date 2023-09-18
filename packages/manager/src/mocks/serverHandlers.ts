@@ -272,8 +272,8 @@ const databases = [
     return res(
       ctx.json({
         ...databaseFactory.build({
-          label: payload?.label ?? 'Database',
           engine: req.params.engine,
+          label: payload?.label ?? 'Database',
         }),
       })
     );
@@ -437,6 +437,12 @@ const vpc = [
       )
     );
   }),
+  rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
+  }),
+  rest.delete('*/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
@@ -450,6 +456,10 @@ const vpc = [
   rest.post('*/vpcs', (req, res, ctx) => {
     const vpc = vpcFactory.build({ ...(req.body as any) });
     return res(ctx.json(vpc));
+  }),
+  rest.post('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    const subnet = subnetFactory.build({ ...(req.body as any) });
+    return res(ctx.json(subnet));
   }),
 ];
 
@@ -640,8 +650,8 @@ export const handlers = [
     return res(
       ctx.json(
         linodeFactory.build({
-          id,
           backups: { enabled: false },
+          id,
           label: 'DC-Specific Pricing Linode',
           region: 'id-cgk',
         })
@@ -712,7 +722,10 @@ export const handlers = [
   rest.put('*/lke/clusters/:clusterId', async (req, res, ctx) => {
     const id = Number(req.params.clusterId);
     const k8s_version = req.params.k8s_version;
-    const cluster = kubernetesAPIResponse.build({ id, k8s_version });
+    const cluster = kubernetesAPIResponse.build({
+      id,
+      k8s_version,
+    });
     return res(ctx.json(cluster));
   }),
   rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
@@ -735,6 +748,10 @@ export const handlers = [
   rest.get('*/firewalls/*/devices', (req, res, ctx) => {
     const devices = firewallDeviceFactory.buildList(10);
     return res(ctx.json(makeResourcePage(devices)));
+  }),
+  rest.get('*/firewalls/:firewallId', (req, res, ctx) => {
+    const firewall = firewallFactory.build();
+    return res(ctx.json(firewall));
   }),
   rest.put('*/firewalls/:firewallId', (req, res, ctx) => {
     const firewall = firewallFactory.build({
@@ -920,6 +937,26 @@ export const handlers = [
   rest.get('*/kubeconfig', (req, res, ctx) => {
     return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
   }),
+  rest.get('*invoices/555/items', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        makeResourcePage([
+          invoiceItemFactory.build({
+            label: 'Linode',
+            region: 'br-gru',
+          }),
+          invoiceItemFactory.build({
+            label: 'Outbound Transfer Overage',
+            region: null,
+          }),
+          invoiceItemFactory.build({
+            label: 'Outbound Transfer Overage',
+            region: 'id-cgk',
+          }),
+        ])
+      )
+    );
+  }),
   rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
     const items = invoiceItemFactory.buildList(10);
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
@@ -1073,6 +1110,11 @@ export const handlers = [
         'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
       percent_complete: 15,
     });
+    const dbEvents = eventFactory.buildList(1, {
+      action: 'database_low_disk_space',
+      entity: { id: 999, label: 'database-1', type: 'database' },
+      message: 'Low disk space.',
+    });
     const oldEvents = eventFactory.buildList(20, {
       action: 'account_update',
       percent_complete: 100,
@@ -1091,7 +1133,12 @@ export const handlers = [
     });
     return res.once(
       ctx.json(
-        makeResourcePage([...events, ...oldEvents, eventWithSpecialCharacters])
+        makeResourcePage([
+          ...events,
+          ...dbEvents,
+          ...oldEvents,
+          eventWithSpecialCharacters,
+        ])
       )
     );
   }),
@@ -1464,9 +1511,9 @@ export const handlers = [
         makeResourcePage([
           ...accountBetaFactory.buildList(5),
           accountBetaFactory.build({
-            started: DateTime.now().minus({ days: 30 }).toISO(),
-            enrolled: DateTime.now().minus({ days: 20 }).toISO(),
             ended: DateTime.now().minus({ days: 5 }).toISO(),
+            enrolled: DateTime.now().minus({ days: 20 }).toISO(),
+            started: DateTime.now().minus({ days: 30 }).toISO(),
           }),
         ])
       )

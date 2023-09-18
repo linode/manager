@@ -1,45 +1,12 @@
 import userEvent from '@testing-library/user-event';
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { mockNotification } from 'src/__data__/notifications';
-import { linodeConfigFactory, linodeFactory, vpcFactory } from 'src/factories';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-  wrapWithTableBody,
-} from 'src/utilities/testHelpers';
+import { linodeFactory } from 'src/factories';
+import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { LinodeRow, RenderFlag } from './LinodeRow';
-
-const queryClient = new QueryClient();
-
-beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
-
-jest.mock('src/hooks/useFlags', () => ({
-  __esModule: true,
-  useFlags: jest.fn().mockReturnValue({ vpc: true }),
-}));
-
-jest.mock('src/queries/linodes/configs.ts', () => ({
-  useAllLinodeConfigsQuery: jest.fn().mockReturnValue({
-    data: linodeConfigFactory.buildList(1),
-    error: {},
-    isLoading: false,
-  }),
-}));
-
-jest.mock('src/queries/vpcs.ts', () => ({
-  useVPCQuery: jest.fn().mockReturnValue({
-    data: vpcFactory.build({ label: 'vpc-1' }),
-    isLoading: false,
-    error: {},
-  }),
-}));
 
 describe('LinodeRow', () => {
   describe('when Linode has notification', () => {
@@ -58,8 +25,7 @@ describe('LinodeRow', () => {
     });
   });
 
-  // TODO: VPC - when a feature flag is no longer needed for vpc, this should be changed
-  it('should render a linode row with associated vpc information if the feature flag is on', () => {
+  it('should render a linode row', () => {
     const linode = linodeFactory.build();
     const renderedLinode = (
       <LinodeRow
@@ -93,10 +59,9 @@ describe('LinodeRow', () => {
     );
 
     const { getByLabelText, getByText } = renderWithTheme(
-      wrapWithTableBody(renderedLinode, { queryClient })
+      wrapWithTableBody(renderedLinode)
     );
 
-    getByText('vpc-1');
     getByText(linode.label);
 
     // Open action menu

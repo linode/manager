@@ -7,13 +7,14 @@ import { OptionProps } from 'react-select';
 
 import { Box } from 'src/components/Box';
 import { Item } from 'src/components/EnhancedSelect';
-import Option from 'src/components/EnhancedSelect/components/Option';
+import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   distroIcon: {
     fontSize: '1.8em',
+
     margin: `0 ${theme.spacing()}`,
     [theme.breakpoints.only('xs')]: {
       fontSize: '1.52em',
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
   },
   root: {
+    '& *': {
+      lineHeight: '1.2em',
+    },
     '& g': {
       fill: theme.name === 'dark' ? 'white' : '#888f91',
     },
@@ -49,7 +53,7 @@ interface ImageOptionProps extends OptionProps<any, any> {
   data: ImageItem;
 }
 
-const ImageOption = (props: ImageOptionProps) => {
+export const ImageOption = (props: ImageOptionProps) => {
   const classes = useStyles();
   const { data, isFocused, isSelected, label } = props;
   const flags = useFlags();
@@ -101,5 +105,3 @@ const sxCloudInitTooltipIcon = {
   padding: 0,
   paddingRight: 1,
 };
-
-export { ImageOption };

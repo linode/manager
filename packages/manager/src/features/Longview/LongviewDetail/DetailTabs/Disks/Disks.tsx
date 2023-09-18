@@ -1,31 +1,15 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
 
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 import { WithStartAndEnd } from '../../../request.types';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import DiskGraph from './DiskGraph';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    [theme.breakpoints.down('lg')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-  select: {
-    marginBottom: theme.spacing(),
-    width: 250,
-  },
-}));
+import { DiskGraph } from './DiskGraph';
+import { StyledBox, StyledTimeRangeSelect } from './Disks.styles';
 
 interface Props {
   clientAPIKey: string;
@@ -36,11 +20,7 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props;
-
-const Disks: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+const Disks = (props: Props) => {
   const {
     clientAPIKey,
     clientLastUpdated,
@@ -118,24 +98,18 @@ const Disks: React.FC<CombinedProps> = (props) => {
   return (
     <div>
       <DocumentTitleSegment segment="Disks" />
-      <Box
-        className={classes.root}
-        display="flex"
-        flexDirection="row"
-        justifyContent="flex-end"
-      >
-        <TimeRangeSelect
-          className={classes.select}
+      <StyledBox display="flex" flexDirection="row" justifyContent="flex-end">
+        <StyledTimeRangeSelect
           defaultValue="Past 30 Minutes"
           handleStatsChange={handleStatsChange}
           hideLabel
           label="Select Time Range"
           small
         />
-      </Box>
+      </StyledBox>
       {renderContent()}
     </div>
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(Disks);
+export default React.memo(Disks);

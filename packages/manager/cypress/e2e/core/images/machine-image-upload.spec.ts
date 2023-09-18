@@ -4,6 +4,7 @@ import { makeResourcePage } from '@src/mocks/serverHandlers';
 import 'cypress-file-upload';
 import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
+import { authenticate } from 'support/api/authentication';
 import { fbtClick, fbtVisible, getClick } from 'support/helpers';
 import {
   mockDeleteImage,
@@ -134,6 +135,7 @@ const uploadImage = (label: string) => {
   cy.intercept('POST', apiMatcher('images/upload')).as('imageUpload');
 };
 
+authenticate();
 describe('machine image', () => {
   before(() => {
     cleanUp('images');

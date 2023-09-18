@@ -1,4 +1,4 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -7,9 +7,7 @@ import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
 
-export type CombinedProps = GraphProps & WithTheme;
-
-export const LoadGraph: React.FC<CombinedProps> = (props) => {
+export const LoadGraph = (props: GraphProps) => {
   const {
     clientAPIKey,
     end,
@@ -17,9 +15,10 @@ export const LoadGraph: React.FC<CombinedProps> = (props) => {
     lastUpdated,
     lastUpdatedError,
     start,
-    theme,
     timezone,
   } = props;
+
+  const theme = useTheme();
 
   const { data, error, loading, request } = useGraphs(
     ['load'],
@@ -55,5 +54,3 @@ export const LoadGraph: React.FC<CombinedProps> = (props) => {
     />
   );
 };
-
-export default withTheme(LoadGraph);

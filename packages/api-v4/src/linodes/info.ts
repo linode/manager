@@ -1,5 +1,5 @@
 import { API_ROOT } from '../constants';
-import { NetworkUtilization, NetworkTransfer } from '../account/types';
+import { RegionalNetworkUtilization, NetworkTransfer } from '../account/types';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { Filter, Params, ResourcePage as Page } from '../types';
 import { Kernel, LinodeType as Type, Stats } from './types';
@@ -52,7 +52,7 @@ export const getLinodeStatsByDate = (
  * @param linodeId { number } The id of the Linode to retrieve network transfer information for.
  */
 export const getLinodeTransfer = (linodeId: number) =>
-  Request<NetworkUtilization>(
+  Request<RegionalNetworkUtilization>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/transfer`
     ),

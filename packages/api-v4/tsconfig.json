@@ -7,7 +7,7 @@
     "outDir": "./lib",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "skipLibCheck":true,
+    "skipLibCheck": true,
     "strict": true,
     "baseUrl": ".",
     "noUnusedLocals": true,
