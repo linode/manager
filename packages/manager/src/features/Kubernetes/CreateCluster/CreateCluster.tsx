@@ -265,7 +265,7 @@ export const CreateCluster = () => {
   const showPricingNotice =
     selectedRegionID &&
     typesData.some((type) =>
-      type.region_prices.find(
+      type.region_prices?.find(
         (regionPrice) => regionPrice.id === selectedRegionID
       )
     );

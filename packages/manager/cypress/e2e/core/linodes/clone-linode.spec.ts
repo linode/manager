@@ -156,10 +156,6 @@ describe('clone linode', () => {
       '@getLinodeTypes',
     ]);
 
-    // TODO: DC Pricing - M3-7073: Move these assertions to end-to-end test once `dcSpecificPricing` flag goes away.
-    // TODO: DC Pricing - M3-7086: Remove this assertion when DC-specific pricing notice goes away.
-    cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
-
     // TODO: DC Pricing - M3-7086: Uncomment docs link assertion when docs links are added.
     // cy.findByText(dcPricingDocsLabel)
     //   .should('be.visible')

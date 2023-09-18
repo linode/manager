@@ -72,14 +72,21 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     });
 
   const selectedRegionHasUniquePricing =
-    !showClonePriceWarning &&
     selectedID &&
-    types?.some((type) =>
-      type.region_prices.find((regionPrice) => regionPrice.id === selectedID)
+    types?.some(
+      (type) =>
+        type.region_prices?.find(
+          (regionPrice) => regionPrice.id === selectedID
+        ) ?? false
     );
 
+  const showUnqiuePricingNotice =
+    flags.dcSpecificPricing &&
+    !showClonePriceWarning &&
+    selectedRegionHasUniquePricing;
+
   const showRegionPriceNotice = isLinode
-    ? selectedRegionHasUniquePricing
+    ? showUnqiuePricingNotice
     : selectedID && priceIncreaseMap[selectedID];
 
   if (props.regions.length === 0) {
