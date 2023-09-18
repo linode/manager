@@ -156,6 +156,8 @@ describe('clone linode', () => {
       '@getLinodeTypes',
     ]);
 
+    cy.findByText(dcPricingRegionNotice, { exact: false }).should('be.visible');
+
     // TODO: DC Pricing - M3-7086: Uncomment docs link assertion when docs links are added.
     // cy.findByText(dcPricingDocsLabel)
     //   .should('be.visible')
