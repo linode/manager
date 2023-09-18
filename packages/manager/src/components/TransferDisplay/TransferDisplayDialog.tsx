@@ -64,7 +64,7 @@ export const TransferDisplayDialog = React.memo(
         <TransferDisplayDialogHeader
           dataTestId="global-transfer-pool-header"
           headerText="Global Network Transfer Pool"
-          tooltipText={`The Global Pool includes transfer associated with active services in all regions except for ${otherRegionPools}`}
+          tooltipText={`The Global Pool includes transfer associated with active services in all regions except for ${otherRegionPools}.`}
         />
         <TransferDisplayUsage
           pullUsagePct={generalPoolUsagePct}
