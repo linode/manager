@@ -8,6 +8,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect/Select';
+import { InputLabel } from 'src/components/InputLabel';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -18,9 +19,9 @@ import { pluralize } from 'src/utilities/pluralize';
 
 import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
 import { CertificateTable } from './CertificateTable';
+import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 
 import type { Configuration } from '@linode/api-v4';
-import { InputLabel } from 'src/components/InputLabel';
 
 interface Props {
   configuration: Configuration;
@@ -30,6 +31,7 @@ interface Props {
 export const ConfigurationAccordion = (props: Props) => {
   const { configuration, loadbalancerId } = props;
   const [isApplyCertDialogOpen, setIsApplyCertDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
     error,
@@ -175,6 +177,7 @@ export const ConfigurationAccordion = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Delete Configuration',
+            onClick: () => setIsDeleteDialogOpen(true),
           }}
         />
         <ApplyCertificatesDrawer
@@ -182,6 +185,12 @@ export const ConfigurationAccordion = (props: Props) => {
           onAdd={handleAddCerts}
           onClose={() => setIsApplyCertDialogOpen(false)}
           open={isApplyCertDialogOpen}
+        />
+        <DeleteConfigurationDialog
+          configuration={configuration}
+          loadbalancerId={loadbalancerId}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          open={isDeleteDialogOpen}
         />
       </form>
     </Accordion>

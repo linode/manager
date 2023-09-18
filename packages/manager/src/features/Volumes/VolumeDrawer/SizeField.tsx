@@ -72,7 +72,7 @@ export const SizeField = (props: Props) => {
     size: value,
   });
 
-  const legacyHelperText = (
+  const priceDisplayText = (
     <FormHelperText>
       {resize || isFromLinode ? null : (
         <span className={classes.createVolumeText}>${price}/month</span>
@@ -108,9 +108,9 @@ export const SizeField = (props: Props) => {
       <div className={classes.priceDisplay}>
         {dcSpecificPricing
           ? hasSelectedRegion
-            ? legacyHelperText
+            ? priceDisplayText
             : dynamicPricingHelperText
-          : legacyHelperText}
+          : priceDisplayText}
       </div>
     </>
   );

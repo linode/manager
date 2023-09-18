@@ -336,7 +336,7 @@ export const BillingActivityPanel = (props: Props) => {
   }, [selectedTransactionType, combinedData]);
 
   return (
-    <Grid xs={12}>
+    <Grid xs={12} data-qa-billing-activity-panel>
       <div className={classes.root}>
         <div className={classes.headerContainer}>
           <Typography className={classes.headline} variant="h2">
