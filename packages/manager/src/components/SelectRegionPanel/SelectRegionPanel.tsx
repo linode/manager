@@ -11,14 +11,14 @@ import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCre
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllTypes, useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { priceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Box } from '../Box';
+import { DynamicPriceNotice } from '../DynamicPriceNotice';
 // import { DocsLink } from '../DocsLink/DocsLink'; //TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed
 import { Link } from '../Link';
-import { DynamicPriceNotice } from '../DynamicPriceNotice';
-import { priceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 
 interface SelectRegionPanelProps {
   disabled?: boolean;
