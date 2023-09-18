@@ -218,7 +218,8 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
               (linode) =>
                 !assignedLinodesAndConfigData
                   .map((data) => data.id)
-                  .includes(linode.id) && !subnet?.linodes.includes(linode.id)
+                  .includes(linode.id) 
+                && !subnet?.linodes.includes(linode.id)
             ) ?? []
           }
           placeholder="Select Linodes or type to search"
