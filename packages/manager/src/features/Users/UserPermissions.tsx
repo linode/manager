@@ -21,17 +21,20 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { Toggle } from 'src/components/Toggle';
-import { Typography } from 'src/components/Typography';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Tab } from 'src/components/ReachTab';
 import { TabList } from 'src/components/ReachTabList';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { Toggle } from 'src/components/Toggle';
+import { Typography } from 'src/components/Typography';
+import withFlags, {
+  FeatureFlagConsumerProps,
+} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   WithQueryClientProps,
   withQueryClient,
@@ -125,13 +128,23 @@ interface State {
   /* Large Account Support */
   showTabs?: boolean;
   tabs?: string[];
+  vpcEnabled: boolean;
 }
 
-type CombinedProps = Props & WithSnackbarProps & WithQueryClientProps;
+type CombinedProps = Props &
+  WithSnackbarProps &
+  WithQueryClientProps &
+  FeatureFlagConsumerProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.getUserGrants();
+
+    if (this.props.flags.vpc) {
+      this.setState({ vpcEnabled: true });
+      this.entityPerms.push('vpc');
+      this.globalBooleanPerms.push('add_vpcs');
+    }
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -201,7 +214,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'domain',
     'longview',
     'database',
-    'vpc',
   ];
 
   entitySetAllTo = (entity: GrantType, value: GrantLevel) => () => {
@@ -284,7 +296,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'add_volumes',
     'add_firewalls',
     'add_databases',
-    'add_vpcs',
     'cancel_account',
   ];
 
@@ -464,11 +475,15 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_nodebalancers: 'Can add NodeBalancers to this account ($)',
       add_stackscripts: 'Can create StackScripts under this account',
       add_volumes: 'Can add Block Storage Volumes to this account ($)',
-      add_vpcs: 'Can add VPCs to this account',
       cancel_account: 'Can cancel the entire account',
       longview_subscription:
         'Can modify this account\u{2019}s Longview subscription ($)',
     };
+
+    if (this.state.vpcEnabled) {
+      permDescriptionMap['add_vpcs'] = 'Can add VPCs to this account';
+    }
+
     return (
       <Grid className="py0" key={perm} sm={6} xs={12}>
         <FormControlLabel
@@ -762,10 +777,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     loading: true,
     loadingGrants: false,
     setAllPerm: 'null',
+    vpcEnabled: false,
   };
 }
 
 export default recompose<CombinedProps, Props>(
   withSnackbar,
-  withQueryClient
+  withQueryClient,
+  withFlags
 )(withStyles(UserPermissions, styles));
