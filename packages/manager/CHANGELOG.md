@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Stuck LKE node pools when HA Control Plane is unavailable for self-hosting Cloud Manager users ([#9558](https://github.com/linode/manager/pull/9558))
 - Longview styling regressions ([#9619](https://github.com/linode/manager/pull/9619))
-- Typo in CloseTicketLink.tsx ([#9639](https://github.com/linode/manager/pull/9639))
+- Typo in 'Confirm Ticket Close' modal ([#9639](https://github.com/linode/manager/pull/9639))
 - Selected state of Longview processes table ([#9643](https://github.com/linode/manager/pull/9643))
 - Typo in NodeBalancer landing table column header ([#9648](https://github.com/linode/manager/pull/9648))
 - Metadata CLI command ([#9665](https://github.com/linode/manager/pull/9665))
