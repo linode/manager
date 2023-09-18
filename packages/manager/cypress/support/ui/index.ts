@@ -9,12 +9,10 @@ import * as fileUpload from './file-upload';
 import * as heading from './heading';
 import * as landingPageEmptyStateResources from './landing-page-empty-state-resources';
 import * as nav from './nav';
-import * as pagination from './pagination';
 import * as select from './select';
 import * as tabList from './tab-list';
 import * as toast from './toast';
 import * as toggle from './toggle';
-import * as userMenu from './user-menu';
 
 export const ui = {
   ...actionMenu,
@@ -28,10 +26,8 @@ export const ui = {
   ...heading,
   ...landingPageEmptyStateResources,
   ...nav,
-  ...pagination,
   ...select,
   ...toast,
   ...tabList,
   ...toggle,
-  ...userMenu,
 };

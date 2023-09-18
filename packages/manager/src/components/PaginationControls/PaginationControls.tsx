@@ -13,7 +13,6 @@ export const PaginationControls = (props: Props) => {
 
   return (
     <Pagination
-      data-qa-pagination-controls
       count={Math.ceil(count / pageSize)}
       onChange={(_, page) => onClickHandler(page)}
       page={page}

@@ -37,19 +37,6 @@ export const mockGetProfile = (profile: Profile): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts PUT request to update a profile and mocks response.
- *
- * @param profile - Updated Profile with which to mock response.
- *
- * @returns Cypress chainable.
- */
-export const mockUpdateProfile = (
-  profile: Profile
-): Cypress.Chainable<null> => {
-  return cy.intercept('PUT', apiMatcher(`profile`), makeResponse(profile));
-};
-
-/**
  * Intercepts GET request to fetch user preferences and mocks response.
  *
  * @param preferences - User preferences with which to respond.
