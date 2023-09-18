@@ -1,3 +1,4 @@
+import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -7,6 +8,7 @@ import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 
 import { DocsLink } from '../DocsLink/DocsLink';
+import { TransferDisplayDialogHeader } from './TransferDisplayDialogHeader';
 import { TransferDisplayUsage } from './TransferDisplayUsage';
 import { NETWORK_TRANSFER_QUOTA_DOCS_LINKS } from './constants';
 import { getDaysRemaining } from './utils';
@@ -41,7 +43,7 @@ export const TransferDisplayDialog = React.memo(
     const transferQuotaDocsText =
       used === 0
         ? 'Compute instances, NodeBalancers, and Object Storage include network transfer.'
-        : 'View products and services that include network transfer, and learn how to optimize network usage to avoid billing surprises.';
+        : 'In some regions, the monthly network transfer is calculated and tracked independently. Transfer overages will be billed separately.';
 
     return (
       <Dialog
@@ -54,40 +56,31 @@ export const TransferDisplayDialog = React.memo(
         {/**
          *  Global Transfer Pool Display
          */}
-        <Typography
-          data-testid="general-transfer-pool-display"
-          fontFamily={theme.font.bold}
-          marginBottom={theme.spacing()}
-        >
-          Global Network Transfer Pool
-        </Typography>
+
+        <TransferDisplayDialogHeader
+          dataTestId="global-transfer-pool-header"
+          headerText="Global Network Transfer Pool"
+          tooltipText="The Global Pool includes transfer associated with active services in all regions except for São Paulo, BR and Jakarta, ID."
+        />
         <TransferDisplayUsage
           pullUsagePct={generalPoolUsagePct}
           quota={quota}
           used={used}
         />
-        <Divider
-          sx={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(3) }}
-        />
+        <StyledDivider />
         {/**
          *  DC-specific Transfer Pool Display
          */}
         {regionTransferPools.length > 0 && (
           <>
-            <Typography
-              data-testid="region-transfer-pool-display"
-              fontFamily={theme.font.bold}
-              marginBottom={theme.spacing()}
-            >
-              Data Center-Specific Network Transfer Pools
-            </Typography>
-            <Typography
-              marginBottom={theme.spacing()}
-              marginTop={theme.spacing()}
-            >
-              In some regions, the monthly network transfer is calculated and
-              tracked independently. These regions are listed below. Transfer
-              overages will be billed separately.
+            <TransferDisplayDialogHeader
+              dataTestId="other-transfer-pool-header"
+              headerText="Other Transfer Pools"
+              tooltipText="In some regions, the monthly network transfer is calculated and tracked independently. Transfer overages will be billed separately."
+            />
+            <Typography marginBottom={theme.spacing(2)} marginTop={-1}>
+              These data center-specific transfer pools are not included in the
+              Global Transfer Pool.
             </Typography>
 
             {regionTransferPools.map((pool, key) => (
@@ -97,7 +90,6 @@ export const TransferDisplayDialog = React.memo(
               >
                 <Typography
                   fontFamily={theme.font.bold}
-                  fontSize={theme.typography.body2.fontSize}
                   marginBottom={theme.spacing()}
                 >
                   {pool.regionName}{' '}
@@ -137,3 +129,13 @@ export const TransferDisplayDialog = React.memo(
     );
   }
 );
+
+const StyledDivider = styled(Divider, {
+  label: 'TransferDisplayDialogDivider',
+})(({ theme }) => ({
+  borderColor: theme.color.border3,
+  marginBottom: theme.spacing(2),
+  marginLeft: theme.spacing(-3),
+  marginTop: theme.spacing(3),
+  width: `calc(100% + ${theme.spacing(6)})`,
+}));

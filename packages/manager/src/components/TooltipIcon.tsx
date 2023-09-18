@@ -38,7 +38,7 @@ interface Props
    * Enables a leaveDelay of 3000ms
    * @default false
    */
-  leaveDelay?: boolean;
+  leaveDelay?: number;
   /**
    * Sets the icon and color
    */
@@ -151,6 +151,7 @@ export const TooltipIcon = (props: Props) => {
       placement={tooltipPosition ? tooltipPosition : 'bottom'}
       sx={sx}
       title={text}
+      {...props}
     >
       <IconButton data-qa-help-button size="large" sx={sxTooltipIcon}>
         {renderIcon}
