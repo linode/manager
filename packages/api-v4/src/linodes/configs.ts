@@ -3,7 +3,7 @@ import {
   UpdateConfigInterfaceOrderSchema,
   UpdateConfigInterfaceSchema,
   UpdateLinodeConfigSchema,
-  linodeInterfaceSchema,
+  singleLinodeInterfaceSchema,
 } from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from '../constants';
 import Request, {
@@ -180,7 +180,7 @@ export const appendConfigInterface = (
       )}/configs/${encodeURIComponent(configId)}/interfaces`
     ),
     setMethod('POST'),
-    setData(data, linodeInterfaceSchema)
+    setData(data, singleLinodeInterfaceSchema)
   );
 
 /**

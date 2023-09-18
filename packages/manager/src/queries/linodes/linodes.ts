@@ -141,6 +141,7 @@ export const useDeleteLinodeMutation = (id: number) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
+      // todo invalidate queries associated with subnets/vpcs?
     },
   });
 };
