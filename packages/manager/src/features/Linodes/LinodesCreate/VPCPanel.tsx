@@ -94,7 +94,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     vpcs
       .find((vpc) => vpc.id === selectedVPC)
       ?.subnets.map((subnet) => ({
-        label: subnet.label,
+        label: `${subnet.label} (${subnet.ipv4 ?? 'No IPv4 range provided'})`, // @TODO VPC: Support for IPv6 down the line
         value: subnet.id,
       })) ?? [];
 
