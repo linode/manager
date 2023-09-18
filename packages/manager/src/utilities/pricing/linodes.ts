@@ -129,3 +129,25 @@ export const getDynamicDCNetworkTransferData = ({
     used: networkTransferData.used || 0,
   };
 };
+
+/**
+ * This function is used to determine if specific pricing exists in a region
+ * given any number of Linode Types
+ * @param regionId the region to check for specific pricing
+ * @param types an array of Linode Types
+ * @returns true if there is at least one linode type with a DC sprcific price for the provided region
+ */
+export const doesRegionHaveUniquePricing = (
+  regionId: Region['id'] | undefined,
+  types: LinodeType[] | undefined
+) => {
+  if (!regionId || !types) {
+    return false;
+  }
+
+  return types?.some(
+    (type) =>
+      type.region_prices?.some((regionPrice) => regionPrice.id === regionId) ??
+      false
+  );
+};

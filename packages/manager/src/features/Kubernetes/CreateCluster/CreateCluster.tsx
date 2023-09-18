@@ -50,6 +50,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
+import { doesRegionHaveUniquePricing } from 'src/utilities/pricing/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inner: {
@@ -259,16 +260,9 @@ export const CreateCluster = () => {
     }
   };
 
-  // Show "Prices in region may vary" if
-  // - A region is selected
-  // - Any of the Linode types include a region_price object for the selected region
   const showPricingNotice =
-    selectedRegionID &&
-    typesData.some((type) =>
-      type.region_prices?.find(
-        (regionPrice) => regionPrice.id === selectedRegionID
-      )
-    );
+    flags.dcSpecificPricing &&
+    doesRegionHaveUniquePricing(selectedRegionID, typesData);
 
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],

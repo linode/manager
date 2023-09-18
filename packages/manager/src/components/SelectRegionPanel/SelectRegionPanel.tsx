@@ -12,7 +12,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useAllTypes, useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import { priceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
-import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
+import {
+  doesRegionHaveUniquePricing,
+  isLinodeTypeDifferentPriceInSelectedRegion,
+} from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Box } from '../Box';
@@ -48,16 +51,16 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const flags = useFlags();
   const params = getQueryParamsFromQueryString(location.search);
 
-  const { data: types } = useAllTypes();
+  const isCloning = /clone/i.test(params.type);
+  const isLinode = location.pathname.startsWith('/linodes');
+
+  const { data: types } = useAllTypes(isLinode);
   const { data: type } = useTypeQuery(
     selectedLinodeTypeId ?? '',
     Boolean(selectedLinodeTypeId)
   );
 
   const currentLinodeRegion = params.regionID;
-
-  const isCloning = /clone/i.test(params.type);
-  const isLinode = location.pathname.startsWith('/linodes');
 
   const showCrossDataCenterCloneWarning =
     isCloning && selectedID && currentLinodeRegion !== selectedID;
@@ -71,20 +74,19 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       type,
     });
 
-  const selectedRegionHasUniquePricing =
-    selectedID &&
-    types?.some(
-      (type) =>
-        type.region_prices?.find(
-          (regionPrice) => regionPrice.id === selectedID
-        ) ?? false
-    );
+  const selectedRegionHasUniquePricing = doesRegionHaveUniquePricing(
+    selectedID,
+    types
+  );
 
   const showUnqiuePricingNotice =
     flags.dcSpecificPricing &&
-    !showClonePriceWarning &&
+    !showClonePriceWarning && // Don't show both notices at the same time.
     selectedRegionHasUniquePricing;
 
+  // If this component is used in the context of Linodes,
+  // use Linode types from the API to deturmine if the region
+  // has specific pricing. Otherwise, check aginst our local pricing map.
   const showRegionPriceNotice = isLinode
     ? showUnqiuePricingNotice
     : selectedID && priceIncreaseMap[selectedID];
