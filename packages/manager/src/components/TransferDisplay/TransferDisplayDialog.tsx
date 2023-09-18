@@ -78,7 +78,7 @@ export const TransferDisplayDialog = React.memo(
         {regionTransferPools.length > 0 && (
           <>
             <TransferDisplayDialogHeader
-              dataTestId="other-transfer-pool-header"
+              dataTestId="other-transfer-pools-header"
               headerText="Other Transfer Pools"
               tooltipText="In some regions, the monthly network transfer is calculated and tracked independently. Transfer overages will be billed separately."
             />

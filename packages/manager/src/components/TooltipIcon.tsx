@@ -142,6 +142,7 @@ export const TooltipIcon = (props: Props) => {
   return (
     <Tooltip
       classes={classes}
+      componentsProps={props.componentsProps}
       data-qa-help-tooltip
       disableInteractive={!interactive}
       enterTouchDelay={0}
@@ -151,7 +152,6 @@ export const TooltipIcon = (props: Props) => {
       placement={tooltipPosition ? tooltipPosition : 'bottom'}
       sx={sx}
       title={text}
-      {...props}
     >
       <IconButton data-qa-help-button size="large" sx={sxTooltipIcon}>
         {renderIcon}
