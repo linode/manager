@@ -36,10 +36,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add VPC Delete Subnet dialog ([#9640](https://github.com/linode/manager/pull/9640))
 - Add VPC filter subnets field ([#9647](https://github.com/linode/manager/pull/9647))
 - Populate VPC Subnets table with data ([#9599](https://github.com/linode/manager/pull/9599))
-- Standardize "region" and "data center" copy for DC-specific pricing
+- Standardize "region" and "data center" copy for DC-specific pricing ([#9670](https://github.com/linode/manager/pull/9670))
 - Removed VPC column from Linodes landing page table ([#9625](https://github.com/linode/manager/pull/9625))
 - Improved VPC Create validation for subnets ([#9659](https://github.com/linode/manager/pull/9659))
-([#9670](https://github.com/linode/manager/pull/9670))
 - Add DC-specific pricing Invoice support ([#9597](https://github.com/linode/manager/pull/9597))
 - Add DC-specific pricing Linode Create support ([#9598](https://github.com/linode/manager/pull/9598))
 - Add DC-specific pricing to Kubernetes node pools ([#9606](https://github.com/linode/manager/pull/9606))
