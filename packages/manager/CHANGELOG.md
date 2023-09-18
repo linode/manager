@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Billing Contact UI regression caused by MUI Update ([#9667](https://github.com/linode/manager/pull/9667))
 - Panels alignment in NodeBalancer create flow ([#9673](https://github.com/linode/manager/pull/9673))
 - Misplaced helper text and static copy in Linode Create Volume drawer ([#9683](https://github.com/linode/manager/pull/9683))
+- Redis trademark changes ([#9694](https://github.com/linode/manager/pull/9694))
 
 ### Tech Stories:
 
