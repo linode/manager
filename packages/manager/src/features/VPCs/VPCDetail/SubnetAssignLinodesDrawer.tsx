@@ -7,6 +7,7 @@ import {
   InterfacePurpose,
   Linode,
   Subnet,
+  APIError,
 } from '@linode/api-v4';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -19,7 +20,6 @@ import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 
 import { queryKey, useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
@@ -55,9 +55,12 @@ const MULTIPLE_CONFIGURATIONS_MESSAGE =
 export const SubnetAssignLinodesDrawer = (props: Props) => {
   const queryClient = useQueryClient();
   const { onClose, open, subnet, vpcId, vpcRegion } = props;
-  const [errorMap, setErrorMap] = React.useState<
+  const [assignLinodesErrors, setAssignLinodesErrors] = React.useState<
     Record<string, string | undefined>
   >({});
+  const [unassignLinodesErrors, setUnassignLinodesErrors] = React.useState<
+    APIError[]
+  >([]);
   const [
     assignedLinodesAndConfigData,
     setAssignedLinodesAndConfigData,
@@ -102,7 +105,10 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
 
   const onAssignLinode = async () => {
     const { selectedLinode, chosenIP, selectedConfig } = values;
-    const configId = selectedConfig?.id ?? linodeConfigs[0]?.id ?? -1;
+    const configId =
+      linodeConfigs.length > 1
+        ? selectedConfig?.id ?? -1
+        : linodeConfigs[0]?.id ?? -1;
     const interfacePayload: InterfacePayload = {
       purpose: 'vpc' as InterfacePurpose,
       label: null,
@@ -141,7 +147,42 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
       // potential todo: the api error for not selecting a linode/config isn't very friendly -- just throws
       // 'Not found', will look into making this nicer
       const newErrors = getErrorMap(['ipv4.vpc'], errors);
-      setErrorMap(newErrors);
+      setAssignLinodesErrors(newErrors);
+    }
+  };
+
+  const onUnassignLinode = async (data: LinodeAndConfigData) => {
+    const { id: linodeId, configId, interfaceId } = data;
+    try {
+      await deleteLinodeConfigInterface(linodeId, configId, interfaceId);
+      setAssignedLinodesAndConfigData(
+        [...assignedLinodesAndConfigData].filter(
+          (linode) => linode.id !== linodeId
+        )
+      );
+      invalidateQueries(data.id, data.configId);
+      queryClient.invalidateQueries([
+        queryKey,
+        'linode',
+        linodeId,
+        configQueryKey,
+        'config',
+        configId,
+        interfaceQueryKey,
+      ]);
+      queryClient.removeQueries([
+        queryKey,
+        'linode',
+        linodeId,
+        configQueryKey,
+        'config',
+        configId,
+        interfaceQueryKey,
+        'interface',
+        interfaceId,
+      ]);
+    } catch (errors) {
+      setUnassignLinodesErrors(errors as APIError[]);
     }
   };
 
@@ -169,6 +210,8 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
       if (linode) {
         const data = await getAllLinodeConfigs(linode.id);
         setLinodeConfigs(data);
+      } else {
+        setLinodeConfigs([]);
       }
     },
     []
@@ -183,7 +226,8 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
       resetForm();
       setAssignedLinodesAndConfigData([]);
       setLinodeConfigs([]);
-      setErrorMap({});
+      setAssignLinodesErrors({});
+      setUnassignLinodesErrors([]);
       setAutoAssignIPv4(true);
     }
   }, [open]);
@@ -194,7 +238,9 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
       open={open}
       title={`Assign Linodes to subnet: ${subnet?.label} (${subnet?.ipv4})`}
     >
-      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+      {assignLinodesErrors.none && (
+        <Notice text={assignLinodesErrors.none} variant="error" />
+      )}
       {userCannotAssignLinodes && (
         <Notice
           important
@@ -218,8 +264,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
               (linode) =>
                 !assignedLinodesAndConfigData
                   .map((data) => data.id)
-                  .includes(linode.id) 
-                && !subnet?.linodes.includes(linode.id)
+                  .includes(linode.id) && !subnet?.linodes.includes(linode.id)
             ) ?? []
           }
           placeholder="Select Linodes or type to search"
@@ -239,7 +284,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
         {!autoAssignIPv4 && (
           <TextField
             disabled={userCannotAssignLinodes}
-            errorText={errorMap['ipv4.vpc']}
+            errorText={assignLinodesErrors['ipv4.vpc']}
             label={'VPC IPv4'}
             onChange={(e) => setFieldValue('chosenIP', e.target.value)}
             sx={{ marginBottom: '8px' }}
@@ -276,18 +321,24 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           </Button>
         </StyledButtonBox>
       </form>
-      {/* TODO: currently using autocomplete for this (pretty interesting), but will eventually replace with a List + download CSV as well */}
-      <Typography variant="body1">
-        <strong>
-          Linodes Assigned to Subnet ({assignedLinodesAndConfigData.length})
-        </strong>
-      </Typography>
+      {/* TODO: currently using autocomplete for this (which is pretty interesting), but will eventually replace with a List + download CSV as well */}
+      {unassignLinodesErrors
+        ? unassignLinodesErrors.map((apiError: APIError) => (
+            <Notice
+              key={apiError.reason}
+              spacingBottom={8}
+              text={apiError.reason}
+              variant="error"
+            />
+          ))
+        : null}
       <Autocomplete
+        clearOnBlur
+        clearOnEscape
         disabled={userCannotAssignLinodes}
+        inputValue={''}
         label={`Linodes Assigned to Subnet (${assignedLinodesAndConfigData.length})`}
-        onChange={(_, value: LinodeAndConfigData) => {
-          // must unassign linode
-        }}
+        onChange={(_, value: LinodeAndConfigData) => onUnassignLinode(value)}
         options={assignedLinodesAndConfigData}
         placeholder="Select a Linode to unassign"
       />
