@@ -85,7 +85,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     selectedRegionHasUniquePricing;
 
   // If this component is used in the context of Linodes,
-  // use Linode types from the API to deturmine if the region
+  // use Linode types from the API to determine if the region
   // has specific pricing. Otherwise, check aginst our local pricing map.
   const showRegionPriceNotice = isLinode
     ? showUnqiuePricingNotice
