@@ -11,7 +11,7 @@ import { DocsLink } from '../DocsLink/DocsLink';
 import { TransferDisplayDialogHeader } from './TransferDisplayDialogHeader';
 import { TransferDisplayUsage } from './TransferDisplayUsage';
 import { NETWORK_TRANSFER_QUOTA_DOCS_LINKS } from './constants';
-import { getDaysRemaining, formatRegionList } from './utils';
+import { formatRegionList, getDaysRemaining } from './utils';
 
 import type { RegionTransferPool } from './utils';
 
@@ -56,15 +56,21 @@ export const TransferDisplayDialog = React.memo(
         maxWidth="sm"
         onClose={onClose}
         open={isOpen}
+        sx={{}}
         title="Monthly Network Transfer Pool"
       >
         {/**
          *  Global Transfer Pool Display
          */}
         <TransferDisplayDialogHeader
+          tooltipText={`The Global Pool includes transfer associated with active services in all regions${
+            listOfOtherRegionTransferPools.length > 0
+              ? ` except for ${otherRegionPools}.`
+              : '.'
+          }
+          `}
           dataTestId="global-transfer-pool-header"
           headerText="Global Network Transfer Pool"
-          tooltipText={`The Global Pool includes transfer associated with active services in all regions except for ${otherRegionPools}.`}
         />
         <TransferDisplayUsage
           pullUsagePct={generalPoolUsagePct}
