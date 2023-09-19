@@ -56,7 +56,6 @@ export const TransferDisplayDialog = React.memo(
         maxWidth="sm"
         onClose={onClose}
         open={isOpen}
-        sx={{}}
         title="Monthly Network Transfer Pool"
       >
         {/**

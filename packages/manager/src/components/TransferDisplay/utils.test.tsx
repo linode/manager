@@ -76,6 +76,10 @@ describe('formatPoolUsagePct', () => {
 
 describe('formatRegionList', () => {
   it('should format the list of regions correctly', () => {
+    const listOfNoRegions = [''];
+    const formattedListNoRegions = formatRegionList(listOfNoRegions);
+    expect(formattedListNoRegions).toBe('');
+
     const listOfOneRegion = ['Newark, NJ'];
     const formattedListOneRegion = formatRegionList(listOfOneRegion);
     expect(formattedListOneRegion).toBe('Newark, NJ');
