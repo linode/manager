@@ -18,6 +18,19 @@ export const interceptCreateLinode = (): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts GET request to get a Linode.
+ *
+ * @param linodeId - ID of Linode to fetch.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetLinode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}`));
+};
+
+/**
  * Intercepts GET request to get all Linodes.
  *
  * @returns Cypress chainable.
@@ -208,6 +221,22 @@ export const interceptCloneLinode = (
 };
 
 /**
+ * Intercepts POST request to enable backups for a Linode.
+ *
+ * @param linodeId - ID of Linode for which to enable backups.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptEnableLinodeBackups = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/backups/enable`)
+  );
+};
+
+/**
  * Intercepts POST request to enable backups for a Linode and mocks response.
  *
  * @param linodeId - ID of Linode for which to enable backups.
@@ -221,5 +250,21 @@ export const mockEnableLinodeBackups = (
     'POST',
     apiMatcher(`linode/instances/${linodeId}/backups/enable`),
     {}
+  );
+};
+
+/**
+ * Intercepts POST request to create a Linode snapshot.
+ *
+ * @param linodeId - ID of Linode for which to create snapshot.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCreateLinodeSnapshot = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/backups`)
   );
 };
