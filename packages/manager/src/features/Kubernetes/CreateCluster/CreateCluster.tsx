@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { DynamicPriceNotice } from 'src/components/DynamicPriceNotice';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -49,6 +50,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
+import { doesRegionHaveUniquePricing } from 'src/utilities/pricing/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inner: {
@@ -258,6 +260,10 @@ export const CreateCluster = () => {
     }
   };
 
+  const showPricingNotice =
+    flags.dcSpecificPricing &&
+    doesRegionHaveUniquePricing(selectedRegionID, typesData);
+
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
@@ -314,6 +320,12 @@ export const CreateCluster = () => {
               regions={filteredRegions}
               selectedID={selectedID}
             />
+            {showPricingNotice && (
+              <DynamicPriceNotice
+                region={selectedRegionID}
+                spacingBottom={16}
+              />
+            )}
             <Select
               onChange={(selected: Item<string>) => {
                 setVersion(selected);
