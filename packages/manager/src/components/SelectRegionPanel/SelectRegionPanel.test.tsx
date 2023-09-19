@@ -1,5 +1,4 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
 
 import { linodeTypeFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -23,7 +22,7 @@ jest.mock('src/hooks/useFlags', () => ({
 
 const createPath = '/linodes/create';
 
-describe('SelectRegionPanel in create flow', () => {
+describe('SelectRegionPanel in Create Flow', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest
@@ -56,16 +55,16 @@ describe('SelectRegionPanel in create flow', () => {
     });
 
     const { findByText } = renderWithTheme(
-      <MemoryRouter initialEntries={[createPath]}>
-        <Route path={createPath}>
-          <SelectRegionPanel
-            handleSelection={jest.fn()}
-            regions={regions}
-            selectedID="id-cgk"
-          />
-        </Route>
-      </MemoryRouter>,
-      { flags: { dcSpecificPricing: true } }
+      <SelectRegionPanel
+        handleSelection={jest.fn()}
+        regions={regions}
+        selectedID="id-cgk"
+      />,
+
+      {
+        MemoryRouter: { initialEntries: [createPath] },
+        flags: { dcSpecificPricing: true },
+      }
     );
 
     await findByText(
@@ -104,11 +103,12 @@ describe('SelectRegionPanel on the Clone Flow', () => {
 
   it('renders expected content on initial render', () => {
     const { container, getAllByRole, getByRole, getByTestId } = renderWithTheme(
-      <MemoryRouter initialEntries={[createPath]}>
-        <Route path={createPath}>
-          <SelectRegionPanel {...mockedProps} />
-        </Route>
-      </MemoryRouter>
+      <SelectRegionPanel {...mockedProps} />,
+      {
+        MemoryRouter: {
+          initialEntries: [createPath],
+        },
+      }
     );
 
     // Header
@@ -145,11 +145,12 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       .mockReturnValue(false);
 
     const { queryAllByRole } = renderWithTheme(
-      <MemoryRouter initialEntries={[createPath]}>
-        <Route path={createPath}>
-          <SelectRegionPanel {...mockedProps} selectedID="us-east" />
-        </Route>
-      </MemoryRouter>
+      <SelectRegionPanel {...mockedProps} selectedID="us-east" />,
+      {
+        MemoryRouter: {
+          initialEntries: [createPath],
+        },
+      }
     );
 
     const warnings = queryAllByRole('alert');
@@ -165,11 +166,12 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       .mockReturnValue(false);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
-      <MemoryRouter initialEntries={[createPath]}>
-        <Route path={createPath}>
-          <SelectRegionPanel {...mockedProps} selectedID="us-west" />
-        </Route>
-      </MemoryRouter>
+      <SelectRegionPanel {...mockedProps} selectedID="us-west" />,
+      {
+        MemoryRouter: {
+          initialEntries: [createPath],
+        },
+      }
     );
 
     const warnings = getAllByRole('alert');
@@ -192,11 +194,12 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       .mockReturnValue(true);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
-      <MemoryRouter initialEntries={[createPath]}>
-        <Route path={createPath}>
-          <SelectRegionPanel {...mockedProps} selectedID="br-gru" />
-        </Route>
-      </MemoryRouter>
+      <SelectRegionPanel {...mockedProps} selectedID="br-gru" />,
+      {
+        MemoryRouter: {
+          initialEntries: [createPath],
+        },
+      }
     );
 
     const warnings = getAllByRole('alert');
