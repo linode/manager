@@ -136,6 +136,11 @@ export const baseApps = {
   '1160820': 'Appwrite',
   '1177225': 'Seatable',
   '1177605': 'Illa Builder',
+  '???' : 'MainConcept FFmpeg Plugins'
+  '???' : 'MainConcept Live Encoder'
+  '???' : 'MainConcept 2GO P2 AVC Ultra Transcoder'
+  '???' : 'MainConcept 2GO XAVC Transcoder'
+  '???' : 'MainConcept 2GO XDCAM Transcoder'
 };
 
 const oneClickFilter = [
