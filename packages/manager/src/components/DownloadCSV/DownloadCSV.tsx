@@ -40,20 +40,24 @@ export const DownloadCSV = ({
   text = 'Download CSV',
 }: DownloadCSVProps) => {
   return (
-    <>
-      <CSVLink
-        aria-hidden="true"
-        className={className}
-        data={cleanCSVData(data)}
-        filename={filename}
-        headers={headers}
-        ref={csvRef}
-        tabIndex={-1}
-      />
-      <Button buttonType={buttonType} onClick={onClick} sx={sx}>
+    <CSVLink
+      aria-hidden="true"
+      className={className}
+      data={cleanCSVData(data)}
+      filename={filename}
+      headers={headers}
+      ref={csvRef}
+      tabIndex={-1}
+    >
+      <Button
+        buttonType={buttonType}
+        component="span"
+        onClick={onClick}
+        sx={sx}
+      >
         {text}
       </Button>
-    </>
+    </CSVLink>
   );
 };
 
