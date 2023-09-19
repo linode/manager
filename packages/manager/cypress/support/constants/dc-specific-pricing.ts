@@ -23,6 +23,26 @@ export const dcPricingDocsUrl = 'https://www.linode.com/pricing';
 
 /** DC-specific pricing Linode type mocks. */
 export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
+  addons: {
+    backups: {
+      price: {
+        hourly: 0.004,
+        monthly: 2.5,
+      },
+      region_prices: [
+        {
+          hourly: 0.0048,
+          id: 'us-east',
+          monthly: 3.57,
+        },
+        {
+          hourly: 0.0056,
+          id: 'us-west',
+          monthly: 4.17,
+        },
+      ],
+    },
+  },
   region_prices: [
     {
       hourly: 0.021,
