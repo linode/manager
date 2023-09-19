@@ -221,7 +221,7 @@ describe('"Enable Linode Backups" banner', () => {
     cy.contains(enableBackupsMessage).should('be.visible');
 
     // Click dismiss button.
-    cy.findByLabelText('Dismiss Enable Linode Backups notice')
+    cy.findByLabelText('Dismiss notice enabling Linode backups')
       .should('be.visible')
       .click();
 
