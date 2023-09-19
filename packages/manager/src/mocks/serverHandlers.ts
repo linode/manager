@@ -977,7 +977,9 @@ export const handlers = [
     return res(ctx.delay(5000), ctx.json(transfer));
   }),
   rest.get('*/account/payments', (req, res, ctx) => {
-    const paymentWithLargeId = paymentFactory.build({ id: 15106536 });
+    const paymentWithLargeId = paymentFactory.build({
+      id: 123_456_789_123_456,
+    });
     const payments = paymentFactory.buildList(5);
     return res(ctx.json(makeResourcePage([paymentWithLargeId, ...payments])));
   }),
@@ -991,7 +993,7 @@ export const handlers = [
       label: 'AkamaiInvoice',
     });
     const invoiceWithLargerId = invoiceFactory.build({
-      id: 23974531,
+      id: 123_456_789_123_456,
       label: 'Invoice with Large ID',
     });
     return res(
