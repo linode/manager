@@ -141,7 +141,10 @@ export const InvoiceDetail = () => {
                     padding: 0,
                   }}
                   component="span"
+                  disableFocusRipple
+                  role="none"
                   size="large"
+                  tabIndex={-1}
                 >
                   <KeyboardArrowLeft
                     sx={{
