@@ -25,18 +25,18 @@ describe('helper functions', () => {
   const region = 'us_east';
 
   describe('getMonthlyPrice', () => {
-    // it('should multiply node price by node count', () => {
-    //   const expectedPrice = (types[0].price.monthly ?? 0) * mockNodePool.count;
-    //   expect(
-    //     getKubernetesMonthlyPrice({
-    //       count: mockNodePool.count,
-    //       flags: { dcSpecificPricing: false },
-    //       region,
-    //       type: mockNodePool.type,
-    //       types,
-    //     })
-    //   ).toBe(expectedPrice);
-    // });
+    it('should multiply node price by node count', () => {
+      const expectedPrice = (types[0].price.monthly ?? 0) * mockNodePool.count;
+      expect(
+        getKubernetesMonthlyPrice({
+          count: mockNodePool.count,
+          flags: { dcSpecificPricing: false },
+          region,
+          type: mockNodePool.type,
+          types,
+        })
+      ).toBe(expectedPrice);
+    });
 
     it('should return zero for bad input', () => {
       expect(
