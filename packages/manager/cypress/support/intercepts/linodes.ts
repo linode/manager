@@ -206,3 +206,20 @@ export const interceptCloneLinode = (
 ): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher(`linode/instances/${linodeId}/clone`));
 };
+
+/**
+ * Intercepts POST request to enable backups for a Linode and mocks response.
+ *
+ * @param linodeId - ID of Linode for which to enable backups.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockEnableLinodeBackups = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/backups/enable`),
+    {}
+  );
+};
