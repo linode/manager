@@ -151,7 +151,7 @@ export const LinodeSelect = (
       )}
       renderOption={(props, option, { selected }) => {
         return (
-          <li {...props}>
+          <li {...props} data-qa-linode-option>
             {renderOption ? (
               renderOption(option, selected)
             ) : (
