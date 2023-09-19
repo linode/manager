@@ -25,16 +25,18 @@ export const StyledNoAssignedLinodesBox = styled(Box, {
   width: '100%',
 }));
 
-export const SelectedOptionsHeader = styled('h4', { label: '' })(
-  ({ theme }) => ({
-    color: theme.color.headline,
-    fontFamily: theme.font.bold,
-    fontSize: '14px',
-    textTransform: 'initial',
-  })
-);
+export const SelectedOptionsHeader = styled('h4', {
+  label: 'SelectedOptionsHeader',
+})(({ theme }) => ({
+  color: theme.color.headline,
+  fontFamily: theme.font.bold,
+  fontSize: '14px',
+  textTransform: 'initial',
+}));
 
-export const SelectedOptionsList = styled(List, { label: '' })(({ theme }) => ({
+export const SelectedOptionsList = styled(List, {
+  label: 'SelectedOptionsList',
+})(({ theme }) => ({
   background: theme.bg.main,
   maxHeight: '450px',
   maxWidth: '416px',
@@ -43,14 +45,18 @@ export const SelectedOptionsList = styled(List, { label: '' })(({ theme }) => ({
   width: '100%',
 }));
 
-export const SelectedOptionsListItem = styled(ListItem, { label: '' })(() => ({
+export const SelectedOptionsListItem = styled(ListItem, {
+  label: 'SelectedOptionsListItem',
+})(() => ({
   justifyContent: 'space-between',
   paddingBottom: 0,
   paddingTop: 0,
 }));
 
-export const StyledLabel = styled('span', { label: '' })(({ theme }) => ({
-  color: theme.color.label,
-  fontFamily: theme.font.semiBold,
-  fontSize: '14px',
-}));
+export const StyledLabel = styled('span', { label: 'StyledLabel' })(
+  ({ theme }) => ({
+    color: theme.color.label,
+    fontFamily: theme.font.semiBold,
+    fontSize: '14px',
+  })
+);

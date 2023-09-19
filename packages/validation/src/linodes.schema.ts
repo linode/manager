@@ -128,7 +128,7 @@ const ipv6ConfigInterface = object().when('purpose', {
     }),
 });
 
-export const singleLinodeInterfaceSchema = object().shape({
+export const LinodeInterfaceSchema = object().shape({
   purpose: mixed().oneOf(
     ['public', 'vlan', 'vpc'],
     'Purpose must be public, vlan, or vpc.'
@@ -165,10 +165,7 @@ export const singleLinodeInterfaceSchema = object().shape({
       then: string().nullable(),
       otherwise: string().test({
         name: testnameDisallowedBasedOnPurpose('VLAN'),
-        message: testmessageDisallowedBasedOnPurpose(
-          'vlan',
-          'ipam_address'
-        ),
+        message: testmessageDisallowedBasedOnPurpose('vlan', 'ipam_address'),
         test: (value) => typeof value === 'undefined' || value === '',
       }),
     }),
@@ -198,8 +195,8 @@ export const singleLinodeInterfaceSchema = object().shape({
     }),
 });
 
-export const linodeInterfaceSchema = array()
-  .of(singleLinodeInterfaceSchema)
+export const LinodeInterfacesSchema = array()
+  .of(LinodeInterfaceSchema)
   .test(
     'unique-public-interface',
     'Only one public interface per config is allowed.',
@@ -285,7 +282,7 @@ export const CreateLinodeSchema = object({
     // .concat(rootPasswordValidation),
     otherwise: string().notRequired(),
   }),
-  interfaces: linodeInterfaceSchema,
+  interfaces: LinodeInterfacesSchema,
   metadata: MetadataSchema,
   firewall_id: number().notRequired(),
 });
@@ -425,7 +422,7 @@ export const CreateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: linodeInterfaceSchema,
+  interfaces: LinodeInterfacesSchema,
 });
 
 export const UpdateLinodeConfigSchema = object({
@@ -440,7 +437,7 @@ export const UpdateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: linodeInterfaceSchema,
+  interfaces: LinodeInterfacesSchema,
 });
 
 export const CreateLinodeDiskSchema = object({

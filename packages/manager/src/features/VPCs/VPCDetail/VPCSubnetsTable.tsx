@@ -54,7 +54,10 @@ export const VPCSubnetsTable = (props: Props) => {
   const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
     false
   );
-  const [subnetAssignLinodesDrawerOpen, setSubnetAssignLinodesDrawerOpen] = React.useState(false);
+  const [
+    subnetAssignLinodesDrawerOpen,
+    setSubnetAssignLinodesDrawerOpen,
+  ] = React.useState(false);
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -116,7 +119,7 @@ export const VPCSubnetsTable = (props: Props) => {
   const handleSubnetAssignLinodes = (subnet: Subnet) => {
     setSelectedSubnet(subnet);
     setSubnetAssignLinodesDrawerOpen(true);
-  }
+  };
 
   if (isLoading) {
     return <CircleProgress />;
@@ -257,11 +260,11 @@ export const VPCSubnetsTable = (props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <SubnetAssignLinodesDrawer 
+      <SubnetAssignLinodesDrawer
         onClose={() => setSubnetAssignLinodesDrawerOpen(false)}
         open={subnetAssignLinodesDrawerOpen}
-        vpcId={vpcId}
         subnet={selectedSubnet}
+        vpcId={vpcId}
         vpcRegion={vpcRegion}
       />
       <SubnetDeleteDialog
