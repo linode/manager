@@ -7,7 +7,6 @@ import {
   formatEventWithAppendedText,
   formatEventWithUsername,
 } from 'src/features/Events/Event.helpers';
-import { capitalize } from 'src/utilities/capitalize';
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
@@ -28,6 +27,11 @@ export const safeSecondaryEntityLabel = (
 ) => {
   const label = e?.secondary_entity?.label;
   return label ? `${text} ${label}` : fallback;
+};
+
+const secondaryEntityTypeObj = {
+  linode: 'Linode',
+  nodebalancer: 'NodeBalancer',
 };
 
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
@@ -259,24 +263,28 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   firewall_device_add: {
     notification: (e) => {
-      const secondaryEntityName = e.secondary_entity?.type
-        ? capitalize(e.secondary_entity.type)
-        : e.secondary_entity?.type;
-
-      return `${secondaryEntityName} ${
-        e.secondary_entity?.label
-      } has been added to Firewall ${e.entity?.label ?? ''}.`;
+      if (e.secondary_entity?.type) {
+        const secondaryEntityName =
+          secondaryEntityTypeObj[e.secondary_entity.type];
+        return `${secondaryEntityName} ${
+          e.secondary_entity?.label
+        } has been added to Firewall ${e.entity?.label ?? ''}.`;
+      }
+      return `A device has been added to Firewall ${e.entity?.label ?? ''}.`;
     },
   },
   firewall_device_remove: {
     notification: (e) => {
-      const secondaryEntityName = e.secondary_entity?.type
-        ? capitalize(e.secondary_entity.type)
-        : e.secondary_entity?.type;
-
-      return `${secondaryEntityName} ${
-        e.secondary_entity?.label
-      } has been removed from Firewall ${e.entity?.label ?? ''}.`;
+      if (e.secondary_entity?.type) {
+        const secondaryEntityName =
+          secondaryEntityTypeObj[e.secondary_entity.type];
+        return `${secondaryEntityName} ${
+          e.secondary_entity?.label
+        } has been removed from Firewall ${e.entity?.label ?? ''}.`;
+      }
+      return `A device has been removed from Firewall ${
+        e.entity?.label ?? ''
+      }.`;
     },
   },
   firewall_disable: {

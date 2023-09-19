@@ -128,7 +128,7 @@ const removeFirewallRules = (ruleLabel: string) => {
  */
 const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
   // Go to Linodes tab
-  ui.tabList.findTabByTitle('Linodes').should('be.visible').click();
+  ui.tabList.findTabByTitle('Linodes (0)').should('be.visible').click();
 
   ui.button.findByTitle('Add Linodes to Firewall').should('be.visible').click();
 
