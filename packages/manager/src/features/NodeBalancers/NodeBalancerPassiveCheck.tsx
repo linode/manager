@@ -1,10 +1,10 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Toggle } from 'src/components/Toggle';
-import { Typography } from 'src/components/Typography';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
+import { Toggle } from 'src/components/Toggle';
+import { Typography } from 'src/components/Typography';
 
 import type { NodeBalancerConfigPanelProps } from './types';
 
@@ -17,7 +17,7 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
   ) => props.onCheckPassiveChange(value);
 
   return (
-    <Grid md={6} sx={{ padding: 0 }} xs={12}>
+    <Grid md={6} sx={{ padding: 1 }} xs={12}>
       <Grid container spacing={2}>
         <Grid xs={12}>
           <Typography data-qa-passive-checks-header variant="h2">

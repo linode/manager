@@ -322,7 +322,7 @@ const IPSharingPanel = (props: Props) => {
                 IP Sharing allows a Linode to share an IP address assignment
                 (one or more additional IP addresses). This can be used to allow
                 one Linode to begin serving requests should another become
-                unresponsive. Only IPs in the same datacenter are offered for
+                unresponsive. Only IPs in the same data center are offered for
                 sharing.
               </Typography>
             </Grid>
@@ -348,7 +348,7 @@ const IPSharingPanel = (props: Props) => {
                     marginTop: theme.spacing(2),
                   }}
                 >
-                  You have no other Linodes in this Linode&rsquo;s datacenter
+                  You have no other Linodes in this Linode&rsquo;s data center
                   with which to share IPs.
                 </Typography>
               ) : (

@@ -249,6 +249,7 @@ export type EventAction =
   | 'community_mention'
   | 'community_question_reply'
   | 'credit_card_updated'
+  | 'database_low_disk_space'
   | 'database_backup_restore'
   | 'database_create'
   | 'database_credentials_reset'

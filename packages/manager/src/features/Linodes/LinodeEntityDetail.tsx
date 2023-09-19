@@ -1,5 +1,4 @@
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
@@ -13,6 +12,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import EntityDetail from 'src/components/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { TableBody } from 'src/components/TableBody';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography, TypographyProps } from 'src/components/Typography';
@@ -20,19 +20,44 @@ import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActi
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllImagesQuery } from 'src/queries/images';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useVPCsQuery } from 'src/queries/vpcs';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { pluralize } from 'src/utilities/pluralize';
 
+import {
+  StyledBodyGrid,
+  StyledBox,
+  StyledChip,
+  StyledColumnLabelGrid,
+  StyledCopyTooltip,
+  StyledGradientDiv,
+  StyledLabelBox,
+  StyledLink,
+  StyledListItem,
+  StyledRightColumnGrid,
+  StyledSummaryGrid,
+  StyledTable,
+  StyledTableCell,
+  StyledTableGrid,
+  StyledTableRow,
+  StyledVPCBox,
+  sxLastListItem,
+  sxListItemFirstChild,
+} from './LinodeEntityDetail.styles';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
@@ -41,20 +66,13 @@ import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
 } from './transitions';
-import {
-  StyledChip,
-  StyledLink,
-  StyledBodyGrid,
-  StyledColumnLabelGrid,
-  StyledRightColumnGrid,
-  StyledSummaryGrid,
-  StyledTable,
-  StyledTableGrid,
-  StyledTableCell,
-  StyledCopyTooltip,
-  StyledGradientDiv,
-  StyledTableRow,
-} from './LinodeEntityDetail.styles';
+
+import type {
+  Interface,
+  Linode,
+  LinodeType,
+} from '@linode/api-v4/lib/linodes/types';
+import type { Subnet } from '@linode/api-v4/lib/vpcs';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -226,19 +244,19 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
 
   return (
     <EntityHeader
-      title={<StyledLink to={`linodes/${linodeId}`}>{linodeLabel}</StyledLink>}
       isSummaryView={isSummaryView}
+      title={<StyledLink to={`linodes/${linodeId}`}>{linodeLabel}</StyledLink>}
       variant={variant}
     >
       <Box sx={sxBoxFlex}>
         <StyledChip
+          component="span"
+          data-qa-linode-status
           hasSecondaryStatus={hasSecondaryStatus}
           isOffline={isOffline}
           isOther={isOther}
           isRunning={isRunning}
           isSummaryView={isSummaryView}
-          component="span"
-          data-qa-linode-status
           label={formattedStatus}
           pill={true}
         />
@@ -330,10 +348,48 @@ export const Body = React.memo((props: BodyProps) => {
   } = props;
 
   const { data: profile } = useProfile();
-
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  const displayVPCSection = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
+  const { data: vpcData } = useVPCsQuery({}, {}, displayVPCSection);
+  const vpcsList = vpcData?.data ?? [];
+
+  const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
+    const subnets = vpc.subnets;
+
+    return Boolean(subnets.find((subnet) => subnet.linodes.includes(linodeId)));
+  });
+
+  const { data: configs } = useAllLinodeConfigsQuery(
+    linodeId,
+    Boolean(vpcLinodeIsAssignedTo) // only grab configs if necessary
+  );
+  let _configInterfaceWithVPC: Interface | undefined;
+
+  // eslint-disable-next-line no-unused-expressions
+  configs?.find((config) => {
+    const interfaces = config.interfaces;
+
+    const interfaceWithVPC = interfaces.find(
+      (_interface) => _interface.vpc_id === vpcLinodeIsAssignedTo?.id
+    );
+
+    if (interfaceWithVPC) {
+      _configInterfaceWithVPC = interfaceWithVPC;
+    }
+
+    return interfaceWithVPC;
+  });
+
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
   const firstAddress = ipv4[0];
@@ -343,80 +399,141 @@ export const Body = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
 
   return (
-    <StyledBodyGrid container direction="row" spacing={2}>
-      {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
-      <Grid
-        container
-        direction="column"
-        spacing={2}
-        sx={{
-          flexBasis: '25%',
-        }}
-      >
-        <StyledColumnLabelGrid>Summary</StyledColumnLabelGrid>
-        <StyledSummaryGrid container direction="row" spacing={2}>
-          <Grid>
-            <Typography>
-              {pluralize('CPU Core', 'CPU Cores', numCPUs)}
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography>{gbStorage} GB Storage</Typography>
-          </Grid>
-          <Grid>
-            <Typography>{gbRAM} GB RAM</Typography>
-          </Grid>
-          <Grid>
-            <Typography>
-              {pluralize('Volume', 'Volumes', numVolumes)}
-            </Typography>
-          </Grid>
-        </StyledSummaryGrid>
-      </Grid>
-      <StyledRightColumnGrid
-        container
-        direction="row"
-        justifyContent="space-between"
-        spacing={2}
-      >
-        <AccessTable
-          footer={
-            numIPAddresses > 2 ? (
-              <Typography variant="body1">
-                <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
-                  View all IP Addresses
-                </HashLink>
+    <>
+      <StyledBodyGrid container direction="row" spacing={2}>
+        {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
+        <Grid
+          sx={{
+            flexBasis: '25%',
+          }}
+          container
+          direction="column"
+          spacing={2}
+        >
+          <StyledColumnLabelGrid>Summary</StyledColumnLabelGrid>
+          <StyledSummaryGrid container direction="row" spacing={2}>
+            <Grid>
+              <Typography>
+                {pluralize('CPU Core', 'CPU Cores', numCPUs)}
               </Typography>
-            ) : undefined
-          }
-          sx={{
-            [theme.breakpoints.up('md')]: {
-              paddingRight: theme.spacing(2.5),
-            },
-          }}
-          gridProps={{ md: 5 }}
-          rows={[{ text: firstAddress }, { text: secondAddress }]}
-          title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
-        />
+            </Grid>
+            <Grid>
+              <Typography>{gbStorage} GB Storage</Typography>
+            </Grid>
+            <Grid>
+              <Typography>{gbRAM} GB RAM</Typography>
+            </Grid>
+            <Grid>
+              <Typography>
+                {pluralize('Volume', 'Volumes', numVolumes)}
+              </Typography>
+            </Grid>
+          </StyledSummaryGrid>
+        </Grid>
+        <StyledRightColumnGrid
+          container
+          direction="row"
+          justifyContent="space-between"
+          spacing={2}
+        >
+          <AccessTable
+            footer={
+              numIPAddresses > 2 ? (
+                <Typography variant="body1">
+                  <HashLink
+                    to={`/linodes/${linodeId}/networking#${ipv4TableID}`}
+                  >
+                    View all IP Addresses
+                  </HashLink>
+                </Typography>
+              ) : undefined
+            }
+            sx={{
+              [theme.breakpoints.up('md')]: {
+                paddingRight: theme.spacing(2.5),
+              },
+            }}
+            gridProps={{ md: 5 }}
+            rows={[{ text: firstAddress }, { text: secondAddress }]}
+            title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
+          />
 
-        <AccessTable
-          rows={[
-            { heading: 'SSH Access', text: sshLink(ipv4[0]) },
-            {
-              heading: 'LISH Console via SSH',
-              text: lishLink(username, region, linodeLabel),
-            },
-          ]}
+          <AccessTable
+            rows={[
+              { heading: 'SSH Access', text: sshLink(ipv4[0]) },
+              {
+                heading: 'LISH Console via SSH',
+                text: lishLink(username, region, linodeLabel),
+              },
+            ]}
+            sx={{
+              [theme.breakpoints.up('md')]: {
+                paddingLeft: theme.spacing(2.5),
+              },
+            }}
+            gridProps={{ md: 7 }}
+            title="Access"
+          />
+        </StyledRightColumnGrid>
+      </StyledBodyGrid>
+      {displayVPCSection && vpcLinodeIsAssignedTo && (
+        <Grid
           sx={{
-            [theme.breakpoints.up('md')]: {
-              paddingLeft: theme.spacing(2.5),
-            },
+            borderTop: `1px solid ${theme.borderColors.borderTable}`,
+            padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
           }}
-          gridProps={{ md: 7 }}
-          title="Access"
-        />
-      </StyledRightColumnGrid>
-    </StyledBodyGrid>
+          container
+          direction="column"
+          spacing={2}
+        >
+          <StyledColumnLabelGrid data-testid="vpc-section-title">
+            VPC
+          </StyledColumnLabelGrid>
+          <Grid
+            sx={{
+              margin: 0,
+              padding: '0 0 8px 0',
+              [theme.breakpoints.down('md')]: {
+                display: 'flex',
+                flexDirection: 'column',
+                paddingLeft: '8px',
+              },
+            }}
+            container
+            direction="row"
+            spacing={2}
+          >
+            <StyledVPCBox>
+              <StyledListItem>
+                <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
+                <Link
+                  data-testid="assigned-vpc-label"
+                  to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
+                >
+                  {vpcLinodeIsAssignedTo.label}
+                </Link>
+              </StyledListItem>
+            </StyledVPCBox>
+            <StyledVPCBox>
+              <StyledListItem>
+                <StyledLabelBox component="span" data-testid="subnets-string">
+                  Subnets:
+                </StyledLabelBox>{' '}
+                {getSubnetsString(vpcLinodeIsAssignedTo.subnets)}
+              </StyledListItem>
+            </StyledVPCBox>
+            <StyledVPCBox>
+              <StyledListItem sx={{ ...sxLastListItem }}>
+                <StyledLabelBox component="span" data-testid="vpc-ipv4">
+                  VPC IPv4:
+                </StyledLabelBox>{' '}
+                {_configInterfaceWithVPC?.ipv4?.vpc}
+              </StyledListItem>
+            </StyledVPCBox>
+          </Grid>
+        </Grid>
+      )}
+    </>
   );
 });
 
@@ -521,50 +638,6 @@ export const Footer = React.memo((props: FooterProps) => {
     [updateLinode, enqueueSnackbar]
   );
 
-  const sxListItemMdBp = {
-    borderRight: 0,
-    flex: '50%',
-    padding: 0,
-  };
-
-  const sxListItem = {
-    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-    color: theme.textColors.tableStatic,
-    display: 'flex',
-    padding: `0px 10px`,
-    [theme.breakpoints.down('md')]: {
-      ...sxListItemMdBp,
-    },
-  };
-
-  const sxListItemFirstChild = {
-    [theme.breakpoints.down('md')]: {
-      ...sxListItemMdBp,
-      '&:first-of-type': {
-        paddingBottom: theme.spacing(0.5),
-      },
-    },
-  };
-
-  const sxLastListItem = {
-    borderRight: 0,
-    paddingRight: 0,
-  };
-
-  const sxBox = {
-    alignItems: 'center',
-    display: 'flex',
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'flex-start',
-      flexDirection: 'column',
-    },
-  };
-
-  const sxLabel = {
-    fontFamily: theme.font.bold,
-    marginRight: '4px',
-  };
-
   return (
     <Grid
       sx={{
@@ -593,57 +666,43 @@ export const Footer = React.memo((props: FooterProps) => {
         lg={8}
         xs={12}
       >
-        <Box sx={sxBox}>
+        <StyledBox>
           {linodePlan && (
-            <Typography
+            <StyledListItem
               sx={{
-                ...sxListItem,
                 ...sxListItemFirstChild,
                 [theme.breakpoints.down('lg')]: {
                   paddingLeft: 0,
                 },
               }}
             >
-              <Box component="span" sx={sxLabel}>
-                Plan:{' '}
-              </Box>{' '}
+              <StyledLabelBox component="span">Plan: </StyledLabelBox>{' '}
               {linodePlan}
-            </Typography>
+            </StyledListItem>
           )}
           {linodeRegionDisplay && (
-            <Typography
-              sx={{
-                ...sxListItem,
-              }}
-            >
-              <Box component="span" sx={sxLabel}>
-                Region:
-              </Box>{' '}
+            <StyledListItem>
+              <StyledLabelBox component="span">Region:</StyledLabelBox>{' '}
               {linodeRegionDisplay}
-            </Typography>
+            </StyledListItem>
           )}
-        </Box>
-        <Box sx={sxBox}>
-          <Typography sx={{ ...sxListItem, ...sxListItemFirstChild }}>
-            <Box component="span" sx={sxLabel}>
-              Linode ID:
-            </Box>{' '}
+        </StyledBox>
+        <StyledBox>
+          <StyledListItem sx={{ ...sxListItemFirstChild }}>
+            <StyledLabelBox component="span">Linode ID:</StyledLabelBox>{' '}
             {linodeId}
-          </Typography>
-          <Typography
+          </StyledListItem>
+          <StyledListItem
             sx={{
-              ...sxListItem,
               ...sxLastListItem,
             }}
           >
-            <Box component="span" sx={sxLabel}>
-              Created:
-            </Box>{' '}
+            <StyledLabelBox component="span">Created:</StyledLabelBox>{' '}
             {formatDate(linodeCreated, {
               timezone: profile?.timezone,
             })}
-          </Typography>
-        </Box>
+          </StyledListItem>
+        </StyledBox>
       </Grid>
       <Grid
         sx={{
@@ -672,3 +731,13 @@ export const Footer = React.memo((props: FooterProps) => {
     </Grid>
   );
 });
+
+export const getSubnetsString = (data: Subnet[]) => {
+  const firstThreeSubnets = data.slice(0, 3);
+  const subnetLabels = firstThreeSubnets.map((subnet) => subnet.label);
+  const firstThreeSubnetsString = subnetLabels.join(', ');
+
+  return data.length > 3
+    ? firstThreeSubnetsString.concat(`, plus ${data.length - 3} more.`)
+    : firstThreeSubnetsString;
+};
