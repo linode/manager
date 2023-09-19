@@ -162,7 +162,6 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   textStrings.forEach((eachString) => {
     doc.text(eachString.text, eachString.leftMargin || pageMargin, y, {
       charSpace: 0.75,
-      maxWidth: 100,
     });
   });
   // reset text format
