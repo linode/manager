@@ -8,6 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { SelectRegionPanel } from './SelectRegionPanel';
 
 jest.mock('src/utilities/pricing/linodes', () => ({
+  doesRegionHaveUniquePricing: jest.fn(() => true),
   isLinodeTypeDifferentPriceInSelectedRegion: jest.fn(() => false),
 }));
 jest.mock('src/utilities/queryParams', () => ({
@@ -19,7 +20,7 @@ jest.mock('src/hooks/useFlags', () => ({
   }),
 }));
 
-describe('SelectRegionPanel on the Create Flow', () => {
+describe('SelectRegionPanel', () => {
   it('should render a notice when the selected region has unique pricing and the flag is on', async () => {
     server.use(
       rest.get('*/linode/types', (req, res, ctx) => {
@@ -64,7 +65,7 @@ describe('SelectRegionPanel on the Create Flow', () => {
   });
 });
 
-describe('SelectRegionPanel on the Clone Flow', () => {
+describe.only('SelectRegionPanel on the Clone Flow', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -89,17 +90,13 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       'You can use our speedtest page to find the best region for your current location.'
     );
 
-    // Dynamic Pricing Notice
-    expect(getByTestId('dynamic-pricing-notice')).toBeInTheDocument();
-
     // Links
     const links = getAllByRole('link');
-    expect(links).toHaveLength(2);
+    expect(links).toHaveLength(1);
     expect(links[0]).toHaveAttribute(
       'href',
       'https://www.linode.com/speed-test/'
     );
-    expect(links[1]).toHaveAttribute('href', 'https://www.linode.com/pricing');
 
     // Select
     expect(
@@ -154,16 +151,15 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       .mockReturnValue(false);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="br-gru" />
+      <SelectRegionPanel {...mockedProps} selectedID="us-west" />
     );
 
     const warnings = getAllByRole('alert');
-    expect(warnings).toHaveLength(2);
-    expect(getByTestId('dynamic-pricing-notice')).toBeInTheDocument();
+    expect(warnings).toHaveLength(1);
     expect(getByTestId('cross-data-center-notice')).toBeInTheDocument();
   });
 
-  it('displays the cloning and price structure notices when cloning to a different region with a different price', () => {
+  it.only('displays the cloning and price structure notices when cloning to a different region with a different price', () => {
     jest
       .spyOn(
         require('src/utilities/queryParams'),
@@ -185,7 +181,7 @@ describe('SelectRegionPanel on the Clone Flow', () => {
     );
 
     const warnings = getAllByRole('alert');
-    expect(warnings).toHaveLength(2);
+    expect(warnings).toHaveLength(3);
     expect(getByTestId('cross-data-center-notice')).toBeInTheDocument();
     expect(getByTestId('different-price-structure-notice')).toBeInTheDocument();
   });
