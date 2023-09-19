@@ -14,7 +14,7 @@ export const RegionHelperText = (props: RegionHelperTextProps) => {
 
   return (
     <Box {...rest}>
-      <Typography variant="body1">
+      <Typography data-testid="region-select-helper-test" variant="body1">
         You can use
         {` `}
         <Link onClick={onClick} to="https://www.linode.com/speed-test/">
