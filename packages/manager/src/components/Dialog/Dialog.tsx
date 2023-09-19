@@ -81,6 +81,7 @@ export const Dialog = (props: DialogProps) => {
         {titleBottomBorder && <StyledHr />}
         <DialogContent
           sx={{
+            overflowX: 'hidden',
             paddingBottom: theme.spacing(3),
           }}
           className={className}
