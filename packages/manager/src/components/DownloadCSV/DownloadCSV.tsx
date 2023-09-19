@@ -14,7 +14,7 @@ interface DownloadCSVProps {
   data: unknown[];
   filename: string;
   headers: { key: string; label: string }[];
-  onClick: () => void;
+  onClick?: () => void;
   sx?: SxProps;
   text?: string;
 }
