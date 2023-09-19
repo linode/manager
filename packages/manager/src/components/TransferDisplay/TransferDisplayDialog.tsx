@@ -63,7 +63,7 @@ export const TransferDisplayDialog = React.memo(
          *  Global Transfer Pool Display
          */}
         <TransferDisplayDialogHeader
-          tooltipText={`The Global Pool includes transfer associated with active services in all regions${
+          tooltipText={`The Global Pool includes transfer associated with active services in your devices' regions${
             listOfOtherRegionTransferPools.length > 0
               ? ` except for ${otherRegionPools}.`
               : '.'
