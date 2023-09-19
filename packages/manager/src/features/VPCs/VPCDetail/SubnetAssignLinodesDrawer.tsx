@@ -8,6 +8,7 @@ import {
   Subnet,
   APIError,
 } from '@linode/api-v4';
+import Close from '@mui/icons-material/Close';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -15,11 +16,15 @@ import { useQueryClient } from 'react-query';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { FormHelperText } from 'src/components/FormHelperText';
+import { IconButton } from 'src/components/IconButton';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+
+import { useFormattedDate } from 'src/hooks/useFormattedDate';
 
 import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
 import { queryKey, useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -29,7 +34,14 @@ import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
 
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
+import {
+  SelectedOptionsHeader,
+  SelectedOptionsList,
+  SelectedOptionsListItem,
+  StyledButtonBox,
+  StyledLabel,
+  StyledNoAssignedLinodesBox,
+} from './SubnetAssignLinodesDrawer.styles';
 
 // @TODO VPC - if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or somthing
@@ -43,6 +55,7 @@ interface Props {
 
 type LinodeAndConfigData = Linode & {
   configId: number;
+  configLabel: string;
   interfaceId: number;
 };
 
@@ -53,8 +66,10 @@ const MULTIPLE_CONFIGURATIONS_MESSAGE =
   'This Linode has multiple configurations. Select which configuration you would like added to the subnet.';
 
 export const SubnetAssignLinodesDrawer = (props: Props) => {
-  const queryClient = useQueryClient();
   const { onClose, open, subnet, vpcId, vpcRegion } = props;
+  const queryClient = useQueryClient();
+  const csvRef = React.useRef<any>();
+  const formattedDate = useFormattedDate();
 
   const [assignLinodesErrors, setAssignLinodesErrors] = React.useState<
     Record<string, string | undefined>
@@ -72,13 +87,11 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     assignedLinodesAndConfigData,
     setAssignedLinodesAndConfigData,
   ] = React.useState<LinodeAndConfigData[]>([]);
-
   const [linodeConfigs, setLinodeConfigs] = React.useState<Config[]>([]);
   const [autoAssignIPv4, setAutoAssignIPv4] = React.useState<boolean>(true);
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
   // there isn't a 'view VPC/Subnet' grant that does anything, so all VPCs get returned even for restricted users
@@ -87,8 +100,19 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     Boolean(profile?.restricted) &&
     (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
+  const csvHeaders = [
+    { key: 'id', label: 'id' },
+    { key: 'label', label: 'label' },
+    { key: 'ipv4', label: 'ipv4' },
+  ];
+
+  const downloadCSV = async () => {
+    await getCSVData();
+    csvRef.current.link.click();
+  };
+
   // We only want the linodes from the same region as the VPC
-  const { data: linodes } = useAllLinodesQuery(
+  const { data: linodes, refetch: getCSVData } = useAllLinodesQuery(
     {},
     {
       region: vpcRegion,
@@ -158,7 +182,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
             ...selectedLinode,
             configId,
             interfaceId: newInterface.id,
-            label: `${selectedLinode.label}${
+            configLabel: `${selectedLinode.label}${
               selectedConfig?.label ? ` (${selectedConfig.label})` : ''
             }`,
           },
@@ -183,15 +207,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     }
   };
 
-  const onUnassignLinode = async (
-    data: LinodeAndConfigData | null | undefined
-  ) => {
-    // this shouldn't be a problem with a list, but adding this check here because of how
-    // autocomplete functionality and clearing works
-    if (!data) {
-      return;
-    }
-
+  const onUnassignLinode = async (data: LinodeAndConfigData) => {
     const { id: linodeId, configId, interfaceId } = data;
     try {
       await deleteLinodeConfigInterface(linodeId, configId, interfaceId);
@@ -252,7 +268,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           const data = await getAllLinodeConfigs(linode.id);
           setLinodeConfigs(data);
         } catch (errors) {
-          // force error to appear at top of page
+          // force error to appear at top of drawer
           setAssignLinodesErrors({
             none: 'Could not load configurations for selected linode',
           });
@@ -367,7 +383,6 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           </Button>
         </StyledButtonBox>
       </form>
-      {/* @TODO VPC: currently using autocomplete for this (which is pretty interesting), but will eventually replace with a List + download CSV as well */}
       {unassignLinodesErrors
         ? unassignLinodesErrors.map((apiError: APIError) => (
             <Notice
@@ -378,18 +393,49 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
             />
           ))
         : null}
-      <Autocomplete
-        clearOnBlur
-        clearOnEscape
-        disabled={userCannotAssignLinodes}
-        inputValue={''}
-        label={`Linodes Assigned to Subnet (${assignedLinodesAndConfigData.length})`}
-        onChange={(_, value: LinodeAndConfigData) => {
-          onUnassignLinode(value);
-          setUnassignLinodesErrors([]);
+      <SelectedOptionsHeader>{`Linodes Assigned to Subnet (${assignedLinodesAndConfigData.length})`}</SelectedOptionsHeader>
+      {assignedLinodesAndConfigData.length > 0 ? (
+        <SelectedOptionsList>
+          {assignedLinodesAndConfigData.map((linodeAndConfigData) => (
+            <SelectedOptionsListItem
+              alignItems="center"
+              key={linodeAndConfigData.id}
+            >
+              <StyledLabel>{linodeAndConfigData.configLabel}</StyledLabel>
+              <IconButton
+                aria-label={`remove ${linodeAndConfigData.configLabel}`}
+                disableRipple
+                onClick={() => {
+                  onUnassignLinode(linodeAndConfigData);
+                  setUnassignLinodesErrors([]);
+                }}
+                size="medium"
+              >
+                <Close />
+              </IconButton>
+            </SelectedOptionsListItem>
+          ))}
+        </SelectedOptionsList>
+      ) : (
+        <StyledNoAssignedLinodesBox>
+          <StyledLabel>No Linodes have been assigned.</StyledLabel>
+        </StyledNoAssignedLinodesBox>
+      )}
+      <DownloadCSV
+        sx={{
+          alignItems: 'flex-start',
+          display: 'flex',
+          gap: 1,
+          marginTop: 2,
+          textAlign: 'left',
         }}
-        options={assignedLinodesAndConfigData}
-        placeholder="Select a Linode to unassign"
+        buttonType="unstyled"
+        csvRef={csvRef}
+        data={assignedLinodesAndConfigData}
+        filename={`linodes-assigned-${formattedDate}.csv`}
+        headers={csvHeaders}
+        onClick={downloadCSV}
+        text={'Download List of Assigned Linodes (.csv)'}
       />
       <StyledButtonBox>
         <Button buttonType="outlined" onClick={onClose}>

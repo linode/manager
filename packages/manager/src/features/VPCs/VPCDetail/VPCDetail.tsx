@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
+import { DismissibleBanner } from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -24,6 +25,9 @@ import {
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
+
+const REBOOT_LINODE_WARNING =
+  'Assigned or unassigned Linodes will not take affect until the Linodes are rebooted.';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -184,6 +188,14 @@ const VPCDetail = () => {
       >
         <Typography variant="h2">Subnets ({vpc.subnets.length})</Typography>
       </Box>
+      {numLinodes > 0 && (
+        <DismissibleBanner
+          preferenceKey={`reboot-linodes-warning-banner`}
+          variant="warning"
+        >
+          <Typography variant="body1">{REBOOT_LINODE_WARNING}</Typography>
+        </DismissibleBanner>
+      )}
       <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
     </>
   );
