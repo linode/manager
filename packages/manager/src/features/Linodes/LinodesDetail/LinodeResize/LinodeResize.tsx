@@ -248,11 +248,14 @@ export const LinodeResize = (props: Props) => {
             }}
             component="p"
           >
-            {/* TODO: Unified Migration: [M3-7114] - Waiting on copy */}
-            New text here explaining what a warm resize is and what a cold
-            resize and the expectations..Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam.
+            During a <strong>warm resize</strong>, your Compute Instance will
+            remain up and running for the duration of the process and will be
+            rebooted to complete the resize. In some cases, you will need to
+            reboot the instance manually (you will receive a notification to do
+            so if necessary). During a <strong>cold resize</strong>, your
+            Compute Instance will be shut down, migrated to a new host machine,
+            and restored to its previous state (booted or powered off) once the
+            resize is complete.
           </Box>
           <FormControl sx={{ marginTop: 0 }}>
             <FormLabel id="resize-migration-types" sx={{ marginBottom: 0 }}>
@@ -396,14 +399,11 @@ export const LinodeResize = (props: Props) => {
           }
           onClose={() => setConfirmationDialogOpen(false)}
           open={isConfirmationDialogOpen}
-          title="Enable this feature?"
+          title="Confirm warm resize?"
         >
-          {/* TODO: Unified Migration: [M3-7114] - Waiting on copy */}
           <Typography variant="subtitle1">
-            The linode will be rebooted once this migration (resize) is done.
-          </Typography>
-          <Typography sx={{ marginTop: '8px' }} variant="subtitle1">
-            Yes, I understand, please proceed with the warm migration.
+            During the warm resize process, your Linode will be rebooted to
+            complete the migration.
           </Typography>
         </ConfirmationDialog>
       </form>
