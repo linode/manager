@@ -1,5 +1,6 @@
 import {
   createLoadbalancerServiceTarget,
+  deleteLoadbalancerServiceTarget,
   getLoadbalancerServiceTargets,
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -31,6 +32,26 @@ export const useServiceTargetCreateMutation = (loadbalancerId: number) => {
   const queryClient = useQueryClient();
   return useMutation<ServiceTarget, APIError[], ServiceTargetPayload>(
     (data) => createLoadbalancerServiceTarget(loadbalancerId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'aglb',
+          loadbalancerId,
+          'service-targets',
+        ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerServiceTargetDeleteMutation = (
+  loadbalancerId: number,
+  serviceTargetId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(
+    () => deleteLoadbalancerServiceTarget(loadbalancerId, serviceTargetId),
     {
       onSuccess() {
         queryClient.invalidateQueries([

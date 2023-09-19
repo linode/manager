@@ -20,7 +20,7 @@ export interface DataCenterPricingOptions {
 }
 
 // The key is a region id and the value is the percentage increase in price.
-const priceIncreaseMap = {
+export const priceIncreaseMap = {
   'br-gru': 0.4, // Sao Paulo
   'id-cgk': 0.2, // Jakarta
 };
@@ -33,7 +33,7 @@ const priceIncreaseMap = {
  *   flags: { dcSpecificPricing: true },
  *   regionId: 'us-east',
  * });
- * @returns a datacenter specific price
+ * @returns a data center specific price
  */
 export const getDCSpecificPrice = ({
   basePrice,

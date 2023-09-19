@@ -1,3 +1,4 @@
+import { ServiceTarget } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import { Hidden, IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
@@ -27,6 +28,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 
 import { CreateServiceTargetDrawer } from './ServiceTargets/CreateServiceTargetDrawer';
+import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
 
 import type { Filter } from '@linode/api-v4';
 
@@ -37,6 +39,11 @@ export const LoadBalancerServiceTargets = () => {
 
   const [query, setQuery] = useState<string>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [
+    selectedServiceTarget,
+    setSelectedServiceTarget,
+  ] = useState<ServiceTarget>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -51,6 +58,11 @@ export const LoadBalancerServiceTargets = () => {
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+  };
+
+  const handleDeleteServiceTarget = (serviceTarget: ServiceTarget) => {
+    setIsDeleteDialogOpen(true);
+    setSelectedServiceTarget(serviceTarget);
   };
 
   // If the user types in a search query, filter results by label.
@@ -173,7 +185,10 @@ export const LoadBalancerServiceTargets = () => {
                   actionsList={[
                     { onClick: () => null, title: 'Edit' },
                     { onClick: () => null, title: 'Clone Service Target' },
-                    { onClick: () => null, title: 'Delete' },
+                    {
+                      onClick: () => handleDeleteServiceTarget(serviceTarget),
+                      title: 'Delete',
+                    },
                   ]}
                   ariaLabel={`Action Menu for service target ${serviceTarget.label}`}
                 />
@@ -193,6 +208,12 @@ export const LoadBalancerServiceTargets = () => {
         loadbalancerId={Number(loadbalancerId)}
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
+      />
+      <DeleteServiceTargetDialog
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
+        serviceTarget={selectedServiceTarget}
       />
     </>
   );

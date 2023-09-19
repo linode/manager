@@ -7,28 +7,29 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { IconButton } from 'src/components/IconButton';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
+import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
-import InvoiceTable from './InvoiceTable';
+import { InvoiceTable } from './InvoiceTable';
 
 export const InvoiceDetail = () => {
   const { invoiceId } = useParams<{ invoiceId: string }>();
@@ -37,6 +38,7 @@ export const InvoiceDetail = () => {
   const csvRef = React.useRef<any>();
 
   const { data: account } = useAccount();
+  const { data: regions } = useRegionsQuery();
 
   const [invoice, setInvoice] = React.useState<Invoice | undefined>(undefined);
   const [items, setItems] = React.useState<InvoiceItem[] | undefined>(
@@ -85,7 +87,15 @@ export const InvoiceDetail = () => {
   ) => {
     const taxes =
       flags[getShouldUseAkamaiBilling(invoice.date) ? 'taxes' : 'taxBanner'];
-    const result = await printInvoice(account, invoice, items, taxes, flags);
+
+    const result = await printInvoice({
+      account,
+      flags,
+      invoice,
+      items,
+      regions: regions ?? [],
+      taxes,
+    });
 
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
   };
@@ -119,14 +129,13 @@ export const InvoiceDetail = () => {
     >
       <Grid container rowGap={2}>
         <Grid xs={12}>
-          <Grid container spacing={2} sx={sxGrid}>
+          <Grid container spacing={2} sx={sxGrid} data-qa-invoice-header>
             <Grid sm={4} sx={sxGrid} xs={12}>
-              <Link to={`/account/billing`}>
+              <Link to={`/account/billing`} data-qa-back-to-billing>
                 <IconButton
                   sx={{
                     padding: 0,
                   }}
-                  data-qa-back-to-billing
                   size="large"
                 >
                   <KeyboardArrowLeft
@@ -201,6 +210,7 @@ export const InvoiceDetail = () => {
                 gap: theme.spacing(2),
                 padding: theme.spacing(1),
               }}
+              data-qa-invoice-summary
             >
               <Typography variant="h2">
                 Subtotal:{' '}

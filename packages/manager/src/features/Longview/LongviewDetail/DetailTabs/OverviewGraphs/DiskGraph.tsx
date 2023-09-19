@@ -1,4 +1,4 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -10,9 +10,7 @@ import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
 
-export type CombinedProps = GraphProps & WithTheme;
-
-export const DiskGraph: React.FC<CombinedProps> = (props) => {
+export const DiskGraph = (props: GraphProps) => {
   const {
     clientAPIKey,
     end,
@@ -20,9 +18,10 @@ export const DiskGraph: React.FC<CombinedProps> = (props) => {
     lastUpdated,
     lastUpdatedError,
     start,
-    theme,
     timezone,
   } = props;
+
+  const theme = useTheme();
 
   const { data, error: requestError, loading, request } = useGraphs(
     ['disk', 'sysinfo'],
@@ -160,5 +159,3 @@ export const processDiskData = (
     { ...emptyState }
   );
 };
-
-export default withTheme(DiskGraph);
