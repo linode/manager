@@ -38,7 +38,7 @@ interface Props
    * Enables a leaveDelay of 3000ms
    * @default false
    */
-  leaveDelay?: boolean;
+  leaveDelay?: number;
   /**
    * Sets the icon and color
    */
@@ -142,6 +142,7 @@ export const TooltipIcon = (props: Props) => {
   return (
     <Tooltip
       classes={classes}
+      componentsProps={props.componentsProps}
       data-qa-help-tooltip
       disableInteractive={!interactive}
       enterTouchDelay={0}

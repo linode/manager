@@ -24,7 +24,8 @@ import TableWrapper from './TableWrapper';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
 
-export interface RenderLinodesProps extends PaginationProps {
+export interface RenderLinodesProps
+  extends PaginationProps<LinodeWithMaintenance> {
   data: Props['data'];
   openDialog: Props['openDialog'];
   openPowerActionDialog: Props['openPowerActionDialog'];

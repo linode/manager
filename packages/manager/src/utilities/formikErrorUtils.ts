@@ -66,3 +66,57 @@ export const handleAPIErrors = (
     }
   });
 };
+
+export interface SubnetError {
+  label?: string;
+  ipv4?: string;
+  ipv6?: string;
+}
+
+/**
+ * Handles given API errors and converts any specific subnet related errors into a usable format;
+ * Returns a map of subnets' indexes to their @interface SubnetError
+ * Example: errors = [{ reason: 'error1', field: 'subnets[1].label' },
+ *                    { reason: 'error2', field: 'subnets[1].ipv4' },
+ *                    { reason: 'not a subnet error so will not appear in return obj', field: 'label'},
+ *                    { reason: 'error3', field: 'subnets[4].ipv4' }]
+ * returns: {
+ *            1: { label: 'error1', ipv4: 'error2' },
+ *            4: { ipv4: 'error3'}
+ *          }
+ *
+ * @param errors the errors from the API
+ * @param setFieldError function to set non-subnet related field errors
+ * @param setError function to set (non-subnet related) general API errors
+ */
+export const handleVPCAndSubnetErrors = (
+  errors: APIError[],
+  setFieldError: (field: string, message: string) => void,
+  setError?: (message: string) => void
+) => {
+  const subnetErrors = {};
+  const nonSubnetErrors: APIError[] = [];
+
+  errors.forEach((error) => {
+    if (error.field && error.field.includes('subnets[')) {
+      const [subnetIdx, field] = error.field.split('.');
+      const idx = parseInt(
+        subnetIdx.substring(subnetIdx.indexOf('[') + 1, subnetIdx.indexOf(']')),
+        10
+      );
+
+      // if there already exists some previous error for the subnet at index idx, we
+      // just add the current error. Otherwise, we create a new entry for the subnet.
+      if (subnetErrors[idx]) {
+        subnetErrors[idx] = { ...subnetErrors[idx], [field]: error.reason };
+      } else {
+        subnetErrors[idx] = { [field]: error.reason };
+      }
+    } else {
+      nonSubnetErrors.push(error);
+    }
+  });
+
+  handleAPIErrors(nonSubnetErrors, setFieldError, setError);
+  return subnetErrors;
+};

@@ -2,6 +2,7 @@ import { linodeTypeFactory } from 'src/factories';
 
 import { getLinodeBackupPrice } from './backups';
 import {
+  doesRegionHaveUniquePricing,
   getDynamicDCNetworkTransferData,
   getLinodeRegionPrice,
   isLinodeInDynamicPricingDC,
@@ -230,5 +231,66 @@ describe('isLinodeTypeDifferentPriceInSelectedRegion', () => {
 
       expect(result).toEqual({ quota: 0, used: 0 });
     });
+  });
+});
+
+describe('getLinodeRegionPrice', () => {
+  it('gets a linode price without a region override', () => {
+    const type = linodeTypeFactory.build({
+      price: {
+        hourly: 0.1,
+        monthly: 5,
+      },
+      region_prices: [],
+    });
+
+    expect(getLinodeRegionPrice(type, 'us-east')).toEqual({
+      hourly: 0.1,
+      monthly: 5,
+    });
+  });
+  it('gets a linode price with a region override', () => {
+    const type = linodeTypeFactory.build({
+      price: {
+        hourly: 0.1,
+        monthly: 5,
+      },
+      region_prices: [{ hourly: 0.2, id: 'id-cgk', monthly: 29.99 }],
+    });
+
+    expect(getLinodeRegionPrice(type, 'id-cgk')).toEqual({
+      hourly: 0.2,
+      monthly: 29.99,
+    });
+  });
+});
+
+describe('doesRegionHaveUniquePricing', () => {
+  it('should return false when values are undefined', () => {
+    expect(doesRegionHaveUniquePricing(undefined, undefined)).toBe(false);
+  });
+  it('should not error when region_prices is undefined', () => {
+    const types = linodeTypeFactory.buildList(1, {
+      region_prices: undefined,
+    });
+    expect(doesRegionHaveUniquePricing('us-east', types)).toBe(false);
+  });
+  it('should return false when no region has specific pricing', () => {
+    const types = linodeTypeFactory.buildList(1, {
+      region_prices: [],
+    });
+    expect(doesRegionHaveUniquePricing('us-east', types)).toBe(false);
+  });
+  it('should return false when no linode type has unique pricing for the specified region', () => {
+    const types = linodeTypeFactory.buildList(1, {
+      region_prices: [{ id: 'id-cgk' }],
+    });
+    expect(doesRegionHaveUniquePricing('us-east', types)).toBe(false);
+  });
+  it('should return true when any linode type has unique pricing for the specified region', () => {
+    const types = linodeTypeFactory.buildList(1, {
+      region_prices: [{ id: 'id-cgk' }],
+    });
+    expect(doesRegionHaveUniquePricing('id-cgk', types)).toBe(true);
   });
 });

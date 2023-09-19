@@ -96,7 +96,7 @@ const VPCDetail = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment="VPC" />
+      <DocumentTitleSegment segment={vpc.label} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -109,7 +109,7 @@ const VPCDetail = () => {
           pathname: `/vpcs/${vpc.label}`,
         }}
         docsLabel="Docs"
-        docsLink="#" // TODO: VPC - Add docs link
+        docsLink="#" // @TODO VPC: Add docs link
       />
       <EntityHeader>
         <Box>

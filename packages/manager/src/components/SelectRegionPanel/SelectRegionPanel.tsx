@@ -7,15 +7,21 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
-import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
+import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useTypeQuery } from 'src/queries/types';
+import { useAllTypes, useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
-import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
+import { DIFFERENT_PRICE_STRUCTURE_WARNING } from 'src/utilities/pricing/constants';
+import { priceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
+import {
+  doesRegionHaveUniquePricing,
+  isLinodeTypeDifferentPriceInSelectedRegion,
+} from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Box } from '../Box';
-import { DocsLink } from '../DocsLink/DocsLink';
+import { DynamicPriceNotice } from '../DynamicPriceNotice';
+// import { DocsLink } from '../DocsLink/DocsLink'; //TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed
 import { Link } from '../Link';
 
 interface SelectRegionPanelProps {
@@ -46,24 +52,47 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const flags = useFlags();
   const params = getQueryParamsFromQueryString(location.search);
 
+  const isCloning = /clone/i.test(params.type);
+  const isLinode = location.pathname.startsWith('/linodes');
+
+  const { data: types } = useAllTypes(isLinode);
   const { data: type } = useTypeQuery(
     selectedLinodeTypeId ?? '',
     Boolean(selectedLinodeTypeId)
   );
 
-  const isCloning = /clone/i.test(params.type);
+  const currentLinodeRegion = params.regionID;
 
   const showCrossDataCenterCloneWarning =
-    isCloning && selectedID && params.regionID !== selectedID;
+    isCloning && selectedID && currentLinodeRegion !== selectedID;
 
-  const showSelectedRegionHasDifferentPriceWarning =
+  const showClonePriceWarning =
     flags.dcSpecificPricing &&
     isCloning &&
     isLinodeTypeDifferentPriceInSelectedRegion({
-      regionA: params.regionID,
+      regionA: currentLinodeRegion,
       regionB: selectedID,
       type,
     });
+
+  const selectedRegionHasUniquePricing = doesRegionHaveUniquePricing(
+    selectedID,
+    types
+  );
+
+  const showUniquePricingNotice =
+    flags.dcSpecificPricing &&
+    !showClonePriceWarning && // Don't show both notices at the same time.
+    selectedRegionHasUniquePricing;
+
+  // If this component is used in the context of Linodes,
+  // use Linode types from the API to determine if the region
+  // has specific pricing. Otherwise, check against our local pricing map.
+  const showRegionPriceNotice = flags.dcSpecificPricing
+    ? isLinode
+      ? showUniquePricingNotice
+      : selectedID && priceIncreaseMap[selectedID]
+    : false;
 
   if (props.regions.length === 0) {
     return null;
@@ -85,20 +114,20 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         <Typography data-qa-tp="Region" variant="h2">
           Region
         </Typography>
-        {flags.dcSpecificPricing && (
+        {/* TODO: DC Pricing - M3-7086: Uncomment this once pricing info notice is removed */}
+        {/* {flags.dcSpecificPricing && (
           <DocsLink
             href="https://www.linode.com/pricing"
             label="How Data Center Pricing Works"
           />
-        )}
+        )} */}
       </Box>
       <RegionHelperText
-        hidePricingNotice={showSelectedRegionHasDifferentPriceWarning}
         onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
       />
       {showCrossDataCenterCloneWarning ? (
         <Notice
-          data-testid="region-select-warning"
+          dataTestId="cross-data-center-notice"
           spacingBottom={0}
           spacingTop={8}
           variant="warning"
@@ -116,13 +145,21 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         regions={regions}
         selectedID={selectedID || null}
       />
-      {showSelectedRegionHasDifferentPriceWarning && (
-        <Notice spacingBottom={0} spacingTop={12} variant="warning">
+      {showClonePriceWarning && (
+        <Notice
+          dataTestId="different-price-structure-notice"
+          spacingBottom={0}
+          spacingTop={12}
+          variant="warning"
+        >
           <Typography fontWeight="bold">
-            The selected region has a different price structure.{' '}
+            {DIFFERENT_PRICE_STRUCTURE_WARNING}{' '}
             <Link to="https://www.linode.com/pricing">Learn more.</Link>
           </Typography>
         </Notice>
+      )}
+      {selectedID && showRegionPriceNotice && (
+        <DynamicPriceNotice region={selectedID} />
       )}
     </Paper>
   );
