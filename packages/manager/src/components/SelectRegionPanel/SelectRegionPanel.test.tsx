@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
 
 import { linodeTypeFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -8,7 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { SelectRegionPanel } from './SelectRegionPanel';
 
 jest.mock('src/utilities/pricing/linodes', () => ({
-  doesRegionHaveUniquePricing: jest.fn(() => true),
+  doesRegionHaveUniquePricing: jest.fn(() => false),
   isLinodeTypeDifferentPriceInSelectedRegion: jest.fn(() => false),
 }));
 jest.mock('src/utilities/queryParams', () => ({
@@ -20,7 +21,19 @@ jest.mock('src/hooks/useFlags', () => ({
   }),
 }));
 
-describe('SelectRegionPanel', () => {
+const createPath = '/linodes/create';
+
+describe('SelectRegionPanel in create flow', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest
+      .spyOn(
+        require('src/utilities/pricing/linodes'),
+        'doesRegionHaveUniquePricing'
+      )
+      .mockReturnValue(true);
+  });
+
   it('should render a notice when the selected region has unique pricing and the flag is on', async () => {
     server.use(
       rest.get('*/linode/types', (req, res, ctx) => {
@@ -37,24 +50,21 @@ describe('SelectRegionPanel', () => {
       })
     );
 
-    jest.mock('react-router-dom', () => ({
-      ...jest.requireActual('react-router-dom'),
-      useLocation: () => ({
-        pathname: '/linodes/create',
-      }),
-    }));
-
     const regions = regionFactory.buildList(1, {
       id: 'id-cgk',
       label: 'Jakarta, ID',
     });
 
     const { findByText } = renderWithTheme(
-      <SelectRegionPanel
-        handleSelection={jest.fn()}
-        regions={regions}
-        selectedID="id-cgk"
-      />,
+      <MemoryRouter initialEntries={[createPath]}>
+        <Route path={createPath}>
+          <SelectRegionPanel
+            handleSelection={jest.fn()}
+            regions={regions}
+            selectedID="id-cgk"
+          />
+        </Route>
+      </MemoryRouter>,
       { flags: { dcSpecificPricing: true } }
     );
 
@@ -65,9 +75,24 @@ describe('SelectRegionPanel', () => {
   });
 });
 
-describe.only('SelectRegionPanel on the Clone Flow', () => {
+describe('SelectRegionPanel on the Clone Flow', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest
+      .spyOn(
+        require('src/utilities/queryParams'),
+        'getQueryParamsFromQueryString'
+      )
+      .mockReturnValue({
+        regionID: 'us-east',
+        type: 'Clone+Linode',
+      });
+    jest
+      .spyOn(
+        require('src/utilities/pricing/linodes'),
+        'doesRegionHaveUniquePricing'
+      )
+      .mockReturnValue(false);
   });
 
   const regions = [...regionFactory.buildList(3)];
@@ -79,7 +104,11 @@ describe.only('SelectRegionPanel on the Clone Flow', () => {
 
   it('renders expected content on initial render', () => {
     const { container, getAllByRole, getByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} />
+      <MemoryRouter initialEntries={[createPath]}>
+        <Route path={createPath}>
+          <SelectRegionPanel {...mockedProps} />
+        </Route>
+      </MemoryRouter>
     );
 
     // Header
@@ -107,16 +136,7 @@ describe.only('SelectRegionPanel on the Clone Flow', () => {
     ).toHaveTextContent('Select a Region');
   });
 
-  it('displays only the dynamic pricing notice when cloning to same region', () => {
-    jest
-      .spyOn(
-        require('src/utilities/queryParams'),
-        'getQueryParamsFromQueryString'
-      )
-      .mockReturnValue({
-        regionID: 'br-gru',
-        type: 'Clone+Linode',
-      });
+  it('displays no notice when cloning to the same region', () => {
     jest
       .spyOn(
         require('src/utilities/pricing/linodes'),
@@ -124,25 +144,19 @@ describe.only('SelectRegionPanel on the Clone Flow', () => {
       )
       .mockReturnValue(false);
 
-    const { getAllByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="br-gru" />
+    const { queryAllByRole } = renderWithTheme(
+      <MemoryRouter initialEntries={[createPath]}>
+        <Route path={createPath}>
+          <SelectRegionPanel {...mockedProps} selectedID="us-east" />
+        </Route>
+      </MemoryRouter>
     );
 
-    const warnings = getAllByRole('alert');
-    expect(warnings).toHaveLength(1);
-    expect(getByTestId('dynamic-pricing-notice')).toBeInTheDocument();
+    const warnings = queryAllByRole('alert');
+    expect(warnings).toHaveLength(0);
   });
 
-  it('displays the region and cloning notices when cloning to a different region with the same price', () => {
-    jest
-      .spyOn(
-        require('src/utilities/queryParams'),
-        'getQueryParamsFromQueryString'
-      )
-      .mockReturnValue({
-        regionID: 'us-east',
-        type: 'Clone+Linode',
-      });
+  it('displays the region cloning notice when cloning to a different region with the same price', () => {
     jest
       .spyOn(
         require('src/utilities/pricing/linodes'),
@@ -151,7 +165,11 @@ describe.only('SelectRegionPanel on the Clone Flow', () => {
       .mockReturnValue(false);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="us-west" />
+      <MemoryRouter initialEntries={[createPath]}>
+        <Route path={createPath}>
+          <SelectRegionPanel {...mockedProps} selectedID="us-west" />
+        </Route>
+      </MemoryRouter>
     );
 
     const warnings = getAllByRole('alert');
@@ -159,29 +177,30 @@ describe.only('SelectRegionPanel on the Clone Flow', () => {
     expect(getByTestId('cross-data-center-notice')).toBeInTheDocument();
   });
 
-  it.only('displays the cloning and price structure notices when cloning to a different region with a different price', () => {
-    jest
-      .spyOn(
-        require('src/utilities/queryParams'),
-        'getQueryParamsFromQueryString'
-      )
-      .mockReturnValue({
-        regionID: 'us-east',
-        type: 'Clone+Linode',
-      });
+  it('displays the cloning and price structure notices when cloning to a different region with a different price', () => {
     jest
       .spyOn(
         require('src/utilities/pricing/linodes'),
         'isLinodeTypeDifferentPriceInSelectedRegion'
       )
       .mockReturnValue(true);
+    jest
+      .spyOn(
+        require('src/utilities/pricing/linodes'),
+        'doesRegionHaveUniquePricing'
+      )
+      .mockReturnValue(true);
 
     const { getAllByRole, getByTestId } = renderWithTheme(
-      <SelectRegionPanel {...mockedProps} selectedID="br-gru" />
+      <MemoryRouter initialEntries={[createPath]}>
+        <Route path={createPath}>
+          <SelectRegionPanel {...mockedProps} selectedID="br-gru" />
+        </Route>
+      </MemoryRouter>
     );
 
     const warnings = getAllByRole('alert');
-    expect(warnings).toHaveLength(3);
+    expect(warnings).toHaveLength(2);
     expect(getByTestId('cross-data-center-notice')).toBeInTheDocument();
     expect(getByTestId('different-price-structure-notice')).toBeInTheDocument();
   });
