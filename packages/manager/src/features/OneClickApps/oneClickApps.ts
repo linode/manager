@@ -1157,6 +1157,116 @@ export const oneClickApps: OCA[] = [
     website: 'https://www.magicspam.com/anti-spam-features.php',
   },
   {
+    alt_description: 'FFmpeg encoder plugins.',
+    alt_name: 'Premium video encoding',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept FFmpeg Plugins are suited for both VOD and live production workflows, with advanced features such as Hybrid GPU acceleration and xHE-AAC audio format.`,
+    logo_url: 'mcffmpegplugin.svg',
+    name: 'MainConcept FFmpeg Plugins',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mcffmpegplugins/',
+        title: 'Deploy MainConcept FFmpeg Plugins through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'MainConcept FFmpeg Plugins are advanced video encoding tools.',
+    website: 'https://www.mainconcept.com/ffmpeg',
+  },
+  {
+    alt_description: 'Live video encoding engine.',
+    alt_name: 'Real time video encoding',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept Live Encoder is a powerful all-in-one encoding engine designed to simplify common broadcast and OTT video workflows.`,
+    logo_url: 'mcliveencoder.svg',
+    name: 'MainConcept Live Encoder',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mcliveencoder/',
+        title: 'Deploy MainConcept Live Encoder through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'MainConcept Live Encoder is a real time video encoding engine.',
+    website: 'https://www.mainconcept.com/live-encoder',
+  },
+  {
+    alt_description: 'Panasonic camera format encoder.',
+    alt_name: 'Media encoding into professional file formats.',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept 2GO P2 AVC Ultra Transcoder is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
+    logo_url: 'mc2gop2avc.svg',
+    name: 'MainConcept 2GO P2 AVC Ultra Transcoder',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mc2gop2avcultratranscoder/',
+        title: 'Deploy MainConcept 2GO P2 AVC Ultra Transcoder through the Linode Marketplace',
+      },
+    ],
+    summary:
+      '2GO P2 AVC Ultra Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
+    website: 'https://www.mainconcept.com/mc2go',
+  },
+  {
+    alt_description: 'Sony camera format encoder.',
+    alt_name: 'Media encoding into professional file formats.',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept 2GO XAVC Transcoder is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XAVC-Intra, XAVC Long GOP and XAVC-S.`,
+    logo_url: 'mc2goxavc.svg',
+    name: 'MainConcept 2GO XAVC Transcoder',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mc2gop2xavc/',
+        title: 'Deploy MainConcept 2GO XAVC Transcoder through the Linode Marketplace',
+      },
+    ],
+    summary:
+      '2GO XAVC Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
+    website: 'https://www.mainconcept.com/mc2go',
+  },
+  {
+    alt_description: 'Sony XDCAM format encoder.',
+    alt_name: 'Media encoding into professional file formats.',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '041125',
+      start: '6DBA98',
+    },
+    description: `MainConcept 2GO XDCAM Transcoder is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XDCAM HD, XDCAM EX, XDCAM IMX and DVCAM (XDCAM DV).`,
+    logo_url: 'mc2goxdcam.svg',
+    name: 'MainConcept 2GO XDCAM Transcoder',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mc2gop2xdcam/',
+        title: 'Deploy MainConcept 2GO XDCAM Transcoder through the Linode Marketplace',
+      },
+    ],
+    summary:
+      '2GO XDCAM Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
+    website: 'https://www.mainconcept.com/mc2go',
+  },
+  {
     alt_description: 'Open source Twitter alternative.',
     alt_name: 'Open source social media',
     categories: ['Media and Entertainment'],
