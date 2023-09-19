@@ -1,5 +1,5 @@
 /**
- * @file Constants related to tiered pricing.
+ * @file Constants related to DC-specific pricing.
  */
 
 import { linodeTypeFactory } from '@src/factories';
@@ -14,6 +14,13 @@ export const dcPricingRegionDifferenceNotice =
 /** Notice shown to users trying to choose a plan before selecting a region. */
 export const dcPricingPlanPlaceholder =
   'Select a region to view plans and prices.';
+
+/** Helper text shown to users users trying to create an LKE cluster before selecting both a region and plan. */
+export const dcPricingKubernetesCheckoutSummaryPlaceholder =
+  'Select a region, HA choice, and add a Node Pool to view pricing and create a cluster.';
+
+export const dcPricingKubernetesHAPlaceholder =
+  'Select a region to view price information.';
 
 /** DC-specific pricing docs link label. */
 export const dcPricingDocsLabel = 'How Data Center Pricing Works';
