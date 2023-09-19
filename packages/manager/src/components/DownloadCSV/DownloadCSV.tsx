@@ -41,19 +41,19 @@ export const DownloadCSV = ({
 }: DownloadCSVProps) => {
   return (
     <CSVLink
-      aria-hidden="true"
       className={className}
       data={cleanCSVData(data)}
       filename={filename}
       headers={headers}
       ref={csvRef}
-      tabIndex={-1}
     >
       <Button
         buttonType={buttonType}
         component="span"
+        disableRipple
         onClick={onClick}
         sx={sx}
+        tabIndex={-1}
       >
         {text}
       </Button>
