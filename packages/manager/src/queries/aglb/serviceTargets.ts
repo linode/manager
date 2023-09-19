@@ -1,11 +1,15 @@
-import { ServiceTarget, getLoadbalancerServiceTargets } from '@linode/api-v4';
+import {
+  ServiceTarget,
+  deleteLoadbalancerServiceTarget,
+  getLoadbalancerServiceTargets,
+} from '@linode/api-v4';
 import {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { QUERY_KEY } from './loadbalancers';
 
@@ -18,5 +22,25 @@ export const useLoadBalancerServiceTargetsQuery = (
     [QUERY_KEY, 'aglb', loadbalancerId, 'service-targets', params, filter],
     () => getLoadbalancerServiceTargets(loadbalancerId, params, filter),
     { keepPreviousData: true }
+  );
+};
+
+export const useLoadBalancerServiceTargetDeleteMutation = (
+  loadbalancerId: number,
+  serviceTargetId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(
+    () => deleteLoadbalancerServiceTarget(loadbalancerId, serviceTargetId),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'aglb',
+          loadbalancerId,
+          'service-targets',
+        ]);
+      },
+    }
   );
 };
