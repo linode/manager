@@ -31,7 +31,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
 
-// @TODO VPC - if all subnet action menu item related components use this as their props, might be worth
+// @TODO VPC - if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or somthing
 interface Props {
   onClose: () => void;
@@ -95,6 +95,19 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     }
   );
 
+  const findUnassignedLinodes = () => {
+    const justAssignedLinodeIds = assignedLinodesAndConfigData.map(
+      (data) => data.id
+    );
+    return (
+      linodes?.filter(
+        (linode) =>
+          !justAssignedLinodeIds.includes(linode.id) &&
+          !subnet?.linodes.includes(linode.id)
+      ) ?? []
+    );
+  };
+
   // We want to invalidate any VPC/subnet related queries as well, since we're making changes to subnets
   const invalidateQueries = (linodeId: number, configId: number) => {
     queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
@@ -115,7 +128,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     const { selectedLinode, chosenIP, selectedConfig } = values;
 
     // if a linode has multiple configs, we force the user to choose one. Otherwise,
-    // we just take the ID of the first config when assigning a linode.
+    // we just take the ID of the first (the only) config when assigning a linode.
     const configId =
       linodeConfigs.length > 1
         ? selectedConfig?.id ?? -1
@@ -145,7 +158,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
             ...selectedLinode,
             configId,
             interfaceId: newInterface.id,
-            label: `${selectedLinode?.label}${
+            label: `${selectedLinode.label}${
               selectedConfig?.label ? ` (${selectedConfig.label})` : ''
             }`,
           },
@@ -157,14 +170,28 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
         selectedConfig: null,
       });
     } catch (errors) {
-      // potential todo: the api error for not selecting a linode/config isn't very friendly -- just throws
-      // 'Not found', will look into making this nicer
+      // if a linode/config is not selected, the error returned isn't very friendly: it just says 'Not found', so added friendlier errors here
       const newErrors = getErrorMap(['ipv4.vpc'], errors);
+      if (newErrors.none) {
+        if (!selectedLinode) {
+          newErrors.none = 'No Linode selected';
+        } else if (configId === -1) {
+          newErrors.none = 'No configuration profile selected';
+        } // no else case: leave room for other errors unrelated to unselected linode/config
+      }
       setAssignLinodesErrors(newErrors);
     }
   };
 
-  const onUnassignLinode = async (data: LinodeAndConfigData) => {
+  const onUnassignLinode = async (
+    data: LinodeAndConfigData | null | undefined
+  ) => {
+    // this shouldn't be a problem with a list, but adding this check here because of how
+    // autocomplete functionality and clearing works
+    if (!data) {
+      return;
+    }
+
     const { id: linodeId, configId, interfaceId } = data;
     try {
       await deleteLinodeConfigInterface(linodeId, configId, interfaceId);
@@ -259,15 +286,15 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
       open={open}
       title={`Assign Linodes to subnet: ${subnet?.label} (${subnet?.ipv4})`}
     >
-      {assignLinodesErrors.none && (
-        <Notice text={assignLinodesErrors.none} variant="error" />
-      )}
       {userCannotAssignLinodes && (
         <Notice
           important
           text={`You don't have permissions to assign Linodes to ${subnet?.label}. Please contact an account administrator for details.`}
           variant="error"
         />
+      )}
+      {assignLinodesErrors.none && (
+        <Notice text={assignLinodesErrors.none} variant="error" />
       )}
       <Notice variant="warning" text={`${REBOOT_LINODE_MESSAGE}`} />
       <form onSubmit={handleSubmit}>
@@ -280,15 +307,8 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
             setFieldValue('selectedLinode', value);
             setAssignLinodesErrors({});
           }}
-          // We only want to be able to assign linodes that were not already assigned
-          options={
-            linodes?.filter(
-              (linode) =>
-                !assignedLinodesAndConfigData
-                  .map((data) => data.id)
-                  .includes(linode.id) && !subnet?.linodes.includes(linode.id)
-            ) ?? []
-          }
+          // We only want to be able to assign linodes that were not already assigned to this subnet
+          options={findUnassignedLinodes()}
           placeholder="Select Linodes or type to search"
           value={values.selectedLinode || null}
           sx={{ marginBottom: '8px' }}
