@@ -97,13 +97,17 @@ describe('EnableObjectStorageModal', () => {
     getByText(ENABLE_OBJ_ACCESS_KEYS_MESSAGE);
   });
 
-  // TODO: includes a link to linode.com/pricing
-  it.skip('includes a link to linode.com/pricing', () => {
+  it('includes a link to linode.com/pricing', () => {
     const { getByText } = render(
-      wrapWithTheme(<EnableObjectStorageModal {...props} />)
+      wrapWithTheme(<EnableObjectStorageModal {...props} />, {
+        flags: { objDCSpecificPricing: true },
+      })
     );
     const link = getByText('Learn more');
-    expect(link.closest('a')).toHaveAttribute('href', '/account/settings');
+    expect(link.closest('a')).toHaveAttribute(
+      'href',
+      'https://www.linode.com/pricing/#object-storage'
+    );
   });
 
   it('includes a link to Account Settings', () => {
