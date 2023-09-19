@@ -5,8 +5,7 @@
 import { linodeTypeFactory } from '@src/factories';
 
 /** Notice shown to users when selecting a region. */
-export const dcPricingRegionNotice =
-  'Prices for plans, products, and services may vary based on region.';
+export const dcPricingRegionNotice = /Prices for plans, products, and services in .* may vary from other regions\./;
 
 /** Notice shown to users when selecting a region with a different price structure. */
 export const dcPricingRegionDifferenceNotice =
