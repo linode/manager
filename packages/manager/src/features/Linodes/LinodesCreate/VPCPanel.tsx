@@ -28,7 +28,7 @@ interface VPCPanelProps {
   handleSubnetChange: (subnetID: number) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
   region?: string;
-  selectedVPCID: number | undefined;
+  selectedVPCId: number | undefined;
   subnetError?: string;
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
@@ -44,7 +44,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     handleSubnetChange,
     handleVPCIPv4Change,
     region,
-    selectedVPCID,
+    selectedVPCId,
     subnetError,
     toggleAssignPublicIPv4Address,
     toggleAutoassignIPv4WithinVPCEnabled,
@@ -128,7 +128,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
             tooltipText: REGION_CAVEAT_HELPER_TEXT,
           }}
           value={vpcDropdownOptions.find(
-            (option) => option.value === selectedVPCID
+            (option) => option.value === selectedVPCId
           )}
           defaultValue={vpcDropdownOptions[0]}
           disabled={!regionSupportsVPCs}

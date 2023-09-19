@@ -1,6 +1,5 @@
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
-import { appendConfigInterface } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
@@ -52,10 +51,7 @@ import {
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import { simpleMutationHandlers } from 'src/queries/base';
-import { getAllLinodeConfigsRequest } from 'src/queries/linodes/configs';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
-import { vpcQueryKey } from 'src/queries/vpcs';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';
 import {
@@ -78,7 +74,6 @@ import { getRegionIDFromLinodeID } from './utilities';
 import type {
   CreateLinodeRequest,
   Interface,
-  InterfacePayload,
   Linode,
   LinodeTypeClass,
   PriceObject,
@@ -106,16 +101,16 @@ interface State {
   privateIPEnabled: boolean;
   selectedBackupID?: number;
   selectedDiskSize?: number;
-  selectedFirewallID?: number;
   selectedImageID?: string;
   selectedLinodeID?: number;
   selectedRegionID?: string;
   selectedStackScriptID?: number;
   selectedStackScriptLabel?: string;
   selectedStackScriptUsername?: string;
-  selectedSubnetID?: number;
+  selectedSubnetId?: number;
   selectedTypeID?: string;
-  selectedVPCID?: number;
+  selectedVPCId?: number;
+  selectedfirewallId?: number;
   showAgreement: boolean;
   showApiAwarenessModal: boolean;
   signedAgreement: boolean;
@@ -155,16 +150,16 @@ const defaultState: State = {
   privateIPEnabled: false,
   selectedBackupID: undefined,
   selectedDiskSize: undefined,
-  selectedFirewallID: undefined,
   selectedImageID: undefined,
   selectedLinodeID: undefined,
   selectedRegionID: '',
   selectedStackScriptID: undefined,
   selectedStackScriptLabel: '',
   selectedStackScriptUsername: '',
-  selectedSubnetID: undefined,
+  selectedSubnetId: undefined,
   selectedTypeID: undefined,
-  selectedVPCID: undefined,
+  selectedVPCId: undefined,
+  selectedfirewallId: undefined,
   showAgreement: false,
   showApiAwarenessModal: false,
   signedAgreement: false,
@@ -307,7 +302,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             }
             autoassignIPv4WithinVPC={this.state.autoassignIPv4WithinVPCEnabled}
             checkValidation={this.checkValidation}
-            firewallID={this.state.selectedFirewallID}
+            firewallId={this.state.selectedfirewallId}
             handleAgreementChange={this.handleAgreementChange}
             handleFirewallChange={this.handleFirewallChange}
             handleSelectUDFs={this.setUDFs}
@@ -323,7 +318,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             regionsData={regionsData}
             resetCreationState={this.clearCreationState}
             selectedUDFs={selectedUDFs}
-            selectedVPCID={this.state.selectedVPCID}
+            selectedVPCId={this.state.selectedVPCId}
             setAuthorizedUsers={this.setAuthorizedUsers}
             setBackupID={this.setBackupID}
             setSelectedVPC={this.handleVPCChange}
@@ -506,8 +501,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
-  handleFirewallChange = (firewallID: number) => {
-    this.setState({ selectedFirewallID: firewallID });
+  handleFirewallChange = (firewallId: number) => {
+    this.setState({ selectedfirewallId: firewallId });
   };
 
   handleShowApiAwarenessModal = () => {
@@ -517,7 +512,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   handleSubnetChange = (subnetID: number) => {
-    this.setState({ selectedSubnetID: subnetID });
+    this.setState({ selectedSubnetId: subnetID });
   };
 
   handleVLANChange = (updatedInterface: Interface) => {
@@ -527,10 +522,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     });
   };
 
-  handleVPCChange = (vpcID: number) => {
+  handleVPCChange = (vpcId: number) => {
     this.setState({
-      selectedSubnetID: -1, // Ensure the selected subnet is cleared
-      selectedVPCID: vpcID,
+      selectedSubnetId: -1, // Ensure the selected subnet is cleared
+      selectedVPCId: vpcId,
     });
   };
 
@@ -622,7 +617,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({
       disabledClasses,
       selectedRegionID: id,
-      selectedVPCID: -1, // When the region gets changed, ensure the VPC selection is cleared
+      selectedVPCId: -1, // When the region gets changed, ensure the VPC selection is cleared
       showAgreement: Boolean(
         !this.props.profile.data?.restricted &&
           isEURegion(id) &&
@@ -746,8 +741,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     // Validation for VPC fields
     if (
-      this.state.selectedVPCID !== undefined &&
-      this.state.selectedVPCID !== -1
+      this.state.selectedVPCId !== undefined &&
+      this.state.selectedVPCId !== -1
     ) {
       const validVPCIPv4 = vpcsValidateIP({
         mustBeIPMask: false,
@@ -757,8 +752,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
       // Situation: Subnet not selected
       if (
-        this.state.selectedSubnetID === undefined ||
-        this.state.selectedSubnetID === -1
+        this.state.selectedSubnetId === undefined ||
+        this.state.selectedSubnetId === -1
       ) {
         return this.setState(
           () => ({
@@ -896,66 +891,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             variant: 'success',
           }
         );
-
-        if (
-          this.state.selectedVPCID !== undefined &&
-          this.state.selectedVPCID !== -1
-        ) {
-          this.props.queryClient
-            .fetchQuery(
-              [linodesQueryKey, 'linode', response.id, 'configs'],
-              () => getAllLinodeConfigsRequest(response.id, {})
-            )
-            .then((res) => {
-              // the Linode was just created, so it only has one config
-              const config = res[0];
-              const data: InterfacePayload = {
-                ipam_address: null,
-                ipv4: {
-                  nat_1_1: this.state.assignPublicIPv4Address
-                    ? 'any'
-                    : response.ipv4[0],
-                  vpc: this.state.autoassignIPv4WithinVPCEnabled
-                    ? undefined
-                    : this.state.vpcIPv4AddressOfLinode,
-                },
-                label: null,
-                primary: true,
-                purpose: 'vpc',
-                subnet_id: this.state.selectedSubnetID,
-                vpc_id: this.state.selectedVPCID,
-              };
-
-              appendConfigInterface(response.id, config.id, data)
-                .then(() => {
-                  this.props.queryClient.invalidateQueries([
-                    vpcQueryKey,
-                    'paginated',
-                  ]);
-                  this.props.queryClient.invalidateQueries([
-                    vpcQueryKey,
-                    'vpc',
-                    this.state.selectedVPCID,
-                  ]);
-                })
-                .catch((errors: APIError[]) => {
-                  const error = getAPIErrorOrDefault(errors)[0].reason;
-
-                  this.props.enqueueSnackbar(
-                    `Error assigning Linode ${
-                      response.label
-                    } to VPC: ${error.toLowerCase()}`,
-                    { persist: true, variant: 'error' }
-                  );
-                });
-            })
-            .catch((_) => {
-              this.props.enqueueSnackbar(
-                'An error occurred while assigning your Linode to the VPC.',
-                { persist: true, variant: 'error' }
-              );
-            });
-        }
 
         /** reset the Events polling */
         resetEventsPolling();
