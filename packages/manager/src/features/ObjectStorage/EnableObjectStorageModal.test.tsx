@@ -36,7 +36,7 @@ describe('EnableObjectStorageModal', () => {
   });
 
   // TODO: DC Pricing - M3-7073: Remove this test once dcSpecificPricing flag is cleaned up
-  it('displays base prices for a region without price increases when the OBJ DC-specific pricing feature flag is off', () => {
+  it('displays base prices for a region without price increases when the DC-specific pricing feature flag is off', () => {
     const { getByText } = render(
       wrapWithTheme(
         <EnableObjectStorageModal {...props} regionId={BASE_PRICING_REGION} />,
@@ -48,7 +48,7 @@ describe('EnableObjectStorageModal', () => {
   });
 
   // TODO: DC Pricing - M3-7073: Remove this test once dcSpecificPricing flag is cleaned up
-  it('displays base prices for a region with price increases if the OBJ DC-specific pricing feature flag is off', () => {
+  it('displays base prices for a region with price increases when the DC-specific pricing feature flag is off', () => {
     const { getByText } = render(
       wrapWithTheme(
         <EnableObjectStorageModal
@@ -64,7 +64,7 @@ describe('EnableObjectStorageModal', () => {
     getByText(`$${OBJ_STORAGE_PRICE.storage_overage} per GB`, { exact: false });
   });
 
-  it('displays base prices for a region without price increases when the OBJ DC-specific pricing feature flag is on', () => {
+  it('displays base prices for a region without price increases when the DC-specific pricing feature flag is on', () => {
     const { getByText } = render(
       wrapWithTheme(
         <EnableObjectStorageModal {...props} regionId={BASE_PRICING_REGION} />,
@@ -76,7 +76,7 @@ describe('EnableObjectStorageModal', () => {
   });
 
   // TODO: DC Pricing - M3-6973: delete this test and replace it with the one below it when beta pricing ends.
-  it('displays beta message with region label for a region with price increases when the OBJ DC-specific pricing flag is on', () => {
+  it('displays beta message with region label for a region with price increases when the DC-specific pricing flag is on', () => {
     const { getByText } = render(
       wrapWithTheme(
         <EnableObjectStorageModal
@@ -94,7 +94,7 @@ describe('EnableObjectStorageModal', () => {
   });
 
   // TODO: DC Pricing - M3-6973: Unskip this test when beta pricing ends.
-  it.skip('displays DC-specific pricing  for a region with price increases when the OBJ DC-specific pricing flag is on', () => {
+  it.skip('displays DC-specific pricing  for a region with price increases when the DC-specific pricing flag is on', () => {
     const { getByText } = render(
       wrapWithTheme(
         <EnableObjectStorageModal
@@ -122,7 +122,7 @@ describe('EnableObjectStorageModal', () => {
     );
   });
 
-  it('displays a message without pricing if no region exists (e.g. access key flow) when the OBJ DC-specific pricing flag is on', () => {
+  it('displays a message without pricing if no region exists (e.g. access key flow) when the DC-specific pricing flag is on', () => {
     const { getByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />, {
         flags: { dcSpecificPricing: true },
@@ -131,7 +131,7 @@ describe('EnableObjectStorageModal', () => {
     getByText(ENABLE_OBJ_ACCESS_KEYS_MESSAGE);
   });
 
-  it('includes a link to linode.com/pricing when the OBJ DC-specific pricing flag is on', () => {
+  it('includes a link to linode.com/pricing when the DC-specific pricing flag is on', () => {
     const { getByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />, {
         flags: { dcSpecificPricing: true },
