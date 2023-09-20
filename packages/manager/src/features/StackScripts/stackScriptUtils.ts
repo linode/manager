@@ -141,6 +141,7 @@ export const baseApps = {
   '???' : 'MainConcept 2GO P2 AVC Ultra Transcoder'
   '???' : 'MainConcept 2GO XAVC Transcoder'
   '???' : 'MainConcept 2GO XDCAM Transcoder'
+  '???' : 'SimpleX Messaging Server'
 };
 
 const oneClickFilter = [

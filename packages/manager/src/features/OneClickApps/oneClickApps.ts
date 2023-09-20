@@ -2285,6 +2285,28 @@ export const oneClickApps: OCA[] = [
   },
   {
     alt_description:
+      'A private by design messaging platform.',
+    alt_name: 'Anonymous messaging platform.',
+    categories: ['Productivity'],
+    colors: {
+      end: '70f0f9',
+      start: '11182f',
+    },
+    description: `SimpleX Chat - The first messaging platform that has no user identifiers of any kind - 100% private by design. SMP server is the relay server used to pass messages in SimpleX network. XFTP is a new file transfer protocol focussed on meta-data protection. This One-Click APP will deploy both smp and xftp servers.`,
+    logo_url: 'simplexchat.svg',
+    name: 'SimpleX Chat',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/simplexchat/',
+        title: 'Deploy SimpleX chat through the Linode Marketplace',
+      },
+    ],
+    summary: 'Private by design messaging server.',
+    website: 'https://simplex.chat',
+  },
+  {
+    alt_description:
       'A simple SQL interface to store and search unstructured data.',
     alt_name: 'SuperinsightDB',
     categories: ['Databases'],
