@@ -7,7 +7,7 @@ export interface ActionHandlers {
 }
 
 export interface FirewallDeviceActionMenuProps extends ActionHandlers {
-  deviceEntityID: string;
+  deviceEntityID: number;
   deviceID: number;
   deviceLabel: string;
   disabled: boolean;
