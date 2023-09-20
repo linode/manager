@@ -19,6 +19,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
@@ -36,11 +37,11 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -64,9 +65,9 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { SelectFirewallPanel } from '../../../components/SelectFirewallPanel/SelectFirewallPanel';
 import { AddonsPanel } from './AddonsPanel';
 import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
-import { FirewallPanel } from './FirewallPanel';
 import {
   StyledButtonGroupBox,
   StyledCreateButton,
@@ -614,7 +615,15 @@ export class LinodeCreate extends React.PureComponent<
                 vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
                 vpcIPv4Error={hasErrorFor['ipv4.vpc']}
               />
-              <FirewallPanel
+              <SelectFirewallPanel
+                helperText={
+                  <Typography>
+                    Assign an existing Firewall to this Linode to control
+                    inbound and outbound network traffic.{' '}
+                    <Link to="">Learn more</Link>.
+                  </Typography>
+                  // @TODO VPC: Update "Learn More" link
+                }
                 handleFirewallChange={this.props.handleFirewallChange}
               />
             </>

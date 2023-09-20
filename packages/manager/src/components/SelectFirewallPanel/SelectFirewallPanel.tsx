@@ -2,19 +2,19 @@ import Stack from '@mui/material/Stack';
 import * as React from 'react';
 
 import Select from 'src/components/EnhancedSelect';
-import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 
-import { StyledCreateLink } from './LinodeCreate.styles';
+import { StyledCreateLink } from '../../features/Linodes/LinodesCreate/LinodeCreate.styles';
 
 interface Props {
   handleFirewallChange: (firewallID: number) => void;
+  helperText: JSX.Element;
 }
 
-export const FirewallPanel = (props: Props) => {
-  const { handleFirewallChange } = props;
+export const SelectFirewallPanel = (props: Props) => {
+  const { handleFirewallChange, helperText } = props;
 
   const { data: firewallsData, error, isLoading } = useFirewallsQuery();
 
@@ -38,10 +38,7 @@ export const FirewallPanel = (props: Props) => {
         Firewall
       </Typography>
       <Stack>
-        <Typography>
-          Assign an existing Firewall to this Linode to control the inbound and
-          outbound network traffic. <Link to="">Learn more</Link>.
-        </Typography>
+        {helperText}
         <Select
           defaultValue={firewallsDropdownOptions[0]}
           errorText={error?.[0].reason}
