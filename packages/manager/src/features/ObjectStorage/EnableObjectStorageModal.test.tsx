@@ -40,7 +40,7 @@ describe('EnableObjectStorageModal', () => {
     const { getByText } = render(
       wrapWithTheme(
         <EnableObjectStorageModal {...props} regionId={BASE_PRICING_REGION} />,
-        { flags: { objDCSpecificPricing: false } }
+        { flags: { dcSpecificPricing: false } }
       )
     );
     getByText(`$${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
@@ -56,7 +56,7 @@ describe('EnableObjectStorageModal', () => {
           regionId={DC_SPECIFIC_PRICING_REGION}
         />,
         {
-          flags: { objDCSpecificPricing: false },
+          flags: { dcSpecificPricing: false },
         }
       )
     );
@@ -68,7 +68,7 @@ describe('EnableObjectStorageModal', () => {
     const { getByText } = render(
       wrapWithTheme(
         <EnableObjectStorageModal {...props} regionId={BASE_PRICING_REGION} />,
-        { flags: { objDCSpecificPricing: true } }
+        { flags: { dcSpecificPricing: true } }
       )
     );
     getByText(`$${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
@@ -84,7 +84,7 @@ describe('EnableObjectStorageModal', () => {
           regionId={DC_SPECIFIC_PRICING_REGION}
         />,
         {
-          flags: { objDCSpecificPricing: true },
+          flags: { dcSpecificPricing: true },
         }
       )
     );
@@ -102,7 +102,7 @@ describe('EnableObjectStorageModal', () => {
           regionId={DC_SPECIFIC_PRICING_REGION}
         />,
         {
-          flags: { objDCSpecificPricing: true },
+          flags: { dcSpecificPricing: true },
         }
       )
     );
@@ -125,7 +125,7 @@ describe('EnableObjectStorageModal', () => {
   it('displays a message without pricing if no region exists (e.g. access key flow) when the OBJ DC-specific pricing flag is on', () => {
     const { getByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />, {
-        flags: { objDCSpecificPricing: true },
+        flags: { dcSpecificPricing: true },
       })
     );
     getByText(ENABLE_OBJ_ACCESS_KEYS_MESSAGE);
@@ -134,7 +134,7 @@ describe('EnableObjectStorageModal', () => {
   it('includes a link to linode.com/pricing when the OBJ DC-specific pricing flag is on', () => {
     const { getByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />, {
-        flags: { objDCSpecificPricing: true },
+        flags: { dcSpecificPricing: true },
       })
     );
     const link = getByText('Learn more');

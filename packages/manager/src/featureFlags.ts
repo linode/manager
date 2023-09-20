@@ -51,7 +51,6 @@ export interface Flags {
   kubernetesDashboardAvailability: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
-  objDCSpecificPricing: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   productInformationBanners: ProductInformationBannerFlag[];

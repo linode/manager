@@ -45,7 +45,7 @@ export const EnableObjectStorageModal = React.memo(
      * @returns Dynamic modal text dependent on the existence and selection of a region
      */
     const getRegionPricingText = (regionLabel: string) => {
-      if (flags.objDCSpecificPricing) {
+      if (flags.dcSpecificPricing) {
         if (!regionId) {
           return <Typography>{ENABLE_OBJ_ACCESS_KEYS_MESSAGE}</Typography>;
         } else if (isObjBetaPricingRegion) {
@@ -69,7 +69,7 @@ export const EnableObjectStorageModal = React.memo(
           {OBJ_STORAGE_NETWORK_TRANSFER_AMT} of outbound data transfer. Beyond
           that, it's{' '}
           <strong>${objStoragePrices.storage_overage} per GB per month.</strong>{' '}
-          {!flags.objDCSpecificPricing && (
+          {!flags.dcSpecificPricing && (
             <Link to="https://www.linode.com/docs/products/storage/object-storage/#pricing">
               Learn more.
             </Link>
@@ -101,7 +101,7 @@ export const EnableObjectStorageModal = React.memo(
         title="Just to confirm..."
       >
         {getRegionPricingText(regionLabel ?? 'this region')}
-        {flags.objDCSpecificPricing && (
+        {flags.dcSpecificPricing && (
           <Typography style={{ marginTop: 12 }}>
             <Link to="https://www.linode.com/pricing/#object-storage">
               Learn more
