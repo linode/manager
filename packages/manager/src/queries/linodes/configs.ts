@@ -12,11 +12,15 @@ import {
   deleteLinodeConfigInterface,
   getConfigInterface,
   getConfigInterfaces,
+  getLinodeConfigs,
   updateConfigInterface,
   updateLinodeConfig,
   updateLinodeConfigOrder,
 } from '@linode/api-v4';
+import { Params } from '@linode/api-v4/src/types';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+
+import { getAll } from 'src/utilities/getAll';
 
 import { queryKey } from './linodes';
 import { getAllLinodeConfigs } from './requests';
@@ -29,8 +33,16 @@ export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   );
 };
 
-const configQueryKey = 'configs';
-const interfaceQueryKey = 'interfaces';
+export const getAllLinodeConfigsRequest = (
+  linodeID: number,
+  passedParams: Params = {}
+) =>
+  getAll<Config>((params) =>
+    getLinodeConfigs(linodeID, { ...params, ...passedParams })
+  )().then((data) => data.data);
+
+export const configQueryKey = 'configs';
+export const interfaceQueryKey = 'interfaces';
 
 // Config queries
 export const useLinodeConfigDeleteMutation = (

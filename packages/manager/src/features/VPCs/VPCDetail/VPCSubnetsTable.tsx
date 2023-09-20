@@ -1,4 +1,3 @@
-import { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -29,6 +28,9 @@ import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import { SubnetEditDrawer } from './SubnetEditDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
+import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
+
+import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
   vpcId: number;
@@ -52,6 +54,10 @@ export const VPCSubnetsTable = (props: Props) => {
   const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
     false
   );
+  const [
+    subnetUnassignLinodesDrawerOpen,
+    setSubnetUnassignLinodesDrawerOpen,
+  ] = React.useState(false);
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -108,6 +114,11 @@ export const VPCSubnetsTable = (props: Props) => {
   const handleEditSubnet = (subnet: Subnet) => {
     setSelectedSubnet(subnet);
     setEditSubnetsDrawerOpen(true);
+  };
+
+  const handleSubnetUnassignLinodes = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
+    setSubnetUnassignLinodesDrawerOpen(true);
   };
 
   if (isLoading) {
@@ -170,6 +181,7 @@ export const VPCSubnetsTable = (props: Props) => {
             <SubnetActionMenu
               handleDelete={handleSubnetDelete}
               handleEdit={handleEditSubnet}
+              handleUnassignLinodes={handleSubnetUnassignLinodes}
               numLinodes={subnet.linodes.length}
               subnet={subnet}
               vpcId={vpcId}
@@ -247,6 +259,14 @@ export const VPCSubnetsTable = (props: Props) => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <SubnetUnassignLinodesDrawer
+        onClose={() => {
+          setSubnetUnassignLinodesDrawerOpen(false);
+        }}
+        open={subnetUnassignLinodesDrawerOpen}
+        subnet={selectedSubnet}
+        vpcId={vpcId}
       />
       <SubnetDeleteDialog
         onClose={() => setDeleteSubnetDialogOpen(false)}
