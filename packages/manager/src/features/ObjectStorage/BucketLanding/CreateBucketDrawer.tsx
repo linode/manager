@@ -18,6 +18,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import { sendCreateBucketEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -34,6 +35,7 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
+  const { data: regions } = useRegionsQuery();
   const { data: clusters } = useObjectStorageClusters();
   const { data: buckets } = useObjectStorageBuckets(clusters);
   const {
@@ -96,6 +98,12 @@ export const CreateBucketDrawer = (props: Props) => {
       isEURegion(formik.values.cluster)
   );
 
+  const clusterRegion =
+    regions &&
+    regions.filter((region) => {
+      return formik.values.cluster.includes(region.id);
+    });
+
   const errorMap = getErrorMap(['label', 'cluster'], error);
 
   return (
@@ -155,7 +163,7 @@ export const CreateBucketDrawer = (props: Props) => {
           handleSubmit={formik.handleSubmit}
           onClose={() => setIsEnableObjDialogOpen(false)}
           open={isEnableObjDialogOpen}
-          regionId={formik.values.cluster.slice(0, -2)}
+          regionId={clusterRegion?.[0]?.id}
         />
       </form>
     </Drawer>
