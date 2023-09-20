@@ -43,6 +43,7 @@ export interface RoutePayload {
 export interface Route {
   id: number;
   label: string;
+  protocol: string[];
   rules: {
     match_condition: MatchCondition;
     service_targets: {

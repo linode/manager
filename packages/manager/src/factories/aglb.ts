@@ -107,8 +107,8 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
       {
         certificates: [
           {
-            id: 1,
             hostname: 'example.com',
+            id: 1,
           },
         ],
         label: 'myentrypoint1',
@@ -174,6 +174,7 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
 export const routeFactory = Factory.Sync.makeFactory<Route>({
   id: Factory.each((i) => i),
   label: 'images-route',
+  protocol: ['tcp', 'http'],
   rules: [
     {
       match_condition: {

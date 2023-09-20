@@ -114,26 +114,22 @@ export const LoadBalancerRoutes = () => {
             >
               Route Label
             </TableSortCell>
-            <TableCell>Match Rule</TableCell>
-            <TableCell>Match Value</TableCell>
-            <TableCell>Service Targets</TableCell>
-            <TableCell>Session Stickiness</TableCell>
+            <TableCell>Rules</TableCell>
+            <TableCell>Protocol</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {error && <TableRowError colSpan={3} message={error?.[0].reason} />}
           {data?.results === 0 && <TableRowEmpty colSpan={3} />}
-          {data?.data.map(({ id, label }) => (
+          {data?.data.map(({ id, label, protocol, rules }) => (
             <TableRow key={`${label}-${id}`}>
               <TableCell>{label}</TableCell>
               {/**
                *   TODO: Not clear at this point need confirmation from UX/API
                */}
-              <TableCell>TBD</TableCell>
-              <TableCell>TBD</TableCell>
-              <TableCell>TBD</TableCell>
-              <TableCell>TBD</TableCell>
+              <TableCell>{rules?.length}</TableCell>
+              <TableCell>{protocol?.join(', ')}</TableCell>
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
