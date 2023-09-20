@@ -267,9 +267,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   firewall_device_remove: {
     notification: (e) =>
-      `A ${e.secondary_entity?.type} has been removed from Firewall ${
-        e.entity?.label ?? ''
-      }.`,
+      `A device has been removed from Firewall ${e.entity?.label ?? ''}.`,
   },
   firewall_disable: {
     notification: (e) => `Firewall ${e.entity?.label ?? ''} has been disabled.`,
