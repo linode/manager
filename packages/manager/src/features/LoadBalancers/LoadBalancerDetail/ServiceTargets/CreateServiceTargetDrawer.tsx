@@ -51,7 +51,7 @@ const algorithmOptions = [
     value: 'ring_hash',
   },
   {
-    description: 'Request are distributed randomly.',
+    description: 'Requests are distributed randomly.',
     label: 'Random',
     value: 'random',
   },
@@ -170,7 +170,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">
           <Typography variant="h3">Service Target CA Certificate</Typography>
-          <TooltipIcon status="help" text="TODO" />
+          <TooltipIcon status="help" text="TODO: AGLB" />
         </Stack>
         <CertificateSelect
           onChange={(cert) =>
@@ -183,7 +183,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
         <Divider spacingBottom={12} spacingTop={24} />
         <Stack alignItems="center" direction="row">
           <Typography variant="h3">Health Checks</Typography>
-          <TooltipIcon status="help" text="TODO" />
+          <TooltipIcon status="help" text="TODO: AGLB" />
         </Stack>
         <FormControlLabel
           control={
@@ -223,7 +223,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                   error?.find((e) => e.field === 'healthcheck.interval')?.reason
                 }
                 label="Interval"
-                labelTooltipText="TODO"
+                labelTooltipText="TODO: AGLB"
                 name="healthcheck.interval"
                 onChange={formik.handleChange}
                 type="number"
@@ -241,7 +241,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                   )?.reason
                 }
                 label="Healthy Threshold"
-                labelTooltipText="TODO"
+                labelTooltipText="TODO: AGLB"
                 name="healthcheck.healthy_threshold"
                 onChange={formik.handleChange}
                 type="number"
@@ -259,7 +259,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                   error?.find((e) => e.field === 'healthcheck.timeout')?.reason
                 }
                 label="Timeout"
-                labelTooltipText="TODO"
+                labelTooltipText="TODO: AGLB"
                 name="healthcheck.timeout"
                 onChange={formik.handleChange}
                 type="number"
@@ -277,7 +277,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                   )?.reason
                 }
                 label="Unhealthy Threshold"
-                labelTooltipText="TODO"
+                labelTooltipText="TODO: AGLB"
                 name="healthcheck.unhealthy_threshold"
                 onChange={formik.handleChange}
                 type="number"
@@ -291,7 +291,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                     error?.find((e) => e.field === 'healthcheck.path')?.reason
                   }
                   label="Health Check Path"
-                  labelTooltipText="TODO"
+                  labelTooltipText="TODO: AGLB"
                   name="healthcheck.path"
                   onChange={formik.handleChange}
                   optional
@@ -302,7 +302,7 @@ export const CreateServiceTargetDrawer = (props: Props) => {
                     error?.find((e) => e.field === 'healthcheck.host')?.reason
                   }
                   label="Health Check Host"
-                  labelTooltipText="TODO"
+                  labelTooltipText="TODO: AGLB"
                   name="healthcheck.host"
                   onChange={formik.handleChange}
                   optional
