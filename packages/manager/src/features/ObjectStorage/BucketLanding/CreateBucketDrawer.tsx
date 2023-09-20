@@ -129,6 +129,7 @@ export const CreateBucketDrawer = (props: Props) => {
           error={errorMap.cluster}
           onBlur={formik.handleBlur}
           onChange={(value) => formik.setFieldValue('cluster', value)}
+          required
           selectedCluster={formik.values.cluster}
         />
         {showAgreement ? (
@@ -142,6 +143,7 @@ export const CreateBucketDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
+            disabled: !formik.values.cluster,
             label: 'Create Bucket',
             loading: isLoading,
             type: 'submit',
