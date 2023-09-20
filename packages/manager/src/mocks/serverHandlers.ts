@@ -885,9 +885,20 @@ export const handlers = [
       id: `br-gru-0` as any,
       region: 'br-gru',
     });
+    const basePricingCluster = objectStorageClusterFactory.build({
+      id: `us-east-0` as any,
+      region: 'us-east',
+    });
     const clusters = objectStorageClusterFactory.buildList(3);
     return res(
-      ctx.json(makeResourcePage([jakartaCluster, saoPauloCluster, ...clusters]))
+      ctx.json(
+        makeResourcePage([
+          jakartaCluster,
+          saoPauloCluster,
+          basePricingCluster,
+          ...clusters,
+        ])
+      )
     );
   }),
   rest.get('*object-storage/keys', (req, res, ctx) => {
