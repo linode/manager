@@ -126,12 +126,22 @@ export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
 export const linodeTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
   {
     billable: 0,
-    quota: 1950,
+    quota: 1950, // GB
     region_transfers: [
-      { billable: 0, id: 'id-cgk', quota: 10000, used: 10 },
-      { billable: 0, id: 'br-gru', quota: 15000, used: 20 },
+      {
+        billable: 0,
+        id: 'id-cgk',
+        quota: 1200, // GB
+        used: 1120000000000, // Bytes
+      },
+      {
+        billable: 0,
+        id: 'br-gru',
+        quota: 1500, // GB
+        used: 90000000000, // Bytes
+      },
     ],
-    used: 13956637,
+    used: 13956637, // Bytes
   }
 );
 

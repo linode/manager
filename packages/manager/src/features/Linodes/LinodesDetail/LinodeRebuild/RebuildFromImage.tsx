@@ -14,7 +14,7 @@ import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
-import ImageSelect from 'src/components/ImageSelect';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';

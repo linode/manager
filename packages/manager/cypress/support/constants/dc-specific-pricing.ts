@@ -5,8 +5,7 @@
 import { linodeTypeFactory } from '@src/factories';
 
 /** Notice shown to users when selecting a region. */
-export const dcPricingRegionNotice =
-  'Prices for plans, products, and services may vary based on Region.';
+export const dcPricingRegionNotice = /Prices for plans, products, and services in .* may vary from other regions\./;
 
 /** Notice shown to users when selecting a region with a different price structure. */
 export const dcPricingRegionDifferenceNotice =
@@ -21,6 +20,12 @@ export const dcPricingDocsLabel = 'How Data Center Pricing Works';
 
 /** DC-specific pricing docs link destination. */
 export const dcPricingDocsUrl = 'https://www.linode.com/pricing';
+
+/** DC-specific pricing current price label. */
+export const dcPricingCurrentPriceLabel = 'Current Price';
+
+/** DC-specific pricing new price label. */
+export const dcPricingNewPriceLabel = 'New Price';
 
 /** DC-specific pricing Linode type mocks. */
 export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {

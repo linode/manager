@@ -440,6 +440,9 @@ const vpc = [
   rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(subnetFactory.buildList(30))));
   }),
+  rest.delete('*/vpcs/:vpcId/subnets/:subnetId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.delete('*/vpcs/:vpcId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
@@ -453,6 +456,10 @@ const vpc = [
   rest.post('*/vpcs', (req, res, ctx) => {
     const vpc = vpcFactory.build({ ...(req.body as any) });
     return res(ctx.json(vpc));
+  }),
+  rest.post('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    const subnet = subnetFactory.build({ ...(req.body as any) });
+    return res(ctx.json(subnet));
   }),
 ];
 
@@ -939,11 +946,11 @@ export const handlers = [
             region: 'br-gru',
           }),
           invoiceItemFactory.build({
-            label: 'Outbound Transfer',
+            label: 'Outbound Transfer Overage',
             region: null,
           }),
           invoiceItemFactory.build({
-            label: 'Outbound Transfer',
+            label: 'Outbound Transfer Overage',
             region: 'id-cgk',
           }),
         ])
@@ -1103,6 +1110,11 @@ export const handlers = [
         'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
       percent_complete: 15,
     });
+    const dbEvents = eventFactory.buildList(1, {
+      action: 'database_low_disk_space',
+      entity: { id: 999, label: 'database-1', type: 'database' },
+      message: 'Low disk space.',
+    });
     const oldEvents = eventFactory.buildList(20, {
       action: 'account_update',
       percent_complete: 100,
@@ -1121,7 +1133,12 @@ export const handlers = [
     });
     return res.once(
       ctx.json(
-        makeResourcePage([...events, ...oldEvents, eventWithSpecialCharacters])
+        makeResourcePage([
+          ...events,
+          ...dbEvents,
+          ...oldEvents,
+          eventWithSpecialCharacters,
+        ])
       )
     );
   }),

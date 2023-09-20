@@ -1,16 +1,26 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { Subnet } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu';
 
-export const SubnetsActionMenu = ({}) => {
+interface SubnetActionHandlers {
+  handleDelete: (subnet: Subnet) => void;
+  handleEdit: (subnet: Subnet) => void;
+}
+
+interface Props extends SubnetActionHandlers {
+  numLinodes: number;
+  subnet: Subnet;
+  vpcId: number;
+}
+
+export const SubnetActionMenu = (props: Props) => {
+  const { handleDelete, handleEdit, numLinodes, subnet } = props;
+
   const handleAssignLinode = () => {};
 
   const handleUnassignLinode = () => {};
-
-  const handleEdit = () => {};
-
-  const handleDelete = () => {};
 
   const actions: Action[] = [
     {
@@ -27,21 +37,29 @@ export const SubnetsActionMenu = ({}) => {
     },
     {
       onClick: () => {
-        handleEdit();
+        handleEdit(subnet);
       },
       title: 'Edit',
     },
     {
+      disabled: numLinodes !== 0,
       onClick: () => {
-        handleDelete();
+        handleDelete(subnet);
       },
       title: 'Delete',
+      tooltip:
+        numLinodes > 0
+          ? 'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
+          : '',
     },
   ];
 
   return (
-    <ActionMenu actionsList={actions} ariaLabel={`Action menu for Subnet`} />
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Subnet ${subnet.label}`}
+    />
   );
 };
 
-export default SubnetsActionMenu;
+export default SubnetActionMenu;

@@ -1,7 +1,7 @@
 import ipaddr from 'ipaddr.js';
 import { array, lazy, object, string } from 'yup';
 
-const LABEL_MESSAGE = 'VPC label must be between 1 and 64 characters.';
+const LABEL_MESSAGE = 'Label must be between 1 and 64 characters.';
 const LABEL_REQUIRED = 'Label is required';
 const LABEL_REQUIREMENTS =
   'Must include only ASCII letters, numbers, and dashes';
