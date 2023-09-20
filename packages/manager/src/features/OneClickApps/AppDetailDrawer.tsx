@@ -8,11 +8,13 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import { OCA } from 'src/features/OneClickApps/oneClickApps';
 import { useFlags } from 'src/hooks/useFlags';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 import { oneClickApps } from './oneClickApps';
+import { mapStackScriptLabelToOneClickAppName } from './utils';
+
+import type { OCA } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appName: {
@@ -92,14 +94,9 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
   };
 
   React.useEffect(() => {
-    const app = oneClickApps.find((app) => {
-      const cleanedStackScriptLabel = stackScriptLabel
-        .replace(/[^\w\s\/$*+-?&.:()]/gi, '')
-        .trim();
-
-      const cleanedAppName = app.name.replace('&reg;', '');
-
-      return cleanedStackScriptLabel === cleanedAppName;
+    const app = mapStackScriptLabelToOneClickAppName({
+      oneClickApps,
+      stackScriptLabel,
     });
 
     if (!app) {

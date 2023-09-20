@@ -10,15 +10,12 @@ import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { APP_ROOT } from 'src/constants';
 import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
-import {
-  AppCategory,
-  oneClickApps,
-} from 'src/features/OneClickApps/oneClickApps';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -30,8 +27,10 @@ import {
   StackScriptFormStateHandlers,
   WithTypesRegionsAndImages,
 } from '../types';
-import { filterUDFErrors } from './formUtilities';
 import { StyledGrid } from './CommonTabbedContent.styles';
+import { filterUDFErrors } from './formUtilities';
+
+import type { AppCategory } from 'src/features/OneClickApps/types';
 
 const appCategories = [
   'Control Panels',
