@@ -24,6 +24,9 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
+const FIREWALL_LABEL_TEXT = `Assign devices to the Firewall.`;
+const FIREWALL_HELPER_TEXT = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.`;
+const NODEBALANCER_HELPER_TEXT = `Only the Firewall's inbound rules apply to NodeBalancers.`;
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only Devices you have permission to modify are shown.';
 
@@ -44,17 +47,10 @@ const initialValues: CreateFirewallPayload = {
   },
 };
 
-const firewallLabelText = `Assign devices to the Firewall.`;
-const firewallHelperText = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.`;
-const nodebalancerHelperText = `Only the Firewall's inbound rules apply to NodeBalancers.`;
-
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
+    // TODO: NBFW - We'll eventually want to check the read_write firewall grant here too, but it doesn't exist yet.
     const { onClose, open } = props;
-    /**
-     * We'll eventually want to check the read_write firewall
-     * grant here too, but it doesn't exist yet.
-     */
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
@@ -121,31 +117,22 @@ export const CreateFirewallDrawer = React.memo(
       validationSchema: CreateFirewallSchema,
     });
 
-    const [selectedNodeBalancers, setSelectedNodeBalancers] = React.useState<
-      NodeBalancer[]
-    >([]);
-
-    const handleNodeBalancerChange = (nodebalancers: NodeBalancer[]) => {
-      if (nodebalancers.length > 0) {
-        setSelectedNodeBalancers(
-          nodebalancers.map((nodebalancer) => nodebalancer)
-        );
-        setFieldValue(
-          'devices.nodebalancers',
-          nodebalancers.map((nodebalancer) => nodebalancer.id)
-        );
-      } else {
-        setSelectedNodeBalancers([]);
-        setFieldValue('devices.nodebalancers', selectedNodeBalancers);
-      }
-    };
-
     React.useEffect(() => {
       if (open) {
         resetForm();
         setSelectedNodeBalancers([]);
       }
     }, [open, resetForm]);
+
+    const [selectedNodeBalancers, setSelectedNodeBalancers] = React.useState<
+      NodeBalancer[]
+    >([]);
+
+    const {
+      data,
+      error: nodebalancerError,
+      isLoading: nodebalancerIsLoading,
+    } = useAllNodeBalancersQuery();
 
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
@@ -166,16 +153,14 @@ export const CreateFirewallDrawer = React.memo(
         : null;
 
     const optionsFilter = (nodebalancer: NodeBalancer) => {
-      return ![...readOnlyNodebalancerIds, ...selectedNodeBalancers].includes(
-        nodebalancer.id
-      );
-    };
+      const selectedNodeBalancersIds =
+        selectedNodeBalancers.map((device) => device.id) ?? [];
 
-    const {
-      data,
-      error: nodebalancerError,
-      isLoading: nodebalancerIsLoading,
-    } = useAllNodeBalancersQuery();
+      return ![
+        ...readOnlyNodebalancerIds,
+        ...selectedNodeBalancersIds,
+      ].includes(nodebalancer.id);
+    };
 
     const nodebalancers = data?.filter(optionsFilter);
 
@@ -225,10 +210,10 @@ export const CreateFirewallDrawer = React.memo(
               })}
               variant="h3"
             >
-              {firewallLabelText}
+              {FIREWALL_LABEL_TEXT}
             </Typography>
             <Typography>
-              {firewallHelperText}
+              {FIREWALL_HELPER_TEXT}
               {deviceSelectGuidance ? ` ${deviceSelectGuidance}` : null}
             </Typography>
             <Typography
@@ -236,7 +221,7 @@ export const CreateFirewallDrawer = React.memo(
                 margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
               })}
             >
-              {nodebalancerHelperText}
+              {NODEBALANCER_HELPER_TEXT}
               <br />
               {learnMoreLink}
             </Typography>
@@ -256,14 +241,19 @@ export const CreateFirewallDrawer = React.memo(
             value={values.devices?.linodes ?? []}
           />
           <Autocomplete
-            onChange={(_, nodebalancers) =>
-              handleNodeBalancerChange(nodebalancers)
-            }
+            onChange={(_, nodebalancers) => {
+              setFieldValue(
+                'devices.nodebalancers',
+                nodebalancers.map((nodebalancer) => nodebalancer.id)
+              );
+              setSelectedNodeBalancers(nodebalancers);
+            }}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
             })}
             disabled={userCannotAddFirewall || !!nodebalancerError}
             errorText={errors['devices.nodebalancers']}
+            isOptionEqualToValue={optionsFilter}
             label="NodeBalancers"
             loading={nodebalancerIsLoading}
             multiple
