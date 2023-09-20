@@ -1,19 +1,20 @@
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
 
-import CloudInitIncompatibleIcon from 'src/assets/icons/cloud-init-incompatible.svg';
 import { Box } from 'src/components/Box';
 import { Item } from 'src/components/EnhancedSelect';
-import Option from 'src/components/EnhancedSelect/components/Option';
+import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   distroIcon: {
     fontSize: '1.8em',
+
     margin: `0 ${theme.spacing()}`,
     [theme.breakpoints.only('xs')]: {
       fontSize: '1.52em',
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
   },
   root: {
+    '& *': {
+      lineHeight: '1.2em',
+    },
     '& g': {
       fill: theme.name === 'dark' ? 'white' : '#888f91',
     },
@@ -49,7 +53,7 @@ interface ImageOptionProps extends OptionProps<any, any> {
   data: ImageItem;
 }
 
-const ImageOption = (props: ImageOptionProps) => {
+export const ImageOption = (props: ImageOptionProps) => {
   const classes = useStyles();
   const { data, isFocused, isSelected, label } = props;
   const flags = useFlags();
@@ -75,12 +79,12 @@ const ImageOption = (props: ImageOptionProps) => {
       >
         <span className={`${data.className} ${classes.distroIcon}`} />
         <Box>{label}</Box>
-        {flags.metadata && !data.isCloudInitCompatible ? (
+        {flags.metadata && data.isCloudInitCompatible ? (
           <TooltipIcon
-            icon={<CloudInitIncompatibleIcon />}
+            icon={<DescriptionOutlinedIcon />}
             status="other"
             sxTooltipIcon={sxCloudInitTooltipIcon}
-            text="This image is not compatible with cloud-init."
+            text="This image is compatible with cloud-init."
           />
         ) : null}
       </Box>
@@ -93,7 +97,11 @@ const sxCloudInitTooltipIcon = {
     height: 20,
     width: 20,
   },
+  '&:hover': {
+    color: 'inherit',
+  },
+  color: 'inherit',
   marginLeft: 'auto',
+  padding: 0,
+  paddingRight: 1,
 };
-
-export { ImageOption };

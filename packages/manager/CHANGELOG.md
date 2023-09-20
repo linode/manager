@@ -4,6 +4,115 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-09-18] - v1.102.0
+
+### Added:
+
+- Configuration Profiles docs link to Linode Details Configurations tab ([#9658](https://github.com/linode/manager/pull/9658))
+
+### Fixed:
+
+- Stuck LKE node pools when HA Control Plane is unavailable for self-hosting Cloud Manager users ([#9558](https://github.com/linode/manager/pull/9558))
+- Longview styling regressions ([#9619](https://github.com/linode/manager/pull/9619))
+- Typo in 'Confirm Ticket Close' modal ([#9639](https://github.com/linode/manager/pull/9639))
+- Selected state of Longview processes table ([#9643](https://github.com/linode/manager/pull/9643))
+- Typo in NodeBalancer landing table column header ([#9648](https://github.com/linode/manager/pull/9648))
+- Metadata CLI command ([#9665](https://github.com/linode/manager/pull/9665))
+- Billing Contact UI regression caused by MUI Update ([#9667](https://github.com/linode/manager/pull/9667))
+- Panels alignment in NodeBalancer create flow ([#9673](https://github.com/linode/manager/pull/9673))
+- Misplaced helper text and static copy in Linode Create Volume drawer ([#9683](https://github.com/linode/manager/pull/9683))
+- Redis trademark changes ([#9694](https://github.com/linode/manager/pull/9694))
+
+### Tech Stories:
+
+- Add Autocomplete component ([#9497](https://github.com/linode/manager/pull/9497))
+- MUI v5 Migration - `SRC > Features > EntityTransfers` ([#9582](https://github.com/linode/manager/pull/9582))
+- MUI v5 Migration - `SRC > Features > Longview` Pt1: Longview Detail ([#9600](https://github.com/linode/manager/pull/9600))
+
+### Upcoming Features:
+
+- Add VPC-related permissions, capabilities, and grants ([#9585](https://github.com/linode/manager/pull/9585))
+- Add VPC data in Linode Detail header ([#9645](https://github.com/linode/manager/pull/9645))
+- Add VPC Create Subnet drawer ([#9652](https://github.com/linode/manager/pull/9652))
+- Add VPC Delete Subnet dialog ([#9640](https://github.com/linode/manager/pull/9640))
+- Add VPC filter subnets field ([#9647](https://github.com/linode/manager/pull/9647))
+- Populate VPC Subnets table with data ([#9599](https://github.com/linode/manager/pull/9599))
+- Standardize "region" and "data center" copy for DC-specific pricing ([#9670](https://github.com/linode/manager/pull/9670))
+- Removed VPC column from Linodes landing page table ([#9625](https://github.com/linode/manager/pull/9625))
+- Improved VPC Create validation for subnets ([#9659](https://github.com/linode/manager/pull/9659))
+- Add DC-specific pricing Invoice support ([#9597](https://github.com/linode/manager/pull/9597))
+- Add DC-specific pricing Linode Create support ([#9598](https://github.com/linode/manager/pull/9598))
+- Add DC-specific pricing to Kubernetes node pools ([#9606](https://github.com/linode/manager/pull/9606))
+- Add DC-specific transfer pools and linode usage displays ([#9620](https://github.com/linode/manager/pull/9620))
+- Add Region label to DC-specific pricing invoices ([#9663](https://github.com/linode/manager/pull/9663))
+- Add AGLB Details - Configuration Tab ([#9591](https://github.com/linode/manager/pull/9591))
+- Add AGLB Certificate Delete Dialog ([#9666](https://github.com/linode/manager/pull/9666))
+- Add AGLB Certificate Create Drawer ([#9616](https://github.com/linode/manager/pull/9616))
+- Add AGLB Configuration Delete Dialog ([#9675](https://github.com/linode/manager/pull/9675))
+- Add DBaaS disk size and used size fields to Database Summary  ([#9638](https://github.com/linode/manager/pull/9638))
+
+
+## [2023-09-07] - v1.101.1
+
+
+### Fixed:
+
+-  Restricted users unable to edit Firewall after creation ([#9637](https://github.com/linode/manager/pull/9637))
+
+## [2023-09-05] - v1.101.0
+
+
+### Added:
+
+- September marketplace release ([#9596](https://github.com/linode/manager/pull/9596))
+
+### Fixed:
+
+- Longview crashing the app with a negative number of CPU cores ([#9563](https://github.com/linode/manager/pull/9563))
+- CopyTooltip hover state in Linode Summary ([#9587](https://github.com/linode/manager/pull/9587))
+- Metadata Image select dropdown ([#9592](https://github.com/linode/manager/pull/9592))
+- Hide User Data accordion in Linode Rebuild dialog for unsupported regions ([#9602](https://github.com/linode/manager/pull/9602))
+
+### Tech Stories:
+
+- Add Product Information Banners for all product landing pages ([#9523](https://github.com/linode/manager/pull/9523))
+- MUI v5 migration - `SRC > Features > ToastNotifications` ([#9555](https://github.com/linode/manager/pull/9555))
+- MUI v5 Migration - `SRC > Features > GlobalNotifications` ([#9561](https://github.com/linode/manager/pull/9561))
+- MUI v5 Migration - `SRC > Features > Events` ([#9565](https://github.com/linode/manager/pull/9565))
+- Make feature flag dev tools show reality ([#9567](https://github.com/linode/manager/pull/9567))
+- Update Material UI and Emotion ([#9603](https://github.com/linode/manager/pull/9603))
+
+### Upcoming Features:
+
+- Add AGLB Create Page - Stepper component ([#9520](https://github.com/linode/manager/pull/9520))
+- VPC Create page ([#9537](https://github.com/linode/manager/pull/9537))
+- VPC detail summary ([#9549](https://github.com/linode/manager/pull/9549))
+- Add AGLB landing page ([#9556](https://github.com/linode/manager/pull/9556))
+- Introduce dynamic pricing utils and constants ([#9564](https://github.com/linode/manager/pull/9564))
+- Add DC Specific Pricing to NodeBalancer Create ([#9566](https://github.com/linode/manager/pull/9566))
+- Add DC-specific pricing to Kubernetes HA ([#9568](https://github.com/linode/manager/pull/9568))
+- Add DC dynamic pricing information for Linode migration flow ([#9570](https://github.com/linode/manager/pull/9570))
+- Add DC Specific Pricing Notices and Docs Links ([#9572](https://github.com/linode/manager/pull/9572))
+- Add AGLB Details - Certificate Tab ([#9576](https://github.com/linode/manager/pull/9576))
+- Add AGLB Details - Service Targets Tab ([#9577](https://github.com/linode/manager/pull/9577))
+- Fix volume e2e test and dc specific price unit test ([#9578](https://github.com/linode/manager/pull/9578))
+- Add AGLB Details - Settings Tab ([#9583](https://github.com/linode/manager/pull/9583))
+- Add Collapsible Table Component ([#9584](https://github.com/linode/manager/pull/9584))
+- Update mocks for DC-specific pricing API responses ([#9586](https://github.com/linode/manager/pull/9586))
+- Add DC-specific pricing to Linode backups ([#9588](https://github.com/linode/manager/pull/9588))
+- Details for betas and ability to enroll in betas ([#9544](https://github.com/linode/manager/pull/9544))
+- Support for VPC and subnet events ([#9530](https://github.com/linode/manager/pull/9530))
+- Added DC specific pricing to Volumes create flows ([#9569](https://github.com/linode/manager/pull/9569))
+- Update header from “Subnet” to “Subnets” in VPC Create flow ([#9604](https://github.com/linode/manager/pull/9604))
+
+
+## [2023-08-30] - v1.100.2
+
+### Fixed:
+
+- Extra API calls for Linode Configs ([#9609](https://github.com/linode/manager/pull/9609))
+
+
 ## [2023-08-22] - v1.100.1
 
 ### Fixed:

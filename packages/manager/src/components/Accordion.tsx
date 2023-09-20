@@ -144,9 +144,9 @@ export const Accordion = (props: AccordionProps) => {
               <Notice
                 data-qa-notice
                 text={notice}
-                {...(success && { success: true })}
-                {...(warning && { warning: true })}
-                {...(error && { error: true })}
+                {...(success && { variant: 'success' })}
+                {...(warning && { variant: 'warning' })}
+                {...(error && { variant: 'error' })}
                 spacingBottom={0}
               />
             </Grid>

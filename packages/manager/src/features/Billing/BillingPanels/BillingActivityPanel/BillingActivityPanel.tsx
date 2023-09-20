@@ -45,6 +45,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
+import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
@@ -186,6 +187,8 @@ export const BillingActivityPanel = (props: Props) => {
 
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
+  const { data: regions } = useRegionsQuery();
+
   const isAkamaiCustomer = account?.billing_source === 'akamai';
 
   const { classes } = useStyles();
@@ -243,12 +246,14 @@ export const BillingActivityPanel = (props: Props) => {
         .then(async (invoiceItems) => {
           pdfLoading.delete(id);
 
-          const result = await printInvoice(
-            account!,
+          const result = await printInvoice({
+            account,
+            flags,
             invoice,
-            invoiceItems,
-            taxes
-          );
+            items: invoiceItems,
+            regions: regions ?? [],
+            taxes,
+          });
 
           if (result.status === 'error') {
             pdfErrors.add(id);
@@ -259,7 +264,7 @@ export const BillingActivityPanel = (props: Props) => {
           pdfErrors.add(id);
         });
     },
-    [account, flags, invoices, pdfErrors, pdfLoading]
+    [account, flags, invoices, pdfErrors, pdfLoading, regions]
   );
 
   const downloadPaymentPDF = React.useCallback(
@@ -331,7 +336,7 @@ export const BillingActivityPanel = (props: Props) => {
   }, [selectedTransactionType, combinedData]);
 
   return (
-    <Grid xs={12}>
+    <Grid xs={12} data-qa-billing-activity-panel>
       <div className={classes.root}>
         <div className={classes.headerContainer}>
           <Typography className={classes.headline} variant="h2">
@@ -399,101 +404,85 @@ export const BillingActivityPanel = (props: Props) => {
           order={'desc'}
           orderBy={'date'}
         >
-          {React.useCallback(
-            ({ data: orderedData }) => (
-              <Paginate data={orderedData} pageSize={25} shouldScroll={false}>
-                {({
-                  count,
-                  data: paginatedAndOrderedData,
-                  handlePageChange,
-                  handlePageSizeChange,
-                  page,
-                  pageSize,
-                }) => (
-                  <>
-                    <Table aria-label="List of Invoices and Payments">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell className={classes.descriptionColumn}>
-                            Description
-                          </TableCell>
-                          <TableCell className={classes.dateColumn}>
-                            Date
-                          </TableCell>
-                          <TableCell className={classes.totalColumn}>
-                            Amount
-                          </TableCell>
-                          <TableCell className={classes.pdfDownloadColumn} />
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableContentWrapper
-                          error={
-                            accountPaymentsError || accountInvoicesError
-                              ? [
-                                  {
-                                    reason:
-                                      'There was an error retrieving your billing activity.',
-                                  },
-                                ]
-                              : undefined
-                          }
-                          loading={
-                            accountPaymentsLoading || accountInvoicesLoading
-                          }
-                          loadingProps={{
-                            columns: 4,
-                          }}
-                          length={paginatedAndOrderedData.length}
-                        >
-                          {paginatedAndOrderedData.map((thisItem) => {
-                            return (
-                              <ActivityFeedItem
-                                downloadPDF={
-                                  thisItem.type === 'invoice'
-                                    ? downloadInvoicePDF
-                                    : downloadPaymentPDF
-                                }
-                                hasError={pdfErrors.has(
-                                  `${thisItem.type}-${thisItem.id}`
-                                )}
-                                isLoading={pdfLoading.has(
-                                  `${thisItem.type}-${thisItem.id}`
-                                )}
-                                key={`${thisItem.type}-${thisItem.id}`}
-                                {...thisItem}
-                              />
-                            );
-                          })}
-                        </TableContentWrapper>
-                      </TableBody>
-                    </Table>
-                    <PaginationFooter
-                      count={count}
-                      eventCategory="Billing Activity Table"
-                      handlePageChange={handlePageChange}
-                      handleSizeChange={handlePageSizeChange}
-                      page={page}
-                      pageSize={pageSize}
-                    />
-                  </>
-                )}
-              </Paginate>
-            ),
-            [
-              classes.descriptionColumn,
-              classes.dateColumn,
-              classes.totalColumn,
-              classes.pdfDownloadColumn,
-              accountPaymentsLoading,
-              accountInvoicesLoading,
-              accountPaymentsError,
-              accountInvoicesError,
-              downloadInvoicePDF,
-              downloadPaymentPDF,
-              pdfErrors,
-              pdfLoading,
-            ]
+          {({ data: orderedData }) => (
+            <Paginate data={orderedData} pageSize={25} shouldScroll={false}>
+              {({
+                count,
+                data: paginatedAndOrderedData,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize,
+              }) => (
+                <>
+                  <Table aria-label="List of Invoices and Payments">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell className={classes.descriptionColumn}>
+                          Description
+                        </TableCell>
+                        <TableCell className={classes.dateColumn}>
+                          Date
+                        </TableCell>
+                        <TableCell className={classes.totalColumn}>
+                          Amount
+                        </TableCell>
+                        <TableCell className={classes.pdfDownloadColumn} />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableContentWrapper
+                        error={
+                          accountPaymentsError || accountInvoicesError
+                            ? [
+                                {
+                                  reason:
+                                    'There was an error retrieving your billing activity.',
+                                },
+                              ]
+                            : undefined
+                        }
+                        loading={
+                          accountPaymentsLoading || accountInvoicesLoading
+                        }
+                        loadingProps={{
+                          columns: 4,
+                        }}
+                        length={paginatedAndOrderedData.length}
+                      >
+                        {paginatedAndOrderedData.map((thisItem) => {
+                          return (
+                            <ActivityFeedItem
+                              downloadPDF={
+                                thisItem.type === 'invoice'
+                                  ? downloadInvoicePDF
+                                  : downloadPaymentPDF
+                              }
+                              hasError={pdfErrors.has(
+                                `${thisItem.type}-${thisItem.id}`
+                              )}
+                              isLoading={pdfLoading.has(
+                                `${thisItem.type}-${thisItem.id}`
+                              )}
+                              key={`${thisItem.type}-${thisItem.id}`}
+                              {...thisItem}
+                            />
+                          );
+                        })}
+                      </TableContentWrapper>
+                    </TableBody>
+                  </Table>
+                  <PaginationFooter
+                    count={count}
+                    eventCategory="Billing Activity Table"
+                    handlePageChange={handlePageChange}
+                    handleSizeChange={handlePageSizeChange}
+                    page={page}
+                    pageSize={pageSize}
+                  />
+                </>
+              )}
+            </Paginate>
           )}
         </OrderBy>
       </div>

@@ -26,7 +26,11 @@ const test_vpcsValidateIP = (value?: string | null) => {
     return true;
   }
 
-  return vpcsValidateIP(value, false);
+  return vpcsValidateIP({
+    value,
+    shouldHaveIPMask: false,
+    mustBeIPMask: false,
+  });
 };
 
 // Utils
@@ -37,6 +41,10 @@ const testmessageDisallowedBasedOnPurpose = (
   field: string
 ) =>
   `${field} is not allowed for interfaces that do not have a purpose set to ${allowedPurpose}.`;
+
+// Constants
+const LINODE_LABEL_CHAR_REQUIREMENT =
+  'Label must contain between 3 and 64 characters.';
 
 // Schemas
 const stackscript_data = array().of(object()).nullable(true);
@@ -137,10 +145,14 @@ export const linodeInterfaceSchema = array()
             /[a-zA-Z0-9-]+/,
             'Must include only ASCII letters, numbers, and dashes'
           ),
-        otherwise: string().test({
-          name: testnameDisallowedBasedOnPurpose('VLAN'),
-          message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
-          test: (value) => typeof value === 'undefined' || value === '',
+        otherwise: string().when('label', {
+          is: null,
+          then: string().nullable(),
+          otherwise: string().test({
+            name: testnameDisallowedBasedOnPurpose('VLAN'),
+            message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
+            test: (value) => typeof value === 'undefined' || value === '',
+          }),
         }),
       }),
       ipam_address: string().when('purpose', {
@@ -150,10 +162,17 @@ export const linodeInterfaceSchema = array()
           message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
           test: validateIP,
         }),
-        otherwise: string().test({
-          name: testnameDisallowedBasedOnPurpose('VLAN'),
-          message: testmessageDisallowedBasedOnPurpose('vlan', 'ipam_address'),
-          test: (value) => typeof value === 'undefined' || value === '',
+        otherwise: string().when('ipam_address', {
+          is: null,
+          then: string().nullable(),
+          otherwise: string().test({
+            name: testnameDisallowedBasedOnPurpose('VLAN'),
+            message: testmessageDisallowedBasedOnPurpose(
+              'vlan',
+              'ipam_address'
+            ),
+            test: (value) => typeof value === 'undefined' || value === '',
+          }),
         }),
       }),
       primary: boolean().notRequired(),
@@ -253,8 +272,8 @@ export const CreateLinodeSchema = object({
   label: string()
     .transform((v) => (v === '' ? undefined : v))
     .notRequired()
-    .min(3, 'Label must contain between 3 and 64 characters.')
-    .max(64, 'Label must contain between 3 and 64 characters.'),
+    .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
+    .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
   tags: array().of(string()).notRequired(),
   private_ip: boolean().notRequired(),
   authorized_users: array().of(string()).notRequired(),
@@ -268,6 +287,7 @@ export const CreateLinodeSchema = object({
   }),
   interfaces: linodeInterfaceSchema,
   metadata: MetadataSchema,
+  firewall_id: number().notRequired(),
 });
 
 const alerts = object({
@@ -323,8 +343,8 @@ export const UpdateLinodeSchema = object({
   label: string()
     .transform((v) => (v === '' ? undefined : v))
     .notRequired()
-    .min(3, 'Label must contain between 3 and 64 characters.')
-    .max(64, 'Label must contain between 3 and 64 characters.'),
+    .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
+    .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
   tags: array().of(string()).notRequired(),
   watchdog_enabled: boolean().notRequired(),
   alerts,

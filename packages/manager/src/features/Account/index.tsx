@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const AccountLanding = React.lazy(
@@ -9,8 +10,12 @@ const AccountLanding = React.lazy(
 const InvoiceDetail = React.lazy(
   () => import('src/features/Billing/InvoiceDetail')
 );
-const EntityTransfersCreate = React.lazy(
-  () => import('src/features/EntityTransfers/EntityTransfersCreate')
+const EntityTransfersCreate = React.lazy(() =>
+  import(
+    'src/features/EntityTransfers/EntityTransfersCreate/EntityTransfersCreate'
+  ).then((module) => ({
+    default: module.EntityTransfersCreate,
+  }))
 );
 const UserDetail = React.lazy(() => import('src/features/Users/UserDetail'));
 
@@ -24,6 +29,7 @@ class Account extends React.Component<Props> {
 
     return (
       <React.Suspense fallback={<SuspenseLoader />}>
+        <ProductInformationBanner bannerLocation="Account" />
         <Switch>
           <Route component={UserDetail} path={`${path}/users/:username`} />
           <Route

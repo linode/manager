@@ -61,7 +61,7 @@ export const NodeBalancerConfigNode = React.memo(
 
     return (
       <React.Fragment>
-        <Grid data-qa-node sx={{ padding: 0 }} xs={12}>
+        <Grid data-qa-node sx={{ padding: 1 }} xs={12}>
           {idx !== 0 && (
             <Grid xs={12}>
               <Divider
@@ -74,7 +74,7 @@ export const NodeBalancerConfigNode = React.memo(
           )}
           {nodesErrorMap.none && (
             <Grid>
-              <Notice error text={nodesErrorMap.none} />
+              <Notice text={nodesErrorMap.none} variant="error" />
             </Grid>
           )}
           <Grid container spacing={2}>
@@ -86,7 +86,7 @@ export const NodeBalancerConfigNode = React.memo(
               }}
               lg={forEdit ? 2 : 4}
               sm={forEdit ? 4 : 6}
-              xs={6}
+              xs={12}
             >
               <TextField
                 data-qa-backend-ip-label
@@ -112,7 +112,7 @@ export const NodeBalancerConfigNode = React.memo(
             )}
           </Grid>
         </Grid>
-        <Grid sx={{ padding: 0 }} xs={12}>
+        <Grid sx={{ padding: 1 }} xs={12}>
           <Grid container data-qa-node key={idx} spacing={2}>
             <Grid lg={forEdit ? 2 : 4} sm={3} xs={12}>
               <ConfigNodeIPSelect

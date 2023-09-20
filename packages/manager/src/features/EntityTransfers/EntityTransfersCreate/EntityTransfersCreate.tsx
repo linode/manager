@@ -1,7 +1,5 @@
 import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { curry } from 'ramda';
 import * as React from 'react';
 import { QueryClient, useQueryClient } from 'react-query';
@@ -9,48 +7,28 @@ import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Notice } from 'src/components/Notice/Notice';
 import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
 import { sendEntityTransferCreateEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { countByEntity } from '../utilities';
-import LinodeTransferTable from './LinodeTransferTable';
-import TransferCheckoutBar from './TransferCheckoutBar';
-import TransferHeader from './TransferHeader';
+import {
+  StyledNotice,
+  StyledRootGrid,
+  StyledSidebarGrid,
+} from './EntityTransferCreate.styles';
+import { LinodeTransferTable } from './LinodeTransferTable';
+import { TransferCheckoutBar } from './TransferCheckoutBar';
+import { TransferHeader } from './TransferHeader';
 import {
   TransferableEntity,
-  curriedTransferReducer,
   defaultTransferState,
+  transferReducer,
 } from './transferReducer';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  error: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-  root: {
-    [theme.breakpoints.down('lg')]: {
-      justifyContent: 'center',
-      margin: 0,
-    },
-  },
-  sidebar: {
-    [theme.breakpoints.down('lg')]: {
-      '&.MuiGrid-item': {
-        paddingLeft: 0,
-        paddingRight: 0,
-      },
-      padding: '0px 8px !important',
-    },
-  },
-}));
-
-export const EntityTransfersCreate: React.FC<{}> = (_) => {
+export const EntityTransfersCreate = () => {
   const { push } = useHistory();
   const { error, isLoading, mutateAsync: createTransfer } = useCreateTransfer();
-  const classes = useStyles();
   const queryClient = useQueryClient();
 
   /**
@@ -58,7 +36,7 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
    */
 
   const [state, dispatch] = React.useReducer(
-    curriedTransferReducer,
+    transferReducer,
     defaultTransferState
   );
 
@@ -115,19 +93,12 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
         title="Make a Service Transfer"
       />
       {error ? (
-        <Notice
-          className={classes.error}
-          error
+        <StyledNotice
           text={getAPIErrorOrDefault(error)[0].reason}
+          variant="error"
         />
       ) : null}
-      <Grid
-        className={classes.root}
-        container
-        direction="row"
-        spacing={3}
-        wrap="wrap"
-      >
+      <StyledRootGrid container direction="row" spacing={3} wrap="wrap">
         <Grid lg={9} md={8} xs={12}>
           <TransferHeader />
           <LinodeTransferTable
@@ -137,7 +108,7 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
             selectedLinodes={state.linodes}
           />
         </Grid>
-        <Grid className={classes.sidebar} lg={3} md={4} xs={12}>
+        <StyledSidebarGrid lg={3} md={4} xs={12}>
           <TransferCheckoutBar
             handleSubmit={(payload) =>
               handleCreateTransfer(payload, queryClient)
@@ -146,10 +117,8 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
             removeEntities={removeEntitiesFromTransfer}
             selectedEntities={state}
           />
-        </Grid>
-      </Grid>
+        </StyledSidebarGrid>
+      </StyledRootGrid>
     </>
   );
 };
-
-export default EntityTransfersCreate;

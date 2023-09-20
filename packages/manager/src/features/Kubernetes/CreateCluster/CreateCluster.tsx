@@ -14,13 +14,13 @@ import { useHistory } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { DynamicPriceNotice } from 'src/components/DynamicPriceNotice';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import {
@@ -50,6 +50,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
+import { doesRegionHaveUniquePricing } from 'src/utilities/pricing/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inner: {
@@ -194,7 +195,7 @@ export const CreateCluster = () => {
     ) as CreateNodePoolData[];
 
     const payload: CreateKubeClusterPayload = {
-      control_plane: { high_availability: highAvailability },
+      control_plane: { high_availability: highAvailability ?? false },
       k8s_version,
       label,
       node_pools,
@@ -259,6 +260,10 @@ export const CreateCluster = () => {
     }
   };
 
+  const showPricingNotice =
+    flags.dcSpecificPricing &&
+    doesRegionHaveUniquePricing(selectedRegionID, typesData);
+
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
@@ -283,14 +288,13 @@ export const CreateCluster = () => {
   return (
     <Grid className={classes.root} container>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
-      <ProductInformationBanner bannerLocation="Kubernetes" important warning />
       <LandingHeader
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
         title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
-        {errorMap.none && <Notice error text={errorMap.none} />}
+        {errorMap.none && <Notice text={errorMap.none} variant="error" />}
         <Paper data-qa-label-header>
           <div className={classes.inner}>
             <TextField
@@ -316,6 +320,12 @@ export const CreateCluster = () => {
               regions={filteredRegions}
               selectedID={selectedID}
             />
+            {showPricingNotice && (
+              <DynamicPriceNotice
+                region={selectedRegionID}
+                spacingBottom={16}
+              />
+            )}
             <Select
               onChange={(selected: Item<string>) => {
                 setVersion(selected);
@@ -356,6 +366,7 @@ export const CreateCluster = () => {
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
+            selectedRegionId={selectedRegionID}
             types={typesData || []}
             typesLoading={typesLoading}
           />

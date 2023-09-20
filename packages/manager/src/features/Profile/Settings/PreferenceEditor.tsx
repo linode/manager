@@ -60,9 +60,11 @@ export const PreferenceEditor = (props: Props) => {
       open={props.open}
       title="Edit Preferences"
     >
-      {errorMessage && <Notice error spacingBottom={8} text={errorMessage} />}
+      {errorMessage && (
+        <Notice spacingBottom={8} text={errorMessage} variant="error" />
+      )}
       {successMessage && (
-        <Notice spacingBottom={8} success text={successMessage} />
+        <Notice spacingBottom={8} text={successMessage} variant="success" />
       )}
       <Typography>
         Update user preferences tied to Cloud Manager. See the{' '}

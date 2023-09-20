@@ -19,7 +19,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
 
   return (
     <StyledPaper>
-      {error && <Notice error text={error} />}
+      {error && <Notice text={error} variant="error" />}
       <StyledFormControlLabel
         label={
           <StyledDiv>
@@ -35,6 +35,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
               >
                 Backups pricing page
               </Link>
+              .
             </Typography>
           </StyledDiv>
         }

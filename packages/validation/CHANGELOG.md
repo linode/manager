@@ -1,3 +1,26 @@
+## [2023-09-18] - v0.31.0
+
+
+### Added:
+
+- Add create certificate schema for AGLB ([#9616](https://github.com/linode/manager/pull/9616))
+
+## [2023-09-07] - v0.30.1
+
+
+### Fixed:
+
+- Edit interfaces config validation to allow null values for label and ipam_address ([#9641](https://github.com/linode/manager/pull/9641))
+
+## [2023-09-05] - v0.30.0
+
+
+### Changed:
+
+- Include 'firewall_id' field as optional in CreateLinodeSchema ([#9453](https://github.com/linode/manager/pull/9453))
+- Include `createSubnetSchema` in `createVPCSchema` validation ([#9537](https://github.com/linode/manager/pull/9537))
+
+
 ## [2023-08-21] - v0.29.0
 
 

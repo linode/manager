@@ -1,3 +1,5 @@
+import { UserData } from '@linode/api-v4/lib/linodes/types';
+
 // Credit: https://github.com/xxorax/node-shell-escape
 function escapeStringForCLI(s: string): string {
   if (/[^A-Za-z0-9_\/:=-]/.test(s)) {
@@ -50,12 +52,18 @@ const parseString = (key: string, value: string) => {
 const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
   if (value === undefined || value === null) {
     return acc;
-  } else if (Array.isArray(value)) {
+  }
+  if (Array.isArray(value)) {
     if (value.length === 0) {
       return acc;
     }
     acc.push(parseArray(key, value));
     return acc;
+  }
+
+  if (key === 'metadata') {
+    const userData = value as UserData;
+    acc.push(`  --${key}.user_data="${userData.user_data}"`);
   } else if (typeof value === 'object') {
     const valueAsString = convertObjectToCLIArg(value);
     acc.push(`  --${key} ${valueAsString}`);

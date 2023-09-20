@@ -64,7 +64,7 @@ export const CaptureSnapshot = (props: Props) => {
       </Typography>
       <FormControl>
         {hasErrorFor.none && (
-          <Notice error spacingBottom={8}>
+          <Notice spacingBottom={8} variant="error">
             {hasErrorFor.none}
           </Notice>
         )}

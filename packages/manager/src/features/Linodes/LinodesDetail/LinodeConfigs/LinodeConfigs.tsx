@@ -1,9 +1,10 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import AddNewLink from 'src/components/AddNewLink';
+import { Box } from 'src/components/Box';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -16,6 +17,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useGrants } from 'src/queries/profile';
+import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics';
 
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
@@ -80,22 +82,27 @@ const LinodeConfigs = () => {
 
   return (
     <>
-      <Grid
-        sx={{
-          padding: '0 0 8px 0',
-        }}
-        alignItems="flex-end"
-        container
-        justifyContent="flex-end"
+      <Box
+        display="flex"
+        gap={2}
+        justifyContent={'flex-end'}
+        sx={{ padding: '7px 0' }}
       >
-        <Grid>
-          <AddNewLink
-            disabled={isReadOnly}
-            label="Add Configuration"
-            onClick={onCreate}
-          />
-        </Grid>
-      </Grid>
+        <DocsLink
+          href={
+            'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/'
+          }
+          onClick={() => {
+            sendLinodeConfigurationDocsEvent('Configuration Profiles');
+          }}
+          label={'Configuration Profiles'}
+        />
+        <AddNewLink
+          disabled={isReadOnly}
+          label="Add Configuration"
+          onClick={onCreate}
+        />
+      </Box>
       <OrderBy data={configs ?? []} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData} scrollToRef={configsPanel}>
@@ -113,31 +120,31 @@ const LinodeConfigs = () => {
                     <TableHead>
                       <TableRow>
                         <TableSortCell
-                          active={orderBy === 'label'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          label={'label'}
                           sx={{
                             ...theme.applyTableHeaderStyles,
                             width: '35%',
                           }}
+                          active={orderBy === 'label'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          label={'label'}
                         >
                           <strong>Config</strong>
                         </TableSortCell>
                         <TableCell
                           sx={{
-                            width: '25%',
                             borderRight: `1px solid ${theme.palette.divider}`,
                             fontWeight: 'bold',
+                            width: '25%',
                           }}
                         >
                           Disks
                         </TableCell>
                         <TableCell
                           sx={{
-                            width: '30%',
                             borderRight: `1px solid ${theme.palette.divider}`,
                             fontWeight: 'bold',
+                            width: '30%',
                           }}
                         >
                           Network Interfaces

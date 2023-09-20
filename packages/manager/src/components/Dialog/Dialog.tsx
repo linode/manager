@@ -81,11 +81,12 @@ export const Dialog = (props: DialogProps) => {
         {titleBottomBorder && <StyledHr />}
         <DialogContent
           sx={{
+            overflowX: 'hidden',
             paddingBottom: theme.spacing(3),
           }}
           className={className}
         >
-          {error && <Notice error text={error} />}
+          {error && <Notice text={error} variant="error" />}
           {children}
         </DialogContent>
       </Box>

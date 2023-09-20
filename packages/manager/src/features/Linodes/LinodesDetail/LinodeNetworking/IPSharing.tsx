@@ -294,18 +294,18 @@ const IPSharingPanel = (props: Props) => {
         <>
           {generalError && (
             <Grid xs={12}>
-              <Notice error text={generalError} />
+              <Notice text={generalError} variant="error" />
             </Grid>
           )}
           {successMessage && (
             <Grid xs={12}>
-              <Notice success text={successMessage} />
+              <Notice text={successMessage} variant="success" />
             </Grid>
           )}
           <Grid container>
             <Grid lg={8} sm={12} xl={6}>
               {flags.ipv6Sharing ? (
-                <Notice warning>
+                <Notice variant="warning">
                   <Typography style={{ fontSize: '0.875rem' }}>
                     <strong>Warning:</strong> Converting a statically routed
                     IPv6 range to a shared range will break existing IPv6
@@ -322,7 +322,7 @@ const IPSharingPanel = (props: Props) => {
                 IP Sharing allows a Linode to share an IP address assignment
                 (one or more additional IP addresses). This can be used to allow
                 one Linode to begin serving requests should another become
-                unresponsive. Only IPs in the same datacenter are offered for
+                unresponsive. Only IPs in the same data center are offered for
                 sharing.
               </Typography>
             </Grid>
@@ -348,7 +348,7 @@ const IPSharingPanel = (props: Props) => {
                     marginTop: theme.spacing(2),
                   }}
                 >
-                  You have no other Linodes in this Linode&rsquo;s datacenter
+                  You have no other Linodes in this Linode&rsquo;s data center
                   with which to share IPs.
                 </Typography>
               ) : (

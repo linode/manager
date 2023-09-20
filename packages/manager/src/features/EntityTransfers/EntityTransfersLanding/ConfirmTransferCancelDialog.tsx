@@ -3,7 +3,6 @@ import {
   cancelTransfer,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
-import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -16,13 +15,6 @@ import { queryKey } from 'src/queries/entityTransfers';
 import { sendEntityTransferCancelEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles(() => ({
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-}));
-
 export interface Props {
   entities?: TransferEntities;
   onClose: () => void;
@@ -30,10 +22,9 @@ export interface Props {
   token?: string;
 }
 
-export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
+export const ConfirmTransferCancelDialog = React.memo((props: Props) => {
   const { entities, onClose, open, token } = props;
 
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const [submitting, setSubmitting] = React.useState(false);
@@ -92,7 +83,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
         label: 'Keep Service Transfer',
         onClick: onClose,
       }}
-      className={classes.actions}
+      sx={{ display: 'flex', justifyContent: 'flex-end' }}
     />
   );
 
@@ -113,9 +104,9 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
         submissionErrors
           ? submissionErrors.map((thisError, idx) => (
               <Notice
-                error
                 key={`form-submit-error-${idx}`}
                 text={thisError.reason}
+                variant="error"
               />
             ))
           : null
@@ -129,6 +120,4 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
       </Typography>
     </ConfirmationDialog>
   );
-};
-
-export default React.memo(ConfirmTransferCancelDialog);
+});

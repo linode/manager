@@ -1,4 +1,3 @@
-import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import countryData from 'country-region-data';
@@ -104,7 +103,7 @@ const ContactInformation = (props: Props) => {
     (_country) => _country.countryShortCode === country
   )?.countryName;
 
-  const sxBox = {
+  const sxGrid = {
     flex: 1,
     maxWidth: '100%',
     position: 'relative',
@@ -140,7 +139,7 @@ const ContactInformation = (props: Props) => {
             state ||
             zip ||
             country) && (
-            <Box sx={sxBox}>
+            <Grid sx={sxGrid}>
               {(firstName || lastName) && (
                 <StyledTypography
                   data-qa-contact-name
@@ -170,10 +169,9 @@ const ContactInformation = (props: Props) => {
                 {city && state && ','} {state} {zip}
               </StyledTypography>
               <StyledTypography>{countryName}</StyledTypography>
-            </Box>
+            </Grid>
           )}
-
-          <Box sx={sxBox}>
+          <Grid sx={sxGrid}>
             <StyledTypography
               data-qa-contact-email
               sx={{ wordBreak: 'break-all' }}
@@ -188,7 +186,7 @@ const ContactInformation = (props: Props) => {
                 <strong>Tax ID</strong> {taxId}
               </StyledTypography>
             )}
-          </Box>
+          </Grid>
         </Grid>
       </BillingPaper>
       <BillingContactDrawer

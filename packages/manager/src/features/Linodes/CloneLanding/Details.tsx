@@ -3,6 +3,7 @@ import Close from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
@@ -15,22 +16,23 @@ import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 
 import {
-  EstimatedCloneTimeMode,
-  ExtendedConfig,
-  getAllDisks,
-  getEstimatedCloneTime,
-} from './utilities';
-import {
   StyledButton,
   StyledDiv,
   StyledHeader,
   StyledTypography,
 } from './Details.styles';
+import {
+  EstimatedCloneTimeMode,
+  ExtendedConfig,
+  getAllDisks,
+  getEstimatedCloneTime,
+} from './utilities';
 
 interface Props {
   clearAll: () => void;
   currentLinodeId: number;
   errorMap: Record<string, string | undefined>;
+  handleCancel: () => void;
   handleClone: () => void;
   handleSelectLinode: (linodeId: number) => void;
   handleToggleConfig: (id: number) => void;
@@ -48,6 +50,7 @@ export const Details = (props: Props) => {
     clearAll,
     currentLinodeId,
     errorMap,
+    handleCancel,
     handleClone,
     handleSelectLinode,
     handleToggleConfig,
@@ -123,7 +126,10 @@ export const Details = (props: Props) => {
   const estimatedCloneTime = getEstimatedCloneTime(totalSize, mode);
 
   return (
-    <Paper sx={{ padding: theme.spacing(2) }}>
+    <Paper
+      data-testid="config-clone-selection-details"
+      sx={{ padding: theme.spacing(2) }}
+    >
       <StyledHeader>
         <Typography variant="h2">Selected</Typography>
         <Button
@@ -137,17 +143,17 @@ export const Details = (props: Props) => {
       </StyledHeader>
 
       {noneError && !isNoneErrorActuallyALinodeError && (
-        <Notice error text={noneError} />
+        <Notice text={noneError} variant="error" />
       )}
 
       <List>
         {selectedConfigs.map((eachConfig) => {
           return (
             <ListItem
-              sx={{ flexWrap: 'wrap', justifyContent: 'space-between' }}
               dense
               disableGutters
               key={eachConfig.id}
+              sx={{ flexWrap: 'wrap', justifyContent: 'space-between' }}
             >
               <StyledDiv>
                 <Typography variant="h3">{eachConfig.label}</Typography>
@@ -175,10 +181,10 @@ export const Details = (props: Props) => {
         {selectedDisks.map((eachDisk) => {
           return (
             <ListItem
-              sx={{ flexWrap: 'wrap', justifyContent: 'space-between' }}
               dense
               disableGutters
               key={eachDisk.id}
+              sx={{ flexWrap: 'wrap', justifyContent: 'space-between' }}
             >
               <Typography variant="h3">{eachDisk.label}</Typography>
               <StyledButton
@@ -196,8 +202,8 @@ export const Details = (props: Props) => {
         <Divider spacingBottom={16} spacingTop={16} />
       )}
 
-      <Typography>
-        Current Datacenter: {region?.label ?? thisLinodeRegion}
+      <Typography data-testid={`current-datacenter-${region?.id}`}>
+        Current Data Center: {region?.label ?? thisLinodeRegion}
       </Typography>
 
       {/* Show the estimated clone time if we're able to submit the form. */}
@@ -232,16 +238,18 @@ export const Details = (props: Props) => {
           </Link>
         </StyledTypography>
       )}
-
-      <Button
-        buttonType="primary"
-        sx={{ marginTop: theme.spacing(3) }}
-        disabled={isCloneButtonDisabled}
-        loading={isSubmitting}
-        onClick={handleClone}
-      >
-        Clone
-      </Button>
+      <ActionsPanel
+        primaryButtonProps={{
+          disabled: isCloneButtonDisabled,
+          label: 'Clone',
+          loading: isSubmitting,
+          onClick: handleClone,
+        }}
+        secondaryButtonProps={{
+          label: 'Cancel',
+          onClick: handleCancel,
+        }}
+      />
     </Paper>
   );
 };

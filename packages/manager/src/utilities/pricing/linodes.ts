@@ -1,4 +1,11 @@
-import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
+import type {
+  LinodeType,
+  PriceObject,
+  Region,
+  RegionalNetworkUtilization,
+} from '@linode/api-v4';
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 /**
  * Gets the price of a Linode type for a specific region.
@@ -8,7 +15,7 @@ import type { LinodeType, PriceObject, Region } from '@linode/api-v4';
  * @returns pricing information for this specific linode type in a region
  */
 export const getLinodeRegionPrice = (
-  type: LinodeType,
+  type: ExtendedType | LinodeType | PlanSelectionType,
   regionId: string
 ): PriceObject => {
   const regionSpecificPrice = type.region_prices?.find(
@@ -22,6 +29,7 @@ export const getLinodeRegionPrice = (
     };
   }
 
+  // TODO: M3-7063 (defaults)
   return type.price;
 };
 
@@ -35,7 +43,7 @@ interface IsPriceDifferentOptions {
  * Given a Linode Type, this function tells you if the Linode type's price
  * is different between two regions.
  *
- * We use this to display a Notice when users a user moves Linodes between regions.
+ * We use this to display a Notice when a user attempts to move Linodes between regions.
  *
  * @returns whether or not the Linode price is different between the two regions
  */
@@ -56,4 +64,90 @@ export const isLinodeTypeDifferentPriceInSelectedRegion = ({
   }
 
   return false;
+};
+
+/**
+ * @param regionId the region of the current Linode
+ * @param type the type of the current Linode
+ * @returns boolean
+ */
+export const isLinodeInDynamicPricingDC = (
+  regionId: Region['id'],
+  type: LinodeType | undefined
+): boolean => {
+  if (!regionId || !type || !type.region_prices) {
+    return false;
+  }
+
+  const priceIncreaseRegions: Region['id'][] = type.region_prices.map(
+    (regionPrice) => regionPrice.id
+  );
+
+  return priceIncreaseRegions.includes(regionId) ? true : false;
+};
+
+interface DynamicPricingLinodeTransferData {
+  dcSpecificPricingFlag: boolean;
+  networkTransferData: Partial<RegionalNetworkUtilization> | undefined;
+  regionId: Region['id'] | undefined;
+}
+
+/**
+ * This function is used to determine the network transfer quota and used data for
+ * either a given Linode or the global region data.
+ * If a the linode is in a dynamic pricing data center, we will use the region specific network transfer data.
+ *
+ * @param dcSpecificPricingFlag the flag that determines whether or not to apply dynamic pricing
+ * @param networkTransferData the network transfer data for the current Linode or the global network transfer data
+ * @param regionId the region of the current Linode
+ * @returns the quota and used network transfer data for the current Linode or the global network transfer data
+ */
+export const getDynamicDCNetworkTransferData = ({
+  dcSpecificPricingFlag,
+  networkTransferData,
+  regionId,
+}: DynamicPricingLinodeTransferData) => {
+  if (!networkTransferData || !regionId) {
+    return { quota: 0, used: 0 };
+  }
+
+  if (networkTransferData.region_transfers && dcSpecificPricingFlag) {
+    const dataCenterSpecificLinodeTransfer = networkTransferData.region_transfers.find(
+      (networkTransferDataRegion) => networkTransferDataRegion.id === regionId
+    );
+
+    if (dataCenterSpecificLinodeTransfer) {
+      return {
+        quota: dataCenterSpecificLinodeTransfer.quota || 0,
+        used: dataCenterSpecificLinodeTransfer.used || 0,
+      };
+    }
+  }
+
+  return {
+    quota: networkTransferData.quota || 0,
+    used: networkTransferData.used || 0,
+  };
+};
+
+/**
+ * This function is used to determine if specific pricing exists in a region
+ * given any number of Linode Types
+ * @param regionId the region to check for specific pricing
+ * @param types an array of Linode Types
+ * @returns true if there is at least one linode type with a DC specific price for the provided region
+ */
+export const doesRegionHaveUniquePricing = (
+  regionId: Region['id'] | undefined,
+  types: LinodeType[] | undefined
+) => {
+  if (!regionId || !types) {
+    return false;
+  }
+
+  return types?.some(
+    (type) =>
+      type.region_prices?.some((regionPrice) => regionPrice.id === regionId) ??
+      false
+  );
 };

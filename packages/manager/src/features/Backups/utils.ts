@@ -4,17 +4,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { queryKey } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';
 
-import type { APIError, Linode, LinodeType } from '@linode/api-v4';
-
-export const getTotalBackupsPrice = (
-  linodes: Linode[],
-  types: LinodeType[]
-) => {
-  return linodes.reduce((prevValue: number, linode: Linode) => {
-    const type = types.find((type) => type.id === linode.type);
-    return prevValue + (type?.addons.backups.price.monthly ?? 0);
-  }, 0);
-};
+import type { APIError, Linode } from '@linode/api-v4';
 
 interface EnableBackupsFufilledResult extends PromiseFulfilledResult<{}> {
   linode: Linode;

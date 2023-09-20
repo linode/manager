@@ -5,6 +5,7 @@ import {
   screen,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import mediaQuery from 'css-mediaquery';
 import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
@@ -39,6 +40,26 @@ export const mockMatchMedia = (matches: boolean = true) => {
     };
   });
 };
+
+const createMatchMedia = (width: number) => {
+  return (query: string) => {
+    return {
+      addEventListener: () => jest.fn(),
+      addListener: () => jest.fn(),
+      dispatchEvent: () => true,
+      matches: mediaQuery.match(query, { width }),
+      media: '',
+      onchange: () => jest.fn(),
+      removeEventListener: () => jest.fn(),
+      removeListener: () => jest.fn(),
+    };
+  };
+};
+
+export const resizeScreenSize = (width: number) => {
+  window.matchMedia = createMatchMedia(width);
+};
+
 interface Options {
   MemoryRouter?: MemoryRouterProps;
   customStore?: DeepPartial<ApplicationState>;

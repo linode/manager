@@ -316,6 +316,10 @@ export const lightTheme: ThemeOptions = {
           },
         },
         tag: {
+          '&:not(.MuiChip-root)': {
+            borderRadius: '4px',
+            padding: '4px',
+          },
           '.MuiChip-deleteIcon': {
             ':hover': {
               backgroundColor: primaryColors.main,
@@ -326,6 +330,7 @@ export const lightTheme: ThemeOptions = {
             fontSize: '16px',
             margin: '0 4px',
           },
+
           backgroundColor: bg.lightBlue1,
           padding: '12px 2px',
         },
@@ -662,7 +667,6 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: 'transparent',
             color: primaryColors.main,
           },
-          padding: 12,
         },
       },
     },
@@ -838,13 +842,6 @@ export const lightTheme: ThemeOptions = {
       },
     },
     MuiMenu: {
-      defaultProps: {
-        slotProps: {
-          backdrop: {
-            invisible: true,
-          },
-        },
-      },
       styleOverrides: {
         paper: {
           '& .selectMenuList': {
@@ -898,8 +895,7 @@ export const lightTheme: ThemeOptions = {
           paddingBottom: 8,
           paddingTop: 8,
           textOverflow: 'initial',
-          transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
-        ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
+          transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1)'}`,
           whiteSpace: 'initial',
         },
         selected: {},
@@ -1412,6 +1408,9 @@ export const lightTheme: ThemeOptions = {
   },
   name: 'light', // @todo remove this because we leverage pallete.mode now
   palette: {
+    background: {
+      default: bg.app,
+    },
     divider: primaryColors.divider,
     error: {
       dark: '#cd2227',
