@@ -44,7 +44,7 @@ export const EnableObjectStorageModal = React.memo(
      * @param regionLabel The human-readable region for the bucket (e.g. Jakarta, ID)
      * @returns Dynamic modal text dependent on the existence and selection of a region
      */
-    const getRegionPricingText = (regionLabel: string) => {
+    const renderRegionPricingText = (regionLabel: string) => {
       if (flags.dcSpecificPricing) {
         if (!regionId) {
           return <Typography>{ENABLE_OBJ_ACCESS_KEYS_MESSAGE}</Typography>;
@@ -100,7 +100,7 @@ export const EnableObjectStorageModal = React.memo(
         open={open}
         title="Just to confirm..."
       >
-        {getRegionPricingText(regionLabel ?? 'this region')}
+        {renderRegionPricingText(regionLabel ?? 'this region')}
         {flags.dcSpecificPricing && (
           <Typography style={{ marginTop: 12 }}>
             <Link to="https://www.linode.com/pricing/#object-storage">
