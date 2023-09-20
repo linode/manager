@@ -67,9 +67,9 @@ export const Link = (props: LinkProps) => {
     className,
     external,
     forceCopyColor,
+    hideIcon,
     onClick,
     to,
-    hideIcon,
   } = props;
   const { classes, cx } = useStyles();
   const sanitizedUrl = () => sanitizeUrl(to);
@@ -77,8 +77,8 @@ export const Link = (props: LinkProps) => {
   const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(children);
   const externalNotice = '- link opens in a new tab';
   const ariaLabel = accessibleAriaLabel
-    ? `${accessibleAriaLabel} ${externalNotice}`
-    : `${childrenAsAriaLabel} ${externalNotice}`;
+    ? `${accessibleAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`
+    : `${childrenAsAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`;
 
   if (childrenContainsNoText(children) && !accessibleAriaLabel) {
     // eslint-disable-next-line no-console
@@ -122,6 +122,7 @@ export const Link = (props: LinkProps) => {
     </a>
   ) : (
     <RouterLink
+      aria-label={ariaLabel}
       data-testid="internal-link"
       {...routerLinkProps}
       className={cx(
