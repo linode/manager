@@ -6,8 +6,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import {
-  sxContainer,
-  sxItem,
   StyledContainerGrid,
   StyledInstructionGrid,
 } from './InstallationInstructions.styles';
@@ -21,8 +19,8 @@ export const InstallationInstructions = React.memo((props: Props) => {
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
 
   return (
-    <Grid container sx={{ ...sxContainer }} spacing={2}>
-      <Grid sx={{ ...sxItem }}>
+    <Grid container spacing={2}>
+      <Grid>
         <Typography>
           Before this client can gather data, you need to install the Longview
           Agent on your server by running the following command. After
@@ -30,16 +28,16 @@ export const InstallationInstructions = React.memo((props: Props) => {
           receiving data.
         </Typography>
       </Grid>
-      <Grid sx={{ ...sxItem }} xs={12}>
+      <Grid xs={12}>
         <StyledContainerGrid spacing={2}>
-          <Grid sx={{ ...sxItem, paddingTop: 0, paddingBottom: 0 }}>
+          <Grid sx={{ padding: '8px' }}>
             <CopyTooltip text={command} />
           </Grid>
           <Grid
             sx={{
-              ...sxItem,
               paddingTop: 0,
               paddingBottom: 0,
+              paddingLeft: '8px',
               overflowX: 'auto',
             }}
           >
@@ -49,15 +47,15 @@ export const InstallationInstructions = React.memo((props: Props) => {
           </Grid>
         </StyledContainerGrid>
       </Grid>
-      <Grid sx={{ ...sxItem }} xs={12}>
+      <Grid xs={12}>
         <Typography>
           This should work for most installations, but if you have issues,
           please consult our troubleshooting guide and manual installation
           instructions (API key required):
         </Typography>
       </Grid>
-      <Grid sx={{ ...sxItem }} xs={12}>
-        <Grid container sx={{ ...sxContainer }} spacing={2}>
+      <Grid xs={12}>
+        <Grid container spacing={2}>
           <StyledInstructionGrid>
             <Typography>
               <Link to="https://www.linode.com/docs/platform/longview/troubleshooting-linode-longview/">
