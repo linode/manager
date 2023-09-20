@@ -1,5 +1,6 @@
 import { Volume } from '@linode/api-v4';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { number, object } from 'yup';
 
@@ -34,6 +35,8 @@ const AttachVolumeValidationSchema = object({
 export const AttachVolumeDrawer = React.memo((props: Props) => {
   const { open, volume } = props;
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const { data: grants } = useGrants();
 
   const { error, mutateAsync: attachVolume } = useAttachVolumeMutation();
@@ -44,9 +47,12 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
       await attachVolume({
         volumeId: volume?.id ?? -1,
         ...values,
-      }).then((_) => {
+      }).then(() => {
         resetEventsPolling();
         handleClose();
+        enqueueSnackbar(`Volume attachment started`, {
+          variant: 'info',
+        });
       });
     },
     validateOnBlur: false,

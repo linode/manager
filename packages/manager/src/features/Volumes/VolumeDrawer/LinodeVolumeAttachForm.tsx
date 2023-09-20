@@ -1,6 +1,7 @@
 import { Linode } from '@linode/api-v4';
 import { Grant } from '@linode/api-v4/lib/account';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { number, object } from 'yup';
 
@@ -43,6 +44,8 @@ export const LinodeVolumeAttachForm = (props: Props) => {
 
   const { data: grants } = useGrants();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const linodeGrant = grants?.linode.find(
     (grant: Grant) => grant.id === linode.id
   );
@@ -72,6 +75,9 @@ export const LinodeVolumeAttachForm = (props: Props) => {
         });
         onClose();
         resetEventsPolling();
+        enqueueSnackbar(`Volume attachment started`, {
+          variant: 'info',
+        });
       } catch (error) {
         setSubmitting(false);
         handleFieldErrors(setErrors, error);

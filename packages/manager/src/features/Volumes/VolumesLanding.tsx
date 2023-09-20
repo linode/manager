@@ -198,7 +198,12 @@ export const VolumesLanding = () => {
         volume={selectedVolume}
       />
       <VolumeDetailsDrawer
-        onClose={() => setIsDetailsDrawerOpen(false)}
+        onClose={() => {
+          setIsDetailsDrawerOpen(false);
+          if (location.state?.volume) {
+            window.history.replaceState(null, '');
+          }
+        }}
         open={isDetailsDrawerOpen}
         volume={selectedVolume ?? location.state?.volume}
       />
