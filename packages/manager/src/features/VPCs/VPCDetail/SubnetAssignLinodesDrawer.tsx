@@ -20,10 +20,16 @@ import { TextField } from 'src/components/TextField';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
 import { queryKey, useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import {
+  ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE,
+  MULTIPLE_CONFIGURATIONS_MESSAGE,
+  REGIONAL_LINODE_MESSAGE,
+} from '../constants';
 import {
   SelectedOptionsHeader,
   SelectedOptionsList,
@@ -34,15 +40,15 @@ import {
 } from './SubnetAssignLinodesDrawer.styles';
 
 import type {
+  APIError,
   Config,
   InterfacePayload,
   InterfacePurpose,
   Linode,
   Subnet,
-  APIError,
 } from '@linode/api-v4';
 
-// @TODO VPC - if all subnet action menu item related components use (most of) this as their props, might be worth
+// @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or somthing
 interface Props {
   onClose: () => void;
@@ -57,12 +63,6 @@ type LinodeAndConfigData = Linode & {
   configLabel: string;
   interfaceId: number;
 };
-
-const REBOOT_LINODE_MESSAGE =
-  'Assigning a Linode to a subnet requires you to reboot the Linode to update its configuration.';
-const REGIONAL_LINODE_MESSAGE = `Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.`;
-const MULTIPLE_CONFIGURATIONS_MESSAGE =
-  'This Linode has multiple configurations. Select which configuration you would like added to the subnet.';
 
 export const SubnetAssignLinodesDrawer = (props: Props) => {
   const { onClose, open, subnet, vpcId, vpcRegion } = props;
@@ -150,19 +150,18 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
   };
 
   const onAssignLinode = async () => {
-    const { selectedLinode, chosenIP, selectedConfig } = values;
+    const { chosenIP, selectedConfig, selectedLinode } = values;
 
     // if a linode has multiple configs, we force the user to choose one. Otherwise,
     // we just take the ID of the first (the only) config when assigning a linode.
     const configId =
-      linodeConfigs.length > 1
-        ? selectedConfig?.id ?? -1
-        : linodeConfigs[0]?.id ?? -1;
+      (linodeConfigs.length > 1 ? selectedConfig?.id : linodeConfigs[0]?.id) ??
+      -1;
 
     const interfacePayload: InterfacePayload = {
-      purpose: 'vpc' as InterfacePurpose,
-      label: null,
       ipam_address: null,
+      label: null,
+      purpose: 'vpc' as InterfacePurpose,
       subnet_id: subnet?.id,
       ...(!autoAssignIPv4 && { ipv4: { vpc: chosenIP } }),
     };
@@ -182,17 +181,17 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           {
             ...selectedLinode,
             configId,
-            interfaceId: newInterface.id,
             configLabel: `${selectedLinode.label}${
               selectedConfig?.label ? ` (${selectedConfig.label})` : ''
             }`,
+            interfaceId: newInterface.id,
           },
         ]);
       }
       setValues({
-        selectedLinode: null,
         chosenIP: '',
         selectedConfig: null,
+        selectedLinode: null,
       });
     } catch (errors) {
       // if a linode/config is not selected, the error returned isn't very friendly: it just says 'Not found', so added friendlier errors here
@@ -201,7 +200,10 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
         if (!selectedLinode) {
           newErrors.none = 'No Linode selected';
         } else if (configId === -1) {
-          newErrors.none = 'No configuration profile selected';
+          newErrors.none =
+            linodeConfigs.length === 0
+              ? 'Selected linode must have at least one configuration profile'
+              : 'No configuration profile selected';
         } // no else case: leave room for other errors unrelated to unselected linode/config
       }
       setAssignLinodesErrors(newErrors);
@@ -209,7 +211,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
   };
 
   const onUnassignLinode = async (data: LinodeAndConfigData) => {
-    const { id: linodeId, configId, interfaceId } = data;
+    const { configId, id: linodeId, interfaceId } = data;
     try {
       await deleteLinodeConfigInterface(linodeId, configId, interfaceId);
       setAssignedLinodesAndConfigData(
@@ -253,9 +255,9 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      selectedLinode: null as Linode | null,
       chosenIP: '',
       selectedConfig: null as Config | null,
+      selectedLinode: null as Linode | null,
     },
     onSubmit: onAssignLinode,
     validateOnBlur: false,
@@ -295,7 +297,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
       setUnassignLinodesErrors([]);
       setAutoAssignIPv4(true);
     }
-  }, [open]);
+  }, [open, resetForm]);
 
   return (
     <Drawer
@@ -313,42 +315,45 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
       {assignLinodesErrors.none && (
         <Notice text={assignLinodesErrors.none} variant="error" />
       )}
-      <Notice variant="warning" text={`${REBOOT_LINODE_MESSAGE}`} />
+      <Notice
+        text={`${ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE}`}
+        variant="warning"
+      />
       <form onSubmit={handleSubmit}>
         <FormHelperText>{REGIONAL_LINODE_MESSAGE}</FormHelperText>
         <Autocomplete
-          disabled={userCannotAssignLinodes}
-          inputValue={values.selectedLinode?.label || ''}
-          label={'Linodes'}
           onChange={(_, value: Linode) => {
             setFieldValue('selectedLinode', value);
             setAssignLinodesErrors({});
           }}
+          disabled={userCannotAssignLinodes}
+          inputValue={values.selectedLinode?.label || ''}
+          label={'Linodes'}
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={findUnassignedLinodes()}
           placeholder="Select Linodes or type to search"
-          value={values.selectedLinode || null}
           sx={{ marginBottom: '8px' }}
+          value={values.selectedLinode || null}
         />
         <Checkbox
-          checked={autoAssignIPv4}
-          disabled={userCannotAssignLinodes}
-          text={'Auto-assign a VPC IPv4 address for this Linode'}
           toolTipText={
             'A range of non-internet facing IP used in an internal network'
           }
+          checked={autoAssignIPv4}
+          disabled={userCannotAssignLinodes}
           onChange={(_) => setAutoAssignIPv4(!autoAssignIPv4)}
           sx={{ marginLeft: `2px`, marginTop: `8px` }}
+          text={'Auto-assign a VPC IPv4 address for this Linode'}
         />
         {!autoAssignIPv4 && (
           <TextField
-            disabled={userCannotAssignLinodes}
-            errorText={assignLinodesErrors['ipv4.vpc']}
-            label={'VPC IPv4'}
             onChange={(e) => {
               setFieldValue('chosenIP', e.target.value);
               setAssignLinodesErrors({});
             }}
+            disabled={userCannotAssignLinodes}
+            errorText={assignLinodesErrors['ipv4.vpc']}
+            label={'VPC IPv4'}
             sx={{ marginBottom: '8px' }}
             value={values.chosenIP}
           />
@@ -357,17 +362,17 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           <>
             <FormHelperText sx={{ marginTop: `16px` }}>
               {MULTIPLE_CONFIGURATIONS_MESSAGE}
-              {/* @TODO: VPC - add docs link */}
+              {/* @TODO VPC: add docs link */}
               <Link to="#"> Learn more</Link>.
             </FormHelperText>
             <Autocomplete
-              disabled={userCannotAssignLinodes}
-              inputValue={values.selectedConfig?.label || ''}
-              label={'Configuration profile'}
               onChange={(_, value: Config) => {
                 setFieldValue('selectedConfig', value);
                 setAssignLinodesErrors({});
               }}
+              disabled={userCannotAssignLinodes}
+              inputValue={values.selectedConfig?.label || ''}
+              label={'Configuration profile'}
               options={linodeConfigs}
               placeholder="Select a configuration profile"
               value={values.selectedConfig || null}
@@ -404,12 +409,12 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
             >
               <StyledLabel>{linodeAndConfigData.configLabel}</StyledLabel>
               <IconButton
-                aria-label={`remove ${linodeAndConfigData.configLabel}`}
-                disableRipple
                 onClick={() => {
                   onUnassignLinode(linodeAndConfigData);
                   setUnassignLinodesErrors([]);
                 }}
+                aria-label={`remove ${linodeAndConfigData.configLabel}`}
+                disableRipple
                 size="medium"
               >
                 <Close />

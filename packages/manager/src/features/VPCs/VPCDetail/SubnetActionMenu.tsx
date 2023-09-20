@@ -17,7 +17,13 @@ interface Props extends SubnetActionHandlers {
 }
 
 export const SubnetActionMenu = (props: Props) => {
-  const { handleAssignLinodes, handleDelete, handleEdit, numLinodes, subnet } = props;
+  const {
+    handleAssignLinodes,
+    handleDelete,
+    handleEdit,
+    numLinodes,
+    subnet,
+  } = props;
 
   const handleUnassignLinode = () => {};
 

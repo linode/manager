@@ -1,18 +1,18 @@
 import { Subnet } from '@linode/api-v4';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 
-import { fireEvent } from '@testing-library/react';
+import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 
 const props = {
   onClose: jest.fn(),
   open: true,
   subnet: {
     id: 1,
-    label: 'subnet-1',
     ipv4: '10.0.0.0/24',
+    label: 'subnet-1',
   } as Subnet,
   vpcId: 1,
   vpcRegion: '',

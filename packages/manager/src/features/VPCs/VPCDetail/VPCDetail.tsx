@@ -16,6 +16,7 @@ import { truncate } from 'src/utilities/truncate';
 
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
+import { REBOOT_LINODE_WARNING_VPCDETAILS } from '../constants';
 import { getUniqueLinodesFromSubnets } from '../utils';
 import {
   StyledActionButton,
@@ -25,9 +26,6 @@ import {
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
-
-const REBOOT_LINODE_WARNING =
-  'Assigned or unassigned Linodes will not take affect until the Linodes are rebooted.';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -193,7 +191,9 @@ const VPCDetail = () => {
           preferenceKey={`reboot-linodes-warning-banner`}
           variant="warning"
         >
-          <Typography variant="body1">{REBOOT_LINODE_WARNING}</Typography>
+          <Typography variant="body1">
+            {REBOOT_LINODE_WARNING_VPCDETAILS}
+          </Typography>
         </DismissibleBanner>
       )}
       <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
