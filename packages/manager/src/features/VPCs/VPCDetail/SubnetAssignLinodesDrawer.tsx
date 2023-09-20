@@ -1,12 +1,6 @@
 import {
   appendConfigInterface,
   deleteLinodeConfigInterface,
-  Config,
-  InterfacePayload,
-  InterfacePurpose,
-  Linode,
-  Subnet,
-  APIError,
 } from '@linode/api-v4';
 import Close from '@mui/icons-material/Close';
 import { useFormik } from 'formik';
@@ -23,17 +17,13 @@ import { IconButton } from 'src/components/IconButton';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
-
 import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
 import { queryKey, useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
 import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
-
 import { getErrorMap } from 'src/utilities/errorUtils';
-
 import {
   SelectedOptionsHeader,
   SelectedOptionsList,
@@ -42,6 +32,15 @@ import {
   StyledLabel,
   StyledNoAssignedLinodesBox,
 } from './SubnetAssignLinodesDrawer.styles';
+
+import type {
+  Config,
+  InterfacePayload,
+  InterfacePurpose,
+  Linode,
+  Subnet,
+  APIError,
+} from '@linode/api-v4';
 
 // @TODO VPC - if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or somthing
@@ -101,9 +100,9 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
   const csvHeaders = [
-    { key: 'id', label: 'id' },
-    { key: 'label', label: 'label' },
-    { key: 'ipv4', label: 'ipv4' },
+    { key: 'label', label: 'Linode Label' },
+    { key: 'ipv4', label: 'IPv4' },
+    { key: 'id', label: 'Linode ID' },
   ];
 
   const downloadCSV = async () => {
@@ -119,6 +118,8 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     }
   );
 
+  // We need to filter to the linodes from this region that are not already
+  // assigned to this subnet
   const findUnassignedLinodes = () => {
     const justAssignedLinodeIds = assignedLinodesAndConfigData.map(
       (data) => data.id
