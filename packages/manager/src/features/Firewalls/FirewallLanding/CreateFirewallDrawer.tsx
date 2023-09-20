@@ -153,8 +153,7 @@ export const CreateFirewallDrawer = React.memo(
         : null;
 
     const optionsFilter = (nodebalancer: NodeBalancer) => {
-      const selectedNodeBalancersIds =
-        selectedNodeBalancers.map((device) => device.id) ?? [];
+      const selectedNodeBalancersIds = selectedNodeBalancers.map((nb) => nb.id);
 
       return ![
         ...readOnlyNodebalancerIds,
