@@ -25,7 +25,7 @@ export const priceIncreaseMap = {
   'id-cgk': 0.2, // Jakarta
 };
 
-// TODO: DC Pricing - M3-6893: Update these values when beta pricing ends.
+// TODO: DC Pricing - M3-6973: Update these values when beta pricing ends.
 export const objectStoragePriceIncreaseMap = {
   'br-gru': {
     monthly: 0.0,

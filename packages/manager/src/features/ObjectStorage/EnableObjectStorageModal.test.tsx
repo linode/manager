@@ -9,15 +9,19 @@ import {
 import { objectStoragePriceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { EnableObjectStorageModal, Props } from './EnableObjectStorageModal';
+import {
+  EnableObjectStorageModal,
+  EnableObjectStorageProps,
+} from './EnableObjectStorageModal';
 
-const DC_PRICING_REGION = 'id-cgk';
+const DC_SPECIFIC_PRICING_REGION_LABEL = 'Jakarta, ID';
+const DC_SPECIFIC_PRICING_REGION = 'id-cgk';
 const BASE_PRICING_REGION = 'us-east';
 
 const handleSubmit = jest.fn();
 const onClose = jest.fn();
 
-const props: Props = {
+const props: EnableObjectStorageProps = {
   handleSubmit,
   onClose,
   open: true,
@@ -31,51 +35,26 @@ describe('EnableObjectStorageModal', () => {
     getByText('Just to confirm...');
   });
 
-  // TODO: fix
-  it.skip('displays base prices for a region without price increases', () => {
+  // TODO: DC Pricing - M3-7073: Remove this test once dcSpecificPricing flag is cleaned up
+  it('displays base prices for a region without price increases when the OBJ DC-specific pricing feature flag is off', () => {
     const { getByText } = render(
       wrapWithTheme(
-        <EnableObjectStorageModal {...props} regionId={BASE_PRICING_REGION} />
+        <EnableObjectStorageModal {...props} regionId={BASE_PRICING_REGION} />,
+        { flags: { objDCSpecificPricing: false } }
       )
     );
     getByText(`$${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
     getByText(`$${OBJ_STORAGE_PRICE.storage_overage} per GB`, { exact: false });
-    getByText(`$${OBJ_STORAGE_PRICE.transfer_overage} per GB`, {
-      exact: false,
-    });
   });
 
-  // TODO: displays beta message with region label if obj DC-specific pricing flag is on
-  it.skip('displays DC-specific prices if the DC-specific pricing flag is on', () => {
+  // TODO: DC Pricing - M3-7073: Remove this test once dcSpecificPricing flag is cleaned up
+  it('displays base prices for a region with price increases if the OBJ DC-specific pricing feature flag is off', () => {
     const { getByText } = render(
       wrapWithTheme(
-        <EnableObjectStorageModal {...props} regionId={DC_PRICING_REGION} />,
-        {
-          flags: { objDCSpecificPricing: true },
-        }
-      )
-    );
-    getByText(
-      `$${objectStoragePriceIncreaseMap[DC_PRICING_REGION].monthly}/month`,
-      {
-        exact: false,
-      }
-    );
-    getByText(
-      `$${objectStoragePriceIncreaseMap[DC_PRICING_REGION].storage_overage} per GB`,
-      { exact: false }
-    );
-    getByText(
-      `$${objectStoragePriceIncreaseMap[DC_PRICING_REGION].transfer_overage} per GB`,
-      { exact: false }
-    );
-  });
-
-  // TODO: fix
-  it.skip('displays base prices if the DC-specific pricing flag is off', () => {
-    const { getByText } = render(
-      wrapWithTheme(
-        <EnableObjectStorageModal {...props} regionId={DC_PRICING_REGION} />,
+        <EnableObjectStorageModal
+          {...props}
+          regionId={DC_SPECIFIC_PRICING_REGION}
+        />,
         {
           flags: { objDCSpecificPricing: false },
         }
@@ -83,12 +62,67 @@ describe('EnableObjectStorageModal', () => {
     );
     getByText(`${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
     getByText(`$${OBJ_STORAGE_PRICE.storage_overage} per GB`, { exact: false });
-    getByText(`$${OBJ_STORAGE_PRICE.transfer_overage} per GB`, {
-      exact: false,
-    });
   });
 
-  it('displays a message without pricing if no region exists, e.g. access key flow, when the OBJ DC-specific pricing flag is on', () => {
+  it('displays base prices for a region without price increases when the OBJ DC-specific pricing feature flag is on', () => {
+    const { getByText } = render(
+      wrapWithTheme(
+        <EnableObjectStorageModal {...props} regionId={BASE_PRICING_REGION} />,
+        { flags: { objDCSpecificPricing: true } }
+      )
+    );
+    getByText(`$${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
+    getByText(`$${OBJ_STORAGE_PRICE.storage_overage} per GB`, { exact: false });
+  });
+
+  // TODO: DC Pricing - M3-6973: delete this test and replace it with the one below it when beta pricing ends.
+  it('displays beta message with region label for a region with price increases when the OBJ DC-specific pricing flag is on', () => {
+    const { getByText } = render(
+      wrapWithTheme(
+        <EnableObjectStorageModal
+          {...props}
+          regionId={DC_SPECIFIC_PRICING_REGION}
+        />,
+        {
+          flags: { objDCSpecificPricing: true },
+        }
+      )
+    );
+    getByText(
+      `Object Storage for ${DC_SPECIFIC_PRICING_REGION_LABEL} is currently in beta. During the beta period, Object Storage in these regions is free. After the beta period, customers will be notified before charges for this service begin.`
+    );
+  });
+
+  // TODO: DC Pricing - M3-6973: Unskip this test when beta pricing ends.
+  it.skip('displays DC-specific pricing  for a region with price increases when the OBJ DC-specific pricing flag is on', () => {
+    const { getByText } = render(
+      wrapWithTheme(
+        <EnableObjectStorageModal
+          {...props}
+          regionId={DC_SPECIFIC_PRICING_REGION}
+        />,
+        {
+          flags: { objDCSpecificPricing: true },
+        }
+      )
+    );
+    getByText(
+      `$${objectStoragePriceIncreaseMap[DC_SPECIFIC_PRICING_REGION].monthly}/month`,
+      {
+        exact: false,
+      }
+    );
+    getByText(
+      `$${objectStoragePriceIncreaseMap[DC_SPECIFIC_PRICING_REGION].storage_overage} per GB`,
+      { exact: false }
+    );
+    getByText(
+      `$${objectStoragePriceIncreaseMap[DC_SPECIFIC_PRICING_REGION].transfer_overage} per GB`,
+      { exact: false }
+    );
+  });
+
+  it('displays a message without pricing if no region exists (e.g. access key flow) when the OBJ DC-specific pricing flag is on', () => {
     const { getByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />, {
         flags: { objDCSpecificPricing: true },
@@ -97,7 +131,7 @@ describe('EnableObjectStorageModal', () => {
     getByText(ENABLE_OBJ_ACCESS_KEYS_MESSAGE);
   });
 
-  it('includes a link to linode.com/pricing', () => {
+  it('includes a link to linode.com/pricing when the OBJ DC-specific pricing flag is on', () => {
     const { getByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />, {
         flags: { objDCSpecificPricing: true },
@@ -126,7 +160,7 @@ describe('EnableObjectStorageModal', () => {
     expect(props.onClose).toHaveBeenCalled();
   });
 
-  it('calls the onClose prop/handler when the X button is clicked', () => {
+  it('calls the onClose prop/handler when the Close (X) button is clicked', () => {
     const { getByLabelText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />)
     );

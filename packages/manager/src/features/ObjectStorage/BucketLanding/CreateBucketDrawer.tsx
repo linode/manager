@@ -22,7 +22,7 @@ import { sendCreateBucketEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 
-import EnableObjectStorageModal from '../EnableObjectStorageModal';
+import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
 
 interface Props {
@@ -150,10 +150,10 @@ export const CreateBucketDrawer = (props: Props) => {
         />
 
         <EnableObjectStorageModal
-          regionId={formik.values.cluster.slice(0, -2)}
           handleSubmit={formik.handleSubmit}
           onClose={() => setIsEnableObjDialogOpen(false)}
           open={isEnableObjDialogOpen}
+          regionId={formik.values.cluster.slice(0, -2)}
         />
       </form>
     </Drawer>
