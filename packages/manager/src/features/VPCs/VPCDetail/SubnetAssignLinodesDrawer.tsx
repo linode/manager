@@ -1,11 +1,7 @@
-import {
-  appendConfigInterface,
-  deleteLinodeConfigInterface,
-} from '@linode/api-v4';
+import { appendConfigInterface } from '@linode/api-v4';
 import Close from '@mui/icons-material/Close';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
@@ -18,11 +14,10 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
-import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
-import { queryKey, useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -66,17 +61,18 @@ type LinodeAndConfigData = Linode & {
 
 export const SubnetAssignLinodesDrawer = (props: Props) => {
   const { onClose, open, subnet, vpcId, vpcRegion } = props;
-  const queryClient = useQueryClient();
+  const {
+    invalidateQueries,
+    unassignLinode,
+    unassignLinodesErrors,
+    setUnassignLinodesErrors,
+  } = useUnassignLinode();
   const csvRef = React.useRef<any>();
   const formattedDate = useFormattedDate();
 
   const [assignLinodesErrors, setAssignLinodesErrors] = React.useState<
     Record<string, string | undefined>
   >({});
-
-  const [unassignLinodesErrors, setUnassignLinodesErrors] = React.useState<
-    APIError[]
-  >([]);
 
   // We only want to keep track the linodes we've assigned to a subnet while this drawer is open, so
   // we need to store that information in local state instead of using the subnet's assigned linodes
@@ -121,32 +117,9 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
   // We need to filter to the linodes from this region that are not already
   // assigned to this subnet
   const findUnassignedLinodes = () => {
-    const justAssignedLinodeIds = assignedLinodesAndConfigData.map(
-      (data) => data.id
-    );
-    return (
-      linodes?.filter(
-        (linode) =>
-          !justAssignedLinodeIds.includes(linode.id) &&
-          !subnet?.linodes.includes(linode.id)
-      ) ?? []
-    );
-  };
-
-  // We want to invalidate any VPC/subnet related queries as well, since we're making changes to subnets
-  const invalidateQueries = (linodeId: number, configId: number) => {
-    queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
-    queryClient.invalidateQueries([vpcQueryKey, 'vpc', vpcId]);
-    queryClient.invalidateQueries([vpcQueryKey, 'vpc', vpcId, subnetQueryKey]);
-    queryClient.invalidateQueries([
-      queryKey,
-      'linode',
-      linodeId,
-      configQueryKey,
-      'config',
-      configId,
-      interfaceQueryKey,
-    ]);
+    return linodes?.filter((linode) => {
+      return !subnet?.linodes.includes(linode.id);
+    });
   };
 
   const onAssignLinode = async () => {
@@ -172,10 +145,15 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
         configId,
         interfacePayload
       );
-      invalidateQueries(selectedLinode?.id ?? -1, configId);
+      invalidateQueries({
+        configId,
+        linodeId: selectedLinode?.id ?? -1,
+        subnetId: subnet?.id ?? -1,
+        vpcId,
+      });
       resetForm();
       setLinodeConfigs([]);
-      if (selectedLinode) {
+      if (selectedLinode && subnet?.linodes.includes(selectedLinode.id)) {
         setAssignedLinodesAndConfigData([
           ...assignedLinodesAndConfigData,
           {
@@ -212,36 +190,20 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
 
   const onUnassignLinode = async (data: LinodeAndConfigData) => {
     const { configId, id: linodeId, interfaceId } = data;
-    try {
-      await deleteLinodeConfigInterface(linodeId, configId, interfaceId);
+    await unassignLinode({
+      configId,
+      interfaceId,
+      linodeId,
+      subnetId: subnet?.id ?? -1,
+      vpcId,
+    });
+
+    if (!subnet?.linodes.includes(linodeId)) {
       setAssignedLinodesAndConfigData(
         [...assignedLinodesAndConfigData].filter(
           (linode) => linode.id !== linodeId
         )
       );
-      invalidateQueries(data.id, data.configId);
-      queryClient.invalidateQueries([
-        queryKey,
-        'linode',
-        linodeId,
-        configQueryKey,
-        'config',
-        configId,
-        interfaceQueryKey,
-      ]);
-      queryClient.removeQueries([
-        queryKey,
-        'linode',
-        linodeId,
-        configQueryKey,
-        'config',
-        configId,
-        interfaceQueryKey,
-        'interface',
-        interfaceId,
-      ]);
-    } catch (errors) {
-      setUnassignLinodesErrors(errors as APIError[]);
     }
   };
 
@@ -330,7 +292,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           inputValue={values.selectedLinode?.label || ''}
           label={'Linodes'}
           // We only want to be able to assign linodes that were not already assigned to this subnet
-          options={findUnassignedLinodes()}
+          options={findUnassignedLinodes() ?? []}
           placeholder="Select Linodes or type to search"
           sx={{ marginBottom: '8px' }}
           value={values.selectedLinode || null}
