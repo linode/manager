@@ -20,14 +20,16 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { StyledCreateLink } from './LinodeCreate.styles';
+import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 
 interface VPCPanelProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
-  handleSelectVPC: (vpcID: number) => void;
-  handleSubnetChange: (subnetID: number) => void;
+  handleSelectVPC: (vpcId: number) => void;
+  handleSubnetChange: (subnetId: number) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
-  region?: string;
+  region: string | undefined;
+  selectedSubnetId: number | undefined;
   selectedVPCId: number | undefined;
   subnetError?: string;
   toggleAssignPublicIPv4Address: () => void;
@@ -44,6 +46,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     handleSubnetChange,
     handleVPCIPv4Change,
     region,
+    selectedSubnetId,
     selectedVPCId,
     subnetError,
     toggleAssignPublicIPv4Address,
@@ -51,8 +54,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
     vpcIPv4AddressOfLinode,
     vpcIPv4Error,
   } = props;
-
-  const [selectedVPC, setSelectedVPC] = React.useState<number>(-1);
 
   const flags = useFlags();
   const { account } = useAccountManagement();
@@ -92,7 +93,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
   const subnetDropdownOptions: Item[] =
     vpcs
-      .find((vpc) => vpc.id === selectedVPC)
+      .find((vpc) => vpc.id === selectedVPCId)
       ?.subnets.map((subnet) => ({
         label: `${subnet.label} (${subnet.ipv4 ?? 'No IPv4 range provided'})`, // @TODO VPC: Support for IPv6 down the line
         value: subnet.id,
@@ -122,7 +123,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
         <Select
           onChange={(selectedVPC: Item<number, string>) => {
             handleSelectVPC(selectedVPC.value);
-            setSelectedVPC(selectedVPC.value);
           }}
           textFieldProps={{
             tooltipText: REGION_CAVEAT_HELPER_TEXT,
@@ -151,11 +151,16 @@ export const VPCPanel = (props: VPCPanelProps) => {
           Create VPC
         </StyledCreateLink>
 
-        {selectedVPC !== -1 && regionSupportsVPCs && (
+        {selectedVPCId !== -1 && regionSupportsVPCs && (
           <Stack>
             <Select
               onChange={(selectedSubnet: Item<number, string>) =>
                 handleSubnetChange(selectedSubnet.value)
+              }
+              value={
+                subnetDropdownOptions.find(
+                  (option) => option.value === selectedSubnetId
+                ) || null
               }
               errorText={subnetError}
               isClearable={false}
@@ -187,8 +192,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     sx={{}}
                   >
                     <Typography noWrap>
-                      Auto-assign a private IPv4 address for this Linode in the
-                      VPC
+                      Auto-assign a VPC IPv4 address for this Linode in the VPC
                     </Typography>
                     <TooltipIcon
                       text={
@@ -250,6 +254,3 @@ export const VPCPanel = (props: VPCPanelProps) => {
     </Paper>
   );
 };
-
-const REGION_CAVEAT_HELPER_TEXT =
-  'A Linode may only be assigned to a VPC in the same region.';

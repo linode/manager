@@ -526,6 +526,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({
       selectedSubnetId: -1, // Ensure the selected subnet is cleared
       selectedVPCId: vpcId,
+      vpcIPv4AddressOfLinode: '', // Ensure the VPC IPv4 address is cleared
     });
   };
 
@@ -617,12 +618,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({
       disabledClasses,
       selectedRegionID: id,
-      selectedVPCId: -1, // When the region gets changed, ensure the VPC selection is cleared
+      // When the region gets changed, ensure the VPC-related selections are cleared
+      selectedSubnetId: undefined,
+      selectedVPCId: -1,
       showAgreement: Boolean(
         !this.props.profile.data?.restricted &&
           isEURegion(id) &&
           !this.props.agreements?.data?.eu_model
       ),
+      vpcIPv4AddressOfLinode: '',
     });
   };
 
@@ -768,7 +772,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         );
       }
 
-      // Situation: 'Auto-assign a private IPv4 address for this Linode in the VPC' checkbox
+      // Situation: 'Auto-assign a VPC IPv4 address for this Linode in the VPC' checkbox
       // unchecked but a valid VPC IPv4 not provided
       if (!this.state.autoassignIPv4WithinVPCEnabled && !validVPCIPv4) {
         return this.setState(

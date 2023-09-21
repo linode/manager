@@ -610,6 +610,7 @@ export class LinodeCreate extends React.PureComponent<
                 handleSubnetChange={this.props.handleSubnetChange}
                 handleVPCIPv4Change={this.props.handleVPCIPv4Change}
                 region={this.props.selectedRegionID}
+                selectedSubnetId={this.props.selectedSubnetId}
                 selectedVPCId={this.props.selectedVPCId}
                 subnetError={hasErrorFor['subnet_id']}
                 vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
@@ -783,7 +784,7 @@ export class LinodeCreate extends React.PureComponent<
       const vpcInterfaceData: InterfacePayload = {
         ipam_address: null,
         ipv4: {
-          nat_1_1: 'any', // contingent on stakeholder feedback
+          nat_1_1: this.props.assignPublicIPv4Address ? 'any' : undefined,
           vpc: this.props.autoassignIPv4WithinVPC
             ? undefined
             : this.props.vpcIPv4AddressOfLinode,
