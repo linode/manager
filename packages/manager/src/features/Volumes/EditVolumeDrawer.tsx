@@ -123,10 +123,7 @@ export const EditVolumeDrawer = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: () => {
-              resetForm();
-              onClose();
-            },
+            onClick: onClose,
           }}
         />
       </form>

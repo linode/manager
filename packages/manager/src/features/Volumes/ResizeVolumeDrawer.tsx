@@ -25,7 +25,7 @@ interface Props {
 }
 
 export const ResizeVolumeDrawer = (props: Props) => {
-  const { onClose, open, volume } = props;
+  const { onClose: _onClose, open, volume } = props;
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
 
@@ -78,6 +78,11 @@ export const ResizeVolumeDrawer = (props: Props) => {
     validationSchema,
   });
 
+  const onClose = () => {
+    _onClose();
+    resetForm();
+  };
+
   return (
     <Drawer onClose={onClose} open={open} title="Resize Volume">
       <form onSubmit={handleSubmit}>
@@ -113,10 +118,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: () => {
-              resetForm();
-              onClose();
-            },
+            onClick: onClose,
           }}
         />
       </form>
