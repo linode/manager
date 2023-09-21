@@ -25,9 +25,12 @@ import {
 
 interface Props {
   linodeId: number;
+  subnetId: number;
 }
 
-export const SubnetLinodeRow = ({ linodeId }: Props) => {
+export const SubnetLinodeRow = (props: Props) => {
+  const { linodeId, subnetId } = props;
+
   const {
     data: linode,
     error: linodeError,
@@ -91,9 +94,10 @@ export const SubnetLinodeRow = ({ linodeId }: Props) => {
       </Hidden>
       <Hidden smDown>
         <StyledTableCell>
-          {getIPv4sCellString(
+          {getSubnetLinodeIPv4CellString(
             configs ?? [],
             configsLoading,
+            subnetId,
             configsError ?? undefined
           )}
         </StyledTableCell>
@@ -131,9 +135,10 @@ const getFirewallsCellString = (
   return getFirewallLinks(data);
 };
 
-const getIPv4sCellString = (
+const getSubnetLinodeIPv4CellString = (
   configs: Config[],
   loading: boolean,
+  subnetId: number,
   error?: APIError[]
 ): JSX.Element | string => {
   if (loading) {
@@ -148,28 +153,28 @@ const getIPv4sCellString = (
     return 'None';
   }
 
-  const interfaces = configs
-    .map((config) =>
-      config.interfaces.filter((configInterface) => configInterface.ipv4?.vpc)
-    )
-    .flat();
-  return getIPv4Links(interfaces);
+  const configInterface = getInterface(configs, subnetId);
+
+  return getIPv4Link(configInterface);
 };
 
-const getIPv4Links = (data: Interface[]): JSX.Element => {
-  const firstThreeInterfaces = data.slice(0, 3);
+const getInterface = (configs: Config[], subnetId: number) => {
+  for (const config of configs) {
+    for (const linodeInterface of config.interfaces) {
+      if (linodeInterface.ipv4?.vpc && linodeInterface.subnet_id === subnetId) {
+        return linodeInterface;
+      }
+    }
+  }
+
+  return undefined;
+};
+
+const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
   return (
     <>
-      {firstThreeInterfaces.map((configInterface, idx) => (
-        <span key={configInterface.id}>
-          {idx > 0 && `, `}
-          {configInterface.ipv4?.vpc}
-        </span>
-      ))}
-      {data.length > 3 && (
-        <span>
-          {`, `}plus {data.length - 3} more.
-        </span>
+      {configInterface && (
+        <span key={configInterface.id}>{configInterface.ipv4?.vpc}</span>
       )}
     </>
   );
