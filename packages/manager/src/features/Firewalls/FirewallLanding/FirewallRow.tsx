@@ -1,6 +1,5 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,6 +11,12 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
+import {
+  StyledDivWrapper,
+  StyledSpan,
+  StyledTableCell,
+  StyledTruncateLinks,
+} from './FirewallRow.styles';
 
 type CombinedProps = Firewall & ActionHandlers;
 
@@ -28,9 +33,9 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
       data-testid={`firewall-row-${id}`}
     >
       <TableCell>
-        <StyledLink tabIndex={0} to={`/firewalls/${id}`}>
+        <Link tabIndex={0} to={`/firewalls/${id}`}>
           {label}
-        </StyledLink>
+        </Link>
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
@@ -39,29 +44,21 @@ export const FirewallRow = React.memo((props: CombinedProps) => {
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
         <TableCell>
-          {getLinodesCellString(devices ?? [], isLoading, error ?? undefined)}
+          {getDevicesCellString(devices ?? [], isLoading, error ?? undefined)}
         </TableCell>
       </Hidden>
-      <TableCell actionCell>
+      <StyledTableCell actionCell>
         <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}
           firewallStatus={status}
           {...actionHandlers}
+          style={{ border: '0', padding: '0' }}
         />
-      </TableCell>
+      </StyledTableCell>
     </TableRow>
   );
 });
-
-export const StyledLink = styled(Link, { label: 'StyledLink' })(() => ({
-  '&:hover, &:focus': {
-    textDecoration: 'underline',
-  },
-  display: 'block',
-  fontSize: '.875rem',
-  lineHeight: '1.125rem',
-}));
 
 /**
  *
@@ -92,7 +89,7 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
   return [(rules.inbound || []).length, (rules.outbound || []).length];
 };
 
-const getLinodesCellString = (
+const getDevicesCellString = (
   data: FirewallDevice[],
   loading: boolean,
   error?: APIError[]
@@ -113,25 +110,22 @@ const getLinodesCellString = (
 };
 
 export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
-  const firstThree = data.slice(0, 3);
   return (
-    <>
-      {firstThree.map((thisDevice, idx) => (
-        <Link
-          className="link secondaryLink"
-          data-testid="firewall-row-link"
-          key={thisDevice.id}
-          to={`/linodes/${thisDevice.entity.id}`}
-        >
-          {idx > 0 && `, `}
-          {thisDevice.entity.label}
-        </Link>
-      ))}
-      {data.length > 3 && (
-        <span>
-          {`, `}plus {data.length - 3} more.
-        </span>
-      )}
-    </>
+    <StyledDivWrapper>
+      <StyledTruncateLinks>
+        {data.map((thisDevice, idx) => (
+          <StyledSpan key={thisDevice.id}>
+            <Link
+              className="link secondaryLink"
+              data-testid="firewall-row-link"
+              to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
+            >
+              {thisDevice.entity.label}
+            </Link>
+            {idx !== data.length - 1 && ','}
+          </StyledSpan>
+        ))}
+      </StyledTruncateLinks>
+    </StyledDivWrapper>
   );
 };

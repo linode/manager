@@ -29,6 +29,11 @@ export const safeSecondaryEntityLabel = (
   return label ? `${text} ${label}` : fallback;
 };
 
+const secondaryEntityTypeObj = {
+  linode: 'Linode',
+  nodebalancer: 'NodeBalancer',
+};
+
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   account_agreement_eu_model: {
     notification: () => 'The EU Model Contract has been signed.',
@@ -257,12 +262,30 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Firewall ${e.entity?.label ?? ''} has been deleted.`,
   },
   firewall_device_add: {
-    notification: (e) =>
-      `A device has been added to Firewall ${e.entity?.label ?? ''}.`,
+    notification: (e) => {
+      if (e.secondary_entity?.type) {
+        const secondaryEntityName =
+          secondaryEntityTypeObj[e.secondary_entity.type];
+        return `${secondaryEntityName} ${
+          e.secondary_entity?.label
+        } has been added to Firewall ${e.entity?.label ?? ''}.`;
+      }
+      return `A device has been added to Firewall ${e.entity?.label ?? ''}.`;
+    },
   },
   firewall_device_remove: {
-    notification: (e) =>
-      `A device has been removed from Firewall ${e.entity?.label ?? ''}.`,
+    notification: (e) => {
+      if (e.secondary_entity?.type) {
+        const secondaryEntityName =
+          secondaryEntityTypeObj[e.secondary_entity.type];
+        return `${secondaryEntityName} ${
+          e.secondary_entity?.label
+        } has been removed from Firewall ${e.entity?.label ?? ''}.`;
+      }
+      return `A device has been removed from Firewall ${
+        e.entity?.label ?? ''
+      }.`;
+    },
   },
   firewall_disable: {
     notification: (e) => `Firewall ${e.entity?.label ?? ''} has been disabled.`,
