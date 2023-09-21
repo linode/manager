@@ -1,17 +1,15 @@
 import { appendConfigInterface } from '@linode/api-v4';
-import Close from '@mui/icons-material/Close';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
-import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { FormHelperText } from 'src/components/FormHelperText';
-import { IconButton } from 'src/components/IconButton';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { TextField } from 'src/components/TextField';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
@@ -26,12 +24,8 @@ import {
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
 import {
-  SelectedOptionsHeader,
-  SelectedOptionsList,
-  SelectedOptionsListItem,
   StyledButtonBox,
-  StyledLabel,
-  StyledNoAssignedLinodesBox,
+  StyledDownloadCSV,
 } from './SubnetAssignLinodesDrawer.styles';
 
 import type {
@@ -55,8 +49,8 @@ interface Props {
 
 type LinodeAndConfigData = Linode & {
   configId: number;
-  configLabel: string;
   interfaceId: number;
+  linodeConfigLabel: string;
 };
 
 export const SubnetAssignLinodesDrawer = (props: Props) => {
@@ -118,9 +112,16 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
   // We need to filter to the linodes from this region that are not already
   // assigned to this subnet
   const findUnassignedLinodes = () => {
-    return linodes?.filter((linode) => {
-      return !subnet?.linodes.includes(linode.id);
-    });
+    const justAssignedLinodeIds = assignedLinodesAndConfigData.map(
+      (data) => data.id
+    );
+    return (
+      linodes?.filter(
+        (linode) =>
+          !justAssignedLinodeIds.includes(linode.id) &&
+          !subnet?.linodes.includes(linode.id)
+      ) ?? []
+    );
   };
 
   const onAssignLinode = async () => {
@@ -160,10 +161,10 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           {
             ...selectedLinode,
             configId,
-            configLabel: `${selectedLinode.label}${
+            interfaceId: newInterface.id,
+            linodeConfigLabel: `${selectedLinode.label}${
               selectedConfig?.label ? ` (${selectedConfig.label})` : ''
             }`,
-            interfaceId: newInterface.id,
           },
         ]);
       }
@@ -363,42 +364,17 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
             />
           ))
         : null}
-      <SelectedOptionsHeader>{`Linodes Assigned to Subnet (${assignedLinodesAndConfigData.length})`}</SelectedOptionsHeader>
-      {assignedLinodesAndConfigData.length > 0 ? (
-        <SelectedOptionsList>
-          {assignedLinodesAndConfigData.map((linodeAndConfigData) => (
-            <SelectedOptionsListItem
-              alignItems="center"
-              key={linodeAndConfigData.id}
-            >
-              <StyledLabel>{linodeAndConfigData.configLabel}</StyledLabel>
-              <IconButton
-                onClick={() => {
-                  onUnassignLinode(linodeAndConfigData);
-                  setUnassignLinodesErrors([]);
-                }}
-                aria-label={`remove ${linodeAndConfigData.configLabel}`}
-                disableRipple
-                size="medium"
-              >
-                <Close />
-              </IconButton>
-            </SelectedOptionsListItem>
-          ))}
-        </SelectedOptionsList>
-      ) : (
-        <StyledNoAssignedLinodesBox>
-          <StyledLabel>No Linodes have been assigned.</StyledLabel>
-        </StyledNoAssignedLinodesBox>
-      )}
-      <DownloadCSV
-        sx={{
-          alignItems: 'flex-start',
-          display: 'flex',
-          gap: 1,
-          marginTop: 2,
-          textAlign: 'left',
+      <RemovableSelectionsList 
+        selectionData={assignedLinodesAndConfigData}
+        headerText={`Linodes Assigned to Subnet (${assignedLinodesAndConfigData.length})`}
+        noDataText={'No Linodes have been assigned.'}
+        onRemove={(data) => {
+          onUnassignLinode(data as LinodeAndConfigData);
+          setUnassignLinodesErrors([]);
         }}
+        preferredDataLabel='linodeConfigLabel'
+      />
+      <StyledDownloadCSV
         buttonType="unstyled"
         csvRef={csvRef}
         data={assignedLinodesAndConfigData}

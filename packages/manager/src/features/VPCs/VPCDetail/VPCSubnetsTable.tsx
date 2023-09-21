@@ -100,16 +100,6 @@ export const VPCSubnetsTable = (props: Props) => {
     generateSubnetsXFilter(subnetsFilterText)
   );
 
-  // Ensure that the selected subnet's data is as up-to-date as possible
-  React.useEffect(() => {
-    if (subnets && selectedSubnet) {
-      const updatedSubnet = subnets.data.find(
-        (subnet) => subnet.id === selectedSubnet.id
-      );
-      setSelectedSubnet(updatedSubnet);
-    }
-  }, [subnets, selectedSubnet]);
-
   const handleSearch = (searchText: string) => {
     setSubnetsFilterText(searchText);
     // If you're on page 2+, need to go back to page 1 to see the actual results
