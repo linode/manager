@@ -14,7 +14,7 @@ interface DownloadCSVProps {
   data: unknown[];
   filename: string;
   headers: { key: string; label: string }[];
-  onClick: () => void;
+  onClick?: () => void;
   sx?: SxProps;
   text?: string;
 }
@@ -40,20 +40,24 @@ export const DownloadCSV = ({
   text = 'Download CSV',
 }: DownloadCSVProps) => {
   return (
-    <>
-      <CSVLink
-        aria-hidden="true"
-        className={className}
-        data={cleanCSVData(data)}
-        filename={filename}
-        headers={headers}
-        ref={csvRef}
+    <CSVLink
+      className={className}
+      data={cleanCSVData(data)}
+      filename={filename}
+      headers={headers}
+      ref={csvRef}
+    >
+      <Button
+        buttonType={buttonType}
+        component="span"
+        disableRipple
+        onClick={onClick}
+        sx={sx}
         tabIndex={-1}
-      />
-      <Button buttonType={buttonType} onClick={onClick} sx={sx}>
+      >
         {text}
       </Button>
-    </>
+    </CSVLink>
   );
 };
 

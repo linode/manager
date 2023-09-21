@@ -9,7 +9,8 @@ import { makeResponse } from 'support/util/response';
 
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 
-import type { ObjectStorageKey } from '@linode/api-v4';
+import type { ObjectStorageBucket, ObjectStorageKey } from '@linode/api-v4';
+import { Cluster } from 'cluster';
 
 /**
  * Intercepts GET requests to fetch buckets.
@@ -25,11 +26,13 @@ export const interceptGetBuckets = (): Cypress.Chainable<null> => {
  *
  * Only returns data for the first request intercepted.
  *
- * @param data - Mock response data.
+ * @param buckets - Object storage buckets with which to mock response.
  *
  * @returns Cypress chainable.
  */
-export const mockGetBuckets = (data: any): Cypress.Chainable<null> => {
+export const mockGetBuckets = (
+  buckets: ObjectStorageBucket[]
+): Cypress.Chainable<null> => {
   /*
    * Only the first mocked response will contain data. Subsequent responses
    * will contain an empty array.
@@ -41,7 +44,7 @@ export const mockGetBuckets = (data: any): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     apiMatcher('object-storage/buckets/*'),
-    sequentialStub([paginateResponse(data), paginateResponse([])])
+    sequentialStub([paginateResponse(buckets), paginateResponse([])])
   );
 };
 
@@ -358,4 +361,28 @@ export const mockDeleteAccessKey = (keyId: number): Cypress.Chainable<null> => {
     body: {},
     statusCode: 200,
   });
+};
+
+/**
+ * Intercepts POST request to cancel Object Storage and mocks response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCancelObjectStorage = (): Cypress.Chainable => {
+  return cy.intercept('POST', apiMatcher('object-storage/cancel'), {});
+};
+
+/**
+ * Intercepts GET request to fetch Object Storage clusters and mocks response.
+ *
+ * @param clusters - Clusters with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetClusters = (clusters: Cluster[]): Cypress.Chainable => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('object-storage/clusters*'),
+    paginateResponse(clusters)
+  );
 };

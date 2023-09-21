@@ -1,7 +1,6 @@
-import Autocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 
-import { TextField } from 'src/components/TextField';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useLoadBalancerCertificatesInfiniteQuery } from 'src/queries/aglb/certificates';
 
 import type { Certificate, Filter } from '@linode/api-v4';
@@ -25,9 +24,10 @@ interface Props {
    */
   onChange: (certificate: Certificate | null) => void;
   /**
-   * The id of the selected certificate
+   * The id of the selected certificate OR a function that should return `true`
+   * if the certificate should be selected.
    */
-  value: number;
+  value: ((certificate: Certificate) => boolean) | number;
 }
 
 export const CertificateSelect = (props: Props) => {
@@ -52,7 +52,9 @@ export const CertificateSelect = (props: Props) => {
   const certificates = data?.pages.flatMap((page) => page.data);
 
   const selectedCertificate =
-    certificates?.find((cert) => cert.id === value) ?? null;
+    typeof value === 'function'
+      ? certificates?.find(value) ?? null
+      : certificates?.find((cert) => cert.id === value) ?? null;
 
   const onScroll = (event: React.SyntheticEvent) => {
     const listboxNode = event.currentTarget;
@@ -75,17 +77,13 @@ export const CertificateSelect = (props: Props) => {
           setInputValue(value);
         }
       }}
-      renderInput={(params) => (
-        <TextField
-          label={label ?? 'Certificate'}
-          {...params}
-          errorText={error?.[0].reason ?? errorText}
-        />
-      )}
+      errorText={error?.[0].reason ?? errorText}
       inputValue={selectedCertificate ? selectedCertificate.label : inputValue}
+      label={label ?? 'Certificate'}
       loading={isLoading}
       onChange={(e, value) => onChange(value)}
       options={certificates ?? []}
+      placeholder="Select a Certificate"
       value={selectedCertificate}
     />
   );

@@ -4,6 +4,7 @@ import {
   CreateCertificatePayload,
   CreateLoadbalancerPayload,
   CreateRoutePayload,
+  Endpoint,
   Loadbalancer,
   Route,
   ServiceTarget,
@@ -141,6 +142,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                       host: 'linode.com',
                       interval: 10000,
                       path: '/images',
+                      protocol: 'http',
                       timeout: 5000,
                       unhealthy_threshold: 5,
                     },
@@ -236,6 +238,7 @@ export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
     host: 'linode.com',
     interval: 10000,
     path: '/images',
+    protocol: 'http',
     timeout: 5000,
     unhealthy_threshold: 5,
   },
@@ -259,6 +262,7 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
       host: 'linode.com',
       interval: 10000,
       path: '/images',
+      protocol: 'http',
       timeout: 5000,
       unhealthy_threshold: 5,
     },
@@ -284,3 +288,10 @@ export const createCertificateFactory = Factory.Sync.makeFactory<CreateCertifica
     type: 'downstream',
   }
 );
+
+export const endpointFactory = Factory.Sync.makeFactory<Endpoint>({
+  host: 'example.com',
+  ip: '192.168.1.1',
+  port: 80,
+  rate_capacity: 10_000,
+});
