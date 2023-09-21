@@ -3,6 +3,7 @@
  */
 
 import { linodeTypeFactory } from '@src/factories';
+import { LkePlanDescription } from 'support/api/lke';
 
 /** Notice shown to users when selecting a region. */
 export const dcPricingRegionNotice = /Prices for plans, products, and services in .* may vary from other regions\./;
@@ -16,10 +17,10 @@ export const dcPricingPlanPlaceholder =
   'Select a region to view plans and prices.';
 
 /** Helper text shown to users users trying to create an LKE cluster before selecting both a region and plan. */
-export const dcPricingKubernetesCheckoutSummaryPlaceholder =
+export const dcPricingLkeCheckoutSummaryPlaceholder =
   'Select a region, HA choice, and add a Node Pool to view pricing and create a cluster.';
 
-export const dcPricingKubernetesHAPlaceholder =
+export const dcPricingLkeHAPlaceholder =
   'Select a region to view price information.';
 
 /** DC-specific pricing docs link label. */
