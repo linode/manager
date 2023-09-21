@@ -4,6 +4,7 @@ import * as React from 'react';
 import Select from 'src/components/EnhancedSelect';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
+import { APP_ROOT } from 'src/constants';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 
 import { StyledCreateLink } from '../../features/Linodes/LinodesCreate/LinodeCreate.styles';
@@ -50,7 +51,7 @@ export const SelectFirewallPanel = (props: Props) => {
           options={firewallsDropdownOptions}
           placeholder={''}
         />
-        <StyledCreateLink to="/firewalls/create">
+        <StyledCreateLink to={`${APP_ROOT}/firewalls/create`}>
           Create Firewall
         </StyledCreateLink>
       </Stack>
