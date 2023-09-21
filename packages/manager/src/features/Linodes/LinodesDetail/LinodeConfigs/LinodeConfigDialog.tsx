@@ -231,6 +231,11 @@ export const LinodeConfigDialog = (props: Props) => {
       thisRegion.id === linode?.region &&
       thisRegion.capabilities.includes('Vlans')
   );
+  const regionHasVPCs = regions.some(
+    (thisRegion) =>
+      thisRegion.id === linode?.region &&
+      thisRegion.capabilities.includes('VPCs')
+  );
 
   const showVlans = regionHasVLANS;
 
@@ -313,7 +318,7 @@ export const LinodeConfigDialog = (props: Props) => {
       configData.initrd = finnixDiskID;
     }
 
-    if (!regionHasVLANS) {
+    if (!regionHasVLANS || !regionHasVPCs) {
       delete configData.interfaces;
     }
 
@@ -551,7 +556,7 @@ export const LinodeConfigDialog = (props: Props) => {
     },
     [setFieldValue]
   );
-
+  console.log(values.interfaces);
   return (
     <Dialog
       fullHeight
@@ -870,6 +875,10 @@ export const LinodeConfigDialog = (props: Props) => {
                       readOnly={isReadOnly}
                       region={linode?.region}
                       slotNumber={idx}
+                      subnetId={thisInterface.subnet_id}
+                      subnetLabel={thisInterface.subnetLabel}
+                      vpcId={thisInterface.vpc_id}
+                      vpcIpv4={thisInterface.ipv4?.vpc}
                     />
                   );
                 })}

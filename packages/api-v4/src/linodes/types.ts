@@ -151,7 +151,7 @@ export type LinodeStatus =
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
 export interface ConfigInterfaceIPv4 {
-  vpc?: string;
+  vpc?: string | null;
   nat_1_1?: string;
 }
 

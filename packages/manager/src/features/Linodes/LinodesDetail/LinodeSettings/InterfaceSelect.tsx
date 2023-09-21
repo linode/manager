@@ -7,10 +7,12 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
+import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
 import { useVlansQuery } from 'src/queries/vlans';
+import { useSubnetsQuery, useVPCsQuery } from 'src/queries/vpcs';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 
 export interface Props {
@@ -24,12 +26,18 @@ export interface Props {
   readOnly: boolean;
   region?: string;
   slotNumber: number;
+  subnetId?: null | number;
+  subnetLabel: null | string;
+  vpcId?: null | number;
+  vpcIpv4?: null | string;
 }
 
 // To allow for empty slots, which the API doesn't account for
 export type ExtendedPurpose = 'none' | InterfacePurpose;
-export interface ExtendedInterface extends Omit<InterfacePayload, 'purpose'> {
+export interface ExtendedInterface
+  extends Partial<Omit<InterfacePayload, 'purpose'>> {
   purpose: ExtendedPurpose;
+  subnetLabel?: null | string;
 }
 
 export const InterfaceSelect = (props: Props) => {
@@ -47,6 +55,10 @@ export const InterfaceSelect = (props: Props) => {
     readOnly,
     region,
     slotNumber,
+    subnetId,
+    subnetLabel,
+    vpcId,
+    vpcIpv4,
   } = props;
 
   const [newVlan, setNewVlan] = React.useState('');
@@ -59,6 +71,10 @@ export const InterfaceSelect = (props: Props) => {
     {
       label: 'VLAN',
       value: 'vlan',
+    },
+    {
+      label: 'VPC',
+      value: 'vpc',
     },
     {
       label: 'None',
@@ -82,6 +98,28 @@ export const InterfaceSelect = (props: Props) => {
     vlanOptions.push({ label: newVlan, value: newVlan });
   }
 
+  const { data: vpcs, isLoading: vpcsLoading } = useVPCsQuery({}, {});
+  const vpcOptions = vpcs?.data.map((vpc) => ({
+    id: vpc.id,
+    label: vpc.label,
+    value: vpc.label,
+  }));
+
+  const { data: subnets, isLoading: subnetsLoading } = useSubnetsQuery(
+    vpcId ?? -1,
+    {},
+    {},
+    Boolean(vpcId)
+  );
+  const subnetOptions = subnets?.data.map((subnet) => ({
+    label: subnet.label,
+    subnet_id: subnet.id,
+    value: subnet.label,
+  }));
+
+  const [autoAssignVpcIpv4, setAutoAssignVpcIpv4] = React.useState(true);
+  const [autoAssignLinodeIpv4, setAutoAssignLinodeIpv4] = React.useState(false);
+
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
     const purpose = selected.value;
     handleChange({
@@ -100,6 +138,79 @@ export const InterfaceSelect = (props: Props) => {
       label: selected?.value ?? '',
       purpose,
     });
+
+  const handleVPCLabelChange = (selected: Item<string>) =>
+    handleChange({
+      ipam_address: null,
+      label: selected?.value ?? '',
+      purpose,
+      subnet_id: null,
+      vpc_id: selected?.id,
+    });
+
+  const handleSubnetChange = (selected: Item<string>) =>
+    handleChange({
+      ipam_address: null,
+      label,
+      purpose,
+      subnet_id: selected?.subnet_id,
+      subnetLabel: selected?.value,
+      vpc_id: vpcId,
+    });
+
+  const handleVpcIpv4Input = (e: React.ChangeEvent<HTMLInputElement>) =>
+    handleChange({
+      ipam_address: null,
+      ipv4: {
+        nat_1_1: autoAssignLinodeIpv4 ? 'any' : '',
+        vpc: e.target.value,
+      },
+      label,
+      purpose,
+      subnet_id: subnetId,
+      subnetLabel,
+      vpc_id: vpcId,
+    });
+
+  React.useEffect(() => {
+    const changeObj = {
+      ipam_address: null,
+      label,
+      purpose,
+      subnet_id: subnetId,
+      subnetLabel,
+      vpc_id: vpcId,
+    };
+    console.log(
+      `autoAssignVpcIpv4: ${autoAssignVpcIpv4}, autoAssignLinodeIpv4: ${autoAssignLinodeIpv4}`
+    );
+    if (!autoAssignVpcIpv4 && autoAssignLinodeIpv4) {
+      handleChange({
+        ...changeObj,
+        ipv4: {
+          nat_1_1: 'any',
+          vpc: vpcIpv4,
+        },
+      });
+    } else if (
+      (autoAssignVpcIpv4 && autoAssignLinodeIpv4) ||
+      autoAssignLinodeIpv4
+    ) {
+      handleChange({
+        ...changeObj,
+        ipv4: {
+          nat_1_1: 'any',
+        },
+      });
+    } else if (!autoAssignLinodeIpv4 && !autoAssignVpcIpv4) {
+      handleChange({
+        ...changeObj,
+        ipv4: {
+          vpc: vpcIpv4,
+        },
+      });
+    }
+  }, [autoAssignVpcIpv4, autoAssignLinodeIpv4]);
 
   const handleCreateOption = (_newVlan: string) => {
     setNewVlan(_newVlan);
@@ -185,6 +296,85 @@ export const InterfaceSelect = (props: Props) => {
                 optional
                 placeholder="192.0.2.0/24"
                 value={ipamAddress}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      ) : null}
+      {purpose === 'vpc' ? (
+        <Grid container>
+          <Grid container flexDirection="column" spacing={isSmallBp ? 0 : 1}>
+            <Grid>
+              <Select
+                noOptionsMessage={() =>
+                  vpcsLoading ? 'Loading...' : 'You have no VPCs.'
+                }
+                creatable
+                createOptionPosition="first"
+                errorText={labelError}
+                inputId={`vpc-label-${slotNumber}`}
+                isClearable
+                isDisabled={readOnly}
+                label="VPC"
+                onChange={handleVPCLabelChange}
+                options={vpcOptions}
+                placeholder="Select a VPC"
+                value={vpcOptions?.find((vpc) => vpc.value === label) ?? null}
+              />
+            </Grid>
+            <Grid sx={{ paddingBottom: 2 }}>
+              <Select
+                noOptionsMessage={() =>
+                  subnetsLoading ? 'Loading...' : 'You have no Subnets.'
+                }
+                value={
+                  subnetOptions?.find(
+                    (subnet) => subnet.value === subnetLabel
+                  ) ?? null
+                }
+                creatable
+                createOptionPosition="first"
+                errorText={labelError}
+                inputId={`subnet-label-${slotNumber}`}
+                isClearable
+                isDisabled={readOnly}
+                label="Subnets"
+                onChange={handleSubnetChange}
+                options={subnetOptions}
+                placeholder="Select a Subnet"
+              />
+            </Grid>
+            <Grid>
+              <Checkbox
+                onChange={() =>
+                  setAutoAssignVpcIpv4(
+                    (autoAssignVpcIpv4) => !autoAssignVpcIpv4
+                  )
+                }
+                checked={autoAssignVpcIpv4}
+                text="Auto-assign a VPC IPv4 address for this Linode"
+                toolTipText="A range of non-internet facing IP addresses used in an internal network."
+              />
+            </Grid>
+            {!autoAssignVpcIpv4 && (
+              <Grid>
+                <TextField
+                  label="VPC IPv4"
+                  onChange={handleVpcIpv4Input}
+                  value={vpcIpv4}
+                />
+              </Grid>
+            )}
+            <Grid>
+              <Checkbox
+                onChange={() =>
+                  setAutoAssignLinodeIpv4(
+                    (autoAssignLinodeIpv4) => !autoAssignLinodeIpv4
+                  )
+                }
+                checked={autoAssignLinodeIpv4}
+                text="Assign a public IPv4 address for this Linode"
+                toolTipText="Assign a public IP address for this VPC via 1:1 static NAT."
               />
             </Grid>
           </Grid>

@@ -9,7 +9,8 @@ export type Capabilities =
   | 'Vlans'
   | 'Bare Metal'
   | 'Metadata'
-  | 'Premium Plans';
+  | 'Premium Plans'
+  | 'VPCs';
 
 export interface DNSResolvers {
   ipv4: string; // Comma-separated IP addresses
