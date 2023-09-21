@@ -12,6 +12,7 @@ import {
   CollapsibleTable,
   TableItem,
 } from 'src/components/CollapsibleTable/CollapsibleTable';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableCell } from 'src/components/TableCell';
@@ -77,6 +78,10 @@ export const LoadBalancerRoutes = () => {
           <TableCell>{rules?.length}</TableCell>
           <TableCell>{protocol}</TableCell>
           <TableCell actionCell>
+            {/**
+             * TODO: AGLB: The Add Rule behavior should be implemented in future AGLB tickets.
+             */}
+            <InlineMenuAction actionText="Add Rule" onClick={() => null} />
             {/**
              * TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets.
              */}
