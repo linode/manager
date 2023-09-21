@@ -10,11 +10,19 @@ interface Props {
   error?: string;
   onBlur: (e: any) => void;
   onChange: (value: string) => void;
+  required?: boolean;
   selectedCluster: string;
 }
 
 export const ClusterSelect: React.FC<Props> = (props) => {
-  const { disabled, error, onBlur, onChange, selectedCluster } = props;
+  const {
+    disabled,
+    error,
+    onBlur,
+    onChange,
+    required,
+    selectedCluster,
+  } = props;
 
   const { data: clusters, error: clustersError } = useObjectStorageClusters();
   const { data: regions } = useRegionsQuery();
@@ -47,6 +55,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
       onBlur={onBlur}
       placeholder="Select a Region"
       regions={regionOptions ?? []}
+      required={required}
       selectedID={selectedCluster}
     />
   );
