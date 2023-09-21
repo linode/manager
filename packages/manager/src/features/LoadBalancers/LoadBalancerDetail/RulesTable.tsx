@@ -62,6 +62,7 @@ export const RulesTable = ({ rules }: Props) => {
                   : 'No'}
               </StyledTableCell>
               <StyledTableCell actionCell>
+                {/** TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets. */}
                 <ActionMenu
                   actionsList={[
                     { onClick: () => null, title: 'TBD' },

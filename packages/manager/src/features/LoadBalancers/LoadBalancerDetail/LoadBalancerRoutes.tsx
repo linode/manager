@@ -77,6 +77,9 @@ export const LoadBalancerRoutes = () => {
           <TableCell>{rules?.length}</TableCell>
           <TableCell>{protocol}</TableCell>
           <TableCell actionCell>
+            {/**
+             * TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets.
+             */}
             <ActionMenu
               actionsList={[
                 { onClick: () => null, title: 'Edit' },
@@ -152,6 +155,9 @@ export const LoadBalancerRoutes = () => {
           value={query}
         />
         <Box flexGrow={1} />
+        {/**
+         * TODO: AGLB: The Create Route behavior should be implemented in future AGLB tickets.
+         */}
         <Button buttonType="primary">Create Route</Button>
       </Stack>
       <CollapsibleTable
