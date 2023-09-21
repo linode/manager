@@ -1,3 +1,4 @@
+// TODO: DC Pricing - remove this comment line after the demo.
 export interface ObjStoragePriceObject {
   monthly: number;
   storage_overage: number;
