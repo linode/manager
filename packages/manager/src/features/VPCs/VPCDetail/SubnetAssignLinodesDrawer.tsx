@@ -54,13 +54,12 @@ type LinodeAndConfigData = Linode & {
 };
 
 export const SubnetAssignLinodesDrawer = (props: Props) => {
-  console.log('this is the subnet', props.subnet)
   const { onClose, open, subnet, vpcId, vpcRegion } = props;
   const {
     invalidateQueries,
+    setUnassignLinodesErrors,
     unassignLinode,
     unassignLinodesErrors,
-    setUnassignLinodesErrors,
   } = useUnassignLinode();
   const csvRef = React.useRef<any>();
   const formattedDate = useFormattedDate();
@@ -206,7 +205,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
         )
       );
     } catch (errors) {
-      setUnassignLinodesErrors(errors as APIError[])
+      setUnassignLinodesErrors(errors as APIError[]);
     }
   };
 
@@ -364,15 +363,15 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
             />
           ))
         : null}
-      <RemovableSelectionsList 
-        selectionData={assignedLinodesAndConfigData}
-        headerText={`Linodes Assigned to Subnet (${assignedLinodesAndConfigData.length})`}
-        noDataText={'No Linodes have been assigned.'}
+      <RemovableSelectionsList
         onRemove={(data) => {
           onUnassignLinode(data as LinodeAndConfigData);
           setUnassignLinodesErrors([]);
         }}
-        preferredDataLabel='linodeConfigLabel'
+        headerText={`Linodes Assigned to Subnet (${assignedLinodesAndConfigData.length})`}
+        noDataText={'No Linodes have been assigned.'}
+        preferredDataLabel="linodeConfigLabel"
+        selectionData={assignedLinodesAndConfigData}
       />
       <StyledDownloadCSV
         buttonType="unstyled"

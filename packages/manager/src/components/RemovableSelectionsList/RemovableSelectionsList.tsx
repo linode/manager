@@ -7,22 +7,44 @@ import { IconButton } from 'src/components/IconButton';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 
-type SelectionDataProps = {
+export type RemovableItem = {
   id: number;
   label: string;
-} & {[key: string]: any;};
-
+} & { [key: string]: any };
 
 interface Props {
-  selectionData: SelectionDataProps[];
+  /**
+   * The descriptionary text to display above the list
+   */
   headerText: string;
+  /**
+   * The text to display if there is no data
+   */
   noDataText: string;
-  onRemove: (data: SelectionDataProps) => void;
+  /**
+   * The action to perform when a data item is clicked
+   */
+  onRemove: (data: RemovableItem) => void;
+  /**
+   * Assumes the passed in prop is a key within the selectionData, and that the
+   * value of this key is a string.
+   * Displays the value of this key as the label of the data item, rather than data.label
+   */
   preferredDataLabel?: string;
+  /**
+   * The data to display in the list
+   */
+  selectionData: RemovableItem[];
 }
 
 export const RemovableSelectionsList = (props: Props) => {
-  const { selectionData, headerText, noDataText, onRemove, preferredDataLabel } = props;
+  const {
+    headerText,
+    noDataText,
+    onRemove,
+    preferredDataLabel,
+    selectionData,
+  } = props;
 
   return (
     <>
@@ -30,15 +52,20 @@ export const RemovableSelectionsList = (props: Props) => {
       {selectionData.length > 0 ? (
         <SelectedOptionsList>
           {selectionData.map((selection) => (
-            <SelectedOptionsListItem
-              alignItems="center"
-              key={selection.id}
-            >
-              <StyledLabel>{preferredDataLabel ? selection[preferredDataLabel] : selection.label}</StyledLabel>
+            <SelectedOptionsListItem alignItems="center" key={selection.id}>
+              <StyledLabel>
+                {preferredDataLabel
+                  ? selection[preferredDataLabel]
+                  : selection.label}
+              </StyledLabel>
               <IconButton
-                onClick={() => onRemove(selection)}
-                aria-label={`remove ${preferredDataLabel ? selection[preferredDataLabel] : selection.label}`}
+                aria-label={`remove ${
+                  preferredDataLabel
+                    ? selection[preferredDataLabel]
+                    : selection.label
+                }`}
                 disableRipple
+                onClick={() => onRemove(selection)}
                 size="medium"
               >
                 <Close />
@@ -96,10 +123,8 @@ const SelectedOptionsListItem = styled(ListItem, {
   paddingTop: 0,
 }));
 
-const StyledLabel = styled('span', { label: 'StyledLabel' })(
-  ({ theme }) => ({
-    color: theme.color.label,
-    fontFamily: theme.font.semiBold,
-    fontSize: '14px',
-  })
-);
+const StyledLabel = styled('span', { label: 'StyledLabel' })(({ theme }) => ({
+  color: theme.color.label,
+  fontFamily: theme.font.semiBold,
+  fontSize: '14px',
+}));
