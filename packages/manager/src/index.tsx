@@ -1,3 +1,4 @@
+import CssBaseline from '@mui/material/CssBaseline';
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -16,11 +17,10 @@ import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
 import { App } from './App';
-import LinodeThemeWrapper from './LinodeThemeWrapper';
+import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
 import './index.css';
 import { queryClientFactory } from './queries/base';
-import CssBaseline from '@mui/material/CssBaseline';
 
 const queryClient = queryClientFactory();
 const store = storeFactory(queryClient);
