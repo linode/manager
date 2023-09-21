@@ -51,7 +51,7 @@ export interface Props {
   nodeCount: number;
   onRemove: () => void;
   poolType: ExtendedType | null;
-  price?: null | number; // Can be undefined until a Region is selected. number;
+  price?: null | number; // Can be undefined until a Region is selected.
   updateNodeCount: (count: number) => void;
 }
 
