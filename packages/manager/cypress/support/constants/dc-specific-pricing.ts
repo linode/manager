@@ -53,3 +53,12 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
     },
   ],
 });
+
+/**
+ * Subset of LKE cluster plans as shown on Cloud Manager.
+ */
+export const dcPricingLkeClusterPlans: LkePlanDescription[] = [
+  { size: 8, tab: 'Shared CPU', type: 'Linode' },
+  { size: 9, tab: 'Shared CPU', type: 'Linode' },
+  { size: 10, tab: 'Shared CPU', type: 'Linode' },
+];
