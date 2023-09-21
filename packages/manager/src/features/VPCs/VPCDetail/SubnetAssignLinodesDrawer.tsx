@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
@@ -23,10 +24,7 @@ import {
   MULTIPLE_CONFIGURATIONS_MESSAGE,
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
-import {
-  StyledButtonBox,
-  StyledDownloadCSV,
-} from './SubnetAssignLinodesDrawer.styles';
+import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
 
 import type {
   APIError,
@@ -83,6 +81,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
   const { data: grants } = useGrants();
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
+  // TODO VPC: this logic for vpc grants/perms appears a lot - commenting a todo here in case we want to move this logic to a parent component
   // there isn't a 'view VPC/Subnet' grant that does anything, so all VPCs get returned even for restricted users
   // with permissions set to 'None'. Therefore, we're treating those as read_only as well
   const userCannotAssignLinodes =
@@ -111,19 +110,12 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
   // We need to filter to the linodes from this region that are not already
   // assigned to this subnet
   const findUnassignedLinodes = () => {
-    const justAssignedLinodeIds = assignedLinodesAndConfigData.map(
-      (data) => data.id
-    );
-    return (
-      linodes?.filter(
-        (linode) =>
-          !justAssignedLinodeIds.includes(linode.id) &&
-          !subnet?.linodes.includes(linode.id)
-      ) ?? []
-    );
+    return linodes?.filter((linode) => {
+      return !subnet?.linodes.includes(linode.id);
+    });
   };
 
-  const onAssignLinode = async () => {
+  const handleAssignLinode = async () => {
     const { chosenIP, selectedConfig, selectedLinode } = values;
 
     // if a linode has multiple configs, we force the user to choose one. Otherwise,
@@ -189,7 +181,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     }
   };
 
-  const onUnassignLinode = async (data: LinodeAndConfigData) => {
+  const handleUnassignLinode = async (data: LinodeAndConfigData) => {
     const { configId, id: linodeId, interfaceId } = data;
     try {
       await unassignLinode({
@@ -223,7 +215,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
       selectedConfig: null as Config | null,
       selectedLinode: null as Linode | null,
     },
-    onSubmit: onAssignLinode,
+    onSubmit: handleAssignLinode,
     validateOnBlur: false,
     validateOnChange: false,
   });
@@ -364,8 +356,8 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           ))
         : null}
       <RemovableSelectionsList
-        onRemove={(data) => {
-          onUnassignLinode(data as LinodeAndConfigData);
+        handleRemove={(data) => {
+          handleUnassignLinode(data as LinodeAndConfigData);
           setUnassignLinodesErrors([]);
         }}
         headerText={`Linodes Assigned to Subnet (${assignedLinodesAndConfigData.length})`}
@@ -373,7 +365,14 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
         preferredDataLabel="linodeConfigLabel"
         selectionData={assignedLinodesAndConfigData}
       />
-      <StyledDownloadCSV
+      <DownloadCSV
+        sx={{
+          alignItems: 'flex-start',
+          display: 'flex',
+          gap: 1,
+          marginTop: 2,
+          textAlign: 'left',
+        }}
         buttonType="unstyled"
         csvRef={csvRef}
         data={assignedLinodesAndConfigData}

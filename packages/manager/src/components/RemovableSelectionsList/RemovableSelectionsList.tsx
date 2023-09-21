@@ -14,6 +14,10 @@ export type RemovableItem = {
 
 interface Props {
   /**
+   * The action to perform when a data item is clicked
+   */
+  handleRemove: (data: RemovableItem) => void;
+  /**
    * The descriptionary text to display above the list
    */
   headerText: string;
@@ -21,10 +25,6 @@ interface Props {
    * The text to display if there is no data
    */
   noDataText: string;
-  /**
-   * The action to perform when a data item is clicked
-   */
-  onRemove: (data: RemovableItem) => void;
   /**
    * Assumes the passed in prop is a key within the selectionData, and that the
    * value of this key is a string.
@@ -39,9 +39,9 @@ interface Props {
 
 export const RemovableSelectionsList = (props: Props) => {
   const {
+    handleRemove,
     headerText,
     noDataText,
-    onRemove,
     preferredDataLabel,
     selectionData,
   } = props;
@@ -65,7 +65,7 @@ export const RemovableSelectionsList = (props: Props) => {
                     : selection.label
                 }`}
                 disableRipple
-                onClick={() => onRemove(selection)}
+                onClick={() => handleRemove(selection)}
                 size="medium"
               >
                 <Close />

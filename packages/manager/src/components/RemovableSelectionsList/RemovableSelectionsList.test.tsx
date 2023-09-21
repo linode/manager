@@ -24,9 +24,9 @@ const diffLabelList = Array.from({ length: 5 }, (_, index) => {
 });
 
 const props = {
+  handleRemove: jest.fn(),
   headerText: 'Linodes to remove',
   noDataText: 'No Linodes available',
-  onRemove: jest.fn(),
   selectionData: defaultList,
 };
 
@@ -79,6 +79,6 @@ describe('Removable Selections List', () => {
     const screen = renderWithTheme(<RemovableSelectionsList {...props} />);
     const removeButton = screen.getByLabelText(`remove my-linode-1`);
     fireEvent.click(removeButton);
-    expect(props.onRemove).toHaveBeenCalled();
+    expect(props.handleRemove).toHaveBeenCalled();
   });
 });
