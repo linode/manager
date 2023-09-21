@@ -43,19 +43,22 @@ export interface RoutePayload {
 export interface Route {
   id: number;
   label: string;
-  protocol: string[];
+  protocol: Protocol;
   rules: {
-    match_condition: MatchCondition;
-    service_targets: {
-      id: number;
-      label: string;
-      percentage: number;
-    }[];
+    match_condition: {
+      hostname: string;
+      match_field: MatchField;
+      match_value: string;
+      session_stickiness_cookie: string | null;
+      session_stickiness_ttl: number | null;
+      service_targets: { id: number; label: string; percentage: number }[];
+    };
   }[];
 }
 
 export interface CreateRoutePayload {
   label: string;
+  protocol: Protocol;
   rules: {
     match_condition: MatchCondition;
     service_targets: {
@@ -98,8 +101,8 @@ export interface MatchCondition {
   hostname: string;
   match_field: MatchField;
   match_value: string;
-  affinity_cookie: string | null;
-  affinity_ttl: string | null;
+  session_stickiness_cookie: string | null;
+  session_stickiness_ttl: string | null;
 }
 
 export interface RouteServiceTargetPayload {

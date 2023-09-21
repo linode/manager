@@ -120,11 +120,11 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
             rules: [
               {
                 match_condition: {
-                  affinity_cookie: 'my-cool-cookie',
-                  affinity_ttl: '60000',
                   hostname: 'example.com',
                   match_field: 'path_prefix',
                   match_value: '/images',
+                  session_stickiness_cookie: 'my-cool-cookie',
+                  session_stickiness_ttl: '60000',
                 },
                 service_targets: [
                   {
@@ -174,37 +174,38 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
 export const routeFactory = Factory.Sync.makeFactory<Route>({
   id: Factory.each((i) => i),
   label: 'images-route',
-  protocol: ['tcp', 'http'],
+  protocol: 'http',
   rules: [
     {
       match_condition: {
-        affinity_cookie: null,
-        affinity_ttl: null,
         hostname: 'www.acme.com',
         match_field: 'path_prefix',
         match_value: '/images/*',
+        service_targets: [
+          {
+            id: 1,
+            label: 'my-service-target',
+            percentage: 10,
+          },
+        ],
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
       },
-      service_targets: [
-        {
-          id: 1,
-          label: 'my-service-target',
-          percentage: 10,
-        },
-      ],
     },
   ],
 });
 
 export const createRouteFactory = Factory.Sync.makeFactory<CreateRoutePayload>({
   label: 'images-route',
+  protocol: 'http',
   rules: [
     {
       match_condition: {
-        affinity_cookie: null,
-        affinity_ttl: null,
         hostname: 'www.acme.com',
         match_field: 'path_prefix',
         match_value: '/images/*',
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
       },
       service_targets: [
         {
