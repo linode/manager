@@ -877,8 +877,29 @@ export const handlers = [
     return res(ctx.json(objectStorageBucketFactory.build()));
   }),
   rest.get('*object-storage/clusters', (req, res, ctx) => {
+    const jakartaCluster = objectStorageClusterFactory.build({
+      id: `id-cgk-0` as any,
+      region: 'id-cgk',
+    });
+    const saoPauloCluster = objectStorageClusterFactory.build({
+      id: `br-gru-0` as any,
+      region: 'br-gru',
+    });
+    const basePricingCluster = objectStorageClusterFactory.build({
+      id: `us-east-0` as any,
+      region: 'us-east',
+    });
     const clusters = objectStorageClusterFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(clusters)));
+    return res(
+      ctx.json(
+        makeResourcePage([
+          jakartaCluster,
+          saoPauloCluster,
+          basePricingCluster,
+          ...clusters,
+        ])
+      )
+    );
   }),
   rest.get('*object-storage/keys', (req, res, ctx) => {
     return res(
