@@ -1,8 +1,10 @@
-import {
+import * as Factory from 'factory.ts';
+
+import type {
   StackScript,
   UserDefinedField,
 } from '@linode/api-v4/lib/stackscripts/types';
-import * as Factory from 'factory.ts';
+import type { OCA } from 'src/features/OneClickApps/types';
 
 export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
   created: '2010-12-31T23:59:58',
@@ -22,6 +24,20 @@ export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
   user_defined_fields: [],
   user_gravatar_id: 'ead4da00f4fe6a4bd0b4f11a510c031d',
   username: 'Linode',
+});
+
+export const oneClickAppFactory = Factory.Sync.makeFactory<OCA>({
+  alt_description: 'A test app',
+  alt_name: 'Test App',
+  categories: ['App Creators'],
+  colors: {
+    end: '#000000',
+    start: '#000000',
+  },
+  description: 'A test app',
+  logo_url: 'https://www.linode.com/media/images/logos/one-click/test.svg',
+  name: 'Test App',
+  summary: 'A test app',
 });
 
 export const userDefinedFieldFactory = Factory.Sync.makeFactory<UserDefinedField>(

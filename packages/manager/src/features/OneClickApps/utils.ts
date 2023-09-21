@@ -11,7 +11,7 @@ interface Options {
  * @param stackScriptLabel
  * @returns
  */
-export const mapStackScriptLabelToOneClickAppName = ({
+export const mapStackScriptLabelToOCA = ({
   oneClickApps,
   stackScriptLabel,
 }: Options): OCA | undefined => {

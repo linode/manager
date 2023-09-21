@@ -12,7 +12,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 import { oneClickApps } from './oneClickApps';
-import { mapStackScriptLabelToOneClickAppName } from './utils';
+import { mapStackScriptLabelToOCA } from './utils';
 
 import type { OCA } from './types';
 
@@ -94,7 +94,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
   };
 
   React.useEffect(() => {
-    const app = mapStackScriptLabelToOneClickAppName({
+    const app = mapStackScriptLabelToOCA({
       oneClickApps,
       stackScriptLabel,
     });
