@@ -22,7 +22,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 
-import EnableObjectStorageModal from '../EnableObjectStorageModal';
+import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
 import { LimitedAccessControls } from './LimitedAccessControls';
 import { MODE } from './types';

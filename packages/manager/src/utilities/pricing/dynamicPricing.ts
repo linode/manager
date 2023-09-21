@@ -25,6 +25,20 @@ export const priceIncreaseMap = {
   'id-cgk': 0.2, // Jakarta
 };
 
+// TODO: DC Pricing - M3-6973: Update these values when beta pricing ends.
+export const objectStoragePriceIncreaseMap = {
+  'br-gru': {
+    monthly: 0.0,
+    storage_overage: 0.0,
+    transfer_overage: 0.0,
+  },
+  'id-cgk': {
+    monthly: 0.0,
+    storage_overage: 0.0,
+    transfer_overage: 0.0,
+  },
+};
+
 /**
  * This function is used to calculate the dynamic pricing for a given entity, based on potential region increased costs.
  * @example
