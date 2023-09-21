@@ -8,20 +8,22 @@ import { ActionMenu } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
+import {
+  CollapsibleTable,
+  TableItem,
+} from 'src/components/CollapsibleTable/CollapsibleTable';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
+
+import { RulesTable } from './RulesTable';
 
 import type { Filter } from '@linode/api-v4';
 
@@ -52,7 +54,7 @@ export const LoadBalancerRoutes = () => {
     filter['label'] = { '+contains': query };
   }
 
-  const { data, error, isLoading } = useLoadBalancerRoutesQuery(
+  const { data: routes, isLoading } = useLoadBalancerRoutesQuery(
     Number(loadbalancerId),
     {
       page: pagination.page,
@@ -64,6 +66,55 @@ export const LoadBalancerRoutes = () => {
   if (isLoading) {
     return <CircleProgress />;
   }
+
+  const getTableItems = (): TableItem[] => {
+    if (!routes) {
+      return [];
+    }
+    return routes.data?.map(({ id, label, protocol, rules }) => {
+      const OuterTableCells = (
+        <>
+          <TableCell>{rules?.length}</TableCell>
+          <TableCell>{protocol}</TableCell>
+          <TableCell actionCell>
+            <ActionMenu
+              actionsList={[
+                { onClick: () => null, title: 'Edit' },
+                { onClick: () => null, title: 'Clone Route' },
+                { onClick: () => null, title: 'Delete' },
+              ]}
+              ariaLabel={`Action Menu for Route ${label}`}
+            />
+          </TableCell>
+        </>
+      );
+
+      const InnerTable = <RulesTable rules={rules} />;
+
+      return {
+        InnerTable,
+        OuterTableCells,
+        id,
+        label,
+      };
+    });
+  };
+
+  const RoutesTableRowHead = (
+    <TableRow>
+      <TableSortCell
+        active={orderBy === 'label'}
+        direction={order}
+        handleClick={handleOrderChange}
+        label="label"
+      >
+        Route Label
+      </TableSortCell>
+      <TableCell>Rules</TableCell>
+      <TableCell>Protocol</TableCell>
+      <TableCell></TableCell>
+    </TableRow>
+  );
 
   return (
     <>
@@ -103,49 +154,13 @@ export const LoadBalancerRoutes = () => {
         <Box flexGrow={1} />
         <Button buttonType="primary">Create Route</Button>
       </Stack>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
-            >
-              Route Label
-            </TableSortCell>
-            <TableCell>Rules</TableCell>
-            <TableCell>Protocol</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {error && <TableRowError colSpan={3} message={error?.[0].reason} />}
-          {data?.results === 0 && <TableRowEmpty colSpan={3} />}
-          {data?.data.map(({ id, label, protocol, rules }) => (
-            <TableRow key={`${label}-${id}`}>
-              <TableCell>{label}</TableCell>
-              {/**
-               *   TODO: Not clear at this point need confirmation from UX/API
-               */}
-              <TableCell>{rules?.length}</TableCell>
-              <TableCell>{protocol?.join(', ')}</TableCell>
-              <TableCell actionCell>
-                <ActionMenu
-                  actionsList={[
-                    { onClick: () => null, title: 'Edit' },
-                    { onClick: () => null, title: 'Clone Route' },
-                    { onClick: () => null, title: 'Delete' },
-                  ]}
-                  ariaLabel={`Action Menu for Route ${label}`}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <CollapsibleTable
+        TableItems={getTableItems()}
+        TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Routes'} />}
+        TableRowHead={RoutesTableRowHead}
+      />
       <PaginationFooter
-        count={data?.results ?? 0}
+        count={routes?.results ?? 0}
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
