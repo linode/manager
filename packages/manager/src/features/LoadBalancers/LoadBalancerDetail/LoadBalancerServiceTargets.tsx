@@ -27,7 +27,8 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerServiceTargetsQuery } from 'src/queries/aglb/serviceTargets';
 
-import { DeleteServiceTargetDialog } from './DeleteServiceTargetDialog';
+import { CreateServiceTargetDrawer } from './ServiceTargets/CreateServiceTargetDrawer';
+import { DeleteServiceTargetDialog } from './ServiceTargets/DeleteServiceTargetDialog';
 
 import type { Filter } from '@linode/api-v4';
 
@@ -37,6 +38,7 @@ export const LoadBalancerServiceTargets = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const [query, setQuery] = useState<string>();
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [
     selectedServiceTarget,
@@ -117,7 +119,12 @@ export const LoadBalancerServiceTargets = () => {
           value={query}
         />
         <Box flexGrow={1} />
-        <Button buttonType="primary">Create Service Target</Button>
+        <Button
+          buttonType="primary"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        >
+          Create Service Target
+        </Button>
       </Stack>
       <Table>
         <TableHead>
@@ -152,7 +159,7 @@ export const LoadBalancerServiceTargets = () => {
                 <Link to={String(serviceTarget.id)}>{serviceTarget.label}</Link>
               </TableCell>
               <TableCell>
-                <Stack alignItems="center" direction="row" spacing={0.5}>
+                <Stack alignItems="center" direction="row" spacing={1}>
                   <StatusIcon status="active" />
                   <Typography noWrap>4 up</Typography>
                   <Typography>&mdash;</Typography>
@@ -197,7 +204,11 @@ export const LoadBalancerServiceTargets = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-
+      <CreateServiceTargetDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
+      />
       <DeleteServiceTargetDialog
         loadbalancerId={Number(loadbalancerId)}
         onClose={() => setIsDeleteDialogOpen(false)}
