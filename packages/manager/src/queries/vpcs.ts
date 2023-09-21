@@ -40,7 +40,7 @@ export const useVPCsQuery = (
     {
       enabled,
       keepPreviousData: true,
-      refetchOnWindowFocus: alwaysRefetch,
+      refetchOnWindowFocus: alwaysRefetch ? 'always' : false,
     }
   );
 };

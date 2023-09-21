@@ -229,12 +229,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   />
                 }
                 label={
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    flexDirection="row"
-                    sx={{}}
-                  >
+                  <Box alignItems="center" display="flex" flexDirection="row">
                     <Typography>
                       Assign a public IPv4 address for this Linode
                     </Typography>

@@ -760,7 +760,8 @@ export class LinodeCreate extends React.PureComponent<
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,
       booted: true,
-      firewall_id: this.props.firewallId,
+      firewall_id:
+        this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
       private_ip: this.props.privateIPEnabled,
