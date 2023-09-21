@@ -60,6 +60,7 @@ type LinodeAndConfigData = Linode & {
 };
 
 export const SubnetAssignLinodesDrawer = (props: Props) => {
+  console.log('this is the subnet', props.subnet)
   const { onClose, open, subnet, vpcId, vpcRegion } = props;
   const {
     invalidateQueries,
@@ -145,7 +146,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
         configId,
         interfacePayload
       );
-      invalidateQueries({
+      await invalidateQueries({
         configId,
         linodeId: selectedLinode?.id ?? -1,
         subnetId: subnet?.id ?? -1,
@@ -153,7 +154,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
       });
       resetForm();
       setLinodeConfigs([]);
-      if (selectedLinode && subnet?.linodes.includes(selectedLinode.id)) {
+      if (selectedLinode) {
         setAssignedLinodesAndConfigData([
           ...assignedLinodesAndConfigData,
           {
@@ -190,20 +191,21 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
 
   const onUnassignLinode = async (data: LinodeAndConfigData) => {
     const { configId, id: linodeId, interfaceId } = data;
-    await unassignLinode({
-      configId,
-      interfaceId,
-      linodeId,
-      subnetId: subnet?.id ?? -1,
-      vpcId,
-    });
-
-    if (!subnet?.linodes.includes(linodeId)) {
+    try {
+      await unassignLinode({
+        configId,
+        interfaceId,
+        linodeId,
+        subnetId: subnet?.id ?? -1,
+        vpcId,
+      });
       setAssignedLinodesAndConfigData(
         [...assignedLinodesAndConfigData].filter(
           (linode) => linode.id !== linodeId
         )
       );
+    } catch (errors) {
+      setUnassignLinodesErrors(errors as APIError[])
     }
   };
 

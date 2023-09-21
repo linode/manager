@@ -60,23 +60,19 @@ export const useUnassignLinode = () => {
     subnetId,
     vpcId,
   }: IdsForUnassignLinode) => {
-    try {
-      await deleteLinodeConfigInterface(linodeId, configId, interfaceId);
-      await invalidateQueries({ configId, linodeId, subnetId, vpcId });
-      await queryClient.invalidateQueries([
-        queryKey,
-        'linode',
-        linodeId,
-        configQueryKey,
-        'config',
-        configId,
-        interfaceQueryKey,
-        'interface',
-        interfaceId,
-      ]);
-    } catch (errors) {
-      setUnassignLinodesErrors(errors as APIError[]);
-    }
+    await deleteLinodeConfigInterface(linodeId, configId, interfaceId);
+    invalidateQueries({ configId, linodeId, subnetId, vpcId });
+    queryClient.invalidateQueries([
+      queryKey,
+      'linode',
+      linodeId,
+      configQueryKey,
+      'config',
+      configId,
+      interfaceQueryKey,
+      'interface',
+      interfaceId,
+    ]);
   };
 
   return {
