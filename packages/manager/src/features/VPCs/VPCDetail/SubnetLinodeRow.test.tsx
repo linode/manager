@@ -31,7 +31,7 @@ describe('SubnetLinodeRow', () => {
         return res(ctx.json(linodeFactory1));
       }),
       rest.get('*/instances/*/configs', async (req, res, ctx) => {
-        const configs = linodeConfigFactory.buildList(1);
+        const configs = linodeConfigFactory.buildList(3);
         return res(ctx.json(makeResourcePage(configs)));
       })
     );
@@ -43,7 +43,7 @@ describe('SubnetLinodeRow', () => {
       getByText,
     } = renderWithTheme(
       wrapWithTableBody(
-        <SubnetLinodeRow linodeId={linodeFactory1.id} subnetId={1} />
+        <SubnetLinodeRow linodeId={linodeFactory1.id} subnetId={0} />
       ),
       {
         queryClient,
