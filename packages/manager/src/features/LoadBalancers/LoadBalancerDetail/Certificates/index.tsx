@@ -1,9 +1,7 @@
 import Stack from '@mui/material/Stack';
 import React from 'react';
 import {
-  Redirect,
   Route,
-  Switch,
   useHistory,
   useLocation,
   useRouteMatch,
@@ -16,8 +14,11 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
 
-import { ServiceTargetCertificates } from './ServiceTargetCertificates';
-import { TLSCertificates } from './TLSCertificates';
+const Certificates = React.lazy(() =>
+  import('./Certificates').then((module) => ({
+    default: module.Certificates,
+  }))
+);
 
 export const LoadBalancerCertificates = () => {
   const { path, url } = useRouteMatch();
@@ -26,13 +27,11 @@ export const LoadBalancerCertificates = () => {
 
   const tabs = [
     {
-      component: TLSCertificates,
-      path: 'tls',
+      path: 'downstream',
       title: 'TLS Certificates',
     },
     {
-      component: ServiceTargetCertificates,
-      path: 'service-target',
+      path: 'ca',
       title: 'Service Target Certificates',
     },
   ];
@@ -61,19 +60,7 @@ export const LoadBalancerCertificates = () => {
           tabs={tabs.map((t) => ({ ...t, routeName: `${url}/${t.path}` }))}
         />
         <React.Suspense fallback={<SuspenseLoader />}>
-          <Switch>
-            <Route component={TLSCertificates} path={`${path}/tls/create`} />
-            <Route component={TLSCertificates} path={`${path}/tls`} />
-            <Route
-              component={ServiceTargetCertificates}
-              path={`${path}/service-target`}
-            />
-            <Route
-              component={ServiceTargetCertificates}
-              path={`${path}/service-target/create`}
-            />
-            <Redirect to={`${path}/tls`} />
-          </Switch>
+          <Route component={Certificates} path={`${path}/:type?/:create?`} />
         </React.Suspense>
       </Tabs>
     </>

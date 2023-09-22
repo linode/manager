@@ -26,8 +26,30 @@ import type { Certificate, Filter } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-certificates';
 
-export const ServiceTargetCertificates = () => {
-  const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
+const descriptionMap = {
+  ca: (
+    <Typography>
+      Used by the load balancer to accept responses from your endpoints in your
+      Service Target. This is the certificate installed on your Endpoints. Apply
+      these certificate(s) in the <Link to="">Service Targets</Link> Tab.
+    </Typography>
+  ),
+  downstream: (
+    <Typography>
+      Certificate used by your load balancer to terminate the connection and
+      decrypt request from client. Apply these certificate(s) in the Details
+      section of your HTTPS <Link to="">Configuration</Link>.
+    </Typography>
+  ),
+};
+
+export const Certificates = () => {
+  const { loadbalancerId, type } = useParams<{
+    loadbalancerId: string;
+    type: Certificate['type'] | undefined;
+  }>();
+
+  const certType = type ?? 'downstream';
 
   const id = Number(loadbalancerId);
 
@@ -52,7 +74,7 @@ export const ServiceTargetCertificates = () => {
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
-    type: 'ca',
+    type: certType,
   };
 
   const { data, error, isLoading } = useLoadBalancerCertificatesQuery(
@@ -79,12 +101,7 @@ export const ServiceTargetCertificates = () => {
 
   return (
     <Stack paddingTop={1} spacing={2}>
-      <Typography>
-        Used by the load balancer to accept responses from your endpoints in
-        your Service Target. This is the certificate installed on your
-        Endpoints. Apply these certificate(s) in the{' '}
-        <Link to="">Service Targets</Link> Tab.
-      </Typography>
+      {descriptionMap[certType]}
       <Table>
         <TableHead>
           <TableRow>
@@ -130,13 +147,11 @@ export const ServiceTargetCertificates = () => {
       />
       <CreateCertificateDrawer
         onClose={() =>
-          history.push(
-            `/loadbalancers/${loadbalancerId}/certificates/service-target`
-          )
+          history.push(`/loadbalancers/${loadbalancerId}/certificates/${type}`)
         }
         loadbalancerId={id}
         open={isCreateDrawerOpen}
-        type="ca"
+        type={certType}
       />
       <DeleteCertificateDialog
         certificate={selectedCertificate}

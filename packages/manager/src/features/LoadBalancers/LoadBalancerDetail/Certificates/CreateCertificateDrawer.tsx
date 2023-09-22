@@ -56,6 +56,7 @@ export const CreateCertificateDrawer = (props: Props) => {
   } = useLoadBalancerCertificateCreateMutation(loadbalancerId);
 
   const formik = useFormik<CreateCertificatePayload>({
+    enableReinitialize: true,
     initialValues: {
       certificate: '',
       key: '',
@@ -89,13 +90,13 @@ export const CreateCertificateDrawer = (props: Props) => {
           value={formik.values.label}
         />
         <TextField
-          placeholder={exampleCert}
           errorText={errorMap.certificate}
           label="TLS Certificate"
           labelTooltipText="TODO"
           multiline
           name="certificate"
           onChange={formik.handleChange}
+          placeholder={exampleCert}
           trimmed
           value={formik.values.certificate}
         />
@@ -107,8 +108,8 @@ export const CreateCertificateDrawer = (props: Props) => {
             multiline
             name="key"
             onChange={formik.handleChange}
-            trimmed
             placeholder={exampleKey}
+            trimmed
             value={formik.values.key}
           />
         )}
