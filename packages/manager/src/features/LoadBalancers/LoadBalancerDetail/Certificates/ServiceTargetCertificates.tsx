@@ -1,15 +1,10 @@
-import CloseIcon from '@mui/icons-material/Close';
-import { IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import EnhancedSelect from 'src/components/EnhancedSelect';
-import { InputAdornment } from 'src/components/InputAdornment';
+import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -19,37 +14,30 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerCertificatesQuery } from 'src/queries/aglb/certificates';
 
-import { CreateCertificateDrawer } from './Certificates/CreateCertificateDrawer';
-import { DeleteCertificateDialog } from './Certificates/DeleteCertificateDialog';
+import { CreateCertificateDrawer } from './CreateCertificateDrawer';
+import { DeleteCertificateDialog } from './DeleteCertificateDialog';
 
 import type { Certificate, Filter } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-certificates';
 
-const CERTIFICATE_TYPE_LABEL_MAP: Record<Certificate['type'], string> = {
-  ca: 'Service Target Certificate',
-  downstream: 'TLS Certificate',
-};
-
-type CertificateTypeFilter = 'all' | Certificate['type'];
-
-export const LoadBalancerCertificates = () => {
+export const ServiceTargetCertificates = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const id = Number(loadbalancerId);
 
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const location = useLocation();
+  const history = useHistory();
+
+  const isCreateDrawerOpen = location.pathname.endsWith('/create');
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
 
   const [selectedCertificateId, setSelectedCertificateId] = useState<number>();
-
-  const [type, setType] = useState<CertificateTypeFilter>('all');
-  const [query, setQuery] = useState<string>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -64,17 +52,8 @@ export const LoadBalancerCertificates = () => {
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+    type: 'ca',
   };
-
-  // If the user selects a Certificate type filter, API filter by that type.
-  if (type !== 'all') {
-    filter['type'] = type;
-  }
-
-  // If the user types in a search query, API filter by the label.
-  if (query) {
-    filter['label'] = { '+contains': query };
-  }
 
   const { data, error, isLoading } = useLoadBalancerCertificatesQuery(
     id,
@@ -94,72 +73,18 @@ export const LoadBalancerCertificates = () => {
     return <CircleProgress />;
   }
 
-  const filterOptions = [
-    { label: 'All', value: 'all' },
-    { label: 'TLS Certificates', value: 'tls' },
-    { label: 'Service Target Certificates', value: 'ca' },
-  ];
-
   const selectedCertificate = data?.data.find(
     (cert) => cert.id === selectedCertificateId
   );
 
   return (
-    <>
-      <Stack
-        alignItems="flex-end"
-        direction="row"
-        flexWrap="wrap"
-        gap={2}
-        mb={1}
-        mt={1}
-      >
-        <EnhancedSelect
-          styles={{
-            container: () => ({
-              maxWidth: '200px',
-            }),
-          }}
-          isClearable={false}
-          label="Certificate Type"
-          noMarginTop
-          onChange={(option) => setType(option?.value as CertificateTypeFilter)}
-          options={filterOptions}
-          value={filterOptions.find((option) => option.value === type) ?? null}
-        />
-        <TextField
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="Clear"
-                  onClick={() => setQuery('')}
-                  size="small"
-                  sx={{ padding: 'unset' }}
-                >
-                  <CloseIcon
-                    color="inherit"
-                    sx={{ color: '#aaa !important' }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          hideLabel
-          label="Filter"
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Filter"
-          style={{ minWidth: '320px' }}
-          value={query}
-        />
-        <Box flexGrow={1} />
-        <Button
-          buttonType="primary"
-          onClick={() => setIsCreateDrawerOpen(true)}
-        >
-          Upload Certificate
-        </Button>
-      </Stack>
+    <Stack paddingTop={1} spacing={2}>
+      <Typography>
+        Used by the load balancer to accept responses from your endpoints in
+        your Service Target. This is the certificate installed on your
+        Endpoints. Apply these certificate(s) in the{' '}
+        <Link to="">Service Targets</Link> Tab.
+      </Typography>
       <Table>
         <TableHead>
           <TableRow>
@@ -171,14 +96,6 @@ export const LoadBalancerCertificates = () => {
             >
               Label
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'type'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="type"
-            >
-              Type
-            </TableSortCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -188,9 +105,6 @@ export const LoadBalancerCertificates = () => {
           {data?.data.map((certificate) => (
             <TableRow key={`${certificate.label}-${certificate.type}`}>
               <TableCell>{certificate.label}</TableCell>
-              <TableCell>
-                {CERTIFICATE_TYPE_LABEL_MAP[certificate.type]}
-              </TableCell>
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
@@ -215,9 +129,14 @@ export const LoadBalancerCertificates = () => {
         pageSize={pagination.pageSize}
       />
       <CreateCertificateDrawer
+        onClose={() =>
+          history.push(
+            `/loadbalancers/${loadbalancerId}/certificates/service-target`
+          )
+        }
         loadbalancerId={id}
-        onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
+        type="ca"
       />
       <DeleteCertificateDialog
         certificate={selectedCertificate}
@@ -225,6 +144,6 @@ export const LoadBalancerCertificates = () => {
         onClose={() => setIsDeleteDrawerOpen(false)}
         open={isDeleteDrawerOpen}
       />
-    </>
+    </Stack>
   );
 };

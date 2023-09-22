@@ -33,7 +33,7 @@ const LoadBalancerServiceTargets = React.lazy(() =>
 );
 
 const LoadBalancerCertificates = React.lazy(() =>
-  import('./LoadBalancerCertificates').then((module) => ({
+  import('./Certificates').then((module) => ({
     default: module.LoadBalancerCertificates,
   }))
 );
