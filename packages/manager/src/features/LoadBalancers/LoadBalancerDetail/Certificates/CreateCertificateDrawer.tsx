@@ -78,7 +78,7 @@ export const CreateCertificateDrawer = (props: Props) => {
   const errorMap = getErrorMap(errorFields, error);
 
   return (
-    <Drawer onClose={onClose} open={open} title={titleMap[type]}>
+    <Drawer onClose={onClose} open={open} title={titleMap[type] ?? ''}>
       <form onSubmit={formik.handleSubmit}>
         {errorMap.none && <Notice text={errorMap.none} variant="error" />}
         <Typography>{descriptionMap[type]}</Typography>
