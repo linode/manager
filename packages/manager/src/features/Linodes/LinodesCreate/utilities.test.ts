@@ -9,6 +9,7 @@ import {
   formatLinodeSubheading,
   getMonthlyAndHourlyNodePricing,
   getRegionIDFromLinodeID,
+  handleAppLabel,
   trimOneClickFromLabel,
 } from './utilities';
 
@@ -145,5 +146,37 @@ describe('filterOneClickApps', () => {
 
     // Expect an empty array when queryResults is empty
     expect(filteredOCAs).toEqual([]);
+  });
+});
+
+describe('handleAppLabel', () => {
+  jest.mock('he', () => ({
+    decode: jest.fn(),
+  }));
+
+  it('should decode the label and remove "Cluster" when cluster_size is present', () => {
+    const stackScript = stackScriptFactory.build({
+      label: 'My StackScript Cluster ',
+      user_defined_fields: [{ name: 'cluster_size' }],
+    });
+
+    const result = handleAppLabel(stackScript);
+
+    expect(result.decodedLabel).toBe('My StackScript Cluster ');
+    expect(result.isCluster).toBe(true);
+    expect(result.label).toBe('My StackScript');
+  });
+
+  it('should decode the label without removing "Cluster" when cluster_size is not present', () => {
+    const stackScript = stackScriptFactory.build({
+      label: 'My StackScript&reg; Cluster ',
+      user_defined_fields: [],
+    });
+
+    const result = handleAppLabel(stackScript);
+
+    expect(result.decodedLabel).toBe('My StackScript® Cluster ');
+    expect(result.isCluster).toBe(false);
+    expect(result.label).toBe('My StackScript® Cluster ');
   });
 });

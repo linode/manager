@@ -9,7 +9,7 @@ interface Options {
  * Given a StackScript label, return the corresponding One-Click App name
  * @param oneClickApps
  * @param stackScriptLabel
- * @returns
+ * @returns {string}
  */
 export const mapStackScriptLabelToOCA = ({
   oneClickApps,

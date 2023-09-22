@@ -19,11 +19,12 @@ import {
   handleAppLabel,
 } from '../../../../src/features/Linodes/LinodesCreate/utilities';
 import { interceptFeatureFlags } from 'support/intercepts/feature-flags';
+import { mapStackScriptLabelToOCA } from '../../../../src/features/OneClickApps/utils';
 import { baseApps } from '../../../../src/features/StackScripts/stackScriptUtils';
-
+import { oneClickApps } from '../../../../src/features/OneClickApps/OneClickApps';
 import type { Config, Linode, StackScript } from '@linode/api-v4';
 import { OCA } from '@src/features/OneClickApps/types';
-import { FlagSet } from '@src/featureFlags';
+import type { FlagSet } from '@src/featureFlags';
 
 authenticate();
 
@@ -46,19 +47,26 @@ describe('OneClick Apps (OCA)', () => {
         const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
         const newApps = flags['one-click-apps']?.value;
 
-        const trimmedApps = filterOneClickApps({
+        const trimmedApps: StackScript[] = filterOneClickApps({
           baseApps,
           newApps,
           queryResults: stackScripts,
         });
 
-        console.log('trimmedApps', trimmedApps);
-
         cy.findByTestId('one-click-apps-container').within(() => {
           trimmedApps.forEach((stackScript) => {
-            const { label } = handleAppLabel(stackScript);
+            const { decodedLabel, label } = handleAppLabel(stackScript);
 
+            // Check that every OCA is listed with the correct label
             cy.get(`[data-qa-select-card-heading="${label}"]`).should('exist');
+
+            // Check that every OCA has a drawer match
+            expect(
+              mapStackScriptLabelToOCA({
+                oneClickApps,
+                stackScriptLabel: decodedLabel,
+              })
+            ).to.not.be.undefined;
           });
         });
       });
