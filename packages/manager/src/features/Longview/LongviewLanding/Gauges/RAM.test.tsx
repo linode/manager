@@ -3,7 +3,7 @@ import * as React from 'react';
 import { memory } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import RAM from './RAM';
+import { RAMGauge } from './RAM';
 
 const mockError = [{ CODE: 0, SEVERITY: 3, TEXT: 'no reason' }];
 
@@ -40,7 +40,7 @@ const errorStore = {
 
 describe('Longview RAM Gauge UI', () => {
   it('should render a loading state initially', () => {
-    const { getByText } = renderWithTheme(<RAM clientID={123} />, {
+    const { getByText } = renderWithTheme(<RAMGauge clientID={123} />, {
       customStore: loadingStore,
     });
 
@@ -48,7 +48,7 @@ describe('Longview RAM Gauge UI', () => {
   });
 
   it('should render error UI if an error comes back from Redux State', async (done) => {
-    const { findByText } = renderWithTheme(<RAM clientID={123} />, {
+    const { findByText } = renderWithTheme(<RAMGauge clientID={123} />, {
       customStore: errorStore,
     });
 
@@ -59,7 +59,7 @@ describe('Longview RAM Gauge UI', () => {
   });
 
   it('should render a data state UI if data comes back from Redux State', async (done) => {
-    const { findByTestId } = renderWithTheme(<RAM clientID={123} />, {
+    const { findByTestId } = renderWithTheme(<RAMGauge clientID={123} />, {
       customStore: dataStore,
     });
 

@@ -12,9 +12,7 @@ interface Props {
   selectedLongviewClientLabel: string;
 }
 
-type CombinedProps = Props;
-
-const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
+export const LongviewDeleteDialog = React.memo((props: Props) => {
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
@@ -72,7 +70,7 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
       Are you sure you want to delete this Longview Client?
     </ConfirmationDialog>
   );
-};
+});
 
 interface ActionsProps {
   isDeleting: boolean;
@@ -80,7 +78,7 @@ interface ActionsProps {
   onSubmit: () => void;
 }
 
-const Actions: React.FC<ActionsProps> = (props) => {
+const Actions = (props: ActionsProps) => {
   return (
     <ActionsPanel
       primaryButtonProps={{
@@ -93,5 +91,3 @@ const Actions: React.FC<ActionsProps> = (props) => {
     />
   );
 };
-
-export default React.memo(LongviewDeleteDialog);
