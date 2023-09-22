@@ -27,7 +27,7 @@ export const RulesTable = ({ rules }: Props) => {
           <StyledTableHeadCell>Match Value</StyledTableHeadCell>
           <StyledTableHeadCell>Match Type</StyledTableHeadCell>
           <StyledTableHeadCell>Service Targets</StyledTableHeadCell>
-          <StyledTableHeadCell>Session Stickyness</StyledTableHeadCell>
+          <StyledTableHeadCell>Session Stickiness</StyledTableHeadCell>
           <StyledTableHeadCell></StyledTableHeadCell>
         </TableRow>
       </TableHead>
