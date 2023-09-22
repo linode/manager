@@ -103,7 +103,12 @@ export const InterfaceSelect = (props: Props) => {
     vlanOptions.push({ label: newVlan, value: newVlan });
   }
 
-  const { data: vpcs, isLoading: vpcsLoading } = useVPCsQuery({}, {});
+  const { data: vpcs, isLoading: vpcsLoading } = useVPCsQuery(
+    {},
+    {
+      ['region']: region,
+    }
+  );
   const vpcOptions = vpcs?.data.map((vpc) => ({
     id: vpc.id,
     label: vpc.label,
