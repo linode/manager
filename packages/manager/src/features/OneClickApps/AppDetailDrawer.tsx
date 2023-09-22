@@ -114,6 +114,9 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
     <Drawer
       anchor="right"
       classes={{ paper: classes.paper }}
+      data-qa-drawer
+      data-testid="drawer"
+      disablePortal
       onClose={onClose}
       open={open}
     >
@@ -149,6 +152,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                 __html: sanitizeHTML(selectedApp.name),
               }}
               className={classes.appName}
+              data-qa-drawer-title={stackScriptLabel}
               data-testid="app-name"
               variant="h2"
             />

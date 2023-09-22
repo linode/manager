@@ -29,7 +29,7 @@ import type { FlagSet } from '@src/featureFlags';
 authenticate();
 
 describe('OneClick Apps (OCA)', () => {
-  beforeEach(() => {
+  before(() => {
     cleanUp(['linodes']);
   });
 
@@ -69,6 +69,27 @@ describe('OneClick Apps (OCA)', () => {
             ).to.not.be.undefined;
           });
         });
+
+        // Check one of the OCA drawers
+        const candidate = trimmedApps[0].label;
+        const stackScriptCandidate = cy
+          .get(`[data-qa-selection-card-info="${candidate}"]`)
+          .first();
+        stackScriptCandidate.should('exist').click();
+
+        const app: OCA | undefined = mapStackScriptLabelToOCA({
+          oneClickApps,
+          stackScriptLabel: candidate,
+        });
+
+        ui.drawer
+          .findByTitle(trimmedApps[0].label)
+          .should('be.visible')
+          .within(() => {
+            containsVisible(app?.description);
+            containsVisible(app?.summary);
+            containsVisible(app?.website);
+          });
       });
     });
   });
