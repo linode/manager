@@ -393,8 +393,7 @@ export class LinodeCreate extends React.PureComponent<
       ) &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
-    // Firewall creation as part of the Linode Create payload is feature flagged with VPC presently
-    const displayVPCAndFirewallPanels = isFeatureEnabled(
+    const displayVPCPanel = isFeatureEnabled(
       'VPCs',
       Boolean(this.props.flags.vpc),
       this.props.account.data?.capabilities ?? []
@@ -595,39 +594,38 @@ export class LinodeCreate extends React.PureComponent<
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
-          {displayVPCAndFirewallPanels ? (
-            <>
-              <VPCPanel
-                toggleAssignPublicIPv4Address={
-                  this.props.toggleAssignPublicIPv4Address
-                }
-                toggleAutoassignIPv4WithinVPCEnabled={
-                  this.props.toggleAutoassignIPv4WithinVPCEnabled
-                }
-                assignPublicIPv4Address={this.props.assignPublicIPv4Address}
-                autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
-                handleSelectVPC={this.props.setSelectedVPC}
-                handleSubnetChange={this.props.handleSubnetChange}
-                handleVPCIPv4Change={this.props.handleVPCIPv4Change}
-                region={this.props.selectedRegionID}
-                selectedSubnetId={this.props.selectedSubnetId}
-                selectedVPCId={this.props.selectedVPCId}
-                subnetError={hasErrorFor['subnet_id']}
-                vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
-                vpcIPv4Error={hasErrorFor['ipv4.vpc']}
-              />
-              <SelectFirewallPanel
-                helperText={
-                  <Typography>
-                    Assign an existing Firewall to this Linode to control
-                    inbound and outbound network traffic.{' '}
-                    <Link to="">Learn more</Link>.
-                  </Typography>
-                  // @TODO VPC: Update "Learn More" link
-                }
-                handleFirewallChange={this.props.handleFirewallChange}
-              />
-            </>
+          {displayVPCPanel ? (
+            <VPCPanel
+              toggleAssignPublicIPv4Address={
+                this.props.toggleAssignPublicIPv4Address
+              }
+              toggleAutoassignIPv4WithinVPCEnabled={
+                this.props.toggleAutoassignIPv4WithinVPCEnabled
+              }
+              assignPublicIPv4Address={this.props.assignPublicIPv4Address}
+              autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
+              handleSelectVPC={this.props.setSelectedVPC}
+              handleSubnetChange={this.props.handleSubnetChange}
+              handleVPCIPv4Change={this.props.handleVPCIPv4Change}
+              region={this.props.selectedRegionID}
+              selectedSubnetId={this.props.selectedSubnetId}
+              selectedVPCId={this.props.selectedVPCId}
+              subnetError={hasErrorFor['subnet_id']}
+              vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
+              vpcIPv4Error={hasErrorFor['ipv4.vpc']}
+            />
+          ) : null}
+          {this.props.flags.linodeCreateWithFirewall ? (
+            <SelectFirewallPanel
+              helperText={
+                <Typography>
+                  Assign an existing Firewall to this Linode to control inbound
+                  and outbound network traffic. <Link to="">Learn more</Link>.
+                </Typography>
+                // @TODO VPC: Update "Learn More" link
+              }
+              handleFirewallChange={this.props.handleFirewallChange}
+            />
           ) : null}
           <AddonsPanel
             userData={{
