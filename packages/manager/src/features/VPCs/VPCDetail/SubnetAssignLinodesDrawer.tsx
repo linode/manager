@@ -92,8 +92,8 @@ export const SubnetAssignLinodesDrawer = (
 
   const csvHeaders = [
     { key: 'label', label: 'Linode Label' },
-    { key: 'ipv4', label: 'IPv4' },
     { key: 'id', label: 'Linode ID' },
+    { key: 'ipv4', label: 'IPv4' },
   ];
 
   const downloadCSV = async () => {
