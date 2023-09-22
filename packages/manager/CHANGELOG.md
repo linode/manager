@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2023-09-22] - v1.102.1
+## [2023-09-22] - v1.103.0
 
-### Fixed:
+### Change:
 
 - Remove Beta chip from Add User Data accordion ([#9712](https://github.com/linode/manager/pull/9712))
 
