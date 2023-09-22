@@ -21,6 +21,12 @@ export const dcPricingDocsLabel = 'How Data Center Pricing Works';
 /** DC-specific pricing docs link destination. */
 export const dcPricingDocsUrl = 'https://www.linode.com/pricing';
 
+/** DC-specific pricing current price label. */
+export const dcPricingCurrentPriceLabel = 'Current Price';
+
+/** DC-specific pricing new price label. */
+export const dcPricingNewPriceLabel = 'New Price';
+
 /** DC-specific pricing Linode type mocks. */
 export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
   region_prices: [

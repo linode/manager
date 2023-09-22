@@ -222,3 +222,22 @@ export const mockGetLinodeType = (
     makeResponse(type)
   );
 };
+
+/**
+ * Intercepts POST request to migrate a Linode.
+ *
+ * @param linodeId - ID of Linode being cloned.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockMigrateLinode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/migrate`),
+    {
+      statusCode: 200,
+    }
+  );
+};

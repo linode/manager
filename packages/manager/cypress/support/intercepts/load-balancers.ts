@@ -102,10 +102,13 @@ export const mockUploadLoadBalancerCertificate = (
  *
  * @returns Cypress chainable.
  */
-export const mockGetServiceTargets = (serviceTargets: ServiceTarget[]) => {
+export const mockGetServiceTargets = (
+  loadBalancer: Loadbalancer,
+  serviceTargets: ServiceTarget[]
+) => {
   return cy.intercept(
     'GET',
-    apiMatcher('/aglb/service-targets*'),
+    apiMatcher(`/aglb/${loadBalancer.id}/service-targets*`),
     paginateResponse(serviceTargets)
   );
 };
@@ -123,5 +126,24 @@ export const mockGetServiceTargetsError = (message?: string) => {
     'GET',
     apiMatcher('/aglb/service-targets*'),
     makeErrorResponse(message ?? defaultMessage, 500)
+  );
+};
+
+/**
+ * Intercepts POST request to create a service target and mocks response.
+ *
+ * @param loadBalancer - Load balancer for mocked service target.
+ * @param serviceTarget - Service target with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateServiceTarget = (
+  loadBalancer: Loadbalancer,
+  serviceTarget: ServiceTarget
+) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`/aglb/${loadBalancer.id}/service-targets`),
+    makeResponse(serviceTarget)
   );
 };
