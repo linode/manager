@@ -42,9 +42,9 @@ export const InteractableDefault: Story = {
       return (
         <>
           <RemovableSelectionsList
-            handleRemove={handleRemove}
             headerText="Linodes to remove"
             noDataText="No Linodes available"
+            onRemove={handleRemove}
             selectionData={data}
           />
           <Button onClick={resetList} sx={{ marginTop: 2 }}>
@@ -64,9 +64,9 @@ export const InteractableDefault: Story = {
  */
 export const SpecifiedLabelExample: Story = {
   args: {
-    handleRemove: (_) => {},
     headerText: 'Linodes to remove',
     noDataText: 'No Linodes available',
+    onRemove: (_) => {},
     preferredDataLabel: 'preferredLabel',
     selectionData: diffLabelListItems,
   },
@@ -80,9 +80,9 @@ export const SpecifiedLabelExample: Story = {
  */
 export const NoDataExample: Story = {
   args: {
-    handleRemove: (_) => {},
     headerText: 'Linodes to remove',
     noDataText: 'No Linodes available',
+    onRemove: (_) => {},
     selectionData: [],
   },
   render: (args) => {

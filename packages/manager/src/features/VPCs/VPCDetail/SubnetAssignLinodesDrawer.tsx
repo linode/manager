@@ -83,7 +83,7 @@ export const SubnetAssignLinodesDrawer = (
   const { data: grants } = useGrants();
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
-  // TODO VPC: this logic for vpc grants/perms appears a lot - commenting a todo here in case we want to move this logic to a parent component
+  // @TODO VPC: this logic for vpc grants/perms appears a lot - commenting a todo here in case we want to move this logic to a parent component
   // there isn't a 'view VPC/Subnet' grant that does anything, so all VPCs get returned even for restricted users
   // with permissions set to 'None'. Therefore, we're treating those as read_only as well
   const userCannotAssignLinodes =
@@ -317,7 +317,9 @@ export const SubnetAssignLinodesDrawer = (
     <Drawer
       onClose={handleOnClose}
       open={open}
-      title={`Assign Linodes to subnet: ${subnet?.label} (${subnet?.ipv4})`}
+      title={`Assign Linodes to subnet: ${subnet?.label} (${
+        subnet?.ipv4 ?? subnet?.ipv6
+      })`}
     >
       {userCannotAssignLinodes && (
         <Notice

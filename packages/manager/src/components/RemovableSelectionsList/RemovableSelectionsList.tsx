@@ -46,10 +46,7 @@ export const RemovableSelectionsList = (props: Props) => {
     selectionData,
   } = props;
 
-  const handleOnClick = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    selection: RemovableItem
-  ) => {
+  const handleOnClick = (selection: RemovableItem) => {
     onRemove(selection);
   };
 
@@ -72,7 +69,7 @@ export const RemovableSelectionsList = (props: Props) => {
                     : selection.label
                 }`}
                 disableRipple
-                onClick={() => handleOnClick}
+                onClick={() => handleOnClick(selection)}
                 size="medium"
               >
                 <Close />
