@@ -998,8 +998,11 @@ export const handlers = [
     return res(ctx.delay(5000), ctx.json(transfer));
   }),
   rest.get('*/account/payments', (req, res, ctx) => {
+    const paymentWithLargeId = paymentFactory.build({
+      id: 123_456_789_123_456,
+    });
     const payments = paymentFactory.buildList(5);
-    return res(ctx.json(makeResourcePage(payments)));
+    return res(ctx.json(makeResourcePage([paymentWithLargeId, ...payments])));
   }),
   rest.get('*/account/invoices', (req, res, ctx) => {
     const linodeInvoice = invoiceFactory.build({
@@ -1010,7 +1013,15 @@ export const handlers = [
       date: '2022-12-16T18:04:01',
       label: 'AkamaiInvoice',
     });
-    return res(ctx.json(makeResourcePage([linodeInvoice, akamaiInvoice])));
+    const invoiceWithLargerId = invoiceFactory.build({
+      id: 123_456_789_123_456,
+      label: 'Invoice with Large ID',
+    });
+    return res(
+      ctx.json(
+        makeResourcePage([linodeInvoice, akamaiInvoice, invoiceWithLargerId])
+      )
+    );
   }),
   rest.get('*/account/invoices/:invoiceId', (req, res, ctx) => {
     const linodeInvoice = invoiceFactory.build({
