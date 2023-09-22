@@ -1,5 +1,4 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { Box } from 'src/components/Box';
 import {
   default as _TextField,
   StandardTextFieldProps,
@@ -9,6 +8,7 @@ import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
@@ -296,7 +296,7 @@ export const TextField = (props: TextFieldProps) => {
     inputId || (label ? convertToKebabCase(`${label}`) : undefined);
 
   return (
-    <div
+    <Box
       className={cx({
         [classes.helpWrapper]: Boolean(tooltipText),
         [errorScrollClassName]: !!errorText,
@@ -443,6 +443,6 @@ export const TextField = (props: TextFieldProps) => {
             {helperText}
           </FormHelperText>
         )}
-    </div>
+    </Box>
   );
 };

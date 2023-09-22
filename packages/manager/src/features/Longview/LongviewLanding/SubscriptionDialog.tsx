@@ -14,7 +14,7 @@ interface Props {
   onSubmit: () => void;
 }
 
-export const SubscriptionDialog: React.FC<Props> = (props) => {
+export const SubscriptionDialog = (props: Props) => {
   const { clientLimit, isManaged, isOpen, onClose, onSubmit } = props;
 
   const actions = () => (
@@ -49,5 +49,3 @@ export const SubscriptionDialog: React.FC<Props> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default SubscriptionDialog;

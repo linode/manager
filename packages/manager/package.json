@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.102.0",
+  "version": "1.103.0",
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -271,6 +271,7 @@
       "^react-native$": "react-native-web",
       "ramda": "ramda/src/index.js",
       "^src/(.*)": "<rootDir>/src/$1",
+      "(.*)\\.css\\?raw$": "$1.css",
       "@linode/api-v4/lib(.*)$": "<rootDir>/../api-v4/src/$1",
       "@linode/validation/lib(.*)$": "<rootDir>/../validation/src/$1",
       "@linode/api-v4": "<rootDir>/../api-v4/src/index.ts",

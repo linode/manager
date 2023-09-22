@@ -10,13 +10,17 @@ import {
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  CombinedProps,
   LongviewClients,
+  LongviewClientsCombinedProps,
   filterLongviewClientsByQuery,
   sortClientsBy,
   sortFunc,
 } from './LongviewClients';
 import { LongviewLanding } from './LongviewLanding';
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 jest.mock('../request');
 jest.mock('./LongviewClientRow');
@@ -30,7 +34,7 @@ const arrayToData = (data: any[]): Record<string, LongviewClient> => {
   }, {});
 };
 
-const props: CombinedProps = {
+const props: LongviewClientsCombinedProps = {
   activeSubscription: longviewSubscriptionFactory.build(),
   createLongviewClient: jest.fn().mockResolvedValue({}),
   deleteLongviewClient: jest.fn(),
@@ -121,6 +125,7 @@ describe('Longview clients list view', () => {
     const { queryAllByTestId } = renderWithTheme(
       <LongviewClients {...props} />
     );
+
     expect(queryAllByTestId('longview-client-row')).toHaveLength(
       clients.length
     );
