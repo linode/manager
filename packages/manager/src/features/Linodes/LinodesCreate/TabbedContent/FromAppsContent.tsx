@@ -30,6 +30,7 @@ import {
 import { StyledGrid } from './CommonTabbedContent.styles';
 import { filterUDFErrors } from './formUtilities';
 
+import type { FlagSet } from 'src/featureFlags';
 import type { AppCategory } from 'src/features/OneClickApps/types';
 
 const appCategories = [
@@ -64,6 +65,7 @@ const errorResources = {
 };
 
 interface Props {
+  flags: FlagSet;
   setNumberOfNodesForAppCluster: (num: number) => void;
 }
 
@@ -143,6 +145,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
       availableStackScriptImages: compatibleImages,
       availableUserDefinedFields: userDefinedFields,
       errors,
+      flags,
       selectedImageID,
       selectedStackScriptID,
       selectedStackScriptLabel,
@@ -238,6 +241,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
             appInstancesLoading={appInstancesLoading}
             disabled={userCannotCreateLinode}
             error={hasErrorFor('stackscript_id')}
+            flags={flags}
             handleClick={handleSelectStackScript}
             isFiltering={isFiltering}
             isSearching={isSearching}

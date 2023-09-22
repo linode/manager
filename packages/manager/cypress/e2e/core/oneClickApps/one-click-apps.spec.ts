@@ -32,7 +32,7 @@ describe('OneClick Apps (OCA)', () => {
     cleanUp(['linodes']);
   });
 
-  it('Lists all the OneClick Apps', () => {
+  it('Lists all the OneClick Apps, by category, and ensure their respective drawer open', () => {
     interceptGetStackScripts().as('getStackScripts');
     interceptFeatureFlags().as('getFeatureFlags');
 
