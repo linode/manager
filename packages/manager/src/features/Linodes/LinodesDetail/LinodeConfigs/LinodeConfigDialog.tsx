@@ -363,6 +363,7 @@ export const LinodeConfigDialog = (props: Props) => {
       scrollErrorIntoView('linode-config-dialog');
     };
 
+    console.log(configData);
     /** Editing */
     if (config) {
       return updateConfig(configData).then(handleSuccess).catch(handleError);
@@ -867,6 +868,9 @@ export const LinodeConfigDialog = (props: Props) => {
                       ipamError={
                         formik.errors[`interfaces[${idx}].ipam_address`]
                       }
+                      subnetError={
+                        formik.errors[`interfaces[${idx}].subnet_id`]
+                      }
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
@@ -879,6 +883,7 @@ export const LinodeConfigDialog = (props: Props) => {
                       subnetLabel={thisInterface.subnetLabel}
                       vpcId={thisInterface.vpc_id}
                       vpcIpv4={thisInterface.ipv4?.vpc}
+                      vpcLabel={thisInterface.vpcLabel}
                     />
                   );
                 })}

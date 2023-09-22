@@ -26,10 +26,12 @@ export interface Props {
   readOnly: boolean;
   region?: string;
   slotNumber: number;
+  subnetError?: string;
   subnetId?: null | number;
   subnetLabel: null | string;
   vpcId?: null | number;
   vpcIpv4?: null | string;
+  vpcLabel?: null | string;
 }
 
 // To allow for empty slots, which the API doesn't account for
@@ -38,6 +40,7 @@ export interface ExtendedInterface
   extends Partial<Omit<InterfacePayload, 'purpose'>> {
   purpose: ExtendedPurpose;
   subnetLabel?: null | string;
+  vpcLabel?: null | string;
 }
 
 export const InterfaceSelect = (props: Props) => {
@@ -55,10 +58,12 @@ export const InterfaceSelect = (props: Props) => {
     readOnly,
     region,
     slotNumber,
+    subnetError,
     subnetId,
     subnetLabel,
     vpcId,
     vpcIpv4,
+    vpcLabel,
   } = props;
 
   const [newVlan, setNewVlan] = React.useState('');
@@ -142,40 +147,47 @@ export const InterfaceSelect = (props: Props) => {
   const handleVPCLabelChange = (selected: Item<string>) =>
     handleChange({
       ipam_address: null,
-      label: selected?.value ?? '',
+      label: null,
       purpose,
       subnet_id: null,
       vpc_id: selected?.id,
+      vpcLabel: selected?.value ?? '',
     });
 
   const handleSubnetChange = (selected: Item<string>) =>
     handleChange({
       ipam_address: null,
-      label,
+      label: null,
       purpose,
       subnet_id: selected?.subnet_id,
       subnetLabel: selected?.value,
       vpc_id: vpcId,
+      vpcLabel,
     });
 
-  const handleVpcIpv4Input = (e: React.ChangeEvent<HTMLInputElement>) =>
-    handleChange({
+  const handleVpcIpv4Input = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const changeObj = {
       ipam_address: null,
       ipv4: {
-        nat_1_1: autoAssignLinodeIpv4 ? 'any' : '',
         vpc: e.target.value,
       },
-      label,
+      label: null,
       purpose,
       subnet_id: subnetId,
       subnetLabel,
       vpc_id: vpcId,
-    });
+      vpcLabel,
+    };
+    if (autoAssignLinodeIpv4) {
+      changeObj.ipv4.nat_1_1 = 'any';
+    }
+    handleChange(changeObj);
+  };
 
   React.useEffect(() => {
     const changeObj = {
       ipam_address: null,
-      label,
+      label: null,
       purpose,
       subnet_id: subnetId,
       subnetLabel,
@@ -334,7 +346,7 @@ export const InterfaceSelect = (props: Props) => {
                 }
                 creatable
                 createOptionPosition="first"
-                errorText={labelError}
+                errorText={subnetError}
                 inputId={`subnet-label-${slotNumber}`}
                 isClearable
                 isDisabled={readOnly}
