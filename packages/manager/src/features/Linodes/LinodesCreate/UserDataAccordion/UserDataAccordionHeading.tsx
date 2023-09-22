@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -28,7 +27,7 @@ export const UserDataAccordionHeading = (props: Props) => {
   return (
     <>
       <Box display="flex">
-        Add User Data <BetaChip component="span" />
+        Add User Data
         <TooltipIcon
           text={
             <>
