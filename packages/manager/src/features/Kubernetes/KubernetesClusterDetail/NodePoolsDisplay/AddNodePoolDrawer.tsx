@@ -205,9 +205,20 @@ export const AddNodePoolDrawer = (props: Props) => {
               spacingBottom={16}
               spacingTop={8}
               text={nodeWarning}
-              variant="error"
+              variant="warning"
             />
           )}
+
+        {selectedTypeInfo && totalPrice === 'unknown' && (
+          <Notice
+            text={
+              'There was an error retrieving prices. Please relead and try again'
+            }
+            spacingBottom={16}
+            spacingTop={8}
+            variant="error"
+          />
+        )}
 
         <Box
           alignItems="center"
@@ -216,7 +227,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           flexDirection="row"
           justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
         >
-          {selectedTypeInfo && (
+          {selectedTypeInfo && totalPrice !== 'unknown' && (
             <Typography className={classes.priceDisplay}>
               This pool will add{' '}
               <strong>

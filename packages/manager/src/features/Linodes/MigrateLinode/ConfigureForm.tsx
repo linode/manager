@@ -3,6 +3,7 @@ import * as React from 'react';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 import { Flag } from 'src/components/Flag';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -92,8 +93,8 @@ export const ConfigureForm = React.memo((props: Props) => {
 
       return {
         backups: backupPriceDisplay(region),
-        hourly: regionPrice?.hourly ?? 'unknown',
-        monthly: regionPrice?.monthly ?? 'unknown',
+        hourly: regionPrice?.hourly,
+        monthly: regionPrice?.monthly,
         panelType,
       };
     },
@@ -148,6 +149,16 @@ export const ConfigureForm = React.memo((props: Props) => {
           )}
         </StyledMigrationBox>
       </StyledMigrationContainer>
+      {!currentRegionPrice && selectedRegion && (
+        <Notice
+          text={
+            'There was an error retrieving prices. Please relead and try again'
+          }
+          spacingBottom={16}
+          spacingTop={8}
+          variant="error"
+        />
+      )}
     </StyledPaper>
   );
 });

@@ -53,10 +53,18 @@ export const BackupLinodeRow = (props: Props) => {
       {flags.dcSpecificPricing && (
         <TableCell parentColumn="Region">{regionLabel ?? 'Unknown'}</TableCell>
       )}
-      <TableCell parentColumn="Price">
+      <TableCell
+        errorText={
+          !backupsMonthlyPrice
+            ? 'There was an error loading the price.'
+            : undefined
+        }
+        errorCell={!Boolean(backupsMonthlyPrice)}
+        parentColumn="Price"
+      >
         {backupsMonthlyPrice
           ? `$${backupsMonthlyPrice?.toFixed(2)}/mo`
-          : '$Unknown/mo'}
+          : '$--.--/mo'}
       </TableCell>
     </TableRow>
   );

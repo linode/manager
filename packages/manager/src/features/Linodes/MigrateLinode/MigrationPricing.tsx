@@ -13,8 +13,8 @@ import type { MigratePricePanelType } from './ConfigureForm';
 
 export interface MigrationPricingProps {
   backups: 'disabled' | PriceObject | undefined;
-  hourly: 'unknown' | null | number | undefined;
-  monthly: 'unknown' | null | number | undefined;
+  hourly: null | number | undefined;
+  monthly: null | number | undefined;
   panelType: MigratePricePanelType;
 }
 

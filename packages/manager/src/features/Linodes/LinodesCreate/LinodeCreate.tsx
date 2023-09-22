@@ -32,11 +32,11 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -56,6 +56,7 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AddonsPanel } from './AddonsPanel';
@@ -88,7 +89,6 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
-import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 export interface LinodeCreateProps {
   checkValidation: LinodeCreateValidation;
@@ -298,8 +298,8 @@ export class LinodeCreate extends React.PureComponent<
 
       if (this.props.createType === 'fromApp' && this.state.numberOfNodes > 0) {
         const { hourlyPrice, monthlyPrice } = getMonthlyAndHourlyNodePricing(
-          typeDisplayInfoCopy.monthly,
-          typeDisplayInfoCopy.hourly,
+          typeDisplayInfoCopy?.monthly,
+          typeDisplayInfoCopy?.hourly,
           this.state.numberOfNodes
         );
 

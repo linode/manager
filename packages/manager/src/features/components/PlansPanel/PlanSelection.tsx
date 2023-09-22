@@ -153,11 +153,17 @@ export const PlanSelection = (props: Props) => {
             )}
           </TableCell>
           <TableCell data-qa-monthly> ${price?.monthly}</TableCell>
-          <TableCell data-qa-hourly>
+          <TableCell
+            errorText={
+              !price ? 'There was an error loading the price.' : undefined
+            }
+            data-qa-hourly
+            errorCell={!price}
+          >
             {isGPU ? (
-              <Currency quantity={price?.hourly ?? 'unknown'} />
+              <Currency quantity={price?.hourly ?? '--.--'} />
             ) : (
-              `$${price?.hourly ?? 'unknown'}`
+              `$${price?.hourly ?? '--.--'}`
             )}
           </TableCell>
           <TableCell center data-qa-ram noWrap>

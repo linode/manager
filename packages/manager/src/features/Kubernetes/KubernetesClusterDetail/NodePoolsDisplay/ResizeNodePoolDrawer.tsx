@@ -99,7 +99,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   const pricePerNode = flags.dcSpecificPricing
     ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly
-    : planType?.price.monthly ?? 'unknown';
+    : planType?.price.monthly;
 
   const totalMonthlyPrice =
     planType &&
@@ -125,11 +125,13 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         }}
       >
         <div className={classes.section}>
-          <Typography className={classes.summary}>
-            Current pool: ${totalMonthlyPrice}/month (
-            {pluralize('node', 'nodes', nodePool.count)} at ${pricePerNode}
-            /month)
-          </Typography>
+          {totalMonthlyPrice && (
+            <Typography className={classes.summary}>
+              Current pool: ${totalMonthlyPrice}/month (
+              {pluralize('node', 'nodes', nodePool.count)} at ${pricePerNode}
+              /month)
+            </Typography>
+          )}
         </div>
 
         {error && <Notice text={error?.[0].reason} variant="error" />}
@@ -146,14 +148,13 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         </div>
 
         <div className={classes.section}>
-          <Typography className={classes.summary}>
-            Resized pool: $
-            {pricePerNode && pricePerNode !== 'unknown'
-              ? updatedCount * pricePerNode
-              : 'unknown'}
-            /month ({pluralize('node', 'nodes', updatedCount)} at $
-            {pricePerNode}/month)
-          </Typography>
+          {pricePerNode && (
+            <Typography className={classes.summary}>
+              {`Resized pool: $${updatedCount * pricePerNode} /month`} (
+              {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}
+              /month)
+            </Typography>
+          )}
         </div>
 
         {updatedCount < nodePool.count && (
@@ -162,6 +163,17 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         {updatedCount < 3 && (
           <Notice important text={nodeWarning} variant="warning" />
+        )}
+
+        {nodePool.count && (!pricePerNode || !totalMonthlyPrice) && (
+          <Notice
+            text={
+              'There was an error retrieving prices. Please relead and try again'
+            }
+            spacingBottom={16}
+            spacingTop={8}
+            variant="error"
+          />
         )}
 
         <ActionsPanel

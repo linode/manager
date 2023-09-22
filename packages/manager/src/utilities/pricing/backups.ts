@@ -80,7 +80,7 @@ export const getTotalBackupsPrice = ({
     const type = types.find((type) => type.id === linode.type);
 
     if (!type) {
-      return 'unknown';
+      return undefined;
     }
 
     // TODO: M3-7063 (defaults)

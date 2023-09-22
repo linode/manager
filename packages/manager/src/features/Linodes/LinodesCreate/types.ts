@@ -19,8 +19,8 @@ export interface ExtendedLinode extends Linode {
 export type TypeInfo =
   | {
       details: string;
-      hourly: 'unknown' | null | number;
-      monthly: 'unknown' | null | number;
+      hourly: null | number | undefined;
+      monthly: null | number | undefined;
       title: string | undefined;
     }
   | undefined;

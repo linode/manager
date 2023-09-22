@@ -503,8 +503,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     return {
       details: `$${linodePrice?.monthly}/month`,
-      hourly: linodePrice?.hourly ?? 'unknown',
-      monthly: linodePrice?.monthly ?? 'unknown',
+      hourly: linodePrice?.hourly,
+      monthly: linodePrice?.monthly,
       title: type?.formattedLabel,
     };
   };

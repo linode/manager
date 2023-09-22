@@ -17,12 +17,10 @@ export const Currency = (props: CurrencyFormatterProps) => {
     style: 'currency',
   });
 
-  const formattedQuantity =
-    quantity !== 'unknown' && isNumber(quantity)
-      ? formatter.format(Math.abs(quantity))
-      : quantity;
-  const isNegative =
-    quantity !== 'unknown' && isNumber(quantity) ? quantity < 0 : false;
+  const formattedQuantity = isNumber(quantity)
+    ? formatter.format(Math.abs(quantity))
+    : quantity;
+  const isNegative = isNumber(quantity) ? quantity < 0 : false;
 
   let output;
 

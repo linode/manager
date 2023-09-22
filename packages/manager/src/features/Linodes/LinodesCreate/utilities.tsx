@@ -88,19 +88,15 @@ export const gpuPlanText = (useTypography?: boolean): JSX.Element => {
 };
 
 export const getMonthlyAndHourlyNodePricing = (
-  monthlyPrice: 'unknown' | null | number,
-  hourlyPrice: 'unknown' | null | number,
+  monthlyPrice: null | number | undefined,
+  hourlyPrice: null | number | undefined,
   numberOfNodes: number
 ) => {
   return {
-    hourlyPrice:
-      hourlyPrice && hourlyPrice !== 'unknown'
-        ? Math.round(hourlyPrice * numberOfNodes * 1000) / 1000
-        : hourlyPrice,
-    monthlyPrice:
-      monthlyPrice && monthlyPrice !== 'unknown'
-        ? monthlyPrice * numberOfNodes
-        : monthlyPrice,
+    hourlyPrice: hourlyPrice
+      ? Math.round(hourlyPrice * numberOfNodes * 1000) / 1000
+      : hourlyPrice,
+    monthlyPrice: monthlyPrice ? monthlyPrice * numberOfNodes : monthlyPrice,
   };
 };
 
