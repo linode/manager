@@ -169,8 +169,6 @@ const getInterface = (configs: Config[], subnetId: number) => {
   return undefined;
 };
 
-// Realistically at this point, configInterface will not be undefined, but since getInterface
-// technically may return an undefined, we need to include that type here too
 const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
   return (
     <>
