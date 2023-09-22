@@ -63,6 +63,7 @@ export const SubnetAssignLinodesDrawer = (
   } = useUnassignLinode();
   const csvRef = React.useRef<any>();
   const newInterfaceId = React.useRef<number>(-1);
+  const removedLinodeId = React.useRef<number>(-1);
   const formattedDate = useFormattedDate();
 
   const [assignLinodesErrors, setAssignLinodesErrors] = React.useState<
@@ -171,6 +172,7 @@ export const SubnetAssignLinodesDrawer = (
 
   const handleUnassignLinode = async (data: LinodeAndConfigData) => {
     const { configId, id: linodeId, interfaceId } = data;
+    removedLinodeId.current = linodeId;
     try {
       await unassignLinode({
         configId,
@@ -179,11 +181,6 @@ export const SubnetAssignLinodesDrawer = (
         subnetId: subnet?.id ?? -1,
         vpcId,
       });
-      setAssignedLinodesAndConfigData(
-        [...assignedLinodesAndConfigData].filter(
-          (linode) => linode.id !== linodeId
-        )
-      );
     } catch (errors) {
       setUnassignLinodesErrors(errors as APIError[]);
     }
@@ -279,6 +276,22 @@ export const SubnetAssignLinodesDrawer = (
     setValues,
   ]);
 
+  React.useEffect(() => {
+    if (
+      removedLinodeId.current !== -1 &&
+      !subnet?.linodes.includes(removedLinodeId.current) &&
+      !!assignedLinodesAndConfigData.find(
+        (data) => data.id === removedLinodeId.current
+      )
+    ) {
+      setAssignedLinodesAndConfigData(
+        [...assignedLinodesAndConfigData].filter(
+          (linode) => linode.id !== removedLinodeId.current
+        )
+      );
+    }
+  }, [subnet, assignedLinodesAndConfigData]);
+
   const getLinodeConfigData = React.useCallback(
     async (linode: Linode | null) => {
       if (linode) {
@@ -315,11 +328,11 @@ export const SubnetAssignLinodesDrawer = (
 
   return (
     <Drawer
-      onClose={handleOnClose}
-      open={open}
       title={`Assign Linodes to subnet: ${subnet?.label} (${
         subnet?.ipv4 ?? subnet?.ipv6
       })`}
+      onClose={handleOnClose}
+      open={open}
     >
       {userCannotAssignLinodes && (
         <Notice
