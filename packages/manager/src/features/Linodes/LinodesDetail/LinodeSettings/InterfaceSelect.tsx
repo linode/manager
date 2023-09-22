@@ -26,11 +26,11 @@ export interface Props {
   readOnly: boolean;
   region?: string;
   slotNumber: number;
-  subnetError?: string;
   subnetId?: null | number;
   subnetLabel: null | string;
   vpcId?: null | number;
   vpcIpv4?: null | string;
+  vpcIpv4Error?: string;
   vpcLabel?: null | string;
 }
 
@@ -58,11 +58,11 @@ export const InterfaceSelect = (props: Props) => {
     readOnly,
     region,
     slotNumber,
-    subnetError,
     subnetId,
     subnetLabel,
     vpcId,
     vpcIpv4,
+    vpcIpv4Error,
     vpcLabel,
   } = props;
 
@@ -192,10 +192,9 @@ export const InterfaceSelect = (props: Props) => {
       subnet_id: subnetId,
       subnetLabel,
       vpc_id: vpcId,
+      vpcLabel,
     };
-    console.log(
-      `autoAssignVpcIpv4: ${autoAssignVpcIpv4}, autoAssignLinodeIpv4: ${autoAssignLinodeIpv4}`
-    );
+
     if (!autoAssignVpcIpv4 && autoAssignLinodeIpv4) {
       handleChange({
         ...changeObj,
@@ -321,9 +320,11 @@ export const InterfaceSelect = (props: Props) => {
                 noOptionsMessage={() =>
                   vpcsLoading ? 'Loading...' : 'You have no VPCs.'
                 }
+                value={
+                  vpcOptions?.find((vpc) => vpc.value === vpcLabel) ?? null
+                }
                 creatable
                 createOptionPosition="first"
-                errorText={labelError}
                 inputId={`vpc-label-${slotNumber}`}
                 isClearable
                 isDisabled={readOnly}
@@ -331,7 +332,6 @@ export const InterfaceSelect = (props: Props) => {
                 onChange={handleVPCLabelChange}
                 options={vpcOptions}
                 placeholder="Select a VPC"
-                value={vpcOptions?.find((vpc) => vpc.value === label) ?? null}
               />
             </Grid>
             <Grid sx={{ paddingBottom: 2 }}>
@@ -346,7 +346,6 @@ export const InterfaceSelect = (props: Props) => {
                 }
                 creatable
                 createOptionPosition="first"
-                errorText={subnetError}
                 inputId={`subnet-label-${slotNumber}`}
                 isClearable
                 isDisabled={readOnly}
@@ -371,6 +370,7 @@ export const InterfaceSelect = (props: Props) => {
             {!autoAssignVpcIpv4 && (
               <Grid>
                 <TextField
+                  errorText={vpcIpv4Error}
                   label="VPC IPv4"
                   onChange={handleVpcIpv4Input}
                   value={vpcIpv4}

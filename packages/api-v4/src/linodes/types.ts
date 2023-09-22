@@ -266,7 +266,7 @@ export interface Disk {
 export type DiskStatus = 'ready' | 'not ready' | 'deleting';
 
 export interface LinodeConfigCreationData {
-  label: string;
+  label?: string;
   devices: Devices;
   initrd: string | number | null;
   kernel?: string;
