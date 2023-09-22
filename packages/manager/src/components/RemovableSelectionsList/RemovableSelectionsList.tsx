@@ -89,7 +89,7 @@ export const RemovableSelectionsList = (props: Props) => {
 const StyledNoAssignedLinodesBox = styled(Box, {
   label: 'StyledNoAssignedLinodesBox',
 })(({ theme }) => ({
-  background: theme.bg.main,
+  background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   display: 'flex',
   flexDirection: 'column',
   height: '52px',
@@ -111,7 +111,7 @@ const SelectedOptionsHeader = styled('h4', {
 const SelectedOptionsList = styled(List, {
   label: 'SelectedOptionsList',
 })(({ theme }) => ({
-  background: theme.bg.main,
+  background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   maxHeight: '450px',
   maxWidth: '416px',
   overflow: 'auto',

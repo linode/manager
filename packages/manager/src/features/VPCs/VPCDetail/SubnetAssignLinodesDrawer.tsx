@@ -160,11 +160,7 @@ export const SubnetAssignLinodesDrawer = (
       });
     } catch (errors) {
       const errorMap = getErrorMap(['ipv4.vpc'], errors);
-      const errorMessage = determineErrorMessage(
-        selectedLinode,
-        configId,
-        errorMap
-      );
+      const errorMessage = determineErrorMessage(configId, errorMap);
 
       setAssignLinodesErrors({ ...errorMap, none: errorMessage });
     }
@@ -190,18 +186,13 @@ export const SubnetAssignLinodesDrawer = (
     setAutoAssignIPv4(!autoAssignIPv4);
   };
 
-  // Helper function to determine the error message based on selectedLinode and configId
+  // Helper function to determine the error message based on the configId
   const determineErrorMessage = (
-    selectedLinode: Linode | null,
     configId: number,
     errorMap: Record<string, string | undefined>
   ) => {
-    if (!selectedLinode) {
-      return 'No Linode selected';
-    } else if (configId === -1) {
-      return linodeConfigs.length === 0
-        ? 'Selected Linode must have at least one configuration profile'
-        : 'No configuration profile selected';
+    if (configId === -1) {
+      return 'Selected Linode must have at least one configuration profile';
     }
     return errorMap.none;
   };
@@ -277,13 +268,16 @@ export const SubnetAssignLinodesDrawer = (
   ]);
 
   React.useEffect(() => {
-    if (
+    // if a linode is not assigned to the subnet but is in assignedLinodesAndConfigData,
+    // we want to remove it from assignedLinodesAndConfigData
+    const isLinodeToRemoveValid =
       removedLinodeId.current !== -1 &&
       !subnet?.linodes.includes(removedLinodeId.current) &&
       !!assignedLinodesAndConfigData.find(
         (data) => data.id === removedLinodeId.current
-      )
-    ) {
+      );
+
+    if (isLinodeToRemoveValid) {
       setAssignedLinodesAndConfigData(
         [...assignedLinodesAndConfigData].filter(
           (linode) => linode.id !== removedLinodeId.current
@@ -410,8 +404,13 @@ export const SubnetAssignLinodesDrawer = (
         )}
         <StyledButtonBox>
           <Button
+            disabled={
+              userCannotAssignLinodes ||
+              !dirty ||
+              !values.selectedLinode ||
+              (linodeConfigs.length > 1 && !values.selectedConfig)
+            }
             buttonType="primary"
-            disabled={userCannotAssignLinodes || !dirty}
             type="submit"
           >
             Assign Linode
