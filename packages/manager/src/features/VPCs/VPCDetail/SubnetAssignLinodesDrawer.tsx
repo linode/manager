@@ -37,7 +37,7 @@ import type {
 
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or somthing
-interface Props {
+interface SubnetAssignLinodesDrawerProps {
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
@@ -51,7 +51,9 @@ type LinodeAndConfigData = Linode & {
   linodeConfigLabel: string;
 };
 
-export const SubnetAssignLinodesDrawer = (props: Props) => {
+export const SubnetAssignLinodesDrawer = (
+  props: SubnetAssignLinodesDrawerProps
+) => {
   const { onClose, open, subnet, vpcId, vpcRegion } = props;
   const {
     invalidateQueries,
@@ -60,16 +62,16 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     unassignLinodesErrors,
   } = useUnassignLinode();
   const csvRef = React.useRef<any>();
+  const newInterfaceId = React.useRef<number>(-1);
   const formattedDate = useFormattedDate();
 
   const [assignLinodesErrors, setAssignLinodesErrors] = React.useState<
     Record<string, string | undefined>
   >({});
 
-  // We only want to keep track the linodes we've assigned to a subnet while this drawer is open, so
-  // we need to store that information in local state instead of using the subnet's assigned linodes
-  // (which keeps track of all linodes assigned to a subnet, not just the ones currently being assigned).
-  // If we close the drawer and then reopen it, this value should be [].
+  // While the drawer is open, we maintain a local list of assigned Linodes.
+  // This is distinct from the subnet's global list of assigned Linodes, which encompasses all assignments.
+  // The local list resets to empty when the drawer is closed and reopened.
   const [
     assignedLinodesAndConfigData,
     setAssignedLinodesAndConfigData,
@@ -115,14 +117,19 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     });
   };
 
+  // Determine the configId based on the number of configurations
+  function getConfigId(linodeConfigs: Config[], selectedConfig: Config | null) {
+    return (
+      (linodeConfigs.length > 1
+        ? selectedConfig?.id // Use selected configuration's id if available
+        : linodeConfigs[0]?.id) ?? -1 // Use the first configuration's id or -1 if no configurations
+    );
+  }
+
   const handleAssignLinode = async () => {
     const { chosenIP, selectedConfig, selectedLinode } = values;
 
-    // if a linode has multiple configs, we force the user to choose one. Otherwise,
-    // we just take the ID of the first (the only) config when assigning a linode.
-    const configId =
-      (linodeConfigs.length > 1 ? selectedConfig?.id : linodeConfigs[0]?.id) ??
-      -1;
+    const configId = getConfigId(linodeConfigs, selectedConfig);
 
     const interfacePayload: InterfacePayload = {
       ipam_address: null,
@@ -138,46 +145,27 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
         configId,
         interfacePayload
       );
+
+      // We're storing this in a ref to access this later in order
+      // to update `assignedLinodesAndConfigData` with the new
+      // interfaceId without causing a re-render
+      newInterfaceId.current = newInterface.id;
+
       await invalidateQueries({
         configId,
         linodeId: selectedLinode?.id ?? -1,
         subnetId: subnet?.id ?? -1,
         vpcId,
       });
-      resetForm();
-      setLinodeConfigs([]);
-      if (selectedLinode) {
-        setAssignedLinodesAndConfigData([
-          ...assignedLinodesAndConfigData,
-          {
-            ...selectedLinode,
-            configId,
-            interfaceId: newInterface.id,
-            linodeConfigLabel: `${selectedLinode.label}${
-              selectedConfig?.label ? ` (${selectedConfig.label})` : ''
-            }`,
-          },
-        ]);
-      }
-      setValues({
-        chosenIP: '',
-        selectedConfig: null,
-        selectedLinode: null,
-      });
     } catch (errors) {
-      // if a linode/config is not selected, the error returned isn't very friendly: it just says 'Not found', so added friendlier errors here
-      const newErrors = getErrorMap(['ipv4.vpc'], errors);
-      if (newErrors.none) {
-        if (!selectedLinode) {
-          newErrors.none = 'No Linode selected';
-        } else if (configId === -1) {
-          newErrors.none =
-            linodeConfigs.length === 0
-              ? 'Selected linode must have at least one configuration profile'
-              : 'No configuration profile selected';
-        } // no else case: leave room for other errors unrelated to unselected linode/config
-      }
-      setAssignLinodesErrors(newErrors);
+      const errorMap = getErrorMap(['ipv4.vpc'], errors);
+      const errorMessage = determineErrorMessage(
+        selectedLinode,
+        configId,
+        errorMap
+      );
+
+      setAssignLinodesErrors({ ...errorMap, none: errorMessage });
     }
   };
 
@@ -201,6 +189,26 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     }
   };
 
+  const handleAutoAssignIPv4Change = () => {
+    setAutoAssignIPv4(!autoAssignIPv4);
+  };
+
+  // Helper function to determine the error message based on selectedLinode and configId
+  const determineErrorMessage = (
+    selectedLinode: Linode | null,
+    configId: number,
+    errorMap: Record<string, string | undefined>
+  ) => {
+    if (!selectedLinode) {
+      return 'No Linode selected';
+    } else if (configId === -1) {
+      return linodeConfigs.length === 0
+        ? 'Selected Linode must have at least one configuration profile'
+        : 'No configuration profile selected';
+    }
+    return errorMap.none;
+  };
+
   const {
     dirty,
     handleSubmit,
@@ -219,6 +227,57 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  React.useEffect(() => {
+    // Return early if no Linode is selected
+    if (!values.selectedLinode) {
+      return;
+    }
+    // Check if the selected Linode is already assigned to the subnet
+    if (
+      values.selectedLinode &&
+      subnet?.linodes.includes(values.selectedLinode.id)
+    ) {
+      const configId = getConfigId(linodeConfigs, values.selectedConfig);
+
+      // Construct a new Linode data object with additional properties
+      const newLinodeData = {
+        ...values.selectedLinode,
+        configId,
+        interfaceId: newInterfaceId.current,
+        // Create a label that combines Linode label and configuration label (if available)
+        linodeConfigLabel: `${values.selectedLinode.label}${
+          values.selectedConfig?.label
+            ? ` (${values.selectedConfig.label})`
+            : ''
+        }`,
+      };
+
+      // Add the new Linode data to the list of assigned Linodes and configurations
+      setAssignedLinodesAndConfigData([
+        ...assignedLinodesAndConfigData,
+        newLinodeData,
+      ]);
+
+      // Reset the form, clear its values, and remove any previously selected Linode configurations when a Linode is chosen
+      resetForm();
+      setLinodeConfigs([]);
+      setValues({
+        chosenIP: '',
+        selectedConfig: null,
+        selectedLinode: null,
+      });
+    }
+  }, [
+    subnet,
+    assignedLinodesAndConfigData,
+    values.selectedLinode,
+    values.selectedConfig,
+    linodeConfigs,
+    resetForm,
+    setLinodeConfigs,
+    setValues,
+  ]);
 
   const getLinodeConfigData = React.useCallback(
     async (linode: Linode | null) => {
@@ -244,20 +303,19 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
     getLinodeConfigData(values.selectedLinode);
   }, [values.selectedLinode, getLinodeConfigData]);
 
-  React.useEffect(() => {
-    if (open) {
-      resetForm();
-      setAssignedLinodesAndConfigData([]);
-      setLinodeConfigs([]);
-      setAssignLinodesErrors({});
-      setUnassignLinodesErrors([]);
-      setAutoAssignIPv4(true);
-    }
-  }, [open, resetForm]);
+  const handleOnClose = () => {
+    onClose();
+    resetForm();
+    setAssignedLinodesAndConfigData([]);
+    setLinodeConfigs([]);
+    setAssignLinodesErrors({});
+    setUnassignLinodesErrors([]);
+    setAutoAssignIPv4(true);
+  };
 
   return (
     <Drawer
-      onClose={onClose}
+      onClose={handleOnClose}
       open={open}
       title={`Assign Linodes to subnet: ${subnet?.label} (${subnet?.ipv4})`}
     >
@@ -297,7 +355,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           }
           checked={autoAssignIPv4}
           disabled={userCannotAssignLinodes}
-          onChange={(_) => setAutoAssignIPv4(!autoAssignIPv4)}
+          onChange={handleAutoAssignIPv4Change}
           sx={{ marginLeft: `2px`, marginTop: `8px` }}
           text={'Auto-assign a VPC IPv4 address for this Linode'}
         />
@@ -356,7 +414,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
           ))
         : null}
       <RemovableSelectionsList
-        handleRemove={(data) => {
+        onRemove={(data) => {
           handleUnassignLinode(data as LinodeAndConfigData);
           setUnassignLinodesErrors([]);
         }}
@@ -382,7 +440,7 @@ export const SubnetAssignLinodesDrawer = (props: Props) => {
         text={'Download List of Assigned Linodes (.csv)'}
       />
       <StyledButtonBox>
-        <Button buttonType="outlined" onClick={onClose}>
+        <Button buttonType="outlined" onClick={handleOnClose}>
           Done
         </Button>
       </StyledButtonBox>
