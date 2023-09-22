@@ -1,4 +1,4 @@
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getPrice } from 'src/utilities/pricing/linodes';
 
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4/lib';
 import type { FlagSet } from 'src/featureFlags';
@@ -36,9 +36,8 @@ export const getKubernetesMonthlyPrice = ({
   }
   const thisType = types.find((t: ExtendedType) => t.id === type);
 
-  const monthlyPrice = flags.dcSpecificPricing
-    ? getLinodeRegionPrice(thisType, region)?.monthly
-    : thisType?.price.monthly;
+  const monthlyPrice = getPrice(thisType, region, flags.dcSpecificPricing)
+    ?.monthly;
 
   return monthlyPrice ? monthlyPrice * count : monthlyPrice;
 };

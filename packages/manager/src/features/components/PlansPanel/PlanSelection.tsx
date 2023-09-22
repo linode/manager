@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
@@ -85,10 +85,11 @@ export const PlanSelection = (props: Props) => {
       ? `${type.formattedLabel} this plan is too small for resize`
       : type.formattedLabel;
 
-  const price: PriceObject | undefined =
-    dcSpecificPricing && selectedRegionId
-      ? getLinodeRegionPrice(type, selectedRegionId)
-      : type?.price ?? undefined;
+  const price: PriceObject | undefined = getPrice(
+    type,
+    selectedRegionId,
+    dcSpecificPricing
+  );
 
   type.subHeadings[0] = `$${price?.monthly ?? 'unknown'}/mo ($${
     price?.hourly ?? 'unknown'

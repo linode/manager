@@ -15,7 +15,7 @@ import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../kubeUtils';
 
@@ -97,9 +97,11 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const pricePerNode = flags.dcSpecificPricing
-    ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly
-    : planType?.price.monthly;
+  const pricePerNode = getPrice(
+    planType,
+    kubernetesRegionId,
+    flags.dcSpecificPricing
+  )?.monthly;
 
   const totalMonthlyPrice =
     planType &&

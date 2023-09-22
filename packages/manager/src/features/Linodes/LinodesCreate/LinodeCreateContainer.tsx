@@ -60,7 +60,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
@@ -497,9 +497,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
     const { dcSpecificPricing, selectedRegionID } = this.state;
 
-    const linodePrice: PriceObject | undefined = dcSpecificPricing
-      ? getLinodeRegionPrice(type, selectedRegionID)
-      : type?.price ?? undefined;
+    const linodePrice: PriceObject | undefined = getPrice(
+      type,
+      selectedRegionID,
+      dcSpecificPricing
+    );
 
     return {
       details: `$${linodePrice?.monthly}/month`,

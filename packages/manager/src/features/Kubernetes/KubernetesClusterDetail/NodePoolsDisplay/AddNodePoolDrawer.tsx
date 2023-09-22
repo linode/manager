@@ -14,7 +14,7 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getPrice } from 'src/utilities/pricing/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
@@ -110,14 +110,16 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode = flags.dcSpecificPricing
-    ? getLinodeRegionPrice(selectedType, clusterRegionId)?.monthly
-    : selectedType?.price?.monthly ?? 'unknown';
+  const pricePerNode = getPrice(
+    selectedType,
+    clusterRegionId,
+    flags.dcSpecificPricing
+  )?.monthly;
 
   const totalPrice =
-    selectedTypeInfo && pricePerNode && pricePerNode !== 'unknown'
+    selectedTypeInfo && pricePerNode
       ? selectedTypeInfo.count * pricePerNode
-      : 'unknown';
+      : undefined;
 
   React.useEffect(() => {
     if (open) {
@@ -209,7 +211,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             />
           )}
 
-        {selectedTypeInfo && totalPrice === 'unknown' && (
+        {selectedTypeInfo && !totalPrice && !pricePerNode && (
           <Notice
             text={
               'There was an error retrieving prices. Please relead and try again'
@@ -227,7 +229,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           flexDirection="row"
           justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
         >
-          {selectedTypeInfo && totalPrice !== 'unknown' && (
+          {selectedTypeInfo && pricePerNode && (
             <Typography className={classes.priceDisplay}>
               This pool will add{' '}
               <strong>
