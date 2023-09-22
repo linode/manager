@@ -1,3 +1,4 @@
+import { decode } from 'he';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -161,4 +162,26 @@ export const filterOneClickApps = ({
     }
   );
   return filteredApps.map((app) => trimOneClickFromLabel(app));
+};
+
+/**
+ * This function is used to
+ * - decode the label of a StackScript
+ * - remove the "Cluster" text from the label of a StackScript since it'll turn into a chip.
+ * @param app // The StackScript
+ * @returns the decoded label of the StackScript
+ */
+export const handleAppLabel = (app: StackScript) => {
+  const decodedLabel = decode(app.label);
+  const isCluster =
+    decodedLabel.endsWith('Cluster ') &&
+    app.user_defined_fields.some((field) => field.name === 'cluster_size');
+
+  const label = isCluster ? decodedLabel.split(' Cluster')[0] : decodedLabel;
+
+  return {
+    decodedLabel,
+    isCluster,
+    label,
+  };
 };

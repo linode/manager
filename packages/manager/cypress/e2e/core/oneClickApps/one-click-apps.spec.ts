@@ -14,6 +14,10 @@ import {
   createLinodeAndGetConfig,
   createAndBootLinode,
 } from 'support/util/linode-utils';
+import {
+  filterOneClickApps,
+  handleAppLabel,
+} from '../../../../src/features/Linodes/LinodesCreate/utilities';
 import { interceptFeatureFlags } from 'support/intercepts/feature-flags';
 import { baseApps } from '../../../../src/features/StackScripts/stackScriptUtils';
 
@@ -42,22 +46,19 @@ describe('OneClick Apps (OCA)', () => {
         const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
         const newApps = flags['one-click-apps']?.value;
 
-        const allowedApps = Object.keys({
-          ...baseApps,
-          ...newApps,
-        });
-        const filteredApps = stackScripts.filter((app) => {
-          return (
-            !app.label.match(/helpers/i) && allowedApps.includes(String(app.id))
-          );
+        const trimmedApps = filterOneClickApps({
+          baseApps,
+          newApps,
+          queryResults: stackScripts,
         });
 
-        console.log('filteredApps TEST', filteredApps);
+        console.log('trimmedApps', trimmedApps);
 
         cy.findByTestId('one-click-apps-container').within(() => {
-          filteredApps.forEach((stackScript) => {
-            // console.log(stackScript);
-            // containsVisible(stackScript.label);
+          trimmedApps.forEach((stackScript) => {
+            const { label } = handleAppLabel(stackScript);
+
+            cy.get(`[data-qa-select-card-heading="${label}"]`).should('exist');
           });
         });
       });

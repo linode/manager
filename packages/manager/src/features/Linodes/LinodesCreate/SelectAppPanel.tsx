@@ -98,7 +98,10 @@ class SelectAppPanel extends React.PureComponent<Props> {
     const isFilteringOrSearching = isFiltering || isSearching;
 
     return (
-      <StyledPaper data-qa-tp="Select Image">
+      <StyledPaper
+        data-qa-tp="Select Image"
+        data-testid="one-click-apps-container"
+      >
         {error && <Notice text={error} variant="error" />}
         {!isFilteringOrSearching ? (
           <AppPanelSection
