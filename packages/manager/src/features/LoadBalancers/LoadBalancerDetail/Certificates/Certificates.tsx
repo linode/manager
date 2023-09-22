@@ -26,23 +26,6 @@ import type { Certificate, Filter } from '@linode/api-v4';
 
 const PREFERENCE_KEY = 'loadbalancer-certificates';
 
-const descriptionMap = {
-  ca: (
-    <Typography>
-      Used by the load balancer to accept responses from your endpoints in your
-      Service Target. This is the certificate installed on your Endpoints. Apply
-      these certificate(s) in the <Link to="">Service Targets</Link> Tab.
-    </Typography>
-  ),
-  downstream: (
-    <Typography>
-      Certificate used by your load balancer to terminate the connection and
-      decrypt request from client. Apply these certificate(s) in the Details
-      section of your HTTPS <Link to="">Configuration</Link>.
-    </Typography>
-  ),
-};
-
 export const Certificates = () => {
   const { loadbalancerId, type } = useParams<{
     loadbalancerId: string;
@@ -101,7 +84,27 @@ export const Certificates = () => {
 
   return (
     <Stack paddingTop={1} spacing={2}>
-      {descriptionMap[certType]}
+      {certType === 'ca' ? (
+        <Typography>
+          Used by the load balancer to accept responses from your endpoints in
+          your Service Target. This is the certificate installed on your
+          Endpoints. Apply these certificate(s) in the{' '}
+          <Link to={`/loadbalancers/${loadbalancerId}/service-targets`}>
+            Service Targets
+          </Link>{' '}
+          Tab.
+        </Typography>
+      ) : (
+        <Typography>
+          Certificate used by your load balancer to terminate the connection and
+          decrypt request from client. Apply these certificate(s) in the Details
+          section of your HTTPS{' '}
+          <Link to={`/loadbalancers/${loadbalancerId}/configurations`}>
+            Configuration
+          </Link>
+          .
+        </Typography>
+      )}
       <Table>
         <TableHead>
           <TableRow>
