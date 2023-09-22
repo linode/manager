@@ -20,7 +20,7 @@ describe('RulesTable', () => {
     expect(screen.getByText('Match Value')).toBeInTheDocument();
     expect(screen.getByText('Match Type')).toBeInTheDocument();
     expect(screen.getByText('Service Targets')).toBeInTheDocument();
-    expect(screen.getByText('Session Stickyness')).toBeInTheDocument();
+    expect(screen.getByText('Session Stickiness')).toBeInTheDocument();
   });
 
   it('renders empty table when no rules are provided', () => {
