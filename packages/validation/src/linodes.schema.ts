@@ -155,7 +155,7 @@ export const linodeInterfaceSchema = object().shape({
   }),
   ipam_address: string().when('purpose', {
     is: 'vlan',
-    then: string().notRequired().test({
+    then: string().notRequired().nullable().test({
       name: 'validateIPAM',
       message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
       test: validateIP,
