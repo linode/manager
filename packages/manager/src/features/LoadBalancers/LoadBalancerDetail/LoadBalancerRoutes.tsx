@@ -1,5 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { IconButton } from '@mui/material';
+import { Hidden, IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -75,8 +75,12 @@ export const LoadBalancerRoutes = () => {
     return routes.data?.map(({ id, label, protocol, rules }) => {
       const OuterTableCells = (
         <>
-          <TableCell>{rules?.length}</TableCell>
-          <TableCell>{protocol?.toLocaleUpperCase()}</TableCell>
+          <Hidden smDown>
+            <TableCell>{rules?.length}</TableCell>
+          </Hidden>
+          <Hidden smDown>
+            <TableCell>{protocol?.toLocaleUpperCase()}</TableCell>{' '}
+          </Hidden>
           <TableCell actionCell>
             {/**
              * TODO: AGLB: The Add Rule behavior should be implemented in future AGLB tickets.
@@ -118,22 +122,26 @@ export const LoadBalancerRoutes = () => {
       >
         Route Label
       </TableSortCell>
-      <TableSortCell
-        active={orderBy === 'rules'}
-        direction={order}
-        handleClick={handleOrderChange}
-        label="rules"
-      >
-        Rules
-      </TableSortCell>
-      <TableSortCell
-        active={orderBy === 'protocol'}
-        direction={order}
-        handleClick={handleOrderChange}
-        label="protocol"
-      >
-        Protocol
-      </TableSortCell>
+      <Hidden smDown>
+        <TableSortCell
+          active={orderBy === 'rules'}
+          direction={order}
+          handleClick={handleOrderChange}
+          label="rules"
+        >
+          Rules
+        </TableSortCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableSortCell
+          active={orderBy === 'protocol'}
+          direction={order}
+          handleClick={handleOrderChange}
+          label="protocol"
+        >
+          Protocol
+        </TableSortCell>
+      </Hidden>
       <TableCell></TableCell>
     </TableRow>
   );
