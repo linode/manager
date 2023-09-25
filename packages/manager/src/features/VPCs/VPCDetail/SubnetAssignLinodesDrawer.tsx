@@ -79,6 +79,14 @@ export const SubnetAssignLinodesDrawer = (
   const [linodeConfigs, setLinodeConfigs] = React.useState<Config[]>([]);
   const [autoAssignIPv4, setAutoAssignIPv4] = React.useState<boolean>(true);
 
+  // We only want the linodes from the same region as the VPC
+  const { data: linodes, refetch: getCSVData } = useAllLinodesQuery(
+    {},
+    {
+      region: vpcRegion,
+    }
+  );
+
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
@@ -101,23 +109,17 @@ export const SubnetAssignLinodesDrawer = (
     csvRef.current.link.click();
   };
 
-  // We only want the linodes from the same region as the VPC
-  const { data: linodes, refetch: getCSVData } = useAllLinodesQuery(
-    {},
-    {
-      region: vpcRegion,
-    }
-  );
-
-  //const [linodeOptionsToAssign, setLinodeOptionsToAssign] = React.useState(findUnassignedLinodes() ?? []);
-
   // We need to filter to the linodes from this region that are not already
   // assigned to this subnet
-  function findUnassignedLinodes() {
+  const findUnassignedLinodes = React.useCallback(() => {
     return linodes?.filter((linode) => {
       return !subnet?.linodes.includes(linode.id);
     });
-  }
+  }, [subnet, linodes]);
+
+  const [linodeOptionsToAssign, setLinodeOptionsToAssign] = React.useState(
+    findUnassignedLinodes() ?? []
+  );
 
   // Determine the configId based on the number of configurations
   function getConfigId(linodeConfigs: Config[], selectedConfig: Config | null) {
@@ -256,6 +258,7 @@ export const SubnetAssignLinodesDrawer = (
         selectedConfig: null,
         selectedLinode: null,
       });
+      setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
     }
   }, [
     subnet,
@@ -263,8 +266,10 @@ export const SubnetAssignLinodesDrawer = (
     values.selectedLinode,
     values.selectedConfig,
     linodeConfigs,
+    findUnassignedLinodes,
     resetForm,
     setLinodeConfigs,
+    setLinodeOptionsToAssign,
     setValues,
   ]);
 
@@ -284,8 +289,14 @@ export const SubnetAssignLinodesDrawer = (
           (linode) => linode.id !== removedLinodeId.current
         )
       );
+      setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
     }
-  }, [subnet, assignedLinodesAndConfigData]);
+  }, [
+    subnet,
+    assignedLinodesAndConfigData,
+    findUnassignedLinodes,
+    setLinodeOptionsToAssign,
+  ]);
 
   const getLinodeConfigData = React.useCallback(
     async (linode: Linode | null) => {
@@ -354,7 +365,7 @@ export const SubnetAssignLinodesDrawer = (
           inputValue={values.selectedLinode?.label || ''}
           label={'Linodes'}
           // We only want to be able to assign linodes that were not already assigned to this subnet
-          options={findUnassignedLinodes() ?? []}
+          options={linodeOptionsToAssign}
           placeholder="Select Linodes or type to search"
           sx={{ marginBottom: '8px' }}
           value={values.selectedLinode || null}
