@@ -7,7 +7,7 @@ import { Button } from 'src/components/Button/Button';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { TextField } from 'src/components/TextField';
 import {
-  calculateAvailableIPv4s,
+  calculateAvailableIPv4sRFC1918,
   SubnetFieldState,
   RESERVED_IP_NUMBER,
 } from 'src/utilities/subnets';
@@ -40,7 +40,7 @@ export const SubnetNode = (props: Props) => {
   };
 
   const onIpv4Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const availIPs = calculateAvailableIPv4s(e.target.value);
+    const availIPs = calculateAvailableIPv4sRFC1918(e.target.value);
     const newSubnet = {
       ...subnet,
       ip: { availIPv4s: availIPs, ipv4: e.target.value },
@@ -90,7 +90,7 @@ export const SubnetNode = (props: Props) => {
           <FormHelperText>
             Available IP Addresses:{' '}
             {subnet.ip.availIPv4s > 4
-              ? subnet.ip.availIPv4s - RESERVED_IP_NUMBER
+              ? (subnet.ip.availIPv4s - RESERVED_IP_NUMBER).toLocaleString()
               : 0}
           </FormHelperText>
         )}

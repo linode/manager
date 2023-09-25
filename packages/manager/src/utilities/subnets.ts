@@ -63,12 +63,28 @@ export const SubnetMaskToAvailIPv4s = {
   32: 1,
 };
 
-export const calculateAvailableIPv4s = (
+export const calculateAvailableIPv4sRFC1918 = (
   address: string
 ): number | undefined => {
-  const [, mask] = address.split('/');
+  const [ip, mask] = address.split('/');
+  const [firstOctet, secondOctet] = ip.split('.');
   const ipType = determineIPType(address);
   if (ipType !== 'ipv4' || mask === '' || mask === undefined) {
+    return undefined;
+  }
+
+  const parsedMask = parseInt(mask, 10);
+  const parsedSecondOctet = parseInt(secondOctet, 10);
+
+  // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs
+  if (
+    (firstOctet !== '10' && firstOctet !== '172' && firstOctet !== '192') ||
+    (firstOctet === '10' && parsedMask < 8) ||
+    (firstOctet === '172' &&
+      (parsedSecondOctet < 16 || parsedSecondOctet > 31 || parsedMask < 12)) ||
+    (firstOctet === '192' && secondOctet === '168' && parsedMask < 16) ||
+    (firstOctet === '192' && secondOctet !== '168')
+  ) {
     return undefined;
   }
 
