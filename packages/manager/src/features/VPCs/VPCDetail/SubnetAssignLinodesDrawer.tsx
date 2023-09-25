@@ -271,10 +271,8 @@ export const SubnetAssignLinodesDrawer = (
     values.selectedLinode,
     values.selectedConfig,
     linodeConfigs,
-    findUnassignedLinodes,
     resetForm,
     setLinodeConfigs,
-    setLinodeOptionsToAssign,
     setValues,
   ]);
 
@@ -295,12 +293,7 @@ export const SubnetAssignLinodesDrawer = (
         )
       );
     }
-  }, [
-    subnet,
-    assignedLinodesAndConfigData,
-    findUnassignedLinodes,
-    setLinodeOptionsToAssign,
-  ]);
+  }, [subnet, assignedLinodesAndConfigData]);
 
   const getLinodeConfigData = React.useCallback(
     async (linode: Linode | null) => {
