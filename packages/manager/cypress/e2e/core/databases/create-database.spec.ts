@@ -8,9 +8,14 @@ import {
   mockCreateDatabase,
   mockGetDatabases,
 } from 'support/intercepts/databases';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
 import { mockGetEvents } from 'support/intercepts/events';
 import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
@@ -62,10 +67,16 @@ describe('create a database cluster, mocked data', () => {
             ? 'Dedicated CPU'
             : 'Shared CPU';
 
+        mockAppendFeatureFlags({
+          databases: makeFeatureFlagData(true),
+        }).as('getFeatureFlags');
+        mockGetFeatureFlagClientstream().as('getClientstream');
         mockCreateDatabase(databaseMock).as('createDatabase');
         mockGetDatabases([databaseMock]).as('getDatabases');
 
         cy.visitWithLogin('/databases/create');
+        cy.wait(['@getFeatureFlags', '@getClientstream']);
+
         ui.entityHeader
           .find()
           .should('be.visible')
