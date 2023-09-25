@@ -67,12 +67,12 @@ export const calculateAvailableIPv4sRFC1918 = (
   address: string
 ): number | undefined => {
   const [ip, mask] = address.split('/');
-  const [firstOctet, secondOctet] = ip.split('.');
   const ipType = determineIPType(address);
   if (ipType !== 'ipv4' || mask === '' || mask === undefined) {
     return undefined;
   }
 
+  const [firstOctet, secondOctet] = ip.split('.');
   const parsedMask = parseInt(mask, 10);
   const parsedSecondOctet = parseInt(secondOctet, 10);
 
