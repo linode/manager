@@ -336,7 +336,7 @@ describe('"Enable Linode Backups" banner', () => {
 
         // Confirm that "Region" column is not shown.
         // TODO: DC Pricing - M3-7073: Remove column assertions when DC pricing goes live.
-        cy.findByLabelText('List of Linodes')
+        cy.findByLabelText('List of Linodes without backups')
           .should('be.visible')
           .within(() => {
             cy.findByText('Region').should('not.exist');
@@ -432,7 +432,7 @@ describe('"Enable Linode Backups" banner', () => {
         );
 
         // Confirm that "Region" column is shown.
-        cy.findByLabelText('List of Linodes')
+        cy.findByLabelText('List of Linodes without backups')
           .should('be.visible')
           .within(() => {
             cy.findByText('Region').should('be.visible');
