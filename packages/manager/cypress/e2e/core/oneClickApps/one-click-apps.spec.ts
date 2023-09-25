@@ -1,27 +1,16 @@
-import { createLinode } from 'support/api/linodes';
 import { containsVisible } from 'support/helpers';
 import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
-import { interceptRebootLinode } from 'support/intercepts/linodes';
 import { interceptGetStackScripts } from 'support/intercepts/stackscripts';
-import {
-  interceptDeleteLinodeConfig,
-  interceptCreateLinodeConfigs,
-  interceptUpdateLinodeConfigs,
-} from 'support/intercepts/configs';
-import {
-  createLinodeAndGetConfig,
-  createAndBootLinode,
-} from 'support/util/linode-utils';
 import {
   filterOneClickApps,
   handleAppLabel,
-} from '../../../../src/features/Linodes/LinodesCreate/utilities';
+} from 'src/features/Linodes/LinodesCreate/utilities';
 import { interceptFeatureFlags } from 'support/intercepts/feature-flags';
-import { mapStackScriptLabelToOCA } from '../../../../src/features/OneClickApps/utils';
-import { baseApps } from '../../../../src/features/StackScripts/stackScriptUtils';
-import { oneClickApps } from '../../../../src/features/OneClickApps/OneClickApps';
+import { mapStackScriptLabelToOCA } from 'src/features/OneClickApps/utils';
+import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
+import { oneClickApps } from 'src/features/OneClickApps/OneClickApps';
 import type { Config, Linode, StackScript } from '@linode/api-v4';
 import { OCA } from '@src/features/OneClickApps/types';
 import type { FlagSet } from '@src/featureFlags';
