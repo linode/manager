@@ -44,6 +44,7 @@ const formatDateForTable = (
 export const createPaymentsTable = (
   doc: JSPDF,
   payment: Payment,
+  startY: number,
   timezone?: string
 ) => {
   autoTable(doc, {
@@ -63,7 +64,7 @@ export const createPaymentsTable = (
     headStyles: {
       fillColor: '#444444',
     },
-    startY: 165,
+    startY,
     styles: {
       lineWidth: 1,
     },
@@ -95,6 +96,10 @@ interface CreateInvoiceItemsTableOptions {
    * Used to add Region labels to the `Region` column
    */
   regions: Region[];
+  /**
+   * The start position of the table on the Y axis
+   */
+  startY: number;
   timezone?: string;
 }
 
@@ -104,7 +109,7 @@ interface CreateInvoiceItemsTableOptions {
 export const createInvoiceItemsTable = (
   options: CreateInvoiceItemsTableOptions
 ) => {
-  const { doc, flags, items, regions, timezone } = options;
+  const { doc, flags, items, regions, timezone, startY } = options;
 
   autoTable(doc, {
     body: items.map((item) => {
@@ -182,7 +187,7 @@ export const createInvoiceItemsTable = (
     headStyles: {
       fillColor: '#444444',
     },
-    startY: 165,
+    startY,
     styles: {
       lineWidth: 1,
     },
