@@ -399,3 +399,9 @@ export interface ResizeLinodePayload {
   /** @default true */
   allow_auto_disk_resize?: boolean;
 }
+
+export interface DeleteLinodeConfigInterfacePayload {
+  linodeId: number;
+  configId: number;
+  interfaceId: number;
+}

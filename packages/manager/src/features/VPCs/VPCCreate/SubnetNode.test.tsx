@@ -23,7 +23,7 @@ describe('SubnetNode', () => {
     await userEvent.type(subnetAddress[1], '192.0.0.0/24', { delay: 1 });
 
     expect(subnetAddress[1]).toHaveValue('192.0.0.0/24');
-    const availIps = screen.getByText('Available IP Addresses: 252');
+    const availIps = screen.getByText('Number of Available IP Addresses: 252');
     expect(availIps).toBeInTheDocument();
   });
 
@@ -41,7 +41,7 @@ describe('SubnetNode', () => {
     await userEvent.type(subnetAddress[1], '192.0.0.0', { delay: 1 });
 
     expect(subnetAddress[1]).toHaveValue('192.0.0.0');
-    const availIps = screen.queryByText('Available IP Addresses:');
+    const availIps = screen.queryByText('Number of Available IP Addresses:');
     expect(availIps).not.toBeInTheDocument();
   });
 
