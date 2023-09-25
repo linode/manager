@@ -118,8 +118,22 @@ export const LoadBalancerRoutes = () => {
       >
         Route Label
       </TableSortCell>
-      <TableCell>Rules</TableCell>
-      <TableCell>Protocol</TableCell>
+      <TableSortCell
+        active={orderBy === 'rules'}
+        direction={order}
+        handleClick={handleOrderChange}
+        label="rules"
+      >
+        Rules
+      </TableSortCell>
+      <TableSortCell
+        active={orderBy === 'protocol'}
+        direction={order}
+        handleClick={handleOrderChange}
+        label="protocol"
+      >
+        Protocol
+      </TableSortCell>
       <TableCell></TableCell>
     </TableRow>
   );

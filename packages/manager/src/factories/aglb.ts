@@ -175,7 +175,7 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
 
 export const routeFactory = Factory.Sync.makeFactory<Route>({
   id: Factory.each((i) => i),
-  label: Factory.each((i) => `route-${i}`)
+  label: Factory.each((i) => `route-${i}`),
   protocol: 'http',
   rules: [
     {
