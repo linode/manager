@@ -176,7 +176,7 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
   }
   const nonEmptyInterfaces = interfaces.filter(
     (thisInterface) => thisInterface.purpose !== 'none'
-  ) as Interface[];
+  );
 
   const removeUnnecessaryVpcState = nonEmptyInterfaces.map(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -869,29 +869,30 @@ export const LinodeConfigDialog = (props: Props) => {
                 {values.interfaces.map((thisInterface, idx) => {
                   return (
                     <InterfaceSelect
+                      errors={{
+                        ipamError:
+                          formik.errors[`interfaces[${idx}].ipam_address`],
+                        labelError: formik.errors[`interfaces[${idx}].label`],
+                        nat_1_1Error: formik.errors['ipv4.nat_1_1'],
+                        subnetError:
+                          formik.errors[`interfaces[${idx}].subnet_id`],
+                        vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
+                        vpcIpv4Error: formik.errors['ipv4.vpc'],
+                      }}
                       handleChange={(newInterface: Interface) =>
                         handleInterfaceChange(idx, newInterface)
-                      }
-                      ipamError={
-                        formik.errors[`interfaces[${idx}].ipam_address`]
-                      }
-                      subnetError={
-                        formik.errors[`interfaces[${idx}].subnet_id`]
                       }
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
-                      labelError={formik.errors[`interfaces[${idx}].label`]}
                       purpose={thisInterface.purpose}
                       readOnly={isReadOnly}
                       region={linode?.region}
                       slotNumber={idx}
                       subnetId={thisInterface.subnet_id}
                       subnetLabel={thisInterface.subnetLabel}
-                      vpcError={formik.errors[`interfaces[${idx}].vpc_id`]}
                       vpcId={thisInterface.vpc_id}
                       vpcIpv4={thisInterface.ipv4?.vpc}
-                      vpcIpv4Error={formik.errors['ipv4.vpc']}
                       vpcLabel={thisInterface.vpcLabel}
                     />
                   );

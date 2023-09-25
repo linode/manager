@@ -10,6 +10,7 @@ import * as React from 'react';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
@@ -22,23 +23,28 @@ export interface Props {
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
   ipamAddress?: null | string;
-  ipamError?: string;
   label?: null | string;
-  labelError?: string;
   purpose: ExtendedPurpose;
   readOnly: boolean;
   region?: string;
   slotNumber: number;
 }
 
-interface VpcState {
+interface VpcStateErrors {
+  ipamError?: string;
+  labelError?: string;
+  nat_1_1Error?: string;
   subnetError?: string;
+  vpcError?: string;
+  vpcIpv4Error?: string;
+}
+
+interface VpcState {
+  errors: VpcStateErrors;
   subnetId?: null | number;
   subnetLabel?: null | string;
-  vpcError?: string;
   vpcId?: null | number;
   vpcIpv4?: null | string;
-  vpcIpv4Error?: string;
   vpcLabel?: null | string;
 }
 
@@ -66,23 +72,19 @@ export const InterfaceSelect = (props: CombinedProps) => {
   );
 
   const {
+    errors,
     fromAddonsPanel,
     handleChange,
     ipamAddress,
-    ipamError,
     label,
-    labelError,
     purpose,
     readOnly,
     region,
     slotNumber,
-    subnetError,
     subnetId,
     subnetLabel,
-    vpcError,
     vpcId,
     vpcIpv4,
-    vpcIpv4Error,
     vpcLabel,
   } = props;
 
@@ -301,7 +303,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
                 }
                 creatable
                 createOptionPosition="first"
-                errorText={labelError}
+                errorText={errors.labelError}
                 inputId={`vlan-label-${slotNumber}`}
                 isClearable
                 isDisabled={readOnly}
@@ -321,7 +323,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
                   'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
                 }
                 disabled={readOnly}
-                errorText={ipamError}
+                errorText={errors.ipamError}
                 inputId={`ipam-input-${slotNumber}`}
                 label="IPAM Address"
                 onChange={handleAddressChange}
@@ -346,7 +348,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
                 }
                 creatable
                 createOptionPosition="first"
-                errorText={vpcError}
+                errorText={errors.vpcError}
                 inputId={`vpc-label-${slotNumber}`}
                 isClearable
                 isDisabled={readOnly}
@@ -368,7 +370,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
                 }
                 creatable
                 createOptionPosition="first"
-                errorText={subnetError}
+                errorText={errors.subnetError}
                 inputId={`subnet-label-${slotNumber}`}
                 isClearable
                 isDisabled={readOnly}
@@ -393,7 +395,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
             {!autoAssignVpcIpv4 && (
               <Grid>
                 <TextField
-                  errorText={vpcIpv4Error}
+                  errorText={errors.vpcIpv4Error}
                   label="VPC IPv4"
                   onChange={handleVpcIpv4Input}
                   value={vpcIpv4}
@@ -411,6 +413,13 @@ export const InterfaceSelect = (props: CombinedProps) => {
                 text="Assign a public IPv4 address for this Linode"
                 toolTipText="Assign a public IP address for this VPC via 1:1 static NAT."
               />
+              {errors.nat_1_1Error && (
+                <Notice
+                  spacingBottom={0}
+                  text={errors.nat_1_1Error}
+                  variant="error"
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>
