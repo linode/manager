@@ -109,13 +109,15 @@ export const SubnetAssignLinodesDrawer = (
     }
   );
 
+  //const [linodeOptionsToAssign, setLinodeOptionsToAssign] = React.useState(findUnassignedLinodes() ?? []);
+
   // We need to filter to the linodes from this region that are not already
   // assigned to this subnet
-  const findUnassignedLinodes = () => {
+  function findUnassignedLinodes() {
     return linodes?.filter((linode) => {
       return !subnet?.linodes.includes(linode.id);
     });
-  };
+  }
 
   // Determine the configId based on the number of configurations
   function getConfigId(linodeConfigs: Config[], selectedConfig: Config | null) {
@@ -444,7 +446,7 @@ export const SubnetAssignLinodesDrawer = (
           marginTop: 2,
           textAlign: 'left',
         }}
-        buttonType="unstyled"
+        buttonType="styledLink"
         csvRef={csvRef}
         data={assignedLinodesAndConfigData}
         filename={`linodes-assigned-${formattedDate}.csv`}

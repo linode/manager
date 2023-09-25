@@ -23,39 +23,44 @@ const diffLabelListItems = Array.from({ length: 5 }, (_, index) => {
   };
 });
 
+interface Dimensions {
+  maxHeight?: number;
+  maxWidth?: number;
+}
+const DefaultRemovableSelectionsListWrapper = (props: Dimensions) => {
+  const { maxHeight, maxWidth } = props;
+  const [data, setData] = React.useState(defaultListItems);
+
+  const handleRemove = (item: RemovableItem) => {
+    setData([...data].filter((data) => data.id !== item.id));
+  };
+
+  const resetList = () => {
+    setData([...defaultListItems]);
+  };
+
+  return (
+    <>
+      <RemovableSelectionsList
+        headerText="Linodes to remove"
+        maxHeight={maxHeight}
+        maxWidth={maxWidth}
+        noDataText="No Linodes available"
+        onRemove={handleRemove}
+        selectionData={data}
+      />
+      <Button onClick={resetList} sx={{ marginTop: 2 }}>
+        Reset list
+      </Button>
+    </>
+  );
+};
+
 /**
  * Interactable example of a RemovableSelectionsList
  */
 export const InteractableDefault: Story = {
-  render: () => {
-    const RemovableSelectionsListWrapper = () => {
-      const [data, setData] = React.useState(defaultListItems);
-
-      const handleRemove = (item: RemovableItem) => {
-        setData([...data].filter((data) => data.id !== item.id));
-      };
-
-      const resetList = () => {
-        setData([...defaultListItems]);
-      };
-
-      return (
-        <>
-          <RemovableSelectionsList
-            headerText="Linodes to remove"
-            noDataText="No Linodes available"
-            onRemove={handleRemove}
-            selectionData={data}
-          />
-          <Button onClick={resetList} sx={{ marginTop: 2 }}>
-            Reset list
-          </Button>
-        </>
-      );
-    };
-
-    return <RemovableSelectionsListWrapper />;
-  },
+  render: () => <DefaultRemovableSelectionsListWrapper />,
 };
 
 /**
@@ -94,6 +99,15 @@ export const SpecifiedLabelExample: Story = {
 
     return <SpecifiedLabelWrapper />;
   },
+};
+
+/**
+ * Example of a RemovableSelectionsList with a custom height and width
+ */
+export const CustomHeightAndWidth: Story = {
+  render: () => (
+    <DefaultRemovableSelectionsListWrapper maxHeight={300} maxWidth={200} />
+  ),
 };
 
 /**

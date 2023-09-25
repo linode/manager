@@ -9,7 +9,7 @@ import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import type { ButtonType } from 'src/components/Button/Button';
 
 interface DownloadCSVProps {
-  buttonType?: 'unstyled' | ButtonType;
+  buttonType?: 'styledLink' | ButtonType;
   children?: React.ReactNode;
   className?: string;
   csvRef?: React.RefObject<any>;
@@ -42,7 +42,7 @@ export const DownloadCSV = ({
   text = 'Download CSV',
 }: DownloadCSVProps) => {
   const renderButton =
-    buttonType === 'unstyled' ? (
+    buttonType === 'styledLink' ? (
       <StyledLinkButton onClick={onClick} sx={sx}>
         <DownloadIcon />
         {text}

@@ -7,9 +7,14 @@ import { IconButton } from 'src/components/IconButton';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 
+import { isPropValid } from 'src/utilities/isPropValid';
+
 export type RemovableItem = {
   id: number;
   label: string;
+  // The remaining key-value pairs must have their values typed
+  // as 'any' because we do not know what types they could be.
+  // Trying to type them as 'unknown' led to type errors.
 } & { [key: string]: any };
 
 interface Props {
@@ -17,6 +22,14 @@ interface Props {
    * The descriptive text to display above the list
    */
   headerText: string;
+  /**
+   * The maxHeight of the list component, in px
+   */
+  maxHeight?: number;
+  /**
+   * The maxWidth of the list component, in px
+   */
+  maxWidth?: number;
   /**
    * The text to display if there is no data
    */
@@ -40,6 +53,8 @@ interface Props {
 export const RemovableSelectionsList = (props: Props) => {
   const {
     headerText,
+    maxHeight,
+    maxWidth,
     noDataText,
     onRemove,
     preferredDataLabel,
@@ -54,7 +69,12 @@ export const RemovableSelectionsList = (props: Props) => {
     <>
       <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
       {selectionData.length > 0 ? (
-        <SelectedOptionsList>
+        <SelectedOptionsList
+          sx={{
+            maxHeight: maxHeight ? `${maxHeight}px` : '450px',
+            maxWidth: maxWidth ? `${maxWidth}px` : '416px',
+          }}
+        >
           {selectionData.map((selection) => (
             <SelectedOptionsListItem alignItems="center" key={selection.id}>
               <StyledLabel>
@@ -78,7 +98,7 @@ export const RemovableSelectionsList = (props: Props) => {
           ))}
         </SelectedOptionsList>
       ) : (
-        <StyledNoAssignedLinodesBox>
+        <StyledNoAssignedLinodesBox maxWidth={maxWidth}>
           <StyledLabel>{noDataText}</StyledLabel>
         </StyledNoAssignedLinodesBox>
       )}
@@ -88,13 +108,14 @@ export const RemovableSelectionsList = (props: Props) => {
 
 const StyledNoAssignedLinodesBox = styled(Box, {
   label: 'StyledNoAssignedLinodesBox',
-})(({ theme }) => ({
+  shouldForwardProp: (prop) => isPropValid(['maxWidth'], prop),
+})(({ theme, maxWidth }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   display: 'flex',
   flexDirection: 'column',
   height: '52px',
   justifyContent: 'center',
-  maxWidth: '416px',
+  maxWidth: maxWidth ? `${maxWidth}px` : '416px',
   paddingLeft: theme.spacing(2),
   width: '100%',
 }));
@@ -112,8 +133,6 @@ const SelectedOptionsList = styled(List, {
   label: 'SelectedOptionsList',
 })(({ theme }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
-  maxHeight: '450px',
-  maxWidth: '416px',
   overflow: 'auto',
   padding: '5px 0',
   width: '100%',
