@@ -17,6 +17,7 @@ import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
+import { getSubnetInterfaceFromConfigs } from '../utils';
 import {
   StyledTableCell,
   StyledTableHeadCell,
@@ -153,20 +154,8 @@ const getSubnetLinodeIPv4CellString = (
     return 'None';
   }
 
-  const configInterface = getInterface(configs, subnetId);
+  const configInterface = getSubnetInterfaceFromConfigs(configs, subnetId);
   return getIPv4Link(configInterface);
-};
-
-const getInterface = (configs: Config[], subnetId: number) => {
-  for (const config of configs) {
-    for (const linodeInterface of config.interfaces) {
-      if (linodeInterface.ipv4?.vpc && linodeInterface.subnet_id === subnetId) {
-        return linodeInterface;
-      }
-    }
-  }
-
-  return undefined;
 };
 
 const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
