@@ -154,6 +154,9 @@ export const InterfaceSelect = (props: CombinedProps) => {
   const handleVPCLabelChange = (selected: Item<string>) =>
     handleChange({
       ipam_address: null,
+      ipv4: {
+        vpc: autoAssignVpcIpv4 ? undefined : vpcIpv4,
+      },
       label: null,
       purpose,
       subnet_id: undefined,
@@ -164,6 +167,9 @@ export const InterfaceSelect = (props: CombinedProps) => {
   const handleSubnetChange = (selected: Item<string>) =>
     handleChange({
       ipam_address: null,
+      ipv4: {
+        vpc: autoAssignVpcIpv4 ? undefined : vpcIpv4,
+      },
       label: null,
       purpose,
       subnet_id: selected?.subnet_id,
@@ -202,6 +208,10 @@ export const InterfaceSelect = (props: CombinedProps) => {
       vpcLabel,
     };
 
+    /**
+     * If a user checks the "Auto-assign a VPC IPv4 address" box, then we send the user inputted address, otherwise we send nothing/undefined.
+     * If a user checks the "Assign a public IPv4" address box, then we send nat_1_1: 'any' to the API for auto assignment.
+     */
     if (!autoAssignVpcIpv4 && autoAssignLinodeIpv4) {
       handleChange({
         ...changeObj,
@@ -219,6 +229,10 @@ export const InterfaceSelect = (props: CombinedProps) => {
         ipv4: {
           nat_1_1: 'any',
         },
+      });
+    } else if (autoAssignVpcIpv4 && !autoAssignLinodeIpv4) {
+      handleChange({
+        ...changeObj,
       });
     } else if (!autoAssignLinodeIpv4 && !autoAssignVpcIpv4) {
       handleChange({
