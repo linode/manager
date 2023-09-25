@@ -284,3 +284,20 @@ export const interceptCreateLinodeSnapshot = (
     apiMatcher(`linode/instances/${linodeId}/backups`)
   );
 };
+
+/**
+ * Intercepts POST request to migrate a Linode.
+ *
+ * @param linodeId - Linode ID for which to mock migration.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockMigrateLinode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/migrate`),
+    {}
+  );
+};

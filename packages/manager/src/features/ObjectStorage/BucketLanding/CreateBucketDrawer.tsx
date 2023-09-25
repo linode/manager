@@ -18,11 +18,12 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import { sendCreateBucketEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 
-import EnableObjectStorageModal from '../EnableObjectStorageModal';
+import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
 
 interface Props {
@@ -34,6 +35,7 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
+  const { data: regions } = useRegionsQuery();
   const { data: clusters } = useObjectStorageClusters();
   const { data: buckets } = useObjectStorageBuckets(clusters);
   const {
@@ -96,6 +98,12 @@ export const CreateBucketDrawer = (props: Props) => {
       isEURegion(formik.values.cluster)
   );
 
+  const clusterRegion =
+    regions &&
+    regions.filter((region) => {
+      return formik.values.cluster.includes(region.id);
+    });
+
   const errorMap = getErrorMap(['label', 'cluster'], error);
 
   return (
@@ -129,6 +137,7 @@ export const CreateBucketDrawer = (props: Props) => {
           error={errorMap.cluster}
           onBlur={formik.handleBlur}
           onChange={(value) => formik.setFieldValue('cluster', value)}
+          required
           selectedCluster={formik.values.cluster}
         />
         {showAgreement ? (
@@ -142,6 +151,7 @@ export const CreateBucketDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
+            disabled: !formik.values.cluster,
             label: 'Create Bucket',
             loading: isLoading,
             type: 'submit',
@@ -153,6 +163,7 @@ export const CreateBucketDrawer = (props: Props) => {
           handleSubmit={formik.handleSubmit}
           onClose={() => setIsEnableObjDialogOpen(false)}
           open={isEnableObjDialogOpen}
+          regionId={clusterRegion?.[0]?.id}
         />
       </form>
     </Drawer>
