@@ -79,14 +79,6 @@ export const SubnetAssignLinodesDrawer = (
   const [linodeConfigs, setLinodeConfigs] = React.useState<Config[]>([]);
   const [autoAssignIPv4, setAutoAssignIPv4] = React.useState<boolean>(true);
 
-  // We only want the linodes from the same region as the VPC
-  const { data: linodes, refetch: getCSVData } = useAllLinodesQuery(
-    {},
-    {
-      region: vpcRegion,
-    }
-  );
-
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
@@ -109,6 +101,14 @@ export const SubnetAssignLinodesDrawer = (
     csvRef.current.link.click();
   };
 
+  // We only want the linodes from the same region as the VPC
+  const { data: linodes, refetch: getCSVData } = useAllLinodesQuery(
+    {},
+    {
+      region: vpcRegion,
+    }
+  );
+
   // We need to filter to the linodes from this region that are not already
   // assigned to this subnet
   const findUnassignedLinodes = React.useCallback(() => {
@@ -117,9 +117,15 @@ export const SubnetAssignLinodesDrawer = (
     });
   }, [subnet, linodes]);
 
-  const [linodeOptionsToAssign, setLinodeOptionsToAssign] = React.useState(
-    findUnassignedLinodes() ?? []
-  );
+  const [linodeOptionsToAssign, setLinodeOptionsToAssign] = React.useState<
+    Linode[]
+  >([]);
+
+  React.useEffect(() => {
+    if (linodes) {
+      setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
+    }
+  }, [linodes, setLinodeOptionsToAssign, findUnassignedLinodes]);
 
   // Determine the configId based on the number of configurations
   function getConfigId(linodeConfigs: Config[], selectedConfig: Config | null) {
@@ -258,7 +264,6 @@ export const SubnetAssignLinodesDrawer = (
         selectedConfig: null,
         selectedLinode: null,
       });
-      setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
     }
   }, [
     subnet,
@@ -289,7 +294,6 @@ export const SubnetAssignLinodesDrawer = (
           (linode) => linode.id !== removedLinodeId.current
         )
       );
-      setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
     }
   }, [
     subnet,
