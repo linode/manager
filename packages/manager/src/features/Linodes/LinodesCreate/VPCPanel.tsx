@@ -109,7 +109,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
       : 'Assign this Linode to an existing VPC.';
 
   return (
-    <Paper sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+    <Paper
+      data-testid="vpc-panel"
+      sx={(theme) => ({ marginTop: theme.spacing(3) })}
+    >
       <Typography
         sx={(theme) => ({ marginBottom: theme.spacing(2) })}
         variant="h2"
@@ -118,6 +121,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
       </Typography>
       <Stack>
         <Typography>
+          {/* @TODO VPC: Update link */}
           {mainCopyVPC} <Link to="">Learn more</Link>.
         </Typography>
         <Select
@@ -152,7 +156,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
         </StyledCreateLink>
 
         {selectedVPCId !== -1 && regionSupportsVPCs && (
-          <Stack>
+          <Stack data-testid="subnet-and-additional-options-section">
             <Select
               onChange={(selectedSubnet: Item<number, string>) =>
                 handleSubnetChange(selectedSubnet.value)
@@ -202,6 +206,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     />
                   </Box>
                 }
+                data-testid="vpc-ipv4-checkbox"
               />
             </Box>
             {!autoassignIPv4WithinVPC ? (

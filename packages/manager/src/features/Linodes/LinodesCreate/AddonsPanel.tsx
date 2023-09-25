@@ -153,8 +153,8 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   return (
     <>
-      {!flags.vpc &&
-        showVlans && ( // @TODO Delete this conditional and AttachVLAN component once VPC is released
+      {!showVPCs &&
+        showVlans && ( // @TODO VPC: Delete this conditional and AttachVLAN component once VPC is fully rolled out
           <AttachVLAN
             handleVLANChange={handleVLANChange}
             helperText={vlanDisabledReason}
@@ -166,7 +166,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             vlanLabel={vlanLabel}
           />
         )}
-      {flags.vpc && showVlans && (
+      {showVPCs && showVlans && (
         <VLANAccordion
           handleVLANChange={handleVLANChange}
           helperText={vlanDisabledReason}
@@ -246,7 +246,10 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           label="Private IP"
         />
         {showVPCs && (
-          <StyledTypography variant="body1">
+          <StyledTypography
+            data-testid="private-ip-contextual-copy"
+            variant="body1"
+          >
             Use this for a backend node to a NodeBalancer. Use VPC instead for
             private communication between your Linodes.
           </StyledTypography>

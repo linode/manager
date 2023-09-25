@@ -594,7 +594,7 @@ export class LinodeCreate extends React.PureComponent<
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
-          {displayVPCPanel ? (
+          {displayVPCPanel && (
             <VPCPanel
               toggleAssignPublicIPv4Address={
                 this.props.toggleAssignPublicIPv4Address
@@ -614,8 +614,8 @@ export class LinodeCreate extends React.PureComponent<
               vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
               vpcIPv4Error={hasErrorFor['ipv4.vpc']}
             />
-          ) : null}
-          {this.props.flags.linodeCreateWithFirewall ? (
+          )}
+          {this.props.flags.linodeCreateWithFirewall && (
             <SelectFirewallPanel
               helperText={
                 <Typography>
@@ -626,7 +626,7 @@ export class LinodeCreate extends React.PureComponent<
               }
               handleFirewallChange={this.props.handleFirewallChange}
             />
-          ) : null}
+          )}
           <AddonsPanel
             userData={{
               createType: this.props.createType,
