@@ -98,6 +98,20 @@ describe('OneClick Apps (OCA)', () => {
         ui.drawer.find().should('not.exist');
 
         // Check the filtering of the apps
+        cy.scrollTo(0, 0);
+        const initialNumberOfApps = trimmedApps.length;
+        cy.findByPlaceholderText('Search for app name')
+          .should('exist')
+          .type(candidate);
+        cy.findByTestId('one-click-apps-container').within(() => {
+          cy.get('[data-qa-selection-card="true"]').should(
+            'have.length.below',
+            initialNumberOfApps
+          );
+          cy.get(`[data-qa-selection-card-info="${candidate}"]`).should(
+            'be.visible'
+          );
+        });
       });
     });
   });

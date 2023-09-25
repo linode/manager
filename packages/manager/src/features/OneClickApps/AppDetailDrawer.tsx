@@ -124,6 +124,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
         <Button
           aria-label="Close drawer"
           className={classes.button}
+          data-qa-close-drawer
           onClick={onClose}
         >
           <Close />
