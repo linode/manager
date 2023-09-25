@@ -1,3 +1,4 @@
+import { Hidden } from '@mui/material';
 import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu';
@@ -32,11 +33,19 @@ export const RulesTable = ({ rules }: Props) => {
     <Table aria-label="Rules Table" size="small">
       <TableHead style={{ fontSize: '.875rem' }}>
         <TableRow>
-          <StyledTableHeadCell>Execution</StyledTableHeadCell>
+          <Hidden smDown>
+            <StyledTableHeadCell>Execution</StyledTableHeadCell>
+          </Hidden>
           <StyledTableHeadCell>Match Value</StyledTableHeadCell>
-          <StyledTableHeadCell>Match Type</StyledTableHeadCell>
-          <StyledTableHeadCell>Service Targets</StyledTableHeadCell>
-          <StyledTableHeadCell>Session Stickiness</StyledTableHeadCell>
+          <Hidden smDown>
+            <StyledTableHeadCell>Match Type</StyledTableHeadCell>
+          </Hidden>
+          <Hidden smDown>
+            <StyledTableHeadCell>Service Targets</StyledTableHeadCell>
+          </Hidden>
+          <Hidden smDown>
+            <StyledTableHeadCell>Session Stickiness</StyledTableHeadCell>
+          </Hidden>
           <StyledTableHeadCell></StyledTableHeadCell>
         </TableRow>
       </TableHead>
@@ -44,32 +53,40 @@ export const RulesTable = ({ rules }: Props) => {
         {rules.length > 0 ? (
           rules.map((rule, index) => (
             <StyledTableRow key={index}>
-              <StyledTableCell
-                component="th"
-                scope="row"
-                sx={{ paddingLeft: 6 }}
-              >
-                {index === 0
-                  ? 'First'
-                  : index === rules.length - 1
-                  ? 'Last'
-                  : null}
-              </StyledTableCell>
+              <Hidden smDown>
+                <StyledTableCell
+                  component="th"
+                  scope="row"
+                  sx={{ paddingLeft: 6 }}
+                >
+                  {index === 0
+                    ? 'First'
+                    : index === rules.length - 1
+                    ? 'Last'
+                    : null}
+                </StyledTableCell>
+              </Hidden>
               <StyledTableCell>
                 {rule.match_condition.match_value}
               </StyledTableCell>
-              <StyledTableCell>
-                {matchFieldMap[rule.match_condition.match_field]}
-              </StyledTableCell>
-              <StyledTableCell>
-                {rule.match_condition.service_targets.length}
-              </StyledTableCell>
-              <StyledTableCell>
-                {rule.match_condition.session_stickiness_cookie &&
-                rule.match_condition.session_stickiness_ttl
-                  ? 'Yes'
-                  : 'No'}
-              </StyledTableCell>
+              <Hidden smDown>
+                <StyledTableCell>
+                  {matchFieldMap[rule.match_condition.match_field]}
+                </StyledTableCell>
+              </Hidden>
+              <Hidden smDown>
+                <StyledTableCell>
+                  {rule.match_condition.service_targets.length}
+                </StyledTableCell>
+              </Hidden>
+              <Hidden smDown>
+                <StyledTableCell>
+                  {rule.match_condition.session_stickiness_cookie &&
+                  rule.match_condition.session_stickiness_ttl
+                    ? 'Yes'
+                    : 'No'}
+                </StyledTableCell>
+              </Hidden>
               <TableCell actionCell>
                 {/** TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets. */}
                 <ActionMenu
