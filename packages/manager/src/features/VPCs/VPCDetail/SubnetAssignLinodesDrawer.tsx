@@ -121,6 +121,9 @@ export const SubnetAssignLinodesDrawer = (
     Linode[]
   >([]);
 
+  // Moved the list of linodes that are currently assignable to a subnet into a state variable (linodeOptionsToAssign)
+  // and update that list whenever this subnet or the list of all linodes in this subnet's region changes. This takes
+  // care of the MUI invalid value warning that was occuring before in the Linodes autocomplete [M3-6752]
   React.useEffect(() => {
     if (linodes) {
       setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
