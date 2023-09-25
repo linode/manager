@@ -174,14 +174,21 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
   if (!interfaces || interfaces.length === 0) {
     return [];
   }
+  const nonEmptyInterfaces = interfaces.filter(
+    (thisInterface) => thisInterface.purpose !== 'none'
+  ) as Interface[];
+
+  const removeUnnecessaryVpcState = nonEmptyInterfaces.map(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ({ subnetLabel, vpcLabel, ...restInterface }: ExtendedInterface) =>
+      restInterface
+  );
   return equals(interfaces, defaultInterfaceList)
     ? // In this case, where eth0 is set to public interface
       // and no other interfaces are specified, the API prefers
       // to receive an empty array.
       []
-    : (interfaces.filter(
-        (thisInterface) => thisInterface.purpose !== 'none'
-      ) as Interface[]);
+    : removeUnnecessaryVpcState;
 };
 
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
@@ -337,7 +344,6 @@ export const LinodeConfigDialog = (props: Props) => {
     };
 
     const handleError = (error: APIError[]) => {
-      console.log(error);
       const mapErrorToStatus = (generalError: string) =>
         formik.setStatus({ generalError });
 
@@ -558,8 +564,7 @@ export const LinodeConfigDialog = (props: Props) => {
     },
     [setFieldValue]
   );
-  console.log(values.interfaces);
-  console.log(formik.errors);
+
   return (
     <Dialog
       fullHeight
