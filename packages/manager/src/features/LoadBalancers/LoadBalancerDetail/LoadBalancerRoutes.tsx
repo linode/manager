@@ -76,7 +76,7 @@ export const LoadBalancerRoutes = () => {
       const OuterTableCells = (
         <>
           <TableCell>{rules?.length}</TableCell>
-          <TableCell>{protocol}</TableCell>
+          <TableCell>{protocol?.toLocaleUpperCase()}</TableCell>
           <TableCell actionCell>
             {/**
              * TODO: AGLB: The Add Rule behavior should be implemented in future AGLB tickets.

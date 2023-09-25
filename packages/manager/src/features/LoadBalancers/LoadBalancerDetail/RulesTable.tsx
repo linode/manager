@@ -3,6 +3,7 @@ import React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -12,11 +13,19 @@ import {
   StyledTableRow,
 } from 'src/features/VPCs/VPCDetail/SubnetLinodeRow.styles';
 
-import type { Route } from '@linode/api-v4';
+import type { MatchField, Route } from '@linode/api-v4';
 
 interface Props {
   rules: Route['rules'];
 }
+
+const matchFieldMap: Record<MatchField, string> = {
+  header: 'HTTP Header',
+  host: 'Host',
+  method: 'HTTP Method',
+  path_prefix: 'Path',
+  query: 'Query String',
+};
 
 export const RulesTable = ({ rules }: Props) => {
   return (
@@ -50,7 +59,7 @@ export const RulesTable = ({ rules }: Props) => {
                 {rule.match_condition.match_value}
               </StyledTableCell>
               <StyledTableCell>
-                {rule.match_condition.match_field}
+                {matchFieldMap[rule.match_condition.match_field]}
               </StyledTableCell>
               <StyledTableCell>
                 {rule.match_condition.service_targets.length}
@@ -61,7 +70,7 @@ export const RulesTable = ({ rules }: Props) => {
                   ? 'Yes'
                   : 'No'}
               </StyledTableCell>
-              <StyledTableCell actionCell>
+              <TableCell actionCell>
                 {/** TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets. */}
                 <ActionMenu
                   actionsList={[
@@ -71,7 +80,7 @@ export const RulesTable = ({ rules }: Props) => {
                   ]}
                   ariaLabel={`Action Menu for Rule ${rule.match_condition.match_value}`}
                 />
-              </StyledTableCell>
+              </TableCell>
             </StyledTableRow>
           ))
         ) : (

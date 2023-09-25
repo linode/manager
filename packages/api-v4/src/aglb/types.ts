@@ -33,11 +33,15 @@ type Policy =
   | 'random'
   | 'maglev';
 
-type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
+export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
 
 export interface RoutePayload {
   label: string;
   rules: Rule[];
+}
+
+export interface ExtendedMatchCondition extends MatchCondition {
+  service_targets: { id: number; label: string; percentage: number }[];
 }
 
 export interface Route {
@@ -45,14 +49,7 @@ export interface Route {
   label: string;
   protocol: Protocol;
   rules: {
-    match_condition: {
-      hostname: string;
-      match_field: MatchField;
-      match_value: string;
-      session_stickiness_cookie: string | null;
-      session_stickiness_ttl: number | null;
-      service_targets: { id: number; label: string; percentage: number }[];
-    };
+    match_condition: ExtendedMatchCondition;
   }[];
 }
 
