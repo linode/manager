@@ -21,9 +21,9 @@ import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 export interface Props {
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
-  ipamAddress: null | string;
+  ipamAddress?: null | string;
   ipamError?: string;
-  label: null | string;
+  label?: null | string;
   labelError?: string;
   purpose: ExtendedPurpose;
   readOnly: boolean;
@@ -32,8 +32,10 @@ export interface Props {
 }
 
 interface VpcState {
+  subnetError?: string;
   subnetId?: null | number;
-  subnetLabel: null | string;
+  subnetLabel?: null | string;
+  vpcError?: string;
   vpcId?: null | number;
   vpcIpv4?: null | string;
   vpcIpv4Error?: string;
@@ -74,8 +76,10 @@ export const InterfaceSelect = (props: CombinedProps) => {
     readOnly,
     region,
     slotNumber,
+    subnetError,
     subnetId,
     subnetLabel,
+    vpcError,
     vpcId,
     vpcIpv4,
     vpcIpv4Error,
@@ -152,7 +156,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
       ipam_address: null,
       label: null,
       purpose,
-      subnet_id: null,
+      subnet_id: undefined,
       vpc_id: selected?.id,
       vpcLabel: selected?.value ?? '',
     });
@@ -328,6 +332,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
                 }
                 creatable
                 createOptionPosition="first"
+                errorText={vpcError}
                 inputId={`vpc-label-${slotNumber}`}
                 isClearable
                 isDisabled={readOnly}
@@ -349,6 +354,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
                 }
                 creatable
                 createOptionPosition="first"
+                errorText={subnetError}
                 inputId={`subnet-label-${slotNumber}`}
                 isClearable
                 isDisabled={readOnly}

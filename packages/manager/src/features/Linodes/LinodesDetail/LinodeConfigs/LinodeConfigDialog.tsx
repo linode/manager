@@ -337,7 +337,7 @@ export const LinodeConfigDialog = (props: Props) => {
     };
 
     const handleError = (error: APIError[]) => {
-      console.log(error)
+      console.log(error);
       const mapErrorToStatus = (generalError: string) =>
         formik.setStatus({ generalError });
 
@@ -870,6 +870,9 @@ export const LinodeConfigDialog = (props: Props) => {
                       ipamError={
                         formik.errors[`interfaces[${idx}].ipam_address`]
                       }
+                      subnetError={
+                        formik.errors[`interfaces[${idx}].subnet_id`]
+                      }
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
@@ -880,6 +883,7 @@ export const LinodeConfigDialog = (props: Props) => {
                       slotNumber={idx}
                       subnetId={thisInterface.subnet_id}
                       subnetLabel={thisInterface.subnetLabel}
+                      vpcError={formik.errors[`interfaces[${idx}].vpc_id`]}
                       vpcId={thisInterface.vpc_id}
                       vpcIpv4={thisInterface.ipv4?.vpc}
                       vpcIpv4Error={formik.errors['ipv4.vpc']}

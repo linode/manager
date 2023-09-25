@@ -128,78 +128,88 @@ const ipv6ConfigInterface = object().when('purpose', {
     }),
 });
 
-export const linodeInterfaceSchema = array()
-  .of(
-    object().shape({
-      purpose: mixed().oneOf(
-        ['public', 'vlan', 'vpc'],
-        'Purpose must be public, vlan, or vpc.'
+export const linodeInterfaceSchema = object().shape({
+  purpose: mixed().oneOf(
+    ['public', 'vlan', 'vpc'],
+    'Purpose must be public, vlan, or vpc.'
+  ),
+  label: string().when('purpose', {
+    is: 'vlan',
+    then: string()
+      .required('VLAN label is required.')
+      .min(1, 'VLAN label must be between 1 and 64 characters.')
+      .max(64, 'VLAN label must be between 1 and 64 characters.')
+      .matches(
+        /[a-zA-Z0-9-]+/,
+        'Must include only ASCII letters, numbers, and dashes'
       ),
-      label: string().when('purpose', {
-        is: 'vlan',
-        then: string()
-          .required('VLAN label is required.')
-          .min(1, 'VLAN label must be between 1 and 64 characters.')
-          .max(64, 'VLAN label must be between 1 and 64 characters.')
-          .matches(
-            /[a-zA-Z0-9-]+/,
-            'Must include only ASCII letters, numbers, and dashes'
-          ),
-        otherwise: string().when('label', {
-          is: null,
-          then: string().nullable(),
-          otherwise: string().test({
-            name: testnameDisallowedBasedOnPurpose('VLAN'),
-            message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
-            test: (value) => typeof value === 'undefined' || value === '',
-          }),
-        }),
+    otherwise: string().when('label', {
+      is: null,
+      then: string().nullable(),
+      otherwise: string().test({
+        name: testnameDisallowedBasedOnPurpose('VLAN'),
+        message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
+        test: (value) => typeof value === 'undefined' || value === '',
       }),
-      ipam_address: string().when('purpose', {
-        is: 'vlan',
-        then: string().notRequired().test({
-          name: 'validateIPAM',
-          message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
-          test: validateIP,
-        }),
-        otherwise: string().when('ipam_address', {
-          is: null,
-          then: string().nullable(),
-          otherwise: string().test({
-            name: testnameDisallowedBasedOnPurpose('VLAN'),
-            message: testmessageDisallowedBasedOnPurpose(
-              'vlan',
-              'ipam_address'
-            ),
-            test: (value) => typeof value === 'undefined' || value === '',
-          }),
-        }),
+    }),
+  }),
+  ipam_address: string().when('purpose', {
+    is: 'vlan',
+    then: string().notRequired().test({
+      name: 'validateIPAM',
+      message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+      test: validateIP,
+    }),
+    otherwise: string().when('ipam_address', {
+      is: null,
+      then: string().nullable(),
+      otherwise: string().test({
+        name: testnameDisallowedBasedOnPurpose('VLAN'),
+        message: testmessageDisallowedBasedOnPurpose('vlan', 'ipam_address'),
+        test: (value) => typeof value === 'undefined' || value === '',
       }),
-      primary: boolean().notRequired(),
-      subnet_id: number().when('purpose', {
-        is: 'vpc',
-        then: number().required(),
-        otherwise: number().test({
-          name: testnameDisallowedBasedOnPurpose('VPC'),
-          message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),
-          test: (value) => typeof value === 'undefined',
-        }),
+    }),
+  }),
+  primary: boolean().notRequired(),
+  subnet_id: number().when('purpose', {
+    is: 'vpc',
+    then: number().required('Subnet is required.'),
+    otherwise: number().test({
+      name: testnameDisallowedBasedOnPurpose('VPC'),
+      message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),
+      test: (value) => typeof value === 'undefined',
+    }),
+  }),
+  vpc_id: number().when('purpose', {
+    is: 'vpc',
+    then: number().required('VPC is required.'),
+    otherwise: number().test({
+      name: testnameDisallowedBasedOnPurpose('VPC'),
+      message: testmessageDisallowedBasedOnPurpose('vpc', 'vpc_id'),
+      test: (value) => typeof value === 'undefined',
+    }),
+  }),
+  ipv4: ipv4ConfigInterface,
+  ipv6: ipv6ConfigInterface,
+  ip_ranges: array()
+    .of(string())
+    .when('purpose', {
+      is: 'vpc',
+      then: array()
+        .of(string().test(validateIP))
+        .max(1)
+        .notRequired()
+        .nullable(),
+      otherwise: array().test({
+        name: testnameDisallowedBasedOnPurpose('VPC'),
+        message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
+        test: (value) => typeof value === 'undefined',
       }),
-      ipv4: ipv4ConfigInterface,
-      ipv6: ipv6ConfigInterface,
-      ip_ranges: array()
-        .of(string())
-        .when('purpose', {
-          is: 'vpc',
-          then: array().of(string().test(validateIP)).max(1).notRequired(),
-          otherwise: array().test({
-            name: testnameDisallowedBasedOnPurpose('VPC'),
-            message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
-            test: (value) => typeof value === 'undefined',
-          }),
-        }),
-    })
-  )
+    }),
+});
+
+export const linodeInterfacesSchema = array()
+  .of(linodeInterfaceSchema)
   .test(
     'unique-public-interface',
     'Only one public interface per config is allowed.',
@@ -285,7 +295,7 @@ export const CreateLinodeSchema = object({
     // .concat(rootPasswordValidation),
     otherwise: string().notRequired(),
   }),
-  interfaces: linodeInterfaceSchema,
+  interfaces: linodeInterfacesSchema,
   metadata: MetadataSchema,
   firewall_id: number().notRequired(),
 });
@@ -425,7 +435,7 @@ export const CreateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: linodeInterfaceSchema,
+  interfaces: linodeInterfacesSchema,
 });
 
 export const UpdateLinodeConfigSchema = object({
@@ -440,7 +450,7 @@ export const UpdateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: linodeInterfaceSchema,
+  interfaces: linodeInterfacesSchema,
 });
 
 export const CreateLinodeDiskSchema = object({
