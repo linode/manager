@@ -53,6 +53,7 @@ describe('OneClick Apps (OCA)', () => {
           queryResults: stackScripts,
         });
 
+        // Check the content of the OCA listing
         cy.findByTestId('one-click-apps-container').within(() => {
           trimmedApps.forEach((stackScript) => {
             const { decodedLabel, label } = handleAppLabel(stackScript);
@@ -61,6 +62,9 @@ describe('OneClick Apps (OCA)', () => {
             cy.get(`[data-qa-select-card-heading="${label}"]`).should('exist');
 
             // Check that every OCA has a drawer match
+            // This validates the regex in `mapStackScriptLabelToOCA`
+            // and ensures every app listed has a corresponding populated drawer
+            // This is only true for the apps defined in `oneClickApps.ts`
             expect(
               mapStackScriptLabelToOCA({
                 oneClickApps,
@@ -70,7 +74,7 @@ describe('OneClick Apps (OCA)', () => {
           });
         });
 
-        // Check one of the OCA drawers
+        // Check drawer content for one OCA candidate
         const candidate = trimmedApps[0].label;
         const stackScriptCandidate = cy
           .get(`[data-qa-selection-card-info="${candidate}"]`)
@@ -90,6 +94,10 @@ describe('OneClick Apps (OCA)', () => {
             containsVisible(app?.summary);
             containsVisible(app?.website);
           });
+        ui.drawerCloseButton.find().click();
+        ui.drawer.find().should('not.exist');
+
+        // Check the filtering of the apps
       });
     });
   });
