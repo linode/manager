@@ -57,7 +57,7 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
 
 /**
  * Subset of LKE cluster plans as shown on Cloud Manager, mapped from DC-specific pricing mock linode
- * types to ensure size is consistent ids in the types factory.
+ * types to ensure size is consistent with ids in the types factory.
  */
 export const dcPricingLkeClusterPlans: LkePlanDescription[] = dcPricingMockLinodeTypes.map(
   (type) => {
