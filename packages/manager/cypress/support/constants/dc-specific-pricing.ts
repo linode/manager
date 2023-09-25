@@ -56,10 +56,15 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
 });
 
 /**
- * Subset of LKE cluster plans as shown on Cloud Manager.
+ * Subset of LKE cluster plans as shown on Cloud Manager, mapped from DC-specific pricing mock linode
+ * types to ensure size is consistent ids in the types factory.
  */
-export const dcPricingLkeClusterPlans: LkePlanDescription[] = [
-  { size: 8, tab: 'Shared CPU', type: 'Linode' },
-  { size: 9, tab: 'Shared CPU', type: 'Linode' },
-  { size: 10, tab: 'Shared CPU', type: 'Linode' },
-];
+export const dcPricingLkeClusterPlans: LkePlanDescription[] = dcPricingMockLinodeTypes.map(
+  (type) => {
+    return {
+      size: type.id.split('-')[2],
+      tab: 'Shared CPU',
+      type: 'Linode',
+    };
+  }
+);
