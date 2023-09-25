@@ -11,8 +11,11 @@ import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import { useVlansQuery } from 'src/queries/vlans';
 import { useSubnetsQuery, useVPCsQuery } from 'src/queries/vpcs';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 
 export interface Props {
@@ -26,6 +29,9 @@ export interface Props {
   readOnly: boolean;
   region?: string;
   slotNumber: number;
+}
+
+interface VpcState {
   subnetId?: null | number;
   subnetLabel: null | string;
   vpcId?: null | number;
@@ -43,9 +49,19 @@ export interface ExtendedInterface
   vpcLabel?: null | string;
 }
 
-export const InterfaceSelect = (props: Props) => {
+type CombinedProps = Props & VpcState;
+
+export const InterfaceSelect = (props: CombinedProps) => {
   const theme = useTheme();
   const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
 
   const {
     fromAddonsPanel,
@@ -67,25 +83,7 @@ export const InterfaceSelect = (props: Props) => {
   } = props;
 
   const [newVlan, setNewVlan] = React.useState('');
-
-  const purposeOptions: Item<ExtendedPurpose>[] = [
-    {
-      label: 'Public Internet',
-      value: 'public',
-    },
-    {
-      label: 'VLAN',
-      value: 'vlan',
-    },
-    {
-      label: 'VPC',
-      value: 'vpc',
-    },
-    {
-      label: 'None',
-      value: 'none',
-    },
-  ];
+  const purposeOptions = getPurposeOptions(showVPCs);
 
   const { data: vlans, isLoading } = useVlansQuery();
   const vlanOptions =
@@ -410,4 +408,30 @@ export const InterfaceSelect = (props: Props) => {
       )}
     </Grid>
   );
+};
+
+const getPurposeOptions = (showVPCs: boolean) => {
+  const purposeOptions: Item<ExtendedPurpose>[] = [
+    {
+      label: 'Public Internet',
+      value: 'public',
+    },
+    {
+      label: 'VLAN',
+      value: 'vlan',
+    },
+    {
+      label: 'None',
+      value: 'none',
+    },
+  ];
+
+  if (showVPCs) {
+    purposeOptions.splice(1, 0, {
+      label: 'VPC',
+      value: 'vpc',
+    });
+  }
+
+  return purposeOptions;
 };
