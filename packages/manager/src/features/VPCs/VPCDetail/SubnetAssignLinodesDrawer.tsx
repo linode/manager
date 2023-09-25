@@ -30,7 +30,6 @@ import type {
   APIError,
   Config,
   InterfacePayload,
-  InterfacePurpose,
   Linode,
   Subnet,
 } from '@linode/api-v4';
@@ -135,7 +134,7 @@ export const SubnetAssignLinodesDrawer = (
     const interfacePayload: InterfacePayload = {
       ipam_address: null,
       label: null,
-      purpose: 'vpc' as InterfacePurpose,
+      purpose: 'vpc',
       subnet_id: subnet?.id,
       ...(!autoAssignIPv4 && { ipv4: { vpc: chosenIP } }),
     };

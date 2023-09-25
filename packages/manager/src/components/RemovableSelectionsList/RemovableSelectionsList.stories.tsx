@@ -59,19 +59,40 @@ export const InteractableDefault: Story = {
 };
 
 /**
- * Example of a RemovableSelectionsList with a specified label option
- * (no action will be performed when clicking on the list items)
+ * Example of a RemovableSelectionsList with a specified label option. Data passed in
+ * has the shape of _{ id: number; label: string; preferredLabel: string; }_, where the
+ * content in _preferredLabel_ is being rendered for each list item's label here.
  */
 export const SpecifiedLabelExample: Story = {
-  args: {
-    headerText: 'Linodes to remove',
-    noDataText: 'No Linodes available',
-    onRemove: (_) => {},
-    preferredDataLabel: 'preferredLabel',
-    selectionData: diffLabelListItems,
-  },
-  render: (args) => {
-    return <RemovableSelectionsList {...args} />;
+  render: () => {
+    const SpecifiedLabelWrapper = () => {
+      const [data, setData] = React.useState(diffLabelListItems);
+
+      const handleRemove = (item: RemovableItem) => {
+        setData([...data].filter((data) => data.id !== item.id));
+      };
+
+      const resetList = () => {
+        setData([...diffLabelListItems]);
+      };
+
+      return (
+        <>
+          <RemovableSelectionsList
+            headerText="Linodes to remove"
+            noDataText="No Linodes available"
+            onRemove={handleRemove}
+            preferredDataLabel="preferredLabel"
+            selectionData={data}
+          />
+          <Button onClick={resetList} sx={{ marginTop: 2 }}>
+            Reset list
+          </Button>
+        </>
+      );
+    };
+
+    return <SpecifiedLabelWrapper />;
   },
 };
 

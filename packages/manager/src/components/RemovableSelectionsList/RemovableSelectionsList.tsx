@@ -14,7 +14,7 @@ export type RemovableItem = {
 
 interface Props {
   /**
-   * The descriptionary text to display above the list
+   * The descriptive text to display above the list
    */
   headerText: string;
   /**
