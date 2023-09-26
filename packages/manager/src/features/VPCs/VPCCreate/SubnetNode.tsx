@@ -88,7 +88,7 @@ export const SubnetNode = (props: Props) => {
         />
         {subnet.ip.availIPv4s && (
           <FormHelperText>
-            Available IP Addresses:{' '}
+            Number of Available IP Addresses:{' '}
             {subnet.ip.availIPv4s > 4
               ? (subnet.ip.availIPv4s - RESERVED_IP_NUMBER).toLocaleString()
               : 0}
