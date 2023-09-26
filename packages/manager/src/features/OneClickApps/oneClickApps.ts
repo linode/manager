@@ -1,3 +1,5 @@
+import { oneClickAppFactory } from 'src/factories/stackscripts';
+
 import type { OCA } from './types';
 
 export const oneClickApps: OCA[] = [
@@ -2525,5 +2527,10 @@ export const oneClickApps: OCA[] = [
     ],
     summary: 'Enterprise-class open source distributed monitoring solution.',
     website: 'https://www.zabbix.com',
+  },
+  {
+    ...oneClickAppFactory.build({
+      name: 'E2E Test App',
+    }),
   },
 ];

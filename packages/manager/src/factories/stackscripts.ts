@@ -35,9 +35,10 @@ export const oneClickAppFactory = Factory.Sync.makeFactory<OCA>({
     start: '#000000',
   },
   description: 'A test app',
-  logo_url: 'https://www.linode.com/media/images/logos/one-click/test.svg',
+  logo_url: 'nodejs.svg',
   name: 'Test App',
   summary: 'A test app',
+  website: 'https://www.linode.com',
 });
 
 export const userDefinedFieldFactory = Factory.Sync.makeFactory<UserDefinedField>(

@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
@@ -42,7 +43,7 @@ export const AppPanelSection = (props: Props) => {
   }
 
   return (
-    <>
+    <Box data-testid={heading}>
       <Typography variant="h2">{heading}</Typography>
       {heading && heading.length > 0 ? (
         <Divider spacingBottom={16} spacingTop={16} />
@@ -78,7 +79,7 @@ export const AppPanelSection = (props: Props) => {
           {`Sorry, no results matching "${searchValue}" were found.`}
         </Typography>
       )}
-    </>
+    </Box>
   );
 };
 
