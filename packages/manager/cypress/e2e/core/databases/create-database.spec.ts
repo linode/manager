@@ -1,5 +1,5 @@
-import { databaseFactory } from 'src/factories/databases';
-import { eventFactory } from 'src/factories/events';
+import { accountFactory, databaseFactory, eventFactory } from 'src/factories';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
@@ -8,14 +8,9 @@ import {
   mockCreateDatabase,
   mockGetDatabases,
 } from 'support/intercepts/databases';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockGetEvents } from 'support/intercepts/events';
 import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
@@ -67,15 +62,13 @@ describe('create a database cluster, mocked data', () => {
             ? 'Dedicated CPU'
             : 'Shared CPU';
 
-        mockAppendFeatureFlags({
-          databases: makeFeatureFlagData(true),
-        }).as('getFeatureFlags');
-        mockGetFeatureFlagClientstream().as('getClientstream');
+        // Mock account to ensure 'Managed Databases' capability.
+        mockGetAccount(accountFactory.build()).as('getAccount');
         mockCreateDatabase(databaseMock).as('createDatabase');
         mockGetDatabases([databaseMock]).as('getDatabases');
 
         cy.visitWithLogin('/databases/create');
-        cy.wait(['@getFeatureFlags', '@getClientstream']);
+        cy.wait('@getAccount');
 
         ui.entityHeader
           .find()
