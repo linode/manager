@@ -26,7 +26,7 @@ export interface BarPercentProps {
 /**
  * Determinate indicator that displays how long a process will take.
  */
-export const BarPercent = (props: BarPercentProps) => {
+export const BarPercent = React.memo((props: BarPercentProps) => {
   const {
     className,
     isFetchingValue,
@@ -56,7 +56,7 @@ export const BarPercent = (props: BarPercentProps) => {
       />
     </StyledDiv>
   );
-};
+});
 
 export const getPercentage = (value: number, max: number) =>
   (value / max) * 100;
