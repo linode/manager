@@ -232,9 +232,12 @@ const VPCCreate = () => {
               {/* @TODO VPC: learn more link here */}
             </StyledBodyTypography>
             <RegionSelect
-              handleSelection={(region: string) =>
-                setFieldValue('region', region)
-              }
+              handleSelection={(region: string) => {
+                setFieldValue('region', region);
+                if (errors.region) {
+                  setFieldError('region', undefined);
+                }
+              }}
               disabled={userCannotAddVPC}
               errorText={errors.region}
               isClearable
@@ -242,18 +245,24 @@ const VPCCreate = () => {
               selectedID={values.region}
             />
             <TextField
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFieldValue('label', e.target.value)
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setFieldValue('label', e.target.value);
+                if (errors.label) {
+                  setFieldError('label', undefined);
+                }
+              }}
               disabled={userCannotAddVPC}
               errorText={errors.label}
               label="VPC label"
               value={values.label}
             />
             <TextField
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFieldValue('description', e.target.value)
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setFieldValue('description', e.target.value);
+                if (errors.description) {
+                  setFieldError('description', undefined);
+                }
+              }}
               disabled={userCannotAddVPC}
               errorText={errors.description}
               label="Description"
