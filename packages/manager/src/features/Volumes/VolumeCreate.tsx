@@ -36,8 +36,10 @@ import {
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
-import { ConfigSelect } from '../VolumeDrawer/ConfigSelect';
-import { SizeField } from '../VolumeDrawer/SizeField';
+import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
+import { SizeField } from './VolumeDrawer/SizeField';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const SIZE_FIELD_WIDTH = 160;
 
@@ -97,7 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CreateVolumeForm = () => {
+export const VolumeCreate = () => {
   const theme = useTheme();
   const classes = useStyles();
   const flags = useFlags();
@@ -226,174 +228,197 @@ const CreateVolumeForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <Notice text={error} variant="error" />}
-      {doesNotHavePermission ? (
-        <Notice
-          text={
-            "You don't have permissions to create a new Volume. Please contact an account administrator for details."
-          }
-          important
-          variant="error"
-        />
-      ) : null}
-      <Box display="flex" flexDirection="column">
-        <Paper>
-          <Typography
-            className={classes.copy}
-            data-qa-volume-size-help
-            variant="body1"
-          >
-            {dcSpecificPricing ? (
-              <span>
-                A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                size. Up to to eight Volumes can be attached to a single Linode.
-                Select a region to see cost per GB.
-              </span>
-            ) : (
-              <span>
-                A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                size and costs $0.10/GB per month. <br />
-                Up to eight volumes can be attached to a single Linode.
-              </span>
-            )}
-          </Typography>
-          <TextField
-            tooltipText="Use only ASCII letters, numbers,
-                  underscores, and dashes."
-            className={classes.select}
-            data-qa-volume-label
-            disabled={doesNotHavePermission}
-            errorText={touched.label ? errors.label : undefined}
-            label="Label"
-            name="label"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            tooltipClasses={classes.labelTooltip}
-            tooltipPosition="right"
-            value={values.label}
-          />
-          <Box alignItems="flex-end" display="flex">
-            <RegionSelect
-              handleSelection={(value) => {
-                setFieldValue('region', value);
-                setFieldValue('linode_id', null);
-              }}
-              regions={
-                regions?.filter((eachRegion) =>
-                  eachRegion.capabilities.some((eachCape) =>
-                    eachCape.match(/block/i)
-                  )
-                ) ?? []
-              }
-              disabled={doesNotHavePermission}
-              errorText={touched.region ? errors.region : undefined}
-              isClearable
-              label="Region"
-              name="region"
-              onBlur={handleBlur}
-              selectedID={values.region}
-              width={320}
-            />
-            {renderSelectTooltip(
-              'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
-            )}
-          </Box>
-          <Box
-            alignItems="flex-end"
-            className={classes.linodeConfigSelectWrapper}
-            display="flex"
-          >
-            <Box
-              alignItems="flex-end"
-              className={classes.linodeSelect}
-              display="flex"
+    <>
+      <DocumentTitleSegment segment="Create a Volume" />
+      <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Volumes',
+              position: 1,
+            },
+          ],
+          pathname: location.pathname,
+        }}
+        title="Create"
+      />
+      <form onSubmit={handleSubmit}>
+        <Box display="flex" flexDirection="column">
+          <Paper>
+            <Typography
+              className={classes.copy}
+              data-qa-volume-size-help
+              variant="body1"
             >
-              <LinodeSelect
-                optionsFilter={(linode: Linode) => {
-                  const linodeRegion = linode.region;
-                  const valuesRegion = values.region;
-
-                  /** When values.region is empty, all Linodes with
-                   * block storage support will be displayed, regardless
-                   * of their region. However, if a region is selected,
-                   * only Linodes from the chosen region with block storage
-                   * support will be shown. */
-                  return isNilOrEmpty(valuesRegion)
-                    ? regionsWithBlockStorage.includes(linodeRegion)
-                    : regionsWithBlockStorage.includes(linodeRegion) &&
-                        linodeRegion === valuesRegion;
-                }}
-                sx={{
-                  width: '320px',
-                }}
-                clearable
-                disabled={doesNotHavePermission}
-                errorText={linodeError}
-                onBlur={handleBlur}
-                onSelectionChange={handleLinodeChange}
-                value={values.linode_id}
-              />
-              {renderSelectTooltip(
-                'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
+              {dcSpecificPricing ? (
+                <span>
+                  A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
+                  size. Up to to eight Volumes can be attached to a single
+                  Linode. Select a region to see cost per GB.
+                </span>
+              ) : (
+                <span>
+                  A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
+                  size and costs $0.10/GB per month. <br />
+                  Up to eight volumes can be attached to a single Linode.
+                </span>
               )}
-            </Box>
-            <ConfigSelect
+            </Typography>
+            {error && (
+              <Notice
+                spacingBottom={0}
+                spacingTop={12}
+                text={error}
+                variant="error"
+              />
+            )}
+            {doesNotHavePermission && (
+              <Notice
+                text={
+                  "You don't have permissions to create a new Volume. Please contact an account administrator for details."
+                }
+                important
+                spacingBottom={0}
+                variant="error"
+              />
+            )}
+            <TextField
+              tooltipText="Use only ASCII letters, numbers,
+                  underscores, and dashes."
+              className={classes.select}
+              data-qa-volume-label
               disabled={doesNotHavePermission}
-              error={touched.config_id ? errors.config_id : undefined}
-              linodeId={linode_id}
-              name="configId"
-              onBlur={handleBlur}
-              onChange={(id: number) => setFieldValue('config_id', id)}
-              value={config_id}
-              width={320}
-            />
-          </Box>
-          <Box alignItems="flex-end" display="flex" position="relative">
-            <SizeField
-              disabled={doesNotHavePermission}
-              error={touched.size ? errors.size : undefined}
-              hasSelectedRegion={!isNilOrEmpty(values.region)}
-              name="size"
+              errorText={touched.label ? errors.label : undefined}
+              label="Label"
+              name="label"
               onBlur={handleBlur}
               onChange={handleChange}
-              regionId={values.region}
-              textFieldStyles={classes.size}
-              value={values.size}
+              tooltipClasses={classes.labelTooltip}
+              tooltipPosition="right"
+              value={values.label}
             />
-          </Box>
-          <Box
-            alignItems="center"
-            className={classes.buttonGroup}
-            display="flex"
-            flexWrap="wrap"
-            justifyContent={showAgreement ? 'space-between' : 'flex-end'}
-          >
-            {showAgreement ? (
-              <EUAgreementCheckbox
-                centerCheckbox
-                checked={hasSignedAgreement}
-                className={classes.agreement}
-                onChange={(e) => setHasSignedAgreement(e.target.checked)}
+            <Box alignItems="flex-end" display="flex">
+              <RegionSelect
+                handleSelection={(value) => {
+                  setFieldValue('region', value);
+                  setFieldValue('linode_id', null);
+                }}
+                regions={
+                  regions?.filter((eachRegion) =>
+                    eachRegion.capabilities.some((eachCape) =>
+                      eachCape.match(/block/i)
+                    )
+                  ) ?? []
+                }
+                disabled={doesNotHavePermission}
+                errorText={touched.region ? errors.region : undefined}
+                isClearable
+                label="Region"
+                name="region"
+                onBlur={handleBlur}
+                selectedID={values.region}
+                width={320}
               />
-            ) : null}
+              {renderSelectTooltip(
+                'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
+              )}
+            </Box>
+            <Box
+              alignItems="flex-end"
+              className={classes.linodeConfigSelectWrapper}
+              display="flex"
+            >
+              <Box
+                alignItems="flex-end"
+                className={classes.linodeSelect}
+                display="flex"
+              >
+                <LinodeSelect
+                  optionsFilter={(linode: Linode) => {
+                    const linodeRegion = linode.region;
+                    const valuesRegion = values.region;
+
+                    /** When values.region is empty, all Linodes with
+                     * block storage support will be displayed, regardless
+                     * of their region. However, if a region is selected,
+                     * only Linodes from the chosen region with block storage
+                     * support will be shown. */
+                    return isNilOrEmpty(valuesRegion)
+                      ? regionsWithBlockStorage.includes(linodeRegion)
+                      : regionsWithBlockStorage.includes(linodeRegion) &&
+                          linodeRegion === valuesRegion;
+                  }}
+                  sx={{
+                    width: '320px',
+                  }}
+                  clearable
+                  disabled={doesNotHavePermission}
+                  errorText={linodeError}
+                  onBlur={handleBlur}
+                  onSelectionChange={handleLinodeChange}
+                  value={values.linode_id}
+                />
+                {renderSelectTooltip(
+                  'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
+                )}
+              </Box>
+              <ConfigSelect
+                disabled={doesNotHavePermission}
+                error={touched.config_id ? errors.config_id : undefined}
+                linodeId={linode_id}
+                name="configId"
+                onBlur={handleBlur}
+                onChange={(id: number) => setFieldValue('config_id', id)}
+                value={config_id}
+                width={320}
+              />
+            </Box>
+            <Box alignItems="flex-end" display="flex" position="relative">
+              <SizeField
+                disabled={doesNotHavePermission}
+                error={touched.size ? errors.size : undefined}
+                hasSelectedRegion={!isNilOrEmpty(values.region)}
+                name="size"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                regionId={values.region}
+                textFieldStyles={classes.size}
+                value={values.size}
+              />
+            </Box>
+            <Box
+              alignItems="center"
+              className={classes.buttonGroup}
+              display="flex"
+              flexWrap="wrap"
+              justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+            >
+              {showAgreement ? (
+                <EUAgreementCheckbox
+                  centerCheckbox
+                  checked={hasSignedAgreement}
+                  className={classes.agreement}
+                  onChange={(e) => setHasSignedAgreement(e.target.checked)}
+                />
+              ) : null}
+            </Box>
+          </Paper>
+          <Box display="flex" justifyContent="flex-end">
+            <Button
+              buttonType="primary"
+              className={classes.button}
+              data-qa-deploy-linode
+              disabled={disabled}
+              loading={isSubmitting}
+              style={{ marginLeft: 12 }}
+              type="submit"
+            >
+              Create Volume
+            </Button>
           </Box>
-        </Paper>
-        <Box display="flex" justifyContent="flex-end">
-          <Button
-            buttonType="primary"
-            className={classes.button}
-            data-qa-deploy-linode
-            disabled={disabled}
-            loading={isSubmitting}
-            style={{ marginLeft: 12 }}
-            type="submit"
-          >
-            Create Volume
-          </Button>
         </Box>
-      </Box>
-    </form>
+      </form>
+    </>
   );
 };
 
@@ -412,5 +437,3 @@ const initialValues: FormState = {
   region: '',
   size: 20,
 };
-
-export default CreateVolumeForm;

@@ -4,8 +4,11 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const VolumesLanding = React.lazy(() => import('./VolumesLanding'));
-const VolumeCreate = React.lazy(
-  () => import('./VolumeCreate/CreateVolumeForm')
+
+const VolumeCreate = React.lazy(() =>
+  import('./VolumeCreate').then((module) => ({
+    default: module.VolumeCreate,
+  }))
 );
 
 const Volumes = () => {
