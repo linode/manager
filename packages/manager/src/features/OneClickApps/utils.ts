@@ -1,5 +1,7 @@
 import type { OCA } from './types';
 
+const OCA_MAPPING_REGEX = /[^A-Za-z0-9\s\/$*+\-?&.:()]/g;
+
 interface Options {
   oneClickApps: OCA[];
   stackScriptLabel: string;
@@ -17,12 +19,12 @@ export const mapStackScriptLabelToOCA = ({
 }: Options): OCA | undefined => {
   return oneClickApps.find((app) => {
     const cleanedStackScriptLabel = stackScriptLabel
-      .replace(/[^A-Za-z0-9\s\/$*+\-?&.:()]/g, '')
+      .replace(OCA_MAPPING_REGEX, '')
       .trim();
 
     const cleanedAppName = app.name
       .replace('&reg;', '')
-      .replace(/[^A-Za-z0-9\s\/$*+\-?&.:()]/g, '');
+      .replace(OCA_MAPPING_REGEX, '');
 
     return cleanedStackScriptLabel === cleanedAppName;
   });
