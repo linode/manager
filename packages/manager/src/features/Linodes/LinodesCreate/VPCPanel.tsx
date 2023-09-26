@@ -11,8 +11,11 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { APP_ROOT } from 'src/constants';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useVPCsQuery } from 'src/queries/vpcs';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -52,6 +55,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
     vpcIPv4Error,
   } = props;
 
+  const flags = useFlags();
+  const { account } = useAccountManagement();
   const { data: vpcData, error, isLoading } = useVPCsQuery({}, {}, true, true);
 
   const regions = useRegionsQuery().data ?? [];
@@ -62,6 +67,16 @@ export const VPCPanel = (props: VPCPanelProps) => {
     regions,
     'VPCs'
   );
+
+  const displayVPCPanel = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
+  if (!displayVPCPanel) {
+    return null;
+  }
 
   const vpcs = vpcData?.data ?? [];
 

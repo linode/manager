@@ -53,7 +53,6 @@ import {
   handleChangeCreateType,
 } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendApiAwarenessClickEvent,
   sendLinodeCreateFlowDocsClickEvent,
@@ -399,12 +398,6 @@ export class LinodeCreate extends React.PureComponent<
       ) &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
-    const displayVPCPanel = isFeatureEnabled(
-      'VPCs',
-      Boolean(this.props.flags.vpc),
-      this.props.account.data?.capabilities ?? []
-    );
-
     return (
       <StyledForm>
         <Grid className="py0">
@@ -600,27 +593,25 @@ export class LinodeCreate extends React.PureComponent<
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
-          {displayVPCPanel && (
-            <VPCPanel
-              toggleAssignPublicIPv4Address={
-                this.props.toggleAssignPublicIPv4Address
-              }
-              toggleAutoassignIPv4WithinVPCEnabled={
-                this.props.toggleAutoassignIPv4WithinVPCEnabled
-              }
-              assignPublicIPv4Address={this.props.assignPublicIPv4Address}
-              autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
-              handleSelectVPC={this.props.setSelectedVPC}
-              handleSubnetChange={this.props.handleSubnetChange}
-              handleVPCIPv4Change={this.props.handleVPCIPv4Change}
-              region={this.props.selectedRegionID}
-              selectedSubnetId={this.props.selectedSubnetId}
-              selectedVPCId={this.props.selectedVPCId}
-              subnetError={hasErrorFor['interfaces[0].subnet_id']}
-              vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
-              vpcIPv4Error={hasErrorFor['ipv4.vpc']}
-            />
-          )}
+          <VPCPanel
+            toggleAssignPublicIPv4Address={
+              this.props.toggleAssignPublicIPv4Address
+            }
+            toggleAutoassignIPv4WithinVPCEnabled={
+              this.props.toggleAutoassignIPv4WithinVPCEnabled
+            }
+            assignPublicIPv4Address={this.props.assignPublicIPv4Address}
+            autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
+            handleSelectVPC={this.props.setSelectedVPC}
+            handleSubnetChange={this.props.handleSubnetChange}
+            handleVPCIPv4Change={this.props.handleVPCIPv4Change}
+            region={this.props.selectedRegionID}
+            selectedSubnetId={this.props.selectedSubnetId}
+            selectedVPCId={this.props.selectedVPCId}
+            subnetError={hasErrorFor['interfaces[0].subnet_id']}
+            vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
+            vpcIPv4Error={hasErrorFor['ipv4.vpc']}
+          />
           {this.props.flags.linodeCreateWithFirewall && (
             <SelectFirewallPanel
               helperText={
