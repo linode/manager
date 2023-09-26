@@ -208,7 +208,11 @@ export const VPCSubnetsTable = (props: Props) => {
           <TableBody>
             {subnet.linodes.length > 0 ? (
               subnet.linodes.map((linodeId) => (
-                <SubnetLinodeRow key={linodeId} linodeId={linodeId} />
+                <SubnetLinodeRow
+                  key={linodeId}
+                  linodeId={linodeId}
+                  subnetId={subnet.id}
+                />
               ))
             ) : (
               <TableRowEmpty colSpan={5} message={'No Linodes'} />
