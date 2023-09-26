@@ -153,7 +153,7 @@ const errorMap = [
   'type',
   'interfaces[1].label',
   'interfaces[1].ipam_address',
-  'subnet_id',
+  'interfaces[0].subnet_id',
   'ipv4.vpc',
 ];
 
@@ -365,6 +365,12 @@ export class LinodeCreate extends React.PureComponent<
     ) {
       displaySections.push({
         title: 'VPC Assigned',
+      });
+    }
+
+    if (this.props.firewallId !== undefined && this.props.firewallId !== -1) {
+      displaySections.push({
+        title: 'Firewall Assigned',
       });
     }
 
@@ -610,7 +616,7 @@ export class LinodeCreate extends React.PureComponent<
               region={this.props.selectedRegionID}
               selectedSubnetId={this.props.selectedSubnetId}
               selectedVPCId={this.props.selectedVPCId}
-              subnetError={hasErrorFor['subnet_id']}
+              subnetError={hasErrorFor['interfaces[0].subnet_id']}
               vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
               vpcIPv4Error={hasErrorFor['ipv4.vpc']}
             />

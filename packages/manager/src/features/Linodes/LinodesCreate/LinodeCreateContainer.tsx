@@ -524,7 +524,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   handleVPCChange = (vpcId: number) => {
     this.setState({
-      selectedSubnetId: -1, // Ensure the selected subnet is cleared
+      selectedSubnetId: undefined, // Ensure the selected subnet is cleared
       selectedVPCId: vpcId,
       vpcIPv4AddressOfLinode: '', // Ensure the VPC IPv4 address is cleared
     });
@@ -754,24 +754,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         value: this.state.vpcIPv4AddressOfLinode,
       });
 
-      // Situation: Subnet not selected
-      if (
-        this.state.selectedSubnetId === undefined ||
-        this.state.selectedSubnetId === -1
-      ) {
-        return this.setState(
-          () => ({
-            errors: [
-              {
-                field: 'subnet_id',
-                reason: 'You must select a subnet',
-              },
-            ],
-          }),
-          () => scrollErrorIntoView()
-        );
-      }
-
       // Situation: 'Auto-assign a VPC IPv4 address for this Linode in the VPC' checkbox
       // unchecked but a valid VPC IPv4 not provided
       if (!this.state.autoassignIPv4WithinVPCEnabled && !validVPCIPv4) {
@@ -780,7 +762,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             errors: [
               {
                 field: 'ipv4.vpc',
-                reason: 'Must be a valid IPv4 address, e.g. 192.0.2.0',
+                reason: 'Must be a valid IPv4 address, e.g. 192.168.2.0',
               },
             ],
           }),
