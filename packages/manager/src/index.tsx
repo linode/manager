@@ -105,8 +105,13 @@ const Main = () => {
   );
 };
 
-if (shouldEnableDevTools) {
-  loadDevTools(store);
+async function loadApp() {
+  if (shouldEnableDevTools) {
+    // If devtools are enabled, load them before we load the main app.
+    // This ensures the MSW is setup before we start making API calls.
+    await loadDevTools(store);
+  }
+  ReactDOM.render(<Main />, document.getElementById('root'));
 }
 
-ReactDOM.render(<Main />, document.getElementById('root'));
+loadApp();
