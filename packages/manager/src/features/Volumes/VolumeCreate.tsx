@@ -264,16 +264,24 @@ export const VolumeCreate = () => {
                 </span>
               )}
             </Typography>
-            {error && <Notice text={error} variant="error" />}
-            {doesNotHavePermission ? (
+            {error && (
+              <Notice
+                spacingBottom={0}
+                spacingTop={12}
+                text={error}
+                variant="error"
+              />
+            )}
+            {doesNotHavePermission && (
               <Notice
                 text={
                   "You don't have permissions to create a new Volume. Please contact an account administrator for details."
                 }
                 important
+                spacingBottom={0}
                 variant="error"
               />
-            ) : null}
+            )}
             <TextField
               tooltipText="Use only ASCII letters, numbers,
                   underscores, and dashes."
