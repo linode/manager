@@ -76,14 +76,20 @@ export const calculateAvailableIPv4sRFC1918 = (
   const parsedMask = parseInt(mask, 10);
   const parsedSecondOctet = parseInt(secondOctet, 10);
 
-  // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs
+  // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs. The ranges are:
+  // 10.x.x.x (10/8 prefix)
+  // 172.16.x.x-172.31.x.x (172/12 prefix)
+  // 192.168.x.x (192.168/16 prefix)
   if (
     (firstOctet !== '10' && firstOctet !== '172' && firstOctet !== '192') ||
+    // Check for invalid 10.x IPs
     (firstOctet === '10' && parsedMask < 8) ||
+    // check for invalid 172.x IPs
     (firstOctet === '172' &&
       (parsedSecondOctet < 16 || parsedSecondOctet > 31 || parsedMask < 12)) ||
-    (firstOctet === '192' && secondOctet === '168' && parsedMask < 16) ||
-    (firstOctet === '192' && secondOctet !== '168')
+    // check for invalid 192.x IPs
+    (firstOctet === '192' &&
+      (secondOctet !== '168' || (secondOctet === '168' && parsedMask < 16)))
   ) {
     return undefined;
   }
