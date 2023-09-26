@@ -29,6 +29,7 @@ import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
@@ -63,6 +64,7 @@ const migrationTypeOptions: { [key in MigrationTypes]: key } = {
 export const LinodeResize = (props: Props) => {
   const { linodeId, onClose, open } = props;
   const theme = useTheme();
+  const flags = useFlags();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -98,7 +100,9 @@ export const LinodeResize = (props: Props) => {
   const formik = useFormik<ResizeLinodePayload>({
     initialValues: {
       allow_auto_disk_resize: shouldEnableAutoResizeDiskOption(disks ?? [])[1],
-      migration_type: migrationTypeOptions.warm,
+      migration_type: flags.unifiedMigrations
+        ? migrationTypeOptions.warm
+        : undefined,
       type: '',
     },
     async onSubmit(values) {
@@ -115,7 +119,9 @@ export const LinodeResize = (props: Props) => {
        */
       await resizeLinode({
         allow_auto_disk_resize: values.allow_auto_disk_resize && !isSmaller,
-        migration_type: values.migration_type,
+        migration_type: flags.unifiedMigrations
+          ? values.migration_type
+          : undefined,
         type: values.type,
       });
       resetEventsPolling();
@@ -178,13 +184,15 @@ export const LinodeResize = (props: Props) => {
   const error = getError(resizeError);
 
   const resizeButtonProps: ButtonProps =
-    formik.values.migration_type === 'cold' || isLinodeOffline
+    flags.unifiedMigrations &&
+    formik.values.migration_type === 'warm' &&
+    !isLinodeOffline
       ? {
-          loading: isLoading,
-          type: 'submit',
+          onClick: () => setConfirmationDialogOpen(true),
         }
       : {
-          onClick: () => setConfirmationDialogOpen(true),
+          loading: isLoading,
+          type: 'submit',
         };
 
   return (
@@ -228,67 +236,68 @@ export const LinodeResize = (props: Props) => {
           />
         </StyledDiv>
 
-        <Box
-          sx={{
-            backgroundColor: theme.bg.offWhite,
-            marginBottom: '8px',
-            padding: '16px 22px 0 22px',
-          }}
-        >
-          <Typography variant="h2">
-            Choose Your Resize Type
-            <TooltipIcon
-              status="help"
-              text={`The resize of your VM will happen within a 96 hour window of the date selected. The resizing may take some time depending on the size of the disk. The notification bell in the top right of the page will notify you when the resizing is complete. Your VM will resize within 15 minutes when you select “Resize Now”. `}
-            />
-          </Typography>
+        {flags.unifiedMigrations && (
           <Box
             sx={{
-              marginTop: 0,
+              backgroundColor: theme.bg.offWhite,
+              marginBottom: '8px',
+              padding: '16px 22px 0 22px',
             }}
-            component="p"
           >
-            During a <strong>warm resize</strong>, your Compute Instance will
-            remain up and running for the duration of the process and will be
-            rebooted to complete the resize. In some cases, you will need to
-            reboot the instance manually (you will receive a notification to do
-            so if necessary). During a <strong>cold resize</strong>, your
-            Compute Instance will be shut down, migrated to a new host machine,
-            and restored to its previous state (booted or powered off) once the
-            resize is complete.
-          </Box>
-          <FormControl sx={{ marginTop: 0 }}>
-            <FormLabel id="resize-migration-types" sx={{ marginBottom: 0 }}>
-              Migration Types
-            </FormLabel>
-            <RadioGroup
-              onChange={(e, value) =>
-                formik.setFieldValue('migration_type', value)
-              }
-              aria-labelledby="resize-migration-types"
-              row
-              value={formik.values.migration_type}
+            <Typography variant="h2">
+              Choose Your Resize Type
+              <TooltipIcon
+                status="help"
+                text={`The resize of your VM will happen within a 96 hour window of the date selected. The resizing may take some time depending on the size of the disk. The notification bell in the top right of the page will notify you when the resizing is complete. Your VM will resize within 15 minutes when you select “Resize Now”. `}
+              />
+            </Typography>
+            <Box
+              sx={{
+                marginTop: 0,
+              }}
+              component="p"
             >
-              <FormControlLabel
-                control={<Radio />}
-                data-qa-radio={migrationTypeOptions.warm}
-                disabled={isLinodeOffline}
-                key={migrationTypeOptions.warm}
-                label={capitalize(migrationTypeOptions.warm)}
-                value={migrationTypeOptions.warm}
-              />
-              <FormControlLabel
-                control={<Radio />}
-                data-qa-radio={migrationTypeOptions.cold}
-                disabled={isLinodeOffline}
-                key={migrationTypeOptions.cold}
-                label={capitalize(migrationTypeOptions.cold)}
-                value={migrationTypeOptions.cold}
-              />
-            </RadioGroup>
-          </FormControl>
-        </Box>
-
+              During a <strong>warm resize</strong>, your Compute Instance will
+              remain up and running for the duration of the process and will be
+              rebooted to complete the resize. In some cases, you will need to
+              reboot the instance manually (you will receive a notification to
+              do so if necessary). During a <strong>cold resize</strong>, your
+              Compute Instance will be shut down, migrated to a new host
+              machine, and restored to its previous state (booted or powered
+              off) once the resize is complete.
+            </Box>
+            <FormControl sx={{ marginTop: 0 }}>
+              <FormLabel id="resize-migration-types" sx={{ marginBottom: 0 }}>
+                Migration Types
+              </FormLabel>
+              <RadioGroup
+                onChange={(e, value) =>
+                  formik.setFieldValue('migration_type', value)
+                }
+                aria-labelledby="resize-migration-types"
+                row
+                value={formik.values.migration_type}
+              >
+                <FormControlLabel
+                  control={<Radio />}
+                  data-qa-radio={migrationTypeOptions.warm}
+                  disabled={isLinodeOffline}
+                  key={migrationTypeOptions.warm}
+                  label={capitalize(migrationTypeOptions.warm)}
+                  value={migrationTypeOptions.warm}
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  data-qa-radio={migrationTypeOptions.cold}
+                  disabled={isLinodeOffline}
+                  key={migrationTypeOptions.cold}
+                  label={capitalize(migrationTypeOptions.cold)}
+                  value={migrationTypeOptions.cold}
+                />
+              </RadioGroup>
+            </FormControl>
+          </Box>
+        )}
         <Typography
           sx={{ alignItems: 'center', display: 'flex', minHeight: '44px' }}
           variant="h2"
@@ -380,32 +389,34 @@ export const LinodeResize = (props: Props) => {
             Resize Linode
           </Button>
         </Box>
-        <ConfirmationDialog
-          actions={
-            <ActionsPanel
-              primaryButtonProps={{
-                'data-testid': 'confirm-resize',
-                label: 'Continue',
-                loading: isLoading,
-                onClick: () => {
-                  formik.handleSubmit();
-                },
-              }}
-              secondaryButtonProps={{
-                label: 'Cancel',
-                onClick: () => setConfirmationDialogOpen(false),
-              }}
-            />
-          }
-          onClose={() => setConfirmationDialogOpen(false)}
-          open={isConfirmationDialogOpen}
-          title="Confirm warm resize?"
-        >
-          <Typography variant="subtitle1">
-            During the warm resize process, your Linode will be rebooted to
-            complete the migration.
-          </Typography>
-        </ConfirmationDialog>
+        {flags.unifiedMigrations && (
+          <ConfirmationDialog
+            actions={
+              <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'confirm-resize',
+                  label: 'Continue',
+                  loading: isLoading,
+                  onClick: () => {
+                    formik.handleSubmit();
+                  },
+                }}
+                secondaryButtonProps={{
+                  label: 'Cancel',
+                  onClick: () => setConfirmationDialogOpen(false),
+                }}
+              />
+            }
+            onClose={() => setConfirmationDialogOpen(false)}
+            open={isConfirmationDialogOpen}
+            title="Confirm warm resize?"
+          >
+            <Typography variant="subtitle1">
+              During the warm resize process, your Linode will be rebooted to
+              complete the migration.
+            </Typography>
+          </ConfirmationDialog>
+        )}
       </form>
     </Dialog>
   );
