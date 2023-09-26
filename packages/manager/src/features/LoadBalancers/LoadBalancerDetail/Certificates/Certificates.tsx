@@ -22,6 +22,7 @@ import { useLoadBalancerCertificatesQuery } from 'src/queries/aglb/certificates'
 
 import { CreateCertificateDrawer } from './CreateCertificateDrawer';
 import { DeleteCertificateDialog } from './DeleteCertificateDialog';
+import { EditCertificateDrawer } from './EditCertificateDrawer';
 
 import type { Certificate, Filter } from '@linode/api-v4';
 
@@ -40,6 +41,7 @@ export const Certificates = () => {
   const history = useHistory();
 
   const isCreateDrawerOpen = location.pathname.endsWith('/create');
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
 
   const [selectedCertificateId, setSelectedCertificateId] = useState<number>();
@@ -147,7 +149,7 @@ export const Certificates = () => {
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
-                    { onClick: () => null, title: 'Edit' },
+                    { onClick: () => setIsEditDrawerOpen(true), title: 'Edit' },
                     {
                       onClick: () => onDeleteCertificate(certificate),
                       title: 'Delete',
@@ -174,6 +176,12 @@ export const Certificates = () => {
         loadbalancerId={id}
         open={isCreateDrawerOpen}
         type={certType}
+      />
+      <EditCertificateDrawer
+        certificateId={selectedCertificateId}
+        loadbalancerId={id}
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
       />
       <DeleteCertificateDialog
         certificate={selectedCertificate}

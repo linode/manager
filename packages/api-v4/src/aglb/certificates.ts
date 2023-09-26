@@ -67,7 +67,7 @@ export const createLoadbalancerCertificate = (
 /**
  * updateLoadbalancerCertificate
  *
- * Creates an Akamai Global Load Balancer certificate
+ * Updates an Akamai Global Load Balancer certificate
  */
 export const updateLoadbalancerCertificate = (
   loadbalancerId: number,
