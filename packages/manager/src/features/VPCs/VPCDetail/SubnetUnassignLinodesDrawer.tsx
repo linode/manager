@@ -161,6 +161,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         ]);
       } catch (error) {
         // Capture errors if the promise.all fails
+        hasError.current = true;
         setUnassignLinodesErrors(error as APIError[]);
       }
     };
