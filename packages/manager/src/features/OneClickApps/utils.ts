@@ -16,9 +16,13 @@ export const mapStackScriptLabelToOCA = ({
   stackScriptLabel,
 }: Options): OCA | undefined => {
   return oneClickApps.find((app) => {
-    const cleanedStackScriptLabel = stackScriptLabel.replace(/\W/g, '').trim();
+    const cleanedStackScriptLabel = stackScriptLabel
+      .replace(/[^A-Za-z0-9\s\/$*+\-?&.:()]/g, '')
+      .trim();
 
-    const cleanedAppName = app.name.replace('&reg;', '').replace(/\W/g, '');
+    const cleanedAppName = app.name
+      .replace('&reg;', '')
+      .replace(/[^A-Za-z0-9\s\/$*+\-?&.:()]/g, '');
 
     return cleanedStackScriptLabel === cleanedAppName;
   });

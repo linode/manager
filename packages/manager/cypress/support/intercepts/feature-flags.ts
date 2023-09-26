@@ -15,13 +15,6 @@ const launchDarklyClientstreamPattern =
   'https://clientstream.launchdarkly.com/eval/*/*';
 
 /**
- * Intercepts GET request to feature flag URL.
- */
-export const interceptFeatureFlags = () => {
-  return cy.intercept('GET', launchDarklyUrlPattern);
-};
-
-/**
  * Intercepts GET request to feature flag clientstream URL and mocks the response.
  *
  * This blocks Cloud Manager from initiating a stream with our feature flag

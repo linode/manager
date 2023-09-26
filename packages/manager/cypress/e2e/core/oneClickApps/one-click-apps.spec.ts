@@ -14,7 +14,6 @@ import {
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import {
-  interceptFeatureFlags,
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
@@ -36,7 +35,6 @@ describe('OneClick Apps (OCA)', () => {
 
   it('Lists all the OneClick Apps', () => {
     interceptGetStackScripts().as('getStackScripts');
-    interceptFeatureFlags().as('getFeatureFlags');
 
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
 
