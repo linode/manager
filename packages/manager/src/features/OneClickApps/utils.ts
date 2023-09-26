@@ -24,7 +24,8 @@ export const mapStackScriptLabelToOCA = ({
 
     const cleanedAppName = app.name
       .replace('&reg;', '')
-      .replace(OCA_MAPPING_REGEX, '');
+      .replace(OCA_MAPPING_REGEX, '')
+      .trim();
 
     return cleanedStackScriptLabel === cleanedAppName;
   });

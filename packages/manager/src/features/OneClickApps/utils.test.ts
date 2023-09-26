@@ -17,7 +17,7 @@ describe('mapStackScriptLabelToOneClickAppName', () => {
   it('should return the matching app', () => {
     const result = mapStackScriptLabelToOCA({
       oneClickApps: [onClickApp],
-      stackScriptLabel: 'TestApp',
+      stackScriptLabel: 'Test App',
     });
 
     expect(result).toBeDefined();
@@ -30,7 +30,7 @@ describe('mapStackScriptLabelToOneClickAppName', () => {
 
     const result = mapStackScriptLabelToOCA({
       oneClickApps: [onClickAppWithUnexpectedCharacters],
-      stackScriptLabel: 'TestApp',
+      stackScriptLabel: 'Test App',
     });
 
     expect(result).toBeDefined();
