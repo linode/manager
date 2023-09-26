@@ -18,7 +18,7 @@ import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { usePrevious } from 'src/hooks/usePrevious';
-import { getAllLinodeConfigsRequest } from 'src/queries/linodes/configs';
+import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
 import {
   queryKey as linodesQueryKey,
   useAllLinodesQuery,
@@ -120,7 +120,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           selectedLinodes.map(async (linode) => {
             const response = await queryClient.fetchQuery(
               [linodesQueryKey, 'linode', linode.id, 'configs'],
-              () => getAllLinodeConfigsRequest(linode.id)
+              () => getAllLinodeConfigs(linode.id)
             );
 
             if (response) {
@@ -301,7 +301,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                     marginTop: 2,
                     textAlign: 'left',
                   }}
-                  buttonType="unstyled"
+                  buttonType="styledLink"
                   csvRef={csvRef}
                   data={selectedLinodes}
                   filename={`linodes-unassigned-${formattedDate}.csv`}

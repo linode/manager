@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Action, ActionMenu } from 'src/components/ActionMenu';
 
 interface SubnetActionHandlers {
+  handleAssignLinodes: (subnet: Subnet) => void;
   handleDelete: (subnet: Subnet) => void;
   handleEdit: (subnet: Subnet) => void;
   handleUnassignLinodes: (subnet: Subnet) => void;
@@ -18,6 +19,7 @@ interface Props extends SubnetActionHandlers {
 
 export const SubnetActionMenu = (props: Props) => {
   const {
+    handleAssignLinodes,
     handleDelete,
     handleEdit,
     handleUnassignLinodes,
@@ -28,15 +30,15 @@ export const SubnetActionMenu = (props: Props) => {
   const actions: Action[] = [
     {
       onClick: () => {
-        // handleAssignLinodes(subnet);
+        handleAssignLinodes(subnet);
       },
-      title: 'Assign Linode',
+      title: 'Assign Linodes',
     },
     {
       onClick: () => {
         handleUnassignLinodes(subnet);
       },
-      title: 'Unassign Linode',
+      title: 'Unassign Linodes',
     },
     {
       onClick: () => {

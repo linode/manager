@@ -7,8 +7,10 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 const AccountLanding = React.lazy(
   () => import('src/features/Account/AccountLanding')
 );
-const InvoiceDetail = React.lazy(
-  () => import('src/features/Billing/InvoiceDetail')
+const InvoiceDetail = React.lazy(() =>
+  import('src/features/Billing/InvoiceDetail/InvoiceDetail').then((module) => ({
+    default: module.InvoiceDetail,
+  }))
 );
 const EntityTransfersCreate = React.lazy(() =>
   import(
