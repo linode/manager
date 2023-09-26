@@ -193,14 +193,11 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
               disabled: !formTouched,
               label: 'Update Access Controls',
               loading: isSubmitting,
-              sx: { marginBottom: 8 },
               type: 'submit',
             }}
             secondaryButtonProps={{
               label: 'Cancel',
-              loading: isSubmitting,
               onClick: onClose,
-              sx: { marginBottom: 8 },
             }}
           />
         </form>
