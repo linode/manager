@@ -19,6 +19,7 @@ import {
   useAllLinodesQuery,
 } from 'src/queries/linodes/linodes';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 import type {
   APIError,
@@ -37,6 +38,9 @@ interface Props {
 export const SubnetUnassignLinodesDrawer = React.memo(
   ({ onClose, open, subnet, vpcId }: Props) => {
     const { linodes: subnetLinodeIds } = subnet || {};
+    const { data: profile } = useProfile();
+    const { data: grants } = useGrants();
+    const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
     const queryClient = useQueryClient();
     const {
       setUnassignLinodesErrors,
@@ -57,6 +61,10 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       { key: 'ipv4', label: 'IPv4' },
       { key: 'id', label: 'Linode ID' },
     ];
+
+    const userCannotUnassignLinodes =
+      Boolean(profile?.restricted) &&
+      (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
     // 1. We need to get all the linodes.
     const { data: linodes, refetch: getCSVData } = useAllLinodesQuery();
@@ -249,6 +257,13 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         onClose={handleOnClose}
         open={open}
       >
+        {userCannotUnassignLinodes && (
+          <Notice
+            important
+            text={`You don't have permissions to unassign Linodes from ${subnet?.label}. Please contact an account administrator for details.`}
+            variant="error"
+          />
+        )}
         <Notice
           text={`Unassigning Linodes from a subnet requires you to reboot the Linodes to update its configuration.`}
           variant="warning"
@@ -256,6 +271,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         <form onSubmit={handleSubmit}>
           <Stack>
             <Autocomplete
+              disabled={userCannotUnassignLinodes}
               errorText={unassignLinodesErrors[0]?.reason} // TODO: Test errors...
               label="Linodes"
               multiple
