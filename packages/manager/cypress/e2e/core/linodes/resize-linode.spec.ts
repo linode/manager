@@ -39,7 +39,7 @@ describe('resize linode', () => {
     });
   });
 
-  it.only('resizes a linode by increasing size: cold migration', () => {
+  it('resizes a linode by increasing size: cold migration', () => {
     mockAppendFeatureFlags({
       unifiedMigrations: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
