@@ -243,12 +243,14 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     return (
       <Drawer
+        title={`Unassign Linodes from subnet: ${subnet?.label} (${
+          subnet?.ipv4 ?? subnet?.ipv6
+        })`}
         onClose={handleOnClose}
         open={open}
-        title={`Unassign Linode from subnet: ${subnet?.label}`}
       >
         <Notice
-          text={`Unassigning a Linode from subnet requires you to reboot the Linode.`}
+          text={`Unassigning Linodes from a subnet requires you to reboot the Linodes to update its configuration.`}
           variant="warning"
         />
         <form onSubmit={handleSubmit}>
