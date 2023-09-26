@@ -123,14 +123,7 @@ export const LoadBalancerRoutes = () => {
         Route Label
       </TableSortCell>
       <Hidden smDown>
-        <TableSortCell
-          active={orderBy === 'rules'}
-          direction={order}
-          handleClick={handleOrderChange}
-          label="rules"
-        >
-          Rules
-        </TableSortCell>
+        <TableCell>Rules</TableCell>
       </Hidden>
       <Hidden smDown>
         <TableSortCell
