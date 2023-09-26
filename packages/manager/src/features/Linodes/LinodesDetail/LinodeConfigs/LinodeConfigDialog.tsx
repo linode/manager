@@ -188,7 +188,7 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
       // and no other interfaces are specified, the API prefers
       // to receive an empty array.
       []
-    : removeUnnecessaryVpcState;
+    : (removeUnnecessaryVpcState as Interface[]);
 };
 
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];

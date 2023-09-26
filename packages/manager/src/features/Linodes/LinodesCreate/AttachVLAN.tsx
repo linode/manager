@@ -71,7 +71,7 @@ export const AttachVLAN = React.memo((props: Props) => {
   )}.`;
 
   return (
-    <Paper sx={{ marginTop: theme.spacing(3) }} data-qa-add-ons>
+    <Paper data-qa-add-ons sx={{ marginTop: theme.spacing(3) }}>
       <Typography
         sx={{
           '& button': {
@@ -101,14 +101,16 @@ export const AttachVLAN = React.memo((props: Props) => {
             .
           </Typography>
           <InterfaceSelect
+            errors={{
+              ipamError,
+              labelError,
+            }}
             handleChange={(newInterface: Interface) =>
               handleVLANChange(newInterface)
             }
             fromAddonsPanel
             ipamAddress={ipamAddress}
-            ipamError={ipamError}
             label={vlanLabel}
-            labelError={labelError}
             purpose="vlan"
             readOnly={readOnly || !regionSupportsVLANs || false}
             region={region}

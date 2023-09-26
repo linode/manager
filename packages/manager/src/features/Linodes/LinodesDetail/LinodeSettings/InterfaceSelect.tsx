@@ -48,6 +48,14 @@ interface VpcState {
   vpcLabel?: null | string;
 }
 
+interface ExtendedItem<T = number | string, L = string> {
+  data?: any;
+  id: number;
+  label: L;
+  subnet_id: number;
+  value: T;
+}
+
 // To allow for empty slots, which the API doesn't account for
 export type ExtendedPurpose = 'none' | InterfacePurpose;
 export interface ExtendedInterface
@@ -153,7 +161,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
       purpose,
     });
 
-  const handleVPCLabelChange = (selected: Item<string>) =>
+  const handleVPCLabelChange = (selected: ExtendedItem<string>) =>
     handleChange({
       ipam_address: null,
       ipv4: {
@@ -166,7 +174,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
       vpcLabel: selected?.value ?? '',
     });
 
-  const handleSubnetChange = (selected: Item<string>) =>
+  const handleSubnetChange = (selected: ExtendedItem<string>) =>
     handleChange({
       ipam_address: null,
       ipv4: {
@@ -184,6 +192,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     const changeObj = {
       ipam_address: null,
       ipv4: {
+        nat_1_1: '',
         vpc: e.target.value,
       },
       label: null,

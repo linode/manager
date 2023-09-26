@@ -107,14 +107,16 @@ export const VLANAccordion = React.memo((props: Props) => {
         .
       </Typography>
       <InterfaceSelect
+        errors={{
+          ipamError,
+          labelError,
+        }}
         handleChange={(newInterface: Interface) =>
           handleVLANChange(newInterface)
         }
         fromAddonsPanel
         ipamAddress={ipamAddress}
-        ipamError={ipamError}
         label={vlanLabel}
-        labelError={labelError}
         purpose="vlan"
         readOnly={readOnly || !regionSupportsVLANs || false}
         region={region}
