@@ -22,7 +22,7 @@ describe('Akamai Global Load Balancer certificates page', () => {
    * - Confirms that TLS and Service Target certificates can be uploaded.
    * - Confirms that certificates table update to reflects uploaded certificates.
    */
-  it('can upload a tls certificate', () => {
+  it('can upload a TLS certificate', () => {
     const mockLoadBalancer = loadbalancerFactory.build();
     const mockLoadBalancerCertTls = certificateFactory.build({
       label: randomLabel(),
