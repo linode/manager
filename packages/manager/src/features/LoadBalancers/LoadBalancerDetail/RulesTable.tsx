@@ -33,9 +33,7 @@ export const RulesTable = ({ rules }: Props) => {
     <Table aria-label="Rules Table" size="small">
       <TableHead style={{ fontSize: '.875rem' }}>
         <TableRow>
-          <Hidden smDown>
-            <StyledTableHeadCell>Execution</StyledTableHeadCell>
-          </Hidden>
+          <StyledTableHeadCell>Execution</StyledTableHeadCell>
           <StyledTableHeadCell>Match Value</StyledTableHeadCell>
           <Hidden smDown>
             <StyledTableHeadCell>Match Type</StyledTableHeadCell>
@@ -53,19 +51,17 @@ export const RulesTable = ({ rules }: Props) => {
         {rules.length > 0 ? (
           rules.map((rule, index) => (
             <StyledTableRow key={index}>
-              <Hidden smDown>
-                <StyledTableCell
-                  component="th"
-                  scope="row"
-                  sx={{ paddingLeft: 6 }}
-                >
-                  {index === 0
-                    ? 'First'
-                    : index === rules.length - 1
-                    ? 'Last'
-                    : null}
-                </StyledTableCell>
-              </Hidden>
+              <StyledTableCell
+                component="th"
+                scope="row"
+                sx={{ paddingLeft: 6 }}
+              >
+                {index === 0
+                  ? 'First'
+                  : index === rules.length - 1
+                  ? 'Last'
+                  : null}
+              </StyledTableCell>
               <StyledTableCell>
                 {rule.match_condition.match_value}
               </StyledTableCell>
