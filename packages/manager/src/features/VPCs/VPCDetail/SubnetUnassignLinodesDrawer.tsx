@@ -1,8 +1,5 @@
-import { deleteLinodeConfigInterface } from '@linode/api-v4';
 import { Subnet } from '@linode/api-v4/lib/vpcs/types';
-import Close from '@mui/icons-material/Close';
 import { Stack } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -12,18 +9,16 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
-import { IconButton } from 'src/components/IconButton';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
+import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { usePrevious } from 'src/hooks/usePrevious';
-import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
+import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import {
   queryKey as linodesQueryKey,
   useAllLinodesQuery,
 } from 'src/queries/linodes/linodes';
-import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
+import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
 
 import type {
   APIError,
@@ -41,15 +36,17 @@ interface Props {
 
 export const SubnetUnassignLinodesDrawer = React.memo(
   ({ onClose, open, subnet, vpcId }: Props) => {
-    const { linodes: linodeIds } = subnet || {};
+    const { linodes: subnetLinodeIds } = subnet || {};
     const queryClient = useQueryClient();
+    const {
+      setUnassignLinodesErrors,
+      unassignLinode,
+      unassignLinodesErrors,
+    } = useUnassignLinode();
     const csvRef = React.useRef<any>();
     const formattedDate = useFormattedDate();
     const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
     const prevSelectedLinodes = usePrevious(selectedLinodes);
-    const [unassignLinodesErrors, setUnassignLinodesErrors] = React.useState<
-      APIError[]
-    >([]);
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
     const [
       configInterfacesToDelete,
@@ -66,7 +63,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     // 2. We need to filter only the linodes that are assigned to the subnet.
     const assignedLinodes = linodes?.filter((linode) => {
-      return linodeIds?.includes(linode.id);
+      return subnetLinodeIds?.includes(linode.id);
     });
 
     // 3. Everytime our selection changes, we need to either add or remove the linode from the configInterfacesToDelete state.
@@ -168,7 +165,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       }
     };
 
-    const downloadCSV = async () => {
+    const downloadCSV = async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
       await getCSVData();
       csvRef.current.link.click();
     };
@@ -185,41 +183,29 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       [getConfigWithVpcInterface]
     );
 
-    const invalidateQueries = async () => {
-      const queryKeys = [
-        [vpcQueryKey, 'paginated'],
-        [vpcQueryKey, 'vpc', vpcId],
-        [vpcQueryKey, 'vpc', vpcId, subnetQueryKey],
-        [vpcQueryKey, 'vpc', vpcId, subnetQueryKey, 'subnet', subnet?.id],
-      ];
-      await Promise.all(
-        queryKeys.map((key) => queryClient.invalidateQueries(key))
-      );
-    };
-
     const processUnassignLinodes = async () => {
       try {
+        const promises = configInterfacesToDelete.map(async (_interface) => {
+          try {
+            await unassignLinode({
+              configId: _interface.configId,
+              interfaceId: _interface.interfaceId,
+              linodeId: _interface.linodeId,
+              subnetId: subnet?.id ?? -1,
+              vpcId,
+            });
+          } catch (error) {
+            hasError.current = true;
+            setUnassignLinodesErrors((prevErrors: APIError[]) => [
+              ...prevErrors,
+              error,
+            ]);
+          }
+        });
+
         // Use Promise.all to concurrently process each item in
         // the configInterfacesToDelete array
-        await Promise.all(
-          configInterfacesToDelete.map(async (_interface) => {
-            try {
-              await deleteLinodeConfigInterface(
-                _interface.linodeId,
-                _interface.configId,
-                _interface.interfaceId
-              );
-            } catch (error) {
-              hasError.current = true; // Set the error flag to true
-              setUnassignLinodesErrors((prevErrors) => [...prevErrors, error]);
-            }
-          })
-        );
-
-        if (!hasError.current) {
-          // Call invalidateQueries if all deletions were successful
-          invalidateQueries();
-        }
+        await Promise.all(promises);
       } catch (error) {
         // Handle any unexpected errors here
         setUnassignLinodesErrors([error]);
@@ -229,6 +215,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     // 5. When the user submits the form, we need to process the unassign linodes.
     const handleUnassignLinode = async () => {
       await processUnassignLinodes();
+
+      // Close the drawer if there are no errors.
       if (!hasError.current) {
         handleOnClose();
       }
@@ -239,6 +227,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         enableReinitialize: true,
         initialValues: {},
         onSubmit: handleUnassignLinode,
+        validateOnBlur: false,
+        validateOnChange: false,
       }
     );
 
@@ -271,28 +261,15 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               renderTags={() => null}
               value={selectedLinodes}
             />
+
             {selectedLinodes.length > 0 && (
               <>
-                <SelectedOptionsHeader>{`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}</SelectedOptionsHeader>
-
-                <SelectedOptionsList>
-                  {selectedLinodes.map((linode) => (
-                    <SelectedOptionsListItem
-                      alignItems="center"
-                      key={linode.id}
-                    >
-                      <StyledLabel>{linode.label}</StyledLabel>
-                      <IconButton
-                        aria-label={`remove ${linode.label}`}
-                        disableRipple
-                        onClick={() => handleRemoveLinode(linode)}
-                        size="medium"
-                      >
-                        <Close />
-                      </IconButton>
-                    </SelectedOptionsListItem>
-                  ))}
-                </SelectedOptionsList>
+                <RemovableSelectionsList
+                  headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
+                  noDataText={'Select Linodes to be Unassigned from Subnet.'}
+                  onRemove={handleRemoveLinode}
+                  selectionData={selectedLinodes}
+                />
                 <DownloadCSV
                   sx={{
                     alignItems: 'flex-start',
@@ -311,7 +288,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 />
                 <ActionsPanel
                   primaryButtonProps={{
-                    'data-testid': 'save-button',
+                    'data-testid': 'unassign-submit-button',
                     label: 'Unassign Linodes',
                     type: 'submit',
                   }}
@@ -328,29 +305,3 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     );
   }
 );
-
-const SelectedOptionsHeader = styled('h4')(({ theme }) => ({
-  color: theme.color.headline,
-  fontFamily: theme.font.bold,
-  fontSize: '14px',
-  textTransform: 'initial',
-}));
-
-const SelectedOptionsList = styled(List)(({ theme }) => ({
-  background: theme.bg.main,
-  maxWidth: '416px',
-  padding: '5px 0',
-  width: '100%',
-}));
-
-const SelectedOptionsListItem = styled(ListItem)(() => ({
-  justifyContent: 'space-between',
-  paddingBottom: 0,
-  paddingTop: 0,
-}));
-
-const StyledLabel = styled('span')(({ theme }) => ({
-  color: theme.color.label,
-  fontFamily: theme.font.semiBold,
-  fontSize: '14px',
-}));
