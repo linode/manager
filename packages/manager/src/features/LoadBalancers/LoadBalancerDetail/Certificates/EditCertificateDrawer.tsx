@@ -1,4 +1,4 @@
-import { CreateCertificatePayload } from '@linode/api-v4';
+import { Certificate, CreateCertificatePayload } from '@linode/api-v4';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import React from 'react';
@@ -12,35 +12,42 @@ import { useLoadBalancerCertificateMutation } from 'src/queries/aglb/certificate
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
-  certificateId: number | undefined;
+  certificate: Certificate | undefined;
   loadbalancerId: number;
   onClose: () => void;
   open: boolean;
 }
 
+const labelMap: Record<Certificate['type'], string> = {
+  ca: 'Server Certificate',
+  downstream: 'TLS Certificate',
+};
+
+/* TODO: AGLB - Update with final copy. */
+const descriptionMap: Record<Certificate['type'], string> = {
+  ca: 'You can edit this cert here. Maybe something about service targets.',
+  downstream:
+    'You can edit this cert here. Perhaps something about the private key and the hos header and what it does.',
+};
+
 export const EditCertificateDrawer = (props: Props) => {
-  const { certificateId, loadbalancerId, onClose: _onClose, open } = props;
+  const { certificate, loadbalancerId, onClose: _onClose, open } = props;
 
   const theme = useTheme();
-
-  const onClose = () => {
-    formik.resetForm();
-    _onClose();
-    reset();
-  };
 
   const {
     error,
     mutateAsync: editCertificate,
     reset,
-  } = useLoadBalancerCertificateMutation(loadbalancerId, certificateId ?? -1);
+  } = useLoadBalancerCertificateMutation(loadbalancerId, certificate?.id ?? -1);
 
   const formik = useFormik<CreateCertificatePayload>({
+    enableReinitialize: true,
     initialValues: {
       certificate: '',
       key: '',
-      label: '',
-      type: 'downstream',
+      label: certificate?.label ?? '',
+      type: certificate?.type ?? 'downstream',
     },
     async onSubmit(values) {
       await editCertificate(values);
@@ -50,49 +57,65 @@ export const EditCertificateDrawer = (props: Props) => {
 
   const errorMap = getErrorMap(['label', 'key', 'certificate'], error);
 
+  const onClose = () => {
+    formik.resetForm();
+    _onClose();
+    reset();
+  };
+
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Certificate">
-      <form onSubmit={formik.handleSubmit}>
-        {errorMap.none && <Notice text={errorMap.none} variant="error" />}
-        <Typography sx={{ marginBottom: theme.spacing(2) }}>
-          {/* TODO: AGLB - Update with final copy. */}
-          You can edit this cert here. Maybe something about service targets.
-        </Typography>
-        <TextField
-          errorText={errorMap.label}
-          label="Certificate Label"
-          name="label"
-          onChange={formik.handleChange}
-          value={formik.values.label}
-        />
-        <TextField
-          errorText={errorMap.certificate}
-          label="TLS Certificate"
-          labelTooltipText="TODO: AGLB"
-          multiline
-          name="certificate"
-          onChange={formik.handleChange}
-          trimmed
-          value={formik.values.certificate}
-        />
-        <TextField
-          errorText={errorMap.key}
-          label="Private Key"
-          labelTooltipText="TODO: AGLB"
-          multiline
-          name="key"
-          onChange={formik.handleChange}
-          trimmed
-          value={formik.values.key}
-        />
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'submit',
-            label: 'Update Certificate',
-            type: 'submit',
-          }}
-        />
-      </form>
+    <Drawer
+      onClose={onClose}
+      open={open}
+      title={`Edit ${certificate?.label ?? 'Certificate'}`}
+    >
+      {errorMap.none && <Notice variant="error">{errorMap.none}</Notice>}
+      {!certificate ? (
+        <Notice variant="error">Error loading certificate.</Notice>
+      ) : (
+        <form onSubmit={formik.handleSubmit}>
+          {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+          <Typography sx={{ marginBottom: theme.spacing(2) }}>
+            {descriptionMap[certificate.type]}
+          </Typography>
+          <TextField
+            errorText={errorMap.label}
+            label="Certificate Label"
+            name="label"
+            onChange={formik.handleChange}
+            value={formik.values.label}
+          />
+          <TextField
+            errorText={errorMap.certificate}
+            label={labelMap[certificate.type]}
+            labelTooltipText="TODO: AGLB"
+            multiline
+            name="certificate"
+            onChange={formik.handleChange}
+            trimmed
+            value={formik.values.certificate}
+          />
+          {certificate?.type === 'downstream' && (
+            <TextField
+              errorText={errorMap.key}
+              label="Private Key"
+              labelTooltipText="TODO: AGLB"
+              multiline
+              name="key"
+              onChange={formik.handleChange}
+              trimmed
+              value={formik.values.key}
+            />
+          )}
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              label: 'Update Certificate',
+              type: 'submit',
+            }}
+          />
+        </form>
+      )}
     </Drawer>
   );
 };

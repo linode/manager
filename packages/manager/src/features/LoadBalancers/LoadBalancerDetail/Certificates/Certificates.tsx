@@ -71,6 +71,11 @@ export const Certificates = () => {
     filter
   );
 
+  const onEditCertificate = (certificate: Certificate) => {
+    setIsEditDrawerOpen(true);
+    setSelectedCertificateId(certificate.id);
+  };
+
   const onDeleteCertificate = (certificate: Certificate) => {
     setIsDeleteDrawerOpen(true);
     setSelectedCertificateId(certificate.id);
@@ -149,7 +154,10 @@ export const Certificates = () => {
               <TableCell actionCell>
                 <ActionMenu
                   actionsList={[
-                    { onClick: () => setIsEditDrawerOpen(true), title: 'Edit' },
+                    {
+                      onClick: () => onEditCertificate(certificate),
+                      title: 'Edit',
+                    },
                     {
                       onClick: () => onDeleteCertificate(certificate),
                       title: 'Delete',
@@ -178,7 +186,7 @@ export const Certificates = () => {
         type={certType}
       />
       <EditCertificateDrawer
-        certificateId={selectedCertificateId}
+        certificate={selectedCertificate}
         loadbalancerId={id}
         onClose={() => setIsEditDrawerOpen(false)}
         open={isEditDrawerOpen}
