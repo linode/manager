@@ -54,7 +54,7 @@ const IPv4 = string()
   .nullable()
   .test({
     name: 'validateIPv4',
-    message: 'Must be a valid IPv4 address, e.g. 192.0.2.0.',
+    message: 'Must be a valid IPv4 address, e.g. 192.0.2.0',
     test: (value) => test_vpcsValidateIP(value),
   });
 
@@ -128,7 +128,7 @@ const ipv6ConfigInterface = object().when('purpose', {
     }),
 });
 
-export const linodeInterfaceSchema = object().shape({
+export const LinodeInterfaceSchema = object().shape({
   purpose: mixed().oneOf(
     ['public', 'vlan', 'vpc'],
     'Purpose must be public, vlan, or vpc.'
@@ -157,7 +157,7 @@ export const linodeInterfaceSchema = object().shape({
     is: 'vlan',
     then: string().notRequired().test({
       name: 'validateIPAM',
-      message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+      message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24',
       test: validateIP,
     }),
     otherwise: string().when('ipam_address', {
@@ -186,11 +186,7 @@ export const linodeInterfaceSchema = object().shape({
     .of(string())
     .when('purpose', {
       is: 'vpc',
-      then: array()
-        .of(string().test(validateIP))
-        .max(1)
-        .notRequired()
-        .nullable(),
+      then: array().of(string().test(validateIP)).max(1).notRequired(),
       otherwise: array().test({
         name: testnameDisallowedBasedOnPurpose('VPC'),
         message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
@@ -199,8 +195,8 @@ export const linodeInterfaceSchema = object().shape({
     }),
 });
 
-export const linodeInterfacesSchema = array()
-  .of(linodeInterfaceSchema)
+export const LinodeInterfacesSchema = array()
+  .of(LinodeInterfaceSchema)
   .test(
     'unique-public-interface',
     'Only one public interface per config is allowed.',
@@ -286,7 +282,7 @@ export const CreateLinodeSchema = object({
     // .concat(rootPasswordValidation),
     otherwise: string().notRequired(),
   }),
-  interfaces: linodeInterfacesSchema,
+  interfaces: LinodeInterfacesSchema,
   metadata: MetadataSchema,
   firewall_id: number().notRequired(),
 });
@@ -426,7 +422,7 @@ export const CreateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: linodeInterfacesSchema,
+  interfaces: LinodeInterfacesSchema,
 });
 
 export const UpdateLinodeConfigSchema = object({
@@ -441,7 +437,7 @@ export const UpdateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: linodeInterfacesSchema,
+  interfaces: LinodeInterfacesSchema,
 });
 
 export const CreateLinodeDiskSchema = object({
