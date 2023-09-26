@@ -178,7 +178,7 @@ describe('create linode', () => {
     // Confirm that the checkout summary at the bottom of the page reflects the correct price.
     containsClick(selectRegionString).type(`${initialRegion.label} {enter}`);
     fbtClick('Shared CPU');
-    getClick('[id="g6-standard-8"]');
+    getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
     cy.get('[data-qa-summary="true"]').within(() => {
       const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
         (regionPrice) => regionPrice.id === initialRegion.id
@@ -197,7 +197,7 @@ describe('create linode', () => {
     // Confirms that the summary updates to reflect price changes if the user changes their region and plan selection.
     containsClick(initialRegion.label).type(`${newRegion.label} {enter}`);
     fbtClick('Shared CPU');
-    getClick('[id="g6-standard-8"]');
+    getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
     cy.get('[data-qa-summary="true"]').within(() => {
       const currentPrice = dcPricingMockLinodeTypes[1].region_prices.find(
         (regionPrice) => regionPrice.id === newRegion.id
