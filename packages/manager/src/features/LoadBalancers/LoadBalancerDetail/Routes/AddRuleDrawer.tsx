@@ -15,6 +15,7 @@ import { LinkButton } from 'src/components/LinkButton';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
+import { useLoadbalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
 import {
@@ -29,7 +30,7 @@ interface Props {
   loadbalancerId: number;
   onClose: () => void;
   open: boolean;
-  route: Route;
+  route: Route | undefined;
 }
 
 const defaultServiceTarget = {
@@ -51,10 +52,18 @@ const initialValues = {
 export const AddRuleDrawer = (props: Props) => {
   const { loadbalancerId, onClose, open, route } = props;
 
+  const { mutateAsync: updateRule } = useLoadbalancerRouteUpdateMutation(
+    loadbalancerId,
+    route?.id ?? -1
+  );
+
   const formik = useFormik<RulePayload>({
     initialValues,
-    async onSubmit(values, formikHelpers) {
-      alert(JSON.stringify(values, null, 2));
+    async onSubmit(rule) {
+      if (!route) {
+        return;
+      }
+      await updateRule({ rules: [...route?.rules, rule] });
     },
   });
 

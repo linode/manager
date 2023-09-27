@@ -48,3 +48,27 @@ export const CreateServiceTargetSchema = object({
     .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev']),
   healthcheck: HealthCheckSchema,
 });
+
+const RouteServiceTargetSchema = object({
+  id: number(),
+  percentage: number(),
+});
+
+const MatchConditionSchema = object({
+  hostname: string(),
+  match_field: string().oneOf(['path_prefix', 'query', 'header', 'method']),
+  match_value: string(),
+  session_stickiness_cookie: string(),
+  session_stickiness_ttl: number(),
+});
+
+export const RuleSchema = object({
+  match_condition: MatchConditionSchema,
+  service_targets: RouteServiceTargetSchema,
+});
+
+export const UpdateRouteSchema = object({
+  label: string(),
+  protocol: string().oneOf(['tcp', 'http']),
+  rules: array(RouteServiceTargetSchema),
+});

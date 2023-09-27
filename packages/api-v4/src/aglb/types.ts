@@ -40,23 +40,30 @@ export interface RoutePayload {
   rules: RuleCreatePayload[];
 }
 
-export interface ExtendedMatchCondition extends MatchCondition {
-  service_targets: { id: number; label: string; percentage: number }[];
-}
-
 export interface Route {
   id: number;
   label: string;
   protocol: Protocol;
   rules: {
-    match_condition: ExtendedMatchCondition;
+    match_condition: MatchCondition;
+    service_targets: {
+      id: number;
+      label: string;
+      percentage: number;
+    }[];
   }[];
 }
+
+export type UpdateRoutePayload = Partial<{
+  label: string;
+  protocol: Protocol;
+  rules: RulePayload[];
+}>;
 
 export interface CreateRoutePayload {
   label: string;
   protocol: Protocol;
-  rules: Rule[];
+  rules: RulePayload[];
 }
 
 export interface Rule {
