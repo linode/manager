@@ -11,7 +11,7 @@ export const queryKey = 'stackscripts';
 
 export const useStackScriptsOCA = (enabled: boolean, params: Params = {}) => {
   return useQuery<StackScript[], APIError[]>(
-    [`${queryKey}-oca-all`, params],
+    `${queryKey}-oca-all`,
     () => getAllOCAsRequest(params),
     {
       enabled,
