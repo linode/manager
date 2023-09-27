@@ -174,21 +174,14 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
   if (!interfaces || interfaces.length === 0) {
     return [];
   }
-  const nonEmptyInterfaces = interfaces.filter(
-    (thisInterface) => thisInterface.purpose !== 'none'
-  );
-
-  const removeUnnecessaryVpcState = nonEmptyInterfaces.map(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ({ subnetLabel, vpcLabel, ...restInterface }: ExtendedInterface) =>
-      restInterface
-  );
   return equals(interfaces, defaultInterfaceList)
     ? // In this case, where eth0 is set to public interface
       // and no other interfaces are specified, the API prefers
       // to receive an empty array.
       []
-    : (removeUnnecessaryVpcState as Interface[]);
+    : (interfaces.filter(
+        (thisInterface) => thisInterface.purpose !== 'none'
+      ) as Interface[]);
 };
 
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
@@ -890,10 +883,8 @@ export const LinodeConfigDialog = (props: Props) => {
                       region={linode?.region}
                       slotNumber={idx}
                       subnetId={thisInterface.subnet_id}
-                      subnetLabel={thisInterface.subnetLabel}
                       vpcId={thisInterface.vpc_id}
                       vpcIpv4={thisInterface.ipv4?.vpc}
-                      vpcLabel={thisInterface.vpcLabel}
                     />
                   );
                 })}

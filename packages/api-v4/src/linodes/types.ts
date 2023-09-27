@@ -151,7 +151,7 @@ export type LinodeStatus =
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
 export interface ConfigInterfaceIPv4 {
-  vpc?: string | null;
+  vpc?: string;
   nat_1_1?: string;
 }
 
@@ -165,8 +165,8 @@ export interface Interface {
   purpose: InterfacePurpose;
   ipam_address: string | null;
   primary?: boolean;
-  subnet_id?: number | null;
-  vpc_id?: number | null;
+  subnet_id?: number;
+  vpc_id?: number;
   ipv4?: ConfigInterfaceIPv4;
   ipv6?: ConfigInterfaceIPv6;
   ip_ranges?: string[];
