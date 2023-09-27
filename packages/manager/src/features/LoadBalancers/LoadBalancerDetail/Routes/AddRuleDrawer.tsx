@@ -50,9 +50,9 @@ const initialValues = {
 };
 
 export const AddRuleDrawer = (props: Props) => {
-  const { loadbalancerId, onClose, open, route } = props;
+  const { loadbalancerId, onClose: _onClose, open, route } = props;
 
-  const { mutateAsync: updateRule } = useLoadbalancerRouteUpdateMutation(
+  const { mutateAsync: updateRule, reset } = useLoadbalancerRouteUpdateMutation(
     loadbalancerId,
     route?.id ?? -1
   );
@@ -64,12 +64,19 @@ export const AddRuleDrawer = (props: Props) => {
         return;
       }
       await updateRule({ rules: [...route?.rules, rule] });
+      onClose();
     },
   });
 
   const cookieType = !formik.values.match_condition.session_stickiness_ttl
     ? stickyOptions[1]
     : stickyOptions[0];
+
+  const onClose = () => {
+    _onClose();
+    formik.resetForm();
+    reset();
+  };
 
   const onAddServiceTarget = () => {
     formik.setFieldValue('service_targets', [

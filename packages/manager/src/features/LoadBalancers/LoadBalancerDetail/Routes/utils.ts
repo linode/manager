@@ -10,7 +10,7 @@ export const matchFieldMap: Record<MatchField, string> = {
 
 export const matchValuePlaceholder: Record<MatchField, string> = {
   header: 'X-route-header=images',
-  host: '',
+  host: 'example.com',
   method: 'POST',
   path_prefix: '/images',
   query: '?svc=images',
