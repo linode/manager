@@ -55,7 +55,13 @@ export const EditCertificateDrawer = (props: Props) => {
     },
   });
 
-  const errorMap = getErrorMap(['label', 'key', 'certificate'], error);
+  const errorFields = ['label', 'certificate'];
+
+  if (certificate?.type === 'downstream') {
+    errorFields.push('key');
+  }
+
+  const errorMap = getErrorMap(errorFields, error);
 
   const onClose = () => {
     formik.resetForm();
