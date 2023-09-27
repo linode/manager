@@ -101,8 +101,8 @@ async function generateChangeset() {
 
   try {
     const addCmd = `git add ${changesetFile}`;
-    // I don't know if this would actually get rid of the code quality error though...
-    const escapedDescription = description.replace(/\\/g, '').replace(/`/g, "\\`"); // Allow backticks in commit message
+    // First sanitize against any \, then allow backticks in commit message
+    const escapedDescription = description.replace(/\\/g, '').replace(/`/g, "\\`"); 
     const commitCmd = `git commit -m "Added changeset: ${escapedDescription}"`;
     execSync(addCmd);
     execSync(commitCmd);
