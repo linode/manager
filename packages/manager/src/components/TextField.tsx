@@ -8,7 +8,7 @@ import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
+import { Box, BoxProps } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
@@ -144,6 +144,10 @@ interface BaseProps {
    */
   trimmed?: boolean;
   value?: Value;
+  /**
+   * Props applied to the root element
+   */
+  containerProps?: BoxProps;
 }
 
 type Value = null | number | string | undefined;
@@ -179,6 +183,7 @@ export const TextField = (props: TextFieldProps) => {
     SelectProps,
     children,
     className,
+    containerProps,
     dataAttrs,
     editable,
     error,
@@ -297,10 +302,14 @@ export const TextField = (props: TextFieldProps) => {
 
   return (
     <Box
-      className={cx({
-        [classes.helpWrapper]: Boolean(tooltipText),
-        [errorScrollClassName]: !!errorText,
-      })}
+      {...containerProps}
+      className={cx(
+        {
+          [classes.helpWrapper]: Boolean(tooltipText),
+          [errorScrollClassName]: !!errorText,
+        },
+        containerProps?.className
+      )}
     >
       <Box display="flex">
         <InputLabel

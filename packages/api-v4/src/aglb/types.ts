@@ -37,7 +37,7 @@ export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
 
 export interface RoutePayload {
   label: string;
-  rules: Rule[];
+  rules: RuleCreatePayload[];
 }
 
 export interface ExtendedMatchCondition extends MatchCondition {
@@ -56,13 +56,23 @@ export interface Route {
 export interface CreateRoutePayload {
   label: string;
   protocol: Protocol;
-  rules: {
-    match_condition: MatchCondition;
-    service_targets: {
-      id: number;
-      label: string;
-      percentage: number;
-    }[];
+  rules: Rule[];
+}
+
+export interface Rule {
+  match_condition: MatchCondition;
+  service_targets: {
+    id: number;
+    label: string;
+    percentage: number;
+  }[];
+}
+
+export interface RulePayload {
+  match_condition: MatchCondition;
+  service_targets: {
+    id: number;
+    percentage: number;
   }[];
 }
 
@@ -89,7 +99,7 @@ export interface CertificateConfig {
   id: number;
 }
 
-export interface Rule {
+export interface RuleCreatePayload {
   match_condition: MatchCondition;
   service_targets: ServiceTargetPayload[];
 }

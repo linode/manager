@@ -26,13 +26,16 @@ import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
 import { RulesTable } from './RulesTable';
 
-import type { Filter } from '@linode/api-v4';
+import type { Filter, Route } from '@linode/api-v4';
+import { AddRuleDrawer } from './Routes/AddRuleDrawer';
 
 const PREFERENCE_KEY = 'loadbalancer-routes';
 
 export const LoadBalancerRoutes = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
+  const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
+  const [selectedRouteId, setSelectedRouteId] = useState<number>();
   const [query, setQuery] = useState<string>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
@@ -64,6 +67,15 @@ export const LoadBalancerRoutes = () => {
     filter
   );
 
+  const selectedRoute = routes?.data.find(
+    (route) => route.id === selectedRouteId
+  );
+
+  const onAddRule = (route: Route) => {
+    setIsAddRuleDrawerOpen(true);
+    setSelectedRouteId(route.id);
+  };
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -72,20 +84,23 @@ export const LoadBalancerRoutes = () => {
     if (!routes) {
       return [];
     }
-    return routes.data?.map(({ id, label, protocol, rules }) => {
+    return routes.data?.map((route) => {
       const OuterTableCells = (
         <>
           <Hidden smDown>
-            <TableCell>{rules?.length}</TableCell>
+            <TableCell>{route.rules?.length}</TableCell>
           </Hidden>
           <Hidden smDown>
-            <TableCell>{protocol?.toLocaleUpperCase()}</TableCell>{' '}
+            <TableCell>{route.protocol?.toLocaleUpperCase()}</TableCell>{' '}
           </Hidden>
           <TableCell actionCell>
             {/**
              * TODO: AGLB: The Add Rule behavior should be implemented in future AGLB tickets.
              */}
-            <InlineMenuAction actionText="Add Rule" onClick={() => null} />
+            <InlineMenuAction
+              actionText="Add Rule"
+              onClick={() => onAddRule(route)}
+            />
             {/**
              * TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets.
              */}
@@ -95,19 +110,19 @@ export const LoadBalancerRoutes = () => {
                 { onClick: () => null, title: 'Clone Route' },
                 { onClick: () => null, title: 'Delete' },
               ]}
-              ariaLabel={`Action Menu for Route ${label}`}
+              ariaLabel={`Action Menu for Route ${route.label}`}
             />
           </TableCell>
         </>
       );
 
-      const InnerTable = <RulesTable rules={rules} />;
+      const InnerTable = <RulesTable rules={route.rules} />;
 
       return {
         InnerTable,
         OuterTableCells,
-        id,
-        label,
+        id: route.id,
+        label: route.label,
       };
     });
   };
@@ -191,6 +206,12 @@ export const LoadBalancerRoutes = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <AddRuleDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsAddRuleDrawerOpen(false)}
+        open={isAddRuleDrawerOpen}
+        route={selectedRoute}
       />
     </>
   );

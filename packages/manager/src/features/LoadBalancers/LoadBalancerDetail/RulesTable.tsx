@@ -21,7 +21,7 @@ interface Props {
   rules: Route['rules'];
 }
 
-const matchFieldMap: Record<MatchField, string> = {
+export const matchFieldMap: Record<MatchField, string> = {
   header: 'HTTP Header',
   host: 'Host',
   method: 'HTTP Method',
