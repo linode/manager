@@ -13,6 +13,10 @@ import { LoadingAppPanelSection } from './LoadingAppPanelSection';
 import { Panel } from './Panel';
 import { AppsData } from './types';
 
+const NEW_APPS_HEADER = 'New apps';
+const POPULAR_APPS_HEADER = 'Popular apps';
+const ALL_APPS_HEADER = 'All apps';
+
 interface Props extends AppsData {
   disabled: boolean;
   error?: string;
@@ -68,22 +72,21 @@ class SelectAppPanel extends React.PureComponent<Props> {
     }
 
     if (appInstancesLoading || !appInstances) {
-      // if (true === true) {
       return (
         <StyledPaper error={error} title="Select App">
           <LoadingAppPanelSection
             desktopCount={3}
-            heading="New apps"
+            heading={NEW_APPS_HEADER}
             mobileCount={2}
           />
           <LoadingAppPanelSection
             desktopCount={6}
-            heading="Popular apps"
+            heading={POPULAR_APPS_HEADER}
             mobileCount={4}
           />
           <LoadingAppPanelSection
             desktopCount={9}
-            heading="All apps"
+            heading={ALL_APPS_HEADER}
             mobileCount={6}
           />
         </StyledPaper>
@@ -118,7 +121,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
             apps={newApps}
             disabled={disabled}
             handleClick={handleClick}
-            heading="New apps"
+            heading={NEW_APPS_HEADER}
             openDrawer={openDrawer}
             selectedStackScriptID={selectedStackScriptID}
           />
@@ -128,7 +131,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
             apps={popularApps}
             disabled={disabled}
             handleClick={handleClick}
-            heading="Popular apps"
+            heading={POPULAR_APPS_HEADER}
             openDrawer={openDrawer}
             selectedStackScriptID={selectedStackScriptID}
           />
@@ -137,7 +140,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
           apps={allApps}
           disabled={disabled}
           handleClick={handleClick}
-          heading={isFilteringOrSearching ? '' : 'All apps'}
+          heading={isFilteringOrSearching ? '' : ALL_APPS_HEADER}
           openDrawer={openDrawer}
           searchValue={searchValue}
           selectedStackScriptID={selectedStackScriptID}

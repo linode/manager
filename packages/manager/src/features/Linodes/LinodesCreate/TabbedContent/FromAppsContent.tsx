@@ -229,6 +229,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
                       ? {
                           endAdornment: (
                             <IconButton
+                              aria-label="Clear search"
                               onClick={handleClearSearch}
                               sx={{ padding: '2px 4px' }}
                             >
@@ -431,8 +432,8 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
     });
   };
 
-  //
-  percentageCounter = initializePercentageCounter(7000);
+  // Based on average API response time
+  percentageCounter = initializePercentageCounter(8000);
 
   state: State = {
     categoryFilter: null,
