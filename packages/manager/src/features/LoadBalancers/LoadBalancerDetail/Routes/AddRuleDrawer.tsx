@@ -19,6 +19,8 @@ import { useLoadbalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
 import {
+  defaultServiceTarget,
+  initialValues,
   matchTypeOptions,
   matchValuePlaceholder,
   stickyOptions,
@@ -33,29 +35,16 @@ interface Props {
   route: Route | undefined;
 }
 
-const defaultServiceTarget = {
-  id: -1,
-  percentage: 100,
-};
-
-const initialValues = {
-  match_condition: {
-    hostname: '',
-    match_field: 'path_prefix' as const,
-    match_value: '',
-    session_stickiness_cookie: null,
-    session_stickiness_ttl: null,
-  },
-  service_targets: [defaultServiceTarget],
-};
-
 export const AddRuleDrawer = (props: Props) => {
   const { loadbalancerId, onClose: _onClose, open, route } = props;
 
-  const { mutateAsync: updateRule, reset } = useLoadbalancerRouteUpdateMutation(
-    loadbalancerId,
-    route?.id ?? -1
-  );
+  const ruleIndex = route?.rules.length ?? 0;
+
+  const {
+    error,
+    mutateAsync: updateRule,
+    reset,
+  } = useLoadbalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
 
   const formik = useFormik<RulePayload>({
     enableReinitialize: true,
@@ -102,6 +91,15 @@ export const AddRuleDrawer = (props: Props) => {
     formik.values.service_targets.splice(index, 1);
     formik.setFieldValue('service_targets', formik.values.service_targets);
   };
+
+  const getServiceTargetError = (index: number, field: 'id' | 'percentage') => {
+    return error?.find(
+      (e) =>
+        e.field === `rules[${ruleIndex}].service_targets[${index}].${field}`
+    )?.reason;
+  };
+
+  console.log(error)
 
   const isStickynessEnabled =
     Boolean(formik.values.match_condition.session_stickiness_cookie) ||
@@ -166,11 +164,14 @@ export const AddRuleDrawer = (props: Props) => {
                       <InputAdornment position="end">%</InputAdornment>
                     ),
                   }}
+                  errorText={getServiceTargetError(index, 'percentage')}
                   hideLabel={index !== 0}
                   label="Percent"
                   max={100}
                   min={0}
+                  name={`service_targets[${index}].percentage`}
                   noMarginTop
+                  onChange={formik.handleChange}
                   type="number"
                   value={formik.values.service_targets[index].percentage}
                 />
@@ -181,6 +182,7 @@ export const AddRuleDrawer = (props: Props) => {
                       serviceTarget?.id ?? null
                     )
                   }
+                  errorText={getServiceTargetError(index, 'id')}
                   loadbalancerId={loadbalancerId}
                   sx={{ flexGrow: 1 }}
                   textFieldProps={{ hideLabel: index !== 0 }}
@@ -273,6 +275,7 @@ export const AddRuleDrawer = (props: Props) => {
                       name="match_condition.session_stickiness_ttl"
                       noMarginTop
                       onChange={formik.handleChange}
+                      type='number'
                     />
                     <Autocomplete
                       options={[

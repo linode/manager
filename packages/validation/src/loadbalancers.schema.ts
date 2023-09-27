@@ -51,24 +51,32 @@ export const CreateServiceTargetSchema = object({
 
 const RouteServiceTargetSchema = object({
   id: number(),
-  percentage: number(),
+  percentage: number()
+    .min(0, 'Percentage must be greater than or equal to 0')
+    .max(100, 'Percentage must be less than or equal to 100'),
 });
 
 const MatchConditionSchema = object({
   hostname: string(),
-  match_field: string().oneOf(['path_prefix', 'query', 'header', 'method']),
+  match_field: string().oneOf([
+    'path_prefix',
+    'query',
+    'header',
+    'method',
+    'host',
+  ]),
   match_value: string(),
-  session_stickiness_cookie: string(),
-  session_stickiness_ttl: number(),
+  session_stickiness_cookie: string().nullable(),
+  session_stickiness_ttl: number().nullable(),
 });
 
 export const RuleSchema = object({
   match_condition: MatchConditionSchema,
-  service_targets: RouteServiceTargetSchema,
+  service_targets: array(RouteServiceTargetSchema),
 });
 
 export const UpdateRouteSchema = object({
   label: string(),
   protocol: string().oneOf(['tcp', 'http']),
-  rules: array(RouteServiceTargetSchema),
+  rules: array(RuleSchema),
 });

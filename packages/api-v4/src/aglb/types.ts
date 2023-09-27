@@ -116,7 +116,7 @@ export interface MatchCondition {
   match_field: MatchField;
   match_value: string;
   session_stickiness_cookie: string | null;
-  session_stickiness_ttl: string | null;
+  session_stickiness_ttl: number | null;
 }
 
 export interface RouteServiceTargetPayload {

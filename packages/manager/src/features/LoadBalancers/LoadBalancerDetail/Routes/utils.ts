@@ -27,3 +27,19 @@ export const stickyOptions = [
   { label: 'Load Balancer Generated' },
   { label: 'Origin Generated' },
 ] as const;
+
+export const defaultServiceTarget = {
+  id: -1,
+  percentage: 101,
+};
+
+export const initialValues = {
+  match_condition: {
+    hostname: '',
+    match_field: 'path_prefix' as const,
+    match_value: '',
+    session_stickiness_cookie: null,
+    session_stickiness_ttl: null,
+  },
+  service_targets: [defaultServiceTarget],
+};
