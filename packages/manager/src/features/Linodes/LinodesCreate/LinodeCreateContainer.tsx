@@ -52,6 +52,7 @@ import {
 } from 'src/queries/accountAgreements';
 import { simpleMutationHandlers } from 'src/queries/base';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
+import { vpcQueryKey } from 'src/queries/vpcs';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';
 import {
@@ -880,6 +881,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
         /** reset the Events polling */
         resetEventsPolling();
+
+        // If a VPC was assigned, invalidate the query so that the relevant VPC data
+        // gets displayed in the LinodeEntityDetail
+        if (
+          this.state.selectedVPCId !== undefined &&
+          this.state.selectedVPCId !== -1
+        ) {
+          this.props.queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
+        }
 
         /** send the user to the Linode detail page */
         this.props.history.push(`/linodes/${response.id}`);

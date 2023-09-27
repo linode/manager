@@ -18,6 +18,7 @@ import { useVPCsQuery } from 'src/queries/vpcs';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { StyledCreateLink } from './LinodeCreate.styles';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
@@ -38,6 +39,8 @@ interface VPCPanelProps {
   vpcIPv4Error?: string;
 }
 
+const ERROR_GROUP_STRING = 'vpc-errors';
+
 export const VPCPanel = (props: VPCPanelProps) => {
   const {
     assignPublicIPv4Address,
@@ -57,7 +60,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
   const flags = useFlags();
   const { account } = useAccountManagement();
-  const { data: vpcData, error, isLoading } = useVPCsQuery({}, {}, true, true);
 
   const regions = useRegionsQuery().data ?? [];
   const selectedRegion = region || '';
@@ -73,6 +75,22 @@ export const VPCPanel = (props: VPCPanelProps) => {
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
+
+  /* To prevent unnecessary API calls, pass the displayVPCPanel boolean to determine
+     whether the query is enabled and whether it should refetchOnWindowFocus
+  */
+  const { data: vpcData, error, isLoading } = useVPCsQuery(
+    {},
+    {},
+    displayVPCPanel,
+    displayVPCPanel
+  );
+
+  React.useEffect(() => {
+    if (subnetError || vpcIPv4Error) {
+      scrollErrorIntoView(ERROR_GROUP_STRING);
+    }
+  }, [subnetError, vpcIPv4Error]);
 
   if (!displayVPCPanel) {
     return null;
@@ -166,6 +184,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   (option) => option.value === selectedSubnetId
                 ) || null
               }
+              errorGroup={ERROR_GROUP_STRING}
               errorText={subnetError}
               isClearable={false}
               label="Subnet"
@@ -211,6 +230,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
             </Box>
             {!autoassignIPv4WithinVPC && (
               <TextField
+                errorGroup={ERROR_GROUP_STRING}
                 errorText={vpcIPv4Error}
                 label="VPC IPv4"
                 onChange={(e) => handleVPCIPv4Change(e.target.value)}
