@@ -99,8 +99,6 @@ export const AddRuleDrawer = (props: Props) => {
     )?.reason;
   };
 
-  console.log(error)
-
   const isStickynessEnabled =
     Boolean(formik.values.match_condition.session_stickiness_cookie) ||
     Boolean(formik.values.match_condition.session_stickiness_ttl);

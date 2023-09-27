@@ -50,10 +50,13 @@ export const CreateServiceTargetSchema = object({
 });
 
 const RouteServiceTargetSchema = object({
-  id: number(),
+  id: number()
+    .min(0, 'Service Target ID is required.')
+    .required('Service Target ID is required.'),
   percentage: number()
-    .min(0, 'Percentage must be greater than or equal to 0')
-    .max(100, 'Percentage must be less than or equal to 100'),
+    .min(0, 'Percent must be greater than or equal to 0.')
+    .max(100, 'Percent must be less than or equal to 100.')
+    .required(),
 });
 
 const MatchConditionSchema = object({
