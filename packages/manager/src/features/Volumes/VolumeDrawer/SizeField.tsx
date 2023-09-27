@@ -9,7 +9,7 @@ import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
-import { SIZE_FIELD_WIDTH } from '../VolumeCreate/CreateVolumeForm';
+import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
 import { makeStyles } from '@mui/styles';
 
 interface Props {
