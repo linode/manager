@@ -1,6 +1,6 @@
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, Params } from '@linode/api-v4/lib/types';
-import { useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -9,22 +9,15 @@ import { queryPresets } from './base';
 
 export const queryKey = 'stackscripts';
 
-export const useStackScriptsOCA = (params: Params = {}) => {
-  const queryClient = useQueryClient();
-
-  const prefetchStackScriptsOCA = async () => {
-    await queryClient.prefetchQuery<StackScript[], APIError[]>(
-      `${queryKey}-oca-all`,
-      () => getAllOCAsRequest(params),
-      {
-        ...queryPresets.oneTimeFetch,
-      }
-    );
-  };
-
-  return {
-    prefetchStackScriptsOCA,
-  };
+export const useStackScriptsOCA = (enabled: boolean, params: Params = {}) => {
+  return useQuery<StackScript[], APIError[]>(
+    [`${queryKey}-oca-all`, params],
+    () => getAllOCAsRequest(params),
+    {
+      enabled,
+      ...queryPresets.oneTimeFetch,
+    }
+  );
 };
 
 export const getAllOCAsRequest = (passedParams: Params = {}) =>

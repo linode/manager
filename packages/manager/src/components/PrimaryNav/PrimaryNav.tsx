@@ -84,6 +84,7 @@ export const PrimaryNav = (props: Props) => {
   const location = useLocation();
 
   const [enableObjectPrefetch, setEnableObjectPrefetch] = React.useState(false);
+
   const [
     enableMarketplacePrefetch,
     setEnableMarketplacePrefetch,
@@ -91,7 +92,11 @@ export const PrimaryNav = (props: Props) => {
 
   const { _isManagedAccount, account } = useAccountManagement();
 
-  const { prefetchStackScriptsOCA } = useStackScriptsOCA();
+  const {
+    data: oneClickApps,
+    error: oneClickAppsError,
+    isLoading: oneClickAppsLoading,
+  } = useStackScriptsOCA(enableMarketplacePrefetch);
 
   const {
     data: clusters,
@@ -112,6 +117,9 @@ export const PrimaryNav = (props: Props) => {
     !bucketsLoading &&
     !clustersError &&
     !bucketsError;
+
+  const allowMarketplacePrefetch =
+    !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
 
   const showDatabases = isFeatureEnabled(
     'Managed Databases',
@@ -136,12 +144,6 @@ export const PrimaryNav = (props: Props) => {
       setEnableMarketplacePrefetch(true);
     }
   };
-
-  React.useEffect(() => {
-    if (enableMarketplacePrefetch) {
-      prefetchStackScriptsOCA();
-    }
-  }, [enableMarketplacePrefetch, prefetchStackScriptsOCA]);
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
     () => [
@@ -246,7 +248,7 @@ export const PrimaryNav = (props: Props) => {
           display: 'Marketplace',
           href: '/linodes/create?type=One-Click',
           icon: <OCA />,
-          prefetchRequestCondition: true,
+          prefetchRequestCondition: allowMarketplacePrefetch,
           prefetchRequestFn: prefetchMarketplace,
         },
       ],
@@ -274,6 +276,7 @@ export const PrimaryNav = (props: Props) => {
       showDatabases,
       _isManagedAccount,
       allowObjPrefetch,
+      allowMarketplacePrefetch,
       flags.databaseBeta,
       flags.aglb,
       showVPCs,
