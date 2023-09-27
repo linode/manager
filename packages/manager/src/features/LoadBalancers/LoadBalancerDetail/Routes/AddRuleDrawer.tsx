@@ -58,6 +58,7 @@ export const AddRuleDrawer = (props: Props) => {
   );
 
   const formik = useFormik<RulePayload>({
+    enableReinitialize: true,
     initialValues,
     async onSubmit(rule) {
       if (!route) {
