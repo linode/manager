@@ -10,8 +10,8 @@ import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { APP_ROOT } from 'src/constants';
 import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
@@ -22,6 +22,7 @@ import {
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { initializePercentageCounter } from 'src/utilities/percentageCounter';
 
 import SelectAppPanel from '../SelectAppPanel';
 import {
@@ -30,8 +31,8 @@ import {
   StackScriptFormStateHandlers,
   WithTypesRegionsAndImages,
 } from '../types';
-import { filterUDFErrors } from './formUtilities';
 import { StyledGrid } from './CommonTabbedContent.styles';
+import { filterUDFErrors } from './formUtilities';
 
 const appCategories = [
   'Control Panels',
@@ -80,6 +81,7 @@ interface State {
   filteredApps: CombinedProps['appInstances'];
   isFiltering: boolean;
   isSearching: boolean;
+  percentageCounter: number;
   query: string;
   selectedScriptForDrawer: string;
 }
@@ -136,6 +138,14 @@ const renderLogo = (selectedStackScriptLabel?: string, logoUrl?: string) => {
 const curriedHandleSelectStackScript = curry(handleSelectStackScript);
 
 export class FromAppsContent extends React.Component<CombinedProps, State> {
+  componentDidMount() {
+    this.percentageCounter.startAnimation(this.updatePercentage);
+  }
+
+  componentWillUnmount() {
+    this.percentageCounter.stopAnimation();
+  }
+
   render() {
     const {
       appInstances,
@@ -179,6 +189,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
       filteredApps,
       isFiltering,
       isSearching,
+      percentageCounter,
       query,
     } = this.state;
 
@@ -193,7 +204,9 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
               <StyledSearchBox>
                 <DebouncedSearchTextField
                   placeholder={
-                    appInstancesLoading ? 'Loading...' : 'Search for app name'
+                    appInstancesLoading
+                      ? `Loading... ${percentageCounter.toFixed(0)}%`
+                      : 'Search for app name'
                   }
                   sx={
                     appInstancesLoading
@@ -379,14 +392,21 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
     });
   };
 
+  percentageCounter = initializePercentageCounter(6000);
+
   state: State = {
     categoryFilter: null,
     detailDrawerOpen: false,
     filteredApps: [],
     isFiltering: false,
     isSearching: false,
+    percentageCounter: 0,
     query: '',
     selectedScriptForDrawer: '',
+  };
+
+  updatePercentage = (newPercentage: number) => {
+    this.setState({ percentageCounter: newPercentage });
   };
 }
 

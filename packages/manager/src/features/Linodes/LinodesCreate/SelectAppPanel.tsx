@@ -4,12 +4,12 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { AppPanelSection } from 'src/features/Linodes/LinodesCreate/AppPanelSection';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
+import { LoadingAppPanelSection } from './LoadingAppPanelSection';
 import { Panel } from './Panel';
 import { AppsData } from './types';
 
@@ -68,12 +68,25 @@ class SelectAppPanel extends React.PureComponent<Props> {
     }
 
     if (appInstancesLoading || !appInstances) {
+      // if (true === true) {
       return (
-        <StyledPanel error={error} title="Select App">
-          <StyledLoadingSpan>
-            <LandingLoading />
-          </StyledLoadingSpan>
-        </StyledPanel>
+        <StyledPaper error={error} title="Select App">
+          <LoadingAppPanelSection
+            desktopCount={3}
+            heading="New apps"
+            mobileCount={2}
+          />
+          <LoadingAppPanelSection
+            desktopCount={6}
+            heading="Popular apps"
+            mobileCount={4}
+          />
+          <LoadingAppPanelSection
+            desktopCount={9}
+            heading="All apps"
+            mobileCount={6}
+          />
+        </StyledPaper>
       );
     }
 
@@ -190,11 +203,5 @@ const StyledPanel = styled(Panel, { label: 'StyledPanel' })(({ theme }) => ({
 const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
   ...commonStyling(theme),
 }));
-
-const StyledLoadingSpan = styled('span', { label: 'StyledLoadingSpan' })({
-  '& >div:first-of-type': {
-    height: 450,
-  },
-});
 
 export default compose<Props, Props>(React.memo)(SelectAppPanel);
