@@ -8,6 +8,14 @@ export const matchFieldMap: Record<MatchField, string> = {
   query: 'Query String',
 };
 
+export const matchValuePlaceholder: Record<MatchField, string> = {
+  header: 'X-route-header=images',
+  host: '',
+  method: 'POST',
+  path_prefix: '/images',
+  query: '?svc=images',
+};
+
 export const matchTypeOptions = Object.keys(matchFieldMap).map(
   (key: MatchField) => ({
     label: matchFieldMap[key],

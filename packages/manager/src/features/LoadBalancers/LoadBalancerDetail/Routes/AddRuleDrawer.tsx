@@ -17,7 +17,11 @@ import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
-import { matchTypeOptions, stickyOptions } from './utils';
+import {
+  matchTypeOptions,
+  matchValuePlaceholder,
+  stickyOptions,
+} from './utils';
 
 import type { Route, RulePayload } from '@linode/api-v4';
 
@@ -116,13 +120,17 @@ export const AddRuleDrawer = (props: Props) => {
                 textFieldProps={{ noMarginTop: true }}
               />
               <TextField
+                placeholder={
+                  matchValuePlaceholder[
+                    formik.values.match_condition.match_field
+                  ]
+                }
                 containerProps={{ sx: { flexGrow: 1 } }}
                 label="Match Value"
                 name="match_condition.match_value"
+                noMarginTop
                 onChange={formik.handleChange}
                 value={formik.values.match_condition.match_value}
-                noMarginTop
-                placeholder="/my-path"
               />
             </Stack>
             <Stack alignItems="center" direction="row" gap={2}>
