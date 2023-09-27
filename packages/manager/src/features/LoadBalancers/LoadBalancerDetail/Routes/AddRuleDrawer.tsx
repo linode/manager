@@ -4,9 +4,9 @@ import Stack from '@mui/material/Stack';
 import { useFormik } from 'formik';
 import React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -16,11 +16,10 @@ import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
 
-import { matchFieldMap } from '../RulesTable';
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
+import { matchTypeOptions, stickyOptions } from './utils';
 
-import type { MatchField, Route, RulePayload } from '@linode/api-v4';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import type { Route, RulePayload } from '@linode/api-v4';
 
 interface Props {
   loadbalancerId: number;
@@ -34,34 +33,26 @@ const defaultServiceTarget = {
   percentage: 100,
 };
 
+const initialValues = {
+  match_condition: {
+    hostname: '',
+    match_field: 'path_prefix' as const,
+    match_value: '',
+    session_stickiness_cookie: null,
+    session_stickiness_ttl: null,
+  },
+  service_targets: [defaultServiceTarget],
+};
+
 export const AddRuleDrawer = (props: Props) => {
   const { loadbalancerId, onClose, open, route } = props;
 
   const formik = useFormik<RulePayload>({
-    initialValues: {
-      match_condition: {
-        hostname: '',
-        match_field: 'path_prefix',
-        match_value: '',
-        session_stickiness_cookie: null,
-        session_stickiness_ttl: null,
-      },
-      service_targets: [defaultServiceTarget],
-    },
+    initialValues,
     async onSubmit(values, formikHelpers) {
-      alert(values);
+      alert(JSON.stringify(values, null, 2));
     },
   });
-
-  const options = Object.keys(matchFieldMap).map((key: MatchField) => ({
-    label: matchFieldMap[key],
-    value: key,
-  }));
-
-  const stickyOptions = [
-    { label: 'Load Balancer Generated' },
-    { label: 'Origin Generated' },
-  ] as const;
 
   const cookieType = !formik.values.match_condition.session_stickiness_ttl
     ? stickyOptions[1]
@@ -72,6 +63,18 @@ export const AddRuleDrawer = (props: Props) => {
       ...formik.values.service_targets,
       defaultServiceTarget,
     ]);
+  };
+
+  const onStickinessChange = (
+    _: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => {
+    if (checked) {
+      formik.setFieldValue('match_condition.session_stickiness_ttl', 8);
+    } else {
+      formik.setFieldValue('match_condition.session_stickiness_ttl', null);
+      formik.setFieldValue('match_condition.session_stickiness_cookie', null);
+    }
   };
 
   const onRemoveServiceTarget = (index: number) => {
@@ -96,15 +99,28 @@ export const AddRuleDrawer = (props: Props) => {
             </Typography>
             <Stack direction="row" spacing={2}>
               <Autocomplete
+                onChange={(_, option) =>
+                  formik.setFieldValue(
+                    'match_condition.match_field',
+                    option.value
+                  )
+                }
+                value={matchTypeOptions.find(
+                  (option) =>
+                    option.value === formik.values.match_condition.match_field
+                )}
                 disableClearable
                 label="Match Type"
-                options={options}
+                options={matchTypeOptions}
                 sx={{ minWidth: 200 }}
                 textFieldProps={{ noMarginTop: true }}
               />
               <TextField
                 containerProps={{ sx: { flexGrow: 1 } }}
                 label="Match Value"
+                name="match_condition.match_value"
+                onChange={formik.handleChange}
+                value={formik.values.match_condition.match_value}
                 noMarginTop
                 placeholder="/my-path"
               />
@@ -174,24 +190,8 @@ export const AddRuleDrawer = (props: Props) => {
             <FormControlLabel
               control={
                 <Toggle
-                  onChange={(_, checked) => {
-                    if (checked) {
-                      formik.setFieldValue(
-                        'match_condition.session_stickiness_ttl',
-                        8
-                      );
-                    } else {
-                      formik.setFieldValue(
-                        'match_condition.session_stickiness_ttl',
-                        null
-                      );
-                      formik.setFieldValue(
-                        'match_condition.session_stickiness_cookie',
-                        null
-                      );
-                    }
-                  }}
                   checked={isStickynessEnabled}
+                  onChange={onStickinessChange}
                   sx={{ marginLeft: -1.5 }}
                 />
               }
@@ -258,7 +258,7 @@ export const AddRuleDrawer = (props: Props) => {
                       disableClearable
                       label="test"
                       textFieldProps={{ hideLabel: true, noMarginTop: true }}
-                      value="Hours"
+                      value={{ label: 'Hours' }}
                     />
                   </Stack>
                 )}

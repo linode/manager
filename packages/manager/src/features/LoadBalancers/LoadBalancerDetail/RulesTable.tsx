@@ -15,19 +15,13 @@ import {
   StyledTableRow,
 } from 'src/features/VPCs/VPCDetail/SubnetLinodeRow.styles';
 
-import type { MatchField, Route } from '@linode/api-v4';
+import { matchFieldMap } from './Routes/utils';
+
+import type { Route } from '@linode/api-v4';
 
 interface Props {
   rules: Route['rules'];
 }
-
-export const matchFieldMap: Record<MatchField, string> = {
-  header: 'HTTP Header',
-  host: 'Host',
-  method: 'HTTP Method',
-  path_prefix: 'Path',
-  query: 'Query String',
-};
 
 export const RulesTable = ({ rules }: Props) => {
   return (
