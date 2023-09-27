@@ -1,14 +1,15 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { styled } from '@mui/material/styles';
+import Close from '@mui/icons-material/Close';
+import Grid from '@mui/material/Unstable_Grid2';
 import compact from 'lodash/compact';
 import curry from 'lodash/curry';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect';
+import { IconButton } from 'src/components/IconButton';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
@@ -178,6 +179,13 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
       sendMarketplaceSearchEvent('Search Field');
     };
 
+    const handleClearSearch = () => {
+      this.setState({
+        isSearching: false,
+        query: '',
+      });
+    };
+
     const logoUrl = appInstances?.find(
       (app) => app.id === selectedStackScriptID
     )?.logo_url;
@@ -200,9 +208,36 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
         <StyledGrid>
           <Paper>
             <Typography variant="h2">Select an App</Typography>
-            <StyledSearchFilterBox>
-              <StyledSearchBox>
+            <Grid
+              sx={{
+                marginTop: 0.5,
+              }}
+              container
+              spacing={2}
+            >
+              <Grid
+                sx={{
+                  '& .MuiInputBase-root': {
+                    maxWidth: '100%',
+                  },
+                  flexGrow: 1,
+                }}
+              >
                 <DebouncedSearchTextField
+                  InputProps={
+                    isSearching
+                      ? {
+                          endAdornment: (
+                            <IconButton
+                              onClick={handleClearSearch}
+                              sx={{ padding: '2px 4px' }}
+                            >
+                              <Close />
+                            </IconButton>
+                          ),
+                        }
+                      : undefined
+                  }
                   placeholder={
                     appInstancesLoading
                       ? `Loading... ${percentageCounter.toFixed(0)}%`
@@ -211,6 +246,9 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
                   sx={
                     appInstancesLoading
                       ? {
+                          '& .MuiInput-input::placeholder': {
+                            opacity: 1,
+                          },
                           '& input': {
                             cursor: 'not-allowed',
                           },
@@ -220,6 +258,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
                         }
                       : null
                   }
+                  debounceTime={250}
                   disabled={appInstancesLoading}
                   fullWidth
                   hideLabel
@@ -228,8 +267,8 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
                   onSearch={this.onSearch}
                   value={query}
                 />
-              </StyledSearchBox>
-              <StyledFilterBox>
+              </Grid>
+              <Grid sx={{ minWidth: 225 }}>
                 <Select
                   placeholder={
                     appInstancesLoading ? 'Loading...' : 'Select category'
@@ -241,8 +280,8 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
                   options={appCategoryOptions}
                   value={categoryFilter}
                 />
-              </StyledFilterBox>
-            </StyledSearchFilterBox>
+              </Grid>
+            </Grid>
           </Paper>
           <SelectAppPanel
             appInstances={
@@ -392,7 +431,8 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
     });
   };
 
-  percentageCounter = initializePercentageCounter(6000);
+  //
+  percentageCounter = initializePercentageCounter(7000);
 
   state: State = {
     categoryFilter: null,
@@ -409,26 +449,3 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
     this.setState({ percentageCounter: newPercentage });
   };
 }
-
-const StyledSearchFilterBox = styled(Box, { label: 'StyledSearchFilterBox' })(
-  ({ theme }) => ({
-    '& > h2': {
-      width: '100%',
-    },
-    display: 'flex',
-    gap: theme.spacing(),
-    justifyContent: 'space-between',
-    marginTop: theme.spacing(),
-  })
-);
-
-const StyledFilterBox = styled(Box, { label: 'StyledFilterBox' })({
-  flexGrow: 1.5,
-});
-
-const StyledSearchBox = styled(Box, { label: 'StyledSearchBox' })({
-  '& .input': {
-    maxWidth: 'none',
-  },
-  flexGrow: 10,
-});
