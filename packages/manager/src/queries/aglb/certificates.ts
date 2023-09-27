@@ -20,6 +20,7 @@ import type {
   Filter,
   Params,
   ResourcePage,
+  UpdateCertificatePayload,
 } from '@linode/api-v4';
 
 export const useLoadBalancerCertificatesQuery = (
@@ -66,7 +67,7 @@ export const useLoadBalancerCertificateMutation = (
   certificateId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Certificate, APIError[], CreateCertificatePayload>(
+  return useMutation<Certificate, APIError[], UpdateCertificatePayload>(
     (data) =>
       updateLoadbalancerCertificate(loadbalancerId, certificateId, data),
     {

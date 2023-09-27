@@ -150,3 +150,10 @@ export interface CreateCertificatePayload {
   label: string;
   type: CertificateType;
 }
+
+export interface UpdateCertificatePayload {
+  key?: string;
+  certificate?: string;
+  label?: string;
+  type?: CertificateType;
+}

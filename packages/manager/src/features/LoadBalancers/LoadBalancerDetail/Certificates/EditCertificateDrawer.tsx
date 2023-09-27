@@ -1,4 +1,4 @@
-import { Certificate, CreateCertificatePayload } from '@linode/api-v4';
+import { Certificate, UpdateCertificatePayload } from '@linode/api-v4';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import React from 'react';
@@ -37,20 +37,20 @@ export const EditCertificateDrawer = (props: Props) => {
 
   const {
     error,
-    mutateAsync: editCertificate,
+    mutateAsync: updateCertificate,
     reset,
   } = useLoadBalancerCertificateMutation(loadbalancerId, certificate?.id ?? -1);
 
-  const formik = useFormik<CreateCertificatePayload>({
+  const formik = useFormik<UpdateCertificatePayload>({
     enableReinitialize: true,
     initialValues: {
       certificate: '',
       key: '',
       label: certificate?.label ?? '',
-      type: certificate?.type ?? 'downstream',
+      type: certificate?.type,
     },
     async onSubmit(values) {
-      await editCertificate(values);
+      await updateCertificate(values);
       onClose();
     },
   });

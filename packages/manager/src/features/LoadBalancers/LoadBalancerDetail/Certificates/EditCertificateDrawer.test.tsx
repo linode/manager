@@ -19,28 +19,10 @@ const mockCACertificate: Certificate = {
 };
 
 describe('EditCertificateDrawer', () => {
-  it('should contain the name of the cert in the drawer title', () => {
+  it('should contain the name of the cert in the drawer title and label field', () => {
     const onClose = jest.fn();
 
-    const { getByTestId } = renderWithTheme(
-      <EditCertificateDrawer
-        certificate={mockTLSCertificate}
-        loadbalancerId={0}
-        onClose={onClose}
-        open
-      />
-    );
-
-    expect(getByTestId('drawer-title')).toHaveTextContent(
-      `Edit ${mockTLSCertificate.label}`
-    );
-  });
-
-  // TODO: update and unskip this test before merging
-  it.skip('should display pre-populated fields for a TLS cert type when opened', async () => {
-    const onClose = jest.fn();
-
-    const { getByLabelText } = renderWithTheme(
+    const { getByTestId, getByLabelText } = renderWithTheme(
       <EditCertificateDrawer
         certificate={mockTLSCertificate}
         loadbalancerId={0}
@@ -50,19 +32,17 @@ describe('EditCertificateDrawer', () => {
     );
 
     const labelInput = getByLabelText('Certificate Label');
-    const certInput = getByLabelText('TLS Certificate');
-    const keyInput = getByLabelText('Private Key');
 
+    expect(getByTestId('drawer-title')).toHaveTextContent(
+      `Edit ${mockTLSCertificate.label}`
+    );
     expect(labelInput).toHaveDisplayValue(mockTLSCertificate.label);
-    expect(certInput).not.toHaveDisplayValue('');
-    expect(keyInput).not.toHaveDisplayValue('');
   });
 
-  // TODO: update and unskip this test before merging
-  it.skip('should display pre-populated fields for a CA cert type when opened', async () => {
+  it('should submit and close drawer when only the label of the certificate is edited', async () => {
     const onClose = jest.fn();
 
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText, getByTestId } = renderWithTheme(
       <EditCertificateDrawer
         certificate={mockCACertificate}
         loadbalancerId={0}
@@ -75,10 +55,17 @@ describe('EditCertificateDrawer', () => {
     const certInput = getByLabelText('Server Certificate');
 
     expect(labelInput).toHaveDisplayValue(mockCACertificate.label);
-    expect(certInput).not.toHaveDisplayValue('');
+    expect(certInput).toHaveDisplayValue('');
+
+    act(() => {
+      userEvent.type(labelInput, 'my-updated-cert-0');
+      userEvent.click(getByTestId('submit'));
+    });
+
+    await waitFor(() => expect(onClose).toBeCalled());
   });
 
-  it('should have editable fields and be submittable when filled out correctly', async () => {
+  it('should submit and close drawer when both a certificate and key are included', async () => {
     const onClose = jest.fn();
 
     const { getByLabelText, getByTestId } = renderWithTheme(
