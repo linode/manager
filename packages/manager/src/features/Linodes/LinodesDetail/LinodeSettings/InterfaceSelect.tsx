@@ -9,13 +9,11 @@ import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-// import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { VPCPanel } from 'src/features/Linodes/LinodesCreate/VPCPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { useVlansQuery } from 'src/queries/vlans';
-// import { useSubnetsQuery, useVPCsQuery } from 'src/queries/vpcs';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 
@@ -100,20 +98,6 @@ export const InterfaceSelect = (props: CombinedProps) => {
   if (Boolean(newVlan)) {
     vlanOptions.push({ label: newVlan, value: newVlan });
   }
-
-  // const { data: vpcs, isLoading: vpcsLoading } = useVPCsQuery(
-  //   {},
-  //   {
-  //     ['region']: region,
-  //   }
-  // );
-
-  // const { data: subnets, isLoading: subnetsLoading } = useSubnetsQuery(
-  //   vpcId ?? -1,
-  //   {},
-  //   {},
-  //   Boolean(vpcId)
-  // );
 
   const [autoAssignVpcIpv4, setAutoAssignVpcIpv4] = React.useState(true);
   const [autoAssignLinodeIpv4, setAutoAssignLinodeIpv4] = React.useState(false);
@@ -244,7 +228,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
-        <Grid xs={12}>
+        <Grid xs={purpose === 'vpc' && !isSmallBp ? 6 : 12}>
           <Select
             options={
               // Do not display "None" as an option for eth0 (must be either Public Internet or a VLAN).
@@ -322,28 +306,32 @@ export const InterfaceSelect = (props: CombinedProps) => {
         </Grid>
       ) : null}
       {purpose === 'vpc' && (
-        <VPCPanel
-          toggleAssignPublicIPv4Address={() =>
-            setAutoAssignLinodeIpv4(
-              (autoAssignLinodeIpv4) => !autoAssignLinodeIpv4
-            )
-          }
-          toggleAutoassignIPv4WithinVPCEnabled={() =>
-            setAutoAssignVpcIpv4((autoAssignVpcIpv4) => !autoAssignVpcIpv4)
-          }
-          assignPublicIPv4Address={autoAssignLinodeIpv4}
-          autoassignIPv4WithinVPC={autoAssignVpcIpv4}
-          handleSelectVPC={handleVPCLabelChange}
-          handleSubnetChange={handleSubnetChange}
-          handleVPCIPv4Change={handleVpcIpv4Input}
-          region={region}
-          selectedSubnetId={subnetId}
-          selectedVPCId={vpcId}
-          subnetError={errors.subnetError}
-          vpcIPv4AddressOfLinode={vpcIpv4}
-          vpcIPv4Error={errors.vpcIpv4Error}
-          vpcIdError={errors.vpcError}
-        />
+        <Grid xs={isSmallBp ? 12 : 6}>
+          <VPCPanel
+            toggleAssignPublicIPv4Address={() =>
+              setAutoAssignLinodeIpv4(
+                (autoAssignLinodeIpv4) => !autoAssignLinodeIpv4
+              )
+            }
+            toggleAutoassignIPv4WithinVPCEnabled={() =>
+              setAutoAssignVpcIpv4((autoAssignVpcIpv4) => !autoAssignVpcIpv4)
+            }
+            assignPublicIPv4Address={autoAssignLinodeIpv4}
+            autoassignIPv4WithinVPC={autoAssignVpcIpv4}
+            from="linodeConfig"
+            handleSelectVPC={handleVPCLabelChange}
+            handleSubnetChange={handleSubnetChange}
+            handleVPCIPv4Change={handleVpcIpv4Input}
+            nat_1_1Error={errors.nat_1_1Error}
+            region={region}
+            selectedSubnetId={subnetId}
+            selectedVPCId={vpcId}
+            subnetError={errors.subnetError}
+            vpcIPv4AddressOfLinode={vpcIpv4}
+            vpcIPv4Error={errors.vpcIpv4Error}
+            vpcIdError={errors.vpcError}
+          />
+        </Grid>
       )}
 
       {!fromAddonsPanel && (

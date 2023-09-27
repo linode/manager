@@ -25,9 +25,11 @@ import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 interface VPCPanelProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
+  from: 'linodeConfig' | 'linodeCreate';
   handleSelectVPC: (vpcId: number) => void;
   handleSubnetChange: (subnetId: number) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
+  nat_1_1Error?: string;
   region: string | undefined;
   selectedSubnetId: number | undefined;
   selectedVPCId: number | undefined;
@@ -43,9 +45,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
   const {
     assignPublicIPv4Address,
     autoassignIPv4WithinVPC,
+    from,
     handleSelectVPC,
     handleSubnetChange,
     handleVPCIPv4Change,
+    nat_1_1Error,
     region,
     selectedSubnetId,
     selectedVPCId,
@@ -105,26 +109,37 @@ export const VPCPanel = (props: VPCPanelProps) => {
     ? getAPIErrorOrDefault(error, 'Unable to load VPCs')[0].reason
     : undefined;
 
-  const mainCopyVPC =
-    vpcDropdownOptions.length <= 1
-      ? 'Allow Linode to communicate in an isolated environment.'
-      : 'Assign this Linode to an existing VPC.';
+  const getMainCopyVPC = () => {
+    if (from === 'linodeConfig') {
+      return '';
+    }
+
+    const copy =
+      vpcDropdownOptions.length <= 1
+        ? 'Allow Linode to communicate in an isolated environment.'
+        : 'Assign this Linode to an existing VPC.';
+
+    return (
+      <>
+        {copy} <Link to="">Learn more</Link>
+      </>
+    );
+  };
 
   return (
-    <Paper
-      data-testid="vpc-panel"
-      sx={(theme) => ({ marginTop: theme.spacing(3) })}
-    >
-      <Typography
-        sx={(theme) => ({ marginBottom: theme.spacing(2) })}
-        variant="h2"
-      >
-        VPC
-      </Typography>
+    <Paper data-testid="vpc-panel" sx={{ padding: 0 }}>
+      {from === 'linodeCreate' && (
+        <Typography
+          sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+          variant="h2"
+        >
+          VPC
+        </Typography>
+      )}
       <Stack>
         <Typography>
           {/* @TODO VPC: Update link */}
-          {mainCopyVPC} <Link to="">Learn more</Link>.
+          {getMainCopyVPC()}
         </Typography>
         <Select
           onChange={(selectedVPC: Item<number, string>) => {
@@ -141,7 +156,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
           errorText={vpcIdError ?? vpcError}
           isClearable={false}
           isLoading={isLoading}
-          label="Assign VPC"
+          label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
           noOptionsMessage={() => 'Create a VPC to assign to this Linode.'}
           options={vpcDropdownOptions}
           placeholder={''}
@@ -153,9 +168,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
           </Typography>
         )}
 
-        {/* <StyledCreateLink to={`${APP_ROOT}/vpcs/create`}>
-          Create VPC
-        </StyledCreateLink> */}
+        {/* {from === 'linodeCreate' && (
+          <StyledCreateLink to={`${APP_ROOT}/vpcs/create`}>
+            Create VPC
+          </StyledCreateLink>
+        )} */}
 
         {selectedVPCId !== -1 && regionSupportsVPCs && (
           <Stack data-testid="subnet-and-additional-options-section">
@@ -197,8 +214,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     flexDirection="row"
                     sx={{}}
                   >
-                    <Typography noWrap>
-                      Auto-assign a VPC IPv4 address for this Linode in the VPC
+                    <Typography>
+                      Auto-assign a VPC IPv4 address for this Linode
                     </Typography>
                     <TooltipIcon
                       text={
@@ -225,9 +242,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 marginLeft: '2px',
                 marginTop: !autoassignIPv4WithinVPC ? theme.spacing() : 0,
               })}
-              alignItems="center"
               display="flex"
-              flexDirection="row"
+              flexDirection="column"
             >
               <FormControlLabel
                 control={
@@ -250,6 +266,15 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   </Box>
                 }
               />
+              {assignPublicIPv4Address && nat_1_1Error && (
+                <Typography
+                  sx={(theme) => ({
+                    color: theme.color.red,
+                  })}
+                >
+                  {nat_1_1Error}
+                </Typography>
+              )}
             </Box>
           </Stack>
         )}
