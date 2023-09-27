@@ -31,6 +31,11 @@ const LoadBalancerServiceTargets = React.lazy(() =>
     default: module.LoadBalancerServiceTargets,
   }))
 );
+const LoadBalancerRoutes = React.lazy(() =>
+  import('./LoadBalancerRoutes').then((module) => ({
+    default: module.LoadBalancerRoutes,
+  }))
+);
 
 const LoadBalancerCertificates = React.lazy(() =>
   import('./Certificates').then((module) => ({
@@ -65,7 +70,7 @@ const LoadBalancerDetailLanding = () => {
       title: 'Configurations',
     },
     {
-      component: undefined,
+      component: LoadBalancerRoutes,
       path: 'routes',
       title: 'Routes',
     },
