@@ -14,7 +14,7 @@ export const UpdateCertificateSchema = object({
   certificate: string(),
   key: string().when(['type', 'certificate'], {
     is: (type: string, certificate: string) =>
-      type === 'downstream' && certificate === '',
+      type === 'downstream' && certificate,
     then: string().required('Private Key is required'),
   }),
   label: string(),
