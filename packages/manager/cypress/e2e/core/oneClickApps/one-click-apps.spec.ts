@@ -21,7 +21,7 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mapStackScriptLabelToOCA } from 'src/features/OneClickApps/utils';
 import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import { stackScriptFactory } from 'src/factories/stackscripts';
-import { oneClickApps } from 'src/features/OneClickApps/OneClickApps';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 
 import type { StackScript } from '@linode/api-v4';
 import type { OCA } from '@src/features/OneClickApps/types';
