@@ -76,9 +76,13 @@ export const RulesTable = ({ rules }: Props) => {
                   <Tooltip
                     title={
                       <>
-                        {rule.match_condition.service_targets.map((item) => (
-                          <div key={item.label}>{item.label}</div>
-                        ))}
+                        {rule.match_condition.service_targets.map(
+                          ({ id, label }) => (
+                            <div key={label}>
+                              {label}:{id}
+                            </div>
+                          )
+                        )}
                       </>
                     }
                   >
