@@ -10,7 +10,7 @@ import { Box, BoxProps } from '../Box';
 interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;
   'data-testid'?: string;
-  label?: string;
+  label: string;
 }
 
 interface ActionPanelProps extends BoxProps {
@@ -50,7 +50,7 @@ const ActionsPanelComponent = (props: ActionPanelProps) => {
           data-qa-cancel
           {...secondaryButtonProps}
         >
-          {secondaryButtonProps?.label}
+          {secondaryButtonProps.label}
         </Button>
       ) : null}
       {primaryButtonProps ? (
@@ -59,7 +59,7 @@ const ActionsPanelComponent = (props: ActionPanelProps) => {
           buttonType="primary"
           {...primaryButtonProps}
         >
-          {primaryButtonProps?.label}
+          {primaryButtonProps.label}
         </Button>
       ) : null}
     </StyledBox>
