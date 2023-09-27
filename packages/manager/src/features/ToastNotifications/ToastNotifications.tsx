@@ -250,6 +250,13 @@ export const ToastNotifications = () => {
               failureMessage: `Error deleting Firewall ${label}.`,
               successMessage: `Firewall ${label} successfully deleted.`,
             });
+          case 'firewall_create':
+            return toastSuccessAndFailure({
+              enqueueSnackbar,
+              eventStatus: event.status,
+              failureMessage: `Error creating Firewall ${label}.`,
+              successMessage: `Firewall ${label} successfully created.`,
+            });
           case 'firewall_device_add':
             return toastSuccessAndFailure({
               enqueueSnackbar,

@@ -1,5 +1,4 @@
 import { Config } from '@linode/api-v4';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -16,7 +15,6 @@ interface Props {
 
 export const DeleteConfigDialog = (props: Props) => {
   const { config, linodeId, onClose, open } = props;
-  const { enqueueSnackbar } = useSnackbar();
 
   const { error, isLoading, mutateAsync } = useLinodeConfigDeleteMutation(
     linodeId,
@@ -25,7 +23,6 @@ export const DeleteConfigDialog = (props: Props) => {
 
   const onDelete = async () => {
     await mutateAsync();
-    enqueueSnackbar('Successfully deleted config', { variant: 'success' });
     onClose();
   };
 
