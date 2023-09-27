@@ -101,8 +101,8 @@ async function generateChangeset() {
 
   try {
     const addCmd = `git add ${changesetFile}`;
-    // First sanitize against any \, then allow backticks in commit message
-    const escapedDescription = description.replace(/\\/g, '').replace(/`/g, "\\`"); 
+    // escape \ characters in input and allow backticks in commit message 
+    const escapedDescription = description.replace(/\\*`/g, "\\`"); 
     const commitCmd = `git commit -m "Added changeset: ${escapedDescription}"`;
     execSync(addCmd);
     execSync(commitCmd);
