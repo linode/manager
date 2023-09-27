@@ -70,7 +70,7 @@ const LoadBalancerDetailLanding = () => {
       title: 'Configurations',
     },
     {
-      component: undefined,
+      component: LoadBalancerRoutes,
       path: 'routes',
       title: 'Routes',
     },
