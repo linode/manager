@@ -8,6 +8,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { Tooltip } from 'src/components/Tooltip';
 import {
   StyledTableCell,
   StyledTableHeadCell,
@@ -72,7 +73,21 @@ export const RulesTable = ({ rules }: Props) => {
               </Hidden>
               <Hidden smDown>
                 <StyledTableCell>
-                  {rule.match_condition.service_targets.length}
+                  <Tooltip
+                    title={
+                      <>
+                        {rule.match_condition.service_targets.map((item) => (
+                          <div key={item.label}>{item.label}</div>
+                        ))}
+                      </>
+                    }
+                  >
+                    <div
+                      style={{ maxWidth: '30px', textDecoration: 'underline' }}
+                    >
+                      {rule.match_condition.service_targets.length}
+                    </div>
+                  </Tooltip>
                 </StyledTableCell>
               </Hidden>
               <Hidden smDown>
