@@ -125,7 +125,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                   match_field: 'path_prefix',
                   match_value: '/images',
                   session_stickiness_cookie: 'my-cool-cookie',
-                  session_stickiness_ttl: '60000',
+                  session_stickiness_ttl: 60000,
                 },
                 service_targets: [
                   {
