@@ -46,7 +46,6 @@ export const getMonthlyBackupsPrice = ({
   type,
 }: BackupsPriceOptions): PriceObject['monthly'] | undefined => {
   if (!region || !type) {
-    // TODO: M3-7063 (defaults)
     return undefined;
   }
 
