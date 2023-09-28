@@ -54,7 +54,7 @@ const IPv4 = string()
   .nullable()
   .test({
     name: 'validateIPv4',
-    message: 'Must be a valid IPv4 address, e.g. 192.0.2.0',
+    message: 'Must be a valid IPv4 address, e.g. 192.168.2.0',
     test: (value) => test_vpcsValidateIP(value),
   });
 

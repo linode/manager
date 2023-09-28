@@ -1,15 +1,15 @@
 export type Capabilities =
-  | 'Linodes'
-  | 'NodeBalancers'
-  | 'Block Storage'
-  | 'Object Storage'
-  | 'Kubernetes'
-  | 'GPU Linodes'
-  | 'Cloud Firewall'
-  | 'Vlans'
   | 'Bare Metal'
+  | 'Block Storage'
+  | 'Cloud Firewall'
+  | 'GPU Linodes'
+  | 'Kubernetes'
+  | 'Linodes'
   | 'Metadata'
+  | 'NodeBalancers'
+  | 'Object Storage'
   | 'Premium Plans'
+  | 'Vlans'
   | 'VPCs';
 
 export interface DNSResolvers {

@@ -49,6 +49,7 @@ export interface Flags {
   dcSpecificPricing: boolean;
   ipv6Sharing: boolean;
   kubernetesDashboardAvailability: boolean;
+  linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
   oneClickApps: OneClickApp;

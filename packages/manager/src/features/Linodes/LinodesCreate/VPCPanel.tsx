@@ -10,7 +10,7 @@ import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-// import { APP_ROOT } from 'src/constants';
+import { APP_ROOT } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -18,11 +18,12 @@ import { useVPCsQuery } from 'src/queries/vpcs';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-// import { StyledCreateLink } from './LinodeCreate.styles';
+import { StyledCreateLink } from './LinodeCreate.styles';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 
-interface VPCPanelProps {
+export interface VPCPanelProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   from: 'linodeConfig' | 'linodeCreate';
@@ -40,6 +41,8 @@ interface VPCPanelProps {
   vpcIPv4Error?: string;
   vpcIdError?: string;
 }
+
+const ERROR_GROUP_STRING = 'vpc-errors';
 
 export const VPCPanel = (props: VPCPanelProps) => {
   const {
@@ -63,7 +66,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
   const flags = useFlags();
   const { account } = useAccountManagement();
-  const { data: vpcData, error, isLoading } = useVPCsQuery({}, {}, true, true);
 
   const regions = useRegionsQuery().data ?? [];
   const selectedRegion = region || '';
@@ -79,6 +81,22 @@ export const VPCPanel = (props: VPCPanelProps) => {
     Boolean(flags.vpc),
     account?.capabilities ?? []
   );
+
+  /* To prevent unnecessary API calls, pass the displayVPCPanel boolean to determine
+     whether the query is enabled and whether it should refetchOnWindowFocus
+  */
+  const { data: vpcData, error, isLoading } = useVPCsQuery(
+    {},
+    {},
+    displayVPCPanel,
+    displayVPCPanel
+  );
+
+  React.useEffect(() => {
+    if (subnetError || vpcIPv4Error) {
+      scrollErrorIntoView(ERROR_GROUP_STRING);
+    }
+  }, [subnetError, vpcIPv4Error]);
 
   if (!displayVPCPanel) {
     return null;
@@ -168,11 +186,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
           </Typography>
         )}
 
-        {/* {from === 'linodeCreate' && (
+        {from === 'linodeCreate' && (
           <StyledCreateLink to={`${APP_ROOT}/vpcs/create`}>
             Create VPC
           </StyledCreateLink>
-        )} */}
+        )}
 
         {selectedVPCId !== -1 && regionSupportsVPCs && (
           <Stack data-testid="subnet-and-additional-options-section">
@@ -185,6 +203,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   (option) => option.value === selectedSubnetId
                 ) || null
               }
+              errorGroup={ERROR_GROUP_STRING}
               errorText={subnetError}
               isClearable={false}
               label="Subnet"
@@ -214,8 +233,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     flexDirection="row"
                     sx={{}}
                   >
-                    <Typography>
-                      Auto-assign a VPC IPv4 address for this Linode
+                    <Typography noWrap>
+                      Auto-assign a VPC IPv4 address for this Linode in the VPC
                     </Typography>
                     <TooltipIcon
                       text={
@@ -230,6 +249,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
             </Box>
             {!autoassignIPv4WithinVPC && (
               <TextField
+                errorGroup={ERROR_GROUP_STRING}
                 errorText={vpcIPv4Error}
                 label="VPC IPv4"
                 onChange={(e) => handleVPCIPv4Change(e.target.value)}
@@ -242,8 +262,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 marginLeft: '2px',
                 marginTop: !autoassignIPv4WithinVPC ? theme.spacing() : 0,
               })}
+              alignItems="center"
               display="flex"
-              flexDirection="column"
+              flexDirection={from === 'linodeCreate' ? 'row' : 'column'}
             >
               <FormControlLabel
                 control={
