@@ -88,6 +88,7 @@ export const LinodeResize = (props: Props) => {
     isConfirmationDialogOpen,
     setIsConfirmationDialogOpen,
   ] = React.useState<boolean>(false);
+  const [hasResizeError, setHasResizeError] = React.useState<boolean>(false);
 
   const {
     error: resizeError,
@@ -158,22 +159,25 @@ export const LinodeResize = (props: Props) => {
     if (!open) {
       formik.resetForm();
       setConfirmationText('');
+      setHasResizeError(false);
+      setIsConfirmationDialogOpen(false);
     }
   }, [open]);
 
   React.useEffect(() => {
     if (resizeError) {
+      setHasResizeError(true);
       // Always close the confirmation dialog on error.
       setIsConfirmationDialogOpen(false);
     }
   }, [resizeError]);
 
   React.useEffect(() => {
-    if (!isConfirmationDialogOpen && resizeError) {
+    if (!isConfirmationDialogOpen && hasResizeError) {
       // Set to "block: end" since the sticky header would otherwise interfere.
       scrollErrorIntoView(undefined, { block: 'end' });
     }
-  }, [isConfirmationDialogOpen, resizeError]);
+  }, [isConfirmationDialogOpen, hasResizeError]);
 
   const tableDisabled = hostMaintenance || unauthorized;
 
@@ -229,7 +233,7 @@ export const LinodeResize = (props: Props) => {
             variant="error"
           />
         )}
-        {error && <Notice variant="error">{error}</Notice>}
+        {hasResizeError && <Notice variant="error">{error}</Notice>}
         <Typography data-qa-description>
           If you&rsquo;re expecting a temporary burst of traffic to your
           website, or if you&rsquo;re not using your Linode as much as you
