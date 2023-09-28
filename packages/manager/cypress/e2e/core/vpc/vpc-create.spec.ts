@@ -3,40 +3,76 @@
  */
 
 import type { Subnet, VPC } from '@linode/api-v4';
-import { vpcFactory, subnetFactory } from '@src/factories';
+import { vpcFactory, subnetFactory, linodeFactory } from '@src/factories';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
+import {
+  mockCreateVPCError,
+  mockCreateVPC,
+  mockDeleteSubnet,
+  mockGetVPC,
+  mockGetSubnets,
+} from 'support/intercepts/vpc';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   randomLabel,
   randomPhrase,
   randomIp,
   randomNumber,
+  randomString,
 } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
+import { buildArray } from 'support/util/arrays';
 
-export const getSubnetNodeSection = (index: number) => {
+/**
+ * Gets the "Add a Subnet" section with the given index.
+ *
+ * @returns Cypress chainable.
+ */
+const getSubnetNodeSection = (index: number) => {
   return cy.get(`[data-qa-subnet-node="${index}"]`);
 };
 
 describe('VPC create flow', () => {
+  /*
+   * - Confirms VPC creation flow using mock API data.
+   * - Confirms that users can create and delete subnets.
+   * - Confirms client side validation when entering invalid IP ranges.
+   * - Confirms that UI handles API errors gracefully.
+   * - Confirms that UI redirects to created VPC page after creating a VPC.
+   */
   it('can create a VPC', () => {
     const vpcRegion = chooseRegion();
 
-    const mockSubnets: Subnet[] = subnetFactory.buildList(5);
-    const mockSubnetDelete: Subnet = subnetFactory.build();
+    const mockSubnets: Subnet[] = buildArray(3, (index: number) => {
+      return subnetFactory.build({
+        label: randomLabel(),
+        id: randomNumber(10000, 99999),
+        ipv4: `${randomIp()}/${randomNumber(0, 32)}`,
+        linodes: linodeFactory.buildList(index + 1),
+      });
+    });
 
+    const mockSubnetToDelete: Subnet = subnetFactory.build();
     const mockInvalidIpRange = `${randomIp()}/${randomNumber(33, 100)}`;
 
     const mockVpc: VPC = vpcFactory.build({
+      id: randomNumber(10000, 99999),
       label: randomLabel(),
       region: vpcRegion.id,
       description: randomPhrase(),
-      subnets: subnetFactory.buildList(5),
+      subnets: mockSubnets,
     });
+
+    const ipValidationErrorMessage = 'The IPv4 range must be in CIDR format';
+    const vpcCreationErrorMessage = 'An unknown error has occurred.';
+    const totalSubnetUniqueLinodes = mockSubnets.reduce(
+      (acc: number, cur: Subnet) => acc + cur.linodes.length,
+      0
+    );
 
     mockAppendFeatureFlags({
       vpc: makeFeatureFlagData(true),
@@ -59,7 +95,7 @@ describe('VPC create flow', () => {
       .type(mockVpc.description);
 
     // Fill out the first Subnet.
-    // Insert an invalid IP address range to confirm client side validation.
+    // Insert an invalid empty IP range to confirm client side validation.
     getSubnetNodeSection(0)
       .should('be.visible')
       .within(() => {
@@ -71,8 +107,7 @@ describe('VPC create flow', () => {
         cy.findByText('Subnet IP Address Range')
           .should('be.visible')
           .click()
-          .type(`{selectAll}{backspace}`)
-          .type(mockInvalidIpRange);
+          .type(`{selectAll}{backspace}`);
       });
 
     ui.button
@@ -81,59 +116,156 @@ describe('VPC create flow', () => {
       .should('be.enabled')
       .click();
 
-    cy.findByText('The IPv4 range must be in CIDR format').should('be.visible');
+    cy.findByText(ipValidationErrorMessage).should('be.visible');
+
+    // Enter a random non-IP address string to further test client side validation.
+    cy.findByText('Subnet IP Address Range')
+      .should('be.visible')
+      .click()
+      .type(`{selectAll}{backspace}`)
+      .type(randomString(18));
+
+    ui.button
+      .findByTitle('Create VPC')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.findByText(ipValidationErrorMessage).should('be.visible');
+
+    // Enter a valid IP address with an invalid network prefix to further test client side validation.
+    cy.findByText('Subnet IP Address Range')
+      .should('be.visible')
+      .click()
+      .type(`{selectAll}{backspace}`)
+      .type(mockInvalidIpRange);
+
+    ui.button
+      .findByTitle('Create VPC')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.findByText(ipValidationErrorMessage).should('be.visible');
 
     // Replace invalid IP address range with valid range.
     cy.findByText('Subnet IP Address Range')
       .should('be.visible')
       .click()
       .type(`{selectAll}{backspace}`)
-      .type(`${randomIp()}/${randomNumber(0, 32)}`);
+      .type(mockSubnets[0].ipv4!);
 
-    // Add another subnet that will later be removed.
+    // Add another subnet that we will remove later.
     ui.button
       .findByTitle('Add a Subnet')
       .should('be.visible')
       .should('be.enabled')
       .click();
 
+    // Fill out subnet section, but leave label blank, then attempt to create
+    // VPC with missing subnet label.
     getSubnetNodeSection(1)
       .should('be.visible')
       .within(() => {
-        cy.findByText('Subnet label')
-          .should('be.visible')
-          .click()
-          .type(mockSubnetDelete.label);
-
         cy.findByText('Subnet IP Address Range')
           .should('be.visible')
           .click()
           .type(`{selectAll}{backspace}`)
-          .type(`${randomIp()}/${randomNumber(0, 32)}`);
+          .type(mockSubnetToDelete.ipv4!);
+      });
 
+    ui.button
+      .findByTitle('Create VPC')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Confirm that label validation message is displayed, then remove the
+    // subnet and confirm that UI responds accordingly.
+    getSubnetNodeSection(1)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Label is required').should('be.visible');
+
+        // Delete subnet.
         cy.findByLabelText('Remove Subnet')
           .should('be.visible')
           .should('be.enabled')
           .click();
       });
 
-    // Confirm that Subnet section has been removed from the page.
     getSubnetNodeSection(1).should('not.exist');
-    cy.findByText(mockSubnetDelete.label).should('not.exist');
+    cy.findByText(mockSubnetToDelete.label).should('not.exist');
 
-    // cy.get('[data-qa-subnet-node="1"]')
-    //   .should('be.visible')
-    //   .within(() => {
-    //     cy.findByText('Subnet label')
-    //     .should('be.visible')
-    //     .click()
-    //     .type(mockSubnetDelete.label)
+    // Continue adding remaining subnets.
+    mockSubnets.slice(1).forEach((mockSubnet: Subnet, index: number) => {
+      ui.button
+        .findByTitle('Add a Subnet')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
-    //   cy.findByText('Subnet IP Address Range')
-    //     .should('be.visible')
-    //     .click()
-    //     .type(`{selectAll}{backspace}`)
-    //     .type(`${randomIp()}/${randomNumber(0, 32)}`);
-    //   });
+      getSubnetNodeSection(index + 1)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Subnet label')
+            .should('be.visible')
+            .click()
+            .type(mockSubnet.label);
+
+          cy.findByText('Subnet IP Address Range')
+            .should('be.visible')
+            .click()
+            .type(`{selectAll}{backspace}`)
+            .type(`${randomIp()}/${randomNumber(0, 32)}`);
+        });
+    });
+
+    // Click "Create VPC", mock an HTTP 500 error and confirm UI displays the message.
+    mockCreateVPCError(vpcCreationErrorMessage).as('createVPC');
+    ui.button
+      .findByTitle('Create VPC')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@createVPC');
+    cy.findByText(vpcCreationErrorMessage).should('be.visible');
+
+    // Click "Create VPC", mock a successful response and confirm that Cloud
+    // redirects to the VPC details page for the new VPC.
+    mockCreateVPC(mockVpc).as('createVPC');
+    mockGetSubnets(mockVpc.id, mockVpc.subnets).as('getSubnets');
+    ui.button
+      .findByTitle('Create VPC')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@createVPC');
+    cy.url().should('endWith', `/vpcs/${mockVpc.id}`);
+    cy.wait('@getSubnets');
+
+    // Confirm that new VPC information is displayed on details page as expected.
+    cy.findByText(mockVpc.label).should('be.visible');
+    cy.get('[data-qa-vpc-summary]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains(`Subnets ${mockVpc.subnets.length}`).should('be.visible');
+        cy.contains(`Linodes ${totalSubnetUniqueLinodes}`).should('be.visible');
+        cy.contains(`VPC ID ${mockVpc.id}`).should('be.visible');
+        cy.contains(`Region ${vpcRegion.label}`).should('be.visible');
+      });
+
+    mockSubnets.forEach((mockSubnet: Subnet) => {
+      cy.findByText(mockSubnet.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText(mockSubnet.id).should('be.visible');
+          cy.findByText(mockSubnet.ipv4!).should('be.visible');
+          cy.findByText(mockSubnet.linodes.length).should('be.visible');
+        });
+    });
   });
 });
