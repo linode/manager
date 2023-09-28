@@ -237,6 +237,24 @@ export const mockUpdateRouteError = (
             field: 'rules[1].service_targets[0].percentage',
             reason: 'Invalid percentage',
           },
+          {
+            field: 'rules[1].service_targets[0].percentage',
+            reason: 'Invalid percentage',
+          },
+          {
+            field: 'rules[1].match_condition.session_stickiness_ttl',
+            reason: 'Invalid TTL',
+          },
+          {
+            field: 'rules[1].match_condition.session_stickiness_cookie',
+            reason: 'Invalid Cookie',
+          },
+          {
+            reason: 'A backend service is down',
+          },
+          {
+            reason: 'You reached a rate limit',
+          },
         ],
       },
       400

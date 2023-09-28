@@ -1,4 +1,4 @@
-import type { MatchField } from '@linode/api-v4';
+import type { MatchField, Rule, RulePayload } from '@linode/api-v4';
 
 export const matchFieldMap: Record<MatchField, string> = {
   header: 'HTTP Header',
@@ -42,4 +42,11 @@ export const initialValues = {
     session_stickiness_ttl: null,
   },
   service_targets: [defaultServiceTarget],
+};
+
+export const getIsSessionStickinessEnabled = (rule: Rule | RulePayload) => {
+  return (
+    rule.match_condition.session_stickiness_cookie !== null ||
+    rule.match_condition.session_stickiness_ttl !== null
+  );
 };

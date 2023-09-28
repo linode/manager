@@ -12,6 +12,7 @@ import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { LinkButton } from 'src/components/LinkButton';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
@@ -20,6 +21,7 @@ import { useLoadbalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
 import {
   defaultServiceTarget,
+  getIsSessionStickinessEnabled,
   initialValues,
   matchTypeOptions,
   matchValuePlaceholder,
@@ -53,14 +55,10 @@ export const AddRuleDrawer = (props: Props) => {
       if (!route) {
         return;
       }
-      await updateRule({ rules: [...route?.rules, rule] });
+      await updateRule({ rules: [...route.rules, rule] });
       onClose();
     },
   });
-
-  const cookieType = !formik.values.match_condition.session_stickiness_ttl
-    ? stickyOptions[1]
-    : stickyOptions[0];
 
   const onClose = () => {
     _onClose();
@@ -75,19 +73,9 @@ export const AddRuleDrawer = (props: Props) => {
     ]);
   };
 
-  const onStickinessChange = (
-    _: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => {
-    if (checked) {
-      formik.setFieldValue('match_condition.session_stickiness_ttl', 8);
-    } else {
-      formik.setFieldValue('match_condition.session_stickiness_ttl', null);
-      formik.setFieldValue('match_condition.session_stickiness_cookie', null);
-    }
-  };
-
   const onRemoveServiceTarget = (index: number) => {
+    // Reset the React query mutation to clear errors
+    reset();
     formik.values.service_targets.splice(index, 1);
     formik.setFieldValue('service_targets', formik.values.service_targets);
   };
@@ -105,13 +93,54 @@ export const AddRuleDrawer = (props: Props) => {
     )?.reason;
   };
 
-  const isStickynessEnabled =
-    formik.values.match_condition.session_stickiness_cookie !== null ||
-    formik.values.match_condition.session_stickiness_ttl !== null;
+  const onStickinessChange = (
+    _: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => {
+    if (checked) {
+      formik.setFieldValue('match_condition.session_stickiness_ttl', 8);
+    } else {
+      formik.setFieldValue('match_condition.session_stickiness_ttl', null);
+      formik.setFieldValue('match_condition.session_stickiness_cookie', null);
+    }
+  };
+
+  const isStickynessEnabled = getIsSessionStickinessEnabled(formik.values);
+
+  const cookieType = !formik.values.match_condition.session_stickiness_ttl
+    ? stickyOptions[1]
+    : stickyOptions[0];
+
+  const stickinessGeneralError = !isStickynessEnabled
+    ? error
+        ?.filter((e) =>
+          e.field?.startsWith(
+            `rules[${ruleIndex}].match_condition.session_stickiness`
+          )
+        )
+        .map((e) => e.reason)
+        .join(', ')
+    : cookieType.label === 'Load Balancer Generated'
+    ? error?.find(
+        (e) =>
+          e.field ===
+          `rules[${ruleIndex}].match_condition.session_stickiness_cookie`
+      )?.reason
+    : error?.find(
+        (e) =>
+          e.field ===
+          `rules[${ruleIndex}].match_condition.session_stickiness_ttl`
+      )?.reason;
+
+  const generalErrors = error
+    ?.filter((error) => !error.field)
+    .map((error) => error.reason)
+    .join(', ');
 
   return (
     <Drawer onClose={onClose} open={open} title="Add Rule" wide>
       <form onSubmit={formik.handleSubmit}>
+        {generalErrors && <Notice text={generalErrors} variant="error" />}
         <Stack spacing={2}>
           <Stack bgcolor={(theme) => theme.bg.app} p={2.5} spacing={1.5}>
             <Typography variant="h3">Match Rule</Typography>
@@ -195,7 +224,7 @@ export const AddRuleDrawer = (props: Props) => {
                   onChange={(serviceTarget) =>
                     formik.setFieldValue(
                       `service_targets[${index}].id`,
-                      serviceTarget?.id ?? null
+                      serviceTarget?.id ?? -1
                     )
                   }
                   errorText={getServiceTargetError(index, 'id')}
@@ -230,6 +259,14 @@ export const AddRuleDrawer = (props: Props) => {
               when when selecting a backend target. When disabled, no session
               information is saved.
             </Typography>
+            {stickinessGeneralError && (
+              <Notice
+                spacingBottom={0}
+                spacingTop={12}
+                text={stickinessGeneralError}
+                variant="error"
+              />
+            )}
             <FormControlLabel
               control={
                 <Toggle
@@ -244,25 +281,14 @@ export const AddRuleDrawer = (props: Props) => {
               <>
                 <Autocomplete
                   onChange={(_, option) => {
-                    if (option?.label === 'Load Balancer Generated') {
-                      formik.setFieldValue(
-                        'match_condition.session_stickiness_ttl',
-                        8
-                      );
-                      formik.setFieldValue(
-                        'match_condition.session_stickiness_cookie',
-                        null
-                      );
-                    } else {
-                      formik.setFieldValue(
-                        'match_condition.session_stickiness_ttl',
-                        null
-                      );
-                      formik.setFieldValue(
-                        'match_condition.session_stickiness_cookie',
-                        'my-cookie'
-                      );
-                    }
+                    formik.setFieldValue(
+                      'match_condition.session_stickiness_ttl',
+                      option?.label === 'Load Balancer Generated' ? 8 : null
+                    );
+                    formik.setFieldValue(
+                      'match_condition.session_stickiness_cookie',
+                      option?.label === 'Load Balancer Generated' ? null : ''
+                    );
                   }}
                   disableClearable
                   label="Cookie type"
@@ -270,8 +296,7 @@ export const AddRuleDrawer = (props: Props) => {
                   textFieldProps={{ noMarginTop: true }}
                   value={cookieType}
                 />
-                {formik.values.match_condition.session_stickiness_ttl ===
-                  null && (
+                {cookieType.label === 'Origin' && (
                   <TextField
                     errorText={getMatchConditionError(
                       'session_stickiness_cookie'
@@ -285,8 +310,7 @@ export const AddRuleDrawer = (props: Props) => {
                     onChange={formik.handleChange}
                   />
                 )}
-                {formik.values.match_condition.session_stickiness_cookie ===
-                  null && (
+                {cookieType.label === 'Load Balancer Generated' && (
                   <Stack alignItems="flex-end" direction="row" spacing={1}>
                     <TextField
                       errorText={getMatchConditionError(

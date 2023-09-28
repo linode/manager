@@ -198,5 +198,14 @@ describe('Akamai Global Load Balancer routes page', () => {
     cy.findByText('Bad Match Type');
     cy.findByText('Service Target does not exist');
     cy.findByText('Invalid percentage');
+    cy.findByText('Invalid TTL', { exact: false });
+    cy.findByText('Invalid Cookie', { exact: false });
+    cy.findByText('A backend service is down', { exact: false });
+    cy.findByText('You reached a rate limit', { exact: false });
+
+    cy.findByLabelText('Use Session Stickiness').check();
+
+    cy.findByText('Invalid TTL', { exact: true });
+    cy.findByText('Invalid Cookie', { exact: true });
   });
 });
