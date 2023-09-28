@@ -292,44 +292,40 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               renderTags={() => null}
               value={selectedLinodes}
             />
-
-            {selectedLinodes.length > 0 && (
-              <>
-                <RemovableSelectionsList
-                  headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
-                  noDataText={'Select Linodes to be Unassigned from Subnet.'}
-                  onRemove={handleRemoveLinode}
-                  selectionData={selectedLinodes}
-                />
-                <DownloadCSV
-                  sx={{
-                    alignItems: 'flex-start',
-                    display: 'flex',
-                    gap: 1,
-                    marginTop: 2,
-                    textAlign: 'left',
-                  }}
-                  buttonType="styledLink"
-                  csvRef={csvRef}
-                  data={selectedLinodes}
-                  filename={`linodes-unassigned-${formattedDate}.csv`}
-                  headers={SUBNET_LINODE_CSV_HEADERS}
-                  onClick={downloadCSV}
-                  text={'Download List of Unassigned Linodes (.csv)'}
-                />
-                <ActionsPanel
-                  primaryButtonProps={{
-                    'data-testid': 'unassign-submit-button',
-                    label: 'Unassign Linodes',
-                    type: 'submit',
-                  }}
-                  secondaryButtonProps={{
-                    label: 'Cancel',
-                    onClick: handleOnClose,
-                  }}
-                />
-              </>
-            )}
+            <RemovableSelectionsList
+              headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
+              noDataText={'Select Linodes to be Unassigned from Subnet.'}
+              onRemove={handleRemoveLinode}
+              selectionData={selectedLinodes}
+            />
+            <DownloadCSV
+              sx={{
+                alignItems: 'flex-start',
+                display: 'flex',
+                gap: 1,
+                marginTop: 2,
+                textAlign: 'left',
+              }}
+              buttonType="styledLink"
+              csvRef={csvRef}
+              data={selectedLinodes}
+              filename={`linodes-unassigned-${formattedDate}.csv`}
+              headers={SUBNET_LINODE_CSV_HEADERS}
+              onClick={downloadCSV}
+              text={'Download List of Unassigned Linodes (.csv)'}
+            />
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'unassign-submit-button',
+                disabled: selectedLinodes.length === 0,
+                label: 'Unassign Linodes',
+                type: 'submit',
+              }}
+              secondaryButtonProps={{
+                label: 'Cancel',
+                onClick: handleOnClose,
+              }}
+            />
           </Stack>
         </form>
       </Drawer>
