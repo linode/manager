@@ -33,28 +33,29 @@ type Policy =
   | 'random'
   | 'maglev';
 
-type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
+export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
 
 export interface RoutePayload {
   label: string;
   rules: Rule[];
 }
 
+export interface ExtendedMatchCondition extends MatchCondition {
+  service_targets: { id: number; label: string; percentage: number }[];
+}
+
 export interface Route {
   id: number;
   label: string;
+  protocol: Protocol;
   rules: {
-    match_condition: MatchCondition;
-    service_targets: {
-      id: number;
-      label: string;
-      percentage: number;
-    }[];
+    match_condition: ExtendedMatchCondition;
   }[];
 }
 
 export interface CreateRoutePayload {
   label: string;
+  protocol: Protocol;
   rules: {
     match_condition: MatchCondition;
     service_targets: {
@@ -97,8 +98,8 @@ export interface MatchCondition {
   hostname: string;
   match_field: MatchField;
   match_value: string;
-  affinity_cookie: string | null;
-  affinity_ttl: string | null;
+  session_stickiness_cookie: string | null;
+  session_stickiness_ttl: string | null;
 }
 
 export interface RouteServiceTargetPayload {
@@ -115,6 +116,7 @@ export interface ServiceTargetPayload {
 }
 
 interface HealthCheck {
+  protocol: 'tcp' | 'http';
   interval: number;
   timeout: number;
   unhealthy_threshold: number;
@@ -128,7 +130,7 @@ export interface ServiceTarget extends ServiceTargetPayload {
 }
 
 export interface Endpoint {
-  ip?: string;
+  ip: string;
   host?: string;
   port: number;
   rate_capacity: number;

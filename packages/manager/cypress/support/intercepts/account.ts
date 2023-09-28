@@ -6,14 +6,17 @@ import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
+import { makeResponse } from 'support/util/response';
 
 import type {
   Account,
   AccountSettings,
   EntityTransfer,
   Invoice,
+  InvoiceItem,
+  Payment,
   PaymentMethod,
-} from '@linode/api-v4/types';
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch account and mocks response.
@@ -182,6 +185,19 @@ export const mockGetAccountSettings = (
 };
 
 /**
+ * Intercepts PUT request to update account settings and mocks response.
+ *
+ * @param settings - Account settings mock data with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccountSettings = (
+  settings: AccountSettings
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', apiMatcher('account/settings'), settings);
+};
+
+/**
  * Intercepts PUT request to update account username and mocks response.
  *
  * @param oldUsername - The original username which will be changed.
@@ -240,9 +256,24 @@ export const mockSetDefaultPaymentMethod = (
 };
 
 /**
+ * Intercepts GET request to fetch an account invoice and mocks response.
+ *
+ * @param invoice - Invoice with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetInvoice = (invoice: Invoice): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/invoices/${invoice.id}`),
+    makeResponse(invoice)
+  );
+};
+
+/**
  * Intercepts GET request to fetch account invoices and mocks response.
  *
- * @param invoices - Invoice data with which to respond.
+ * @param invoices - Invoice data with which to mock response.
  *
  * @returns Cypress chainable.
  */
@@ -253,5 +284,41 @@ export const mockGetInvoices = (
     'GET',
     apiMatcher('account/invoices*'),
     paginateResponse(invoices)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch an account invoice's items and mocks response.
+ *
+ * @param invoice - Invoice for which to retrieve invoice items.
+ * @param items - Invoice items with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetInvoiceItems = (
+  invoice: Invoice,
+  items: InvoiceItem[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/invoices/${invoice.id}/items*`),
+    paginateResponse(items)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch account payments and mocks response.
+ *
+ * @param payments - Payment data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetPayments = (
+  payments: Payment[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/payments*'),
+    paginateResponse(payments)
   );
 };

@@ -192,7 +192,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                       key={`${selectedApp.name}-guide-${idx}`}
                       to={link.href}
                     >
-                      {link.title}
+                      {sanitizeHTML(link.title)}
                     </Link>
                   ))}
                 </Box>

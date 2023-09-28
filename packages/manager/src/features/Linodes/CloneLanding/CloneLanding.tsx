@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { castDraft } from 'immer';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
@@ -18,13 +18,15 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { TabPanels } from 'src/components/ReachTabPanels';
+import { Tabs } from 'src/components/ReachTabs';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
-import { TabPanels } from 'src/components/ReachTabPanels';
-import { Tabs } from 'src/components/ReachTabs';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
@@ -247,6 +249,10 @@ const CloneLanding = () => {
       });
   };
 
+  const handleCancel = () => {
+    history.push(`/linodes/${linodeId}/configurations`);
+  };
+
   // Cast the results of the Immer state to a mutable data structure.
   const errorMap = getErrorMap(['disk_size'], castDraft(state.errors));
 
@@ -260,110 +266,109 @@ const CloneLanding = () => {
       <MutationNotification linodeId={linodeId} />
       <Notifications />
       <LinodesDetailHeader />
-      <Grid sx={{ marginTop: theme.spacing(1) }} container>
-        <Grid lg={9} md={8} xs={12}>
-          <Paper sx={{ padding: `${theme.spacing(3)} ${theme.spacing(3)} 0` }}>
-            <Typography
-              aria-level={2}
-              sx={{ marginBottom: theme.spacing(2) }}
-              data-qa-title
-              role="heading"
-              variant="h2"
-            >
-              Clone
-            </Typography>
+      <Paper sx={{ padding: theme.spacing(2) }}>
+        <Grid
+          container
+          justifyContent="space-between"
+          sx={{ marginTop: theme.spacing(1) }}
+        >
+          <Grid md={7} xs={12}>
+            <Paper sx={{ padding: 0 }}>
+              <Typography
+                aria-level={2}
+                data-qa-title
+                role="heading"
+                sx={{ marginBottom: theme.spacing(2) }}
+                variant="h2"
+              >
+                Clone
+              </Typography>
 
-            <Tabs
-              index={Math.max(
-                tabs.findIndex((tab) => matches(tab.routeName)),
-                0
-              )}
-              onChange={navToURL}
-            >
-              <TabLinkList tabs={tabs} />
-              <TabPanels>
-                <SafeTabPanel index={0}>
-                  <StyledOuterDiv>
-                    <Configs
-                      // Cast the results of the Immer state to a mutable data structure.
-                      configSelection={castDraft(state.configSelection)}
-                      configs={configsInState}
-                      handleSelect={toggleConfig}
-                    />
-                  </StyledOuterDiv>
-                </SafeTabPanel>
-
-                <SafeTabPanel index={1}>
-                  <StyledOuterDiv>
-                    <Typography>
-                      You can make a copy of a disk to the same or different
-                      Linode. We recommend you power off your Linode first, and
-                      keep it powered off until the disk has finished being
-                      cloned.
-                    </Typography>
-                    <div style={{ marginTop: theme.spacing(4) }}>
-                      <Disks
+              <Tabs
+                index={Math.max(
+                  tabs.findIndex((tab) => matches(tab.routeName)),
+                  0
+                )}
+                onChange={navToURL}
+              >
+                <TabLinkList tabs={tabs} />
+                <TabPanels>
+                  <SafeTabPanel index={0}>
+                    <Box>
+                      <Configs
                         // Cast the results of the Immer state to a mutable data structure.
-                        diskSelection={castDraft(state.diskSelection)}
-                        disks={disksInState}
-                        handleSelect={toggleDisk}
-                        selectedConfigIds={selectedConfigIds}
+                        configSelection={castDraft(state.configSelection)}
+                        configs={configsInState}
+                        handleSelect={toggleConfig}
                       />
-                    </div>
-                  </StyledOuterDiv>
-                </SafeTabPanel>
-              </TabPanels>
-            </Tabs>
-          </Paper>
+                    </Box>
+                  </SafeTabPanel>
+
+                  <SafeTabPanel index={1}>
+                    <Box>
+                      <Notice spacingTop={16} variant="info">
+                        You can make a copy of a disk to the same or different
+                        Linode. We recommend you power off your Linode first,
+                        and keep it powered off until the disk has finished
+                        being cloned.
+                      </Notice>
+                      <div>
+                        <Disks
+                          // Cast the results of the Immer state to a mutable data structure.
+                          diskSelection={castDraft(state.diskSelection)}
+                          disks={disksInState}
+                          handleSelect={toggleDisk}
+                          selectedConfigIds={selectedConfigIds}
+                        />
+                      </div>
+                    </Box>
+                  </SafeTabPanel>
+                </TabPanels>
+              </Tabs>
+            </Paper>
+          </Grid>
+          <Grid md={4} xs={12}>
+            <Details
+              selectedConfigs={attachAssociatedDisksToConfigs(
+                selectedConfigs,
+                disks
+              )}
+              // cloning the config takes precedence.
+              selectedDisks={disksInState.filter((disk) => {
+                return (
+                  // This disk has been individually selected ...
+                  state.diskSelection[disk.id].isSelected &&
+                  // ... AND it's associated configs are NOT selected
+                  intersection(
+                    pathOr(
+                      [],
+                      [disk.id, 'associatedConfigIds'],
+                      state.diskSelection
+                    ),
+                    selectedConfigIds
+                  ).length === 0
+                );
+              })}
+              // If a selected disk is associated with a selected config, we
+              // don't want it to appear in the Details component, since
+              clearAll={clearAll}
+              currentLinodeId={linodeId}
+              errorMap={errorMap}
+              handleCancel={handleCancel}
+              handleClone={handleClone}
+              handleSelectLinode={setSelectedLinodeId}
+              handleToggleConfig={toggleConfig}
+              handleToggleDisk={toggleDisk}
+              isSubmitting={state.isSubmitting}
+              selectedLinodeId={state.selectedLinodeId}
+              selectedLinodeRegion={selectedLinodeRegion}
+              thisLinodeRegion={linode?.region ?? ''}
+            />
+          </Grid>
         </Grid>
-        <Grid lg={3} md={4} xs={12}>
-          <Details
-            selectedConfigs={attachAssociatedDisksToConfigs(
-              selectedConfigs,
-              disks
-            )}
-            // cloning the config takes precedence.
-            selectedDisks={disksInState.filter((disk) => {
-              return (
-                // This disk has been individually selected ...
-                state.diskSelection[disk.id].isSelected &&
-                // ... AND it's associated configs are NOT selected
-                intersection(
-                  pathOr(
-                    [],
-                    [disk.id, 'associatedConfigIds'],
-                    state.diskSelection
-                  ),
-                  selectedConfigIds
-                ).length === 0
-              );
-            })}
-            // If a selected disk is associated with a selected config, we
-            // don't want it to appear in the Details component, since
-            clearAll={clearAll}
-            currentLinodeId={linodeId}
-            errorMap={errorMap}
-            handleClone={handleClone}
-            handleSelectLinode={setSelectedLinodeId}
-            handleToggleConfig={toggleConfig}
-            handleToggleDisk={toggleDisk}
-            isSubmitting={state.isSubmitting}
-            selectedLinodeId={state.selectedLinodeId}
-            selectedLinodeRegion={selectedLinodeRegion}
-            thisLinodeRegion={linode?.region ?? ''}
-          />
-        </Grid>
-      </Grid>
+      </Paper>
     </React.Fragment>
   );
 };
-
-const StyledOuterDiv = styled('div', { label: 'StyledOuterDiv' })(
-  ({ theme }) => ({
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-  })
-);
 
 export default CloneLanding;

@@ -1,9 +1,9 @@
-import { determineIPType, vpcsValidateIP } from '@linode/validation';
+import { determineIPType } from '@linode/validation';
 
-export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.0.0/24';
+export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.4.0/24';
 export const RESERVED_IP_NUMBER = 4;
 
-// VPC: TODO - added ipv6 related fields here, but they will not be used until VPCs support ipv6
+// @TODO VPC: added ipv6 related fields here, but they will not be used until VPCs support ipv6
 interface SubnetIPState {
   availIPv4s?: number;
   ipv4?: string;
@@ -63,50 +63,36 @@ export const SubnetMaskToAvailIPv4s = {
   32: 1,
 };
 
-export const calculateAvailableIPv4s = (
+export const calculateAvailableIPv4sRFC1918 = (
   address: string
 ): number | undefined => {
-  const [, mask] = address.split('/');
+  const [ip, mask] = address.split('/');
   const ipType = determineIPType(address);
   if (ipType !== 'ipv4' || mask === '' || mask === undefined) {
     return undefined;
   }
 
-  return SubnetMaskToAvailIPv4s[mask];
-};
+  const [firstOctet, secondOctet] = ip.split('.');
+  const parsedMask = parseInt(mask, 10);
+  const parsedSecondOctet = parseInt(secondOctet, 10);
 
-export const DEFAULT_LABEL_ERROR = 'Label is required';
-export const DEFAULT_IPV4_ERROR = 'The IPv4 range must be in CIDR format';
-
-// TODO: VPC - add error validation for ipv6 when that becomes supported
-export const validateSubnets = (
-  subnets: SubnetFieldState[],
-  options?: {
-    ipv4Error?: string;
-    ipv6Error?: string;
-    labelError?: string;
+  // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs. The ranges are:
+  // 10.x.x.x (10/8 prefix)
+  // 172.16.x.x-172.31.x.x (172/12 prefix)
+  // 192.168.x.x (192.168/16 prefix)
+  if (
+    (firstOctet !== '10' && firstOctet !== '172' && firstOctet !== '192') ||
+    // Check for invalid 10.x IPs
+    (firstOctet === '10' && parsedMask < 8) ||
+    // check for invalid 172.x IPs
+    (firstOctet === '172' &&
+      (parsedSecondOctet < 16 || parsedSecondOctet > 31 || parsedMask < 12)) ||
+    // check for invalid 192.x IPs
+    (firstOctet === '192' &&
+      (secondOctet !== '168' || (secondOctet === '168' && parsedMask < 16)))
+  ) {
+    return undefined;
   }
-): SubnetFieldState[] => {
-  return subnets.map((subnet) => {
-    if (subnet.label || subnet.ip.ipv4) {
-      const errorSubnet: SubnetFieldState = { ...subnet, labelError: '' };
-      if (!subnet.label) {
-        errorSubnet['labelError'] = options?.labelError ?? DEFAULT_LABEL_ERROR;
-      }
-      if (
-        determineIPType(subnet.ip.ipv4 ?? '') !== 'ipv4' ||
-        !vpcsValidateIP({
-          mustBeIPMask: false,
-          shouldHaveIPMask: true,
-          value: subnet.ip.ipv4,
-        })
-      ) {
-        const errorIP = { ...subnet.ip, ipv4Error: '' };
-        errorIP['ipv4Error'] = options?.ipv4Error ?? DEFAULT_IPV4_ERROR;
-        errorSubnet['ip'] = errorIP;
-      }
-      return errorSubnet;
-    }
-    return subnet;
-  });
+
+  return SubnetMaskToAvailIPv4s[mask];
 };

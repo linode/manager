@@ -4,6 +4,60 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-09-22] - v1.103.0
+
+### Change:
+
+- Remove Beta chip from Add User Data accordion ([#9712](https://github.com/linode/manager/pull/9712))
+
+## [2023-09-18] - v1.102.0
+
+### Added:
+
+- Configuration Profiles docs link to Linode Details Configurations tab ([#9658](https://github.com/linode/manager/pull/9658))
+
+### Fixed:
+
+- Stuck LKE node pools when HA Control Plane is unavailable for self-hosting Cloud Manager users ([#9558](https://github.com/linode/manager/pull/9558))
+- Longview styling regressions ([#9619](https://github.com/linode/manager/pull/9619))
+- Typo in 'Confirm Ticket Close' modal ([#9639](https://github.com/linode/manager/pull/9639))
+- Selected state of Longview processes table ([#9643](https://github.com/linode/manager/pull/9643))
+- Typo in NodeBalancer landing table column header ([#9648](https://github.com/linode/manager/pull/9648))
+- Metadata CLI command ([#9665](https://github.com/linode/manager/pull/9665))
+- Billing Contact UI regression caused by MUI Update ([#9667](https://github.com/linode/manager/pull/9667))
+- Panels alignment in NodeBalancer create flow ([#9673](https://github.com/linode/manager/pull/9673))
+- Misplaced helper text and static copy in Linode Create Volume drawer ([#9683](https://github.com/linode/manager/pull/9683))
+- Redis trademark changes ([#9694](https://github.com/linode/manager/pull/9694))
+
+### Tech Stories:
+
+- Add Autocomplete component ([#9497](https://github.com/linode/manager/pull/9497))
+- MUI v5 Migration - `SRC > Features > EntityTransfers` ([#9582](https://github.com/linode/manager/pull/9582))
+- MUI v5 Migration - `SRC > Features > Longview` Pt1: Longview Detail ([#9600](https://github.com/linode/manager/pull/9600))
+
+### Upcoming Features:
+
+- Add VPC-related permissions, capabilities, and grants ([#9585](https://github.com/linode/manager/pull/9585))
+- Add VPC data in Linode Detail header ([#9645](https://github.com/linode/manager/pull/9645))
+- Add VPC Create Subnet drawer ([#9652](https://github.com/linode/manager/pull/9652))
+- Add VPC Delete Subnet dialog ([#9640](https://github.com/linode/manager/pull/9640))
+- Add VPC filter subnets field ([#9647](https://github.com/linode/manager/pull/9647))
+- Populate VPC Subnets table with data ([#9599](https://github.com/linode/manager/pull/9599))
+- Standardize "region" and "data center" copy for DC-specific pricing ([#9670](https://github.com/linode/manager/pull/9670))
+- Removed VPC column from Linodes landing page table ([#9625](https://github.com/linode/manager/pull/9625))
+- Improved VPC Create validation for subnets ([#9659](https://github.com/linode/manager/pull/9659))
+- Add DC-specific pricing Invoice support ([#9597](https://github.com/linode/manager/pull/9597))
+- Add DC-specific pricing Linode Create support ([#9598](https://github.com/linode/manager/pull/9598))
+- Add DC-specific pricing to Kubernetes node pools ([#9606](https://github.com/linode/manager/pull/9606))
+- Add DC-specific transfer pools and linode usage displays ([#9620](https://github.com/linode/manager/pull/9620))
+- Add Region label to DC-specific pricing invoices ([#9663](https://github.com/linode/manager/pull/9663))
+- Add AGLB Details - Configuration Tab ([#9591](https://github.com/linode/manager/pull/9591))
+- Add AGLB Certificate Delete Dialog ([#9666](https://github.com/linode/manager/pull/9666))
+- Add AGLB Certificate Create Drawer ([#9616](https://github.com/linode/manager/pull/9616))
+- Add AGLB Configuration Delete Dialog ([#9675](https://github.com/linode/manager/pull/9675))
+- Add DBaaS disk size and used size fields to Database Summary  ([#9638](https://github.com/linode/manager/pull/9638))
+
+
 ## [2023-09-07] - v1.101.1
 
 

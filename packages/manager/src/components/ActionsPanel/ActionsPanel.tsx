@@ -9,7 +9,7 @@ import { Box, BoxProps } from '../Box';
 interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;
   'data-testid'?: string;
-  label?: string;
+  label: string;
 }
 
 export interface ActionPanelProps extends BoxProps {
@@ -52,7 +52,7 @@ export const ActionsPanel = (props: ActionPanelProps) => {
           data-qa-cancel
           {...secondaryButtonProps}
         >
-          {secondaryButtonProps?.label}
+          {secondaryButtonProps.label}
         </Button>
       ) : null}
       {primaryButtonProps ? (
@@ -61,7 +61,7 @@ export const ActionsPanel = (props: ActionPanelProps) => {
           buttonType="primary"
           {...primaryButtonProps}
         >
-          {primaryButtonProps?.label}
+          {primaryButtonProps.label}
         </Button>
       ) : null}
     </StyledBox>

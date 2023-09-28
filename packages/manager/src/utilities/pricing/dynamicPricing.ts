@@ -20,9 +20,23 @@ export interface DataCenterPricingOptions {
 }
 
 // The key is a region id and the value is the percentage increase in price.
-const priceIncreaseMap = {
+export const priceIncreaseMap = {
   'br-gru': 0.4, // Sao Paulo
   'id-cgk': 0.2, // Jakarta
+};
+
+// TODO: DC Pricing - M3-6973: Update these values when beta pricing ends.
+export const objectStoragePriceIncreaseMap = {
+  'br-gru': {
+    monthly: 0.0,
+    storage_overage: 0.0,
+    transfer_overage: 0.0,
+  },
+  'id-cgk': {
+    monthly: 0.0,
+    storage_overage: 0.0,
+    transfer_overage: 0.0,
+  },
 };
 
 /**
@@ -33,7 +47,7 @@ const priceIncreaseMap = {
  *   flags: { dcSpecificPricing: true },
  *   regionId: 'us-east',
  * });
- * @returns a datacenter specific price
+ * @returns a data center specific price
  */
 export const getDCSpecificPrice = ({
   basePrice,

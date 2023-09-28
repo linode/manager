@@ -296,7 +296,7 @@ export const TextField = (props: TextFieldProps) => {
     inputId || (label ? convertToKebabCase(`${label}`) : undefined);
 
   return (
-    <div
+    <Box
       className={cx({
         [classes.helpWrapper]: Boolean(tooltipText),
         [errorScrollClassName]: !!errorText,
@@ -443,6 +443,6 @@ export const TextField = (props: TextFieldProps) => {
             {helperText}
           </FormHelperText>
         )}
-    </div>
+    </Box>
   );
 };

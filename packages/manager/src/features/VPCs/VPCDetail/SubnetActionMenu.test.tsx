@@ -11,7 +11,9 @@ afterEach(() => {
 });
 
 const props = {
+  handleAssignLinodes: jest.fn(),
   handleDelete: jest.fn(),
+  handleEdit: jest.fn(),
   numLinodes: 1,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   vpcId: 1,
@@ -22,8 +24,8 @@ describe('SubnetActionMenu', () => {
     const screen = renderWithTheme(<SubnetActionMenu {...props} />);
     const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
     fireEvent.click(actionMenu);
-    screen.getByText('Assign Linode');
-    screen.getByText('Unassign Linode');
+    screen.getByText('Assign Linodes');
+    screen.getByText('Unassign Linodes');
     screen.getByText('Edit');
     screen.getByText('Delete');
   });
@@ -56,5 +58,27 @@ describe('SubnetActionMenu', () => {
       'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
     );
     expect(tooltipText).not.toBeInTheDocument();
+  });
+
+  it('should allow the edit button to be clicked', () => {
+    const screen = renderWithTheme(
+      <SubnetActionMenu {...props} numLinodes={0} />
+    );
+    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
+    fireEvent.click(actionMenu);
+
+    const editButton = screen.getByText('Edit');
+    fireEvent.click(editButton);
+    expect(props.handleEdit).toHaveBeenCalled();
+  });
+
+  it('should allow the Assign Linodes button to be clicked', () => {
+    const screen = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
+    fireEvent.click(actionMenu);
+
+    const assignButton = screen.getByText('Assign Linodes');
+    fireEvent.click(assignButton);
+    expect(props.handleAssignLinodes).toHaveBeenCalled();
   });
 });

@@ -457,6 +457,10 @@ const vpc = [
     const vpc = vpcFactory.build({ ...(req.body as any) });
     return res(ctx.json(vpc));
   }),
+  rest.post('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
+    const subnet = subnetFactory.build({ ...(req.body as any) });
+    return res(ctx.json(subnet));
+  }),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
@@ -873,8 +877,29 @@ export const handlers = [
     return res(ctx.json(objectStorageBucketFactory.build()));
   }),
   rest.get('*object-storage/clusters', (req, res, ctx) => {
+    const jakartaCluster = objectStorageClusterFactory.build({
+      id: `id-cgk-0` as any,
+      region: 'id-cgk',
+    });
+    const saoPauloCluster = objectStorageClusterFactory.build({
+      id: `br-gru-0` as any,
+      region: 'br-gru',
+    });
+    const basePricingCluster = objectStorageClusterFactory.build({
+      id: `us-east-0` as any,
+      region: 'us-east',
+    });
     const clusters = objectStorageClusterFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(clusters)));
+    return res(
+      ctx.json(
+        makeResourcePage([
+          jakartaCluster,
+          saoPauloCluster,
+          basePricingCluster,
+          ...clusters,
+        ])
+      )
+    );
   }),
   rest.get('*object-storage/keys', (req, res, ctx) => {
     return res(
@@ -973,8 +998,11 @@ export const handlers = [
     return res(ctx.delay(5000), ctx.json(transfer));
   }),
   rest.get('*/account/payments', (req, res, ctx) => {
+    const paymentWithLargeId = paymentFactory.build({
+      id: 123_456_789_123_456,
+    });
     const payments = paymentFactory.buildList(5);
-    return res(ctx.json(makeResourcePage(payments)));
+    return res(ctx.json(makeResourcePage([paymentWithLargeId, ...payments])));
   }),
   rest.get('*/account/invoices', (req, res, ctx) => {
     const linodeInvoice = invoiceFactory.build({
@@ -985,7 +1013,15 @@ export const handlers = [
       date: '2022-12-16T18:04:01',
       label: 'AkamaiInvoice',
     });
-    return res(ctx.json(makeResourcePage([linodeInvoice, akamaiInvoice])));
+    const invoiceWithLargerId = invoiceFactory.build({
+      id: 123_456_789_123_456,
+      label: 'Invoice with Large ID',
+    });
+    return res(
+      ctx.json(
+        makeResourcePage([linodeInvoice, akamaiInvoice, invoiceWithLargerId])
+      )
+    );
   }),
   rest.get('*/account/invoices/:invoiceId', (req, res, ctx) => {
     const linodeInvoice = invoiceFactory.build({
@@ -1106,6 +1142,11 @@ export const handlers = [
         'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
       percent_complete: 15,
     });
+    const dbEvents = eventFactory.buildList(1, {
+      action: 'database_low_disk_space',
+      entity: { id: 999, label: 'database-1', type: 'database' },
+      message: 'Low disk space.',
+    });
     const oldEvents = eventFactory.buildList(20, {
       action: 'account_update',
       percent_complete: 100,
@@ -1124,7 +1165,12 @@ export const handlers = [
     });
     return res.once(
       ctx.json(
-        makeResourcePage([...events, ...oldEvents, eventWithSpecialCharacters])
+        makeResourcePage([
+          ...events,
+          ...dbEvents,
+          ...oldEvents,
+          eventWithSpecialCharacters,
+        ])
       )
     );
   }),

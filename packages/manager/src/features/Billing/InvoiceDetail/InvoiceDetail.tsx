@@ -129,15 +129,22 @@ export const InvoiceDetail = () => {
     >
       <Grid container rowGap={2}>
         <Grid xs={12}>
-          <Grid container spacing={2} sx={sxGrid}>
+          <Grid container data-qa-invoice-header spacing={2} sx={sxGrid}>
             <Grid sm={4} sx={sxGrid} xs={12}>
-              <Link to={`/account/billing`}>
+              <Link
+                accessibleAriaLabel="Back to Billing"
+                data-qa-back-to-billing
+                to={`/account/billing`}
+              >
                 <IconButton
                   sx={{
                     padding: 0,
                   }}
-                  data-qa-back-to-billing
+                  component="span"
+                  disableFocusRipple
+                  role="none"
                   size="large"
+                  tabIndex={-1}
                 >
                   <KeyboardArrowLeft
                     sx={{
@@ -169,7 +176,6 @@ export const InvoiceDetail = () => {
                     data={items}
                     filename={`invoice-${invoice.date}.csv`}
                     headers={csvHeaders}
-                    onClick={() => csvRef.current.link.click()}
                     sx={{ ...sxDownloadButton, marginRight: '8px' }}
                   />
                   <Button
@@ -211,6 +217,7 @@ export const InvoiceDetail = () => {
                 gap: theme.spacing(2),
                 padding: theme.spacing(1),
               }}
+              data-qa-invoice-summary
             >
               <Typography variant="h2">
                 Subtotal:{' '}
@@ -246,5 +253,3 @@ export const InvoiceDetail = () => {
     </Paper>
   );
 };
-
-export default InvoiceDetail;
