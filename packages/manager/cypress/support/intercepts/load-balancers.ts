@@ -202,3 +202,44 @@ export const mockUpdateRoute = (loadBalancer: Loadbalancer, route: Route) => {
     makeResponse(route)
   );
 };
+
+/**
+ * Intercepts PUT request to update a route and mocks the response.
+ *
+ * @param loadBalancer - Load balancer for mocked route.
+ * @param route - Route with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateRouteError = (
+  loadBalancer: Loadbalancer,
+  route: Route
+) => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/aglb/${loadBalancer.id}/routes/${route.id}`),
+    makeResponse(
+      {
+        errors: [
+          {
+            field: 'rules[1].match_condition.match_value',
+            reason: 'Bad Match Value',
+          },
+          {
+            field: 'rules[1].match_condition.match_field',
+            reason: 'Bad Match Type',
+          },
+          {
+            field: 'rules[1].service_targets[0].id',
+            reason: 'Service Target does not exist',
+          },
+          {
+            field: 'rules[1].service_targets[0].percentage',
+            reason: 'Invalid percentage',
+          },
+        ],
+      },
+      400
+    )
+  );
+};

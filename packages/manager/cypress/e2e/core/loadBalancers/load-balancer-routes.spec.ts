@@ -18,6 +18,7 @@ import {
   mockGetLoadBalancerRoutes,
   mockGetLoadBalancerServiceTargets,
   mockUpdateRoute,
+  mockUpdateRouteError,
 } from 'support/intercepts/load-balancers';
 
 describe('Akamai Global Load Balancer routes page', () => {
@@ -132,5 +133,70 @@ describe('Akamai Global Load Balancer routes page', () => {
       });
 
     cy.wait('@updateRoute');
+  });
+  it('surfaces API errors in the Add Rule Drawer', () => {
+    const loadbalancer = loadbalancerFactory.build();
+    const routes = routeFactory.buildList(1);
+    const serviceTargets = serviceTargetFactory.buildList(3);
+
+    mockAppendFeatureFlags({
+      aglb: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+    mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+    mockGetLoadBalancerServiceTargets(loadbalancer.id, serviceTargets).as(
+      'getServiceTargets'
+    );
+
+    cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/routes`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientStream',
+      '@getLoadBalancer',
+      '@getRoutes',
+    ]);
+
+    ui.button
+      .findByTitle('Add Rule')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockUpdateRouteError(loadbalancer, routes[0]).as('updateRoute');
+
+    ui.drawer
+      .findByTitle('Add Rule')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Match Value')
+          .should('be.visible')
+          .type('x-header=value');
+
+        cy.findByLabelText('Service Target')
+          .should('be.visible')
+          .click()
+          .type(serviceTargets[0].label);
+
+        cy.wait('@getServiceTargets');
+
+        ui.autocompletePopper
+          .findByTitle(serviceTargets[0].label)
+          .should('be.visible')
+          .click();
+
+        ui.buttonGroup
+          .findButtonByTitle('Add Rule')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@updateRoute');
+
+    cy.findByText('Bad Match Value');
+    cy.findByText('Bad Match Type');
+    cy.findByText('Service Target does not exist');
+    cy.findByText('Invalid percentage');
   });
 });
