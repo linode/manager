@@ -130,7 +130,7 @@ const VPCDetail = () => {
         </Box>
       </EntityHeader>
       <StyledPaper>
-        <StyledSummaryBox display="flex" flex={1}>
+        <StyledSummaryBox display="flex" flex={1} data-qa-vpc-summary>
           {summaryData.map((col) => {
             return (
               <Box key={col[0].label} paddingRight={6}>
