@@ -7,6 +7,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -195,6 +196,8 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(linodeId, open);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const {
     data: kernels,
     error: kernelsError,
@@ -317,7 +320,7 @@ export const LinodeConfigDialog = (props: Props) => {
       delete configData.interfaces;
     }
 
-    const handleSuccess = () => {
+    const handleSuccess = (isCreate: boolean) => {
       formik.setSubmitting(false);
       queryClient.invalidateQueries(['linode', 'configs', props.linodeId]);
       // If there's any chance a VLAN changed here, make sure our query data is up to date
@@ -328,10 +331,14 @@ export const LinodeConfigDialog = (props: Props) => {
       ) {
         queryClient.invalidateQueries('vlans');
       }
+      const actionType = isCreate ? 'created' : 'updated';
+      enqueueSnackbar(`Successfully ${actionType} ${configData.label}`, {
+        variant: 'success',
+      });
       onClose();
     };
 
-    const handleError = (error: APIError[]) => {
+    const handleError = (error: APIError[], isCreate: boolean) => {
       const mapErrorToStatus = (generalError: string) =>
         formik.setStatus({ generalError });
 
@@ -341,6 +348,11 @@ export const LinodeConfigDialog = (props: Props) => {
           if (err.field && ['disk_id', 'volume_id'].includes(err.field)) {
             err.field = 'devices';
           }
+        });
+
+        const actionType = isCreate ? 'create' : 'update';
+        enqueueSnackbar(`Failed to ${actionType} ${configData.label}`, {
+          variant: 'error',
         });
       };
 
@@ -360,11 +372,15 @@ export const LinodeConfigDialog = (props: Props) => {
 
     /** Editing */
     if (config) {
-      return updateConfig(configData).then(handleSuccess).catch(handleError);
+      return updateConfig(configData)
+        .then(() => handleSuccess(false))
+        .catch((error) => handleError(error, false));
     }
 
+    return createConfig(configData)
+      .then(() => handleSuccess(true))
+      .catch((error) => handleError(error, true));
     /** Creating */
-    return createConfig(configData).then(handleSuccess).catch(handleError);
   };
 
   React.useEffect(() => {

@@ -193,20 +193,6 @@ export const ToastNotifications = () => {
            * We don't know if it's possible for these to fail,
            * but are including handling to be safe.
            */
-          case 'linode_config_delete':
-            return toastSuccessAndFailure({
-              enqueueSnackbar,
-              eventStatus: event.status,
-              failureMessage: `Error deleting config ${secondaryLabel}.`,
-              successMessage: `Config ${secondaryLabel} successfully deleted from Linode ${label}.`,
-            });
-          case 'linode_config_create':
-            return toastSuccessAndFailure({
-              enqueueSnackbar,
-              eventStatus: event.status,
-              failureMessage: `Error creating config ${secondaryLabel}.`,
-              successMessage: `Config ${secondaryLabel} successfully created on Linode ${label}.`,
-            });
           case 'linode_clone':
             return toastSuccessAndFailure({
               enqueueSnackbar,
@@ -228,48 +214,6 @@ export const ToastNotifications = () => {
               eventStatus: event.status,
               failureMessage: `Error resizing Linode ${label}.`,
               successMessage: `Linode ${label} successfully resized.`,
-            });
-          case 'firewall_enable':
-            return toastSuccessAndFailure({
-              enqueueSnackbar,
-              eventStatus: event.status,
-              failureMessage: `Error enabling Firewall ${label}.`,
-              successMessage: `Firewall ${label} successfully enabled.`,
-            });
-          case 'firewall_disable':
-            return toastSuccessAndFailure({
-              enqueueSnackbar,
-              eventStatus: event.status,
-              failureMessage: `Error disabling Firewall ${label}.`,
-              successMessage: `Firewall ${label} successfully disabled.`,
-            });
-          case 'firewall_delete':
-            return toastSuccessAndFailure({
-              enqueueSnackbar,
-              eventStatus: event.status,
-              failureMessage: `Error deleting Firewall ${label}.`,
-              successMessage: `Firewall ${label} successfully deleted.`,
-            });
-          case 'firewall_create':
-            return toastSuccessAndFailure({
-              enqueueSnackbar,
-              eventStatus: event.status,
-              failureMessage: `Error creating Firewall ${label}.`,
-              successMessage: `Firewall ${label} successfully created.`,
-            });
-          case 'firewall_device_add':
-            return toastSuccessAndFailure({
-              enqueueSnackbar,
-              eventStatus: event.status,
-              failureMessage: `Error adding ${secondaryLabel} to Firewall ${label}.`,
-              successMessage: `Device ${secondaryLabel} successfully added to Firewall ${label}.`,
-            });
-          case 'firewall_device_remove':
-            return toastSuccessAndFailure({
-              enqueueSnackbar,
-              eventStatus: event.status,
-              failureMessage: `Error removing ${secondaryLabel} from Firewall ${label}.`,
-              successMessage: `Device ${secondaryLabel} successfully removed from Firewall ${label}.`,
             });
           case 'longviewclient_create':
             return toastSuccessAndFailure({

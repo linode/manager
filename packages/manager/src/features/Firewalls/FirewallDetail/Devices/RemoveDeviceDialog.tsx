@@ -1,4 +1,5 @@
 import { FirewallDevice } from '@linode/api-v4';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -29,6 +30,8 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     open,
   } = props;
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
     device?.id ?? -1
@@ -37,7 +40,16 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const queryClient = useQueryClient();
 
   const onDelete = async () => {
-    await mutateAsync();
+    try {
+      await mutateAsync();
+      enqueueSnackbar(`Successfully removed ${device?.entity.label}`, {
+        variant: 'success',
+      });
+    } catch {
+      enqueueSnackbar(`Failed to remove ${device?.entity.label}`, {
+        variant: 'error',
+      });
+    }
 
     // Since the linode was removed as a device, invalidate the linode-specific firewall query
     queryClient.invalidateQueries([

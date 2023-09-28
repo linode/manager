@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -16,6 +17,8 @@ interface Props {
 }
 
 export const FirewallDialog = React.memo((props: Props) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const {
     mode,
     onClose,
@@ -54,8 +57,17 @@ export const FirewallDialog = React.memo((props: Props) => {
   };
 
   const onSubmit = async () => {
-    await requestMap[mode]();
-    onClose();
+    try {
+      await requestMap[mode]();
+      enqueueSnackbar(`Successfully ${mode}d ${label}`, {
+        variant: 'success',
+      });
+      onClose();
+    } catch (e) {
+      enqueueSnackbar(`Failed to ${mode} ${label}`, {
+        variant: 'error',
+      });
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -50,6 +51,8 @@ export const CreateFirewallDrawer = React.memo(
 
     const { mutateAsync } = useCreateFirewall();
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const {
       errors,
       handleBlur,
@@ -91,6 +94,9 @@ export const CreateFirewallDrawer = React.memo(
 
         mutateAsync(payload)
           .then(() => {
+            enqueueSnackbar(`Successfully created ${payload.label}`, {
+              variant: 'success',
+            });
             setSubmitting(false);
             onClose();
           })
@@ -105,6 +111,9 @@ export const CreateFirewallDrawer = React.memo(
               err,
               'Error creating Firewall.'
             );
+            enqueueSnackbar(`Failed to create ${payload.label}`, {
+              variant: 'error',
+            });
           });
       },
       validateOnBlur: false,
