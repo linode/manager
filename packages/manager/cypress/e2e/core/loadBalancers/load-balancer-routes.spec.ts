@@ -291,4 +291,74 @@ describe('Akamai Global Load Balancer routes page', () => {
     cy.findByText('Invalid TTL', { exact: true });
     cy.findByText('Invalid Cookie', { exact: true });
   });
+  it('surfaces API errors in the Add Rule Drawer for a TCP route', () => {
+    const loadbalancer = loadbalancerFactory.build();
+    const routes = routeFactory.buildList(1, { protocol: 'tcp' });
+    const serviceTargets = serviceTargetFactory.buildList(3);
+
+    mockAppendFeatureFlags({
+      aglb: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+    mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+    mockGetLoadBalancerServiceTargets(loadbalancer.id, serviceTargets).as(
+      'getServiceTargets'
+    );
+
+    cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/routes`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientStream',
+      '@getLoadBalancer',
+      '@getRoutes',
+    ]);
+
+    ui.button
+      .findByTitle('Add Rule')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockUpdateRouteError(loadbalancer, routes[0]).as('updateRoute');
+
+    ui.drawer
+      .findByTitle('Add Rule')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Service Target')
+          .should('be.visible')
+          .click()
+          .type(serviceTargets[0].label);
+
+        cy.wait('@getServiceTargets');
+
+        ui.autocompletePopper
+          .findByTitle(serviceTargets[0].label)
+          .should('be.visible')
+          .click();
+
+        ui.buttonGroup
+          .findButtonByTitle('Add Rule')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@updateRoute');
+
+    cy.findByText('Bad Match Value');
+    cy.findByText('Bad Match Type');
+    cy.findByText('Service Target does not exist');
+    cy.findByText('Invalid percentage');
+    cy.findByText('Invalid TTL', { exact: false });
+    cy.findByText('Invalid Cookie', { exact: false });
+    cy.findByText('A backend service is down', { exact: false });
+    cy.findByText('You reached a rate limit', { exact: false });
+
+    cy.findByLabelText('Use Session Stickiness').check();
+
+    cy.findByText('Invalid TTL', { exact: true });
+    cy.findByText('Invalid Cookie', { exact: true });
+  });
 });

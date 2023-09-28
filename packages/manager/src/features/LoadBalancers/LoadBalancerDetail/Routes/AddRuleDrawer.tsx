@@ -133,7 +133,13 @@ export const AddRuleDrawer = (props: Props) => {
       )?.reason;
 
   const generalErrors = error
-    ?.filter((error) => !error.field)
+    ?.filter(
+      (error) =>
+        !error.field ||
+        (route?.protocol === 'tcp' &&
+          (error.field.includes('match_condition.match_field') ||
+            error.field.includes('match_condition.match_value')))
+    )
     .map((error) => error.reason)
     .join(', ');
 
