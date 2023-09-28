@@ -86,7 +86,7 @@ export const LinodeResize = (props: Props) => {
   const [confirmationText, setConfirmationText] = React.useState('');
   const [
     isConfirmationDialogOpen,
-    setConfirmationDialogOpen,
+    setIsConfirmationDialogOpen,
   ] = React.useState<boolean>(false);
 
   const {
@@ -150,9 +150,18 @@ export const LinodeResize = (props: Props) => {
   }, [open]);
 
   React.useEffect(() => {
-    // Set to "block: end" since the sticky header would otherwise interfere.
-    scrollErrorIntoView(undefined, { block: 'end' });
+    if (resizeError) {
+      // Always close the confirmation dialog on error.
+      setIsConfirmationDialogOpen(false);
+    }
   }, [resizeError]);
+
+  React.useEffect(() => {
+    if (!isConfirmationDialogOpen && resizeError) {
+      // Set to "block: end" since the sticky header would otherwise interfere.
+      scrollErrorIntoView(undefined, { block: 'end' });
+    }
+  }, [isConfirmationDialogOpen, resizeError]);
 
   const hostMaintenance = linode?.status === 'stopped';
   const isLinodeOffline = linode?.status === 'offline';
@@ -188,7 +197,7 @@ export const LinodeResize = (props: Props) => {
     formik.values.migration_type === 'warm' &&
     !isLinodeOffline
       ? {
-          onClick: () => setConfirmationDialogOpen(true),
+          onClick: () => setIsConfirmationDialogOpen(true),
         }
       : {
           loading: isLoading,
@@ -244,13 +253,7 @@ export const LinodeResize = (props: Props) => {
               padding: '16px 22px 0 22px',
             }}
           >
-            <Typography variant="h2">
-              Choose Your Resize Type
-              <TooltipIcon
-                status="help"
-                text={`The resize of your VM will happen within a 96 hour window of the date selected. The resizing may take some time depending on the size of the disk. The notification bell in the top right of the page will notify you when the resizing is complete. Your VM will resize within 15 minutes when you select “Resize Now”. `}
-              />
-            </Typography>
+            <Typography variant="h2">Choose Your Resize Type</Typography>
             <Box
               sx={{
                 marginTop: 0,
@@ -403,11 +406,11 @@ export const LinodeResize = (props: Props) => {
                 }}
                 secondaryButtonProps={{
                   label: 'Cancel',
-                  onClick: () => setConfirmationDialogOpen(false),
+                  onClick: () => setIsConfirmationDialogOpen(false),
                 }}
               />
             }
-            onClose={() => setConfirmationDialogOpen(false)}
+            onClose={() => setIsConfirmationDialogOpen(false)}
             open={isConfirmationDialogOpen}
             title="Confirm warm resize?"
           >
