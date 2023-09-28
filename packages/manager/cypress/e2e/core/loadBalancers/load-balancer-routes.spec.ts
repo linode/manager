@@ -134,6 +134,89 @@ describe('Akamai Global Load Balancer routes page', () => {
 
     cy.wait('@updateRoute');
   });
+  it('can add a TCP rule', () => {
+    const loadbalancer = loadbalancerFactory.build();
+    const routes = routeFactory.buildList(1, { protocol: 'tcp' });
+    const serviceTargets = serviceTargetFactory.buildList(3);
+
+    mockAppendFeatureFlags({
+      aglb: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetLoadBalancer(loadbalancer).as('getLoadBalancer');
+    mockGetLoadBalancerRoutes(loadbalancer.id, routes).as('getRoutes');
+    mockGetLoadBalancerServiceTargets(loadbalancer.id, serviceTargets).as(
+      'getServiceTargets'
+    );
+
+    cy.visitWithLogin(`/loadbalancers/${loadbalancer.id}/routes`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getClientStream',
+      '@getLoadBalancer',
+      '@getRoutes',
+    ]);
+
+    ui.button
+      .findByTitle('Add Rule')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockUpdateRoute(loadbalancer, routes[0]).as('updateRoute');
+
+    ui.drawer
+      .findByTitle('Add Rule')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Percent')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type('50');
+
+        cy.findByLabelText('Service Target')
+          .should('be.visible')
+          .click()
+          .type(serviceTargets[0].label);
+
+        cy.wait('@getServiceTargets');
+
+        ui.autocompletePopper
+          .findByTitle(serviceTargets[0].label)
+          .should('be.visible')
+          .click();
+
+        cy.findByText('Add Service Target').click();
+
+        cy.findByDisplayValue('100')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type('50');
+
+        cy.findAllByLabelText('Service Target')
+          .last()
+          .should('be.visible')
+          .click()
+          .type(serviceTargets[1].label);
+
+        cy.wait('@getServiceTargets');
+
+        ui.autocompletePopper
+          .findByTitle(serviceTargets[1].label)
+          .should('be.visible')
+          .click();
+
+        ui.buttonGroup
+          .findButtonByTitle('Add Rule')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@updateRoute');
+  });
   it('surfaces API errors in the Add Rule Drawer', () => {
     const loadbalancer = loadbalancerFactory.build();
     const routes = routeFactory.buildList(1);
