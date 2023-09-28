@@ -20,6 +20,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import type {
   APIError,
@@ -37,21 +38,23 @@ interface Props {
 
 export const SubnetUnassignLinodesDrawer = React.memo(
   ({ onClose, open, subnet, vpcId }: Props) => {
-    const { linodes: subnetLinodeIds } = subnet || {};
     const { data: profile } = useProfile();
     const { data: grants } = useGrants();
     const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
+
     const queryClient = useQueryClient();
     const {
       setUnassignLinodesErrors,
       unassignLinode,
       unassignLinodesErrors,
     } = useUnassignLinode();
+
     const csvRef = React.useRef<any>();
     const formattedDate = useFormattedDate();
     const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
     const prevSelectedLinodes = usePrevious(selectedLinodes);
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
+
     const [
       linodeOptionsToUnassign,
       setLinodeOptionsToUnassign,
@@ -60,11 +63,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       configInterfacesToDelete,
       setConfigInterfacesToDelete,
     ] = React.useState<DeleteLinodeConfigInterfacePayload[]>([]);
-    const csvHeaders = [
-      { key: 'label', label: 'Linode Label' },
-      { key: 'id', label: 'Linode ID' },
-      { key: 'ipv4', label: 'IPv4' },
-    ];
+
+    const { linodes: subnetLinodeIds } = subnet || {};
 
     const userCannotUnassignLinodes =
       Boolean(profile?.restricted) &&
@@ -313,7 +313,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                   csvRef={csvRef}
                   data={selectedLinodes}
                   filename={`linodes-unassigned-${formattedDate}.csv`}
-                  headers={csvHeaders}
+                  headers={SUBNET_LINODE_CSV_HEADERS}
                   onClick={downloadCSV}
                   text={'Download List of Unassigned Linodes (.csv)'}
                 />
