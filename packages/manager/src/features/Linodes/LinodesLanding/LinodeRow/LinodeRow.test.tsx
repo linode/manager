@@ -11,12 +11,7 @@ import { LinodeRow, RenderFlag } from './LinodeRow';
 describe('LinodeRow', () => {
   describe('when Linode has notification', () => {
     it('should render a Flag', () => {
-      const wrapper = shallow(
-        <RenderFlag
-          linodeNotifications={[mockNotification]}
-          mutationAvailable={false}
-        />
-      );
+      const wrapper = shallow(<RenderFlag mutationAvailable={false} />);
 
       const Tooltip = wrapper.find('Tooltip');
 
