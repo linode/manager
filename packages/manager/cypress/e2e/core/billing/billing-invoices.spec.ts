@@ -135,15 +135,8 @@ describe('Account invoices', () => {
         cy.findByText(`Invoice #${mockInvoice.id}`).should('be.visible');
         cy.findByText(formatUsd(sumSubtotal + sumTax)).should('be.visible');
 
-        ui.button
-          .findByTitle('Download CSV')
-          .should('be.visible')
-          .should('be.enabled');
-
-        ui.button
-          .findByTitle('Download PDF')
-          .should('be.visible')
-          .should('be.enabled');
+        cy.findByText('Download CSV').should('be.visible');
+        cy.findByText('Download PDF').should('be.visible');
       });
 
     // Confirm that invoice summary displays subtotal, tax subtotal, tax summary entries, and grand total.

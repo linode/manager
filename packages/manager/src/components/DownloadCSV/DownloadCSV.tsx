@@ -2,19 +2,21 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 
+import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import { Button } from 'src/components/Button/Button';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 import type { ButtonType } from 'src/components/Button/Button';
 
 interface DownloadCSVProps {
-  buttonType?: ButtonType;
+  buttonType?: 'styledLink' | ButtonType;
   children?: React.ReactNode;
   className?: string;
   csvRef?: React.RefObject<any>;
   data: unknown[];
   filename: string;
   headers: { key: string; label: string }[];
-  onClick: () => void;
+  onClick?: () => void;
   sx?: SxProps;
   text?: string;
 }
@@ -39,20 +41,35 @@ export const DownloadCSV = ({
   sx,
   text = 'Download CSV',
 }: DownloadCSVProps) => {
+  const renderButton =
+    buttonType === 'styledLink' ? (
+      <StyledLinkButton onClick={onClick} sx={sx}>
+        <DownloadIcon />
+        {text}
+      </StyledLinkButton>
+    ) : (
+      <Button
+        buttonType={buttonType}
+        component="span"
+        disableRipple
+        onClick={onClick}
+        sx={sx}
+        tabIndex={-1}
+      >
+        {text}
+      </Button>
+    );
+
   return (
     <>
       <CSVLink
-        aria-hidden="true"
         className={className}
         data={cleanCSVData(data)}
         filename={filename}
         headers={headers}
         ref={csvRef}
-        tabIndex={-1}
       />
-      <Button buttonType={buttonType} onClick={onClick} sx={sx}>
-        {text}
-      </Button>
+      {renderButton}
     </>
   );
 };

@@ -1,34 +1,17 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { Box } from 'src/components/Box';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { Props as LVProps } from 'src/containers/longview.container';
 
-import LongviewRows from './LongviewListRows';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    ...theme.applyLinkStyles,
-  },
-  empty: {
-    alignItems: 'center',
-    display: 'flex',
-    height: '20em',
-    justifyContent: 'center',
-  },
-  emptyText: {
-    fontSize: '1.1em',
-  },
-}));
+import { LongviewListRows } from './LongviewListRows';
 
 type LongviewProps = Omit<
   LVProps,
@@ -53,7 +36,7 @@ interface Props {
 
 type CombinedProps = Props & LongviewProps;
 
-const LongviewList: React.FC<CombinedProps> = (props) => {
+export const LongviewList = React.memo((props: CombinedProps) => {
   const {
     createLongviewClient,
     filteredData,
@@ -66,8 +49,6 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
     triggerDeleteLongviewClient,
     userCanCreateLongviewClient,
   } = props;
-
-  const classes = useStyles();
 
   // Empty state and a new client is being created
   const newClientIsLoading = loading && longviewClientsResults === 0;
@@ -98,14 +79,22 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
   /** Empty state */
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
     return (
-      <Paper className={classes.empty} data-testid="no-client-list">
-        <Typography className={classes.emptyText} variant="body1">
+      <Paper
+        data-testid="no-client-list"
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          height: '20em',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography sx={{ fontSize: '1.1em' }} variant="body1">
           {userCanCreateLongviewClient ? (
             <React.Fragment>
               You have no Longview clients configured.{' '}
-              <button className={classes.button} onClick={createLongviewClient}>
+              <StyledLinkButton onClick={createLongviewClient}>
                 Click here to add one.
-              </button>
+              </StyledLinkButton>
             </React.Fragment>
           ) : (
             'You have no Longview clients configured.'
@@ -131,7 +120,7 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
       }) => (
         <>
           <Box flexDirection="column">
-            <LongviewRows
+            <LongviewListRows
               longviewClientsData={paginatedAndOrderedData}
               openPackageDrawer={openPackageDrawer}
               triggerDeleteLongviewClient={triggerDeleteLongviewClient}
@@ -152,6 +141,4 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
       )}
     </Paginate>
   );
-};
-
-export default compose<CombinedProps, CombinedProps>(React.memo)(LongviewList);
+});

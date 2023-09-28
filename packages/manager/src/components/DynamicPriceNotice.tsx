@@ -17,7 +17,13 @@ export const DynamicPriceNotice = (props: Props) => {
   const regionLabel = regions?.find((r) => r.id === region)?.label ?? region;
 
   return (
-    <Notice spacingBottom={0} spacingTop={12} variant="warning" {...rest}>
+    <Notice
+      dataTestId="dynamic-pricing-notice"
+      spacingBottom={0}
+      spacingTop={12}
+      variant="warning"
+      {...rest}
+    >
       <Typography fontWeight="bold">
         Prices for plans, products, and services in {regionLabel} may vary from
         other regions.{' '}

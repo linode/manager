@@ -38,7 +38,7 @@ describe('TransferDisplayDialogUsage', () => {
     const progressBars = getAllByRole('progressbar');
 
     expect(progressBars.length).toBe(3);
-    expect(getByTestId('general-transfer-pool-display')).toBeInTheDocument();
+    expect(getByTestId('global-transfer-pool-header')).toBeInTheDocument();
 
     expect(await findByText('9000 GB Used (36%)')).toBeInTheDocument();
     expect(await findByText('8500 GB Used (85%)')).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe('TransferDisplayDialogUsage', () => {
 
     const progressBars = getAllByRole('progressbar');
 
-    expect(getByTestId('general-transfer-pool-display')).toBeInTheDocument();
+    expect(getByTestId('global-transfer-pool-header')).toBeInTheDocument();
     expect(progressBars.length).toBe(1);
     expect(progressBars[0]).toHaveAttribute('aria-valuenow', '36');
   });

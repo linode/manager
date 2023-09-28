@@ -7,10 +7,11 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
-import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
+import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllTypes, useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { DIFFERENT_PRICE_STRUCTURE_WARNING } from 'src/utilities/pricing/constants';
 import { priceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 import {
   doesRegionHaveUniquePricing,
@@ -126,7 +127,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       />
       {showCrossDataCenterCloneWarning ? (
         <Notice
-          data-testid="region-select-warning"
+          dataTestId="cross-data-center-notice"
           spacingBottom={0}
           spacingTop={8}
           variant="warning"
@@ -145,9 +146,14 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         selectedID={selectedID || null}
       />
       {showClonePriceWarning && (
-        <Notice spacingBottom={0} spacingTop={12} variant="warning">
+        <Notice
+          dataTestId="different-price-structure-notice"
+          spacingBottom={0}
+          spacingTop={12}
+          variant="warning"
+        >
           <Typography fontWeight="bold">
-            The selected region has a different price structure.{' '}
+            {DIFFERENT_PRICE_STRUCTURE_WARNING}{' '}
             <Link to="https://www.linode.com/pricing">Learn more.</Link>
           </Typography>
         </Notice>
