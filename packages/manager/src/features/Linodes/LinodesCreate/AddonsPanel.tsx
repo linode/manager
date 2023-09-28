@@ -14,8 +14,10 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { UserDataAccordionProps } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
 import { AttachVLAN } from './AttachVLAN';
@@ -72,6 +74,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   const theme = useTheme();
   const flags = useFlags();
+  const { data: account } = useAccount();
 
   const { data: image } = useImageQuery(
     selectedImageID ?? '',
@@ -124,6 +127,12 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   // The backups warning is shown when the user checks to enable backups, but they are using a custom image that may not be compatible.
   const showBackupsWarning = checkBackupsWarning();
 
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
+
   // Check whether the source Linode has been allocated a private IP to select/unselect the 'Private IP' checkbox.
   React.useEffect(() => {
     if (selectedLinodeID) {
@@ -144,8 +153,8 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   return (
     <>
-      {!flags.vpc &&
-        showVlans && ( // @TODO Delete this conditional and AttachVLAN component once VPC is released
+      {!showVPCs &&
+        showVlans && ( // @TODO VPC: Delete this conditional and AttachVLAN component once VPC is fully rolled out
           <AttachVLAN
             handleVLANChange={handleVLANChange}
             helperText={vlanDisabledReason}
@@ -157,7 +166,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             vlanLabel={vlanLabel}
           />
         )}
-      {flags.vpc && showVlans && (
+      {showVPCs && showVlans && (
         <VLANAccordion
           handleVLANChange={handleVLANChange}
           helperText={vlanDisabledReason}
@@ -236,6 +245,15 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           }
           label="Private IP"
         />
+        {showVPCs && (
+          <StyledTypography
+            data-testid="private-ip-contextual-copy"
+            variant="body1"
+          >
+            Use this for a backend node to a NodeBalancer. Use VPC instead for
+            private communication between your Linodes.
+          </StyledTypography>
+        )}
       </Paper>
     </>
   );
