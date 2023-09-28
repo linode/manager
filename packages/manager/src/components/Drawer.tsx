@@ -132,7 +132,6 @@ export const Drawer = (props: Props) => {
         <Grid>
           <IconButton
             sx={{
-              position: 'absolute',
               right: '-12px',
               top: '-12px',
             }}
