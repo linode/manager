@@ -127,9 +127,12 @@ export const VPCPanel = (props: VPCPanelProps) => {
     ? getAPIErrorOrDefault(error, 'Unable to load VPCs')[0].reason
     : undefined;
 
+  const fromLinodeCreate = from === 'linodeCreate';
+  const fromLinodeConfig = from === 'linodeConfig';
+
   const getMainCopyVPC = () => {
-    if (from === 'linodeConfig') {
-      return '';
+    if (fromLinodeConfig) {
+      return null;
     }
 
     const copy =
@@ -139,14 +142,24 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
     return (
       <>
-        {copy} <Link to="">Learn more</Link>
+        {copy} <Link to="">Learn more</Link>.
       </>
     );
   };
 
   return (
-    <Paper data-testid="vpc-panel" sx={{ padding: 0 }}>
-      {from === 'linodeCreate' && (
+    <Paper
+      sx={(theme) => ({
+        ...(fromLinodeCreate && {
+          marginTop: theme.spacing(3),
+        }),
+        ...(fromLinodeConfig && {
+          padding: 0,
+        }),
+      })}
+      data-testid="vpc-panel"
+    >
+      {fromLinodeCreate && (
         <Typography
           sx={(theme) => ({ marginBottom: theme.spacing(2) })}
           variant="h2"
