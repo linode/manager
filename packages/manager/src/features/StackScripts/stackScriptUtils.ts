@@ -138,7 +138,7 @@ export const baseApps = {
   '1177605': 'Illa Builder',
 };
 
-const oneClickFilter = [
+export const oneClickFilter = [
   {
     '+and': [
       { '+or': [{ username: 'linode-stackscripts' }, { username: 'linode' }] },

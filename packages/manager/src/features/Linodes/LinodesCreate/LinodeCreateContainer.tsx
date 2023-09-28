@@ -2,7 +2,7 @@ import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Region } from '@linode/api-v4/lib/regions';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
-import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -34,7 +34,9 @@ import withFlags, {
 } from 'src/containers/withFeatureFlagConsumer.container';
 import {
   WithLinodesProps,
+  WithMarketplaceAppsProps,
   withLinodes,
+  withMarketplaceApps,
 } from 'src/containers/withLinodes.container';
 import {
   WithQueryClientProps,
@@ -44,13 +46,11 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
-import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import {
   queryKey as accountAgreementsQueryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import { simpleMutationHandlers } from 'src/queries/base';
-import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';
 import {
@@ -81,9 +81,6 @@ import type {
 const DEFAULT_IMAGE = 'linode/debian11';
 
 interface State {
-  appInstances?: StackScript[];
-  appInstancesError?: string;
-  appInstancesLoading: boolean;
   attachedVLANLabel: null | string;
   authorized_users: string[];
   availableStackScriptImages?: Image[];
@@ -125,10 +122,10 @@ type CombinedProps = WithSnackbarProps &
   WithProfileProps &
   AgreementsProps &
   WithQueryClientProps &
+  WithMarketplaceAppsProps &
   WithAccountSettingsProps;
 
 const defaultState: State = {
-  appInstancesLoading: false,
   attachedVLANLabel: '',
   authorized_users: [],
   backupsEnabled: false,
@@ -175,13 +172,6 @@ const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
   return disabledClasses;
 };
 
-const trimOneClickFromLabel = (script: StackScript) => {
-  return {
-    ...script,
-    label: script.label.replace('One-Click', ''),
-  };
-};
-
 const nonImageCreateTypes = ['fromStackScript', 'fromBackup', 'fromLinode'];
 
 const isNonDefaultImageType = (prevType: string, type: string) => {
@@ -193,39 +183,10 @@ const isNonDefaultImageType = (prevType: string, type: string) => {
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   componentDidMount() {
     // Allowed apps include the base set of original apps + anything LD tells us to show
-    const newApps = this.props.flags.oneClickApps || [];
-    const allowedApps = Object.keys({ ...baseApps, ...newApps });
     if (nonImageCreateTypes.includes(this.props.createType)) {
       // If we're navigating directly to e.g. the clone page, don't select an image by default
       this.setState({ selectedImageID: undefined });
     }
-    this.setState({ appInstancesLoading: true });
-
-    this.props.queryClient
-      .fetchQuery('stackscripts-oca-all', () => getAllOCAsRequest())
-      .then((res: StackScript[]) => {
-        // Don't display One-Click Helpers to the user
-        // Filter out any apps that we don't have info for
-        const filteredApps = res.filter((script) => {
-          return (
-            !script.label.match(/helpers/i) &&
-            allowedApps.includes(String(script.id))
-          );
-        });
-        const trimmedApps = filteredApps.map((stackscript) =>
-          trimOneClickFromLabel(stackscript)
-        );
-        this.setState({
-          appInstances: trimmedApps,
-          appInstancesLoading: false,
-        });
-      })
-      .catch((_) => {
-        this.setState({
-          appInstancesError: 'There was an error loading Marketplace Apps.',
-          appInstancesLoading: false,
-        });
-      });
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -850,7 +811,8 @@ export default recompose<CombinedProps, {}>(
   withProfile,
   withAgreements,
   withQueryClient,
-  withAccountSettings
+  withAccountSettings,
+  withMarketplaceApps
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {

@@ -24,10 +24,34 @@ const cachedRequests = [
     endpoint: 'linode/kernels',
     filename: 'kernels.json',
   },
+  {
+    endpoint: 'linode/stackscripts',
+    filename: 'marketplace.json',
+    filter: [
+      {
+        '+and': [
+          {
+            '+or': [
+              { username: 'linode-stackscripts' },
+              { username: 'linode' },
+            ],
+          },
+          {
+            label: {
+              '+contains': 'One-Click',
+            },
+          },
+        ],
+      },
+      { '+order_by': 'ordinal' },
+    ],
+  },
 ];
 
-async function handleRequest(endpoint, filename) {
-  const response = await fetch(API_ROOT + endpoint + '?page_size=500');
+async function handleRequest(endpoint, filename, filter) {
+  const response = await fetch(API_ROOT + endpoint + '?page_size=500', {
+    headers: filter ? { 'x-filter': JSON.stringify(filter) } : {},
+  });
   const data = await response.json();
 
   if (data.data.pages > 1) {
@@ -51,7 +75,7 @@ async function prebuild() {
   console.log('Caching common requests');
 
   const requests = cachedRequests.map((request) =>
-    handleRequest(request.endpoint, request.filename)
+    handleRequest(request.endpoint, request.filename, request.filter)
   );
 
   try {
