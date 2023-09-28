@@ -170,7 +170,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
         {nodePool.count && (!pricePerNode || !totalMonthlyPrice) && (
           <Notice
             text={
-              'There was an error retrieving prices. Please relead and try again'
+              'There was an error retrieving prices. Please reload and try again.'
             }
             spacingBottom={16}
             spacingTop={8}
