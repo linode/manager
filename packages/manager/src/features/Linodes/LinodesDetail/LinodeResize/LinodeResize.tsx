@@ -97,6 +97,11 @@ export const LinodeResize = (props: Props) => {
 
   const { data: regionsData } = useRegionsQuery();
 
+  const hostMaintenance = linode?.status === 'stopped';
+  const isLinodeOffline = linode?.status === 'offline';
+  const unauthorized =
+    getPermissionsForLinode(grants, linodeId || 0) === 'read_only';
+
   const formik = useFormik<ResizeLinodePayload>({
     initialValues: {
       allow_auto_disk_resize: shouldEnableAutoResizeDiskOption(disks ?? [])[1],
@@ -133,6 +138,13 @@ export const LinodeResize = (props: Props) => {
   });
 
   React.useEffect(() => {
+    if (isLinodeOffline) {
+      formik.setFieldValue('migration_type', migrationTypeOptions.cold);
+      return;
+    }
+  }, [isLinodeOffline]);
+
+  React.useEffect(() => {
     const allow_auto_disk_resize = shouldEnableAutoResizeDiskOption(
       disks ?? []
     )[1];
@@ -162,11 +174,6 @@ export const LinodeResize = (props: Props) => {
       scrollErrorIntoView(undefined, { block: 'end' });
     }
   }, [isConfirmationDialogOpen, resizeError]);
-
-  const hostMaintenance = linode?.status === 'stopped';
-  const isLinodeOffline = linode?.status === 'offline';
-  const unauthorized =
-    getPermissionsForLinode(grants, linodeId || 0) === 'read_only';
 
   const tableDisabled = hostMaintenance || unauthorized;
 
@@ -297,6 +304,17 @@ export const LinodeResize = (props: Props) => {
                   label={capitalize(migrationTypeOptions.cold)}
                   value={migrationTypeOptions.cold}
                 />
+                {isLinodeOffline && (
+                  <TooltipIcon
+                    sxTooltipIcon={{
+                      marginLeft: '-15px',
+                    }}
+                    status="help"
+                    text={`The Warm resize option is currently disabled in this context as the instance is offline, and a Cold Resize is required to initiate the instance restart.`}
+                    tooltipPosition="right"
+                    width={300}
+                  />
+                )}
               </RadioGroup>
             </FormControl>
           </Box>
