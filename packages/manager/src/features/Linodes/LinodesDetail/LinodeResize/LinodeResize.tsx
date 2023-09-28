@@ -1,28 +1,18 @@
 import {
-  Disk,
-  LinodeType,
   MigrationTypes,
   ResizeLinodePayload,
 } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { FormControl } from 'src/components/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
@@ -39,13 +29,19 @@ import { usePreferences } from 'src/queries/preferences';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
-import { capitalize } from 'src/utilities/capitalize';
 import { extendType } from 'src/utilities/extendType';
 import { getPermissionsForLinode } from 'src/utilities/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
+import {
+  getError,
+  isSmallerThanCurrentPlan,
+  shouldEnableAutoResizeDiskOption,
+} from './LinodeResize.utils';
+import { UnifiedConfirmationDialog } from './LinodeResizeUnifiedMigrationConfirmationDialog';
+import { UnifiedMigrationPanel } from './LinodeResizeUnifiedMigrationPanel';
 
 import type { ButtonProps } from 'src/components/Button/Button';
 
@@ -63,8 +59,8 @@ const migrationTypeOptions: { [key in MigrationTypes]: key } = {
 
 export const LinodeResize = (props: Props) => {
   const { linodeId, onClose, open } = props;
-  const theme = useTheme();
   const flags = useFlags();
+  const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -243,7 +239,15 @@ export const LinodeResize = (props: Props) => {
           </Link>
         </Typography>
 
-        <StyledDiv>
+        <Box
+          sx={{
+            '& > div': {
+              padding: 0,
+            },
+            marginBottom: theme.spacing(3),
+            marginTop: theme.spacing(5),
+          }}
+        >
           <PlansPanel
             currentPlanHeading={type ? extendType(type).heading : undefined} // lol, why make us pass the heading and not the plan id?
             disabled={tableDisabled}
@@ -253,74 +257,14 @@ export const LinodeResize = (props: Props) => {
             selectedRegionID={linode?.region}
             types={currentTypes.map(extendType)}
           />
-        </StyledDiv>
+        </Box>
 
         {flags.unifiedMigrations && (
-          <Box
-            sx={{
-              backgroundColor: theme.bg.offWhite,
-              marginBottom: '8px',
-              padding: '16px 22px 0 22px',
-            }}
-          >
-            <Typography variant="h2">Choose Your Resize Type</Typography>
-            <Box
-              sx={{
-                marginTop: 0,
-              }}
-              component="p"
-            >
-              During a <strong>warm resize</strong>, your Compute Instance will
-              remain up and running for the duration of the process and will be
-              rebooted to complete the resize. In some cases, you will need to
-              reboot the instance manually (you will receive a notification to
-              do so if necessary). During a <strong>cold resize</strong>, your
-              Compute Instance will be shut down, migrated to a new host
-              machine, and restored to its previous state (booted or powered
-              off) once the resize is complete.
-            </Box>
-            <FormControl sx={{ marginTop: 0 }}>
-              <FormLabel id="resize-migration-types" sx={{ marginBottom: 0 }}>
-                Migration Types
-              </FormLabel>
-              <RadioGroup
-                onChange={(e, value) =>
-                  formik.setFieldValue('migration_type', value)
-                }
-                aria-labelledby="resize-migration-types"
-                row
-                value={formik.values.migration_type}
-              >
-                <FormControlLabel
-                  control={<Radio />}
-                  data-qa-radio={migrationTypeOptions.warm}
-                  disabled={isLinodeOffline}
-                  key={migrationTypeOptions.warm}
-                  label={capitalize(migrationTypeOptions.warm)}
-                  value={migrationTypeOptions.warm}
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  data-qa-radio={migrationTypeOptions.cold}
-                  disabled={isLinodeOffline}
-                  key={migrationTypeOptions.cold}
-                  label={capitalize(migrationTypeOptions.cold)}
-                  value={migrationTypeOptions.cold}
-                />
-                {isLinodeOffline && (
-                  <TooltipIcon
-                    sxTooltipIcon={{
-                      marginLeft: '-15px',
-                    }}
-                    status="help"
-                    text={`The Warm resize option is currently disabled in this context as the instance is offline, and a Cold Resize is required to initiate the instance restart.`}
-                    tooltipPosition="right"
-                    width={300}
-                  />
-                )}
-              </RadioGroup>
-            </FormControl>
-          </Box>
+          <UnifiedMigrationPanel
+            formik={formik}
+            isLinodeOffline={isLinodeOffline}
+            migrationTypeOptions={migrationTypeOptions}
+          />
         )}
         <Typography
           sx={{ alignItems: 'center', display: 'flex', minHeight: '44px' }}
@@ -414,118 +358,14 @@ export const LinodeResize = (props: Props) => {
           </Button>
         </Box>
         {flags.unifiedMigrations && (
-          <ConfirmationDialog
-            actions={
-              <ActionsPanel
-                primaryButtonProps={{
-                  'data-testid': 'confirm-resize',
-                  label: 'Continue',
-                  loading: isLoading,
-                  onClick: () => {
-                    formik.handleSubmit();
-                  },
-                }}
-                secondaryButtonProps={{
-                  label: 'Cancel',
-                  onClick: () => setIsConfirmationDialogOpen(false),
-                }}
-              />
-            }
-            onClose={() => setIsConfirmationDialogOpen(false)}
-            open={isConfirmationDialogOpen}
-            title="Confirm warm resize?"
-          >
-            <Typography variant="subtitle1">
-              During the warm resize process, your Linode will be rebooted to
-              complete the migration.
-            </Typography>
-          </ConfirmationDialog>
+          <UnifiedConfirmationDialog
+            formik={formik}
+            isConfirmationDialogOpen={isConfirmationDialogOpen}
+            isLoading={isLoading}
+            setIsConfirmationDialogOpen={setIsConfirmationDialogOpen}
+          />
         )}
       </form>
     </Dialog>
   );
-};
-
-const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
-  '& > div': {
-    padding: 0,
-  },
-  marginBottom: theme.spacing(3),
-  marginTop: theme.spacing(5),
-}));
-
-const getError = (error: APIError[] | null) => {
-  if (!error) {
-    return null;
-  }
-
-  const errorText = error?.[0]?.reason;
-  if (
-    typeof errorText === 'string' &&
-    errorText.match(/allocated more disk/i)
-  ) {
-    return (
-      <Typography>
-        The current disk size of your Linode is too large for the new service
-        plan. Please resize your disk to accommodate the new plan. You can read
-        our{' '}
-        <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
-          Resize Your Linode
-        </Link>{' '}
-        guide for more detailed instructions.
-      </Typography>
-    );
-  }
-
-  return errorText;
-};
-
-/**
- * the user should only be given the option to automatically resize
- * their disks under the 2 following conditions:
- *
- * 1. They have 1 ext disk (and nothing else)
- * 2. They have 1 ext disk and 1 swap disk (and nothing else)
- *
- * If they have more than 2 disks, no automatic resizing is going to
- * take place server-side, so given them the option to toggle
- * the checkbox is pointless.
- *
- * @returns array of both the ext disk to resize and a boolean
- * of whether the option should be enabled
- */
-export const shouldEnableAutoResizeDiskOption = (
-  linodeDisks: Disk[]
-): [string | undefined, boolean] => {
-  const linodeExtDiskLabels = linodeDisks.reduce((acc, eachDisk) => {
-    return eachDisk.filesystem === 'ext3' || eachDisk.filesystem === 'ext4'
-      ? [...acc, eachDisk.label]
-      : acc;
-  }, []);
-  const linodeHasOneExtDisk = linodeExtDiskLabels.length === 1;
-  const linodeHasOneSwapDisk =
-    linodeDisks.reduce((acc, eachDisk) => {
-      return eachDisk.filesystem === 'swap'
-        ? [...acc, eachDisk.filesystem]
-        : acc;
-    }, []).length === 1;
-  const shouldEnable =
-    (linodeDisks.length === 1 && linodeHasOneExtDisk) ||
-    (linodeDisks.length === 2 && linodeHasOneSwapDisk && linodeHasOneExtDisk);
-  return [linodeExtDiskLabels[0], shouldEnable];
-};
-
-export const isSmallerThanCurrentPlan = (
-  selectedPlanID: null | string,
-  currentPlanID: null | string,
-  types: LinodeType[]
-) => {
-  const currentType = types.find((thisType) => thisType.id === currentPlanID);
-  const nextType = types.find((thisType) => thisType.id === selectedPlanID);
-
-  if (!(currentType && nextType)) {
-    return false;
-  }
-
-  return currentType.disk > nextType.disk;
 };
