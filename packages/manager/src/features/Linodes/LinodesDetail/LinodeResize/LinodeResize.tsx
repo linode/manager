@@ -142,7 +142,7 @@ export const LinodeResize = (props: Props) => {
     if (isLinodeOffline) {
       formik.setFieldValue('migration_type', migrationTypeOptions.cold);
     }
-  }, [linode, isLinodeOffline]);
+  }, [isLinodeOffline, open]);
 
   React.useEffect(() => {
     const allow_auto_disk_resize = shouldEnableAutoResizeDiskOption(
