@@ -9,11 +9,11 @@ export const matchFieldMap: Record<MatchField, string> = {
 };
 
 export const matchValuePlaceholder: Record<MatchField, string> = {
-  header: 'X-route-header=images',
+  header: 'x-my-header=this',
   host: 'example.com',
   method: 'POST',
-  path_prefix: '/images',
-  query: '?svc=images',
+  path_prefix: '/my-path',
+  query: '?my-query-param=this',
 };
 
 export const matchTypeOptions = Object.keys(matchFieldMap).map(
@@ -25,7 +25,7 @@ export const matchTypeOptions = Object.keys(matchFieldMap).map(
 
 export const stickyOptions = [
   { label: 'Load Balancer Generated' },
-  { label: 'Origin Generated' },
+  { label: 'Origin' },
 ] as const;
 
 export const defaultServiceTarget = {
