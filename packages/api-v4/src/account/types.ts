@@ -36,16 +36,16 @@ export interface Account {
 export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
-  | 'Linodes'
-  | 'NodeBalancers'
   | 'Block Storage'
-  | 'Object Storage'
-  | 'Kubernetes'
   | 'Cloud Firewall'
-  | 'Vlans'
-  | 'Machine Images'
+  | 'Kubernetes'
+  | 'Linodes'
   | 'LKE HA Control Planes'
+  | 'Machine Images'
   | 'Managed Databases'
+  | 'NodeBalancers'
+  | 'Object Storage'
+  | 'Vlans'
   | 'VPCs';
 
 export interface AccountSettings {

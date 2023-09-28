@@ -71,7 +71,11 @@ export const AttachVLAN = React.memo((props: Props) => {
   )}.`;
 
   return (
-    <Paper sx={{ marginTop: theme.spacing(3) }} data-qa-add-ons>
+    <Paper
+      data-qa-add-ons
+      data-testid="attach-vlan"
+      sx={{ marginTop: theme.spacing(3) }}
+    >
       <Typography
         sx={{
           '& button': {
