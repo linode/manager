@@ -16,8 +16,8 @@ const props = {
   vpcId: 1,
 };
 
-describe('Subnet Assign Linodes Drawer', () => {
-  it('should render a subnet assign linodes drawer', () => {
+describe('Subnet Unassign Linodes Drawer', () => {
+  it('should render a subnet Unassign linodes drawer', () => {
     const { getByText } = renderWithTheme(
       <SubnetUnassignLinodesDrawer {...props} />
     );

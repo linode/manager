@@ -53,13 +53,17 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const prevSelectedLinodes = usePrevious(selectedLinodes);
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
     const [
+      linodeOptionsToUnassign,
+      setLinodeOptionsToUnassign,
+    ] = React.useState<Linode[]>([]);
+    const [
       configInterfacesToDelete,
       setConfigInterfacesToDelete,
     ] = React.useState<DeleteLinodeConfigInterfacePayload[]>([]);
     const csvHeaders = [
       { key: 'label', label: 'Linode Label' },
-      { key: 'ipv4', label: 'IPv4' },
       { key: 'id', label: 'Linode ID' },
+      { key: 'ipv4', label: 'IPv4' },
     ];
 
     const userCannotUnassignLinodes =
@@ -70,9 +74,17 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const { data: linodes, refetch: getCSVData } = useAllLinodesQuery();
 
     // 2. We need to filter only the linodes that are assigned to the subnet.
-    const assignedLinodes = linodes?.filter((linode) => {
-      return subnetLinodeIds?.includes(linode.id);
-    });
+    const findAssignedLinodes = React.useCallback(() => {
+      return linodes?.filter((linode) => {
+        return subnetLinodeIds?.includes(linode.id);
+      });
+    }, [linodes, subnetLinodeIds]);
+
+    React.useEffect(() => {
+      if (linodes) {
+        setLinodeOptionsToUnassign(findAssignedLinodes() ?? []);
+      }
+    }, [linodes, setLinodeOptionsToUnassign, findAssignedLinodes]);
 
     // 3. Everytime our selection changes, we need to either add or remove the linode from the configInterfacesToDelete state.
     React.useEffect(() => {
@@ -86,25 +98,21 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
       // If a linode was removed, remove the corresponding configInterfaceToDelete.
       if (prevSelectedSet.size > selectedSet.size) {
-        // Identify the Linodes to remove.
         const linodesToRemove = Array.from(prevSelectedSet).filter(
           (linode) => !selectedSet.has(linode)
         );
 
-        // Update the configInterfacesToDelete.
+        // Filter the config interfaces to delete, removing those associated with Linodes to be removed.
         const updatedConfigInterfacesToDelete = configInterfacesToDelete.filter(
           (_interface) => {
-            // Check if the _interface.linodeId matches any of the linodesToRemove.
             const linodeToRemove = linodesToRemove.find(
               (linode) => linode.id === _interface.linodeId
             );
 
-            // If it does, remove it from the configInterfacesToDelete.
             if (linodeToRemove) {
               return false;
             }
 
-            // Otherwise, keep it.
             return true;
           }
         );
@@ -119,7 +127,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     }, [selectedLinodes]);
 
     // 4. When a linode is selected, we need to get the configs with VPC interfaces.
-    const getConfigWithVpcInterface = async (selectedLinodes: Linode[]) => {
+    const getConfigWithVPCInterface = async (selectedLinodes: Linode[]) => {
       try {
         const updatedConfigInterfaces = await Promise.all(
           selectedLinodes.map(async (linode) => {
@@ -186,10 +194,10 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       );
     };
 
-    // Debounce the getConfigWithVpcInterface function to prevent rapid API calls
+    // Debounce the getConfigWithVPCInterface function to prevent rapid API calls
     const debouncedGetConfigWithInterface = React.useCallback(
-      debounce(200, false, getConfigWithVpcInterface),
-      [getConfigWithVpcInterface]
+      debounce(200, false, getConfigWithVPCInterface),
+      [getConfigWithVPCInterface]
     );
 
     const processUnassignLinodes = async () => {
@@ -264,19 +272,23 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             variant="error"
           />
         )}
+        {unassignLinodesErrors && (
+          <Notice text={unassignLinodesErrors[0]?.reason} variant="error" />
+        )}
         <Notice
-          text={`Unassigning Linodes from a subnet requires you to reboot the Linodes to update its configuration.`}
+          text={`Unassigning Linodes from  a subnet requires you to reboot the Linodes to update its configuration.`}
           variant="warning"
         />
         <form onSubmit={handleSubmit}>
           <Stack>
             <Autocomplete
               disabled={userCannotUnassignLinodes}
-              errorText={unassignLinodesErrors[0]?.reason} // TODO: Test errors...
+              errorText={unassignLinodesErrors[0]?.reason}
               label="Linodes"
               multiple
               onChange={(_, value) => setSelectedLinodes(value)}
-              options={assignedLinodes ?? []}
+              options={linodeOptionsToUnassign}
+              placeholder="Select Linodes or type to search"
               renderTags={() => null}
               value={selectedLinodes}
             />
