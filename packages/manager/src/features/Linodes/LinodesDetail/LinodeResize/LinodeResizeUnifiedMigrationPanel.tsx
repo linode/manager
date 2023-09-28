@@ -36,7 +36,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
       <Typography variant="h2">Choose Your Resize Type</Typography>
       <Box
         sx={{
-          marginTop: 0,
+          marginTop: 1,
         }}
         component="p"
       >
@@ -63,7 +63,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
             data-qa-radio={migrationTypeOptions.warm}
             disabled={isLinodeOffline}
             key={migrationTypeOptions.warm}
-            label={capitalize(migrationTypeOptions.warm)}
+            label={`${capitalize(migrationTypeOptions.warm)} resize`}
             value={migrationTypeOptions.warm}
           />
           <FormControlLabel
@@ -71,7 +71,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
             data-qa-radio={migrationTypeOptions.cold}
             disabled={isLinodeOffline}
             key={migrationTypeOptions.cold}
-            label={capitalize(migrationTypeOptions.cold)}
+            label={`${capitalize(migrationTypeOptions.cold)} resize`}
             value={migrationTypeOptions.cold}
           />
           {isLinodeOffline && (
@@ -80,7 +80,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
                 marginLeft: '-15px',
               }}
               status="help"
-              text={`The Warm resize option is currently disabled in this context as the instance is offline, and a Cold Resize is required to initiate the instance restart.`}
+              text={`The warm resize option is currently disabled in this context as the instance is offline, and a cold resize is required to initiate the instance restart.`}
               tooltipPosition="right"
               width={300}
             />
