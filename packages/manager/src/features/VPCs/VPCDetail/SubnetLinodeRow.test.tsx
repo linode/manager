@@ -42,7 +42,9 @@ describe('SubnetLinodeRow', () => {
       getByTestId,
       getByText,
     } = renderWithTheme(
-      wrapWithTableBody(<SubnetLinodeRow linodeId={linodeFactory1.id} />),
+      wrapWithTableBody(
+        <SubnetLinodeRow linodeId={linodeFactory1.id} subnetId={0} />
+      ),
       {
         queryClient,
       }

@@ -11,7 +11,12 @@ describe('CreateCertificateDrawer', () => {
     const onClose = jest.fn();
 
     const { getByLabelText, getByTestId } = renderWithTheme(
-      <CreateCertificateDrawer loadbalancerId={0} onClose={onClose} open />
+      <CreateCertificateDrawer
+        loadbalancerId={0}
+        onClose={onClose}
+        open
+        type="downstream"
+      />
     );
 
     const labelInput = getByLabelText('Label');

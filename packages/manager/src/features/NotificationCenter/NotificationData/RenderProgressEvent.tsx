@@ -2,7 +2,7 @@ import { Event } from '@linode/api-v4/lib/account/types';
 import { Duration } from 'luxon';
 import * as React from 'react';
 
-import BarPercent from 'src/components/BarPercent';
+import { BarPercent } from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';

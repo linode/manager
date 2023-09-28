@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
+import { DismissibleBanner } from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -15,6 +16,7 @@ import { truncate } from 'src/utilities/truncate';
 
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
+import { REBOOT_LINODE_WARNING_VPCDETAILS } from '../constants';
 import { getUniqueLinodesFromSubnets } from '../utils';
 import {
   StyledActionButton,
@@ -184,7 +186,17 @@ const VPCDetail = () => {
       >
         <Typography variant="h2">Subnets ({vpc.subnets.length})</Typography>
       </Box>
-      <VPCSubnetsTable vpcId={vpc.id} />
+      {numLinodes > 0 && (
+        <DismissibleBanner
+          preferenceKey={`reboot-linodes-warning-banner`}
+          variant="warning"
+        >
+          <Typography variant="body1">
+            {REBOOT_LINODE_WARNING_VPCDETAILS}
+          </Typography>
+        </DismissibleBanner>
+      )}
+      <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
     </>
   );
 };
