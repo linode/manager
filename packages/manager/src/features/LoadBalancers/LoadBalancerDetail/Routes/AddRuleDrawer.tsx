@@ -109,43 +109,53 @@ export const AddRuleDrawer = (props: Props) => {
         <Stack spacing={2}>
           <Stack bgcolor={(theme) => theme.bg.app} p={2.5} spacing={1.5}>
             <Typography variant="h3">Match Rule</Typography>
-            <Typography>
-              A rule consists of a match type, and a pattern to match on called
-              a match value. Each rule can specify only one field or patter
-              pair.
-            </Typography>
-            <Stack direction="row" spacing={2}>
-              <Autocomplete
-                onChange={(_, option) =>
-                  formik.setFieldValue(
-                    'match_condition.match_field',
-                    option.value
-                  )
-                }
-                value={matchTypeOptions.find(
-                  (option) =>
-                    option.value === formik.values.match_condition.match_field
-                )}
-                disableClearable
-                label="Match Type"
-                options={matchTypeOptions}
-                sx={{ minWidth: 200 }}
-                textFieldProps={{ noMarginTop: true }}
-              />
-              <TextField
-                placeholder={
-                  matchValuePlaceholder[
-                    formik.values.match_condition.match_field
-                  ]
-                }
-                containerProps={{ sx: { flexGrow: 1 } }}
-                label="Match Value"
-                name="match_condition.match_value"
-                noMarginTop
-                onChange={formik.handleChange}
-                value={formik.values.match_condition.match_value}
-              />
-            </Stack>
+            {route?.protocol === 'tcp' ? (
+              <Typography>
+                A TCP rule consists a percent allocation to a Service Target.
+              </Typography>
+            ) : (
+              <Typography>
+                A rule consists of a match type, and a pattern to match on
+                called a match value. Each rule can specify only one field or
+                patter pair.
+              </Typography>
+            )}
+            {route?.protocol !== 'tcp' && (
+              <Stack direction="row" spacing={2}>
+                <Autocomplete
+                  onChange={(_, option) =>
+                    formik.setFieldValue(
+                      'match_condition.match_field',
+                      option?.value ?? null
+                    )
+                  }
+                  value={
+                    matchTypeOptions.find(
+                      (option) =>
+                        option.value ===
+                        formik.values.match_condition.match_field
+                    ) ?? null
+                  }
+                  label="Match Type"
+                  options={matchTypeOptions}
+                  sx={{ minWidth: 200 }}
+                  textFieldProps={{ noMarginTop: true }}
+                />
+                <TextField
+                  placeholder={
+                    matchValuePlaceholder[
+                      formik.values.match_condition.match_field
+                    ]
+                  }
+                  containerProps={{ sx: { flexGrow: 1 } }}
+                  label="Match Value"
+                  name="match_condition.match_value"
+                  noMarginTop
+                  onChange={formik.handleChange}
+                  value={formik.values.match_condition.match_value}
+                />
+              </Stack>
+            )}
             <Stack alignItems="center" direction="row" gap={2}>
               <Typography>Routes to</Typography>
               <Divider light sx={{ flexGrow: 1 }} />
@@ -233,12 +243,12 @@ export const AddRuleDrawer = (props: Props) => {
                       );
                       formik.setFieldValue(
                         'match_condition.session_stickiness_cookie',
-                        ''
+                        null
                       );
                     } else {
                       formik.setFieldValue(
                         'match_condition.session_stickiness_ttl',
-                        ''
+                        null
                       );
                       formik.setFieldValue(
                         'match_condition.session_stickiness_cookie',
@@ -273,7 +283,7 @@ export const AddRuleDrawer = (props: Props) => {
                       name="match_condition.session_stickiness_ttl"
                       noMarginTop
                       onChange={formik.handleChange}
-                      type='number'
+                      type="number"
                     />
                     <Autocomplete
                       options={[
