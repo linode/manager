@@ -77,6 +77,7 @@ export const SelectionCardWrapper = (props: Props) => {
     <InfoGrid xs={2}>
       <Info
         aria-label={`Info for "${label}"`}
+        data-qa-selection-card-info={label}
         onClick={handleInfoClick}
         onKeyDown={handleKeyPress}
         role="button"

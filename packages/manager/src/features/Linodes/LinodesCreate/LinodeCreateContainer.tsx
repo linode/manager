@@ -70,7 +70,7 @@ import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
-import { getRegionIDFromLinodeID } from './utilities';
+import { filterOneClickApps, getRegionIDFromLinodeID } from './utilities';
 
 import type {
   CreateLinodeRequest,
@@ -189,13 +189,6 @@ const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
   return disabledClasses;
 };
 
-const trimOneClickFromLabel = (script: StackScript) => {
-  return {
-    ...script,
-    label: script.label.replace('One-Click', ''),
-  };
-};
-
 const nonImageCreateTypes = ['fromStackScript', 'fromBackup', 'fromLinode'];
 
 const isNonDefaultImageType = (prevType: string, type: string) => {
@@ -208,7 +201,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   componentDidMount() {
     // Allowed apps include the base set of original apps + anything LD tells us to show
     const newApps = this.props.flags.oneClickApps || [];
-    const allowedApps = Object.keys({ ...baseApps, ...newApps });
     if (nonImageCreateTypes.includes(this.props.createType)) {
       // If we're navigating directly to e.g. the clone page, don't select an image by default
       this.setState({ selectedImageID: undefined });
@@ -218,17 +210,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.props.queryClient
       .fetchQuery('stackscripts-oca-all', () => getAllOCAsRequest())
       .then((res: StackScript[]) => {
-        // Don't display One-Click Helpers to the user
-        // Filter out any apps that we don't have info for
-        const filteredApps = res.filter((script) => {
-          return (
-            !script.label.match(/helpers/i) &&
-            allowedApps.includes(String(script.id))
-          );
+        const trimmedApps = filterOneClickApps({
+          baseApps,
+          newApps,
+          queryResults: res,
         });
-        const trimmedApps = filteredApps.map((stackscript) =>
-          trimOneClickFromLabel(stackscript)
-        );
+
         this.setState({
           appInstances: trimmedApps,
           appInstancesLoading: false,

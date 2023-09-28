@@ -242,6 +242,7 @@ export class LinodeCreate extends React.PureComponent<
     const {
       accountBackupsEnabled,
       errors,
+      flags,
       formIsSubmitting,
       handleAgreementChange,
       handleShowApiAwarenessModal,
@@ -440,6 +441,7 @@ export class LinodeCreate extends React.PureComponent<
                   // error={hasErrorFor.image}
                   accountBackupsEnabled={accountBackupsEnabled}
                   errors={errors}
+                  flags={flags}
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
