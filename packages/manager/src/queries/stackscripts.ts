@@ -2,7 +2,7 @@ import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, Params } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 
-import { data as initialData } from 'src/cachedData/marketplace.json';
+import { data as placeholderData } from 'src/cachedData/marketplace.json';
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
 import { getAll } from 'src/utilities/getAll';
 
@@ -16,7 +16,7 @@ export const useStackScriptsOCA = (enabled: boolean, params: Params = {}) => {
     () => getAllOCAsRequest(params),
     {
       enabled,
-      initialData,
+      placeholderData,
       ...queryPresets.oneTimeFetch,
     }
   );
