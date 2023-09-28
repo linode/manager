@@ -318,7 +318,7 @@ export const darkTheme: ThemeOptions = {
           '&$error': {
             color: '#c9cacb',
           },
-          '&$focused': {
+          '&.Mui-focused': {
             color: '#c9cacb',
           },
           color: '#c9cacb',
