@@ -35,9 +35,7 @@ import withFlags, {
 } from 'src/containers/withFeatureFlagConsumer.container';
 import {
   WithLinodesProps,
-  WithMarketplaceAppsProps,
   withLinodes,
-  withMarketplaceApps,
 } from 'src/containers/withLinodes.container';
 import {
   WithQueryClientProps,
@@ -79,6 +77,10 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
+import {
+  WithMarketplaceAppsProps,
+  withMarketplaceApps,
+} from 'src/containers/withMarketplaceApps';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 

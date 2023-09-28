@@ -56,7 +56,7 @@ async function handleRequest(endpoint, filename, filter) {
 
   if (data.data.pages > 1) {
     throw new Error(
-      'Results over 100 will not be retrieved or cached. Aborting.'
+      `Request ${endpoint} has many pages but we only support caching 1 page.`
     );
   }
 
