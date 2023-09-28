@@ -26,7 +26,7 @@ import {
   stickyOptions,
 } from './utils';
 
-import type { Route, RulePayload } from '@linode/api-v4';
+import type { MatchCondition, Route, RulePayload } from '@linode/api-v4';
 
 interface Props {
   loadbalancerId: number;
@@ -99,9 +99,15 @@ export const AddRuleDrawer = (props: Props) => {
     )?.reason;
   };
 
+  const getMatchConditionError = (field: keyof MatchCondition) => {
+    return error?.find(
+      (e) => e.field === `rules[${ruleIndex}].match_condition.${field}`
+    )?.reason;
+  };
+
   const isStickynessEnabled =
-    Boolean(formik.values.match_condition.session_stickiness_cookie) ||
-    Boolean(formik.values.match_condition.session_stickiness_ttl);
+    formik.values.match_condition.session_stickiness_cookie !== null ||
+    formik.values.match_condition.session_stickiness_ttl !== null;
 
   return (
     <Drawer onClose={onClose} open={open} title="Add Rule" wide>
@@ -136,6 +142,7 @@ export const AddRuleDrawer = (props: Props) => {
                         formik.values.match_condition.match_field
                     ) ?? null
                   }
+                  errorText={getMatchConditionError('match_field')}
                   label="Match Type"
                   options={matchTypeOptions}
                   sx={{ minWidth: 200 }}
@@ -148,6 +155,7 @@ export const AddRuleDrawer = (props: Props) => {
                     ]
                   }
                   containerProps={{ sx: { flexGrow: 1 } }}
+                  errorText={getMatchConditionError('match_value')}
                   label="Match Value"
                   name="match_condition.match_value"
                   noMarginTop
@@ -262,8 +270,12 @@ export const AddRuleDrawer = (props: Props) => {
                   textFieldProps={{ noMarginTop: true }}
                   value={cookieType}
                 />
-                {!formik.values.match_condition.session_stickiness_ttl && (
+                {formik.values.match_condition.session_stickiness_ttl ===
+                  null && (
                   <TextField
+                    errorText={getMatchConditionError(
+                      'session_stickiness_cookie'
+                    )}
                     value={
                       formik.values.match_condition.session_stickiness_cookie
                     }
@@ -273,9 +285,13 @@ export const AddRuleDrawer = (props: Props) => {
                     onChange={formik.handleChange}
                   />
                 )}
-                {!formik.values.match_condition.session_stickiness_cookie && (
+                {formik.values.match_condition.session_stickiness_cookie ===
+                  null && (
                   <Stack alignItems="flex-end" direction="row" spacing={1}>
                     <TextField
+                      errorText={getMatchConditionError(
+                        'session_stickiness_ttl'
+                      )}
                       value={
                         formik.values.match_condition.session_stickiness_ttl
                       }
