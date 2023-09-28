@@ -215,7 +215,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             hasError.current = true;
             setUnassignLinodesErrors((prevErrors: APIError[]) => [
               ...prevErrors,
-              error,
+              ...error,
             ]);
           }
         });
@@ -272,8 +272,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             variant="error"
           />
         )}
-        {unassignLinodesErrors && (
-          <Notice text={unassignLinodesErrors[0]?.reason} variant="error" />
+        {unassignLinodesErrors.length > 0 && (
+          <Notice text={unassignLinodesErrors[0].reason} variant="error" />
         )}
         <Notice
           text={`Unassigning Linodes from  a subnet requires you to reboot the Linodes to update its configuration.`}
