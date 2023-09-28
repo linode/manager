@@ -15,7 +15,7 @@ interface Props extends DrawerProps {
    */
   title: string;
   /**
-   * Increaces the Drawers width from 480px to 700px on desktop-sized viewports
+   * Increases the Drawers width from 480px to 700px on desktop-sized viewports
    * @default false
    */
   wide?: boolean;
