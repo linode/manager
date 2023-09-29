@@ -89,8 +89,6 @@ export const AddRuleDrawer = (props: Props) => {
   };
 
   const onRemoveServiceTarget = (index: number) => {
-    // Reset the React query mutation to clear errors
-    reset();
     formik.values.service_targets.splice(index, 1);
     formik.setFieldValue('service_targets', formik.values.service_targets);
   };
@@ -309,7 +307,8 @@ export const AddRuleDrawer = (props: Props) => {
                       formik.errors.match_condition?.session_stickiness_cookie
                     }
                     value={
-                      formik.values.match_condition.session_stickiness_cookie
+                      formik.values.match_condition.session_stickiness_cookie ??
+                      ''
                     }
                     label="Cookie"
                     labelTooltipText="TODO: AGLB"
