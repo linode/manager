@@ -19,6 +19,7 @@ import { Typography } from 'src/components/Typography';
 import { useLoadbalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
+import { MatchTypeInfo } from './MatchTypeInfo';
 import {
   TimeUnit,
   defaultServiceTarget,
@@ -33,7 +34,6 @@ import {
 } from './utils';
 
 import type { MatchCondition, Route, RulePayload } from '@linode/api-v4';
-import { MatchTypeInfo } from './MatchTypeInfo';
 
 interface Props {
   loadbalancerId: number;
@@ -145,8 +145,8 @@ export const AddRuleDrawer = (props: Props) => {
       (error) =>
         !error.field ||
         (route?.protocol === 'tcp' &&
-          (error.field.includes('match_condition.match_field') ||
-            error.field.includes('match_condition.match_value')))
+          (error.field.includes('match_condition.match') ||
+            error.field.includes('match_condition.session_stickiness')))
     )
     .map((error) => error.reason)
     .join(', ');
@@ -274,123 +274,126 @@ export const AddRuleDrawer = (props: Props) => {
               </LinkButton>
             </Box>
           </Stack>
-          <Stack spacing={1.5}>
-            <Typography variant="h3">Session Stickiness</Typography>
-            <Typography>
-              Controls how subsequent requests from the same client are routed
-              when selecting a backend target. When disabled, no session
-              information is saved.
-            </Typography>
-            {stickinessGeneralError && (
-              <Notice
-                spacingBottom={0}
-                spacingTop={12}
-                text={stickinessGeneralError}
-                variant="error"
+          {route?.protocol !== 'tcp' && (
+            <Stack spacing={1.5}>
+              <Typography variant="h3">Session Stickiness</Typography>
+              <Typography>
+                Controls how subsequent requests from the same client are routed
+                when selecting a backend target. When disabled, no session
+                information is saved.
+              </Typography>
+              {stickinessGeneralError && (
+                <Notice
+                  spacingBottom={0}
+                  spacingTop={12}
+                  text={stickinessGeneralError}
+                  variant="error"
+                />
+              )}
+              <FormControlLabel
+                control={
+                  <Toggle
+                    checked={isStickinessEnabled}
+                    onChange={onStickinessChange}
+                    sx={{ marginLeft: -1.5 }}
+                  />
+                }
+                label="Use Session Stickiness"
               />
-            )}
-            <FormControlLabel
-              control={
-                <Toggle
-                  checked={isStickinessEnabled}
-                  onChange={onStickinessChange}
-                  sx={{ marginLeft: -1.5 }}
-                />
-              }
-              label="Use Session Stickiness"
-            />
-            {isStickinessEnabled && (
-              <>
-                <Autocomplete
-                  onChange={(_, option) => {
-                    formik.setFieldValue(
-                      'match_condition.session_stickiness_ttl',
-                      option?.label === 'Load Balancer Generated'
-                        ? defaultTTL
-                        : null
-                    );
-                    formik.setFieldValue(
-                      'match_condition.session_stickiness_cookie',
-                      option?.label === 'Load Balancer Generated' ? null : ''
-                    );
-                  }}
-                  disableClearable
-                  label="Cookie type"
-                  options={stickyOptions}
-                  textFieldProps={{ labelTooltipText: 'TODO: AGLB' }}
-                  value={cookieType}
-                />
-                <TextField
-                  errorText={getMatchConditionError(
-                    'session_stickiness_cookie'
-                  )}
-                  value={
-                    formik.values.match_condition.session_stickiness_cookie
-                  }
-                  label="Cookie"
-                  labelTooltipText="TODO: AGLB"
-                  name="match_condition.session_stickiness_cookie"
-                  onChange={formik.handleChange}
-                  placeholder="my-cookie-name"
-                />
-                {cookieType.label === 'Load Balancer Generated' && (
-                  <Stack alignItems="flex-end" direction="row" spacing={1}>
-                    <TextField
-                      errorText={getMatchConditionError(
-                        'session_stickiness_ttl'
-                      )}
-                      onChange={(e) =>
-                        formik.setFieldValue(
-                          'match_condition.session_stickiness_ttl',
-                          (e.target as HTMLInputElement).valueAsNumber *
-                            timeUnitFactorMap[ttlUnit]
-                        )
-                      }
-                      value={
-                        (formik.values.match_condition.session_stickiness_ttl ??
-                          0) / timeUnitFactorMap[ttlUnit]
-                      }
-                      label="Stickiness TTL"
-                      labelTooltipText="TODO: AGLB"
-                      name="match_condition.session_stickiness_ttl"
-                      type="number"
-                    />
-                    <Autocomplete
-                      onChange={(_, option) => {
-                        const currentTTLUnit = ttlUnit;
-
-                        const factor =
-                          timeUnitFactorMap[option.key] /
-                          timeUnitFactorMap[currentTTLUnit];
-
-                        setTTLUnit(option.key);
-
-                        if (
-                          formik.values.match_condition.session_stickiness_ttl
-                        ) {
-                          const oldValue =
-                            formik.values.match_condition
-                              .session_stickiness_ttl;
-
+              {isStickinessEnabled && (
+                <>
+                  <Autocomplete
+                    onChange={(_, option) => {
+                      formik.setFieldValue(
+                        'match_condition.session_stickiness_ttl',
+                        option?.label === 'Load Balancer Generated'
+                          ? defaultTTL
+                          : null
+                      );
+                      formik.setFieldValue(
+                        'match_condition.session_stickiness_cookie',
+                        option?.label === 'Load Balancer Generated' ? null : ''
+                      );
+                    }}
+                    disableClearable
+                    label="Cookie type"
+                    options={stickyOptions}
+                    textFieldProps={{ labelTooltipText: 'TODO: AGLB' }}
+                    value={cookieType}
+                  />
+                  <TextField
+                    errorText={getMatchConditionError(
+                      'session_stickiness_cookie'
+                    )}
+                    value={
+                      formik.values.match_condition.session_stickiness_cookie
+                    }
+                    label="Cookie"
+                    labelTooltipText="TODO: AGLB"
+                    name="match_condition.session_stickiness_cookie"
+                    onChange={formik.handleChange}
+                    placeholder="my-cookie-name"
+                  />
+                  {cookieType.label === 'Load Balancer Generated' && (
+                    <Stack alignItems="flex-end" direction="row" spacing={1}>
+                      <TextField
+                        errorText={getMatchConditionError(
+                          'session_stickiness_ttl'
+                        )}
+                        onChange={(e) =>
                           formik.setFieldValue(
                             'match_condition.session_stickiness_ttl',
-                            oldValue * factor
-                          );
+                            (e.target as HTMLInputElement).valueAsNumber *
+                              timeUnitFactorMap[ttlUnit]
+                          )
                         }
-                      }}
-                      value={timeUnitOptions.find(
-                        (option) => option.key === ttlUnit
-                      )}
-                      disableClearable
-                      label="test"
-                      options={timeUnitOptions}
-                      textFieldProps={{ hideLabel: true }}
-                    />
-                  </Stack>
-                )}
-              </>
-            )}
-          </Stack>
+                        value={
+                          (formik.values.match_condition
+                            .session_stickiness_ttl ?? 0) /
+                          timeUnitFactorMap[ttlUnit]
+                        }
+                        label="Stickiness TTL"
+                        labelTooltipText="TODO: AGLB"
+                        name="match_condition.session_stickiness_ttl"
+                        type="number"
+                      />
+                      <Autocomplete
+                        onChange={(_, option) => {
+                          const currentTTLUnit = ttlUnit;
+
+                          const factor =
+                            timeUnitFactorMap[option.key] /
+                            timeUnitFactorMap[currentTTLUnit];
+
+                          setTTLUnit(option.key);
+
+                          if (
+                            formik.values.match_condition.session_stickiness_ttl
+                          ) {
+                            const oldValue =
+                              formik.values.match_condition
+                                .session_stickiness_ttl;
+
+                            formik.setFieldValue(
+                              'match_condition.session_stickiness_ttl',
+                              oldValue * factor
+                            );
+                          }
+                        }}
+                        value={timeUnitOptions.find(
+                          (option) => option.key === ttlUnit
+                        )}
+                        disableClearable
+                        label="test"
+                        options={timeUnitOptions}
+                        textFieldProps={{ hideLabel: true }}
+                      />
+                    </Stack>
+                  )}
+                </>
+              )}
+            </Stack>
+          )}
         </Stack>
         <ActionsPanel
           primaryButtonProps={{

@@ -12,6 +12,7 @@ import {
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4/lib/aglb/types';
 import * as Factory from 'factory.ts';
+import { pickRandom } from 'src/utilities/random';
 
 const certificate = `
 -----BEGIN CERTIFICATE-----
@@ -176,7 +177,7 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
 export const routeFactory = Factory.Sync.makeFactory<Route>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `route-${i}`),
-  protocol: 'http',
+  protocol: Factory.each(() => pickRandom(['http', 'tcp'])),
   rules: [
     {
       match_condition: {
