@@ -194,6 +194,54 @@ export const routeFactory = Factory.Sync.makeFactory<Route>({
         session_stickiness_ttl: null,
       },
     },
+    {
+      match_condition: {
+        hostname: 'www.acdme.com',
+        match_field: 'path_prefix',
+        match_value: '/images/*',
+        service_targets: [
+          {
+            id: 1,
+            label: 'my-service-target',
+            percentage: 10,
+          },
+        ],
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
+      },
+    },
+    {
+      match_condition: {
+        hostname: 'www.acadfme.com',
+        match_field: 'path_prefix',
+        match_value: '/images/*',
+        service_targets: [
+          {
+            id: 1,
+            label: 'my-service-target',
+            percentage: 10,
+          },
+        ],
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
+      },
+    },
+    {
+      match_condition: {
+        hostname: 'www.acefasgeme.com',
+        match_field: 'path_prefix',
+        match_value: '/images/*',
+        service_targets: [
+          {
+            id: 1,
+            label: 'my-service-target',
+            percentage: 10,
+          },
+        ],
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
+      },
+    },
   ],
 });
 
