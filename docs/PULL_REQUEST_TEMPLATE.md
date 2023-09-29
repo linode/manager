@@ -9,7 +9,7 @@
 ## Description
 
 ## As an Author I have considered
-- [ ] :eyes:
+- [ ] :eyes: Doing a self review
 - [ ] 👷‍♀️ Create small PRs. In most cases this will be possible.
 - [ ] ✅ Provide tests for your changes.
 - [ ] 📝 Use descriptive commit messages.
