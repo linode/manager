@@ -50,3 +50,20 @@ export const getIsSessionStickinessEnabled = (rule: Rule | RulePayload) => {
     rule.match_condition.session_stickiness_ttl !== null
   );
 };
+
+export const timeUnitFactorMap = {
+  day: 86_400_000,
+  hour: 3_600_000,
+  millisecond: 1,
+  minute: 60000,
+  second: 1000,
+};
+
+export type TimeUnit = keyof typeof timeUnitFactorMap;
+
+export const timeUnitOptions = Object.keys(timeUnitFactorMap).map(
+  (key: TimeUnit) => ({
+    label: key,
+    value: timeUnitFactorMap[key],
+  })
+);

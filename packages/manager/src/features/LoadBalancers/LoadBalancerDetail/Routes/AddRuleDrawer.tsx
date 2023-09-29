@@ -2,7 +2,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -20,12 +20,15 @@ import { useLoadbalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
 import {
+  TimeUnit,
   defaultServiceTarget,
   getIsSessionStickinessEnabled,
   initialValues,
   matchTypeOptions,
   matchValuePlaceholder,
   stickyOptions,
+  timeUnitFactorMap,
+  timeUnitOptions,
 } from './utils';
 
 import type { MatchCondition, Route, RulePayload } from '@linode/api-v4';
@@ -47,6 +50,8 @@ export const AddRuleDrawer = (props: Props) => {
     mutateAsync: updateRule,
     reset,
   } = useLoadbalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
+
+  const [ttlUnit, setTTLUnit] = useState<TimeUnit>('hour');
 
   const formik = useFormik<RulePayload>({
     enableReinitialize: true,
@@ -98,7 +103,10 @@ export const AddRuleDrawer = (props: Props) => {
     checked: boolean
   ) => {
     if (checked) {
-      formik.setFieldValue('match_condition.session_stickiness_ttl', 8);
+      formik.setFieldValue(
+        'match_condition.session_stickiness_ttl',
+        timeUnitFactorMap['hour'] * 8
+      );
     } else {
       formik.setFieldValue('match_condition.session_stickiness_ttl', null);
       formik.setFieldValue('match_condition.session_stickiness_cookie', null);
@@ -107,9 +115,10 @@ export const AddRuleDrawer = (props: Props) => {
 
   const isStickynessEnabled = getIsSessionStickinessEnabled(formik.values);
 
-  const cookieType = !formik.values.match_condition.session_stickiness_ttl
-    ? stickyOptions[1]
-    : stickyOptions[0];
+  const cookieType =
+    formik.values.match_condition.session_stickiness_ttl === null
+      ? stickyOptions[1]
+      : stickyOptions[0];
 
   const stickinessGeneralError = !isStickynessEnabled
     ? error
@@ -161,6 +170,14 @@ export const AddRuleDrawer = (props: Props) => {
                 patter pair.
               </Typography>
             )}
+            <TextField
+              errorText={getMatchConditionError('hostname')}
+              label="Hostname"
+              labelTooltipText="TODO: AGLB"
+              name="match_condition.hostname"
+              onChange={formik.handleChange}
+              value={formik.values.match_condition.hostname}
+            />
             {route?.protocol !== 'tcp' && (
               <Stack direction="row" spacing={2}>
                 <Autocomplete
@@ -181,7 +198,7 @@ export const AddRuleDrawer = (props: Props) => {
                   label="Match Type"
                   options={matchTypeOptions}
                   sx={{ minWidth: 200 }}
-                  textFieldProps={{ noMarginTop: true }}
+                  textFieldProps={{ labelTooltipText: 'TODO: AGLB' }}
                 />
                 <TextField
                   placeholder={
@@ -192,8 +209,8 @@ export const AddRuleDrawer = (props: Props) => {
                   containerProps={{ sx: { flexGrow: 1 } }}
                   errorText={getMatchConditionError('match_value')}
                   label="Match Value"
+                  labelTooltipText="TODO: AGLB"
                   name="match_condition.match_value"
-                  noMarginTop
                   onChange={formik.handleChange}
                   value={formik.values.match_condition.match_value}
                 />
@@ -299,7 +316,7 @@ export const AddRuleDrawer = (props: Props) => {
                   disableClearable
                   label="Cookie type"
                   options={stickyOptions}
-                  textFieldProps={{ noMarginTop: true }}
+                  textFieldProps={{ labelTooltipText: 'TODO: AGLB' }}
                   value={cookieType}
                 />
                 {cookieType.label === 'Origin' && (
@@ -311,8 +328,8 @@ export const AddRuleDrawer = (props: Props) => {
                       formik.values.match_condition.session_stickiness_cookie
                     }
                     label="Cookie"
+                    labelTooltipText="TODO: AGLB"
                     name="match_condition.session_stickiness_cookie"
-                    noMarginTop
                     onChange={formik.handleChange}
                   />
                 )}
@@ -322,25 +339,31 @@ export const AddRuleDrawer = (props: Props) => {
                       errorText={getMatchConditionError(
                         'session_stickiness_ttl'
                       )}
+                      onChange={(e) =>
+                        formik.setFieldValue(
+                          'match_condition.session_stickiness_ttl',
+                          (e.target as HTMLInputElement).valueAsNumber *
+                            timeUnitFactorMap[ttlUnit]
+                        )
+                      }
                       value={
-                        formik.values.match_condition.session_stickiness_ttl
+                        (formik.values.match_condition.session_stickiness_ttl ??
+                          0) / timeUnitFactorMap[ttlUnit]
                       }
                       label="Stickyness TTL"
+                      labelTooltipText="TODO: AGLB"
                       name="match_condition.session_stickiness_ttl"
-                      noMarginTop
-                      onChange={formik.handleChange}
                       type="number"
                     />
                     <Autocomplete
-                      options={[
-                        { label: 'Hours' },
-                        { label: 'Days' },
-                        { label: 'Minutes' },
-                      ]}
+                      value={timeUnitOptions.find(
+                        (option) => option.label === ttlUnit
+                      )}
                       disableClearable
                       label="test"
-                      textFieldProps={{ hideLabel: true, noMarginTop: true }}
-                      value={{ label: 'Hours' }}
+                      onChange={(_, option) => setTTLUnit(option.label)}
+                      options={timeUnitOptions}
+                      textFieldProps={{ hideLabel: true }}
                     />
                   </Stack>
                 )}
