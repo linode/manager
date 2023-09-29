@@ -11,6 +11,7 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
+import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
@@ -71,7 +72,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
     // 1. We need to get all the linodes.
-    const { data: linodes, refetch: getCSVData } = useAllLinodesQuery();
+    const {
+      data: linodes,
+      error: linodesError,
+      refetch: getCSVData,
+    } = useAllLinodesQuery();
 
     // 2. We need to filter only the linodes that are assigned to the subnet.
     const findAssignedLinodes = React.useCallback(() => {
@@ -275,15 +280,12 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         {unassignLinodesErrors.length > 0 && (
           <Notice text={unassignLinodesErrors[0].reason} variant="error" />
         )}
-        <Notice
-          text={`Unassigning Linodes from  a subnet requires you to reboot the Linodes to update its configuration.`}
-          variant="warning"
-        />
+        <Notice text={SUBNET_UNASSIGN_LINODES_WARNING} variant="warning" />
         <form onSubmit={handleSubmit}>
           <Stack>
             <Autocomplete
               disabled={userCannotUnassignLinodes}
-              errorText={unassignLinodesErrors[0]?.reason}
+              errorText={linodesError ? linodesError[0].reason : undefined}
               label="Linodes"
               multiple
               onChange={(_, value) => setSelectedLinodes(value)}
