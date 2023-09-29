@@ -28,7 +28,7 @@ export const MatchTypeInfo = () => {
   return (
     <List>
       {types.map(({ description, title }) => (
-        <ListItem key={title} sx={{ paddingX: 0, paddingY: 0.5 }}>
+        <ListItem key={title} sx={{ paddingX: 0.5 }}>
           <ListItemText
             primary={title}
             primaryTypographyProps={{ fontSize: '14px', fontWeight: 'bold' }}

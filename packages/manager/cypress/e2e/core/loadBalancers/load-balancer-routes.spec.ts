@@ -217,7 +217,7 @@ describe('Akamai Global Load Balancer routes page', () => {
 
     cy.wait('@updateRoute');
   });
-  it.only('surfaces API errors in the Add Rule Drawer', () => {
+  it('surfaces API errors in the Add Rule Drawer', () => {
     const loadbalancer = loadbalancerFactory.build();
     const routes = routeFactory.buildList(1);
     const serviceTargets = serviceTargetFactory.buildList(3);
@@ -285,6 +285,7 @@ describe('Akamai Global Load Balancer routes page', () => {
     cy.findByText('Invalid Cookie', { exact: false });
     cy.findByText('A backend service is down', { exact: false });
     cy.findByText('You reached a rate limit', { exact: false });
+    cy.findByText('Hostname is not valid');
 
     cy.findByLabelText('Use Session Stickiness').check();
 
