@@ -196,12 +196,6 @@ const MainContent = (props: CombinedProps) => {
 
   const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
 
-  const showDatabases = isFeatureEnabled(
-    'Managed Databases',
-    Boolean(flags.databases),
-    account?.capabilities ?? []
-  );
-
   const showVPCs = isFeatureEnabled(
     'VPCs',
     Boolean(flags.vpc),
@@ -357,9 +351,7 @@ const MainContent = (props: CombinedProps) => {
                             <Route component={SearchLanding} path="/search" />
                             <Route component={EventsLanding} path="/events" />
                             <Route component={Firewalls} path="/firewalls" />
-                            {showDatabases ? (
-                              <Route component={Databases} path="/databases" />
-                            ) : null}
+                            <Route component={Databases} path="/databases" />
                             {flags.selfServeBetas ? (
                               <Route component={BetaRoutes} path="/betas" />
                             ) : null}

@@ -20,7 +20,6 @@ import { makeStyles } from 'tss-react/mui';
 import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
@@ -45,7 +44,6 @@ import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/Databa
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -193,7 +191,6 @@ interface NodePricing {
 const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
-  const flags = useFlags();
 
   const {
     data: regionsData,
@@ -453,11 +450,6 @@ const DatabaseCreate = () => {
               position: 1,
             },
           ],
-          labelOptions: {
-            suffixComponent: flags.databaseBeta ? (
-              <BetaChip className={classes.chip} component="span" />
-            ) : null,
-          },
           pathname: location.pathname,
         }}
         title="Create"
@@ -560,21 +552,6 @@ const DatabaseCreate = () => {
               ))}
             </RadioGroup>
           </FormControl>
-          <Grid md={8} xs={12}>
-            {flags.databaseBeta ? (
-              <Notice className={classes.notice} variant="info">
-                <strong>
-                  Notice: There is no charge for database clusters during beta.
-                </strong>{' '}
-                Database clusters will be subject to charges when the beta
-                period ends on May 2nd, 2022.{' '}
-                <Link to="https://www.linode.com/pricing/#databases">
-                  View pricing
-                </Link>
-                .
-              </Notice>
-            ) : undefined}
-          </Grid>
         </Grid>
         <Divider spacingBottom={12} spacingTop={26} />
         <Grid>

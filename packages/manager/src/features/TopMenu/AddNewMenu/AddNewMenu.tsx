@@ -44,12 +44,6 @@ export const AddNewMenu = () => {
   const flags = useFlags();
   const open = Boolean(anchorEl);
 
-  const showDatabases = isFeatureEnabled(
-    'Managed Databases',
-    Boolean(flags.databases),
-    account?.capabilities ?? []
-  );
-
   const showVPCs = isFeatureEnabled(
     'VPCs',
     Boolean(flags.vpc),
@@ -114,7 +108,6 @@ export const AddNewMenu = () => {
     {
       description: 'High-performance managed database clusters',
       entity: 'Database',
-      hide: !showDatabases,
       icon: DatabaseIcon,
       link: '/databases/create',
     },

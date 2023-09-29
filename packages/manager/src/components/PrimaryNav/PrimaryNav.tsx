@@ -121,12 +121,6 @@ export const PrimaryNav = (props: Props) => {
   const allowMarketplacePrefetch =
     !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
 
-  const showDatabases = isFeatureEnabled(
-    'Managed Databases',
-    Boolean(flags.databases),
-    account?.capabilities ?? []
-  );
-
   const showVPCs = isFeatureEnabled(
     'VPCs',
     Boolean(flags.vpc),
@@ -216,10 +210,8 @@ export const PrimaryNav = (props: Props) => {
         },
         {
           display: 'Databases',
-          hide: !showDatabases,
           href: '/databases',
           icon: <Database />,
-          isBeta: flags.databaseBeta,
         },
         {
           activeLinks: ['/kubernetes/create'],
@@ -273,11 +265,9 @@ export const PrimaryNav = (props: Props) => {
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      showDatabases,
       _isManagedAccount,
       allowObjPrefetch,
       allowMarketplacePrefetch,
-      flags.databaseBeta,
       flags.aglb,
       showVPCs,
     ]
