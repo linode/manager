@@ -1,9 +1,9 @@
 import { StackScript } from '@linode/api-v4';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useStackScriptsOCA } from 'src/queries/stackscripts';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
