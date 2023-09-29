@@ -24,10 +24,10 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
+import { AddRuleDrawer } from './Routes/AddRuleDrawer';
 import { RulesTable } from './RulesTable';
 
 import type { Filter, Route } from '@linode/api-v4';
-import { AddRuleDrawer } from './Routes/AddRuleDrawer';
 
 const PREFERENCE_KEY = 'loadbalancer-routes';
 

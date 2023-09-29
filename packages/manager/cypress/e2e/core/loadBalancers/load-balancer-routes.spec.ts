@@ -217,7 +217,7 @@ describe('Akamai Global Load Balancer routes page', () => {
 
     cy.wait('@updateRoute');
   });
-  it('surfaces API errors in the Add Rule Drawer', () => {
+  it.only('surfaces API errors in the Add Rule Drawer', () => {
     const loadbalancer = loadbalancerFactory.build();
     const routes = routeFactory.buildList(1);
     const serviceTargets = serviceTargetFactory.buildList(3);

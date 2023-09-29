@@ -250,6 +250,10 @@ export const mockUpdateRouteError = (
             reason: 'Invalid Cookie',
           },
           {
+            field: 'rules[1].match_condition.hostname',
+            reason: 'Hostname is not valid',
+          },
+          {
             reason: 'A backend service is down',
           },
           {

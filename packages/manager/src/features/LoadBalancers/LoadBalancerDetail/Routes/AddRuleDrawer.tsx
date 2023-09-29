@@ -33,6 +33,7 @@ import {
 } from './utils';
 
 import type { MatchCondition, Route, RulePayload } from '@linode/api-v4';
+import { MatchTypeInfo } from './MatchTypeInfo';
 
 interface Props {
   loadbalancerId: number;
@@ -131,17 +132,13 @@ export const AddRuleDrawer = (props: Props) => {
         )
         .map((e) => e.reason)
         .join(', ')
-    : cookieType.label === 'Load Balancer Generated'
+    : cookieType.label === 'Origin'
     ? error?.find(
         (e) =>
           e.field ===
-          `rules[${ruleIndex}].match_condition.session_stickiness_cookie`
-      )?.reason
-    : error?.find(
-        (e) =>
-          e.field ===
           `rules[${ruleIndex}].match_condition.session_stickiness_ttl`
-      )?.reason;
+      )?.reason
+    : null;
 
   const generalErrors = error
     ?.filter(
@@ -200,7 +197,7 @@ export const AddRuleDrawer = (props: Props) => {
                   label="Match Type"
                   options={matchTypeOptions}
                   sx={{ minWidth: 200 }}
-                  textFieldProps={{ labelTooltipText: 'TODO: AGLB' }}
+                  textFieldProps={{ labelTooltipText: <MatchTypeInfo /> }}
                 />
                 <TextField
                   placeholder={
@@ -323,21 +320,19 @@ export const AddRuleDrawer = (props: Props) => {
                   textFieldProps={{ labelTooltipText: 'TODO: AGLB' }}
                   value={cookieType}
                 />
-                {cookieType.label === 'Origin' && (
-                  <TextField
-                    errorText={getMatchConditionError(
-                      'session_stickiness_cookie'
-                    )}
-                    value={
-                      formik.values.match_condition.session_stickiness_cookie
-                    }
-                    label="Cookie"
-                    labelTooltipText="TODO: AGLB"
-                    name="match_condition.session_stickiness_cookie"
-                    onChange={formik.handleChange}
-                    placeholder="my-cookie-name"
-                  />
-                )}
+                <TextField
+                  errorText={getMatchConditionError(
+                    'session_stickiness_cookie'
+                  )}
+                  value={
+                    formik.values.match_condition.session_stickiness_cookie
+                  }
+                  label="Cookie"
+                  labelTooltipText="TODO: AGLB"
+                  name="match_condition.session_stickiness_cookie"
+                  onChange={formik.handleChange}
+                  placeholder="my-cookie-name"
+                />
                 {cookieType.label === 'Load Balancer Generated' && (
                   <Stack alignItems="flex-end" direction="row" spacing={1}>
                     <TextField
