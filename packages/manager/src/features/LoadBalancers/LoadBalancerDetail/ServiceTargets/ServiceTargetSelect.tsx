@@ -37,6 +37,7 @@ interface Props {
    * The id of the selected service target
    */
   value: number;
+  onBlur: () => void;
 }
 
 export const ServiceTargetSelect = (props: Props) => {
@@ -44,10 +45,11 @@ export const ServiceTargetSelect = (props: Props) => {
     errorText,
     label,
     loadbalancerId,
+    onBlur,
     onChange,
-    value,
     sx,
     textFieldProps,
+    value,
   } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
@@ -99,6 +101,7 @@ export const ServiceTargetSelect = (props: Props) => {
       label={label ?? 'Service Target'}
       loading={isLoading}
       noMarginTop
+      onBlur={onBlur}
       onChange={(e, value) => onChange(value)}
       options={serviceTargets ?? []}
       placeholder="Select a Service Target"
