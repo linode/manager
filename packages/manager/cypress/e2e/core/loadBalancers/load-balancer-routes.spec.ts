@@ -292,7 +292,7 @@ describe('Akamai Global Load Balancer routes page', () => {
     cy.findByText('Invalid TTL', { exact: true });
     cy.findByText('Invalid Cookie', { exact: true });
   });
-  it.only('surfaces API errors in the Add Rule Drawer for a TCP route', () => {
+  it('surfaces API errors in the Add Rule Drawer for a TCP route', () => {
     const loadbalancer = loadbalancerFactory.build();
     const routes = routeFactory.buildList(1, { protocol: 'tcp' });
     const serviceTargets = serviceTargetFactory.buildList(3);
