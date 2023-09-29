@@ -43,7 +43,7 @@ export interface RoutePayload {
 export interface Route {
   id: number;
   label: string;
-  protocol: Protocol;
+  protocol: 'tcp' | 'http';
   rules: {
     match_condition: MatchCondition;
     service_targets: {
@@ -56,13 +56,13 @@ export interface Route {
 
 export type UpdateRoutePayload = Partial<{
   label: string;
-  protocol: Protocol;
+  protocol: 'tcp' | 'http';
   rules: RulePayload[];
 }>;
 
 export interface CreateRoutePayload {
   label: string;
-  protocol: Protocol;
+  protocol: 'tcp' | 'http';
   rules: RulePayload[];
 }
 
