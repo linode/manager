@@ -2,6 +2,7 @@ import {
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
+import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -99,7 +100,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     vlanOptions.push({ label: newVlan, value: newVlan });
   }
 
-  const [autoAssignVpcIPv4, setAutoAssignVpcIPv4] = React.useState(true);
+  const [autoAssignVPCIPv4, setautoAssignVPCIPv4] = React.useState(true);
   const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(false);
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
@@ -121,23 +122,23 @@ export const InterfaceSelect = (props: CombinedProps) => {
       purpose,
     });
 
-  const handleVPCLabelChange = (selectedVpcId: number) =>
+  const handleVPCLabelChange = (selectedVPCId: number) =>
     handleChange({
       ipam_address: null,
       ipv4: {
-        vpc: autoAssignVpcIPv4 ? undefined : vpcIPv4,
+        vpc: autoAssignVPCIPv4 ? undefined : vpcIPv4,
       },
       label: null,
       purpose,
       subnet_id: undefined,
-      vpc_id: selectedVpcId,
+      vpc_id: selectedVPCId,
     });
 
   const handleSubnetChange = (selectedSubnetId: number) =>
     handleChange({
       ipam_address: null,
       ipv4: {
-        vpc: autoAssignVpcIPv4 ? undefined : vpcIPv4,
+        vpc: autoAssignVPCIPv4 ? undefined : vpcIPv4,
       },
       label: null,
       purpose,
@@ -184,7 +185,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
      * If a user checks the "Auto-assign a VPC IPv4 address" box, then we send the user inputted address, otherwise we send nothing/undefined.
      * If a user checks the "Assign a public IPv4" address box, then we send nat_1_1: 'any' to the API for auto assignment.
      */
-    if (!autoAssignVpcIPv4 && autoAssignLinodeIPv4) {
+    if (!autoAssignVPCIPv4 && autoAssignLinodeIPv4) {
       handleChange({
         ...changeObj,
         ipv4: {
@@ -193,7 +194,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
         },
       });
     } else if (
-      (autoAssignVpcIPv4 && autoAssignLinodeIPv4) ||
+      (autoAssignVPCIPv4 && autoAssignLinodeIPv4) ||
       autoAssignLinodeIPv4
     ) {
       handleChange({
@@ -202,11 +203,11 @@ export const InterfaceSelect = (props: CombinedProps) => {
           nat_1_1: 'any',
         },
       });
-    } else if (autoAssignVpcIPv4 && !autoAssignLinodeIPv4) {
+    } else if (autoAssignVPCIPv4 && !autoAssignLinodeIPv4) {
       handleChange({
         ...changeObj,
       });
-    } else if (!autoAssignLinodeIPv4 && !autoAssignVpcIPv4) {
+    } else if (!autoAssignLinodeIPv4 && !autoAssignVPCIPv4) {
       handleChange({
         ...changeObj,
         ipv4: {
@@ -214,7 +215,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
         },
       });
     }
-  }, [autoAssignVpcIPv4, autoAssignLinodeIPv4]);
+  }, [autoAssignVPCIPv4, autoAssignLinodeIPv4]);
 
   const handleCreateOption = (_newVlan: string) => {
     setNewVlan(_newVlan);
@@ -225,10 +226,85 @@ export const InterfaceSelect = (props: CombinedProps) => {
     });
   };
 
+  const jsxSelectVLAN = (
+    <Select
+      noOptionsMessage={() =>
+        isLoading
+          ? 'Loading...'
+          : 'You have no VLANs in this region. Type to create one.'
+      }
+      creatable
+      createOptionPosition="first"
+      errorText={errors.labelError}
+      inputId={`vlan-label-${slotNumber}`}
+      isClearable
+      isDisabled={readOnly}
+      label="VLAN"
+      onChange={handleLabelChange}
+      onCreateOption={handleCreateOption}
+      options={vlanOptions}
+      placeholder="Create or select a VLAN"
+      value={vlanOptions.find((thisVlan) => thisVlan.value === label) ?? null}
+    />
+  );
+
+  const jsxIPAMForVLAN = (
+    <TextField
+      tooltipOnMouseEnter={() =>
+        sendLinodeCreateDocsEvent('IPAM Address Tooltip Hover')
+      }
+      tooltipText={
+        'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
+      }
+      disabled={readOnly}
+      errorText={errors.ipamError}
+      inputId={`ipam-input-${slotNumber}`}
+      label="IPAM Address"
+      onChange={handleAddressChange}
+      optional
+      placeholder="192.0.2.0/24"
+      value={ipamAddress}
+    />
+  );
+
+  const enclosingJSXForVLANFields = (
+    jsxSelectVLAN: JSX.Element,
+    jsxIPAMForVLAN: JSX.Element
+  ) => {
+    return fromAddonsPanel ? (
+      <Grid container>
+        <Grid
+          sx={{
+            flexDirection: 'row',
+            [theme.breakpoints.down('sm')]: {
+              flexDirection: 'column',
+            },
+          }}
+          container
+          spacing={isSmallBp ? 0 : 4}
+        >
+          <Grid sm={6} xs={12}>
+            {jsxSelectVLAN}
+          </Grid>
+          <Grid sm={6} xs={12}>
+            {jsxIPAMForVLAN}
+          </Grid>
+        </Grid>
+      </Grid>
+    ) : (
+      <Grid sm={6} xs={12}>
+        <Stack>
+          {jsxSelectVLAN}
+          {jsxIPAMForVLAN}
+        </Stack>
+      </Grid>
+    );
+  };
+
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
-        <Grid xs={purpose === 'vpc' && !isSmallBp ? 6 : 12}>
+        <Grid xs={!isSmallBp ? 6 : 12}>
           <Select
             options={
               // Do not display "None" as an option for eth0 (must be either Public Internet or a VLAN).
@@ -248,63 +324,8 @@ export const InterfaceSelect = (props: CombinedProps) => {
           />
         </Grid>
       )}
-      {purpose === 'vlan' ? (
-        <Grid container>
-          <Grid
-            sx={{
-              flexDirection: 'row',
-              [theme.breakpoints.down('sm')]: {
-                flexDirection: 'column',
-              },
-            }}
-            container
-            spacing={isSmallBp ? 0 : 4}
-          >
-            <Grid sm={6} xs={12}>
-              <Select
-                noOptionsMessage={() =>
-                  isLoading
-                    ? 'Loading...'
-                    : 'You have no VLANs in this region. Type to create one.'
-                }
-                value={
-                  vlanOptions.find((thisVlan) => thisVlan.value === label) ??
-                  null
-                }
-                creatable
-                createOptionPosition="first"
-                errorText={errors.labelError}
-                inputId={`vlan-label-${slotNumber}`}
-                isClearable
-                isDisabled={readOnly}
-                label="VLAN"
-                onChange={handleLabelChange}
-                onCreateOption={handleCreateOption}
-                options={vlanOptions}
-                placeholder="Create or select a VLAN"
-              />
-            </Grid>
-            <Grid sm={6} xs={12}>
-              <TextField
-                tooltipOnMouseEnter={() =>
-                  sendLinodeCreateDocsEvent('IPAM Address Tooltip Hover')
-                }
-                tooltipText={
-                  'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
-                }
-                disabled={readOnly}
-                errorText={errors.ipamError}
-                inputId={`ipam-input-${slotNumber}`}
-                label="IPAM Address"
-                onChange={handleAddressChange}
-                optional
-                placeholder="192.0.2.0/24"
-                value={ipamAddress}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      ) : null}
+      {purpose === 'vlan' &&
+        enclosingJSXForVLANFields(jsxSelectVLAN, jsxIPAMForVLAN)}
       {purpose === 'vpc' && (
         <Grid xs={isSmallBp ? 12 : 6}>
           <VPCPanel
@@ -314,10 +335,10 @@ export const InterfaceSelect = (props: CombinedProps) => {
               )
             }
             toggleAutoassignIPv4WithinVPCEnabled={() =>
-              setAutoAssignVpcIPv4((autoAssignVpcIPv4) => !autoAssignVpcIPv4)
+              setautoAssignVPCIPv4((autoAssignVPCIPv4) => !autoAssignVPCIPv4)
             }
             assignPublicIPv4Address={autoAssignLinodeIPv4}
-            autoassignIPv4WithinVPC={autoAssignVpcIPv4}
+            autoassignIPv4WithinVPC={autoAssignVPCIPv4}
             from="linodeConfig"
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}

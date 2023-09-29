@@ -213,13 +213,6 @@ const interfacesToPayload = (
   return interfaces.filter(
     (thisInterface) => thisInterface.purpose !== 'none'
   ) as Interface[];
-
-  // return equals(interfaces, defaultInterfaceList)
-  //   ?
-  //     []
-  //   : (interfaces.filter(
-  //       (thisInterface) => thisInterface.purpose !== 'none'
-  //     ) as Interface[]);
 };
 
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
@@ -491,7 +484,7 @@ export const LinodeConfigDialog = (props: Props) => {
         setDeviceCounter(deviceCounterDefault);
       }
     }
-  }, [open, config, initrdFromConfig, resetForm]);
+  }, [open, config, initrdFromConfig, resetForm, queryClient, vpcEnabled]);
 
   const generalError = formik.status?.generalError;
 
@@ -631,6 +624,21 @@ export const LinodeConfigDialog = (props: Props) => {
       setFieldValue('initrd', selectedDisk.value);
     },
     [setFieldValue]
+  );
+
+  const networkInterfacesHelperText = (
+    <Typography>
+      Configure the network that a selected interface will connect to (
+      {vpcEnabled
+        ? '"Public Internet", VLAN, or VPC'
+        : 'either "Public Internet" or a VLAN'}
+      ) . Each Linode can have up to three Network Interfaces. For more
+      information, see our{' '}
+      <Link to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance">
+        Network Interfaces guide
+      </Link>
+      .
+    </Typography>
   );
 
   return (
@@ -913,21 +921,10 @@ export const LinodeConfigDialog = (props: Props) => {
                       paddingBottom: 0,
                       paddingTop: 0,
                     }}
-                    text={
-                      <Typography>
-                        Configure the network that a selected interface will
-                        connect to (either &quot;Public Internet&quot; or a
-                        VLAN). Each Linode can have up to three Network
-                        Interfaces. For more information, see our{' '}
-                        <Link to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance">
-                          Network Interfaces guide
-                        </Link>
-                        .
-                      </Typography>
-                    }
                     interactive
                     status="help"
                     sx={{ tooltip: { maxWidth: 350 } }}
+                    text={networkInterfacesHelperText}
                   />
                 </Box>
                 {formik.errors.interfaces ? (
@@ -1126,7 +1123,7 @@ interface ConfigFormProps {
   loading: boolean;
 }
 
-const DialogContent: React.FC<ConfigFormProps> = (props) => {
+const DialogContent = (props: ConfigFormProps) => {
   const { errors, loading } = props;
 
   if (loading) {
