@@ -115,14 +115,14 @@ export const AddRuleDrawer = (props: Props) => {
     }
   };
 
-  const isStickynessEnabled = getIsSessionStickinessEnabled(formik.values);
+  const isStickinessEnabled = getIsSessionStickinessEnabled(formik.values);
 
   const cookieType =
     formik.values.match_condition.session_stickiness_ttl === null
       ? stickyOptions[1]
       : stickyOptions[0];
 
-  const stickinessGeneralError = !isStickynessEnabled
+  const stickinessGeneralError = !isStickinessEnabled
     ? error
         ?.filter((e) =>
           e.field?.startsWith(
@@ -169,7 +169,7 @@ export const AddRuleDrawer = (props: Props) => {
               <Typography>
                 A rule consists of a match type, and a pattern to match on
                 called a match value. Each rule can specify only one field or
-                patter pair.
+                pattern pair.
               </Typography>
             )}
             <TextField
@@ -281,7 +281,7 @@ export const AddRuleDrawer = (props: Props) => {
             <Typography variant="h3">Session Stickiness</Typography>
             <Typography>
               Controls how subsequent requests from the same client are routed
-              when when selecting a backend target. When disabled, no session
+              when selecting a backend target. When disabled, no session
               information is saved.
             </Typography>
             {stickinessGeneralError && (
@@ -295,14 +295,14 @@ export const AddRuleDrawer = (props: Props) => {
             <FormControlLabel
               control={
                 <Toggle
-                  checked={isStickynessEnabled}
+                  checked={isStickinessEnabled}
                   onChange={onStickinessChange}
                   sx={{ marginLeft: -1.5 }}
                 />
               }
               label="Use Session Stickiness"
             />
-            {isStickynessEnabled && (
+            {isStickinessEnabled && (
               <>
                 <Autocomplete
                   onChange={(_, option) => {
@@ -355,7 +355,7 @@ export const AddRuleDrawer = (props: Props) => {
                         (formik.values.match_condition.session_stickiness_ttl ??
                           0) / timeUnitFactorMap[ttlUnit]
                       }
-                      label="Stickyness TTL"
+                      label="Stickiness TTL"
                       labelTooltipText="TODO: AGLB"
                       name="match_condition.session_stickiness_ttl"
                       type="number"
