@@ -87,7 +87,7 @@ describe('VPC create flow', () => {
       .click()
       .type(`${vpcRegion.label}{enter}`);
 
-    cy.findByText('VPC label').should('be.visible').click().type(mockVpc.label);
+    cy.findByText('VPC Label').should('be.visible').click().type(mockVpc.label);
 
     cy.findByText('Description')
       .should('be.visible')
@@ -99,7 +99,7 @@ describe('VPC create flow', () => {
     getSubnetNodeSection(0)
       .should('be.visible')
       .within(() => {
-        cy.findByText('Subnet label')
+        cy.findByText('Subnet Label')
           .should('be.visible')
           .click()
           .type(mockSubnets[0].label);
@@ -208,7 +208,7 @@ describe('VPC create flow', () => {
       getSubnetNodeSection(index + 1)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Subnet label')
+          cy.findByText('Subnet Label')
             .should('be.visible')
             .click()
             .type(mockSubnet.label);

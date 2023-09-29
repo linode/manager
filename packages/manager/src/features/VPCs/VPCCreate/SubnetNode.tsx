@@ -63,7 +63,7 @@ export const SubnetNode = (props: Props) => {
             disabled={disabled}
             errorText={subnet.labelError}
             inputId={`subnet-label-${idx}`}
-            label="Subnet label"
+            label="Subnet Label"
             onChange={onLabelChange}
             placeholder="Enter a subnet label"
             value={subnet.label}

@@ -247,7 +247,7 @@ const VPCCreate = () => {
               }
               disabled={userCannotAddVPC}
               errorText={errors.label}
-              label="VPC label"
+              label="VPC Label"
               value={values.label}
             />
             <TextField
