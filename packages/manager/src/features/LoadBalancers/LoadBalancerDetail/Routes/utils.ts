@@ -1,4 +1,6 @@
+/* eslint-disable perfectionist/sort-objects */
 import type { MatchField, Rule, RulePayload } from '@linode/api-v4';
+import { capitalize } from 'src/utilities/capitalize';
 
 export const matchFieldMap: Record<MatchField, string> = {
   header: 'HTTP Header',
@@ -52,18 +54,21 @@ export const getIsSessionStickinessEnabled = (rule: Rule | RulePayload) => {
 };
 
 export const timeUnitFactorMap = {
-  day: 86_400_000,
-  hour: 3_600_000,
   millisecond: 1,
-  minute: 60000,
   second: 1000,
+  minute: 60000,
+  hour: 3_600_000,
+  day: 86_400_000,
 };
 
 export type TimeUnit = keyof typeof timeUnitFactorMap;
 
 export const timeUnitOptions = Object.keys(timeUnitFactorMap).map(
   (key: TimeUnit) => ({
-    label: key,
+    key,
+    label: `${capitalize(key)}s`,
     value: timeUnitFactorMap[key],
   })
 );
+
+export const defaultTTL = timeUnitFactorMap['hour'] * 8;

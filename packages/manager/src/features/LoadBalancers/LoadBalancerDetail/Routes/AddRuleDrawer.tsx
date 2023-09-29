@@ -22,6 +22,7 @@ import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
 import {
   TimeUnit,
   defaultServiceTarget,
+  defaultTTL,
   getIsSessionStickinessEnabled,
   initialValues,
   matchTypeOptions,
@@ -69,6 +70,7 @@ export const AddRuleDrawer = (props: Props) => {
     _onClose();
     formik.resetForm();
     reset();
+    setTTLUnit('hour');
   };
 
   const onAddServiceTarget = () => {
@@ -105,7 +107,7 @@ export const AddRuleDrawer = (props: Props) => {
     if (checked) {
       formik.setFieldValue(
         'match_condition.session_stickiness_ttl',
-        timeUnitFactorMap['hour'] * 8
+        defaultTTL
       );
     } else {
       formik.setFieldValue('match_condition.session_stickiness_ttl', null);
@@ -306,7 +308,9 @@ export const AddRuleDrawer = (props: Props) => {
                   onChange={(_, option) => {
                     formik.setFieldValue(
                       'match_condition.session_stickiness_ttl',
-                      option?.label === 'Load Balancer Generated' ? 8 : null
+                      option?.label === 'Load Balancer Generated'
+                        ? defaultTTL
+                        : null
                     );
                     formik.setFieldValue(
                       'match_condition.session_stickiness_cookie',
@@ -331,6 +335,7 @@ export const AddRuleDrawer = (props: Props) => {
                     labelTooltipText="TODO: AGLB"
                     name="match_condition.session_stickiness_cookie"
                     onChange={formik.handleChange}
+                    placeholder="my-cookie-name"
                   />
                 )}
                 {cookieType.label === 'Load Balancer Generated' && (
@@ -356,12 +361,33 @@ export const AddRuleDrawer = (props: Props) => {
                       type="number"
                     />
                     <Autocomplete
+                      onChange={(_, option) => {
+                        const currentTTLUnit = ttlUnit;
+
+                        const factor =
+                          timeUnitFactorMap[option.key] /
+                          timeUnitFactorMap[currentTTLUnit];
+
+                        setTTLUnit(option.key);
+
+                        if (
+                          formik.values.match_condition.session_stickiness_ttl
+                        ) {
+                          const oldValue =
+                            formik.values.match_condition
+                              .session_stickiness_ttl;
+
+                          formik.setFieldValue(
+                            'match_condition.session_stickiness_ttl',
+                            oldValue * factor
+                          );
+                        }
+                      }}
                       value={timeUnitOptions.find(
-                        (option) => option.label === ttlUnit
+                        (option) => option.key === ttlUnit
                       )}
                       disableClearable
                       label="test"
-                      onChange={(_, option) => setTTLUnit(option.label)}
                       options={timeUnitOptions}
                       textFieldProps={{ hideLabel: true }}
                     />
