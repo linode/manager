@@ -28,20 +28,20 @@ export interface Props {
   slotNumber: number;
 }
 
-interface VpcStateErrors {
+interface VPCStateErrors {
   ipamError?: string;
   labelError?: string;
   nat_1_1Error?: string;
   subnetError?: string;
   vpcError?: string;
-  vpcIpv4Error?: string;
+  vpcIPv4Error?: string;
 }
 
-interface VpcState {
-  errors: VpcStateErrors;
+interface VPCState {
+  errors: VPCStateErrors;
   subnetId?: number;
+  vpcIPv4?: string;
   vpcId?: number;
-  vpcIpv4?: string;
 }
 
 // To allow for empty slots, which the API doesn't account for
@@ -51,7 +51,7 @@ export interface ExtendedInterface
   purpose: ExtendedPurpose;
 }
 
-type CombinedProps = Props & VpcState;
+type CombinedProps = Props & VPCState;
 
 export const InterfaceSelect = (props: CombinedProps) => {
   const theme = useTheme();
@@ -76,8 +76,8 @@ export const InterfaceSelect = (props: CombinedProps) => {
     region,
     slotNumber,
     subnetId,
+    vpcIPv4,
     vpcId,
-    vpcIpv4,
   } = props;
 
   const [newVlan, setNewVlan] = React.useState('');
@@ -99,8 +99,8 @@ export const InterfaceSelect = (props: CombinedProps) => {
     vlanOptions.push({ label: newVlan, value: newVlan });
   }
 
-  const [autoAssignVpcIpv4, setAutoAssignVpcIpv4] = React.useState(true);
-  const [autoAssignLinodeIpv4, setAutoAssignLinodeIpv4] = React.useState(false);
+  const [autoAssignVpcIPv4, setAutoAssignVpcIPv4] = React.useState(true);
+  const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(false);
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
     const purpose = selected.value;
@@ -125,7 +125,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     handleChange({
       ipam_address: null,
       ipv4: {
-        vpc: autoAssignVpcIpv4 ? undefined : vpcIpv4,
+        vpc: autoAssignVpcIPv4 ? undefined : vpcIPv4,
       },
       label: null,
       purpose,
@@ -137,7 +137,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     handleChange({
       ipam_address: null,
       ipv4: {
-        vpc: autoAssignVpcIpv4 ? undefined : vpcIpv4,
+        vpc: autoAssignVpcIPv4 ? undefined : vpcIPv4,
       },
       label: null,
       purpose,
@@ -145,7 +145,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
       vpc_id: vpcId,
     });
 
-  const handleVpcIpv4Input = (vpcIpv4Input: string) => {
+  const handleVPCIPv4Input = (vpcIPv4Input: string) => {
     const changeObj = {
       ipam_address: null,
       label: null,
@@ -153,19 +153,19 @@ export const InterfaceSelect = (props: CombinedProps) => {
       subnet_id: subnetId,
       vpc_id: vpcId,
     };
-    if (autoAssignLinodeIpv4) {
+    if (autoAssignLinodeIPv4) {
       handleChange({
         ...changeObj,
         ipv4: {
           nat_1_1: 'any',
-          vpc: vpcIpv4Input,
+          vpc: vpcIPv4Input,
         },
       });
     } else {
       handleChange({
         ...changeObj,
         ipv4: {
-          vpc: vpcIpv4Input,
+          vpc: vpcIPv4Input,
         },
       });
     }
@@ -184,17 +184,17 @@ export const InterfaceSelect = (props: CombinedProps) => {
      * If a user checks the "Auto-assign a VPC IPv4 address" box, then we send the user inputted address, otherwise we send nothing/undefined.
      * If a user checks the "Assign a public IPv4" address box, then we send nat_1_1: 'any' to the API for auto assignment.
      */
-    if (!autoAssignVpcIpv4 && autoAssignLinodeIpv4) {
+    if (!autoAssignVpcIPv4 && autoAssignLinodeIPv4) {
       handleChange({
         ...changeObj,
         ipv4: {
           nat_1_1: 'any',
-          vpc: vpcIpv4,
+          vpc: vpcIPv4,
         },
       });
     } else if (
-      (autoAssignVpcIpv4 && autoAssignLinodeIpv4) ||
-      autoAssignLinodeIpv4
+      (autoAssignVpcIPv4 && autoAssignLinodeIPv4) ||
+      autoAssignLinodeIPv4
     ) {
       handleChange({
         ...changeObj,
@@ -202,19 +202,19 @@ export const InterfaceSelect = (props: CombinedProps) => {
           nat_1_1: 'any',
         },
       });
-    } else if (autoAssignVpcIpv4 && !autoAssignLinodeIpv4) {
+    } else if (autoAssignVpcIPv4 && !autoAssignLinodeIPv4) {
       handleChange({
         ...changeObj,
       });
-    } else if (!autoAssignLinodeIpv4 && !autoAssignVpcIpv4) {
+    } else if (!autoAssignLinodeIPv4 && !autoAssignVpcIPv4) {
       handleChange({
         ...changeObj,
         ipv4: {
-          vpc: vpcIpv4,
+          vpc: vpcIPv4,
         },
       });
     }
-  }, [autoAssignVpcIpv4, autoAssignLinodeIpv4]);
+  }, [autoAssignVpcIPv4, autoAssignLinodeIPv4]);
 
   const handleCreateOption = (_newVlan: string) => {
     setNewVlan(_newVlan);
@@ -309,26 +309,26 @@ export const InterfaceSelect = (props: CombinedProps) => {
         <Grid xs={isSmallBp ? 12 : 6}>
           <VPCPanel
             toggleAssignPublicIPv4Address={() =>
-              setAutoAssignLinodeIpv4(
-                (autoAssignLinodeIpv4) => !autoAssignLinodeIpv4
+              setAutoAssignLinodeIPv4(
+                (autoAssignLinodeIPv4) => !autoAssignLinodeIPv4
               )
             }
             toggleAutoassignIPv4WithinVPCEnabled={() =>
-              setAutoAssignVpcIpv4((autoAssignVpcIpv4) => !autoAssignVpcIpv4)
+              setAutoAssignVpcIPv4((autoAssignVpcIPv4) => !autoAssignVpcIPv4)
             }
-            assignPublicIPv4Address={autoAssignLinodeIpv4}
-            autoassignIPv4WithinVPC={autoAssignVpcIpv4}
+            assignPublicIPv4Address={autoAssignLinodeIPv4}
+            autoassignIPv4WithinVPC={autoAssignVpcIPv4}
             from="linodeConfig"
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
-            handleVPCIPv4Change={handleVpcIpv4Input}
+            handleVPCIPv4Change={handleVPCIPv4Input}
             nat_1_1Error={errors.nat_1_1Error}
             region={region}
             selectedSubnetId={subnetId}
             selectedVPCId={vpcId}
             subnetError={errors.subnetError}
-            vpcIPv4AddressOfLinode={vpcIpv4}
-            vpcIPv4Error={errors.vpcIpv4Error}
+            vpcIPv4AddressOfLinode={vpcIPv4}
+            vpcIPv4Error={errors.vpcIPv4Error}
             vpcIdError={errors.vpcError}
           />
         </Grid>

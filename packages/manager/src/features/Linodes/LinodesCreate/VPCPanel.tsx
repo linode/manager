@@ -277,7 +277,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
               })}
               alignItems="center"
               display="flex"
-              flexDirection={from === 'linodeCreate' ? 'row' : 'column'}
             >
               <FormControlLabel
                 control={
