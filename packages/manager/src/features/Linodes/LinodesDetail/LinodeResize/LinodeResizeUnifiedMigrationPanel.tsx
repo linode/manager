@@ -50,12 +50,13 @@ export const UnifiedMigrationPanel = (props: Props) => {
       </Box>
       <FormControl sx={{ marginTop: 0 }}>
         <FormLabel id="resize-migration-types" sx={{ marginBottom: 0 }}>
-          Migration Types
+          Resize Types
         </FormLabel>
         <RadioGroup
           aria-labelledby="resize-migration-types"
           onChange={(e, value) => formik.setFieldValue('migration_type', value)}
           row
+          sx={{ marginTop: '0 !important' }}
           value={formik.values.migration_type}
         >
           <FormControlLabel

@@ -32,7 +32,7 @@ const transitionActionMap: Partial<Record<EventAction, string>> = {
   linode_migrate_datacenter: 'Migrating',
   linode_mutate: 'Upgrading',
   linode_rebuild: 'Rebuilding',
-  linode_resize: 'Migrating',
+  linode_resize: 'Resizing',
   linode_snapshot: 'Snapshot',
 };
 
