@@ -55,7 +55,7 @@ const RouteServiceTargetSchema = object({
     .required('Service Target ID is required.'),
   percentage: number()
     .min(0, 'Percent must be greater than or equal to 0.')
-    .max(100, 'Percent must be less than or equal to 100.')
+    .max(50, 'Percent must be less than or equal to 100.')
     .required(),
 });
 
