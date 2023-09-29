@@ -11,8 +11,6 @@ import {
 import {
   mockCreateVPCError,
   mockCreateVPC,
-  mockDeleteSubnet,
-  mockGetVPC,
   mockGetSubnets,
 } from 'support/intercepts/vpc';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
@@ -26,6 +24,7 @@ import {
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
+import { getUniqueLinodesFromSubnets } from 'src/features/VPCs/utils';
 
 /**
  * Gets the "Add a Subnet" section with the given index.
@@ -69,10 +68,7 @@ describe('VPC create flow', () => {
 
     const ipValidationErrorMessage = 'The IPv4 range must be in CIDR format';
     const vpcCreationErrorMessage = 'An unknown error has occurred.';
-    const totalSubnetUniqueLinodes = mockSubnets.reduce(
-      (acc: number, cur: Subnet) => acc + cur.linodes.length,
-      0
-    );
+    const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets(mockSubnets);
 
     mockAppendFeatureFlags({
       vpc: makeFeatureFlagData(true),
