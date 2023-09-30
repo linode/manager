@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { getIn, useFormik, yupToFormErrors } from 'formik';
+import { merge } from 'lodash';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -36,7 +37,6 @@ import {
 } from './utils';
 
 import type { Route, RulePayload } from '@linode/api-v4';
-import { merge } from 'lodash';
 
 interface Props {
   loadbalancerId: number;
@@ -73,16 +73,18 @@ export const AddRuleDrawer = (props: Props) => {
       }
     },
     validate(values) {
+      const apiErrorsInFormikFormat = getFormikErrorsFromAPIErrors(
+        error ?? [],
+        `rules[${ruleIndex}].`
+      );
+
       try {
         RuleSchema.validateSync(values, { abortEarly: false });
       } catch (errors) {
-        return merge(
-          getFormikErrorsFromAPIErrors(error ?? [], `rules[${ruleIndex}].`),
-          yupToFormErrors(errors)
-        );
+        return merge(apiErrorsInFormikFormat, yupToFormErrors(errors));
       }
 
-      return getFormikErrorsFromAPIErrors(error ?? [], `rules[${ruleIndex}].`);
+      return apiErrorsInFormikFormat;
     },
     validateOnBlur: true,
     validateOnChange: true,
