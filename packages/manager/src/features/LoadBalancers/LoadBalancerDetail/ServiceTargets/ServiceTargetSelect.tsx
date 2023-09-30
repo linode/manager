@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { TextFieldProps } from 'src/components/TextField';
 import { useLoadBalancerServiceTargetsInfiniteQuery } from 'src/queries/aglb/serviceTargets';
 
 import type { Filter, ServiceTarget } from '@linode/api-v4';
 import type { SxProps } from '@mui/material';
-import { TextFieldProps } from 'src/components/TextField';
 
 interface Props {
   /**
@@ -21,6 +21,7 @@ interface Props {
    * The id of the Load Balancer you want to show certificates for
    */
   loadbalancerId: number;
+  onBlur?: () => void;
   /**
    * Called when the value of the Select changes
    */
@@ -37,7 +38,6 @@ interface Props {
    * The id of the selected service target
    */
   value: number;
-  onBlur: () => void;
 }
 
 export const ServiceTargetSelect = (props: Props) => {

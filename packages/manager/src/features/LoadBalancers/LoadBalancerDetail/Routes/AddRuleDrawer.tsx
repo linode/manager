@@ -2,7 +2,7 @@ import { RuleSchema } from '@linode/validation';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { getIn, useFormik } from 'formik';
+import { getIn, useFormik, yupToFormErrors } from 'formik';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -36,6 +36,7 @@ import {
 } from './utils';
 
 import type { Route, RulePayload } from '@linode/api-v4';
+import { merge } from 'lodash';
 
 interface Props {
   loadbalancerId: number;
@@ -71,7 +72,20 @@ export const AddRuleDrawer = (props: Props) => {
         );
       }
     },
-    validationSchema: RuleSchema,
+    validate(values) {
+      try {
+        RuleSchema.validateSync(values, { abortEarly: false });
+      } catch (errors) {
+        return merge(
+          getFormikErrorsFromAPIErrors(error ?? [], `rules[${ruleIndex}].`),
+          yupToFormErrors(errors)
+        );
+      }
+
+      return getFormikErrorsFromAPIErrors(error ?? [], `rules[${ruleIndex}].`);
+    },
+    validateOnBlur: true,
+    validateOnChange: true,
   });
 
   const onClose = () => {
@@ -116,13 +130,38 @@ export const AddRuleDrawer = (props: Props) => {
       : stickyOptions[0];
 
   const generalErrors = error
-    ?.filter(
-      (error) =>
-        !error.field ||
-        (route?.protocol === 'tcp' &&
-          (error.field.includes('match_condition.match') ||
-            error.field.includes('match_condition.session_stickiness')))
-    )
+    ?.filter((error) => {
+      if (!error.field) {
+        return true;
+      }
+
+      if (
+        route?.protocol === 'tcp' &&
+        (error.field.includes('match_condition.match') ||
+          error.field.includes('match_condition.session_stickiness'))
+      ) {
+        return true;
+      }
+
+      if (
+        route?.protocol === 'http' &&
+        !isStickinessEnabled &&
+        error.field.includes('match_condition.session_stickiness')
+      ) {
+        return true;
+      }
+
+      if (
+        route?.protocol === 'http' &&
+        isStickinessEnabled &&
+        cookieType.label === 'Origin' &&
+        error.field.includes('match_condition.session_stickiness_ttl')
+      ) {
+        return true;
+      }
+
+      return false;
+    })
     .map((error) => error.reason)
     .join(', ');
 
@@ -153,16 +192,22 @@ export const AddRuleDrawer = (props: Props) => {
               label="Hostname"
               labelTooltipText="TODO: AGLB"
               name="match_condition.hostname"
-              onBlur={formik.handleBlur}
+              // onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               value={formik.values.match_condition.hostname}
             />
             {route?.protocol !== 'tcp' && (
               <Stack direction="row" spacing={2}>
                 <Autocomplete
-                  onBlur={() =>
-                    formik.setFieldTouched('match_condition.match_field')
-                  }
+                  // errorText={
+                  //   formik.touched.match_condition?.match_field
+                  //     ? formik.errors.match_condition?.match_field
+                  //     : undefined
+                  // }
+                  errorText={formik.errors.match_condition?.match_field}
+                  // onBlur={() =>
+                  //   formik.setFieldTouched('match_condition.match_field')
+                  // }
                   onChange={(_, option) =>
                     formik.setFieldValue(
                       'match_condition.match_field',
@@ -176,28 +221,24 @@ export const AddRuleDrawer = (props: Props) => {
                         formik.values.match_condition.match_field
                     ) ?? null
                   }
-                  errorText={
-                    formik.touched.match_condition?.match_field
-                      ? formik.errors.match_condition?.match_field
-                      : undefined
-                  }
                   label="Match Type"
                   options={matchTypeOptions}
                   sx={{ minWidth: 200 }}
                   textFieldProps={{ labelTooltipText: <MatchTypeInfo /> }}
                 />
                 <TextField
+                  // errorText={
+                  //   formik.touched.match_condition?.match_value
+                  //     ? formik.errors.match_condition?.match_value
+                  //     : undefined
+                  // }
+                  errorText={formik.errors.match_condition?.match_value}
                   placeholder={
                     matchValuePlaceholder[
                       formik.values.match_condition.match_field
                     ]
                   }
                   containerProps={{ sx: { flexGrow: 1 } }}
-                  errorText={
-                    formik.touched.match_condition?.match_value
-                      ? formik.errors.match_condition?.match_value
-                      : undefined
-                  }
                   label="Match Value"
                   labelTooltipText="TODO: AGLB"
                   name="match_condition.match_value"
@@ -223,34 +264,42 @@ export const AddRuleDrawer = (props: Props) => {
                       <InputAdornment position="end">%</InputAdornment>
                     ),
                   }}
-                  errorText={
-                    formik.touched.service_targets?.[index]?.percentage
-                      ? getIn(
-                          formik.errors,
-                          `service_targets[${index}].percentage`
-                        )
-                      : undefined
-                  }
+                  // errorText={
+                  //   formik.touched.service_targets?.[index]?.percentage
+                  //     ? getIn(
+                  //         formik.errors,
+                  //         `service_targets[${index}].percentage`
+                  //       )
+                  //     : undefined
+                  // }
+                  errorText={getIn(
+                    formik.errors,
+                    `service_targets[${index}].percentage`
+                  )}
                   hideLabel={index !== 0}
                   label="Percent"
                   max={100}
                   min={0}
                   name={`service_targets[${index}].percentage`}
                   noMarginTop
-                  onBlur={formik.handleBlur}
+                  // onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   type="number"
                   value={formik.values.service_targets[index].percentage}
                 />
                 <ServiceTargetSelect
-                  errorText={
-                    formik.touched.service_targets?.[index]?.id
-                      ? getIn(formik.errors, `service_targets[${index}].id`)
-                      : undefined
-                  }
-                  onBlur={() =>
-                    formik.setFieldTouched(`service_targets[${index}].id`)
-                  }
+                  // errorText={
+                  //   formik.touched.service_targets?.[index]?.id
+                  //     ? getIn(formik.errors, `service_targets[${index}].id`)
+                  //     : undefined
+                  // }
+                  errorText={getIn(
+                    formik.errors,
+                    `service_targets[${index}].id`
+                  )}
+                  // onBlur={() =>
+                  //   formik.setFieldTouched(`service_targets[${index}].id`)
+                  // }
                   onChange={(serviceTarget) =>
                     formik.setFieldValue(
                       `service_targets[${index}].id`,
@@ -289,14 +338,6 @@ export const AddRuleDrawer = (props: Props) => {
                 when selecting a backend target. When disabled, no session
                 information is saved.
               </Typography>
-              {/* {stickinessGeneralError && (
-                <Notice
-                  spacingBottom={0}
-                  spacingTop={12}
-                  text={stickinessGeneralError}
-                  variant="error"
-                />
-              )} */}
               <FormControlLabel
                 control={
                   <Toggle
@@ -329,11 +370,14 @@ export const AddRuleDrawer = (props: Props) => {
                     value={cookieType}
                   />
                   <TextField
+                    // errorText={
+                    //   formik.touched.match_condition?.session_stickiness_cookie
+                    //     ? formik.errors.match_condition
+                    //         ?.session_stickiness_cookie
+                    //     : undefined
+                    // }
                     errorText={
-                      formik.touched.match_condition?.session_stickiness_cookie
-                        ? formik.errors.match_condition
-                            ?.session_stickiness_cookie
-                        : undefined
+                      formik.errors.match_condition?.session_stickiness_cookie
                     }
                     value={
                       formik.values.match_condition.session_stickiness_cookie ??
@@ -342,18 +386,21 @@ export const AddRuleDrawer = (props: Props) => {
                     label="Cookie"
                     labelTooltipText="TODO: AGLB"
                     name="match_condition.session_stickiness_cookie"
-                    onBlur={formik.handleBlur}
+                    // onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     placeholder="my-cookie-name"
                   />
                   {cookieType.label === 'Load Balancer Generated' && (
                     <Stack alignItems="flex-end" direction="row" spacing={1}>
                       <TextField
+                        // errorText={
+                        //   formik.touched.match_condition?.session_stickiness_ttl
+                        //     ? formik.errors.match_condition
+                        //         ?.session_stickiness_ttl
+                        //     : undefined
+                        // }
                         errorText={
-                          formik.touched.match_condition?.session_stickiness_ttl
-                            ? formik.errors.match_condition
-                                ?.session_stickiness_ttl
-                            : undefined
+                          formik.errors.match_condition?.session_stickiness_ttl
                         }
                         onChange={(e) =>
                           formik.setFieldValue(
@@ -370,7 +417,7 @@ export const AddRuleDrawer = (props: Props) => {
                         label="Stickiness TTL"
                         labelTooltipText="TODO: AGLB"
                         name="match_condition.session_stickiness_ttl"
-                        onBlur={formik.handleBlur}
+                        // onBlur={formik.handleBlur}
                         type="number"
                       />
                       <Autocomplete
