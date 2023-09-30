@@ -55,17 +55,6 @@ export interface ExtendedInterface
 type CombinedProps = Props & VPCState;
 
 export const InterfaceSelect = (props: CombinedProps) => {
-  const theme = useTheme();
-  const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
-  const flags = useFlags();
-  const { data: account } = useAccount();
-
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   const {
     errors,
     fromAddonsPanel,
@@ -80,6 +69,17 @@ export const InterfaceSelect = (props: CombinedProps) => {
     vpcIPv4,
     vpcId,
   } = props;
+
+  const theme = useTheme();
+  const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  const showVPCs = isFeatureEnabled(
+    'VPCs',
+    Boolean(flags.vpc),
+    account?.capabilities ?? []
+  );
 
   const [newVlan, setNewVlan] = React.useState('');
   const purposeOptions = getPurposeOptions(showVPCs);
