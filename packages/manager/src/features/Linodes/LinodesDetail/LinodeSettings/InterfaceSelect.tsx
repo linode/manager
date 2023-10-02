@@ -173,6 +173,14 @@ export const InterfaceSelect = (props: CombinedProps) => {
   };
 
   React.useEffect(() => {
+    if (purpose !== 'vpc') {
+      return handleChange({
+        ipam_address: ipamAddress,
+        label,
+        purpose,
+      });
+    }
+
     const changeObj = {
       ipam_address: null,
       label: null,
@@ -215,7 +223,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
         },
       });
     }
-  }, [autoAssignVPCIPv4, autoAssignLinodeIPv4]);
+  }, [autoAssignVPCIPv4, autoAssignLinodeIPv4, purpose]);
 
   const handleCreateOption = (_newVlan: string) => {
     setNewVlan(_newVlan);
