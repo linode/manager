@@ -1,13 +1,10 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { Button } from 'src/components/Button/Button';
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
-import { Grid } from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { DispatchProps } from 'src/containers/longview.container';
@@ -21,45 +18,13 @@ import { formatUptime } from 'src/utilities/formatUptime';
 
 import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
-import RestrictedUserLabel from './RestrictedUserLabel';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  lastUpdatedOuter: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(1),
-    },
-  },
-  lastUpdatedText: {
-    fontSize: '0.75rem',
-  },
-  packageButton: {
-    '&:hover': {
-      backgroundColor: 'inherit',
-      color: 'inherit',
-      textDecoration: 'underline',
-    },
-    fontSize: '0.875rem',
-    padding: 0,
-    textAlign: 'left',
-  },
-  root: {
-    '& a': {
-      color: theme.textColors.linkActiveLight,
-    },
-    '& a:hover': {
-      color: theme.palette.primary.main,
-    },
-    [theme.breakpoints.down('lg')]: {
-      alignItems: 'center',
-      flexDirection: 'row',
-    },
-  },
-  updates: {
-    [theme.breakpoints.down('lg')]: {
-      marginRight: theme.spacing(2),
-    },
-  },
-}));
+import {
+  StyledButton,
+  StyledDiv,
+  StyledRootGrid,
+  StyledUpdatesGrid,
+} from './LongviewClientHeader.styles';
+import { RestrictedUserLabel } from './RestrictedUserLabel';
 
 interface Props {
   clientID: number;
@@ -73,7 +38,11 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVDataProps;
 
-export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
+const enhanced = compose<CombinedProps, Props>(
+  withClientStats((ownProps: Props) => ownProps.clientID)
+);
+
+export const LongviewClientHeader = enhanced((props: CombinedProps) => {
   const {
     clientID,
     clientLabel,
@@ -85,7 +54,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
     updateLongviewClient,
     userCanModifyClient,
   } = props;
-  const classes = useStyles();
+
   const [updating, setUpdating] = React.useState<boolean>(false);
 
   const { data: profile } = useProfile();
@@ -139,8 +108,8 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
     longviewClientLastUpdated !== 0;
 
   return (
-    <Grid className={classes.root} container direction="column" spacing={2}>
-      <Grid item>
+    <StyledRootGrid container spacing={2}>
+      <Grid>
         {userCanModifyClient ? (
           <EditableEntityLabel
             loading={updating}
@@ -152,42 +121,35 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
           <RestrictedUserLabel label={clientLabel} subtext={hostname} />
         )}
       </Grid>
-      <Grid className={classes.updates} item>
+      <StyledUpdatesGrid>
         {loading ? (
           <Typography>Loading...</Typography>
         ) : (
           <>
             <Typography>{formattedUptime}</Typography>
             {numPackagesToUpdate > 0 ? (
-              <Button
-                className={classes.packageButton}
+              <StyledButton
                 onClick={() => openPackageDrawer()}
                 title={packagesToUpdate}
               >
                 {packagesToUpdate}
-              </Button>
+              </StyledButton>
             ) : (
               <Typography>{packagesToUpdate}</Typography>
             )}
           </>
         )}
-      </Grid>
-      <Grid item>
+      </StyledUpdatesGrid>
+      <Grid>
         <Link to={`/longview/clients/${clientID}`}>View Details</Link>
         {!loading && (
-          <div className={classes.lastUpdatedOuter}>
-            <Typography className={classes.lastUpdatedText} variant="caption">
+          <StyledDiv>
+            <Typography sx={{ fontSize: '0.75rem' }} variant="caption">
               {formattedlastUpdatedTime}
             </Typography>
-          </div>
+          </StyledDiv>
         )}
       </Grid>
-    </Grid>
+    </StyledRootGrid>
   );
-};
-
-const enhanced = compose<CombinedProps, Props>(
-  withClientStats((ownProps: Props) => ownProps.clientID)
-);
-
-export default enhanced(LongviewClientHeader);
+});

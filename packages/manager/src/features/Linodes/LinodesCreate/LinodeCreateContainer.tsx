@@ -4,6 +4,7 @@ import { Region } from '@linode/api-v4/lib/regions';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import { vpcsValidateIP } from '@linode/validation';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { WithSnackbarProps, withSnackbar } from 'notistack';
@@ -51,6 +52,7 @@ import {
 } from 'src/queries/accountAgreements';
 import { simpleMutationHandlers } from 'src/queries/base';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
+import { vpcQueryKey } from 'src/queries/vpcs';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';
 import {
@@ -68,7 +70,7 @@ import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
-import { getRegionIDFromLinodeID } from './utilities';
+import { filterOneClickApps, getRegionIDFromLinodeID } from './utilities';
 
 import type {
   CreateLinodeRequest,
@@ -84,8 +86,10 @@ interface State {
   appInstances?: StackScript[];
   appInstancesError?: string;
   appInstancesLoading: boolean;
+  assignPublicIPv4Address: boolean;
   attachedVLANLabel: null | string;
   authorized_users: string[];
+  autoassignIPv4WithinVPCEnabled: boolean;
   availableStackScriptImages?: Image[];
   availableUserDefinedFields?: UserDefinedField[];
   backupsEnabled: boolean;
@@ -104,7 +108,10 @@ interface State {
   selectedStackScriptID?: number;
   selectedStackScriptLabel?: string;
   selectedStackScriptUsername?: string;
+  selectedSubnetId?: number;
   selectedTypeID?: string;
+  selectedVPCId?: number;
+  selectedfirewallId?: number;
   showAgreement: boolean;
   showApiAwarenessModal: boolean;
   signedAgreement: boolean;
@@ -112,6 +119,7 @@ interface State {
   udfs?: any;
   userData: string | undefined;
   vlanIPAMAddress: null | string;
+  vpcIPv4AddressOfLinode?: string;
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -129,8 +137,10 @@ type CombinedProps = WithSnackbarProps &
 
 const defaultState: State = {
   appInstancesLoading: false,
+  assignPublicIPv4Address: false,
   attachedVLANLabel: '',
   authorized_users: [],
+  autoassignIPv4WithinVPCEnabled: true,
   backupsEnabled: false,
   customLabel: undefined,
   dcSpecificPricing: false,
@@ -147,7 +157,10 @@ const defaultState: State = {
   selectedStackScriptID: undefined,
   selectedStackScriptLabel: '',
   selectedStackScriptUsername: '',
+  selectedSubnetId: undefined,
   selectedTypeID: undefined,
+  selectedVPCId: undefined,
+  selectedfirewallId: undefined,
   showAgreement: false,
   showApiAwarenessModal: false,
   signedAgreement: false,
@@ -155,6 +168,7 @@ const defaultState: State = {
   udfs: undefined,
   userData: undefined,
   vlanIPAMAddress: null,
+  vpcIPv4AddressOfLinode: '',
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -175,13 +189,6 @@ const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
   return disabledClasses;
 };
 
-const trimOneClickFromLabel = (script: StackScript) => {
-  return {
-    ...script,
-    label: script.label.replace('One-Click', ''),
-  };
-};
-
 const nonImageCreateTypes = ['fromStackScript', 'fromBackup', 'fromLinode'];
 
 const isNonDefaultImageType = (prevType: string, type: string) => {
@@ -194,7 +201,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   componentDidMount() {
     // Allowed apps include the base set of original apps + anything LD tells us to show
     const newApps = this.props.flags.oneClickApps || [];
-    const allowedApps = Object.keys({ ...baseApps, ...newApps });
     if (nonImageCreateTypes.includes(this.props.createType)) {
       // If we're navigating directly to e.g. the clone page, don't select an image by default
       this.setState({ selectedImageID: undefined });
@@ -204,17 +210,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.props.queryClient
       .fetchQuery('stackscripts-oca-all', () => getAllOCAsRequest())
       .then((res: StackScript[]) => {
-        // Don't display One-Click Helpers to the user
-        // Filter out any apps that we don't have info for
-        const filteredApps = res.filter((script) => {
-          return (
-            !script.label.match(/helpers/i) &&
-            allowedApps.includes(String(script.id))
-          );
+        const trimmedApps = filterOneClickApps({
+          baseApps,
+          newApps,
+          queryResults: res,
         });
-        const trimmedApps = filteredApps.map((stackscript) =>
-          trimOneClickFromLabel(stackscript)
-        );
+
         this.setState({
           appInstances: trimmedApps,
           appInstancesLoading: false,
@@ -284,12 +285,20 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             accountBackupsEnabled={
               this.props.accountSettings.data?.backups_enabled ?? false
             }
+            toggleAutoassignIPv4WithinVPCEnabled={
+              this.toggleAutoassignIPv4WithinVPCEnabled
+            }
+            autoassignIPv4WithinVPC={this.state.autoassignIPv4WithinVPCEnabled}
             checkValidation={this.checkValidation}
+            firewallId={this.state.selectedfirewallId}
             handleAgreementChange={this.handleAgreementChange}
+            handleFirewallChange={this.handleFirewallChange}
             handleSelectUDFs={this.setUDFs}
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             handleSubmitForm={this.submitForm}
+            handleSubnetChange={this.handleSubnetChange}
             handleVLANChange={this.handleVLANChange}
+            handleVPCIPv4Change={this.handleVPCIPv4Change}
             imageDisplayInfo={this.getImageInfo()}
             ipamAddress={this.state.vlanIPAMAddress}
             label={this.generateLabel()}
@@ -297,8 +306,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             regionsData={regionsData}
             resetCreationState={this.clearCreationState}
             selectedUDFs={selectedUDFs}
+            selectedVPCId={this.state.selectedVPCId}
             setAuthorizedUsers={this.setAuthorizedUsers}
             setBackupID={this.setBackupID}
+            setSelectedVPC={this.handleVPCChange}
+            toggleAssignPublicIPv4Address={this.toggleAssignPublicIPv4Address}
             toggleBackupsEnabled={this.toggleBackupsEnabled}
             togglePrivateIPEnabled={this.togglePrivateIPEnabled}
             typeDisplayInfo={this.getTypeInfo()}
@@ -315,6 +327,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             updateUserData={this.setUserData}
             userCannotCreateLinode={userCannotCreateLinode}
             vlanLabel={this.state.attachedVLANLabel}
+            vpcIPv4AddressOfLinode={this.state.vpcIPv4AddressOfLinode}
             {...restOfProps}
             {...restOfState}
           />
@@ -476,10 +489,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
+  handleFirewallChange = (firewallId: number) => {
+    this.setState({ selectedfirewallId: firewallId });
+  };
+
   handleShowApiAwarenessModal = () => {
     this.setState((prevState) => ({
       showApiAwarenessModal: !prevState.showApiAwarenessModal,
     }));
+  };
+
+  handleSubnetChange = (subnetID: number) => {
+    this.setState({ selectedSubnetId: subnetID });
   };
 
   handleVLANChange = (updatedInterface: Interface) => {
@@ -487,6 +508,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       attachedVLANLabel: updatedInterface.label,
       vlanIPAMAddress: updatedInterface.ipam_address,
     });
+  };
+
+  handleVPCChange = (vpcId: number) => {
+    this.setState({
+      selectedSubnetId: undefined, // Ensure the selected subnet is cleared
+      selectedVPCId: vpcId,
+      vpcIPv4AddressOfLinode: '', // Ensure the VPC IPv4 address is cleared
+    });
+  };
+
+  handleVPCIPv4Change = (IPv4: string) => {
+    this.setState({ vpcIPv4AddressOfLinode: IPv4 });
   };
 
   params = getQueryParamsFromQueryString(this.props.location.search) as Record<
@@ -573,11 +606,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({
       disabledClasses,
       selectedRegionID: id,
+      // When the region gets changed, ensure the VPC-related selections are cleared
+      selectedSubnetId: undefined,
+      selectedVPCId: -1,
       showAgreement: Boolean(
         !this.props.profile.data?.restricted &&
           isEURegion(id) &&
           !this.props.agreements?.data?.eu_model
       ),
+      vpcIPv4AddressOfLinode: '',
     });
   };
 
@@ -694,6 +731,34 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       }
     }
 
+    // Validation for VPC fields
+    if (
+      this.state.selectedVPCId !== undefined &&
+      this.state.selectedVPCId !== -1
+    ) {
+      const validVPCIPv4 = vpcsValidateIP({
+        mustBeIPMask: false,
+        shouldHaveIPMask: false,
+        value: this.state.vpcIPv4AddressOfLinode,
+      });
+
+      // Situation: 'Auto-assign a VPC IPv4 address for this Linode in the VPC' checkbox
+      // unchecked but a valid VPC IPv4 not provided
+      if (!this.state.autoassignIPv4WithinVPCEnabled && !validVPCIPv4) {
+        return this.setState(
+          () => ({
+            errors: [
+              {
+                field: 'ipv4.vpc',
+                reason: 'Must be a valid IPv4 address, e.g. 192.168.2.0',
+              },
+            ],
+          }),
+          () => scrollErrorIntoView()
+        );
+      }
+    }
+
     /**
      * run a certain linode action based on the type
      * if clone, run clone service request and upsert linode
@@ -804,6 +869,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         /** reset the Events polling */
         resetEventsPolling();
 
+        // If a VPC was assigned, invalidate the query so that the relevant VPC data
+        // gets displayed in the LinodeEntityDetail
+        if (
+          this.state.selectedVPCId !== undefined &&
+          this.state.selectedVPCId !== -1
+        ) {
+          this.props.queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
+        }
+
         /** send the user to the Linode detail page */
         this.props.history.push(`/linodes/${response.id}`);
       })
@@ -816,6 +890,27 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           () => scrollErrorIntoView()
         );
       });
+  };
+
+  toggleAssignPublicIPv4Address = () => {
+    this.setState({
+      assignPublicIPv4Address: !this.state.assignPublicIPv4Address,
+    });
+  };
+
+  toggleAutoassignIPv4WithinVPCEnabled = () => {
+    this.setState({
+      autoassignIPv4WithinVPCEnabled: !this.state
+        .autoassignIPv4WithinVPCEnabled,
+    });
+
+    /*
+      If the "Auto-assign a private IPv4 address ..." checkbox is unchecked,
+      ensure the VPC IPv4 box is clear
+    */
+    if (this.state.autoassignIPv4WithinVPCEnabled) {
+      this.setState({ vpcIPv4AddressOfLinode: '' });
+    }
   };
 
   toggleBackupsEnabled = () =>

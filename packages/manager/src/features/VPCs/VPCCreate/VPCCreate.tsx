@@ -186,10 +186,10 @@ const VPCCreate = () => {
   });
 
   React.useEffect(() => {
-    if (errors || generalAPIError) {
+    if (errors || generalAPIError || generalSubnetErrorsFromAPI) {
       scrollErrorIntoView();
     }
-  }, [errors, generalAPIError]);
+  }, [errors, generalAPIError, generalSubnetErrorsFromAPI]);
 
   return (
     <>

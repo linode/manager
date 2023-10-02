@@ -103,3 +103,27 @@ export const getRegionTransferPools = (
 export const formatPoolUsagePct = (pct: number): string => {
   return `${pct.toFixed(pct < 1 ? 2 : 0)}%`;
 };
+
+/**
+ * Format a list of regions into a readable string.
+ * @param regions
+ * @returns string
+ *
+ * @example formatRegionList(['Region 1', 'Region 2', 'Region 3']) // 'Region 1, Region 2 and Region 3'
+ * @example formatRegionList(['Region 1, Region 2']) // 'Region 1 and Region 2'
+ * @example formatRegionList(['Region 1']) // 'Region 1'
+ * @example formatRegionList([]) // ''
+ */
+export const formatRegionList = (regions: string[]) => {
+  const length = regions.length;
+
+  if (length === 0) {
+    return '';
+  } else if (length === 1) {
+    return regions[0];
+  } else {
+    const lastRegion = regions.pop();
+
+    return `${regions.join(', ')} and ${lastRegion}`;
+  }
+};
