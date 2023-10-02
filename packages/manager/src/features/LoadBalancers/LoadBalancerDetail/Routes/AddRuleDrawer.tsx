@@ -58,6 +58,7 @@ export const AddRuleDrawer = (props: Props) => {
 
   const [ttlUnit, setTTLUnit] = useState<TimeUnit>('hour');
 
+
   const formik = useFormik<RulePayload>({
     enableReinitialize: true,
     initialValues,
@@ -77,6 +78,7 @@ export const AddRuleDrawer = (props: Props) => {
         error ?? [],
         `rules[${ruleIndex}].`
       );
+
 
       try {
         RuleSchema.validateSync(values, { abortEarly: false });
@@ -165,6 +167,10 @@ export const AddRuleDrawer = (props: Props) => {
         return true;
       }
 
+      if (!error.field.startsWith(`rules[${ruleIndex}]`)) {
+        return true;
+      }
+
       return false;
     })
     .map((error) => error.reason)
@@ -173,6 +179,12 @@ export const AddRuleDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Add Rule" wide>
       <form onSubmit={formik.handleSubmit}>
+        {/**
+         * @todo: AGLB update copy
+         */}
+        <Typography sx={{ marginBottom: 2 }}>
+          This is how you create a rule and more about how it works.
+        </Typography>
         {generalErrors && <Notice text={generalErrors} variant="error" />}
         <Stack spacing={2}>
           <Stack bgcolor={(theme) => theme.bg.app} p={2.5} spacing={1.5}>
@@ -406,7 +418,7 @@ export const AddRuleDrawer = (props: Props) => {
                     placeholder="my-cookie-name"
                   />
                   {cookieType.label === 'Load Balancer Generated' && (
-                    <Stack alignItems="flex-end" direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1}>
                       <TextField
                         // errorText={
                         //   formik.touched.match_condition?.session_stickiness_ttl
@@ -464,6 +476,7 @@ export const AddRuleDrawer = (props: Props) => {
                         disableClearable
                         label="test"
                         options={timeUnitOptions}
+                        sx={{ marginTop: '45px !important' }}
                         textFieldProps={{ hideLabel: true }}
                       />
                     </Stack>

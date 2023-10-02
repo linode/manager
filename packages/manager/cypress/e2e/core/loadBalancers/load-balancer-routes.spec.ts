@@ -287,10 +287,10 @@ describe('Akamai Global Load Balancer routes page', () => {
     cy.findByText('You reached a rate limit', { exact: false });
     cy.findByText('Hostname is not valid');
 
-    // cy.findByLabelText('Use Session Stickiness').check();
+    cy.findByLabelText('Use Session Stickiness').check();
 
-    // cy.findByText('Invalid TTL', { exact: true });
-    // cy.findByText('Invalid Cookie', { exact: true });
+    cy.findByText('Invalid TTL', { exact: true });
+    cy.findByText('Invalid Cookie', { exact: true });
   });
   it('surfaces API errors in the Add Rule Drawer for a TCP route', () => {
     const loadbalancer = loadbalancerFactory.build();

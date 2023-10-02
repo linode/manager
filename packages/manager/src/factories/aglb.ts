@@ -191,7 +191,7 @@ export const routeFactory = Factory.Sync.makeFactory<Route>({
         {
           id: 1,
           label: 'my-service-target',
-          percentage: 10,
+          percentage: 100,
         },
       ],
     },

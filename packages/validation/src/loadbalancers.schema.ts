@@ -84,10 +84,9 @@ export const RuleSchema = object({
         if (!serviceTargets || serviceTargets.length === 0) {
           return true;
         }
-        const sum =
-          serviceTargets.reduce((acc, serviceTarget) => {
-            return acc + (serviceTarget?.percentage ?? 0);
-          }, 0) || 0;
+        const sum = serviceTargets.reduce((acc, serviceTarget) => {
+          return acc + (serviceTarget?.percentage ?? 0);
+        }, 0);
         return sum === 100;
       }
     )
