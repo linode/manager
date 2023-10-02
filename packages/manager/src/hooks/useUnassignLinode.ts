@@ -77,8 +77,8 @@ export const useUnassignLinode = () => {
 
   return {
     invalidateQueries,
+    setUnassignLinodesErrors,
     unassignLinode,
     unassignLinodesErrors,
-    setUnassignLinodesErrors,
   };
 };

@@ -10,3 +10,5 @@ export const MULTIPLE_CONFIGURATIONS_MESSAGE =
 
 export const REBOOT_LINODE_WARNING_VPCDETAILS =
   'Assigned or unassigned Linodes will not take affect until the Linodes are rebooted.';
+
+export const SUBNET_UNASSIGN_LINODES_WARNING = `Unassigning Linodes from a subnet requires you to reboot the Linodes to update its configuration.`;
