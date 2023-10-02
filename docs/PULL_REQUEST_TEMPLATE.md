@@ -1,10 +1,10 @@
 ## PR Type
 
-- [ ] Feature
-- [ ] Bug Fix
-- [ ] Change / Optimization
-- [ ] Tech Story
-- [ ] Upcoming Feature
+[ ] Feature<br>
+[ ] Bug Fix<br>
+[ ] Change / Optimization<br>
+[ ] Tech Story<br>
+[ ] Upcoming Feature
 
 ## Description
 Highlight the Pull Requests context and intentions and provide a list of major changes.
@@ -18,7 +18,7 @@ Highlight the Pull Requests context and intentions and provide a list of major c
 | ------- | ------- |
 | 📷 | 📷 |
 
-## How to test 🧪
+## How to test
 
 ### Prerequisites
 - ...
@@ -32,15 +32,16 @@ Highlight the Pull Requests context and intentions and provide a list of major c
 - ...
 - ...
 ## As an Author I have considered
-*Check all that apply*
-- [ ] :eyes: Doing a self review
-- [ ] :question: Our [contribution guidelines](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md)
-- [ ] :pinching_hand: Splitting feature into small PRs
-- [ ] :heavy_plus_sign: Adding a changeset
-- [ ] :test_tube: Providing/Improving test coverage
-- [ ] :flags: Using a feature flag to protect the release
-- [ ] :footprints: Providing comprehensive reproduction steps
-- [ ] :page_facing_up: Providing or updating our documentation
-- [ ] :clock1: Scheduling a pair reviewing session
-- [ ] :calling: Providing mobile support
-- [ ] :wheelchair: Providing accessibility support
+*Check all that apply*<br>
+<br>
+[ ] 👀 Doing a self review<br>
+[ ] ❔ Our [contribution guidelines](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md)<br>
+[ ] 🤏 Splitting feature into small PRs<br>
+[ ] ➕ Adding a changeset<br>
+[ ] 🧪 Providing/Improving test coverage<br>
+[ ] 🚩 Using a feature flag to protect the release<br>
+[ ] 👣 Providing comprehensive reproduction steps<br>
+[ ] 📑 Providing or updating our documentation<br>
+[ ] 🕛 Scheduling a pair reviewing session<br>
+[ ] 📱 Providing mobile support<br>
+[ ] ♿  Providing accessibility support
