@@ -400,7 +400,7 @@ export interface ResizeLinodePayload {
   type: string;
   /** @default true */
   allow_auto_disk_resize?: boolean;
-  /** @default 'warm' */
+  /** @default 'cold' */
   migration_type?: MigrationTypes;
 }
 
