@@ -482,6 +482,7 @@ export const LinodeConfigDialog = (props: Props) => {
         resetForm({ values: defaultFieldsValues });
         setUseCustomRoot(false);
         setDeviceCounter(deviceCounterDefault);
+        setPrimaryInterfaceIndex(0);
       }
     }
   }, [open, config, initrdFromConfig, resetForm, queryClient, vpcEnabled]);
@@ -962,11 +963,13 @@ export const LinodeConfigDialog = (props: Props) => {
                         ipamError:
                           formik.errors[`interfaces[${idx}].ipam_address`],
                         labelError: formik.errors[`interfaces[${idx}].label`],
-                        nat_1_1Error: formik.errors['ipv4.nat_1_1'],
+                        nat_1_1Error:
+                          formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
                         subnetError:
                           formik.errors[`interfaces[${idx}].subnet_id`],
                         vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
-                        vpcIPv4Error: formik.errors['ipv4.vpc'],
+                        vpcIPv4Error:
+                          formik.errors[`interfaces[${idx}].ipv4.vpc`],
                       }}
                       handleChange={(newInterface: Interface) =>
                         handleInterfaceChange(idx, newInterface)
