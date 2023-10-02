@@ -5,14 +5,14 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
-interface Props {
+interface CreateUserDrawerProps {
   onClose: () => void;
   open: boolean;
   refetch: () => void;
@@ -26,7 +26,7 @@ interface State {
   username: string;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = CreateUserDrawerProps & RouteComponentProps<{}>;
 
 class CreateUserDrawer extends React.Component<CombinedProps, State> {
   componentDidUpdate(prevProps: CombinedProps) {

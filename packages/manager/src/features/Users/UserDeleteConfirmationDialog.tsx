@@ -3,16 +3,19 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-interface Props {
+interface UserDeleteConfirmationDialogProps {
   onCancel: () => void;
   onDelete: () => void;
   open: boolean;
   username: string;
 }
 
-export const UserDeleteConfirmationDialog = (props: Props) => {
-  const { onCancel, onDelete, open, username } = props;
-
+export const UserDeleteConfirmationDialog = ({
+  onCancel,
+  onDelete,
+  open,
+  username,
+}: UserDeleteConfirmationDialogProps) => {
   return (
     <ConfirmationDialog
       actions={

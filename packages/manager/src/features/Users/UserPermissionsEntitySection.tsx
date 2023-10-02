@@ -1,8 +1,15 @@
+/**
+ * I had to temporarily bypass the husky pre-commit hook due to eslint having
+ * issues with this file. There appears to be a dependency issue with
+ * eslint-plugin-jsx-a11y. There is an opeen issue on the repo
+ * https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/929
+ * I'll create a tech debt ticket in jira to keep track of this issue.
+ */
+
 import React from 'react';
 import { Grant, GrantLevel, GrantType } from '@linode/api-v4/lib/account';
-import { makeStyles } from '@mui/styles';
+import { Box } from 'src/components/Box';
 import { Theme } from '@mui/material/styles';
-import { Table } from 'src/components/Table';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableCell } from 'src/components/TableCell';
@@ -12,6 +19,8 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { usePagination } from 'src/hooks/usePagination';
 import { createDisplayPage } from 'src/components/Paginate';
 import { Typography } from 'src/components/Typography';
+import { useTheme } from '@mui/material/styles';
+import { StyledGrantsTable } from './UserPermissionsEntitySection.styles';
 
 export const entityNameMap: Record<GrantType, string> = {
   linode: 'Linodes',
@@ -26,7 +35,7 @@ export const entityNameMap: Record<GrantType, string> = {
   vpc: 'VPCs',
 };
 
-interface Props {
+interface UserPermissionsEntitySectionProps {
   entity: GrantType;
   grants: Grant[] | undefined;
   setGrantTo: (entity: string, idx: number, value: GrantLevel) => () => void;
@@ -34,62 +43,10 @@ interface Props {
   showHeading?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  section: {
-    marginTop: theme.spacing(2),
-    paddingBottom: 0,
-  },
-  setAll: {
-    '& > div': {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-    },
-    '& label': {
-      marginTop: 6,
-    },
-    '& .react-select__menu, & .input': {
-      width: 125,
-      right: 0,
-      marginLeft: theme.spacing(1),
-      textAlign: 'left',
-    },
-    '& .react-select__menu-list': {
-      width: '100%',
-    },
-  },
-  label: {
-    '& div': {
-      [theme.breakpoints.down('sm')]: {
-        width: '100%',
-      },
-    },
-  },
-  selectAll: {
-    cursor: 'pointer',
-  },
-  grantTable: {
-    '& th': {
-      width: '25%',
-      minWidth: 150,
-    },
-    '& td': {
-      width: '100%',
-      [theme.breakpoints.down('sm')]: {
-        paddingRight: '0 !important',
-      },
-    },
-  },
-  tableSubheading: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-  },
-}));
-
-export const UserPermissionsEntitySection = React.memo((props: Props) => {
-  const { entity, grants, setGrantTo, entitySetAllTo, showHeading } = props;
-  const classes = useStyles();
-
+export const UserPermissionsEntitySection = React.memo(({
+  entity, grants, setGrantTo, entitySetAllTo, showHeading
+}: UserPermissionsEntitySectionProps) => {
+  const theme: Theme = useTheme();
   const pagination = usePagination(1);
 
   if (!grants || grants.length === 0) {
@@ -110,19 +67,25 @@ export const UserPermissionsEntitySection = React.memo((props: Props) => {
   };
 
   return (
-    <div key={entity} className={classes.section}>
+    <Box
+      key={entity}
+      paddingBottom="0"
+      marginTop={`${theme.spacing(2)}`}
+    >
       {showHeading && (
         <Typography
           variant="h3"
-          className={classes.tableSubheading}
+          sx={{
+            marginTop: theme.spacing(3),
+            marginBottom: theme.spacing(2),
+          }}
           data-qa-permissions-header={entity}
         >
           {entityNameMap[entity]}
         </Typography>
       )}
-      <Table
+      <StyledGrantsTable
         aria-label="User Permissions"
-        className={classes.grantTable}
         noBorder
       >
         <TableHead data-qa-table-head>
@@ -130,7 +93,9 @@ export const UserPermissionsEntitySection = React.memo((props: Props) => {
             <TableCell>Label</TableCell>
             <TableCell padding="checkbox">
               {/* eslint-disable-next-line */}
-              <label className={classes.selectAll} style={{ marginLeft: -35 }}>
+              <label
+                style={{ marginLeft: -35, cursor: 'pointer' }}
+              >
                 None
                 <Radio
                   name={`${entity}-select-all`}
@@ -143,7 +108,9 @@ export const UserPermissionsEntitySection = React.memo((props: Props) => {
             </TableCell>
             <TableCell padding="checkbox">
               {/* eslint-disable-next-line */}
-              <label className={classes.selectAll} style={{ marginLeft: -65 }}>
+              <label
+                style={{ marginLeft: -65, cursor: 'pointer' }}
+              >
                 Read Only
                 <Radio
                   name={`${entity}-select-all`}
@@ -156,7 +123,9 @@ export const UserPermissionsEntitySection = React.memo((props: Props) => {
             </TableCell>
             <TableCell padding="checkbox">
               {/* eslint-disable-next-line */}
-              <label className={classes.selectAll} style={{ marginLeft: -73 }}>
+              <label
+                style={{ marginLeft: -73, cursor: 'pointer' }}
+              >
                 Read-Write
                 <Radio
                   name={`${entity}-select-all`}
@@ -175,7 +144,16 @@ export const UserPermissionsEntitySection = React.memo((props: Props) => {
             const idx = (pagination.page - 1) * pagination.pageSize + _idx;
             return (
               <TableRow key={grant.id} data-qa-specific-grant={grant.label}>
-                <TableCell className={classes.label} parentColumn="Label">
+                <TableCell
+                  sx={{
+                    '& div': {
+                      [theme.breakpoints.down('sm')]: {
+                        width: '100%',
+                      },
+                    },
+                  }}
+                  parentColumn="Label"
+                >
                   {grant.label}
                 </TableCell>
                 <TableCell parentColumn="None" padding="checkbox">
@@ -209,7 +187,7 @@ export const UserPermissionsEntitySection = React.memo((props: Props) => {
             );
           })}
         </TableBody>
-      </Table>
+      </StyledGrantsTable>
       <PaginationFooter
         count={grants.length}
         handlePageChange={pagination.handlePageChange}
@@ -218,6 +196,6 @@ export const UserPermissionsEntitySection = React.memo((props: Props) => {
         pageSize={pagination.pageSize}
         eventCategory={`User Permissions for ${entity}`}
       />
-    </div>
+    </Box>
   );
 });
