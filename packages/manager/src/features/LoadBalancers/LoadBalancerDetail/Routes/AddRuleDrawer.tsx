@@ -327,11 +327,11 @@ export const AddRuleDrawer = (props: Props) => {
                   value={formik.values.service_targets[index].id}
                 />
                 <IconButton
-                  sx={
-                    index === 0
-                      ? { marginTop: '24px !important', padding: 0 }
-                      : { padding: 0 }
-                  }
+                  sx={{
+                    height: '32px',
+                    marginTop: `${index === 0 ? 28 : 2}px !important`,
+                    width: '32px',
+                  }}
                   aria-label={`Remove Service Target ${index}`}
                   onClick={() => onRemoveServiceTarget(index)}
                 >
