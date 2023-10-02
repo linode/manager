@@ -30,8 +30,13 @@ export const MatchTypeInfo = () => {
       {types.map(({ description, title }) => (
         <ListItem key={title} sx={{ paddingX: 0.5 }}>
           <ListItemText
+            primaryTypographyProps={{
+              sx: (theme) => ({
+                fontFamily: theme.font.bold,
+                fontSize: '14px',
+              }),
+            }}
             primary={title}
-            primaryTypographyProps={{ fontSize: '14px', fontWeight: 'bold' }}
             secondary={description}
             secondaryTypographyProps={{ fontSize: '14px' }}
           />

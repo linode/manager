@@ -26,6 +26,8 @@ export interface UpdateLoadbalancerPayload {
 
 type Protocol = 'tcp' | 'http' | 'https';
 
+type RouteProtocol = 'tcp' | 'http';
+
 type Policy =
   | 'round_robin'
   | 'least_request'
@@ -43,7 +45,7 @@ export interface RoutePayload {
 export interface Route {
   id: number;
   label: string;
-  protocol: 'tcp' | 'http';
+  protocol: RouteProtocol;
   rules: {
     match_condition: MatchCondition;
     service_targets: {
@@ -56,13 +58,13 @@ export interface Route {
 
 export type UpdateRoutePayload = Partial<{
   label: string;
-  protocol: 'tcp' | 'http';
+  protocol: RouteProtocol;
   rules: RulePayload[];
 }>;
 
 export interface CreateRoutePayload {
   label: string;
-  protocol: 'tcp' | 'http';
+  protocol: RouteProtocol;
   rules: RulePayload[];
 }
 

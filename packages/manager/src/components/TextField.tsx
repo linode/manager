@@ -8,7 +8,7 @@ import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box, BoxProps } from 'src/components/Box';
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
@@ -16,6 +16,8 @@ import { InputLabel } from 'src/components/InputLabel';
 import { TooltipProps } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
+
+import type { BoxProps } from 'src/components/Box';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   absolute: {
