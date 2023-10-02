@@ -234,9 +234,7 @@ export const OrderBy = <T extends unknown>(props: CombinedProps<T>) => {
 
 const Memoized = React.memo(OrderBy);
 
-export default <T extends unknown>(props: CombinedProps<T>) => (
-  <Memoized {...props} />
-);
+export default <T,>(props: CombinedProps<T>) => <Memoized {...props} />;
 
 const isValidDate = (date: any) => {
   return DateTime.fromISO(date).isValid;

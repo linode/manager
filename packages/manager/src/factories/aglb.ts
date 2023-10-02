@@ -4,6 +4,7 @@ import {
   CreateCertificatePayload,
   CreateLoadbalancerPayload,
   CreateRoutePayload,
+  Endpoint,
   Loadbalancer,
   Route,
   ServiceTarget,
@@ -107,8 +108,8 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
       {
         certificates: [
           {
-            id: 1,
             hostname: 'example.com',
+            id: 1,
           },
         ],
         label: 'myentrypoint1',
@@ -120,11 +121,11 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
             rules: [
               {
                 match_condition: {
-                  affinity_cookie: 'my-cool-cookie',
-                  affinity_ttl: '60000',
                   hostname: 'example.com',
                   match_field: 'path_prefix',
                   match_value: '/images',
+                  session_stickiness_cookie: 'my-cool-cookie',
+                  session_stickiness_ttl: '60000',
                 },
                 service_targets: [
                   {
@@ -141,6 +142,7 @@ export const createLoadbalancerWithAllChildrenFactory = Factory.Sync.makeFactory
                       host: 'linode.com',
                       interval: 10000,
                       path: '/images',
+                      protocol: 'http',
                       timeout: 5000,
                       unhealthy_threshold: 5,
                     },
@@ -173,37 +175,39 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
 
 export const routeFactory = Factory.Sync.makeFactory<Route>({
   id: Factory.each((i) => i),
-  label: 'images-route',
+  label: Factory.each((i) => `route-${i}`),
+  protocol: 'http',
   rules: [
     {
       match_condition: {
-        affinity_cookie: null,
-        affinity_ttl: null,
         hostname: 'www.acme.com',
         match_field: 'path_prefix',
         match_value: '/images/*',
+        service_targets: [
+          {
+            id: 1,
+            label: 'my-service-target',
+            percentage: 10,
+          },
+        ],
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
       },
-      service_targets: [
-        {
-          id: 1,
-          label: 'my-service-target',
-          percentage: 10,
-        },
-      ],
     },
   ],
 });
 
 export const createRouteFactory = Factory.Sync.makeFactory<CreateRoutePayload>({
   label: 'images-route',
+  protocol: 'http',
   rules: [
     {
       match_condition: {
-        affinity_cookie: null,
-        affinity_ttl: null,
         hostname: 'www.acme.com',
         match_field: 'path_prefix',
         match_value: '/images/*',
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
       },
       service_targets: [
         {
@@ -234,6 +238,7 @@ export const serviceTargetFactory = Factory.Sync.makeFactory<ServiceTarget>({
     host: 'linode.com',
     interval: 10000,
     path: '/images',
+    protocol: 'http',
     timeout: 5000,
     unhealthy_threshold: 5,
   },
@@ -257,6 +262,7 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
       host: 'linode.com',
       interval: 10000,
       path: '/images',
+      protocol: 'http',
       timeout: 5000,
       unhealthy_threshold: 5,
     },
@@ -282,3 +288,10 @@ export const createCertificateFactory = Factory.Sync.makeFactory<CreateCertifica
     type: 'downstream',
   }
 );
+
+export const endpointFactory = Factory.Sync.makeFactory<Endpoint>({
+  host: 'example.com',
+  ip: '192.168.1.1',
+  port: 80,
+  rate_capacity: 10_000,
+});

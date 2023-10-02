@@ -2,12 +2,14 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 
+import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import { Button } from 'src/components/Button/Button';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 import type { ButtonType } from 'src/components/Button/Button';
 
 interface DownloadCSVProps {
-  buttonType?: ButtonType;
+  buttonType?: 'styledLink' | ButtonType;
   children?: React.ReactNode;
   className?: string;
   csvRef?: React.RefObject<any>;
@@ -39,10 +41,24 @@ export const DownloadCSV = ({
   sx,
   text = 'Download CSV',
 }: DownloadCSVProps) => {
+  const renderButton =
+    buttonType === 'styledLink' ? (
+      <StyledLinkButton onClick={onClick} sx={sx}>
+        <DownloadIcon />
+        {text}
+      </StyledLinkButton>
+    ) : (
+      <Button buttonType={buttonType} onClick={onClick} sx={sx}>
+        {text}
+      </Button>
+    );
+
   return (
     <>
       <CSVLink
-        aria-hidden="true"
+        // This is a visually hidden link that is controlled by the button below.
+        // It should not be focusable or visible to screen readers either.
+        aria-hidden={true}
         className={className}
         data={cleanCSVData(data)}
         filename={filename}
@@ -50,9 +66,7 @@ export const DownloadCSV = ({
         ref={csvRef}
         tabIndex={-1}
       />
-      <Button buttonType={buttonType} onClick={onClick} sx={sx}>
-        {text}
-      </Button>
+      {renderButton}
     </>
   );
 };

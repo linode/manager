@@ -93,6 +93,7 @@ export const VLANAccordion = React.memo((props: Props) => {
         marginTop: 2,
       }}
       data-qa-add-ons
+      data-testid="vlan-accordion"
     >
       <Typography>{regionalAvailabilityMessage}</Typography>
       <Typography sx={{ marginTop: 2 }} variant="body1">

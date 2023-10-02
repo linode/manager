@@ -68,6 +68,7 @@ export const PaginationFooter = (props: Props) => {
       alignItems="center"
       display="flex"
       justifyContent="space-between"
+      data-qa-table-pagination
     >
       {!isShowingAll && (
         <PaginationControls
@@ -78,7 +79,7 @@ export const PaginationFooter = (props: Props) => {
         />
       )}
       {!fixedSize ? (
-        <PageSizeSelectContainer>
+        <PageSizeSelectContainer data-qa-pagination-page-size>
           <Select
             defaultValue={defaultPagination}
             hideLabel

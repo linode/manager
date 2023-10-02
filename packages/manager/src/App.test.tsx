@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 
 import { App, hasOauthError } from './App';
-import LinodeThemeWrapper from './LinodeThemeWrapper';
+import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { queryClientFactory } from './queries/base';
 import { storeFactory } from './store';
 

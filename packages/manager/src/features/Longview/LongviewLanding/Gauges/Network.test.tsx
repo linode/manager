@@ -3,7 +3,7 @@ import * as React from 'react';
 import { network as mockNetworkData } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import Network, { generateUsedNetworkAsBytes } from './Network';
+import { NetworkGauge, generateUsedNetworkAsBytes } from './Network';
 
 const mockError = [{ CODE: 0, SEVERITY: 3, TEXT: 'no reason' }];
 
@@ -45,7 +45,7 @@ describe('Utility Functions', () => {
 
 describe('Longview Network Gauge UI', () => {
   it('should render a loading state initially', () => {
-    const { getByText } = renderWithTheme(<Network clientID={123} />, {
+    const { getByText } = renderWithTheme(<NetworkGauge clientID={123} />, {
       customStore: loadingStore,
     });
 
@@ -53,7 +53,7 @@ describe('Longview Network Gauge UI', () => {
   });
 
   it('should render an error state upon Redux Error State', async () => {
-    const { findByText } = renderWithTheme(<Network clientID={123} />, {
+    const { findByText } = renderWithTheme(<NetworkGauge clientID={123} />, {
       customStore: errorStore,
     });
 
@@ -61,7 +61,7 @@ describe('Longview Network Gauge UI', () => {
   });
 
   it('should render a data state when data is in Redux state', async () => {
-    const { findByTestId } = renderWithTheme(<Network clientID={123} />, {
+    const { findByTestId } = renderWithTheme(<NetworkGauge clientID={123} />, {
       customStore: dataStore,
     });
 
