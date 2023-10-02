@@ -199,6 +199,7 @@ export const AddRuleDrawer = (props: Props) => {
               name="match_condition.hostname"
               // onBlur={formik.handleBlur}
               onChange={formik.handleChange}
+              placeholder="www.example.com"
               value={formik.values.match_condition.hostname}
             />
             {route?.protocol !== 'tcp' && (
@@ -217,14 +218,15 @@ export const AddRuleDrawer = (props: Props) => {
                   }
                   // onBlur={() =>
                   //   formik.setFieldTouched('match_condition.match_field')
+                  // }
                   value={
                     matchTypeOptions.find(
                       (option) =>
                         option.value ===
                         formik.values.match_condition.match_field
-                    ) ?? null
+                    ) ?? matchTypeOptions[0]
                   }
-                  // }
+                  disableClearable
                   errorText={formik.errors.match_condition?.match_field}
                   label="Match Type"
                   options={matchTypeOptions}
