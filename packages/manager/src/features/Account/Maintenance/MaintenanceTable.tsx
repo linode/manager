@@ -132,6 +132,7 @@ const MaintenanceTable = ({ type }: Props) => {
 
   const downloadCSV = async () => {
     await getCSVData();
+    csvRef.current.link.click();
   };
 
   return (
