@@ -221,6 +221,7 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
       className={classnames(classes.root, {
         [`${classes.marketplaceSpacing}`]: isDrawerOpenable,
       })}
+      data-testid="user-defined-fields-panel"
     >
       <Box className={classes.header}>
         {appLogo}

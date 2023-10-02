@@ -41,7 +41,7 @@ interface Props {
   open: boolean;
 }
 
-export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
+export const UpgradeVolumeDialog = (props: Props) => {
   const { id, label, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 

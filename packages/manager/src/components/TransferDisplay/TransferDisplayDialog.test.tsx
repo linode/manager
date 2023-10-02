@@ -87,7 +87,7 @@ describe('TransferDisplayDialog', () => {
     const transferButton = await findByText(TRANSFER_DISPLAY_BUTTON);
     fireEvent.click(transferButton);
 
-    expect(getByTestId('general-transfer-pool-display')).toBeInTheDocument();
-    expect(getByTestId('region-transfer-pool-display')).toBeInTheDocument();
+    expect(getByTestId('global-transfer-pool-header')).toBeInTheDocument();
+    expect(getByTestId('other-transfer-pools-header')).toBeInTheDocument();
   });
 });

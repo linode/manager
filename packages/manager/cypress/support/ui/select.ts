@@ -36,6 +36,23 @@ export const select = {
       .scrollIntoView()
       .should('be.visible');
   },
+
+  /**
+   * Finds a LinodeSelect menu item by its text contents.
+   *
+   * This assumes that the Enhanced Select menu is already open.
+   *
+   * @param text - Text of menu item to find.
+   *
+   * @returns Cypress chainable.
+   */
+  findLinodeItemByText: (text: string) => {
+    return cy
+      .get('[data-qa-linode-option]')
+      .contains(text)
+      .scrollIntoView()
+      .should('be.visible');
+  },
 };
 
 /**

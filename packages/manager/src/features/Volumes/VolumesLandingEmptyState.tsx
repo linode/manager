@@ -11,30 +11,34 @@ import {
   linkAnalyticsEvent,
   youtubeLinkData,
 } from './VolumesLandingEmptyStateData';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const VolumesLandingEmptyState = () => {
   const { push } = useHistory();
 
   return (
-    <ResourcesSection
-      buttonProps={[
-        {
-          children: 'Create Volume',
-          onClick: () => {
-            sendEvent({
-              action: 'Click:button',
-              category: linkAnalyticsEvent.category,
-              label: 'Create Volume',
-            });
-            push('/volumes/create');
+    <>
+      <DocumentTitleSegment segment="Volumes" />
+      <ResourcesSection
+        buttonProps={[
+          {
+            children: 'Create Volume',
+            onClick: () => {
+              sendEvent({
+                action: 'Click:button',
+                category: linkAnalyticsEvent.category,
+                label: 'Create Volume',
+              });
+              push('/volumes/create');
+            },
           },
-        },
-      ]}
-      gettingStartedGuidesData={gettingStartedGuides}
-      headers={headers}
-      icon={StyledVolumeIcon}
-      linkAnalyticsEvent={linkAnalyticsEvent}
-      youtubeLinkData={youtubeLinkData}
-    />
+        ]}
+        gettingStartedGuidesData={gettingStartedGuides}
+        headers={headers}
+        icon={StyledVolumeIcon}
+        linkAnalyticsEvent={linkAnalyticsEvent}
+        youtubeLinkData={youtubeLinkData}
+      />
+    </>
   );
 };

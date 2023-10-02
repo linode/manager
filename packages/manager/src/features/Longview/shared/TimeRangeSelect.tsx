@@ -25,7 +25,7 @@ export type Labels =
   | 'Past 30 Minutes'
   | 'Past Year';
 
-const TimeRangeSelect: React.FC<Props> = (props) => {
+export const TimeRangeSelect = React.memo((props: Props) => {
   const { defaultValue, handleStatsChange, ...restOfSelectProps } = props;
 
   const { data: preferences, refetch: refetchPreferences } = usePreferences();
@@ -125,9 +125,7 @@ const TimeRangeSelect: React.FC<Props> = (props) => {
       value={options.find((o) => o.label === selectedTimeRange) || options[0]}
     />
   );
-};
-
-export default React.memo(TimeRangeSelect);
+});
 
 /**
  * react-select option generator that aims to remain a pure function

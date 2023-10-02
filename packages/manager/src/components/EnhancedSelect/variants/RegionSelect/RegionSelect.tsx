@@ -136,6 +136,7 @@ export const RegionSelect = React.memo(
             tooltipText: helperText,
           }}
           components={{ Option: RegionOption, SingleValue: _SingleValue }}
+          data-testid="region-select"
           disabled={disabled}
           isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
           label={label ?? 'Region'}

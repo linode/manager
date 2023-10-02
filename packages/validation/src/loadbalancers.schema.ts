@@ -21,3 +21,30 @@ export const certificateConfigSchema = object({
     })
   ),
 });
+
+export const EndpointSchema = object({
+  ip: string().required('IP is required.'),
+  host: string(),
+  port: number().required('Port is required.').min(0).max(65_535),
+  rate_capacity: number().required('Rate Capacity is required.'),
+});
+
+const HealthCheckSchema = object({
+  protocol: string().oneOf(['http', 'tcp']),
+  interval: number().min(0),
+  timeout: number().min(0),
+  unhealthy_threshold: number().min(0),
+  healthy_threshold: number().min(0),
+  path: string(),
+  host: string(),
+});
+
+export const CreateServiceTargetSchema = object({
+  label: string().required('Label is required.'),
+  endpoints: array(EndpointSchema).required(),
+  ca_certificate: string().nullable(),
+  load_balancing_policy: string()
+    .required()
+    .oneOf(['round_robin', 'least_request', 'ring_hash', 'random', 'maglev']),
+  healthcheck: HealthCheckSchema,
+});

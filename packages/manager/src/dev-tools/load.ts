@@ -6,8 +6,8 @@ import { ApplicationStore } from 'src/store';
  * are needed.
  * @param store Redux store to control
  */
-export function loadDevTools(store: ApplicationStore) {
-  import('./dev-tools').then((devTools) => devTools.install(store));
+export async function loadDevTools(store: ApplicationStore) {
+  await import('./dev-tools').then((devTools) => devTools.install(store));
 }
 
 /**

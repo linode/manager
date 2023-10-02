@@ -16,7 +16,10 @@ describe('ActionsPanel', () => {
   it('should render render primary button when primaryButtonProps are passed', () => {
     renderWithTheme(
       <ActionsPanel
-        primaryButtonProps={{ 'data-testid': primaryButtonTestId }}
+        primaryButtonProps={{
+          'data-testid': primaryButtonTestId,
+          label: 'Submit',
+        }}
       />
     );
     expect(screen.getByTestId(primaryButtonTestId)).toBeInTheDocument();
@@ -30,13 +33,16 @@ describe('ActionsPanel', () => {
   it('should render secondary button when secondaryButtonProps are passed', () => {
     renderWithTheme(
       <ActionsPanel
-        secondaryButtonProps={{ 'data-testid': secondaryButtonTestId }}
+        secondaryButtonProps={{
+          'data-testid': secondaryButtonTestId,
+          label: 'Cancel',
+        }}
       />
     );
     expect(screen.getByTestId(secondaryButtonTestId)).toBeInTheDocument();
   });
 
-  it('should not render secondary button when  secondaryButtonProps are not passed', () => {
+  it('should not render secondary button when secondaryButtonProps are not passed', () => {
     renderWithTheme(<ActionsPanel secondaryButtonProps={undefined} />);
     expect(screen.queryByTestId(secondaryButtonTestId)).not.toBeInTheDocument();
   });
@@ -47,6 +53,7 @@ describe('ActionsPanel', () => {
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': primaryButtonTestId,
+          label: 'Submit',
           onClick: mockHandler,
         }}
       />
@@ -61,6 +68,7 @@ describe('ActionsPanel', () => {
       <ActionsPanel
         secondaryButtonProps={{
           'data-testid': secondaryButtonTestId,
+          label: 'Cancel',
           onClick: mockHandler,
         }}
       />

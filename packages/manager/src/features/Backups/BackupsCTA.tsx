@@ -50,6 +50,7 @@ export const BackupsCTA = () => {
       </Typography>
       <Box component="span" display="flex">
         <StyledLinkButton
+          aria-label="Dismiss notice enabling Linode backups"
           onClick={handleDismiss}
           sx={{ lineHeight: '0.5rem', marginLeft: 12 }}
         >

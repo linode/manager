@@ -13,7 +13,6 @@ interface DebouncedSearchProps extends TextFieldProps {
   defaultValue?: string;
   hideLabel?: boolean;
   isSearching?: boolean;
-  label: string;
   onSearch: (query: string) => void;
   placeholder?: string;
 }

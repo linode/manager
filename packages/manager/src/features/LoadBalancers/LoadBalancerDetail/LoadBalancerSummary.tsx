@@ -58,14 +58,6 @@ export const LoadBalancerSummary = () => {
         </Typography>
       ),
     },
-    {
-      title: 'Logs',
-      value: (
-        <Typography>
-          <IPAddress ips={[loadbalancer?.hostname ?? '']} isHovered />
-        </Typography>
-      ),
-    },
   ];
 
   return (

@@ -8,8 +8,8 @@ import {
 import { apiMatcher } from 'support/util/intercepts';
 
 const overrideLocalStorage = (
-  window: any,
-  storageOverrides: Map<string, any>
+  window: Window,
+  storageOverrides: Record<string, any>
 ): void => {
   Object.keys(storageOverrides).forEach((key: string) => {
     const value = storageOverrides[key];
@@ -17,7 +17,7 @@ const overrideLocalStorage = (
   });
 };
 
-const _loginWithToken = (win) => {
+const _loginWithToken = (win: Window) => {
   win.localStorage.setItem('authentication/oauth-token', oauthToken);
   win.localStorage.setItem('authentication/scopes', '*');
   // cy.log(window.localStorage.getItem('authentication/oauth-token'));
@@ -39,9 +39,8 @@ export interface LinodeVisitOptions {
    *
    * If `undefined` is passed, local storage overriding will be disabled.
    *
-   * @var {Map<string, any>}
    */
-  localStorageOverrides?: Map<string, any>;
+  localStorageOverrides?: Record<string, any>;
 
   /**
    * Whether or not to mock common Linode API requests.
@@ -50,7 +49,6 @@ export interface LinodeVisitOptions {
    * `CommonRequestMockOptions` object is passed, mocks are enabled with the
    * provided options. Otherwise (e.g. `false` or `undefined`) mocks are disabled.
    *
-   * @var {boolean | CommonRequestMockOptions | undefined}
    */
   mockRequests?: CommonRequestMockOptions | boolean;
 
@@ -62,7 +60,6 @@ export interface LinodeVisitOptions {
    *
    * If `undefined` is passed, preference overriding will be disabled.
    *
-   * @var {UserPreferences | undefined}
    */
   preferenceOverrides?: UserPreferences;
 }
@@ -88,7 +85,7 @@ Cypress.Commands.add(
     Cypress.on('uncaught:exception', (_err, _runnable) => false);
 
     const opt = {
-      onBeforeLoad: (win: any) => {
+      onBeforeLoad: (win: Window) => {
         _loginWithToken(win);
         if (resolvedLinodeOptions.localStorageOverrides) {
           overrideLocalStorage(

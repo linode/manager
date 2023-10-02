@@ -40,3 +40,8 @@ declare module '*.svg' {
   const src: ComponentClass<any, any>;
   export default src;
 }
+
+declare module '*.css?raw' {
+  const src: string;
+  export default src;
+}
