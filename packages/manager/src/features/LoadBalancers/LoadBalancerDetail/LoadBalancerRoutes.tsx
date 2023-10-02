@@ -25,6 +25,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
 import { AddRuleDrawer } from './Routes/AddRuleDrawer';
+import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
 import { RulesTable } from './RulesTable';
 
 import type { Filter, Route } from '@linode/api-v4';
@@ -35,8 +36,9 @@ export const LoadBalancerRoutes = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
   const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
-  const [selectedRouteId, setSelectedRouteId] = useState<number>();
   const [query, setQuery] = useState<string>();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedRouteId, setSelectedRouteId] = useState<number>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -76,6 +78,11 @@ export const LoadBalancerRoutes = () => {
     setSelectedRouteId(route.id);
   };
 
+  const onDeleteRoute = (route: Route) => {
+    setIsDeleteDialogOpen(true);
+    setSelectedRouteId(route.id);
+  };
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -88,10 +95,10 @@ export const LoadBalancerRoutes = () => {
       const OuterTableCells = (
         <>
           <Hidden smDown>
-            <TableCell>{route.rules?.length}</TableCell>
+            <TableCell>{route.rules.length}</TableCell>
           </Hidden>
           <Hidden smDown>
-            <TableCell>{route.protocol?.toLocaleUpperCase()}</TableCell>{' '}
+            <TableCell>{route.protocol.toLocaleUpperCase()}</TableCell>{' '}
           </Hidden>
           <TableCell actionCell>
             {/**
@@ -108,7 +115,7 @@ export const LoadBalancerRoutes = () => {
               actionsList={[
                 { onClick: () => null, title: 'Edit' },
                 { onClick: () => null, title: 'Clone Route' },
-                { onClick: () => null, title: 'Delete' },
+                { onClick: () => onDeleteRoute(route), title: 'Delete' },
               ]}
               ariaLabel={`Action Menu for Route ${route.label}`}
             />
@@ -211,6 +218,12 @@ export const LoadBalancerRoutes = () => {
         loadbalancerId={Number(loadbalancerId)}
         onClose={() => setIsAddRuleDrawerOpen(false)}
         open={isAddRuleDrawerOpen}
+        route={selectedRoute}
+      />
+      <DeleteRouteDialog
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
         route={selectedRoute}
       />
     </>

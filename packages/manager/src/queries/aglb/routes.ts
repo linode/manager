@@ -1,7 +1,7 @@
 import {
+  deleteLoadbalancerRoute,
   getLoadbalancerRoutes,
   updateLoadbalancerRoute,
-  UpdateRoutePayload,
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
@@ -13,6 +13,7 @@ import type {
   Params,
   ResourcePage,
   Route,
+  UpdateRoutePayload,
 } from '@linode/api-v4';
 
 export const useLoadBalancerRoutesQuery = (
@@ -27,14 +28,33 @@ export const useLoadBalancerRoutesQuery = (
   );
 };
 
-export const useLoadbalancerRouteUpdateMutation = (
+export const useLoadBalancerRouteUpdateMutation = (
   loadbalancerId: number,
   routeId: number
 ) => {
   const queryClient = useQueryClient();
-
-  return useMutation<Route, APIError[], UpdateRoutePayload>(
+  return useMutation<{}, APIError[], UpdateRoutePayload>(
     (data) => updateLoadbalancerRoute(loadbalancerId, routeId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'routes',
+        ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerRouteDeleteMutation = (
+  loadbalancerId: number,
+  routeId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(
+    () => deleteLoadbalancerRoute(loadbalancerId, routeId),
     {
       onSuccess() {
         queryClient.invalidateQueries([

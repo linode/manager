@@ -18,7 +18,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { Typography } from 'src/components/Typography';
-import { useLoadbalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ServiceTargetSelect } from '../ServiceTargets/ServiceTargetSelect';
@@ -54,7 +54,7 @@ export const AddRuleDrawer = (props: Props) => {
     error,
     mutateAsync: updateRule,
     reset,
-  } = useLoadbalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
+  } = useLoadBalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
 
   const [ttlUnit, setTTLUnit] = useState<TimeUnit>('hour');
 
