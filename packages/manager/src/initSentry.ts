@@ -78,7 +78,7 @@ export const initSentry = () => {
       /**
        * Uncomment the 3 lines below to enable Sentry's "Performance" feature.
        * We're disabling it October 2nd 2023 because we are running into plan limits
-       * and this Sentry feature isn't crutial to our workflow.
+       * and this Sentry feature isn't crucial to our workflow.
        */
       // enableTracing: true,
       // integrations: [new BrowserTracing()],
