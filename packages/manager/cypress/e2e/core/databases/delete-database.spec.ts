@@ -9,11 +9,16 @@ import {
   mockDeleteProvisioningDatabase,
   mockGetDatabase,
 } from 'support/intercepts/databases';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
 } from 'support/constants/databases';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 describe('Delete database clusters', () => {
   databaseConfigurations.forEach(
@@ -36,13 +41,17 @@ describe('Delete database clusters', () => {
             allow_list: [allowedIp],
           });
 
+          mockAppendFeatureFlags({
+            databases: makeFeatureFlagData(true),
+          }).as('getFeatureFlags');
+          mockGetFeatureFlagClientstream().as('getClientstream');
           mockGetDatabase(database).as('getDatabase');
           mockDeleteDatabase(database.id, database.engine).as('deleteDatabase');
 
           cy.visitWithLogin(
             `/databases/${database.engine}/${database.id}/settings`
           );
-          cy.wait('@getDatabase');
+          cy.wait(['@getFeatureFlags', '@getClientstream', '@getDatabase']);
 
           // Click "Delete Cluster" button.
           ui.button
@@ -92,6 +101,10 @@ describe('Delete database clusters', () => {
           const errorMessage =
             'Your database is provisioning; please wait until provisioning is complete to perform this operation.';
 
+          mockAppendFeatureFlags({
+            databases: makeFeatureFlagData(true),
+          }).as('getFeatureFlags');
+          mockGetFeatureFlagClientstream().as('getClientstream');
           mockGetDatabase(database).as('getDatabase');
           mockDeleteProvisioningDatabase(
             database.id,
@@ -102,7 +115,7 @@ describe('Delete database clusters', () => {
           cy.visitWithLogin(
             `/databases/${database.engine}/${database.id}/settings`
           );
-          cy.wait('@getDatabase');
+          cy.wait(['@getFeatureFlags', '@getClientstream', '@getDatabase']);
 
           // Click "Delete Cluster" button.
           ui.button

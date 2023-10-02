@@ -1,15 +1,16 @@
 export type Capabilities =
-  | 'Linodes'
-  | 'NodeBalancers'
-  | 'Block Storage'
-  | 'Object Storage'
-  | 'Kubernetes'
-  | 'GPU Linodes'
-  | 'Cloud Firewall'
-  | 'Vlans'
   | 'Bare Metal'
+  | 'Block Storage'
+  | 'Cloud Firewall'
+  | 'GPU Linodes'
+  | 'Kubernetes'
+  | 'Linodes'
   | 'Metadata'
-  | 'Premium Plans';
+  | 'NodeBalancers'
+  | 'Object Storage'
+  | 'Premium Plans'
+  | 'Vlans'
+  | 'VPCs';
 
 export interface DNSResolvers {
   ipv4: string; // Comma-separated IP addresses

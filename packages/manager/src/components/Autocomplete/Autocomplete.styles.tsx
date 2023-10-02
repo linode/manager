@@ -51,7 +51,6 @@ export const CustomPopper = (props: PopperProps) => {
         ? `calc(${style.width} + 2px)`
         : style.width + 2
       : undefined,
-    zIndex: 1,
   };
 
   return (

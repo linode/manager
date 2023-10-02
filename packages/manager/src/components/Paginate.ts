@@ -4,10 +4,9 @@ import * as React from 'react';
 import scrollTo from 'src/utilities/scrollTo';
 import { storage } from 'src/utilities/storage';
 
-export const createDisplayPage = <T extends any>(
-  page: number,
-  pageSize: number
-) => (list: T[]): T[] => {
+export const createDisplayPage = <T>(page: number, pageSize: number) => (
+  list: T[]
+): T[] => {
   const count = list.length;
   if (count === 0) {
     return list;
@@ -25,9 +24,9 @@ export const createDisplayPage = <T extends any>(
   return slice(startIndex, endIndex + 1, list);
 };
 
-export interface PaginationProps extends State {
+export interface PaginationProps<T> extends State {
   count: number;
-  data: any[];
+  data: T[];
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (pageSize: number) => void;
 }
@@ -37,9 +36,9 @@ interface State {
   pageSize: number;
 }
 
-interface Props {
-  children: (p: PaginationProps) => React.ReactNode;
-  data: any[];
+interface Props<T> {
+  children: (p: PaginationProps<T>) => React.ReactNode;
+  data: T[];
   page?: number;
   pageSize?: number;
   pageSizeSetter?: (v: number) => void;
@@ -48,9 +47,9 @@ interface Props {
   updatePageUrl?: (page: number) => void;
 }
 
-export default class Paginate extends React.Component<Props, State> {
+export default class Paginate<T> extends React.Component<Props<T>, State> {
   render() {
-    let view;
+    let view: (data: T[]) => T[];
     // update view based on page url
     if (this.props.updatePageUrl) {
       view = createDisplayPage(this.props.page || 1, this.state.pageSize);

@@ -2,11 +2,12 @@ import { User, deleteUser } from '@linode/api-v4/lib/account';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { makeStyles, useTheme } from '@mui/styles';
+import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import AddNewLink from 'src/components/AddNewLink';
+import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -27,56 +28,6 @@ import { GravatarByEmail } from '../../components/GravatarByEmail';
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
-    },
-  },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingRight: 0,
-      paddingTop: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-  avatar: {
-    animation: '$fadeIn 150ms linear forwards',
-    borderRadius: '50%',
-    height: 30,
-    marginRight: theme.spacing(2),
-    width: 30,
-  },
-  emptyImage: {
-    display: 'inline',
-    height: 30,
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      height: 40,
-      width: 40,
-    },
-    width: 30,
-  },
-  headline: {
-    lineHeight: '1.5rem',
-    marginBottom: 8,
-    marginLeft: 15,
-    marginTop: 8,
-  },
-  title: {
-    marginBottom: theme.spacing(2),
-  },
-  userLandingHeader: {
-    margin: 0,
-    width: '100%',
-  },
-}));
 
 const UsersLanding = () => {
   const { data: profile } = useProfile();
@@ -104,7 +55,6 @@ const UsersLanding = () => {
     string | undefined
   >('');
 
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -211,26 +161,18 @@ const UsersLanding = () => {
           variant="error"
         />
       )}
-      <Grid
-        alignItems="flex-end"
-        className={classes.userLandingHeader}
-        container
-        justifyContent="flex-end"
-        spacing={2}
-      >
-        <Grid className={classes.addNewWrapper}>
-          <AddNewLink
-            disabledReason={
-              isRestrictedUser
-                ? 'You cannot create other users as a restricted user.'
-                : undefined
-            }
-            disabled={isRestrictedUser}
-            label="Add a User"
-            onClick={openForCreate}
-          />
-        </Grid>
-      </Grid>
+      <Box display="flex" justifyContent="flex-end" sx={{ marginBottom: 1 }}>
+        <AddNewLink
+          disabledReason={
+            isRestrictedUser
+              ? 'You cannot create other users as a restricted user.'
+              : undefined
+          }
+          disabled={isRestrictedUser}
+          label="Add a User"
+          onClick={openForCreate}
+        />
+      </Box>
       <Table aria-label="List of Users">
         <TableHead>
           <TableRow>

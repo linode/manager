@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { queryClientFactory } from 'src/queries/base';
 import { storeFactory } from 'src/store';
 

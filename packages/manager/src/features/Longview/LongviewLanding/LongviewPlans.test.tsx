@@ -14,7 +14,7 @@ import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  CombinedProps,
+  LongviewPlansProps,
   LONGVIEW_FREE_ID,
   LongviewPlans,
   formatPrice,
@@ -22,7 +22,7 @@ import {
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
 
-const props: CombinedProps = {
+const props: LongviewPlansProps = {
   subscriptionRequestHook: {
     data: mockLongviewSubscriptions,
     lastUpdated: 0,

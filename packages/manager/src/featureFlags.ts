@@ -1,8 +1,6 @@
-import { TPAProvider } from '@linode/api-v4/lib/profile';
-
-import { NoticeVariant } from 'src/components/Notice/Notice';
-
-import { Doc } from './features/OneClickApps/oneClickApps';
+import type { Doc } from './features/OneClickApps/types';
+import type { TPAProvider } from '@linode/api-v4/lib/profile';
+import type { NoticeVariant } from 'src/components/Notice/Notice';
 
 // These flags should correspond with active features flags in LD
 
@@ -49,6 +47,7 @@ export interface Flags {
   dcSpecificPricing: boolean;
   ipv6Sharing: boolean;
   kubernetesDashboardAvailability: boolean;
+  linodeCreateWithFirewall: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
   oneClickApps: OneClickApp;

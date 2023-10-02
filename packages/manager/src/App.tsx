@@ -1,8 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import '@reach/tabs/styles.css';
 import { ErrorBoundary } from '@sentry/react';
-import 'highlight.js/styles/a11y-dark.css';
-import 'highlight.js/styles/a11y-light.css';
 import { useSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
