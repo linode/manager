@@ -80,8 +80,12 @@ export const RuleSchema = object({
       'sum-of-percentage',
       'The sum of the percentages must be 100',
       (serviceTargets) => {
+        // An empty array is okay.
+        if (!serviceTargets || serviceTargets.length === 0) {
+          return true;
+        }
         const sum =
-          serviceTargets?.reduce((acc, serviceTarget) => {
+          serviceTargets.reduce((acc, serviceTarget) => {
             return acc + (serviceTarget?.percentage ?? 0);
           }, 0) || 0;
         return sum === 100;

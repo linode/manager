@@ -256,7 +256,7 @@ export const AddRuleDrawer = (props: Props) => {
               </Stack>
             )}
             <Stack alignItems="center" direction="row" gap={2}>
-              <Typography>Routes to</Typography>
+              <Typography sx={{ fontStyle: 'italic' }}>Routes to</Typography>
               <Divider light sx={{ flexGrow: 1 }} />
             </Stack>
             {typeof formik.errors.service_targets === 'string' && (
