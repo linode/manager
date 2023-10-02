@@ -90,6 +90,9 @@ export const AddRuleDrawer = (props: Props) => {
     validateOnChange: true,
   });
 
+  // eslint-disable-next-line no-console
+  console.log(formik.errors);
+
   const onClose = () => {
     _onClose();
     formik.resetForm();
@@ -206,16 +209,14 @@ export const AddRuleDrawer = (props: Props) => {
                   //     ? formik.errors.match_condition?.match_field
                   //     : undefined
                   // }
-                  errorText={formik.errors.match_condition?.match_field}
-                  // onBlur={() =>
-                  //   formik.setFieldTouched('match_condition.match_field')
-                  // }
                   onChange={(_, option) =>
                     formik.setFieldValue(
                       'match_condition.match_field',
                       option?.value ?? null
                     )
                   }
+                  // onBlur={() =>
+                  //   formik.setFieldTouched('match_condition.match_field')
                   value={
                     matchTypeOptions.find(
                       (option) =>
@@ -223,6 +224,8 @@ export const AddRuleDrawer = (props: Props) => {
                         formik.values.match_condition.match_field
                     ) ?? null
                   }
+                  // }
+                  errorText={formik.errors.match_condition?.match_field}
                   label="Match Type"
                   options={matchTypeOptions}
                   sx={{ minWidth: 200 }}
@@ -233,14 +236,14 @@ export const AddRuleDrawer = (props: Props) => {
                   //   formik.touched.match_condition?.match_value
                   //     ? formik.errors.match_condition?.match_value
                   //     : undefined
-                  // }
-                  errorText={formik.errors.match_condition?.match_value}
                   placeholder={
                     matchValuePlaceholder[
                       formik.values.match_condition.match_field
                     ]
                   }
                   containerProps={{ sx: { flexGrow: 1 } }}
+                  // }
+                  errorText={formik.errors.match_condition?.match_value}
                   label="Match Value"
                   labelTooltipText="TODO: AGLB"
                   name="match_condition.match_value"
@@ -254,6 +257,14 @@ export const AddRuleDrawer = (props: Props) => {
               <Typography>Routes to</Typography>
               <Divider light sx={{ flexGrow: 1 }} />
             </Stack>
+            {typeof formik.errors.service_targets === 'string' && (
+              <Notice
+                spacingBottom={12}
+                spacingTop={16}
+                text={formik.errors.service_targets}
+                variant="error"
+              />
+            )}
             {formik.values.service_targets.map((serviceTargt, index) => (
               <Stack
                 direction="row"

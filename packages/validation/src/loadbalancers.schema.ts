@@ -75,7 +75,19 @@ const MatchConditionSchema = object({
 
 export const RuleSchema = object({
   match_condition: MatchConditionSchema,
-  service_targets: array(RouteServiceTargetSchema),
+  service_targets: array(RouteServiceTargetSchema)
+    .test(
+      'sum-of-percentage',
+      'The sum of the percentages must be 100',
+      (serviceTargets) => {
+        const sum =
+          serviceTargets?.reduce((acc, serviceTarget) => {
+            return acc + (serviceTarget?.percentage ?? 0);
+          }, 0) || 0;
+        return sum === 100;
+      }
+    )
+    .required(),
 });
 
 export const UpdateRouteSchema = object({
