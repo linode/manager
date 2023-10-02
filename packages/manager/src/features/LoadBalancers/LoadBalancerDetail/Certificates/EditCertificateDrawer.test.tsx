@@ -3,16 +3,19 @@ import { act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { mockCertificate } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EditCertificateDrawer } from './EditCertificateDrawer';
 
 const mockTLSCertificate: Certificate = {
+  certificate: mockCertificate,
   id: 0,
   label: 'test-tls-cert',
   type: 'downstream',
 };
 const mockCACertificate: Certificate = {
+  certificate: mockCertificate,
   id: 0,
   label: 'test-ca-cert',
   type: 'ca',
@@ -22,7 +25,7 @@ describe('EditCertificateDrawer', () => {
   it('should contain the name of the cert in the drawer title and label field', () => {
     const onClose = jest.fn();
 
-    const { getByTestId, getByLabelText } = renderWithTheme(
+    const { getByLabelText, getByTestId } = renderWithTheme(
       <EditCertificateDrawer
         certificate={mockTLSCertificate}
         loadbalancerId={0}

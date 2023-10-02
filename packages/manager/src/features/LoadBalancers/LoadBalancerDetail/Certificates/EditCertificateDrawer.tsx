@@ -18,7 +18,7 @@ interface Props {
   open: boolean;
 }
 
-const labelMap: Record<Certificate['type'], string> = {
+export const labelMap: Record<Certificate['type'], string> = {
   ca: 'Server Certificate',
   downstream: 'TLS Certificate',
 };
@@ -92,23 +92,27 @@ export const EditCertificateDrawer = (props: Props) => {
             value={formik.values.label}
           />
           <TextField
+            disabled
             errorText={errorMap.certificate}
             label={labelMap[certificate.type]}
             labelTooltipText="TODO: AGLB"
             multiline
             name="certificate"
             onChange={formik.handleChange}
+            placeholder={certificate.certificate ?? ''}
             trimmed
             value={formik.values.certificate}
           />
           {certificate?.type === 'downstream' && (
             <TextField
+              disabled
               errorText={errorMap.key}
               label="Private Key"
               labelTooltipText="TODO: AGLB"
               multiline
               name="key"
               onChange={formik.handleChange}
+              placeholder="Key is concealed."
               trimmed
               value={formik.values.key}
             />
