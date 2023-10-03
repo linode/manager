@@ -4,7 +4,7 @@ import * as React from 'react';
 interface CurrencyFormatterProps {
   dataAttrs?: Record<string, any>;
   decimalPlaces?: number;
-  quantity: number | string;
+  quantity: number | '--.--';
   wrapInParentheses?: boolean;
 }
 
