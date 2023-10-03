@@ -43,7 +43,11 @@ describe('SubnetLinodeRow', () => {
       getByText,
     } = renderWithTheme(
       wrapWithTableBody(
-        <SubnetLinodeRow linodeId={linodeFactory1.id} subnetId={0} />
+        <SubnetLinodeRow
+          handleUnassignLinode={jest.fn()}
+          linodeId={linodeFactory1.id}
+          subnetId={0}
+        />
       ),
       {
         queryClient,

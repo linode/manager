@@ -33,12 +33,13 @@ import type {
 interface Props {
   onClose: () => void;
   open: boolean;
+  selectedLinode?: Linode;
   subnet?: Subnet;
   vpcId: number;
 }
 
 export const SubnetUnassignLinodesDrawer = React.memo(
-  ({ onClose, open, subnet, vpcId }: Props) => {
+  ({ onClose, open, selectedLinode, subnet, vpcId }: Props) => {
     const { data: profile } = useProfile();
     const { data: grants } = useGrants();
     const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
@@ -52,7 +53,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     const csvRef = React.useRef<any>();
     const formattedDate = useFormattedDate();
-    const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
+    const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>(
+      selectedLinode ? [selectedLinode] : []
+    );
     const prevSelectedLinodes = usePrevious(selectedLinodes);
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
