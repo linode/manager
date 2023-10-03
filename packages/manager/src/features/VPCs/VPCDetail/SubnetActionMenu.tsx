@@ -8,6 +8,7 @@ interface SubnetActionHandlers {
   handleAssignLinodes: (subnet: Subnet) => void;
   handleDelete: (subnet: Subnet) => void;
   handleEdit: (subnet: Subnet) => void;
+  handleUnassignLinodes: (subnet: Subnet) => void;
 }
 
 interface Props extends SubnetActionHandlers {
@@ -21,11 +22,10 @@ export const SubnetActionMenu = (props: Props) => {
     handleAssignLinodes,
     handleDelete,
     handleEdit,
+    handleUnassignLinodes,
     numLinodes,
     subnet,
   } = props;
-
-  const handleUnassignLinode = () => {};
 
   const actions: Action[] = [
     {
@@ -36,7 +36,7 @@ export const SubnetActionMenu = (props: Props) => {
     },
     {
       onClick: () => {
-        handleUnassignLinode();
+        handleUnassignLinodes(subnet);
       },
       title: 'Unassign Linodes',
     },

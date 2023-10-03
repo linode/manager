@@ -6,7 +6,6 @@ import { Box } from 'src/components/Box';
 import { IconButton } from 'src/components/IconButton';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
-
 import { isPropValid } from 'src/utilities/isPropValid';
 
 export type RemovableItem = {
@@ -109,7 +108,7 @@ export const RemovableSelectionsList = (props: Props) => {
 const StyledNoAssignedLinodesBox = styled(Box, {
   label: 'StyledNoAssignedLinodesBox',
   shouldForwardProp: (prop) => isPropValid(['maxWidth'], prop),
-})(({ theme, maxWidth }) => ({
+})(({ maxWidth, theme }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   display: 'flex',
   flexDirection: 'column',
