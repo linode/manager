@@ -276,8 +276,10 @@ export const VPCSubnetsTable = (props: Props) => {
         vpcId={vpcId}
       />
       <CollapsibleTable
+        TableRowEmpty={
+          <TableRowEmpty colSpan={5} message={'No Subnets are assigned.'} />
+        }
         TableItems={getTableItems()}
-        TableRowEmpty={<TableRowEmpty colSpan={5} message={'No Subnets'} />}
         TableRowHead={SubnetTableRowHead}
       />
       <PaginationFooter
