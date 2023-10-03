@@ -92,7 +92,7 @@ export const PlanSelection = (props: Props) => {
   );
 
   type.subHeadings[0] = `$${price?.monthly ?? '--.--'}/mo ($${
-    price?.hourly ?? 'unknown'
+    price?.hourly ?? '--.--'
   }/hr)`;
 
   return (
