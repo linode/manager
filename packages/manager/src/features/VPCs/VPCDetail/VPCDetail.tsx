@@ -188,7 +188,7 @@ const VPCDetail = () => {
       </Box>
       {numLinodes > 0 && (
         <DismissibleBanner
-          preferenceKey={`reboot-linodes-warning-banner`}
+          preferenceKey={`reboot-linodes-warning-banner-${vpc.id}`}
           variant="warning"
         >
           <Typography variant="body1">
