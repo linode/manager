@@ -9,7 +9,7 @@
 ## Description
 Highlight the Pull Request's context and intentions.
 
-List of changes.
+### List of changes.
 - ...
 - ...
 
