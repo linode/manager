@@ -200,7 +200,7 @@ export const AddRuleDrawer = (props: Props) => {
               label="Hostname"
               labelTooltipText="TODO: AGLB"
               name="match_condition.hostname"
-              // onBlur={formik.handleBlur}
+              onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               placeholder="www.example.com"
               value={formik.values.match_condition.hostname}
@@ -208,20 +208,20 @@ export const AddRuleDrawer = (props: Props) => {
             {route?.protocol !== 'tcp' && (
               <Stack direction="row" spacing={2}>
                 <Autocomplete
-                  // errorText={
-                  //   formik.touched.match_condition?.match_field
-                  //     ? formik.errors.match_condition?.match_field
-                  //     : undefined
-                  // }
+                  errorText={
+                    formik.touched.match_condition?.match_field
+                      ? formik.errors.match_condition?.match_field
+                      : undefined
+                  }
                   onChange={(_, option) =>
                     formik.setFieldValue(
                       'match_condition.match_field',
                       option?.value ?? null
                     )
                   }
-                  // onBlur={() =>
-                  //   formik.setFieldTouched('match_condition.match_field')
-                  // }
+                  onBlur={() =>
+                    formik.setFieldTouched('match_condition.match_field')
+                  }
                   value={
                     matchTypeOptions.find(
                       (option) =>
@@ -230,25 +230,23 @@ export const AddRuleDrawer = (props: Props) => {
                     ) ?? matchTypeOptions[0]
                   }
                   disableClearable
-                  errorText={formik.errors.match_condition?.match_field}
                   label="Match Type"
                   options={matchTypeOptions}
                   sx={{ minWidth: 200 }}
                   textFieldProps={{ labelTooltipText: <MatchTypeInfo /> }}
                 />
                 <TextField
-                  // errorText={
-                  //   formik.touched.match_condition?.match_value
-                  //     ? formik.errors.match_condition?.match_value
-                  //     : undefined
+                  errorText={
+                    formik.touched.match_condition?.match_value
+                      ? formik.errors.match_condition?.match_value
+                      : undefined
+                  }
                   placeholder={
                     matchValuePlaceholder[
                       formik.values.match_condition.match_field
                     ]
                   }
                   containerProps={{ sx: { flexGrow: 1 } }}
-                  // }
-                  errorText={formik.errors.match_condition?.match_value}
                   label="Match Value"
                   labelTooltipText="TODO: AGLB"
                   name="match_condition.match_value"
@@ -282,48 +280,38 @@ export const AddRuleDrawer = (props: Props) => {
                       <InputAdornment position="end">%</InputAdornment>
                     ),
                   }}
-                  // errorText={
-                  //   formik.touched.service_targets?.[index]?.percentage
-                  //     ? getIn(
-                  //         formik.errors,
-                  //         `service_targets[${index}].percentage`
-                  //       )
-                  //     : undefined
-                  // }
-                  errorText={getIn(
-                    formik.errors,
-                    `service_targets[${index}].percentage`
-                  )}
+                  errorText={
+                    formik.touched.service_targets?.[index]?.percentage
+                      ? getIn(
+                          formik.errors,
+                          `service_targets[${index}].percentage`
+                        )
+                      : undefined
+                  }
                   hideLabel={index !== 0}
                   label="Percent"
                   max={100}
                   min={0}
                   name={`service_targets[${index}].percentage`}
                   noMarginTop
-                  // onBlur={formik.handleBlur}
+                  onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   type="number"
                   value={formik.values.service_targets[index].percentage}
                 />
                 <ServiceTargetSelect
-                  // errorText={
-                  //   formik.touched.service_targets?.[index]?.id
-                  //     ? getIn(formik.errors, `service_targets[${index}].id`)
-                  //     : undefined
-                  // }
-                  errorText={getIn(
-                    formik.errors,
-                    `service_targets[${index}].id`
-                  )}
-                  // onBlur={() =>
-                  //   formik.setFieldTouched(`service_targets[${index}].id`)
-                  // }
-                  onChange={(serviceTarget) =>
+                  errorText={
+                    formik.touched.service_targets?.[index]?.id
+                      ? getIn(formik.errors, `service_targets[${index}].id`)
+                      : undefined
+                  }
+                  onChange={(serviceTarget) => {
+                    formik.setFieldTouched(`service_targets[${index}].id`);
                     formik.setFieldValue(
                       `service_targets[${index}].id`,
                       serviceTarget?.id ?? -1
-                    )
-                  }
+                    );
+                  }}
                   loadbalancerId={loadbalancerId}
                   sx={{ flexGrow: 1 }}
                   textFieldProps={{ hideLabel: index !== 0 }}
@@ -388,14 +376,11 @@ export const AddRuleDrawer = (props: Props) => {
                     value={cookieType}
                   />
                   <TextField
-                    // errorText={
-                    //   formik.touched.match_condition?.session_stickiness_cookie
-                    //     ? formik.errors.match_condition
-                    //         ?.session_stickiness_cookie
-                    //     : undefined
-                    // }
                     errorText={
-                      formik.errors.match_condition?.session_stickiness_cookie
+                      formik.touched.match_condition?.session_stickiness_cookie
+                        ? formik.errors.match_condition
+                            ?.session_stickiness_cookie
+                        : undefined
                     }
                     value={
                       formik.values.match_condition.session_stickiness_cookie ??
@@ -404,21 +389,18 @@ export const AddRuleDrawer = (props: Props) => {
                     label="Cookie"
                     labelTooltipText="TODO: AGLB"
                     name="match_condition.session_stickiness_cookie"
-                    // onBlur={formik.handleBlur}
+                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     placeholder="my-cookie-name"
                   />
                   {cookieType.label === 'Load Balancer Generated' && (
                     <Stack direction="row" spacing={1}>
                       <TextField
-                        // errorText={
-                        //   formik.touched.match_condition?.session_stickiness_ttl
-                        //     ? formik.errors.match_condition
-                        //         ?.session_stickiness_ttl
-                        //     : undefined
-                        // }
                         errorText={
-                          formik.errors.match_condition?.session_stickiness_ttl
+                          formik.touched.match_condition?.session_stickiness_ttl
+                            ? formik.errors.match_condition
+                                ?.session_stickiness_ttl
+                            : undefined
                         }
                         onChange={(e) =>
                           formik.setFieldValue(
@@ -435,7 +417,7 @@ export const AddRuleDrawer = (props: Props) => {
                         label="Stickiness TTL"
                         labelTooltipText="TODO: AGLB"
                         name="match_condition.session_stickiness_ttl"
-                        // onBlur={formik.handleBlur}
+                        onBlur={formik.handleBlur}
                         type="number"
                       />
                       <Autocomplete

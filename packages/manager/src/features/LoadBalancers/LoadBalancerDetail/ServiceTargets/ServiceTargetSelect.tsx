@@ -21,7 +21,6 @@ interface Props {
    * The id of the Load Balancer you want to show certificates for
    */
   loadbalancerId: number;
-  onBlur?: () => void;
   /**
    * Called when the value of the Select changes
    */
@@ -45,7 +44,6 @@ export const ServiceTargetSelect = (props: Props) => {
     errorText,
     label,
     loadbalancerId,
-    onBlur,
     onChange,
     sx,
     textFieldProps,
@@ -101,7 +99,6 @@ export const ServiceTargetSelect = (props: Props) => {
       label={label ?? 'Service Target'}
       loading={isLoading}
       noMarginTop
-      onBlur={onBlur}
       onChange={(e, value) => onChange(value)}
       options={serviceTargets ?? []}
       placeholder="Select a Service Target"
