@@ -41,10 +41,11 @@ export const UnifiedMigrationPanel = (props: Props) => {
         component="p"
       >
         During a <strong>warm resize</strong>, your Compute Instance will remain
-        up and running for the duration of the process and will be rebooted to
-        complete the resize. In some cases, you will need to reboot the instance
-        manually (you will receive a notification to do so if necessary). During
-        a <strong>cold resize</strong>, your Compute Instance will be shut down,
+        up and running for the duration of the process. It will stay up while it
+        is migrated to a new host machine and then rebooted to complete the warm
+        resize. In some cases, you will need to reboot the instance manually
+        (you will receive a notification to do so if necessary). During a{' '}
+        <strong>cold resize</strong>, your Compute Instance will be shut down,
         migrated to a new host machine, and restored to its previous state
         (booted or powered off) once the resize is complete.
       </Box>
