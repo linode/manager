@@ -64,13 +64,13 @@ describe('Billing Contact', () => {
   it('Check Billing Contact Form', () => {
     // intercept get account request and stub response.
     mockGetAccount(accountData).as('getAccount');
-    cy.visitWithLogin('/account/billing', { mockRequests: false });
+    cy.visitWithLogin('/account/billing');
     checkAccountContactDisplay(accountData);
   });
   it('Edit Contact Info', () => {
     // intercept create account request and stub response
     mockUpdateAccount(newAccountData).as('updateAccount');
-    cy.visitWithLogin('/account/billing', { mockRequests: false });
+    cy.visitWithLogin('/account/billing');
     cy.get('[data-qa-contact-summary]').within((_contact) => {
       cy.findByText('Edit').should('be.visible').click();
     });
