@@ -62,13 +62,14 @@ export const MultipleSubnetInput = (props: Props) => {
           />
         </Grid>
       ))}
+      <Divider sx={{ marginTop: theme.spacing(3) }} />
       <Button
         buttonType="outlined"
         disabled={disabled}
         onClick={addSubnet}
-        sx={{ marginTop: theme.spacing(3) }}
+        sx={{ marginTop: theme.spacing(2) }}
       >
-        Add a Subnet
+        Add {subnets.length > 0 ? 'another' : 'a'} Subnet
       </Button>
     </Grid>
   );
