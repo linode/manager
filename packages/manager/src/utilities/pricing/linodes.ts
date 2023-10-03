@@ -18,7 +18,6 @@ export const getLinodeRegionPrice = (
   type?: ExtendedType | LinodeType | PlanSelectionType,
   regionId?: null | string
 ): PriceObject | undefined => {
-  // TODO: M3-7063 (defaults)
   if (!type || !regionId) {
     return undefined;
   }
