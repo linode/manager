@@ -97,7 +97,13 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     : null;
 
   const renderBackupsPrice = () => {
-    return backupsMonthlyPrice &&
+    return backupsMonthlyPrice && backupsMonthlyPrice > 0 ? (
+      <Typography variant="body1">
+        <Currency quantity={backupsMonthlyPrice} /> per month
+      </Typography>
+    ) : (
+      '$--.-- per month'
+    );
       backupsMonthlyPrice !== 'unknown' &&
       backupsMonthlyPrice > 0 ? (
       <Typography variant="body1">
