@@ -55,7 +55,7 @@ export const getDCSpecificPrice = ({
   regionId,
 }: DataCenterPricingOptions) => {
   if (!regionId || !basePrice) {
-    return 'unknown';
+    return undefined;
   }
 
   if (!flags?.dcSpecificPricing) {
