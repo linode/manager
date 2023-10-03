@@ -101,7 +101,10 @@ async function generateChangeset() {
 
   try {
     const addCmd = `git add ${changesetFile}`;
-    const escapedDescription = description.replace(/`/g, "\\`"); // Allow backticks in commit message
+    // This allows backticks in the commit message. We first need to sanitize against any number of backslashes 
+    // that appear before backtick in description, to avoid having unescaped characters. Then we can add back 
+    // two backslashes before the backtick to make sure backticks show up in the commit message.
+    const escapedDescription = description.replace(/\\*`/g, "\\`"); 
     const commitCmd = `git commit -m "Added changeset: ${escapedDescription}"`;
     execSync(addCmd);
     execSync(commitCmd);
