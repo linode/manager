@@ -67,6 +67,7 @@ export const FirewallDialog = React.memo((props: Props) => {
       enqueueSnackbar(`Failed to ${mode} ${label}`, {
         variant: 'error',
       });
+      errorMap[mode] = e;
     }
   };
 
