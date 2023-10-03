@@ -38,6 +38,10 @@ export const useStyles = makeStyles<
     borderLeft: `5px solid ${theme.palette.error.dark}`,
   },
   flag: {
+    '& svg': {
+      left: `-${theme.spacing()}`,
+      position: 'relative',
+    },
     marginRight: theme.spacing(2),
   },
   icon: {
@@ -127,33 +131,74 @@ export type NoticeVariant =
   | 'warning';
 
 export interface NoticeProps extends Grid2Props {
-  breakWords?: boolean;
+  /**
+   * If true, the error will be treated as "static" and will not be included in the error group.
+   * This will essentially disable the scroll to error behavior.
+   */
+  bypassValidation?: boolean;
+  /**
+   * Additional classes to be applied to the root element.
+   */
   className?: string;
+  /**
+   * The data-qa attribute to apply to the root element.
+   */
   dataTestId?: string;
+  /**
+   * The error group this error belongs to. This is used to scroll to the error when the user clicks on the error.
+   */
   errorGroup?: string;
+  /**
+   * If true, a flag will be displayed to the left of the error.
+   */
   flag?: boolean;
+  /**
+   * If true, an icon will be displayed to the left of the error, reflecting the variant of the error.
+   */
   important?: boolean;
-  notificationList?: boolean;
+  /**
+   * The function to execute when/if the error is clicked.
+   */
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  /**
+   * The amount of spacing to apply to the bottom of the error.
+   */
   spacingBottom?: 0 | 4 | 8 | 12 | 16 | 20 | 24 | 32;
+  /**
+   * The amount of spacing to apply to the left of the error.
+   */
   spacingLeft?: number;
+  /**
+   * The amount of spacing to apply to the top of the error.
+   */
   spacingTop?: 0 | 4 | 8 | 12 | 16 | 24 | 32;
+  /**
+   * Additional styles to apply to the root element.
+   */
   sx?: SxProps;
+  /**
+   * The text to display in the error. If this is not provided, props.children will be used.
+   */
   text?: string;
+  /**
+   * Props to apply to the Typography component that wraps the error text.
+   */
   typeProps?: TypographyProps;
+  /**
+   * The variant of the error. This will determine the color treatment of the error.
+   */
   variant?: NoticeVariant;
 }
 
 export const Notice = (props: NoticeProps) => {
   const {
-    breakWords,
+    bypassValidation = false,
     children,
     className,
     dataTestId,
     errorGroup,
     flag,
     important,
-    notificationList,
     onClick,
     spacingBottom,
     spacingLeft,
@@ -201,7 +246,9 @@ export const Notice = (props: NoticeProps) => {
       children
     );
 
-  const errorScrollClassName = errorGroup
+  const errorScrollClassName = bypassValidation
+    ? ''
+    : errorGroup
     ? `error-for-scroll-${errorGroup}`
     : `error-for-scroll`;
 
@@ -217,34 +264,37 @@ export const Notice = (props: NoticeProps) => {
   return (
     <Grid
       className={cx({
-        [classes.breakWords]: breakWords,
-        [classes.error]: variantMap.error && !notificationList,
-        [classes.errorList]: variantMap.error && notificationList,
+        [classes.error]: variantMap.error,
+        [classes.errorList]: variantMap.error,
+        [classes.flag]: flag,
         [classes.important]: important,
-        [classes.info]: variantMap.info && !notificationList,
-        [classes.infoList]: variantMap.info && notificationList,
+        [classes.info]: variantMap.info,
+        [classes.infoList]: variantMap.info,
         [classes.marketing]: variantMap.marketing,
-        [classes.marketing]: variantMap.marketing && !notificationList,
+        [classes.marketing]: variantMap.marketing,
         [classes.root]: true,
-        [classes.success]: variantMap.success && !notificationList,
-        [classes.successList]: variantMap.success && notificationList,
-        [classes.warning]: variantMap.warning && !notificationList,
-        [classes.warningList]: variantMap.warning && notificationList,
+        [classes.success]: variantMap.success,
+        [classes.successList]: variantMap.success,
+        [classes.warning]: variantMap.warning,
+        [classes.warningList]: variantMap.warning,
         [errorScrollClassName]: variantMap.error,
         notice: true,
         ...(className && { [className]: true }),
       })}
-      style={{
+      data-testid={`notice${variant ? `-${variant}` : ''}${
+        important ? '-important' : ''
+      }${flag ? '-flag' : ''}`}
+      sx={{
         marginBottom: spacingBottom !== undefined ? spacingBottom : 24,
         marginLeft: spacingLeft !== undefined ? spacingLeft : 0,
         marginTop: spacingTop !== undefined ? spacingTop : 0,
+        ...sx,
       }}
       {...dataAttributes}
       role="alert"
-      sx={sx}
     >
       {flag && (
-        <Grid>
+        <Grid data-testid="notice-with-flag-icon">
           <Flag className={classes.flag} />
         </Grid>
       )}
