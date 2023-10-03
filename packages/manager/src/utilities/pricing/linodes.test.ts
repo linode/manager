@@ -19,7 +19,7 @@ describe('getLinodeRegionPrice', () => {
     const expected = undefined;
     expect(actual).toEqual(expected);
   });
-  it('gets a linode price as unknow when type is undefined', () => {
+  it('gets a linode price as undefined when type is undefined', () => {
     const actual = getLinodeRegionPrice(undefined, 'us-east');
     const expected = undefined;
     expect(actual).toEqual(expected);
