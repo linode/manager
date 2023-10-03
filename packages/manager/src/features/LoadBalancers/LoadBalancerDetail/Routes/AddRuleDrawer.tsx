@@ -1,9 +1,8 @@
-import { RuleSchema } from '@linode/validation';
+import { HTTPRuleSchema, TCPRuleSchema } from '@linode/validation';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { getIn, useFormik, yupToFormErrors } from 'formik';
-import { merge } from 'lodash';
+import { getIn, useFormik } from 'formik';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -50,6 +49,9 @@ export const AddRuleDrawer = (props: Props) => {
 
   const ruleIndex = route?.rules.length ?? 0;
 
+  const validationSchema =
+    route?.protocol === 'tcp' ? TCPRuleSchema : HTTPRuleSchema;
+
   const {
     error,
     mutateAsync: updateRule,
@@ -58,14 +60,16 @@ export const AddRuleDrawer = (props: Props) => {
 
   const [ttlUnit, setTTLUnit] = useState<TimeUnit>('hour');
 
-
   const formik = useFormik<RulePayload>({
     enableReinitialize: true,
     initialValues,
     async onSubmit(rule) {
       try {
         const existingRules = route?.rules ?? [];
-        await updateRule({ rules: [...existingRules, rule] });
+        await updateRule({
+          protocol: route?.protocol,
+          rules: [...existingRules, rule],
+        });
         onClose();
       } catch (errors) {
         formik.setErrors(
@@ -73,27 +77,14 @@ export const AddRuleDrawer = (props: Props) => {
         );
       }
     },
-    validate(values) {
-      const apiErrorsInFormikFormat = getFormikErrorsFromAPIErrors(
-        error ?? [],
-        `rules[${ruleIndex}].`
-      );
-
-
-      try {
-        RuleSchema.validateSync(values, { abortEarly: false });
-      } catch (errors) {
-        return merge(apiErrorsInFormikFormat, yupToFormErrors(errors));
-      }
-
-      return apiErrorsInFormikFormat;
-    },
-    validateOnBlur: true,
-    validateOnChange: true,
+    // If we're showing API errors and the user makes a change,
+    // formik will clear the API errors because it re-runs the client side validation.
+    // Disabling validateOnBlur and validateOnChange when an API error is shown prevents
+    // all API errors from disappearing.
+    validateOnBlur: !error,
+    validateOnChange: !error,
+    validationSchema,
   });
-
-  // eslint-disable-next-line no-console
-  console.log(formik.errors);
 
   const onClose = () => {
     _onClose();

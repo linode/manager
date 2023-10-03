@@ -56,25 +56,26 @@ const RouteServiceTargetSchema = object({
   percentage: number()
     .min(0, 'Percent must be greater than or equal to 0.')
     .max(100, 'Percent must be less than or equal to 100.')
-    .required(),
+    .typeError('Percent is required.')
+    .required('Percent is required.'),
 });
 
-const MatchConditionSchema = object({
+const TCPMatchConditionSchema = object({
   hostname: string(),
-  match_field: string().oneOf([
-    'path_prefix',
-    'query',
-    'header',
-    'method',
-    'host',
-  ]),
-  match_value: string(),
-  session_stickiness_cookie: string().nullable(),
-  session_stickiness_ttl: number().nullable(),
 });
 
-export const RuleSchema = object({
-  match_condition: MatchConditionSchema,
+const HTTPMatchConditionSchema = TCPMatchConditionSchema.concat(
+  object({
+    match_field: string()
+      .oneOf(['path_prefix', 'query', 'header', 'method', 'host'])
+      .required('Match field is required.'),
+    match_value: string().required('Match value is required.'),
+    session_stickiness_cookie: string().nullable(),
+    session_stickiness_ttl: number().nullable(),
+  })
+);
+
+const BaseRuleSchema = object({
   service_targets: array(RouteServiceTargetSchema)
     .test(
       'sum-of-percentage',
@@ -93,8 +94,34 @@ export const RuleSchema = object({
     .required(),
 });
 
+export const HTTPRuleSchema = BaseRuleSchema.concat(
+  object({
+    match_condition: HTTPMatchConditionSchema,
+  })
+);
+
+export const TCPRuleSchema = BaseRuleSchema.concat(
+  object({
+    match_condition: TCPMatchConditionSchema,
+  })
+);
+
 export const UpdateRouteSchema = object({
   label: string(),
   protocol: string().oneOf(['tcp', 'http']),
-  rules: array(RuleSchema),
+  rules: array().when('protocol', {
+    is: 'tcp',
+    then: (o) => o.of(TCPRuleSchema),
+    otherwise: (o) => o.of(HTTPRuleSchema),
+  }),
+});
+
+export const TestUpdateRouteSchema = object({
+  label: string(),
+  protocol: string().oneOf(['tcp', 'http']),
+  rules: array().when('protocol', {
+    is: 'tcp',
+    then: (o) => o.of(TCPRuleSchema),
+    otherwise: (o) => o.of(HTTPRuleSchema),
+  }),
 });
