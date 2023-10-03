@@ -8,7 +8,7 @@ export interface DisplayPriceProps {
   decimalPlaces?: number;
   fontSize?: string;
   interval?: string;
-  price: number | string;
+  price: number | '--.--';
 }
 
 export const displayPrice = (price: number) => `$${price.toFixed(2)}`;
