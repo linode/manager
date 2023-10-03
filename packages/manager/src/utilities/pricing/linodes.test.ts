@@ -10,7 +10,7 @@ import {
 } from './linodes';
 
 describe('getLinodeRegionPrice', () => {
-  it('gets a linode price as unknow when regionId is undefined', () => {
+  it('gets a linode price as undefined when regionId is undefined', () => {
     const type = linodeTypeFactory.build({
       price: undefined,
       region_prices: [],
