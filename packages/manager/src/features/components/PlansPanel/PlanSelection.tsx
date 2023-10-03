@@ -91,7 +91,7 @@ export const PlanSelection = (props: Props) => {
     dcSpecificPricing
   );
 
-  type.subHeadings[0] = `$${price?.monthly ?? 'unknown'}/mo ($${
+  type.subHeadings[0] = `$${price?.monthly ?? '--.--'}/mo ($${
     price?.hourly ?? 'unknown'
   }/hr)`;
 
