@@ -59,7 +59,6 @@ export const getDCSpecificPrice = ({
   }
 
   if (!flags?.dcSpecificPricing) {
-    // TODO: M3-7063 (defaults)
     return basePrice.toFixed(2);
   }
 
