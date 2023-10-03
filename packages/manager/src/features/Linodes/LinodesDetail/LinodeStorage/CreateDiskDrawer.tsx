@@ -153,7 +153,7 @@ export const CreateDiskDrawer = (props: Props) => {
               formik.touched.filesystem ? formik.errors.filesystem : undefined
             }
             onChange={(_, option) =>
-              formik.setFieldValue('filesystem', option?.label)
+              formik.setFieldValue('filesystem', option.label)
             }
             value={fileSystemOptions.find(
               (option) => option.label === formik.values.filesystem
