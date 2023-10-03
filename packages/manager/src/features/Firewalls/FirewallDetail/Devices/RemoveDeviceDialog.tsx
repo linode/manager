@@ -40,26 +40,21 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const queryClient = useQueryClient();
 
   const onDelete = async () => {
-    try {
-      await mutateAsync();
+    mutateAsync().then(() => {
       enqueueSnackbar(`Successfully removed ${device?.entity.label}`, {
         variant: 'success',
       });
-    } catch {
-      enqueueSnackbar(`Failed to remove ${device?.entity.label}`, {
-        variant: 'error',
-      });
-    }
 
-    // Since the linode was removed as a device, invalidate the linode-specific firewall query
-    queryClient.invalidateQueries([
-      linodesQueryKey,
-      'linode',
-      linodeId,
-      'firewalls',
-    ]);
+      // Since the linode was removed as a device, invalidate the linode-specific firewall query
+      queryClient.invalidateQueries([
+        linodesQueryKey,
+        'linode',
+        linodeId,
+        'firewalls',
+      ]);
 
-    onClose();
+      onClose();
+    });
   };
 
   const dialogTitle = onLinodeNetworkTab

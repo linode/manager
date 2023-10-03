@@ -1,6 +1,4 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -35,8 +33,6 @@ export const AddDeviceDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const { data: firewall } = useFirewallQuery(Number(id));
   const {
     data: currentDevices,
@@ -55,27 +51,16 @@ export const AddDeviceDrawer = (props: Props) => {
   } = useAddFirewallDeviceMutation(Number(id));
   const theme = useTheme();
 
-  const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
+  const [selectedLinodeIds, setSelectedLinodeIds] = React.useState<number[]>(
+    []
+  );
 
   const handleSubmit = async () => {
     await Promise.all(
-      selectedLinodes.map((linode) =>
-        addDevice({ id: linode.id, type: 'linode' })
-          .then(() => {
-            enqueueSnackbar(`Successfully added ${linode.label}`, {
-              variant: 'success',
-            });
-          })
-          .catch((error) => {
-            enqueueSnackbar(`Failed to add ${linode.label}`, {
-              variant: 'error',
-            });
-            throw error;
-          })
-      )
+      selectedLinodeIds.map((id) => addDevice({ id, type: 'linode' }))
     );
     onClose();
-    setSelectedLinodes([]);
+    setSelectedLinodeIds([]);
   };
 
   // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
@@ -144,6 +129,9 @@ export const AddDeviceDrawer = (props: Props) => {
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
             linodeSelectGuidance ? linodeSelectGuidance : ''
           }`}
+          onSelectionChange={(linodes) =>
+            setSelectedLinodeIds(linodes.map((linode) => linode.id))
+          }
           optionsFilter={(linode) =>
             ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id)
           }
@@ -151,13 +139,12 @@ export const AddDeviceDrawer = (props: Props) => {
           loading={currentDevicesLoading}
           multiple
           noOptionsMessage="No Linodes available to add"
-          onSelectionChange={(linodes) => setSelectedLinodes(linodes)}
-          value={selectedLinodes.map((linode) => linode.id)}
+          value={selectedLinodeIds}
         />
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            disabled: selectedLinodes.length === 0,
+            disabled: selectedLinodeIds.length === 0,
             label: 'Add',
             loading: isLoading,
             onClick: handleSubmit,

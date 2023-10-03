@@ -320,7 +320,7 @@ export const LinodeConfigDialog = (props: Props) => {
       delete configData.interfaces;
     }
 
-    const handleSuccess = (isCreate: boolean) => {
+    const handleSuccess = () => {
       formik.setSubmitting(false);
       queryClient.invalidateQueries(['linode', 'configs', props.linodeId]);
       // If there's any chance a VLAN changed here, make sure our query data is up to date
@@ -331,14 +331,15 @@ export const LinodeConfigDialog = (props: Props) => {
       ) {
         queryClient.invalidateQueries('vlans');
       }
-      const actionType = isCreate ? 'created' : 'updated';
+
+      const actionType = Boolean(config) ? 'updated' : 'created';
       enqueueSnackbar(`Successfully ${actionType} ${configData.label}`, {
         variant: 'success',
       });
       onClose();
     };
 
-    const handleError = (error: APIError[], isCreate: boolean) => {
+    const handleError = (error: APIError[]) => {
       const mapErrorToStatus = (generalError: string) =>
         formik.setStatus({ generalError });
 
@@ -350,7 +351,7 @@ export const LinodeConfigDialog = (props: Props) => {
           }
         });
 
-        const actionType = isCreate ? 'create' : 'update';
+        const actionType = Boolean(config) ? 'update' : 'create';
         enqueueSnackbar(`Failed to ${actionType} ${configData.label}`, {
           variant: 'error',
         });
@@ -372,14 +373,10 @@ export const LinodeConfigDialog = (props: Props) => {
 
     /** Editing */
     if (config) {
-      return updateConfig(configData)
-        .then(() => handleSuccess(false))
-        .catch((error) => handleError(error, false));
+      return updateConfig(configData).then(handleSuccess).catch(handleError);
     }
 
-    return createConfig(configData)
-      .then(() => handleSuccess(true))
-      .catch((error) => handleError(error, true));
+    return createConfig(configData).then(handleSuccess).catch(handleError);
     /** Creating */
   };
 
