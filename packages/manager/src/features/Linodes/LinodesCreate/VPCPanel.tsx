@@ -110,10 +110,15 @@ export const VPCPanel = (props: VPCPanelProps) => {
       : accumulator;
   }, []);
 
-  vpcDropdownOptions.unshift({
-    label: 'None',
-    value: -1,
-  });
+  const fromLinodeCreate = from === 'linodeCreate';
+  const fromLinodeConfig = from === 'linodeConfig';
+
+  if (fromLinodeCreate) {
+    vpcDropdownOptions.unshift({
+      label: 'None',
+      value: -1,
+    });
+  }
 
   const subnetDropdownOptions: Item[] =
     vpcs
@@ -126,9 +131,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
   const vpcError = error
     ? getAPIErrorOrDefault(error, 'Unable to load VPCs')[0].reason
     : undefined;
-
-  const fromLinodeCreate = from === 'linodeCreate';
-  const fromLinodeConfig = from === 'linodeConfig';
 
   const getMainCopyVPC = () => {
     if (fromLinodeConfig) {
@@ -182,7 +184,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
           value={vpcDropdownOptions.find(
             (option) => option.value === selectedVPCId
           )}
-          defaultValue={vpcDropdownOptions[0]}
+          defaultValue={fromLinodeConfig ? null : vpcDropdownOptions[0]} // If we're in the Config dialog, there is no "None" option at index 0
           disabled={!regionSupportsVPCs}
           errorText={vpcIdError ?? vpcError}
           isClearable={false}
@@ -190,7 +192,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
           label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
           noOptionsMessage={() => 'Create a VPC to assign to this Linode.'}
           options={vpcDropdownOptions}
-          placeholder={''}
+          placeholder={'Select a VPC'}
         />
         {vpcDropdownOptions.length <= 1 && regionSupportsVPCs && (
           <Typography sx={(theme) => ({ paddingTop: theme.spacing(1.5) })}>
