@@ -26,7 +26,7 @@ export interface BarPercentProps {
 /**
  * Determinate indicator that displays how long a process will take.
  */
-export const BarPercent = (props: BarPercentProps) => {
+export const BarPercent = React.memo((props: BarPercentProps) => {
   const {
     className,
     isFetchingValue,
@@ -39,7 +39,7 @@ export const BarPercent = (props: BarPercentProps) => {
   } = props;
 
   return (
-    <StyledDiv className={`${className}`}>
+    <StyledDiv className={className}>
       <StyledLinearProgress
         variant={
           isFetchingValue
@@ -56,9 +56,7 @@ export const BarPercent = (props: BarPercentProps) => {
       />
     </StyledDiv>
   );
-};
-
-export default React.memo(BarPercent);
+});
 
 export const getPercentage = (value: number, max: number) =>
   (value / max) * 100;
@@ -71,7 +69,7 @@ const StyledDiv = styled('div')({
 
 const StyledLinearProgress = styled(LinearProgress, {
   label: 'StyledLinearProgress',
-  shouldForwardProp: (prop) => isPropValid(['rounded'], prop),
+  shouldForwardProp: (prop) => isPropValid(['rounded', 'narrow'], prop),
 })<Partial<BarPercentProps>>(({ theme, ...props }) => ({
   '& .MuiLinearProgress-bar2Buffer': {
     backgroundColor: '#5ad865',

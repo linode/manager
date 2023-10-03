@@ -213,7 +213,7 @@ all new Linodes will automatically be backed up.`
           }}
           style={{ margin: 0, padding: 0 }}
         />
-        <Table>
+        <Table aria-label="List of Linodes without backups">
           <TableHead>
             <TableRow>
               <TableCell>Label</TableCell>

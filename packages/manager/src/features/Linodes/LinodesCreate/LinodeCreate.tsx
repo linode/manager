@@ -19,6 +19,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
@@ -26,6 +27,10 @@ import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Typography } from 'src/components/Typography';
+import {
+  WithAccountProps,
+  withAccount,
+} from 'src/containers/account.container';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
 import { WithTypesProps } from 'src/containers/types.container';
@@ -59,6 +64,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { SelectFirewallPanel } from '../../../components/SelectFirewallPanel/SelectFirewallPanel';
 import { AddonsPanel } from './AddonsPanel';
 import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
@@ -75,6 +81,7 @@ import { FromImageContent } from './TabbedContent/FromImageContent';
 import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
 import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
+import { VPCPanel } from './VPCPanel';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -91,24 +98,35 @@ import {
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
 
 export interface LinodeCreateProps {
+  assignPublicIPv4Address: boolean;
+  autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
+  firewallId: number | undefined;
   handleAgreementChange: () => void;
+  handleFirewallChange: (firewallId: number) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
+  handleSubnetChange: (subnetId: number) => void;
   handleVLANChange: (updatedInterface: InterfacePayload) => void;
+  handleVPCIPv4Change: (IPv4: string) => void;
   history: any;
   imageDisplayInfo: Info;
   ipamAddress: null | string;
   label: string;
   regionDisplayInfo: Info;
   resetCreationState: () => void;
+  selectedSubnetId?: number;
+  selectedVPCId?: number;
   setAuthorizedUsers: (usernames: string[]) => void;
   setBackupID: (id: number) => void;
+  setSelectedVPC: (vpcID: number) => void;
   showAgreement: boolean;
   showApiAwarenessModal: boolean;
   showGeneralError?: boolean;
   signedAgreement: boolean;
+  toggleAssignPublicIPv4Address: () => void;
+  toggleAutoassignIPv4WithinVPCEnabled: () => void;
   toggleBackupsEnabled: () => void;
   togglePrivateIPEnabled: () => void;
   typeDisplayInfo: TypeInfo;
@@ -120,6 +138,7 @@ export interface LinodeCreateProps {
   updateUserData: (userData: string) => void;
   userData: string | undefined;
   vlanLabel: null | string;
+  vpcIPv4AddressOfLinode: string | undefined;
 }
 
 const errorMap = [
@@ -133,6 +152,8 @@ const errorMap = [
   'type',
   'interfaces[1].label',
   'interfaces[1].ipam_address',
+  'interfaces[0].subnet_id',
+  'ipv4.vpc',
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -140,17 +161,18 @@ type InnerProps = WithTypesRegionsAndImages &
   StackScriptFormStateHandlers &
   LinodeCreateProps;
 
-type CombinedProps = InnerProps &
-  AllFormStateAndHandlers &
+type CombinedProps = AllFormStateAndHandlers &
   AppsData &
-  ReduxStateProps &
-  WithDisplayData &
+  FeatureFlagConsumerProps &
   ImagesProps &
-  WithLinodesProps &
+  InnerProps &
+  ReduxStateProps &
   RegionsProps &
-  WithTypesProps &
   RouteComponentProps<{}> &
-  FeatureFlagConsumerProps;
+  WithAccountProps &
+  WithDisplayData &
+  WithLinodesProps &
+  WithTypesProps;
 
 interface State {
   numberOfNodes: number;
@@ -220,6 +242,7 @@ export class LinodeCreate extends React.PureComponent<
     const {
       accountBackupsEnabled,
       errors,
+      flags,
       formIsSubmitting,
       handleAgreementChange,
       handleShowApiAwarenessModal,
@@ -253,7 +276,6 @@ export class LinodeCreate extends React.PureComponent<
     } = this.props;
 
     const hasErrorFor = getErrorMap(errorMap, errors);
-
     const generalError = getErrorMap(errorMap, errors).none;
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
@@ -339,6 +361,21 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
+    if (
+      this.props.selectedVPCId !== undefined &&
+      this.props.selectedVPCId !== -1
+    ) {
+      displaySections.push({
+        title: 'VPC Assigned',
+      });
+    }
+
+    if (this.props.firewallId !== undefined && this.props.firewallId !== -1) {
+      displaySections.push({
+        title: 'Firewall Assigned',
+      });
+    }
+
     const selectedLinode = this.props.linodesData?.find(
       (image) => image.id === this.props.selectedLinodeID
     );
@@ -406,6 +443,7 @@ export class LinodeCreate extends React.PureComponent<
                   // error={hasErrorFor.image}
                   accountBackupsEnabled={accountBackupsEnabled}
                   errors={errors}
+                  flags={flags}
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
@@ -559,6 +597,37 @@ export class LinodeCreate extends React.PureComponent<
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
+          <VPCPanel
+            toggleAssignPublicIPv4Address={
+              this.props.toggleAssignPublicIPv4Address
+            }
+            toggleAutoassignIPv4WithinVPCEnabled={
+              this.props.toggleAutoassignIPv4WithinVPCEnabled
+            }
+            assignPublicIPv4Address={this.props.assignPublicIPv4Address}
+            autoassignIPv4WithinVPC={this.props.autoassignIPv4WithinVPC}
+            handleSelectVPC={this.props.setSelectedVPC}
+            handleSubnetChange={this.props.handleSubnetChange}
+            handleVPCIPv4Change={this.props.handleVPCIPv4Change}
+            region={this.props.selectedRegionID}
+            selectedSubnetId={this.props.selectedSubnetId}
+            selectedVPCId={this.props.selectedVPCId}
+            subnetError={hasErrorFor['interfaces[0].subnet_id']}
+            vpcIPv4AddressOfLinode={this.props.vpcIPv4AddressOfLinode}
+            vpcIPv4Error={hasErrorFor['ipv4.vpc']}
+          />
+          {this.props.flags.linodeCreateWithFirewall && (
+            <SelectFirewallPanel
+              helperText={
+                <Typography>
+                  Assign an existing Firewall to this Linode to control inbound
+                  and outbound network traffic. <Link to="">Learn more</Link>.
+                </Typography>
+                // @TODO VPC: Update "Learn More" link
+              }
+              handleFirewallChange={this.props.handleFirewallChange}
+            />
+          )}
           <AddonsPanel
             userData={{
               createType: this.props.createType,
@@ -669,16 +738,29 @@ export class LinodeCreate extends React.PureComponent<
 
   getPayload = () => {
     const selectedRegion = this.props.selectedRegionID || '';
+
     const regionSupportsVLANs = doesRegionSupportFeature(
       selectedRegion,
       this.props.regionsData,
       'Vlans'
     );
+
+    const regionSupportsVPCs = doesRegionSupportFeature(
+      this.props.selectedRegionID ?? '',
+      this.props.regionsData,
+      'VPCs'
+    );
+
+    // eslint-disable-next-line sonarjs/no-unused-collection
+    const interfaces: InterfacePayload[] = [];
+
     const payload = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,
       booted: true,
+      firewall_id:
+        this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
       private_ip: this.props.privateIPEnabled,
@@ -695,27 +777,57 @@ export class LinodeCreate extends React.PureComponent<
     };
 
     if (
+      regionSupportsVPCs &&
+      this.props.selectedVPCId !== undefined &&
+      this.props.selectedVPCId !== -1
+    ) {
+      const vpcInterfaceData: InterfacePayload = {
+        ipam_address: null,
+        ipv4: {
+          nat_1_1: this.props.assignPublicIPv4Address ? 'any' : undefined,
+          vpc: this.props.autoassignIPv4WithinVPC
+            ? undefined
+            : this.props.vpcIPv4AddressOfLinode,
+        },
+        label: null,
+        primary: true,
+        purpose: 'vpc',
+        subnet_id: this.props.selectedSubnetId,
+        vpc_id: this.props.selectedVPCId,
+      };
+
+      interfaces.push(vpcInterfaceData);
+    }
+
+    if (
       regionSupportsVLANs &&
       this.props.selectedImageID &&
-      this.props.vlanLabel
+      Boolean(this.props.vlanLabel)
     ) {
-      // Only submit interfaces in the payload if the region supports VLANs
-      // and an image and VLAN have been selected.
-      const interfaces = [defaultPublicInterface];
-      if (Boolean(this.props.vlanLabel)) {
-        interfaces.push({
-          ipam_address: this.props.ipamAddress,
-          label: this.props.vlanLabel,
-          purpose: 'vlan',
-        });
+      // The region must support VLANs and an image and VLAN
+      // must be selected
+      interfaces.push({
+        ipam_address: this.props.ipamAddress,
+        label: this.props.vlanLabel,
+        purpose: 'vlan',
+      });
+
+      // If there are no VPC interfaces, insert a default public interface in interfaces[0]
+      if (!interfaces.some((_interface) => _interface.purpose === 'vpc')) {
+        interfaces.unshift(defaultPublicInterface);
       }
-      payload['interfaces'] = interfaces;
     }
 
     if (this.props.userData) {
       payload['metadata'] = {
         user_data: utoa(this.props.userData),
       };
+    }
+
+    // Only submit 'interfaces' in the payload if there are VPCs
+    // or VLANs
+    if (interfaces.length > 0) {
+      payload['interfaces'] = interfaces;
     }
 
     return payload;
@@ -832,6 +944,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, InnerProps>(connected);
+const enhanced = recompose<CombinedProps, InnerProps>(connected, withAccount);
 
 export default enhanced(LinodeCreate);

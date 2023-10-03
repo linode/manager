@@ -1,6 +1,4 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { Region } from '@linode/api-v4/lib/regions';
+import { decode } from 'he';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -9,6 +7,8 @@ import { displayType } from 'src/features/Linodes/presentation';
 import { ExtendedType } from 'src/utilities/extendType';
 
 import { ExtendedLinode } from './types';
+
+import type { Image, Linode, Region, StackScript } from '@linode/api-v4/lib';
 
 /**
  * adds a heading and subheading key to the Linode
@@ -121,4 +121,69 @@ export const regionSupportsMetadata = (
       .find((regionData) => regionData.id === region)
       ?.capabilities.includes('Metadata') ?? false
   );
+};
+
+/**
+ * This function is used to remove the "One-Click" text from the label of an OCA StackScript.
+ * @param stackScript
+ * @returns StackScript
+ */
+export const trimOneClickFromLabel = (stackScript: StackScript) => {
+  return {
+    ...stackScript,
+    label: stackScript.label.replace('One-Click', ''),
+  };
+};
+
+interface FilteredOCAs {
+  baseApps: Record<string, string>;
+  newApps: Record<string, string> | never[];
+  queryResults: StackScript[];
+}
+
+/**
+ * This function is used to filter StackScripts OCAs.
+ * @param baseApps // The base apps that are always displayed (static)
+ * @param newApps // The new apps defined in the OneClickApps feature flag
+ * @param queryResults // The results of the query for StackScripts
+ * @returns an array of OCA StackScripts
+ */
+export const filterOneClickApps = ({
+  baseApps,
+  newApps,
+  queryResults,
+}: FilteredOCAs) => {
+  const allowedApps = Object.keys({ ...baseApps, ...newApps });
+  // Don't display One-Click Helpers to the user
+  // Filter out any apps that we don't have info for
+  const filteredApps: StackScript[] = queryResults.filter(
+    (app: StackScript) => {
+      return (
+        !app.label.match(/helpers/i) && allowedApps.includes(String(app.id))
+      );
+    }
+  );
+  return filteredApps.map((app) => trimOneClickFromLabel(app));
+};
+
+/**
+ * This function is used to
+ * - decode the label of a StackScript
+ * - remove the "Cluster" text from the label of a StackScript since it'll turn into a chip.
+ * @param app // The StackScript
+ * @returns the decoded label of the StackScript
+ */
+export const handleAppLabel = (app: StackScript) => {
+  const decodedLabel = decode(app.label);
+  const isCluster =
+    decodedLabel.endsWith('Cluster ') &&
+    app.user_defined_fields.some((field) => field.name === 'cluster_size');
+
+  const label = isCluster ? decodedLabel.split(' Cluster')[0] : decodedLabel;
+
+  return {
+    decodedLabel,
+    isCluster,
+    label,
+  };
 };
