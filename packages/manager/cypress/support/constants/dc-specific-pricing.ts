@@ -1,8 +1,9 @@
 /**
- * @file Constants related to tiered pricing.
+ * @file Constants related to DC-specific pricing.
  */
 
 import { linodeTypeFactory } from '@src/factories';
+import { LkePlanDescription } from 'support/api/lke';
 
 /** Notice shown to users when selecting a region. */
 export const dcPricingRegionNotice = /Prices for plans, products, and services in .* may vary from other regions\./;
@@ -14,6 +15,13 @@ export const dcPricingRegionDifferenceNotice =
 /** Notice shown to users trying to choose a plan before selecting a region. */
 export const dcPricingPlanPlaceholder =
   'Select a region to view plans and prices.';
+
+/** Helper text shown to users users trying to create an LKE cluster before selecting both a region and plan. */
+export const dcPricingLkeCheckoutSummaryPlaceholder =
+  'Select a region, HA choice, and add a Node Pool to view pricing and create a cluster.';
+
+export const dcPricingLkeHAPlaceholder =
+  'Select a region to view price information.';
 
 /** DC-specific pricing docs link label. */
 export const dcPricingDocsLabel = 'How Data Center Pricing Works';
@@ -29,6 +37,26 @@ export const dcPricingNewPriceLabel = 'New Price';
 
 /** DC-specific pricing Linode type mocks. */
 export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
+  addons: {
+    backups: {
+      price: {
+        hourly: 0.004,
+        monthly: 2.5,
+      },
+      region_prices: [
+        {
+          hourly: 0.0048,
+          id: 'us-east',
+          monthly: 3.57,
+        },
+        {
+          hourly: 0.0056,
+          id: 'us-west',
+          monthly: 4.17,
+        },
+      ],
+    },
+  },
   region_prices: [
     {
       hourly: 0.021,
@@ -46,3 +74,17 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
     },
   ],
 });
+
+/**
+ * Subset of LKE cluster plans as shown on Cloud Manager, mapped from DC-specific pricing mock linode
+ * types to ensure size is consistent with ids in the types factory.
+ */
+export const dcPricingLkeClusterPlans: LkePlanDescription[] = dcPricingMockLinodeTypes.map(
+  (type) => {
+    return {
+      size: type.id.split('-')[2],
+      tab: 'Shared CPU',
+      type: 'Linode',
+    };
+  }
+);

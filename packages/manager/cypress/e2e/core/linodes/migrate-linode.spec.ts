@@ -161,28 +161,26 @@ describe('Migrate linodes', () => {
     const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
       (regionPrice) => regionPrice.id === initialRegion.id
     );
+    const currentBackupPrice = dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
+      (regionPrice) => regionPrice.id === initialRegion.id
+    );
     cy.get('[data-testid="current-price-panel"]').within(() => {
       cy.findByText(`$${currentPrice.monthly.toFixed(2)}`).should('be.visible');
       cy.findByText(`$${currentPrice.hourly}`).should('be.visible');
-      cy.findByText(
-        `$${dcPricingMockLinodeTypes[0].addons.backups.price.monthly.toFixed(
-          2
-        )}`
-      ).should('be.visible');
+      cy.findByText(`$${currentBackupPrice.monthly}`).should('be.visible');
     });
 
     cy.findByText(dcPricingNewPriceLabel).should('be.visible');
     const newPrice = dcPricingMockLinodeTypes[1].region_prices.find(
       (linodeType) => linodeType.id === newRegion.id
     );
+    const newBackupPrice = dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
+      (regionPrice) => regionPrice.id === newRegion.id
+    );
     cy.get('[data-testid="new-price-panel"]').within(() => {
       cy.findByText(`$${newPrice.monthly.toFixed(2)}`).should('be.visible');
       cy.findByText(`$${newPrice.hourly}`).should('be.visible');
-      cy.findByText(
-        `$${dcPricingMockLinodeTypes[1].addons.backups.price.monthly.toFixed(
-          2
-        )}`
-      ).should('be.visible');
+      cy.findByText(`$${newBackupPrice.monthly}`).should('be.visible');
     });
 
     // intercept migration request and stub it, respond with 200

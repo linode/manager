@@ -34,7 +34,9 @@ describe('VPC Subnets table', () => {
       getByPlaceholderText,
       getByTestId,
       getByText,
-    } = renderWithTheme(<VPCSubnetsTable vpcId={1} />, { queryClient });
+    } = renderWithTheme(<VPCSubnetsTable vpcId={1} vpcRegion="" />, {
+      queryClient,
+    });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -53,8 +55,8 @@ describe('VPC Subnets table', () => {
     const actionMenuButton = getAllByRole('button')[4];
     fireEvent.click(actionMenuButton);
 
-    getByText('Assign Linode');
-    getByText('Unassign Linode');
+    getByText('Assign Linodes');
+    getByText('Unassign Linodes');
     getByText('Edit');
     getByText('Delete');
   });
@@ -68,7 +70,7 @@ describe('VPC Subnets table', () => {
     );
 
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
-      <VPCSubnetsTable vpcId={2} />
+      <VPCSubnetsTable vpcId={2} vpcRegion="" />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -86,7 +88,7 @@ describe('VPC Subnets table', () => {
       })
     );
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
-      <VPCSubnetsTable vpcId={3} />
+      <VPCSubnetsTable vpcId={3} vpcRegion="" />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
