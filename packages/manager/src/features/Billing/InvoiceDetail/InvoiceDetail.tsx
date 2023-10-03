@@ -176,6 +176,7 @@ export const InvoiceDetail = () => {
                     data={items}
                     filename={`invoice-${invoice.date}.csv`}
                     headers={csvHeaders}
+                    onClick={() => csvRef.current.link.click()}
                     sx={{ ...sxDownloadButton, marginRight: '8px' }}
                   />
                   <Button
