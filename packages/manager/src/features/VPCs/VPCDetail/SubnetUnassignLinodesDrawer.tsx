@@ -283,7 +283,11 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         {unassignLinodesErrors.length > 0 && (
           <Notice text={unassignLinodesErrors[0].reason} variant="error" />
         )}
-        <Notice text={SUBNET_UNASSIGN_LINODES_WARNING} variant="warning" />
+        <Notice
+          spacingBottom={selectedLinode ? 0 : 16}
+          text={SUBNET_UNASSIGN_LINODES_WARNING}
+          variant="warning"
+        />
         {!selectedLinode && (
           <Typography>
             Select the Linodes you would like to unassign from this subnet. Only
@@ -307,6 +311,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             )}
             <RemovableSelectionsList
               headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
+              isRemovable={selectedLinode ? false : true}
               noDataText={'Select Linodes to be Unassigned from Subnet.'}
               onRemove={handleRemoveLinode}
               selectionData={selectedLinodes}
