@@ -1,9 +1,8 @@
 import { Hidden } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   DragDropContext,
   Draggable,
@@ -11,24 +10,24 @@ import {
   Droppable,
 } from 'react-beautiful-dnd';
 
-import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import { ActionMenu } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Tooltip } from 'src/components/Tooltip';
-import { RuleStatus } from 'src/features/Firewalls/FirewallDetail/Rules/firewallRuleEditor';
-import { isPropValid } from 'src/utilities/isPropValid';
+
+import {
+  StyledDragIndicator,
+  StyledInnerBox,
+  StyledRuleBox,
+  StyledUl,
+  sxBox,
+  sxItemSpacing,
+} from './RulesTable.styles';
 
 import type { MatchField, Route } from '@linode/api-v4';
 
 interface Props {
   rules: Route['rules'];
-}
-
-interface StyledRuleBoxProps {
-  originalIndex: number;
-  ruleId: number;
-  status: RuleStatus;
 }
 
 const matchFieldMap: Record<MatchField, string> = {
@@ -39,74 +38,32 @@ const matchFieldMap: Record<MatchField, string> = {
   query: 'Query String',
 };
 
-export const StyledDragIndicator = styled(DragIndicator, {
-  label: 'StyledDragIndicator',
-})(({ theme }) => ({
-  color: theme.color.grey8,
-  marginRight: theme.spacing(1.5),
-  position: 'relative',
-  top: 2,
-}));
-
-export const StyledUl = styled('ul', { label: 'StyledUl' })(({ theme }) => ({
-  backgroundColor: theme.color.border3,
-  listStyle: 'none',
-  margin: 0,
-  paddingLeft: 0,
-  width: '100%',
-}));
-
-export const sxBox = {
-  alignItems: 'center',
-  display: 'flex',
-  width: '100%',
-};
-
-export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
-  ({ theme }) => ({
-    backgroundColor: theme.bg.tableHeader,
-    color: theme.textColors.tableHeader,
-    fontSize: '.875rem',
-    fontWeight: 'bold',
-    height: '46px',
-  })
-);
-
-export const StyledRuleBox = styled(Box, {
-  label: 'StyledRuleBox',
-  shouldForwardProp: (prop) => isPropValid(['originalIndex', 'ruleId'], prop),
-})<StyledRuleBoxProps>(({ originalIndex, ruleId, status, theme }) => ({
-  borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-  color: theme.textColors.tableStatic,
-  fontSize: '0.875rem',
-  margin: 0,
-  ...sxBox,
-
-  // Conditional styles
-  // Highlight the row if it's been modified or reordered. ID is the current index,
-  // so if it doesn't match the original index we know that the rule has been moved.
-  ...(status === 'PENDING_DELETION'
-    ? {
-        '& td': { color: '#D2D3D4' },
-        backgroundColor: 'rgba(247, 247, 247, 0.25)',
-      }
-    : {}),
-  ...(status === 'MODIFIED' || status === 'NEW' || originalIndex !== ruleId
-    ? { backgroundColor: theme.bg.lightBlue1 }
-    : {}),
-  ...(status === 'NOT_MODIFIED' ? { backgroundColor: theme.bg.bgPaper } : {}),
-}));
-
-export const sxItemSpacing = {
-  padding: `0 8px`,
-};
-
 export const RulesTable = ({ rules }: Props) => {
   const theme: Theme = useTheme();
 
+  const [ruelsState, setRulesState] = useState(
+    rules.map((rule, index) => {
+      return {
+        id: index,
+        originalIndex: index,
+        ...rule,
+      };
+    })
+  );
+
   const onDragEnd = (result: DropResult) => {
+    if (
+      !result.destination ||
+      result.destination.index === result.source.index
+    ) {
+      return;
+    }
+
     if (result.destination) {
-      // triggerReorder(result.source.index, result.destination?.index);
+      const reorderedRules = ruelsState;
+      const [removed] = reorderedRules.splice(result.source.index, 1);
+      reorderedRules.splice(result.destination!.index, 0, removed);
+      setRulesState(reorderedRules);
     }
   };
 
@@ -153,16 +110,19 @@ export const RulesTable = ({ rules }: Props) => {
           <Droppable droppableId="droppable">
             {(provided) => (
               <StyledUl ref={provided.innerRef} {...provided.droppableProps}>
-                {rules.length > 0 ? (
-                  rules.map((rule, index) => (
+                {ruelsState.length > 0 ? (
+                  ruelsState.map((rule, index) => (
                     <Draggable
-                      draggableId={String(rule.match_condition.hostname)}
+                      draggableId={String(rule.match_condition.match_value)}
                       index={index}
                       key={rule.match_condition.hostname}
                     >
                       {(provided) => (
                         <li
-                          // aria-label={rule.label ?? `firewall rule ${thisRuleRow.id}`}
+                          aria-label={
+                            rule.match_condition.hostname ??
+                            `Rule ${rule.match_condition.hostname}`
+                          }
                           // aria-roledescription={screenReaderMessage}
                           aria-selected={false}
                           key={rule.match_condition.hostname}
@@ -172,20 +132,24 @@ export const RulesTable = ({ rules }: Props) => {
                           {...provided.dragHandleProps}
                         >
                           <StyledRuleBox
-                            // aria-label={label ?? `firewall rule ${id}`}
+                            aria-label={`Rule ${rule.match_condition.hostname}`}
                             key={index}
-                            originalIndex={0}
-                            ruleId={index}
-                            status={'NOT_MODIFIED'}
+                            sx={{ backgroundColor: theme.bg.bgPaper }}
                           >
                             <Box
+                              aria-label={`Label: ${
+                                index === 0
+                                  ? 'First'
+                                  : index === rules.length - 1
+                                  ? 'Last'
+                                  : null
+                              }`}
                               sx={{
                                 ...sxItemSpacing,
                                 overflowWrap: 'break-word',
                                 paddingLeft: '8px',
                                 width: xsDown ? '50%' : '15%',
                               }}
-                              // aria-label={`Label: ${label}`}
                             >
                               <StyledDragIndicator aria-label="Drag indicator icon" />
                               {index === 0
@@ -296,8 +260,9 @@ export const RulesTable = ({ rules }: Props) => {
                     </Draggable>
                   ))
                 ) : (
-                  <TableRowEmpty colSpan={5} message={'No Linodes'} />
+                  <TableRowEmpty colSpan={5} message={'No Rules'} />
                 )}
+                {provided.placeholder}
               </StyledUl>
             )}
           </Droppable>

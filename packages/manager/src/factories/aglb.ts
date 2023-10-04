@@ -182,7 +182,7 @@ export const routeFactory = Factory.Sync.makeFactory<Route>({
       match_condition: {
         hostname: 'www.acme.com',
         match_field: 'path_prefix',
-        match_value: '/images/*',
+        match_value: '/A/*',
         service_targets: [
           {
             id: 1,
@@ -198,7 +198,7 @@ export const routeFactory = Factory.Sync.makeFactory<Route>({
       match_condition: {
         hostname: 'www.acdme.com',
         match_field: 'path_prefix',
-        match_value: '/images/*',
+        match_value: '/B/*',
         service_targets: [
           {
             id: 1,
@@ -214,7 +214,7 @@ export const routeFactory = Factory.Sync.makeFactory<Route>({
       match_condition: {
         hostname: 'www.acadfme.com',
         match_field: 'path_prefix',
-        match_value: '/images/*',
+        match_value: '/C/*',
         service_targets: [
           {
             id: 1,
@@ -230,7 +230,7 @@ export const routeFactory = Factory.Sync.makeFactory<Route>({
       match_condition: {
         hostname: 'www.acefasgeme.com',
         match_field: 'path_prefix',
-        match_value: '/images/*',
+        match_value: '/D/*',
         service_targets: [
           {
             id: 1,
