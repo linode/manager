@@ -24,12 +24,11 @@ export const DeleteConfigDialog = (props: Props) => {
   );
 
   const onDelete = async () => {
-    mutateAsync().then(() => {
-      enqueueSnackbar(`Successfully deleted ${config?.label}`, {
-        variant: 'success',
-      });
-      onClose();
+    await mutateAsync();
+    enqueueSnackbar(`Successfully deleted ${config?.label}`, {
+      variant: 'success',
     });
+    onClose();
   };
 
   const actions = (
