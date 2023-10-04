@@ -151,6 +151,10 @@ const VPCCreate = () => {
         visualToAPISubnetMapping
       );
       setFieldValue('subnets', subnetsAndErrors);
+
+      if (errors || generalAPIError || generalSubnetErrorsFromAPI) {
+        scrollErrorIntoView();
+      }
     }
 
     setSubmitting(false);
@@ -192,12 +196,6 @@ const VPCCreate = () => {
       setFieldError(field, undefined);
     }
   };
-
-  React.useEffect(() => {
-    if (errors || generalAPIError || generalSubnetErrorsFromAPI) {
-      scrollErrorIntoView(undefined, { behavior: 'smooth' });
-    }
-  }, [errors, generalAPIError, generalSubnetErrorsFromAPI]);
 
   return (
     <>
