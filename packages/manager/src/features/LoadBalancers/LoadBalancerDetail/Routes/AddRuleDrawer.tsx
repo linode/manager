@@ -449,7 +449,7 @@ export const AddRuleDrawer = (props: Props) => {
                         disableClearable
                         label="test"
                         options={timeUnitOptions}
-                        sx={{ marginTop: '45px !important' }}
+                        sx={{ marginTop: '45px !important', minWidth: '140px' }}
                         textFieldProps={{ hideLabel: true }}
                       />
                     </Stack>

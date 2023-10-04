@@ -14,7 +14,7 @@ export const certificateConfigSchema = object({
   certificates: array(
     object({
       id: number()
-        .typeError('Certificate ID is required.')
+        .typeError('Certificate ID must be a number.')
         .required('Certificate ID is required.')
         .min(0, 'Certificate ID is required.'),
       hostname: string().required('A Host Header is required.'),
@@ -56,7 +56,7 @@ const RouteServiceTargetSchema = object({
   percentage: number()
     .min(0, 'Percent must be greater than or equal to 0.')
     .max(100, 'Percent must be less than or equal to 100.')
-    .typeError('Percent is required.')
+    .typeError('Percent must be a number.')
     .required('Percent is required.'),
 });
 
@@ -71,7 +71,9 @@ const HTTPMatchConditionSchema = TCPMatchConditionSchema.concat(
       .required('Match field is required.'),
     match_value: string().required('Match value is required.'),
     session_stickiness_cookie: string().nullable(),
-    session_stickiness_ttl: number().nullable(),
+    session_stickiness_ttl: number()
+      .typeError('TTL must be a number.')
+      .nullable(),
   })
 );
 
