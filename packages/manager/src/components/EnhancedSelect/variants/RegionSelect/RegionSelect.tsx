@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-objects */
 import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 
@@ -8,10 +9,14 @@ import Select, {
 } from 'src/components/EnhancedSelect/Select';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { Flag } from 'src/components/Flag';
+import { useFlags } from 'src/hooks/useFlags';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
+import { disabledRegions } from './DisabledRegions';
 import { RegionItem, RegionOption } from './RegionOption';
 import { ContinentNames, Country } from './utils';
+
+import type { FlagSet } from 'src/featureFlags';
 
 interface Props<IsClearable extends boolean>
   extends Omit<
@@ -33,7 +38,7 @@ export const selectStyles = {
 
 type RegionGroup = 'Other' | ContinentNames;
 
-export const getRegionOptions = (regions: Region[]) => {
+export const getRegionOptions = (regions: Region[], flags: FlagSet) => {
   // Note: Do not re-order this list even though ESLint is complaining.
   const groups: Record<RegionGroup, RegionItem[]> = {
     'North America': [],
@@ -46,11 +51,29 @@ export const getRegionOptions = (regions: Region[]) => {
     Other: [],
   };
 
-  for (const region of regions) {
+  const hasUserAccessToDisabledRegions = disabledRegions.some((thisRegion) =>
+    regions.some((region) => region.id === thisRegion.regionId)
+  );
+  const allRegions = [
+    ...regions,
+    ...disabledRegions
+      .filter((disabledRegion) => flags[disabledRegion.featureFlag] === true)
+      .map((region) => region.fakeRegion)
+      .filter(
+        (fakeRegion) => !regions.some((region) => region.id === fakeRegion.id)
+      ),
+  ];
+
+  for (const region of allRegions) {
     const group = getRegionCountryGroup(region);
 
     groups[group].push({
       country: region.country,
+      disabledMessage: hasUserAccessToDisabledRegions
+        ? undefined
+        : disabledRegions.find(
+            (disabledRegion) => disabledRegion.regionId === region.id
+          )?.disabledMessage,
       flag: <Flag country={region.country as Lowercase<Country>} />,
       label: `${region.label} (${region.id})`,
       value: region.id,
@@ -108,6 +131,7 @@ export const RegionSelect = React.memo(
       ...restOfReactSelectProps
     } = props;
 
+    const flags = useFlags();
     const onChange = React.useCallback(
       (selection: RegionItem | null) => {
         if (selection === null) {
@@ -124,7 +148,10 @@ export const RegionSelect = React.memo(
       [handleSelection]
     );
 
-    const options = React.useMemo(() => getRegionOptions(regions), [regions]);
+    const options = React.useMemo(() => getRegionOptions(regions, flags), [
+      flags,
+      regions,
+    ]);
 
     return (
       <div style={{ width }}>
