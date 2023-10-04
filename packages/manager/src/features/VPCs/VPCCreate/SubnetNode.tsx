@@ -69,11 +69,13 @@ export const SubnetNode = (props: Props) => {
             value={subnet.label}
           />
         </Grid>
-        <Grid xs={1}>
-          <StyledButton onClick={removeSubnet}>
-            <Close data-testid={`delete-subnet-${idx}`} />
-          </StyledButton>
-        </Grid>
+        {isRemovable && (
+          <Grid xs={1}>
+            <StyledButton onClick={removeSubnet}>
+              <Close data-testid={`delete-subnet-${idx}`} />
+            </StyledButton>
+          </Grid>
+        )}
       </Grid>
       <Grid xs={isRemovable ? 11 : 12}>
         <TextField
