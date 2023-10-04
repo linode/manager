@@ -22,7 +22,7 @@ export const baseApps = {
   '401697': 'WordPress - Latest One-Click',
   '401698': 'Drupal - Latest One-Click',
   '401699': 'Ark - Latest One-Click',
-  '401700': 'CS:GO - Latest One-Click',
+  // '401700': 'CS:GO - Latest One-Click',
   '401701': 'LAMP One-Click',
   '401702': 'MERN One-Click',
   '401703': 'Rust - Latest One-Click',
