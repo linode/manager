@@ -687,7 +687,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * will be displayed, even if other required fields are missing.
      */
 
-    if (payload.root_pass !== undefined) {
+    if (payload.root_pass) {
       const passwordError = validatePassword(payload.root_pass);
       if (passwordError) {
         this.setState(
