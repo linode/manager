@@ -13,12 +13,16 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+// Cypress command and assertion setup.
 import chaiString from 'chai-string';
+import '@testing-library/cypress/add-commands';
+import 'cypress-axe';
 import 'cypress-real-events/support';
-
-// chai is a global exposed by Cypress which means
-// we can just simply extend it
+import './setup/login-command';
+import './setup/defer-command';
 chai.use(chaiString);
 
-import './commands';
-import './request-tracking';
+// Test setup.
+import { trackApiRequests } from './setup/request-tracking';
+
+trackApiRequests();
