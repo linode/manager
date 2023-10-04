@@ -1,5 +1,5 @@
 import { Subnet } from '@linode/api-v4/lib/vpcs/types';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -284,19 +284,27 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           <Notice text={unassignLinodesErrors[0].reason} variant="error" />
         )}
         <Notice text={SUBNET_UNASSIGN_LINODES_WARNING} variant="warning" />
+        {!selectedLinode && (
+          <Typography>
+            Select the Linodes you would like to unassign from this subnet. Only
+            Linodes in this VPC&rsquo;s region are displayed.
+          </Typography>
+        )}
         <form onSubmit={handleSubmit}>
           <Stack>
-            <Autocomplete
-              disabled={userCannotUnassignLinodes}
-              errorText={linodesError ? linodesError[0].reason : undefined}
-              label="Linodes"
-              multiple
-              onChange={(_, value) => setSelectedLinodes(value)}
-              options={linodeOptionsToUnassign}
-              placeholder="Select Linodes or type to search"
-              renderTags={() => null}
-              value={selectedLinodes}
-            />
+            {!selectedLinode && (
+              <Autocomplete
+                disabled={userCannotUnassignLinodes}
+                errorText={linodesError ? linodesError[0].reason : undefined}
+                label="Linodes"
+                multiple
+                onChange={(_, value) => setSelectedLinodes(value)}
+                options={linodeOptionsToUnassign}
+                placeholder="Select Linodes or type to search"
+                renderTags={() => null}
+                value={selectedLinodes}
+              />
+            )}
             <RemovableSelectionsList
               headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
               noDataText={'Select Linodes to be Unassigned from Subnet.'}
