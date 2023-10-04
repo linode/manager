@@ -18,6 +18,7 @@ import { PassiveCheck } from './NodeBalancerPassiveCheck';
 import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
+import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 
 const DATA_NODE = 'data-node-idx';
@@ -104,10 +105,10 @@ export const NodeBalancerConfigPanel = (
   };
 
   const onNodeModeChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    nodeIdx: number
+    nodeIdx: number,
+    mode: NodeBalancerConfigNodeMode
   ) => {
-    props.onNodeModeChange!(nodeIdx, e.target.value);
+    props.onNodeModeChange!(nodeIdx, mode);
   };
 
   const addNode = () => {
