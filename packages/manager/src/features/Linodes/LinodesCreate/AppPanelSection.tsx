@@ -1,13 +1,15 @@
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
-import { decode } from 'he';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import { SelectionCardWrapper } from 'src/features/Linodes/LinodesCreate/SelectionCardWrapper';
+
+import { handleAppLabel } from './utilities';
 
 interface Props {
   apps: StackScript[];
@@ -41,7 +43,7 @@ export const AppPanelSection = (props: Props) => {
   }
 
   return (
-    <>
+    <Box data-testid={heading}>
       <Typography variant="h2">{heading}</Typography>
       {heading && heading.length > 0 ? (
         <Divider spacingBottom={16} spacingTop={16} />
@@ -49,16 +51,7 @@ export const AppPanelSection = (props: Props) => {
       {apps.length > 0 ? (
         <AppPanelGrid container spacing={2}>
           {apps.map((eachApp) => {
-            const decodedLabel = decode(eachApp.label);
-            const isCluster =
-              decodedLabel.endsWith('Cluster ') &&
-              eachApp.user_defined_fields.some(
-                (field) => field.name === 'cluster_size'
-              );
-
-            const label = isCluster
-              ? decodedLabel.split(' Cluster')[0]
-              : decodedLabel;
+            const { decodedLabel, isCluster, label } = handleAppLabel(eachApp);
 
             return (
               <SelectionCardWrapper
@@ -86,7 +79,7 @@ export const AppPanelSection = (props: Props) => {
           {`Sorry, no results matching "${searchValue}" were found.`}
         </Typography>
       )}
-    </>
+    </Box>
   );
 };
 
