@@ -333,9 +333,12 @@ export const LinodeConfigDialog = (props: Props) => {
         queryClient.invalidateQueries('vlans');
       }
 
-      enqueueSnackbar(`Successfully ${actionType} ${configData.label}`, {
-        variant: 'success',
-      });
+      enqueueSnackbar(
+        `Configuration ${configData.label} successfully ${actionType}`,
+        {
+          variant: 'success',
+        }
+      );
       onClose();
     };
 
@@ -349,10 +352,6 @@ export const LinodeConfigDialog = (props: Props) => {
           if (err.field && ['disk_id', 'volume_id'].includes(err.field)) {
             err.field = 'devices';
           }
-        });
-
-        enqueueSnackbar(`Failed to ${actionType} ${configData.label}`, {
-          variant: 'error',
         });
       };
 
