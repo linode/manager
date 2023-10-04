@@ -115,9 +115,8 @@ export const baseApps = {
   '1008125': 'Easypanel',
   '1017300': 'Kali Linux',
   '1037036': 'Budibase',
-  // uncomment clusters after marketplace release
-  // '1226544': 'HashiCorp Nomad Cluster',
-  // '1226545': 'HashiCorp Nomad Clients Cluster',
+  '1226544': 'HashiCorp Nomad Cluster',
+  '1226545': 'HashiCorp Nomad Clients Cluster',
   '1037037': 'HashiCorp Nomad',
   '1037038': 'HashiCorp Vault',
   '1051714': 'Microweber',
