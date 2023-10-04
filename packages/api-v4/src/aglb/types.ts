@@ -40,6 +40,12 @@ export interface RoutePayload {
   rules: Rule[];
 }
 
+export interface UpdateRoutePayload {
+  label: string;
+  protocol: Protocol;
+  rules: Route['rules'];
+}
+
 export interface ExtendedMatchCondition extends MatchCondition {
   service_targets: { id: number; label: string; percentage: number }[];
 }

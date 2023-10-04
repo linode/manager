@@ -14,6 +14,7 @@ import { ActionMenu } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Tooltip } from 'src/components/Tooltip';
+import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
 import {
   StyledDragIndicator,
@@ -27,7 +28,8 @@ import {
 import type { MatchField, Route } from '@linode/api-v4';
 
 interface Props {
-  rules: Route['rules'];
+  loadbalancerId: number;
+  route: Route;
 }
 
 const matchFieldMap: Record<MatchField, string> = {
@@ -38,18 +40,29 @@ const matchFieldMap: Record<MatchField, string> = {
   query: 'Query String',
 };
 
-export const RulesTable = ({ rules }: Props) => {
+export const RulesTable = ({ loadbalancerId, route }: Props) => {
+  const { label, protocol, rules } = route;
   const theme: Theme = useTheme();
 
   const [ruelsState, setRulesState] = useState(rules);
+  const { mutateAsync: updateRoute } = useLoadBalancerRouteUpdateMutation(
+    loadbalancerId,
+    route?.id ?? -1
+  );
 
-  const handleRulesReorder = (
+  const handleRulesReorder = async (
     sourceIndex: number,
     destinationIndex: number
   ) => {
     const reorderedRules = [...ruelsState];
     const [removed] = reorderedRules.splice(sourceIndex, 1);
     reorderedRules.splice(destinationIndex, 0, removed);
+    await updateRoute({
+      label,
+      protocol,
+      rules: reorderedRules,
+    });
+    //* * TODO: We could consider removing local persistence once integrated with the API. Ideally, the component should render fresh data */
     setRulesState(reorderedRules);
   };
 

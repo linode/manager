@@ -113,7 +113,9 @@ export const LoadBalancerRoutes = () => {
         </>
       );
 
-      const InnerTable = <RulesTable rules={route.rules} />;
+      const InnerTable = (
+        <RulesTable loadbalancerId={Number(loadbalancerId)} route={route} />
+      );
 
       return {
         InnerTable,
