@@ -74,6 +74,7 @@ export const EditCertificateDrawer = (props: Props) => {
       onClose={onClose}
       open={open}
       title={`Edit ${certificate?.label ?? 'Certificate'}`}
+      wide
     >
       {errorMap.none && <Notice variant="error">{errorMap.none}</Notice>}
       {!certificate ? (
@@ -86,6 +87,7 @@ export const EditCertificateDrawer = (props: Props) => {
           </Typography>
           <TextField
             errorText={errorMap.label}
+            expand
             label="Certificate Label"
             name="label"
             onChange={formik.handleChange}
@@ -93,18 +95,20 @@ export const EditCertificateDrawer = (props: Props) => {
           />
           <TextField
             errorText={errorMap.certificate}
+            expand
             label={labelMap[certificate.type]}
             labelTooltipText="TODO: AGLB"
             multiline
             name="certificate"
             onChange={formik.handleChange}
-            placeholder={certificate.certificate ?? ''}
+            placeholder={certificate.certificate.trim() ?? ''}
             trimmed
             value={formik.values.certificate}
           />
           {certificate?.type === 'downstream' && (
             <TextField
               errorText={errorMap.key}
+              expand
               label="Private Key"
               labelTooltipText="TODO: AGLB"
               multiline
