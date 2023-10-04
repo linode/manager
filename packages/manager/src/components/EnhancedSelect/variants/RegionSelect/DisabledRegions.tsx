@@ -10,7 +10,10 @@ const tokyoDisabledMessage = (
   <Typography>
     Tokyo is sold out while we expand our capacity. We recommend deploying
     workloads in Osaka.{` `}
-    <Link to="TODO">Learn more</Link>.
+    <Link to="https://www.linode.com/blog/linode/tokyo-region-availability-update/">
+      Learn more
+    </Link>
+    .
   </Typography>
 );
 
@@ -39,7 +42,7 @@ interface DisabledRegion {
   regionId: 'ap-northeast';
 }
 
-export const disabledRegions: DisabledRegion[] = [
+export const listOfDisabledRegions: DisabledRegion[] = [
   {
     disabledMessage: tokyoDisabledMessage,
     fakeRegion: fakeTokyo,

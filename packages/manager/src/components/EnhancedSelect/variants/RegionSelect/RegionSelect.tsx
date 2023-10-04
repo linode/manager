@@ -12,8 +12,8 @@ import { Flag } from 'src/components/Flag';
 import { useFlags } from 'src/hooks/useFlags';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-import { disabledRegions } from './DisabledRegions';
 import { RegionItem, RegionOption } from './RegionOption';
+import { listOfDisabledRegions } from './disabledRegions';
 import { ContinentNames, Country } from './utils';
 
 import type { FlagSet } from 'src/featureFlags';
@@ -51,12 +51,13 @@ export const getRegionOptions = (regions: Region[], flags: FlagSet) => {
     Other: [],
   };
 
-  const hasUserAccessToDisabledRegions = disabledRegions.some((thisRegion) =>
-    regions.some((region) => region.id === thisRegion.regionId)
+  const hasUserAccessToDisabledRegions = listOfDisabledRegions.some(
+    (disabledRegion) =>
+      regions.some((region) => region.id === disabledRegion.regionId)
   );
   const allRegions = [
     ...regions,
-    ...disabledRegions
+    ...listOfDisabledRegions
       .filter((disabledRegion) => flags[disabledRegion.featureFlag] === true)
       .map((region) => region.fakeRegion)
       .filter(
@@ -71,7 +72,7 @@ export const getRegionOptions = (regions: Region[], flags: FlagSet) => {
       country: region.country,
       disabledMessage: hasUserAccessToDisabledRegions
         ? undefined
-        : disabledRegions.find(
+        : listOfDisabledRegions.find(
             (disabledRegion) => disabledRegion.regionId === region.id
           )?.disabledMessage,
       flag: <Flag country={region.country as Lowercase<Country>} />,
