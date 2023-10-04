@@ -24,5 +24,7 @@ chai.use(chaiString);
 
 // Test setup.
 import { trackApiRequests } from './setup/request-tracking';
+import { mockAccountRequest } from './setup/mock-account-request';
 
 trackApiRequests();
+mockAccountRequest();
