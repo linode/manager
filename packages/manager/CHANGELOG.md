@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-10-02] - v1.104.1
+
+- Fixed: Add disabled Tokyo RegionSelect menu entry
+
 ## [2023-10-02] - v1.104.0
 
 ### Added:
