@@ -10,6 +10,7 @@ const tokyoDisabledMessage = (
   <Typography>
     Tokyo is sold out while we expand our capacity. We recommend deploying
     workloads in Osaka.{` `}
+    <br />
     <Link to="https://www.linode.com/blog/linode/tokyo-region-availability-update/">
       Learn more
     </Link>
