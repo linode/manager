@@ -4,6 +4,7 @@ import { setupPlugins } from './cypress/support/plugins';
 import { configureFileWatching } from './cypress/support/plugins/configure-file-watching';
 import { configureTestSuite } from './cypress/support/plugins/configure-test-suite';
 import { disableGoogleSafeBrowsing } from './cypress/support/plugins/disable-google-safe-browsing';
+import { disableChromeNewHeadless } from './cypress/support/plugins/disable-chrome-new-headless';
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
 import { loadEnvironmentConfig } from './cypress/support/plugins/load-env-config';
 import { nodeVersionCheck } from './cypress/support/plugins/node-version-check';
@@ -57,6 +58,7 @@ export default defineConfig({
         configureFileWatching,
         configureTestSuite,
         vitePreprocess,
+        disableChromeNewHeadless,
         disableGoogleSafeBrowsing,
         discardPassedTestRecordings,
         fetchAccount,
