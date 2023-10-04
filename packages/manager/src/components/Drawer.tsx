@@ -62,7 +62,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   title: {
-    // paddingRight: theme.spacing(4),
+    paddingRight: theme.spacing(4),
     wordBreak: 'break-word',
   },
   wide: {
@@ -133,7 +133,7 @@ export const Drawer = (props: Props) => {
         <Grid>
           <IconButton
             sx={{
-              // position: 'absolute',
+              position: 'absolute',
               right: '-12px',
               top: '-12px',
             }}
