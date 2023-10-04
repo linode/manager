@@ -62,7 +62,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   title: {
-    paddingRight: theme.spacing(4),
+    marginRight: theme.spacing(4),
     wordBreak: 'break-word',
   },
   wide: {
