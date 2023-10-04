@@ -65,8 +65,8 @@ export const NodeBalancerConfigNode = React.memo(
     }[] = [
       { label: 'Accept', value: 'accept' },
       { label: 'Reject', value: 'reject' },
-      { label: 'Drain', value: 'drain' },
       { label: 'Backup', value: 'backup' },
+      { label: 'Drain', value: 'drain' },
     ];
 
     return (
