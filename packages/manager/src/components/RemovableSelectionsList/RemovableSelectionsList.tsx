@@ -56,7 +56,7 @@ interface Props {
 export const RemovableSelectionsList = (props: Props) => {
   const {
     headerText,
-    isRemovable,
+    isRemovable = true,
     maxHeight,
     maxWidth,
     noDataText,
