@@ -88,12 +88,12 @@ const VPCCreate = () => {
         const errorData: SubnetError = errors[apiSubnetIdx];
         return {
           ...subnet,
-          labelError: errorData.label ?? '',
           // @TODO VPC: IPv6 error handling
           ip: {
             ...subnet.ip,
             ipv4Error: errorData.ipv4 ?? '',
           },
+          labelError: errorData.label ?? '',
         };
       } else {
         return subnet;
@@ -185,9 +185,17 @@ const VPCCreate = () => {
     validationSchema: createVPCSchema,
   });
 
+  // Helper method to set a field's value and clear existing errors
+  const onChangeField = (field: string, value: string) => {
+    setFieldValue(field, value);
+    if (errors[field]) {
+      setFieldError(field, undefined);
+    }
+  };
+
   React.useEffect(() => {
     if (errors || generalAPIError || generalSubnetErrorsFromAPI) {
-      scrollErrorIntoView();
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
   }, [errors, generalAPIError, generalSubnetErrorsFromAPI]);
 
@@ -232,12 +240,9 @@ const VPCCreate = () => {
               {/* @TODO VPC: learn more link here */}
             </StyledBodyTypography>
             <RegionSelect
-              handleSelection={(region: string) => {
-                setFieldValue('region', region);
-                if (errors.region) {
-                  setFieldError('region', undefined);
-                }
-              }}
+              handleSelection={(region: string) =>
+                onChangeField('region', region)
+              }
               disabled={userCannotAddVPC}
               errorText={errors.region}
               isClearable
@@ -245,24 +250,18 @@ const VPCCreate = () => {
               selectedID={values.region}
             />
             <TextField
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFieldValue('label', e.target.value);
-                if (errors.label) {
-                  setFieldError('label', undefined);
-                }
-              }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChangeField('label', e.target.value)
+              }
               disabled={userCannotAddVPC}
               errorText={errors.label}
               label="VPC label"
               value={values.label}
             />
             <TextField
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFieldValue('description', e.target.value);
-                if (errors.description) {
-                  setFieldError('description', undefined);
-                }
-              }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChangeField('description', e.target.value)
+              }
               disabled={userCannotAddVPC}
               errorText={errors.description}
               label="Description"
