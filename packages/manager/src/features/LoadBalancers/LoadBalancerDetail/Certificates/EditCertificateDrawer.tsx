@@ -110,6 +110,7 @@ export const EditCertificateDrawer = (props: Props) => {
               multiline
               name="key"
               onChange={formik.handleChange}
+              placeholder="Private key is redacted for security reasons."
               trimmed
               value={formik.values.key}
             />
