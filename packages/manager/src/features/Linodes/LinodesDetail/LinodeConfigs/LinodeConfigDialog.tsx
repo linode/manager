@@ -374,8 +374,8 @@ export const LinodeConfigDialog = (props: Props) => {
       return updateConfig(configData).then(handleSuccess).catch(handleError);
     }
 
-    return createConfig(configData).then(handleSuccess).catch(handleError);
     /** Creating */
+    return createConfig(configData).then(handleSuccess).catch(handleError);
   };
 
   React.useEffect(() => {
