@@ -20,6 +20,7 @@ export interface NoticeProps extends Grid2Props {
   /**
    * If true, the error will be treated as "static" and will not be included in the error group.
    * This will essentially disable the scroll to error behavior.
+   * **Note:** This only applies to notice variants of "error".
    */
   bypassValidation?: boolean;
   /**
