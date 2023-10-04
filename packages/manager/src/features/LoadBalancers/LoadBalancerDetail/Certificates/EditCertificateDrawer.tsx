@@ -54,6 +54,7 @@ export const EditCertificateDrawer = (props: Props) => {
         certificate: values.certificate !== '' ? values.certificate : undefined,
         key: values.key !== '' ? values.key : undefined,
         label: values.label,
+        type: values.type,
       });
       onClose();
     },
