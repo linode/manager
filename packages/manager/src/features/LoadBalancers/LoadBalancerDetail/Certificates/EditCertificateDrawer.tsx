@@ -92,7 +92,6 @@ export const EditCertificateDrawer = (props: Props) => {
             value={formik.values.label}
           />
           <TextField
-            disabled
             errorText={errorMap.certificate}
             label={labelMap[certificate.type]}
             labelTooltipText="TODO: AGLB"
@@ -105,14 +104,12 @@ export const EditCertificateDrawer = (props: Props) => {
           />
           {certificate?.type === 'downstream' && (
             <TextField
-              disabled
               errorText={errorMap.key}
               label="Private Key"
               labelTooltipText="TODO: AGLB"
               multiline
               name="key"
               onChange={formik.handleChange}
-              placeholder="Key is concealed."
               trimmed
               value={formik.values.key}
             />
