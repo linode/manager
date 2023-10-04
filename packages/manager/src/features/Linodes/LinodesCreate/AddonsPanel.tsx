@@ -31,7 +31,7 @@ interface UserDataProps extends UserDataAccordionProps {
 export interface AddonsPanelProps {
   accountBackups: boolean;
   backups: boolean;
-  backupsMonthlyPrice?:  null | number;
+  backupsMonthlyPrice?: null | number;
   changeBackups: () => void;
   createType: CreateTypes;
   disabled?: boolean;
@@ -95,22 +95,6 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const backupsDisabledReason = isBareMetal
     ? 'Backups cannot be used with Bare Metal Linodes.'
     : null;
-
-  const renderBackupsPrice = () => {
-    return backupsMonthlyPrice && backupsMonthlyPrice > 0 ? (
-      <Typography variant="body1">
-        <Currency quantity={backupsMonthlyPrice} /> per month
-      </Typography>
-    ) : (
-      '$--.-- per month'
-    );
-      backupsMonthlyPrice !== 'unknown' &&
-      backupsMonthlyPrice > 0 ? (
-      <Typography variant="body1">
-        <Currency quantity={backupsMonthlyPrice} /> per month
-      </Typography>
-    ) : undefined;
-  };
 
   const checkBackupsWarning = () => {
     if (accountBackups || props.backups) {
@@ -221,7 +205,14 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           label={
             <Box display="flex">
               <Box sx={{ marginRight: 2 }}>Backups</Box>
-              {renderBackupsPrice()}
+              <Typography variant="body1">
+                {backupsMonthlyPrice && backupsMonthlyPrice > 0 ? (
+                  <Currency quantity={backupsMonthlyPrice} />
+                ) : (
+                  '$--.--'
+                )}{' '}
+                per month
+              </Typography>
             </Box>
           }
         />

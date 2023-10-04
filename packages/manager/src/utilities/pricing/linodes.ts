@@ -42,7 +42,9 @@ export const getLinodeRegionPrice = (
  * @param {string} selectedRegionId - The selected region ID.
  * @param {boolean | undefined} dcSpecificPricing - The data center specific pricing.
  * @returns {number | undefined} The price or undefined if not available.
+ * TODO: DC Pricing - M3-7073: Remove this function and replace with getLinodeRegionPrice once dcSpecificPricing flag is removed.
  */
+
 export const getPrice = (
   type: ExtendedType | LinodeType | PlanSelectionType | undefined,
   selectedRegionId: string | undefined,
