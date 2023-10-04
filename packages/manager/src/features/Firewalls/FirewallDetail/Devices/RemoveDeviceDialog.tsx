@@ -41,7 +41,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
   const onDelete = async () => {
     await mutateAsync();
-    enqueueSnackbar(`Successfully removed Device ${device?.entity.label}`, {
+    enqueueSnackbar(`Device ${device?.entity.label} successfully removed`, {
       variant: 'success',
     });
 

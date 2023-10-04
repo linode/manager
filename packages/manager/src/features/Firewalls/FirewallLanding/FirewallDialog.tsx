@@ -58,7 +58,7 @@ export const FirewallDialog = React.memo((props: Props) => {
 
   const onSubmit = async () => {
     await requestMap[mode]();
-    enqueueSnackbar(`Successfully ${mode}d Firewall ${label}`, {
+    enqueueSnackbar(`Firewall ${label} successfully ${mode}d`, {
       variant: 'success',
     });
     onClose();

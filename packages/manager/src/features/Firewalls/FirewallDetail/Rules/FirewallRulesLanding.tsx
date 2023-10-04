@@ -195,7 +195,7 @@ const FirewallRulesLanding = (props: Props) => {
         // Reset editor state.
         inboundDispatch({ rules: _rules.inbound ?? [], type: 'RESET' });
         outboundDispatch({ rules: _rules.outbound ?? [], type: 'RESET' });
-        enqueueSnackbar('Successfully updated Firewall rules', {
+        enqueueSnackbar('Firewall rules successfully updated', {
           variant: 'success',
         });
       })
