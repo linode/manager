@@ -152,9 +152,7 @@ const VPCCreate = () => {
       );
       setFieldValue('subnets', subnetsAndErrors);
 
-      if (errors || generalAPIError || generalSubnetErrorsFromAPI) {
-        scrollErrorIntoView();
-      }
+      scrollErrorIntoView();
     }
 
     setSubmitting(false);
