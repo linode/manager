@@ -6,8 +6,13 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { Notice } from './Notice';
 
 describe('Notice Component', () => {
-  it('renders without errors', () => {
-    renderWithTheme(<Notice />);
+  it('renders without errors with proper spacing', () => {
+    const { container } = renderWithTheme(<Notice />);
+    const notice = container.firstChild;
+
+    expect(notice).toHaveStyle('margin-bottom: 24px');
+    expect(notice).toHaveStyle('margin-left: 0');
+    expect(notice).toHaveStyle('margin-top: 0');
   });
 
   it('renders with text', () => {
@@ -56,12 +61,6 @@ describe('Notice Component', () => {
     expect(container.firstChild).toHaveStyle('border-left: 5px solid #ca0813;');
   });
 
-  it('displays flag', () => {
-    const { getByTestId } = renderWithTheme(<Notice flag />);
-
-    expect(getByTestId('notice-with-flag-icon')).toBeInTheDocument();
-  });
-
   it('displays icon for important notices', () => {
     const { getByTestId } = renderWithTheme(<Notice important />);
     const icon = getByTestId('notice-important');
@@ -81,9 +80,9 @@ describe('Notice Component', () => {
     );
     const notice = container.firstChild;
 
-    expect(notice).toHaveStyle('margin-bottom: 16px');
-    expect(notice).toHaveStyle('margin-left: 32px');
-    expect(notice).toHaveStyle('margin-top: 32px');
+    expect(notice).toHaveStyle('margin-bottom: 8px');
+    expect(notice).toHaveStyle('margin-left: 4px');
+    expect(notice).toHaveStyle('margin-top: 4px');
   });
 
   it('applies typeProps to Typography component', () => {
