@@ -41,15 +41,25 @@ const matchFieldMap: Record<MatchField, string> = {
 export const RulesTable = ({ rules }: Props) => {
   const theme: Theme = useTheme();
 
-  const [ruelsState, setRulesState] = useState(
-    rules.map((rule, index) => {
-      return {
-        id: index,
-        originalIndex: index,
-        ...rule,
-      };
-    })
-  );
+  const [ruelsState, setRulesState] = useState(rules);
+
+  const handleRulesReorder = (
+    sourceIndex: number,
+    destinationIndex: number
+  ) => {
+    const reorderedRules = [...ruelsState];
+    const [removed] = reorderedRules.splice(sourceIndex, 1);
+    reorderedRules.splice(destinationIndex, 0, removed);
+    setRulesState(reorderedRules);
+  };
+
+  const handleMoveUp = (sourceIndex: number) => {
+    handleRulesReorder(sourceIndex, sourceIndex - 1);
+  };
+
+  const handleMoveDown = (sourceIndex: number) => {
+    handleRulesReorder(sourceIndex, sourceIndex + 1);
+  };
 
   const onDragEnd = (result: DropResult) => {
     if (
@@ -60,10 +70,7 @@ export const RulesTable = ({ rules }: Props) => {
     }
 
     if (result.destination) {
-      const reorderedRules = ruelsState;
-      const [removed] = reorderedRules.splice(result.source.index, 1);
-      reorderedRules.splice(result.destination!.index, 0, removed);
-      setRulesState(reorderedRules);
+      handleRulesReorder(result.source.index, result.destination!.index);
     }
   };
 
@@ -113,9 +120,9 @@ export const RulesTable = ({ rules }: Props) => {
                 {ruelsState.length > 0 ? (
                   ruelsState.map((rule, index) => (
                     <Draggable
-                      draggableId={String(rule.match_condition.match_value)}
+                      draggableId={JSON.stringify(rule)}
                       index={index}
-                      key={rule.match_condition.hostname}
+                      key={JSON.stringify(rule)}
                     >
                       {(provided) => (
                         <li
@@ -125,7 +132,7 @@ export const RulesTable = ({ rules }: Props) => {
                           }
                           // aria-roledescription={screenReaderMessage}
                           aria-selected={false}
-                          key={rule.match_condition.hostname}
+                          key={JSON.stringify(rule)}
                           ref={provided.innerRef}
                           role="option"
                           {...provided.draggableProps}
@@ -140,7 +147,7 @@ export const RulesTable = ({ rules }: Props) => {
                               aria-label={`Label: ${
                                 index === 0
                                   ? 'First'
-                                  : index === rules.length - 1
+                                  : index === ruelsState.length - 1
                                   ? 'Last'
                                   : null
                               }`}
@@ -154,7 +161,7 @@ export const RulesTable = ({ rules }: Props) => {
                               <StyledDragIndicator aria-label="Drag indicator icon" />
                               {index === 0
                                 ? 'First'
-                                : index === rules.length - 1
+                                : index === ruelsState.length - 1
                                 ? 'Last'
                                 : null}
                             </Box>
@@ -247,8 +254,16 @@ export const RulesTable = ({ rules }: Props) => {
                               <ActionMenu
                                 actionsList={[
                                   { onClick: () => null, title: 'Edit' },
-                                  { onClick: () => null, title: 'Move Up' },
-                                  { onClick: () => null, title: 'Move Down' },
+                                  {
+                                    disabled: index === 0,
+                                    onClick: () => handleMoveUp(index),
+                                    title: 'Move Up',
+                                  },
+                                  {
+                                    disabled: index === ruelsState.length - 1,
+                                    onClick: () => handleMoveDown(index),
+                                    title: 'Move Down',
+                                  },
                                   { onClick: () => null, title: 'Remove' },
                                 ]}
                                 ariaLabel={`Action Menu for Rule ${rule.match_condition.match_value}`}
