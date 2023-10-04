@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2023-10-02] - v1.104.1
 
-- Fixed: Add disabled Tokyo RegionSelect menu entry
+### Fixed:
+
+- Add disabled Tokyo RegionSelect menu entry ([#9758](https://github.com/linode/manager/pull/9758))
 
 ## [2023-10-02] - v1.104.0
 
