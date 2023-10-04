@@ -50,7 +50,11 @@ export const EditCertificateDrawer = (props: Props) => {
       type: certificate?.type,
     },
     async onSubmit(values) {
-      await updateCertificate(values);
+      await updateCertificate({
+        certificate: values.certificate !== '' ? values.certificate : undefined,
+        key: values.key !== '' ? values.key : undefined,
+        label: values.label,
+      });
       onClose();
     },
   });

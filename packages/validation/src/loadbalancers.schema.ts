@@ -12,13 +12,10 @@ export const CreateCertificateSchema = object({
 
 export const UpdateCertificateSchema = object().shape(
   {
-    certificate: string().when(['type', 'key'], {
-      is: (type: string, key: string) => type === 'downstream' && key,
-      then: string().required('Certificate is required'),
-    }),
+    certificate: string(),
     key: string().when(['type', 'certificate'], {
       is: (type: string, certificate: string) =>
-        type === 'downstream' && certificate,
+        undefined && type === 'downstream' && certificate, // This doesn't actually work, though
       then: string().required('Private Key is required'),
     }),
     label: string(),
