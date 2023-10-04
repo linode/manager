@@ -3,8 +3,6 @@ import {
   LongviewClient,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -14,7 +12,6 @@ import { compose } from 'recompose';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { Grid } from 'src/components/Grid';
 import { Typography } from 'src/components/Typography';
 import withLongviewClients, {
   Props as LongviewProps,
@@ -24,52 +21,20 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 
-import LongviewPackageDrawer from '../LongviewPackageDrawer';
+import { LongviewPackageDrawer } from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
 import { getFinalUsedCPU } from './Gauges/CPU';
 import { generateUsedNetworkAsBytes } from './Gauges/Network';
 import { getUsedStorage } from './Gauges/Storage';
-import DeleteDialog from './LongviewDeleteDialog';
-import LongviewList from './LongviewList';
-import SubscriptionDialog from './SubscriptionDialog';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  cta: {
-    marginTop: theme.spacing(2),
-  },
-  headingWrapper: {
-    marginBottom: theme.spacing(),
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: 0,
-      marginRight: 0,
-    },
-  },
-  searchbar: {
-    '& > div': {
-      width: '300px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    [theme.breakpoints.only('md')]: {
-      '&.MuiGrid-item': {
-        paddingLeft: 0,
-      },
-    },
-  },
-  selectLabel: {
-    minWidth: '65px',
-  },
-  sortSelect: {
-    alignItems: 'center',
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    [theme.breakpoints.up('xs')]: {
-      width: 221,
-    },
-    width: 210,
-  },
-}));
+import {
+  StyledCTAGrid,
+  StyledHeadingGrid,
+  StyledSearchbarGrid,
+  StyledSortSelectGrid,
+} from './LongviewClients.styles';
+import { LongviewDeleteDialog } from './LongviewDeleteDialog';
+import { LongviewList } from './LongviewList';
+import { SubscriptionDialog } from './SubscriptionDialog';
 
 interface Props {
   activeSubscription: ActiveLongviewPlan;
@@ -77,14 +42,14 @@ interface Props {
   newClientLoading: boolean;
 }
 
-export type CombinedProps = Props &
+export type LongviewClientsCombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
   StateProps;
 
 type SortKey = 'cpu' | 'load' | 'name' | 'network' | 'ram' | 'storage' | 'swap';
 
-export const LongviewClients: React.FC<CombinedProps> = (props) => {
+export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const { getLongviewClients } = props;
 
   const { data: profile } = useProfile();
@@ -149,8 +114,6 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
     subscriptionDialogOpen,
     setSubscriptionDialogOpen,
   ] = React.useState<boolean>(false);
-
-  const classes = useStyles();
 
   React.useEffect(() => {
     getLongviewClients();
@@ -233,13 +196,8 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clients" />
-      <Grid
-        alignItems="center"
-        className={classes.headingWrapper}
-        container
-        spacing={2}
-      >
-        <Grid className={classes.searchbar} item>
+      <StyledHeadingGrid container spacing={2}>
+        <StyledSearchbarGrid>
           <DebouncedSearchTextField
             debounceTime={250}
             hideLabel
@@ -247,9 +205,9 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
             onSearch={handleSearch}
             placeholder="Filter by client label or hostname"
           />
-        </Grid>
-        <Grid className={`py0 ${classes.sortSelect}`} item>
-          <Typography className={classes.selectLabel}>Sort by: </Typography>
+        </StyledSearchbarGrid>
+        <StyledSortSelectGrid>
+          <Typography sx={{ minWidth: '65px' }}>Sort by: </Typography>
           <Select
             value={sortOptions.find(
               (thisOption) => thisOption.value === sortKey
@@ -261,8 +219,8 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
             options={sortOptions}
             small
           />
-        </Grid>
-      </Grid>
+        </StyledSortSelectGrid>
+      </StyledHeadingGrid>
       <LongviewList
         createLongviewClient={handleAddClient}
         filteredData={sortedList}
@@ -276,22 +234,15 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
         userCanCreateLongviewClient={userCanCreateClient}
       />
       {!isLongviewPro && (
-        <Grid
-          alignItems="center"
-          className={classes.cta}
-          container
-          direction="column"
-          justifyContent="center"
-          spacing={2}
-        >
+        <StyledCTAGrid container spacing={2}>
           <Typography data-testid="longview-upgrade">
             <Link to={'/longview/plan-details'}>Upgrade to Longview Pro</Link>
             {` `}for more clients, longer data retention, and more frequent data
             updates.
           </Typography>
-        </Grid>
+        </StyledCTAGrid>
       )}
-      <DeleteDialog
+      <LongviewDeleteDialog
         closeDialog={() => toggleDeleteDialog(false)}
         deleteClient={deleteLongviewClient}
         open={deleteDialogOpen}
@@ -337,7 +288,10 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, Props & RouteComponentProps>(
+export default compose<
+  LongviewClientsCombinedProps,
+  Props & RouteComponentProps
+>(
   React.memo,
   connected,
   withLongviewClients()

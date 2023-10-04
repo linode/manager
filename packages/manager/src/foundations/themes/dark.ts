@@ -556,6 +556,11 @@ export const darkTheme: ThemeOptions = {
       paper: '#2e3238',
     },
     divider: primaryColors.divider,
+    error: {
+      dark: customDarkModeOptions.color.red,
+      light: customDarkModeOptions.color.red,
+      main: customDarkModeOptions.color.red,
+    },
     mode: 'dark',
     primary: primaryColors,
     text: {

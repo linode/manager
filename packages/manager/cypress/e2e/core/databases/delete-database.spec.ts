@@ -2,8 +2,9 @@
  * @file DBaaS integration tests for delete operations.
  */
 
-import { databaseFactory } from 'src/factories/databases';
+import { accountFactory, databaseFactory } from 'src/factories';
 import { randomNumber, randomIp } from 'support/util/random';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockDeleteDatabase,
   mockDeleteProvisioningDatabase,
@@ -36,13 +37,15 @@ describe('Delete database clusters', () => {
             allow_list: [allowedIp],
           });
 
+          // Mock account to ensure 'Managed Databases' capability.
+          mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
           mockDeleteDatabase(database.id, database.engine).as('deleteDatabase');
 
           cy.visitWithLogin(
             `/databases/${database.engine}/${database.id}/settings`
           );
-          cy.wait('@getDatabase');
+          cy.wait(['@getAccount', '@getDatabase']);
 
           // Click "Delete Cluster" button.
           ui.button
@@ -92,6 +95,7 @@ describe('Delete database clusters', () => {
           const errorMessage =
             'Your database is provisioning; please wait until provisioning is complete to perform this operation.';
 
+          mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
           mockDeleteProvisioningDatabase(
             database.id,
@@ -102,7 +106,7 @@ describe('Delete database clusters', () => {
           cy.visitWithLogin(
             `/databases/${database.engine}/${database.id}/settings`
           );
-          cy.wait('@getDatabase');
+          cy.wait(['@getAccount', '@getDatabase']);
 
           // Click "Delete Cluster" button.
           ui.button

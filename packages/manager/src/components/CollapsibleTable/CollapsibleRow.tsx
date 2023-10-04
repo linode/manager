@@ -25,7 +25,7 @@ export const CollapsibleRow = (props: Props) => {
       <StyledOuterTableRow>
         <TableCell component="th" scope="row">
           <IconButton
-            aria-label="expand row"
+            aria-label={`${label} expand row`}
             onClick={() => setOpen(!open)}
             size="small"
             sx={{ padding: 1 }}

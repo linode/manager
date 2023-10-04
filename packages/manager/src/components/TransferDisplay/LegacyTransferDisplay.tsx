@@ -10,7 +10,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import BarPercent from 'src/components/BarPercent';
+import { BarPercent } from 'src/components/BarPercent';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';

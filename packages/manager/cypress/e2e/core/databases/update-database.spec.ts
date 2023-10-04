@@ -10,6 +10,7 @@ import {
 } from 'support/util/random';
 import { databaseFactory } from 'src/factories/databases';
 import { ui } from 'support/ui';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetDatabase,
   mockGetDatabaseCredentials,
@@ -22,6 +23,7 @@ import {
   databaseClusterConfiguration,
   databaseConfigurations,
 } from 'support/constants/databases';
+import { accountFactory } from '@src/factories';
 
 /**
  * Updates a database cluster's label.
@@ -164,6 +166,8 @@ describe('Update database clusters', () => {
             allow_list: [allowedIp],
           });
 
+          // Mock account to ensure 'Managed Databases' capability.
+          mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
           mockResetPassword(database.id, database.engine).as(
             'resetRootPassword'
@@ -175,7 +179,7 @@ describe('Update database clusters', () => {
           ).as('getCredentials');
 
           cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
-          cy.wait('@getDatabase');
+          cy.wait(['@getAccount', '@getDatabase']);
 
           cy.get('[data-qa-cluster-config]').within(() => {
             cy.findByText(configuration.region.label).should('be.visible');
@@ -276,6 +280,7 @@ describe('Update database clusters', () => {
             'Your database is provisioning; please wait until provisioning is complete to perform this operation.';
           const hostnameRegex = /your hostnames? will appear here once (it is|they are) available./i;
 
+          mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
 
           mockUpdateProvisioningDatabase(
@@ -291,7 +296,7 @@ describe('Update database clusters', () => {
           ).as('resetRootPassword');
 
           cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
-          cy.wait('@getDatabase');
+          cy.wait(['@getAccount', '@getDatabase']);
 
           // Cannot update database label.
           updateDatabaseLabel(initialLabel, updateAttemptLabel);

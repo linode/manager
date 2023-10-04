@@ -1,12 +1,14 @@
-import { databaseFactory } from 'src/factories/databases';
-import { eventFactory } from 'src/factories/events';
+import { accountFactory, databaseFactory, eventFactory } from 'src/factories';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
+  mockDatabaseEngineTypes,
 } from 'support/constants/databases';
 import {
   mockCreateDatabase,
   mockGetDatabases,
+  mockGetDatabaseEngines,
 } from 'support/intercepts/databases';
 import { mockGetEvents } from 'support/intercepts/events';
 import { getRegionById } from 'support/util/regions';
@@ -62,10 +64,17 @@ describe('create a database cluster, mocked data', () => {
             ? 'Dedicated CPU'
             : 'Shared CPU';
 
+        // Mock account to ensure 'Managed Databases' capability.
+        mockGetAccount(accountFactory.build()).as('getAccount');
+        mockGetDatabaseEngines(mockDatabaseEngineTypes).as(
+          'getDatabaseEngines'
+        );
         mockCreateDatabase(databaseMock).as('createDatabase');
         mockGetDatabases([databaseMock]).as('getDatabases');
 
         cy.visitWithLogin('/databases/create');
+        cy.wait(['@getAccount', '@getDatabaseEngines']);
+
         ui.entityHeader
           .find()
           .should('be.visible')

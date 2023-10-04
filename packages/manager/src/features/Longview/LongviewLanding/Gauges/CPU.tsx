@@ -1,4 +1,4 @@
-import { WithTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { clamp, pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -12,7 +12,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import { CPU } from '../../request.types';
 import { BaseProps as Props, baseGaugeProps } from './common';
 
-type CombinedProps = Props & WithTheme & LVDataProps;
+type CombinedProps = Props & LVDataProps;
 
 export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
   const numberOfCores = pathOr(0, ['SysInfo', 'cpu', 'cores'], data);
@@ -20,53 +20,53 @@ export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
   return normalizeValue(usedCPU, numberOfCores);
 };
 
-const CPUGauge: React.FC<CombinedProps> = (props) => {
-  const {
-    lastUpdatedError,
-    longviewClientData,
-    longviewClientDataError: error,
-    longviewClientDataLoading: loading,
-  } = props;
+export const CPUGauge = withClientStats<Props>((ownProps) => ownProps.clientID)(
+  (props: CombinedProps) => {
+    const {
+      lastUpdatedError,
+      longviewClientData,
+      longviewClientDataError: error,
+      longviewClientDataLoading: loading,
+    } = props;
 
-  const numberOfCores = pathOr(
-    0,
-    ['SysInfo', 'cpu', 'cores'],
-    longviewClientData
-  );
-  const usedCPU = sumCPUUsage(longviewClientData.CPU);
-  const finalUsedCPU = normalizeValue(usedCPU, numberOfCores);
+    const theme = useTheme();
 
-  return (
-    <GaugePercent
-      {...baseGaugeProps}
-      // The MAX depends on the number of CPU cores. Default to 1 if cores
-      innerText={innerText(
-        finalUsedCPU || 0,
-        loading,
-        !!error || !!lastUpdatedError
-      )}
-      subTitle={
-        <>
-          <Typography>
-            <strong>CPU</strong>
-          </Typography>
-          {!error && !loading && (
+    const numberOfCores = pathOr(
+      0,
+      ['SysInfo', 'cpu', 'cores'],
+      longviewClientData
+    );
+    const usedCPU = sumCPUUsage(longviewClientData.CPU);
+    const finalUsedCPU = normalizeValue(usedCPU, numberOfCores);
+
+    return (
+      <GaugePercent
+        {...baseGaugeProps}
+        // The MAX depends on the number of CPU cores. Default to 1 if cores
+        innerText={innerText(
+          finalUsedCPU || 0,
+          loading,
+          !!error || !!lastUpdatedError
+        )}
+        subTitle={
+          <>
             <Typography>
-              {pluralize('Core', 'Cores', numberOfCores || 0)}
+              <strong>CPU</strong>
             </Typography>
-          )}
-        </>
-      }
-      filledInColor={props.theme.graphs.blue}
-      // doesn't exist or is 0.
-      max={100 * numberOfCores}
-      value={usedCPU}
-    />
-  );
-};
-
-export default withClientStats<Props>((ownProps) => ownProps.clientID)(
-  withTheme(CPUGauge)
+            {!error && !loading && (
+              <Typography>
+                {pluralize('Core', 'Cores', numberOfCores || 0)}
+              </Typography>
+            )}
+          </>
+        }
+        filledInColor={theme.graphs.blue}
+        // doesn't exist or is 0.
+        max={100 * numberOfCores}
+        value={usedCPU}
+      />
+    );
+  }
 );
 
 // UTILITIES

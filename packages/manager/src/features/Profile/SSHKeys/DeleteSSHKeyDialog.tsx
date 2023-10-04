@@ -26,6 +26,7 @@ const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'confirm-delete',
+            label: 'Delete',
             loading: isLoading,
             onClick: onDelete,
           }}

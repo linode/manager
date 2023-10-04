@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  useLocation,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { TabPanels } from 'src/components/ReachTabPanels';
 import { Tabs } from 'src/components/ReachTabs';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
@@ -27,9 +31,14 @@ const LoadBalancerServiceTargets = React.lazy(() =>
     default: module.LoadBalancerServiceTargets,
   }))
 );
+const LoadBalancerRoutes = React.lazy(() =>
+  import('./LoadBalancerRoutes').then((module) => ({
+    default: module.LoadBalancerRoutes,
+  }))
+);
 
 const LoadBalancerCertificates = React.lazy(() =>
-  import('./LoadBalancerCertificates').then((module) => ({
+  import('./Certificates').then((module) => ({
     default: module.LoadBalancerCertificates,
   }))
 );
@@ -41,12 +50,9 @@ const LoadBalancerSettings = React.lazy(() =>
 );
 
 const LoadBalancerDetailLanding = () => {
-  const history = useHistory();
-
-  const { loadbalancerId, tab } = useParams<{
-    loadbalancerId: string;
-    tab?: string;
-  }>();
+  const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
+  const location = useLocation();
+  const { path, url } = useRouteMatch();
 
   const id = Number(loadbalancerId);
 
@@ -54,32 +60,40 @@ const LoadBalancerDetailLanding = () => {
 
   const tabs = [
     {
-      routeName: `/loadbalancers/${id}/summary`,
+      component: LoadBalancerSummary,
+      path: 'summary',
       title: 'Summary',
     },
     {
-      routeName: `/loadbalancers/${id}/configurations`,
+      component: LoadBalancerConfigurations,
+      path: 'configurations',
       title: 'Configurations',
     },
     {
-      routeName: `/loadbalancers/${id}/routes`,
+      component: LoadBalancerRoutes,
+      path: 'routes',
       title: 'Routes',
     },
     {
-      routeName: `/loadbalancers/${id}/service-targets`,
+      component: LoadBalancerServiceTargets,
+      path: 'service-targets',
       title: 'Service Targets',
     },
     {
-      routeName: `/loadbalancers/${id}/certificates`,
+      component: LoadBalancerCertificates,
+      path: 'certificates',
       title: 'Certificates',
     },
     {
-      routeName: `/loadbalancers/${id}/settings`,
+      component: LoadBalancerSettings,
+      path: 'settings',
       title: 'Settings',
     },
   ];
 
-  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
+  const tabIndex = tabs.findIndex((tab) =>
+    location.pathname.startsWith(`${url}/${tab.path}`)
+  );
 
   return (
     <>
@@ -98,39 +112,22 @@ const LoadBalancerDetailLanding = () => {
         docsLabel="Docs"
         docsLink="" // TODO: AGLB - Add docs link
       />
-      <Tabs
-        index={tabIndex === -1 ? 0 : tabIndex}
-        onChange={(i) => history.push(tabs[i].routeName)}
-      >
-        <TabLinkList tabs={tabs} />
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <React.Suspense fallback={<SuspenseLoader />}>
-              <LoadBalancerSummary />
-            </React.Suspense>
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <React.Suspense fallback={<SuspenseLoader />}>
-              <LoadBalancerConfigurations />
-            </React.Suspense>
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>2</SafeTabPanel>
-          <SafeTabPanel index={3}>
-            <React.Suspense fallback={<SuspenseLoader />}>
-              <LoadBalancerServiceTargets />
-            </React.Suspense>
-          </SafeTabPanel>
-          <SafeTabPanel index={4}>
-            <React.Suspense fallback={<SuspenseLoader />}>
-              <LoadBalancerCertificates />
-            </React.Suspense>
-          </SafeTabPanel>
-          <SafeTabPanel index={5}>
-            <React.Suspense fallback={<SuspenseLoader />}>
-              <LoadBalancerSettings />
-            </React.Suspense>
-          </SafeTabPanel>
-        </TabPanels>
+      <Tabs index={tabIndex === -1 ? 0 : tabIndex}>
+        <TabLinkList
+          tabs={tabs.map((t) => ({ ...t, routeName: `${url}/${t.path}` }))}
+        />
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <Switch>
+            {tabs.map((tab) => (
+              <Route
+                component={tab.component}
+                key={tab.title}
+                path={`${path}/${tab.path}`}
+              />
+            ))}
+            <Route component={LoadBalancerSummary} />
+          </Switch>
+        </React.Suspense>
       </Tabs>
     </>
   );
