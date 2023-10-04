@@ -20,6 +20,7 @@ import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 import { getSubnetInterfaceFromConfigs } from '../utils';
 import {
+  StyledActionTableCell,
   StyledTableCell,
   StyledTableHeadCell,
   StyledTableRow,
@@ -117,12 +118,12 @@ export const SubnetLinodeRow = (props: Props) => {
           )}
         </StyledTableCell>
       </Hidden>
-      <TableCell actionCell>
+      <StyledActionTableCell actionCell>
         <InlineMenuAction
           actionText="Unassign Linode"
           onClick={() => handleUnassignLinode(subnet, linode)}
         />
-      </TableCell>
+      </StyledActionTableCell>
     </StyledTableRow>
   );
 };
