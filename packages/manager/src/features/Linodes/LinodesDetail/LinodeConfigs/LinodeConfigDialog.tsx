@@ -320,6 +320,7 @@ export const LinodeConfigDialog = (props: Props) => {
       delete configData.interfaces;
     }
 
+    const actionType = Boolean(config) ? 'updated' : 'created';
     const handleSuccess = () => {
       formik.setSubmitting(false);
       queryClient.invalidateQueries(['linode', 'configs', props.linodeId]);
@@ -332,7 +333,6 @@ export const LinodeConfigDialog = (props: Props) => {
         queryClient.invalidateQueries('vlans');
       }
 
-      const actionType = Boolean(config) ? 'updated' : 'created';
       enqueueSnackbar(`Successfully ${actionType} ${configData.label}`, {
         variant: 'success',
       });
@@ -351,7 +351,6 @@ export const LinodeConfigDialog = (props: Props) => {
           }
         });
 
-        const actionType = Boolean(config) ? 'update' : 'create';
         enqueueSnackbar(`Failed to ${actionType} ${configData.label}`, {
           variant: 'error',
         });
