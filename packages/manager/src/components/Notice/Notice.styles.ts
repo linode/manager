@@ -22,7 +22,7 @@ export const useStyles = makeStyles<
   },
   important: {
     '&.MuiGrid2-root': {
-      padding: theme.spacing(1.5),
+      padding: theme.spacing(1),
       paddingRight: 18,
     },
     [`& .${classes.noticeText}`]: {

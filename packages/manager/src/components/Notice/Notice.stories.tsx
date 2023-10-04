@@ -90,7 +90,7 @@ const meta: Meta<NoticeProps> = {
       </StyledWrapper>
     ),
   ],
-  title: 'Components/Notice',
+  title: 'Components/Notifications/Notices',
 };
 export default meta;
 
