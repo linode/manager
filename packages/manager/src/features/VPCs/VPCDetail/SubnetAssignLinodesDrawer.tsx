@@ -149,6 +149,7 @@ export const SubnetAssignLinodesDrawer = (
       label: null,
       purpose: 'vpc',
       subnet_id: subnet?.id,
+      vpc_id: vpcId,
       ...(!autoAssignIPv4 && { ipv4: { vpc: chosenIP } }),
     };
 

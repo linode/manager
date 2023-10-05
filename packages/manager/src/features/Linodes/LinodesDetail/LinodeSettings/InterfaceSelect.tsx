@@ -100,7 +100,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     vlanOptions.push({ label: newVlan, value: newVlan });
   }
 
-  const [autoAssignVPCIPv4, setautoAssignVPCIPv4] = React.useState(true);
+  const [autoAssignVPCIPv4, setAutoAssignVPCIPv4] = React.useState(true);
   const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(false);
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
@@ -343,7 +343,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
               )
             }
             toggleAutoassignIPv4WithinVPCEnabled={() =>
-              setautoAssignVPCIPv4((autoAssignVPCIPv4) => !autoAssignVPCIPv4)
+              setAutoAssignVPCIPv4((autoAssignVPCIPv4) => !autoAssignVPCIPv4)
             }
             assignPublicIPv4Address={autoAssignLinodeIPv4}
             autoassignIPv4WithinVPC={autoAssignVPCIPv4}
