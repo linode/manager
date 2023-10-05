@@ -206,9 +206,7 @@ const getFirewallLinks = (data: Firewall[]): JSX.Element => {
 
 export const SubnetLinodeTableRowHead = (
   <TableRow>
-    <StyledTableHeadCell sx={{ width: '24%' }}>
-      Linode Label
-    </StyledTableHeadCell>
+    <StyledTableHeadCell>Linode Label</StyledTableHeadCell>
     <StyledTableHeadCell sx={{ width: '14%' }}>Status</StyledTableHeadCell>
     <Hidden lgDown>
       <StyledTableHeadCell sx={{ width: '10%' }}>Linode ID</StyledTableHeadCell>
