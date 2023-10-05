@@ -9,7 +9,9 @@ import { useHistory } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
@@ -38,8 +40,6 @@ import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
 import { SizeField } from './VolumeDrawer/SizeField';
-import { LandingHeader } from 'src/components/LandingHeader';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const SIZE_FIELD_WIDTH = 160;
 
@@ -86,6 +86,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '18px',
   },
   select: {
+    [theme.breakpoints.down('sm')]: {
+      width: 320,
+    },
     width: 400,
   },
   size: {
@@ -156,6 +159,7 @@ export const VolumeCreate = () => {
     touched,
     values,
   } = useFormik({
+    initialValues,
     onSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
       const { config_id, label, linode_id, region, size } = values;
 
@@ -200,7 +204,6 @@ export const VolumeCreate = () => {
           );
         });
     },
-    initialValues,
     validationSchema: CreateVolumeSchema,
   });
 
@@ -349,6 +352,9 @@ export const VolumeCreate = () => {
                           linodeRegion === valuesRegion;
                   }}
                   sx={{
+                    [theme.breakpoints.down('sm')]: {
+                      width: 320,
+                    },
                     width: '400px',
                   }}
                   clearable
@@ -370,7 +376,7 @@ export const VolumeCreate = () => {
                 onBlur={handleBlur}
                 onChange={(id: number) => setFieldValue('config_id', id)}
                 value={config_id}
-                width={400}
+                width={[theme.breakpoints.down('sm')] ? 320 : 400}
               />
             </Box>
             <Box alignItems="flex-end" display="flex" position="relative">
