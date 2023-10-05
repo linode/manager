@@ -38,7 +38,7 @@ import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing'
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
-describe.skip('LKE cluster updates', () => {
+describe('LKE cluster updates', () => {
   /*
    * - Confirms UI flow of upgrading a cluster to high availability control plane using mocked data.
    * - Confirms that user is shown a warning and agrees to billing changes before upgrading.
