@@ -77,7 +77,7 @@ export const updateLoadbalancerRoute = (
       )}/routes/${encodeURIComponent(routeId)}`
     ),
     setData(data),
-    setMethod('POST')
+    setMethod('PUT')
   );
 
 /**

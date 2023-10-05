@@ -15,6 +15,7 @@ import type {
   Route,
   UpdateRoutePayload,
 } from '@linode/api-v4';
+import { updateInPaginatedStore } from '../base';
 
 export const useLoadBalancerRoutesQuery = (
   id: number,
@@ -36,13 +37,23 @@ export const useLoadBalancerRouteUpdateMutation = (
   return useMutation<Route, APIError[], UpdateRoutePayload>(
     (data) => updateLoadbalancerRoute(loadbalancerId, routeId, data),
     {
-      onSuccess() {
+      onError() {
+        // On error, refetch to keep the client in sync with the API
         queryClient.invalidateQueries([
           QUERY_KEY,
           'loadbalancer',
           loadbalancerId,
           'routes',
         ]);
+      },
+      onMutate(variables) {
+        // Optimistically update the route on mutate
+        updateInPaginatedStore<Route>(
+          [QUERY_KEY, 'loadbalancer', loadbalancerId, 'routes'],
+          routeId,
+          variables,
+          queryClient
+        );
       },
     }
   );

@@ -1,8 +1,8 @@
 import { Hidden } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import React, { useState } from 'react';
+import { useSnackbar } from 'notistack';
+import React from 'react';
 import {
   DragDropContext,
   Draggable,
@@ -42,9 +42,9 @@ const matchFieldMap: Record<MatchField, string> = {
 
 export const RulesTable = ({ loadbalancerId, route }: Props) => {
   const { label, protocol, rules } = route;
-  const theme: Theme = useTheme();
+  const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const [ruelsState, setRulesState] = useState(rules);
   const { mutateAsync: updateRoute } = useLoadBalancerRouteUpdateMutation(
     loadbalancerId,
     route?.id ?? -1
@@ -54,16 +54,19 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
     sourceIndex: number,
     destinationIndex: number
   ) => {
-    const reorderedRules = [...ruelsState];
+    const reorderedRules = [...rules];
     const [removed] = reorderedRules.splice(sourceIndex, 1);
     reorderedRules.splice(destinationIndex, 0, removed);
-    await updateRoute({
-      label,
-      protocol,
-      rules: reorderedRules,
-    });
-    //* * TODO: We could consider removing local persistence once integrated with the API. Ideally, the component should render fresh data */
-    setRulesState(reorderedRules);
+
+    try {
+      await updateRoute({
+        label,
+        protocol,
+        rules: reorderedRules,
+      });
+    } catch (error) {
+      enqueueSnackbar(error?.[0].reason, { variant: 'error' });
+    }
   };
 
   const handleMoveUp = (sourceIndex: number) => {
@@ -129,13 +132,13 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided) => (
-              <StyledUl ref={provided.innerRef} {...provided.droppableProps}>
-                {ruelsState.length > 0 ? (
-                  ruelsState.map((rule, index) => (
+              <StyledUl {...provided.droppableProps} ref={provided.innerRef}>
+                {rules.length > 0 ? (
+                  rules.map((rule, index) => (
                     <Draggable
-                      draggableId={JSON.stringify(rule)}
+                      draggableId={String(index)}
                       index={index}
-                      key={JSON.stringify(rule)}
+                      key={index}
                     >
                       {(provided) => (
                         <li
@@ -145,7 +148,6 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                           }
                           // aria-roledescription={screenReaderMessage}
                           aria-selected={false}
-                          key={JSON.stringify(rule)}
                           ref={provided.innerRef}
                           role="option"
                           {...provided.draggableProps}
@@ -160,7 +162,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                               aria-label={`Label: ${
                                 index === 0
                                   ? 'First'
-                                  : index === ruelsState.length - 1
+                                  : index === rules.length - 1
                                   ? 'Last'
                                   : null
                               }`}
@@ -174,7 +176,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                               <StyledDragIndicator aria-label="Drag indicator icon" />
                               {index === 0
                                 ? 'First'
-                                : index === ruelsState.length - 1
+                                : index === rules.length - 1
                                 ? 'Last'
                                 : null}
                             </Box>
@@ -273,7 +275,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                     title: 'Move Up',
                                   },
                                   {
-                                    disabled: index === ruelsState.length - 1,
+                                    disabled: index === rules.length - 1,
                                     onClick: () => handleMoveDown(index),
                                     title: 'Move Down',
                                   },
