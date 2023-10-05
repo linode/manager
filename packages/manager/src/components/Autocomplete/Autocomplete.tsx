@@ -4,7 +4,7 @@ import MuiAutocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 
 import { Box } from 'src/components/Box';
-import { TextField } from 'src/components/TextField';
+import { TextField, TextFieldProps } from 'src/components/TextField';
 
 import {
   CustomPopper,
@@ -33,6 +33,7 @@ export interface EnhancedAutocompleteProps<
   noMarginTop?: boolean;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
+  textFieldProps?: Partial<TextFieldProps>;
 }
 
 /**
@@ -78,6 +79,7 @@ export const Autocomplete = <
     placeholder,
     renderOption,
     selectAllLabel = '',
+    textFieldProps,
     value,
     ...rest
   } = props;
@@ -103,6 +105,7 @@ export const Autocomplete = <
           noMarginTop={noMarginTop}
           placeholder={placeholder || 'Select an option'}
           {...params}
+          {...textFieldProps}
         />
       )}
       renderOption={(props, option, state, ownerState) => {

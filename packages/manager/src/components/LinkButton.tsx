@@ -49,6 +49,7 @@ export const LinkButton = (props: Props) => {
       disabled={isDisabled}
       onClick={onClick}
       style={style}
+      type="button"
     >
       {children}
     </StyledLinkButton>

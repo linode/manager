@@ -3,7 +3,7 @@ import {
   deleteLoadbalancerServiceTarget,
   getLoadbalancerServiceTargets,
 } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { QUERY_KEY } from './loadbalancers';
 
@@ -60,6 +60,29 @@ export const useLoadBalancerServiceTargetDeleteMutation = (
           loadbalancerId,
           'service-targets',
         ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerServiceTargetsInfiniteQuery = (
+  id: number,
+  filter: Filter = {}
+) => {
+  return useInfiniteQuery<ResourcePage<ServiceTarget>, APIError[]>(
+    [QUERY_KEY, 'loadbalancer', id, 'certificates', 'infinite', filter],
+    ({ pageParam }) =>
+      getLoadbalancerServiceTargets(
+        id,
+        { page: pageParam, page_size: 25 },
+        filter
+      ),
+    {
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
+        }
+        return page + 1;
       },
     }
   );

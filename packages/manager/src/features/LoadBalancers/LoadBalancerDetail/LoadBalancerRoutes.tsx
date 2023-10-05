@@ -24,6 +24,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
+import { AddRuleDrawer } from './Routes/AddRuleDrawer';
 import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
 import { RulesTable } from './RulesTable';
 
@@ -34,6 +35,7 @@ const PREFERENCE_KEY = 'loadbalancer-routes';
 export const LoadBalancerRoutes = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
 
+  const [isAddRuleDrawerOpen, setIsAddRuleDrawerOpen] = useState(false);
   const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedRouteId, setSelectedRouteId] = useState<number>();
@@ -71,6 +73,11 @@ export const LoadBalancerRoutes = () => {
     (route) => route.id === selectedRouteId
   );
 
+  const onAddRule = (route: Route) => {
+    setIsAddRuleDrawerOpen(true);
+    setSelectedRouteId(route.id);
+  };
+
   const onDeleteRoute = (route: Route) => {
     setIsDeleteDialogOpen(true);
     setSelectedRouteId(route.id);
@@ -97,7 +104,10 @@ export const LoadBalancerRoutes = () => {
             {/**
              * TODO: AGLB: The Add Rule behavior should be implemented in future AGLB tickets.
              */}
-            <InlineMenuAction actionText="Add Rule" onClick={() => null} />
+            <InlineMenuAction
+              actionText="Add Rule"
+              onClick={() => onAddRule(route)}
+            />
             {/**
              * TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets.
              */}
@@ -203,6 +213,12 @@ export const LoadBalancerRoutes = () => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
+      />
+      <AddRuleDrawer
+        loadbalancerId={Number(loadbalancerId)}
+        onClose={() => setIsAddRuleDrawerOpen(false)}
+        open={isAddRuleDrawerOpen}
+        route={selectedRoute}
       />
       <DeleteRouteDialog
         loadbalancerId={Number(loadbalancerId)}
