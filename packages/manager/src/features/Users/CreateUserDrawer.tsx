@@ -12,7 +12,7 @@ import { Toggle } from 'src/components/Toggle';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
-interface CreateUserDrawerProps {
+interface Props {
   onClose: () => void;
   open: boolean;
   refetch: () => void;
@@ -26,7 +26,7 @@ interface State {
   username: string;
 }
 
-type CombinedProps = CreateUserDrawerProps & RouteComponentProps<{}>;
+type CombinedProps = Props & RouteComponentProps<{}>;
 
 class CreateUserDrawer extends React.Component<CombinedProps, State> {
   componentDidUpdate(prevProps: CombinedProps) {

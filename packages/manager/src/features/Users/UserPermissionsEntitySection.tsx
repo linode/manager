@@ -35,7 +35,7 @@ export const entityNameMap: Record<GrantType, string> = {
   vpc: 'VPCs',
 };
 
-interface UserPermissionsEntitySectionProps {
+interface Props {
   entity: GrantType;
   grants: Grant[] | undefined;
   setGrantTo: (entity: string, idx: number, value: GrantLevel) => () => void;
@@ -45,7 +45,7 @@ interface UserPermissionsEntitySectionProps {
 
 export const UserPermissionsEntitySection = React.memo(({
   entity, grants, setGrantTo, entitySetAllTo, showHeading
-}: UserPermissionsEntitySectionProps) => {
+}: Props) => {
   const theme: Theme = useTheme();
   const pagination = usePagination(1);
 

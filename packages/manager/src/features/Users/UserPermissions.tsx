@@ -412,7 +412,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               checked={!restricted}
               disabled={username === currentUser}
               onChange={this.onChangeRestricted}
-              sx={{ marginRight: 3 }}
+              sx={{ marginRight: '3px' }}
             />
           </Grid>
         </Grid>

@@ -8,15 +8,12 @@ import { Action, ActionMenu } from 'src/components/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useProfile } from 'src/queries/profile';
 
-interface UsersActionMenuProps {
+interface Props {
   onDelete: (username: string) => void;
   username: string;
 }
 
-export const UsersActionMenu = ({
-  onDelete,
-  username,
-}: UsersActionMenuProps) => {
+export const UsersActionMenu = ({ onDelete, username }: Props) => {
   const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));

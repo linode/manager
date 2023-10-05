@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-interface UserDeleteConfirmationDialogProps {
+interface Props {
   onCancel: () => void;
   onDelete: () => void;
   open: boolean;
@@ -15,7 +15,7 @@ export const UserDeleteConfirmationDialog = ({
   onDelete,
   open,
   username,
-}: UserDeleteConfirmationDialogProps) => {
+}: Props) => {
   return (
     <ConfirmationDialog
       actions={
