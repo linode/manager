@@ -44,15 +44,23 @@ export const EditCertificateDrawer = (props: Props) => {
   const formik = useFormik<UpdateCertificatePayload>({
     enableReinitialize: true,
     initialValues: {
-      certificate: '',
+      certificate: certificate?.certificate.trim(),
       key: '',
       label: certificate?.label ?? '',
       type: certificate?.type,
     },
     async onSubmit(values) {
+      // The user has not edited their cert or the private key, so we exclude both cert and key from the request.
+      const shouldIgnoreField =
+        certificate?.certificate.trim() === values.certificate &&
+        values.key === '';
+
       await updateCertificate({
-        certificate: values.certificate !== '' ? values.certificate : undefined,
-        key: values.key !== '' ? values.key : undefined,
+        certificate:
+          values.certificate && !shouldIgnoreField
+            ? values.certificate
+            : undefined,
+        key: values.key && !shouldIgnoreField ? values.key : undefined,
         label: values.label,
         type: values.type,
       });
@@ -106,7 +114,6 @@ export const EditCertificateDrawer = (props: Props) => {
             multiline
             name="certificate"
             onChange={formik.handleChange}
-            placeholder={certificate.certificate.trim() ?? ''}
             trimmed
             value={formik.values.certificate}
           />
@@ -119,7 +126,7 @@ export const EditCertificateDrawer = (props: Props) => {
               multiline
               name="key"
               onChange={formik.handleChange}
-              placeholder="Private key is redacted for security reasons."
+              placeholder="Private key is redacted for security."
               trimmed
               value={formik.values.key}
             />

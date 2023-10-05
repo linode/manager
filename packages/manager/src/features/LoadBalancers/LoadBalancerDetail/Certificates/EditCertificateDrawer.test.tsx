@@ -42,6 +42,28 @@ describe('EditCertificateDrawer', () => {
     expect(labelInput).toHaveDisplayValue(mockTLSCertificate.label);
   });
 
+  it('should contain the cert in the cert field and placeholder text in the private key for a downstream cert', () => {
+    const onClose = jest.fn();
+
+    const { getByLabelText } = renderWithTheme(
+      <EditCertificateDrawer
+        certificate={mockTLSCertificate}
+        loadbalancerId={0}
+        onClose={onClose}
+        open
+      />
+    );
+
+    const certInput = getByLabelText('TLS Certificate');
+    const keyInput = getByLabelText('Private Key');
+
+    expect(certInput).toHaveDisplayValue(mockTLSCertificate.certificate.trim());
+    expect(keyInput).toHaveAttribute(
+      'placeholder',
+      'Private key is redacted for security.'
+    );
+  });
+
   it('should submit and close drawer when only the label of the certificate is edited', async () => {
     const onClose = jest.fn();
 
@@ -58,7 +80,7 @@ describe('EditCertificateDrawer', () => {
     const certInput = getByLabelText('Server Certificate');
 
     expect(labelInput).toHaveDisplayValue(mockCACertificate.label);
-    expect(certInput).toHaveDisplayValue('');
+    expect(certInput).toHaveDisplayValue(mockCACertificate.certificate.trim());
 
     act(() => {
       userEvent.type(labelInput, 'my-updated-cert-0');
