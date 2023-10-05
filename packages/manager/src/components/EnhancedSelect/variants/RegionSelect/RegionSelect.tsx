@@ -1,6 +1,7 @@
 /* eslint-disable perfectionist/sort-objects */
 import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import Select, {
   BaseSelectProps,
@@ -38,7 +39,11 @@ export const selectStyles = {
 
 type RegionGroup = 'Other' | ContinentNames;
 
-export const getRegionOptions = (regions: Region[], flags: FlagSet) => {
+export const getRegionOptions = (
+  regions: Region[],
+  flags: FlagSet,
+  path: string
+) => {
   // Note: Do not re-order this list even though ESLint is complaining.
   const groups: Record<RegionGroup, RegionItem[]> = {
     'North America': [],
@@ -64,7 +69,13 @@ export const getRegionOptions = (regions: Region[], flags: FlagSet) => {
           // We may want to consider modifying this logic if we end up with disabled regions that don't rely on feature flags
           flags[disabledRegion.featureFlag] &&
           // Don't display a fake region if it's included in the real /regions response
-          !regions.some((region) => region.id === disabledRegion.fakeRegion.id)
+          !regions.some(
+            (region) => region.id === disabledRegion.fakeRegion.id
+          ) &&
+          // Don't display a fake region if it's excluded by the current path
+          !disabledRegion.excludePaths?.some((pathToExclude) =>
+            path.includes(pathToExclude)
+          )
       )
       .map((disabledRegion) => disabledRegion.fakeRegion),
   ];
@@ -137,6 +148,8 @@ export const RegionSelect = React.memo(
     } = props;
 
     const flags = useFlags();
+    const location = useLocation();
+    const path = location.pathname;
     const onChange = React.useCallback(
       (selection: RegionItem | null) => {
         if (selection === null) {
@@ -153,10 +166,10 @@ export const RegionSelect = React.memo(
       [handleSelection]
     );
 
-    const options = React.useMemo(() => getRegionOptions(regions, flags), [
-      flags,
-      regions,
-    ]);
+    const options = React.useMemo(
+      () => getRegionOptions(regions, flags, path),
+      [flags, regions]
+    );
 
     return (
       <div style={{ width }}>
