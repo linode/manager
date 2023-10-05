@@ -65,6 +65,7 @@ export const Autocomplete = <
     disablePortal = true,
     errorText = '',
     helperText,
+    isOptionEqualToValue,
     label,
     limitTags = 2,
     loading = false,
@@ -132,6 +133,7 @@ export const Autocomplete = <
       defaultValue={defaultValue}
       disableCloseOnSelect={multiple}
       disablePortal={disablePortal}
+      isOptionEqualToValue={isOptionEqualToValue}
       limitTags={limitTags}
       loading={loading}
       loadingText={loadingText || 'Loading...'}

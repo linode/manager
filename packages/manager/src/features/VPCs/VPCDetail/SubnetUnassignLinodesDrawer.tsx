@@ -300,6 +300,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               <Autocomplete
                 disabled={userCannotUnassignLinodes}
                 errorText={linodesError ? linodesError[0].reason : undefined}
+                isOptionEqualToValue={() => true} // Ignore the multi-select warning since it isn't helpful https://github.com/mui/material-ui/issues/29727
                 label="Linodes"
                 multiple
                 onChange={(_, value) => setSelectedLinodes(value)}
