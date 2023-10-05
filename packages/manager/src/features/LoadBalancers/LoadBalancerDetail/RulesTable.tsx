@@ -287,6 +287,8 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                     </Draggable>
                   ))
                 ) : (
+                  // This causes a Warning: validateDOMNesting(...): <tr> cannot appear as a child of <ul>
+                  // because TableRowEmpty is intended to be used in a table, not a ul.
                   <TableRowEmpty colSpan={5} message={'No Rules'} />
                 )}
                 {provided.placeholder}

@@ -1,7 +1,6 @@
 // RulesTable.test.tsx
 
 import '@testing-library/jest-dom/extend-expect';
-import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { routeFactory } from 'src/factories';
@@ -10,29 +9,43 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { RulesTable } from './RulesTable';
 
 // Mock data for testing
-const mockRoute = routeFactory.buildList(1)[0];
+const mockRoute = routeFactory.build({
+  protocol: 'http',
+  rules: [
+    {
+      match_condition: {
+        match_value: '/images/*',
+      },
+      service_targets: [],
+    },
+  ],
+});
 
 describe('RulesTable', () => {
   it('renders table headers', () => {
-    renderWithTheme(<RulesTable loadbalancerId={1} route={mockRoute} />);
-    expect(screen.getByText('Execution')).toBeInTheDocument();
-    expect(screen.getByText('Match Value')).toBeInTheDocument();
+    const { getByText } = renderWithTheme(
+      <RulesTable loadbalancerId={1} route={mockRoute} />
+    );
+    expect(getByText('Execution')).toBeInTheDocument();
+    expect(getByText('Match Value')).toBeInTheDocument();
   });
 
   it('renders empty table when no rules are provided', () => {
-    renderWithTheme(
+    const { getByText } = renderWithTheme(
       <RulesTable
         loadbalancerId={1}
         route={{ id: 0, label: 'test', protocol: 'http', rules: [] }}
       />
     );
-    expect(screen.getByText('No Linodes')).toBeInTheDocument();
+    expect(getByText('No Rules')).toBeInTheDocument();
   });
 
   it('renders rules correctly', () => {
-    renderWithTheme(<RulesTable loadbalancerId={1} route={mockRoute} />);
+    const { getByText } = renderWithTheme(
+      <RulesTable loadbalancerId={1} route={mockRoute} />
+    );
 
-    expect(screen.getByText('First')).toBeInTheDocument();
-    expect(screen.getByText('/images/*')).toBeInTheDocument();
+    expect(getByText('First')).toBeInTheDocument();
+    expect(getByText('/images/*')).toBeInTheDocument();
   });
 });
