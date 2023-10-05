@@ -58,11 +58,15 @@ export const getRegionOptions = (regions: Region[], flags: FlagSet) => {
   const allRegions = [
     ...regions,
     ...listOfDisabledRegions
-      .filter((disabledRegion) => flags[disabledRegion.featureFlag] === true)
-      .map((region) => region.fakeRegion)
       .filter(
-        (fakeRegion) => !regions.some((region) => region.id === fakeRegion.id)
-      ),
+        (disabledRegion) =>
+          // Only display a fake region if the feature flag for it is enabled
+          // We may want to consider modifying this logic if we end up with disabled regions that don't rely on feature flags
+          flags[disabledRegion.featureFlag] &&
+          // Don't display a fake region if it's included in the real /regions response
+          !regions.some((region) => region.id === disabledRegion.fakeRegion.id)
+      )
+      .map((disabledRegion) => disabledRegion.fakeRegion),
   ];
 
   for (const region of allRegions) {
