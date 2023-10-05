@@ -240,7 +240,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 />
               ))
             ) : (
-              <TableRowEmpty colSpan={5} message={'No Linodes'} />
+              <TableRowEmpty colSpan={6} message={'No Linodes'} />
             )}
           </TableBody>
         </Table>
