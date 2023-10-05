@@ -52,4 +52,22 @@ describe('PrimaryNav', () => {
 
     expect(getByTestId(queryString).getAttribute('aria-current')).toBe('false');
   });
+
+  it('should show databases menu when feature is off and has Managed Databases', () => {
+    const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags: { databases: false },
+      queryClient,
+    });
+
+    expect(getByTestId('menu-item-Databases')).toBeInTheDocument();
+  });
+
+  it('should show databases menu when feature is on', () => {
+    const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags: { databases: true },
+      queryClient,
+    });
+
+    expect(getByTestId('menu-item-Databases')).toBeInTheDocument();
+  });
 });
