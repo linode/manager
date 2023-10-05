@@ -1,6 +1,6 @@
 import { invoiceItemFactory, regionFactory } from 'src/factories';
 
-import { getInvoiceRegion } from './utils';
+import { getInvoiceRegion, invoiceCreatedAfterDCPricingLaunch } from './utils';
 
 describe('getInvoiceRegion', () => {
   it('should get a formatted label given invoice items and regions', () => {
@@ -40,5 +40,22 @@ describe('getInvoiceRegion', () => {
     });
 
     expect(getInvoiceRegion(invoiceItems, regions)).toBe('Global');
+  });
+});
+
+describe('invoiceCreatedAfterDCPricingLaunch', () => {
+  it('should return true for an invoice date after 10/05/2023', () => {
+    const invoiceDate = '2023-10-06T12:00:00';
+    expect(invoiceCreatedAfterDCPricingLaunch(invoiceDate)).toBe(true);
+  });
+
+  it('should return false for an invoice date before 10/05/2023', () => {
+    const invoiceDate = '2023-10-01T12:00:00';
+    expect(invoiceCreatedAfterDCPricingLaunch(invoiceDate)).toBe(false);
+  });
+
+  it('should return true for an invoice dated 10/05/2023', () => {
+    const invoiceDate = '2023-10-05T12:00:00';
+    expect(invoiceCreatedAfterDCPricingLaunch(invoiceDate)).toBe(true);
   });
 });
