@@ -12,7 +12,6 @@ import {
 
 import { ActionMenu } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Tooltip } from 'src/components/Tooltip';
 import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
@@ -287,9 +286,16 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                     </Draggable>
                   ))
                 ) : (
-                  // This causes a Warning: validateDOMNesting(...): <tr> cannot appear as a child of <ul>
-                  // because TableRowEmpty is intended to be used in a table, not a ul.
-                  <TableRowEmpty colSpan={5} message={'No Rules'} />
+                  <Box
+                    sx={(theme) => ({
+                      bgcolor: theme.bg.bgPaper,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      padding: 1.5,
+                    })}
+                  >
+                    No Rules
+                  </Box>
                 )}
                 {provided.placeholder}
               </StyledUl>
