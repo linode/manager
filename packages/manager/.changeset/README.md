@@ -1,7 +1,7 @@
 # Changesets
 
 This directory gets auto-populated when running `yarn changeset`.
-You can however add your changesets manually as well, knowing that the [TYPE] is limited to the following options `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Upcoming Features` and follow this format:
+You can however add your changesets manually as well, knowing that the [TYPE] is limited to the following options `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Tested`, `Upcoming Features` and follow this format:
 
 ```md
 ---

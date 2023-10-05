@@ -40,6 +40,6 @@ Feel free to open an issue to report a bug or request a feature.
     - Run `yarn changeset`from the root, choose the package to create a changeset for, and provide a description for the change.
     You can either have it committed automatically or do it manually if you need to edit it.
     - A changeset is optional, it merely depends if it falls in one of the following categories:
-    `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Upcoming Features`
+    `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Tested`, `Upcoming Features`
 
 Two reviews from members of the Cloud Manager team are required before merge. After approval, all pull requests are squash merged.
