@@ -92,6 +92,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       if (linodes) {
         setLinodeOptionsToUnassign(findAssignedLinodes() ?? []);
       }
+      return () => {
+        setLinodeOptionsToUnassign([]);
+      };
     }, [linodes, setLinodeOptionsToUnassign, findAssignedLinodes]);
 
     // 3. Everytime our selection changes, we need to either add or remove the linode from the configInterfacesToDelete state.
