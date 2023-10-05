@@ -135,8 +135,7 @@ export const AddRuleDrawer = (props: Props) => {
 
       if (
         route?.protocol === 'tcp' &&
-        (error.field.includes('match_condition.match') ||
-          error.field.includes('match_condition.session_stickiness'))
+        error.field.includes('match_condition')
       ) {
         return true;
       }
@@ -191,75 +190,79 @@ export const AddRuleDrawer = (props: Props) => {
                 pattern pair.
               </Typography>
             )}
-            <TextField
-              errorText={
-                formik.touched.match_condition?.hostname
-                  ? formik.errors.match_condition?.hostname
-                  : undefined
-              }
-              label="Hostname"
-              labelTooltipText="TODO: AGLB"
-              name="match_condition.hostname"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              placeholder="www.example.com"
-              value={formik.values.match_condition.hostname}
-            />
             {route?.protocol !== 'tcp' && (
-              <Stack direction="row" spacing={2}>
-                <Autocomplete
-                  errorText={
-                    formik.touched.match_condition?.match_field
-                      ? formik.errors.match_condition?.match_field
-                      : undefined
-                  }
-                  onChange={(_, option) =>
-                    formik.setFieldValue(
-                      'match_condition.match_field',
-                      option?.value ?? null
-                    )
-                  }
-                  onBlur={() =>
-                    formik.setFieldTouched('match_condition.match_field')
-                  }
-                  value={
-                    matchTypeOptions.find(
-                      (option) =>
-                        option.value ===
-                        formik.values.match_condition.match_field
-                    ) ?? matchTypeOptions[0]
-                  }
-                  disableClearable
-                  label="Match Type"
-                  options={matchTypeOptions}
-                  sx={{ minWidth: 200 }}
-                  textFieldProps={{ labelTooltipText: <MatchTypeInfo /> }}
-                />
+              <>
                 <TextField
                   errorText={
-                    formik.touched.match_condition?.match_value
-                      ? formik.errors.match_condition?.match_value
+                    formik.touched.match_condition?.hostname
+                      ? formik.errors.match_condition?.hostname
                       : undefined
                   }
-                  placeholder={
-                    matchValuePlaceholder[
-                      formik.values.match_condition.match_field
-                    ]
-                  }
-                  containerProps={{ sx: { flexGrow: 1 } }}
-                  label="Match Value"
+                  label="Hostname"
                   labelTooltipText="TODO: AGLB"
-                  name="match_condition.match_value"
+                  name="match_condition.hostname"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.values.match_condition.match_value}
+                  placeholder="www.example.com"
+                  value={formik.values.match_condition.hostname}
                 />
-              </Stack>
+                <Stack direction="row" spacing={2}>
+                  <Autocomplete
+                    errorText={
+                      formik.touched.match_condition?.match_field
+                        ? formik.errors.match_condition?.match_field
+                        : undefined
+                    }
+                    onBlur={() =>
+                      formik.setFieldTouched('match_condition.match_field')
+                    }
+                    onChange={(_, option) =>
+                      formik.setFieldValue(
+                        'match_condition.match_field',
+                        option?.value ?? null
+                      )
+                    }
+                    value={
+                      matchTypeOptions.find(
+                        (option) =>
+                          option.value ===
+                          formik.values.match_condition.match_field
+                      ) ?? matchTypeOptions[0]
+                    }
+                    disableClearable
+                    label="Match Type"
+                    options={matchTypeOptions}
+                    sx={{ minWidth: 200 }}
+                    textFieldProps={{ labelTooltipText: <MatchTypeInfo /> }}
+                  />
+                  <TextField
+                    errorText={
+                      formik.touched.match_condition?.match_value
+                        ? formik.errors.match_condition?.match_value
+                        : undefined
+                    }
+                    placeholder={
+                      matchValuePlaceholder[
+                        formik.values.match_condition.match_field
+                      ]
+                    }
+                    containerProps={{ sx: { flexGrow: 1 } }}
+                    label="Match Value"
+                    labelTooltipText="TODO: AGLB"
+                    name="match_condition.match_value"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.match_condition.match_value}
+                  />
+                </Stack>
+                <Stack alignItems="center" direction="row" gap={2}>
+                  <Typography sx={{ fontStyle: 'italic' }}>
+                    Routes to
+                  </Typography>
+                  <Divider light sx={{ flexGrow: 1 }} />
+                </Stack>
+              </>
             )}
-            <Stack alignItems="center" direction="row" gap={2}>
-              <Typography sx={{ fontStyle: 'italic' }}>Routes to</Typography>
-              <Divider light sx={{ flexGrow: 1 }} />
-            </Stack>
             {typeof formik.errors.service_targets === 'string' && (
               <Notice
                 spacingBottom={12}
