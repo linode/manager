@@ -11,11 +11,11 @@ import { pathOr } from 'ramda';
 import { ADDRESSES } from 'src/constants';
 import { FlagSet } from 'src/featureFlags';
 import { formatDate } from 'src/utilities/formatDate';
+import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 
 import type { Region } from '@linode/api-v4';
-import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
 /**
  * Margin that has to be applied to every item added to the PDF.
