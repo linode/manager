@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 
 - Add disabled Tokyo RegionSelect menu entry ([#9758](https://github.com/linode/manager/pull/9758))
+- Display DC-specific monthly prices to two decimal places and hide blank Region column on past invoices ([#9759](https://github.com/linode/manager/pull/9759))
 
 ## [2023-10-02] - v1.104.0
 
