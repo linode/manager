@@ -318,6 +318,11 @@ export class LinodeCreate extends React.PureComponent<
     if (typeDisplayInfo) {
       const typeDisplayInfoCopy = cloneDeep(typeDisplayInfo);
 
+      // Always display monthly cost to two decimals
+      typeDisplayInfoCopy.details = `$${typeDisplayInfo.monthly.toFixed(
+        2
+      )}/month`;
+
       if (this.props.createType === 'fromApp' && this.state.numberOfNodes > 0) {
         const { hourlyPrice, monthlyPrice } = getMonthlyAndHourlyNodePricing(
           typeDisplayInfoCopy.monthly,
@@ -325,7 +330,9 @@ export class LinodeCreate extends React.PureComponent<
           this.state.numberOfNodes
         );
 
-        typeDisplayInfoCopy.details = `${this.state.numberOfNodes} Nodes - $${monthlyPrice}/month $${hourlyPrice}/hr`;
+        typeDisplayInfoCopy.details = `${
+          this.state.numberOfNodes
+        } Nodes - $${monthlyPrice.toFixed(2)}/month $${hourlyPrice}/hr`;
       }
 
       displaySections.push(typeDisplayInfoCopy);

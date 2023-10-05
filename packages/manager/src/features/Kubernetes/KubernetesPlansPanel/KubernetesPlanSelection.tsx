@@ -53,7 +53,7 @@ export const KubernetesPlanSelection = (
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
   const subHeadings = [
-    `$${price.monthly}/mo ($${price.hourly}/hr)`,
+    `$${price.monthly?.toFixed(2)}/mo ($${price.hourly}/hr)`,
     type.subHeadings[1],
   ];
 
@@ -88,7 +88,7 @@ export const KubernetesPlanSelection = (
           key={type.id}
         >
           <TableCell data-qa-plan-name>{type.heading}</TableCell>
-          <TableCell data-qa-monthly> ${price.monthly}</TableCell>
+          <TableCell data-qa-monthly> ${price.monthly?.toFixed(2)}</TableCell>
           <TableCell data-qa-hourly>${price.hourly}</TableCell>
           <TableCell center data-qa-ram>
             {convertMegabytesTo(type.memory, true)}

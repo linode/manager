@@ -91,7 +91,9 @@ export const PlanSelection = (props: Props) => {
       ? getLinodeRegionPrice(type, selectedRegionId)
       : type.price;
 
-  type.subHeadings[0] = `$${price.monthly}/mo ($${price.hourly}/hr)`;
+  type.subHeadings[0] = `$${price.monthly?.toFixed(2)}/mo ($${
+    price.hourly
+  }/hr)`;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -151,7 +153,7 @@ export const PlanSelection = (props: Props) => {
               />
             )}
           </TableCell>
-          <TableCell data-qa-monthly> ${price?.monthly}</TableCell>
+          <TableCell data-qa-monthly> ${price?.monthly?.toFixed(2)}</TableCell>
           <TableCell data-qa-hourly>
             {isGPU ? (
               <Currency quantity={price.hourly ?? 0} />

@@ -338,7 +338,7 @@ const DatabaseCreate = () => {
         monthly: null,
       };
       const subHeadings = [
-        `$${price.monthly}/mo ($${price.hourly}/hr)`,
+        `$${price.monthly?.toFixed(2)}/mo ($${price.hourly}/hr)`,
         typeLabelDetails(type.memory, type.disk, type.vcpus),
       ] as [string, string];
       return {
@@ -375,7 +375,7 @@ const DatabaseCreate = () => {
           1 Node {` `}
           <br />
           <span style={{ fontSize: '12px' }}>
-            {`$${nodePricing?.single?.monthly || 0}/month $${
+            {`$${nodePricing?.single?.monthly.toFixed(2) || 0}/month $${
               nodePricing?.single?.hourly || 0
             }/hr`}
           </span>
@@ -389,7 +389,7 @@ const DatabaseCreate = () => {
           3 Nodes - High Availability (recommended)
           <br />
           <span style={{ fontSize: '12px' }}>
-            {`$${nodePricing?.multi?.monthly || 0}/month $${
+            {`$${nodePricing?.multi?.monthly.toFixed(2) || 0}/month $${
               nodePricing?.multi?.hourly || 0
             }/hr`}
           </span>
