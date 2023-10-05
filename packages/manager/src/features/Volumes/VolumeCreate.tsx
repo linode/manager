@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '18px',
   },
   select: {
-    width: 320,
+    width: 400,
   },
   size: {
     position: 'relative',
@@ -317,7 +317,7 @@ export const VolumeCreate = () => {
                 name="region"
                 onBlur={handleBlur}
                 selectedID={values.region}
-                width={320}
+                width={400}
               />
               {renderSelectTooltip(
                 'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
@@ -349,7 +349,7 @@ export const VolumeCreate = () => {
                           linodeRegion === valuesRegion;
                   }}
                   sx={{
-                    width: '320px',
+                    width: '400px',
                   }}
                   clearable
                   disabled={doesNotHavePermission}
@@ -370,7 +370,7 @@ export const VolumeCreate = () => {
                 onBlur={handleBlur}
                 onChange={(id: number) => setFieldValue('config_id', id)}
                 value={config_id}
-                width={320}
+                width={400}
               />
             </Box>
             <Box alignItems="flex-end" display="flex" position="relative">
