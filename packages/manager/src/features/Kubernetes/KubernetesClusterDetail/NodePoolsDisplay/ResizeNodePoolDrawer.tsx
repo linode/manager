@@ -99,7 +99,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   const pricePerNode =
     (flags.dcSpecificPricing && planType
-      ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly
+      ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly?.toFixed(2)
       : planType?.price.monthly) || 0;
 
   const totalMonthlyPrice =
@@ -110,7 +110,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
       region: kubernetesRegionId,
       type: nodePool.type,
       types: planType ? [planType] : [],
-    });
+    }).toFixed(2);
 
   return (
     <Drawer
@@ -148,8 +148,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Resized pool: ${updatedCount * pricePerNode}/month (
-            {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}/month)
+            Resized pool: ${(updatedCount * Number(pricePerNode)).toFixed(2)}
+            /month ({pluralize('node', 'nodes', updatedCount)} at $
+            {pricePerNode}/month)
           </Typography>
         </div>
 
