@@ -38,13 +38,13 @@ interface Props {
   errors?: APIError[];
   items?: InvoiceItem[];
   loading: boolean;
+  shouldShowRegion: boolean;
 }
 
 export const InvoiceTable = (props: Props) => {
   const { classes } = useStyles();
   const MIN_PAGE_SIZE = 25;
   const flags = useFlags();
-  const NUM_COLUMNS = flags.dcSpecificPricing ? 9 : 8;
 
   const {
     data: regions,
@@ -52,7 +52,8 @@ export const InvoiceTable = (props: Props) => {
     isLoading: regionsLoading,
   } = useRegionsQuery();
 
-  const { errors, items, loading } = props;
+  const { errors, items, loading, shouldShowRegion } = props;
+  const NUM_COLUMNS = flags.dcSpecificPricing && shouldShowRegion ? 9 : 8;
 
   const renderTableContent = () => {
     if (loading || regionsLoading) {
@@ -105,7 +106,7 @@ export const InvoiceTable = (props: Props) => {
                   <TableCell data-qa-quantity parentColumn="Quantity">
                     {renderQuantity(invoiceItem.quantity)}
                   </TableCell>
-                  {flags.dcSpecificPricing && (
+                  {flags.dcSpecificPricing && shouldShowRegion && (
                     <TableCell data-qa-region parentColumn="Region">
                       {getInvoiceRegion(invoiceItem, regions ?? [])}
                     </TableCell>
@@ -165,7 +166,9 @@ export const InvoiceTable = (props: Props) => {
           <TableCell sx={{ minWidth: '125px' }}>From</TableCell>
           <TableCell sx={{ minWidth: '125px' }}>To</TableCell>
           <TableCell>Quantity</TableCell>
-          {flags.dcSpecificPricing && <TableCell>Region</TableCell>}
+          {flags.dcSpecificPricing && shouldShowRegion && (
+            <TableCell>Region</TableCell>
+          )}
           <TableCell noWrap>Unit Price</TableCell>
           <TableCell>Amount (USD)</TableCell>
           <TableCell>Tax (USD)</TableCell>

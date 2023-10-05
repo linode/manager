@@ -23,6 +23,7 @@ import {
   createPaymentsTable,
   createPaymentsTotalsTable,
   dateConversion,
+  invoiceCreatedAfterDCPricingLaunch,
   pageMargin,
 } from './utils';
 
@@ -288,6 +289,7 @@ export const printInvoice = async (
         flags,
         items: itemsChunk,
         regions,
+        shouldShowRegions: invoiceCreatedAfterDCPricingLaunch(invoice.date),
         startY: titlePosition,
         timezone,
       });
