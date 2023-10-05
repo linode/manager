@@ -14,6 +14,7 @@ import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
@@ -99,7 +100,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   const pricePerNode =
     (flags.dcSpecificPricing && planType
-      ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly?.toFixed(2)
+      ? getLinodeRegionPrice(planType, kubernetesRegionId)?.monthly
       : planType?.price.monthly) || 0;
 
   const totalMonthlyPrice =
@@ -110,7 +111,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
       region: kubernetesRegionId,
       type: nodePool.type,
       types: planType ? [planType] : [],
-    }).toFixed(2);
+    });
 
   return (
     <Drawer
@@ -127,8 +128,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
       >
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Current pool: ${totalMonthlyPrice}/month (
-            {pluralize('node', 'nodes', nodePool.count)} at ${pricePerNode}
+            Current pool: $
+            {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}/month (
+            {pluralize('node', 'nodes', nodePool.count)} at $
+            {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
             /month)
           </Typography>
         </div>
@@ -148,9 +151,12 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Resized pool: ${(updatedCount * Number(pricePerNode)).toFixed(2)}
+            Resized pool: $
+            {renderMonthlyPriceToCorrectDecimalPlace(
+              updatedCount * pricePerNode
+            )}
             /month ({pluralize('node', 'nodes', updatedCount)} at $
-            {pricePerNode}/month)
+            {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}/month)
           </Typography>
         </div>
 

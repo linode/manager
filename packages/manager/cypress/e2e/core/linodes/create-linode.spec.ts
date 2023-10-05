@@ -183,7 +183,7 @@ describe('create linode', () => {
       const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
         (regionPrice) => regionPrice.id === initialRegion.id
       );
-      cy.findByText(`$${currentPrice.monthly}.00/month`).should('be.visible');
+      cy.findByText(`$${currentPrice.monthly}/month`).should('be.visible');
     });
 
     // Confirms that a notice is shown in the "Region" section of the Linode Create form informing the user of tiered pricing
@@ -202,7 +202,7 @@ describe('create linode', () => {
       const currentPrice = dcPricingMockLinodeTypes[1].region_prices.find(
         (regionPrice) => regionPrice.id === newRegion.id
       );
-      cy.findByText(`$${currentPrice.monthly}.00/month`).should('be.visible');
+      cy.findByText(`$${currentPrice.monthly}/month`).should('be.visible');
     });
 
     getClick('#linode-label').clear().type(linodeLabel);

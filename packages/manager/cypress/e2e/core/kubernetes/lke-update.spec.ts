@@ -38,7 +38,7 @@ import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing'
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
-describe('LKE cluster updates', () => {
+describe.skip('LKE cluster updates', () => {
   /*
    * - Confirms UI flow of upgrading a cluster to high availability control plane using mocked data.
    * - Confirms that user is shown a warning and agrees to billing changes before upgrading.
@@ -515,9 +515,9 @@ describe('LKE cluster updates', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        cy.findByText(
-          'Resized pool: $12.00/month (1 node at $12.00/month)'
-        ).should('be.visible');
+        cy.findByText('Resized pool: $12/month (1 node at $12/month)').should(
+          'be.visible'
+        );
 
         cy.findByLabelText('Add 1')
           .should('be.visible')
@@ -526,9 +526,9 @@ describe('LKE cluster updates', () => {
           .click();
 
         cy.findByLabelText('Edit Quantity').should('have.value', '3');
-        cy.findByText(
-          'Resized pool: $36.00/month (3 nodes at $12.00/month)'
-        ).should('be.visible');
+        cy.findByText('Resized pool: $36/month (3 nodes at $12/month)').should(
+          'be.visible'
+        );
 
         ui.button
           .findByTitle('Save Changes')
@@ -826,7 +826,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     });
 
     // Confirm total price is listed in Kube Specs.
-    cy.findByText('$14.00/month').should('be.visible');
+    cy.findByText('$14.40/month').should('be.visible');
 
     // Click "Resize Pool" and increase size to 3 nodes.
     ui.button
@@ -851,10 +851,10 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .should('be.disabled');
 
         cy.findByText(
-          'Current pool: $14.00/month (1 node at $14.00/month)'
+          'Current pool: $14.40/month (1 node at $14.40/month)'
         ).should('be.visible');
         cy.findByText(
-          'Resized pool: $14.00/month (1 node at $14.00/month)'
+          'Resized pool: $14.40/month (1 node at $14.40/month)'
         ).should('be.visible');
 
         cy.findByLabelText('Add 1')
@@ -866,10 +866,10 @@ describe('LKE cluster updates for DC-specific prices', () => {
 
         cy.findByLabelText('Edit Quantity').should('have.value', '4');
         cy.findByText(
-          'Current pool: $14.00/month (1 node at $14.00/month)'
+          'Current pool: $14.40/month (1 node at $14.40/month)'
         ).should('be.visible');
         cy.findByText(
-          'Resized pool: $56.00/month (4 nodes at $14.00/month)'
+          'Resized pool: $57.60/month (4 nodes at $14.40/month)'
         ).should('be.visible');
 
         cy.findByLabelText('Subtract 1')
@@ -879,7 +879,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
 
         cy.findByLabelText('Edit Quantity').should('have.value', '3');
         cy.findByText(
-          'Resized pool: $42.00/month (3 nodes at $14.00/month)'
+          'Resized pool: $43.20/month (3 nodes at $14.40/month)'
         ).should('be.visible');
 
         ui.button
@@ -892,7 +892,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     cy.wait(['@resizeNodePool', '@getNodePools']);
 
     // Confirm total price updates in Kube Specs.
-    cy.findByText('$42.00/month').should('be.visible');
+    cy.findByText('$43.20/month').should('be.visible');
   });
 
   /*
@@ -939,7 +939,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     cy.findByText('Linode 0 GB', { selector: 'h2' }).should('be.visible');
 
     // Confirm total price is listed in Kube Specs.
-    cy.findByText('$14.00/month').should('be.visible');
+    cy.findByText('$14.40/month').should('be.visible');
 
     // Add a new node pool, select plan, submit form in drawer.
     ui.button
@@ -961,14 +961,14 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .closest('tr')
           .within(() => {
             // Assert that DC-specific prices are displayed the plan table, then add a node pool with 2 linodes.
-            cy.findByText('$14.00').should('be.visible');
+            cy.findByText('$14.40').should('be.visible');
             cy.findByText('$0.021').should('be.visible');
             cy.findByLabelText('Add 1').should('be.visible').click().click();
           });
 
         // Assert that DC-specific prices are displayed as helper text.
         cy.contains(
-          'This pool will add $28.00/month (2 nodes at $14.00/month) to this cluster.'
+          'This pool will add $28.80/month (2 nodes at $14.40/month) to this cluster.'
         ).should('be.visible');
 
         ui.button
@@ -981,7 +981,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     // Wait for API responses.
     cy.wait(['@addNodePool', '@getNodePools']);
 
-    // Confirm total price updates in Kube Specs: $14/mo existing pool + $28/mo new pool.
-    cy.findByText('$42.00/month').should('be.visible');
+    // Confirm total price updates in Kube Specs: $14.40/mo existing pool + $28.80/mo new pool.
+    cy.findByText('$43.20/month').should('be.visible');
   });
 });

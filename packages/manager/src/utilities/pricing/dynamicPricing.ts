@@ -70,3 +70,14 @@ export const getDCSpecificPrice = ({
 
   return basePrice.toFixed(2);
 };
+
+export const renderMonthlyPriceToCorrectDecimalPlace = (
+  monthlyPrice: null | number | undefined
+) => {
+  if (!monthlyPrice) {
+    return '--.--';
+  }
+  return Number.isInteger(monthlyPrice)
+    ? monthlyPrice
+    : monthlyPrice.toFixed(2);
+};

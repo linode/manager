@@ -14,6 +14,7 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -112,12 +113,12 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   const pricePerNode =
     flags.dcSpecificPricing && selectedType
-      ? getLinodeRegionPrice(selectedType, clusterRegionId).monthly?.toFixed(2)
+      ? getLinodeRegionPrice(selectedType, clusterRegionId).monthly
       : selectedType?.price?.monthly;
 
   const totalPrice =
     selectedTypeInfo && pricePerNode
-      ? (selectedTypeInfo.count * Number(pricePerNode)).toFixed(2)
+      ? selectedTypeInfo.count * pricePerNode
       : 0;
 
   React.useEffect(() => {
@@ -221,9 +222,9 @@ export const AddNodePoolDrawer = (props: Props) => {
             <Typography className={classes.priceDisplay}>
               This pool will add{' '}
               <strong>
-                ${totalPrice}/month (
+                ${renderMonthlyPriceToCorrectDecimalPlace(totalPrice)}/month (
                 {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
-                {pricePerNode ?? 0}
+                {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode) ?? 0}
                 /month)
               </strong>{' '}
               to this cluster.

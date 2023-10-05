@@ -63,14 +63,14 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
       // Use `us-east` and `us-west` so we do not have to mock regions request,
       // which otherwise may not include the actual regions which have DC-specific pricing applied.
       id: 'us-east',
-      monthly: 14.0,
+      monthly: 14.4,
     },
     {
       hourly: 0.018,
       // Use `us-east` and `us-west` so we do not have to mock regions request,
       // which otherwise may not include the actual regions which have DC-specific pricing applied.
       id: 'us-west',
-      monthly: 12.0,
+      monthly: 12.2,
     },
   ],
 });

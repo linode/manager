@@ -62,6 +62,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { SelectFirewallPanel } from '../../../components/SelectFirewallPanel/SelectFirewallPanel';
@@ -319,8 +320,8 @@ export class LinodeCreate extends React.PureComponent<
       const typeDisplayInfoCopy = cloneDeep(typeDisplayInfo);
 
       // Always display monthly cost to two decimals
-      typeDisplayInfoCopy.details = `$${typeDisplayInfo.monthly.toFixed(
-        2
+      typeDisplayInfoCopy.details = `$${renderMonthlyPriceToCorrectDecimalPlace(
+        typeDisplayInfo.monthly
       )}/month`;
 
       if (this.props.createType === 'fromApp' && this.state.numberOfNodes > 0) {

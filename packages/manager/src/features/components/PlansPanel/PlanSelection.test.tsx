@@ -110,7 +110,7 @@ describe('PlanSelection (card, mobile)', () => {
     ).toHaveTextContent('Dedicated 20 GB');
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-1"]')
-    ).toHaveTextContent('$10.00/mo ($0.015/hr)');
+    ).toHaveTextContent('$10/mo ($0.015/hr)');
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-2"]')
     ).toHaveTextContent('1 CPU, 50 GB Storage, 2 GB RAM');
@@ -153,7 +153,7 @@ describe('PlanSelection (card, mobile)', () => {
     ).toHaveTextContent('Dedicated 20 GB');
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-1"]')
-    ).toHaveTextContent('$14.00/mo ($0.021/hr)');
+    ).toHaveTextContent('$14.40/mo ($0.021/hr)');
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-2"]')
     ).toHaveTextContent('1 CPU, 50 GB Storage, 2 GB RAM');

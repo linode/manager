@@ -16,9 +16,9 @@ import {
 
 const planHeader = 'Dedicated 20 GB';
 const baseHourlyPrice = '$0.015';
-const baseMonthlyPrice = '$10.00';
+const baseMonthlyPrice = '$10';
 const regionHourlyPrice = '$0.018';
-const regionMonthlyPrice = '$12.00';
+const regionMonthlyPrice = '$12.20';
 const ram = '16 GB';
 const cpu = '8';
 const storage = '1024 GB';
