@@ -53,7 +53,7 @@ export const getRegionOptions = (regions: Region[], flags: FlagSet) => {
 
   const hasUserAccessToDisabledRegions = listOfDisabledRegions.some(
     (disabledRegion) =>
-      regions.some((region) => region.id === disabledRegion.regionId)
+      regions.some((region) => region.id === disabledRegion.fakeRegion.id)
   );
   const allRegions = [
     ...regions,
@@ -77,7 +77,7 @@ export const getRegionOptions = (regions: Region[], flags: FlagSet) => {
       disabledMessage: hasUserAccessToDisabledRegions
         ? undefined
         : listOfDisabledRegions.find(
-            (disabledRegion) => disabledRegion.regionId === region.id
+            (disabledRegion) => disabledRegion.fakeRegion.id === region.id
           )?.disabledMessage,
       flag: <Flag country={region.country as Lowercase<Country>} />,
       label: `${region.label} (${region.id})`,

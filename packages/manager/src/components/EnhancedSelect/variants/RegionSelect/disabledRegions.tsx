@@ -37,17 +37,29 @@ type FakeRegion = Region & { disabled: boolean; display: string };
 
 // UTILS
 interface DisabledRegion {
+  /**
+   * The message to display when the region is disabled.
+   */
   disabledMessage: JSX.Element;
+  /**
+   * A list of paths that should not display the fake region.
+   */
+  excludePaths?: string[];
+  /**
+   * The fake region to display.
+   */
   fakeRegion: FakeRegion;
+  /**
+   * The feature flag that controls whether the fake region should be displayed.
+   */
   featureFlag: string;
-  regionId: 'ap-northeast';
 }
 
 export const listOfDisabledRegions: DisabledRegion[] = [
   {
     disabledMessage: tokyoDisabledMessage,
+    excludePaths: ['/object-storage/buckets/create'],
     fakeRegion: fakeTokyo,
     featureFlag: 'soldOutTokyo',
-    regionId: 'ap-northeast',
   },
 ];
