@@ -515,9 +515,9 @@ describe('LKE cluster updates', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        cy.findByText('Resized pool: $12/month (1 node at $12/month)').should(
-          'be.visible'
-        );
+        cy.findByText(
+          'Resized pool: $12.00/month (1 node at $12.00/month)'
+        ).should('be.visible');
 
         cy.findByLabelText('Add 1')
           .should('be.visible')
@@ -526,9 +526,9 @@ describe('LKE cluster updates', () => {
           .click();
 
         cy.findByLabelText('Edit Quantity').should('have.value', '3');
-        cy.findByText('Resized pool: $36/month (3 nodes at $12/month)').should(
-          'be.visible'
-        );
+        cy.findByText(
+          'Resized pool: $36.00/month (3 nodes at $12.00/month)'
+        ).should('be.visible');
 
         ui.button
           .findByTitle('Save Changes')
@@ -850,12 +850,12 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        cy.findByText('Current pool: $14/month (1 node at $14/month)').should(
-          'be.visible'
-        );
-        cy.findByText('Resized pool: $14/month (1 node at $14/month)').should(
-          'be.visible'
-        );
+        cy.findByText(
+          'Current pool: $14.00/month (1 node at $14.00/month)'
+        ).should('be.visible');
+        cy.findByText(
+          'Resized pool: $14.00/month (1 node at $14.00/month)'
+        ).should('be.visible');
 
         cy.findByLabelText('Add 1')
           .should('be.visible')
@@ -865,12 +865,12 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .click();
 
         cy.findByLabelText('Edit Quantity').should('have.value', '4');
-        cy.findByText('Current pool: $14/month (1 node at $14/month)').should(
-          'be.visible'
-        );
-        cy.findByText('Resized pool: $56/month (4 nodes at $14/month)').should(
-          'be.visible'
-        );
+        cy.findByText(
+          'Current pool: $14.00/month (1 node at $14.00/month)'
+        ).should('be.visible');
+        cy.findByText(
+          'Resized pool: $56.00/month (4 nodes at $14.00/month)'
+        ).should('be.visible');
 
         cy.findByLabelText('Subtract 1')
           .should('be.visible')
@@ -878,9 +878,9 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .click();
 
         cy.findByLabelText('Edit Quantity').should('have.value', '3');
-        cy.findByText('Resized pool: $42/month (3 nodes at $14/month)').should(
-          'be.visible'
-        );
+        cy.findByText(
+          'Resized pool: $42.00/month (3 nodes at $14.00/month)'
+        ).should('be.visible');
 
         ui.button
           .findByTitle('Save Changes')
@@ -961,14 +961,14 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .closest('tr')
           .within(() => {
             // Assert that DC-specific prices are displayed the plan table, then add a node pool with 2 linodes.
-            cy.findByText('$14').should('be.visible');
+            cy.findByText('$14.00').should('be.visible');
             cy.findByText('$0.021').should('be.visible');
             cy.findByLabelText('Add 1').should('be.visible').click().click();
           });
 
         // Assert that DC-specific prices are displayed as helper text.
         cy.contains(
-          'This pool will add $28/month (2 nodes at $14/month) to this cluster.'
+          'This pool will add $28.00/month (2 nodes at $14.00/month) to this cluster.'
         ).should('be.visible');
 
         ui.button
