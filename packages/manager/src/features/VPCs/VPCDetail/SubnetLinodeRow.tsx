@@ -219,6 +219,6 @@ export const SubnetLinodeTableRowHead = (
     <Hidden smDown>
       <StyledTableHeadCell>Firewalls</StyledTableHeadCell>
     </Hidden>
-    <StyledTableHeadCell sx={{ width: '11%' }}></StyledTableHeadCell>
+    <StyledTableHeadCell></StyledTableHeadCell>
   </TableRow>
 );
