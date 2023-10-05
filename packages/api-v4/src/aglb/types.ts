@@ -26,6 +26,8 @@ export interface UpdateLoadbalancerPayload {
 
 type Protocol = 'tcp' | 'http' | 'https';
 
+type RouteProtocol = 'tcp' | 'http';
+
 type Policy =
   | 'round_robin'
   | 'least_request'
@@ -37,31 +39,13 @@ export type MatchField = 'path_prefix' | 'query' | 'host' | 'header' | 'method';
 
 export interface RoutePayload {
   label: string;
-  rules: Rule[];
-}
-
-export interface UpdateRoutePayload {
-  label: string;
-  protocol: Protocol;
-  rules: Route['rules'];
-}
-
-export interface ExtendedMatchCondition extends MatchCondition {
-  service_targets: { id: number; label: string; percentage: number }[];
+  rules: RuleCreatePayload[];
 }
 
 export interface Route {
   id: number;
   label: string;
-  protocol: Protocol;
-  rules: {
-    match_condition: ExtendedMatchCondition;
-  }[];
-}
-
-export interface CreateRoutePayload {
-  label: string;
-  protocol: Protocol;
+  protocol: RouteProtocol;
   rules: {
     match_condition: MatchCondition;
     service_targets: {
@@ -69,6 +53,36 @@ export interface CreateRoutePayload {
       label: string;
       percentage: number;
     }[];
+  }[];
+}
+
+export type UpdateRoutePayload = Partial<{
+  label: string;
+  protocol: RouteProtocol;
+  rules: RulePayload[];
+}>;
+
+export interface CreateRoutePayload {
+  label: string;
+  protocol: RouteProtocol;
+  rules: RulePayload[];
+}
+
+export interface Rule {
+  match_condition: MatchCondition;
+  service_targets: {
+    id: number;
+    label: string;
+    percentage: number;
+  }[];
+}
+
+export interface RulePayload {
+  match_condition: MatchCondition;
+  service_targets: {
+    id: number;
+    label: string;
+    percentage: number;
   }[];
 }
 
@@ -95,7 +109,7 @@ export interface CertificateConfig {
   id: number;
 }
 
-export interface Rule {
+export interface RuleCreatePayload {
   match_condition: MatchCondition;
   service_targets: ServiceTargetPayload[];
 }
@@ -105,7 +119,7 @@ export interface MatchCondition {
   match_field: MatchField;
   match_value: string;
   session_stickiness_cookie: string | null;
-  session_stickiness_ttl: string | null;
+  session_stickiness_ttl: number | null;
 }
 
 export interface RouteServiceTargetPayload {

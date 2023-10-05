@@ -5,6 +5,7 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { updateInPaginatedStore } from '../base';
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
@@ -15,7 +16,6 @@ import type {
   Route,
   UpdateRoutePayload,
 } from '@linode/api-v4';
-import { updateInPaginatedStore } from '../base';
 
 export const useLoadBalancerRoutesQuery = (
   id: number,
@@ -47,11 +47,12 @@ export const useLoadBalancerRouteUpdateMutation = (
         ]);
       },
       onMutate(variables) {
+        const key = [QUERY_KEY, 'loadbalancer', loadbalancerId, 'routes'];
         // Optimistically update the route on mutate
         updateInPaginatedStore<Route>(
-          [QUERY_KEY, 'loadbalancer', loadbalancerId, 'routes'],
+          key,
           routeId,
-          variables,
+          { rules: variables.rules },
           queryClient
         );
       },

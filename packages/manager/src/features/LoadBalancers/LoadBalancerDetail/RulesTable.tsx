@@ -210,12 +210,12 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                   overflowWrap: 'break-word',
                                   width: '20%',
                                 }}
-                                aria-label={`Service Targets: ${rule.match_condition.service_targets.length}`}
+                                aria-label={`Service Targets: ${rule.service_targets.length}`}
                               >
                                 <Tooltip
                                   title={
                                     <>
-                                      {rule.match_condition.service_targets.map(
+                                      {rule.service_targets.map(
                                         ({ id, label }) => (
                                           <div key={label}>
                                             {label}:{id}
@@ -231,10 +231,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                       textDecoration: 'underline',
                                     }}
                                   >
-                                    {
-                                      rule.match_condition.service_targets
-                                        .length
-                                    }
+                                    {rule.service_targets.length}
                                   </div>
                                 </Tooltip>
                               </Box>

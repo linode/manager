@@ -8,6 +8,7 @@ import Request, {
 import { Filter, Params, ResourcePage } from '../types';
 import { BETA_API_ROOT } from '../constants';
 import type { Route, RoutePayload, UpdateRoutePayload } from './types';
+import { UpdateRouteSchema } from '@linode/validation';
 
 /**
  * getLoadbalancerRoutes
@@ -76,7 +77,7 @@ export const updateLoadbalancerRoute = (
         loadbalancerId
       )}/routes/${encodeURIComponent(routeId)}`
     ),
-    setData(data),
+    setData(data, UpdateRouteSchema),
     setMethod('PUT')
   );
 
