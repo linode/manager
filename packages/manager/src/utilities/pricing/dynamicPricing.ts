@@ -1,5 +1,6 @@
 import type { Region } from '@linode/api-v4';
 import type { FlagSet } from 'src/featureFlags';
+import { UNKNOWN_PRICE } from './constants';
 
 export interface DataCenterPricingOptions {
   /**
@@ -75,7 +76,7 @@ export const renderMonthlyPriceToCorrectDecimalPlace = (
   monthlyPrice: null | number | undefined
 ) => {
   if (!monthlyPrice) {
-    return '--.--';
+    return UNKNOWN_PRICE;
   }
   return Number.isInteger(monthlyPrice)
     ? monthlyPrice
