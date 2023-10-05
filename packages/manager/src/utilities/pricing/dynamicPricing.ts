@@ -39,6 +39,11 @@ export const objectStoragePriceIncreaseMap = {
   },
 };
 
+export const pricingLinkMap = {
+  'br-gru': 'https://www.linode.com/pricing/sao-paulo/',
+  'id-cgk': 'https://www.linode.com/pricing/jakarta/',
+};
+
 /**
  * This function is used to calculate the dynamic pricing for a given entity, based on potential region increased costs.
  * @example

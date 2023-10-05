@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useRegionsQuery } from 'src/queries/regions';
+import { pricingLinkMap } from 'src/utilities/pricing/dynamicPricing';
 
 import { Link } from './Link';
 import { Notice, NoticeProps } from './Notice/Notice';
@@ -27,7 +28,9 @@ export const DynamicPriceNotice = (props: Props) => {
       <Typography fontWeight="bold">
         Prices for plans, products, and services in {regionLabel} may vary from
         other regions.{' '}
-        <Link to="https://www.linode.com/pricing">Learn more.</Link>
+        <Link to={pricingLinkMap[region] ?? 'https://www.linode.com/pricing'}>
+          Learn more.
+        </Link>
       </Typography>
     </Notice>
   );
