@@ -15,6 +15,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 
 import type { Region } from '@linode/api-v4';
+import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
 /**
  * Margin that has to be applied to every item added to the PDF.
@@ -410,9 +411,10 @@ export interface PdfResult {
 
 export const dateConversion = (str: string): number => Date.parse(str);
 
-export const MAGIC_DATE_THAT_DC_PRICING_WAS_IMPLEMENTED =
-  '2023-10-05 00:00:00Z';
-
+/**
+ * @param _invoiceDate When the invoice was generated
+ * @returns True if invoice is dated on or after the release of DC-specific pricing (10/05/23). From then on, invoice items return a region.
+ */
 export const invoiceCreatedAfterDCPricingLaunch = (_invoiceDate?: string) => {
   // Default to `true` for bad input.
   if (!_invoiceDate) {
@@ -420,7 +422,7 @@ export const invoiceCreatedAfterDCPricingLaunch = (_invoiceDate?: string) => {
   }
 
   const dcPricingDate = new Date(
-    MAGIC_DATE_THAT_DC_PRICING_WAS_IMPLEMENTED
+    MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED
   ).getTime();
   const invoiceDate = new Date(_invoiceDate).getTime();
 
