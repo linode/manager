@@ -8,6 +8,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
+import { PRICE_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 interface Props {
   error?: string;
@@ -54,12 +55,8 @@ export const BackupLinodeRow = (props: Props) => {
         <TableCell parentColumn="Region">{regionLabel ?? 'Unknown'}</TableCell>
       )}
       <TableCell
-        errorText={
-          !backupsMonthlyPrice
-            ? 'There was an error loading the price.'
-            : undefined
-        }
         errorCell={!Boolean(backupsMonthlyPrice)}
+        errorText={!backupsMonthlyPrice ? PRICE_ERROR_NOTICE_TEXT : undefined}
         parentColumn="Price"
       >
         {backupsMonthlyPrice

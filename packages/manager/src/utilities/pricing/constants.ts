@@ -14,6 +14,7 @@ export const OBJ_STORAGE_PRICE: ObjStoragePriceObject = {
   transfer_overage: 0.005,
 };
 export const UNKNOWN_PRICE = '--.--';
+export const PRICE_ERROR_NOTICE_TEXT = 'There was an error loading the price.';
 
 // Other constants
 export const PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE =

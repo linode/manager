@@ -12,6 +12,7 @@ import { TableCell } from 'src/components/TableCell';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
+import { PRICE_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getPrice } from 'src/utilities/pricing/linodes';
@@ -94,11 +95,9 @@ export const KubernetesPlanSelection = (
         >
           <TableCell data-qa-plan-name>{type.heading}</TableCell>
           <TableCell
-            errorText={
-              !price ? 'There was an error loading the price.' : undefined
-            }
             data-qa-monthly
             errorCell={!price}
+            errorText={!price ? PRICE_ERROR_NOTICE_TEXT : undefined}
           >
             $
             {price?.monthly
@@ -106,11 +105,9 @@ export const KubernetesPlanSelection = (
               : UNKNOWN_PRICE}
           </TableCell>
           <TableCell
-            errorText={
-              !price ? 'There was an error loading the price.' : undefined
-            }
             data-qa-hourly
             errorCell={!price}
+            errorText={!price ? PRICE_ERROR_NOTICE_TEXT : undefined}
           >
             ${price?.hourly ?? UNKNOWN_PRICE}
           </TableCell>

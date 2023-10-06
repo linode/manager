@@ -10,6 +10,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { PRICE_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
@@ -161,11 +162,9 @@ export const PlanSelection = (props: Props) => {
             ${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}
           </TableCell>
           <TableCell
-            errorText={
-              !price ? 'There was an error loading the price.' : undefined
-            }
             data-qa-hourly
             errorCell={!price}
+            errorText={!price ? PRICE_ERROR_NOTICE_TEXT : undefined}
           >
             {isGPU ? (
               <Currency quantity={price?.hourly ?? UNKNOWN_PRICE} />
