@@ -101,10 +101,7 @@ export const KubernetesPlanSelection = (
             errorCell={!price}
             errorText={!price ? PRICE_ERROR_NOTICE_TEXT : undefined}
           >
-            $
-            {price?.monthly
-              ? renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)
-              : UNKNOWN_PRICE}
+            ${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}
           </TableCell>
           <TableCell
             data-qa-hourly

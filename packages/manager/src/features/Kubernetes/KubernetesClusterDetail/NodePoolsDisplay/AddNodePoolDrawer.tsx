@@ -229,7 +229,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           flexDirection="row"
           justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
         >
-          {selectedTypeInfo && pricePerNode && (
+          {selectedTypeInfo && (
             <Typography className={classes.priceDisplay}>
               This pool will add{' '}
               <strong>

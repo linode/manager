@@ -95,11 +95,9 @@ export const PlanSelection = (props: Props) => {
     selectedRegionId,
     dcSpecificPricing
   );
-  type.subHeadings[0] = `$${
-    price?.hourly
-      ? renderMonthlyPriceToCorrectDecimalPlace(price.monthly)
-      : UNKNOWN_PRICE
-  }/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
+  type.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
+    price?.monthly
+  )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>

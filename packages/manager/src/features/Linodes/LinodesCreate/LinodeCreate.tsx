@@ -37,11 +37,11 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -331,11 +331,11 @@ export class LinodeCreate extends React.PureComponent<
           this.state.numberOfNodes
         );
 
-        typeDisplayInfoCopy.details = `${this.state.numberOfNodes} Nodes - $${
+        typeDisplayInfoCopy.details = `${
+          this.state.numberOfNodes
+        } Nodes - $${renderMonthlyPriceToCorrectDecimalPlace(
           monthlyPrice
-            ? renderMonthlyPriceToCorrectDecimalPlace(monthlyPrice)
-            : '--.--'
-        }/month $${hourlyPrice}/hr`;
+        )}/month $${hourlyPrice}/hr`;
       }
 
       displaySections.push(typeDisplayInfoCopy);

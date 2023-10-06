@@ -8,7 +8,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
-import { PRICE_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+import {
+  PRICE_ERROR_NOTICE_TEXT,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 
 interface Props {
   error?: string;
@@ -61,7 +64,7 @@ export const BackupLinodeRow = (props: Props) => {
       >
         {backupsMonthlyPrice
           ? `$${backupsMonthlyPrice?.toFixed(2)}/mo`
-          : '$--.--/mo'}
+          : `$${UNKNOWN_PRICE}/mo`}
       </TableCell>
     </TableRow>
   );
