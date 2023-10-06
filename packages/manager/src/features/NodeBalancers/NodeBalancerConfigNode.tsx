@@ -29,7 +29,7 @@ export interface NodeBalancerConfigNodeProps {
   onNodeModeChange: (nodeId: number, mode: NodeBalancerConfigNodeMode) => void;
   onNodePortChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  removeNode: (e: React.MouseEvent<HTMLElement>) => void;
+  removeNode: (nodeIndex: number) => void;
 }
 
 export const NodeBalancerConfigNode = React.memo(
@@ -186,7 +186,7 @@ export const NodeBalancerConfigNode = React.memo(
             )}
             {(forEdit || idx !== 0) && (
               <Box alignSelf="flex-end" paddingBottom={1}>
-                <Button disabled={disabled} onClick={removeNode}>
+                <Button disabled={disabled} onClick={() => removeNode(idx)}>
                   Remove
                 </Button>
               </Box>

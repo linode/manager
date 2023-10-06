@@ -118,14 +118,13 @@ export const NodeBalancerConfigPanel = (
     props.addNode();
   };
 
-  const removeNode = (e: React.MouseEvent<HTMLElement>) => {
+  const removeNode = (nodeIndex: number) => {
     if (props.disabled) {
       return;
     }
-    const nodeIdx: null | string = e.currentTarget.getAttribute(DATA_NODE);
     const { removeNode } = props;
-    if (removeNode && nodeIdx) {
-      return removeNode(+nodeIdx);
+    if (removeNode) {
+      return removeNode(nodeIndex);
     }
   };
 
