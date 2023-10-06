@@ -1,4 +1,6 @@
 import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -63,6 +65,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
     vpcIPv4Error,
     vpcIdError,
   } = props;
+
+  const theme = useTheme();
+  const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
 
   const flags = useFlags();
   const { account } = useAccountManagement();
@@ -248,7 +253,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     flexDirection="row"
                     sx={{}}
                   >
-                    <Typography noWrap>
+                    <Typography noWrap={!isSmallBp && from === 'linodeConfig'}>
                       Auto-assign a VPC IPv4 address for this Linode in the VPC
                     </Typography>
                     <TooltipIcon

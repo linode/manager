@@ -71,7 +71,9 @@ export const InterfaceSelect = (props: CombinedProps) => {
   } = props;
 
   const theme = useTheme();
-  const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallBp = useMediaQuery(
+    theme.breakpoints.down(fromAddonsPanel ? 'sm' : 1015)
+  );
   const flags = useFlags();
   const { data: account } = useAccount();
 
@@ -312,7 +314,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
-        <Grid xs={!isSmallBp ? 6 : 12}>
+        <Grid xs={isSmallBp ? 12 : 6}>
           <Select
             options={
               // Do not display "None" as an option for eth0 (must be either Public Internet or a VLAN).
