@@ -12,6 +12,7 @@ import { TableCell } from 'src/components/TableCell';
 import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { useFlags } from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/utilities/extendType';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
@@ -54,7 +55,9 @@ export const KubernetesPlanSelection = (
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
   const subHeadings = [
-    `$${price?.monthly ?? '--.--'}/mo ($${price?.hourly ?? '--.--'}/hr)`,
+    `$${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}/mo ($${
+      price?.hourly
+    }/hr)`,
     type.subHeadings[1],
   ];
 
@@ -96,7 +99,10 @@ export const KubernetesPlanSelection = (
             data-qa-monthly
             errorCell={!price}
           >
-            ${price?.monthly ?? '--.--'}
+            $
+            {price?.monthly
+              ? renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)
+              : '--.--'}
           </TableCell>
           <TableCell
             errorText={

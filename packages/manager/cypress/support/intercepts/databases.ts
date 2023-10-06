@@ -2,7 +2,11 @@
  * @file Cypress intercepts and mocks for Cloud Manager DBaaS operations.
  */
 
-import { Database, DatabaseCredentials } from '@linode/api-v4/types';
+import {
+  Database,
+  DatabaseCredentials,
+  DatabaseEngine,
+} from '@linode/api-v4/types';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
@@ -228,5 +232,22 @@ export const mockDeleteProvisioningDatabase = (
     'DELETE',
     apiMatcher(`databases/${engine}/instances/${id}`),
     error
+  );
+};
+
+/**
+ * Intercepts GET request to fetch available DBaaS engines and mocks response.
+ *
+ * @param engines - Database engine types.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetDatabaseEngines = (
+  engines: DatabaseEngine[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('databases/engines*'),
+    paginateResponse(engines)
   );
 };

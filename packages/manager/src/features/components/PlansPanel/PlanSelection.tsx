@@ -9,6 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
@@ -90,10 +91,11 @@ export const PlanSelection = (props: Props) => {
     selectedRegionId,
     dcSpecificPricing
   );
-
-  type.subHeadings[0] = `$${price?.monthly ?? '--.--'}/mo ($${
-    price?.hourly ?? '--.--'
-  }/hr)`;
+  type.subHeadings[0] = `$${
+    price?.hourly
+      ? renderMonthlyPriceToCorrectDecimalPlace(price.monthly)
+      : '--.--'
+  }/mo ($${price?.hourly ?? '--.--'}/hr)`;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -153,7 +155,10 @@ export const PlanSelection = (props: Props) => {
               />
             )}
           </TableCell>
-          <TableCell data-qa-monthly> ${price?.monthly}</TableCell>
+          <TableCell data-qa-monthly>
+            {' '}
+            ${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}
+          </TableCell>
           <TableCell
             errorText={
               !price ? 'There was an error loading the price.' : undefined
