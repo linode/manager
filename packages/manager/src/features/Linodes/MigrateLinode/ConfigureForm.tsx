@@ -10,6 +10,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import {
   getLinodeRegionPrice,
   isLinodeTypeDifferentPriceInSelectedRegion,
@@ -151,11 +152,9 @@ export const ConfigureForm = React.memo((props: Props) => {
       </StyledMigrationContainer>
       {!currentRegionPrice && selectedRegion && (
         <Notice
-          text={
-            'There was an error retrieving prices. Please reload and try again.'
-          }
           spacingBottom={16}
           spacingTop={8}
+          text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
           variant="error"
         />
       )}

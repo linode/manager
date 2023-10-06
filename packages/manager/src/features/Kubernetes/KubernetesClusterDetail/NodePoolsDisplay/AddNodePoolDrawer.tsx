@@ -14,6 +14,7 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getPrice } from 'src/utilities/pricing/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -214,11 +215,9 @@ export const AddNodePoolDrawer = (props: Props) => {
 
         {selectedTypeInfo && !totalPrice && !pricePerNode && (
           <Notice
-            text={
-              'There was an error retrieving prices. Please reload and try again.'
-            }
             spacingBottom={16}
             spacingTop={8}
+            text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
             variant="error"
           />
         )}

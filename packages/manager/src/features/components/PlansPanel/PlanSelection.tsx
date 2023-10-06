@@ -9,8 +9,10 @@ import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
-import { PRICE_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+import {
+  PRICE_ERROR_NOTICE_TEXT,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
