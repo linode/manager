@@ -2,6 +2,7 @@ import {
   createLoadbalancerCertificate,
   deleteLoadbalancerCertificate,
   getLoadbalancerCertificates,
+  updateLoadbalancerCertificate,
 } from '@linode/api-v4';
 import {
   useInfiniteQuery,
@@ -19,6 +20,7 @@ import type {
   Filter,
   Params,
   ResourcePage,
+  UpdateCertificatePayload,
 } from '@linode/api-v4';
 
 export const useLoadBalancerCertificatesQuery = (
@@ -47,6 +49,27 @@ export const useLoadBalancerCertificateCreateMutation = (
   const queryClient = useQueryClient();
   return useMutation<Certificate, APIError[], CreateCertificatePayload>(
     (data) => createLoadbalancerCertificate(loadbalancerId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([
+          QUERY_KEY,
+          'loadbalancer',
+          loadbalancerId,
+          'certificates',
+        ]);
+      },
+    }
+  );
+};
+
+export const useLoadBalancerCertificateMutation = (
+  loadbalancerId: number,
+  certificateId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<Certificate, APIError[], UpdateCertificatePayload>(
+    (data) =>
+      updateLoadbalancerCertificate(loadbalancerId, certificateId, data),
     {
       onSuccess() {
         queryClient.invalidateQueries([

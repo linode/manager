@@ -10,6 +10,20 @@ export const CreateCertificateSchema = object({
   type: string().oneOf(['downstream', 'ca']).required('Type is required.'),
 });
 
+export const UpdateCertificateSchema = object().shape(
+  {
+    certificate: string(),
+    key: string().when(['type', 'certificate'], {
+      is: (type: string, certificate: string) =>
+        type === 'downstream' && certificate,
+      then: string().required('Private Key is required'),
+    }),
+    label: string(),
+    type: string().oneOf(['downstream', 'ca']),
+  },
+  [['certificate', 'key']]
+);
+
 export const certificateConfigSchema = object({
   certificates: array(
     object({
