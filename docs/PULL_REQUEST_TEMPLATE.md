@@ -34,6 +34,8 @@ List any change relevant to the reviewer.
 
 ## As an Author I have considered 🤔
 
+*Check all that apply*
+
 - [ ] 👀 Doing a self review
 - [ ] ❔ Our [contribution guidelines](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md)
 - [ ] 🤏 Splitting feature into small PRs
