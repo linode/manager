@@ -9,7 +9,7 @@ export interface DisplayPriceProps {
   decimalPlaces?: number;
   fontSize?: string;
   interval?: string;
-  price: number | typeof UNKNOWN_PRICE;
+  price: number | '--.--';
 }
 
 export const displayPrice = (price: number) => `$${price.toFixed(2)}`;
