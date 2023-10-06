@@ -111,14 +111,14 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
           >
             Execution
           </Box>
-          <Box sx={{ ...sxItemSpacing, width: xsDown ? '45%' : '25%' }}>
+          <Box sx={{ ...sxItemSpacing, width: xsDown ? '45%' : '20%' }}>
             Match Value
           </Box>
           <Hidden smDown>
             <Box
               sx={{
                 ...sxItemSpacing,
-                width: '15%',
+                width: '20%',
               }}
             >
               Match Type
@@ -187,7 +187,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                             <Box
                               sx={{
                                 ...sxItemSpacing,
-                                width: xsDown ? '45%' : '25%',
+                                width: xsDown ? '45%' : '20%',
                               }}
                               aria-label={`Match value: ${rule.match_condition.match_value}`}
                             >
@@ -201,7 +201,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                     rule.match_condition.match_field
                                   ]
                                 }`}
-                                sx={{ ...sxItemSpacing, width: '15%' }}
+                                sx={{ ...sxItemSpacing, width: '20%' }}
                               >
                                 {
                                   matchFieldMap[
