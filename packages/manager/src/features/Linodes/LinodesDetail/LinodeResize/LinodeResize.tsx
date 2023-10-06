@@ -11,6 +11,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Dialog } from 'src/components/Dialog/Dialog';
+import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -315,14 +316,17 @@ export const LinodeResize = (props: Props) => {
               ) : (
                 'your disk'
               )}{' '}
-              to be automatically scaled with this Linode&rsquo;s new size? We
-              recommend you keep this option enabled when available. Automatic
-              resizing is only available when moving to a larger plan, and when
-              you have a single ext disk (or one ext and one swap disk) on your
-              Linode.
+              to be automatically scaled with this Linode&rsquo;s new size?{' '}
+              <br />
+              We recommend you keep this option enabled when available.
             </Typography>
           }
           disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
+        />
+        <Divider
+          sx={{
+            marginTop: theme.spacing(2),
+          }}
         />
         <Box marginTop={2}>
           <TypeToConfirm
