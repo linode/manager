@@ -40,7 +40,7 @@ List any change relevant to the reviewer.
 [ ] 🤏 Splitting feature into small PRs<br>
 [ ] ➕ Adding a changeset<br>
 [ ] 🧪 Providing/Improving test coverage<br>
-[ ] 🔐 Removing all sensitive information from the code and PR description
+[ ] 🔐 Removing all sensitive information from the code and PR description<br>
 [ ] 🚩 Using a feature flag to protect the release<br>
 [ ] 👣 Providing comprehensive reproduction steps<br>
 [ ] 📑 Providing or updating our documentation<br>
