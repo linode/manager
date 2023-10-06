@@ -1,4 +1,7 @@
-import { getDCSpecificPrice } from './dynamicPricing';
+import {
+  getDCSpecificPrice,
+  renderMonthlyPriceToCorrectDecimalPlace,
+} from './dynamicPricing';
 import { getDynamicVolumePrice } from './dynamicVolumePrice';
 
 describe('getDCSpecificPricingDisplay', () => {
@@ -58,5 +61,23 @@ describe('getDCSpecificPricingDisplay', () => {
         regionId: 'invalid-region',
       })
     ).toBe('0.00');
+  });
+});
+
+describe('renderMonthlyPriceToCorrectDecimalPlace', () => {
+  it('renders monthly price to two decimal places if the price includes a decimal', () => {
+    expect(renderMonthlyPriceToCorrectDecimalPlace(12.2)).toBe('12.20');
+  });
+
+  it('renders monthly price as an integer if the price does not include a decimal', () => {
+    expect(renderMonthlyPriceToCorrectDecimalPlace(12)).toBe(12);
+  });
+
+  it('renders monthly price as --.-- (unknown price) if the price is undefined', () => {
+    expect(renderMonthlyPriceToCorrectDecimalPlace(undefined)).toBe('--.--');
+  });
+
+  it('renders monthly price as --.-- (unknown price) if the price is null', () => {
+    expect(renderMonthlyPriceToCorrectDecimalPlace(null)).toBe('--.--');
   });
 });

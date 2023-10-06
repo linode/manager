@@ -161,6 +161,7 @@ type CertificateType = 'ca' | 'downstream';
 export interface Certificate {
   id: number;
   label: string;
+  certificate: string;
   type: CertificateType;
 }
 
@@ -169,4 +170,11 @@ export interface CreateCertificatePayload {
   certificate: string;
   label: string;
   type: CertificateType;
+}
+
+export interface UpdateCertificatePayload {
+  key?: string;
+  certificate?: string;
+  label?: string;
+  type?: CertificateType;
 }

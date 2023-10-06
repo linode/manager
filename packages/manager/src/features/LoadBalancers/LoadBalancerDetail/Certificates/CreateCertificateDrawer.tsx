@@ -9,6 +9,8 @@ import { Typography } from 'src/components/Typography';
 import { useLoadBalancerCertificateCreateMutation } from 'src/queries/aglb/certificates';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import { labelMap } from './EditCertificateDrawer';
+
 import type { Certificate, CreateCertificatePayload } from '@linode/api-v4';
 
 interface Props {
@@ -91,7 +93,7 @@ export const CreateCertificateDrawer = (props: Props) => {
         />
         <TextField
           errorText={errorMap.certificate}
-          label="TLS Certificate"
+          label={labelMap[type]}
           labelTooltipText="TODO"
           multiline
           name="certificate"

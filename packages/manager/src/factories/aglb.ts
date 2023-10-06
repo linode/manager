@@ -14,7 +14,7 @@ import {
 import * as Factory from 'factory.ts';
 import { pickRandom } from 'src/utilities/random';
 
-const certificate = `
+export const mockCertificate = `
 -----BEGIN CERTIFICATE-----
 MIID0DCCArigAwIBAgIBATANBgkqhkiG9w0BAQUFADB/MQswCQYDVQQGEwJGUjET
 MBEGA1UECAwKU29tZS1TdGF0ZTEOMAwGA1UEBwwFUGFyaXMxDTALBgNVBAoMBERp
@@ -40,7 +40,7 @@ cbTV5RDkrlaYwm5yqlTIglvCv7o=
 -----END CERTIFICATE-----
 `;
 
-const key = `
+const mockKey = `
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAvpnaPKLIKdvx98KW68lz8pGaRRcYersNGqPjpifMVjjE8LuC
 oXgPU0HePnNTUjpShBnynKCvrtWhN+haKbSp+QWXSxiTrW99HBfAl1MDQyWcukoE
@@ -308,6 +308,7 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
 // Certificate endpoints
 // *********************
 export const certificateFactory = Factory.Sync.makeFactory<Certificate>({
+  certificate: mockCertificate,
   id: Factory.each((i) => i),
   label: Factory.each((i) => `certificate-${i}`),
   type: 'ca',
@@ -315,8 +316,8 @@ export const certificateFactory = Factory.Sync.makeFactory<Certificate>({
 
 export const createCertificateFactory = Factory.Sync.makeFactory<CreateCertificatePayload>(
   {
-    certificate,
-    key,
+    certificate: mockCertificate,
+    key: mockKey,
     label: 'my-cert',
     type: 'downstream',
   }
