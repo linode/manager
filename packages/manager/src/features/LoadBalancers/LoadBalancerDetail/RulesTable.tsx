@@ -261,7 +261,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                               aria-label={`Action Menu`}
                               sx={{ ...sxItemSpacing, width: '5%' }}
                             >
-                              {/** TODO: AGLB: The Action menu behavior should be implemented in future AGLB tickets. */}
+                              {/** TODO: AGLB: The Edit and Delete Action menu behavior should be implemented in future AGLB tickets. */}
                               <ActionMenu
                                 actionsList={[
                                   { onClick: () => null, title: 'Edit' },
