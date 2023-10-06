@@ -50,7 +50,6 @@ export const MultipleSubnetInput = (props: Props) => {
     <Grid>
       {subnets.map((subnet, subnetIdx) => (
         <Grid key={`subnet-${subnetIdx}`}>
-          {subnetIdx !== 0 && <Divider sx={{ marginTop: theme.spacing(3) }} />}
           <SubnetNode
             onChange={(subnet, subnetIdx, removable) =>
               handleSubnetChange(subnet, subnetIdx ?? 0, !!removable)
@@ -60,15 +59,16 @@ export const MultipleSubnetInput = (props: Props) => {
             isRemovable={true}
             subnet={subnet}
           />
+          <Divider sx={{ marginTop: theme.spacing(3) }} />
         </Grid>
       ))}
       <Button
         buttonType="outlined"
         disabled={disabled}
         onClick={addSubnet}
-        sx={{ marginTop: theme.spacing(3) }}
+        sx={{ marginTop: theme.spacing(2) }}
       >
-        Add a Subnet
+        Add {subnets.length > 0 ? 'another' : 'a'} Subnet
       </Button>
     </Grid>
   );

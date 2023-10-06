@@ -1,5 +1,5 @@
 import { Subnet } from '@linode/api-v4/lib/vpcs/types';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -33,12 +33,13 @@ import type {
 interface Props {
   onClose: () => void;
   open: boolean;
+  selectedLinode?: Linode;
   subnet?: Subnet;
   vpcId: number;
 }
 
 export const SubnetUnassignLinodesDrawer = React.memo(
-  ({ onClose, open, subnet, vpcId }: Props) => {
+  ({ onClose, open, selectedLinode, subnet, vpcId }: Props) => {
     const { data: profile } = useProfile();
     const { data: grants } = useGrants();
     const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
@@ -52,7 +53,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     const csvRef = React.useRef<any>();
     const formattedDate = useFormattedDate();
-    const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
+    const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>(
+      selectedLinode ? [selectedLinode] : []
+    );
     const prevSelectedLinodes = usePrevious(selectedLinodes);
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
@@ -89,6 +92,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       if (linodes) {
         setLinodeOptionsToUnassign(findAssignedLinodes() ?? []);
       }
+      return () => {
+        setLinodeOptionsToUnassign([]);
+      };
     }, [linodes, setLinodeOptionsToUnassign, findAssignedLinodes]);
 
     // 3. Everytime our selection changes, we need to either add or remove the linode from the configInterfacesToDelete state.
@@ -280,22 +286,36 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         {unassignLinodesErrors.length > 0 && (
           <Notice text={unassignLinodesErrors[0].reason} variant="error" />
         )}
-        <Notice text={SUBNET_UNASSIGN_LINODES_WARNING} variant="warning" />
+        <Notice
+          spacingBottom={selectedLinode ? 0 : 16}
+          text={SUBNET_UNASSIGN_LINODES_WARNING}
+          variant="warning"
+        />
+        {!selectedLinode && (
+          <Typography>
+            Select the Linodes you would like to unassign from this subnet. Only
+            Linodes in this VPC&rsquo;s region are displayed.
+          </Typography>
+        )}
         <form onSubmit={handleSubmit}>
           <Stack>
-            <Autocomplete
-              disabled={userCannotUnassignLinodes}
-              errorText={linodesError ? linodesError[0].reason : undefined}
-              label="Linodes"
-              multiple
-              onChange={(_, value) => setSelectedLinodes(value)}
-              options={linodeOptionsToUnassign}
-              placeholder="Select Linodes or type to search"
-              renderTags={() => null}
-              value={selectedLinodes}
-            />
+            {!selectedLinode && (
+              <Autocomplete
+                disabled={userCannotUnassignLinodes}
+                errorText={linodesError ? linodesError[0].reason : undefined}
+                isOptionEqualToValue={() => true} // Ignore the multi-select warning since it isn't helpful https://github.com/mui/material-ui/issues/29727
+                label="Linodes"
+                multiple
+                onChange={(_, value) => setSelectedLinodes(value)}
+                options={linodeOptionsToUnassign}
+                placeholder="Select Linodes or type to search"
+                renderTags={() => null}
+                value={selectedLinodes}
+              />
+            )}
             <RemovableSelectionsList
               headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
+              isRemovable={selectedLinode ? false : true}
               noDataText={'Select Linodes to be Unassigned from Subnet.'}
               onRemove={handleRemoveLinode}
               selectionData={selectedLinodes}
