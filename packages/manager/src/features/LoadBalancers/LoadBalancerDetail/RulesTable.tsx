@@ -208,7 +208,6 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                     rule.match_condition.match_field
                                   ]
                                 }
-                                hello
                               </Box>
                             </Hidden>
                             <Hidden smDown>
