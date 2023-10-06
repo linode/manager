@@ -331,9 +331,11 @@ export class LinodeCreate extends React.PureComponent<
           this.state.numberOfNodes
         );
 
-        typeDisplayInfoCopy.details = `${
-          this.state.numberOfNodes
-        } Nodes - $${monthlyPrice?.toFixed(2)}/month $${hourlyPrice}/hr`;
+        typeDisplayInfoCopy.details = `${this.state.numberOfNodes} Nodes - $${
+          monthlyPrice
+            ? renderMonthlyPriceToCorrectDecimalPlace(monthlyPrice)
+            : '--.--'
+        }/month $${hourlyPrice}/hr`;
       }
 
       displaySections.push(typeDisplayInfoCopy);

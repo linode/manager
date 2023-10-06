@@ -14,6 +14,7 @@ import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getPrice } from 'src/utilities/pricing/linodes';
@@ -175,11 +176,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         {nodePool.count && (!pricePerNode || !totalMonthlyPrice) && (
           <Notice
-            text={
-              'There was an error retrieving prices. Please reload and try again.'
-            }
             spacingBottom={16}
             spacingTop={8}
+            text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
             variant="error"
           />
         )}

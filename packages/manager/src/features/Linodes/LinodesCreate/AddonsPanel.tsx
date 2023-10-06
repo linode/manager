@@ -19,6 +19,7 @@ import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 import { AttachVLAN } from './AttachVLAN';
 import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
@@ -209,7 +210,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
                 {backupsMonthlyPrice && backupsMonthlyPrice > 0 ? (
                   <Currency quantity={backupsMonthlyPrice} />
                 ) : (
-                  '$--.--'
+                  UNKNOWN_PRICE
                 )}{' '}
                 per month
               </Typography>
