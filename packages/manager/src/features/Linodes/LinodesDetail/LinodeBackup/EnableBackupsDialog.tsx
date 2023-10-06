@@ -13,6 +13,7 @@ import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 interface Props {
   linodeId: number | undefined;
@@ -101,11 +102,9 @@ export const EnableBackupsDialog = (props: Props) => {
         </Typography>
       ) : (
         <Notice
-          text={
-            'There was an error retrieving prices. Please relead and try again'
-          }
           spacingBottom={16}
           spacingTop={8}
+          text={PRICES_RELOAD_ERROR_NOTICE_TEXT}
           variant="error"
         />
       )}
