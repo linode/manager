@@ -34,8 +34,8 @@ export interface VPCPanelProps {
   handleVPCIPv4Change: (IPv4: string) => void;
   nat_1_1Error?: string;
   region: string | undefined;
-  selectedSubnetId: number | undefined;
-  selectedVPCId: number | undefined;
+  selectedSubnetId?: null | number;
+  selectedVPCId?: null | number;
   subnetError?: string;
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
