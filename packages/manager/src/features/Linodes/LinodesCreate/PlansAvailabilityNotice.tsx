@@ -100,7 +100,6 @@ const PlansAvailabilityNoticeMessage = (
     return (
       <Notice
         bypassValidation={true}
-        data-testid={`${planType}-notice-error`}
         dataTestId={`${planType}-notice-error`}
         variant="error"
       >

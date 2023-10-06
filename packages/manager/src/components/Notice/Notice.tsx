@@ -167,7 +167,6 @@ export const Notice = (props: NoticeProps) => {
         [classes.info]: variantMap.info,
         [classes.infoList]: variantMap.info,
         [classes.marketing]: variantMap.marketing,
-        [classes.marketing]: variantMap.marketing,
         [classes.root]: true,
         [classes.success]: variantMap.success,
         [classes.successList]: variantMap.success,
