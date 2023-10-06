@@ -104,3 +104,24 @@ export const mockDeleteSubnet = (
 export const mockCreateSubnet = (vpcId: number): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher(`vpcs/${vpcId}/subnets`), {});
 };
+
+/**
+ * Intercepts PUT request to edit a subnet for a VPC and mocks response
+ *
+ * @param vpcId: ID of VPC for which to mock response
+ * @param subnetId: ID of subnet for which to mock response
+ * @param editedSubnet Updated subnet data with which to mock response
+ *
+ * @returns Cypress chainable
+ */
+export const mockEditSubnet = (
+  vpcId: number,
+  subnetId: number,
+  editedSubnet: Subnet
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`vpcs/${vpcId}/subnets/${subnetId}`),
+    editedSubnet
+  );
+};
