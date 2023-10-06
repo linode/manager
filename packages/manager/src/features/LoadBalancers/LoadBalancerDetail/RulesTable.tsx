@@ -111,7 +111,9 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
           >
             Execution
           </Box>
-          <Box sx={{ ...sxItemSpacing, width: '20%' }}>Match Value</Box>
+          <Box sx={{ ...sxItemSpacing, width: xsDown ? '45%' : '20%' }}>
+            Match Value
+          </Box>
           <Hidden smDown>
             <Box
               sx={{
@@ -183,8 +185,11 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                 : null}
                             </Box>
                             <Box
+                              sx={{
+                                ...sxItemSpacing,
+                                width: xsDown ? '45%' : '20%',
+                              }}
                               aria-label={`Match value: ${rule.match_condition.match_value}`}
-                              sx={{ ...sxItemSpacing, width: '20%' }}
                             >
                               {rule.match_condition.match_value}
                             </Box>
@@ -203,6 +208,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                     rule.match_condition.match_field
                                   ]
                                 }
+                                hello
                               </Box>
                             </Hidden>
                             <Hidden smDown>
@@ -255,8 +261,12 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                               </Box>
                             </Hidden>
                             <Box
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row-reverse',
+                                width: '5%',
+                              }}
                               aria-label={`Action Menu`}
-                              sx={{ ...sxItemSpacing, width: '5%' }}
                             >
                               {/** TODO: AGLB: The Edit and Delete Action menu behavior should be implemented in future AGLB tickets. */}
                               <ActionMenu
