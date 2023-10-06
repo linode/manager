@@ -1,3 +1,5 @@
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+
 import {
   getDCSpecificPrice,
   renderMonthlyPriceToCorrectDecimalPlace,
@@ -74,10 +76,12 @@ describe('renderMonthlyPriceToCorrectDecimalPlace', () => {
   });
 
   it('renders monthly price as --.-- (unknown price) if the price is undefined', () => {
-    expect(renderMonthlyPriceToCorrectDecimalPlace(undefined)).toBe('--.--');
+    expect(renderMonthlyPriceToCorrectDecimalPlace(undefined)).toBe(
+      UNKNOWN_PRICE
+    );
   });
 
   it('renders monthly price as --.-- (unknown price) if the price is null', () => {
-    expect(renderMonthlyPriceToCorrectDecimalPlace(null)).toBe('--.--');
+    expect(renderMonthlyPriceToCorrectDecimalPlace(null)).toBe(UNKNOWN_PRICE);
   });
 });

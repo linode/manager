@@ -1,10 +1,12 @@
 import { isNumber } from 'lodash';
 import * as React from 'react';
 
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+
 interface CurrencyFormatterProps {
   dataAttrs?: Record<string, any>;
   decimalPlaces?: number;
-  quantity: number | '--.--';
+  quantity: number | typeof UNKNOWN_PRICE;
   wrapInParentheses?: boolean;
 }
 

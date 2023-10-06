@@ -26,6 +26,7 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllTypes } from 'src/queries/types';
 import { pluralize } from 'src/utilities/pluralize';
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 import { AutoEnroll } from './AutoEnroll';
 import { BackupLinodeRow } from './BackupLinodeRow';
@@ -196,7 +197,7 @@ all new Linodes will automatically be backed up.`
                 flags,
                 linodes: linodesWithoutBackups,
                 types: types ?? [],
-              }) ?? '--.--'
+              }) ?? UNKNOWN_PRICE
             }
             interval="mo"
           />

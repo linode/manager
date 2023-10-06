@@ -3,12 +3,13 @@ import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
 import { Typography } from 'src/components/Typography';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 export interface DisplayPriceProps {
   decimalPlaces?: number;
   fontSize?: string;
   interval?: string;
-  price: number | '--.--';
+  price: number | typeof UNKNOWN_PRICE;
 }
 
 export const displayPrice = (price: number) => `$${price.toFixed(2)}`;

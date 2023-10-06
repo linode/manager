@@ -1,6 +1,7 @@
+import { UNKNOWN_PRICE } from './constants';
+
 import type { Region } from '@linode/api-v4';
 import type { FlagSet } from 'src/featureFlags';
-import { UNKNOWN_PRICE } from './constants';
 
 export interface DataCenterPricingOptions {
   /**

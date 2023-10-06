@@ -9,6 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
@@ -94,8 +95,8 @@ export const PlanSelection = (props: Props) => {
   type.subHeadings[0] = `$${
     price?.hourly
       ? renderMonthlyPriceToCorrectDecimalPlace(price.monthly)
-      : '--.--'
-  }/mo ($${price?.hourly ?? '--.--'}/hr)`;
+      : UNKNOWN_PRICE
+  }/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -167,9 +168,9 @@ export const PlanSelection = (props: Props) => {
             errorCell={!price}
           >
             {isGPU ? (
-              <Currency quantity={price?.hourly ?? '--.--'} />
+              <Currency quantity={price?.hourly ?? UNKNOWN_PRICE} />
             ) : (
-              `$${price?.hourly ?? '--.--'}`
+              `$${price?.hourly ?? UNKNOWN_PRICE}`
             )}
           </TableCell>
           <TableCell center data-qa-ram noWrap>
