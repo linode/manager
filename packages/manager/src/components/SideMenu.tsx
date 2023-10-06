@@ -14,9 +14,7 @@ export interface Props {
   open: boolean;
 }
 
-type CombinedProps = Props;
-
-export const SideMenu: React.FC<CombinedProps> = (props) => {
+export const SideMenu = (props: Props) => {
   const { closeMenu, collapse, open } = props;
 
   return (
