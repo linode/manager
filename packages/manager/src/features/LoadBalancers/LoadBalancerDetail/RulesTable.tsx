@@ -12,7 +12,7 @@ import {
 
 import { ActionMenu } from 'src/components/ActionMenu';
 import { Box } from 'src/components/Box';
-import { Tooltip } from 'src/components/Tooltip';
+import { TextTooltip } from 'src/components/TextTooltip';
 import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
 
 import {
@@ -38,6 +38,9 @@ const matchFieldMap: Record<MatchField, string> = {
   path_prefix: 'Path',
   query: 'Query String',
 };
+
+const screenReaderMessage =
+  'Some screen readers may require you to enter focus mode to interact with Loadbalancer rule list items. In focus mode, press spacebar to begin a drag or tab to access item actions.';
 
 export const RulesTable = ({ loadbalancerId, route }: Props) => {
   const { label, protocol, rules } = route;
@@ -145,7 +148,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                             rule.match_condition.hostname ??
                             `Rule ${rule.match_condition.hostname}`
                           }
-                          // aria-roledescription={screenReaderMessage}
+                          aria-roledescription={screenReaderMessage}
                           aria-selected={false}
                           ref={provided.innerRef}
                           role="option"
@@ -211,8 +214,11 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                 }}
                                 aria-label={`Service Targets: ${rule.service_targets.length}`}
                               >
-                                <Tooltip
-                                  title={
+                                <TextTooltip
+                                  displayText={String(
+                                    rule.service_targets.length
+                                  )}
+                                  tooltipText={
                                     <>
                                       {rule.service_targets.map(
                                         ({ id, label }) => (
@@ -223,16 +229,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                       )}
                                     </>
                                   }
-                                >
-                                  <div
-                                    style={{
-                                      maxWidth: '30px',
-                                      textDecoration: 'underline',
-                                    }}
-                                  >
-                                    {rule.service_targets.length}
-                                  </div>
-                                </Tooltip>
+                                />
                               </Box>
                             </Hidden>
                             <Hidden smDown>
