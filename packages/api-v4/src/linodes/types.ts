@@ -165,8 +165,8 @@ export interface Interface {
   purpose: InterfacePurpose;
   ipam_address: string | null;
   primary?: boolean;
-  subnet_id?: number;
-  vpc_id?: number;
+  subnet_id?: number | null;
+  vpc_id?: number | null;
   ipv4?: ConfigInterfaceIPv4;
   ipv6?: ConfigInterfaceIPv6;
   ip_ranges?: string[];
@@ -266,7 +266,7 @@ export interface Disk {
 export type DiskStatus = 'ready' | 'not ready' | 'deleting';
 
 export interface LinodeConfigCreationData {
-  label?: string;
+  label: string;
   devices: Devices;
   initrd: string | number | null;
   kernel?: string;

@@ -40,9 +40,9 @@ interface VPCStateErrors {
 
 interface VPCState {
   errors: VPCStateErrors;
-  subnetId?: number;
+  subnetId?: null | number;
   vpcIPv4?: string;
-  vpcId?: number;
+  vpcId?: null | number;
 }
 
 // To allow for empty slots, which the API doesn't account for
