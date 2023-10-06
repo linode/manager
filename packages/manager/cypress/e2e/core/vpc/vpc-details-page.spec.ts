@@ -189,7 +189,7 @@ describe('VPC details page', () => {
     // confirm there are no remaining subnets
     cy.url().should('endWith', `/${mockVPC.id}`);
     cy.findByText('Subnets (0)');
-    cy.findByText('No Subnets');
+    cy.findByText('No Subnets are assigned.');
     cy.findByText(mockSubnet.label).should('not.exist');
   });
 
@@ -227,7 +227,7 @@ describe('VPC details page', () => {
     // confirm that vpc and subnet details get displayed
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (0)');
-    cy.findByText('No Subnets');
+    cy.findByText('No Subnets are assigned.');
 
     ui.button.findByTitle('Create Subnet').should('be.visible').click();
 

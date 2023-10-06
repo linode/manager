@@ -25,7 +25,7 @@ describe('VPC create page', () => {
     getAllByText('Subnets');
     getAllByText('Subnet label');
     getAllByText('Subnet IP Address Range');
-    getAllByText('Add a Subnet');
+    getAllByText('Add another Subnet');
     getAllByText('Create VPC');
   });
 
@@ -55,7 +55,7 @@ describe('VPC create page', () => {
 
   it('should add and delete subnets correctly', async () => {
     renderWithTheme(<VPCCreate />);
-    const addSubnet = screen.getByText('Add a Subnet');
+    const addSubnet = screen.getByText('Add another Subnet');
     expect(addSubnet).toBeInTheDocument();
     await act(async () => {
       userEvent.click(addSubnet);
