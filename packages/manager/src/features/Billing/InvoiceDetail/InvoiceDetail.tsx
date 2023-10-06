@@ -28,6 +28,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 
+import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { InvoiceTable } from './InvoiceTable';
 
@@ -51,6 +52,8 @@ export const InvoiceDetail = () => {
   );
 
   const flags = useFlags();
+
+  const shouldShowRegion = invoiceCreatedAfterDCPricingLaunch(invoice?.date);
 
   const requestData = () => {
     setLoading(true);
@@ -93,7 +96,7 @@ export const InvoiceDetail = () => {
       flags,
       invoice,
       items,
-      regions: regions ?? [],
+      regions: shouldShowRegion && regions ? regions : [],
       taxes,
     });
 
@@ -105,7 +108,9 @@ export const InvoiceDetail = () => {
     { key: 'from', label: 'From' },
     { key: 'to', label: 'To' },
     { key: 'quantity', label: 'Quantity' },
-    ...(flags.dcSpecificPricing ? [{ key: 'region', label: 'Region' }] : []),
+    ...(flags.dcSpecificPricing && shouldShowRegion
+      ? [{ key: 'region', label: 'Region' }]
+      : []),
     { key: 'unit_price', label: 'Unit Price' },
     { key: 'amount', label: 'Amount (USD)' },
     { key: 'tax', label: 'Tax (USD)' },
@@ -176,6 +181,7 @@ export const InvoiceDetail = () => {
                     data={items}
                     filename={`invoice-${invoice.date}.csv`}
                     headers={csvHeaders}
+                    onClick={() => csvRef.current.link.click()}
                     sx={{ ...sxDownloadButton, marginRight: '8px' }}
                   />
                   <Button
@@ -205,7 +211,12 @@ export const InvoiceDetail = () => {
           {pdfGenerationError && (
             <Notice variant="error">Failed generating PDF.</Notice>
           )}
-          <InvoiceTable errors={errors} items={items} loading={loading} />
+          <InvoiceTable
+            errors={errors}
+            items={items}
+            loading={loading}
+            shouldShowRegion={shouldShowRegion}
+          />
         </Grid>
         <Grid xs={12}>
           {invoice && (

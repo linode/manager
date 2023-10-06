@@ -15,19 +15,13 @@ import {
   StyledTableRow,
 } from 'src/features/VPCs/VPCDetail/SubnetLinodeRow.styles';
 
-import type { MatchField, Route } from '@linode/api-v4';
+import { matchFieldMap } from './Routes/utils';
+
+import type { Route } from '@linode/api-v4';
 
 interface Props {
   rules: Route['rules'];
 }
-
-const matchFieldMap: Record<MatchField, string> = {
-  header: 'HTTP Header',
-  host: 'Host',
-  method: 'HTTP Method',
-  path_prefix: 'Path',
-  query: 'Query String',
-};
 
 export const RulesTable = ({ rules }: Props) => {
   return (
@@ -76,27 +70,25 @@ export const RulesTable = ({ rules }: Props) => {
                   <Tooltip
                     title={
                       <>
-                        {rule.match_condition.service_targets.map(
-                          ({ id, label }) => (
-                            <div key={label}>
-                              {label}:{id}
-                            </div>
-                          )
-                        )}
+                        {rule.service_targets.map(({ id, label }) => (
+                          <div key={label}>
+                            {label}:{id}
+                          </div>
+                        ))}
                       </>
                     }
                   >
                     <div
                       style={{ maxWidth: '30px', textDecoration: 'underline' }}
                     >
-                      {rule.match_condition.service_targets.length}
+                      {rule.service_targets.length}
                     </div>
                   </Tooltip>
                 </StyledTableCell>
               </Hidden>
               <Hidden smDown>
                 <StyledTableCell>
-                  {rule.match_condition.session_stickiness_cookie &&
+                  {rule.match_condition.session_stickiness_cookie ||
                   rule.match_condition.session_stickiness_ttl
                     ? 'Yes'
                     : 'No'}

@@ -37,20 +37,40 @@ export const dcPricingNewPriceLabel = 'New Price';
 
 /** DC-specific pricing Linode type mocks. */
 export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
+  addons: {
+    backups: {
+      price: {
+        hourly: 0.004,
+        monthly: 2.5,
+      },
+      region_prices: [
+        {
+          hourly: 0.0048,
+          id: 'us-east',
+          monthly: 3.57,
+        },
+        {
+          hourly: 0.0056,
+          id: 'us-west',
+          monthly: 4.17,
+        },
+      ],
+    },
+  },
   region_prices: [
     {
       hourly: 0.021,
       // Use `us-east` and `us-west` so we do not have to mock regions request,
       // which otherwise may not include the actual regions which have DC-specific pricing applied.
       id: 'us-east',
-      monthly: 14,
+      monthly: 14.4,
     },
     {
       hourly: 0.018,
       // Use `us-east` and `us-west` so we do not have to mock regions request,
       // which otherwise may not include the actual regions which have DC-specific pricing applied.
       id: 'us-west',
-      monthly: 12,
+      monthly: 12.2,
     },
   ],
 });
@@ -68,3 +88,6 @@ export const dcPricingLkeClusterPlans: LkePlanDescription[] = dcPricingMockLinod
     };
   }
 );
+
+export const MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED =
+  '2023-10-05 00:00:00Z';
