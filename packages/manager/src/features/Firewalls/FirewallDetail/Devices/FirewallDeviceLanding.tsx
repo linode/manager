@@ -29,7 +29,7 @@ export const formattedTypes = {
 };
 
 const helperText =
-  'Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.';
+  'Assign one or more Services to this Firewall. You can add Services later if you want to customize your rules first.';
 
 export const FirewallDeviceLanding = React.memo(
   (props: FirewallDeviceLandingProps) => {

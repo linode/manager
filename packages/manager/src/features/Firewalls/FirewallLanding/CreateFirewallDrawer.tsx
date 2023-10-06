@@ -24,11 +24,11 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-const FIREWALL_LABEL_TEXT = `Assign devices to the Firewall.`;
-const FIREWALL_HELPER_TEXT = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.`;
+const FIREWALL_LABEL_TEXT = `Assign Services to the Firewall.`;
+const FIREWALL_HELPER_TEXT = `Assign one or more Services to this Firewall. You can add Services later if you want to customize your rules first.`;
 const NODEBALANCER_HELPER_TEXT = `Only the Firewall's inbound rules apply to NodeBalancers.`;
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
-  'Only Devices you have permission to modify are shown.';
+  'Only Services you have permission to modify are shown.';
 
 export interface CreateFirewallDrawerProps {
   onClose: () => void;
