@@ -201,7 +201,7 @@ export const RulesTable = ({ loadbalancerId, route }: Props) => {
                                     rule.match_condition.match_field
                                   ]
                                 }`}
-                                sx={{ ...sxItemSpacing, width: '20%' }}
+                                sx={{ ...sxItemSpacing, width: '15%' }}
                               >
                                 {
                                   matchFieldMap[
