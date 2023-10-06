@@ -333,7 +333,7 @@ export class LinodeCreate extends React.PureComponent<
 
         typeDisplayInfoCopy.details = `${
           this.state.numberOfNodes
-        } Nodes - $${monthlyPrice.toFixed(2)}/month $${hourlyPrice}/hr`;
+        } Nodes - $${monthlyPrice?.toFixed(2)}/month $${hourlyPrice}/hr`;
       }
 
       displaySections.push(typeDisplayInfoCopy);
