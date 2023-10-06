@@ -5,6 +5,7 @@ import {
   mockUpdateVPC,
   mockCreateSubnet,
   mockDeleteSubnet,
+  mockEditSubnet,
   mockGetSubnets,
 } from 'support/intercepts/vpc';
 import {
@@ -254,5 +255,85 @@ describe('VPC details page', () => {
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (1)').should('be.visible');
     cy.findByText(mockSubnet.label).should('be.visible');
+  });
+
+  /**
+   * - Confirms UI flow for editing a subnet
+   */
+  it('can edit a subnet', () => {
+    const mockSubnet = subnetFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+    const mockVPC = vpcFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      subnets: [mockSubnet],
+    });
+
+    const mockEditedSubnet = subnetFactory.build({
+      ...mockSubnet,
+      label: randomLabel(),
+    });
+
+    const mockVPCAfterSubnetEdited = vpcFactory.build({
+      ...mockVPC,
+      subnets: [mockEditedSubnet],
+    });
+
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+
+    mockGetVPC(mockVPC).as('getVPC');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+    mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
+
+    cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC', '@getSubnets']);
+
+    // confirm that vpc and subnet details get displayed
+    cy.findByText(mockVPC.label).should('be.visible');
+    cy.findByText('Subnets (1)').should('be.visible');
+    cy.findByText(mockSubnet.label).should('be.visible');
+
+    // confirm that subnet can be edited and that page reflects changes
+    mockEditSubnet(mockVPC.id, mockEditedSubnet.id, mockEditedSubnet).as(
+      'editSubnet'
+    );
+    mockGetVPC(mockVPCAfterSubnetEdited).as('getVPC');
+    mockGetSubnets(mockVPC.id, [mockEditedSubnet]).as('getSubnets');
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Subnet ${mockSubnet.label}`)
+      .should('be.visible')
+      .click();
+    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
+
+    ui.drawer
+      .findByTitle('Edit Subnet')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Label')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(mockEditedSubnet.label);
+
+        cy.findByLabelText('Subnet IP Address Range')
+          .should('be.visible')
+          .should('not.be.enabled');
+
+        cy.findByTestId('save-button')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that edited subnet info displays
+    cy.wait(['@editSubnet', '@getVPC', '@getSubnets']);
+    cy.findByText(mockVPC.label).should('be.visible');
+    cy.findByText('Subnets (1)').should('be.visible');
+    cy.findByText(mockEditedSubnet.label).should('be.visible');
   });
 });
