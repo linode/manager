@@ -27,7 +27,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncate } from 'src/utilities/truncate';
 
-import StackScriptTableHead from '../Partials/StackScriptTableHead';
+import { StackScriptTableHead } from '../Partials/StackScriptTableHead';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 

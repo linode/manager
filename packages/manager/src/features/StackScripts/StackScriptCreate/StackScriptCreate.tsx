@@ -35,7 +35,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import ScriptForm from 'src/features/StackScripts/StackScriptForm';
+import StackScriptForm from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
 import { queryKey } from 'src/queries/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -250,7 +250,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             variant="error"
           />
         )}
-        <ScriptForm
+        <StackScriptForm
           description={{
             handler: this.handleDescriptionChange,
             value: description,

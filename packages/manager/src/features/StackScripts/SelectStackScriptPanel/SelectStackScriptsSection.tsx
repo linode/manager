@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export interface Props {
+interface Props {
   currentUser: string;
   data: StackScript[];
   disabled?: boolean;
@@ -30,9 +30,7 @@ export interface Props {
   selectedId?: number;
 }
 
-type CombinedProps = Props;
-
-export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
+export const SelectStackScriptsSection = (props: Props) => {
   const classes = useStyles();
   const { data, disabled, isSorting, onSelect, selectedId } = props;
 
@@ -71,5 +69,3 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
     </TableBody>
   );
 };
-
-export default SelectStackScriptsSection as React.FC<Props>;

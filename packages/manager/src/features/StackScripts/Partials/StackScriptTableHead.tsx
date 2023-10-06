@@ -111,9 +111,7 @@ interface Props {
   sortOrder?: SortOrder;
 }
 
-type CombinedProps = Props;
-
-export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
+export const StackScriptTableHead = (props: Props) => {
   const classes = useStyles();
   const {
     category,
@@ -211,5 +209,3 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
     </TableHead>
   );
 };
-
-export default StackScriptTableHead;

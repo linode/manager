@@ -27,7 +27,7 @@ import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
-import StackScriptTableHead from '../Partials/StackScriptTableHead';
+import { StackScriptTableHead } from '../Partials/StackScriptTableHead';
 import {
   AcceptedFilters,
   generateCatchAllFilter,

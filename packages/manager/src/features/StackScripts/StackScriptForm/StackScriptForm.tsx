@@ -86,8 +86,6 @@ interface Props {
   script: TextFieldHandler;
 }
 
-type CombinedProps = Props;
-
 const errorResources = {
   images: 'Images',
   label: 'A label',
@@ -96,7 +94,7 @@ const errorResources = {
 
 // exported as a class component, otherwise no display name
 // appears in tests
-export const StackScriptForm: React.FC<CombinedProps> = (props) => {
+export const StackScriptForm = (props: Props) => {
   const {
     currentUser,
     description,
