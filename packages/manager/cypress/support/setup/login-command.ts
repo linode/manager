@@ -1,4 +1,4 @@
-import { UserPreferences } from '@linode/api-v4/types';
+import type { UserPreferences } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { oauthToken } from 'support/constants/api';
 import { apiMatcher } from 'support/util/intercepts';
