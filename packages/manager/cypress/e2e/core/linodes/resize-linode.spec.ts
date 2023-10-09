@@ -2,6 +2,7 @@ import { createLinode } from 'support/api/linodes';
 import { containsVisible, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
 import {
   mockAppendFeatureFlags,
@@ -11,6 +12,10 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 authenticate();
 describe('resize linode', () => {
+  beforeEach(() => {
+    cleanUp(['linodes']);
+  });
+
   it('resizes a linode by increasing size: warm migration', () => {
     mockAppendFeatureFlags({
       unifiedMigrations: makeFeatureFlagData(true),
@@ -99,7 +104,8 @@ describe('resize linode', () => {
       getClick('[id="g6-standard-4"]');
       // We disable the options if the linode is offline, and proceed with a
       // cold migration even though warm is selected by default.
-      cy.get('[data-qa-radio="warm"]')
+      cy.get('[data-qa-radio="warm"]').find('input').should('be.disabled');
+      cy.get('[data-qa-radio="cold"]')
         .find('input')
         .should('be.checked')
         .should('be.disabled');
