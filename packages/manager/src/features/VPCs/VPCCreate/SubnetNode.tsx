@@ -7,9 +7,9 @@ import { Button } from 'src/components/Button/Button';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { TextField } from 'src/components/TextField';
 import {
-  calculateAvailableIPv4sRFC1918,
-  SubnetFieldState,
   RESERVED_IP_NUMBER,
+  SubnetFieldState,
+  calculateAvailableIPv4sRFC1918,
 } from 'src/utilities/subnets';
 
 interface Props {
@@ -56,8 +56,8 @@ export const SubnetNode = (props: Props) => {
     <Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
         <Grid
-          xs={isRemovable ? 11 : 12}
           sx={{ ...(!isRemovable && { width: '100%' }) }}
+          xs={isRemovable ? 11 : 12}
         >
           <TextField
             disabled={disabled}
@@ -69,7 +69,7 @@ export const SubnetNode = (props: Props) => {
             value={subnet.label}
           />
         </Grid>
-        {isRemovable && !!idx && (
+        {isRemovable && (
           <Grid xs={1}>
             <StyledButton onClick={removeSubnet} aria-label="Remove Subnet">
               <Close data-testid={`delete-subnet-${idx}`} />

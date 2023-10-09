@@ -88,12 +88,12 @@ const VPCCreate = () => {
         const errorData: SubnetError = errors[apiSubnetIdx];
         return {
           ...subnet,
-          labelError: errorData.label ?? '',
           // @TODO VPC: IPv6 error handling
           ip: {
             ...subnet.ip,
             ipv4Error: errorData.ipv4 ?? '',
           },
+          labelError: errorData.label ?? '',
         };
       } else {
         return subnet;
@@ -151,6 +151,8 @@ const VPCCreate = () => {
         visualToAPISubnetMapping
       );
       setFieldValue('subnets', subnetsAndErrors);
+
+      scrollErrorIntoView();
     }
 
     setSubmitting(false);
@@ -185,11 +187,13 @@ const VPCCreate = () => {
     validationSchema: createVPCSchema,
   });
 
-  React.useEffect(() => {
-    if (errors || generalAPIError || generalSubnetErrorsFromAPI) {
-      scrollErrorIntoView();
+  // Helper method to set a field's value and clear existing errors
+  const onChangeField = (field: string, value: string) => {
+    setFieldValue(field, value);
+    if (errors[field]) {
+      setFieldError(field, undefined);
     }
-  }, [errors, generalAPIError, generalSubnetErrorsFromAPI]);
+  };
 
   return (
     <>
@@ -233,7 +237,7 @@ const VPCCreate = () => {
             </StyledBodyTypography>
             <RegionSelect
               handleSelection={(region: string) =>
-                setFieldValue('region', region)
+                onChangeField('region', region)
               }
               disabled={userCannotAddVPC}
               errorText={errors.region}
@@ -243,7 +247,7 @@ const VPCCreate = () => {
             />
             <TextField
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFieldValue('label', e.target.value)
+                onChangeField('label', e.target.value)
               }
               disabled={userCannotAddVPC}
               errorText={errors.label}
@@ -252,7 +256,7 @@ const VPCCreate = () => {
             />
             <TextField
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFieldValue('description', e.target.value)
+                onChangeField('description', e.target.value)
               }
               disabled={userCannotAddVPC}
               errorText={errors.description}
