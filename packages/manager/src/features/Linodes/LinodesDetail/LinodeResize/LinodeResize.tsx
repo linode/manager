@@ -80,10 +80,7 @@ export const LinodeResize = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [confirmationText, setConfirmationText] = React.useState('');
-  const [
-    isConfirmationDialogOpen,
-    setIsConfirmationDialogOpen,
-  ] = React.useState<boolean>(false);
+
   const [hasResizeError, setHasResizeError] = React.useState<boolean>(false);
 
   const {
@@ -155,24 +152,16 @@ export const LinodeResize = (props: Props) => {
       formik.resetForm();
       setConfirmationText('');
       setHasResizeError(false);
-      setIsConfirmationDialogOpen(false);
     }
   }, [open]);
 
   React.useEffect(() => {
     if (resizeError) {
       setHasResizeError(true);
-      // Always close the confirmation dialog on error.
-      setIsConfirmationDialogOpen(false);
-    }
-  }, [resizeError]);
-
-  React.useEffect(() => {
-    if (!isConfirmationDialogOpen && hasResizeError) {
       // Set to "block: end" since the sticky header would otherwise interfere.
       scrollErrorIntoView(undefined, { block: 'end' });
     }
-  }, [isConfirmationDialogOpen, hasResizeError]);
+  }, [resizeError]);
 
   const tableDisabled = hostMaintenance || unauthorized;
 
