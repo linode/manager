@@ -3,7 +3,12 @@ import {
   deleteLoadbalancerServiceTarget,
   getLoadbalancerServiceTargets,
 } from '@linode/api-v4';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import { QUERY_KEY } from './loadbalancers';
 
