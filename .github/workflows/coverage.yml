@@ -2,12 +2,14 @@ name: Code Coverage
 
 on:
   workflow_run:
-    workflows: [ci]
+    workflows:
+      - ci
     types:
       - completed
 
 jobs:
-  checks:
+  compare_pr_coverage:
+    name: Compare PR Code Coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,7 +27,7 @@ jobs:
         run: yarn
 
       - name: Run test coverage
-        run: yarn coverage
+        run: yarn test
 
       #  Compares two code coverage files and generates report as a comment
       - name: Generate Code Coverage report
