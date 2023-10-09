@@ -264,4 +264,83 @@ describe('VPC create flow', () => {
         });
     });
   });
+
+  /*
+   * - Confirms VPC creation flow without creating subnets using mock API data.
+   * - Confirms that users can delete the pre-existing subnet in the create form.
+   * - Confirms that "Add another Subnet" button label updates to reflect no subnets.
+   * - Confirms that Cloud Manager UI responds accordingly when creating a VPC without subnets.
+   */
+  it('can create a VPC without any subnets', () => {
+    const vpcRegion = chooseRegion();
+    const mockVpc: VPC = vpcFactory.build({
+      id: randomNumber(10000, 99999),
+      label: randomLabel(),
+      region: vpcRegion.id,
+      description: randomPhrase(),
+      subnets: [],
+    });
+
+    const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets([]);
+
+    mockAppendFeatureFlags({
+      vpc: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientstream');
+
+    cy.visitWithLogin('/vpcs/create');
+    cy.wait(['@getFeatureFlags', '@getClientstream']);
+
+    cy.findByText('Region')
+      .should('be.visible')
+      .click()
+      .type(`${vpcRegion.label}{enter}`);
+
+    cy.findByText('VPC Label').should('be.visible').click().type(mockVpc.label);
+
+    // Remove the subnet.
+    getSubnetNodeSection(0)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Remove Subnet')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that subnet button label is "Add a Subnet" when there are no
+    // subnets.
+    mockCreateVPC(mockVpc).as('createVpc');
+    mockGetSubnets(mockVpc.id, []).as('getSubnets');
+    ui.button
+      .findByTitle('Add a Subnet')
+      .should('be.visible')
+      .should('be.enabled');
+
+    cy.findByText('Add another Subnet').should('not.exist');
+
+    // Create the VPC and confirm the user is redirected to the details page.
+    ui.button
+      .findByTitle('Create VPC')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@createVpc');
+    cy.url().should('endWith', `/vpcs/${mockVpc.id}`);
+    cy.wait('@getSubnets');
+
+    // Confirm that the expected VPC information is shown, and that no Subnets
+    // are listed in the table.
+    cy.get('[data-qa-vpc-summary]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains(`Subnets ${mockVpc.subnets.length}`).should('be.visible');
+        cy.contains(`Linodes ${totalSubnetUniqueLinodes}`).should('be.visible');
+        cy.contains(`VPC ID ${mockVpc.id}`).should('be.visible');
+        cy.contains(`Region ${vpcRegion.label}`).should('be.visible');
+      });
+
+    cy.findByText('No Subnets are assigned.').should('be.visible');
+  });
 });
