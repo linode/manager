@@ -125,7 +125,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 interface Props {
-  appIsLoading: boolean;
   isLoggedInAsCustomer: boolean;
 }
 
@@ -272,15 +271,7 @@ const MainContent = (props: CombinedProps) => {
    * otherwise just show the rest of the app.
    */
   return (
-    <div
-      className={cx({
-        [classes.appFrame]: true,
-        /**
-         * hidden to prevent some jankiness with the app loading before the splash screen
-         */
-        [classes.hidden]: props.appIsLoading,
-      })}
-    >
+    <div className={classes.appFrame}>
       <ComplianceUpdateProvider value={complianceUpdateContextValue}>
         <NotificationProvider value={contextValue}>
           <>

@@ -1,10 +1,7 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import '@reach/tabs/styles.css';
 import { ErrorBoundary } from '@sentry/react';
 import { useSnackbar } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -22,7 +19,6 @@ import MainContent from './MainContent';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAuthentication } from './hooks/useAuthentication';
-import { useFeatureFlagsLoad } from './hooks/useFeatureFlagLoad';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
@@ -39,7 +35,6 @@ import { sshKeyEventHandler } from './queries/profile';
 import { supportTicketEventHandler } from './queries/support';
 import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
-import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
 
 // Ensure component's display name is 'App'
@@ -53,10 +48,11 @@ const BaseApp = withDocumentTitleProvider(
       const { data: preferences } = usePreferences();
       const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
-      const { featureFlagsLoading } = useFeatureFlagsLoad();
-      const appIsLoading = useSelector(
-        (state: ApplicationState) => state.initialLoad.appIsLoading
-      );
+      // const { featureFlagsLoading } = useFeatureFlagsLoad();
+
+      // const appIsLoading = useSelector(
+      //   (state: ApplicationState) => state.initialLoad.appIsLoading
+      // );
       const { loggedInAsCustomer } = useAuthentication();
 
       const { enqueueSnackbar } = useSnackbar();
@@ -267,7 +263,7 @@ const BaseApp = withDocumentTitleProvider(
       return (
         <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
           {/** Accessibility helper */}
-          <a href="#main-content" className="skip-link">
+          <a className="skip-link" href="#main-content">
             Skip to main content
           </a>
           <div hidden>
@@ -277,33 +273,15 @@ const BaseApp = withDocumentTitleProvider(
               Opens an external site in a new window
             </span>
           </div>
-          <GoTo open={goToOpen} onClose={() => setGoToOpen(false)} />
+          <GoTo onClose={() => setGoToOpen(false)} open={goToOpen} />
           {/** Update the LD client with the user's id as soon as we know it */}
           <IdentifyUser />
           <DocumentTitleSegment segment="Akamai Cloud Manager" />
-          {featureFlagsLoading ? null : (
-            <MainContent
-              appIsLoading={appIsLoading}
-              isLoggedInAsCustomer={loggedInAsCustomer}
-            />
-          )}
+          <MainContent isLoggedInAsCustomer={loggedInAsCustomer} />
         </ErrorBoundary>
       );
     })
   )
 );
-
-export const hasOauthError = (...args: (APIError[] | Error | undefined)[]) => {
-  return args.some((eachError) => {
-    const cleanedError: JSX.Element | string = pathOr(
-      '',
-      [0, 'reason'],
-      eachError
-    );
-    return typeof cleanedError !== 'string'
-      ? false
-      : cleanedError.toLowerCase().includes('oauth');
-  });
-};
 
 export const isOSMac = navigator.userAgent.includes('Mac');
