@@ -32,6 +32,7 @@ export const stickyOptions = [
 
 export const defaultServiceTarget = {
   id: -1,
+  label: '',
   percentage: 100,
 };
 

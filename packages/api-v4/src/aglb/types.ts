@@ -81,6 +81,7 @@ export interface RulePayload {
   match_condition: MatchCondition;
   service_targets: {
     id: number;
+    label: string;
     percentage: number;
   }[];
 }
