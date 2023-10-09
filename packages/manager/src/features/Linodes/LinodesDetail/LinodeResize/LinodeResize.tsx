@@ -41,7 +41,6 @@ import {
   isSmallerThanCurrentPlan,
   shouldEnableAutoResizeDiskOption,
 } from './LinodeResize.utils';
-import { UnifiedConfirmationDialog } from './LinodeResizeUnifiedMigrationConfirmationDialog';
 import { UnifiedMigrationPanel } from './LinodeResizeUnifiedMigrationPanel';
 
 import type { ButtonProps } from 'src/components/Button/Button';
@@ -204,7 +203,7 @@ export const LinodeResize = (props: Props) => {
     formik.values.migration_type === 'warm' &&
     !isLinodeOffline
       ? {
-          onClick: () => setIsConfirmationDialogOpen(true),
+          onClick: () => formik.handleSubmit(),
         }
       : {
           loading: isLoading,
@@ -361,14 +360,6 @@ export const LinodeResize = (props: Props) => {
             Resize Linode
           </Button>
         </Box>
-        {flags.unifiedMigrations && (
-          <UnifiedConfirmationDialog
-            formik={formik}
-            isConfirmationDialogOpen={isConfirmationDialogOpen}
-            isLoading={isLoading}
-            setIsConfirmationDialogOpen={setIsConfirmationDialogOpen}
-          />
-        )}
       </form>
     </Dialog>
   );

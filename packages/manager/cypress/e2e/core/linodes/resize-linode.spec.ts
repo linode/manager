@@ -34,7 +34,6 @@ describe('resize linode', () => {
       cy.get('[data-qa-radio="warm"]').find('input').should('be.checked');
       cy.get('[data-testid="textfield-input"]').type(linode.label);
       cy.get('[data-qa-resize="true"]').click();
-      cy.get('[data-qa-confirm-resize="true"]').click();
       cy.wait('@linodeResize');
 
       // TODO: Unified Migration: [M3-7115] - Replace with copy from API '../notifications.py'
