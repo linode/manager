@@ -1,6 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -13,13 +13,6 @@ import { truncate } from 'src/utilities/truncate';
 
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
-const useStyles = makeStyles()(() => ({
-  loadingWrapper: {
-    border: 0,
-    paddingTop: 100,
-  },
-}));
-
 interface Props {
   currentUser: string;
   data: StackScript[];
@@ -31,7 +24,6 @@ interface Props {
 }
 
 export const SelectStackScriptsSection = (props: Props) => {
-  const { classes } = useStyles();
   const { data, disabled, isSorting, onSelect, selectedId } = props;
 
   const { data: profile } = useProfile();
@@ -51,7 +43,7 @@ export const SelectStackScriptsSection = (props: Props) => {
       onSelect={() => onSelect(s)}
       stackScriptID={s.id}
       stackScriptUsername={s.username}
-      updateFor={[selectedId === s.id, classes]}
+      updateFor={[selectedId === s.id]}
     />
   );
 
@@ -61,11 +53,16 @@ export const SelectStackScriptsSection = (props: Props) => {
         data && data.map(selectStackScript)
       ) : (
         <TableRow>
-          <TableCell className={classes.loadingWrapper} colSpan={5}>
+          <StyledTableCell colSpan={5}>
             <CircleProgress />
-          </TableCell>
+          </StyledTableCell>
         </TableRow>
       )}
     </TableBody>
   );
 };
+
+const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
+  border: 0,
+  paddingTop: 100,
+});
