@@ -66,8 +66,8 @@ jobs:
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v3
         with:
-          name: base-lcov.info
-          path: ./coverage/lcov.info
+          name: base-lcov
+          path: base-lcov.info
 
   checks:
     runs-on: ubuntu-latest
@@ -82,7 +82,7 @@ jobs:
       - name: Download code coverage report from base branch
         uses: actions/download-artifact@v3
         with:
-          name: base-lcov.info
+          name: base-lcov
 
       - name: Install dependencies
         run: yarn
@@ -98,7 +98,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
           lcov-file: "./coverage/lcov.info"
-          base-lcov-file: "./coverage/base-lcov.info"
+          base-lcov-file: "base-lcov.info"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
           send-summary-comment: true
           show-annotations: "warning" # Possible options warning|error
