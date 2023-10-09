@@ -53,7 +53,6 @@
     "lodash": "^4.17.21",
     "glob-parent": "^5.1.2",
     "hosted-git-info": "^5.0.0",
-    "minimatch": "^9.0.2",
     "@types/react": "^17",
     "yaml": "^2.3.0",
     "word-wrap": "^1.2.4",
