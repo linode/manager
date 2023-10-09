@@ -166,6 +166,10 @@ jobs:
           path: packages/api-v4
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
+      - uses: actions/upload-artifact@v3
+        with:
+          name: base-lcov.info
+          path: ./coverage/lcov.info
 
   typecheck-manager:
     runs-on: ubuntu-latest

@@ -1,32 +1,14 @@
 name: Code Coverage
 
-on: [pull_request]
+on:
+  workflow_run:
+    workflows: ["ci"]
+    types:
+      - completed
 
 jobs:
-  base_branch_coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js v18.14.0
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.14"
-
-      - name: Install dependencies
-        run: yarn
-
-      - name: Run test coverage
-        run: yarn test
-
-      - name: Upload code coverage for ref branch
-        uses: actions/upload-artifact@v3
-        with:
-          name: ref-lcov.info
-          path: ./coverage/lcov.info
-
   checks:
     runs-on: ubuntu-latest
-    needs: base_branch_coverage
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js v18.14.0
@@ -53,7 +35,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
           lcov-file: "./coverage/lcov.info"
-          base-lcov-file: "./lcov.info"
+          base-lcov-file: "./coverage/base-lcov.info"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
           send-summary-comment: true
           show-annotations: "warning" # Possible options warning|error
