@@ -100,7 +100,7 @@
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "typecheck": "tsc",
-    "coverage": "jest --coverage && open coverage/lcov-report/index.html"
+    "coverage": "jest && open coverage/lcov-report/index.html"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
