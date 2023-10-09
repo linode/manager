@@ -515,7 +515,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   linode_resize_create: {
     notification: (e) =>
-      `Resize for Linode ${e.entity!.label} has been initiated.`,
+      `A cold resize for Linode ${e.entity!.label} has been initiated.`,
   },
   linode_resize_warm_create: {
     notification: (e) =>
