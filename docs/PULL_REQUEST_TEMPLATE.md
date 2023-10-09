@@ -33,20 +33,21 @@ List any change relevant to the reviewer.
 - ...
 
 ## As an Author I have considered 🤔
-*Check all that apply*<br>
-<br>
-[ ] 👀 Doing a self review<br>
-[ ] ❔ Our [contribution guidelines](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md)<br>
-[ ] 🤏 Splitting feature into small PRs<br>
-[ ] ➕ Adding a changeset<br>
-[ ] 🧪 Providing/Improving test coverage<br>
-[ ] 🔐 Removing all sensitive information from the code and PR description<br>
-[ ] 🚩 Using a feature flag to protect the release<br>
-[ ] 👣 Providing comprehensive reproduction steps<br>
-[ ] 📑 Providing or updating our documentation<br>
-[ ] 🕛 Scheduling a pair reviewing session<br>
-[ ] 📱 Providing mobile support<br>
-[ ] ♿  Providing accessibility support
+
+*Check all that apply*
+
+- [ ] 👀 Doing a self review
+- [ ] ❔ Our [contribution guidelines](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md)
+- [ ] 🤏 Splitting feature into small PRs
+- [ ] ➕ Adding a changeset
+- [ ] 🧪 Providing/Improving test coverage
+- [ ] 🔐 Removing all sensitive information from the code and PR description
+- [ ] 🚩 Using a feature flag to protect the release
+- [ ] 👣 Providing comprehensive reproduction steps
+- [ ] 📑 Providing or updating our documentation
+- [ ] 🕛 Scheduling a pair reviewing session
+- [ ] 📱 Providing mobile support
+- [ ] ♿  Providing accessibility support
 
 ---
 ## Commit message and pull request title format standards
