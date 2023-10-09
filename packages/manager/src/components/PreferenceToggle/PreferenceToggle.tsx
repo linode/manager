@@ -19,7 +19,7 @@ interface RenderChildrenProps<T> {
 type RenderChildren<T> = (props: RenderChildrenProps<T>) => JSX.Element;
 
 interface Props<T = PreferenceValue> {
-  children: RenderChildren<T>;
+  children: RenderChildren<T | undefined>;
   initialSetCallbackFn?: (value: T) => void;
   preferenceKey: string;
   preferenceOptions: [T, T];
@@ -189,17 +189,6 @@ export const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
 
     return newPreferenceToSet;
   };
-
-  /**
-   * render-block the children. We can prevent
-   * render-blocking by passing a default value as a prop
-   *
-   * So if you want to handle local state outside of this component,
-   * you can do so and pass the value explicitly with the _value_ prop
-   */
-  if (isNullOrUndefined(currentlySetPreference)) {
-    return null;
-  }
 
   return typeof children === 'function'
     ? children({ preference: currentlySetPreference, togglePreference })
