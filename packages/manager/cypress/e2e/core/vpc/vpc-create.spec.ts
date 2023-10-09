@@ -27,7 +27,7 @@ import { buildArray } from 'support/util/arrays';
 import { getUniqueLinodesFromSubnets } from 'src/features/VPCs/utils';
 
 /**
- * Gets the "Add a Subnet" section with the given index.
+ * Gets the "Add another Subnet" section with the given index.
  *
  * @returns Cypress chainable.
  */
@@ -153,7 +153,7 @@ describe('VPC create flow', () => {
 
     // Add another subnet that we will remove later.
     ui.button
-      .findByTitle('Add a Subnet')
+      .findByTitle('Add another Subnet')
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -196,7 +196,7 @@ describe('VPC create flow', () => {
     // Continue adding remaining subnets.
     mockSubnets.slice(1).forEach((mockSubnet: Subnet, index: number) => {
       ui.button
-        .findByTitle('Add a Subnet')
+        .findByTitle('Add another Subnet')
         .should('be.visible')
         .should('be.enabled')
         .click();
