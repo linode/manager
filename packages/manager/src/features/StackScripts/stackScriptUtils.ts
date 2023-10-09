@@ -127,8 +127,8 @@ export const baseApps = {
   '1096122': 'Mastodon',
   '1102900': 'Apache Airflow',
   '1102902': 'HaltDOS Community WAF',
-  '1102905': 'Gopaddle',
   '1102904': 'Superinsight',
+  '1102905': 'Gopaddle',
   '1102906': 'Passky',
   '1102907': 'ONLYOFFICE Docs',
   '1132204': 'Redis Sentinel Cluster',
@@ -136,12 +136,12 @@ export const baseApps = {
   '1160820': 'Appwrite',
   '1177225': 'Seatable',
   '1177605': 'Illa Builder',
-  '1243759' : 'MainConcept FFmpeg Plugins'
-  '1243760' : 'MainConcept Live Encoder'
-  '1243762' : 'MainConcept 2GO P2 AVC Ultra Transcoder'
-  '1243763' : 'MainConcept 2GO XAVC Transcoder'
-  '1243764' : 'MainConcept 2GO XDCAM Transcoder'
-  '1243780' : 'SimpleX Chat'
+  '1243759': 'MainConcept FFmpeg Plugins',
+  '1243760': 'MainConcept Live Encoder',
+  '1243762': 'MainConcept 2GO P2 AVC Ultra Transcoder',
+  '1243763': 'MainConcept 2GO XAVC Transcoder',
+  '1243764': 'MainConcept 2GO XDCAM Transcoder',
+  '1243780': 'SimpleX Chat',
 };
 
 const oneClickFilter = [
