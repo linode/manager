@@ -140,7 +140,9 @@ describe('resize linode', () => {
       // Failed to reduce the size of the linode
       cy.contains(
         'The current disk size of your Linode is too large for the new service plan. Please resize your disk to accommodate the new plan. You can read our Resize Your Linode guide for more detailed instructions.'
-      ).should('be.visible');
+      )
+        .scrollIntoView()
+        .should('be.visible');
 
       // Normal flow when resizing a linode to a smaller size after first resizing
       // its disk.
