@@ -12,7 +12,6 @@ const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
     initSession={jest.fn()}
     isAuthenticated={false}
-    markAppAsDoneLoading={jest.fn()}
     pendingUpload={false}
     queryClient={queryClient}
     store={store}

@@ -19,7 +19,6 @@ import { queryKey as accountQueryKey } from 'src/queries/account';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
-import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { MapState } from 'src/store/types';
 
@@ -36,11 +35,6 @@ type CombinedProps = Props &
   WithApplicationStoreProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
-  state = {
-    hasEnsuredAllTypes: false,
-    showChildren: false,
-  };
-
   componentDidMount() {
     const { initSession } = this.props;
     /**
@@ -145,9 +139,13 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     } catch {
       /** We choose to do nothing, relying on the Redux error state. */
     } finally {
-      this.props.markAppAsDoneLoading();
       this.setState({ showChildren: true });
     }
+  };
+
+  state = {
+    hasEnsuredAllTypes: false,
+    showChildren: false,
   };
 }
 
@@ -163,14 +161,12 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => ({
 
 interface DispatchProps {
   initSession: () => void;
-  markAppAsDoneLoading: () => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
-  markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

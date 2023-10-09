@@ -4,7 +4,6 @@ import * as React from 'react';
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 
 import { configureErrorReportingUser } from './exceptionReporting';
-import { useFeatureFlagsLoad } from './hooks/useFeatureFlagLoad';
 import { useAccount } from './queries/account';
 import { useProfile } from './queries/profile';
 
@@ -15,13 +14,14 @@ import { useProfile } from './queries/profile';
  * and this is a good side-effect usage of useEffect().
  */
 
-export const IdentifyUser = () => {
+export const useIdentifyUser = () => {
   const { data: account, error: accountError } = useAccount();
   const { data: profile } = useProfile();
+  const [areFeatureFlagsLoading, setAreFeatureFlagsLoading] = React.useState(
+    true
+  );
 
   const client = useLDClient();
-
-  const { setFeatureFlagsLoaded } = useFeatureFlagsLoad();
 
   const userID = profile?.uid;
   const username = profile?.username;
@@ -41,7 +41,7 @@ export const IdentifyUser = () => {
        * our loading state and move on - we'll render the app
        * without any context of feature flags.
        */
-      setFeatureFlagsLoaded();
+      setAreFeatureFlagsLoading(true);
     } else {
       /**
        * returns unknown if:
@@ -59,6 +59,7 @@ export const IdentifyUser = () => {
         : account?.tax_id === ''
         ? 'Unknown'
         : account?.tax_id;
+
       if (client && country && username && taxID) {
         client
           .identify({
@@ -68,13 +69,7 @@ export const IdentifyUser = () => {
             privateAttributes: ['country, taxID'],
             taxID,
           })
-          .then(() => setFeatureFlagsLoaded())
-          /**
-           * We could handle this in other ways, but for now don't let a
-           * LD bung-up block the app from loading.
-           */
-
-          .catch(() => setFeatureFlagsLoaded());
+          .finally(() => setAreFeatureFlagsLoading(false));
       } else {
         // We "setFeatureFlagsLoaded" here because if the API is
         // in maintenance mode, we can't fetch the user's username.
@@ -82,12 +77,10 @@ export const IdentifyUser = () => {
 
         // If we're being honest, featureFlagsLoading shouldn't be tracked by Redux
         // and this code should go away eventually.
-        setFeatureFlagsLoaded();
+        setAreFeatureFlagsLoading(false);
       }
     }
   }, [client, username, account, accountError]);
 
-  return null;
+  return { areFeatureFlagsLoading };
 };
-
-export default IdentifyUser;

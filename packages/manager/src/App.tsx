@@ -14,8 +14,9 @@ import { EventWithStore, events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
 import GoTo from './GoTo';
-import IdentifyUser from './IdentifyUser';
+import { useIdentifyUser } from './IdentifyUser';
 import MainContent from './MainContent';
+import { SplashScreen } from './components/SplashScreen';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAuthentication } from './hooks/useAuthentication';
@@ -45,14 +46,11 @@ const BaseApp = withDocumentTitleProvider(
     withFeatureFlagConsumer(() => {
       const history = useHistory();
 
+      const { areFeatureFlagsLoading } = useIdentifyUser();
+
       const { data: preferences } = usePreferences();
       const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
-      // const { featureFlagsLoading } = useFeatureFlagsLoad();
-
-      // const appIsLoading = useSelector(
-      //   (state: ApplicationState) => state.initialLoad.appIsLoading
-      // );
       const { loggedInAsCustomer } = useAuthentication();
 
       const { enqueueSnackbar } = useSnackbar();
@@ -260,6 +258,10 @@ const BaseApp = withDocumentTitleProvider(
         };
       }, [handleMigrationEvent]);
 
+      if (areFeatureFlagsLoading) {
+        return <SplashScreen />;
+      }
+
       return (
         <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
           {/** Accessibility helper */}
@@ -275,7 +277,6 @@ const BaseApp = withDocumentTitleProvider(
           </div>
           <GoTo onClose={() => setGoToOpen(false)} open={goToOpen} />
           {/** Update the LD client with the user's id as soon as we know it */}
-          <IdentifyUser />
           <DocumentTitleSegment segment="Akamai Cloud Manager" />
           <MainContent isLoggedInAsCustomer={loggedInAsCustomer} />
         </ErrorBoundary>
