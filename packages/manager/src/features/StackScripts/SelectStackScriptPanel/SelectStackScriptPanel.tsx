@@ -8,7 +8,8 @@ import {
 } from '@linode/api-v4/lib/stackscripts';
 import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
+import { WithStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 

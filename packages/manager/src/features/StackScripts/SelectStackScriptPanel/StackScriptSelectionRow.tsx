@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { WithStyles, withStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
+import { WithStyles } from '@mui/styles';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { compose as recompose } from 'recompose';

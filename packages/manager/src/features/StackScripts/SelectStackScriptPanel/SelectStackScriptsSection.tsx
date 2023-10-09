@@ -1,6 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -13,7 +13,7 @@ import { truncate } from 'src/utilities/truncate';
 
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   loadingWrapper: {
     border: 0,
     paddingTop: 100,
@@ -31,7 +31,7 @@ interface Props {
 }
 
 export const SelectStackScriptsSection = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data, disabled, isSorting, onSelect, selectedId } = props;
 
   const { data: profile } = useProfile();

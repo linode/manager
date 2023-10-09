@@ -2,7 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -16,7 +16,7 @@ import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -112,7 +112,7 @@ export const StackScriptForm = (props: Props) => {
     script,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
   const selectedImages = imageToItem(images.selected);
