@@ -1,6 +1,6 @@
 name: Code Coverage
 
-on: [pull_request_target]
+on: [pull_request]
 
 jobs:
   base_branch_coverage:
@@ -29,6 +29,10 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     needs: base_branch_coverage
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
     steps:
       - uses: actions/checkout@v3 # Checkout the PR branch
       - name: Use Node.js v18.14.0
