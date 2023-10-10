@@ -84,11 +84,12 @@ const enhanceError = (e: any) => {
         : `- ${error.reason}`;
     });
 
-    const requestUrl = !!e.request?.responseURL
-      ? `\nRequest URL: ${e.request.responseURL}`
-      : '';
+    const requestInfo =
+      !!e.request?.responseURL && !!e.config.method
+        ? `\nRequest: ${e.config.method.toUpperCase()} ${e.request.responseURL}`
+        : '';
 
-    return new Error(`${summary}\n${errorDetails.join('\n')}${requestUrl}`);
+    return new Error(`${summary}\n${errorDetails.join('\n')}${requestInfo}`);
   }
 
   if (isAxiosError(e)) {
@@ -98,11 +99,12 @@ const enhanceError = (e: any) => {
       ? `Request failed with status code ${e.response.status}`
       : `Request failed`;
 
-    const requestUrl = !!e.request?.responseURL
-      ? `\nRequest URL: ${e.request.responseURL}`
-      : '';
+    const requestInfo =
+      !!e.request?.responseURL && !!e.config.method
+        ? `\nRequest: ${e.config.method.toUpperCase()} ${e.request.responseURL}`
+        : '';
 
-    return new Error(`${summary}${requestUrl}`);
+    return new Error(`${summary}${requestInfo}`);
   }
 
   // Handle cases where a validation error is thrown.
