@@ -24,8 +24,8 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLoadBalancerRoutesQuery } from 'src/queries/aglb/routes';
 
-import { AddRuleDrawer } from './Routes/AddRuleDrawer';
 import { DeleteRouteDialog } from './Routes/DeleteRouteDialog';
+import { RuleDrawer } from './Routes/RuleDrawer';
 import { RulesTable } from './RulesTable';
 
 import type { Filter, Route } from '@linode/api-v4';
@@ -227,7 +227,7 @@ export const LoadBalancerRoutes = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      <AddRuleDrawer
+      <RuleDrawer
         onClose={() => {
           setIsAddRuleDrawerOpen(false);
           setSelectedRuleIndex(undefined);

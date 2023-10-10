@@ -45,7 +45,10 @@ interface Props {
   ruleIndexToEdit: number | undefined;
 }
 
-export const AddRuleDrawer = (props: Props) => {
+/**
+ * Drawer used for *adding* and *editing* AGLB rules
+ */
+export const RuleDrawer = (props: Props) => {
   const {
     loadbalancerId,
     onClose: _onClose,
@@ -63,26 +66,31 @@ export const AddRuleDrawer = (props: Props) => {
 
   const {
     error,
+    isLoading,
     mutateAsync: updateRule,
     reset,
-    isLoading,
   } = useLoadBalancerRouteUpdateMutation(loadbalancerId, route?.id ?? -1);
 
   const [ttlUnit, setTTLUnit] = useState<TimeUnit>('hour');
 
   const formik = useFormik<RulePayload>({
     enableReinitialize: true,
-    initialValues: isEditMode ? route!.rules[ruleIndexToEdit] : initialValues,
+    initialValues: isEditMode
+      ? route?.rules[ruleIndexToEdit] ?? initialValues
+      : initialValues,
     async onSubmit(rule) {
       try {
         const existingRules = route?.rules ?? [];
 
+        // If we are editing, update the rule with the form data.
         if (isEditMode) {
           existingRules[ruleIndexToEdit] = rule;
         }
 
         await updateRule({
           protocol: route?.protocol,
+          // If we are editing, send the updated rules, otherwise
+          // append a new rule to the end.
           rules: isEditMode ? existingRules : [...existingRules, rule],
         });
         onClose();

@@ -43,7 +43,7 @@ const matchFieldMap: Record<MatchField, string> = {
 const screenReaderMessage =
   'Some screen readers may require you to enter focus mode to interact with Loadbalancer rule list items. In focus mode, press spacebar to begin a drag or tab to access item actions.';
 
-export const RulesTable = ({ loadbalancerId, route, onEditRule }: Props) => {
+export const RulesTable = ({ loadbalancerId, onEditRule, route }: Props) => {
   const { label, protocol, rules } = route;
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
@@ -250,7 +250,7 @@ export const RulesTable = ({ loadbalancerId, route, onEditRule }: Props) => {
                                 }}
                               >
                                 {rule.match_condition
-                                  .session_stickiness_cookie &&
+                                  .session_stickiness_cookie ||
                                 rule.match_condition.session_stickiness_ttl
                                   ? 'Yes'
                                   : 'No'}
