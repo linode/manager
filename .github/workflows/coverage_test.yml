@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.base_ref }} # The base branch of the PR (develop)
       - name: Use Node.js v18.14.0
         uses: actions/setup-node@v3
         with:
@@ -31,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: base_branch_coverage
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3 # Checkout the PR branch
       - name: Use Node.js v18.14.0
         uses: actions/setup-node@v3
         with:
@@ -41,6 +43,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: base-lcov
+          path: packages/manager/coverage/base-lcov.info
 
       - name: Install dependencies
         run: yarn
@@ -56,7 +59,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
           lcov-file: "packages/manager/coverage/lcov.info"
-          base-lcov-file: "packages/manager/base-lcov.info"
+          base-lcov-file: "packages/manager/coverage/base-lcov.info"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
           send-summary-comment: true
           show-annotations: "warning" # Possible options warning|error
