@@ -29,10 +29,6 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     needs: base_branch_coverage
-    permissions:
-      issues: write
-      pull-requests: write
-      contents: write
     steps:
       - uses: actions/checkout@v3 # Checkout the PR branch
       - name: Use Node.js v18.14.0
@@ -68,5 +64,5 @@ jobs:
           lcov-file: "packages/manager/coverage/lcov.info"
           base-lcov-file: "packages/manager/coverage/base-lcov/lcov.info"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
-          send-summary-comment: true
+          send-summary-comment: false
           show-annotations: "warning" # Possible options warning|error
