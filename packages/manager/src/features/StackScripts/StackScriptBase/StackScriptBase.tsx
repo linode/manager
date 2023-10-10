@@ -30,9 +30,15 @@ import {
   generateSpecificFilter,
 } from '../stackScriptUtils';
 import { StackScriptsRequest } from '../types';
+import {
+  StyledContentDiv,
+  StyledDebouncedSearchTextfield,
+  StyledEmptyStateDiv,
+  StyledLoaderDiv,
+  StyledPlaceHolder,
+  StyledTable,
+} from './StackScriptBase.styles';
 import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
-
-import { StyledContentDiv, StyledDebouncedSearchTextfield, StyledEmptyStateDiv, StyledLoaderDiv, StyledPlaceHolder, StyledTable } from './StackScriptBase.styles';
 
 type CurrentFilter = 'deploys' | 'label' | 'revision';
 

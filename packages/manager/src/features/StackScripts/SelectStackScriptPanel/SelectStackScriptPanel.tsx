@@ -25,10 +25,14 @@ import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncate } from 'src/utilities/truncate';
 
 import { StackScriptTableHead } from '../Partials/StackScriptTableHead';
+import {
+  StyledLinkDiv,
+  StyledPanelPaper,
+  StyledSelectingPaper,
+  StyledTable,
+} from './SelectStackScriptPanel.styles';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
-
-import { StyledLinkDiv, StyledPanelPaper, StyledSelectingPaper, StyledTable } from './SelectStackScriptPanel.styles';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -60,9 +64,7 @@ interface Props extends RenderGuardProps {
   selectedUsername?: string;
 }
 
-type CombinedProps = Props &
-  RenderGuardProps &
-  WithProfileProps;
+type CombinedProps = Props & RenderGuardProps & WithProfileProps;
 
 interface State {
   stackScript?: StackScript;
@@ -102,13 +104,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const {
-      category,
-      error,
-      profile,
-      request,
-      selectedId,
-    } = this.props;
+    const { category, error, profile, request, selectedId } = this.props;
     const { stackScript, stackScriptError, stackScriptLoading } = this.state;
 
     if (selectedId) {

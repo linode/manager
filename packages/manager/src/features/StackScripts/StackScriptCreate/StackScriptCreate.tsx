@@ -34,7 +34,7 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import StackScriptForm from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
+import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
 import { queryKey } from 'src/queries/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
