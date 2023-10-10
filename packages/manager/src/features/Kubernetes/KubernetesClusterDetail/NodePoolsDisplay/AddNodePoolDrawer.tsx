@@ -235,7 +235,7 @@ export const AddNodePoolDrawer = (props: Props) => {
               <strong>
                 ${renderMonthlyPriceToCorrectDecimalPlace(totalPrice)}/month (
                 {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
-                {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode) ?? 0}
+                {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
                 /month)
               </strong>{' '}
               to this cluster.
