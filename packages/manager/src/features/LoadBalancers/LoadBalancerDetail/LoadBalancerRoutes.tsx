@@ -39,6 +39,7 @@ export const LoadBalancerRoutes = () => {
   const [query, setQuery] = useState<string>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedRouteId, setSelectedRouteId] = useState<number>();
+  const [selectedRuleIndex, setSelectedRuleIndex] = useState<number>();
 
   const pagination = usePagination(1, PREFERENCE_KEY);
 
@@ -76,6 +77,12 @@ export const LoadBalancerRoutes = () => {
   const onAddRule = (route: Route) => {
     setIsAddRuleDrawerOpen(true);
     setSelectedRouteId(route.id);
+  };
+
+  const onEditRule = (route: Route, ruleIndex: number) => {
+    setIsAddRuleDrawerOpen(true);
+    setSelectedRouteId(route.id);
+    setSelectedRuleIndex(ruleIndex);
   };
 
   const onDeleteRoute = (route: Route) => {
@@ -124,7 +131,11 @@ export const LoadBalancerRoutes = () => {
       );
 
       const InnerTable = (
-        <RulesTable loadbalancerId={Number(loadbalancerId)} route={route} />
+        <RulesTable
+          loadbalancerId={Number(loadbalancerId)}
+          onEditRule={(index) => onEditRule(route, index)}
+          route={route}
+        />
       );
 
       return {
@@ -217,10 +228,14 @@ export const LoadBalancerRoutes = () => {
         pageSize={pagination.pageSize}
       />
       <AddRuleDrawer
+        onClose={() => {
+          setIsAddRuleDrawerOpen(false);
+          setSelectedRuleIndex(undefined);
+        }}
         loadbalancerId={Number(loadbalancerId)}
-        onClose={() => setIsAddRuleDrawerOpen(false)}
         open={isAddRuleDrawerOpen}
         route={selectedRoute}
+        ruleIndexToEdit={selectedRuleIndex}
       />
       <DeleteRouteDialog
         loadbalancerId={Number(loadbalancerId)}

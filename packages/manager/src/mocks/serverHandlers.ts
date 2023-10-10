@@ -362,7 +362,10 @@ const aglb = [
   rest.put('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     const id = Number(req.params.routeId);
     const body = req.body as any;
-    return res(ctx.json(createRouteFactory.build({ id, ...body })));
+    return res(
+      ctx.delay(2000),
+      ctx.json(createRouteFactory.build({ id, ...body }))
+    );
   }),
   rest.delete('*/v4beta/aglb/:id/routes/:routeId', (req, res, ctx) => {
     return res(ctx.json({}));

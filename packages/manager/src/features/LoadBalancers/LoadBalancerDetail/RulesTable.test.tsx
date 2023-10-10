@@ -24,7 +24,7 @@ const mockRoute = routeFactory.build({
 describe('RulesTable', () => {
   it('renders table headers', () => {
     const { getByText } = renderWithTheme(
-      <RulesTable loadbalancerId={1} route={mockRoute} />
+      <RulesTable loadbalancerId={1} onEditRule={jest.fn()} route={mockRoute} />
     );
     expect(getByText('Execution')).toBeInTheDocument();
     expect(getByText('Match Value')).toBeInTheDocument();
@@ -34,6 +34,7 @@ describe('RulesTable', () => {
     const { getByText } = renderWithTheme(
       <RulesTable
         loadbalancerId={1}
+        onEditRule={jest.fn()}
         route={{ id: 0, label: 'test', protocol: 'http', rules: [] }}
       />
     );
@@ -42,7 +43,7 @@ describe('RulesTable', () => {
 
   it('renders rules correctly', () => {
     const { getByText } = renderWithTheme(
-      <RulesTable loadbalancerId={1} route={mockRoute} />
+      <RulesTable loadbalancerId={1} onEditRule={jest.fn()} route={mockRoute} />
     );
 
     expect(getByText('First')).toBeInTheDocument();
