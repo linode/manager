@@ -2,6 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -41,6 +42,16 @@ export const FirewallDeviceLanding = React.memo(
 
     const theme = useTheme();
 
+    const history = useHistory();
+    const routeMatch = useRouteMatch();
+    const location = useLocation();
+
+    React.useEffect(() => {
+      if (location.pathname.endsWith('add')) {
+        setDeviceDrawerOpen(true);
+      }
+    }, [location.pathname]);
+
     const [filteredDevices, setFilteredDevices] = React.useState<
       FirewallDevice[]
     >([]);
@@ -68,6 +79,12 @@ export const FirewallDeviceLanding = React.memo(
 
     const handleClose = () => {
       setDeviceDrawerOpen(false);
+      history.push(routeMatch.url);
+    };
+
+    const handleOpen = () => {
+      setDeviceDrawerOpen(true);
+      history.push(routeMatch.url + '/add');
     };
 
     const [searchText, setSearchText] = React.useState('');
@@ -126,7 +143,7 @@ export const FirewallDeviceLanding = React.memo(
                 buttonType="primary"
                 data-testid="add-device-button"
                 disabled={disabled}
-                onClick={() => setDeviceDrawerOpen(true)}
+                onClick={handleOpen}
               >
                 Add {formattedType}s to Firewall
               </Button>
