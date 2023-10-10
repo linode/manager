@@ -1,7 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
-import classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -11,11 +10,8 @@ import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { Table } from 'src/components/Table';
 import {
   WithProfileProps,
   withProfile,
@@ -34,8 +30,9 @@ import {
   generateSpecificFilter,
 } from '../stackScriptUtils';
 import { StackScriptsRequest } from '../types';
-import withStyles, { StyleProps } from './StackScriptBase.styles';
 import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
+
+import { StyledContentDiv, StyledDebouncedSearchTextfield, StyledEmptyStateDiv, StyledLoaderDiv, StyledPlaceHolder, StyledTable } from './StackScriptBase.styles';
 
 type CurrentFilter = 'deploys' | 'label' | 'revision';
 
@@ -74,7 +71,6 @@ interface Props {
 }
 
 type CombinedProps = Props &
-  StyleProps &
   RouteComponentProps &
   WithProfileProps &
   WithQueryClientProps;
@@ -86,7 +82,7 @@ interface HelperFunctions {
 
 export type StateProps = HelperFunctions & State;
 
-interface WithStackScriptBaseOptions {
+export interface WithStackScriptBaseOptions {
   isSelecting: boolean;
   // Whether or not `type=` and `query=` QS params should be respected and
   // written to on user input.
@@ -134,7 +130,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         successMessage,
       } = this.state;
 
-      const { classes, grants, profile } = this.props;
+      const { grants, profile } = this.props;
 
       const userCannotCreateStackScripts =
         Boolean(profile.data?.restricted) &&
@@ -159,9 +155,9 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
       if (this.state.loading) {
         return (
-          <div className={classes.loaderWrapper}>
+          <StyledLoaderDiv>
             <CircleProgress />
-          </div>
+          </StyledLoaderDiv>
         );
       }
 
@@ -184,39 +180,32 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           {!didSearch &&
           listOfStackScripts &&
           listOfStackScripts.length === 0 ? (
-            <div className={classes.emptyState} data-qa-stackscript-empty-msg>
+            <StyledEmptyStateDiv data-qa-stackscript-empty-msg>
               {userCannotCreateStackScripts ? (
-                <Placeholder
-                  className={classes.stackscriptPlaceholder}
+                <StyledPlaceHolder
                   icon={StackScriptsIcon}
                   isEntity
                   renderAsSecondary
                   title="StackScripts"
                 >
                   You don&rsquo;t have any StackScripts to select from.
-                </Placeholder>
+                </StyledPlaceHolder>
               ) : (
                 <StackScriptsEmptyLandingState
                   goToCreateStackScript={this.goToCreateStackScript}
                 />
               )}
-            </div>
+            </StyledEmptyStateDiv>
           ) : (
             <React.Fragment>
-              <div
-                className={classNames({
-                  [classes.landing]: !isSelecting,
-                  [classes.searchWrapper]: true,
-                })}
-              >
-                <DebouncedSearchTextField
+              <StyledContentDiv isSelecting={!isSelecting}>
+                <StyledDebouncedSearchTextfield
                   tooltipText={
                     this.props.category === 'community'
                       ? `Hint: try searching for a specific item by prepending your
                   search term with "username:", "label:", or "description:"`
                       : ''
                   }
-                  className={classes.searchBar}
                   debounceTime={400}
                   defaultValue={query}
                   hideLabel
@@ -225,14 +214,13 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   onSearch={this.handleSearch}
                   placeholder="Search by Label, Username, or Description"
                 />
-              </div>
-              <Table
+              </StyledContentDiv>
+              <StyledTable
                 aria-label="List of StackScripts"
                 colCount={isSelecting ? 1 : 4}
                 noOverflow={true}
                 rowCount={listOfStackScripts.length}
                 style={!isSelecting ? { tableLayout: 'fixed' } : undefined}
-                tableClass={classes.table}
               >
                 <StackScriptTableHead
                   category={this.props.category}
@@ -247,7 +235,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   getDataAtPage={this.getDataAtPage}
                   getNext={this.getNext}
                 />
-              </Table>
+              </StyledTable>
 
               {/*
                * show loading indicator if we're getting more stackscripts
@@ -603,7 +591,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       stackScriptImages.some((imageId) => isLinodeKubeImageId(imageId));
   }
 
-  return compose(withRouter, withProfile, withStyles)(EnhancedComponent);
+  return compose(withRouter, withProfile)(EnhancedComponent);
 };
 
 export default withStackScriptBase;
