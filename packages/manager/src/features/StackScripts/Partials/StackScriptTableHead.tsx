@@ -64,11 +64,9 @@ export const StackScriptTableHead = (props: StackScriptTableHeadProps) => {
           sx={(theme: Theme) => ({
             ...sharedStackScriptCellStyles(category, isSelecting, theme),
           })}
-          category={category}
           colSpan={isSelecting ? 2 : 1}
           data-qa-stackscript-table-header
           {...maybeAddSortingProps('label')}
-          isSelecting={isSelecting}
         >
           StackScript
         </Cell>
