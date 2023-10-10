@@ -40,7 +40,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: base-lcov
-          path: packages/manager/coverage/base-lcov.info
+          path: packages/manager/coverage/base-lcov
 
       - name: Install dependencies
         run: yarn
@@ -62,7 +62,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
           lcov-file: "packages/manager/coverage/lcov.info"
-          base-lcov-file: "base-lcov.info"
+          base-lcov-file: "packages/manager/coverage/base-lcov/lcov.info"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
           send-summary-comment: true
           show-annotations: "warning" # Possible options warning|error
