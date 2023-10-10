@@ -23,7 +23,7 @@ describe('Create Subnet Drawer', () => {
     expect(createSubnetTexts[0]).toBeVisible(); // the Drawer title
     expect(createSubnetTexts[1]).toBeVisible(); // the button
 
-    const label = getByText('Subnet label');
+    const label = getByText('Subnet Label');
     expect(label).toBeVisible();
     expect(label).toBeEnabled();
 

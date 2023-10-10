@@ -171,7 +171,7 @@ describe('VPC details page', () => {
       .findByTitle(`Delete Subnet ${mockSubnet.label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Subnet label')
+        cy.findByLabelText('Subnet Label')
           .should('be.visible')
           .click()
           .type(mockSubnet.label);
@@ -238,7 +238,7 @@ describe('VPC details page', () => {
       .findByTitle('Create Subnet')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Subnet label')
+        cy.findByText('Subnet Label')
           .should('be.visible')
           .click()
           .type(mockSubnet.label);
