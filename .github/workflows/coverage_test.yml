@@ -26,9 +26,6 @@ jobs:
           name: base-lcov
           path: packages/manager/coverage/lcov.info
 
-      - name: List Contents of Coverage Directory
-        run: cd packages/manager/coverage && ls -R
-
   checks:
     runs-on: ubuntu-latest
     needs: base_branch_coverage
@@ -48,6 +45,12 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+      - name: Debugging - List Contents of Directory
+        run: |
+          ls -R
+          ls -R packages/manager/coverage
+        working-directory: ${{ github.workspace }}
+
       - name: Run test coverage
         run: yarn workspace linode-manager run test
 
@@ -59,7 +62,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
           lcov-file: "packages/manager/coverage/lcov.info"
-          base-lcov-file: base-lcov
+          base-lcov-file: "base-lcov.info"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
           send-summary-comment: true
           show-annotations: "warning" # Possible options warning|error
