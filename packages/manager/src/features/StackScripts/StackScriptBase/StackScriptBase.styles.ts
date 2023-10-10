@@ -6,15 +6,22 @@ import { Table } from 'src/components/Table';
 
 import type { WithStackScriptBaseOptions } from './StackScriptBase';
 
-type StyledStackScriptBaseProps = Pick<WithStackScriptBaseOptions, 'isSelecting'>;
+type StyledStackScriptBaseProps = Pick<
+  WithStackScriptBaseOptions,
+  'isSelecting'
+>;
 
-export const StyledContentDiv = styled('div', { label: 'StyledContentDiv' })<StyledStackScriptBaseProps>(({ isSelecting, theme }) => ({
-  ...(isSelecting ? {
-    backgroundColor: `${theme.bg.app} !important`,
-    marginTop: `-${theme.spacing()}`,
-  } : {
-    backgroundColor: theme.bg.bgPaper,
-  }),
+export const StyledContentDiv = styled('div', {
+  label: 'StyledContentDiv',
+})<StyledStackScriptBaseProps>(({ isSelecting, theme }) => ({
+  ...(isSelecting
+    ? {
+        backgroundColor: `${theme.bg.app} !important`,
+        marginTop: `-${theme.spacing()}`,
+      }
+    : {
+        backgroundColor: theme.bg.bgPaper,
+      }),
   display: 'flex',
   flexWrap: 'nowrap',
   paddingBottom: '8px !important',
@@ -30,11 +37,15 @@ export const StyledContentDiv = styled('div', { label: 'StyledContentDiv' })<Sty
   zIndex: 11,
 }));
 
-export const StyledEmptyStateDiv = styled('div', { label: 'StyledEmptyStateDiv'})(({ theme }) => ({
+export const StyledEmptyStateDiv = styled('div', {
+  label: 'StyledEmptyStateDiv',
+})(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-export const StyledDebouncedSearchTextfield = styled(DebouncedSearchTextField, { label: 'StyledDebouncedSearchTextfield' })(({ theme }) => ({
+export const StyledDebouncedSearchTextfield = styled(DebouncedSearchTextField, {
+  label: 'StyledDebouncedSearchTextfield',
+})(({ theme }) => ({
   '& + button': {
     paddingBottom: 0,
     paddingTop: 0,
@@ -57,14 +68,18 @@ export const StyledDebouncedSearchTextfield = styled(DebouncedSearchTextField, {
   marginTop: 0,
 }));
 
-export const StyledLoaderDiv = styled('div', { label: 'StyledLoaderDiv' })(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  padding: theme.spacing(2),
-}));
+export const StyledLoaderDiv = styled('div', { label: 'StyledLoaderDiv' })(
+  ({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    padding: theme.spacing(2),
+  })
+);
 
 // Styles to override base placeholder styles for StackScript null state
-export const StyledPlaceHolder = styled(Placeholder, { label: 'StyledPlaceHolder'})(({ theme }) => ({
+export const StyledPlaceHolder = styled(Placeholder, {
+  label: 'StyledPlaceHolder',
+})(({ theme }) => ({
   '& svg': {
     marginTop: 4,
     transform: 'scale(0.8)',
@@ -74,7 +89,8 @@ export const StyledPlaceHolder = styled(Placeholder, { label: 'StyledPlaceHolder
   width: '100%',
 }));
 
-export const StyledTable = styled(Table, { label: 'StyledTable' })(({ theme }) => ({
-  backgroundColor: theme.bg.bgPaper,
-  overflow: 'scroll',
-}));
+export const StyledTable = styled(Table, { label: 'StyledTable' })(
+  ({ theme }) => ({
+    backgroundColor: theme.bg.bgPaper,
+  })
+);

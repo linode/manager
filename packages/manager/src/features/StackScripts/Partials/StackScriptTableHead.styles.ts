@@ -159,6 +159,7 @@ const SharedStackScriptCellStyles = (
 
 export const StyledSortedStackScriptCell = styled(TableSortCell, {
   label: 'StyledSortedStackScriptCell',
+  shouldForwardProp: (prop) => isPropValid(['category', 'isSelecting'], prop),
 })<StyledStackScriptCellProps>(({ category, isSelecting, theme }) => ({
   ...SharedStackScriptCellStyles(category, isSelecting, theme),
 }));

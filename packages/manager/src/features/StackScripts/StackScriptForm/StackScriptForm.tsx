@@ -54,9 +54,7 @@ const errorResources = {
   script: 'A script',
 };
 
-// exported as a class component, otherwise no display name
-// appears in tests
-export const StackScriptForm = (props: Props) => {
+export const StackScriptForm = React.memo((props: Props) => {
   const {
     currentUser,
     description,
@@ -177,6 +175,6 @@ export const StackScriptForm = (props: Props) => {
       />
     </Paper>
   );
-};
+});
 
 export default React.memo(StackScriptForm);
