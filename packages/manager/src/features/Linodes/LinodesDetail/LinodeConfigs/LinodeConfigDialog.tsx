@@ -265,6 +265,10 @@ export const LinodeConfigDialog = (props: Props) => {
     setPrimaryInterfaceIndex,
   ] = React.useState<number>();
 
+  const [insufficientVPCIPv4Data, setInsufficientVPCIPv4Data] = React.useState(
+    {}
+  );
+
   const regionHasVLANS = regions.some(
     (thisRegion) =>
       thisRegion.id === linode?.region &&
@@ -968,6 +972,26 @@ export const LinodeConfigDialog = (props: Props) => {
                   </>
                 )}
                 {values.interfaces.map((thisInterface, idx) => {
+                  const surfaceVPCIPv4Error = () => {
+                    const testing = {};
+                    testing[`${idx}`] = true;
+
+                    setInsufficientVPCIPv4Data((insufficientVPCIPv4Data) => ({
+                      ...insufficientVPCIPv4Data,
+                      ...testing,
+                    }));
+                  };
+
+                  const clearVPCIPv4Error = () => {
+                    const testing = {};
+                    testing[`${idx}`] = false;
+
+                    setInsufficientVPCIPv4Data((insufficientVPCIPv4Data) => ({
+                      ...insufficientVPCIPv4Data,
+                      ...testing,
+                    }));
+                  };
+
                   return (
                     <InterfaceSelect
                       errors={{
@@ -980,11 +1004,15 @@ export const LinodeConfigDialog = (props: Props) => {
                           formik.errors[`interfaces[${idx}].subnet_id`],
                         vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
                         vpcIPv4Error:
-                          formik.errors[`interfaces[${idx}].ipv4.vpc`],
+                          formik.errors[`interfaces[${idx}].ipv4.vpc`] ||
+                          insufficientVPCIPv4Data[idx]
+                            ? 'Must be a valid IPv4 address, e.g. 192.168.2.0'
+                            : undefined,
                       }}
                       handleChange={(newInterface: Interface) =>
                         handleInterfaceChange(idx, newInterface)
                       }
+                      clearVPCIPv4Error={clearVPCIPv4Error}
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
@@ -993,6 +1021,7 @@ export const LinodeConfigDialog = (props: Props) => {
                       region={linode?.region}
                       slotNumber={idx}
                       subnetId={thisInterface.subnet_id}
+                      surfaceVPCIPv4Error={surfaceVPCIPv4Error}
                       vpcIPv4={thisInterface.ipv4?.vpc}
                       vpcId={thisInterface.vpc_id}
                     />

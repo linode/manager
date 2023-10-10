@@ -19,6 +19,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 
 export interface Props {
+  clearVPCIPv4Error?: () => void;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
   ipamAddress?: null | string;
@@ -27,6 +28,7 @@ export interface Props {
   readOnly: boolean;
   region?: string;
   slotNumber: number;
+  surfaceVPCIPv4Error?: () => void;
 }
 
 interface VPCStateErrors {
@@ -56,6 +58,7 @@ type CombinedProps = Props & VPCState;
 
 export const InterfaceSelect = (props: CombinedProps) => {
   const {
+    clearVPCIPv4Error,
     errors,
     fromAddonsPanel,
     handleChange,
@@ -66,6 +69,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     region,
     slotNumber,
     subnetId,
+    surfaceVPCIPv4Error,
     vpcIPv4,
     vpcId,
   } = props;
@@ -226,6 +230,16 @@ export const InterfaceSelect = (props: CombinedProps) => {
       });
     }
   }, [autoAssignVPCIPv4, autoAssignLinodeIPv4, purpose]);
+
+  React.useEffect(() => {
+    if (!autoAssignVPCIPv4 && !vpcIPv4 && surfaceVPCIPv4Error) {
+      surfaceVPCIPv4Error();
+    }
+
+    if (!autoAssignVPCIPv4 && vpcIPv4 && clearVPCIPv4Error) {
+      clearVPCIPv4Error();
+    }
+  }, [autoAssignVPCIPv4, vpcIPv4]);
 
   const handleCreateOption = (_newVlan: string) => {
     setNewVlan(_newVlan);
