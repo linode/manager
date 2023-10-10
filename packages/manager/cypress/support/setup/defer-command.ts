@@ -23,10 +23,6 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-import '@testing-library/cypress/add-commands';
-import 'cypress-axe';
-
-import './login';
 
 /**
  * Describes an object which can contain a label.
@@ -36,7 +32,7 @@ export interface Labelable {
 }
 
 /**
- * Yields a Cypress Promise that can be used in place of the given Promise.
+ * Yields a Cypress Promise that can be used in place of a native Promise.
  *
  * @param promise - Promise with result to await.
  * @param options - Defer options.
@@ -102,5 +98,3 @@ Cypress.Commands.add(
     return cy.wrap<Promise<T>, T>(wrapPromise(), wrapOptions);
   }
 );
-
-import '@testing-library/cypress/add-commands';
