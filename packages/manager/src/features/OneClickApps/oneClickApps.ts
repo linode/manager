@@ -1131,7 +1131,7 @@ export const oneClickApps: OCA[] = [
       start: '6DBA98',
     },
     description: `MainConcept FFmpeg Plugins are suited for both VOD and live production workflows, with advanced features such as Hybrid GPU acceleration and xHE-AAC audio format.`,
-    logo_url: 'mcffmpegplugin.svg',
+    logo_url: 'mcffmpegplugins.svg',
     name: 'MainConcept FFmpeg Plugins',
     related_guides: [
       {
@@ -2258,7 +2258,7 @@ export const oneClickApps: OCA[] = [
       end: '70f0f9',
       start: '11182f',
     },
-    description: `SimpleX Chat - The first messaging platform that has no user identifiers of any kind - 100% private by design. SMP server is the relay server used to pass messages in SimpleX network. XFTP is a new file transfer protocol focussed on meta-data protection. This One-Click APP will deploy both smp and xftp servers.`,
+    description: `SimpleX Chat - The first messaging platform that has no user identifiers of any kind - 100% private by design. SMP server is the relay server used to pass messages in SimpleX network. XFTP is a new file transfer protocol focussed on meta-data protection. This One-Click APP will deploy both SMP and XFTP servers.`,
     logo_url: 'simplexchat.svg',
     name: 'SimpleX Chat',
     related_guides: [
