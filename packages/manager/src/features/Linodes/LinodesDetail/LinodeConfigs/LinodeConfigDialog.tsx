@@ -48,6 +48,7 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
+import { vpcQueryKey } from 'src/queries/vpcs';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -377,7 +378,16 @@ export const LinodeConfigDialog = (props: Props) => {
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries('vlans');
+        queryClient.invalidateQueries(vlansQueryKey);
+      }
+
+      // Ensure VPC query data is up-to-date
+      if (
+        configData.interfaces?.some(
+          (thisInterface) => thisInterface.purpose === 'vpc'
+        )
+      ) {
+        queryClient.invalidateQueries(vpcQueryKey);
       }
       onClose();
     };
