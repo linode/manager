@@ -10,7 +10,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
-  PRICE_ERROR_NOTICE_TEXT,
+  PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -164,7 +164,7 @@ export const PlanSelection = (props: Props) => {
           <TableCell
             data-qa-hourly
             errorCell={!price}
-            errorText={!price ? PRICE_ERROR_NOTICE_TEXT : undefined}
+            errorText={!price ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             {isGPU ? (
               <Currency quantity={price?.hourly ?? UNKNOWN_PRICE} />

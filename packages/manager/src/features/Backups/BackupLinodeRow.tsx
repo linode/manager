@@ -9,7 +9,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import {
-  PRICE_ERROR_NOTICE_TEXT,
+  PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 
@@ -59,7 +59,7 @@ export const BackupLinodeRow = (props: Props) => {
       )}
       <TableCell
         errorCell={!Boolean(backupsMonthlyPrice)}
-        errorText={!backupsMonthlyPrice ? PRICE_ERROR_NOTICE_TEXT : undefined}
+        errorText={!backupsMonthlyPrice ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
         parentColumn="Price"
       >
         {backupsMonthlyPrice
