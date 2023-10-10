@@ -23,3 +23,9 @@ export const StyledSelectingPaper = styled(Paper, { label: 'StyledSelectingPaper
   overflowY: 'scroll',
   paddingTop: 0,
 });
+
+export const StyledTable = styled(Table, { label: 'StyledTable' })(({ theme }) => ({
+  backgroundColor: theme.color.white,
+  flexGrow: 1,
+  width: '100%',
+}));
