@@ -31,6 +31,7 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { chooseRegion } from 'support/util/regions';
+import { expectManagedDisabled } from 'support/api/managed';
 
 authenticate();
 describe('linode backups', () => {
@@ -45,6 +46,10 @@ describe('linode backups', () => {
    * - Confirms that Linode details page updates to reflect that backups are enabled.
    */
   it('can enable backups', () => {
+    // Skip or optionally fail if test account has Managed enabled.
+    // This is necessary because Managed accounts have backups enabled implicitly.
+    expectManagedDisabled();
+
     // Create a Linode that is not booted and which does not have backups enabled.
     const createLinodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
