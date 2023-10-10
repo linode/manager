@@ -18,14 +18,14 @@ jobs:
       - name: Run test coverage
         run: yarn workspace linode-manager run test
 
-      - name: List Contents of Coverage Directory
-        run: cd packages/manager/coverage && ls -R
-
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v3
         with:
           name: base-lcov
-          path: packages/manager/coverage/base-lcov.info
+          path: packages/manager/coverage/lcov.info
+
+      - name: List Contents of Coverage Directory
+        run: cd packages/manager/coverage && ls -R
 
   checks:
     runs-on: ubuntu-latest
