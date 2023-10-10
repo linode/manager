@@ -16,7 +16,7 @@ jobs:
         run: yarn
 
       - name: Run test coverage
-        run: yarn test
+        run: yarn workspace linode-manager run test
 
       - name: List Contents of Working Directory
         run: ls -R
@@ -46,7 +46,7 @@ jobs:
         run: yarn
 
       - name: Run test coverage
-        run: yarn test
+        run: yarn workspace linode-manager run test
 
       #  Compares two code coverage files and generates report as a comment
       - name: Generate Code Coverage report
