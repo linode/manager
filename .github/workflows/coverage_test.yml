@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: base-lcov
-          path: ./coverage/base-lcov.info
+          path: coverage/base-lcov.info
 
   checks:
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
-          lcov-file: "./coverage/lcov.info"
+          lcov-file: "coverage/lcov.info"
           base-lcov-file: "base-lcov.info"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
           send-summary-comment: true
