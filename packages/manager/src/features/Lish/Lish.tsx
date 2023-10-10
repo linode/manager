@@ -146,9 +146,6 @@ export default Lish;
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   '& [data-reach-tab][role="tab"]': {
-    '&:hover': {
-      color: theme.name === 'light' ? theme.color.blue : theme.color.black,
-    },
     '&[aria-selected="true"]': {
       '&:hover': {
         backgroundColor: theme.palette.primary.light,
