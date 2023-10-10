@@ -106,9 +106,9 @@ export const TransferContent = (props: ContentProps) => {
                 ? `${regionName} Transfer Used (${totalUsedInGB} GB - ${Math.ceil(
                     totalUsagePercent
                   )}%)`
-                : `Global Pool Used (${totalUsedInGB} GB) - ${Math.ceil(
+                : `Global Pool Used (${totalUsedInGB} GB - ${Math.ceil(
                     totalUsagePercent
-                  )}%`}
+                  )}%)`}
             </span>
           </StyledPoolUsage>
           <StyledRemainingPoolUsage>
