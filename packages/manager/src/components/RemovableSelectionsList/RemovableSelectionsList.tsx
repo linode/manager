@@ -22,6 +22,10 @@ interface Props {
    */
   headerText: string;
   /**
+   * If false, hide the remove button
+   */
+  isRemovable?: boolean;
+  /**
    * The maxHeight of the list component, in px
    */
   maxHeight?: number;
@@ -52,6 +56,7 @@ interface Props {
 export const RemovableSelectionsList = (props: Props) => {
   const {
     headerText,
+    isRemovable = true,
     maxHeight,
     maxWidth,
     noDataText,
@@ -73,6 +78,7 @@ export const RemovableSelectionsList = (props: Props) => {
             maxHeight: maxHeight ? `${maxHeight}px` : '450px',
             maxWidth: maxWidth ? `${maxWidth}px` : '416px',
           }}
+          isRemovable={isRemovable}
         >
           {selectionData.map((selection) => (
             <SelectedOptionsListItem alignItems="center" key={selection.id}>
@@ -81,18 +87,20 @@ export const RemovableSelectionsList = (props: Props) => {
                   ? selection[preferredDataLabel]
                   : selection.label}
               </StyledLabel>
-              <IconButton
-                aria-label={`remove ${
-                  preferredDataLabel
-                    ? selection[preferredDataLabel]
-                    : selection.label
-                }`}
-                disableRipple
-                onClick={() => handleOnClick(selection)}
-                size="medium"
-              >
-                <Close />
-              </IconButton>
+              {isRemovable && (
+                <IconButton
+                  aria-label={`remove ${
+                    preferredDataLabel
+                      ? selection[preferredDataLabel]
+                      : selection.label
+                  }`}
+                  disableRipple
+                  onClick={() => handleOnClick(selection)}
+                  size="medium"
+                >
+                  <Close />
+                </IconButton>
+              )}
             </SelectedOptionsListItem>
           ))}
         </SelectedOptionsList>
@@ -130,10 +138,11 @@ const SelectedOptionsHeader = styled('h4', {
 
 const SelectedOptionsList = styled(List, {
   label: 'SelectedOptionsList',
-})(({ theme }) => ({
+  shouldForwardProp: (prop) => isPropValid(['isRemovable'], prop),
+})<{ isRemovable?: boolean }>(({ isRemovable, theme }) => ({
   background: theme.name === 'light' ? theme.bg.main : theme.bg.app,
   overflow: 'auto',
-  padding: '5px 0',
+  padding: !isRemovable ? '16px 0' : '5px 0',
   width: '100%',
 }));
 
@@ -142,6 +151,7 @@ const SelectedOptionsListItem = styled(ListItem, {
 })(() => ({
   justifyContent: 'space-between',
   paddingBottom: 0,
+  paddingRight: 4,
   paddingTop: 0,
 }));
 
