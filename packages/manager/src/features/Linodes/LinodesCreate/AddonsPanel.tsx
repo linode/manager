@@ -19,7 +19,6 @@ import { useImageQuery } from 'src/queries/images';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { privateIPRegex } from 'src/utilities/ipUtils';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 import { AttachVLAN } from './AttachVLAN';
 import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
@@ -96,6 +95,14 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const backupsDisabledReason = isBareMetal
     ? 'Backups cannot be used with Bare Metal Linodes.'
     : null;
+
+  const renderBackupsPrice = () => {
+    return backupsMonthlyPrice && backupsMonthlyPrice > 0 ? (
+      <Typography variant="body1">
+        <Currency quantity={backupsMonthlyPrice} /> per month
+      </Typography>
+    ) : undefined;
+  };
 
   const checkBackupsWarning = () => {
     if (accountBackups || props.backups) {
@@ -206,14 +213,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           label={
             <Box display="flex">
               <Box sx={{ marginRight: 2 }}>Backups</Box>
-              <Typography variant="body1">
-                {backupsMonthlyPrice && backupsMonthlyPrice > 0 ? (
-                  <Currency quantity={backupsMonthlyPrice} />
-                ) : (
-                  UNKNOWN_PRICE
-                )}{' '}
-                per month
-              </Typography>
+              {renderBackupsPrice()}
             </Box>
           }
         />

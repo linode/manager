@@ -21,7 +21,7 @@ export type TypeInfo =
       details: string;
       hourly: null | number | undefined;
       monthly: null | number | undefined;
-      title: string | undefined;
+      title: string;
     }
   | undefined;
 

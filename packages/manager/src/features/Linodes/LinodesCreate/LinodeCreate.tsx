@@ -97,6 +97,7 @@ import {
 } from './types';
 
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
@@ -335,7 +336,7 @@ export class LinodeCreate extends React.PureComponent<
           this.state.numberOfNodes
         } Nodes - $${renderMonthlyPriceToCorrectDecimalPlace(
           monthlyPrice
-        )}/month $${hourlyPrice}/hr`;
+        )}/month $${hourlyPrice ?? UNKNOWN_PRICE}/hr`;
       }
 
       displaySections.push(typeDisplayInfoCopy);

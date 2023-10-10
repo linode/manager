@@ -81,6 +81,7 @@ import {
   WithMarketplaceAppsProps,
   withMarketplaceApps,
 } from 'src/containers/withMarketplaceApps';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -512,12 +513,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       dcSpecificPricing
     );
 
-    return {
-      details: `$${linodePrice?.monthly}/month`,
-      hourly: linodePrice?.hourly,
-      monthly: linodePrice?.monthly,
-      title: type?.formattedLabel,
-    };
+    return (
+      type && {
+        details: `$${linodePrice ? UNKNOWN_PRICE : linodePrice}/month`,
+        hourly: linodePrice?.hourly,
+        monthly: linodePrice?.monthly,
+        title: type.formattedLabel,
+      }
+    );
   };
 
   setAuthorizedUsers = (usernames: string[]) =>
