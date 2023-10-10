@@ -90,7 +90,7 @@ describe('resize linode', () => {
         });
 
       // Wait until the disk resize is done.
-      ui.toast.assertMessage(`Disk ${diskName} resized successfully.`);
+      ui.toast.assertMessage(`Disk ${diskName} successfully resized.`);
 
       cy.intercept(
         'POST',

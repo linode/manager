@@ -171,7 +171,7 @@ describe('Linode Config', () => {
         });
 
       ui.toast.assertMessage(
-        'Configuration My Debian 10 Disk Profile – GRUB 2 successfully deleted'
+        'Configuration My Debian 10 Disk Profile successfully deleted'
       );
       cy.findByLabelText('List of Configurations').within(() => {
         containsVisible('No data to display.');
@@ -277,7 +277,7 @@ describe('Linode Config', () => {
         .its('response.statusCode')
         .should('eq', 200);
       ui.toast.assertMessage(
-        'Configuration My Debian 10 Disk Profile – GRUB 2 successfully deleted'
+        'Configuration My Debian 10 Disk Profile successfully deleted'
       );
       cy.findByLabelText('List of Configurations').within(() => {
         containsVisible('No data to display.');
