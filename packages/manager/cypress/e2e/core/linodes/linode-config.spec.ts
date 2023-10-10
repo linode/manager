@@ -170,7 +170,9 @@ describe('Linode Config', () => {
             .click();
         });
 
-      ui.toast.assertMessage('Successfully deleted config');
+      ui.toast.assertMessage(
+        'Configuration My Debian 10 Disk Profile – GRUB 2 successfully deleted'
+      );
       cy.findByLabelText('List of Configurations').within(() => {
         containsVisible('No data to display.');
       });
@@ -232,7 +234,7 @@ describe('Linode Config', () => {
           });
 
         ui.toast.assertMessage(
-          'Linode cy-test-clone-origin-linode has been cloned successfully to cy-test-clone-destination-linode.'
+          'Linode cy-test-clone-origin-linode successfully cloned to cy-test-clone-destination-linode.'
         );
       });
     });
@@ -274,7 +276,9 @@ describe('Linode Config', () => {
       cy.wait('@deleteLinodeConfig')
         .its('response.statusCode')
         .should('eq', 200);
-      ui.toast.assertMessage('Successfully deleted config');
+      ui.toast.assertMessage(
+        'Configuration My Debian 10 Disk Profile – GRUB 2 successfully deleted'
+      );
       cy.findByLabelText('List of Configurations').within(() => {
         containsVisible('No data to display.');
       });
