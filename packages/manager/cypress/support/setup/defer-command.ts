@@ -135,7 +135,7 @@ const enhanceError = (e: any) => {
           )
           .join('\n');
 
-    return `${summary}\n${validationErrorMessage}`;
+    return new Error(`${summary}\n${validationErrorMessage}`);
   }
   // Return `e` unmodified if it's not handled by any of the above cases.
   return e;
