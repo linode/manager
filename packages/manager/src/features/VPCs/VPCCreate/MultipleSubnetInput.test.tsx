@@ -32,7 +32,7 @@ describe('MultipleSubnetInput', () => {
       <MultipleSubnetInput {...props} />
     );
 
-    expect(getAllByText('Subnet label')).toHaveLength(3);
+    expect(getAllByText('Subnet Label')).toHaveLength(3);
     expect(getAllByText('Subnet IP Address Range')).toHaveLength(3);
     getByDisplayValue('subnet 1');
     getByDisplayValue('subnet 2');

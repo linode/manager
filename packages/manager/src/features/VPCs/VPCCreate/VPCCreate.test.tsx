@@ -19,11 +19,11 @@ describe('VPC create page', () => {
     const { getAllByText } = renderWithTheme(<VPCCreate />);
 
     getAllByText('Region');
-    getAllByText('VPC label');
+    getAllByText('VPC Label');
     getAllByText('Select a Region');
     getAllByText('Description');
     getAllByText('Subnets');
-    getAllByText('Subnet label');
+    getAllByText('Subnet Label');
     getAllByText('Subnet IP Address Range');
     getAllByText('Add another Subnet');
     getAllByText('Create VPC');
@@ -61,7 +61,7 @@ describe('VPC create page', () => {
       userEvent.click(addSubnet);
     });
 
-    const subnetLabels = screen.getAllByText('Subnet label');
+    const subnetLabels = screen.getAllByText('Subnet Label');
     const subnetIps = screen.getAllByText('Subnet IP Address Range');
     expect(subnetLabels).toHaveLength(2);
     expect(subnetIps).toHaveLength(2);
@@ -72,7 +72,7 @@ describe('VPC create page', () => {
       userEvent.click(deleteSubnet);
     });
 
-    const subnetLabelAfter = screen.getAllByText('Subnet label');
+    const subnetLabelAfter = screen.getAllByText('Subnet Label');
     const subnetIpsAfter = screen.getAllByText('Subnet IP Address Range');
     expect(subnetLabelAfter).toHaveLength(1);
     expect(subnetIpsAfter).toHaveLength(1);
@@ -80,7 +80,7 @@ describe('VPC create page', () => {
 
   it('should display that a subnet ip is invalid and require a subnet label if a user adds an invalid subnet ip', async () => {
     renderWithTheme(<VPCCreate />);
-    const subnetLabel = screen.getByText('Subnet label');
+    const subnetLabel = screen.getByText('Subnet Label');
     expect(subnetLabel).toBeInTheDocument();
     const subnetIp = screen.getByText('Subnet IP Address Range');
     expect(subnetIp).toBeInTheDocument();
