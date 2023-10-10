@@ -29,7 +29,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     '&[data-reach-tab][data-selected]': {
       '&:hover': {
-        color: `${theme.palette.primary.main}`,
+        color: theme.palette.primary.main,
       },
       borderBottom: `3px solid ${theme.textColors.linkActiveLight}`,
       color: theme.textColors.headlineStatic,
