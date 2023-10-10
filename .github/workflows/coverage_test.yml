@@ -18,14 +18,14 @@ jobs:
       - name: Run test coverage
         run: yarn workspace linode-manager run test
 
-      - name: List Contents of Working Directory
-        run: ls -R
+      - name: List Contents of Coverage Directory
+        run: cd packages/manager/coverage && ls -R
 
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v3
         with:
           name: base-lcov
-          path: coverage/base-lcov.info
+          path: packages/manager/coverage/base-lcov.info
 
   checks:
     runs-on: ubuntu-latest
@@ -55,8 +55,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
-          lcov-file: "coverage/lcov.info"
-          base-lcov-file: "base-lcov.info"
+          lcov-file: "packages/manager/coverage/lcov.info"
+          base-lcov-file: "packages/manager/base-lcov.info"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
           send-summary-comment: true
           show-annotations: "warning" # Possible options warning|error
