@@ -11,7 +11,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
       '&:hover': {
         backgroundColor: theme.color.grey7,
-        color: `${theme.palette.primary.main}`,
+        color: theme.palette.primary.main,
       },
       alignItems: 'center',
       borderBottom: '2px solid transparent',
