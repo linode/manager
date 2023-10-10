@@ -1,48 +1,3 @@
-# name: Code Coverage
-
-# on:
-#   workflow_run:
-#     workflows:
-#       - ci
-#     types:
-#       - completed
-
-# jobs:
-#   compare_pr_coverage:
-#     name: Compare PR Code Coverage
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Use Node.js v18.14.0
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: "18.14"
-
-#       - name: Download code coverage report from base branch
-#         uses: actions/download-artifact@v3
-#         with:
-#           name: ref-lcov.info
-
-#       - name: Install dependencies
-#         run: yarn
-
-#       - name: Run test coverage
-#         run: yarn test
-
-#       #  Compares two code coverage files and generates report as a comment
-#       - name: Generate Code Coverage report
-#         id: code-coverage
-#         uses: barecheck/code-coverage-action@v1
-#         with:
-#           github-token: ${{ secrets.GITHUB_TOKEN }}
-#           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
-#           lcov-file: "./coverage/lcov.info"
-#           base-lcov-file: "./coverage/base-lcov.info"
-#           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
-#           send-summary-comment: true
-#           show-annotations: "warning" # Possible options warning|error
-
-
 name: Code Coverage
 
 on: [pull_request]
@@ -63,11 +18,14 @@ jobs:
       - name: Run test coverage
         run: yarn test
 
+      - name: List Contents of Working Directory
+        run: ls -R
+
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v3
         with:
           name: base-lcov
-          path: base-lcov.info
+          path: ./coverage/base-lcov.info
 
   checks:
     runs-on: ubuntu-latest
