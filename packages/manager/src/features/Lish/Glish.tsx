@@ -4,8 +4,8 @@ import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { VncScreen, VncScreenHandle } from 'react-vnc';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 
@@ -133,7 +133,7 @@ const Glish = (props: Props) => {
   return (
     <VncScreen
       autoConnect={false}
-      loadingUI={<CircleProgress />}
+      loadingUI={<StyledCircleProgress />}
       ref={ref}
       showDotCursor
       url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
