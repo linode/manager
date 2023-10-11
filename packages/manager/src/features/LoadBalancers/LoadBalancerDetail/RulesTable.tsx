@@ -216,22 +216,26 @@ export const RulesTable = ({ loadbalancerId, onEditRule, route }: Props) => {
                                 }}
                                 aria-label={`Service Targets: ${rule.service_targets.length}`}
                               >
-                                <TextTooltip
-                                  displayText={String(
-                                    rule.service_targets.length
-                                  )}
-                                  tooltipText={
-                                    <>
-                                      {rule.service_targets.map(
-                                        ({ id, label }) => (
-                                          <div key={label}>
-                                            {label}:{id}
-                                          </div>
-                                        )
-                                      )}
-                                    </>
-                                  }
-                                />
+                                {rule.service_targets.length > 0 ? (
+                                  <TextTooltip
+                                    displayText={String(
+                                      rule.service_targets.length
+                                    )}
+                                    tooltipText={
+                                      <>
+                                        {rule.service_targets.map(
+                                          ({ id, label }) => (
+                                            <div key={label}>
+                                              {label}:{id}
+                                            </div>
+                                          )
+                                        )}
+                                      </>
+                                    }
+                                  />
+                                ) : (
+                                  'None'
+                                )}
                               </Box>
                             </Hidden>
                             <Hidden smDown>
