@@ -105,6 +105,7 @@
 
 .xterm .xterm-screen {
     position: relative;
+    margin: 0 auto;
 }
 
 .xterm .xterm-screen canvas {

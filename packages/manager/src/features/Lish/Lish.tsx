@@ -85,17 +85,7 @@ const Lish = () => {
   };
 
   if (isLoading) {
-    return (
-      <CircleProgress
-        sx={{
-          left: '50%',
-          position: 'absolute',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
-        }}
-        noInner
-      />
-    );
+    return <StyledCircleProgress />;
   }
 
   if (linodeError) {
@@ -169,4 +159,11 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   },
   backgroundColor: 'black',
   margin: 0,
+}));
+
+export const StyledCircleProgress = styled(CircleProgress)(() => ({
+  left: '50%',
+  position: 'absolute',
+  top: '50%',
+  transform: 'translate(-50%, -50%)',
 }));
