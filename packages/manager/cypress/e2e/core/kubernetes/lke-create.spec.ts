@@ -73,12 +73,7 @@ const getSimilarPlans = (
 authenticate();
 describe('LKE Cluster Creation', () => {
   before(() => {
-    cleanUp('lke-clusters');
-    // TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
+    cleanUp(['linodes', 'lke-clusters']);
   });
 
   /*
@@ -96,6 +91,11 @@ describe('LKE Cluster Creation', () => {
       .fill(null)
       .map(() => randomItem(lkeClusterPlans));
 
+    // TODO: DC Pricing - M3-7073: Remove feature flag mocks when DC specific pricing goes live.
+    mockAppendFeatureFlags({
+      dcSpecificPricing: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
     interceptCreateCluster().as('createCluster');
 
     cy.visitWithLogin('/kubernetes/clusters');
@@ -225,10 +225,6 @@ describe('LKE Cluster Creation', () => {
 describe('LKE Cluster Creation with DC-specific pricing', () => {
   before(() => {
     cleanUp('lke-clusters');
-    mockAppendFeatureFlags({
-      dcSpecificPricing: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
   });
 
   /*
@@ -247,6 +243,10 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
       .fill(null)
       .map(() => randomItem(dcPricingLkeClusterPlans));
 
+    mockAppendFeatureFlags({
+      dcSpecificPricing: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
     interceptCreateCluster().as('createCluster');
 
     cy.visitWithLogin('/kubernetes/clusters');
