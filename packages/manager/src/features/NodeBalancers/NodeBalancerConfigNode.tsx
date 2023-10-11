@@ -32,6 +32,16 @@ export interface NodeBalancerConfigNodeProps {
   removeNode: (nodeIndex: number) => void;
 }
 
+const modeOptions: {
+  label: string;
+  value: NodeBalancerConfigNodeMode;
+}[] = [
+  { label: 'Accept', value: 'accept' },
+  { label: 'Reject', value: 'reject' },
+  { label: 'Backup', value: 'backup' },
+  { label: 'Drain', value: 'drain' },
+];
+
 export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
     const {
@@ -58,16 +68,6 @@ export const NodeBalancerConfigNode = React.memo(
       ['label', 'address', 'weight', 'port', 'mode'],
       node.errors
     );
-
-    const modeOptions: {
-      label: string;
-      value: NodeBalancerConfigNodeMode;
-    }[] = [
-      { label: 'Accept', value: 'accept' },
-      { label: 'Reject', value: 'reject' },
-      { label: 'Backup', value: 'backup' },
-      { label: 'Drain', value: 'drain' },
-    ];
 
     return (
       <React.Fragment>
