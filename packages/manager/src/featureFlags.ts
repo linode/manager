@@ -58,10 +58,12 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   regionDropdown: boolean;
   selfServeBetas: boolean;
+  soldOutTokyo: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
+  unifiedMigrations: boolean;
   vpc: boolean;
 }
 

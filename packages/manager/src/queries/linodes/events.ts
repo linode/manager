@@ -38,6 +38,7 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
     case 'linode_mutate_create':
     case 'linode_resize':
     case 'linode_resize_create':
+    case 'linode_resize_warm_create':
     case 'linode_reboot':
     case 'linode_boot':
     case 'linode_shutdown':
@@ -137,6 +138,7 @@ export const shouldRequestNotifications = (event: Event) => {
 const eventsWithRelevantNotifications = [
   'linode_resize',
   'linode_resize_create',
+  'linode_resize_warm_create',
   'linode_migrate',
   'linode_mutate',
   'linode_mutate_create',
