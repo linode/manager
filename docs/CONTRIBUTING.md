@@ -16,18 +16,13 @@ Feel free to open an issue to report a bug or request a feature.
 4. Make your changes, commit them following the standards below, and then push them to your fork.
 5. Commit message format standard: `<commit type>: [JIRA-ticket-number] - <description>`
 
-    **commit types:**  
-    `feat`: New feature for the user (not a part of the code, or ci, ...).  
-    `fix`: Bugfix for the user (not a fix to build something, ...).  
-    `refactor`: Restructuring existing code without changing its external behavior or visual UI. Typically to improve readability, maintainability, and performance.  
-    `style`: General styling changes. Does not change any functionality.  
-    `build`: Changes to the application build.  
-    `chore`: Other changes that do not impact production code.  
-    `ci`: Changes to the CI pipeline.  
-    `docs`: Changes to the documentation docs.  
-    `perf`: Performance changes.  
-    `test`: New tests or changes to existing tests. Does not change the production code.  
-    `change`: Only use for something that doesn’t fit in any other category.  
+    **Commit Types:**
+    `feat`: New feature for the user (not a part of the code, or ci, ...).
+    `fix`: Bugfix for the user (not a fix to build something, ...).
+    `change`: Modifying an existing visual UI instance. Such as a component or a feature.
+    `refactor`: Restructuring existing code without changing its external behavior or visual UI. Typically to improve readability, maintainability, and performance.
+    `test`: New tests or changes to existing tests. Does not change the production code.
+    `upcoming`: A new feature that is in progress, not visible to users yet, and usually behind a feature flag.
 
     **Example:** `feat: [M3-1234] - Allow user to view their login history`
 
@@ -40,6 +35,6 @@ Feel free to open an issue to report a bug or request a feature.
     - Run `yarn changeset`from the root, choose the package to create a changeset for, and provide a description for the change.
     You can either have it committed automatically or do it manually if you need to edit it.
     - A changeset is optional, it merely depends if it falls in one of the following categories:
-    `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Upcoming Features`
+    `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Tests`, `Upcoming Features`
 
 Two reviews from members of the Cloud Manager team are required before merge. After approval, all pull requests are squash merged.

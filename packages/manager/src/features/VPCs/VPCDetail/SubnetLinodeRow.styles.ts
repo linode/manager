@@ -22,6 +22,12 @@ export const StyledTableCell = styled(TableCell, {
   border: 'none',
 }));
 
+export const StyledActionTableCell = styled(TableCell, {
+  label: 'StyledActionTableCell',
+})(() => ({
+  border: 'none',
+}));
+
 export const StyledTableHeadCell = styled(TableCell, {
   label: 'StyledTableHeadCell',
 })(({ theme }) => ({

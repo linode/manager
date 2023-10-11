@@ -41,24 +41,24 @@ describe('MultipleSubnetInput', () => {
 
   it('should add a subnet to the array when the Add Subnet button is clicked', () => {
     const { getByText } = renderWithTheme(<MultipleSubnetInput {...props} />);
-    const addButton = getByText('Add a Subnet');
+    const addButton = getByText('Add another Subnet');
     fireEvent.click(addButton);
     expect(props.onChange).toHaveBeenCalledWith([
       ...props.subnets,
       {
-        ip: { ipv4: '10.0.4.0/24', ipv4Error: '', availIPv4s: 256 },
+        ip: { availIPv4s: 256, ipv4: '10.0.4.0/24', ipv4Error: '' },
         label: '',
         labelError: '',
       },
     ]);
   });
 
-  it('all inputs after the first should have a close button (X)', () => {
+  it('all inputs should have a close button (X)', () => {
     const { queryAllByTestId } = renderWithTheme(
       <MultipleSubnetInput {...props} />
     );
     expect(queryAllByTestId(/delete-subnet/)).toHaveLength(
-      props.subnets.length - 1
+      props.subnets.length
     );
   });
 
