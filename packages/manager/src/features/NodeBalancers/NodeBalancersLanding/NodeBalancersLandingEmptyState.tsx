@@ -45,5 +45,5 @@ const StyledPlaceholder = styled(Placeholder, {
 })(({ theme }) => ({
   // this important rules can be removed when Placeholder is refactored
   // and we can just use sx={{ paddingBottom: 0 }} on placeholder
-  padding: `${theme.spacing(2)} 0 0 0 !important`,
+  padding: `${theme.spacing(10)} 0 0 0 !important`,
 }));

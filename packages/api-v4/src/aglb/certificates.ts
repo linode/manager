@@ -7,8 +7,15 @@ import Request, {
 } from '../request';
 import { BETA_API_ROOT } from '../constants';
 import { Filter, Params, ResourcePage } from '../types';
-import { Certificate, CreateCertificatePayload } from './types';
-import { CreateCertificateSchema } from '@linode/validation';
+import {
+  Certificate,
+  CreateCertificatePayload,
+  UpdateCertificatePayload,
+} from './types';
+import {
+  CreateCertificateSchema,
+  UpdateCertificateSchema,
+} from '@linode/validation';
 
 /**
  * getLoadbalancerCertificates
@@ -67,12 +74,12 @@ export const createLoadbalancerCertificate = (
 /**
  * updateLoadbalancerCertificate
  *
- * Creates an Akamai Global Load Balancer certificate
+ * Updates an Akamai Global Load Balancer certificate
  */
 export const updateLoadbalancerCertificate = (
   loadbalancerId: number,
   certificateId: number,
-  data: Partial<CreateCertificatePayload>
+  data: Partial<UpdateCertificatePayload>
 ) =>
   Request<Certificate>(
     setURL(
@@ -81,7 +88,7 @@ export const updateLoadbalancerCertificate = (
       )}/certificates/${encodeURIComponent(certificateId)}`
     ),
     setMethod('PUT'),
-    setData(data)
+    setData(data, UpdateCertificateSchema)
   );
 
 /**

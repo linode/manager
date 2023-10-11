@@ -126,7 +126,7 @@ describe('ConfigureForm component with price comparison', () => {
       '$10.00/month, $0.015/hour | Backups $2.50/month'
     );
     expect(getByTestId(newPricePanel)).toHaveTextContent(
-      '$14.00/month, $0.021/hour | Backups $4.17/month'
+      '$14.40/month, $0.021/hour | Backups $4.17/month'
     );
   });
 
@@ -136,7 +136,7 @@ describe('ConfigureForm component with price comparison', () => {
       '$10.00/month, $0.015/hour'
     );
     expect(getByTestId(newPricePanel)).toHaveTextContent(
-      '$14.00/month, $0.021/hour'
+      '$14.40/month, $0.021/hour'
     );
   });
 

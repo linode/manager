@@ -222,35 +222,35 @@ export const mockUpdateRouteError = (
       {
         errors: [
           {
-            field: 'rules[1].match_condition.match_value',
+            field: 'rules[3].match_condition.match_value',
             reason: 'Bad Match Value',
           },
           {
-            field: 'rules[1].match_condition.match_field',
+            field: 'rules[3].match_condition.match_field',
             reason: 'Bad Match Type',
           },
           {
-            field: 'rules[1].service_targets[0].id',
+            field: 'rules[3].service_targets[0].id',
             reason: 'Service Target does not exist',
           },
           {
-            field: 'rules[1].service_targets[0].percentage',
+            field: 'rules[3].service_targets[0].percentage',
             reason: 'Invalid percentage',
           },
           {
-            field: 'rules[1].service_targets[0].percentage',
+            field: 'rules[3].service_targets[0].percentage',
             reason: 'Invalid percentage',
           },
           {
-            field: 'rules[1].match_condition.session_stickiness_ttl',
+            field: 'rules[3].match_condition.session_stickiness_ttl',
             reason: 'Invalid TTL',
           },
           {
-            field: 'rules[1].match_condition.session_stickiness_cookie',
+            field: 'rules[3].match_condition.session_stickiness_cookie',
             reason: 'Invalid Cookie',
           },
           {
-            field: 'rules[1].match_condition.hostname',
+            field: 'rules[3].match_condition.hostname',
             reason: 'Hostname is not valid',
           },
           {
