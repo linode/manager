@@ -7,6 +7,7 @@ import { paginateResponse } from 'support/util/paginate';
 
 import type { Subnet, VPC } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
+import { makeErrorResponse } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch a VPC and mocks response.
@@ -28,6 +29,38 @@ export const mockGetVPC = (vpc: VPC): Cypress.Chainable<null> => {
  */
 export const mockGetVPCs = (vpcs: VPC[]): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('vpcs*'), paginateResponse(vpcs));
+};
+
+/**
+ * Intercepts POST request to create a VPC and mocks the response.
+ *
+ * @param vpc - VPC object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateVPC = (vpc: VPC): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('vpcs'), makeResponse(vpc));
+};
+
+/**
+ * Intercepts POST request to create a VPC and mocks an HTTP error response.
+ *
+ * By default, a 500 response is mocked.
+ *
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param errorCode - Optional error code with which to mock response. Default is `500`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateVPCError = (
+  errorMessage: string = 'An error has occurred',
+  errorCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('vpcs'),
+    makeErrorResponse(errorMessage, errorCode)
+  );
 };
 
 /**
@@ -103,4 +136,25 @@ export const mockDeleteSubnet = (
  */
 export const mockCreateSubnet = (vpcId: number): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher(`vpcs/${vpcId}/subnets`), {});
+};
+
+/**
+ * Intercepts PUT request to edit a subnet for a VPC and mocks response
+ *
+ * @param vpcId: ID of VPC for which to mock response
+ * @param subnetId: ID of subnet for which to mock response
+ * @param editedSubnet Updated subnet data with which to mock response
+ *
+ * @returns Cypress chainable
+ */
+export const mockEditSubnet = (
+  vpcId: number,
+  subnetId: number,
+  editedSubnet: Subnet
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`vpcs/${vpcId}/subnets/${subnetId}`),
+    editedSubnet
+  );
 };
