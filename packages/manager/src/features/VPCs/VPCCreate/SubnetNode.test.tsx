@@ -54,7 +54,7 @@ describe('SubnetNode', () => {
       />
     );
 
-    const label = screen.getByText('Subnet label');
+    const label = screen.getByText('Subnet Label');
     expect(label).toBeInTheDocument();
     const ipAddress = screen.getByText('Subnet IP Address Range');
     expect(ipAddress).toBeInTheDocument();
