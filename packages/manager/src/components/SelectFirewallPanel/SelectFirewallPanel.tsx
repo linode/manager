@@ -83,6 +83,7 @@ export const SelectFirewallPanel = (props: Props) => {
           Create Firewall
         </StyledCreateLink>
         <CreateFirewallDrawer
+          label="Additional Linodes (Optional)"
           onClose={() => setIsDrawerOpen(false)}
           onFirewallCreated={handleFirewallCreated}
           open={isDrawerOpen}

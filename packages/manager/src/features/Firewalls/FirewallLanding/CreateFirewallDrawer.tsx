@@ -22,6 +22,7 @@ export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
   'Only Linodes you have permission to modify are shown.';
 
 export interface CreateFirewallDrawerProps {
+  label?: string;
   onClose: () => void;
   onFirewallCreated?: (firewallId: number, firewallLabel: string) => void;
   open: boolean;
@@ -41,7 +42,7 @@ const initialValues: CreateFirewallPayload = {
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
     // TODO: NBFW - We'll eventually want to check the read_write firewall grant here too, but it doesn't exist yet.
-    const { onClose, onFirewallCreated, open } = props;
+    const { label, onClose, onFirewallCreated, open } = props;
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
@@ -180,6 +181,7 @@ export const CreateFirewallDrawer = React.memo(
             disabled={userCannotAddFirewall}
             errorText={errors['devices.linodes']}
             helperText={firewallHelperText}
+            label={label}
             multiple
             onBlur={handleBlur}
             optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
