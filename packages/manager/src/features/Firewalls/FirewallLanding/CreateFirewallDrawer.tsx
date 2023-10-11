@@ -1,21 +1,15 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -24,11 +18,8 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
-const FIREWALL_LABEL_TEXT = `Assign devices to the Firewall.`;
-const FIREWALL_HELPER_TEXT = `Assign one or more devices to this firewall. You can add devices later if you want to customize your rules first.`;
-const NODEBALANCER_HELPER_TEXT = `Only the Firewall's inbound rules apply to NodeBalancers.`;
-export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
-  'Only Devices you have permission to modify are shown.';
+export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
+  'Only Linodes you have permission to modify are shown.';
 
 export interface CreateFirewallDrawerProps {
   onClose: () => void;
@@ -39,7 +30,6 @@ export interface CreateFirewallDrawerProps {
 const initialValues: CreateFirewallPayload = {
   devices: {
     linodes: [],
-    nodebalancers: [],
   },
   label: '',
   rules: {
@@ -124,19 +114,8 @@ export const CreateFirewallDrawer = React.memo(
     React.useEffect(() => {
       if (open) {
         resetForm();
-        setSelectedNodeBalancers([]);
       }
-    }, [open, resetForm]);
-
-    const [selectedNodeBalancers, setSelectedNodeBalancers] = React.useState<
-      NodeBalancer[]
-    >([]);
-
-    const {
-      data,
-      error: nodebalancerError,
-      isLoading: nodebalancerIsLoading,
-    } = useAllNodeBalancersQuery();
+    }, [open]);
 
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
@@ -146,29 +125,14 @@ export const CreateFirewallDrawer = React.memo(
       ? getEntityIdsByPermission(grants, 'linode', 'read_only')
       : [];
 
-    // If a user is restricted, they can not add a read-only NodeBalancer to a firewall.
-    const readOnlyNodebalancerIds = _isRestrictedUser
-      ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
-      : [];
+    const linodeSelectGuidance =
+      readOnlyLinodeIds.length > 0
+        ? READ_ONLY_LINODES_HIDDEN_MESSAGE
+        : undefined;
 
-    const deviceSelectGuidance =
-      readOnlyLinodeIds.length > 0 || readOnlyNodebalancerIds.length > 0
-        ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
-        : null;
-
-    const optionsFilter = (nodebalancer: NodeBalancer) => {
-      const selectedNodeBalancersIds = selectedNodeBalancers.map((nb) => nb.id);
-
-      return ![
-        ...readOnlyNodebalancerIds,
-        ...selectedNodeBalancersIds,
-      ].includes(nodebalancer.id);
-    };
-
-    const nodebalancers = data?.filter(optionsFilter);
-
-    // TODO: NBFW - Placeholder until real link is available
-    const learnMoreLink = <a href="#">Learn more</a>;
+    const firewallHelperText = `Assign one or more Linodes to this firewall. You can add Linodes later if you want to customize your rules first. ${
+      linodeSelectGuidance ? linodeSelectGuidance : ''
+    }`;
 
     const generalError =
       status?.generalError ||
@@ -206,29 +170,6 @@ export const CreateFirewallDrawer = React.memo(
             onChange={handleChange}
             value={values.label}
           />
-          <Box>
-            <Typography
-              sx={(theme) => ({
-                margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
-              })}
-              variant="h3"
-            >
-              {FIREWALL_LABEL_TEXT}
-            </Typography>
-            <Typography>
-              {FIREWALL_HELPER_TEXT}
-              {deviceSelectGuidance ? ` ${deviceSelectGuidance}` : null}
-            </Typography>
-            <Typography
-              sx={(theme) => ({
-                margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
-              })}
-            >
-              {NODEBALANCER_HELPER_TEXT}
-              <br />
-              {learnMoreLink}
-            </Typography>
-          </Box>
           <LinodeSelect
             onSelectionChange={(selected) =>
               setFieldValue(
@@ -238,32 +179,11 @@ export const CreateFirewallDrawer = React.memo(
             }
             disabled={userCannotAddFirewall}
             errorText={errors['devices.linodes']}
+            helperText={firewallHelperText}
             multiple
             onBlur={handleBlur}
             optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
             value={values.devices?.linodes ?? []}
-          />
-          <Autocomplete
-            onChange={(_, nodebalancers) => {
-              setFieldValue(
-                'devices.nodebalancers',
-                nodebalancers.map((nodebalancer) => nodebalancer.id)
-              );
-              setSelectedNodeBalancers(nodebalancers);
-            }}
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-            disabled={userCannotAddFirewall || !!nodebalancerError}
-            errorText={errors['devices.nodebalancers']}
-            isOptionEqualToValue={optionsFilter}
-            label="NodeBalancers"
-            loading={nodebalancerIsLoading}
-            multiple
-            noMarginTop={false}
-            noOptionsText="No NodeBalancers available to add"
-            options={nodebalancers || []}
-            value={selectedNodeBalancers}
           />
           <ActionsPanel
             primaryButtonProps={{
