@@ -34,6 +34,11 @@ declare global {
         linodeOptions?: LinodeVisitOptions,
         cypressOptions?: Partial<Cypress.VisitOptions>
       ): Chainable<any>;
+
+      /**
+       * Internal Cypress command to retrieve test state.
+       */
+      state(state: string): any;
     }
   }
 }
