@@ -37,6 +37,8 @@ declare global {
 
       /**
        * Internal Cypress command to retrieve test state.
+       *
+       * @param state - Cypress internal state to retrieve.
        */
       state(state: string): any;
     }
