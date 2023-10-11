@@ -77,7 +77,7 @@ export const StyledLoaderDiv = styled('div', { label: 'StyledLoaderDiv' })(
 );
 
 // Styles to override base placeholder styles for StackScript null state
-export const StyledPlaceHolder = styled(Placeholder, {
+export const StyledPlaceholder = styled(Placeholder, {
   label: 'StyledPlaceHolder',
 })(({ theme }) => ({
   '& svg': {
