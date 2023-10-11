@@ -53,7 +53,7 @@ describe('PrimaryNav', () => {
     expect(getByTestId(queryString).getAttribute('aria-current')).toBe('false');
   });
 
-  it('should show databases menu when feature is off and has Managed Databases', () => {
+  it('should show Databases menu item when feature flag is off but user has Managed Databases', () => {
     const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
       flags: { databases: false },
       queryClient,
