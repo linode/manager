@@ -63,7 +63,7 @@ export const SubnetNode = (props: Props) => {
             disabled={disabled}
             errorText={subnet.labelError}
             inputId={`subnet-label-${idx}`}
-            label="Subnet label"
+            label="Subnet Label"
             onChange={onLabelChange}
             placeholder="Enter a subnet label"
             value={subnet.label}
@@ -71,7 +71,7 @@ export const SubnetNode = (props: Props) => {
         </Grid>
         {isRemovable && (
           <Grid xs={1}>
-            <StyledButton onClick={removeSubnet}>
+            <StyledButton onClick={removeSubnet} aria-label="Remove Subnet">
               <Close data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>
