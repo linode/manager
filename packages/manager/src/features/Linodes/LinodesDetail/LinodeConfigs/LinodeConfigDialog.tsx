@@ -7,6 +7,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
@@ -227,6 +228,8 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(linodeId, open);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const {
     data: kernels,
     error: kernelsError,
@@ -369,6 +372,7 @@ export const LinodeConfigDialog = (props: Props) => {
       delete configData.interfaces;
     }
 
+    const actionType = Boolean(config) ? 'updated' : 'created';
     const handleSuccess = () => {
       formik.setSubmitting(false);
       queryClient.invalidateQueries(['linode', 'configs', props.linodeId]);
@@ -389,6 +393,13 @@ export const LinodeConfigDialog = (props: Props) => {
       ) {
         queryClient.invalidateQueries(vpcQueryKey);
       }
+
+      enqueueSnackbar(
+        `Configuration ${configData.label} successfully ${actionType}`,
+        {
+          variant: 'success',
+        }
+      );
       onClose();
     };
 

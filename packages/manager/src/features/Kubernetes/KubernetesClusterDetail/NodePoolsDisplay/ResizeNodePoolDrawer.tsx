@@ -14,6 +14,7 @@ import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
+import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
@@ -127,8 +128,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
       >
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Current pool: ${totalMonthlyPrice}/month (
-            {pluralize('node', 'nodes', nodePool.count)} at ${pricePerNode}
+            Current pool: $
+            {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}/month (
+            {pluralize('node', 'nodes', nodePool.count)} at $
+            {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
             /month)
           </Typography>
         </div>
@@ -148,8 +151,12 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Resized pool: ${updatedCount * pricePerNode}/month (
-            {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}/month)
+            Resized pool: $
+            {renderMonthlyPriceToCorrectDecimalPlace(
+              updatedCount * pricePerNode
+            )}
+            /month ({pluralize('node', 'nodes', updatedCount)} at $
+            {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}/month)
           </Typography>
         </div>
 
