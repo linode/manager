@@ -53,7 +53,7 @@ describe('checkPreferencesForBannerDismissal', () => {
   });
 });
 
-describe('databases menu for a restricted user', () => {
+describe('Databases menu item for a restricted user', () => {
   it('should not render the menu item', async () => {
     server.use(
       rest.get('*/account', (req, res, ctx) => {
