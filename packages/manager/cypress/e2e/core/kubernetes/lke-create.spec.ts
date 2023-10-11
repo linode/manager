@@ -91,7 +91,7 @@ describe('LKE Cluster Creation', () => {
   it('can create an LKE cluster', () => {
     const clusterLabel = randomLabel();
     const clusterRegion = chooseRegion();
-    const clusterVersion = '1.26';
+    const clusterVersion = '1.27';
     const clusterPlans = new Array(2)
       .fill(null)
       .map(() => randomItem(lkeClusterPlans));
@@ -242,7 +242,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     const clusterRegion = getRegionById('us-southeast');
     const dcSpecificPricingRegion = getRegionById('us-east');
     const clusterLabel = randomLabel();
-    const clusterVersion = '1.26';
+    const clusterVersion = '1.27';
     const clusterPlans = new Array(2)
       .fill(null)
       .map(() => randomItem(dcPricingLkeClusterPlans));
