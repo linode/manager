@@ -8,7 +8,7 @@ import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
-import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel/UserDefinedFieldsPanel';
 import { StackScriptsRequest } from 'src/features/StackScripts/types';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';

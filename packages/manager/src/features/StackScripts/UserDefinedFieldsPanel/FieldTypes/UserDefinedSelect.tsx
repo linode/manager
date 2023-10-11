@@ -1,6 +1,5 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -9,19 +8,6 @@ import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  radioGroupLabel: {
-    display: 'block',
-    marginBottom: '4px',
-  },
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    margin: `${theme.spacing(3)} 0 0`,
-    marginTop: '16px',
-  },
-}));
 
 interface Props {
   error?: string;
@@ -32,7 +18,6 @@ interface Props {
 }
 
 export const UserDefinedSelect = (props: Props) => {
-  const { classes } = useStyles();
 
   const { error, field, isOptional, updateFormState, value } = props;
 
@@ -69,12 +54,12 @@ export const UserDefinedSelect = (props: Props) => {
     );
   }
   return (
-    <div className={classes.root}>
+    <StyledRootDiv>
       {error && <Notice spacingTop={8} text={error} variant="error" />}
-      <InputLabel className={classes.radioGroupLabel}>
+      <StyledInputLabel>
         {field.label}
         {!isOptional && '*'}
-      </InputLabel>
+      </StyledInputLabel>
 
       {oneof.map((choice: string, index) => (
         <FormControlLabel
@@ -91,6 +76,18 @@ export const UserDefinedSelect = (props: Props) => {
           value={choice}
         />
       ))}
-    </div>
+    </StyledRootDiv>
   );
 };
+
+const StyledInputLabel = styled(InputLabel, { label: 'StyledInputLabel' })({
+  display: 'block',
+  marginBottom: '4px',
+});
+
+const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  margin: `${theme.spacing(3)} 0 0`,
+  marginTop: theme.spacing(2),
+}));
