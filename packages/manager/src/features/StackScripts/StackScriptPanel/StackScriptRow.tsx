@@ -1,4 +1,5 @@
-import { WithStyles, withStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
+import { WithStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
@@ -35,7 +36,7 @@ export interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
-export const StackScriptRow: React.FC<CombinedProps> = (props) => {
+export const StackScriptRow = (props: CombinedProps) => {
   const {
     canAddLinodes,
     canModify,

@@ -2,8 +2,7 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import classnames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -20,7 +19,7 @@ import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   advDescription: {
     margin: `${theme.spacing(2)} 0`,
   },
@@ -65,8 +64,6 @@ interface Props {
   udf_data: any;
   userDefinedFields?: UserDefinedField[];
 }
-
-type CombinedProps = Props;
 
 const renderField = (
   udf_data: any,
@@ -177,14 +174,14 @@ const renderField = (
 };
 
 const handleOpenDrawer = (
-  openDrawer: CombinedProps['openDrawer'],
+  openDrawer: Props['openDrawer'],
   selectedLabel: string
 ) => () => {
   openDrawer?.(selectedLabel);
 };
 
-const UserDefinedFieldsPanel = (props: CombinedProps) => {
-  const classes = useStyles();
+const UserDefinedFieldsPanel = (props: Props) => {
+  const { classes, cx } = useStyles();
   const {
     appLogo,
     errors,
@@ -218,7 +215,7 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
 
   return (
     <Paper
-      className={classnames(classes.root, {
+      className={cx(classes.root, {
         [`${classes.marketplaceSpacing}`]: isDrawerOpenable,
       })}
       data-testid="user-defined-fields-panel"

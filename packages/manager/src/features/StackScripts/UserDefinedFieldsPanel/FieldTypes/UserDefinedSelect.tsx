@@ -1,6 +1,6 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -10,7 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   radioGroupLabel: {
     display: 'block',
     marginBottom: '4px',
@@ -32,7 +32,7 @@ interface Props {
 }
 
 export const UserDefinedSelect = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { error, field, isOptional, updateFormState, value } = props;
 

@@ -150,7 +150,7 @@ const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
-const StackScripts = React.lazy(() => import('src/features/StackScripts'));
+const StackScripts = React.lazy(() => import('src/features/StackScripts/StackScripts'));
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );

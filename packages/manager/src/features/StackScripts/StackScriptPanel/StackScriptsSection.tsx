@@ -1,6 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -17,7 +17,7 @@ import stripImageName from 'src/utilities/stripImageName';
 
 import StackScriptRow from './StackScriptRow';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   loadingWrapper: {
     border: 0,
     paddingTop: 100,
@@ -38,8 +38,8 @@ export interface Props {
   triggerMakePublic: (id: number, label: string) => void;
 }
 
-const StackScriptsSection: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const StackScriptsSection = (props: Props) => {
+  const { classes } = useStyles();
   const { category, data, isSorting, triggerDelete, triggerMakePublic } = props;
 
   const { data: profile } = useProfile();
@@ -89,5 +89,3 @@ const StackScriptsSection: React.FC<Props> = (props) => {
     </TableBody>
   );
 };
-
-export default StackScriptsSection;

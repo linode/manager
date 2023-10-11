@@ -1,5 +1,6 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { WithStyles, createStyles, withStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
+import { WithStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 
