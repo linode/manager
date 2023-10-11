@@ -53,7 +53,7 @@ export const Hively = (props: Props) => {
       <Stack alignItems="center" direction="row" pl={1} spacing={1.5}>
         <Typography
           sx={{
-            paddingRight: 2.5,
+            padding: '2px 20px 2px 0',
           }}
         >
           <Link external to={href + '3'}>
