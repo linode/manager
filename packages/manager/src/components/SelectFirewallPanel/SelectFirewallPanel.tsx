@@ -4,7 +4,7 @@ import * as React from 'react';
 import Select from 'src/components/EnhancedSelect';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import { APP_ROOT } from 'src/constants';
+import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 
 import { StyledCreateLink } from '../../features/Linodes/LinodesCreate/LinodeCreate.styles';
@@ -16,6 +16,17 @@ interface Props {
 
 export const SelectFirewallPanel = (props: Props) => {
   const { handleFirewallChange, helperText } = props;
+
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+
+  const handleCreateFirewallClick = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const handleFirewallCreated = (id: number, label: string) => {
+    setDropdownValue({ label, value: id });
+    handleFirewallChange(id);
+  };
 
   const { data: firewallsData, error, isLoading } = useFirewallsQuery();
 
@@ -29,6 +40,11 @@ export const SelectFirewallPanel = (props: Props) => {
     label: 'None',
     value: -1,
   });
+
+  const [dropdownValue, setDropdownValue] = React.useState<{
+    label: string;
+    value: number;
+  }>(firewallsDropdownOptions[0]);
 
   return (
     <Paper
@@ -44,19 +60,33 @@ export const SelectFirewallPanel = (props: Props) => {
       <Stack>
         {helperText}
         <Select
-          defaultValue={firewallsDropdownOptions[0]}
+          onChange={(selection) => {
+            setDropdownValue(selection);
+            handleFirewallChange(selection.value);
+          }}
           errorText={error?.[0].reason}
           isClearable={false}
           isLoading={isLoading}
           label="Assign Firewall"
           noOptionsMessage={() => 'Create a Firewall to assign to this Linode.'}
-          onChange={(selection) => handleFirewallChange(selection.value)}
           options={firewallsDropdownOptions}
           placeholder={''}
+          value={dropdownValue}
         />
-        <StyledCreateLink to={`${APP_ROOT}/firewalls/create`}>
+        <StyledCreateLink
+          onClick={(e) => {
+            e.preventDefault();
+            handleCreateFirewallClick();
+          }}
+          to="#"
+        >
           Create Firewall
         </StyledCreateLink>
+        <CreateFirewallDrawer
+          onClose={() => setIsDrawerOpen(false)}
+          onFirewallCreated={handleFirewallCreated}
+          open={isDrawerOpen}
+        />
       </Stack>
     </Paper>
   );
