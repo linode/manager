@@ -25,7 +25,7 @@ import {
   SubnetError,
   handleVPCAndSubnetErrors,
 } from 'src/utilities/formikErrorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   SubnetFieldState,

@@ -13,7 +13,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { InputAdornment } from 'src/components/InputAdornment';
 import ImageSelect from 'src/features/Images/ImageSelect';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -116,7 +116,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
 
-  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+  const hasErrorFor = getAPIErrorFor(errorResources, errors);
   const selectedImages = imageToItem(images.selected);
 
   return (

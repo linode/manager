@@ -11,7 +11,7 @@ import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { StackScriptsRequest } from 'src/features/StackScripts/types';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import {
   ReduxStateProps,
@@ -64,7 +64,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     // we can assume that the StackScript specified any/all
     const showAllImages = equals(compatibleImages, Object.values(imagesData));
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const hasErrorFor = getAPIErrorFor(errorResources, errors);
 
     return (
       <React.Fragment>

@@ -1,4 +1,4 @@
-import isPathOneOf from 'src/utilities/routing/isPathOneOf';
+import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 
 export const linkIsActive = (
   href: string,

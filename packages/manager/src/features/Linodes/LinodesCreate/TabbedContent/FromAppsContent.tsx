@@ -18,7 +18,7 @@ import { AppDetailDrawer } from 'src/features/OneClickApps';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import SelectAppPanel from '../SelectAppPanel';
 import {
@@ -184,7 +184,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
       query,
     } = this.state;
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const hasErrorFor = getAPIErrorFor(errorResources, errors);
 
     return (
       <React.Fragment>

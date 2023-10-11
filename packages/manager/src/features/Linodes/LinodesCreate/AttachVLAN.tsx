@@ -10,7 +10,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
-import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
+import { arrayToList } from 'src/utilities/arrayToList';
 import {
   doesRegionSupportFeature,
   regionsWithFeature,

@@ -46,16 +46,17 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
-import createDevicesFromStrings, {
+import {
   DevicesAsStrings,
+  createDevicesFromStrings,
 } from 'src/utilities/createDevicesFromStrings';
-import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
+import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import {
   ExtendedInterface,

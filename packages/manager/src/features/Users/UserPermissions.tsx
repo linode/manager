@@ -40,8 +40,8 @@ import {
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import {
   UserPermissionsEntitySection,
@@ -418,7 +418,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const classes = withStyles.getClasses(this.props);
     const { currentUser, username } = this.props;
     const { errors, restricted } = this.state;
-    const hasErrorFor = getAPIErrorsFor({ restricted: 'Restricted' }, errors);
+    const hasErrorFor = getAPIErrorFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
 
     return (
