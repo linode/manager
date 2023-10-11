@@ -35,7 +35,7 @@ import {
   StyledDebouncedSearchTextfield,
   StyledEmptyStateDiv,
   StyledLoaderDiv,
-  StyledPlaceHolder,
+  StyledPlaceholder,
   StyledTable,
 } from './StackScriptBase.styles';
 import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
@@ -188,14 +188,14 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           listOfStackScripts.length === 0 ? (
             <StyledEmptyStateDiv data-qa-stackscript-empty-msg>
               {userCannotCreateStackScripts ? (
-                <StyledPlaceHolder
+                <StyledPlaceholder
                   icon={StackScriptsIcon}
                   isEntity
                   renderAsSecondary
                   title="StackScripts"
                 >
                   You don&rsquo;t have any StackScripts to select from.
-                </StyledPlaceHolder>
+                </StyledPlaceholder>
               ) : (
                 <StackScriptsEmptyLandingState
                   goToCreateStackScript={this.goToCreateStackScript}
