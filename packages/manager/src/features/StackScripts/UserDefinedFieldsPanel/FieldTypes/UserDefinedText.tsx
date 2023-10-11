@@ -1,24 +1,11 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { withStyles } from 'tss-react/mui';
-import { WithStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { TextField } from 'src/components/TextField';
-
-type ClassNames = 'accessPanel' | 'marginTop';
-
-const styles = () =>
-  createStyles({
-    accessPanel: {
-      padding: 0,
-    },
-    marginTop: {
-      marginTop: 0,
-    },
-  });
+import { isPropValid } from 'src/utilities/isPropValid';
 
 interface Props {
   error?: string;
@@ -32,9 +19,7 @@ interface Props {
   value: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class UserDefinedText extends React.Component<CombinedProps, {}> {
+class UserDefinedText extends React.Component<Props, {}> {
   render() {
     return (
       <div>
@@ -57,7 +42,6 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
 
   renderPasswordField = () => {
     const {
-      classes,
       error,
       field,
       isOptional,
@@ -67,11 +51,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
     } = this.props;
 
     return (
-      <AccessPanel
-        className={classNames({
-          [classes.accessPanel]: true,
-          [classes.marginTop]: !isOptional,
-        })}
+      <StyledAccessPanel
         disabledReason={tooltip}
         error={error}
         handleChange={this.handleUpdatePassword}
@@ -102,6 +82,14 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
   };
 }
 
-const styled = withStyles(styles);
+type StyledAccessPanelProps = Pick<Props, 'isOptional'>;
 
-export default styled(RenderGuard<CombinedProps>(UserDefinedText));
+const StyledAccessPanel = styled(AccessPanel, { 
+  label: 'StyledAccessPanel',
+  shouldForwardProp: (prop) => isPropValid(['isOptional'], prop),
+})<StyledAccessPanelProps>(({ isOptional }) => ({
+  padding: 0,
+  ...(!isOptional && { margin: 0 }),
+}));
+
+export default RenderGuard<Props>(UserDefinedText);

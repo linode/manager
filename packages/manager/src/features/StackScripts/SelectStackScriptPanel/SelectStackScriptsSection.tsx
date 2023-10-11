@@ -62,7 +62,7 @@ export const SelectStackScriptsSection = (props: Props) => {
   );
 };
 
-const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
+export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
   border: 0,
   paddingTop: 100,
 });

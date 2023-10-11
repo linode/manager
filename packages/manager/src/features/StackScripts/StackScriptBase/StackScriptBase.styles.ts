@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Table } from 'src/components/Table';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 import type { WithStackScriptBaseOptions } from './StackScriptBase';
 
@@ -13,6 +14,7 @@ type StyledStackScriptBaseProps = Pick<
 
 export const StyledContentDiv = styled('div', {
   label: 'StyledContentDiv',
+  shouldForwardProp: (prop) => isPropValid(['isSelecting'], prop),
 })<StyledStackScriptBaseProps>(({ isSelecting, theme }) => ({
   ...(isSelecting
     ? {
