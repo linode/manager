@@ -354,7 +354,7 @@ const aglb = [
   }),
   // Routes
   rest.get('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(routeFactory.buildList(4))));
+    return res(ctx.json(makeResourcePage(routeFactory.buildList(1))));
   }),
   rest.post('*/v4beta/aglb/:id/routes', (req, res, ctx) => {
     return res(ctx.json(createRouteFactory.buildList(4)));

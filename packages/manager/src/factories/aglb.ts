@@ -183,7 +183,39 @@ export const routeFactory = Factory.Sync.makeFactory<Route>({
       match_condition: {
         hostname: 'www.acme.com',
         match_field: 'path_prefix',
-        match_value: '/images/*',
+        match_value: '/A/*',
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
+      },
+      service_targets: [
+        {
+          id: 1,
+          label: 'my-service-target',
+          percentage: 100,
+        },
+      ],
+    },
+    {
+      match_condition: {
+        hostname: 'www.acme.com',
+        match_field: 'path_prefix',
+        match_value: '/B/*',
+        session_stickiness_cookie: null,
+        session_stickiness_ttl: null,
+      },
+      service_targets: [
+        {
+          id: 1,
+          label: 'my-service-target',
+          percentage: 100,
+        },
+      ],
+    },
+    {
+      match_condition: {
+        hostname: 'www.acme.com',
+        match_field: 'path_prefix',
+        match_value: '/C/*',
         session_stickiness_cookie: null,
         session_stickiness_ttl: null,
       },
@@ -213,6 +245,7 @@ export const createRouteFactory = Factory.Sync.makeFactory<CreateRoutePayload>({
       service_targets: [
         {
           id: 1,
+          label: 'test',
           percentage: 10,
         },
       ],
