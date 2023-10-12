@@ -109,7 +109,11 @@ export const handleError = (error: AxiosError, store: ApplicationStore) => {
     },
     {
       condition: (e) => {
-        return !!e.reason.match(/.*open a support ticket/i) && !e.field;
+        return (
+          (!!e.reason.match(/.*open a support ticket/i) ||
+            !!e.reason.match(/contact Support/i)) &&
+          !e.field
+        );
       },
       replacementText: <SupportError errors={errors} />,
     },
