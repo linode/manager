@@ -5,7 +5,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { isPropValid } from 'src/utilities/isPropValid';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { LongviewSubscriptionRowProps } from './LongviewPlans';
 
@@ -81,7 +81,7 @@ export const StyledTable = styled(Table, { label: 'StyledTable' })(
 
 export const StyledTableRow = styled(TableRow, {
   label: 'StyledTableRow',
-  shouldForwardProp: (prop) => isPropValid(['disabled'], prop),
+  shouldForwardProp: omittedProps(['disabled']),
 })<StyledTableRowProps>(({ disabled }) => ({
   ...(disabled && {
     cursor: 'not-allowed',
